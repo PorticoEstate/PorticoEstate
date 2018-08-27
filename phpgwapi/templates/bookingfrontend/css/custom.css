@@ -796,3 +796,49 @@ NEW APPLICATION PAGE STYLE
     color: #ee5b5e;
     cursor: pointer;
 }
+
+.booking-cart {
+    border: 1px solid #e2e2e2;
+    position: fixed;
+    bottom: 0px;
+    right: 10px;
+    min-width: 27%;
+    background-color: #fff;   
+}
+.booking-cart-title {
+    padding: 0.5em;
+    background-color: #D3E8E9;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.booking-cart-title i:hover,
+.booking-cart-title span:nth-child(1):hover {
+    color: #aaa;
+    cursor: pointer;
+}
+
+.booking-cart-item {
+    padding: 0.9em;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+
+.new-application-page .check-box-label {
+    font-size: 1.3em !important;    
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+    
+    
+    .booking-cart {
+        right: 0;
+        max-width: 575px;
+        min-width: 27% !important;
+    }
+
+    .booking-cart-title i,
+    .booking-cart-title span:nth-child(2) {
+        margin-right: 10px;
+    }
+}

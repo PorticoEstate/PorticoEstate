@@ -32,7 +32,6 @@
                     </div>
                     
                     <p class="px-2 p-3" id="item-description">
-                        Lorem ipsumdolor sit amet, consectetur adipiscing elit. Phasellus eget lorem pulvinar neque dignissim viverra at vel magna. In convallis dolor et tellus fringilla tincidunt. Duis gravida euismod nisi, a gravida nibh viverra dignissim. Aenean dapibus justo vitae sapien eleifend, vitae egestas arcu vehicula. Vivamus aliquam nibh vitae metus venenatis tempor quis vitae leo.
                     </p>
                     
                     <div class="building-accordion">
@@ -79,7 +78,23 @@
                             </div>
                             <div id="collapseThree" class="collapse">
                                 <div class="card-body">
-                                    Lorem ipsumdolor sit amet, consectetur adipiscing elit. Phasellus eget lorem pulvinar neque dignissim viverra at vel magna. In convallis dolor et tellus fringilla tincidunt. Duis gravida euismod nisi, a gravida nibh viverra dignissim. Aenean dapibus justo vitae sapien eleifend, vitae egestas arcu vehicula. Vivamus aliquam nibh vitae metus venenatis tempor quis vitae leo.
+                                    <span id="opening_hours"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="building-card">
+                            <div class="building-card-header">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
+                                        Kontaktinformasjon
+                                    </button>
+                                    <button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
+                                </h5>
+                            </div>
+                            <div id="collapseFour" class="collapse">
+                                <div class="card-body">
+                                    <div id="contact_info"></div>
                                 </div>
                             </div>
                         </div>

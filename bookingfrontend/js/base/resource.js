@@ -74,7 +74,7 @@ function PopulateCalendarEvents() {
             if(result.ResultSet.totalResultsAvailable > 1) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     var visible = true;
-                    color = "#2875c2";
+                    color = "";
                     
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
@@ -84,6 +84,13 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Sun.to_, result.ResultSet.Result[k].Sun.organization_name, 
                         result.ResultSet.Result[k].Sun.description);
                         
+                        
+                        if(result.ResultSet.Result[k].Sun.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Sun.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -103,6 +110,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Mon.to_, result.ResultSet.Result[k].Mon.organization_name, 
                         result.ResultSet.Result[k].Mon.description);
                         
+                        if(result.ResultSet.Result[k].Mon.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Mon.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -119,6 +132,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Tue.to_, result.ResultSet.Result[k].Tue.organization_name, 
                         result.ResultSet.Result[k].Tue.description);
                         
+                        if(result.ResultSet.Result[k].Tue.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Tue.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Tue.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -136,6 +155,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Wed.to_, result.ResultSet.Result[k].Wed.organization_name, 
                         result.ResultSet.Result[k].Wed.description);
                         
+                        if(result.ResultSet.Result[k].Wed.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Wed.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Wed.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -153,6 +178,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Thu.to_, result.ResultSet.Result[k].Thu.organization_name, 
                         result.ResultSet.Result[k].Thu.description);
                         
+                        if(result.ResultSet.Result[k].Thu.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Thu.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Thu.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -170,6 +201,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Fri.to_, result.ResultSet.Result[k].Fri.organization_name, 
                         result.ResultSet.Result[k].Fri.description);
                         
+                        if(result.ResultSet.Result[k].Fri.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Fri.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Fri.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
@@ -187,6 +224,12 @@ function PopulateCalendarEvents() {
                         result.ResultSet.Result[k].Sat.to_, result.ResultSet.Result[k].Sat.organization_name, 
                         result.ResultSet.Result[k].Sat.description);
                         
+                        if(result.ResultSet.Result[k].Sat.type == "allocation") {
+                            color = "#2875c2";
+                        } else if(result.ResultSet.Result[k].Sat.type == "event") {
+                            color = "#898989";
+                        }
+
                         eventsArray.push({ id: result.ResultSet.Result[k].Sat.id + result.ResultSet.Result[k].resource,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",

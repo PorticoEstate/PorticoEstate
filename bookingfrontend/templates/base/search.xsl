@@ -130,7 +130,7 @@
         </div>
         
         <!-- SEARCH RESULT -->
-        <div id="searchResult" data-bind="ifnot: selectedFilterbox">
+        <div id="searchResult" data-bind="if: notFilterSearch">
             <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: items().length"></span>)</h1>
            
             <div class="row" id="result-items" data-bind="foreach: items">

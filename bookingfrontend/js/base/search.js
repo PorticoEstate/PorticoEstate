@@ -10,7 +10,7 @@ var ViewModel = function(data) {
     var self = this;
     
     self.items = (results);
-        
+    self.notFilterSearch = ko.observable(false);    
     self.filterboxes = ko.observableArray();
     self.filterbox = ko.observableArray();
     self.selectedFilterbox = ko.observable(false);    
@@ -42,6 +42,7 @@ var ViewModel = function(data) {
         self.selectedFilterboxValue(e.filterboxOptionId);
         self.selectedTags.removeAll();
         self.selectedFilterbox(true);
+        self.notFilterSearch(false);
         DoFilterSearch(e.filterboxOptionId);
     };
     self.facilities = ko.observableArray();
@@ -100,10 +101,12 @@ $(document).ready(function ()
     
     $(".searchBtn").click(function () {
         doSearch();
+        searchViewModel.notFilterSearch(true);
     });
 
     $('#mainSearchInput').bind("enterKey", function (e) {
         doSearch();
+        searchViewModel.notFilterSearch(true);
     });
 
     $('#mainSearchInput').keyup(function (e) {

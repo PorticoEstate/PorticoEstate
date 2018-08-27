@@ -137,8 +137,8 @@ $(document).ready(function ()
 });
 
 
-function ForwardToNewApplication() {
+function ForwardToNewApplication(start, end) {
     //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.add&building_id="+urlParams['id'];
 
-    window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id']}, false);
+    window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'], start: (typeof start === 'undefined') ? "" : start, end: (typeof end === 'undefined') ? "" : end}, false);
 }
