@@ -2702,28 +2702,23 @@ JS;
 				);
 			}
 
-			$total_records = count($values);
+			if( phpgw::get_var('phpgw_return_as') == 'json' )
+			{
+				$total_records = count($values);
 
-			$result_data = array('results' => $values);
+				$result_data = array('results' => $values);
 
-			$result_data['total_records'] = $total_records;
-			$result_data['draw'] = $draw;
+				$result_data['total_records'] = $total_records;
+				$result_data['draw'] = $draw;
 
-			return $this->jquery_results($result_data);
+				return $this->jquery_results($result_data);
 
-			/* if( phpgw::get_var('phpgw_return_as') == 'json' )
-			  {
+			}
+			else
+			{
+				return $values;			
+			}
 
-			  if(count($content))
-			  {
-			  return json_encode($content);
-			  }
-			  else
-			  {
-			  return "";
-			  }
-			  }
-			  return $content; */
 		}
 
 		function delete()

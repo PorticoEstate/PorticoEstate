@@ -343,6 +343,12 @@
 				);
 			}
 
+			$columns['details'] = array
+				(
+				'id' => 'details',
+				'name' => lang('details')
+			);
+
 
 			$custom_cols = $this->get_custom_cols();
 
@@ -614,6 +620,8 @@
 			}
 
 
+			$selected_columns = !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+
 			$custom_status = $this->so->get_custom_status();
 			$closed_status = array('X');
 			foreach ($custom_status as $custom)
@@ -632,6 +640,16 @@
 
 			foreach ($tickets as & $ticket)
 			{
+				if(in_array('details', $selected_columns))
+				{
+					$ticket['details'] = "#1: {$ticket['details']}";
+					$additional_notes = $this->read_additional_notes((int)$ticket['id'] );
+					foreach ($additional_notes as $additional_note)
+					{
+						$ticket['details'] .= "<br/>#{$additional_note['value_count']}: {$additional_note['value_note']}";
+					}
+				}
+
 				if (!isset($category_name[$ticket['cat_id']]))
 				{
 					$category_name[$ticket['cat_id']] = $this->get_category_name($ticket['cat_id']);
