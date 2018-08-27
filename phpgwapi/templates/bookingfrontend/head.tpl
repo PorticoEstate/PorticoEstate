@@ -62,6 +62,4 @@
             <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
         </div>
                 
-        <div class="showMe" style="display: none;">      
-    </body>
-</html>
+        <div class="showMe" style="display: none;">
