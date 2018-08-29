@@ -95,17 +95,30 @@
 			}
 
 			$date_info = array();
+			$project_is_closed = false;
 
 			foreach ($related_projects as $_project)
 			{
 				$_project_id = (int)$_project['id'];
 
-				$this->db->query("SELECT account_group, location_code, end_date FROM fm_project WHERE id={$_project_id}", __LINE__, __FILE__);
+				$this->db->query("SELECT account_group, location_code, end_date, fm_project_status.closed"
+					. " FROM fm_project"
+					. " JOIN fm_project_status ON fm_project.status = fm_project_status.id"
+					. " WHERE fm_project.id={$_project_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$finnish_date = $this->db->f('end_date');
+				$project_is_closed = $this->db->f('closed');
+				$skip_finnish_date = false;
 				if(!$finnish_date)
 				{
-					continue;
+					if($project_is_closed)
+					{
+						$skip_finnish_date = true;
+					}
+					else
+					{
+						continue;
+					}
 				}
 				$account_group = $this->db->f('account_group');
 				$location_code = $this->db->f('location_code');
@@ -127,14 +140,20 @@
 						}
 					}
 				}
+				else if($project_is_closed)//check if ticket should be closed
+				{
+					$note_closed = "Meldingen er automatisk avsluttet fra prosjekt";
+				}
 
-				$date_info[$finnish_date] = array
-				(
-					'note' => $note,
-					'finnish_date' => $finnish_date,
-					'location_code' => $location_code
-				);
-
+				if(!$skip_finnish_date)
+				{
+					$date_info[$finnish_date] = array
+					(
+						'note' => $note,
+						'finnish_date' => $finnish_date,
+						'location_code' => $location_code
+					);
+				}
 			}
 
 			/**
@@ -146,33 +165,37 @@
 			$date_info_keys = array_keys($date_info);
 
 			$finnish_date = (int)$date_info_keys[0];
-			if (!$finnish_date)
+			if ($finnish_date)
 			{
-				return;
+				$update = false;
+
+				if ($oldfinnish_date && $finnish_date && $oldfinnish_date2 != $finnish_date)
+				{
+					$this->db->query("UPDATE fm_tts_tickets SET finnish_date2='{$finnish_date}' WHERE id='{$id}'", __LINE__, __FILE__);
+					$old_value = $oldfinnish_date2;
+					$update = true;
+				}
+				else if (!$oldfinnish_date && $finnish_date && $oldfinnish_date != $finnish_date)
+				{
+					$this->db->query("UPDATE fm_tts_tickets SET finnish_date='{$finnish_date}' , finnish_date2='{$finnish_date}' WHERE id='{$id}'", __LINE__, __FILE__);
+					$old_value = $oldfinnish_date;
+					$update = true;
+				}
+
+				if ($update)
+				{
+					$fields_updated = array('finnish_date');
+					$this->historylog->add('F', $id, $finnish_date, $old_value);
+					$this->historylog->add('C', $id, $date_info[$finnish_date]['note']);
+					$this->botts->mail_ticket($id, $fields_updated, $receipt = array(), $date_info[$finnish_date]['location_code'], false, true);
+					phpgwapi_cache::message_set(lang('finnish date changed'), 'message');
+				}
 			}
 
-			$update = false;
-
-			if ($oldfinnish_date && $finnish_date && $oldfinnish_date2 != $finnish_date)
+			if($project_is_closed)
 			{
-				$this->db->query("UPDATE fm_tts_tickets SET finnish_date2='{$finnish_date}' WHERE id='{$id}'", __LINE__, __FILE__);
-				$old_value = $oldfinnish_date2;
-				$update = true;
-			}
-			else if (!$oldfinnish_date && $finnish_date && $oldfinnish_date != $finnish_date)
-			{
-				$this->db->query("UPDATE fm_tts_tickets SET finnish_date='{$finnish_date}' , finnish_date2='{$finnish_date}' WHERE id='{$id}'", __LINE__, __FILE__);
-				$old_value = $oldfinnish_date;
-				$update = true;
-			}
-
-			if ($update)
-			{
-				$fields_updated = array('finnish_date');
-				$this->historylog->add('F', $id, $finnish_date, $old_value);
-				$this->historylog->add('C', $id, $date_info[$finnish_date]['note']);
-				$this->botts->mail_ticket($id, $fields_updated, $receipt = array(), $date_info[$finnish_date]['location_code'], false, true);
-				phpgwapi_cache::message_set(lang('finnish date changed'), 'message');
+				$this->botts->update_status( array('status' => 'X'), $id );
+				$this->historylog->add('C', $id, $note_closed);
 			}
 		}
 	}
