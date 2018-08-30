@@ -25,6 +25,7 @@
 		$moveout_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index'));
 		$moveout_text = $GLOBALS['phpgw']->translation->translate('moveout', array(), false, 'rental');
 
+
 		$acl = & $GLOBALS['phpgw']->acl;
 
 
@@ -59,6 +60,19 @@ HTML;
 			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$moveout_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$moveout_text}</a>
+				</li>
+HTML;
+
+		}
+
+		if($acl->check('run', PHPGW_ACL_READ, 'frontend'))
+		{
+			$rental_frontend_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'frontend.uihelpdesk.index'));
+			$rental_frontend_text = $GLOBALS['phpgw']->translation->translate('rental', array(), false, 'rental frontend');
+
+			$topmenu .= <<<HTML
+				<li class="pure-menu-item">
+					<a href="{$rental_frontend_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp;{$rental_frontend_text}</a>
 				</li>
 HTML;
 
