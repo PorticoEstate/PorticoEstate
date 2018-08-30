@@ -168,7 +168,7 @@
 
 		protected function generate_secret( $length = 10 )
 		{
-			return substr(base64_encode(rand(1000000000, 9999999999)), 0, $length);
+			return substr(base64_encode(sprintf("%010d", mt_rand())), 0, $length);
 		}
 
 		public function add_js_event( $event, $js )
