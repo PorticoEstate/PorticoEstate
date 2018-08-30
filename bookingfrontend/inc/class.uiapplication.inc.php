@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'add' => true,
+			'add_contact' => true,
             'confirm' => true,
 			'edit' => true,
 			'show' => true,
