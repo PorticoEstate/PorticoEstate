@@ -76,7 +76,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     {
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, 
                         result.ResultSet.Result[k].Sun.to_, result.ResultSet.Result[k].Sun.organization_name, 
-                        result.ResultSet.Result[k].Sun.description);
+                        result.ResultSet.Result[k].Sun.description, result.ResultSet.Result[k].Sun.contact_email);
                         
                         if(result.ResultSet.Result[k].Sun.type == "allocation") {
                             color = "#2875c2";
@@ -102,7 +102,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, 
                         result.ResultSet.Result[k].Mon.to_, result.ResultSet.Result[k].Mon.organization_name, 
-                        result.ResultSet.Result[k].Mon.description);
+                        result.ResultSet.Result[k].Mon.description, result.ResultSet.Result[k].Mon.contact_email);
                         if(result.ResultSet.Result[k].Mon.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Mon.type == "event") {
@@ -126,7 +126,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, 
                         result.ResultSet.Result[k].Tue.to_, result.ResultSet.Result[k].Tue.organization_name, 
-                        result.ResultSet.Result[k].Tue.description);
+                        result.ResultSet.Result[k].Tue.description, result.ResultSet.Result[k].Tue.contact_email);
                         
                         if(result.ResultSet.Result[k].Tue.type == "allocation") {
                             color = "#2875c2";
@@ -151,7 +151,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, 
                         result.ResultSet.Result[k].Wed.to_, result.ResultSet.Result[k].Wed.organization_name, 
-                        result.ResultSet.Result[k].Wed.description);
+                        result.ResultSet.Result[k].Wed.description, result.ResultSet.Result[k].Wed.contact_email);
                         
                         if(result.ResultSet.Result[k].Wed.type == "allocation") {
                             color = "#2875c2";
@@ -176,7 +176,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, 
                         result.ResultSet.Result[k].Thu.to_, result.ResultSet.Result[k].Thu.organization_name, 
-                        result.ResultSet.Result[k].Thu.description);
+                        result.ResultSet.Result[k].Thu.description, result.ResultSet.Result[k].Thu.contact_email);
                         
                         if(result.ResultSet.Result[k].Thu.type == "allocation") {
                             color = "#2875c2";
@@ -201,7 +201,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, 
                         result.ResultSet.Result[k].Fri.to_, result.ResultSet.Result[k].Fri.organization_name, 
-                        result.ResultSet.Result[k].Fri.description);
+                        result.ResultSet.Result[k].Fri.description, result.ResultSet.Result[k].Fri.contact_email);
                         
                         if(result.ResultSet.Result[k].Fri.type == "allocation") {
                             color = "#2875c2";
@@ -226,7 +226,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         
                         var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, 
                         result.ResultSet.Result[k].Sat.to_, result.ResultSet.Result[k].Sat.organization_name, 
-                        result.ResultSet.Result[k].Sat.description);
+                        result.ResultSet.Result[k].Sat.description, result.ResultSet.Result[k].Sat.contact_email);
                         
                         
                         if(result.ResultSet.Result[k].Sat.type == "allocation") {

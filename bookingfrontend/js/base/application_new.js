@@ -11,6 +11,7 @@ var am;
 
 function applicationModel()  {
     var self = this;
+    self.showErrorMessages = ko.observable(false);
     self.bookingDate = ko.observable();
     self.bookingStartTime = ko.observable();
     self.bookingEndTime = ko.observable();
@@ -34,7 +35,7 @@ function applicationModel()  {
         if(k > 0) { return true; }
        return false;       
     }).extend({ required: true });
-self.activityId = ko.observable();
+    self.activityId = ko.observable();
     self.date = ko.observableArray().extend({
         minLength: 1
     });
@@ -71,12 +72,34 @@ self.activityId = ko.observable();
     self.arrangementName = ko.observable("").extend({ required: true });
     self.aboutArrangement = ko.observable("").extend({ required: true });
     
-    self.agegroupList = agegroup.extend({ required: true });
+    self.agegroupList = agegroup.extend({  });
     
     self.specialRequirements = ko.observable("");
+    self.termAcceptDocs = ko.observableArray();
+    self.termAccept = ko.computed(function() {
+        var notAccepted = ko.utils.arrayFirst(self.termAcceptDocs(), function(current) {
+            return current.checkedStatus() == false;
+        });
+        if(!notAccepted) {
+            return true;
+        } else {
+            return false;
+        }
+    }).extend({ required: true });
+    self.termAcceptedDocs = ko.computed(function() {
+        var list = [];
+        for(var i=0; i<self.termAcceptDocs().length; i++) {
+            if(self.termAcceptDocs()[i].checkedStatus()) {
+                list.push(self.termAcceptDocs()[i].docId);
+            }
+        }
+        return list;
+    });
     self.addApplication = function () {
         if(self.errors().length > 0) {
+            self.showErrorMessages(true);
             self.errors.showAllMessages();
+            
         } else {
             AddApplication();
         }
@@ -105,8 +128,8 @@ $(document).ready(function ()
         activityId = result.application.activity_id;
         for(var i=0; i<result.agegroups.length; i++) {
             agegroup.push({name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name, 
-                inputCountMale: ko.observable("").extend({ required: true, number: true }),
-                inputCountFemale: ko.observable("").extend({ required: true, number: true }), 
+                inputCountMale: ko.observable("").extend({ number: true }),
+                inputCountFemale: ko.observable("").extend({ number: true }), 
                 id: result.agegroups[i].id})
         }
 
@@ -118,14 +141,43 @@ $(document).ready(function ()
                 }
             }
         });
+
+        var parameter = {
+            menuaction: "booking.uidocument_view.regulations",
+            'owner[]':  "building::"+urlParams['building_id'],
+            sort: "name"
+        };
+        getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+        $.getJSON(getJsonURL, function(result) {
+            for(var i=0; i<result.data.length; i++) {
+                am.termAcceptDocs.push({docName: result.data[i].name, itemLink: result.data[i].link, checkedStatus: ko.observable(false), docId: result.data[i].id.replace( /^\D+/g, '') })
+                
+            }
+            console.log(am.termAcceptDocs());
+        });
+        
     }).done(function() {
         am = new applicationModel();
         am.activityId(activityId);
         ko.applyBindings(am);
         showContent();
+        addPostedDate();
+    });
+
+
+    
+    
+    $(".booking-cart-title").click(function(){
+        if($(".booking-cart-icon").hasClass("fa-window-minimize")) {
+            $(".booking-cart-icon").removeClass("far fa-window-minimize");
+            $(".booking-cart-icon").addClass("fas fa-plus");
+        } else if($(".booking-cart-icon").hasClass("fas fa-plus")) {
+            $(".booking-cart-icon").removeClass("fas fa-plus");
+            $(".booking-cart-icon").addClass("far fa-window-minimize");
+        }
+        $(".booking-cart-items").toggle();
     });
     
-       
     
     /*$(document).on('click', '#goToConfirmPage', function () {
         
@@ -140,32 +192,42 @@ $(document).ready(function ()
     });
 });
 
+function addPostedDate() {
+    if(urlParams['start'].length > 0 && urlParams['end'].length > 0 &&
+    urlParams['start'] != "undefined" && urlParams['end'] != "undefined") {
+        am.date.push({from_: new Date(parseInt(urlParams['start'])), to_: new Date(parseInt(urlParams['end'])), repeat: false, formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });
+    }
+}
 function AddApplication() {
     var requestUrl = phpGWLink('bookingfrontend/', { menuaction: "bookingfrontend.uiapplication.add", building_id: 10 }, true);
-    var parameter = {
-        contact_email: "test@test.com",
-        contact_email2: "test@test.com",
-                resources: am.selectedResources(),
-                contact_phone: 22222222,
+    var parameter = {        
+                resources: am.selectedResources(),                
+                from_: am.from_(),
+                to_: am.to_(),
+                accepted_documents: am.termAcceptedDocs(),
+                description: am.aboutArrangement(),                
+                activity_id: am.activityId()                
+    };
+    for(var i=0; i<am.agegroupList().length; i++) {
+        parameter['male[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountMale();
+        parameter['female[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountFemale();
+    }
+
+    /*
+    contact_phone: 22222222,
                 customer_identifier_type: "organization_number", //ssn
                 customer_ssn: "",
                 customer_organization_number: 995838931,
-                from_: am.from_(),
-                to_: am.to_(),
-                accepted_documents: 137,
-                description: am.aboutArrangement(),
                 contact_name: "qwer",
                 responsible_street: "oslo",
                 responsible_zip_code: 0050,
                 responsible_city: "oslo",
-                activity_id: am.activityId(),
-                audience: [37]
-    };
+                contact_email: "test@test.com",
+        contact_email2: "test@test.com",
+        audience: [37]
+                */
             
-            for(var i=0; i<am.agegroupList().length; i++) {
-                parameter['male[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountMale();
-                parameter['female[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountFemale();
-            }
+            
             
             
             console.log(parameter);

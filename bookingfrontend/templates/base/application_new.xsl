@@ -190,6 +190,22 @@
                         <label>BEHOV FOR SPESIELL TILRETTELEGGING</label>
                         <textarea class="form-control" data-bind="textInput: specialRequirements"></textarea>
                     </div>
+
+                    <div class="form-group termAccept mt-5 mb-5">
+                        <!--<label><input type="checkbox" data-bind="checked: termAccept"/>&#160; <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" /></label>
+                        -->
+                        <label>JURDISKE BETINGELSER</label>
+                        <span data-bind="ifnot: termAccept" class="validationMessage">Jurdiske betingelser er ikke godtatt</span>                         
+                        <div class="form-check checkbox" data-bind="foreach: termAcceptDocs">
+                            <div>
+                                <label class="check-box-label d-inline">
+                                    <input class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
+                                    <span class="label-text" data-bind=""></span>
+                                </label>
+                                <a class="d-inline termAcceptDocsUrl" data-bind="text: docName"> </a>
+                            </div>
+                        </div>
+                    </div>
                     
                     <hr class="mt-5 mb-5"></hr>
                     
@@ -200,6 +216,35 @@
                 </div>
             </div>
             </form>
+            <div class="booking-cart">
+                <div class="booking-cart-title">
+                    <span class="font-weight-bold">Søknader</span><span>(2)</span>
+                    
+                    <i class="booking-cart-icon fas fa-plus float-right"></i>
+                </div>
+                <div class="booking-cart-items" style="display: none;">
+                    <div class="booking-cart-item">
+                        <div class="row">
+                            <div class="col-6">Stavanger idrettshall</div>
+                            <div class="col-6">Sal A, Sal B, Sal C, Sal D</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">23 feb 2018</div>
+                            <div class="col-6">17:00 - 19:00</div>                        
+                        </div>
+                    </div>
+                    <div class="booking-cart-item">
+                        <div class="row">
+                            <div class="col-6">Stavanger idrettshall</div>
+                            <div class="col-6">Sal A, Sal B, Sal C, Sal D</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">23 feb 2018</div>
+                            <div class="col-6">17:00 - 19:00</div>                        
+                        </div>
+                    </div>
+                </div>
+            </div>                        
             <pre data-bind="text: ko.toJSON(am, null, 2)"></pre> 
                 
             <div class="push"></div>

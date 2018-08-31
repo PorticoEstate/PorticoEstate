@@ -2,6 +2,7 @@
 
 
     <div class="container new-application-page">
+        <form action="" data-bind='submit: postApplication' method="POST" id='application_form' name="form">
         <div class="col-md-8 offset-md-2">
 
             <h1 class="font-weight-bold">Kontakt og fakturainformasjon</h1>
@@ -37,6 +38,8 @@
                 <input class="form-check-input" type="radio" name="typeApplicationRadio" id="orgRadio" data-bind="checked: typeApplicationRadio" value="org"/>
                 <label class="form-check-label" for="orgRadio">Organisasjon</label>
             </div>
+            <p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage">Ingen ressurs valgt!</p>
+
             
             <div class="form-group" data-bind="visible: typeApplicationRadio() === 'org'">
                 <label>ORG.NUMMER</label>
@@ -70,18 +73,13 @@
                 <input type="file" data-bind="textInput: attachment"/>  
             </div>
                                 
-            <div class="form-group termAccept">
-                <label><input type="checkbox" data-bind="checked: termAccept"/>&#160; <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" /></label>
-                <div>
-                    <a href="" class="">Doc 1</a>
-                </div>
-            </div>
+            
             
             <button class="btn btn-light" type="submit">Send søknad</button>
-        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>
+        
         </div>
-       
-          
+       </form>
+        <div class="mt-5"><pre data-bind="text: ko.toJSON(am, null, 2)"></pre></div>  
         <div class="push"></div>
     </div>
     <script type="text/javascript">
