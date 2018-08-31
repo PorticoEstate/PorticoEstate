@@ -327,6 +327,12 @@
 			}
 			return $list;
 		}
+
+
+		function delete_application($id)
+		{
+			$this->so->delete_application($id);
+		}
 	}
 
 	class booking_boapplication_association extends booking_bocommon

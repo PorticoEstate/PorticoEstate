@@ -1436,4 +1436,32 @@
 			}
 			return $list;
 		}
+
+
+		function delete_partial()
+		{
+			$status = array('deleted' => false);
+			$id = phpgw::get_var('id', 'int', 'POST');
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			if (!empty($session_id) && $id > 0)
+			{
+				$partials = $this->get_partials($session_id);
+				$exists = false;
+				foreach ($partials as $partial)
+				{
+					if ($partial['id'] == $id)
+					{
+						$exists = true;
+						break;
+					}
+				}
+				if ($exists)
+				{
+					$this->bo->delete_application($id);
+					$status['deleted'] = true;
+				}
+			}
+			return $status;
+		}
+
 	}

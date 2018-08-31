@@ -301,6 +301,25 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
+
+		public function delete_application($id)
+		{
+			$db = $this->db;
+			$db->transaction_begin();
+			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
+			foreach ($tablesuffixes as $suffix)
+			{
+				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
+				$sql = "DELETE FROM $table_name WHERE application_id=$id";
+				$db->query($sql, __LINE__, __FILE__);
+			}
+			$table_name = $this->table_name;
+			$sql = "DELETE FROM $table_name WHERE id=$id";
+			$db->query($sql, __LINE__, __FILE__);
+			return	$db->transaction_commit();
+		}
+
+
 		function check_collision( $resources, $from_, $to_ )
 		{
 			$rids = join(',', array_map("intval", $resources));
