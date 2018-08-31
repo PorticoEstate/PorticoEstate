@@ -306,7 +306,15 @@ function PopulateBookableResources(baseURL, urlParams) {
     getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['id']}, true);        
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.results.length; i++) {
-            bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
+//          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
+            bookableResources.push({
+				name: result.results[i].name,
+				resourceItemLink: phpGWLink('bookingfrontend/',{
+					menuaction:'bookingfrontend.uiresource.show',
+					id:result.results[i].id,
+					buildingid:urlParams['id']
+				})
+			});
             resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
         }
         PopulateCalendarEvents(baseURL, urlParams);
