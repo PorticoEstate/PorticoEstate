@@ -318,7 +318,7 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiapplication.index',
 						'phpgw_return_as' => 'json')),
-					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
+					'sorted_by' => array('key' => 4, 'dir' => 'desc'),//created
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -638,6 +638,7 @@
 						$application[$field] = 'dummy';
 					}
 					$application['contact_email'] = 'dummy@example.com';
+					$application['contact_email2'] = 'dummy@example.com';
 					$application['responsible_zip_code'] = '0000';
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '000000000';
@@ -868,6 +869,129 @@
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
 				'config' => $application_text));
 		}
+
+
+		function add_contact()
+		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			$application_text = $config->config_data;
+			$errors = array();
+
+			$partial2 = array();
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$partial2 = $this->extract_form_data();
+				// Application contains only contact details. Use dummy values for event fields
+				$dummyfields_string = array('building_name','description','secret','status');
+				foreach ($dummyfields_string as $field)
+				{
+					$partial2[$field] = 'dummy';
+				}
+				$dummyfields_int = array('activity_id','owner_id');
+				foreach ($dummyfields_int as $field)
+				{
+					$partial2[$field] = 1;
+				}
+				$partial2['agegroups'] = array(array('agegroup_id' => 1, 'male' => 1, 'female' => 1));
+				$partial2['audience']  = array(1);
+				$partial2['dates']     = array(array('from_' => '2018-01-01 00:00:00', 'to_' => '2018-01-01 01:00:00'));
+				$partial2['resources'] = array(1);
+
+				$errors = $this->validate($partial2);
+
+				$session_id = $GLOBALS['phpgw']->session->get_session_id();
+				if (empty($session_id))
+				{
+					$errors['session_id'] = lang('No session ID found, application aborted');
+				}
+
+				if ($_POST['contact_email'] != $_POST['contact_email2'])
+				{
+					$errors['email'] = lang('The e-mail addresses you entered do not match');
+				}
+				$partial2['contact_email2'] = phpgw::get_var('contact_email2', 'string', 'POST');
+
+				if (!$errors)
+				{
+					// Get data on prior partial applications for this session ID
+					$partials = $this->bo->get_partials_list($session_id);
+					if ($partials['total_records'] == 0)
+					{
+						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
+						// Redirect to the front page
+						$this->redirect();
+					}
+					else
+					{
+						$partial2_fields = array('contact_email','contact_name','contact_phone',
+							'customer_identifier_type','customer_organization_number','customer_ssn',
+							'responsible_city','responsible_street','responsible_zip_code');
+						foreach ($partials['results'] as &$application)
+						{
+							// Remove certain unused fields from the update
+							unset($application['frontend_modified']);
+							// Add the contact data from partial2
+							foreach ($partial2_fields as $field)
+							{
+								$application[$field] = $partial2[$field];
+							}
+							// Update status fields
+							$application['status'] = 'NEW';
+							$application['created'] = 'now';
+							$application['modified'] = 'now';
+							$application['session_id'] = null;
+							$receipt = $this->bo->update($application);
+							$this->bo->send_notification($application, true);
+						}
+						$messages = array(
+							'one' => array(
+								'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
+								'review' => "A Case officer will review your application as soon as possible."),
+							'multiple' => array(
+								'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
+								'review' => "A Case officer will review your applications as soon as possible.")
+							);
+						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
+						phpgwapi_cache::message_set(lang($messages[$msgset]['registered']) . "<br />" .
+							lang($messages[$msgset]['review']) . "<br />" .
+							lang("Please check your Spam Filter if you are missing mail."
+						));
+						// Redirect to the front page
+						$this->redirect();
+					}
+				}
+			}
+
+			$this->install_customer_identifier_ui($partial2);
+			if ($orgnr)
+			{
+				$partial2['customer_identifier_type'] = 'organization_number';
+				$partial2['customer_organization_number'] = $orgnr;
+				$orgid = $this->organization_bo->so->get_orgid($orgnr);
+				$organization = $this->organization_bo->read_single($orgid);
+				if ($organization['contacts'][0]['name'] != '')
+				{
+					$partial2['contact_name'] = $organization['contacts'][0]['name'];
+					$partial2['contact_email'] = $organization['contacts'][0]['email'];
+					$partial2['contact_phone'] = $organization['contacts'][0]['phone'];
+				}
+				else
+				{
+					$partial2['contact_name'] = $organization['contacts'][1]['name'];
+					$partial2['contact_email'] = $organization['contacts'][1]['email'];
+					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
+				}
+			}
+			$this->flash_form_errors($errors);
+			$partial2['cancel_link'] = self::link();
+			self::add_javascript('bookingfrontend', 'base', 'application.js');
+
+			self::render_template_xsl('application_contact', array('application' => $partial2, 'config' => $application_text));
+		}
+
 
 		public function confirm() {
         	self::render_template_xsl('application_new_confirm', array());
@@ -1312,4 +1436,32 @@
 			}
 			return $list;
 		}
+
+
+		function delete_partial()
+		{
+			$status = array('deleted' => false);
+			$id = phpgw::get_var('id', 'int', 'POST');
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			if (!empty($session_id) && $id > 0)
+			{
+				$partials = $this->get_partials($session_id);
+				$exists = false;
+				foreach ($partials as $partial)
+				{
+					if ($partial['id'] == $id)
+					{
+						$exists = true;
+						break;
+					}
+				}
+				if ($exists)
+				{
+					$this->bo->delete_application($id);
+					$status['deleted'] = true;
+				}
+			}
+			return $status;
+		}
+
 	}

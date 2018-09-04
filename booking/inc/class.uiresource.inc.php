@@ -184,7 +184,7 @@
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			self::rich_text_editor('field_description', 'field_opening_hours', 'field_contact_info');
+			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -250,7 +250,7 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('field_description', 'field_opening_hours', 'field_contact_info');
+			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach ($activity_data['results'] as $acKey => $acValue)
 			{

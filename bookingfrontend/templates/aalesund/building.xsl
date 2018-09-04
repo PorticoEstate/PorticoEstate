@@ -60,7 +60,7 @@
 									<button class="btn btn-main" onclick="window.location.href='{message_link}'">
 										<xsl:value-of select="php:function('lang', 'Send message')" />
 									</button>
-									- Meldig til saksbehandler for bygg
+									- Melding til saksbehandler for bygg
 								</div>
 							</xsl:if>
 

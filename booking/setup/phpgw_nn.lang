@@ -397,7 +397,9 @@ Select Type	booking	nn	Velg type
 Customer number	booking	nn	Ressursnummer
 Send	booking	nn	Send
 Your application has now been registered and a confirmation email has been sent to you.	booking	nn	Søknaden er sendt inn, og ein kvittering er sendt til deg på e-post.
+Your applications have now been registered and confirmation emails have been sent to you.	booking	nn	Søknadene har nå blitt sendt inn, og bekreftelser har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	nn	Ein saksbehandler vil behandle søknaden så fort som mogeleg.
+A Case officer will review your applications as soon as possible.	booking	nn	En saksbehandler vil behandle søknadene så fort som mulig.
 Please check your Spam Filter if you are missing mail.	booking	nn	Vi gjer merksam på at e-postsvar blir automatisk generert og derfor av og til vil ende i spamfilter/nettsøppel.
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	nn	Fødselsdato/fødselsnummer er ikkje gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	booking	nn	Organisasjonsnummer er ugyldig
@@ -734,6 +736,7 @@ Front page filtering	booking	nn	Filtrering på forside
 Main activity	booking	nn	Hovedaktivitet
 New facility	booking	nn	Ny fasilitet
 New resource category	booking	nn	Ny ressurskategori
+No partial applications exist for this session, contact details are not saved	booking	nn	Ingen delsøknader finnes for denne sesjonen, avbryter lagring av kontaktinformasjon
 No session ID found, application aborted	booking	nn	Ingen sesjons-ID funnet, lagring av søknaden er avbrutt
 Not a top level activity	booking	nn	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	nn	Bare én filtreringsboks per linje
