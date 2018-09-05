@@ -1,16 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div class="container new-application-page">
+          
+                        
+                        
+	<div class="container new-application-page" id="new-application-page">
+               
             <form action="" data-bind='submit: addApplication' method="POST" id='application_form' name="form">
             <div class="row">
                 
                 <div class="col-md-8 offset-md-2">
                     
                     <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'New application')"/></h1>
-                    <p>For at vi skal kunne behandle din søknad trenger vi en del opplysninger, og vi trenger en del opplysninger for statististiske formål. 
-                        Du må derfor fylle ut alle feltene i søknadskjemaet, er dette ukjent, gi oss et estimat. 
-                        Det må påberegnes inntil 3 dagers saksbehandlingstid.
-                    </p>
-
+                    
+                    <p><xsl:value-of select="config/application_new_application"/></p>
                     <hr class="mt-5 mb-5"></hr>
                     
                     <h5 class="font-weight-bold mb-4">Anlegg</h5>
@@ -22,7 +23,7 @@
                             <span class="caret"></span>
                         </button>
 
-                        <ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
+                        <ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
                             <li>
                                 <div class="form-check checkbox checkbox-primary">
                                     <label class="check-box-label">
@@ -56,15 +57,15 @@
                                 <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
                             </div>
 
-                            <label class="check-box-label">
+                            <!--<label class="check-box-label">
                                 <input class="form-check-input repeatEvent" type="checkbox"  data-bind="checked: repeat"/>
                                 <span class="label-text">Repeter ukentlig</span>
-                            </label>
+                            </label>-->
                                                       
                         </div>
                         
                         
-                        <button class="btn btn-outline-light btn-sm mt-2" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i> Legg til dato</button>
+                        <button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i> Legg til dato</button>
                     </div>
                     
                     <div class="form-group">
@@ -72,7 +73,7 @@
                         <div data-bind="foreach: date">
                             <div class="d-block">
                                 <span data-bind='text: formatedPeriode'></span>
-                                <span data-bind='text: repeat == true ? " (repeter)" : ""'></span>
+                                <!--<span data-bind='text: repeat == true ? " (repeter)" : ""'></span>-->
                                 <butoon class="ml-2" data-bind="click: $parent.removeDate"><i class="fas fa-minus-circle"></i></butoon>
                             </div>
                             
@@ -87,6 +88,20 @@
                     
                     <h5 class="font-weight-bold mb-4">Om arrangementet</h5>
                     
+                    <div class="form-group">
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
+                        
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Velg      
+                            </button>
+                            <div class="dropdown-menu" data-bind="foreach: audiences" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="form-group">
                         <label>ARRANGØR</label>
                         <input type="text" class="form-control" data-bind="textInput: organizer"/>  
@@ -191,6 +206,10 @@
                         <textarea class="form-control" data-bind="textInput: specialRequirements"></textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label><xsl:value-of select="php:function('lang', 'Attachment')" /></label>
+                        <input type="file" data-bind="textInput: attachment"/>  
+                    </div>
                     <div class="form-group termAccept mt-5 mb-5">
                         <!--<label><input type="checkbox" data-bind="checked: termAccept"/>&#160; <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" /></label>
                         -->
@@ -209,43 +228,21 @@
                     
                     <hr class="mt-5 mb-5"></hr>
                     
+                    <div class="container" data-bind="foreach: msgboxes">
+                        <div class="alert alert-warning" data-bind="text: msg" role="alert">
+                        
+                        </div>
+                    </div>
+
                     <div class="form-group float-right">
-                        <button class="btn btn-outline-light btn-sm" type="submit">Legg til flere søknader</button>
+                        <button class="btn btn-outline-light btn-sm border-0" type="submit">Legg til søknad</button>
                         <button id="goToConfirmPage" class="btn btn-light" data-bind='click: GoToConfirmPage'>Gå til kontakt og fakturainformasjon</button>                        
                     </div>
                 </div>
             </div>
             </form>
-            <div class="booking-cart">
-                <div class="booking-cart-title">
-                    <span class="font-weight-bold">Søknader</span><span>(2)</span>
-                    
-                    <i class="booking-cart-icon fas fa-plus float-right"></i>
-                </div>
-                <div class="booking-cart-items" style="display: none;">
-                    <div class="booking-cart-item">
-                        <div class="row">
-                            <div class="col-6">Stavanger idrettshall</div>
-                            <div class="col-6">Sal A, Sal B, Sal C, Sal D</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">23 feb 2018</div>
-                            <div class="col-6">17:00 - 19:00</div>                        
-                        </div>
-                    </div>
-                    <div class="booking-cart-item">
-                        <div class="row">
-                            <div class="col-6">Stavanger idrettshall</div>
-                            <div class="col-6">Sal A, Sal B, Sal C, Sal D</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">23 feb 2018</div>
-                            <div class="col-6">17:00 - 19:00</div>                        
-                        </div>
-                    </div>
-                </div>
-            </div>                        
-            <pre data-bind="text: ko.toJSON(am, null, 2)"></pre> 
+                                   
+            <!--<pre data-bind="text: ko.toJSON(am, null, 2)"></pre> -->
                 
             <div class="push"></div>
         </div>

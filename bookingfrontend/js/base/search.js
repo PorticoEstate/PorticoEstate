@@ -24,7 +24,7 @@ var ViewModel = function(data) {
         if(e.type == "town") {
             self.selectedTown("");
             
-        } else {
+        } else if(e.type == "activity") {
             self.selectedActivity("");
         }
         self.selectedTags.remove(function(item) {
@@ -93,7 +93,8 @@ var initialData = {
 };
 
 var searchViewModel = new ViewModel(initialData);
-ko.applyBindings(searchViewModel);
+
+ko.applyBindings(searchViewModel, document.getElementById("search-page-content"));
 
 $(document).ready(function ()
 {
@@ -216,6 +217,7 @@ function doSearch() {
                     type: response.results.results[i].type,
                     tagItems: []
                 });
+                
             }
             $('html, body').animate({
                 scrollTop: $("#searchResult").offset().top - 100
@@ -237,7 +239,8 @@ function DoFilterSearch() {
     
     searchViewModel.facilities.removeAll();
     searchViewModel.activities.removeAll();
-    searchViewModel.towns.removeAll();    
+    searchViewModel.towns.removeAll();
+        
     $.getJSON(requestURL, function(result){
             for(var i=0; i<result.facilities.length; i++) {
                 var selected = false;
@@ -247,7 +250,6 @@ function DoFilterSearch() {
                 if(alreadySelected) {
                     selected = true;
                 }
-                console.log(selected);
                 searchViewModel.facilities.push(ko.observable({ index: i, facilityOption: result.facilities[i].name, 
                     facilityOptionId: result.facilities[i].id,
                     facilitySelected: "facilitySelected",

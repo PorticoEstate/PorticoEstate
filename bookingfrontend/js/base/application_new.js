@@ -5,7 +5,7 @@ CreateUrlParams(window.location.search);
 var bookableresource = ko.observableArray();
 var bookingDates = ko.observableArray();
 var agegroup = ko.observableArray();
-
+var audiences = ko.observableArray();
 ko.validation.locale('nb-NO');
 var am;  
 
@@ -15,7 +15,7 @@ function applicationModel()  {
     self.bookingDate = ko.observable();
     self.bookingStartTime = ko.observable();
     self.bookingEndTime = ko.observable();
-    self.repeat = ko.observable(false);
+    //self.repeat = ko.observable(false);
     self.bookableResource = bookableresource;
     self.selectedResources = ko.observableArray(0);
     self.isResourceSelected = ko.computed(function() {
@@ -35,6 +35,12 @@ function applicationModel()  {
         if(k > 0) { return true; }
        return false;       
     }).extend({ required: true });
+    self.audiences = audiences;
+    self.audienceSelectedValue = ko.observable();
+    self.audienceSelected = (function(e) {        
+        $("#audienceDropdownBtn").text(e.name);
+        self.audienceSelectedValue(e.id);
+    });
     self.activityId = ko.observable();
     self.date = ko.observableArray().extend({
         minLength: 1
@@ -52,9 +58,8 @@ function applicationModel()  {
             end.setMinutes(new Date(self.bookingEndTime()).getMinutes());
             
             if(start.getTime() < end.getTime()) {
-                self.date.push({from_: start, to_: end, repeat: self.repeat(), formatedPeriode: formatDate(start, end) });
-                self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime(""); self.repeat(false);
-                console.log(formatSingleDate(start), end);
+                self.date.push({from_: start, to_: end, formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
+                self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime(""); //self.repeat(false);
                 self.from_.push(formatSingleDate(start));
                 self.to_.push(formatSingleDate(end));
             } else {
@@ -75,6 +80,7 @@ function applicationModel()  {
     self.agegroupList = agegroup.extend({  });
     
     self.specialRequirements = ko.observable("");
+    self.attachment = ko.observable();
     self.termAcceptDocs = ko.observableArray();
     self.termAccept = ko.computed(function() {
         var notAccepted = ko.utils.arrayFirst(self.termAcceptDocs(), function(current) {
@@ -90,18 +96,18 @@ function applicationModel()  {
         var list = [];
         for(var i=0; i<self.termAcceptDocs().length; i++) {
             if(self.termAcceptDocs()[i].checkedStatus()) {
-                list.push(self.termAcceptDocs()[i].docId);
+                list.push("building::"+self.termAcceptDocs()[i].docId);
             }
         }
         return list;
-    });
+    });    
+    self.msgboxes = ko.observableArray([]);
     self.addApplication = function () {
         if(self.errors().length > 0) {
             self.showErrorMessages(true);
-            self.errors.showAllMessages();
-            
+            self.errors.showAllMessages();            
         } else {
-            AddApplication();
+            AddApplication(false);
         }
         //    var checkboxes = $("input[type='checkbox']");
         //console.log(!checkboxes.is(":checked"));
@@ -109,11 +115,15 @@ function applicationModel()  {
     };
     
     self.GoToConfirmPage = function () {
-	    //getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
-        if(self.errors().length == 0) {
-            AddApplication();    
+        if(bc.applicationCartItems().length > 0) {
+            window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add_contact", building_id: urlParams['building_id'] }, false);
         } else {
-            self.errors.showAllMessages();
+            if(self.errors().length > 0) {
+                self.showErrorMessages(true);
+                self.errors.showAllMessages();            
+            } else {
+                AddApplication(true);
+            }
         }
     }
     
@@ -131,6 +141,10 @@ $(document).ready(function ()
                 inputCountMale: ko.observable("").extend({ number: true }),
                 inputCountFemale: ko.observable("").extend({ number: true }), 
                 id: result.agegroups[i].id})
+        }
+
+        for(var i=0; i<result.audience.length; i++) {
+            audiences.push({id: result.audience[i].id, name: result.audience[i].name })
         }
 
         getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
@@ -159,26 +173,13 @@ $(document).ready(function ()
     }).done(function() {
         am = new applicationModel();
         am.activityId(activityId);
-        ko.applyBindings(am);
+        ko.applyBindings(am, document.getElementById("new-application-page"));        
         showContent();
         addPostedDate();
     });
 
+    
 
-    
-    
-    $(".booking-cart-title").click(function(){
-        if($(".booking-cart-icon").hasClass("fa-window-minimize")) {
-            $(".booking-cart-icon").removeClass("far fa-window-minimize");
-            $(".booking-cart-icon").addClass("fas fa-plus");
-        } else if($(".booking-cart-icon").hasClass("fas fa-plus")) {
-            $(".booking-cart-icon").removeClass("fas fa-plus");
-            $(".booking-cart-icon").addClass("far fa-window-minimize");
-        }
-        $(".booking-cart-items").toggle();
-    });
-    
-    
     /*$(document).on('click', '#goToConfirmPage', function () {
         
         //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.confirm&building_id="+urlParams['building_id'];
@@ -187,31 +188,40 @@ $(document).ready(function ()
         
     });*/
     
-    $('.dropdown-menu').on('click', function () {
+    $('.resourceDropdown').on('click', function () {
         $(this).parent().toggleClass('show');
     });
 });
 
 function addPostedDate() {
-    if(urlParams['start'].length > 0 && urlParams['end'].length > 0 &&
-    urlParams['start'] != "undefined" && urlParams['end'] != "undefined") {
-        am.date.push({from_: new Date(parseInt(urlParams['start'])), to_: new Date(parseInt(urlParams['end'])), repeat: false, formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });
+    if(typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
+        if(urlParams['start'].length > 0 && urlParams['end'].length > 0) {
+
+            am.date.push({from_: new Date(parseInt(urlParams['start'])), to_: new Date(parseInt(urlParams['end'])), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });            
+        }
     }
 }
-function AddApplication() {
-    var requestUrl = phpGWLink('bookingfrontend/', { menuaction: "bookingfrontend.uiapplication.add", building_id: 10 }, true);
+function AddApplication(GoToPartialTwo) {
+    var requestUrl = phpGWLink('bookingfrontend/', { menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'] }, true);
     var parameter = {        
                 resources: am.selectedResources(),                
                 from_: am.from_(),
-                to_: am.to_(),
-                accepted_documents: am.termAcceptedDocs(),
+                to_: am.to_(),                
                 description: am.aboutArrangement(),                
-                activity_id: am.activityId()                
+                activity_id: am.activityId(),
+                formstage: "partial1",
+                equipment: "",
+                file: am.attachment(),
+                //building_name: "test",
+                building_id: urlParams['building_id']
     };
     for(var i=0; i<am.agegroupList().length; i++) {
         parameter['male[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountMale();
         parameter['female[' + am.agegroupList()[i].id + ']'] = am.agegroupList()[i].inputCountFemale();
-    }
+    } console.log(am.attachment());
+    parameter['audience[]'] = am.audienceSelectedValue();
+    parameter['accepted_documents[]'] = am.termAcceptedDocs();
+    parameter['files[]'] = am.attachment();
 
     /*
     contact_phone: 22222222,
@@ -256,27 +266,21 @@ function AddApplication() {
             
             $.post(requestUrl, parameter)
             .done(function( data ) {
-                console.log(data);
+                if(typeof data.msgbox_data !== "undefined") {
+                    for(var i=0; i<data.msgbox_data.length; i++) {
+                        am.msgboxes.push({msg: data.msgbox_data[i].msgbox_text});
+                    }
+                } else {
+                    if(GoToPartialTwo) {
+                        window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add_contact", building_id: urlParams['building_id'] }, false);
+                    } else {
+                        window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['building_id'] }, false);                                            
+                    }
+                }
+                            
             });
 }
 
-function formatDate(date, end) {
-  
-  var year = date.getFullYear();
-
-  return ("0" + date.getDate()).slice(-2) + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + year + " " + 
-          ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2) + 
-          " - " +
-         ("0" + (end.getHours())).slice(-2)  + ":" + ("0" + (end.getMinutes())).slice(-2);
-}
-
-function formatSingleDate(date) {
-  
-  var year = date.getFullYear();
-
-  return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
-          ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2);
-}
 
 
 YUI({ lang: 'nb-no' }).use(

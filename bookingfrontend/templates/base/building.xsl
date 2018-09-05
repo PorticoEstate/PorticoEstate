@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 
-	<div class="container my-container-top-fix wrapper">
+	<div class="container my-container-top-fix wrapper" id="building-page-content">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
 				<a>

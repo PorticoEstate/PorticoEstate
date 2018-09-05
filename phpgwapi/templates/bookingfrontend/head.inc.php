@@ -45,6 +45,7 @@ JS;
 
 
 	$stylesheets = array();
+	
 
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";

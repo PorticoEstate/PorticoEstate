@@ -34,6 +34,55 @@ function showContent() {
     $('.showMe').css("display", "");
 }
 
+function ApplicationsCartModel()  {
+       var self = this;
+       self.applicationCartItems = ko.observableArray([]);
+       self.deleteItem = function(e) {
+           console.log(e);
+           requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.delete_partial"}, true);
+           e.id
+           /*$.post( requestUrl, function( data ) {
+               console.log(data);
+               console.log(requestUrl);
+           }).done(function () {
+               GetBookingCartItems(self);
+           });*/
+           $.post( requestUrl, { id: e.id } ).done(function(response) {
+            GetApplicationsCartItems(self);
+            console.log(response);
+            });
+           
+       };
+   }
+  
+   function GetApplicationsCartItems(bc) {
+       bc.applicationCartItems.removeAll();
+       
+       getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.get_partials", phpgw_return_as: "json"}, true);
+           $.getJSON(getJsonURL, function(result){
+               for(var i=0; i<result.length; i++) {                
+                   var dates = [];
+                  var resources = [];
+                  var exist = ko.utils.arrayFirst(bc.applicationCartItems(), function(item) {
+                       return item.id == result[i].id;
+                  });
+                  console.log(result[i].id); 
+                  if(!exist) {
+                       for(var k =0; k<result[i].dates.length; k++) {
+                           dates.push({date: formatSingleDateWithoutHours(new Date(result[i].dates[k].from_)), 
+                           from_: result[i].dates[k].from_, to_: result[i].dates[k].to_ ,
+                           periode: formatPeriodeHours(result[i].dates[k].from_, result[i].dates[k].to_)});
+                       }
+                       for(var k =0; k<result[i].resources.length; k++) {
+                           resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id });
+                       }
+                    bc.applicationCartItems.push({id: result[i].id, building_name: result[i].building_name, dates: dates, resources: ko.observableArray(resources)});
+                    }                
+                }
+            });
+    }
+    
+
 function CreateUrlParams(params) {
     var allParams = params.split("&");
     for(var i=0; i<allParams.length; i++) {
@@ -64,6 +113,10 @@ function createToolTipTitle(resource, from_, to_, organization_name, description
 
 $(document).ready(function ()
 {
+    bc = new ApplicationsCartModel();
+    ko.applyBindings(bc, document.getElementById("applications-cart-content"));
+    GetApplicationsCartItems(bc);
+
     $(document).on('click', '.scheduler-base-icon-next', function () {
         if($(this).parents("#myScheduler").length == 1)  {
             date.setDate(date.getDate() + 7);
@@ -137,6 +190,17 @@ $(document).ready(function ()
     $(document).on('click', '#newApplicationBtn', function () {
         ForwardToNewApplication();
     });
+
+    $(".booking-cart-title").click(function(){
+                if($(".booking-cart-icon").hasClass("fa-window-minimize")) {
+                    $(".booking-cart-icon").removeClass("far fa-window-minimize");
+                    $(".booking-cart-icon").addClass("fas fa-plus");
+                } else if($(".booking-cart-icon").hasClass("fas fa-plus")) {
+                    $(".booking-cart-icon").removeClass("fas fa-plus");
+                    $(".booking-cart-icon").addClass("far fa-window-minimize");
+                }
+                $(".booking-cart-items").toggle();
+            });
     
 });
 
@@ -146,3 +210,33 @@ function ForwardToNewApplication(start, end) {
 
     window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'], start: (typeof start === 'undefined') ? "" : start, end: (typeof end === 'undefined') ? "" : end}, false);
 }
+
+function formatDate(date, end) {
+      
+        var year = date.getFullYear();
+      
+        return ("0" + date.getDate()).slice(-2) + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + year + " " + 
+                ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2) + 
+                " - " +
+               ("0" + (end.getHours())).slice(-2)  + ":" + ("0" + (end.getMinutes())).slice(-2);
+      }
+      
+      function formatSingleDateWithoutHours(date) {
+      
+          return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();;
+      }
+      
+      function formatPeriodeHours(from_, to_) {
+          from_ = new Date(from_);
+          to_ = new Date(to_);
+          return ("0" + (from_.getHours())).slice(-2) + ":" + ("0" + (from_.getMinutes())).slice(-2) + 
+          " - " + ("0" + (to_.getHours())).slice(-2) + ":" + ("0" + (to_.getMinutes())).slice(-2);
+      }
+      
+      function formatSingleDate(date) {
+        
+        var year = date.getFullYear();
+      
+        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
+                ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2);
+      }

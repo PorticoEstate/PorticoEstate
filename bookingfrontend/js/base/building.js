@@ -5,11 +5,13 @@ var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
 $(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
-ko.applyBindings({
-    bookableResource: (bookableResources),
-    items: events
-});
-
+function BuildingModel() {
+    var self = this;
+    self.bookableResource = bookableResources;
+    self.items = events;
+}
+    
+ko.applyBindings(new BuildingModel, document.getElementById("building-page-content"));
 $(document).ready(function ()
 {
     //urlParams = new URLSearchParams(window.location.search); //not ie supported
@@ -281,7 +283,7 @@ function PopulateBuildingData(baseURL, urlParams) {
         $("#item-street").text(result.building.street);
         $("#item-zip-city").text(result.building.zip_code + " " + result.building.city);
         $("#item-description").html(result.building.description);
-        $("#opening_hours").text(result.building.opening_hours);
+        $("#opening_hours").html(result.building.opening_hours);
         $("#contact_info").html(result.building.homepage + "</br>" + result.building.email + "</br>" + result.building.phone);        
     });
     

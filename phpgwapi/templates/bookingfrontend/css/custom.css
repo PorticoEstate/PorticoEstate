@@ -770,6 +770,12 @@ NEW APPLICATION PAGE STYLE
     width: 90px !important;
 }
 
+.new-application-page .btn,
+.new-application-page .btn:hover, .new-application-page .dropdown .btn:active, .new-application-page .dropdown .btn:focus {
+    border: 1px #4d4c4c solid;
+    outline: none !important;
+}
+
 .seperateByComma {
    color: green;
 }
@@ -801,13 +807,18 @@ NEW APPLICATION PAGE STYLE
 }
 
 .booking-cart {
+    max-height: 100%;
+    overflow-y: scroll;
+    z-index: 999999;
     border: 1px solid #e2e2e2;
     position: fixed;
     bottom: 0px;
     right: 10px;
-    min-width: 27%;
-    background-color: #fff;   
+    width: 27%;
+    min-width: 480px;
+    background-color: #fff;
 }
+
 .booking-cart-title {
     padding: 0.5em;
     background-color: #D3E8E9;
@@ -825,20 +836,52 @@ NEW APPLICATION PAGE STYLE
     border-bottom: 1px solid #e2e2e2;
 }
 
+.booking-cart-item .fa-trash-alt:hover,
+#new-application-partialtwo  .fa-trash-alt:hover {
+    color: #008DD1 !important;
+    cursor: pointer !important;
+}
 
+.new-application-page {
+    min-height: 890px;
+}
+
+#new-application-partialtwo .applications {
+    background-color: #fff;
+}
 
 /* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 575px) {
-    
+@media (max-width: 575px) {  
     
     .booking-cart {
         right: 0;
-        max-width: 575px;
-        min-width: 27% !important;
+        min-width: 95% !important;
     }
 
     .booking-cart-title i,
     .booking-cart-title span:nth-child(2) {
         margin-right: 10px;
     }
+}
+
+@media (max-width: 390px) {  
+    
+    .booking-cart {
+        right: 0;
+        min-width: 100% !important;
+    }
+
+    .booking-cart-title i,
+    .booking-cart-title span:nth-child(2) {
+        margin-right: 10px;
+    }
+}
+
+@media (min-width: 1850px) { 
+
+    .booking-cart {
+        margin-bottom: -10px !important;
+        margin-right: -23px !important;
+    }
+    
 }
