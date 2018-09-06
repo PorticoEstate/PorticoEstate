@@ -541,11 +541,27 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
+			$array_resource = array(&$resource);
+			$this->bo->add_activity_facility_data($array_resource);
 
 			$_filter_building['id'] = array_merge(array(-1), $resource['buildings']);
 
 			$bui_result = $this->sobuilding->read(array("sort" => "name", "dir" => "asc",
 				"filters" => $_filter_building));
+
+			// Create text strings for the activity and facility lists
+			$activitynames = array();
+			foreach ($resource['activities_list'] as $activity)
+			{
+				$activitynames[] = $activity['name'];
+			}
+			$resource['activities_names'] = implode(', ', $activitynames);
+			$facilitynames = array();
+			foreach ($resource['facilities_list'] as $facility)
+			{
+				$facilitynames[] = $facility['name'];
+			}
+			$resource['facilities_names'] = implode(', ', $facilitynames);
 
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
 					'id' => $resource['id']));
@@ -561,46 +577,6 @@
 					'id' => $resource['id']));
 			$resource['edit_facilities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_facilities',
 					'id' => $resource['id']));
-
-			// Add a list of activities. Only active activities are included, and only activities belonging to the top
-			// level activity defined for the resource
-			$activitylist = $this->activity_bo->fetch_activities_hierarchy();
-			$childactivities = array();
-			if (array_key_exists($resource['activity_id'], $activitylist))
-			{
-				$childactivities = $activitylist[$resource['activity_id']]['children'];
-			}
-			$resactivities = array();
-			foreach ($resource['activities'] as $activity_id)
-			{
-				if (array_key_exists($activity_id, $childactivities))
-				{
-					$childactivity = $childactivities[$activity_id];
-					if ($childactivity['active'])
-					{
-						$resactivities[] = $childactivity['name'];
-					}
-				}
-			}
-			usort($resactivities, function ($a,$b) { return strcmp(strtolower($a),strtolower($b)); });
-			$resource['activities_list'] = implode(', ', $resactivities);
-
-			// Add a list of facilities. Only active facilities are included
-			$facilitylist = $this->facility_bo->get_facilities();
-			$resfacilities = array();
-			foreach ($resource['facilities'] as $facility_id)
-			{
-				if (array_key_exists($facility_id, $facilitylist))
-				{
-					$facility = $facilitylist[$facility_id];
-					if ($facility['active'])
-					{
-						$resfacilities[] = $facility['name'];
-					}
-				}
-			}
-			usort($resfacilities, function ($a,$b) { return strcmp(strtolower($a),strtolower($b)); });
-			$resource['facilities_list'] = implode(', ', $resfacilities);
 
 			$tabs = array();
 			$tabs['generic'] = array(

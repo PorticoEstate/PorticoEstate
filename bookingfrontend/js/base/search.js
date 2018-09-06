@@ -274,11 +274,11 @@ function DoFilterSearch() {
                 for(var k=0; k<result.buildings[i].resources.length; k++) {
                     var facilities = [];
                     var activities = [];
-                    for(var f=0; f<result.buildings[i].resources[k].facilities.length; f++) {
-                        facilities.push({name: result.buildings[i].resources[k].facilities[f].name});
+                    for(var f=0; f<result.buildings[i].resources[k].facilities_list.length; f++) {
+                        facilities.push({name: result.buildings[i].resources[k].facilities_list[f].name});
                     }
-                    for(var f=0; f<result.buildings[i].resources[k].activities.length; f++) {
-                        activities.push({name: result.buildings[i].resources[k].activities[f].name});
+                    for(var f=0; f<result.buildings[i].resources[k].activities_list.length; f++) {
+                        activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
                     }                    
                     resources.push({name: result.buildings[i].resources[k].name, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities });
                 }

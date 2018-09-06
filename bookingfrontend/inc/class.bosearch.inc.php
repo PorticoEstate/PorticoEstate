@@ -12,6 +12,7 @@
 			$this->soresource = CreateObject('booking.soresource');
 			$this->soevent = CreateObject('booking.soevent');
 			$this->borescategory = CreateObject('booking.borescategory');
+			$this->boresource = CreateObject('booking.boresource');
 			$this->boactivity = CreateObject('booking.boactivity');
 			$this->bofacility = CreateObject('booking.bofacility');
 		}
@@ -259,14 +260,10 @@
 				'facilities'  => array(),
 				'partoftowns' => array(),
 				);
-			$fields_resource = array('id','name');
+			$fields_resource = array('id','name','activities_list','facilities_list');
 			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
 
-			// Get a list of all activities, grouped on top level activities, as well as all facilities
-			$activitylist = $this->boactivity->fetch_activities_hierarchy();
-			$facilitylist = $this->bofacility->get_facilities();
-			// Also get a list of all part_of_town that are used for buildings, creating a list keyed on the
-			// part_of_town id
+			// Get a list of all part_of_town that are used for buildings, creating a list keyed on the part_of_town id
 			$partoftownlist = array();
 			$potlist = execMethod('property.solocation.get_booking_part_of_towns');
 			foreach ($potlist as $pot)
@@ -328,18 +325,17 @@
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
 			$resource_filters['rescategory_id'] = $params['rescategory_id'];
 			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
+			$this->boresource->add_activity_facility_data($resources['results']);
 
 			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
-			// activities and facilities
+			// check the activities and facilities
 			$building_resources = array();
 			$all_activities = array();
 			$all_facilities = array();
 			foreach ($resources['results'] as &$resource)
 			{
+				// Keep only the wanted fields
 				$building_ids = $resource['buildings'];
-				$toplevelactivity_id = $resource['activity_id'];
-				$activity_ids = $resource['activities'];
-				$facility_ids = $resource['facilities'];
 				foreach ($resource as $k => $v)
 				{
 					if (!in_array($k,$fields_resource))
@@ -347,62 +343,33 @@
 						unset($resource[$k]);
 					}
 				}
-				// Add a list of activities with id and name. Only active activities are included, and only activities
-				// belonging to the top level activity defined for the resource
-				$childactivities = array();
-				if (array_key_exists($toplevelactivity_id, $activitylist))
-				{
-					$childactivities = $activitylist[$toplevelactivity_id]['children'];
-				}
-				$resource['activities'] = array();
+				// Handle the activities
 				$include_on_activity = False;
-				foreach ($activity_ids as $activity_id)
+				foreach ($resource['activities_list'] as $activity)
 				{
-					if (array_key_exists($activity_id, $childactivities))
+					if (!array_key_exists($activity['id'], $all_activities))
 					{
-						$childactivity = $childactivities[$activity_id];
-						if ($childactivity['active'])
-						{
-							// Include the activity for the resource
-							$resource['activities'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
-							if (!array_key_exists($childactivity['id'], $all_activities))
-							{
-								// Include the activity for the all activities list
-								$all_activities[$childactivity['id']] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
-							}
-							// Check filter criteria
-							if (isset($params['activity_id']) && $activity_id == $params['activity_id'])
-							{
-								$include_on_activity = True;
-							}
-						}
+						$all_activities[$activity['id']] = array('id' => $activity['id'], 'name' => $activity['name']);
+					}
+					// Check filter criteria
+					if (isset($params['activity_id']) && $activity['id'] == $params['activity_id'])
+					{
+						$include_on_activity = True;
 					}
 				}
-				usort($resource['activities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-				// Add a list of facilities with id and name. Only active facilities are included
-				$resource['facilities'] = array();
+				// Handle the facilities
 				$include_on_facility = False;
 				$facilities_matched = array();
-				foreach ($facility_ids as $facility_id)
+				foreach ($resource['facilities_list'] as $facility)
 				{
-					if (array_key_exists($facility_id,$facilitylist))
+					if (!array_key_exists($facility['id'], $all_facilities))
 					{
-						$facility = $facilitylist[$facility_id];
-						if ($facility['active'])
-						{
-							// Include the facility for the resource
-							$resource['facilities'][] = array('id' => $facility['id'], 'name' => $facility['name']);
-							if (!array_key_exists($facility['id'], $all_facilities))
-							{
-								// Include the facility for the all facilities list
-								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
-							}
-							// Check filter criteria
-							if (isset($params['facility_id']) && in_array($facility_id, $params['facility_id']))
-							{
-								$facilities_matched[] = $facility_id;
-							}
-						}
+						$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
+					}
+					// Check filter criteria
+					if (isset($params['facility_id']) && in_array($facility['id'], $params['facility_id']))
+					{
+						$facilities_matched[] = $facility['id'];
 					}
 				}
 				// If applicable, check if all facility criterias are met
@@ -414,7 +381,6 @@
 						$include_on_facility = True;
 					}
 				}
-				usort($resource['facilities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 				// Add the resource to the building, unless given filter criterias are not met
 				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility)) {
 					$resource['ignore'] = True;

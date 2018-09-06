@@ -90,7 +90,7 @@
 						<xsl:value-of select="php:function('lang', 'Activities')"/>
 					</label>
 					<span>
-						<xsl:value-of select="resource/activities_list"/>
+						<xsl:value-of select="resource/activities_names"/>
 					</span>
 				</div>
 				<xsl:if test="resource/permission/write">
@@ -111,7 +111,7 @@
 						<xsl:value-of select="php:function('lang', 'Facilities')"/>
 					</label>
 					<span>
-						<xsl:value-of select="resource/facilities_list"/>
+						<xsl:value-of select="resource/facilities_names"/>
 					</span>
 				</div>
 				<xsl:if test="resource/permission/write">

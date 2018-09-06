@@ -12,6 +12,8 @@
 			parent::__construct();
 			$this->so = CreateObject('booking.soresource');
 			$this->building_bo = CreateObject('booking.bobuilding');
+			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->facility_bo = CreateObject('booking.bofacility');
 		}
 
 		public function allowed_types()
@@ -119,6 +121,7 @@
 		public function populate_grid_data( $menuaction )
 		{
 			$resources = $this->read();
+			$this->add_activity_facility_data($resources['results']);
 
 			$building_ids = array();
 			foreach ($resources['results'] as &$resource)
@@ -166,6 +169,57 @@
 //            echo '<pre>'; print_r($rpta); echo '</pre>'; exit('saul');
 			return $data;
 		}
+
+
+		function add_activity_facility_data(&$resources)
+		{
+			// Get a list of all activities, grouped on top level activities, as well as all facilities
+			$activitylist = $this->activity_bo->fetch_activities_hierarchy();
+			$facilitylist = $this->facility_bo->get_facilities();
+
+			foreach ($resources as &$resource)
+			{
+				// Add a list of activities with id and name. Only active activities are included, and only activities
+				// belonging to the top level activity defined for the resource
+				$toplevelactivity_id = $resource['activity_id'];
+				$childactivities = array();
+				if (array_key_exists($toplevelactivity_id, $activitylist))
+				{
+					$childactivities = $activitylist[$toplevelactivity_id]['children'];
+				}
+				$activity_ids = $resource['activities'];
+				$resource['activities_list'] = array();
+				foreach ($activity_ids as $activity_id)
+				{
+					if (array_key_exists($activity_id, $childactivities))
+					{
+						$childactivity = $childactivities[$activity_id];
+						if ($childactivity['active'])
+						{
+							$resource['activities_list'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
+						}
+					}
+				}
+				usort($resource['activities_list'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+				// Add a list of facilities with id and name. Only active facilities are included
+				$facility_ids = $resource['facilities'];
+				$resource['facilities_list'] = array();
+				foreach ($facility_ids as $facility_id)
+				{
+					if (array_key_exists($facility_id,$facilitylist))
+					{
+						$facility = $facilitylist[$facility_id];
+						if ($facility['active'])
+						{
+							// Include the facility for the resource
+							$resource['facilities_list'][] = array('id' => $facility['id'], 'name' => $facility['name']);
+						}
+					}
+				}
+				usort($resource['facilities_list'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			}
+		}
+
 
 		public function get_schedule( $id, $buildingmodule, $resourcemodule, $search = null )
 		{

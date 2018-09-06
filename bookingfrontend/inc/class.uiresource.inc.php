@@ -50,6 +50,8 @@
 		public function show()
 		{
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+			$array_resource = array(&$resource);
+			$this->bo->add_activity_facility_data($array_resource);
 			$pathway = array();
 			$lang_home = lang('home');
 			foreach ($resource['buildings'] as $building_id)
