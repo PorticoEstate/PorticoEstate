@@ -24,8 +24,11 @@ function applicationModel() {
     self.orgnr = ko.observable().extend({required: {
             onlyIf: function () {
                 return self.typeApplicationRadio() === "organization_number";
-            }
-        }
+            }            
+        },
+        minLength: 9,
+        maxLength: 9,
+        number: true
     });
     self.ssn = ko.observable().extend({required: {
             onlyIf: function () {
@@ -33,7 +36,11 @@ function applicationModel() {
             }
         }, fodselNR: true});
     self.contactName = ko.observable().extend({required: true});
+    self.responsible_street = ko.observable();
+    self.responsible_city = ko.observable();
+    self.responsible_zip_code = ko.observable();
     self.contactMail = ko.observable().extend({required: true, email: true});
+    self.contactMail2 = ko.observable().extend({required: true, email: true});
     self.contactPhone = ko.observable().extend({ phoneNO: true });
     
     self.typeApplicationValidationMessage = ko.observable(false);
@@ -61,11 +68,11 @@ function ConfirmApplication() {
         customer_ssn: am.ssn(),
         customer_organization_number: am.orgnr(),
         contact_name: am.contactName(),
-        responsible_street: "oslo",
-        responsible_zip_code: 0050,
-        responsible_city: "oslo",
+        responsible_street: am.responsible_street(),
+        responsible_zip_code: am.responsible_zip_code(),
+        responsible_city: am.responsible_city(),
         contact_email: am.contactMail(),
-        contact_email2: am.contactMail()
+        contact_email2: am.contactMail2()
     };
     $.post(requestUrl, parameter)
             .done(function( data ) {

@@ -40,17 +40,12 @@ function ApplicationsCartModel()  {
        self.deleteItem = function(e) {
            console.log(e);
            requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.delete_partial"}, true);
-           e.id
-           /*$.post( requestUrl, function( data ) {
-               console.log(data);
-               console.log(requestUrl);
-           }).done(function () {
-               GetBookingCartItems(self);
-           });*/
-           $.post( requestUrl, { id: e.id } ).done(function(response) {
-            GetApplicationsCartItems(self);
-            console.log(response);
+           var answer = confirm('Er du sikker på slette søknad fra handlekurv?');
+           if (answer) {
+            $.post( requestUrl, { id: e.id } ).done(function(response) {
+                GetApplicationsCartItems(self);
             });
+           }
            
        };
    }

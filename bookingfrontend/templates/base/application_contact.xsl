@@ -60,10 +60,30 @@
                     <label>NAVN</label>
                     <input type="text" class="form-control" data-bind="textInput: contactName"/>  
                 </div>
+
+                <div class="form-group">
+                    <label>GATE</label>
+                    <input type="text" class="form-control" data-bind="textInput: responsible_street"/>  
+                </div>
+
+                <div class="form-group">
+                    <label>STEDSNAVN</label>
+                    <input type="text" class="form-control" data-bind="textInput: responsible_city"/>  
+                </div>
+
+                <div class="form-group">
+                    <label>POSTNUMMER</label>
+                    <input type="text" class="form-control" data-bind="textInput: responsible_zip_code"/>  
+                </div>
                 
                 <div class="form-group">
                     <label>E-POST</label>
                     <input type="text" class="form-control" data-bind="textInput: contactMail"/>  
+                </div>
+
+                <div class="form-group">
+                    <label>BEKREFT E-POST</label>
+                    <input type="text" class="form-control" data-bind="textInput: contactMail2"/>  
                 </div>
                 
                 <div class="form-group">
