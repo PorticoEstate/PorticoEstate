@@ -82,6 +82,7 @@ function ConfirmApplication() {
                     }
                 } else {
                     am.applicationSuccess(true);
+                    GetApplicationsCartItems(bc);
                     $('html, body').animate({
                         scrollTop: 0
                     }, 1000);
