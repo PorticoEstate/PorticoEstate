@@ -922,7 +922,7 @@
 					{
 						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
 						// Redirect to the front page
-						$this->redirect();
+						$this->redirect(array());
 					}
 					else
 					{
@@ -960,7 +960,7 @@
 							lang("Please check your Spam Filter if you are missing mail."
 						));
 						// Redirect to the front page
-						$this->redirect();
+						$this->redirect(array());
 					}
 				}
 			}
