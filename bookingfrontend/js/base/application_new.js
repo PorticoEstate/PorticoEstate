@@ -1,4 +1,5 @@
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+$(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
 var urlParams = [];
 CreateUrlParams(window.location.search);
 
