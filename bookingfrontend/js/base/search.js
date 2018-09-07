@@ -116,6 +116,34 @@ $(document).ready(function ()
             $(this).trigger("enterKey");
         }
     });
+    // Event show all
+    // Event hide all, except index 0
+    var showItems = true;
+    $(document).on('click', '.filterSearchToggle', function () {
+        console.log();
+        var items = (($(this).prev('div').find(".custom-subcard")));
+        $(this).prev('div').find(".custom-subcard").each(function(e) {
+            if(showItems){
+                items[e].style.display = ""; 
+            }
+            else{
+                if(e != 1 && e!=0){
+                    items[e].style.display = "none";
+                }
+            }
+        });
+
+        // If we have triggered show all items. Set function to hide items except first two index for next onclick action.
+        if(showItems){
+            showItems = false;
+            $(this).html('<i class="fas fa-angle-up">')
+        } 
+        // If we have triggered hide items. Set function to show all items for next onclick action.
+        else{
+            showItems = true;
+            $(this).html('<i class="fas fa-angle-down">');
+        }
+    });
     
     GetFilterBoxData();
 });
@@ -210,14 +238,16 @@ function doSearch() {
 				} else if(response.results.results[i].type == "organization") {
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiorganization.show",id:response.results.results[i].id}, false);
                 }
-                results.push({name: response.results.results[i].name, 
+                results.push({name: response.results.results[i].name,
+                    street: typeof response.results.results[i].street === "undefined" ? "" : response.results.results[i].street,
+                    postcode: (typeof response.results.results[i].zip_code === "undefined" ? "" : response.results.results[i].zip_code) + " " +
+                    typeof response.results.results[i].city === "undefined" ? "" : response.results.results[i].city,
                     activity_name: response.results.results[i].activity_name,
                     itemLink: url,
-                    resultType: (response.results.results[i].type).charAt(0).toUpperCase(),
+                    resultType: GetTypeName(response.results.results[i].type).toUpperCase(),
                     type: response.results.results[i].type,
                     tagItems: []
                 });
-                
             }
             $('html, body').animate({
                 scrollTop: $("#searchResult").offset().top - 100
@@ -279,14 +309,14 @@ function DoFilterSearch() {
                     }
                     for(var f=0; f<result.buildings[i].resources[k].activities_list.length; f++) {
                         activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
-                    }                    
-                    resources.push({name: result.buildings[i].resources[k].name, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities });
+                    }                  
+                    resources.push({name: result.buildings[i].resources[k].name, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false });
                 }
-                items.push({resultType: "B", 
+                items.push({resultType: GetTypeName("building").toUpperCase(), 
                 name: result.buildings[i].name, 
                 street: result.buildings[i].street,
                 postcode: result.buildings[i].zip_code + " " + result.buildings[i].city,
-                filterSearchItemsResources: resources,
+                filterSearchItemsResources: ko.observableArray(resources),
                 itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:result.buildings[i].id}, false) });
             }
             searchViewModel.filterSearchItems(items);
@@ -295,3 +325,12 @@ function DoFilterSearch() {
         });
 }
 
+function GetTypeName(type) {
+    if(type.toLowerCase() == "building") {
+        return "anlegg";
+    } else if(type.toLowerCase() == "resource") {
+        return "lokale";
+    } else if(type.toLowerCase() == "organization") {
+        return "org";
+    }
+}

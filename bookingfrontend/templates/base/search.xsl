@@ -76,7 +76,7 @@
             <h1 class="text-center result-title">Dette skjer i Stavanger</h1>
 
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 card-positioncorrect">
                     <a href="/PorticoEstate/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show" class="custom-card-link">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
@@ -101,7 +101,7 @@
                     </a>
                 </div>
                 
-                <div class="col-lg-6">
+                <div class="col-lg-6 card-positioncorrect">
                     <a href="/PorticoEstate/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show" class="custom-card-link">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
@@ -134,7 +134,7 @@
             <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: items().length"></span>)</h1>
            
             <div class="row" id="result-items" data-bind="foreach: items">
-                <div class="col-lg-6">
+                <div class="col-lg-6 card-positioncorrect">
                     <a class="custom-card-link-href" data-bind="">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
@@ -142,7 +142,7 @@
                                 
                                 <svg width="90" height="90">
                                     <circle cx="45" cy="45" r="37" fill="#008DD1" />
-                                    <text x="50%" y="50%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
+                                    <text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
                                         
                                     </text>
                                     
@@ -150,8 +150,11 @@
                                                                
                             </div>
                             <div class="col-8 desc">
-                                <span class="font-weight-bold" data-bind="text: name"></span>
-                                <h4 class="font-weight-bold" data-bind="text: activity_name"></h4>
+                                <div class="col-8 desc">
+                                    <h4 class="font-weight-bold" data-bind="text: name"></h4>
+                                    <span data-bind="text: street"></span>
+                                    <span class="d-block" data-bind="text: postcode"></span>
+                                </div>
                                 <div data-bind="foreach: tagItems">
                                     <span class="badge badge-pill badge-default text-uppercase" data-bind="text: $rawData, click: selectThisTag" ></span>
                                 </div>
@@ -170,7 +173,7 @@
             <div data-bind="if: filterSearchItems().length > 0">
             
             <div class="row" data-bind="foreach: filterSearchItems">
-                <div class="col-lg-6">
+                <div class="col-lg-6 card-positioncorrect">
                     <a class="custom-card-link-href" data-bind="">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
@@ -178,7 +181,7 @@
                                 
                                 <svg width="90" height="90">
                                     <circle cx="45" cy="45" r="37" fill="#008DD1" />
-                                    <text x="50%" y="50%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
+                                    <text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
                                         
                                     </text>
                                     
@@ -195,8 +198,9 @@
                         
                     </a>
                     
-                    <div class="row" style="width: 100%" data-bind="foreach: filterSearchItemsResources">
-                        <div class="custom-subcard">
+                    <div class="row custom-all-subcard" style="width: 100%" data-bind="foreach: filterSearchItemsResources">
+                    
+                        <div class="custom-subcard" data-bind="visible: $index() == 0 || $index() == 1">
                                     <div class="row">
                                         <div class="col-6">
                                             <h5 class="font-weight-bold" data-bind="text: name"></h5>
@@ -213,8 +217,9 @@
                                     <span class="tagTitle" data-bind="if: $index() == 0">Aktiviteter: </span>
                                         <span class="mr-2 textTagsItems" data-bind="text: name" ></span>
                                     </div>
-                                </div>
+                        </div>                                
                     </div>
+                    <div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 1"><i class="fas fa-angle-down"></i> Se <span data-bind="text: (filterSearchItemsResources().length - 2) "></span> flere</div>
 
                 </div>
             </div>

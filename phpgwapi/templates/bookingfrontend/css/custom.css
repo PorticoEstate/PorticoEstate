@@ -299,11 +299,28 @@ SEARCH PAGE STYLE
 
 .pageResults {
     margin-bottom: 5em;
+    min-height: 800px;
 }
 
 .result-title {
     margin-top: 2em;
     margin-bottom: 2em;
+}
+
+.filterSearchToggle {
+    width: 100%;
+    margin-left: -14.9px;
+    margin-bottom: 10px;
+    background-color: #D3E8E9;
+    border: 1px solid #dedede;
+    outline: none;
+    margin-top: -10px !important;
+    text-align: center;
+    cursor: pointer;
+}
+
+.filterSearchToggle:active, .filterSearchToggle:focus {
+    outline: none;
 }
 
 .custom-card {
@@ -336,13 +353,18 @@ SEARCH PAGE STYLE
     border-bottom: 0px;
     width: 100%;
 }
+.custom-subcard:last-child {
+    border-bottom: 1px solid #dedede;
+}
 
 #welcomeResult .custom-card .desc span {
     font-size: 12px;
     display: block;
     font-weight: bold;
 }
-
+.card-positioncorrect {
+    padding-left: 40px;
+}
 .custom-card-link:hover {
     text-decoration: none;    
 }

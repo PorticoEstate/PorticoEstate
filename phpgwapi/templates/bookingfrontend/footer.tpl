@@ -2,7 +2,7 @@
                 <div class="booking-cart-title">
                     <span class="font-weight-bold">Søknader </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
                     
-                    <i class="booking-cart-icon fas fa-plus float-right"></i>
+                    <i class="booking-cart-icon fas fa-plus float-right mr-2"></i>
                 </div>
                 <div class="booking-cart-items" data-bind="foreach: applicationCartItems" style="display: none;">
                     <div class="booking-cart-item">
