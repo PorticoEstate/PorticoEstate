@@ -986,7 +986,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$partial2['cancel_link'] = self::link();
+			$partial2['cancel_link'] = self::link(array());
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
 
 			self::render_template_xsl('application_contact', array('application' => $partial2, 'config' => $application_text));
