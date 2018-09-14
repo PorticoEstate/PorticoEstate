@@ -43,7 +43,15 @@
 				return true;
 			}
 
-			$org_unit = (int)$values_attribute['1']['value'];
+			foreach ($values_attribute as $key => $valueset)
+			{
+				if($valueset['name'] == 'arbeidssted')
+				{
+					$org_unit = (int)$valueset['value'];
+					break;
+				}
+			}
+
 			$sql = "SELECT arbeidssted FROM fm_org_unit WHERE id = {$org_unit}";
 			$this->db->query($sql);
 			$this->db->next_record();
