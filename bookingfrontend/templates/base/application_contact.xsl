@@ -118,7 +118,8 @@
     </div>
     <script type="text/javascript">
         var script = document.createElement("script"); 
-        script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_contact.js";
+        //script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_contact.js";
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_contact.js";
 
         document.head.appendChild(script);
     </script>
