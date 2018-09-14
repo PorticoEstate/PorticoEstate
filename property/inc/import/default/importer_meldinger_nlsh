@@ -24,6 +24,14 @@
 		public function add( $data )
 		{
 			$location_code  = trim($data[0]);
+
+			/**
+			 * In case there are empty rows at the end.
+			 */
+			if(empty($location_code))
+			{
+				return true;
+			}
 			$message_cat_id  = (int)$data[1];
 			$priority  = (int)$data[2];
 			$message_title  = phpgw::clean_value($data[3]);
