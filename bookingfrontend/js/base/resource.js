@@ -332,6 +332,7 @@ function GenerateCalendarForEvents(date) {
 
                 $("[data-toggle='tooltip']").tooltip();
                 $(".overlay").hide();
+				$(".scheduler-view-day-current-time").hide();
                 
                 $('.popover-title').remove();
 
