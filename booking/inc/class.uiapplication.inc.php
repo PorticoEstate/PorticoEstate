@@ -866,11 +866,10 @@
 				'file'), 'application_form');
 
 			self::adddatetimepicker();
-			//printf("<!-- application = %s --> \n", print_r($application, true));
-			//printf("<!-- test -->");
+
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => $application_text, 'test' => print_r($application, true)));
+				'config' => $application_text));
 		}
 
 
