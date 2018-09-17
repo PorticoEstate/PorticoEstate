@@ -819,6 +819,10 @@ NEW APPLICATION PAGE STYLE
     color: #FFA500;
 }
 
+.new-application-page .error {
+    color: #FFA500;
+}
+
 .new-application-page .fa-minus-circle {
     color: #595959;
 }

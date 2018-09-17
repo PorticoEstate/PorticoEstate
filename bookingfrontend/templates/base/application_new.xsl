@@ -4,7 +4,7 @@
                         
 	<div class="container new-application-page" id="new-application-page">
                
-            <form action="" data-bind='submit: addApplication' method="POST" id='application_form' name="form">
+            <form action="" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
             <div class="row">
                 
                 <div class="col-md-8 offset-md-2">
@@ -13,13 +13,17 @@
                     
                     <p><xsl:value-of select="config/application_new_application"/></p>
                     <hr class="mt-5 mb-5"></hr>
+
+                    <div class="mb-4"><xsl:call-template name="msgbox"/></div>
                     
-                    <h5 class="font-weight-bold mb-4">Anlegg</h5>
-                    
+                    <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId" />
+                    <input name="formstage" value="partial1" hidden="hidden"/>
+                    <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'building')" /></h5>                  
+                                        
                     <div class="form-group">
-                        <label>RESSURS</label>
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'resource')" /></label>
                         <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
-                            Velg lokaler 
+                            <xsl:value-of select="php:function('lang', 'choose')" /> 
                             <span class="caret"></span>
                         </button>
 
@@ -27,14 +31,14 @@
                             <li>
                                 <div class="form-check checkbox checkbox-primary">
                                     <label class="check-box-label">
-                                        <input class="form-check-input choosenResource" type="checkbox"  data-bind="textInput: name, checked: selected"/>
+                                        <input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
                                         <span class="label-text" data-bind="text: name"></span>
+
                                     </label>
                                 </div>
                             </li>
                             
                         </ul>
-                        
                     </div>
                     
                     <div class="form-group">
@@ -56,131 +60,66 @@
                             <div class="form-group">
                                 <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
                             </div>
-
-                            <!--<label class="check-box-label">
-                                <input class="form-check-input repeatEvent" type="checkbox"  data-bind="checked: repeat"/>
-                                <span class="label-text">Repeter ukentlig</span>
-                            </label>-->
                                                       
                         </div>
-                        
-                        
-                        <button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i> Legg til dato</button>
+                                                
+                        <button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i>&#160;<xsl:value-of select="php:function('lang', 'add another date')" /></button>
                     </div>
                     
                     <div class="form-group">
                         <span class="font-weight-bold d-block mt-2 span-label">Valgte datoer</span>
                         <div data-bind="foreach: date">
                             <div class="d-block">
+                                <input name="from_[]" hidden="hidden" data-bind="value: from_"/>
+                                <input name="to_[]" hidden="hidden" data-bind="value: to_"/>                              
                                 <span data-bind='text: formatedPeriode'></span>
-                                <!--<span data-bind='text: repeat == true ? " (repeter)" : ""'></span>-->
                                 <butoon class="ml-2" data-bind="click: $parent.removeDate"><i class="fas fa-minus-circle"></i></butoon>
                             </div>
                             
                         </div>
-                        
-                        
-                        
-                        <span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">Ingen dato valgt</span>
+                                                
+                        <span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates"><xsl:value-of select="php:function('lang', 'choose a date')" /></span>
                     </div>
                     
                     <hr class="mt-5 mb-5"></hr>
                     
-                    <h5 class="font-weight-bold mb-4">Om arrangementet</h5>
+                    <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Information about the event')" /></h5>
                     
                     <div class="form-group">
                         <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
                         
                         <div class="dropdown d-inline-block">
                             <button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Velg      
+                                <xsl:value-of select="php:function('lang', 'choose')" />      
                             </button>
                             <div class="dropdown-menu" data-bind="foreach: audiences" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
                             </div>
+                            <input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
                         </div>
 
                     </div>
 
                     <div class="form-group">
-                        <label>ARRANGØR</label>
-                        <input type="text" class="form-control" data-bind="textInput: organizer"/>  
-                    </div>
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'description')" /></label>
+                        
+                        <textarea id="field_description" class="form-control" rows="3" name="description">
+                                <xsl:value-of select="application/description"/>
+                        </textarea>
+                    </div>                  
+                   
                     <div class="form-group">
-                        <label>NAVN PÅ ARRANGEMENT</label>
-                        <input type="text" class="form-control" data-bind="textInput: arrangementName"/>
-                    </div>
-                    <div class="form-group">
-                        <label>OM ARRANGEMENT</label>
-                        <textarea class="form-control" data-bind="textInput: aboutArrangement"></textarea>
-                    </div>
-                    
-                    <!--<div class="form-group">
-                        <label>ESTIMERT ANTALL DELTAGERE</label>
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
                         <div class="p-2 border">
                             <div class="row mb-2">
                                 <div class="col-3">
                                     <span class="span-label mt-2"></span>
                                 </div>
                                 <div class="col-4">
-                                    <span>Menn</span>
+                                    <span><xsl:value-of select="php:function('lang', 'Male')" /></span>
                                 </div>
                                 <div class="col-4">
-                                     <span>Kvinner</span>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-2">
-                                <div class="col-3">
-                                    <span class="mt-2">0 - 12 år</span>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="mann" data-bind="textInput: participantMenU12"/>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: participantWomenU12"/>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-2">    
-                                <div class="col-3">
-                                    <span class="mt-2">13 - 19 år</span>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="mann" data-bind="textInput: participantMenO13"/>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: participantWomenO13"/>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-2">
-                                <div class="col-3">
-                                    <span class="mt-2">20+ år</span>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="mann" data-bind="textInput: participantMenO20"/>
-                                </div>
-                                <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: participantWomenO20"/>
-                                </div>
-                            </div>    
-                                                                                       
-                        </div>
-                    </div>-->
-
-                    <div class="form-group">
-                        <label>ESTIMERT ANTALL DELTAGERE</label>
-                        <div class="p-2 border">
-                            <div class="row mb-2">
-                                <div class="col-3">
-                                    <span class="span-label mt-2"></span>
-                                </div>
-                                <div class="col-4">
-                                    <span>Menn</span>
-                                </div>
-                                <div class="col-4">
-                                     <span>Kvinner</span>
+                                     <xsl:value-of select="php:function('lang', 'Female')" />
                                 </div>
                             </div>
                             
@@ -190,10 +129,10 @@
                                     <span class="mt-2" data-bind="text: agegroupLabel"></span>
                                 </div>
                                 <div class="col-4">                                    
-                                    <input class="form-control sm-input" placeholder="mann" data-bind="textInput: inputCountMale"/>
+                                    <input class="form-control sm-input maleInput" placeholder="mann" data-bind=""/>
                                 </div>
                                 <div class="col-4">
-                                    <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: inputCountFemale"/>
+                                    <input class="form-control sm-input femaleInput" placeholder="kvinne" data-bind=""/>
                                 </div>
                             </div>
                                                                                        
@@ -202,19 +141,35 @@
                     
                     
                     <div class="form-group">
-                        <label>BEHOV FOR SPESIELL TILRETTELEGGING</label>
-                        <textarea class="form-control" data-bind="textInput: specialRequirements"></textarea>
+                        <label class="text-uppercase"><xsl:value-of select="config/application_equipment"/></label>
+                        <textarea class="form-control" name="equipment">
+                            <xsl:value-of select="application/equipment"/>
+                        </textarea>
                     </div>
 
                     <div class="form-group">
-                        <label><xsl:value-of select="php:function('lang', 'Attachment')" /></label>
-                        <input type="file" data-bind="textInput: attachment"/>  
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Attachment')" /></label>
+                        <input name="name" id='field_name' type='file' >
+                            <xsl:attribute name='title'>
+                                <xsl:value-of select="document/name"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation">
+                                <xsl:text>mime size</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-allowing">
+                                <xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-max-size">
+                                <xsl:text>2M</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+                            </xsl:attribute>
+                        </input>  
                     </div>
                     <div class="form-group termAccept mt-5 mb-5">
-                        <!--<label><input type="checkbox" data-bind="checked: termAccept"/>&#160; <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" /></label>
-                        -->
-                        <label>JURDISKE BETINGELSER</label>
-                        <span data-bind="ifnot: termAccept" class="validationMessage">Jurdiske betingelser er ikke godtatt</span>                         
+                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'legal condition')" /></label>
+                        <span data-bind="ifnot: termAccept" class="validationMessage"><xsl:value-of select="config/application_terms2"/></span>                         
                         <div class="form-check checkbox" data-bind="foreach: termAcceptDocs">
                             <div>
                                 <label class="check-box-label d-inline">
@@ -223,15 +178,14 @@
                                 </label>
                                 <a class="d-inline termAcceptDocsUrl" data-bind=""> </a>
                             </div>
-                        </div>
+                        </div>                     
+                        
                     </div>
                     
                     <hr class="mt-5 mb-5"></hr>
                     
-                    <div class="container" data-bind="foreach: msgboxes">
-                        <div class="alert alert-warning" data-bind="text: msg" role="alert">
-                        
-                        </div>
+                    <div class="alert alert-warning" data-bind="visible: noApplicationsInCart" role="alert">
+                        <span>Legg til søknad først!</span>
                     </div>
 
                     <div class="form-group float-right">
@@ -242,13 +196,18 @@
             </div>
             </form>
                                    
-            <!--<pre data-bind="text: ko.toJSON(am, null, 2)"></pre> -->
+            <!--<pre data-bind="text: ko.toJSON(am, null, 2)"></pre>-->
                 
             <div class="push"></div>
         </div>
 	<script type="text/javascript">
+            var initialSelection = <xsl:value-of select="application/resources_json"/>;
+            var initialAudience = <xsl:value-of select="application/audience_json"/>;
+            var initialDates = <xsl:value-of select="application/dates_json"/>;
+            var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;
+            var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
             var script = document.createElement("script"); 
-            script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_new.js";
+            script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js";
 
             document.head.appendChild(script);			
         </script>

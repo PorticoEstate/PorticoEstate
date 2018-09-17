@@ -776,6 +776,8 @@
 			$this->flash_form_errors($errors);
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
+			$application['dates_json'] = json_encode($application['dates']);
+			$application['agegroups_json'] = json_encode($application['agegroups']);
 			$top_level_activity = false;
 			if (!$activity_id)
 			{
@@ -864,10 +866,11 @@
 				'file'), 'application_form');
 
 			self::adddatetimepicker();
-
+			//printf("<!-- application = %s --> \n", print_r($application, true));
+			//printf("<!-- test -->");
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => $application_text));
+				'config' => $application_text, 'test' => print_r($application, true)));
 		}
 
 

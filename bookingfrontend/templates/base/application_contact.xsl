@@ -3,17 +3,17 @@
 
     <div class="container new-application-page" id="new-application-partialtwo">    
 
-        <form action="" data-bind='submit: postApplication' method="POST" id='application_form' name="form">
+        <form action="" method="POST" id='application_form' name="form">
         <div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 
-            <h1 class="font-weight-bold">Kontakt og fakturainformasjon</h1>
+            <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'invoice information')" /></h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
 
             <hr class="mt-5 mb-5"></hr>
-            
-            <h5 class="font-weight-bold mb-4">Søknader</h5>
-            <p class="validationMessage" data-bind="visible: applicationCartItems().length == 0">Du har ingen lagrede søknader.</p>
+            <div class="mb-4"><xsl:call-template name="msgbox"/></div>
+            <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'applications')" /></h5>
+            <p class="validationMessage" data-bind="visible: applicationCartItems().length == 0"><xsl:value-of select="php:function('lang', 'applicationcart empty')" /></p>
             
             <div data-bind="visible: applicationCartItems().length != 0">
                 <div data-bind="foreach: applicationCartItems">
@@ -23,7 +23,6 @@
                         <div data-bind="foreach: resources" class="col-5"><span class="mr-3" data-bind="text: name"></span></div>
                         <div class="col-1 text-right">
                             <span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span>
-                            <!--<a href="" class="far fa-edit"></a>-->
                         </div>
                     </div>
                     <div class="row" data-bind="foreach: dates">
@@ -34,91 +33,78 @@
                 </div>
                 
                 <hr class="mt-5 mb-5"></hr>
-                
+                <input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typeApplicationRadio" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
-                    <label class="form-check-label" for="privateRadio">Privat</label>
+                    <input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
+                    <label class="form-check-label" for="privateRadio"><xsl:value-of select="php:function('lang', 'Private event')" /></label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="typeApplicationRadio" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
-                    <label class="form-check-label" for="orgRadio">Organisasjon</label>
+                    <input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
+                    <label class="form-check-label" for="orgRadio"><xsl:value-of select="php:function('lang', 'organization')" /></label>
                 </div>
-                <p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage">Ingen valgt</p>
+                <p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage"><xsl:value-of select="php:function('lang', 'choose a')" /></p>
 
                 
                 <div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-                    <label>ORG.NUMMER</label>
-                    <input type="text" class="form-control" data-bind="textInput: orgnr"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'organization number')" /></label>
+                    <input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>  
                 </div>
                 
                 <div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
-                    <label>FØDSELSNUMMER</label>
-                    <input type="text" class="form-control" data-bind="textInput: ssn"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Ssn')" /></label>
+                    <input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>  
                 </div>
                 
                 <div class="form-group">
-                    <label>NAVN</label>
-                    <input type="text" class="form-control" data-bind="textInput: contactName"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_name')" /></label>
+                    <input type="text" class="form-control" name="contact_name" value="{application/contact_name}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label>GATE</label>
-                    <input type="text" class="form-control" data-bind="textInput: responsible_street"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'street')" /></label>
+                    <input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"/>  
                 </div>                
 
                 <div class="form-group">
-                    <label>POSTNUMMER</label>
-                    <input type="text" class="form-control" data-bind="textInput: responsible_zip_code"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'zip code')" /></label>
+                    <input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label>STEDSNAVN</label>
-                    <input type="text" class="form-control" data-bind="textInput: responsible_city"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'postal city')" /></label>
+                    <input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"/>  
                 </div>
                 
                 <div class="form-group">
-                    <label>E-POST</label>
-                    <input type="text" class="form-control" data-bind="textInput: contactMail"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_email')" /></label>
+                    <input type="text" class="form-control" name="contact_email" value="{application/contact_email}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label>BEKREFT E-POST</label>
-                    <input type="text" class="form-control" data-bind="textInput: contactMail2"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')" /></label>
+                    <input type="text" class="form-control" name="contact_email2" value="{application/contact_email2}"/>  
                 </div>
                 
                 <div class="form-group">
-                    <label>TELEFON</label>
-                    <input type="text" class="form-control" data-bind="textInput: contactPhone"/>  
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'phone')" /></label>
+                    <input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"/>  
                 </div>
                 
                 <hr class="mt-5"></hr>
 
-                <div class="container" data-bind="foreach: msgboxes">
-                        <div class="alert alert-warning" data-bind="text: msg" role="alert">
-                        
-                        </div>
-                </div>
                       
-                <button class="btn btn-light" type="submit">Send søknad</button>
+                <button class="btn btn-light" type="submit"><xsl:value-of select="php:function('lang', 'send')" /></button>
             </div>
         
         </div>
        </form>
 
-       <div  class="col-md-8 offset-md-2" data-bind="visible: applicationSuccess">
-        <h1 class="font-weight-bold">Kontakt og fakturainformasjon</h1>
-
-           <div class="alert alert-success" role="alert">
-                            <i class="far fa-check-circle"></i><span> Din søknad er lagret!</span>
-                        </div>
-                        
-                </div>
         <!--<div class="mt-5"><pre data-bind="text: ko.toJSON(am, null, 2)"></pre></div> --> 
         <div class="push"></div>
     </div>
     <script type="text/javascript">
         var script = document.createElement("script"); 
-        script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_contact.js";
+        script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_contact.js";
 
         document.head.appendChild(script);
     </script>
