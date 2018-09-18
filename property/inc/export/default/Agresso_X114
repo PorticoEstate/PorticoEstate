@@ -556,7 +556,7 @@
 		 * @param integer $rollback_internal_voucher
 		 * @return array Receipt
 		 */
-		public function RullTilbake( $Filnavn, $date, $rollback_voucher, $rollback_internal_voucher )
+		public function RullTilbake( $Filnavn, $date, $rollback_voucher, $rollback_internal_voucher = false)
 		{
 			$voucher = $this->select_invoice_rollback($date, $Filnavn, $rollback_voucher, $rollback_internal_voucher);
 
