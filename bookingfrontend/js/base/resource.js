@@ -29,20 +29,6 @@ function CreateUrlParams(params) {
 }
 
 function PopulateResourceData() {
-//    getJsonURL = baseURL+"?menuaction=bookingfrontend.uiresource.index_json&filter_building_id="+urlParams['buildingid']+"&phpgw_return_as=json";
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['buildingid']}, true);
-
-    $.getJSON(getJsonURL, function(result){
-        for(var i=0; i<result.results.length; i++) {
-            if(result.results[i].id == urlParams['id']) {
-                $("#main-item-header").text(result.results[i].full_name);
-                $("#item-street").text(result.results[i].building_street);
-                $("#item-zip-city").text(result.results[i].building_city + " " + result.results[i].building_district);
-                $("#item-description").html(result.results[i].description);  
-            }
-        }
-    });
-    
  //   getJsonURL = baseURL+"?menuaction=booking.uidocument_resource.index&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"booking.uidocument_resource.index", filter_owner_id:urlParams['id']}, true);
     $.getJSON(getJsonURL, function(result){
