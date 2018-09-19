@@ -1,20 +1,20 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-
-	<div class="container my-container-top-fix wrapper" id="building-page-content">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item">
-				<a>
+<div id="building-page-content">
+	<div class="info-content">
+	<div class="container my-container-top-fix wrapper">
+		
+		<div class="location">
+			<span><a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
 					</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
-			</li>
-			<li class="breadcrumb-item active">
-				<xsl:value-of select="php:function('lang', 'building')" />
-			</li>
-		</ol>
+			</span>
+			<span><xsl:value-of select="php:function('lang', 'building')" /></span>
+		</div>
+
 		<div class="row p-3">
 			<div class="col-lg-6">
 
@@ -111,9 +111,9 @@
 				<div data-bind="foreach: bookableResource">
 					<div class="custom-card">
 						<a class="bookable-resource-link-href" href="" data-bind="">
-							<h2 data-bind="text: name"></h2>
+							<span data-bind="text: name"></span>
 						</a>
-						<span class="font-weight-bold">Fasiliteter: </span>
+						<span class="font-weight-bold d-block mt-2">Fasiliteter: </span>
 						<span>Bla bla, </span>
 						<span>Bla bla</span>
 					</div>
@@ -121,8 +121,10 @@
 
 			</div>
 		</div>
+		</div>
+		</div>
 
-
+		<div class="container wrapper">
 		<div class="row margin-top-and-bottom">
 
 			<div class="button-group dropdown calendar-tool invisible">
@@ -183,7 +185,7 @@
 		</div>
 	</div>
 
-
+</div>
 	<script type="text/javascript">
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/building.js";

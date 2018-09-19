@@ -294,7 +294,7 @@ function PopulateBuildingData(baseURL, urlParams) {
         $("#contact_info").html(result.building.homepage + "</br>" + result.building.email + "</br>" + result.building.phone);        
     });
     
-    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", id:urlParams['id']}, true);    
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", filter_owner_id:urlParams['id']}, true);    
     
     $.getJSON(getJsonURL, function(result){
         if(result.ResultSet.Result.length > 0) {
