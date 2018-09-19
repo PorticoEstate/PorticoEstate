@@ -207,7 +207,8 @@
             var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;
             var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
             var script = document.createElement("script"); 
-            script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js";
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js";
+           //script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_new.js";
 
             document.head.appendChild(script);			
         </script>

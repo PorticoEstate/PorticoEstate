@@ -368,7 +368,7 @@
 		function set_order_status ($subject, $body, $from)
 		{
 			$order_arr = explode(':', $subject);
-			$order_id = trim($order_arr[1]);
+			$order_id = (int)trim($order_arr[1]);
 
 			$text = trim($body);
 			$textAr = explode(PHP_EOL, $text);

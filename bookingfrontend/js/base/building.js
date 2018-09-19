@@ -88,6 +88,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
@@ -113,6 +114,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Mon.description,
@@ -138,6 +140,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Tue.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Tue.description,
@@ -163,6 +166,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Wed.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Wed.description,
@@ -188,6 +192,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Thu.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Thu.description,
@@ -213,6 +218,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Fri.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Fri.description,
@@ -239,6 +245,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 
                         eventsArray.push({ id: result.ResultSet.Result[k].Sat.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
                             content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sat.description,
@@ -305,7 +312,7 @@ function PopulateBuildingData(baseURL, urlParams) {
 }
 
 function PopulateBookableResources(baseURL, urlParams) {
-    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['id']}, true);        
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['id'], sort: 'sort'}, true);
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.results.length; i++) {
 //          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
@@ -340,103 +347,372 @@ function EventsOptionsChanged(building, checkValue) {
 
 function GenerateCalendarForEvents(date) {
 
-    $("#myScheduler .scheduler-base-content").first().remove();
-    $("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
-    events.reverse();
-    
-    showContent();
-    
-    YUI({lang: 'nb-NO'}).use('aui-scheduler',
-            function (Y) {
-                var nb_NO_strings_allDay = {allDay: 'Hel dag'};
-                var strings = {
-                    agenda: 'Agenda',
-                    day: 'Dag',
-                    month: 'Måned',
-                    today: 'Idag',
-                    week: 'Uke',
-                    year: 'År'
-                };
-                
-                var eventRecorder = new Y.SchedulerEventRecorder({
-                    content: "",
-                    headerTemplate: "<span>Ny søknad</span>",
-                    //bodyTemplate: NewEventContentGenerate(),
-                    strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
-                    on: {
-                        save: function(event) {
-                            //alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
-                            $(".overlay").show();
-                            console.log(new Date(this.getTemplateData().startDate));
-                            ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
-                            
-                        }
-                    }
-                });
-                         
-                new Y.Scheduler(
-                        {
-                            boundingBox: '#myScheduler',
-                            eventRecorder: eventRecorder,
-                            date: date,
-                            items: events,
-                            render: true,
-                            strings: strings,
-                            firstDayOfWeek: 1,
-                            views: [
-                                new Y.SchedulerWeekView({
-                                    isoTime: true,
-                                    strings: nb_NO_strings_allDay,
-                                    headerView: false
-                                })
-                            ]
+	$("#myScheduler .scheduler-base-content").first().remove();
+	$("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
+	events.reverse();
 
-                        }
-                );
+	showContent();
 
-                var dayView = new Y.SchedulerDayView();
-                new Y.Scheduler(
-                        {
-                            boundingBox: '#mySchedulerSmallDeviceView',
-                            eventRecorder: eventRecorder,
-                            date: date,
-                            items: events,
-                            render: true,
-                            strings: strings,
-                            views: [
-                                new Y.SchedulerDayView({
-                                    isoTime: true,
-                                    strings: nb_NO_strings_allDay,
-                                    headerView: false
-                                })
-                            ]
+	YUI({lang: 'nb-NO'}).use(
+		'aui-scheduler',
+		function(Y) {
+			var CSS_SCHEDULER_TODAY = Y.getClassName('scheduler', 'today');
 
-                        }
-                );
-                
-                $(".scheduler-base-views").hide();
-                $(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
-                $(".scheduler-base-icon-next").addClass("fas fa-chevron-right");
-                HideUncheckResources();
-                $("[data-toggle='tooltip']").tooltip();
-                $(".overlay").hide();
-                
-                $('.popover-title').remove();
+			var CSS_SCHEDULER_VIEW_DAY_TABLE_COL = Y.getClassName('scheduler-view', 'day', 'table', 'col');
+			var CSS_SCHEDULER_VIEW_DAY_TABLE_COL_SHIM = Y.getClassName('scheduler-view', 'day', 'table', 'col', 'shim');
+			var CSS_SCHEDULER_VIEW_DAY_TABLE_COLDAY = Y.getClassName('scheduler-view', 'day', 'table', 'colday');
+			var TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY = '<td class="' + [CSS_SCHEDULER_VIEW_DAY_TABLE_COL,
+				CSS_SCHEDULER_VIEW_DAY_TABLE_COLDAY].join(' ') + '" data-colnumber="{colNumber}" style="border-left-style: {borderStyle}">' +
+				'<div class="' + CSS_SCHEDULER_VIEW_DAY_TABLE_COL_SHIM + '">&nbsp;</div>' +
+				'</td>';
 
-                var width = 100 / resourceIds.length;
-                $(".scheduler-event-disabled").css("max-width", width + "%"); 
-                $(".scheduler-event-title").text("");                
+			var CSS_SCHEDULER_VIEW_DAY_HEADER_DAY = Y.getClassName('scheduler-view', 'day', 'header', 'day');
+			var CSS_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST = Y.getClassName('scheduler-view', 'day', 'header', 'day', 'first');
+			var TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST = '<td class="' + [CSS_SCHEDULER_VIEW_DAY_HEADER_DAY,
+				CSS_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST].join(' ') + '"></td>';
+			var TPL_SCHEDULER_VIEW_DAY_HEADER_DAY = '<th class="' + CSS_SCHEDULER_VIEW_DAY_HEADER_DAY +
+				'" data-colnumber="{colNumber}" colspan="{colSpan}"><a href="#">&nbsp;</a></th>';
 
-                $(".scheduler-event-disabled").hover(function () {
-                    $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
-                });
+			var SchedulerResourceWeekView = Y.Component.create({
+				NAME: 'scheduler-view-week-resource',
+				EXTENDS: Y.SchedulerWeekView,
+				ATTRS: {
+					name: {
+						value: 'resources'
+					},
+					resources: {
+						value: ['no resource']
+					}
+				},
 
-                $( ".scheduler-event-disabled" ).mouseleave(function() {
-                    $("[data-toggle='tooltip']").tooltip('hide');
-                });
+				prototype: {
+					getColumnShimByDateAndResource: function(date,resource) {
+						var resources = this.get('resources');
+						var index = this.getDateDaysOffset(date)*resources.length + resources.indexOf(resource);
+						if (0 <= index && index < this.columnShims.size()) {
+							return this.columnShims.item(index);
+						}
+						else {
+							return null;
+						}
+					},
 
-            }
-    );
+					plotEvent: function(evt) {
+						var nodeList = evt.get('node');
+						if (nodeList.size() < 2) {
+							evt.addPaddingNode();
+						}
+						var node = evt.get('node').item(0);
+						var paddingNode = evt.get('node').item(1);
+						var shim = this.getColumnShimByDateAndResource(evt.get('startDate'), evt.get('resource'));
+						if (shim) {
+							shim.append(node);
+							if (evt.get('visible')) {
+								node.show();
+							}
+						}
+						else {
+							node.hide();
+						}
+						evt.syncUI();
+						this.syncEventTopUI(evt);
+						this.syncEventHeightUI(evt);
+					},
+
+					plotEvents: function() {
+						var scheduler = this.get('scheduler');
+						var filterFn = this.get('filterFn');
+						var resources = this.get('resources');
+						scheduler.flushEvents();
+						var view = this;
+						this.columnShims.each(function(colShimNode, i) {
+							var events = scheduler.getEventsByDay(view.getDateByColumn(Math.floor(i/resources.length)), true);
+							var plottedEvents = [];
+							var columnEvents = Y.Array.filter(
+								events,
+								function(event) {
+									return event.get('resource') === resources[i % resources.length];
+								}
+							);
+							colShimNode.empty();
+							Y.Array.each(columnEvents, function(evt) {
+								if (filterFn.apply(view, [evt])) {
+									view.plotEvent(evt);
+									plottedEvents.push(evt);
+								}
+							});
+							view.syncEventsIntersectionUI(plottedEvents);
+						});
+						this.syncHeaderViewUI();
+						this.syncCurrentTimeUI();
+					},
+
+					syncColumnsUI: function() {
+						var resources = this.get('resources');
+						var todayDate = this.get('scheduler').get('todayDate');
+						var view = this;
+						this.colDaysNode.each(function(columnNode, i) {
+							var columnDate = view.getDateByColumn(Math.floor(i/resources.length));
+							columnNode.toggleClass(
+								CSS_SCHEDULER_TODAY, !Y.DataType.DateMath.isDayOverlap(columnDate, todayDate));
+						});
+						this.syncCurrentTimeUI();
+					},
+
+					syncUI: function() {
+						SchedulerResourceWeekView.superclass.syncUI.apply(this, arguments);
+						this.gridContainer.attr('colspan', this.get('resources').length*this.get('days'));
+					},
+
+					_valueColDaysNode: function() {
+						var buffer = [];
+						var colNumber = 0;
+						for (i = 0; i < this.get('days'); i++) {
+							var resourceIndex = 0;
+							for (var r in this.get('resources')) {
+								var borderStyle = resourceIndex++ == 0 ? 'solid' : 'none';
+								buffer.push(
+									Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY, {
+										colNumber: colNumber++,
+										borderStyle: borderStyle
+									})
+								);
+							}
+						}
+						return Y.NodeList.create(buffer.join(''));
+					},
+
+					_valueColHeaderDaysNode: function() {
+						var buffer = [];
+						var colNumber = 0;
+						buffer.push(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST);
+						for (i = 0; i < this.get('days'); i++) {
+							buffer.push(
+								Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY, {
+									colNumber: colNumber++ * this.get('resources').length,
+									colSpan: this.get('resources').length
+								})
+							);
+						}
+						return Y.NodeList.create(buffer.join(''));
+					}
+				}
+			});
+
+			var SchedulerResourceDayView = Y.Component.create({
+				NAME: 'scheduler-view-day-resource',
+				EXTENDS: Y.SchedulerDayView,
+				ATTRS: {
+					name: {
+						value: 'resources'
+					},
+					resources: {
+						value: ['no resource']
+					}
+				},
+
+				prototype: {
+					getColumnShimByResource: function(resource) {
+						var resources = this.get('resources');
+						var index = resources.indexOf(resource);
+						if (0 <= index && index < this.columnShims.size()) {
+							return this.columnShims.item(index);
+						}
+						else {
+							return null;
+						}
+					},
+
+					plotEvent: function(evt) {
+						var nodeList = evt.get('node');
+						if (nodeList.size() < 2) {
+							evt.addPaddingNode();
+						}
+						var node = evt.get('node').item(0);
+						var paddingNode = evt.get('node').item(1);
+						var shim = this.getColumnShimByResource(evt.get('resource'));
+						if (shim) {
+							shim.append(node);
+							if (evt.get('visible')) {
+								node.show();
+							}
+						}
+						else {
+							node.hide();
+						}
+						evt.syncUI();
+						this.syncEventTopUI(evt);
+						this.syncEventHeightUI(evt);
+					},
+
+					plotEvents: function() {
+						var scheduler = this.get('scheduler');
+						var filterFn = this.get('filterFn');
+						var events = scheduler.getEventsByDay(scheduler.get('date'), true);
+						var resources = this.get('resources');
+						scheduler.flushEvents();
+						var view = this;
+						this.columnShims.each(function(colShimNode, i) {
+							var plottedEvents = [];
+							var columnEvents = Y.Array.filter(
+								events,
+								function(event) {
+									return event.get('resource') === resources[i];
+								}
+							);
+							colShimNode.empty();
+							Y.Array.each(columnEvents, function(evt) {
+								if (filterFn.apply(view, [evt])) {
+									view.plotEvent(evt);
+										plottedEvents.push(evt);
+								}
+							});
+							view.syncEventsIntersectionUI(plottedEvents);
+						});
+						this.syncHeaderViewUI();
+						this.syncCurrentTimeUI();
+					},
+
+					syncColumnsUI: function() {
+						var resources = this.get('resources');
+						var todayDate = this.get('scheduler').get('todayDate');
+						var view = this;
+						this.colDaysNode.each(function(columnNode, i) {
+							var columnDate = view.getDateByColumn(Math.floor(i/resources.length));
+							columnNode.toggleClass(
+								CSS_SCHEDULER_TODAY, !Y.DataType.DateMath.isDayOverlap(columnDate, todayDate));
+						});
+						this.syncCurrentTimeUI();
+					},
+
+					syncUI: function() {
+						SchedulerResourceDayView.superclass.syncUI.apply(this, arguments);
+						this.gridContainer.attr('colspan', this.get('resources').length);
+					},
+
+					_valueColDaysNode: function() {
+						var buffer = [];
+						var colNumber = 0;
+						var resourceIndex = 0;
+						for (var r in this.get('resources')) {
+							var borderStyle = resourceIndex++ == 0 ? 'solid' : 'none';
+							buffer.push(
+								Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY, {
+									colNumber: colNumber++,
+									borderStyle: borderStyle
+								})
+							);
+						}
+						return Y.NodeList.create(buffer.join(''));
+					},
+
+					_valueColHeaderDaysNode: function() {
+						var buffer = [];
+						var colNumber = 0;
+						buffer.push(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST);
+						buffer.push(
+							Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY, {
+								colNumber: colNumber,
+								colSpan: this.get('resources').length
+							})
+						);
+						return Y.NodeList.create(buffer.join(''));
+					}
+				}
+			});
+
+			var nb_NO_strings_allDay = {allDay: 'Hel dag'};
+			var strings = {
+				agenda: 'Agenda',
+				day: 'Dag',
+				month: 'Måned',
+				today: 'Idag',
+				week: 'Uke',
+				year: 'År'
+			};
+
+			var resourceslist = [];
+			for (var i=0; i<resourceIds.length; i++) {
+				resourceslist.push(resourceIds[i].id);
+			}
+			var resourceWeekView = new SchedulerResourceWeekView(
+				{
+					isoTime: true,
+					strings: nb_NO_strings_allDay,
+					headerView: false,
+					resources: resourceslist
+				}
+			);
+			var resourceDayView = new SchedulerResourceDayView(
+				{
+					isoTime: true,
+					strings: nb_NO_strings_allDay,
+					headerView: false,
+					resources: resourceslist
+				}
+			);
+
+			var eventRecorder = new Y.SchedulerEventRecorder({
+				content: "",
+				headerTemplate: "<span>Ny søknad</span>",
+				//bodyTemplate: NewEventContentGenerate(),
+				strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
+				on: {
+					save: function(event) {
+						//alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
+						$(".overlay").show();
+						console.log(new Date(this.getTemplateData().startDate));
+						ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
+					}
+				}
+			});
+
+			new Y.Scheduler(
+			  {
+				boundingBox: '#myScheduler',
+				eventRecorder: eventRecorder,
+				date: date,
+				items: events,
+				render: true,
+				strings: strings,
+				firstDayOfWeek: 1,
+				views: [resourceWeekView]
+			  }
+			);
+
+			new Y.Scheduler(
+			  {
+				boundingBox: '#mySchedulerSmallDeviceView',
+				eventRecorder: eventRecorder,
+				date: date,
+				items: events,
+				render: true,
+				strings: strings,
+				views: [resourceDayView]
+			  }
+			);
+
+			$(".scheduler-base-views").hide();
+			$(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
+			$(".scheduler-base-icon-next").addClass("fas fa-chevron-right");
+			HideUncheckResources();
+			$("[data-toggle='tooltip']").tooltip();
+			$(".overlay").hide();
+			$(".scheduler-view-day-current-time").hide();
+
+			$('.popover-title').remove();
+
+			$(".scheduler-event-title").text("");
+
+			$(".scheduler-event-disabled").hover(function () {
+				$(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+			});
+
+			$( ".scheduler-event-disabled" ).mouseleave(function() {
+				$("[data-toggle='tooltip']").tooltip('hide');
+			});
+		}
+	);
 }
 
 YUI({ lang: 'nb-no' }).use(
