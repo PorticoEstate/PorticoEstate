@@ -12,7 +12,6 @@
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</span>
-			<span><xsl:value-of select="php:function('lang', 'building')" /></span>
 		</div>
 
 		<div class="row p-3">
@@ -23,36 +22,27 @@
 						<img class="img-fluid rounded" id="item-main-picture" src=""/>
 					</div>
 					<div class="col-sm-8 col-xs-12 building-place-info">
-						<h3 id="main-item-header"></h3>
+						<h3>
+							<xsl:value-of select="building/name"/>
+						</h3>
 						<i class="fas fa-map-marker d-inline"> </i>
 						<div class="building-place-adr">
-							<span id="item-street"></span>
-							<span id="item-zip-city"></span>
+							<span>
+								<xsl:value-of select="building/street"/>
+							</span>
+							<span>
+								<xsl:value-of select="building/zip_code"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="building/city"/>
+							</span>
 						</div>
 					</div>
 
-					<p class="px-2 p-3" id="item-description">
-					</p>
+					<div class="px-2 p-3" id="item-description">
+						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
+					</div>
 
 					<div class="building-accordion">
-						<div class="building-card">
-							<div class="building-card-header">
-								<h5 class="mb-0">
-									<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
-										Anlegget inneholder
-									</button>
-									<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
-
-								</h5>
-
-							</div>
-
-							<div id="collapseOne" class="collapse">
-								<div class="card-body">
-									<p id="item-contains"></p>
-								</div>
-							</div>
-						</div>
 						<div class="building-card">
 							<div class="building-card-header">
 								<h5 class="mb-0">
@@ -67,40 +57,44 @@
 								</div>
 							</div>
 						</div>
-						<div class="building-card">
-							<div class="building-card-header">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
-										Åpningstider
-									</button>
-									<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
-								</h5>
-							</div>
-							<div id="collapseThree" class="collapse">
-								<div class="card-body">
-									<span id="opening_hours"></span>
-								</div>
-							</div>
-						</div>
 
-						<div class="building-card">
-							<div class="building-card-header">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
-										Kontaktinformasjon
-									</button>
-									<button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
-								</h5>
-							</div>
-							<div id="collapseFour" class="collapse">
-								<div class="card-body">
-									<div id="contact_info"></div>
+						<xsl:if test="building/opening_hours and normalize-space(building/opening_hours)">
+							<div class="building-card">
+								<div class="building-card-header">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
+											Åpningstider
+										</button>
+										<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
+									</h5>
+								</div>
+								<div id="collapseThree" class="collapse">
+									<div class="card-body">
+										<xsl:value-of disable-output-escaping="yes" select="building/opening_hours"/>
+									</div>
 								</div>
 							</div>
-						</div>
+						</xsl:if>
+
+						<xsl:if test="building/opening_hours and normalize-space(building/contact_info)">
+							<div class="building-card">
+								<div class="building-card-header">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
+											Kontaktinformasjon
+										</button>
+										<button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
+									</h5>
+								</div>
+								<div id="collapseFour" class="collapse">
+									<div class="card-body">
+											<xsl:value-of disable-output-escaping="yes" select="building/contact_info"/>
+								</div>
+								</div>
+							</div>
+						</xsl:if>
 					</div>
 				</div>
-
 
 			</div>
 

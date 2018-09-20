@@ -284,18 +284,7 @@ function compare(a,b) {
 
 function PopulateBuildingData(baseURL, urlParams) {
 
-    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show", id:urlParams['id']}, true);    
-    $.getJSON(getJsonURL, function(result){
-        $("#main-item-header").text(result.building.name);
-        $("#item-street").text(result.building.street);
-        $("#item-zip-city").text(result.building.zip_code + " " + result.building.city);
-        $("#item-description").html(result.building.description);
-        $("#opening_hours").html(result.building.opening_hours);
-        $("#contact_info").html(result.building.homepage + "</br>" + result.building.email + "</br>" + result.building.phone);        
-    });
-    
     getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", filter_owner_id:urlParams['id']}, true);    
-    
     $.getJSON(getJsonURL, function(result){
         if(result.ResultSet.Result.length > 0) {
             $("#item-main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[0].id+"&filter_owner_id="+urlParams['id']);
