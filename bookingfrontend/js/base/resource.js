@@ -16,7 +16,9 @@ $(document).ready(function ()
      $(document).on('click', '#list-img-thumbs img', function () {
          $(".main-picture").attr("src", this.src);
      });
-  
+
+    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['buildingid'], resource_id:  urlParams['id'] }, false);
+    $(".bookBtnForward").attr("href", bookBtnURL);
 });
 
 

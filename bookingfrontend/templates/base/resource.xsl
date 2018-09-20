@@ -133,7 +133,7 @@
 
                 <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
                 
-                <button class="btn btn-default ml-1"><i class="fas fa-plus"></i> Book</button>
+                <a href="" class="btn btn-default ml-1 bookBtnForward"><i class="fas fa-plus"></i> Book</a>
             </div>
             
             
