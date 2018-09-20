@@ -205,9 +205,6 @@
   
               am.date.push({from_: new Date(parseInt(urlParams['start'])), to_: new Date(parseInt(urlParams['end'])), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });            
           }
-      }      
-      if(typeof urlParams['resource_id'] !== "undefined") {
-        
       }
   }
     
