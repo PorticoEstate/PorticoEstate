@@ -458,6 +458,52 @@
 		}
 
 
+		function events()
+		{
+			$fields_events = array('building_name','contact_email','contact_name','description','from_','id','to_');
+			$now = date('Y-m-d');
+			$expired_conditions = "(bb_event.active != 0 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.description != '')";
+			$event_result = $this->soevent->read(array("sort" => "from_", "dir" => "asc",
+				"filters" => array('where' => $expired_conditions)));
+			foreach ($event_result['results'] as &$event)
+			{
+				foreach ($event as $k => $v)
+				{
+					if (!in_array($k,$fields_events))
+					{
+						unset($event[$k]);
+					}
+				}
+				$ts_from = strtotime($event['from_']);
+				$ts_to   = strtotime($event['to_']);
+				$day_from = date('d', $ts_from);
+				$day_to   = date('d', $ts_to);
+				if ($day_from == $day_to)
+				{
+					$event['datetime_day'] = sprintf('%d', $day_from);
+				}
+				else
+				{
+					$event['datetime_day'] = sprintf('%d-%d', $day_from, $day_to);
+				}
+				$month_from = date('M', $ts_from);
+				$month_to   = date('M', $ts_to);
+				if ($month_from == $month_to)
+				{
+					$event['datetime_month'] = lang($month_from);
+				}
+				else
+				{
+					$event['datetime_month'] = sprintf('%s-%s', lang($month_from), lang($month_to));
+				}
+				$event['datetime_time'] = sprintf('%s-%s', date('H:i',$ts_from), date('H:i',$ts_to));
+			}
+			unset($event);
+
+			return $event_result;
+		}
+
+
 		function get_filterboxdata()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');

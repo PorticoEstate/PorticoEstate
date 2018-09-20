@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'autocomplete'      => true,
+			'events'            => true,
 			'get_filterboxdata' => true,
 			'index'             => true,
 			'query'             => true,
@@ -229,6 +230,12 @@
 			$facility_ids = array_unique($facility_ids);
 			return $this->bo->resquery(array('rescategory_id' => $rescategory_id,
 				'activity_id' => $activity_id, 'facility_id' => $facility_ids, 'part_of_town_id' => $part_of_town_id));
+		}
+
+
+		function events()
+		{
+			return $this->bo->events();
 		}
 
 
