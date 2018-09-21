@@ -1249,6 +1249,31 @@
 			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
 			'uc' => array()
 		),
+		'fm_tts_external_communication' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'order_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'type_id' => array('type' => 'int', 'precision' => 2, 'nullable' => False),
+				'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'subject' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'message' => array('type' => 'text', 'nullable' => False),
+				'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'mail_recipients' => array('type' => 'text', 'nullable' => True),
+				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(
+				'fm_tts_tickets' => array('ticket_id' => 'id')
+				),
+			'uc' => array()
+		),
 		'fm_org_unit' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

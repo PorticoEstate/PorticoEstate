@@ -790,4 +790,74 @@
 				}
 			}
 		}
+				/**
+		 * Marshal values according to type
+		 * @param $value the value
+		 * @param $type the type of value
+		 * @return database value
+		 */
+		final public function marshal( $value, $type )
+		{
+			if ($value === null)
+			{
+				return 'NULL';
+			}
+			else if ($type == 'int')
+			{
+				if ($value == '')
+				{
+					return 'NULL';
+				}
+				return intval($value);
+			}
+			else if ($type == 'float')
+			{
+				return str_replace(',', '.', $value);
+			}
+			else if ($type == 'field')
+			{
+				return $this->db_addslashes($value);
+			}
+			else if ($type == 'jsonb')
+			{
+				return "'" . json_encode($value) . "'";
+			}
+			return "'" . $this->db_addslashes($value) . "'";
+		}
+
+		/**
+		 * Unmarshal database values according to type
+		 * @param $value the field value
+		 * @param $type	a string dictating value type
+		 * @return the php value
+		 */
+		final public function unmarshal( $value, $type )
+		{
+			if ($type == 'bool')
+			{
+				return (bool)$value;
+			}
+			elseif ($type == 'int')
+			{
+				return (int)$value;
+			}
+			elseif ($value === null || $value == 'NULL' || ($type != 'string' && (strlen(trim($value)) === 0)))
+			{
+				return null;
+			}
+			elseif ($type == 'float')
+			{
+				return floatval($value);
+			}
+			else if ($type == 'json')
+			{
+				return json_decode($value, true);
+			}
+			else if ($type == 'datestring')
+			{
+				return date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($value));
+			}
+			return $this->stripslashes($value);
+		}
+
 	}

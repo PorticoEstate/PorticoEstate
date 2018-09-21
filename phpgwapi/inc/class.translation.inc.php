@@ -34,7 +34,7 @@
 		/**
 		* @var array $lang the translated strings - speeds look up
 		*/
-		private $lang = array();
+		private static $lang = array();
 
 		/**
 		* @var array $errors errors returned from function calls

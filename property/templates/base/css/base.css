@@ -134,16 +134,16 @@ div.content {
 	vertical-align: middle;
 }
 fieldset {
-	margin-top: 0.5em;
-	border:1px solid #1E90FF;
+/*	margin-top: 0.5em;
+	border:1px solid #1E90FF;*/
 }
 
 legend {
 	padding: 0.2em 0.5em;
-	border:1px solid #1E90FF;
+/*	border:1px solid #1E90FF;*/
 	/*  color:#cccccc;*/
 	font-size:90%;
-	text-align:right;
+/*	text-align:right;*/
 	font-weight: bolder;
 }
 

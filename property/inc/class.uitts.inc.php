@@ -1818,6 +1818,14 @@ HTML;
 
 			$id = phpgw::get_var('id', 'int');
 
+			$add_external_communication = phpgw::get_var('external_communication', 'int');
+
+			if ($add_external_communication)
+			{
+				self::redirect(array('menuaction' => 'property.uiexternal_communication.edit','ticket_id' => $id,
+					'type_id' => $add_external_communication ));
+			}
+
 			if ($this->tenant_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view2',
@@ -2476,7 +2484,8 @@ HTML;
 				'data' => json_encode($additional_notes),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0,'asc'))),
 				)
 			);
 

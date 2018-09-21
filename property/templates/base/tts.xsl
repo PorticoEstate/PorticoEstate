@@ -706,6 +706,23 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'external communication')"/>
+						</label>
+						<input type="hidden" id="external_communication" name="external_communication" value=""/>
+
+						<input type="button" class="pure-button pure-button-primary" name="init_external_communication" onClick="confirm_session('external_communication');">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'start')"/>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'external communication')"/>
+							</xsl:attribute>
+						</input>
+					</div>
+
 					<xsl:choose>
 						<xsl:when test="access_order = 1">
 							<xsl:choose>

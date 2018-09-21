@@ -10107,3 +10107,50 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.730 to 0.9.17.731
+	*
+	*/
+	$test[] = '0.9.17.730';
+
+	function property_upgrade0_9_17_730()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.ticket.external_communication', 'Helpdesk external communication', 'property', $allow_grant = false, $custom_tbl = false, $c_function = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_external_communication', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'order_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'type_id' => array('type' => 'int', 'precision' => 2, 'nullable' => False),
+					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'subject' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'message' => array('type' => 'text', 'nullable' => False),
+					'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'mail_recipients' => array('type' => 'text', 'nullable' => True),
+					'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(
+					'fm_tts_tickets' => array('ticket_id' => 'id')
+					),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.731';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
