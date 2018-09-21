@@ -69,40 +69,7 @@
 				}
 			}
 
-			if(isset($values['mail_recipients']) && is_array($values['mail_recipients']))
-			{
-				$vendor_email = array();
-				$validator = CreateObject('phpgwapi.EmailAddressValidator');
-				foreach ($values['mail_recipients'] as $_temp)
-				{
-					if ($_temp)
-					{
-						if ($validator->check_email_address($_temp))
-						{
-							$vendor_email[] = $_temp;
-						}
-						else
-						{
-							$receipt['error'][] = array('msg' => lang('%1 is not a valid address', $_temp));
-						}
-					}
-				}
-				$value_set['mail_recipients'] = implode(',', $vendor_email);
-				unset($_temp);
-			}
-
-			if(isset($values['file_attachments']) && is_array($values['file_attachments']))
-			{
-				$file_attachments = array();
-				foreach ($values['file_attachments'] as $_temp)
-				{
-					if ($_temp)
-					{
-						$file_attachments[] = (int)$_temp;
-					}
-				}
-				$value_set['file_attachments'] = implode(',', $file_attachments);
-			}
+			$value_set['mail_recipients'] = $this->organize_mail_recipients($values);
 
 			$value_set['created_on'] = time();
 			$value_set['modified_date'] = time();
@@ -163,6 +130,23 @@
 				}
 			}
 
+
+
+			$value_set['mail_recipients'] = $this->organize_mail_recipients($values);
+
+			if(isset($values['file_attachments']) && is_array($values['file_attachments']))
+			{
+				$file_attachments = array();
+				foreach ($values['file_attachments'] as $_temp)
+				{
+					if ($_temp)
+					{
+						$file_attachments[] = (int)$_temp;
+					}
+				}
+				$value_set['file_attachments'] = implode(',', $file_attachments);
+			}
+
 			$this->db->transaction_begin();
 
 			/**
@@ -182,7 +166,7 @@
 			{
 				$this->db->query("UPDATE {$table} SET subject='{$new_subject}' WHERE id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('S', $id, $new_subject, $old_subject);
-				phpgwapi_cache::message_set(ang('Subject has been updated'), 'message');
+				phpgwapi_cache::message_set(lang('Subject has been updated'), 'message');
 			}
 
 			$new_message = $values['message'];
@@ -200,6 +184,79 @@
 
 		}
 
+		function organize_mail_recipients( $values )
+		{
+			$value_string = '';
+			$mail_recipients = array();
+			if(isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+
+				foreach ($values['mail_recipients'] as $_temp)
+				{
+					if($_temp)
+					{
+						$_temp = str_replace(array(' ', ';'), array('', ','), $_temp);
+						if(preg_match('/,/', $_temp))
+						{
+							$mail_recipients = array_merge($mail_recipients, explode(',', $_temp));
+						}
+						else
+						{
+							$mail_recipients[] = $_temp;
+						}
+					}
+
+				}
+				unset($_temp);
+
+				$vendor_email = array();
+				$validator = CreateObject('phpgwapi.EmailAddressValidator');
+				foreach ($mail_recipients as $_temp)
+				{
+					if ($_temp)
+					{
+						if ($validator->check_email_address($_temp))
+						{
+							$vendor_email[] = $_temp;
+						}
+						else
+						{
+							phpgwapi_cache::message_set(lang('%1 is not a valid address', $_temp), 'error');
+
+						}
+					}
+				}
+				$value_string = implode(',', $vendor_email);
+				unset($_temp);
+			}
+			return $value_string;
+		}
+
+		function read( $ticket_id )
+		{
+			$sql = 'SELECT * FROM fm_tts_external_communication WHERE ticket_id = ' . (int) $ticket_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			$fields = $this->get_fields();
+
+			while ($this->db->next_record())
+			{
+				foreach ($fields as $field	=> $field_info)
+				{
+					$row[$field] = $this->db->f($field, true);
+				}
+
+				$mail_recipients = trim($row['mail_recipients'], ',');
+				$row['mail_recipients'] = $mail_recipients ? explode(',', $mail_recipients) : array();
+				$file_attachments = trim($row['file_attachments'], ',');
+				$row['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
+				$row['created_on']  = $this->db->f('created_on');
+				$row['created_by']  = $this->db->f('created_by');
+				$row['modified_date']  = $this->db->f('modified_date');
+				$values[] = $row;
+			}
+			return $values;
+		}
 		function read_single( $id )
 		{
 			$sql = 'SELECT * FROM fm_tts_external_communication WHERE id = ' . (int) $id;
@@ -217,7 +274,7 @@
 			$values['mail_recipients'] = $mail_recipients ? explode(',', $mail_recipients) : array();
 			$file_attachments = trim($values['file_attachments'], ',');
 			$values['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
-			$values['timestamp']  = $this->db->f('created_on');
+			$values['created_on']  = $this->db->f('created_on');
 			$values['created_by']  = $this->db->f('created_by');
 
 			return $values;

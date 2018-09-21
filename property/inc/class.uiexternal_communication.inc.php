@@ -94,6 +94,7 @@ phpgw::import_class('phpgwapi.datetime');
 
 			$id = phpgw::get_var('id', 'int');
 			$ticket_id = phpgw::get_var('ticket_id', 'int');
+			$type_id = phpgw::get_var('type_id', 'int');
 
 
 			if(!$error)
@@ -232,20 +233,6 @@ JS;
 				)
 			);
 
-
-			switch ($type_id)
-			{
-				case '1':
-					$lang_label = lang('complaint');
-					break;
-				case '2':
-					$lang_label = lang('deviation');
-					break;
-
-				default:
-					break;
-			}
-
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id' => $ticket['vendor_id'],
 				'vendor_name' => $ticket['vendor_name'],
@@ -267,7 +254,7 @@ JS;
 						$_recipients_found[] = $vendor_email['value_email'];
 					}
 				}
-				$value_extra_mail_address = implode(',', array_diff($values['mail_recipients'], $_recipients_found));
+				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
 			}
 
 			$datatable_def[] = array
@@ -289,7 +276,7 @@ JS;
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view_file'));
 
 			//fixme
-			$file_attachments = isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) ? $ticket['file_attachments'] : array();
+			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
 			$content_files = array();
 			$lang_view_file = lang('click to view file');
@@ -335,13 +322,61 @@ JS;
 				)
 			);
 
-			$tabs = array();
-			$tabs['main'] = array(
-				'label' => $lang_label,
-				'link' => '#main'
+			$record_history = $this->bo->read_record_history($id);
+			$z = 1;
+			foreach ($record_history as &$history_entry)
+			{
+				$history_entry['sort_key'] = $z++;
+
+			}
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_4',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(
+					array('key' => 'sort_key', 'label' => '#', 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => false,
+						'resizeable' => true),
+					array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+					array('key' => 'value_action', 'label' => lang('Action'), 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'value_old_value', 'label' => lang('old value'), 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'value_new_value', 'label' => lang('New value'), 'sortable' => true,
+						'resizeable' => true)),
+				'data' => json_encode($record_history),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
 			);
 
+			$tabs = array();
+			$tabs['main'] = array(
+				'label' => lang('message'),
+				'link' => '#main'
+			);
+			$tabs['history'] = array(
+				'label' => lang('history'),
+				'link' => '#history'
+			);
+
+			$type_list = array();
+			$type_list[] = array
+			(
+				'id' => 1,
+				'name' => lang('deviation')
+			);
+			$type_list[] = array
+			(
+				'id' => 2,
+				'name' => lang('complaint follow-up')
+			);
+
+
 			$data = array(
+				'type_list' => array('options' => $this->bocommon->select_list((int) $values['type_id'], $type_list)),
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => 'property.uiexternal_communication.edit', 'id' => $id)),
 				'cancel_url' => self::link(array('menuaction' => "property.uitts.view", 'id' => $ticket_id)),

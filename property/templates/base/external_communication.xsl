@@ -110,6 +110,16 @@
 								<xsl:value-of select="php:function('lang', 'external communication')"/>
 							</legend>
 							
+							<xsl:if test="value_id !=''">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'id')"/>
+									</label>
+									<xsl:value-of select="value_id"/>
+								</div>
+
+							</xsl:if>
+
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'type')"/>
@@ -121,12 +131,7 @@
 									<option value="">
 										<xsl:value-of select="php:function('lang', 'select')"/>
 									</option>
-									<option value="1">
-										<xsl:value-of select="php:function('lang', 'complaint')"/>
-									</option>
-									<option value="2">
-										<xsl:value-of select="php:function('lang', 'deviation')"/>
-									</option>
+									<xsl:apply-templates select="type_list/options"/>
 								</select>
 							</div>
 							<div class="pure-control-group">
@@ -236,6 +241,22 @@
 
 						</fieldset>
 					</div>
+					<div id="history">
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_4'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="config" select ='config'/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+
+
 				</div>
 				<div id="submit_group_bottom" class="proplist-col">
 					<xsl:variable name="lang_save">
@@ -352,4 +373,13 @@
 			</div>
 		</div>
 	</div>
+</xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

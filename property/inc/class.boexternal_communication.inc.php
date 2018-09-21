@@ -155,5 +155,46 @@
 			return $receipt;
 
 		}
+		function read_record_history( $id )
+		{
+			$history_array = $this->historylog->return_array(array('C', 'O'), array(), '', '', $id);
+
+			$record_history = array();
+			$i = 0;
+
+			foreach ($history_array as $value)
+			{
+				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user'] = $value['owner'];
+
+				switch ($value['status'])
+				{
+					case 'S': $type = lang('Subject changed');
+						break;
+					case 'M':
+						$type = lang('Sent by email to');
+						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
+						break;
+					default:
+					// nothing
+				}
+
+				$record_history[$i]['value_action'] = $type ? $type : '';
+				unset($type);
+				if ($value['status'] != 'O' && $value['new_value'])
+				{
+					$record_history[$i]['value_new_value'] = $value['new_value'];
+					$record_history[$i]['value_old_value'] = $value['old_value'];
+				}
+				else
+				{
+					$record_history[$i]['value_new_value'] = '';
+				}
+
+				$i++;
+			}
+
+			return $record_history;
+		}
 
 	}
