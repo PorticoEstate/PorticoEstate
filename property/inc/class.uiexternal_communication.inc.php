@@ -400,6 +400,7 @@ JS;
 				'type_list' => array('options' => $type_list),
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "property.uiexternal_communication.{$mode}", 'id' => $id)),
+				'edit_action' => self::link(array('menuaction' => "property.uiexternal_communication.edit", 'id' => $id)),
 				'cancel_url' => self::link(array('menuaction' => "property.uitts.view", 'id' => $ticket_id)),
 				'value_ticket_id' => $ticket_id,
 				'value_ticket_subject' => $ticket['subject'],
@@ -413,6 +414,7 @@ JS;
 				'value_active_tab' => 0,
 				'base_java_url' => "{menuaction:'property.uitts.update_data',id:{$ticket_id}}",
 			);
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('property', 'portico', 'external_communication.edit.js');

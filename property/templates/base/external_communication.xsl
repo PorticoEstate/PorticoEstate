@@ -247,41 +247,50 @@
 					</div>
 				</div>
 				<div id="submit_group_bottom" class="proplist-col">
-					<xsl:if test="mode = 'edit'">
-						<xsl:variable name="lang_save">
-							<xsl:value-of select="php:function('lang', 'save')"/>
-						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="save">
-							<xsl:attribute name="value">
-								<xsl:value-of select="$lang_save"/>
-							</xsl:attribute>
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_save"/>
-							</xsl:attribute>
-						</input>
-						<xsl:if test="value_id !=''">
-							<xsl:variable name="lang_send">
-								<xsl:value-of select="php:function('lang', 'send')"/>
+					<xsl:choose>
+						<xsl:when test="mode = 'edit'">
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="php:function('lang', 'save')"/>
 							</xsl:variable>
-							<xsl:variable name="lang_preview_html">
-								<xsl:value-of select="php:function('lang', 'preview html')"/>
-							</xsl:variable>
-							<input type="hidden" id="preview_html" name="preview_html" value=""/>
-							<input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});">
+							<input type="submit" class="pure-button pure-button-primary" name="save">
 								<xsl:attribute name="value">
-									<xsl:value-of select="$lang_preview_html"/>
-								</xsl:attribute>
-							</input>
-							<input type="submit" class="pure-button pure-button-primary" name="send">
-								<xsl:attribute name="value">
-									<xsl:value-of select="$lang_send"/>
+									<xsl:value-of select="$lang_save"/>
 								</xsl:attribute>
 								<xsl:attribute name="title">
-									<xsl:value-of select="$lang_send"/>
+									<xsl:value-of select="$lang_save"/>
 								</xsl:attribute>
 							</input>
-						</xsl:if>
-					</xsl:if>
+							<xsl:if test="value_id !=''">
+								<xsl:variable name="lang_send">
+									<xsl:value-of select="php:function('lang', 'send')"/>
+								</xsl:variable>
+								<xsl:variable name="lang_preview_html">
+									<xsl:value-of select="php:function('lang', 'preview html')"/>
+								</xsl:variable>
+								<input type="hidden" id="preview_html" name="preview_html" value=""/>
+								<input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});">
+									<xsl:attribute name="value">
+										<xsl:value-of select="$lang_preview_html"/>
+									</xsl:attribute>
+								</input>
+								<input type="submit" class="pure-button pure-button-primary" name="send">
+									<xsl:attribute name="value">
+										<xsl:value-of select="$lang_send"/>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_send"/>
+									</xsl:attribute>
+								</input>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<input type="button" class="pure-button pure-button-primary" name="edit" onClick="window.location = '{edit_action}';">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'edit')"/>
+								</xsl:attribute>
+							</input>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:variable name="cancel_url">
 						<xsl:value-of select="cancel_url"/>
 					</xsl:variable>
