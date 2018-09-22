@@ -1249,6 +1249,16 @@
 			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
 			'uc' => array()
 		),
+		'fm_tts_external_communication_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_tts_external_communication' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),

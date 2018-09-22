@@ -10154,3 +10154,34 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.731 to 0.9.17.732
+	*
+	*/
+	$test[] = '0.9.17.731';
+
+	function property_upgrade0_9_17_731()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_external_communication_type', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.732';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

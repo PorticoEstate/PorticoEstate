@@ -15,9 +15,9 @@
 		self.name="first_Window";
 		preview = function(id)
 		{
-			var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
-			var strURL = phpGWLink('index.php', oArgs);
-			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
+		var strURL = phpGWLink('index.php', oArgs);
+		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		};
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var order_id = '<xsl:value-of select="value_order_id"/>';
@@ -106,21 +106,24 @@
 								</div>
 
 							</xsl:if>
-
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'type')"/>
-								</label>
-								<select id="type_id" name="type_id" class="pure-input-1-2">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<option value="">
-										<xsl:value-of select="php:function('lang', 'select')"/>
-									</option>
-									<xsl:apply-templates select="type_list/options"/>
-								</select>
-							</div>
+							<xsl:choose>
+								<xsl:when test="count(type_list/options/*) =0">
+									<input type="hidden" id="type_id" name="type_id" value="1"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'type')"/>
+										</label>
+										<select id="type_id" name="type_id" class="pure-input-1-2">
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:apply-templates select="type_list/options"/>
+										</select>
+									</div>
+								</xsl:otherwise>
+							</xsl:choose>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'subject')"/>

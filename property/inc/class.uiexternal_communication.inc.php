@@ -120,7 +120,7 @@
 
 			$ticket_id = phpgw::get_var('ticket_id', 'int');
 
-			if(!$error)
+			if(!$error && $id)
 			{
 				$values = $this->bo->read_single($id);
 				$ticket_id = $values['ticket_id'];
@@ -387,20 +387,17 @@ JS;
 			);
 
 			$type_list = array();
-			$type_list[] = array
-			(
-				'id' => 1,
-				'name' => lang('deviation')
-			);
-			$type_list[] = array
-			(
-				'id' => 2,
-				'name' => lang('complaint follow-up')
-			);
+			$type_list =  execMethod('property.bogeneric.get_list', array('type' => 'external_com_type',
+				'selected' => (int) $values['type_id']));
+
+			if(count($type_list) > 1)
+			{
+				array_unshift($type_list, array('id' => '', 'name' => lang('select')));
+			}
 
 
 			$data = array(
-				'type_list' => array('options' => $this->bocommon->select_list((int) $values['type_id'], $type_list)),
+				'type_list' => array('options' => $type_list),
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "property.uiexternal_communication.{$mode}", 'id' => $id)),
 				'cancel_url' => self::link(array('menuaction' => "property.uitts.view", 'id' => $ticket_id)),
