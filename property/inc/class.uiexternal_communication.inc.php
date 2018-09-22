@@ -30,8 +30,8 @@
 	 * Description
 	 * @package property
 	 */
-phpgw::import_class('phpgwapi.uicommon');
-phpgw::import_class('phpgwapi.datetime');
+	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class property_uiexternal_communication extends phpgwapi_uicommon
 	{
@@ -47,9 +47,9 @@ phpgw::import_class('phpgwapi.datetime');
 			'delete'		=> true,
 		);
 
-		var $acl;
+		var $acl, $historylog;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$bo, $botts, $bocommon, $config;
+			$bo, $botts, $bocommon, $config, $dateformat, $preview_html;
 
 		public function __construct()
 		{
@@ -66,6 +66,9 @@ phpgw::import_class('phpgwapi.datetime');
 			$this->botts = createObject('property.botts');
 			$this->bocommon = createObject('property.bocommon');
 			$this->config = CreateObject('phpgwapi.config', 'property')->read();
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->historylog = & $this->bo->historylog;
+			$this->preview_html = phpgw::get_var('preview_html', 'bool');
 
 		}
 
@@ -77,6 +80,23 @@ phpgw::import_class('phpgwapi.datetime');
 			}
 
 			$this->edit();
+		}
+
+		public function view()
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			/**
+			 * Do not allow save / send here
+			 */
+			if(phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool'))
+			{
+				phpgw::no_access();
+			}
+			$this->edit(array(), 'view');
 		}
 
 
@@ -93,13 +113,17 @@ phpgw::import_class('phpgwapi.datetime');
 			}
 
 			$id = phpgw::get_var('id', 'int');
-			$ticket_id = phpgw::get_var('ticket_id', 'int');
-			$type_id = phpgw::get_var('type_id', 'int');
+			if( $this->preview_html)
+			{
+				$this->_send($id);
+			}
 
+			$ticket_id = phpgw::get_var('ticket_id', 'int');
 
 			if(!$error)
 			{
 				$values = $this->bo->read_single($id);
+				$ticket_id = $values['ticket_id'];
 			}
 
 			$additional_message_notes = $this->bo->read_additional_notes($id);
@@ -378,14 +402,13 @@ JS;
 			$data = array(
 				'type_list' => array('options' => $this->bocommon->select_list((int) $values['type_id'], $type_list)),
 				'datatable_def' => $datatable_def,
-				'form_action' => self::link(array('menuaction' => 'property.uiexternal_communication.edit', 'id' => $id)),
+				'form_action' => self::link(array('menuaction' => "property.uiexternal_communication.{$mode}", 'id' => $id)),
 				'cancel_url' => self::link(array('menuaction' => "property.uitts.view", 'id' => $ticket_id)),
 				'value_ticket_id' => $ticket_id,
 				'value_ticket_subject' => $ticket['subject'],
 				'value_subject'		=> !empty($values['subject']) ? $values['subject'] : $ticket['subject'],
 				'value_extra_mail_address'=> $value_extra_mail_address,
 				'value_id'	=> $id,
-				'value_type_id'		=> $type_id,
 				'vendor_data' => $vendor_data,
 				'contact_data'	=> $contact_data,
 				'mode' => $mode,
@@ -396,7 +419,7 @@ JS;
 
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('property', 'portico', 'external_communication.edit.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline'), array($mode => $data));
+			self::render_template_xsl(array('external_communication', 'datatable_inline'), array('edit' => $data));
 
 		}
 
@@ -436,12 +459,354 @@ JS;
 				$this->receipt['message'][] = array('msg' => lang('message has been saved'));
 
 				self::message_set($this->receipt);
-				self::redirect(array('menuaction' => 'property.uiexternal_communication.edit',
-					'id' => $id,
-					'ticket_id' => $values['ticket_id'],
-					'type_id' => $values['type_id']));
+				if( phpgw::get_var('send', 'bool'))
+				{
+					$this->_send($id);
+				}
+				else
+				{
+					self::redirect(array('menuaction' => 'property.uiexternal_communication.edit',
+						'id' => $id,
+						'ticket_id' => $values['ticket_id'],
+						'type_id' => $values['type_id']));
+				}
 			}
 
+		}
+
+		private function _send($id )
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$message_info = $this->bo->read_single($id);
+
+			$ticket_id = $message_info['ticket_id'];
+			$ticket = $this->botts->read_single($ticket_id);
+			$recipients = $message_info['mail_recipients'];
+
+			$contact_data = $this->get_contact_data($ticket);
+
+			$coordinator_email = $contact_data['user_email'];
+			$coordinator_name = $contact_data['user_name'];
+
+			$cc = '';
+			$bcc = '';
+			$cc_arr = array();
+			if($contact_data['contact_email'])
+			{
+				$cc_arr[] = $contact_data['contact_email'];
+			}
+			if($contact_data['contact_email2'])
+			{
+				$cc_arr[] = $contact_data['contact_email2'];
+			}
+
+			if($cc_arr)
+			{
+				$cc = implode(';', $cc_arr);
+			}
+
+			$html_content = $this->_get_html_content($message_info, $contact_data);
+
+			$html = $html_content['html'];
+			$subject = $html_content['subject'];
+
+			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
+				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'),'error' );
+			}
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
+			$_to = !empty($recipients[0]) ? implode(';', $recipients) : '';
+
+			if (!$_to)
+			{
+				phpgwapi_cache::message_set(lang('missing recipient for order %1', $ticket['order_id']),'error' );
+				return false;
+			}
+
+			$attachment_log = '';
+			if (!empty($message_info['file_attachments']) && is_array($message_info['file_attachments']))
+			{
+				$attachments = CreateObject('property.bofiles')->get_attachments($message_info['file_attachments']);
+				$_attachment_log = array();
+				foreach ($attachments as $_attachment)
+				{
+					$_attachment_log[] = $_attachment['name'];
+				}
+				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+			}
+
+
+			$historylog_ticket = CreateObject('property.historylog', 'tts');
+
+			try
+			{
+				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
+				$historylog_ticket->add('M', $ticket_id, "{$_to}{$attachment_log}");
+				$this->historylog->add('M', $id, "{$_to}{$attachment_log}");
+				phpgwapi_cache::message_set(lang('message %1 is sent by email to %2', $id, $_to),'message' );
+			}
+			catch (Exception $exc)
+			{
+				phpgwapi_cache::message_set($exc->getMessage(),'error' );
+			}
+		}
+
+		private function _get_html_content( $message_info, $contact_data )
+		{
+			$preview = $this->preview_html;
+			$id = $message_info['id'];
+
+			$ticket_id = $message_info['ticket_id'];
+			$ticket = $this->botts->read_single($ticket_id);
+
+			$lang_print = lang('print');
+
+			$body = <<<HTML
+
+				<script type="text/javascript">
+						document.write("<form><input type=button "
+						+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
+				</script>
+				<H2>__SUBJECT__</H2>
+
+HTML;
+			if(!$preview)
+			{
+				$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.view',
+					'id' => $id), false, true) . '">' . lang('Ticket') . " # {$ticket_id}::{$id} </a>" . "\n";
+			}
+
+			$entry_date = $GLOBALS['phpgw']->common->show_date($message_info['created_on'], $this->dateformat);
+			$body .= "<table>\n";
+			if($preview)
+			{
+				$value_recipients = implode('<br/>:&nbsp;', $message_info['mail_recipients']);
+
+				$body .= '<tr><td valign = "top">'. lang('to')."</td><td>:&nbsp;{$value_recipients}</td></tr>\n";
+			}
+
+			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>\n";
+			$body .= '<tr><td>'. lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] ."</td></tr>\n";
+			$body .= '<tr><td>'. lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] ."</td></tr>\n";
+			if (isset($address_element) AND is_array($address_element))
+			{
+				foreach ($address_element as $address_entry)
+				{
+					$body .= '<tr><td>'. $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] ."</td></tr>\n";
+				}
+			}
+
+			$body .= '<tr><td>'. lang('from') . "</td><td>:&nbsp;{$contact_data['user_name']}</td></tr>\n";
+			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_email']}</td></tr>\n";
+			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_phone']}</td></tr>\n";
+
+			if($contact_data['organisation'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['organisation']}</td></tr>\n";
+			}
+			if($contact_data['department'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['department']}</td></tr>\n";
+			}
+			if($contact_data['contact_name'])
+			{
+				$body .= '<tr><td>'. lang('contact') . " 1</td><td>:&nbsp;{$contact_data['contact_name']}</td></tr>\n";
+			}
+			if($contact_data['contact_email'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email']}</td></tr>\n";
+			}
+			if($contact_data['contact_phone'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone']}</td></tr>\n";
+			}
+			if($contact_data['contact_name2'])
+			{
+				$body .= '<tr><td>'. lang('contact') . " 2</td><td>:&nbsp;{$contact_data['contact_name2']}</td></tr>\n";
+			}
+			if($contact_data['contact_email2'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email2']}</td></tr>\n";
+			}
+			if($contact_data['contact_phone2'])
+			{
+				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone2']}</td></tr>\n";
+			}
+			if($ticket['assignedto'])
+			{
+				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>\n";
+			}
+
+			$body .= "</table class='beta'><br/><br/>\n";
+
+			$i = 1;
+			$lang_date = lang('date');
+			$lang_user = lang('user');
+			$lang_note = lang('note');
+			$table_content = <<<HTML
+			<thead>
+				<tr>
+					<th>
+						#
+					</th>
+					<th>
+						{$lang_date}
+					</th>
+					<th>
+						{$lang_user}
+					</th>
+					<th>
+						{$lang_note}
+					</th>
+				</tr>
+			</thead>
+HTML;
+
+			$user_name = $message_info['created_by'] ? $GLOBALS['phpgw']->accounts->get($message_info['created_by'])->__toString() : '';
+
+			$first_note = nl2br($message_info['message']);
+
+			$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$first_note}</td></tr>\n";
+
+			$additional_notes = $this->bo->read_additional_notes($id);
+
+			foreach ($additional_notes as $value)
+			{
+				$value_note = nl2br($value['value_note']);
+				$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value_note}</td></tr>\n";
+				$i++;
+			}
+
+			$body.= "<table border='1'>{$table_content}</table>\n";
+
+			$subject = '[' . lang('Ticket') . " #{$ticket_id}::{$id} ] : {$location_code}  {$message_info['subject']}({$i})";
+
+			$body = str_replace('__SUBJECT__', $subject, $body);
+
+
+			$html = <<<HTML
+<!DOCTYPE html>
+			<html>
+				<head>
+					<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+					<title>{$subject}</title>
+					<style>
+						.beta {
+							border: 1px solid black;
+							border-collapse: collapse;
+						}
+						html {
+						font-family: arial;
+						}
+						@page {
+						size: A4;
+						}
+
+						#order_deadline{
+							width: 800px;
+							border:0px solid transparent;
+						}
+
+						#order_deadline td{
+							border:0px solid transparent;
+						}
+						@media print {
+						li {page-break-inside: avoid;}
+						h1, h2, h3, h4, h5 {
+						page-break-after: avoid;
+						}
+
+						table, figure {
+						page-break-inside: avoid;
+						}
+						}
+
+
+						@page:left{
+						@bottom-left {
+						content: "Page " counter(page) " of " counter(pages);
+						}
+						}
+						@media print
+						{
+							.btn
+							{
+								display: none !important;
+							}
+						}
+
+						.btn{
+						background: none repeat scroll 0 0 #2647A0;
+						color: #FFFFFF;
+						display: inline-block;
+						margin-right: 5px;
+						padding: 5px 10px;
+						text-decoration: none;
+						border: 1px solid #173073;
+						cursor: pointer;
+						}
+
+						ul{
+						list-style: none outside none;
+						}
+
+						li{
+						list-style: none outside none;
+						}
+
+						li.list_item ol li{
+						list-style: decimal;
+						}
+
+						ul.groups li {
+						padding: 3px 0;
+						}
+
+						ul.groups li.odd{
+						background: none repeat scroll 0 0 #DBE7F5;
+						}
+
+						ul.groups h3 {
+						font-size: 18px;
+						margin: 0 0 5px;
+						}
+
+					</style>
+				</head>
+				<body>
+					<div style='width: 800px;'>
+						{$body}
+					</div>
+				</body>
+			</html>
+HTML;
+
+
+			if ($preview)
+			{
+
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				echo $html;
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			return array
+			(
+				'html' => $html,
+				'subject' => $subject,
+				'contact_data' => $contact_data,
+			);
 		}
 
 		private function _populate($id = false)

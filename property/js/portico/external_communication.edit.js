@@ -21,4 +21,3 @@ window.on_vendor_updated = function ()
 {
 	fetch_vendor_email();
 };
-

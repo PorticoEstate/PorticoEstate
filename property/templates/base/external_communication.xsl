@@ -13,30 +13,17 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 	<script type="text/javascript">
 		self.name="first_Window";
-		<xsl:value-of select="lookup_functions"/>
-
-		function preview_html(id)
+		preview = function(id)
 		{
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
-		var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-
-		}
-
-		function preview_pdf(id)
-		{
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
-
-		var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-		}
-
+			var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		};
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var order_id = '<xsl:value-of select="value_order_id"/>';
 
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
+
 
 	</script>
 
@@ -109,7 +96,7 @@
 							<legend>
 								<xsl:value-of select="php:function('lang', 'external communication')"/>
 							</legend>
-							
+
 							<xsl:if test="value_id !=''">
 								<div class="pure-control-group">
 									<label>
@@ -255,32 +242,43 @@
 							</xsl:if>
 						</xsl:for-each>
 					</div>
-
-
 				</div>
 				<div id="submit_group_bottom" class="proplist-col">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'save')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="save">
-						<xsl:attribute name="value">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="lang_send">
-						<xsl:value-of select="php:function('lang', 'send')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="send">
-						<xsl:attribute name="value">
-							<xsl:value-of select="$lang_send"/>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_send"/>
-						</xsl:attribute>
-					</input>
+					<xsl:if test="mode = 'edit'">
+						<xsl:variable name="lang_save">
+							<xsl:value-of select="php:function('lang', 'save')"/>
+						</xsl:variable>
+						<input type="submit" class="pure-button pure-button-primary" name="save">
+							<xsl:attribute name="value">
+								<xsl:value-of select="$lang_save"/>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_save"/>
+							</xsl:attribute>
+						</input>
+						<xsl:if test="value_id !=''">
+							<xsl:variable name="lang_send">
+								<xsl:value-of select="php:function('lang', 'send')"/>
+							</xsl:variable>
+							<xsl:variable name="lang_preview_html">
+								<xsl:value-of select="php:function('lang', 'preview html')"/>
+							</xsl:variable>
+							<input type="hidden" id="preview_html" name="preview_html" value=""/>
+							<input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});">
+								<xsl:attribute name="value">
+									<xsl:value-of select="$lang_preview_html"/>
+								</xsl:attribute>
+							</input>
+							<input type="submit" class="pure-button pure-button-primary" name="send">
+								<xsl:attribute name="value">
+									<xsl:value-of select="$lang_send"/>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_send"/>
+								</xsl:attribute>
+							</input>
+						</xsl:if>
+					</xsl:if>
 					<xsl:variable name="cancel_url">
 						<xsl:value-of select="cancel_url"/>
 					</xsl:variable>
