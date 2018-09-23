@@ -195,7 +195,7 @@
 				{
 					if($_temp)
 					{
-						$_temp = str_replace(array(' ', ';'), array('', ','), $_temp);
+						$_temp = str_replace(array(' ', '&amp;#59;', '&#59;', ';'), array('', ',', ',', ','), $_temp);
 						if(preg_match('/,/', $_temp))
 						{
 							$mail_recipients = array_merge($mail_recipients, explode(',', $_temp));

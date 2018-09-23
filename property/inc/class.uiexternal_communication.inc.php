@@ -687,7 +687,7 @@ HTML;
 
 			$body.= "<table border='1'>{$table_content}</table>\n";
 
-			$subject = '[' . lang('Ticket') . " #{$ticket_id}::{$id} ] : {$location_code}  {$message_info['subject']}({$i})";
+			$subject = "[PorticoTicket #{$ticket_id}::{$id}] : {$location_code}  {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
 
