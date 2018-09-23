@@ -299,7 +299,7 @@
 					'public' => false,
 					'required' => true,
 					),
-				'ticket_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'ticket_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
 					'label' => 'ticket_id',
 					'sortable' => false,

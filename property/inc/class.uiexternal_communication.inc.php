@@ -513,6 +513,46 @@ JS;
 			$html = $html_content['html'];
 			$subject = $html_content['subject'];
 
+			$preview = $this->preview_html;
+
+			$attachment_log = '';
+			$attachment_text = '';
+			if (!empty($message_info['file_attachments']) && is_array($message_info['file_attachments']))
+			{
+				$attachments = CreateObject('property.bofiles')->get_attachments($message_info['file_attachments']);
+				$_attachment_log = array();
+				foreach ($attachments as $_attachment)
+				{
+					$_attachment_log[] = $_attachment['name'];
+				}
+				$attachment_log = implode(', ', $_attachment_log);
+			}
+
+			$lang_attachments = lang('attachments');
+
+			if($attachment_log)
+			{
+				$attachment_html_row = "<tr><td>$lang_attachments</td><td>:&nbsp;$attachment_log</td></tr>";
+				$attachment_text = " {$lang_attachments} : {$attachment_log}";
+			}
+			else
+			{
+				$attachment_html_row = '';
+			}
+
+			$html = str_replace('__ATTACHMENTS__', $attachment_html_row, $html);
+
+			if ($preview)
+			{
+
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				echo $html;
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+
 			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 			{
 				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'),'error' );
@@ -530,27 +570,14 @@ JS;
 				return false;
 			}
 
-			$attachment_log = '';
-			if (!empty($message_info['file_attachments']) && is_array($message_info['file_attachments']))
-			{
-				$attachments = CreateObject('property.bofiles')->get_attachments($message_info['file_attachments']);
-				$_attachment_log = array();
-				foreach ($attachments as $_attachment)
-				{
-					$_attachment_log[] = $_attachment['name'];
-				}
-				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
-			}
-
-
 			$historylog_ticket = CreateObject('property.historylog', 'tts');
 
 			try
 			{
 				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
 				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
-				$historylog_ticket->add('M', $ticket_id, "{$_to}{$attachment_log}");
-				$this->historylog->add('M', $id, "{$_to}{$attachment_log}");
+				$historylog_ticket->add('M', $ticket_id, "{$_to}{$attachment_text}");
+				$this->historylog->add('M', $id, "{$_to}{$attachment_text}");
 				phpgwapi_cache::message_set(lang('message %1 is sent by email to %2', $id, $_to),'message' );
 			}
 			catch (Exception $exc)
@@ -569,12 +596,22 @@ JS;
 
 			$lang_print = lang('print');
 
-			$body = <<<HTML
+			$body = '';
+			if($preview)
+			{
+				$body = <<<HTML
 
 				<script type="text/javascript">
 						document.write("<form><input type=button "
 						+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
 				</script>
+
+HTML;
+			}
+
+			$body .= <<<HTML
+				<br/>
+				======== Ved svar: Svar over denne linjen og behold saksnummer i emnefelt. ========
 				<H2>__SUBJECT__</H2>
 
 HTML;
@@ -645,7 +682,7 @@ HTML;
 				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>\n";
 			}
 
-			$body .= "</table class='beta'><br/><br/>\n";
+			$body .= "__ATTACHMENTS__\n</table><br/><br/>\n";
 
 			$i = 1;
 			$lang_date = lang('date');
@@ -685,7 +722,7 @@ HTML;
 				$i++;
 			}
 
-			$body.= "<table border='1'>{$table_content}</table>\n";
+			$body.= "<table class='details'>{$table_content}</table>\n";
 
 			$subject = "[PorticoTicket #{$ticket_id}::{$id}] : {$location_code}  {$message_info['subject']}({$i})";
 
@@ -699,13 +736,31 @@ HTML;
 					<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 					<title>{$subject}</title>
 					<style>
-						.beta {
-							border: 1px solid black;
-							border-collapse: collapse;
-						}
+
 						html {
-						font-family: arial;
+							font-family: arial;
+							}
+
+						.details {
+						  width: 100%;
+						  border: 1px solid black;
+						  border-collapse: collapse;
 						}
+						.details th {
+						  background: darkblue;
+						  color: white;
+						}
+						.details td,
+						.details th {
+						  border: 1px solid black;
+						  text-align: left;
+						  padding: 5px 10px;
+						}
+						.details tr:nth-child(even) {
+						  background: lightblue;
+						}
+
+
 						@page {
 						size: A4;
 						}
@@ -789,16 +844,6 @@ HTML;
 			</html>
 HTML;
 
-
-			if ($preview)
-			{
-
-				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-				echo $html;
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
 
 			return array
 			(
