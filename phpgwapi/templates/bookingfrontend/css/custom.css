@@ -378,6 +378,9 @@ SEARCH PAGE STYLE
 }
 
 /* SEARCH CONTAINER */
+.circle {
+    fill: #000;
+}
 
 .pageResults {
     margin-bottom: 5em;

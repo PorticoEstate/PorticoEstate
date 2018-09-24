@@ -137,6 +137,10 @@ SEARCH PAGE STYLE
 
 /* SEARCH CONTAINER */
 
+.circle {
+    fill: #005692;
+}
+
 .filterSearchToggle {
     background-color: #b9d6ea;
     border: 1px solid #dedede;
