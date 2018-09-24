@@ -92,7 +92,7 @@
 			/**
 			 * Do not allow save / send here
 			 */
-			if(phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool'))
+			if(phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || phpgw::get_var('init_preview', 'bool'))
 			{
 				phpgw::no_access();
 			}
@@ -107,15 +107,32 @@
 				phpgw::no_access();
 			}
 
-			if(!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool')))
+			/**
+			 * Save first, then preview - first pass
+			 */
+			$init_preview = phpgw::get_var('init_preview', 'bool');
+
+			if(!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool')  || $init_preview))
 			{
-				$this->save();
+				$this->save($init_preview);
 			}
 
 			$id = phpgw::get_var('id', 'int');
 			if( $this->preview_html)
 			{
 				$this->_send($id);
+			}
+
+			/**
+			 * Save first, then preview - second pass
+			 */
+			if(phpgw::get_var('init_preview2', 'bool'))
+			{
+				$do_preview = $id;
+			}
+			else
+			{
+				$do_preview = null;
 			}
 
 			$ticket_id = phpgw::get_var('ticket_id', 'int');
@@ -390,6 +407,7 @@ JS;
 				'value_subject'		=> !empty($values['subject']) ? $values['subject'] : $ticket['subject'],
 				'value_extra_mail_address'=> $value_extra_mail_address,
 				'value_id'	=> $id,
+				'value_do_preview' => $do_preview,
 				'vendor_data' => $vendor_data,
 				'contact_data'	=> $contact_data,
 				'mode' => $mode,
@@ -406,7 +424,7 @@ JS;
 		}
 
 
-		public function save( )
+		public function save($init_preview = null )
 		{
 			$id = phpgw::get_var('id', 'int');
 
@@ -448,9 +466,11 @@ JS;
 				else
 				{
 					self::redirect(array('menuaction' => 'property.uiexternal_communication.edit',
-						'id' => $id,
-						'ticket_id' => $values['ticket_id'],
-						'type_id' => $values['type_id']));
+							'id' => $id,
+							'ticket_id' => $values['ticket_id'],
+							'type_id' => $values['type_id'],
+							'init_preview2'	=> $init_preview)
+						);
 				}
 			}
 
