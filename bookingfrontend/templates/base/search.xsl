@@ -81,7 +81,7 @@
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
                                 <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#008DD1" />
+                                    <circle cx="45" cy="45" r="37" fill="#005692" />
                                     <text x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em">
                                         22
                                     </text>
@@ -106,7 +106,7 @@
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
                                 <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#008DD1" />
+                                    <circle cx="45" cy="45" r="37" fill="#005692" />
                                     <text x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em">
                                         22
                                     </text>
@@ -141,7 +141,7 @@
                                 <!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
                                 
                                 <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#008DD1" />
+                                    <circle cx="45" cy="45" r="37" fill="#005692" />
                                     <text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
                                         
                                     </text>
@@ -180,7 +180,7 @@
                                 <!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
                                 
                                 <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#008DD1" />
+                                    <circle cx="45" cy="45" r="37" fill="#005692" />
                                     <text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
                                         
                                     </text>
@@ -206,7 +206,7 @@
                                             <h5 class="font-weight-bold" data-bind="text: name"></h5>
                                         </div>
                                         <div class="col-6">
-                                            <button class="btn btn-light float-right">Book</button>
+                                            <a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">Book</a>
                                         </div>
                                     </div>
                                     <div data-bind="foreach: facilities">
@@ -219,7 +219,7 @@
                                     </div>
                         </div>                                
                     </div>
-                    <div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 1"><i class="fas fa-angle-down"></i> Se <span data-bind="text: (filterSearchItemsResources().length - 2) "></span> flere</div>
+                    <div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2"><i class="fas fa-angle-down"></i> Se <span data-bind="text: (filterSearchItemsResources().length - 2) "></span> flere</div>
 
                 </div>
             </div>

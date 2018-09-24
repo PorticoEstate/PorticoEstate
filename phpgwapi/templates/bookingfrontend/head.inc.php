@@ -50,7 +50,7 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
-	$stylesheets[] = "https://fonts.googleapis.com/css?family=Roboto";
+	$stylesheets[] = "https://fonts.googleapis.com/css?family=Work+Sans";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/custom.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 
@@ -69,8 +69,11 @@ JS;
 		}
 	}
 
-	$logoimg = "/phpgwapi/templates/bookingfrontend/img/bergen-logo.png";
-	$GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_url']))
+	{
+		$logoimg = $GLOBALS['phpgw_info']['server']['logo_url'];
+		$GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
+	}
 
 	//loads jquery
 //	phpgwapi_jquery::load_widget('core');

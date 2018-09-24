@@ -154,31 +154,7 @@ $(document).ready(function ()
                 
                 $(".popover-content").html('<input type="time" name="usr_time">');
             }*/
-            
-        }
-         
-        /*var periode = $(this).parent().find(".scheduler-event-title").text();
-        $('#modal-booking-periode').text("");
-        $('#modal-booking-resource').text("");
-        $('#modal-booking-id').text("");
-        $('#modal-booking-organization').text("");
-        $("#modal-booking-description").text("");
-        if(periode == undefined || periode == "") {
-            periode = "Hel dag";
-        }
-        $('#modal-booking-periode').text(periode);
-        $('#modal-booking-resource').text($(this).find(".event-resource").text());
-        $('#modal-booking-id').text($(this).find(".event-id").text());
-        
-        if($(this).find(".event-organization-name").text() != "undefined") {
-            $('#modal-booking-organization').text($(this).find(".event-organization-name").text());
-        }
-        if($(this).find(".event-description").text() != "undefined") {
-            $("#modal-booking-description").text($(this).find(".event-description").text());
-        }
-        
-        $('#myModal').modal('show');*/
-         
+                    }
          
     });
     
@@ -196,7 +172,15 @@ $(document).ready(function ()
                 }
                 $(".booking-cart-items").toggle();
             });
-    
+    $(window).scroll(function () {
+        if ($(document).scrollTop() == 0) {
+            $('.brand-site-img').removeClass('tiny-logo');
+            $('.navbar').removeClass('tiny-navbar');
+        } else {
+            $('.brand-site-img').addClass('tiny-logo');
+            $('.navbar').addClass('tiny-navbar');
+        }
+        });
 });
 
 

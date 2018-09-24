@@ -2,7 +2,7 @@
           
                         
                         
-	<div class="container new-application-page" id="new-application-page">
+	<div class="container new-application-page my-container-top-fix" id="new-application-page">
                
             <form action="" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
             <div class="row">

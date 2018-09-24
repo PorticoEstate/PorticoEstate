@@ -10,7 +10,7 @@
   var agegroup = ko.observableArray();
   var audiences = ko.observableArray();
   ko.validation.locale('nb-NO');
-  var am;  
+  var am;
   
   function applicationModel()  {
       var self = this;
@@ -146,6 +146,12 @@
                       if($.inArray(result.results[i].id, initialSelection) > -1) {
                         tempSelected = true;
                       }
+                      if(typeof urlParams['resource_id'] !== "undefined" && initialSelection.length == 0) {
+                            if(urlParams['resource_id'] == result.results[i].id) {
+                                tempSelected = true;
+                            }
+                      }
+                                            
                       bookableresource.push({id: result.results[i].id, name: result.results[i].name, selected: ko.observable(tempSelected)});
                   }
               }
@@ -174,7 +180,7 @@
           am.activityId(activityId);
           ko.applyBindings(am, document.getElementById("new-application-page"));        
           showContent();
-          PopulatePostedDate();
+          PopulatePostedData();
           if(typeof initialAudience !== "undefined") {
             am.audienceSelectedValue(initialAudience);
           }
@@ -193,7 +199,7 @@
       });
   });
   
-  function PopulatePostedDate() {
+  function PopulatePostedData() {
       if(typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
           if(urlParams['start'].length > 0 && urlParams['end'].length > 0) {
   

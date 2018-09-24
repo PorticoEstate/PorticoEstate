@@ -1,6 +1,7 @@
 var selectedAutocompleteValue = false;
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
+$(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
 
 var results = ko.observableArray();
 var tags = ko.observableArray();
@@ -118,31 +119,21 @@ $(document).ready(function ()
     });
     // Event show all
     // Event hide all, except index 0
-    var showItems = true;
     $(document).on('click', '.filterSearchToggle', function () {
-        console.log();
         var items = (($(this).prev('div').find(".custom-subcard")));
+        var element = this;
         $(this).prev('div').find(".custom-subcard").each(function(e) {
-            if(showItems){
-                items[e].style.display = ""; 
+            if(!$(this).is(':visible')){
+                items[e].style.display = "";
+                $(element).html('<i class="fas fa-angle-up">') 
             }
             else{
                 if(e != 1 && e!=0){
                     items[e].style.display = "none";
+                    $(element).html('<i class="fas fa-angle-down">'); 
                 }
             }
         });
-
-        // If we have triggered show all items. Set function to hide items except first two index for next onclick action.
-        if(showItems){
-            showItems = false;
-            $(this).html('<i class="fas fa-angle-up">')
-        } 
-        // If we have triggered hide items. Set function to show all items for next onclick action.
-        else{
-            showItems = true;
-            $(this).html('<i class="fas fa-angle-down">');
-        }
     });
     
     GetFilterBoxData();
@@ -302,6 +293,8 @@ function DoFilterSearch() {
             for(var i=0; i<result.buildings.length; i++) {
                 var resources = [];
                 for(var k=0; k<result.buildings[i].resources.length; k++) {
+            
+                    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: result.buildings[i].id, resource_id: result.buildings[i].resources[k].id }, false);
                     var facilities = [];
                     var activities = [];
                     for(var f=0; f<result.buildings[i].resources[k].facilities_list.length; f++) {
@@ -310,7 +303,7 @@ function DoFilterSearch() {
                     for(var f=0; f<result.buildings[i].resources[k].activities_list.length; f++) {
                         activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
                     }                  
-                    resources.push({name: result.buildings[i].resources[k].name, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false });
+                    resources.push({name: result.buildings[i].resources[k].name, forwardToApplicationPage: bookBtnURL, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false });
                 }
                 items.push({resultType: GetTypeName("building").toUpperCase(), 
                 name: result.buildings[i].name, 

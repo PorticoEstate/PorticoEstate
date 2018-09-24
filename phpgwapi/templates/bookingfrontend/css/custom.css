@@ -12,31 +12,17 @@ and open the template in the editor.
 
 
 html {
-    font-family: 'Roboto', serif !important;
     font-size: 1rem;
     height: 100%;
+    color: #000;
 }
 
 body {
-    background-color: #f5f5f5 !important;
-}
-
-p {
-    color: #373737;
-}
-
-a {
-    color: #3d3d3d !important;  
-    outline: 0;
-}
-
-a:hover {
-    color: #008DD1 !important;
-    outline: 0;
+    background-color: #f5f5f5;
 }
 
 a:active {
-    outline: 0;
+    outline: 0 !important;
 }
 
 button {
@@ -52,13 +38,51 @@ button {
 }
 
 .navbar {
-    background-color: #fff !important;
+    padding-bottom: 1.4em;
+    -webkit-transition: ease 0.2s; /* Safari */
+          transition: ease 0.2s;
+}
+
+.nav-link {
+    margin: 5px !important;
+}
+.nav-link:hover {
+    line-height: 1.4em;    
+}
+
+.brand-site-title {
+    font-size: 20px;
+}
+
+.brand-site-img {
+    -webkit-transition: ease 0.2s; /* Safari */
+          transition: ease 0.2s;
 }
 
 .navbar-brand span {
     line-height: normal !important;
     display: block !important;
-    font-size: 14px;
+    font-weight: bold;
+}
+
+.navbar-brand:hover { 
+    opacity: 0.5;
+}
+
+.tiny-logo {
+    -webkit-transform: scale(0.7); /* Saf3.1+, Chrome */
+     -moz-transform: scale(0.7); /* FF3.5+ */
+      -ms-transform: scale(0.7); /* IE9 */
+       -o-transform: scale(0.7); /* Opera 10.5+ */
+          transform: scale(0.7);
+          -webkit-transition: ease 0.3s; /* Safari */
+          transition: ease 0.3s;
+}
+
+.tiny-navbar {
+    padding-bottom: 0.5em;
+    -webkit-transition: ease 0.3s; /* Safari */
+    transition: ease 0.3s;
 }
 
 .check-box-label {
@@ -95,7 +119,6 @@ input[type="checkbox"] + .label-text:before{
 
 input[type="checkbox"]:checked + .label-text:before{
 	content: "\f14a";
-	color: #2980b9;
 	animation: effect 250ms ease-in;
 }
 
@@ -109,19 +132,39 @@ input[type="checkbox"]:disabled + .label-text:before{
 }
 
 .bg-light {
-    /*background-color: #f2f2f2 !important;*/
-     border-bottom: 1px solid #3d3d3d;
+     border-bottom: 1px solid #000;
 }
 
-.container {
-    /*max-width: 1280px;*/
-    margin-top: 100px;
+.my-container-top-fix {
+    margin-top: 104px;
 }
 
 .dropdown-menu {
     transform: none !important;
     top: auto !important;
     left: auto !important;
+}
+
+.bookable-resource-link-href {
+    text-decoration: none;
+}
+
+.bookable-resource-link-href span,
+.termAcceptDocsUrl {
+    color: #000;
+    text-decoration: none !important;
+    border-bottom: 2px solid #000;
+    line-height: 1.4em;
+    display: inline-block;    
+}
+
+.bookable-resource-link-href span {
+    font-size: 20px;
+}
+
+.bookable-resource-link-href span:hover,
+.termAcceptDocsUrl:hover {
+    border-bottom: 2px solid transparent;
 }
 
 .margin-top-and-bottom {
@@ -132,26 +175,24 @@ input[type="checkbox"]:disabled + .label-text:before{
     margin: 0em 1.9em;
 }
 
-.wrapper {
-  min-height: 100%;
-  /* Equal to height of footer */
-  /* But also accounting for potential margin-bottom of last child */
-  margin-bottom: 10em;
+
+footer {
+    background: #fff;
+    line-height: 30px;
+    padding: 25px 20px;
 }
 
-.footer,
-.push {
-  height: 10em;
+.footer a {
+    color: #000;
+    text-decoration: none;
+    border-bottom: 2px solid #000;
+    display:inline-block !important;
+    line-height: 1.4em;
 }
 
-.footer {
-    background-color: #fff;
-    height: 10em;
-}
-
-.footer .container {
-    padding: 1em;
-    width: 100% !important;
+.footer a:hover {
+    border-bottom: 0px !important;
+    text-decoration: none;
 }
 
 .footer span {
@@ -250,7 +291,6 @@ SEARCH PAGE STYLE
 }
 
 .searchContainer {
-    background-color: #fff;
     padding: 50px;
 }
 
@@ -259,18 +299,18 @@ SEARCH PAGE STYLE
 }
 
 .searchInput {
-    border: 2px solid #008DD1 !important;
+    border: 2px solid #3d3d3d !important;
     border-radius: 0 !important;
 }
 
 .searchInput:focus {
     box-shadow: none;
-    border: 2px solid #085bbe !important;
+    border: 2px solid #3d3d3d !important;
 }
 
 .searchBtn {
-    background-color: #008DD1 !important;
-    border: 2px solid #008DD1;
+    background-color: #3d3d3d !important;
+    border: 2px solid #3d3d3d;
     color: #fff;
 }
 
@@ -284,10 +324,10 @@ SEARCH PAGE STYLE
 .dropdown .btn:focus,
 .dropdown .show > .dropdown .btn-secondary.dropdown-toggle
 {
-    background-color: transparent !important;
+    background-color: #fff !important;
     color: #000 !important;
     min-width: 10em;
-    border: 1px #008DD1 solid;
+    border: 1px #3d3d3d solid;
     border-radius: 0;
 }
 
@@ -311,7 +351,7 @@ SEARCH PAGE STYLE
     width: 100%;
     margin-left: -14.9px;
     margin-bottom: 10px;
-    background-color: #D3E8E9;
+    background-color: rgb(247, 247, 247);
     border: 1px solid #dedede;
     outline: none;
     margin-top: -10px !important;
@@ -329,11 +369,11 @@ SEARCH PAGE STYLE
     border: 1px #dedede solid;
     margin-bottom: 10px;
     width: 100%;
+    color: #000;
 }
 
 .custom-card:hover {
     background-color: #e2e2e2;
-    
 }
 
 .custom-card-link-href:hover {
@@ -353,9 +393,20 @@ SEARCH PAGE STYLE
     border-bottom: 0px;
     width: 100%;
 }
+
 .custom-subcard:last-child {
     border-bottom: 1px solid #dedede;
 }
+
+
+.custom-subcard .show {
+    display: block;
+}
+
+.custom-subcard .hide {
+    display: none;
+}
+
 
 #welcomeResult .custom-card .desc span {
     font-size: 12px;
@@ -411,25 +462,14 @@ input:focus {
     margin-left: 5px;
 }
 
-.badge {
-    margin: 0 0.5em 0.5em 0;
-    padding: 0.5em;
-    color: #fff;
-}
-
-.badge-default {
-    background-color: #414141; 
-}
-
-.badge-default:hover {
-    background-color: #5a5a5a;
-    color: #82c1fc;
+.autocompleter {
+    background-color: #f9f9f9;
 }
 
 .bygg-li {
     width: 50%;
     float: left;
-    background-color: #f5f5f5;
+    background-color: #f9f9f9;
     padding: 0.5em;
     border-right: 5px #fff solid;
     overflow: hidden;
@@ -438,7 +478,7 @@ input:focus {
 .org-li {
     width: 50%;
     float: right;
-    background-color: #f5f5f5;
+    background-color: #f9f9f9;
     padding: 0.5em;
     overflow: hidden;
 }
@@ -461,9 +501,11 @@ input:focus {
 
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575px) {
-    
-    .navbar-brand span {
-        text-align: center;
+    .navbar-brand {
+        margin-right: 0 !important;
+    }
+    .navbar-brand span {        
+        font-size: 14px;
     }
     
     .date-circle {
@@ -572,6 +614,26 @@ BUILDING PAGE STYLE
     height:     100%; 
 }
 
+.info-content {
+    padding-top: 2em;
+}
+
+.location {
+    margin-bottom: 2em;
+}
+
+.location span {
+    font-size: 14px;
+    padding: 0.5em;
+    background-color: #fff;
+    border: 1px #dedede solid;
+    border-right: none;
+}
+
+.location span:last-child {
+    border-right: 1px #dedede solid;
+}
+
 .building-place-adr {
     display: inline;
 }
@@ -593,6 +655,11 @@ BUILDING PAGE STYLE
     background-color: transparent;
     border-bottom: 1px #e2e2e2 solid;
     padding: 1em;
+}
+
+.building-card-header button{
+    color: #000 !important;
+    background-color: transparent;
 }
 
 .building-card-header button{
@@ -707,6 +774,7 @@ RESOURCE PAGE STYLE
 
 .main-picture {
     max-height: 300px;
+    min-height: 300px;
 }
 
 #list-img-thumbs img {
@@ -853,7 +921,6 @@ NEW APPLICATION PAGE STYLE
 
 .booking-cart-title i:hover,
 .booking-cart-title span:nth-child(1):hover {
-    color: #aaa;
     cursor: pointer;
 }
 
@@ -864,12 +931,7 @@ NEW APPLICATION PAGE STYLE
 
 .booking-cart-item .fa-trash-alt:hover,
 #new-application-partialtwo  .fa-trash-alt:hover {
-    color: #008DD1 !important;
     cursor: pointer !important;
-}
-
-.new-application-page {
-    min-height: 890px;
 }
 
 #new-application-partialtwo .applications {

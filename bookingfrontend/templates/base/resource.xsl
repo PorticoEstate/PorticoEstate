@@ -1,25 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-    
+    <div class="info-content" id="building-page-content">
     <div class="container my-container-top-fix wrapper">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a>
-                    <xsl:attribute name="href">
-                        <xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="php:function('lang', 'Home')" />
-                </a>
-            </li>
-			<li class="breadcrumb-item active">
-				<a>
+        <div class="location">
+			<span><a>
 					<xsl:attribute name="href">
-						<xsl:value-of select="building/link" />
+						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
 					</xsl:attribute>
-					<xsl:value-of select="building/name" />
+					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
-			</li>
-        </ol>
+			</span>
+			<span><xsl:value-of select="php:function('lang', 'resource')" /></span>
+		</div>
 
 		<div class="row p-3">
             <div class="col-lg-6">
@@ -131,15 +123,17 @@
                 </div>  
             </div>
         </div>
+        </div>
+        </div>
         
-        
+        <div class="container wrapper">
         <div class="row margin-top-and-bottom">
             
             <div class="button-group dropdown">
 
                 <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
                 
-                <button class="btn btn-default ml-1"><i class="fas fa-plus"></i> Book</button>
+                <a href="" class="btn btn-default ml-1 bookBtnForward"><i class="fas fa-plus"></i> Book</a>
             </div>
             
             
