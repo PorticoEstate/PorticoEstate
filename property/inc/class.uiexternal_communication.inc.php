@@ -568,7 +568,7 @@ JS;
 				
 				$lang_external = lang('external communication');
 
-				$historylog_ticket->add('M', $ticket_id, "($lang_external) {$_to}{$attachment_text}");
+				$historylog_ticket->add('M', $ticket_id, "($lang_external [$id]) {$_to}{$attachment_text}");
 				$this->historylog->add('M', $id, "{$_to}{$attachment_text}");
 				$this->bo->update_msg($id, $_to, $attachment_log);
 			}
@@ -710,7 +710,7 @@ HTML;
 
 			$body.= "<table class='details'>{$table_content}</table>\n";
 
-			$subject = "[PorticoTicket #{$ticket_id}::{$id}] : {$location_code}  {$message_info['subject']}({$i})";
+			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$location_code} {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
 

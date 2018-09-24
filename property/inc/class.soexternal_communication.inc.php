@@ -221,25 +221,26 @@
 
 			return $values;
 		}
-		function add_msg($id, $message )
+		function add_msg($id, $message, $sender = '' )
 		{
 			$value_set = array
 			(
-				'excom_id'	=> (int) $id,
-				'message'	=> $message,
-				'created_on' => time(),
-				'created_by' => $this->account
+				'excom_id'				=> (int) $id,
+				'message'				=> $message,
+				'created_on'			=> time(),
+				'created_by'			=> $this->account,
+				'sender_email_address'	=> $sender
 			);
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
-
 
 			$table = 'fm_tts_external_communication_msg';
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($table, 'id');
 
+			return $id;
 		}
 
 		function update_msg($excom_id, $mail_recipients, $file_attachments = '' )
