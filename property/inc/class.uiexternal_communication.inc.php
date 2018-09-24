@@ -676,7 +676,6 @@ HTML;
 
 			$body .= "__ATTACHMENTS__\n</table><br/><br/>\n";
 
-			$i = 1;
 			$lang_date = lang('date');
 			$lang_who = lang('who');
 			$lang_note = lang('note');
@@ -701,6 +700,7 @@ HTML;
 
 			$additional_notes = $this->bo->read_additional_notes($id);
 
+			$i = 0;
 			foreach ($additional_notes as $value)
 			{
 				$value_note = nl2br($value['value_note']);
