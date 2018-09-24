@@ -10193,7 +10193,6 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_external_communication', array(), 'timestamp_sent');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_external_communication', array(), 'message');
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
