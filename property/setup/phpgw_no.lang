@@ -2388,3 +2388,9 @@ other projects	property	no	Andre prosjekter
 assign	property	no	Tildel
 start time	property	no	Starttid
 serie	property	no	Serie
+external communication	property	no	Ekstern kommunikasjon
+internal communication	property	no	Intern kommunikasjon
+comma separated list	property	no	Kommaseparert liste
+external communication type	property	no	Ekstern kommunikasjonstype
+message	property	no	melding
+message has been saved	property	no	Melding er lagret

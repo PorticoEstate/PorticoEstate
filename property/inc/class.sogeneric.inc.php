@@ -907,6 +907,30 @@
 					);
 					break;
 
+				case 'external_com_type':
+					$_lang_external_com_type = lang('external communication type');
+					$info = array
+						(
+						'table' => 'fm_tts_external_communication_type',
+						'id' => array('name' => 'id', 'type' => 'int'),
+						'fields' => array
+						(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+						),
+						'edit_msg' => lang('edit') . ' ' . $_lang_external_com_type,
+						'add_msg' => lang('add') . ' ' . $_lang_external_com_type,
+						'name' => $_lang_external_com_type,
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::ticket::external_com_type'
+					);
+					break;
+
 				//-------- ID type varchar
 				case 'external_project':
 					$info = array

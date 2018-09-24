@@ -85,12 +85,6 @@
 									<xsl:value-of select="php:function('lang', 'Prefix')"/>
 								</label>
 								<input type="text" id="per_prefix" name="per_prefix" value="{person_data/per_prefix}">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Prefix')"/>
-									</xsl:attribute>
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="php:function('lang', 'Prefix')"/>
 									</xsl:attribute>

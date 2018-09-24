@@ -1818,6 +1818,14 @@ HTML;
 
 			$id = phpgw::get_var('id', 'int');
 
+			$add_external_communication = phpgw::get_var('external_communication', 'int');
+
+			if ($add_external_communication)
+			{
+				self::redirect(array('menuaction' => 'property.uiexternal_communication.edit','ticket_id' => $id,
+					'type_id' => $add_external_communication ));
+			}
+
 			if ($this->tenant_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view2',
@@ -2476,7 +2484,8 @@ HTML;
 				'data' => json_encode($additional_notes),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0,'asc'))),
 				)
 			);
 
@@ -2901,6 +2910,55 @@ HTML;
 				)
 			);
 
+			$external_messages_def = array(
+				array(
+					'key' => 'id',
+					'label' => lang('id'),
+					'hidden' => false
+					),
+				array(
+					'key' => 'subject_link',
+					'label' => lang('subject'),
+					'hidden' => false,
+					'sortable' => true,
+					),
+				array(
+					'key' => 'mail_recipients',
+					'label' => lang('email'),
+					'hidden' => false,
+					'sortable' => true,
+					),
+				array(
+					'key' => 'modified_date',
+					'label' => lang('modified date'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+				);
+
+			$external_messages = createObject('property.soexternal_communication')->read($id);
+
+			foreach ($external_messages as &$external_message)
+			{
+				$external_message['modified_date'] = $GLOBALS['phpgw']->common->show_date($external_message['modified_date']);
+				$external_message['mail_recipients'] = implode(', ', $external_message['mail_recipients']);
+				$external_message['subject_link'] = "<a href=\"" . self::link(array('menuaction' => 'property.uiexternal_communication.edit',
+						'id' => $external_message['id'], 'ticket_id' => $id)) . "\">{$external_message['subject']}</a>";
+			}
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_9',
+				'requestUrl' => "''",
+				'data' => json_encode($external_messages),
+				'ColumnDefs' => $external_messages_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
+				)
+			);
 
 
 			// end invoice table

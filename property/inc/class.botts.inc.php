@@ -1407,6 +1407,7 @@ HTML;
 			foreach ($additional_notes as $value)
 			{
 				$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>";
+				$i++;
 			}
 
 			$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
