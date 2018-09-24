@@ -42,6 +42,21 @@
 		{
 			$this->location_id = (int)$location_id;
 		}
+
+		public function read()
+		{
+			if(!$this->location_id)
+			{
+				throw new Exception("location_id is not set");
+			}
+			
+			if(!$this->config_data)
+			{
+				$this->read_repository();
+			}
+			return $this->config_data;
+		}
+
 		public function read_repository()
 		{
 			$sql = "SELECT phpgw_config2_section.name as section, value as config_value, phpgw_config2_attrib.name as config_name "
