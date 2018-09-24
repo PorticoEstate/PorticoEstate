@@ -563,7 +563,7 @@ JS;
 
 			try
 			{
-				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments);
 				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
 				
 				$lang_external = lang('external communication');
