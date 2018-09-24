@@ -100,8 +100,7 @@ JS;
 	}
 
 	$config	= CreateObject('phpgwapi.config','booking')->read();
-	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
-
+	
 	$bodoc = CreateObject('booking.bodocumentation');
 	$manual  =  $bodoc->so->getFrontendDoc();	
 

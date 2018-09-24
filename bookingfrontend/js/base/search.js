@@ -1,4 +1,5 @@
 var selectedAutocompleteValue = false;
+$(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
 $(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
@@ -146,9 +147,23 @@ function GetUpcommingEvents() {
     $.getJSON(requestURL, function(result) {
         $(".upcomingevents-header").html(result.header);
         for(var i=0; i<result.results.length; i++) {
+            var from_ = new Date(result.results[i].from_);
+            var to_ = new Date(result.results[i].to_);
+            var month = result.results[i].datetime_month;
+            var fontsize = "40px";
+            if(from_.getDate() != to_.getDate()) {
+                fontsize = "23px";
+                if(month.indexOf("-") != -1) {
+                    var months = month.split("-"); 
+                    month = months[0].substr(0,3) + "-" + months[1].substr(0,3);
+                }                
+            } else {
+                month = month.substr(0,3);
+            }
             searchViewModel.upcommingevents.push({
+                event_fontsize: fontsize,
                 datetime_day: result.results[i].datetime_day,
-                datetime_month: (result.results[i].datetime_month).substring(0, 3),
+                datetime_month: month,
                 building_name: result.results[i].building_name,
                 description: result.results[i].description,
                 datetime_time: result.results[i].datetime_time,

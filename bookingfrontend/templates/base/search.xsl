@@ -81,8 +81,8 @@
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
                                 <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#005692" />
-                                    <text data-bind="text: datetime_day" x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">                                        
+                                    <circle cx="45" cy="45" r="41" fill="#005692" />
+                                    <text class="event_datetime_day" data-bind="" x="50%" y="43%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">                                        
                                     </text>
                                     <text data-bind="text: datetime_month" x="50%" y="68%" text-anchor="middle" fill="white" font-weight="bold" dy=".3em">                                        
                                     </text>

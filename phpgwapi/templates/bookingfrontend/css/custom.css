@@ -424,6 +424,7 @@ SEARCH PAGE STYLE
 
 .custom-card p {
     font-size: 14px;
+    min-height: 50px;
 }
 
 .custom-subcard {
