@@ -30,6 +30,18 @@
 
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
+              <ul class="navbar-nav navbar-search d-none">
+                  <li class="nav-item">
+                      <form>
+                      <div class="input-group mb-3">
+                        <input class="form-control" type="text" placeholder="Søk sted, hall, aktivitet, utstyr" />
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                          </div>
+                      </div>
+                      </form>
+                  </li>
+              </ul>
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                   <a class="nav-link" href="#">Om tjenesten</a>

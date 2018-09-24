@@ -1,3 +1,4 @@
+$(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
 var resourceIds = [];

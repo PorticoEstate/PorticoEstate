@@ -1,3 +1,4 @@
+$(".navbar-search").removeClass("d-none");
   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
   $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
   $(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");

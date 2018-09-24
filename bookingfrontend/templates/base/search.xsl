@@ -73,58 +73,32 @@
 
         <!-- UPCOMMING ARRAGEMENTS -->
         <div id="welcomeResult">
-            <h1 class="text-center result-title">Dette skjer i Stavanger</h1>
+            <h1 class="text-center upcomingevents-header"></h1>
 
-            <div class="row">
+            <div class="row" data-bind="foreach: upcommingevents">
                 <div class="col-lg-6 card-positioncorrect">
-                    <a href="/PorticoEstate/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show" class="custom-card-link">
+                    <a href="" class="custom-card-link">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
                                 <svg width="90" height="90">
                                     <circle cx="45" cy="45" r="37" fill="#005692" />
-                                    <text x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em">
-                                        22
+                                    <text data-bind="text: datetime_day" x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">                                        
                                     </text>
-                                    <text x="50%" y="70%" text-anchor="middle" fill="white" font-family="Arial" dy=".3em">
-                                        MARS
+                                    <text data-bind="text: datetime_month" x="50%" y="68%" text-anchor="middle" fill="white" font-weight="bold" dy=".3em">                                        
                                     </text>
                                 </svg>
                             </div>
                             <div class="col-8 desc">
-                                <h5 class="font-weight-bold">Foballturnering</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                <span>19:00-15:00</span>
-                                <span>STED: TASTAHALLEN</span>
-                                <span>ARRANGØR: TUFTE IL</span>
+                                <h5 class="font-weight-bold" data-bind="text: building_name"></h5>
+                                <p data-bind="text: description"></p>
+                                <span class="text-uppercase" data-bind="text: datetime_time"></span>
+                                <span class="text-uppercase" data-bind="text: building_name"></span>
+                                <span class="text-uppercase" data-bind="text: contact_name"></span>
                             </div>
                         </div>
                     </a>
                 </div>
                 
-                <div class="col-lg-6 card-positioncorrect">
-                    <a href="/PorticoEstate/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show" class="custom-card-link">
-                        <div class="row custom-card">
-                            <div class="col-3 date-circle">
-                                <svg width="90" height="90">
-                                    <circle cx="45" cy="45" r="37" fill="#005692" />
-                                    <text x="50%" y="40%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em">
-                                        22
-                                    </text>
-                                    <text x="50%" y="70%" text-anchor="middle" fill="white" font-family="Arial" dy=".3em">
-                                        MARS
-                                    </text>
-                                </svg>
-                            </div>
-                            <div class="col-8 desc">
-                                <h5 class="font-weight-bold">Foballturnering</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                <span>19:00-15:00</span>
-                                <span>STED: TASTAHALLEN</span>
-                                <span>ARRANGØR: TUFTE IL</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
             </div>
         
         </div>

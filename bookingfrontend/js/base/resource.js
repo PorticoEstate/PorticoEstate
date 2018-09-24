@@ -1,3 +1,4 @@
+$(".navbar-search").removeClass("d-none");
 var events = ko.observableArray();
 var date = new Date();
 //var urlParams = new URLSearchParams(window.location.search);

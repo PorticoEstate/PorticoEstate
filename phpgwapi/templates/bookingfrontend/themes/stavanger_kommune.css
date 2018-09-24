@@ -240,6 +240,7 @@ APPLICATIONCART STYLE
 .booking-cart-title {
     background-color: #b9d6ea;
     border-bottom: 1px solid #e2e2e2;
+    color: #000;
 }
 
 .booking-cart-item {

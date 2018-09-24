@@ -11,6 +11,7 @@ var ViewModel = function(data) {
     var self = this;
     
     self.items = (results);
+    self.upcommingevents = ko.observableArray([]);
     self.notFilterSearch = ko.observable(false);    
     self.filterboxes = ko.observableArray();
     self.filterbox = ko.observableArray();
@@ -136,9 +137,27 @@ $(document).ready(function ()
         });
     });
     
+    GetUpcommingEvents();
     GetFilterBoxData();
 });
 
+function GetUpcommingEvents() {
+    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.events"}, true);
+    $.getJSON(requestURL, function(result) {
+        $(".upcomingevents-header").html(result.header);
+        for(var i=0; i<result.results.length; i++) {
+            searchViewModel.upcommingevents.push({
+                datetime_day: result.results[i].datetime_day,
+                datetime_month: (result.results[i].datetime_month).substring(0, 3),
+                building_name: result.results[i].building_name,
+                description: result.results[i].description,
+                datetime_time: result.results[i].datetime_time,
+                contact_name: result.results[i].contact_name
+            });
+        }
+    }).done(function () {
+    });
+}
 
 function GetFilterBoxData() {
     var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.get_filterboxdata"}, true);
