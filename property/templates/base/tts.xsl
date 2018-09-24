@@ -724,7 +724,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'files')"/>
+							<xsl:value-of select="php:function('lang', 'messages')"/>
 						</label>
 						<div class="pure-u-md-1-2" >
 							<xsl:for-each select="datatable_def">

@@ -75,6 +75,13 @@
 			$value_set['modified_date'] = time();
 			$value_set['created_by'] = $this->account;
 
+			$new_message = $value_set['message'];
+
+			/*
+			 * Stored elsewhere
+			 */
+			unset($value_set['message']);
+
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
 
@@ -84,6 +91,8 @@
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($table, 'id');
+
+			$this->add_msg($id, $new_message);
 
 			$this->db->transaction_commit();
 
@@ -103,9 +112,9 @@
 			$old_subject = $this->db->f('subject');
 			$_old_message = $this->db->f('message');
 
-			$history_values = $this->historylog->return_array(array(), array('C'), 'history_timestamp', 'DESC', $id);
+			$history_values = $this->get_messages($id, 'DESC');
 
-			$old_message = $history_values[0]['new_value'];
+			$old_message = $history_values[0]['message'];
 
 			if (!$old_message)
 			{
@@ -173,7 +182,7 @@
 			if (($old_message != $new_message) && $new_message)
 			{
 				$this->fields_updated[] = 'message';
-				$this->historylog->add('C', $id, $new_message, $old_message);
+				$this->add_msg($id, $new_message);
 			}
 
 			$this->db->transaction_commit();
@@ -182,6 +191,73 @@
 
 			return $receipt;
 
+		}
+
+		function get_messages($id, $sort = 'DESC')
+		{
+			$table = 'fm_tts_external_communication_msg';
+
+			$this->db->query("SELECT * FROM {$table} WHERE excom_id = " .(int)$id . " ORDER BY id {$sort}", __LINE__, __FILE__);
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$mail_recipients = trim( $this->db->f('mail_recipients'), ',');
+				$mail_recipients = $mail_recipients ? explode(',', $mail_recipients) : array();
+				$file_attachments = trim($this->db->f('file_attachments'), ',');
+				$file_attachments = $file_attachments ? explode(',', $file_attachments) : array();
+
+				$values[] = array
+				(
+					'id'		=> $this->db->f('id'),
+					'message'	=> $this->db->f('message', true),
+					'created_on' => $this->db->f('created_on'),
+					'created_by' => $this->db->f('created_by'),
+					'timestamp_sent' => $this->db->f('id'),
+					'mail_recipients' => $mail_recipients,
+					'file_attachments' => $file_attachments,
+					'sender_email_address' => $this->db->f('sender_email_address', true),
+				);
+			}
+
+			return $values;
+		}
+		function add_msg($id, $message )
+		{
+			$value_set = array
+			(
+				'excom_id'	=> (int) $id,
+				'message'	=> $message,
+				'created_on' => time(),
+				'created_by' => $this->account
+			);
+
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
+
+
+			$table = 'fm_tts_external_communication_msg';
+
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+			$id = $this->db->get_last_insert_id($table, 'id');
+
+		}
+
+		function update_msg($excom_id, $mail_recipients, $file_attachments = '' )
+		{
+			$table = 'fm_tts_external_communication_msg';
+			$this->db->query("SELECT max(id) as id FROM {$table} WHERE excom_id = " .(int)$excom_id, __LINE__, __FILE__);
+			$this->db->next_record();
+			$id	= (int) $this->db->f('id');
+
+			$value_set = array
+			(
+				'timestamp_sent'	=>  time(),
+				'mail_recipients'	=> $mail_recipients,
+				'file_attachments' => $file_attachments,
+			);
+
+			$value_set_update = $this->db->validate_update($value_set);
+			return $this->db->query("UPDATE {$table} SET {$value_set_update} WHERE id={$id}", __LINE__, __FILE__);
 		}
 
 		function organize_mail_recipients( $values )

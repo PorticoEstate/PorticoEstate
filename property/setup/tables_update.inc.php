@@ -10129,8 +10129,6 @@
 					'type_id' => array('type' => 'int', 'precision' => 2, 'nullable' => False),
 					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 					'subject' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
-					'message' => array('type' => 'text', 'nullable' => False),
-					'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 					'mail_recipients' => array('type' => 'text', 'nullable' => True),
 					'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 					'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
@@ -10181,6 +10179,49 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.732';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.732 to 0.9.17.733
+	*
+	*/
+	$test[] = '0.9.17.732';
+
+	function property_upgrade0_9_17_732()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_external_communication', array(), 'timestamp_sent');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_external_communication', array(), 'message');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_external_communication_msg',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'excom_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'message' => array('type' => 'text', 'nullable' => False),
+					'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'mail_recipients' => array('type' => 'text', 'nullable' => True),
+					'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'sender_email_address' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(
+					'fm_tts_external_communication' => array('excom_id' => 'id')
+					),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.733';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

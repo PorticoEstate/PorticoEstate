@@ -15,9 +15,9 @@
 		self.name="first_Window";
 		preview = function(id)
 		{
-		var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
+			var strURL = phpGWLink('index.php', oArgs);
+			Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 		};
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var order_id = '<xsl:value-of select="value_order_id"/>';

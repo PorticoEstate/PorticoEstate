@@ -128,25 +128,10 @@
 
 			$additional_message_notes = $this->bo->read_additional_notes($id);
 
-			if($id)
-			{
-				$message_notes = array(
-					array(
-						'value_id' => '', //not from historytable
-						'value_count' => 1,
-						'value_date' => $GLOBALS['phpgw']->common->show_date($values['created_on']),
-						'value_user' => $values['created_by'] ? $GLOBALS['phpgw']->accounts->get($values['created_by'])->__toString() : '',
-						'value_note' => $values['message'],
-					)
-				);
-
-				$additional_message_notes = array_merge($message_notes, $additional_message_notes);
-			}
-
 			$message_note_def = array(
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
 
@@ -176,7 +161,7 @@
 			$note_def = array(
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
 
@@ -296,10 +281,8 @@ JS;
 				)
 			);
 
-
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view_file'));
 
-			//fixme
 			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
 			$content_files = array();
@@ -571,14 +554,23 @@ JS;
 			}
 
 			$historylog_ticket = CreateObject('property.historylog', 'tts');
+			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'))->read();
+
+			if(!empty($config_admin['xPortico']['sender_email_address']))
+			{
+				$coordinator_email = $config_admin['xPortico']['sender_email_address'];
+			}
 
 			try
 			{
 				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
 				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
-				$historylog_ticket->add('M', $ticket_id, "{$_to}{$attachment_text}");
+				
+				$lang_external = lang('external communication');
+
+				$historylog_ticket->add('M', $ticket_id, "($lang_external) {$_to}{$attachment_text}");
 				$this->historylog->add('M', $id, "{$_to}{$attachment_text}");
-				phpgwapi_cache::message_set(lang('message %1 is sent by email to %2', $id, $_to),'message' );
+				$this->bo->update_msg($id, $_to, $attachment_log);
 			}
 			catch (Exception $exc)
 			{
@@ -686,7 +678,7 @@ HTML;
 
 			$i = 1;
 			$lang_date = lang('date');
-			$lang_user = lang('user');
+			$lang_who = lang('who');
 			$lang_note = lang('note');
 			$table_content = <<<HTML
 			<thead>
@@ -698,7 +690,7 @@ HTML;
 						{$lang_date}
 					</th>
 					<th>
-						{$lang_user}
+						{$lang_who}
 					</th>
 					<th>
 						{$lang_note}
@@ -706,12 +698,6 @@ HTML;
 				</tr>
 			</thead>
 HTML;
-
-			$user_name = $message_info['created_by'] ? $GLOBALS['phpgw']->accounts->get($message_info['created_by'])->__toString() : '';
-
-			$first_note = nl2br($message_info['message']);
-
-			$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$first_note}</td></tr>\n";
 
 			$additional_notes = $this->bo->read_additional_notes($id);
 

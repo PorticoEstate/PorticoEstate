@@ -45,19 +45,28 @@
 		function read_additional_notes( $id = 0)
 		{
 			$additional_notes = array();
-			$history_array = $this->historylog->return_array(array(), array('C'), '', '', $id);
 
-			$i = 2;
+			$history_array = $this->so->get_messages($id);
+
+			$i = 1;
 			foreach ($history_array as $value)
 			{
+				if($value['sender_email_address'])
+				{
+					$value_user = $value['sender_email_address'];
+				}
+				else if($value['created_by'])
+				{
+					$value_user = $GLOBALS['phpgw']->accounts->get($value['created_by'])->__toString();
+				}
+
 				$additional_notes[] = array
 					(
 					'value_id' => $value['id'],
 					'value_count' => $i,
-					'value_date' => $GLOBALS['phpgw']->common->show_date($value['datetime']),
-					'value_user' => $value['owner'],
-					'value_note' => stripslashes($value['new_value']),
-					'value_publish' => $value['publish'],
+					'value_date' => $GLOBALS['phpgw']->common->show_date($value['created_on']),
+					'value_user' => $value_user,
+					'value_note' => stripslashes($value['message']),
 				);
 				$i++;
 			}
@@ -196,5 +205,8 @@
 
 			return $record_history;
 		}
-
+		function update_msg($id, $to, $attachment_log = '' )
+		{
+			$this->so->update_msg($id, $to, $attachment_log);
+		}
 	}

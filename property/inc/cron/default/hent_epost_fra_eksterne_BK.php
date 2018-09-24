@@ -125,8 +125,8 @@
 		function process_messages()
 		{
 			// Set connection information.
-			$host = 'epost.bergen.kommune.no';
-			$username = 'xPortico';
+			$host = !empty($this->config->config_data['xPortico']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
+			$username = !empty($this->config->config_data['xPortico']['username']) ? $this->config->config_data['xPortico']['username'] : 'xPortico';
 			$password = $this->config->config_data['xPortico']['password'];
 			$version = Client::VERSION_2016;
 
