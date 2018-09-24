@@ -710,7 +710,7 @@ HTML;
 
 			$body.= "<table class='details'>{$table_content}</table>\n";
 
-			$subject = "[PorticoTicket #{$ticket_id}::{$id}] : {$location_code}  {$message_info['subject']}({$i})";
+			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$location_code} {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
 
