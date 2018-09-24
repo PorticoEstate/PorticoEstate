@@ -460,6 +460,15 @@
 
 		function events()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+			$headertext = lang('Upcoming events');
+			$headertext_config = $config->config_data['frontpage_upcomingevents'];
+			if (!empty($headertext_config))
+			{
+				$headertext = $headertext_config;
+			}
+
 			$fields_events = array('building_name','contact_email','contact_name','description','from_','id','to_');
 			$now = date('Y-m-d');
 			$expired_conditions = "(bb_event.active != 0 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.description != '')";
@@ -499,6 +508,8 @@
 				$event['datetime_time'] = sprintf('%s-%s', date('H:i',$ts_from), date('H:i',$ts_to));
 			}
 			unset($event);
+
+			$event_result['header'] = $headertext;
 
 			return $event_result;
 		}

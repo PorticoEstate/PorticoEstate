@@ -195,6 +195,7 @@
 							<xsl:value-of select="config_data/emails"/>
 						</textarea>
 					</div>
+
 					<div class="pure-control-group">
 						<xsl:value-of select="php:function('lang', 'Front page filtering')"/>
 					</div>
@@ -209,6 +210,18 @@
 							<xsl:value-of select="config_data/frontpage_filterboxdata"/>
 						</textarea>
 					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Title for upcoming events')"/>
+						</label>
+						<input id="field_frontpage_upcomingevents" type="text" name="config_data[frontpage_upcomingevents]" class="pure-input-1-2" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/frontpage_upcomingevents"/>
+							</xsl:attribute>
+						</input>
+					</div>
+
 					<div class="pure-control-group">					
 						<xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/>
 					</div>

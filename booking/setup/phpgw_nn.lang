@@ -747,4 +747,6 @@ Resource category	booking	nn	Ressurskategori
 Send as sms	booking	nn	Send som sms
 Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
 Text and activity IDs for each filter box	booking	nn	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
+Title for upcoming events	booking	nn	Tittel for liste med kommende arrangementer
+Upcoming events	booking	nn	Kommende arrangementer
 Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad med informasjon om aktiviteten/arrangementet er lagt til. Du kan legge til en ny søknad, eller fullføre søknaden ved å legge til kontaktinformasjon.
