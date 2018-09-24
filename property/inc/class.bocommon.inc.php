@@ -2558,13 +2558,23 @@
 			return $ret;
 		}
 
-		public function get_vendor_email( $vendor_id = 0 )
+		public function get_vendor_email( $vendor_id = 0 , $field_name = '')
 		{
 			if (!$vendor_id)
 			{
 				$vendor_id = phpgw::get_var('vendor_id', 'int', 'GET', 0);
+				$field_name = phpgw::get_var('field_name', 'string', 'GET');
 			}
 			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
+
+			if(!$field_name)
+			{
+				$field_name = 'values[vendor_email][]';
+			}
+			else
+			{
+				$field_name .= '[]';
+			}
 
 			$content_email = array();
 			$title = lang('The address to which this order will be sendt');
@@ -2573,7 +2583,7 @@
 				$content_email[] = array
 					(
 					'value_email' => $_entry['email'],
-					'value_select' => "<input type='checkbox' name='values[vendor_email][]' value='{$_entry['email']}' title='{$title}'>"
+					'value_select' => "<input type='checkbox' name='{$field_name}' value='{$_entry['email']}' title='{$title}'>"
 				);
 			}
 

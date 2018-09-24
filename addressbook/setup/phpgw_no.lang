@@ -22,3 +22,28 @@ communication descriptions manager	common	no	Kommunikasjonstypebeskrivelse
 location manager	common	no	Lokasjonstyper
 Notes Types Manager	common	no	Notattyper
 custom fields on org-person	common	no	Egentilpassede felt for org-person
+prefix	addressbook	no	Prefiks
+all	addressbook	no	Alle
+type	addressbook	no	Type
+new	addressbook	no	Ny
+persom	addressbook	no	Person
+middle name	addressbook	no	Mellomnavn
+title	addressbook	no	Tittel
+suffix	addressbook	no	suffiks
+initials	addressbook	no	Initialer
+sound	addressbook	no	Lyd
+public key	addressbook	no	Offentlig nøkkel
+person	common	no	Person
+persons	addressbook	no	Personer
+orgs	addressbook	no	Organisasjoner
+address	addressbook	no	Adresse
+default organizations	addressbook	no	Standard-organisasjoner
+all organizations	addressbook	no	alle organisasjoner
+current organizations	addressbook	no	Valgte organisasjoner
+all categories	addressbook	no	alle kategorier
+current categories	addressbook	no	Valgte kategorier
+communications	addressbook	no	Kommunikasjon
+communication data	addressbook	no	Kommunikasjonsdata
+value	addressbook	no	Verdi
+preferred	addressbook	no	Standard
+export contacts	addressbook	no	Ekporter kontakter

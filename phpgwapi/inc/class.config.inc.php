@@ -94,6 +94,14 @@
 		 */
 		public function read_repository()
 		{
+			static $data_cache = array();
+
+			if(!empty($data_cache[$this->module]))
+			{
+				$this->config_data = $data_cache[$this->module];
+				return $this->config_data;
+			}
+
 			$this->config_data = array();
 			
 			$this->db->query("SELECT * FROM phpgw_config WHERE config_app='{$this->module}'",__LINE__,__FILE__);
@@ -109,6 +117,9 @@
 					$this->config_data[$this->db->f('config_name')] = $this->db->f('config_value', true);
 				}
 			}
+
+			$data_cache[$this->module] = $this->config_data;
+
 			return $this->config_data;
 		}
 

@@ -262,6 +262,12 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'ticket_priority'))
 					),
+					'external_com_type' => array
+						(
+						'text' => lang('external communication type'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'external_com_type'))
+					),
 					'ticket_config' => array
 						(
 						'text' => lang('ticket config'),
