@@ -193,7 +193,7 @@
 
 		}
 
-		function get_messages($id, $sort = 'DESC')
+		function get_messages($id, $sort = 'ASC')
 		{
 			$table = 'fm_tts_external_communication_msg';
 
