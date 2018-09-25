@@ -4,6 +4,8 @@ $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
 $(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
 
+var urlParams = [];
+CreateUrlParams(window.location.search);
 var results = ko.observableArray();
 var tags = ko.observableArray();
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
@@ -101,7 +103,12 @@ ko.applyBindings(searchViewModel, document.getElementById("search-page-content")
 
 $(document).ready(function ()
 {
+    
     $(".overlay").show();
+    if(urlParams['searchterm'] != "" && typeof urlParams['searchterm'] !== "undefined") {
+        searchViewModel.notFilterSearch(true);
+        doSearch(decodeURI(urlParams['searchterm']));
+    }    
     
     $(".searchBtn").click(function () {
         doSearch();
@@ -136,8 +143,7 @@ $(document).ready(function ()
                 }
             }
         });
-    });
-    
+    });  
     GetUpcommingEvents();
     GetFilterBoxData();
 });
@@ -228,8 +234,8 @@ function GetAutocompleteData() {
 }
 
 
-function doSearch() {
-    $(".overlay").show();    
+function doSearch(searchterm_value) {
+    $(".overlay").show();
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
     searchViewModel.filterSearchItems.removeAll();
@@ -241,15 +247,19 @@ function doSearch() {
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
     searchViewModel.selectedTags.removeAll();
     var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query"}, true);
-    var searchTerm = $("#mainSearchInput").val();
-
+    var searchTerm;
+    if(searchterm_value != "" && typeof searchterm_value !== "undefined") {
+        searchTerm = searchterm_value;
+    } else {
+        searchTerm = $("#mainSearchInput").val();
+    }
+    
     $.ajax({
         url: requestUrl,
         type: "get",
         contentType: 'text/plain',
         data: {searchterm: searchTerm},
         success: function (response) {
-            
             results.removeAll();
             for(var i=0; i<response.results.results.length; i++) {
                 var url = "";

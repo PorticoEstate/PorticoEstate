@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
               <ul class="navbar-nav navbar-search d-none">
                   <li class="nav-item">
-                      <form>
+                      <form id="navbar-search-form">
                       <div class="input-group mb-3">
                         <input class="form-control" type="text" placeholder="Søk sted, hall, aktivitet, utstyr" />
                           <div class="input-group-append">

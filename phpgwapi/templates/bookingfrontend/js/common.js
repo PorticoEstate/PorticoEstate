@@ -108,6 +108,13 @@ function createToolTipTitle(resource, from_, to_, organization_name, description
 
 $(document).ready(function ()
 {
+    $( "#navbar-search-form" ).submit(function( event ) {
+        event.preventDefault();
+        if($(".navbar-search input").val().length > 0) {
+            window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.index", searchterm: $(".navbar-search input").val() }, false);
+        }        
+    });
+
     bc = new ApplicationsCartModel();
     ko.applyBindings(bc, document.getElementById("applications-cart-content"));
     GetApplicationsCartItems(bc);
@@ -172,6 +179,7 @@ $(document).ready(function ()
                 }
                 $(".booking-cart-items").toggle();
             });
+            
     $(window).scroll(function () {
         if ($(document).scrollTop() == 0) {
             $('.brand-site-img').removeClass('tiny-logo');

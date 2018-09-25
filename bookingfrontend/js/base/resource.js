@@ -22,15 +22,6 @@ $(document).ready(function ()
     $(".bookBtnForward").attr("href", bookBtnURL);
 });
 
-
-function CreateUrlParams(params) {
-    var allParams = params.split("&");
-    for(var i=0; i<allParams.length; i++) {
-        var splitParam = allParams[i].split("=");  
-        urlParams[splitParam[0]] = splitParam[1];
-    }    
-}
-
 function PopulateResourceData() {
  //   getJsonURL = baseURL+"?menuaction=booking.uidocument_resource.index&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"booking.uidocument_resource.index", filter_owner_id:urlParams['id']}, true);

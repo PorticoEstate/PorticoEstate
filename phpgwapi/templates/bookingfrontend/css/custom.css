@@ -45,6 +45,7 @@ button {
 
 .nav-link {
     margin: 5px !important;
+    border-bottom: 2px solid transparent;
 }
 .nav-link:hover {
     line-height: 1.4em;    
