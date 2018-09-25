@@ -60,7 +60,7 @@
 					(
 					'write' => array_fill_keys(array('active', 'description', 'from_', 'to_', 'contact_name',
 						'contact_email',
-						'contact_phone', 'activity_name', 'audience', 'agegroups', 'is_public'), true),
+						'contact_phone', 'activity_name', 'audience', 'agegroups', 'is_public', 'include_in_list'), true),
 				);
 			}
 

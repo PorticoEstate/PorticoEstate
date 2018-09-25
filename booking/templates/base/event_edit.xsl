@@ -133,6 +133,12 @@
 									</option>
 								</select>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Include in event list')"/>
+								</label>
+								<xsl:copy-of select="phpgw:option_checkbox(event/include_in_list, 'include_in_list')"/>
+							</div>
 						</div>
 					</div>
 					<div class="pure-g">

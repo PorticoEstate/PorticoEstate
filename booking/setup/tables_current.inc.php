@@ -711,7 +711,8 @@
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'customer_internal' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
 					'default' => '1'),
-				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'include_in_list' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
