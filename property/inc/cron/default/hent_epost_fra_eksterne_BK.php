@@ -125,8 +125,8 @@
 		function process_messages()
 		{
 			// Set connection information.
-			$host = 'epost.bergen.kommune.no';
-			$username = 'xPortico';
+			$host = !empty($this->config->config_data['xPortico']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
+			$username = !empty($this->config->config_data['xPortico']['username']) ? $this->config->config_data['xPortico']['username'] : 'xPortico';
 			$password = $this->config->config_data['xPortico']['password'];
 			$version = Client::VERSION_2016;
 
@@ -300,6 +300,13 @@
 
 		function handle_message($client, $item3, $folder_info)
 		{
+
+			/**
+			 * Testing
+			 */
+//			_debug_array($item3->Sender->Mailbox->EmailAddress);
+//			die();
+
 			$target = array();
 			$subject = $item3->Subject;
 			$rool =$item3->Body->_;
@@ -346,10 +353,45 @@
 					$target['id'] = $ticket_id;
 				}
 			}
+			else if(preg_match("/\[PorticoTicket/" , $subject ))
+			{
+				preg_match_all("/\[[^\]]*\]/", $subject, $matches);
+				$identificator_str =  trim($matches[0][0],  "[]" );
+				$identificator_arr = explode("::", $identificator_str);
+
+				$sender = $item3->Sender->Mailbox->EmailAddress;
+				$ticket_id = $this->update_external_communication($identificator_arr, $body, $sender);
+
+				if($ticket_id)
+				{
+					$target['type'] = 'fmticket';
+					$target['id'] = $ticket_id;
+				}
+			}
 
 			return $target;
 
 		}
+
+		function update_external_communication($identificator_arr, $body, $sender)
+		{
+			$ticket_id = $identificator_arr[1];
+			$msg_id	= $identificator_arr[2];
+
+			if(!(int)$msg_id)
+			{
+				return false;
+			}
+			$soexternal = createObject('property.soexternal_communication');
+
+			$message_arr = explode('========', $body);
+			$message = $message_arr[0];
+			if($soexternal->add_msg($msg_id, $message, $sender))
+			{
+				return $ticket_id;
+			}	
+		}
+
 		function get_ticket ($subject)
 		{
 			//ISS vedlegg: vedlegg til #ID: <din WO ID>

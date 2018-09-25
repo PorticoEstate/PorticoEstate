@@ -21,3 +21,21 @@ window.on_vendor_updated = function ()
 {
 	fetch_vendor_email();
 };
+
+
+this.preview = function (id)
+{
+	var oArgs = {menuaction: 'property.uiexternal_communication.view', id: id, preview_html: true};
+	var strURL = phpGWLink('index.php', oArgs);
+	Window1 = window.open(strURL, 'Search', "left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+};
+
+$(document).ready(function ()
+{
+	var do_preview = $("#do_preview").val();
+
+	if (do_preview)
+	{
+		preview(do_preview);
+	}
+});

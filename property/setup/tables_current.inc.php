@@ -1267,8 +1267,6 @@
 				'type_id' => array('type' => 'int', 'precision' => 2, 'nullable' => False),
 				'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'subject' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
-				'message' => array('type' => 'text', 'nullable' => False),
-				'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'mail_recipients' => array('type' => 'text', 'nullable' => True),
 				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
@@ -1281,6 +1279,25 @@
 			'ix' => array(),
 			'fk' => array(
 				'fm_tts_tickets' => array('ticket_id' => 'id')
+				),
+			'uc' => array()
+		),
+		'fm_tts_external_communication_msg' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'excom_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'message' => array('type' => 'text', 'nullable' => False),
+				'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'mail_recipients' => array('type' => 'text', 'nullable' => True),
+				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'sender_email_address' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(
+				'fm_tts_external_communication' => array('excom_id' => 'id')
 				),
 			'uc' => array()
 		),

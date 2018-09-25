@@ -13,12 +13,6 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 	<script type="text/javascript">
 		self.name="first_Window";
-		preview = function(id)
-		{
-		var oArgs = {menuaction:'property.uiexternal_communication.view',id:id, preview_html:true};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-		};
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var order_id = '<xsl:value-of select="value_order_id"/>';
 
@@ -40,6 +34,7 @@
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<input type="hidden" id="ticket_id" name="ticket_id" value="{value_ticket_id}"/>
 					<input type="hidden" id="id" name="id" value="{value_id}"/>
+					<input type="hidden" id="do_preview" name="do_preview" value="{value_do_preview}"/>
 
 					<div id="main">
 						<fieldset>
@@ -268,7 +263,8 @@
 									<xsl:value-of select="php:function('lang', 'preview html')"/>
 								</xsl:variable>
 								<input type="hidden" id="preview_html" name="preview_html" value=""/>
-								<input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});">
+								<!--input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});"-->
+								<input type="submit" class="pure-button pure-button-primary" name="init_preview">
 									<xsl:attribute name="value">
 										<xsl:value-of select="$lang_preview_html"/>
 									</xsl:attribute>

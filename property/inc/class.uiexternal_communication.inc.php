@@ -92,7 +92,7 @@
 			/**
 			 * Do not allow save / send here
 			 */
-			if(phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool'))
+			if(phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || phpgw::get_var('init_preview', 'bool'))
 			{
 				phpgw::no_access();
 			}
@@ -107,15 +107,32 @@
 				phpgw::no_access();
 			}
 
-			if(!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool')))
+			/**
+			 * Save first, then preview - first pass
+			 */
+			$init_preview = phpgw::get_var('init_preview', 'bool');
+
+			if(!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool')  || $init_preview))
 			{
-				$this->save();
+				$this->save($init_preview);
 			}
 
 			$id = phpgw::get_var('id', 'int');
 			if( $this->preview_html)
 			{
 				$this->_send($id);
+			}
+
+			/**
+			 * Save first, then preview - second pass
+			 */
+			if(phpgw::get_var('init_preview2', 'bool'))
+			{
+				$do_preview = $id;
+			}
+			else
+			{
+				$do_preview = null;
 			}
 
 			$ticket_id = phpgw::get_var('ticket_id', 'int');
@@ -128,25 +145,10 @@
 
 			$additional_message_notes = $this->bo->read_additional_notes($id);
 
-			if($id)
-			{
-				$message_notes = array(
-					array(
-						'value_id' => '', //not from historytable
-						'value_count' => 1,
-						'value_date' => $GLOBALS['phpgw']->common->show_date($values['created_on']),
-						'value_user' => $values['created_by'] ? $GLOBALS['phpgw']->accounts->get($values['created_by'])->__toString() : '',
-						'value_note' => $values['message'],
-					)
-				);
-
-				$additional_message_notes = array_merge($message_notes, $additional_message_notes);
-			}
-
 			$message_note_def = array(
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
 
@@ -176,7 +178,7 @@
 			$note_def = array(
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
 
@@ -296,10 +298,8 @@ JS;
 				)
 			);
 
-
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view_file'));
 
-			//fixme
 			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
 			$content_files = array();
@@ -407,6 +407,7 @@ JS;
 				'value_subject'		=> !empty($values['subject']) ? $values['subject'] : $ticket['subject'],
 				'value_extra_mail_address'=> $value_extra_mail_address,
 				'value_id'	=> $id,
+				'value_do_preview' => $do_preview,
 				'vendor_data' => $vendor_data,
 				'contact_data'	=> $contact_data,
 				'mode' => $mode,
@@ -423,7 +424,7 @@ JS;
 		}
 
 
-		public function save( )
+		public function save($init_preview = null )
 		{
 			$id = phpgw::get_var('id', 'int');
 
@@ -465,9 +466,11 @@ JS;
 				else
 				{
 					self::redirect(array('menuaction' => 'property.uiexternal_communication.edit',
-						'id' => $id,
-						'ticket_id' => $values['ticket_id'],
-						'type_id' => $values['type_id']));
+							'id' => $id,
+							'ticket_id' => $values['ticket_id'],
+							'type_id' => $values['type_id'],
+							'init_preview2'	=> $init_preview)
+						);
 				}
 			}
 
@@ -571,14 +574,23 @@ JS;
 			}
 
 			$historylog_ticket = CreateObject('property.historylog', 'tts');
+			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'))->read();
+
+			if(!empty($config_admin['xPortico']['sender_email_address']))
+			{
+				$coordinator_email = $config_admin['xPortico']['sender_email_address'];
+			}
 
 			try
 			{
-				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments);
 				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
-				$historylog_ticket->add('M', $ticket_id, "{$_to}{$attachment_text}");
+				
+				$lang_external = lang('external communication');
+
+				$historylog_ticket->add('M', $ticket_id, "($lang_external [$id]) {$_to}{$attachment_text}");
 				$this->historylog->add('M', $id, "{$_to}{$attachment_text}");
-				phpgwapi_cache::message_set(lang('message %1 is sent by email to %2', $id, $_to),'message' );
+				$this->bo->update_msg($id, $_to, $attachment_log);
 			}
 			catch (Exception $exc)
 			{
@@ -684,9 +696,8 @@ HTML;
 
 			$body .= "__ATTACHMENTS__\n</table><br/><br/>\n";
 
-			$i = 1;
 			$lang_date = lang('date');
-			$lang_user = lang('user');
+			$lang_who = lang('who');
 			$lang_note = lang('note');
 			$table_content = <<<HTML
 			<thead>
@@ -698,7 +709,7 @@ HTML;
 						{$lang_date}
 					</th>
 					<th>
-						{$lang_user}
+						{$lang_who}
 					</th>
 					<th>
 						{$lang_note}
@@ -707,14 +718,9 @@ HTML;
 			</thead>
 HTML;
 
-			$user_name = $message_info['created_by'] ? $GLOBALS['phpgw']->accounts->get($message_info['created_by'])->__toString() : '';
-
-			$first_note = nl2br($message_info['message']);
-
-			$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$first_note}</td></tr>\n";
-
 			$additional_notes = $this->bo->read_additional_notes($id);
 
+			$i = 0;
 			foreach ($additional_notes as $value)
 			{
 				$value_note = nl2br($value['value_note']);
@@ -724,7 +730,7 @@ HTML;
 
 			$body.= "<table class='details'>{$table_content}</table>\n";
 
-			$subject = "[PorticoTicket #{$ticket_id}::{$id}] : {$location_code}  {$message_info['subject']}({$i})";
+			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$location_code} {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
 
