@@ -557,6 +557,8 @@
 
 		function create_ticket ($subject, $body)
 		{
+			$ticket_id = $this->get_ticket($subject);
+
 			$subject_arr = explode('#', $subject);
 			$id_arr = explode(':', $subject_arr[1]);
 			$external_ticket_id = trim($id_arr[1]);
@@ -589,19 +591,28 @@
 			}
 			$message_details = implode(PHP_EOL, $message_details_arr);
 
-			$priority = 1;
-			$message_cat_id = 10006; // IK eksterne
-			$ticket = array
-			(
-				'location_code' => $location_code,
-				'cat_id' => $message_cat_id,
-				'priority' => $priority, //valgfri (1-3)
-				'title' => $message_title,
-				'details' => $message_details,
-				'external_ticket_id'	=> $external_ticket_id
-			);
+			if($ticket_id)
+			{
+				$historylog = CreateObject('property.historylog', 'tts');
+				$historylog->add('C', $ticket_id, $message_details);
+			}
+			else
+			{
+				$priority = 1;
+				$message_cat_id = 10006; // IK eksterne
+				$ticket = array
+				(
+					'location_code' => $location_code,
+					'cat_id' => $message_cat_id,
+					'priority' => $priority, //valgfri (1-3)
+					'title' => $message_title,
+					'details' => $message_details,
+					'external_ticket_id'	=> $external_ticket_id
+				);
 
-			return CreateObject('property.botts')->add_ticket($ticket);
+				$ticket_id =  CreateObject('property.botts')->add_ticket($ticket);
+			}
+			return $ticket_id;
 		}
 
 		function add_attacthment_to_target( $target, $saved_attachments )
