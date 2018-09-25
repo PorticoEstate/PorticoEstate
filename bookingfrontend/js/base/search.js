@@ -153,22 +153,21 @@ function GetUpcommingEvents() {
     $.getJSON(requestURL, function(result) {
         $(".upcomingevents-header").html(result.header);
         for(var i=0; i<result.results.length; i++) {
-            var from_ = new Date(result.results[i].from_);
-            var to_ = new Date(result.results[i].to_);
+            var datetime_day = result.results[i].datetime_day;
             var month = result.results[i].datetime_month;
             var fontsize = "40px";
-            if(from_.getDate() != to_.getDate()) {
-                fontsize = "23px";
-                if(month.indexOf("-") != -1) {
-                    var months = month.split("-"); 
-                    month = months[0].substr(0,3) + "-" + months[1].substr(0,3);
-                }                
+            if(month.indexOf("-") != -1) {
+                var months = month.split("-"); 
+                month = months[0].substr(0,3) + "-" + months[1].substr(0,3);
             } else {
                 month = month.substr(0,3);
+            }            
+            if(datetime_day.indexOf("-") != -1) {
+                fontsize = "23px";                                
             }
             searchViewModel.upcommingevents.push({
                 event_fontsize: fontsize,
-                datetime_day: result.results[i].datetime_day,
+                datetime_day: datetime_day,
                 datetime_month: month,
                 building_name: result.results[i].building_name,
                 description: result.results[i].description,
