@@ -394,20 +394,40 @@
 
 				echo '<div id="ticket_info_container"></div>';
 
-				$lang = js_lang( 'Name', 'address', 'subject', 'id', 'assigned to', 'modified date');
+				$lang = js_lang( 'Name', 'address', 'status','subject', 'id', 'assigned to', 'modified date');
 
 
-				$default_status = array('O');
+				$default_status = array();
 
 				if(!empty($prefs['property']['tts_status']))
 				{
 					$default_status[] = $prefs['property']['tts_status'];
 				}
+				if(!empty($prefs['property']['tts_status_2']))
+				{
+					$default_status[] = $prefs['property']['tts_status_2'];
+				}
+				if(!empty($prefs['property']['tts_status_3']))
+				{
+					$default_status[] = $prefs['property']['tts_status_3'];
+				}
+				if(!empty($prefs['property']['tts_status_4']))
+				{
+					$default_status[] = $prefs['property']['tts_status_4'];
+				}
 
 				$status_filter = '';
-				foreach ($default_status as $_default_status)
+
+				if(!$default_status)
 				{
-					$status_filter .= "'&status_id[]={$_default_status}'";
+					$status_filter .= "&status_id=O"; //all variants of Open
+				}
+				else
+				{
+					foreach ($default_status as $_default_status)
+					{
+						$status_filter .= "&status_id[]={$_default_status}";
+					}
 				}
 
 				$js = <<<JS
@@ -421,13 +441,14 @@
 						user_id:{$accound_id}
 						}, true);
 
-						ticket_infoURL += {$status_filter};
+						ticket_infoURL += '{$status_filter}';
 					var rTicket_info = [{n: 'ResultSet'},{n: 'Result'}];
 		//			var rTicket_info = 'data';
 
 					var colDefsTicket_info = [
 						{key: 'id', label: lang['id'], formatter: genericLink},
 						{key: 'subject', label: lang['subject']},
+						{key: 'status', label: lang['status']},
 						{key: 'address', label: lang['address']},
 						{key: 'assignedto', label: lang['assigned to']},
 						{key: 'modified_date', label: lang['modified date']}
@@ -451,244 +472,6 @@ JS;
 				unset($category_name);
 				unset($default_status);
 				unset($_default_status);
-			}
-
-
-			if (isset($prefs['property']['mainscreen_show_new_updated_tts_2']) && $prefs['property']['mainscreen_show_new_updated_tts_2'] == 'yes')
-			{
-
-				$default_status = isset($prefs['property']['tts_status_2']) ? $prefs['property']['tts_status_2'] : '';
-				$tts = CreateObject('property.sotts');
-				$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
-				$total_records = $tts->total_records;
-
-				$portalbox = CreateObject('phpgwapi.listbox', array
-					(
-					'title' => isset($prefs['property']['mainscreen_tts_title_2']) && $prefs['property']['mainscreen_tts_title_2'] ? "{$prefs['property']['mainscreen_tts_title_2']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-				));
-
-				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
-				{
-					$GLOBALS['portal_order'][] = $app_id;
-				}
-
-				$var = $this->get_controls($app_id);
-
-				foreach ($var as $key => $value)
-				{
-					//			$portalbox->set_controls($key,$value);
-				}
-
-				$category_name = array(); // caching
-
-				$portalbox->data = array();
-				foreach ($tickets as $ticket)
-				{
-					if (!$ticket['subject'])
-					{
-						if (!isset($category_name[$ticket['cat_id']]))
-						{
-							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
-							$category_name[$ticket['cat_id']] = $ticket['subject'];
-						}
-						else
-						{
-							$ticket['subject'] = $category_name[$ticket['cat_id']];
-						}
-					}
-
-					$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'],
-						'extra' => array('view' => true)));
-
-					$group = '';
-					if ($ticket['group_id'])
-					{
-						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
-					}
-
-					$portalbox->data[] = array
-						(
-						'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-							'id' => $ticket['id']))
-					);
-				}
-
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
-
-				unset($tts);
-				unset($portalbox);
-				unset($category_name);
-				unset($default_status);
-			}
-
-
-			if (isset($prefs['property']['mainscreen_show_new_updated_tts_3']) && $prefs['property']['mainscreen_show_new_updated_tts_3'] == 'yes')
-			{
-
-				$default_status = isset($prefs['property']['tts_status_3']) ? $prefs['property']['tts_status_3'] : '';
-				$tts = CreateObject('property.sotts');
-				$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
-				$total_records = $tts->total_records;
-
-				$portalbox = CreateObject('phpgwapi.listbox', array
-					(
-					'title' => isset($prefs['property']['mainscreen_tts_title_3']) && $prefs['property']['mainscreen_tts_title_3'] ? "{$prefs['property']['mainscreen_tts_title_3']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-				));
-
-				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
-				{
-					$GLOBALS['portal_order'][] = $app_id;
-				}
-
-				$var = $this->get_controls($app_id);
-
-				foreach ($var as $key => $value)
-				{
-					//			$portalbox->set_controls($key,$value);
-				}
-
-				$category_name = array(); // caching
-
-				$portalbox->data = array();
-				foreach ($tickets as $ticket)
-				{
-					if (!$ticket['subject'])
-					{
-						if (!isset($category_name[$ticket['cat_id']]))
-						{
-							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
-							$category_name[$ticket['cat_id']] = $ticket['subject'];
-						}
-						else
-						{
-							$ticket['subject'] = $category_name[$ticket['cat_id']];
-						}
-					}
-					$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'],
-						'extra' => array('view' => true)));
-
-					$group = '';
-					if ($ticket['group_id'])
-					{
-						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
-					}
-
-					$portalbox->data[] = array
-						(
-						'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-							'id' => $ticket['id']))
-					);
-				}
-
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
-
-				unset($tts);
-				unset($portalbox);
-				unset($category_name);
-				unset($default_status);
-			}
-
-			if (isset($prefs['property']['mainscreen_show_new_updated_tts_4']) && $prefs['property']['mainscreen_show_new_updated_tts_4'] == 'yes')
-			{
-
-				$default_status = isset($prefs['property']['tts_status_4']) ? $prefs['property']['tts_status_4'] : '';
-				$tts = CreateObject('property.sotts');
-				$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => $default_status));
-				$total_records = $tts->total_records;
-
-				$portalbox = CreateObject('phpgwapi.listbox', array
-					(
-					'title' => isset($prefs['property']['mainscreen_tts_title_4']) && $prefs['property']['mainscreen_tts_title_4'] ? "{$prefs['property']['mainscreen_tts_title_4']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-				));
-
-				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
-				{
-					$GLOBALS['portal_order'][] = $app_id;
-				}
-
-				$var = $this->get_controls($app_id);
-
-				foreach ($var as $key => $value)
-				{
-					//			$portalbox->set_controls($key,$value);
-				}
-
-				$status = array();
-				$status['X'] = array
-					(
-					'name' => lang('closed'),
-				);
-				$status['O'] = array
-					(
-					'name' => lang('open'),
-				);
-
-				$custom_status = execMethod('property.botts.get_custom_status');
-
-				foreach ($custom_status as $custom)
-				{
-					$status["C{$custom['id']}"] = array
-						(
-						'status' => $custom['name'],
-					);
-				}
-
-				$category_name = array(); // caching
-
-				$portalbox->data = array();
-				foreach ($tickets as $ticket)
-				{
-					if (!$ticket['subject'])
-					{
-						if (!isset($category_name[$ticket['cat_id']]))
-						{
-							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
-							$category_name[$ticket['cat_id']] = $ticket['subject'];
-						}
-						else
-						{
-							$ticket['subject'] = $category_name[$ticket['cat_id']];
-						}
-					}
-					$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'],
-						'extra' => array('view' => true)));
-					$portalbox->data[] = array
-						(
-						'text' => "{$location['loc1_name']} :: {$ticket['subject']} :: {$status[$ticket['status']]['name']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-							'id' => $ticket['id']))
-					);
-				}
-
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
-
-				unset($tts);
-				unset($portalbox);
-				unset($category_name);
-				unset($default_status);
 			}
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
