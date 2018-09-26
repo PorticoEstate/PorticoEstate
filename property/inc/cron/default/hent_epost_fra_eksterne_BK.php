@@ -300,13 +300,6 @@
 
 		function handle_message($client, $item3, $folder_info)
 		{
-
-			/**
-			 * Testing
-			 */
-//			_debug_array($item3->Sender->Mailbox->EmailAddress);
-//			die();
-
 			$target = array();
 			$subject = $item3->Subject;
 			$rool =$item3->Body->_;
@@ -326,8 +319,6 @@
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
 					$target['type'] = 'fmticket';
 					$target['id'] = $ticket_id;
-					$this->update_message($client, $item3);
-					$this->move_message($client, $item3, $folder_info);
 				}
 			}
 			else if(preg_match("/^Kvittering status:/" , $subject ))
@@ -339,8 +330,6 @@
 					$target['type'] = 'workorder';
 					$target['id'] = $order_id;
 					$this->receipt['message'][] = array('msg' => "Status for ordre #{$order_id} er oppdatert");
-					$this->update_message($client, $item3);
-					$this->move_message($client, $item3, $folder_info);
 				}
 			}
 			else if(preg_match("/^ISS vedlegg:/" , $subject ))
@@ -369,6 +358,14 @@
 				}
 			}
 
+			/**
+			 * Ticket created / updated
+			 */
+			if($target)
+			{
+				$this->update_message($client, $item3);
+				$this->move_message($client, $item3, $folder_info);
+			}
 			return $target;
 
 		}
