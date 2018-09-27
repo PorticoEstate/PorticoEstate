@@ -426,7 +426,7 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query()
+		private function _get_params()
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -447,10 +447,19 @@
 				'vendor_id' => $this->vendor_id,
 				'status_id' => $this->status_id
 			);
+			
+			return $params;
+			
+		}
+
+		public function query()
+		{
+			$export = phpgw::get_var('export', 'bool');
 
 			$result_objects = array();
 			$result_count = 0;
 
+			$params = $this->_get_params();
 			$values = $this->bo->read($params);
 
 			if ($export)
@@ -460,7 +469,7 @@
 
 			$result_data = array('results' => $values);
 			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['draw'] = $draw;
+			$result_data['draw'] = phpgw::get_var('draw', 'int');
 
 			return $this->jquery_results($result_data);
 		}
@@ -1571,7 +1580,7 @@
 			}
 			else
 			{
-				$list = $this->bo->read($id);
+				$list = $this->bo->read($this->_get_params());
 			}
 			$uicols = $this->bo->uicols;
 			$this->bocommon->download($list, $uicols['name'], $uicols['descr'], $uicols['input_type']);
