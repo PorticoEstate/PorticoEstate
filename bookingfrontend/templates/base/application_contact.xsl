@@ -4,7 +4,7 @@
     <div class="container new-application-page my-container-top-fix" id="new-application-partialtwo">    
 
         <form action="" method="POST" id='application_form' name="form">
-        <div class="row">
+        <div class="row mb-5">
         <div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 
             <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'invoice information')" /></h1>
@@ -94,7 +94,7 @@
                 <hr class="mt-5"></hr>
 
                       
-                <button class="btn btn-light" type="submit"><xsl:value-of select="php:function('lang', 'send')" /></button>
+                <button class="btn btn-light mb-5" type="submit"><xsl:value-of select="php:function('lang', 'send')" /></button>
             </div>
         
         </div>
