@@ -77,6 +77,7 @@
 	class hent_epost_fra_eksterne_BK extends property_cron_parent
 	{
 
+		var $items_to_move = array();
 		protected $config;
 
 		public function __construct()
@@ -237,6 +238,12 @@
 						{
 							$this->add_attacthment_to_target($target, $saved_attachments);
 						}
+
+						foreach ($this->items_to_move as $item4)
+						{
+							$this->update_message($client, $item4);
+							$this->move_message($client, $item4, $folder_info);
+						}
 					}
 				}
 			}
@@ -363,8 +370,8 @@
 			 */
 			if($target)
 			{
-				$this->update_message($client, $item3);
-				$this->move_message($client, $item3, $folder_info);
+				$this->items_to_move[] = $item3;
+
 			}
 			return $target;
 

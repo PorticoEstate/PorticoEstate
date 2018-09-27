@@ -238,9 +238,7 @@
 			$table = 'fm_tts_external_communication_msg';
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
-			$id = $this->db->get_last_insert_id($table, 'id');
-
-			return $id;
+			return $this->db->get_last_insert_id($table, 'id');
 		}
 
 		function update_msg($excom_id, $mail_recipients, $file_attachments = '' )
