@@ -606,7 +606,7 @@
 			}
 			else
 			{
-				$priority = 1;
+				$priority = 3;
 				$message_cat_id = 10006; // IK eksterne
 				$ticket = array
 				(
