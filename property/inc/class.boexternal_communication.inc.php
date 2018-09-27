@@ -225,7 +225,7 @@
 			$botts = createObject('property.botts');
 			$ticket = $botts->read_single($ticket_id);
 
-			$contact_data = $this->bo->get_contact_data($ticket);
+			$contact_data = $this->get_contact_data($ticket);
 
 			$_to = $contact_data['user_email'];
 			$from_email = 'ikkesvar@bergen.kommune.no';
@@ -234,7 +234,7 @@
 			$cc = '';
 			$bcc = '';
 
-			$html_content = $this->bo->get_html_content($message_info, $contact_data);
+			$html_content = $this->get_html_content($message_info, $contact_data);
 
 			$subject = $html_content['subject'];
 
