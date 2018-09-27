@@ -372,10 +372,10 @@
 
 		function update_external_communication($identificator_arr, $body, $sender)
 		{
-			$ticket_id = $identificator_arr[1];
-			$msg_id	= $identificator_arr[2];
+			$ticket_id = (int)$identificator_arr[1];
+			$msg_id	= (int)$identificator_arr[2];
 
-			if(!(int)$msg_id)
+			if(!$msg_id)
 			{
 				return false;
 			}
@@ -385,6 +385,17 @@
 			$message = $message_arr[0];
 			if($soexternal->add_msg($msg_id, $message, $sender))
 			{
+				$sql = "SELECT assignedto"
+					. " FROM fm_tts_tickets"
+					. " WHERE id = {$ticket_id}";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$assignedto = $this->db->f('assignedto');
+				if($assignedto)
+				{
+					createObject('property.boexternal_communication')->alert_assigned($msg_id);
+				}
+
 				return $ticket_id;
 			}	
 		}
@@ -595,7 +606,7 @@
 			}
 			else
 			{
-				$priority = 1;
+				$priority = 3;
 				$message_cat_id = 10006; // IK eksterne
 				$ticket = array
 				(

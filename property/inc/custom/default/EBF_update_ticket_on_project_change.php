@@ -57,7 +57,7 @@
 		private function update_ticket( $id, $project, $values_attribute )
 		{
 
-			$this->db->query("SELECT status, finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$id'", __LINE__, __FILE__);
+			$this->db->query("SELECT status, cat_id, finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$id'", __LINE__, __FILE__);
 			$this->db->next_record();
 
 			/**
@@ -65,6 +65,7 @@
 			 */
 
 			$status = $this->db->f('status');
+			$ticket_category = $this->db->f('cat_id');
 			if ($status == 'X')
 			{
 				return;
@@ -96,6 +97,7 @@
 
 			$date_info = array();
 			$project_is_closed = false;
+			$do_not_close_ticket =false;
 
 			foreach ($related_projects as $_project)
 			{
@@ -126,8 +128,9 @@
 				$_finnish_date = $finnish_date;
 				$note = 'FerdigDato er automatisk til prosjekt sluttDato';
 
-				if ($account_group == 48) // klargjøring
+				if ($ticket_category == 34) // klargjøring (48)
 				{
+					$do_not_close_ticket = true;
 					//search for 2 working day delay
 					for ($i = 2; $i < 10; $i++)
 					{
@@ -192,7 +195,7 @@
 				}
 			}
 
-			if($project_is_closed)
+			if($project_is_closed && !$do_not_close_ticket)
 			{
 				$this->botts->update_status( array('status' => 'X'), $id );
 				$this->historylog->add('C', $id, $note_closed);
