@@ -252,6 +252,11 @@
 				$from_email = $config_admin['xPortico']['sender_email_address'];
 			}
 
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
 			try
 			{
 				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($html), '', $cc, $bcc, $from_email, $from_name, 'html', '', false);
