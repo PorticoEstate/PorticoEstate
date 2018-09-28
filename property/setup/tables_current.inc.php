@@ -1200,6 +1200,9 @@
 				'order_deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'invoice_remark' => array('type' => 'text', 'nullable' => True),
 				'external_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'document_required' => array('type' =>	'int', 'precision' => 4, 'nullable' => True),
+				'handyman_checklist_id' => array('type' => 'int','precision' => 8, 'nullable' => true),
+				'handyman_order_number' => array('type' =>	'int', 'precision' => 8, 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

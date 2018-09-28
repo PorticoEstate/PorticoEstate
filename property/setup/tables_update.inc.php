@@ -10222,3 +10222,76 @@
 		}
 	}
 
+
+	/**
+	* Handyman
+	* Update property version from 0.9.17.733 to 0.9.17.734
+	*
+	*/
+	$test[] = '0.9.17.733';
+	function property_upgrade0_9_17_733()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'document_required', array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_checklist_id', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_order_number', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_handyman_documents', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'hs_document_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'file_path' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'file_extension' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'hm_installation_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'created_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'retrieved_from_handyman' => array('type' => 'int', 'precision' => 2, 'default' => '0'),
+				'retrieved_date' => array('type' => 'timestamp', 'nullable' => True),
+				'message_id' => array('type' => 'int', 'precision' => 4, 'default' => 0),
+				'hs_order_number' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'hs_checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_handyman_log', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'comment' => array('type' => 'text'),
+				'log_date' => array('type' => 'timestamp', 'default' => 'current_timestamp'),
+				'success' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
+				'num_of_messages' => array('type' => 'int', 'precision' => 4)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.734';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
