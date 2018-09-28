@@ -244,6 +244,8 @@
 							$this->update_message($client, $item4);
 							$this->move_message($client, $item4, $folder_info);
 						}
+
+						$this->items_to_move = array();
 					}
 				}
 			}
