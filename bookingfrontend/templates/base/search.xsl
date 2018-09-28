@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
    <div id="search-page-content">
     <div class="jumbotron jumbotron-fluid">
-        <div class="container searchContainer my-container-top-fix">
+        <div class="container searchContainer my-container-top-fix">            
             <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
             
             <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>

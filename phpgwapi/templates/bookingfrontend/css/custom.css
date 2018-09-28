@@ -119,6 +119,15 @@ button {
     -webkit-transition: ease 0.3s; /* Safari */
     transition: ease 0.3s;
 }
+.msg_good {
+    margin-top: 85px;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.msgbox_text {
+    margin-top: 20px;
+}
 
 .check-box-label {
 	position: relative;
@@ -325,6 +334,7 @@ footer {
 SEARCH PAGE STYLE
 
 *********************************************/
+
 
 
 .jumbotron {
@@ -868,6 +878,10 @@ RESOURCE PAGE STYLE
 NEW APPLICATION PAGE STYLE
 
 *********************************************/
+
+.new-application-page {
+    margin-bottom: 100px;
+}
 
 .new-application-page hr {
     border-color: #595959;

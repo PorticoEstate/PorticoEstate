@@ -60,7 +60,7 @@ $(".navbar-search").removeClass("d-none");
                   self.date.push({from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
                   self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime(""); //self.repeat(false);
               } else {
-                  $(".applicationSelectedDates").text("Startid mÃ¥ vÃ¦re tidligere enn sluttid");
+                  $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
               }
               
           }
@@ -181,18 +181,11 @@ $(".navbar-search").removeClass("d-none");
           am.activityId(activityId);
           ko.applyBindings(am, document.getElementById("new-application-page"));        
           showContent();
-          PopulatePostedData();
+          PopulatePostedDate();
           if(typeof initialAudience !== "undefined") {
             am.audienceSelectedValue(initialAudience);
           }
-          if(initialDates != null) {
-            for(var i=0; i<initialDates.length; i++) {
-                var from_ = initialDates[i].from_;
-                var to_ = initialDates[i].to_;
-
-                am.date.push({from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_) ) });
-              }
-          }
+          
       });
   
       $('.resourceDropdown').on('click', function () {
@@ -200,13 +193,20 @@ $(".navbar-search").removeClass("d-none");
       });
   });
   
-  function PopulatePostedData() {
-      if(typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
-          if(urlParams['start'].length > 0 && urlParams['end'].length > 0) {
-  
-              am.date.push({from_: new Date(parseInt(urlParams['start'])), to_: new Date(parseInt(urlParams['end'])), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });            
+  function PopulatePostedDate() {
+    if(initialDates != null) {
+        for(var i=0; i<initialDates.length; i++) {
+            var from_ = initialDates[i].from_;
+            var to_ = initialDates[i].to_;
+            am.date.push({from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_) ) });
           }
-      }
+      } else {
+        if(typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
+            if(urlParams['start'].length > 0 && urlParams['end'].length > 0) {    
+                am.date.push({from_: formatSingleDate(new Date(parseInt(urlParams['start']))), to_: formatSingleDate(new Date(parseInt(urlParams['end']))), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])) ) });            
+            }
+        }
+      }      
   }
     
   YUI({ lang: 'nb-no' }).use(
@@ -218,6 +218,7 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
+          mask: '%d/%m/%y',
           on: {
             selectionChange: function(event) { 
                 new Date(event.newSelection);

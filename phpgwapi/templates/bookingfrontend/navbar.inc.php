@@ -12,8 +12,8 @@
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			foreach($msgbox_data as & $message)
 			{
-				echo "<div class='{$message['msgbox_class']}'>";
-				echo $message['msgbox_text'];
+				echo "<div class='alert alert-success {$message['msgbox_class']}' role='alert'>";
+				echo "<p class='msgbox_text'>".$message['msgbox_text']."</p>";
 				echo '</div>';
 			}
 		}
