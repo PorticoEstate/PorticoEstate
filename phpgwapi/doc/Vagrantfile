@@ -187,10 +187,17 @@ EOF
 sudo sed -i "s/PasswordAuthentication.*/PasswordAuthentication yes/" /etc/ssh/sshd_config
 sudo sed -i "s/ChallengeResponseAuthentication.*/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
 
-    sudo cp /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
+sudo cp /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
 
-    sudo service postgresql restart
-    sudo service apache2 restart
-   SHELL
+ # Allow htaccess in symfony web directory
+sudo sed -i '/DocumentRoot/a <Directory /var/www/html/portico/hm>\\n AllowOverride All\\n</Directory>' /etc/apache2/sites-enabled/000-default.conf
+
+ # Enable mod_rewrite
+ sudo a2enmod rewrite
+
+sudo service postgresql restart
+sudo service apache2 restart
+
+SHELL
 
 end
