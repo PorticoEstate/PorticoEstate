@@ -30,8 +30,6 @@ RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/apache2/php.ini && \
 
 COPY custom-apache.conf /etc/php/7.2/apache2/conf.d/91-app.ini
 RUN ln -s /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
- # Allow htaccess in symfony web directory
-RUN sed -i '/DocumentRoot/a <Directory /var/www/html/portico/hm>\\n AllowOverride All\\n</Directory>' /etc/apache2/sites-enabled/000-default.conf
 
  # Enable mod_rewrite
 RUN a2enmod rewrite
