@@ -72,7 +72,7 @@
                             <div class="d-block">
                                 <input name="from_[]" hidden="hidden" data-bind="value: from_"/>
                                 <input name="to_[]" hidden="hidden" data-bind="value: to_"/>                              
-                                <span class="seperateByComma" data-bind='text: formatedPeriode'></span>
+                                <span data-bind='text: formatedPeriode'></span>
                                 <butoon class="ml-2" data-bind="click: $parent.removeDate"><i class="fas fa-minus-circle"></i></butoon>
                             </div>
                             
@@ -99,6 +99,16 @@
                         </div>
 
                     </div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
+						<input type="text" class="form-control" name="name" value="{application/name}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organizer')" /></label>
+						<input type="text" class="form-control" name="organizer" value="{application/organizer}"/>
+					</div>
 
                     <div class="form-group">
                         <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'description')" /></label>

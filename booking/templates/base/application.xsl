@@ -216,6 +216,22 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'Name')" />
+								</label>
+								<span>
+									<xsl:value-of select="application/name" disable-output-escaping="yes"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Organizer')" />
+								</label>
+								<span>
+									<xsl:value-of select="application/organizer" disable-output-escaping="yes"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<span>

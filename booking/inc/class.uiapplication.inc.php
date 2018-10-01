@@ -51,7 +51,7 @@
 			$this->document_resource = CreateObject('booking.bodocument_resource');
 
 			self::set_active_menu('booking::applications');
-			$this->fields = array('formstage', 'description', 'equipment', 'resources', 'activity_id',
+			$this->fields = array('formstage', 'name', 'organizer', 'description', 'equipment', 'resources', 'activity_id',
 				'building_id', 'building_name', 'contact_name',
 				'contact_email', 'contact_phone', 'audience',
 				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
@@ -1132,7 +1132,7 @@
 			$event[] = array('application_id', $application['id']);
 			$event[] = array('reminder', '0');
 			$copy = array(
-				'activity_id', 'description', 'contact_name',
+				'activity_id', 'name', 'organizer', 'description', 'contact_name',
 				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
 				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
 			);

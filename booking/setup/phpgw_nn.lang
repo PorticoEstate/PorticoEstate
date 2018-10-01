@@ -742,6 +742,7 @@ No session ID found, application aborted	booking	nn	Ingen sesjons-ID funnet, lag
 Not a top level activity	booking	nn	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	nn	Bare én filtreringsboks per linje
 Opening hours	booking	nn	Åpningstider
+Organizer	booking	nn	Arrangør
 Please select a resource category	booking	nn	Velg en ressurskategori
 Resource categories	booking	nn	Ressurskategorier
 Resource category	booking	nn	Ressurskategori
