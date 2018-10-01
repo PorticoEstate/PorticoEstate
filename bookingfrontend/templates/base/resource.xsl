@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
     <div class="info-content" id="building-page-content">
-    <div class="container my-container-top-fix wrapper">
+    <div class="container wrapper">
         <div class="location">
 			<span><a>
 					<xsl:attribute name="href">

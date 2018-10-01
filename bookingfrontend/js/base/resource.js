@@ -237,7 +237,7 @@ function PopulateCalendarEvents() {
 function GenerateCalendarForEvents(date) {
     $("#myScheduler .scheduler-base-content").first().remove();
     $("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
-    showContent();
+
     YUI({lang: 'nb-NO'}).use('aui-scheduler',
             function (Y) {
                 var nb_NO_strings_allDay = {allDay: 'Hel dag'};

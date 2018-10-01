@@ -180,7 +180,6 @@ $(".navbar-search").removeClass("d-none");
           am = new applicationModel();
           am.activityId(activityId);
           ko.applyBindings(am, document.getElementById("new-application-page"));        
-          showContent();
           PopulatePostedDate();
           if(typeof initialAudience !== "undefined") {
             am.audienceSelectedValue(initialAudience);

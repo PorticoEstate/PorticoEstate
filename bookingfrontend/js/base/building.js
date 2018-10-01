@@ -341,8 +341,6 @@ function GenerateCalendarForEvents(date) {
 	$("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
 	events.reverse();
 
-	showContent();
-
 	YUI({lang: 'nb-NO'}).use(
 		'aui-scheduler',
 		function(Y) {

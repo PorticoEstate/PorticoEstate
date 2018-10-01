@@ -166,6 +166,8 @@ function GetUpcommingEvents() {
                 fontsize = "23px";                                
             }
             searchViewModel.upcommingevents.push({
+                name: result.results[i].name,
+                organizer: result.results[i].organizer,
                 event_fontsize: fontsize,
                 datetime_day: datetime_day,
                 datetime_month: month,
@@ -228,7 +230,6 @@ function GetAutocompleteData() {
             }
         });
         $(".overlay").hide();
-        showContent();
     });
 }
 

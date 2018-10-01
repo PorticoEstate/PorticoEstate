@@ -30,9 +30,6 @@ function phpGWLink(strURL, oArgs, bAsJSON)
 }
 
 
-function showContent() {
-    $('.showMe').css("display", "");
-}
 
 function ApplicationsCartModel()  {
        var self = this;
@@ -107,7 +104,9 @@ function createToolTipTitle(resource, from_, to_, organization_name, description
 
 
 $(document).ready(function ()
-{
+{   setTimeout(function() {
+        $('.showMe').css("display", "");
+    },800);
     $( "#navbar-search-form" ).submit(function( event ) {
         event.preventDefault();
         if($(".navbar-search input").val().length > 0) {

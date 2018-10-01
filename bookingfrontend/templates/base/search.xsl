@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
    <div id="search-page-content">
     <div class="jumbotron jumbotron-fluid">
-        <div class="container searchContainer my-container-top-fix">            
+        <div class="container searchContainer">            
             <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
             
             <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -89,11 +89,11 @@
                                 </svg>
                             </div>
                             <div class="col-8 desc">
-                                <h5 class="font-weight-bold" data-bind="text: building_name"></h5>
+                                <h5 class="font-weight-bold" data-bind="text: name"></h5>
                                 <p data-bind="text: description"></p>
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
-                                <span class="text-uppercase" data-bind="text: building_name"></span>
-                                <span class="text-uppercase" data-bind="text: contact_name"></span>
+                                <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
+                                <span class="text-uppercase" data-bind="text: 'ARRANGØR: ' +organizer"></span>
                             </div>
                         </div>
                     </a>

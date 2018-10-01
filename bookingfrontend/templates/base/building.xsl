@@ -2,7 +2,7 @@
 
 <div id="building-page-content">
 	<div class="info-content">
-	<div class="container my-container-top-fix wrapper">
+	<div class="container wrapper">
 		
 		<div class="location">
 			<span><a>
