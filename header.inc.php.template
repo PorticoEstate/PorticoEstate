@@ -79,6 +79,13 @@
 	// Note that with mcrypt enabled- the database settings are encrypted (the web-interface has to be used to produce the settings)
 	{domains}
 
+	// Experimental: To make it possible to hold dbconfig in seperated file
+	if(file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'dbconfig.php'))
+	{
+		$dbconfig = include(dirname(__FILE__).DIRECTORY_SEPARATOR.'dbconfig.php');
+		$GLOBALS['phpgw_domain'] = array_merge($GLOBALS['phpgw_domain'],$dbconfig);
+	}
+
 	/**
 	* @global boolean $phpgw_info['server']['show_domain_selectbox']
 	* If you want to have your domains in a select box, change to True

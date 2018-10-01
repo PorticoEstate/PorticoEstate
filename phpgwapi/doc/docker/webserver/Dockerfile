@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     apache2 \
     libapache2-mod-php \
@@ -22,11 +22,16 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libaio1 \
     locales
 
-RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/apache2/php.ini && \
-    sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/cli/php.ini
+RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/apache2/php.ini && \
+    sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/cli/php.ini
 
-COPY custom-apache.conf /etc/php/7.0/apache2/conf.d/91-app.ini
-RUN ln -s /etc/php/7.0/apache2/conf.d/91-app.ini /etc/php/7.0/cli/conf.d/91-app.ini
+COPY custom-apache.conf /etc/php/7.2/apache2/conf.d/91-app.ini
+RUN ln -s /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
+ # Allow htaccess in symfony web directory
+RUN lsudo sed -i '/DocumentRoot/a <Directory /var/www/html/portico/hm>\\n AllowOverride All\\n</Directory>' /etc/apache2/sites-enabled/000-default.conf
+
+ # Enable mod_rewrite
+RUN l sudo a2enmod rewrite
 
 RUN mkdir -p /var/www/html/portico /var/www/portico-empty-start-data \
     && chown www-data /var/www/portico-empty-start-data
