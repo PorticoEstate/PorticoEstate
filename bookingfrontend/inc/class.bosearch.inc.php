@@ -278,7 +278,7 @@
 			{
 				$invalid_params = True;
 			}
-			$intparams = array('activity_id', 'part_of_town_id');
+			$intparams = array('activity_id');
 			foreach ($intparams as $intparam)
 			{
 				if (isset($params[$intparam]))
@@ -294,26 +294,30 @@
 					}
 				}
 			}
-			if (isset($params['facility_id']))
+			$multiintparams = array('facility_id','part_of_town_id');
+			foreach ($multiintparams as $multiintparam)
 			{
-				if (empty($params['facility_id']))
+				if (isset($params[$multiintparam]))
 				{
-					$params['facility_id'] = null;
-				}
-				else
-				{
-					foreach ($params['facility_id'] as $fid)
+					if (empty($params[$multiintparam]))
 					{
-						if (!(is_int($fid) && $fid > 0))
+						$params[$multiintparam] = null;
+					}
+					else
+					{
+						foreach ($params[$multiintparam] as $val)
 						{
-							$invalid_params = True;
-							break;
+							if (!(is_int($val) && $val > 0))
+							{
+								$invalid_params = True;
+								break;
+							}
 						}
 					}
-				}
-				if (!$invalid_params)
-				{
-					sort($params['facility_id']);
+					if (!$invalid_params)
+					{
+						sort($params[$multiintparam]);
+					}
 				}
 			}
 			if ($invalid_params)
@@ -419,7 +423,7 @@
 					$building['part_of_town_name'] = $building['district'];
 				}
 				// Check filter criteria
-				if (isset($params['part_of_town_id']) && $building['part_of_town_id'] != $params['part_of_town_id'])
+				if (isset($params['part_of_town_id']) && !in_array($building['part_of_town_id'],$params['part_of_town_id']))
 				{
 					continue;
 				}
