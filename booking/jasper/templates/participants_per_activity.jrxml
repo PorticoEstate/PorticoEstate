@@ -38,7 +38,7 @@
 				INNER JOIN bb_event_resource er ON er.event_id = ev.id
 				INNER JOIN bb_resource re ON re.id = er.resource_id
 				INNER JOIN bb_activity ac ON re.activity_id = ac.id
-				INNER JOIN bb_building bu ON bu.id = re.building_id
+				INNER JOIN bb_building bu ON bu.id = ev.building_id
 				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
 				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
@@ -79,7 +79,7 @@
 			from bb_event ev
 			inner join bb_event_resource er on er.event_id = ev.id
 			inner join bb_resource re on re.id = er.resource_id
-			inner join bb_building bu on bu.id = re.building_id
+			inner join bb_building bu on bu.id = ev.building_id
 			WHERE date_trunc('day', ev.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
 			AND date_trunc('day', ev.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
 			AND re.id = ANY (string_to_array($P{BK_RESOURCES}, ',')::int4[])

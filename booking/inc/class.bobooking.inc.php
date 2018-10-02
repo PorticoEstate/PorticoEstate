@@ -1107,11 +1107,19 @@
 									$last[] = $l;
 									break;
 								}
-								elseif (($ef >= $lf) && ($et > $lt))
+								/**
+								 * Sigurd 20181001: endret fra
+								 * $tmp['to_'] = $ef;
+								 * til
+								 * $tmp['to_'] = $lt;
+								 */
+								else if (($ef >= $lf) && ($et > $lt))
 								{
 //                                    echo "B1: (ef >= lf) && (et > lt)\n";
 									$tmp['from_'] = $lf;
-									$tmp['to_'] = $ef;
+//									$tmp['to_'] = $ef;
+									//Sigurd 20181001
+									$tmp['to_'] = $lt;
 									$last[] = $tmp;
 								}
 								elseif (($ef <= $lf) && ($et < $lt))
