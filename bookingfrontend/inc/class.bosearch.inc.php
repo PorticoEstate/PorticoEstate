@@ -473,8 +473,7 @@
 				$headertext = $headertext_config;
 			}
 
-			$fields_events = array('building_name','contact_email','contact_name','description',
-				'from_','homepage','id','name','organizer','to_');
+			$fields_events = array('building_name','from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
 			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.description != '')";
 			$event_result = $this->soevent->read(array("sort" => "from_", "dir" => "asc",
