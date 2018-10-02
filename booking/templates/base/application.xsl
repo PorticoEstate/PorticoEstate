@@ -232,6 +232,19 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'Homepage')" />
+								</label>
+								<xsl:if test="application/homepage and normalize-space(application/homepage)">
+									<a>
+										<xsl:attribute name="href">
+											<xsl:value-of select="application/homepage"/>
+										</xsl:attribute>
+										<xsl:value-of select="application/homepage"/>
+									</a>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<span>

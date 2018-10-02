@@ -15,6 +15,7 @@
 				'application_id' => array('type' => 'int', 'required' => false),
 				'name' => array('type' => 'string', 'query' => true, 'required' => false),
 				'organizer' => array('type' => 'string', 'query' => true, 'required' => false),
+				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
 				'description' => array('type' => 'string', 'required' => true, 'query' => true),
 				'building_id' => array('type' => 'int', 'required' => true),
 				'building_name' => array('type' => 'string', 'required' => true, 'query' => true),

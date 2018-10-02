@@ -121,6 +121,16 @@
 								</input>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_homepage">
+									<xsl:value-of select="php:function('lang', 'Homepage')" />
+								</label>
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="event/homepage"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_description">
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>

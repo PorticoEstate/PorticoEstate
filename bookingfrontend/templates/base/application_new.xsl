@@ -110,6 +110,11 @@
 						<input type="text" class="form-control" name="organizer" value="{application/organizer}"/>
 					</div>
 
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Homepage for the event')" /></label>
+						<input type="text" class="form-control" name="homepage" value="{application/homepage}"/>
+					</div>
+
                     <div class="form-group">
                         <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'description')" /></label>
                         

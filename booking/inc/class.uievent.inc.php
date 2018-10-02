@@ -35,7 +35,7 @@
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->resource_bo = CreateObject('booking.boresource');
 			self::set_active_menu('booking::applications::events');
-			$this->fields = array('activity_id', 'name', 'organizer', 'description',
+			$this->fields = array('activity_id', 'name', 'organizer', 'homepage', 'description',
 				'resources', 'cost', 'application_id',
 				'building_id', 'building_name',
 				'contact_name', 'contact_email', 'contact_phone',

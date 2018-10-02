@@ -473,7 +473,8 @@
 				$headertext = $headertext_config;
 			}
 
-			$fields_events = array('building_name','contact_email','contact_name','description','from_','id','name','organizer','to_');
+			$fields_events = array('building_name','contact_email','contact_name','description',
+				'from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
 			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.description != '')";
 			$event_result = $this->soevent->read(array("sort" => "from_", "dir" => "asc",
@@ -486,6 +487,12 @@
 					{
 						unset($event[$k]);
 					}
+				}
+				$event['name'] = html_entity_decode($event['name']);
+				$event['organizer'] = html_entity_decode($event['organizer']);
+				if (trim($event['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($event['homepage'])))
+				{
+					$event['homepage'] = 'http://' . $event['homepage'];
 				}
 				$ts_from = strtotime($event['from_']);
 				$ts_to   = strtotime($event['to_']);
