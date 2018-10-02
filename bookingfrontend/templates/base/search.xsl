@@ -71,8 +71,11 @@
 
         <div class="row mt-5" data-bind="if: selectedTags().length > 0">
             <div data-bind="foreach: selectedTags">
-                <div class="tags d-inline"><span data-bind="text: value, click: $root.clearTag" ></span>
-                <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a></div>
+            <div class="d-inline-block mb-2">
+                <div class="tags">
+                    <span data-bind="text: value, click: $root.clearTag" ></span>
+                    <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a></div>
+                </div>
             </div>
         </div>
 
