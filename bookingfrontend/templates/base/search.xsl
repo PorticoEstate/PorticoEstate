@@ -97,8 +97,7 @@
                                 </svg>
                             </div>
                             <div class="col-8 desc">
-                                <h5 class="font-weight-bold" data-bind="text: name"></h5>
-                                <p data-bind="text: description"></p>
+                                <h5 class="font-weight-bold title" data-bind="text: name"></h5>                                
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
                                 <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
                                 <span class="text-uppercase" data-bind="text: 'ARRANGØR: ' +organizer"></span>

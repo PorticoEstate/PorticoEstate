@@ -180,9 +180,7 @@ function GetUpcommingEvents() {
                 datetime_day: datetime_day,
                 datetime_month: month,
                 building_name: result.results[i].building_name,
-                description: result.results[i].description,
-                datetime_time: result.results[i].datetime_time,
-                contact_name: result.results[i].contact_name
+                datetime_time: result.results[i].datetime_time
             });
         }
     }).done(function () {

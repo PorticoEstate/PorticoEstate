@@ -46,10 +46,6 @@ button {
   visibility: hidden;
 }
 
-.cursor-pointer:hover {
-    cursor: pointer;
-}
-
 .navbar {
     padding-bottom: 1.4em;
     -webkit-transition: ease 0.2s; /* Safari */
@@ -505,6 +501,11 @@ SEARCH PAGE STYLE
     display: block;
     font-weight: bold;
 }
+
+#welcomeResult .title {
+    min-height: 50px;
+}
+
 .card-positioncorrect {
     padding-left: 40px;
 }
@@ -912,8 +913,20 @@ ORGANIZATION PAGE STYLE
 
 *********************************************/
 
+#organization-edit-page-content {
+    margin-top: 140px;
+}
 
+#organization-edit-page-content label, .span-label {
+    font-size: 0.8em;
+    color: #373737;
+    display: block;
+}
 
+#organization-edit-page-content .form-group, .new-application-page .form-check {
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+}
 
 /********************************************
 
