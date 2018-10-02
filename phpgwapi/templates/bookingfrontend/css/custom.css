@@ -46,6 +46,10 @@ button {
   visibility: hidden;
 }
 
+.cursor-pointer:hover {
+    cursor: pointer;
+}
+
 .navbar {
     padding-bottom: 1.4em;
     -webkit-transition: ease 0.2s; /* Safari */
@@ -145,6 +149,7 @@ button {
     color: #8a6d3b;
     padding: .75rem 1.25rem;
     border: 1px solid transparent;
+    margin-bottom: 0px;
 }
 
 .msgbox_text {
@@ -366,6 +371,7 @@ SEARCH PAGE STYLE
     /*background-image: url("../img/jumbotron-bg-bergen.png");*/
     background-color: #fff;
     border-bottom: 3px #3d3d3d solid;
+    padding-top: 50px;
 }
 
 .searchContainer {
@@ -411,6 +417,10 @@ SEARCH PAGE STYLE
 
 .dropdown-item:active {
     background-color: #f8f9fa;
+}
+
+.dropdown-item a:hover {
+    text-decoration: none;
 }
 
 /* SEARCH CONTAINER */

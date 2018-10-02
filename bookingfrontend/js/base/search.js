@@ -23,13 +23,10 @@ var ViewModel = function(data) {
     self.selectedFilterboxValue = ko.observable("");
     self.selectedFacilities = ko.observableArray("");
     self.selectedActivity = ko.observableArray("");
-    self.selectedTown = ko.observableArray("");
+    self.selectedTowns = ko.observableArray("");
     self.selectedTags = ko.observableArray();
     self.clearTag = function(e) {
-        if(e.type == "town") {
-            self.selectedTown("");
-            
-        } else if(e.type == "activity") {
+        if(e.type == "activity") {
             self.selectedActivity("");
         }
         self.selectedTags.remove(function(item) {
@@ -38,12 +35,15 @@ var ViewModel = function(data) {
         self.selectedFacilities.remove(function(item) {
             return item == e.id;
         });
+        self.selectedTowns.remove(function(item) {
+            return item == e.id;
+        });
         DoFilterSearch();
     };   
     self.filterboxSelected = function(e) {
         self.selectedActivity("");
         self.selectedFacilities.removeAll();
-        self.selectedTown("");
+        self.selectedTowns.removeAll();
         self.selectedFilterboxValue(e.filterboxOptionId);
         self.selectedTags.removeAll();
         self.selectedFilterbox(true);
@@ -83,12 +83,20 @@ var ViewModel = function(data) {
     };
     self.townSelected = function(e) {
         
-        self.selectedTags.remove(function(current) {
-            return current.type == "town";
-        })
-        self.selectedTags.push({id: e.townOptionId, type: "town", value: e.townOption});
-        
-        self.selectedTown(e.townOptionId);
+        var exists = ko.utils.arrayFirst(self.selectedTowns(), function(current) {
+            return current == e.townOptionId;
+        });
+        if(!exists) {
+            self.selectedTowns.push(e.townOptionId);
+            self.selectedTags.push({id: e.townOptionId, type: "town", value: e.townOption});
+        } else {
+            self.selectedTowns.remove(function(item) {
+                return item == e.townOptionId;
+            });
+            self.selectedTags.remove(function(item) {
+                return item.id == e.townOptionId && item.type == "town";
+            });
+        }        
         DoFilterSearch();
     }   
 };
@@ -242,7 +250,7 @@ function doSearch(searchterm_value) {
     searchViewModel.selectedFacilities.removeAll();
     searchViewModel.selectedFilterboxValue("");
     searchViewModel.selectedActivity("");
-    searchViewModel.selectedTown("");
+    searchViewModel.selectedTowns.removeAll();
     searchViewModel.selectedFilterbox(false);
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
     searchViewModel.selectedTags.removeAll();
@@ -300,7 +308,7 @@ function DoFilterSearch() {
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
     results.removeAll();
-    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTown(), activity_id: searchViewModel.selectedActivity()  }, true);
+    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity()  }, true);
     
     searchViewModel.facilities.removeAll();
     searchViewModel.activities.removeAll();
@@ -308,17 +316,17 @@ function DoFilterSearch() {
         
     $.getJSON(requestURL, function(result){
             for(var i=0; i<result.facilities.length; i++) {
-                var selected = false;
+                var selectedFacilities = false;
                 var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedFacilities(), function(current) {
                     return current == result.facilities[i].id;
                 });
                 if(alreadySelected) {
-                    selected = true;
+                    selectedFacilities = true;
                 }
                 searchViewModel.facilities.push(ko.observable({ index: i, facilityOption: result.facilities[i].name, 
                     facilityOptionId: result.facilities[i].id,
                     facilitySelected: "facilitySelected",
-                    selected: ko.observable(selected) }));
+                    selected: ko.observable(selectedFacilities) }));
             }
 
             for(var i=0; i<result.activities.length; i++) {
@@ -328,9 +336,18 @@ function DoFilterSearch() {
             }
 
             for(var i=0; i<result.partoftowns.length; i++) {
+                var selectedTown = false;
+                var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedTowns(), function(current) {
+                    return current == result.partoftowns[i].id;
+                });
+                if(alreadySelected) {
+                    selectedTown = true;
+                }
+
                 searchViewModel.towns.push({ townOption: result.partoftowns[i].name, 
                     townOptionId: result.partoftowns[i].id,
-                    townSelected: "townSelected" });
+                    townSelected: "townSelected",
+                    selected: ko.observable(selectedTown) });
             }            
 
             var items = [];
