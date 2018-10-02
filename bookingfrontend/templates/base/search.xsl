@@ -49,8 +49,10 @@
                       Fasiliteter      
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item d-inline" data-bind="text: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#">
-                         </a><span class="d-inline" data-bind="if: selected">&#10004;</span>
+                    <div class="dropdown-item d-block">
+                        <a class="text-dark" data-bind="text: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
+                        <span data-bind="if: selected">&#160; &#10004;</span>
+                    </div>
                 </div>
             </div>
 
@@ -59,7 +61,10 @@
                       Bydel      
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" data-bind="text: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
+                    <div class="dropdown-item d-block">
+                        <a class="text-dark" data-bind="text: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
+                        <span data-bind="if: selected">&#160; &#10004;</span>
+                    </div>
                 </div>
             </div>
         </div>
