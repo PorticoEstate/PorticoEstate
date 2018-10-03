@@ -4,7 +4,9 @@
         <div class="container searchContainer">            
             <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
             
-            <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <div class="text-center">
+				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+			</div>
             <div class="input-group input-group-lg">
                 <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large" aria-describedby="inputGroup-sizing-sm" placeholder="Søk sted, hall, aktivitet, utstyr el"/>
                 <div class="input-group-prepend">
