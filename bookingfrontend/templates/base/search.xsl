@@ -4,7 +4,7 @@
         <div class="container searchContainer">            
             <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
             
-            <div class="text-center">
+            <div class="text-center mt-4 mb-5">
 				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 			</div>
             <div class="input-group input-group-lg">
