@@ -85,7 +85,6 @@
 
             <div class="row" data-bind="foreach: upcommingevents">
                 <div class="col-lg-6 card-positioncorrect">
-                    <a href="" class="custom-card-link">
                         <div class="row custom-card">
                             <div class="col-3 date-circle">
                                 <svg width="90" height="90">
@@ -100,12 +99,11 @@
                                 <h5 class="font-weight-bold title" data-bind="text: name"></h5>                                
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
                                 <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
-                                <span class="text-uppercase" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+                                <span class="text-uppercase mb-3" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+                                <a class="upcomming-event-href" href="" data-bind=""><span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span></a>
                             </div>
                         </div>
-                    </a>
-                </div>
-                
+                </div>                
             </div>
         
         </div>

@@ -1,4 +1,5 @@
 var selectedAutocompleteValue = false;
+$(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }")
 $(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
@@ -180,7 +181,8 @@ function GetUpcommingEvents() {
                 datetime_day: datetime_day,
                 datetime_month: month,
                 building_name: result.results[i].building_name,
-                datetime_time: result.results[i].datetime_time
+                datetime_time: result.results[i].datetime_time,
+                homepage: result.results[i].homepage
             });
         }
     }).done(function () {

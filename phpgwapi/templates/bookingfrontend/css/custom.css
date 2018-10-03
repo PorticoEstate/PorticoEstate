@@ -504,6 +504,16 @@ SEARCH PAGE STYLE
 
 #welcomeResult .title {
     min-height: 50px;
+    overflow: hidden;
+    max-height: 50px;
+}
+
+#welcomeResult .custom-card {
+    min-height: 180px;
+}
+
+#welcomeResult .custom-card:hover {
+    background-color: #fff;
 }
 
 .card-positioncorrect {
