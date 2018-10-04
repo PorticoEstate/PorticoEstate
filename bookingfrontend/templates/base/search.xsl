@@ -132,7 +132,7 @@
                             </div>
                             <div class="col-8 desc">
                                 <div class="desc">
-                                    <h4 class="font-weight-bold" data-bind="text: name"></h4>
+                                    <h4 class="font-weight-bold" data-bind="html: name"></h4>
                                     <span data-bind="text: street"></span>
                                     <span class="d-block" data-bind="text: postcode"></span>
                                 </div>
@@ -170,7 +170,7 @@
                                                                
                             </div>
                             <div class="col-8 desc">
-                                <h4 class="font-weight-bold" data-bind="text: name"></h4>
+                                <h4 class="font-weight-bold" data-bind="html: name"></h4>
                                 <span data-bind="text: street"></span>
                                 <span class="d-block" data-bind="text: postcode"></span>
                             </div>
@@ -184,7 +184,7 @@
                         <div class="custom-subcard" data-bind="visible: $index() == 0 || $index() == 1">
                                     <div class="row">
                                         <div class="col-6">
-                                            <h5 class="font-weight-bold" data-bind="text: name"></h5>
+                                            <h5 class="font-weight-bold" data-bind="html: name"></h5>
                                         </div>
                                         <div class="col-6">
                                             <a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">Book</a>
