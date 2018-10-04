@@ -102,7 +102,7 @@
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
                                 <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
                                 <span class="text-uppercase mb-3" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-                                <a class="upcomming-event-href" href="" data-bind=""><span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span></a>
+                                <a class="upcomming-event-href" href="" target="_blank" data-bind=""><span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span></a>
                             </div>
                         </div>
                 </div>                
