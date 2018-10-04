@@ -32,7 +32,7 @@
                         
                     </div>
 
-                    <div class="col-12 mb-4">
+                    <div class="col mb-4">
                         <xsl:if test="organization/permission/write">
                             <button class="btn btn-light" onclick="window.location.href='{organization/edit_link}'">
                                 <xsl:value-of select="php:function('lang', 'edit')" />
@@ -75,10 +75,12 @@
 
                                 <div id="collapseDelegates" class="collapse">
                                     <div class="card-body">
-                                        <div id="delegates_container"/>
-                                        <a href="{organization/new_delegate_link}">
-                                            <xsl:value-of select="php:function('lang', 'new delegate')" />
-                                        </a>
+                                        <div id="delegates_container"/>                                        
+                                        <xsl:if test="organization/permission/write">
+                                            <a href="{organization/new_delegate_link}">
+                                                <xsl:value-of select="php:function('lang', 'new delegate')" />
+                                            </a>
+                                        </xsl:if>
                                     </div>
                                 </div>
                         </div>
@@ -191,9 +193,11 @@
                         </div>
                     </div>
                 </div>
-                <a href="{organization/new_group_link}">
-					<xsl:value-of select="php:function('lang', 'new group')" />
-				</a>
+                <xsl:if test="organization/permission/write">
+                    <a href="{organization/new_group_link}">
+                        <xsl:value-of select="php:function('lang', 'new group')" />
+                    </a>
+                </xsl:if>
             </div>
         </div>
         </div>
