@@ -45,7 +45,7 @@
 									<xsl:if test="id=../resource/rescategory_id">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>
-									<xsl:value-of select="name" />
+									<xsl:value-of disable-output-escaping="yes" select="name" />
 								</option>
 							</xsl:for-each>
 						</select>

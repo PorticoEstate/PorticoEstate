@@ -30,7 +30,7 @@
                             
                         </button>
                         <div class="dropdown-menu" data-bind="foreach: filterbox" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" data-bind="text: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
+                            <a class="dropdown-item" data-bind="html: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
                         </div>
                     </div>            
             </div>
@@ -42,7 +42,7 @@
                       Aktiviteter      
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" data-bind="text: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
+                        <a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
                     <div class="dropdown-item d-block">
-                        <a class="text-dark" data-bind="text: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
+                        <a class="text-dark" data-bind="html: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
                         <span data-bind="if: selected">&#160; &#10004;</span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
                     <div class="dropdown-item d-block">
-                        <a class="text-dark" data-bind="text: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
+                        <a class="text-dark" data-bind="html: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
                         <span data-bind="if: selected">&#160; &#10004;</span>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
             <div data-bind="foreach: selectedTags">
             <div class="d-inline-block mb-2">
                 <div class="tags">
-                    <span data-bind="text: value, click: $root.clearTag" ></span>
+                    <span data-bind="html: value, click: $root.clearTag" ></span>
                     <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a></div>
                 </div>
             </div>
@@ -133,8 +133,8 @@
                             <div class="col-8 desc">
                                 <div class="desc">
                                     <h4 class="font-weight-bold" data-bind="html: name"></h4>
-                                    <span data-bind="text: street"></span>
-                                    <span class="d-block" data-bind="text: postcode"></span>
+                                    <span data-bind="html: street"></span>
+                                    <span class="d-block" data-bind="html: postcode"></span>
                                 </div>
                                 <div data-bind="foreach: tagItems">
                                     <span class="badge badge-pill badge-default text-uppercase" data-bind="text: $rawData, click: selectThisTag" ></span>
@@ -171,8 +171,8 @@
                             </div>
                             <div class="col-8 desc">
                                 <h4 class="font-weight-bold" data-bind="html: name"></h4>
-                                <span data-bind="text: street"></span>
-                                <span class="d-block" data-bind="text: postcode"></span>
+                                <span data-bind="html: street"></span>
+                                <span class="d-block" data-bind="html: postcode"></span>
                             </div>
 
                         </div>
@@ -192,11 +192,11 @@
                                     </div>
                                     <div data-bind="foreach: facilities">
                                         <span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
-                                        <span class="mr-2 textTagsItems" data-bind="text: name" ></span>
+                                        <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
                                     <div data-bind="foreach: activities">
                                     <span class="tagTitle" data-bind="if: $index() == 0">Aktiviteter: </span>
-                                        <span class="mr-2 textTagsItems" data-bind="text: name" ></span>
+                                        <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
                         </div>                                
                     </div>

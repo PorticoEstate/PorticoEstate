@@ -565,7 +565,14 @@
 						continue;
 					}
 					$rescategories = $this->borescategory->get_rescategories_by_activities($activity_ids);
-
+					// Resource category names containing special characters (such as parentheses) seems to be doubly
+					// escaped when retrieved, so decode the name once here (ie. from "&amp;#40;" to "&#40;") and then
+					// the templates can handle the second decoding
+					foreach ($rescategories as &$rescategory)
+					{
+						$rescategory['name'] = html_entity_decode($rescategory['name']);
+					}
+					unset($rescategory);
 					$data[] = array('text' => $boxtext, 'rescategories' => $rescategories);
 				}
 			}
