@@ -180,7 +180,10 @@
 			foreach ($resources as &$resource)
 			{
 				// Add a list of activities with id and name. Only active activities are included, and only activities
-				// belonging to the top level activity defined for the resource
+				// belonging to the top level activity defined for the resource. Note that activity names containing
+				// special characters (such as parentheses) seems to be doubly escaped when retrieved, so decode the
+				// name once here (ie. from "&amp;#40;" to "&#40;") and then the templates can handle the second
+				// decoding
 				$toplevelactivity_id = $resource['activity_id'];
 				$childactivities = array();
 				if (array_key_exists($toplevelactivity_id, $activitylist))
@@ -196,7 +199,7 @@
 						$childactivity = $childactivities[$activity_id];
 						if ($childactivity['active'])
 						{
-							$resource['activities_list'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
+							$resource['activities_list'][] = array('id' => $childactivity['id'], 'name' => html_entity_decode($childactivity['name']));
 						}
 					}
 				}

@@ -191,7 +191,7 @@
                                     <input class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
                                     <span class="label-text" data-bind=""></span>
                                 </label>
-                                <a class="d-inline termAcceptDocsUrl" data-bind=""> </a>
+                                <a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""> </a>
                             </div>
                         </div>                     
                         
