@@ -31,9 +31,7 @@
                         </a>
                         
                     </div>
-                    <p class="col-12">
-                        <xsl:value-of select="organization/description"/>
-                    </p>
+
                     <div class="col-12 mb-4">
                         <xsl:if test="organization/permission/write">
                             <button class="btn btn-light" onclick="window.location.href='{organization/edit_link}'">
@@ -57,23 +55,85 @@
 
                                 <div id="collapseOne" class="collapse">
                                     <div class="card-body">
-                                        <p id="item-about"><xsl:value-of select="organization/description"/></p>
+                                        <xsl:value-of select="organization/description"/>
                                     </div>
                                 </div>
                             </xsl:if>
+                        </div>                
+
+                        <div class="building-card">
+                                <div class="building-card-header">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseDelegates" aria-expanded="false">
+                                            <xsl:value-of select="php:function('lang', 'delegates')" />
+                                        </button>
+                                        <button data-toggle="collapse" data-target="#collapseDelegates" class="btn fas fa-plus float-right"></button>
+                                        
+                                    </h5>
+                                    
+                                </div>
+
+                                <div id="collapseDelegates" class="collapse">
+                                    <div class="card-body">
+                                        <div id="delegates_container"/>
+                                        <a href="{organization/new_delegate_link}">
+                                            <xsl:value-of select="php:function('lang', 'new delegate')" />
+                                        </a>
+                                    </div>
+                                </div>
                         </div>
+
+                        <div class="building-card">
+                                <div class="building-card-header">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBuildingsUsedBy" aria-expanded="false">
+                                            <xsl:value-of select="php:function('lang', 'Used buildings')" />
+                                        </button>
+                                        <button data-toggle="collapse" data-target="#collapseBuildingsUsedBy" class="btn fas fa-plus float-right"></button>
+                                        
+                                    </h5>
+                                    
+                                </div>
+
+                                <div id="collapseBuildingsUsedBy" class="collapse">
+                                    <div class="card-body">
+                                        <div id="buildings_used_by_container"/>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="building-card">
+                                <div class="building-card-header">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseDocuments" aria-expanded="false">
+                                            <xsl:value-of select="php:function('lang', 'documents')" />
+                                        </button>
+                                        <button data-toggle="collapse" data-target="#collapseDocuments" class="btn fas fa-plus float-right"></button>
+                                        
+                                    </h5>
+                                    
+                                </div>
+
+                                <div id="collapseDocuments" class="collapse">
+                                    <div class="card-body">
+                                        <div id="documents_container"/>
+                                    </div>
+                                </div>
+                        </div>                        
+                        
+
                         <div class="building-card">
                             <xsl:if test="organization/email and normalize-space(organization/email) or
                             organization/phone and normalize-space(organization/phone)">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
-                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
+                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseContacts" aria-expanded="false">
                                             <xsl:value-of select="php:function('lang', 'contact person')" />
                                         </button>
-                                        <button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
+                                        <button data-toggle="collapse" data-target="#collapseContacts" class="btn fas fa-plus float-right"></button>
                                     </h5>
                                 </div>
-                                <div id="collapseThree" class="collapse">
+                                <div id="collapseContacts" class="collapse">
                                     <div class="card-body" >
                                         <div>
                                             <div class="d-block">
@@ -112,7 +172,7 @@
             
             <div class="col-lg-6 building-bookable">
                 <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'group')" /></h5>
-                <div class="custom-card p-0 m-0" data-bind="visible: groups().length > 0">
+                <div class="custom-card p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
                     <div data-bind="foreach: groups">
                         <div class="custom-subcard mb-0">
                             <span data-bind="text: name"></span>
@@ -131,7 +191,9 @@
                         </div>
                     </div>
                 </div>
-                
+                <a href="{organization/new_group_link}">
+					<xsl:value-of select="php:function('lang', 'new group')" />
+				</a>
             </div>
         </div>
         </div>
@@ -140,8 +202,39 @@
     </div>
 
     <script type="text/javascript">
+            JqueryPortico.booking = {};
             var script = document.createElement("script"); 
 			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/organization.js";
-            document.head.appendChild(script);			
+            document.head.appendChild(script);
+
+            var organization_id = <xsl:value-of select="organization/id"/>;
+            var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
+        
+            <![CDATA[
+            var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id}, true);
+            var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1'},true);
+            var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id}, true);
+            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index', sort:'name', no_images:1, filter_owner_id:organization_id}, true);
+            var document_organizationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index_images', sort:'name', filter_owner_id:organization_id}, true);
+            ]]>
+                    
+            var rBuilding = [{n: 'ResultSet'},{n: 'Result'}];
+
+            var colDefsDelegate = [
+            {key: 'name', label: lang['Name'], formatter: genericLink},
+            {key: 'email', label: lang['email']}
+            ];
+
+            var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+            var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
+                
+            createTable('delegates_container', delegateURL, colDefsDelegate, '', 'table table-hover');
+            createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding, 'table table-hover');
+    
+            createTable('documents_container', documentURL, colDefsDocument, '', 'table table-hover');
+            $(window).on('load', function(){
+            // Load image
+            //JqueryPortico.booking.inlineImages('images_container', document_organizationURL);
+            });			
         </script>
 </xsl:template>

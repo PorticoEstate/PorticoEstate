@@ -503,13 +503,14 @@ SEARCH PAGE STYLE
 }
 
 #welcomeResult .title {
-    min-height: 50px;
+    min-height: 45px;
     overflow: hidden;
-    max-height: 50px;
+    max-height: 45px;
 }
 
 #welcomeResult .custom-card {
-    min-height: 180px;
+    min-height: 170px;
+    max-height: 170px;
 }
 
 #welcomeResult .custom-card:hover {

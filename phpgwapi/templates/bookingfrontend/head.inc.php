@@ -80,6 +80,7 @@ JS;
 
 	$javascripts = array();
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jquery.min.js";
+	$javascripts[] = "/phpgwapi/js/jquery/common.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
@@ -89,7 +90,7 @@ JS;
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/common.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
 
-
+	
 	foreach ( $javascripts as $javascript )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
