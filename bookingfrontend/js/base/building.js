@@ -288,11 +288,15 @@ function PopulateBuildingData(baseURL, urlParams) {
     getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", filter_owner_id:urlParams['id']}, true);    
     $.getJSON(getJsonURL, function(result){
         if(result.ResultSet.Result.length > 0) {
-            $("#item-main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[0].id+"&filter_owner_id="+urlParams['id']);
+			var mainPictureFound = false;
             for(var i=0; i<result.ResultSet.Result.length; i++) {
                 var src = baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[i].id+"&filter_owner_id="+urlParams['id'];
                 var imgTag = '<img id="modal-img-'+i+'" src="'+src+'" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
                 $(".building-images").append(imgTag);
+				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
+					mainPictureFound = true;
+					$("#item-main-picture").attr("src", src);
+				}
             }
         } else {
             $(".col-item-img").remove();
