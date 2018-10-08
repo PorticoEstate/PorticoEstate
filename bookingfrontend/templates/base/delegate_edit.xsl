@@ -11,21 +11,17 @@
 						</a>
 					</span>
 					<span>
-						<a href="{delegate/organization_link}"><xsl:value-of select="delegate/organization_name"/></a>
+						<a><xsl:value-of select="delegate/organization_name"/></a>
 					</span>
-					<span><xsl:value-of select="delegate/name"/></span>
+					<xsl:if test="not(delegate/id)"><span><xsl:value-of select="php:function('lang', 'New delegate')" /></span></xsl:if>
+					<xsl:if test="delegate/id">
+						<span><xsl:value-of select="delegate/name"/></span>
+						<span><xsl:value-of select="php:function('lang', 'Edit delegate')" /></span>
+					</xsl:if>
 				</div>
 
             	<div class="row">
-					<div class="col-12">
-						<xsl:if test="not(delegate/id)">
-							<h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'New delegate')" /></h1>
-						</xsl:if>
-						<xsl:if test="delegate/id">
-							<h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'Edit delegate')" /></h1>
-						</xsl:if>
-					</div>
-
+					
 					<form action="" method="POST" id="form" name="form" class="col-md-8">
 						<div class="col mb-5">
 							<xsl:call-template name="msgbox"/>

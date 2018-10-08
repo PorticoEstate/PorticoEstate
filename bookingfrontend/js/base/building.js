@@ -310,13 +310,23 @@ function PopulateBookableResources(baseURL, urlParams) {
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.results.length; i++) {
 //          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
+            var facilitiesList = []; activitiesList = [];
+            for(var k=0; k<result.results[i].facilities_list.length; k++) {
+                facilitiesList.push(result.results[i].facilities_list[k].name);
+            }            
+            for(var k=0; k<result.results[i].activities_list.length; k++) {
+                activitiesList.push(result.results[i].activities_list[k].name);
+            }
+            
             bookableResources.push({
 				name: result.results[i].name,
 				resourceItemLink: phpGWLink('bookingfrontend/',{
 					menuaction:'bookingfrontend.uiresource.show',
 					id:result.results[i].id,
 					buildingid:urlParams['id']
-				})
+                }),
+                facilitiesList: ko.observableArray(facilitiesList),
+                activitiesList: ko.observableArray(activitiesList)
 			});
             resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
         }

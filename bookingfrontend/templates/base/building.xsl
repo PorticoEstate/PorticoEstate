@@ -12,6 +12,7 @@
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</span>
+			<span><xsl:value-of select="php:function('lang', 'Building')" /></span>
 		</div>
 
 		<div class="row p-3">
@@ -107,9 +108,17 @@
 						<a class="bookable-resource-link-href" href="" data-bind="">
 							<span data-bind="text: name"></span>
 						</a>
-						<span class="font-weight-bold d-block mt-2">Fasiliteter: </span>
-						<span>Bla bla, </span>
-						<span>Bla bla</span>
+						
+						<div class="mt-2" data-bind="foreach: facilitiesList">
+						<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>							
+							<span class="textTagsItems" data-bind="text: $data"></span>
+						</div>
+						
+						
+						<div data-bind="foreach: activitiesList">							
+							<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt: </span>
+							<span class="mr-2 textTagsItems" data-bind="text: $data"></span>
+						</div>
 					</div>
 				</div>
 

@@ -10,20 +10,14 @@
 						</a>
 					</span>
 					<span>
-						<a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a>
+						<xsl:value-of select="group/organization_name"/>
 					</span>
 					<xsl:if test="not(group/id)">
-						<span>
-							<a href="{group/organization_link}"><xsl:value-of select="php:function('lang', 'New Group')" /></a>
-						</span>
+						<span><xsl:value-of select="php:function('lang', 'New Group')" /></span>
 					</xsl:if>
 					<xsl:if test="group/id">
-						<span>
-							<a href="{group/organization_link}"><xsl:value-of select="php:function('lang', 'Edit Group')" /></a>
-						</span>
-						
+						<span><xsl:value-of select="php:function('lang', 'Edit Group')" /></span>						
 					</xsl:if>				
-					
 				</div>
 				
 				<form action="" method="POST" id="form" name="form" class="col-lg-8">

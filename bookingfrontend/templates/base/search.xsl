@@ -195,7 +195,7 @@
                                         <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
                                     <div data-bind="foreach: activities">
-                                    <span class="tagTitle" data-bind="if: $index() == 0">Aktiviteter: </span>
+                                    <span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt: </span>
                                         <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
                         </div>                                
