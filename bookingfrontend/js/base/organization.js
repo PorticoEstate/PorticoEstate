@@ -1,3 +1,4 @@
+$(".group_link").attr('data-bind', "attr: {'href': group_link }");
 var urlParams = [];
 CreateUrlParams(window.location.search);
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
@@ -27,7 +28,8 @@ function PopulateOrganizationData() {
                         name: result.data[i].name,
                         group_contact_person_name: result.data[i].contacts[k].name,
                         group_contact_person_email: result.data[i].contacts[k].email,
-                        group_contact_person_phone: result.data[i].contacts[k].phone
+                        group_contact_person_phone: result.data[i].contacts[k].phone,
+                        group_link: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.show", id:result.data[i].id}, false)
                     });
                 }
             }

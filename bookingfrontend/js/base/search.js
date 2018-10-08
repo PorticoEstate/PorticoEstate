@@ -1,5 +1,5 @@
 var selectedAutocompleteValue = false;
-$(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }")
+$(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }");
 $(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");

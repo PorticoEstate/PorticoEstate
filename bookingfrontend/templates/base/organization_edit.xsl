@@ -16,7 +16,7 @@
 </func:function>
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="organization-edit-page-content">  
+	<div id="organization-edit-page-content" class="margin-top-content">  
         <div class="container wrapper">
             <div class="location mt-5">
                 <span><a>
