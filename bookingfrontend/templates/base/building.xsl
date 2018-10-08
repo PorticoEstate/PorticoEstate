@@ -142,10 +142,12 @@
 				<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
 					<i class="far fa-calendar-alt"></i> Velg dato</button>
 
+					<xsl:if test="building/deactivate_application=0">
 				<button class="btn btn-default" id="newApplicationBtn">
 					<i class="fas fa-plus"></i>
 					<xsl:value-of select="php:function('lang', 'new booking application')" />
 				</button>
+					</xsl:if>
 			</div>
 
 
