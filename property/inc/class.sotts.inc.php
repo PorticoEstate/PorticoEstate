@@ -1478,6 +1478,16 @@
 				$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
 			}
 
+			if($oldgroup_id || $ticket['group_id'])
+			{
+				if($oldassigned && ! $ticket['assignedto'])
+				{
+					$this->fields_updated[] = 'assignedto';
+					$this->db->query("UPDATE fm_tts_tickets SET assignedto = NULL WHERE id={$id}", __LINE__, __FILE__);
+					$this->historylog->add('A', $id, '', $oldassigned);					
+				}
+			}
+
 			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
 			{
 				$this->fields_updated[] = 'group_id';
