@@ -55,7 +55,7 @@
 			$pathway = array();
 			$lang_home = lang('home');
 			$buildinginfo = array();
-			$building_fields = array('city','email','homepage','name','opening_hours','phone','street','zip_code');
+			$building_fields = array('city','deactivate_application','email','homepage','name','opening_hours','phone','street','zip_code');
 			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
