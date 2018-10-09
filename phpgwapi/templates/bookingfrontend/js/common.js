@@ -168,6 +168,11 @@ $(document).ready(function ()
         ForwardToNewApplication();
     });
 
+    $(document).on('click', '.img-thumbnail', function () {
+        $("#lightbox").find($('img')).attr("src",$(this).attr('src'));
+        $("#lightbox").find($('img')).attr("id",$(this).attr('id'));
+    });
+    
     $(".booking-cart-title").click(function(){
                 if($(".booking-cart-icon").hasClass("fa-window-minimize")) {
                     $(".booking-cart-icon").removeClass("far fa-window-minimize");
