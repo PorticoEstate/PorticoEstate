@@ -109,16 +109,16 @@
 							<span data-bind="text: name"></span>
 						</a>
 						
-						<div class="mt-2" data-bind="foreach: facilitiesList">
-						<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>							
-							<span class="textTagsItems" data-bind="text: $data"></span>
-						</div>
-						
-						
 						<div data-bind="foreach: activitiesList">							
-							<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt: </span>
+									<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt for: </span>
 							<span class="mr-2 textTagsItems" data-bind="text: $data"></span>
 						</div>
+
+								<div class="mt-2" data-bind="foreach: facilitiesList">
+									<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
+									<span class="textTagsItems" data-bind="text: $data"></span>
+								</div>
+
 					</div>
 				</div>
 

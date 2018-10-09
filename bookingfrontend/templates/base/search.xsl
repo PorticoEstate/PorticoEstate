@@ -190,14 +190,14 @@
                                             <a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">Book</a>
                                         </div>
                                     </div>
-                                    <div data-bind="foreach: facilities">
-                                        <span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
-                                        <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
-                                    </div>
                                     <div data-bind="foreach: activities">
-                                    <span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt: </span>
+										<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt for: </span>
                                         <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
+									<div data-bind="foreach: facilities">
+										<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
+										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
+									</div>
                         </div>                                
                     </div>
                     <div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2"><i class="fas fa-angle-down"></i> Se <span data-bind="text: (filterSearchItemsResources().length - 2) "></span> flere</div>
