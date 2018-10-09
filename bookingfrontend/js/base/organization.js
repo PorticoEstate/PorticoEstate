@@ -29,7 +29,23 @@ function PopulateOrganizationData() {
         }
     })  .done(function() {
     });
-    
-    
+
+
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index", filter_owner_id:urlParams['id']}, true);    
+    $.getJSON(getJsonURL, function(result){
+        if(result.data.length > 0) {
+            var mainPictureFound = false;
+            for(var i=0; i<result.data.length; i++) {                
+                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.data[i].id, filter_owner_id: urlParams['id']}, false);               
+				if (result.data[i].category == 'picture main' && !mainPictureFound) {
+					mainPictureFound = true;
+					$("#item-main-picture").attr("src", src);
+				}
+            }
+        } else {
+            $(".col-item-img").remove();
+        }
+        
+    });
     
 }

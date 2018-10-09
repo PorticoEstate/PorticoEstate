@@ -17,28 +17,31 @@
             <div class="col-lg-6">
                 
                 <div class="row">
-                    <div class="col-12 px-2 p-3">
-                        <h3 id="main-item-header"><xsl:value-of select="organization/name"/></h3>
-                        <xsl:if test="organization/street and normalize-space(organization/street)">
-                            <i class="fas fa-map-marker d-inline"> </i>
-                            <div class="building-place-adr">
-                                <span id="item-street"><xsl:value-of select="organization/street"/></span>
-                                <span id="item-zip-city"><xsl:value-of select="organization/zip_code"/>&#160;<xsl:value-of select="organization/city"/></span>
+                    
+                        <div class="col-sm-4 d-none d-sm-block col-item-img">
+                            <img class="img-fluid rounded" id="item-main-picture" src=""/>
                         </div>
-                        </xsl:if>
-                        <a id="item-web-href" class="d-block mt-2" href="">
-                            <span id="item-web-url"><xsl:value-of select="organization/homepage"/></span>
-                        </a>
-                        
-                    </div>
+                        <div class="col-sm-8 mb-5">
+                            <h3 id="main-item-header"><xsl:value-of select="organization/name"/></h3>
+                            <xsl:if test="organization/street and normalize-space(organization/street)">
+                                <i class="fas fa-map-marker d-inline"> </i>
+                                <div class="building-place-adr">
+                                    <span id="item-street"><xsl:value-of select="organization/street"/></span>
+                                    <span id="item-zip-city"><xsl:value-of select="organization/zip_code"/>&#160;<xsl:value-of select="organization/city"/></span>
+                            </div>
+                            </xsl:if>
+                            <a id="item-web-href" class="d-block mt-2" href="">
+                                <span id="item-web-url"><xsl:value-of select="organization/homepage"/></span>
+                            </a>
+                            <xsl:if test="organization/permission/write">
+                                <button class="btn btn-light" onclick="window.location.href='{organization/edit_link}'">
+                                    <xsl:value-of select="php:function('lang', 'edit')" />
+                                </button>
+                            </xsl:if>
+                        </div>
+                    
 
-                    <div class="col mb-4">
-                        <xsl:if test="organization/permission/write">
-                            <button class="btn btn-light" onclick="window.location.href='{organization/edit_link}'">
-                                <xsl:value-of select="php:function('lang', 'edit')" />
-                            </button>
-                        </xsl:if>
-                    </div>
+                    
                     <div class="building-accordion">
                         <div class="building-card">
                             <xsl:if test="organization/description and normalize-space(organization/description)">
