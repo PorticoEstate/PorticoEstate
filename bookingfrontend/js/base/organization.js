@@ -33,17 +33,20 @@ function PopulateOrganizationData() {
 
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:urlParams['id']}, true);
     $.getJSON(getJsonURL, function(result){
-		if(result.ResultSet.Result.length > 0) {
-            var mainPictureFound = false;
+        var mainPictureFound = false;
+		if(result.ResultSet.Result.length > 0) {            
 			for(var i=0; i<result.ResultSet.Result.length; i++) {
-				var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
+                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
+                var imgTag = '<img id="modal-img-'+i+'" src="'+src+'" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
+                $(".organization-images").append(imgTag);
 				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
 					mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
             }
-        } else {
-            $(".col-item-img").remove();
+            if(!mainPictureFound) {
+                $(".col-item-img").remove();
+            }
         }
         
     });

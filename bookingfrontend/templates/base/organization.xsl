@@ -108,6 +108,21 @@
                         </div>
 
                         <div class="building-card">
+							<div class="building-card-header">
+								<h5 class="mb-0">
+									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePicture" aria-expanded="false">
+										<xsl:value-of select="php:function('lang', 'picture')" />
+									</button>
+									<button data-toggle="collapse" data-target="#collapsePicture" class="btn fas fa-plus float-right"></button>
+								</h5>
+							</div>
+							<div id="collapsePicture" class="collapse">
+								<div class="card-body organization-images" id="list-img-thumbs">
+								</div>
+							</div>
+						</div>
+
+                        <div class="building-card">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseDocuments" aria-expanded="false">
@@ -206,6 +221,15 @@
         </div>
         </div>
         <div class="push"></div>
+
+        <div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-body lightbox-body">
+                    <a href="#" class="close">&#215;</a>
+                    <img src="" alt="" />
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript">
