@@ -48,8 +48,11 @@ button {
 
 .navbar {
     padding-bottom: 1.4em;
-    -webkit-transition: ease 0.2s; /* Safari */
-          transition: ease 0.2s;
+    -webkit-transform: scale(1); /* Saf3.1+, Chrome */
+     -moz-transform: scale(1); /* FF3.5+ */
+      -ms-transform: scale(1); /* IE9 */
+       -o-transform: scale(1); /* Opera 10.5+ */
+          transform: scale(1);
 }
 
 .nav-link {
