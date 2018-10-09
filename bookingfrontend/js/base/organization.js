@@ -31,13 +31,13 @@ function PopulateOrganizationData() {
     });
 
 
-    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index", filter_owner_id:urlParams['id']}, true);    
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:urlParams['id']}, true);
     $.getJSON(getJsonURL, function(result){
-        if(result.data.length > 0) {
+		if(result.ResultSet.Result.length > 0) {
             var mainPictureFound = false;
-            for(var i=0; i<result.data.length; i++) {                
-                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.data[i].id, filter_owner_id: urlParams['id']}, false);               
-				if (result.data[i].category == 'picture main' && !mainPictureFound) {
+			for(var i=0; i<result.ResultSet.Result.length; i++) {
+				var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
+				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
 					mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
