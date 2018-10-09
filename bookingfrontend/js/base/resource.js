@@ -13,13 +13,17 @@ $(document).ready(function ()
     $(".overlay").show();
     
     PopulateResourceData();
-    PopulateCalendarEvents();
+	if (deactivate_calendar == 0) {
+		PopulateCalendarEvents();
+	}
      $(document).on('click', '#list-img-thumbs img', function () {
          $(".main-picture").attr("src", this.src);
      });
 
     var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['buildingid'], resource_id:  urlParams['id'] }, false);
     $(".bookBtnForward").attr("href", bookBtnURL);
+
+	$(".overlay").hide();
 });
 
 function PopulateResourceData() {
@@ -230,7 +234,6 @@ function PopulateCalendarEvents() {
                 .done(function () {
                     events = eventsArray;
                     GenerateCalendarForEvents(date);
-                    $(".calendar-tool").removeClass("invisible");
                 });    
 }
 

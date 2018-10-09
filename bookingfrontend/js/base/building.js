@@ -21,6 +21,8 @@ $(document).ready(function ()
     PopulateBuildingData(baseURL, urlParams);
     PopulateBookableResources(baseURL, urlParams);    
     
+	$(".calendar-tool").removeClass("invisible");
+
     $(document).on('change', '.choosenResource', function (e) {
         for(var i=0; i<resourceIds.length; i++) {
 
@@ -35,6 +37,8 @@ $(document).ready(function ()
     $('.dropdown-menu').on('click', function () {
         $(this).parent().toggleClass('show');
     });
+
+	$(".overlay").hide();
     
 });
 
@@ -263,7 +267,6 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         events = eventsArray;
                         events.sort(compare);
                         GenerateCalendarForEvents(date);    
-                        $(".calendar-tool").removeClass("invisible");
                         
                     }
                 });
@@ -326,7 +329,9 @@ function PopulateBookableResources(baseURL, urlParams) {
 			});
             resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
         }
-        PopulateCalendarEvents(baseURL, urlParams);
+		if (deactivate_calendar == 0) {
+			PopulateCalendarEvents(baseURL, urlParams);
+		}
     });
 }
 

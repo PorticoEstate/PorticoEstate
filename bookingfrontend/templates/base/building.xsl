@@ -131,6 +131,7 @@
 		<div class="row margin-top-and-bottom">
 
 			<div class="button-group dropdown calendar-tool invisible">
+					<xsl:if test="building/deactivate_calendar=0">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					Velg lokaler
 					<span class="caret"></span>
@@ -150,6 +151,7 @@
 
 				<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
 					<i class="far fa-calendar-alt"></i> Velg dato</button>
+					</xsl:if>
 
 					<xsl:if test="building/deactivate_application=0">
 				<button class="btn btn-default" id="newApplicationBtn">
@@ -169,10 +171,10 @@
 			</div>-->
 
 
-
+			<xsl:if test="building/deactivate_calendar=0">
 			<div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom"></div>
-
 			<div id="mySchedulerSmallDeviceView" class="d-lg-none margin-top-and-bottom"></div>
+			</xsl:if>
 
 		</div>
 
@@ -192,6 +194,7 @@
 
 </div>
 	<script type="text/javascript">
+		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/building.js";
 
