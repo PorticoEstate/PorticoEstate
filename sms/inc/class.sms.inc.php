@@ -199,7 +199,7 @@
 			}
 			for ($i = 0; $i < count($array_sms_to); $i++)
 			{
-				$c_sms_to = str_replace(array("\'","\""), array("", ""), $array_sms_to[$i]);
+				$c_sms_to = str_replace(array("\'","\"", " "), array("", "", ""), $array_sms_to[$i]);
 				$message = $this->db->db_addslashes($message);
 
 				$db_query = "INSERT INTO phpgw_sms_tblsmsoutgoing
