@@ -90,6 +90,13 @@
 								<div id="collapseFour" class="collapse">
 									<div class="card-body">
 											<xsl:value-of disable-output-escaping="yes" select="building/contact_info"/>
+												<xsl:if test="building/deactivate_sendmessage=0">
+													<button class="btn btn-default" onclick="window.location.href='{building/message_link}'">
+														<i class="fas fa-plus"></i>
+														<xsl:value-of select="php:function('lang', 'Send message')" />
+													</button>
+													- Melding til saksbehandler for bygg
+												</xsl:if>
 								</div>
 								</div>
 							</div>
