@@ -43,6 +43,12 @@
 						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 					</div>
 
+							<div>
+								<button class="btn btn-default">
+									<xsl:value-of select="php:function('lang', 'Calendar')" />
+								</button>
+							</div>
+
 					<div class="building-accordion">
 						<div class="building-card">
 							<div class="building-card-header">
@@ -108,7 +114,7 @@
 
 			<div class="col-lg-6 building-bookable">
 				<h3 class="">
-					<xsl:value-of select="php:function('lang', 'Bookable resources')" />
+					<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
 				</h3>
 				<div data-bind="foreach: bookableResource">
 					<div class="custom-card">

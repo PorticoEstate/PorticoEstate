@@ -727,6 +727,8 @@ return to application	booking	no	Tilbake til søknad
 application add	booking	no	Ny søknad
 duplicate in name	booking	no	Navnet finnes fra før
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
+Bookable resources (2018)	booking	no	Lokaler til leie
+Calendar	booking	no	Kalender
 Contact and invoice information	booking	no	Kontakt- og fakturainformasjon
 Edit activities	booking	no	Rediger aktiviteter
 Edit facilities	booking	no	Rediger fasiliteter
