@@ -39,7 +39,7 @@
         <div class="row mt-3" data-bind="if: selectedFilterbox">
             <div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
                 <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Aktiviteter      
+						Tilrettelagt for
                 </button>
                 <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
