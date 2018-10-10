@@ -42,7 +42,7 @@
 					<div class="col-12 mt-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 					</div>
-					<div class="col-12 mt-4 mb-4">
+					<div class="col-auto mt-4 mb-4">
 						<xsl:if test="building/deactivate_application=0">
 							<button class="btn btn-light" id="newApplicationBtn">
 								<i class="fas fa-plus"></i>&#160;
@@ -50,13 +50,14 @@
 							</button>
 						</xsl:if>
 					</div>						
-
+					<div class="col-auto mt-4 mb-4">
 							<div>
-								<button class="btn btn-default">
+								<button class="btn btn-light goToCal">
+									<i class="fa fa-calendar"></i>&#160;
 									<xsl:value-of select="php:function('lang', 'Calendar')" />
 								</button>
 							</div>
-
+					</div>
 					<div class="building-accordion">
 						<div class="building-card">
 							<div class="building-card-header">

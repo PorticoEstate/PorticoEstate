@@ -38,6 +38,12 @@ $(document).ready(function ()
         $(this).parent().toggleClass('show');
     });
 
+    $(".goToCal").click(function() {
+        $('html,body').animate({
+            scrollTop: $(".calendar-tool").offset().top - 140},
+            'slow');
+    });
+
 	$(".overlay").hide();
     
 });
