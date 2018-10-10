@@ -10,51 +10,53 @@
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</span>
-			<span><xsl:value-of select="php:function('lang', 'resource')" /></span>
+            <span><xsl:value-of select="php:function('lang', 'Building')" /></span>
+			<span><xsl:value-of select="building/name"/></span>
 		</div>
 
 		<div class="row p-3">
             <div class="col-lg-6">
                 
                 <div class="row">
-                    <div class="col-sm-4 d-none d-sm-block col-item-img">
-						<img class="img-fluid rounded" id="item-main-picture" src=""/>
+                    <div class="col-md-4 mb-4 col-item-img">
+						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
 
-                    <div class="col-sm-8">
+                    <div class="col-md-8">
 						<h3>
 							<xsl:value-of select="resource/name"/>
 						</h3>
-						<span>
+						<h3>
 							<xsl:value-of select="building/name"/>
-						</span>
-						<br />
-                        <i class="fas fa-map-marker d-inline"> </i>
+						</h3>
+                        <i class="fas fa-map-marker d-inline">&#160;</i>
                         <div class="building-place-adr">
 							<span>
 								<xsl:value-of select="building/street"/>
 							</span>
-							<span>
+							<span class="d-block">
 								<xsl:value-of select="building/zip_code"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="building/city"/>
 							</span>
+
+                            <div class="mt-2"><xsl:for-each select="resource/activities_list">					
+                                <span class="mr-3"><xsl:value-of select="name"/></span>                            
+                            </xsl:for-each></div>
                         </div>
+
+                        
                     </div>
-					<div class="px-2 p-3" id="item-description">
+					<div class="col-12 mt-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
 					</div>
 
-					<div>
-						<ul>
-							<xsl:for-each select="resource/activities_list">
-								<li>
-									<xsl:value-of select="name"/>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</div>
-
+                    <div class="col-12 mt-4">
+                        <xsl:if test="building/deactivate_application=0">
+                        <a href="" class="btn btn-light bookBtnForward"><i class="fas fa-plus"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'book')" /></a>
+                        </xsl:if>
+                    </div>
 					
                 </div>
             </div>
@@ -85,6 +87,21 @@
 								</div>
 							</div>
 						</xsl:if>
+
+                        <div class="building-card">
+							<div class="building-card-header">
+								<h5 class="mb-0">
+									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePictures" aria-expanded="false">
+										Bilder
+									</button>
+									<button data-toggle="collapse" data-target="#collapsePictures" class="btn fas fa-plus float-right"></button>
+								</h5>
+							</div>
+							<div id="collapsePictures" class="collapse">
+								<div class="card-body resource-images" id="list-img-thumbs">
+								</div>
+							</div>
+						</div>
 
 						<xsl:if test="resource/opening_hours and normalize-space(resource/opening_hours)">
 							<div class="building-card">
@@ -137,9 +154,6 @@
                 <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
 				</xsl:if>
                 
-				<xsl:if test="building/deactivate_application=0">
-                <a href="" class="btn btn-default ml-1 bookBtnForward"><i class="fas fa-plus"></i> Book</a>
-				</xsl:if>
             </div>
             
             
