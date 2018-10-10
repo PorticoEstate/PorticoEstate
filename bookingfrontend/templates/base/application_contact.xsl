@@ -7,7 +7,7 @@
         <div class="row mb-5">
         <div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 
-            <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'invoice information')" /></h1>
+            <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'Contact and invoice information')" /></h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
 
@@ -34,6 +34,9 @@
                 </div>
                 
                 <hr class="mt-5 mb-5"></hr>
+				<label class="text-uppercase">
+					<xsl:value-of select="php:function('lang', 'invoice information')" />
+				</label>
                 <input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
@@ -87,7 +90,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'phone')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_phone')" /></label>
                     <input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"/>  
                 </div>
                 

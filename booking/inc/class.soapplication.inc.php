@@ -51,7 +51,7 @@
 				'contact_name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'contact_email' => array('type' => 'string', 'required' => true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
-				'contact_phone' => array('type' => 'string'),
+				'contact_phone' => array('type' => 'string', 'required' => true),
 				'case_officer_name' => array('type' => 'string', 'query' => true,
 					'join' => array(
 						'table' => 'phpgw_accounts',
