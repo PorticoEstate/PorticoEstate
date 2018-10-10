@@ -17,7 +17,11 @@
             <div class="col-lg-6">
                 
                 <div class="row">
-                    <div class="px-2 p-3">
+                    <div class="col-sm-4 d-none d-sm-block col-item-img">
+						<img class="img-fluid rounded" id="item-main-picture" src=""/>
+					</div>
+
+                    <div class="col-sm-8">
 						<h3>
 							<xsl:value-of select="resource/name"/>
 						</h3>
@@ -51,7 +55,12 @@
 						</ul>
 					</div>
 
-					<div class="building-accordion">
+					
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="building-accordion">
 						<xsl:if test="count(resource/facilities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">
@@ -114,13 +123,6 @@
 						</xsl:if>
 
                     </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6 resource-picture">
-                <img class="img-fluid rounded m-1 main-picture" src=""/>
-                <div id="list-img-thumbs">
-                </div>  
             </div>
         </div>
         </div>
