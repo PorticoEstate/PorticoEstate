@@ -476,6 +476,10 @@ SEARCH PAGE STYLE
     text-decoration: none !important;
 }
 
+.desc h4 {
+    overflow: hidden;
+}
+
 .custom-card p {
     font-size: 14px;
     min-height: 50px;
@@ -749,12 +753,18 @@ BUILDING PAGE STYLE
     border-right: 1px #dedede solid;
 }
 
+.image-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center right;
+    border: 2px solid #fff;
+}
+  
 .building-place-adr {
     display: inline;
-}
-
-.building-place-adr span:last-child {
-    display: block ;
+    font-size: 14px;
 }
 
 .building-bookable h1 {
@@ -784,6 +794,10 @@ BUILDING PAGE STYLE
 
 .building-accordion {
     width: 100%;
+}
+
+.card-body {
+    padding-left: 30px !important;
 }
 
 .tooltip { pointer-events: none; }

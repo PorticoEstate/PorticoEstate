@@ -97,11 +97,11 @@
                                     </text>
                                 </svg>
                             </div>
-                            <div class="col-8 desc">
+                            <div class="col-9 desc">
                                 <h5 class="font-weight-bold title" data-bind="text: name"></h5>                                
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
                                 <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
-                                <span class="text-uppercase mb-3" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+                                <span class="text-uppercase mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
                                 <a class="upcomming-event-href" href="" target="_blank" data-bind=""><span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span></a>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                 </svg>
                                                                
                             </div>
-                            <div class="col-8 desc">
+                            <div class="col-9 desc">
                                 <div class="desc">
                                     <h4 class="font-weight-bold" data-bind="html: name"></h4>
                                     <span data-bind="html: street"></span>
@@ -169,7 +169,7 @@
                                 </svg>
                                                                
                             </div>
-                            <div class="col-8 desc">
+                            <div class="col-9 desc">
                                 <h4 class="font-weight-bold" data-bind="html: name"></h4>
                                 <span data-bind="html: street"></span>
                                 <span class="d-block" data-bind="html: postcode"></span>

@@ -18,16 +18,16 @@
                 
                 <div class="row">
                     
-                        <div class="col-sm-4 d-none d-sm-block col-item-img">
-                            <img class="img-fluid rounded" id="item-main-picture" src=""/>
+                        <div class="col-md-4 mb-4 col-item-img">
+                            <img class="img-fluid image-circle" id="item-main-picture" src=""/>
                         </div>
-                        <div class="col-sm-8 mb-5">
+                        <div class="col-md-8 mb-5">
                             <h3 id="main-item-header"><xsl:value-of select="organization/name"/></h3>
                             <xsl:if test="organization/street and normalize-space(organization/street)">
                                 <i class="fas fa-map-marker d-inline"> </i>
                                 <div class="building-place-adr">
                                     <span id="item-street"><xsl:value-of select="organization/street"/></span>
-                                    <span id="item-zip-city"><xsl:value-of select="organization/zip_code"/>&#160;<xsl:value-of select="organization/city"/></span>
+                                    <span class="d-block" id="item-zip-city"><xsl:value-of select="organization/zip_code"/>&#160;<xsl:value-of select="organization/city"/></span>
                             </div>
                             </xsl:if>
                             <a id="item-web-href" class="d-block mt-2" href="">
@@ -42,7 +42,7 @@
                     
 
                     
-                    <div class="building-accordion">
+                    <div class="building-accordion mt-4">
                         <div class="building-card">
                             <xsl:if test="organization/description and normalize-space(organization/description)">
                                 <div class="building-card-header">

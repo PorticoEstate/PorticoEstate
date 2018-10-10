@@ -296,10 +296,10 @@ function PopulateBuildingData(baseURL, urlParams) {
 					mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
-            }
-            if(!mainPictureFound) {
-                $(".col-item-img").remove();
-            }
+            }            
+        }
+        if(!mainPictureFound) {
+            $(".col-item-img").remove();
         }
     });
 }

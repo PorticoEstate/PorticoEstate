@@ -27,23 +27,23 @@ $(document).ready(function ()
 });
 
 function PopulateResourceData() {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"booking.uidocument_resource.index", filter_owner_id:urlParams['id']}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.index_images", filter_owner_id:urlParams['id']}, true);
     $.getJSON(getJsonURL, function(result){
         var mainPictureFound = false;
-        if(result.data.length > 0) {
-            $(".main-picture").attr("src", phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.data[0].id, filter_owner_id:urlParams['id']}, false));
-            for(var i=0; i<result.data.length; i++) {
-                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.data[i].id, filter_owner_id:urlParams['id']}, false);
+        if(result.ResultSet.Result.length > 0) {
+            for(var i=0; i<result.ResultSet.Result.length; i++) {
+                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.ResultSet.Result[i].id, filter_owner_id:urlParams['id']}, false);
                 var imgTag = '<img src="'+src+'" class="img-thumbnail m-1" alt=""></img>';
                 $("#list-img-thumbs").append(imgTag);
-                if (result.data[i].category == '!picture_main' && !mainPictureFound) {
+                console.log(src, result.ResultSet.Result[i].category);
+                if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
                     mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
-            }
-            if(!mainPictureFound) {
-                $(".col-item-img").remove();
-            }   
+            }               
+        }
+        if(!mainPictureFound) {
+            $(".col-item-img").remove();
         }
         
     });

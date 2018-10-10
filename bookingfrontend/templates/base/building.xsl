@@ -19,10 +19,10 @@
 			<div class="col-lg-6">
 
 				<div class="row">
-					<div class="col-sm-4 d-none d-sm-block col-item-img">
-						<img class="img-fluid rounded" id="item-main-picture" src=""/>
+					<div class="col-md-4 mb-4 col-item-img">
+						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
-					<div class="col-sm-8 col-xs-12 building-place-info">
+					<div class="col-md-8 col-xs-12 building-place-info">
 						<h3>
 							<xsl:value-of select="building/name"/>
 						</h3>
@@ -31,7 +31,7 @@
 							<span>
 								<xsl:value-of select="building/street"/>
 							</span>
-							<span>
+							<span class="d-block">
 								<xsl:value-of select="building/zip_code"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="building/city"/>
@@ -39,9 +39,17 @@
 						</div>
 					</div>
 
-					<div class="px-2 p-3" id="item-description">
+					<div class="col-12 mt-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 					</div>
+					<div class="col-12 mt-4 mb-4">
+						<xsl:if test="building/deactivate_application=0">
+							<button class="btn btn-light" id="newApplicationBtn">
+								<i class="fas fa-plus"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'book')" />
+							</button>
+						</xsl:if>
+					</div>						
 
 					<div class="building-accordion">
 						<div class="building-card">
@@ -160,12 +168,6 @@
 					<i class="far fa-calendar-alt"></i> Velg dato</button>
 					</xsl:if>
 
-					<xsl:if test="building/deactivate_application=0">
-				<button class="btn btn-default" id="newApplicationBtn">
-					<i class="fas fa-plus"></i>
-					<xsl:value-of select="php:function('lang', 'new booking application')" />
-				</button>
-					</xsl:if>
 			</div>
 
 
