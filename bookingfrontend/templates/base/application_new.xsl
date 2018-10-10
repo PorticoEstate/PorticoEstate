@@ -205,7 +205,7 @@
 
                     <div class="form-group float-right">
                         <button class="btn btn-outline-light btn-sm border-0" type="submit">Legg til søknad</button>
-                        <button id="goToConfirmPage" class="btn btn-light" data-bind='click: GoToConfirmPage'>Gå til kontakt og fakturainformasjon</button>                        
+						<button id="goToConfirmPage" class="btn btn-light" data-bind='click: GoToConfirmPage'>Gå til kontakt- og fakturainformasjon</button>
                     </div>
                 </div>
             </div>

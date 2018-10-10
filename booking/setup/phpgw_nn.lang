@@ -411,6 +411,7 @@ Add Resource	booking	nn	Ny ressurs
 activity_id	booking	nn	Aktivitet
 contact_email	booking	nn	E-post
 contact_name	booking	nn	Namn
+contact_phone	booking	nn	Telefon
 customer_identifier_type	booking	nn	Fakturainformasjon
 Or	booking	nn	eller
 group_id	booking	nn	Gruppe/Lag
@@ -724,6 +725,7 @@ return to application	booking	nn	Tilbake til søknad
 application add	booking	nn	Ny søknad
 duplicate in name	booking	nn	Navnet finnest frå før
 At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
+Contact and invoice information	booking	nn	Kontakt- og fakturainformasjon
 Edit activities	booking	nn	Rediger aktiviteter
 Edit facilities	booking	nn	Rediger fasiliteter
 edit facility	booking	nn	Rediger fasilitet
