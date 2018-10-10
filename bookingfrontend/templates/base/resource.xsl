@@ -133,7 +133,9 @@
             
             <div class="button-group dropdown">
 
+				<xsl:if test="building/deactivate_calendar=0">
                 <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
+				</xsl:if>
                 
 				<xsl:if test="building/deactivate_application=0">
                 <a href="" class="btn btn-default ml-1 bookBtnForward"><i class="fas fa-plus"></i> Book</a>
@@ -151,9 +153,10 @@
                 
 
             
+			<xsl:if test="building/deactivate_calendar=0">
             <div id="myScheduler" class="d-none d-sm-block d-xs-block margin-top-and-bottom"></div>
-
             <div id="mySchedulerSmallDeviceView" class="d-block d-sm-none d-xs-none margin-top-and-bottom"></div>
+			</xsl:if>
 
         </div>
         
@@ -163,6 +166,7 @@
 
     
     <script type="text/javascript">
+		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
             var script = document.createElement("script"); 
 //            script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/resource.js";
 			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/resource.js";
