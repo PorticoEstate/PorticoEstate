@@ -21,7 +21,7 @@
                     <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'building')" /></h5>                  
                                         
                     <div class="form-group">
-                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'resource')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" /></label>
                         <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
                             <xsl:value-of select="php:function('lang', 'choose')" /> 
                             <span class="caret"></span>
@@ -42,14 +42,19 @@
                     </div>
                     
                     <div class="form-group">
-                        <span class="font-weight-bold d-block mt-2 span-label">Valgte ressurser</span>
+						<span class="font-weight-bold d-block mt-2 span-label">
+							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
+						</span>
                         <div data-bind="foreach: bookableresource">
                             <span class="seperateByComma mr-2" data-bind='text: selected() ? name : ""'></span>
                         </div>
-                        <span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">Ingen ressurs valgt!</span> 
+						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
+							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
+						</span>
                     </div>
                     
                     <div class="form-group" >
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Date and time')" /></label>
                         <div class="form-inline">
                             <div class="form-group mr-5">
                                 <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
@@ -123,6 +128,13 @@
                         </textarea>
                     </div>                  
                    
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="config/application_equipment"/></label>
+						<textarea class="form-control" name="equipment">
+							<xsl:value-of select="application/equipment"/>
+						</textarea>
+					</div>
+
                     <div class="form-group">
                         <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
                         <div class="p-2 border">
@@ -154,14 +166,6 @@
                         </div>
                     </div>
                     
-                    
-                    <div class="form-group">
-                        <label class="text-uppercase"><xsl:value-of select="config/application_equipment"/></label>
-                        <textarea class="form-control" name="equipment">
-                            <xsl:value-of select="application/equipment"/>
-                        </textarea>
-                    </div>
-
                     <div class="form-group">
                         <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Attachment')" /></label>
                         <input name="name" id='field_name' type='file' >
