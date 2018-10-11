@@ -16,61 +16,62 @@
                 </div>
             </div>
             <div id="search-autocomplete"></div>
+
+             <!-- FILTER BOXES> -->
+             <h5 class="mt-5 font-weight-bold">Velg kategorier</h5>
+            <div class="row mx-auto" data-bind="if: filterboxes().length > 0">
+                <div data-bind="foreach: filterboxes">
+                        <div class="dropdown d-inline-block mr-2">
+                            <button class="btn btn-secondary dropdown-toggle d-inline" data-bind="text: filterboxCaption" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                
+                            </button>
+                            <div class="dropdown-menu" data-bind="foreach: filterbox" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" data-bind="html: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
+                            </div>
+                        </div>            
+                </div>
+            </div>
+
+            <div class="row mx-auto mt-3" data-bind="if: selectedFilterbox">
+                <div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
+                    <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tilrettelagt for
+                    </button>
+                    <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
+                    </div>
+                </div>
+
+                <div class="dropdown d-inline-block" data-bind="if: facilities().length > 0">
+                    <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Fasiliteter      
+                    </button>
+                    <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-item d-block">
+                            <a class="text-dark" data-bind="html: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
+                            <span data-bind="if: selected">&#160; &#10004;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown d-inline-block" data-bind="if: towns().length > 0">
+                    <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Bydel      
+                    </button>
+                    <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-item d-block">
+                            <a class="text-dark" data-bind="html: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
+                            <span data-bind="if: selected">&#160; &#10004;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
     </div>
   
     <div class="container pageResults">
         
-        <!-- FILTER BOXES> -->
-        <div class="row" data-bind="if: filterboxes().length > 0">
-            <div data-bind="foreach: filterboxes">
-                    <div class="dropdown d-inline-block mr-2">
-                        <button class="btn btn-secondary dropdown-toggle d-inline" data-bind="text: filterboxCaption" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            
-                        </button>
-                        <div class="dropdown-menu" data-bind="foreach: filterbox" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" data-bind="html: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
-                        </div>
-                    </div>            
-            </div>
-        </div>
-
-        <div class="row mt-3" data-bind="if: selectedFilterbox">
-            <div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
-                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Tilrettelagt for
-                </button>
-                <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
-                </div>
-            </div>
-
-            <div class="dropdown d-inline-block" data-bind="if: facilities().length > 0">
-                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Fasiliteter      
-                </button>
-                <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
-                    <div class="dropdown-item d-block">
-                        <a class="text-dark" data-bind="html: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
-                        <span data-bind="if: selected">&#160; &#10004;</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dropdown d-inline-block" data-bind="if: towns().length > 0">
-                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Bydel      
-                </button>
-                <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
-                    <div class="dropdown-item d-block">
-                        <a class="text-dark" data-bind="html: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
-                        <span data-bind="if: selected">&#160; &#10004;</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row mt-5" data-bind="if: selectedTags().length > 0">
             <div data-bind="foreach: selectedTags">
             <div class="d-inline-block mb-2">
