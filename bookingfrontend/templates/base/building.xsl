@@ -42,6 +42,7 @@
 					<div class="col-12 mt-4 mb-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 					</div>
+
 							<xsl:if test="building/deactivate_application=0">
 					<div class="col-auto">
 							<button class="btn btn-light" id="newApplicationBtn">
@@ -50,6 +51,8 @@
 							</button>
 					</div>						
 							</xsl:if>
+
+							<xsl:if test="building/deactivate_calendar=0">
 					<div class="col-auto">
 							<div>
 								<button class="btn btn-light goToCal">
@@ -58,6 +61,8 @@
 								</button>
 							</div>
 					</div>
+							</xsl:if>
+
 					<div class="building-accordion">
 						<div class="building-card">
 							<div class="building-card-header">
@@ -152,8 +157,8 @@
 		<div class="container wrapper">
 		<div class="row margin-top-and-bottom">
 
-			<div class="button-group dropdown calendar-tool invisible">
 					<xsl:if test="building/deactivate_calendar=0">
+						<div class="button-group dropdown calendar-tool invisible">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					Velg lokaler
 					<span class="caret"></span>
@@ -173,9 +178,8 @@
 
 				<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
 					<i class="far fa-calendar-alt"></i> Velg dato</button>
+						</div>
 					</xsl:if>
-
-			</div>
 
 
 

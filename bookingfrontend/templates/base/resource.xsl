@@ -51,13 +51,25 @@
 						<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
 					</div>
 
-                    <div class="col-12 mt-4">
-                        <xsl:if test="building/deactivate_application=0">
-                        <a href="" class="btn btn-light bookBtnForward"><i class="fas fa-plus"></i>&#160;
-								<xsl:value-of select="php:function('lang', 'book')" /></a>
-                        </xsl:if>
-                    </div>
+						<xsl:if test="building/deactivate_application=0">
+							<div class="col-auto mt-4">
+								<a href="" class="btn btn-light bookBtnForward"><i class="fas fa-plus"></i>&#160;
+									<xsl:value-of select="php:function('lang', 'Book resource')" />
+								</a>
+							</div>
+						</xsl:if>
 					
+						<xsl:if test="building/deactivate_calendar=0">
+							<div class="col-auto mt-4 mb-4">
+								<div>
+									<button class="btn btn-light goToCal">
+										<i class="fa fa-calendar"></i>&#160;
+										<xsl:value-of select="php:function('lang', 'Calendar')" />
+									</button>
+								</div>
+							</div>
+						</xsl:if>
+
                 </div>
             </div>
             
@@ -148,15 +160,11 @@
         <div class="container wrapper">
         <div class="row margin-top-and-bottom">
             
-            <div class="button-group dropdown">
-
-				<xsl:if test="building/deactivate_calendar=0">
+			<xsl:if test="building/deactivate_calendar=0">
+				<div class="button-group dropdown calendar-tool">
                 <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
-				</xsl:if>
-                
-            </div>
-            
-            
+				</div>
+			</xsl:if>
                 
                 <!--<div class="input-group date" id="datepicker" data-provide="datepicker">
                     <input type="text" class="form-control" />

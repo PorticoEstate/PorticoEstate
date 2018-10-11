@@ -23,6 +23,12 @@ $(document).ready(function ()
     var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['buildingid'], resource_id:  urlParams['id'] }, false);
     $(".bookBtnForward").attr("href", bookBtnURL);
 
+    $(".goToCal").click(function() {
+        $('html,body').animate({
+            scrollTop: $(".calendar-tool").offset().top - 140},
+            'slow');
+    });
+
 	$(".overlay").hide();
 });
 
