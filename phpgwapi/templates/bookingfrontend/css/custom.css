@@ -935,7 +935,8 @@ ORGANIZATION / DELEGATE PAGE STYLE
 #delegate-page-content label, .span-label,
 #delegate-edit-page-content label, .span-label,
 #group-page-content label, .span-label,
-#group-edit-page-content label, .span-label {
+#group-edit-page-content label, .span-label,
+#systemmessage-page-content label, .span-label {
     font-size: 0.8em;
     color: #373737;
     display: block;

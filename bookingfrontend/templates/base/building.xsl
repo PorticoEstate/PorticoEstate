@@ -106,8 +106,8 @@
 									<div class="card-body">
 											<xsl:value-of disable-output-escaping="yes" select="building/contact_info"/>
 												<xsl:if test="building/deactivate_sendmessage=0">
-													<button class="btn btn-default" onclick="window.location.href='{building/message_link}'">
-														<i class="fas fa-plus"></i>
+													<button class="btn btn-light" onclick="window.location.href='{building/message_link}'">
+														<i class="fas fa-envelope"></i>&#160;
 														<xsl:value-of select="php:function('lang', 'Send message')" />
 													</button>
 													- Melding til saksbehandler for bygg
