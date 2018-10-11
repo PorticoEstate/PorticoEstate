@@ -28,14 +28,12 @@ allocation	activitycalendar	nn	Tildeling
 allocations	activitycalendar	nn	Tildelinger
 allocations colliding with existing bookings or allocations (%1)	activitycalendar	nn	Dobbel-booking som IKKE lagres
 allocations that can be created (%1)	activitycalendar	nn	Tildelinger som kan lages
-legal condition	activitycalendar	nn	juridiske betingelser
 application	activitycalendar	nn	Søknad
 applications	activitycalendar	nn	Søknader
 apr	activitycalendar	nn	april
 archived	activitycalendar	nn	Arkivert
 audience	activitycalendar	nn	Målgruppe
 aug	activitycalendar	nn	august
-book	activitycalendar	nn	Book
 bookable resources	activitycalendar	nn	Bookbare ressurser
 booking	activitycalendar	nn	Booking
 booking district	activitycalendar	nn	Bydel
@@ -54,9 +52,6 @@ clear	activitycalendar	nn	Nullstill
 cancelled	activitycalendar	nn	Avbestilt
 case officer	activitycalendar	nn	Saksbehandler
 category	activitycalendar	nn	Kategori
-choose	activitycalendar	nn	Velg
-choose a	activitycalendar	nn	Ingen valgt
-applicationcart empty	activitycalendar	nn	Ingen søknader finnes
 choose a date	activitycalendar	nn	Velg dato
 choose a date	activitycalendar	nn	Velg en dato
 choose file	activitycalendar	nn	Velg dokument
