@@ -30,7 +30,7 @@
 
 					<div class="col-12">
 						<div class="form-group">
-							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Group')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Group (2018)')" /></label>
 							<xsl:value-of select="group/name"/>
 						</div>
 					</div>

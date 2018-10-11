@@ -29,7 +29,7 @@
 
 						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Group')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Group (2018)')" /></label>
 								<input name="name" class="form-control" type="text" value="{group/name}">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>

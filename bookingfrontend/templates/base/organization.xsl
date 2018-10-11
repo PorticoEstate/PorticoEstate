@@ -191,7 +191,7 @@
             </div>
             
             <div class="col-lg-6 building-bookable">
-                <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'group')" /></h5>
+						<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Groups (2018)')" /></h5>
                 <div class="custom-card p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
                     <div data-bind="foreach: groups">
                         <div class="custom-subcard mb-0">
