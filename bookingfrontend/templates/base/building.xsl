@@ -39,18 +39,18 @@
 						</div>
 					</div>
 
-					<div class="col-12 mt-4" id="item-description">
+					<div class="col-12 mt-4 mb-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 					</div>
 							<xsl:if test="building/deactivate_application=0">
-					<div class="col-auto mt-4 mb-4">
+					<div class="col-auto">
 							<button class="btn btn-light" id="newApplicationBtn">
 								<i class="fas fa-plus"></i>&#160;
 										<xsl:value-of select="php:function('lang', 'Book resource')" />
 							</button>
 					</div>						
 							</xsl:if>
-					<div class="col-auto mt-4 mb-4">
+					<div class="col-auto">
 							<div>
 								<button class="btn btn-light goToCal">
 									<i class="fa fa-calendar"></i>&#160;

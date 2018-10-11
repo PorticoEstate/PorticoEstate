@@ -88,7 +88,7 @@
             <div class="row" data-bind="foreach: upcommingevents">
                 <div class="col-lg-6 card-positioncorrect">
                         <div class="row custom-card">
-                            <div class="col-3 date-circle">
+                            <div class="col-md-3 col-sm-4 col-4 date-circle">
                                 <svg width="90" height="90">
                                     <circle cx="45" cy="45" r="41" class="circle"/>
                                     <text class="event_datetime_day" data-bind="" x="50%" y="43%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">                                        
@@ -97,7 +97,7 @@
                                     </text>
                                 </svg>
                             </div>
-                            <div class="col-9 desc">
+                            <div class="col-md-9 col-sm-8 col-8 desc">
                                 <h5 class="font-weight-bold title" data-bind="text: name"></h5>                                
                                 <span class="text-uppercase" data-bind="text: datetime_time"></span>
                                 <span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>

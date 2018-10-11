@@ -363,6 +363,13 @@ footer {
     }
 }
 
+@media (max-width: 340px) {
+    .brand-site-title {
+
+        font-size: 14px;
+    
+    }
+}
 
 /********************************************
 
