@@ -732,7 +732,9 @@ Book resource	booking	no	Lei lokale
 Bookable resources (2018)	booking	no	Lokaler til leie
 Calendar	booking	no	Kalender
 choose a	booking	no	Ingen valgt
+Chosen resources (2018)	booking	no	Valgte lokaler
 Contact and invoice information	booking	no	Kontakt- og fakturainformasjon
+Date and time	booking	no	Dato og tid
 Edit activities	booking	no	Rediger aktiviteter
 Edit facilities	booking	no	Rediger fasiliteter
 edit facility	booking	no	Rediger fasilitet
@@ -751,6 +753,7 @@ Main activity	booking	no	Hovedaktivitet
 New facility	booking	no	Ny fasilitet
 New resource category	booking	no	Ny ressurskategori
 No partial applications exist for this session, contact details are not saved	booking	no	Ingen delsøknader finnes for denne sesjonen, avbryter lagring av kontaktinformasjon
+No resource chosen (2018)	booking	no	Intet lokale valgt!
 No session ID found, application aborted	booking	no	Ingen sesjons-ID funnet, lagring av søknaden er avbrutt
 Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	no	Bare én filtreringsboks per linje
@@ -758,6 +761,7 @@ Opening hours	booking	no	Åpningstider
 Organizer	booking	no	Arrangør
 Picture main	booking	no	Hovedbilde
 Please select a resource category	booking	no	Velg en ressurskategori
+Resource (2018)	booking	no	Lokale
 Resource categories	booking	no	Ressurskategorier
 Resource category	booking	no	Ressurskategori
 Send as sms	booking	no	Send som sms

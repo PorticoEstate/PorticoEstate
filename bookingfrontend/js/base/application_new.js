@@ -13,6 +13,14 @@ $(".navbar-search").removeClass("d-none");
   ko.validation.locale('nb-NO');
   var am;
   
+  var timepickerValues = [];
+  for (hour = 0; hour < 24; hour++) {
+	  for (minute = 0; minute < 60; minute += 15) {
+		  var value = ("00" + hour).substr(-2) + ":" + ("00" + minute).substr(-2);
+		  timepickerValues.push(value);
+	  }
+  }
+
   function applicationModel()  {
       var self = this;
       self.showErrorMessages = ko.observable(false);
@@ -239,6 +247,7 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
+		  values: timepickerValues,
           mask: 'kl. %H:%M',
           on: {
             selectionChange: function(event) { 
@@ -262,6 +271,7 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
+		  values: timepickerValues,
           mask: 'kl. %H:%M',
           on: {
             selectionChange: function(event) { 
