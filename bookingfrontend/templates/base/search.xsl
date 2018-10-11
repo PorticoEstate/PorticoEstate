@@ -66,22 +66,22 @@
                     </div>
                 </div>
             </div>
+            <div class="row mx-auto mt-5" data-bind="if: selectedTags().length > 0">
+                <div data-bind="foreach: selectedTags">
+                <div class="d-inline-block mb-2">
+                    <div class="tags mr-2">
+                        <span data-bind="html: value, click: $root.clearTag" ></span>
+                        <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                </div>
+            </div>
+
         </div>
         
     </div>
   
     <div class="container pageResults">
-        
-        <div class="row mt-5" data-bind="if: selectedTags().length > 0">
-            <div data-bind="foreach: selectedTags">
-            <div class="d-inline-block mb-2">
-                <div class="tags">
-                    <span data-bind="html: value, click: $root.clearTag" ></span>
-                    <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a></div>
-                </div>
-            </div>
-        </div>
-
         <!-- UPCOMMING ARRAGEMENTS -->
         <div id="welcomeResult">
             <h1 class="text-center upcomingevents-header"></h1>
