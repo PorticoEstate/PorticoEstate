@@ -1132,7 +1132,7 @@
 			$event[] = array('application_id', $application['id']);
 			$event[] = array('reminder', '0');
 			$copy = array(
-				'activity_id', 'name', 'organizer', 'homepage', 'description', 'contact_name',
+				'activity_id', 'name', 'organizer', 'homepage', 'description', 'equipment', 'contact_name',
 				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
 				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
 			);

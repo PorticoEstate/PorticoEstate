@@ -91,6 +91,14 @@
 								</textarea>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_equipment">
+									<xsl:value-of select="php:function('lang', 'Equipment (2018)')" />
+								</label>
+								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="equipment">
+									<xsl:value-of select="event/equipment"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_public">
 									<xsl:value-of select="php:function('lang', 'Event type')"/>
 								</label>

@@ -17,6 +17,7 @@
 				'organizer' => array('type' => 'string', 'query' => true, 'required' => false),
 				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
 				'description' => array('type' => 'string', 'required' => true, 'query' => true),
+				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'building_id' => array('type' => 'int', 'required' => true),
 				'building_name' => array('type' => 'string', 'required' => true, 'query' => true),
 				'from_' => array('type' => 'string', 'required' => true),

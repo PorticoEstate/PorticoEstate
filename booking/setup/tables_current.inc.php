@@ -691,6 +691,7 @@
 				'organizer' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'homepage' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => False),
+				'equipment' => array('type' => 'text', 'nullable' => True),
 				'from_' => array('type' => 'timestamp', 'nullable' => False),
 				'to_' => array('type' => 'timestamp', 'nullable' => False),
 				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,
