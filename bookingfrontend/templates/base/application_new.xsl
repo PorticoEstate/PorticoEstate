@@ -21,7 +21,7 @@
 					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></h5>
 
 					<p>
-						<xsl:value-of select="php:function('lang', 'Application for')"/>
+						<xsl:value-of select="php:function('lang', 'Application for')"/>:
 						<xsl:value-of select="application/building_name"/>
 					</p>
                                         
