@@ -724,10 +724,12 @@ approve	booking	nn	Godkjenn
 return to application	booking	nn	Tilbake til søknad
 application add	booking	nn	Ny søknad
 duplicate in name	booking	nn	Navnet finnest frå før
+Application for	booking	nn	Søknaden gjelder
 applicationcart empty	booking	nn	Ingen søknader finnes
 At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
 Book resource	booking	nn	Lei lokale
 Bookable resources (2018)	booking	nn	Lokaler til leie
+Building (2018)	booking	nn	Anlegg
 Calendar	booking	nn	Kalender
 choose a	booking	nn	Ingen valgt
 Chosen resources (2018)	booking	nn	Valgte lokaler

@@ -18,7 +18,12 @@
                     
                     <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId" />
                     <input name="formstage" value="partial1" hidden="hidden"/>
-                    <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'building')" /></h5>                  
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></h5>
+
+					<p>
+						<xsl:value-of select="php:function('lang', 'Application for')"/>
+						<xsl:value-of select="application/building_name"/>
+					</p>
                                         
                     <div class="form-group">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" /></label>
