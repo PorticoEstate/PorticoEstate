@@ -653,6 +653,17 @@ input:focus {
     .autocompleter-item span:last-child {
         margin-top: 5px !important;
     }
+
+    .bygg-li {
+        width: 100%;
+        border-right: 0px !important;
+    }
+
+    .org-li {
+        width: 100%;
+        border: none;
+    }
+
 }
 
 /* Small devices (landscape phones, 576px and up)*/
