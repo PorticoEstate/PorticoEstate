@@ -96,7 +96,7 @@
 							</div>
 						</xsl:if>
 
-						<xsl:if test="building/opening_hours and normalize-space(building/contact_info)">
+						<xsl:if test="building/contact_info and normalize-space(building/contact_info)">
 							<div class="building-card">
 								<div class="building-card-header">
 									<h5 class="mb-0">
