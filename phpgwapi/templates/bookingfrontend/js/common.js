@@ -98,7 +98,7 @@ function createToolTipTitle(resource, from_, to_, organization_name, description
     if (contact_email !== undefined) {
         toolTipTitle += '<br/><b class="mt-3 d-block">Kontakt</b>' + contact_email;
     }
-    
+    toolTipTitle += '<a href="http://tek.no" style="color: #fff">button</a>'
     return toolTipTitle;
 }
 

@@ -161,6 +161,9 @@ button {
 	color: #666;
 	font-size: 1.28em;
 }
+.tooltip {
+    pointer-events: auto !important;
+}
 
 input[type="checkbox"], input[type="radio"]{
 	position: absolute;

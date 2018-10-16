@@ -12,7 +12,8 @@ function BuildingModel() {
     self.items = events;
 }
     
-ko.applyBindings(new BuildingModel, document.getElementById("building-page-content"));
+buildingModel = new BuildingModel();
+ko.applyBindings(buildingModel, document.getElementById("building-page-content")); 
 $(document).ready(function ()
 {
     //urlParams = new URLSearchParams(window.location.search); //not ie supported
@@ -714,12 +715,20 @@ function GenerateCalendarForEvents(date) {
 			$(".scheduler-event-title").text("");
 
 			$(".scheduler-event-disabled").hover(function () {
-				$(this).find( "[data-toggle='tooltip']" ).tooltip("show");
-			});
-
-			$( ".scheduler-event-disabled" ).mouseleave(function() {
-				$("[data-toggle='tooltip']").tooltip('hide');
-			});
+                if($(".bs-tooltip-right").length == 0) {
+                    $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                } else {
+                    if($('.bs-tooltip-right').is(':hover') === false) {
+                        $("[data-toggle='tooltip']").tooltip('hide');
+                        $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                    }
+                }
+            });
+            
+            $( ".bs-tooltip-right" ).mouseleave(function() {
+                $("[data-toggle='tooltip']").tooltip('hide');
+            });
+            
 		}
 	);
 }
