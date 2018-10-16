@@ -221,9 +221,10 @@
 
 		function query2(  )
 		{
-			$num_rows = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			$length = phpgw::get_var('length', 'int', 'REQUEST', 10);
+		//	$num_rows = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
 			$_REQUEST['start'] = phpgw::get_var('startIndex');
-			$_REQUEST['results'] = $num_rows;
+			$_REQUEST['length'] = $length;
 
 			$values = $this->query();
 
@@ -233,7 +234,7 @@
 					"totalRecords" => $values['recordsTotal'],
 					"Result" => $values['data'],
 					'recordsReturned' => count( $values['data']),
-					'pageSize' => $num_rows,
+					'pageSize' => $length,
 					'startIndex' => $this->start,
 					'sortKey' => $this->order,
 					'sortDir' => $this->sort,
