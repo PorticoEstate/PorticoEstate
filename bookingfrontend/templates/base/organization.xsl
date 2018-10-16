@@ -148,7 +148,7 @@
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseContacts" aria-expanded="false">
-                                            <xsl:value-of select="php:function('lang', 'contact person')" />
+													<xsl:value-of select="php:function('lang', 'Contact information')" />
                                         </button>
                                         <button data-toggle="collapse" data-target="#collapseContacts" class="btn fas fa-plus float-right"></button>
                                     </h5>
