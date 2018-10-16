@@ -11,7 +11,7 @@
 						</a>
 					</span>
 					<span>
-						<a><xsl:value-of select="delegate/organization_name"/></a>
+						<a href="{delegate/organization_link}"><xsl:value-of select="delegate/organization_name"/></a>
 					</span>
 					<xsl:if test="not(delegate/id)"><span><xsl:value-of select="php:function('lang', 'New delegate')" /></span></xsl:if>
 					<xsl:if test="delegate/id">

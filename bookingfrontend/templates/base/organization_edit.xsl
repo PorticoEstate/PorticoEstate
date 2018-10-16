@@ -26,7 +26,9 @@
                         <xsl:value-of select="php:function('lang', 'Home')" />
                     </a>
                 </span>
-                <span><xsl:value-of select="php:function('lang', 'organization')" /></span>
+					<span>
+						<a href="{organization/organization_link}"><xsl:value-of select="organization/name"/></a>
+					</span>
 				<xsl:if test="new_form">
 					<span><xsl:value-of select="php:function('lang', 'New Organization')" /></span>
 				</xsl:if>

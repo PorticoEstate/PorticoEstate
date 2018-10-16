@@ -12,7 +12,6 @@
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</span>
-			<span><xsl:value-of select="php:function('lang', 'Building')" /></span>
 		</div>
 
 		<div class="row p-3">

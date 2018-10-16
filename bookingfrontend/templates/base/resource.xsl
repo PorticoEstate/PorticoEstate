@@ -10,8 +10,14 @@
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</span>
-            <span><xsl:value-of select="php:function('lang', 'Building')" /></span>
-			<span><xsl:value-of select="building/name"/></span>
+				<span>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="building/link"/>
+						</xsl:attribute>
+						<xsl:value-of select="building/name"/>
+					</a>
+				</span>
 		</div>
 
 		<div class="row p-3">

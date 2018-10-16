@@ -10,7 +10,9 @@
 						</a>
 					</span>
 					<span>
-						<xsl:value-of select="group/organization_name"/>
+						<a href="{group/organization_link}">
+							<xsl:value-of select="group/organization_name"/>
+						</a>
 					</span>
 					<xsl:if test="not(group/id)">
 						<span><xsl:value-of select="php:function('lang', 'New Group')" /></span>
