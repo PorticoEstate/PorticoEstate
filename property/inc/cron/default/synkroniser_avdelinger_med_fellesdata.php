@@ -325,12 +325,16 @@
 					'id' => $unit['id'],
 					'parent_id' => $unit['parent'],
 					'name' => $db->db_addslashes($unit['name']),
-					'arbeidssted' => $unit['arbeidssted'],
 					'created_on' => time(),
 					'created_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_on' => time()
 				);
+
+				if(!empty($unit['arbeidssted']))
+				{
+					$value_set['arbeidssted'] = $unit['arbeidssted'];
+				}
 
 				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'], __LINE__, __FILE__);
 				$db->next_record();
