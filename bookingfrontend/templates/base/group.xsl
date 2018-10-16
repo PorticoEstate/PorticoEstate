@@ -12,7 +12,6 @@
 					<span>
 						<a href="{group/organization_link}"><xsl:value-of select="group/organization_name"/></a>
 					</span>
-					<span><xsl:value-of select="group/name"/></span>
 				</div>
 
             	<div class="row">

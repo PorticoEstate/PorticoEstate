@@ -225,6 +225,8 @@
 
 		public function edit()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$id = phpgw::get_var('id', 'int');
 
 
@@ -245,6 +247,7 @@
 			else
 			{
 				$group = array();
+				$group['show_in_portal'] = 1;
 				$group['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
 
 				$organization_id = phpgw::get_var('organization_id', 'int');
@@ -336,7 +339,7 @@
 					'date', 'security', 'file'));
 
 			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module,
-				'activities' => $activities));
+				'activities' => $activities, 'config_data' => $config->config_data));
 		}
 
 		public function show()

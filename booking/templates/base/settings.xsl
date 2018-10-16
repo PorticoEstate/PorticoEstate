@@ -222,6 +222,18 @@
 						</input>
 					</div>
 
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Help texts')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Help text group: Edit group')"/>
+						</label>
+						<textarea id="field_help_group_edit" name="config_data[help_group_edit]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/help_group_edit"/>
+						</textarea>
+					</div>
+
 					<div class="pure-control-group">					
 						<xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/>
 					</div>

@@ -726,6 +726,7 @@ approve	booking	no	Godkjenn
 return to application	booking	no	Tilbake til søknad
 application add	booking	no	Ny søknad
 duplicate in name	booking	no	Navnet finnes fra før
+Add date and time	booking	no	Legg til tidspunkt
 Application for	booking	no	Søknaden gjelder
 applicationcart empty	booking	no	Ingen søknader finnes
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
@@ -736,7 +737,7 @@ Calendar	booking	no	Kalender
 choose a	booking	no	Ingen valgt
 Chosen resources (2018)	booking	no	Valgte lokaler
 Contact and invoice information	booking	no	Kontakt- og fakturainformasjon
-Date and time	booking	no	Dato og tid
+Date and time	booking	no	Tidspunkt
 Edit activities	booking	no	Rediger aktiviteter
 Edit facilities	booking	no	Rediger fasiliteter
 edit facility	booking	no	Rediger fasilitet
@@ -749,6 +750,8 @@ Facility	booking	no	Fasilitet
 Front page filtering	booking	no	Filtrering på forside
 Group (2018)	booking	no	Gruppe
 Groups (2018)	booking	no	Grupper
+Help text group: Edit group	booking	no	Gruppe: Opprett eller rediger gruppe
+Help texts	booking	no	Hjelpetekster
 Homepage for the event	booking	no	Hjemmeside for aktiviteten/arrangementet
 Include in event list	booking	no	Vis i arrangementsliste på forsiden
 legal condition	booking	no	Juridiske betingelser
@@ -767,6 +770,9 @@ Please select a resource category	booking	no	Velg en ressurskategori
 Resource (2018)	booking	no	Lokale
 Resource categories	booking	no	Ressurskategorier
 Resource category	booking	no	Ressurskategori
+Resources (2018)	booking	no	Lokaler
+Select a date and time	booking	no	Velg et tidspunkt
+Selected date and time	booking	no	Valgte tidspunkter
 Send as sms	booking	no	Send som sms
 Send sms to contact	booking	no	Send sms til registrerte kontaktpersoner
 Text and activity IDs for each filter box	booking	no	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)

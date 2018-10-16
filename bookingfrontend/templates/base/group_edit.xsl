@@ -10,7 +10,9 @@
 						</a>
 					</span>
 					<span>
-						<xsl:value-of select="group/organization_name"/>
+						<a href="{group/organization_link}">
+							<xsl:value-of select="group/organization_name"/>
+						</a>
 					</span>
 					<xsl:if test="not(group/id)">
 						<span><xsl:value-of select="php:function('lang', 'New Group')" /></span>
@@ -26,6 +28,12 @@
 						<div class="col-12">
 							<xsl:call-template name="msgbox"/>
 						</div>
+
+					<xsl:if test="config_data/help_group_new and normalize-space(config_data/help_group_new)">
+						<div class="col-12">
+							<xsl:value-of select="config_data/help_group_edit"/>
+						</div>
+					</xsl:if>
 
 						<div class="col-12">
 							<div class="form-group">
@@ -97,50 +105,6 @@
 									</select>
 								</div>
 							</div>
-
-							<xsl:if test="group/id">
-								<div class="col-12">
-									<div class="form-group">
-										<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Active')"/></label>
-										<select id="field_active" class="form-control" name="active">
-											<option value="1">
-												<xsl:if test="group/active=1">
-													<xsl:attribute name="selected">checked</xsl:attribute>
-												</xsl:if>
-												<xsl:value-of select="php:function('lang', 'Active')"/>
-											</option>
-											<option value="0">
-												<xsl:if test="group/active=0">
-													<xsl:attribute name="selected">checked</xsl:attribute>
-												</xsl:if>
-												<xsl:value-of select="php:function('lang', 'Inactive')"/>
-											</option>
-										</select>
-									</div>
-								</div>
-							</xsl:if>
-
-							 <!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
-							<div class="col-12">
-								<div class="form-group">
-									<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label>
-									<select id="field_show_in_portal" name="show_in_portal">
-										<option value="0">
-											<xsl:if test="group/show_in_portal=0">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'No')"/>
-										</option>
-										<option value="1">
-											<xsl:if test="group/show_in_portal=1">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'Yes')"/>
-										</option>
-									</select>
-								</div>
-							</div>
-							<!--</xsl:if>-->
 
 							<div class="col-12">
 								<div class="form-group">
