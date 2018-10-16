@@ -245,6 +245,7 @@
 			else
 			{
 				$group = array();
+				$group['show_in_portal'] = 1;
 				$group['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
 
 				$organization_id = phpgw::get_var('organization_id', 'int');
