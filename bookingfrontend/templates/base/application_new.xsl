@@ -73,11 +73,16 @@
                                                       
                         </div>
                                                 
-                        <button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i>&#160;<xsl:value-of select="php:function('lang', 'add another date')" /></button>
+						<button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate">
+							<i class="fas fa-plus"></i>&#160;
+							<xsl:value-of select="php:function('lang', 'Add date and time')" />
+						</button>
                     </div>
                     
                     <div class="form-group">
-                        <span class="font-weight-bold d-block mt-2 span-label">Valgte datoer</span>
+						<span class="font-weight-bold d-block mt-2 span-label">
+							<xsl:value-of select="php:function('lang', 'Selected date and time')" />
+						</span>
                         <div data-bind="foreach: date">
                             <div class="d-block">
                                 <input name="from_[]" hidden="hidden" data-bind="value: from_"/>
@@ -88,7 +93,9 @@
                             
                         </div>
                                                 
-                        <span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates"><xsl:value-of select="php:function('lang', 'choose a date')" /></span>
+						<span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">
+							<xsl:value-of select="php:function('lang', 'Select a date and time')" />
+						</span>
                     </div>
                     
                     <hr class="mt-5 mb-5"></hr>
