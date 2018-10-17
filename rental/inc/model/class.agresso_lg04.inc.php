@@ -99,11 +99,13 @@
 			{
 				$missing_billing_info[] = 'Missing payer id.';
 			}
-
-			$customer_id = $contract_parties[$payer_id]->get_customer_id();
-			if($this->check_customer_id && empty($customer_id))
+			else
 			{
-				$missing_billing_info[] = 'Missing customer id.';
+				$customer_id = $contract_parties[$payer_id]->get_customer_id();
+				if($this->check_customer_id && empty($customer_id))
+				{
+					$missing_billing_info[] = 'Missing customer id.';
+				}
 			}
 
 			if(!$contract->get_billing_start_date())
