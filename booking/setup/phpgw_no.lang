@@ -771,6 +771,9 @@ Resource (2018)	booking	no	Lokale
 Resource categories	booking	no	Ressurskategorier
 Resource category	booking	no	Ressurskategori
 Resources (2018)	booking	no	Lokaler
+responsible_city	booking	no	Poststed
+responsible_street	booking	no	Gate
+responsible_zip_code	booking	no	Postnummer
 Select a date and time	booking	no	Velg et tidspunkt
 Selected date and time	booking	no	Valgte tidspunkter
 Send as sms	booking	no	Send som sms
