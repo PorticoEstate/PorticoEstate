@@ -415,11 +415,11 @@
 
 			$values_combo_box[2] = $this->bo->select_status_list('filter', $this->status_id);
 			array_unshift($values_combo_box[2], array(
-				'id' => 'all',
-				'name' => lang('all')));
-			array_unshift($values_combo_box[2], array(
 				'id' => 'open',
 				'name' => lang('open')));
+			array_unshift($values_combo_box[2], array(
+				'id' => 'all',
+				'name' => lang('all')));
 			$combos[] = array
 				(
 				'type' => 'filter',

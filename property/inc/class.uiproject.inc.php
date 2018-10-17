@@ -484,8 +484,8 @@
 			);
 
 			$values_combo_box[3] = $this->bo->select_status_list('filter');
-			array_unshift($values_combo_box[3], array('id' => 'all', 'name' => lang('all')));
 			array_unshift($values_combo_box[3], array('id' => 'open', 'name' => lang('open')));
+			array_unshift($values_combo_box[3], array('id' => 'all', 'name' => lang('all')));
 
 			foreach ($values_combo_box[3] as &$_entry)
 			{
