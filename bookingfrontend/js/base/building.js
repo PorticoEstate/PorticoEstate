@@ -45,9 +45,29 @@ $(document).ready(function ()
             'slow');
     });
 
+    /*$(document).on('click', '.tooltip-desc-btn', function () {
+        $(this).find(".tooltip-desc").show();    
+    });*/
+
 	$(".overlay").hide();
-    
 });
+
+function tooltipDetails() {
+    var tooltipText = "";
+    var url = $(this).find('.event-id')[0];
+    url = url.getAttribute("data-url");
+
+    $.ajax({
+    url: url,
+    type: 'GET',
+    async: false,
+    success: function(response){
+        tooltipText = response;
+    }
+    });
+
+    return tooltipText;
+}
 
 function HideUncheckResources() {
     for(var i=0; i<resourceIds.length; i++) {
@@ -84,21 +104,20 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
                     {
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, 
-                        result.ResultSet.Result[k].Sun.to_, result.ResultSet.Result[k].Sun.organization_name, 
-                        result.ResultSet.Result[k].Sun.description, result.ResultSet.Result[k].Sun.contact_email);
-                        
                         if(result.ResultSet.Result[k].Sun.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Sun.type == "event") {
                             color = "#898989";
                         }
-
+                        var event_infourl = result.ResultSet.Result[k].Sun.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -111,20 +130,20 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, 
-                        result.ResultSet.Result[k].Mon.to_, result.ResultSet.Result[k].Mon.organization_name, 
-                        result.ResultSet.Result[k].Mon.description, result.ResultSet.Result[k].Mon.contact_email);
                         if(result.ResultSet.Result[k].Mon.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Mon.type == "event") {
                             color = "#898989";
                         }
-
+                        var event_infourl = result.ResultSet.Result[k].Mon.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Mon.description,
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
@@ -136,10 +155,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Tue.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, 
-                        result.ResultSet.Result[k].Tue.to_, result.ResultSet.Result[k].Tue.organization_name, 
-                        result.ResultSet.Result[k].Tue.description, result.ResultSet.Result[k].Tue.contact_email);
-                        
+                        var event_infourl = result.ResultSet.Result[k].Tue.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         if(result.ResultSet.Result[k].Tue.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Tue.type == "event") {
@@ -150,7 +169,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Tue.description,
                             startDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString()),
@@ -162,10 +181,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Wed.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, 
-                        result.ResultSet.Result[k].Wed.to_, result.ResultSet.Result[k].Wed.organization_name, 
-                        result.ResultSet.Result[k].Wed.description, result.ResultSet.Result[k].Wed.contact_email);
-                        
+                        var event_infourl = result.ResultSet.Result[k].Wed.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         if(result.ResultSet.Result[k].Wed.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Wed.type == "event") {
@@ -176,7 +195,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Wed.description,
                             startDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString()),
@@ -188,10 +207,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Thu.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, 
-                        result.ResultSet.Result[k].Thu.to_, result.ResultSet.Result[k].Thu.organization_name, 
-                        result.ResultSet.Result[k].Thu.description, result.ResultSet.Result[k].Thu.contact_email);
-                        
+                        var event_infourl = result.ResultSet.Result[k].Thu.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         if(result.ResultSet.Result[k].Thu.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Thu.type == "event") {
@@ -202,7 +221,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Thu.description,
                             startDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString()),
@@ -214,10 +233,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Fri.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, 
-                        result.ResultSet.Result[k].Fri.to_, result.ResultSet.Result[k].Fri.organization_name, 
-                        result.ResultSet.Result[k].Fri.description, result.ResultSet.Result[k].Fri.contact_email);
-                        
+                        var event_infourl = result.ResultSet.Result[k].Fri.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         if(result.ResultSet.Result[k].Fri.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Fri.type == "event") {
@@ -228,7 +247,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Fri.description,
                             startDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString()),
@@ -240,11 +259,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Sat.id, eventsArray))
                     {
                         
-                        var toolTipTitle = createToolTipTitle(result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, 
-                        result.ResultSet.Result[k].Sat.to_, result.ResultSet.Result[k].Sat.organization_name, 
-                        result.ResultSet.Result[k].Sat.description, result.ResultSet.Result[k].Sat.contact_email);
-                        
-                        
+                        var event_infourl = result.ResultSet.Result[k].Sat.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+                        }
                         if(result.ResultSet.Result[k].Sat.type == "allocation") {
                             color = "#2875c2";
                         } else if(result.ResultSet.Result[k].Sat.type == "event") {
@@ -255,7 +273,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
-                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
                             description: result.ResultSet.Result[k].Sat.description,
                             startDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString()),
@@ -715,19 +733,40 @@ function GenerateCalendarForEvents(date) {
 			$(".scheduler-event-title").text("");
 
 			$(".scheduler-event-disabled").hover(function () {
-                if($(".bs-tooltip-right").length == 0) {
-                    $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                if($(".tooltip").length == 0) {
+                    $('.scheduler-event-disabled').tooltip({
+                        delay: 500,
+                        placement: "right",
+                        title: tooltipDetails,
+                        html: true,
+                        trigger: 'manual'
+                    });
+                    $(this).tooltip('show');
+                    
                 } else {
-                    if($('.bs-tooltip-right').is(':hover') === false) {
-                        $("[data-toggle='tooltip']").tooltip('hide');
-                        $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                    if($('.tooltip').is(':hover') === false) {
+                        $('.tooltip').tooltip('hide');
+                        $(this).tooltip('show');
                     }
                 }
             });
             
-            $( ".bs-tooltip-right" ).mouseleave(function() {
-                $("[data-toggle='tooltip']").tooltip('hide');
+            $( ".tooltip" ).mouseleave(function() {
+                $('.tooltip').tooltip('hide');
             });
+
+            $( ".scheduler-event-disabled" ).mouseleave(function() {
+                if($('.tooltip').is(':hover') === false) {
+                    $('.tooltip').tooltip('hide');
+                }
+            });
+            
+            $(".scheduler-view-day-table-col").hover(function () {
+                if($(this).find('.scheduler-event-disabled').length == 0) {
+                    $('.tooltip').tooltip('hide');
+                }
+            });
+            
             
 		}
 	);
