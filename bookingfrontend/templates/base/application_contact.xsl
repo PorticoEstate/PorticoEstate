@@ -65,17 +65,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'street')" /></label>
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_street')" /></label>
                     <input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"/>  
                 </div>                
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'zip code')" /></label>
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_zip_code')" /></label>
                     <input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'postal city')" /></label>
+                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_city')" /></label>
                     <input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"/>  
                 </div>
                 

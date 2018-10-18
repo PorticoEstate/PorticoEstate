@@ -978,12 +978,14 @@
 				{
 					$partial2['contact_name'] = $organization['contacts'][0]['name'];
 					$partial2['contact_email'] = $organization['contacts'][0]['email'];
+					$partial2['contact_email2'] = $organization['contacts'][0]['email'];
 					$partial2['contact_phone'] = $organization['contacts'][0]['phone'];
 				}
 				else
 				{
 					$partial2['contact_name'] = $organization['contacts'][1]['name'];
 					$partial2['contact_email'] = $organization['contacts'][1]['email'];
+					$partial2['contact_email2'] = $organization['contacts'][1]['email'];
 					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
 				}
 			}

@@ -769,6 +769,9 @@ Resource (2018)	booking	nn	Lokale
 Resource categories	booking	nn	Ressurskategorier
 Resource category	booking	nn	Ressurskategori
 Resources (2018)	booking	nn	Lokaler
+responsible_city	booking	nn	Poststed
+responsible_street	booking	nn	Gate
+responsible_zip_code	booking	nn	Postnummer
 Select a date and time	booking	nn	Velg et tidspunkt
 Selected date and time	booking	nn	Valgte tidspunkter
 Send as sms	booking	nn	Send som sms
