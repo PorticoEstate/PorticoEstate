@@ -758,7 +758,7 @@ function GenerateCalendarForEvents(date) {
                     placement: "right",
                     title: tooltipDetails,
                     html: true,
-                    trigger: 'manual'
+                    trigger: "click"
                 });
                 $(this).tooltip('show');
                 
