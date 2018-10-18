@@ -216,7 +216,7 @@ JS;
 
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$org = CreateObject('bookingfrontend.uiorganization');
-	$orgid = $org->get_orgid($bouser->orgnr);
+
 	if($bouser->is_logged_in())
 	{
 
@@ -255,7 +255,7 @@ JS;
 		{
 			$tpl_vars['login_text_org'] = $bouser->orgname;
 			$tpl_vars['login_text'] = lang('Logout');
-			$tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
+			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $org->get_orgid($bouser->orgnr)));
 		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';
