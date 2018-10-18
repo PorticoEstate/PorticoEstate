@@ -161,9 +161,6 @@ button {
 	color: #666;
 	font-size: 1.28em;
 }
-.tooltip {
-    pointer-events: auto !important;
-}
 
 input[type="checkbox"], input[type="radio"]{
 	position: absolute;
@@ -296,9 +293,33 @@ footer {
     color: #fff !important;
 }
 
+.tooltip {
+    pointer-events: auto !important;
+    z-index: 1000;
+}
+
+.tooltip .arrow {
+    display: none;
+}
+
 .tooltip-inner {
-    background-color: #3d3d3d;
-    padding: 0.5em;
+    padding: 1.4em;
+    text-align: left;
+    max-width: none;
+    border-radius: 0px;
+    background-color: #fff !important;
+    border: 1px solid #c9c9c9 !important;
+    color: #000 !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+}
+
+.tooltip-inner span{
+    font-weight: bold;
+}
+
+.tooltip-desc {
+    margin-top: 10px;
+    display: none;
 }
 
 .popover-content,
@@ -882,10 +903,6 @@ BUILDING PAGE STYLE
     visibility: hidden;
 }
 
-.event-resource {
-    text-decoration: underline;
-}
-
 .org-name {
     font-size: 19px;
 }
@@ -1015,7 +1032,7 @@ NEW APPLICATION PAGE STYLE
     outline: none !important;
 }
 
-.seperateByComma {
+.selectedItems {
    color: green;
 }
 
