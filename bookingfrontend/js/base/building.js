@@ -744,7 +744,7 @@ function GenerateCalendarForEvents(date) {
                     $(this).tooltip('show');
                     
                 } else {
-                    if($('.tooltip').is(':hover') === false) {
+                    if($('.tooltip:hover').length === 0) {
                         $('.tooltip').tooltip('hide');
                         $(this).tooltip('show');
                     }
@@ -756,7 +756,7 @@ function GenerateCalendarForEvents(date) {
             });
 
             $( ".scheduler-event-disabled" ).mouseleave(function() {
-                if($('.tooltip').is(':hover') === false) {
+                if($('.tooltip:hover').length === 0) {
                     $('.tooltip').tooltip('hide');
                 }
             });
