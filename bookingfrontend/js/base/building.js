@@ -751,19 +751,20 @@ function GenerateCalendarForEvents(date) {
                 }
             });
 
-            $("#mySchedulerSmallDeviceView, .scheduler-event-disabled").click(function () {
-                console.log("test");
-                $('.tooltip').tooltip('hide');
-                $('.scheduler-event-disabled').tooltip({
-                    delay: 500,
-                    placement: "right",
-                    title: tooltipDetails,
-                    html: true,
-                    trigger: 'manual'
+            window.addEventListener('touchstart', function() {
+                $(".scheduler-event-disabled").click(function () {
+                    $('.tooltip').tooltip('hide');
+                    $('.scheduler-event-disabled').tooltip({
+                        delay: 500,
+                        placement: "right",
+                        title: tooltipDetails,
+                        html: true,
+                        trigger: 'manual'
+                    });
+                    $(this).tooltip('show');
+                    
                 });
-                $(this).tooltip('show');
-                
-            });    
+            });                
             
             $( ".tooltip" ).mouseleave(function() {
                 $('.tooltip').tooltip('hide');
