@@ -65,7 +65,7 @@ function tooltipDetails() {
         tooltipText = response;
     }
     });
-
+    
     return tooltipText;
 }
 
@@ -750,6 +750,19 @@ function GenerateCalendarForEvents(date) {
                     }
                 }
             });
+
+            $(".scheduler-event-disabled").click(function () {
+                $('.tooltip').tooltip('hide');
+                $('.scheduler-event-disabled').tooltip({
+                    delay: 500,
+                    placement: "right",
+                    title: tooltipDetails,
+                    html: true,
+                    trigger: "click"
+                });
+                $(this).tooltip('show');
+                
+            });                
             
             $( ".tooltip" ).mouseleave(function() {
                 $('.tooltip').tooltip('hide');
