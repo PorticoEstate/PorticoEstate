@@ -106,7 +106,7 @@
                                 </div>
                         </div>
 
-                        <div class="building-card">
+							<div class="building-card card-img-thumbs">
 							<div class="building-card-header">
 								<h5 class="mb-0">
 									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePicture" aria-expanded="false">
@@ -119,7 +119,7 @@
 								<div class="card-body organization-images" id="list-img-thumbs">
 								</div>
 							</div>
-						</div>
+							</div>
 
                         <div class="building-card">
                                 <div class="building-card-header">

@@ -40,14 +40,15 @@ function PopulateResourceData() {
             for(var i=0; i<result.ResultSet.Result.length; i++) {
                 var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.ResultSet.Result[i].id, filter_owner_id:urlParams['id']}, false);
                 var imgTag = '<img src="'+src+'" class="img-thumbnail m-1" alt=""></img>';
-                $("#list-img-thumbs").append(imgTag);
-                console.log(src, result.ResultSet.Result[i].category);
+                $(".resource-images").append(imgTag);
                 if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
                     mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
             }               
-        }
+        } else {
+			$(".card-img-thumbs").remove();
+		}
         if(!mainPictureFound) {
             $(".col-item-img").remove();
         }

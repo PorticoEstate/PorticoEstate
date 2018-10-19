@@ -63,7 +63,7 @@
 							</xsl:if>
 
 					<div class="building-accordion">
-						<div class="building-card">
+						<div class="building-card card-img-thumbs">
 							<div class="building-card-header">
 								<h5 class="mb-0">
 									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">

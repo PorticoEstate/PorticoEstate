@@ -127,7 +127,7 @@
 							</div>
 						</xsl:if>
 
-                        <div class="building-card">
+						<div class="building-card card-img-thumbs">
 							<div class="building-card-header">
 								<h5 class="mb-0">
 									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePictures" aria-expanded="false">

@@ -322,6 +322,8 @@ function PopulateBuildingData(baseURL, urlParams) {
 					$("#item-main-picture").attr("src", src);
 				}
             }            
+        } else {
+			$(".card-img-thumbs").remove();
         }
         if(!mainPictureFound) {
             $(".col-item-img").remove();
