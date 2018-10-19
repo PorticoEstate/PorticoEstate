@@ -324,6 +324,32 @@
 				{
 					phpgwapi_cache::message_set("Ordre #{$workorder['id']} er overført");
 					$this->log_transfer( $workorder['id'] );
+
+					$interlink = CreateObject('property.interlink');
+
+					$origin_data = $interlink->get_relation('property', '.project.workorder', $workorder['id'], 'origin');
+					$origin_data = array_merge($origin_data, $interlink->get_relation('property', '.project', $workorder['project_id'], 'origin'));
+
+
+					$tickets = array();
+					foreach ($origin_data as $__origin)
+					{
+						if($__origin['location'] != '.ticket')
+						{
+							continue;
+						}
+
+						foreach ($__origin['data'] as $_origin_data)
+						{
+							$tickets[] = $_origin_data['id'];
+						}
+					}
+
+					if($tickets)
+					{
+						$this->alert_external($workorder['id'], $tickets, $vendor['name'], $workorder['end_date']);
+					}
+
 				}
 			}
 
@@ -333,6 +359,54 @@
 				$historylog->add('RM', $id, "Ordre overført til agresso");
 				$now = time();
 				$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET order_sent = {$now} WHERE id = {$id}");
+			}
+
+
+			private function alert_external($workorder_id, $tickets, $vendor_name, $end_date )
+			{
+				$historylog = CreateObject('property.historylog', 'workorder');
+				$sotts = CreateObject('property.sotts');
+
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				$recipients = array
+				(
+					'dag.boye.tellnes@no.issworld.com',
+					'servicedesk@iss.no'
+				);
+
+				$_to = implode(';', $recipients);
+				$bcc = 'hc483@bergen.kommune.no';
+				$cc = '';
+				$coordinator_email = 'IkkeSvar@bergen.kommune.no';
+				$coordinator_name = $GLOBALS['phpgw_info']['server']['site_title'];
+
+				foreach ($tickets as $ticket_id)
+				{
+					$ticket = $sotts->read_single($ticket_id);
+
+					if(empty($ticket['external_ticket_id']))
+					{
+						continue;
+					}
+
+					$subject = "WO ID: {$ticket['external_ticket_id']} er bestilt fra {$vendor_name}";
+					$message = "Forventet sluttdato: {$end_date}";
+
+					try
+					{
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', $cc, $bcc, $coordinator_email, $coordinator_name, 'txt', '', array());
+						phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
+						$historylog->add('RM', $workorder_id, "ISS er varslet om bestilling med referanse til deres avviksmelding");
+					}
+					catch (Exception $exc)
+					{
+						phpgwapi_cache::message_set($exc->getMessage(),'error' );
+					}
+				}
 			}
 		}
 	}

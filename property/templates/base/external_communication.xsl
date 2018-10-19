@@ -123,11 +123,18 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'subject')"/>
 								</label>
-								<input type="text" name="subject" value="{value_subject}" class="pure-input-1-2" >
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'subject')"/>
-									</xsl:attribute>
-								</input>
+								<xsl:choose>
+									<xsl:when test="mode = 'edit'">
+										<input type="text" name="subject" value="{value_subject}" class="pure-input-1-2" >
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'subject')"/>
+											</xsl:attribute>
+										</input>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="value_subject"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</div>
 
 							<div class="pure-control-group">
@@ -156,22 +163,26 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'descr')"/>
-								</label>
-								<textarea id ="communication_message" class="pure-input-1-2" rows="10" name="message">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'message')"/>
-									</xsl:attribute>
-									<xsl:if test="value_id = ''">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</textarea>
-							</div>
-							<xsl:call-template name="vendor_form"/>
+							<xsl:choose>
+								<xsl:when test="mode = 'edit'">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'descr')"/>
+										</label>
+										<textarea id ="communication_message" class="pure-input-1-2" rows="10" name="message">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'message')"/>
+											</xsl:attribute>
+											<xsl:if test="value_id = ''">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+										</textarea>
+									</div>
+									<xsl:call-template name="vendor_form"/>
+								</xsl:when>
+							</xsl:choose>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'email')"/>
@@ -196,14 +207,19 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'extra mail address')"/>
 								</label>
-								<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-1-2" >
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'comma separated list')"/>
-									</xsl:attribute>
-								</input>
+								<xsl:choose>
+									<xsl:when test="mode = 'edit'">
+										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-1-2" >
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'comma separated list')"/>
+											</xsl:attribute>
+										</input>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="value_extra_mail_address"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</div>
-
-
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
