@@ -24,9 +24,14 @@ $(".navbar-search").removeClass("d-none");
   function applicationModel()  {
       var self = this;
       self.showErrorMessages = ko.observable(false);
-      self.bookingDate = ko.observable();
-      self.bookingStartTime = ko.observable();
-      self.bookingEndTime = ko.observable();
+      self.bookingDate = ko.observable("");
+      self.bookingStartTime = ko.observable("");
+      self.bookingEndTime = ko.observable("");
+      self.bookingAddFilledDate = ko.computed(function() {
+        if(self.bookingEndTime() != "" && self.bookingStartTime() != "" && self.bookingDate() != "") {
+            self.addDate();
+        }
+      });
       self.bookableResource = bookableresource;
       self.selectedResources = ko.observableArray(0);
       self.isResourceSelected = ko.computed(function() {
@@ -66,7 +71,9 @@ $(".navbar-search").removeClass("d-none");
               
               if(start.getTime() < end.getTime()) {
                   self.date.push({from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
-                  self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime(""); //self.repeat(false);
+                  setTimeout(function() {
+                    self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime("");
+                  },500); //self.repeat(false);
               } else {
                   $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
               }

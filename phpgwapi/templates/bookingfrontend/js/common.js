@@ -83,26 +83,6 @@ function CreateUrlParams(params) {
     }    
 }
 
-function createToolTipTitle(resource, from_, to_, organization_name, description, contact_email) {
-    var toolTipTitle = '' + resource
-            + '<br/>' + from_ + ' - ' + to_;
-
-    if (organization_name !== undefined) {
-        toolTipTitle = organization_name + '<br/>' + toolTipTitle;
-    }
-
-    if (description !== undefined) {
-        toolTipTitle += '<br/>' + description;
-    }
-
-    if (contact_email !== undefined) {
-        toolTipTitle += '<br/><b class="mt-3 d-block">Kontakt</b>' + contact_email;
-    }
-    toolTipTitle += '<a href="http://tek.no" style="color: #fff">button</a>'
-    return toolTipTitle;
-}
-
-
 $(document).ready(function ()
 {   setTimeout(function() {
         $('.showMe').css("display", "");

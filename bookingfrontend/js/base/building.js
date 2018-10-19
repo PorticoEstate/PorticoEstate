@@ -45,9 +45,9 @@ $(document).ready(function ()
             'slow');
     });
 
-    /*$(document).on('click', '.tooltip-desc-btn', function () {
+    $(document).on('click', '.tooltip-desc-btn', function () {
         $(this).find(".tooltip-desc").show();    
-    });*/
+    });
 
 	$(".overlay").hide();
 });
