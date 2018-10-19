@@ -549,7 +549,7 @@
 						array(
 							'key' => 'agreement_group_id',
 							'label' => lang('ID'),
-							'sortable' => false,
+							'sortable' => true,
 							'formatter' => 'JqueryPortico.FormatterCenter'
 						),
 						array(
@@ -682,10 +682,15 @@
 					$action = 'edit';
 				}
 
+				if ($values['copy_agreement_group'])
+				{
+					$action = 'add';
+				}
+
 				if (!$receipt['error'])
 				{
 					$receipt = $this->bo->save_agreement_group($values, $action);
-					if (!$agreement_group_id)
+					if (!empty($receipt['agreement_group_id']))
 					{
 						$agreement_group_id = $receipt['agreement_group_id'];
 					}
@@ -731,15 +736,18 @@
 			}
 
 			$link_data = array
-				(
+			(
 				'menuaction' => 'property.uipricebook.edit_agreement_group',
 				'agreement_group_id' => $agreement_group_id
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
+
 			$data = array
-				(
+			(
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uipricebook.agreement_group')),
@@ -753,6 +761,14 @@
 				'lang_done' => lang('done'),
 				'lang_descr' => lang('description'),
 				'value_agreement_group_id' => $values['agreement_group_id'],
+				'value_start_date' => $GLOBALS['phpgw']->common->show_date(
+								phpgwapi_datetime::date_to_timestamp($values['start_date']),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							),
+				'value_end_date' => $GLOBALS['phpgw']->common->show_date(
+								phpgwapi_datetime::date_to_timestamp($values['end_date']),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							),
 				'value_num' => $values['num'],
 				'value_descr' => $values['descr'],
 				'lang_num_statustext' => lang('An unique code for this activity'),
@@ -760,9 +776,9 @@
 				'lang_save_statustext' => lang('Save the building'),
 				'lang_descr_statustext' => lang('Enter the description for this activity'),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
 			);
+
+			phpgwapi_jquery::formvalidator_generate(array());
 
 			$appname = lang('pricebook');
 

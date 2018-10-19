@@ -10295,3 +10295,51 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	*
+	* Update property version from 0.9.17.734 to 0.9.17.735
+	*
+	*/
+	$test[] = '0.9.17.734';
+	function property_upgrade0_9_17_734()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_agreement_group', 'entry_date', array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_agreement_group', 'start_date', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_agreement_group', 'end_date', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_agreement_group', 'user_id', array(
+				'type' =>	'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_agreement_group', 'descr', array('type' => 'text', 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.735';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
+	

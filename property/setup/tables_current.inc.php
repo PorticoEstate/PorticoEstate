@@ -696,8 +696,12 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'num' => array('type' => 'varchar', 'precision' => '25', 'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
-				'status' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False)
+				'descr' => array('type' => 'text', 'nullable' => True),
+				'status' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
