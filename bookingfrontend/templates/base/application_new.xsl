@@ -51,7 +51,7 @@
 							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
 						</span>
                         <div data-bind="foreach: bookableresource">
-                            <span class="seperateByComma mr-2" data-bind='text: selected() ? name : ""'></span>
+                            <span class="selectedItems mr-2" data-bind='text: selected() ? name : ""'></span>
                         </div>
 						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
@@ -64,19 +64,21 @@
                             <div class="form-group mr-5">
                                 <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
                             </div>
-                            <div class="form-group">
-                                <input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime" placeholder="Fra"/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-sm-6 col-6">
+                                    <input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime" placeholder="Fra"/>
+                                </div>
+                                <div class="form-group col-lg-6 col-sm-6 col-6">
+                                    <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
+                                </div>
                             </div>
                                                       
                         </div>
                                                 
-						<button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate">
+						<!--<button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate">
 							<i class="fas fa-plus"></i>&#160;
 							<xsl:value-of select="php:function('lang', 'Add date and time')" />
-						</button>
+						</button>-->
                     </div>
                     
                     <div class="form-group">
@@ -85,9 +87,9 @@
 						</span>
                         <div data-bind="foreach: date">
                             <div class="d-block">
-                                <input name="from_[]" hidden="hidden" data-bind="value: from_"/>
-                                <input name="to_[]" hidden="hidden" data-bind="value: to_"/>                              
-                                <span data-bind='text: formatedPeriode'></span>
+                                <input name="from_[]" data-bind="value: from_"/>
+                                <input name="to_[]" data-bind="value: to_"/>                              
+                                <span class="selectedItems" data-bind='text: formatedPeriode'></span>
                                 <butoon class="ml-2" data-bind="click: $parent.removeDate"><i class="fas fa-minus-circle"></i></butoon>
                             </div>
                             

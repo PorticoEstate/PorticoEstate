@@ -2,39 +2,60 @@
 	<h3>
 		<xsl:value-of select="php:function('lang', 'Allocation')"/> #<xsl:value-of select="allocation/id"/>
 	</h3>
-	<dl>
-		<dt>
-			<xsl:value-of select="php:function('lang', 'Where')"/>
-		</dt>
-		<dd>
-			<a href="{allocation/building_link}">
-				<xsl:value-of select="allocation/building_name"/>
-			</a>
-			(<xsl:value-of select="allocation/resource_info"/>)
-		</dd>
-		<dt>
-			<xsl:value-of select="php:function('lang', 'When')"/>
-		</dt>
-		<dd>
-			<xsl:value-of select="allocation/when"/>
-		</dd>
-		<dt>
-			<xsl:value-of select="php:function('lang', 'Who')"/>
-		</dt>
-		<dd>
-			<a href="{allocation/org_link}">
-				<xsl:value-of select="allocation/organization_name"/>
-			</a>
-		</dd>
-	</dl>
+
+	<span class="d-block"><xsl:value-of select="allocation/when"/></span>
+	
+	<div><span class="font-weight-bold text-uppercase">STED: </span>
+		<a href="{allocation/building_link}">
+			<xsl:value-of select="allocation/building_name"/>
+		</a>
+		(<xsl:value-of select="allocation/resource_info"/>)
+	</div>
+
+	<div><span class="font-weight-bold text-uppercase">ARRANGØR: </span>
+		<a href="{allocation/org_link}">
+			<xsl:value-of select="allocation/organization_name"/>
+		</a>
+	</div>
+
+	<div class="tooltip-desc-btn">
+		<span><i class="fas fa-info-circle"></i></span>
+		<p class="tooltip-desc">
+    	<span class="d-block font-weight-normal">
+		<xsl:value-of select="allocation/description" disable-output-escaping="yes"/>
+			<xsl:if test="allocation/is_public=1">
+					<xsl:if test="orginfo">
+						<a href="{orginfo/link}">
+							<xsl:value-of select="orginfo/name"/>
+						</a>:
+					</xsl:if>
+					<xsl:value-of select="allocation/contact_name"/>
+					<xsl:if test="allocation/contact_email != ''">
+						<br/>
+						E-post: <xsl:value-of select="allocation/contact_email"/>
+					</xsl:if>
+					<xsl:if test="allocation/contact_phone != ''">
+						<br/>
+						Telefon: <xsl:value-of select="allocation/contact_phone"/>
+					</xsl:if>
+			</xsl:if>
+			<xsl:if test="allocation/is_public=0">
+					<xsl:value-of select="php:function('lang', 'Private event')"/>
+			</xsl:if>	
+		</span>
+		</p></div>
+
+	
 	<xsl:if test="allocation/add_link">
 		<div class="actions">
-			<button onclick="location.href='{allocation/add_link}'">
+			<button onclick="location.href='{allocation/add_link}'" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Create new booking')"/>
 			</button>
-			<button onclick="location.href='{allocation/cancel_link}'">
+			<button onclick="location.href='{allocation/cancel_link}'" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Cancel allocation')"/>
 			</button>
 		</div>
 	</xsl:if>
+
+	
 </xsl:template>
