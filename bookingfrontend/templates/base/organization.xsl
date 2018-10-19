@@ -57,7 +57,7 @@
 
                                 <div id="collapseOne" class="collapse">
                                     <div class="card-body">
-                                        <xsl:value-of select="organization/description"/>
+                                        <xsl:value-of disable-output-escaping="yes" select="organization/description"/>
                                     </div>
                                 </div>
                             </xsl:if>
