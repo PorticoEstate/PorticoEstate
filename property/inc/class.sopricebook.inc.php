@@ -36,6 +36,7 @@
 
 		function __construct()
 		{
+			$this->socommon = CreateObject('property.socommon');
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
@@ -633,9 +634,13 @@
 			if ($this->db->next_record())
 			{
 				$agreement_group['agreement_group_id'] = $id;
-				$agreement_group['num'] = $this->db->f('num');
+				$agreement_group['num'] = $this->db->f('num', true);
 				$agreement_group['status'] = $this->db->f('status');
 				$agreement_group['descr'] = $this->db->f('descr', true);
+				$agreement_group['entry_date'] = $this->db->f('entry_date');
+				$agreement_group['start_date'] = $this->db->f('start_date');
+				$agreement_group['end_date'] = $this->db->f('end_date');
+				$agreement_group['user_id'] = $this->db->f('user_id');
 
 				return $agreement_group;
 			}
@@ -698,19 +703,68 @@
 
 		function add_agreement_group( $values )
 		{
+
+			$receipt = array();
+			$num = $this->db->db_addslashes($values['num']);
+			$sql = "SELECT id FROM fm_agreement_group WHERE num = '{$num}'";
+			if ($this->db->next_record())
+			{
+				$receipt['error'][] = array('msg' => lang('num is already taken'));
+				return false;
+			}
+
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$vals = array(
 				$values['agreement_group_id'],
-				$values['num'],
+				$num,
 				$values['status'],
-				$values['descr']
+				$values['descr'],
+				time(),
+				$values['start_date'],
+				$values['end_date'],
+				$this->account
 			);
 
 			$vals = $this->db->validate_insert($vals);
 
-			$this->db->query("INSERT INTO fm_agreement_group (id,num,status,descr) "
+			$this->db->transaction_begin();
+
+			$this->db->query("INSERT INTO fm_agreement_group (id,num,status,descr,entry_date, start_date, end_date, user_id) "
 				. "VALUES ($vals)", __LINE__, __FILE__);
+
+			if (!empty($values['copy_agreement_group']))
+			{
+				$orig_agreement_group_id = (int)$values['orig_agreement_group_id'];
+
+				$sql = "SELECT * FROM fm_activities WHERE agreement_group_id = {$orig_agreement_group_id}";
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				$activities = array();
+				while ($this->db->next_record())
+				{
+					$activity = array();
+					$activity['num'] = $this->db->f('num');
+					$activity['base_descr'] = $this->db->f('base_descr');
+					$activity['unit'] = $this->db->f('unit');
+					$activity['ns3420'] = $this->db->f('ns3420');
+					$activity['descr'] = $this->db->f('descr');
+					$activity['dim_d'] = $this->db->f('dim_d');
+					$activity['branch_id'] = $this->db->f('branch_id');
+					$activity['agreement_group_id'] = (int)$values['agreement_group_id'];
+					$activities[] =  $activity;
+				}
+
+				foreach ($activities as $value_set)
+				{
+					$value_set['id'] = $this->socommon->next_id('fm_activities');
+					$cols = implode(',', array_keys($value_set));
+					$values_insert = $this->db->validate_insert(array_values($value_set));
+					$this->db->query("INSERT INTO fm_activities ({$cols}) VALUES ({$values_insert})", __LINE__, __FILE__);
+				}
+			}
+
+			$this->db->transaction_commit();
 
 			$receipt['message'][] = array('msg' => lang('Agreement group has been saved'));
 			$receipt['agreement_group_id'] = $values['agreement_group_id'];
@@ -724,7 +778,9 @@
 			$value_set = array(
 				'num' => $values['num'],
 				'status' => $values['status'],
-				'descr' => $values['descr']
+				'descr' => $values['descr'],
+				'start_date' => $values['start_date'],
+				'end_date' => $values['end_date']
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -734,7 +790,9 @@
 
 			$this->db->transaction_commit();
 
+			$receipt = array();
 			$receipt['message'][] = array('msg' => lang('Agreement group has been edited'));
+			$receipt['agreement_group_id'] = $values['agreement_group_id'];
 			return $receipt;
 		}
 

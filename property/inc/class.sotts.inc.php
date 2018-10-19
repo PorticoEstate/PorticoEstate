@@ -903,6 +903,7 @@
 				$ticket['invoice_remark'] = $this->db->f('invoice_remark', true);
 				$ticket['order_received'] = $this->db->f('order_received');
 				$ticket['order_received_amount'] = $this->db->f('order_received_amount');
+				$ticket['external_ticket_id'] = $this->db->f('external_ticket_id');
 				$mail_recipients = trim($this->db->f('mail_recipients'), ',');
 				$ticket['mail_recipients'] = $mail_recipients ? explode(',', $mail_recipients) : array();
 				$file_attachments = trim($this->db->f('file_attachments'), ',');
