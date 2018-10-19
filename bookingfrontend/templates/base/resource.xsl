@@ -45,10 +45,6 @@
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="building/city"/>
 							</span>
-
-                            <div class="mt-2"><xsl:for-each select="resource/activities_list">					
-                                <span class="mr-3"><xsl:value-of select="name"/></span>                            
-                            </xsl:for-each></div>
                         </div>
 
                         
@@ -81,6 +77,31 @@
             
             <div class="col-lg-6">
                 <div class="building-accordion">
+						<xsl:if test="count(resource/activities_list) &gt; 0">
+							<div class="building-card">
+								<div class="building-card-header">
+									<h5 class="mb-0">
+										<button class="btn btn-link" data-toggle="collapse" data-target="#collapseActivities" aria-expanded="false">
+											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
+										</button>
+										<button data-toggle="collapse" data-target="#collapseActivities" class="btn fas fa-plus float-right"></button>
+									</h5>
+								</div>
+
+								<div id="collapseActivities" class="collapse">
+									<div class="card-body">
+										<ul>
+											<xsl:for-each select="resource/activities_list">
+												<li>
+													<xsl:value-of select="name"/>
+												</li>
+											</xsl:for-each>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</xsl:if>
+
 						<xsl:if test="count(resource/facilities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">

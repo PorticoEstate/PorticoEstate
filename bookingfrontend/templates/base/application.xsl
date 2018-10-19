@@ -34,6 +34,7 @@
 
 			<div class="row">
 				<div class="col">
+					<!--
 					<div class="mb-4 float-right">
 						<xsl:if test="frontend and application/status='ACCEPTED'">
 							<form method="POST">
@@ -42,6 +43,7 @@
 							</form>
 						</xsl:if>
 					</div>
+					-->
 					<xsl:call-template name="msgbox"/>
 
 					<xsl:if test="frontend">

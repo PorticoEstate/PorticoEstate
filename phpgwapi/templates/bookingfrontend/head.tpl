@@ -53,12 +53,6 @@
               </ul>
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Om tjenesten</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{manual_url}">{manual_text}</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link font-weight-bold" href="{login_url}"><strong>{login_text}</strong></a>
                 </li>
               </ul>
