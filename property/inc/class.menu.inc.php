@@ -1150,9 +1150,10 @@
 				);
 			}
 
+			$invoicehandler = isset($config['invoicehandler']) && $config['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
+
 			if ($acl->check('.invoice', PHPGW_ACL_READ, 'property'))
 			{
-				$invoicehandler = isset($config['invoicehandler']) && $config['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
 				$children = array();
 				$children_invoice = array();
 				if ($acl->check('.invoice', PHPGW_ACL_PRIVATE, 'property'))
