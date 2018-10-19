@@ -76,11 +76,9 @@ JS;
 	}
 
 	//loads jquery
-//	phpgwapi_jquery::load_widget('core');
+	phpgwapi_jquery::load_widget('core');
 
 	$javascripts = array();
-	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jquery.min.js";
-	$javascripts[] = "/phpgwapi/js/jquery/common.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
@@ -190,7 +188,7 @@ JS;
 	$tpl_vars = array
 	(
 		'css'		   => $GLOBALS['phpgw']->common->get_css(),
-//		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
+		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'	  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
@@ -206,11 +204,8 @@ JS;
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 
-	// if ($manual !== null) 
-	{
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
-	}
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 
@@ -219,7 +214,6 @@ JS;
 
 	if($bouser->is_logged_in())
 	{
-
 		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
 		$session_org_id = phpgw::get_var('session_org_id','int', 'GET');

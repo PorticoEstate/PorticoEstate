@@ -3,9 +3,18 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+		{metainfo_author}
+		{metainfo_description}
+		{metainfo_keywords}
+		{metainfo_robots}
+		<title>{site_title}</title>
+		<link rel="icon" href="{img_icon}" type="image/x-ico">
+		<link rel="shortcut icon" href="{img_icon}">
         <!-- BEGIN stylesheet -->
         <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+		{css}
+		{javascript}
     		<!-- BEGIN javascript -->
 		<script type="text/javascript" src="{javascript_uri}"></script>
 		<!-- END javascript -->
