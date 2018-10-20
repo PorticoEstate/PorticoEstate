@@ -799,6 +799,12 @@
 //			$user_only = phpgw::get_var('user_only', 'bool');
 			$user_only = $total_hours ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
+			if($all_items)
+			{
+				$filter_status = 'all';
+				$filter_month =	null;
+			}
+
 			$report_type = phpgw::get_var('report_type', 'string');
 			if ($filter_component_str = phpgw::get_var('filter_component', 'string'))
 			{
