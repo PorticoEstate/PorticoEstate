@@ -537,9 +537,9 @@
 				(
 					'id'			=> $this->db->f('account_id'),
 					'lid'			=> $this->db->f('account_lid'),
-					'passwd_hash'	=> $this->db->f('account_pwd'),
-					'firstname'		=> $this->db->f('account_firstname'),
-					'lastname'		=> $this->db->f('account_lastname'),
+					'passwd_hash'	=> $this->db->f('account_pwd', true),
+					'firstname'		=> $this->db->f('account_firstname', true),
+					'lastname'		=> $this->db->f('account_lastname', true),
 					'lastlogin'		=> $this->db->f('account_lastlogin'),
 					'lastloginfrom'	=> $this->db->f('account_lastloginfrom'),
 					'lastpasswd_change'		=> $this->db->f('account_lastpwd_change'),
