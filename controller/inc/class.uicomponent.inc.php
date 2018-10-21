@@ -1847,7 +1847,11 @@ HTML;
 
 				for ($_month = 1; $_month < 13; $_month++)
 				{
-					if ($user_id && $user_id != $entry[$_month]['info']['assigned_to'])
+					if ($user_id 
+						&& ( (!is_array($user_id) && $user_id != $entry[$_month]['info']['assigned_to'])
+							||  (!in_array($entry[$_month]['info']['assigned_to'], $user_id))
+							)
+						)
 					{
 						continue;
 					}
