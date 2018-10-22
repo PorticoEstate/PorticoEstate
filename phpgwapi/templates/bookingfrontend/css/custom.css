@@ -973,7 +973,8 @@ ORGANIZATION / DELEGATE PAGE STYLE
 #group-page-content label, .span-label,
 #group-edit-page-content label, .span-label,
 #systemmessage-page-content label, .span-label,
-#event-edit-page-content label, .span-label {
+#event-edit-page-content label, .span-label,
+#event-delete-page-content label, .span-label {
     font-size: 0.8em;
     color: #373737;
     display: block;

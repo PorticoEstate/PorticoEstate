@@ -70,7 +70,7 @@
 			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
 			{
 				$date = substr($event['from_'], 0, 10);
-				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
 
@@ -145,7 +145,7 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 
 			$activity_path = $this->activity_bo->get_path($event['activity_id']);
@@ -237,7 +237,7 @@
 							$this->bo->update($event);
 						}
 						$date = substr($event['from_'], 0, 10);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $event['building_id'], 'date' => $date));
 					}
 					else
@@ -254,7 +254,7 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
