@@ -390,7 +390,7 @@
 			{
 				$orginfo = array();
 			}
-
+			//echo $event['name'];
 			$event['resources'] = $resources['results'];
 			$res_names = array();
 			foreach ($event['resources'] as $res)
@@ -400,7 +400,15 @@
 			$event['resource_info'] = join(', ', $res_names);
 			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id']));
-			$event['when'] = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			} else {
+				$end = new DateTime($event['to_']);				
+				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$event['when'] = $when;
 			$bouser = CreateObject('bookingfrontend.bouser');
 			if ($bouser->is_organization_admin($event['customer_organization_id']))
 			{

@@ -397,7 +397,15 @@
 						'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
 						'resource' => $allocation['resource']));
 			}
-			$allocation['when'] = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			$interval = (new DateTime($allocation['from_']))->diff(new DateTime($allocation['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			} else {
+				$end = new DateTime($allocation['to_']);				
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$allocation['when'] = $when;
 			self::render_template_xsl('allocation_info', array('allocation' => $allocation,
 				'user_can_delete_allocations' => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome

@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<h3>
-		<xsl:value-of select="php:function('lang', 'Event')"/> #<xsl:value-of select="event/id"/>
+		<xsl:value-of select="event/name"/>
 	</h3>
 
 	<span class="d-block"><xsl:value-of select="event/when"/></span>
@@ -12,17 +12,20 @@
 		(<xsl:value-of select="event/resource_info"/>)
 	</div>
 
+	<div><span class="font-weight-bold text-uppercase">ARRANGØR: </span>
+		<xsl:if test="orginfo">
+			<a href="{orginfo/link}">
+				<xsl:value-of select="orginfo/name"/>
+			</a>:
+		</xsl:if>
+	</div>
+
 	<div class="tooltip-desc-btn">
 		<span><i class="fas fa-info-circle"></i></span>
 		<p class="tooltip-desc">
     	<span class="d-block font-weight-normal">
-			<xsl:if test="event/is_public=1">
-				<xsl:if test="orginfo">
-						<a href="{orginfo/link}">
-							<xsl:value-of select="orginfo/name"/>
-						</a>:
-					</xsl:if>
-					<xsl:value-of select="event/contact_name"/>
+			<xsl:if test="event/is_public=1">				
+					<!--<xsl:value-of select="event/contact_name"/>-->
 					<xsl:if test="event/contact_email != ''">
 						<br/>
 						E-post: <xsl:value-of select="event/contact_email"/>
@@ -33,12 +36,10 @@
 					</xsl:if>
 			</xsl:if>
 			<xsl:if test="event/is_public=0">
-				<xsl:value-of select="php:function('lang', 'Private event')"/>
+				<br/><xsl:value-of select="php:function('lang', 'Private event')"/>
 			</xsl:if>
 			<xsl:if test="event/is_public=1">
-				<div>
-					<xsl:value-of select="event/description" disable-output-escaping="yes"/>
-				</div>
+				<br/><xsl:value-of select="event/description" disable-output-escaping="yes"/>
 			</xsl:if>
 		</span>
 		</p>
