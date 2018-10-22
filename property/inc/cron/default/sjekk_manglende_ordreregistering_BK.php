@@ -132,7 +132,7 @@ HTML;
 
 					$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction' => 'property.uiworkorder.edit',
-						'id' => $order_id), false, true) . ">{$order_id}</a>";
+						'id' => $order_id), false, true) . "\">{$order_id}</a>";
 
 					$html .=<<<HTML
 
