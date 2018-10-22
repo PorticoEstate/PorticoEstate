@@ -855,8 +855,8 @@ from	property	nn	Fra
 from date	property	nn	Fra dato
 funding	property	nn	Finansiering
 gaards nr	property	nn	Gårdsnr.
-gab	property	nn	Grunneiendom
-gabnr	property	nn	Grunneiendom
+gab	property	nn	Grunneigedom
+gabnr	property	nn	Grunneigedom
 gallery	property	nn	Bildearkiv
 general	property	nn	Generelt
 generic	property	nn	Generelt
@@ -2388,3 +2388,4 @@ assign	property	nn	Tildel
 start time	property	nn	Starttid
 serie	property	nn	Serie
 external communication	property	no	Ekstern kommunikasjon
+cadastre	property	nn	Grunneigedom

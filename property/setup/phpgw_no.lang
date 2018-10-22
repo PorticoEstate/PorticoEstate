@@ -58,6 +58,7 @@ add a entity	property	no	Legg til en entitet
 add a entrance	property	no	Legg til inngang
 add a equipment	property	no	Legg til utstyr
 add a gab	property	no	Legg til grunneiendom
+cadastre	property	no	Grunneiendom
 add agreement	property	no	Legg til avtale
 add agreement group	property	no	Legg til en avtalegruppe
 add a hour	property	no	Legg til post
