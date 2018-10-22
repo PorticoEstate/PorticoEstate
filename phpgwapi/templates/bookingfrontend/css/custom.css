@@ -298,6 +298,11 @@ footer {
     z-index: 1000;
 }
 
+.tooltip.show {
+    margin-top: -30px;
+    margin-left: -10px;
+}
+
 .tooltip .arrow {
     display: none;
 }

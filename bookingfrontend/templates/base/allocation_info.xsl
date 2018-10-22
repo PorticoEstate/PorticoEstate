@@ -1,6 +1,10 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<h3>
-		<xsl:value-of select="php:function('lang', 'Allocation')"/> #<xsl:value-of select="allocation/id"/>
+		<!--<xsl:value-of select="php:function('lang', 'Allocation')"/> #
+		<xsl:value-of select="allocation/id"/>-->
+		<!--<a href="{allocation/org_link}">-->
+			<xsl:value-of select="allocation/organization_name"/>
+		<!--</a>-->
 	</h3>
 
 	<span class="d-block"><xsl:value-of select="allocation/when"/></span>
@@ -12,12 +16,7 @@
 		(<xsl:value-of select="allocation/resource_info"/>)
 	</div>
 
-	<div><span class="font-weight-bold text-uppercase">ARRANGØR: </span>
-		<a href="{allocation/org_link}">
-			<xsl:value-of select="allocation/organization_name"/>
-		</a>
-	</div>
-
+	<xsl:if test="allocation/contact_email != '' or allocation/contact_phone != '' or orginfo/name != ''">
 	<div class="tooltip-desc-btn">
 		<span><i class="fas fa-info-circle"></i></span>
 		<p class="tooltip-desc">
@@ -43,8 +42,9 @@
 					<xsl:value-of select="php:function('lang', 'Private event')"/>
 			</xsl:if>	
 		</span>
-		</p></div>
-
+		</p>
+	</div>
+	</xsl:if>
 	
 	<xsl:if test="allocation/add_link">
 		<div class="actions">

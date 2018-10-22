@@ -1196,7 +1196,15 @@
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id']));
 			}
-			$booking['when'] = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			} else {
+				$end = new DateTime($booking['to_']);				
+				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$booking['when'] = $when;
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
