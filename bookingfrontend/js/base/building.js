@@ -18,7 +18,11 @@ $(document).ready(function ()
 {
     //urlParams = new URLSearchParams(window.location.search); //not ie supported
     $(".overlay").show();
-    CreateUrlParams(window.location.search);    
+    CreateUrlParams(window.location.search);
+    if(typeof urlParams['date']  !== "undefined") {
+        date = new Date(urlParams['date']);
+        console.log(date);
+    }    
     PopulateBuildingData(baseURL, urlParams);
     PopulateBookableResources(baseURL, urlParams);    
     
@@ -696,7 +700,7 @@ function GenerateCalendarForEvents(date) {
 					}
 				}
 			});
-
+            
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',

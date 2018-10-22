@@ -128,7 +128,7 @@
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
 					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $event['building_id'], 'date' => $date));
 				}
 			}
