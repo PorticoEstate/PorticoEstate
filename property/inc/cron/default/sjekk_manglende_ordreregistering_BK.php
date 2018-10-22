@@ -128,11 +128,16 @@ HTML;
 				{
 					$this->receipt['error'][] = array('msg' => "Ordre: {$order_id}; dato: {$entry['date']}; budsjett:{$entry['budget']}; bestiller: {$entry['account_lastname']}, {$entry['account_firstname']};  er ikke registrert i Agresso");
 
-				$i++;
+					$i++;
 
-				$html .=<<<HTML
+					$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'property.uiworkorder.edit',
+						'id' => $order_id), false, true) . "\">{$order_id}</a>";
+
+					$html .=<<<HTML
+
 					<tr>
-						<td>{$order_id}</td>
+						<td>{$order_link}</td>
 						<td>{$entry['date']}</td>
 						<td>{$entry['budget']}</td>
 						<td>{$entry['account_lastname']}, {$entry['account_firstname']}</td>
