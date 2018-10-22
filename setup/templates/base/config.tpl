@@ -135,6 +135,7 @@
       <option value="ads"{selected_auth_type_ads}>ads</option>
       <option value="remoteuser"{selected_auth_type_remoteuser}>Remote User</option>
       <option value="customsso"{selected_auth_type_customsso}>Custom SSO</option>
+      <option value="azure"{selected_auth_type_azure}>Azure AD</option>
       <!-- <option value="http"{selected_auth_type_http}>HTTP</option> -->
       <!-- <option value="nis"{selected_auth_type_nis}>NIS</option> -->
       <!-- <option value="pam"{selected_auth_type_pam}>PAM (Not Ready)</option> -->
