@@ -1110,7 +1110,7 @@
 
 <!-- New template-->
 <!-- add / edit agreement_group -->
-<xsl:template match="edit_agreement_group">
+<xsl:template match="edit_agreement_group" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
 		function ns3420_lookup()
 		{
@@ -1142,13 +1142,23 @@
 								</label>
 								<xsl:value-of select="value_agreement_group_id"/>
 							</div>
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'copy')" />
+								</label>
+								<input type="checkbox" name="values[copy_agreement_group]" value="True">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'copy')" />
+									</xsl:attribute>
+								</input>
+							</div>
 						</xsl:when>
 					</xsl:choose>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="lang_num"/>
 						</label>
-						<input type="text" id="num" name="values[num]" value="{value_num}">
+						<input type="text" id="num" name="values[num]" value="{value_num}" class="pure-input-1-2">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_num_statustext"/>
 							</xsl:attribute>
@@ -1168,9 +1178,30 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'start date')" />
+						</label>
+						<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'start date')" />
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'end date')" />
+						</label>
+
+						<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'end date')" />
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="lang_descr"/>
 						</label>
-						<textarea cols="60" rows="4" name="values[descr]">
+						<textarea cols="60" rows="4" name="values[descr]" class="pure-input-1-2">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
