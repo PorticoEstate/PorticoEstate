@@ -799,6 +799,12 @@
 //			$user_only = phpgw::get_var('user_only', 'bool');
 			$user_only = $total_hours ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
+			if($all_items)
+			{
+				$filter_status = 'all';
+				$filter_month =	null;
+			}
+
 			$report_type = phpgw::get_var('report_type', 'string');
 			if ($filter_component_str = phpgw::get_var('filter_component', 'string'))
 			{
@@ -1841,7 +1847,11 @@ HTML;
 
 				for ($_month = 1; $_month < 13; $_month++)
 				{
-					if ($user_id && $user_id != $entry[$_month]['info']['assigned_to'])
+					if ($user_id 
+						&& ( (!is_array($user_id) && $user_id != $entry[$_month]['info']['assigned_to'])
+							||  (!in_array($entry[$_month]['info']['assigned_to'], $user_id))
+							)
+						)
 					{
 						continue;
 					}

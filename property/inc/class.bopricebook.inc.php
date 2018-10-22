@@ -390,12 +390,16 @@
 
 		function save_agreement_group( $values, $action = '' )
 		{
+			$values['start_date'] = $this->bocommon->date_to_timestamp($values['start_date']);
+			$values['end_date'] = $this->bocommon->date_to_timestamp($values['end_date']);
+
 			if ($action == 'edit')
 			{
 				$receipt = $this->so->edit_agreement_group($values);
 			}
 			else
 			{
+				$values['orig_agreement_group_id'] = $values['agreement_group_id'];
 				$values['agreement_group_id'] = $this->socommon->next_id('fm_agreement_group');
 				$receipt = $this->so->add_agreement_group($values);
 			}

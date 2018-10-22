@@ -49,6 +49,39 @@
 			$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 		}
 
+		$db->query("SELECT external_ticket_id FROM fm_tts_tickets WHERE id = {$id}", __LINE__, __FILE__);
+		$db->next_record();
+		$external_ticket_id = $db->f('external_ticket_id');
+		//varsle ISS om at denne utgår
+		if ($external_ticket_id && !$projects)
+		{
+			$recipients = array
+			(
+				'dag.boye.tellnes@no.issworld.com',
+				'servicedesk@iss.no'
+			);
+
+			$_to = implode(';', $recipients);
+			$bcc = 'hc483@bergen.kommune.no';
+			$cc = '';
+			$coordinator_email = 'IkkeSvar@bergen.kommune.no';
+			$coordinator_name = $GLOBALS['phpgw_info']['server']['site_title'];
+
+			$subject = "WO ID: {$external_ticket_id} er håndtert uten bestilling";
+			$message = "Saken er avsluttet";
+
+			try
+			{
+				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', $cc, $bcc, $coordinator_email, $coordinator_name, 'txt', '', array());
+				phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
+				$this->historylog->add('M', $id, "ISS (varslet om at bestilling utgår, med referanse til deres avviksmelding)");
+			}
+			catch (Exception $exc)
+			{
+				phpgwapi_cache::message_set($exc->getMessage(),'error' );
+			}
+		}
+
 		$validator = CreateObject('phpgwapi.EmailAddressValidator');
 		$socommon = CreateObject('property.socommon');
 

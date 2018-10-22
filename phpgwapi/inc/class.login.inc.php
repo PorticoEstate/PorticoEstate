@@ -352,6 +352,84 @@
 					}
 				}
 			}
+			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' &&  (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
+			{
+				//Reset auth object
+				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
+				$login = $GLOBALS['phpgw']->auth->get_username();
+				$logindomain = phpgw::get_var('domain', 'string', 'GET');
+
+				if($login)
+				{
+					$GLOBALS['hook_values'] = array
+					(
+						'account_lid' => $login
+					);
+					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
+
+					if (strstr($login, '#') === false && $logindomain)
+					{
+						$login .= "#{$logindomain}";
+					}
+
+					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
+				}
+
+				if (!$login || empty($GLOBALS['sessionid']))
+				{
+					$cd_array = array();
+					if ($GLOBALS['phpgw']->session->cd_reason)
+					{
+						$cd_array['cd']			 = $GLOBALS['phpgw']->session->cd_reason;
+					}
+					$cd_array['skip_remote'] = true;
+
+					if ($lightbox)
+					{
+						$cd_array['lightbox'] = true;
+					}
+					if ($logindomain)
+					{
+						$cd_array['domain'] = $logindomain;
+					}
+
+					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					exit;
+				}
+
+				$forward = phpgw::get_var('phpgw_forward');
+				if ($forward)
+				{
+					$extra_vars['phpgw_forward'] = $forward;
+					foreach ($_GET as $name => $value)
+					{
+						if (preg_match('/phpgw_/', $name))
+						{
+							$name				 = urlencode($name);
+							$extra_vars[$name]	 = urlencode($value);
+						}
+					}
+				}
+
+				$extra_vars['cd'] = 'yes';
+
+				if ($lightbox)
+				{
+					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->hooks->process('login');
+					if ($after)
+					{
+						$this->redirect_after($frontend);
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					}
+				}
+			}
 
 			if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 			{

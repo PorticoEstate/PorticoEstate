@@ -438,7 +438,8 @@
 						menuaction:'property.uitts.query2',
 						order:'id',
 						sort:'asc',
-						user_id:{$accound_id}
+						user_id:{$accound_id},
+						result:10
 						}, true);
 
 						ticket_infoURL += '{$status_filter}';
