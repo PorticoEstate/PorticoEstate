@@ -174,7 +174,7 @@
 				'file'), 'event_form');
 
 			self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments, 'config' => $config->config_data));
 		}
 
 		public function cancel()

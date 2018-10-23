@@ -430,5 +430,6 @@ Redirect is computed if url ends with	bookingfrontend	no	Omdirigering blir kalku
 bookingfrontend host	bookingfrontend	no	Bookingfrontend vert
 Needed for the return from the external logout	bookingfrontend	no	Nødvendig for retur fra ekstern logg ut
 Activities (2018)	bookingfrontend	no	Tilrettelagt for
+Information about the event (edit)	bookingfrontend	no	Informasjon om arrangementet
 metadata settings	bookingfrontend	no	Metadata innstillinger
 update results	bookingfrontend	no	Oppdater resultater

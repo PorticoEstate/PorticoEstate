@@ -10342,4 +10342,22 @@
 	}
 
 
+	/**
+	*
+	* Update property version from 0.9.17.735 to 0.9.17.736
+	*
+	*/
+	$test[] = '0.9.17.735';
+	function property_upgrade0_9_17_735()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.location.gab', 'Property informations', 'property', $allow_grant = false, $custom_tbl = 'fm_gab_location', $c_function = true);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.736';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 	

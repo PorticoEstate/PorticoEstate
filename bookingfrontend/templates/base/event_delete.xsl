@@ -32,21 +32,21 @@
 							<xsl:call-template name="msgbox"/>
 						</div>
 
-						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building')" /></label>
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
 								<xsl:value-of select="event/building_name"/>
 							</div>
-						</div>
 
-						<div class="col-12">
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
+						<xsl:value-of select="event/name"/>
+					</div>
+
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Description')" /></label>
 								<xsl:value-of select="event/description"/>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
 								<xsl:for-each select="activities">
@@ -55,30 +55,23 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'From')" /></label>
 								<xsl:value-of select="event/from_"/>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'To')"/></label>
 								<xsl:value-of select="event/to_"/>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Message')" /></label>
 								<textarea id="field-message" class="form-control" name="message" type="text">
 									<xsl:value-of select="system_message/message"/>
 								</textarea>
 							</div>
-						</div>						
 
 						<div class="col mt-5">
 							<input type="submit" class="btn btn-light mr-4">
