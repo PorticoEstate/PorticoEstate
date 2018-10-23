@@ -21,7 +21,6 @@ $(document).ready(function ()
     CreateUrlParams(window.location.search);
     if(typeof urlParams['date']  !== "undefined") {
         date = new Date(urlParams['date']);
-        console.log(date);
     }    
     PopulateBuildingData(baseURL, urlParams);
     PopulateBookableResources(baseURL, urlParams);    

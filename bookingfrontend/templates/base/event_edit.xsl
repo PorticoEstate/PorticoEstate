@@ -17,7 +17,7 @@
 
             	<div class="row">					
 
-					<form action="" method="POST" id="form" name="form" class="col-md-8">
+					<form action="" method="POST" id="event_form" name="form" class="col-md-8">
 
 						<div class="col mb-4">
 							<xsl:call-template name="msgbox"/>
