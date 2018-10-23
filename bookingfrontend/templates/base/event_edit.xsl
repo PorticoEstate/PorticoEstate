@@ -98,7 +98,7 @@
 
 						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building')" /></label>
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
 								<div class="autocomplete">
 									<input id="field_building_id" class="form-control" name="building_id" type="hidden">
 										<xsl:attribute name="data-validation">
@@ -127,6 +127,7 @@
 							</div>
 						</div>
 
+<!--
 						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resources')" /></label>
@@ -142,6 +143,38 @@
 								</div>
 							</div>
 						</div>
+-->
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" /></label>
+						<button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+							<xsl:value-of select="php:function('lang', 'choose')" />
+							<span class="caret"></span>
+						</button>
+
+						<ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
+							<li>
+								<div class="form-check checkbox checkbox-primary">
+									<label class="check-box-label">
+										<input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
+										<span class="label-text" data-bind="text: name"></span>
+									</label>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="form-group">
+						<span class="font-weight-bold d-block mt-2 span-label">
+							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
+						</span>
+						<div data-bind="foreach: bookableresource">
+							<span class="selectedItems mr-2" data-bind='text: selected() ? name : ""'></span>
+						</div>
+						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
+							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
+						</span>
+					</div>
 
 						<dt class="heading mt-4 mb-4">
 							<xsl:value-of select="php:function('lang', 'When')" />
@@ -214,6 +247,7 @@
 							<xsl:value-of select="php:function('lang', 'Who')" />
 						</dt>
 
+<!--
 						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
@@ -241,6 +275,20 @@
 								</ul>
 							</div>
 						</div>
+-->
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
+						<div class="dropdown d-inline-block">
+							<button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<xsl:value-of select="php:function('lang', 'choose')" />
+							</button>
+							<div class="dropdown-menu" data-bind="foreach: audiences" aria-labelledby="dropdownMenuButton">
+								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
+							</div>
+							<input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
+						</div>
+					</div>
 
 						<div class="col-12">
 							<div class="form-group">
@@ -358,12 +406,34 @@
 							<xsl:value-of select="php:function('lang', 'Invoice information')" />
 						</dt>
 
+<!--
 						<div class="col-12">
 							<div class="form-group">
-								<!--<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Phone')" /></label>-->
 								<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
 							</div>
 						</div>
+-->
+
+					<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
+						<label class="form-check-label" for="privateRadio"><xsl:value-of select="php:function('lang', 'Private event')" /></label>
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
+						<label class="form-check-label" for="orgRadio"><xsl:value-of select="php:function('lang', 'organization')" /></label>
+					</div>
+					<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage"><xsl:value-of select="php:function('lang', 'choose a')" /></p>
+
+					<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'organization number')" /></label>
+						<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>
+					</div>
+
+					<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Ssn')" /></label>
+						<input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>
+					</div>
 
 
 						<div class="col mt-5">
