@@ -23,127 +23,36 @@
 							<xsl:call-template name="msgbox"/>
 						</div>
 
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'Why')" />
-						</dt>
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></h5>
 
-						<div class="col-12">
-							<div class="form-group">
-								<label for="field_activity">
-									<xsl:value-of select="php:function('lang', 'Activity')" />
-								</label>
-								<select name="activity_id" class="form-control" id="field_activity">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-										</xsl:attribute>
-										<option value="">
-											<xsl:value-of select="php:function('lang', '-- select an activity --')" />
-										</option>
-										<xsl:for-each select="activities">
-											<option>
-												<xsl:if test="../event/activity_id = id">
-													<xsl:attribute name="selected">selected</xsl:attribute>
-												</xsl:if>
-												<xsl:attribute name="value">
-													<xsl:value-of select="id"/>
-												</xsl:attribute>
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:for-each>
-								</select>
-							</div>
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
+						<div class="autocomplete">
+							<input id="field_building_id" class="form-control" name="building_id" type="hidden">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter a building')" />
+								</xsl:attribute>
+								<xsl:attribute name="value">
+									<xsl:value-of select="event/building_id"/>
+								</xsl:attribute>
+							</input>
+							<input id="field_building_name" class="form-control" name="building_name" type="text">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter a building')" />
+								</xsl:attribute>
+								<xsl:attribute name="value">
+									<xsl:value-of select="event/building_name"/>
+								</xsl:attribute>
+							</input>
+							<div id="building_container"/>
 						</div>
-
-						<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Event type')"/></label>
-								<select id="field_public" class="form-control" name="is_public">
-									<option value="1">
-										<xsl:if test="event/is_public=1">
-											<xsl:attribute name="selected">checked</xsl:attribute>
-										</xsl:if>
-										<xsl:value-of select="php:function('lang', 'Public event')"/>
-									</option>
-									<option value="0">
-										<xsl:if test="event/is_public=0">
-											<xsl:attribute name="selected">checked</xsl:attribute>
-										</xsl:if>
-										<xsl:value-of select="php:function('lang', 'Private event')"/>
-									</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Description')" /></label>
-								<textarea id="field_description" class="form-control" name="description">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a description')" />
-									</xsl:attribute>
-									<xsl:value-of select="event/description"/>
-								</textarea>
-							</div>
-						</div>
-
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'Where')" />
-						</dt>
-
-						<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
-								<div class="autocomplete">
-									<input id="field_building_id" class="form-control" name="building_id" type="hidden">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter a building')" />
-										</xsl:attribute>
-										<xsl:attribute name="value">
-											<xsl:value-of select="event/building_id"/>
-										</xsl:attribute>
-									</input>
-									<input id="field_building_name" class="form-control" name="building_name" type="text">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter a building')" />
-										</xsl:attribute>
-										<xsl:attribute name="value">
-											<xsl:value-of select="event/building_name"/>
-										</xsl:attribute>
-									</input>
-									<div id="building_container"/>
-								</div>
-							</div>
-						</div>
-
-<!--
-						<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resources')" /></label>
-								<input type="hidden" class="form-control" data-validation="application_resources">
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please choose at least 1 resource')" />
-									</xsl:attribute>
-								</input>
-								<div id="resources_container">
-									<span class="select_first_text">
-										<xsl:value-of select="php:function('lang', 'Select a building first')" />
-									</span>
-								</div>
-							</div>
-						</div>
--->
+					</div>
 
 					<div class="form-group">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" /></label>
@@ -151,7 +60,6 @@
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</button>
-
 						<ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
 							<li>
 								<div class="form-check checkbox checkbox-primary">
@@ -176,11 +84,6 @@
 						</span>
 					</div>
 
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'When')" />
-						</dt>
-
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'From')" /></label>
 								<xsl:value-of select="event/from_"/>
@@ -209,10 +112,8 @@
 									</xsl:if>
 								</input>
 							</div>
-						</div>
 
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'To')" /></label>
 								<xsl:value-of select="event/to_"/>
@@ -241,41 +142,10 @@
 									</xsl:if>
 								</input>
 							</div>
-						</div>
 
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'Who')" />
-						</dt>
+					<hr class="mt-5 mb-5"></hr>
 
-<!--
-						<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
-								<input type="hidden" class="form-control" data-validation="target_audience">
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please choose at least 1 target audience')" />
-									</xsl:attribute>
-								</input>
-								<ul id="audience">
-									<xsl:for-each select="audience">
-										<li>
-											<input type="radio" class="form-control" name="audience[]">
-												<xsl:attribute name="value">
-													<xsl:value-of select="id"/>
-												</xsl:attribute>
-												<xsl:if test="../event/audience=id">
-													<xsl:attribute name="checked">checked</xsl:attribute>
-												</xsl:if>
-											</input>
-											<label>
-												<xsl:value-of select="name"/>
-											</label>
-										</li>
-									</xsl:for-each>
-								</ul>
-							</div>
-						</div>
--->
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Information about the event (edit)')" /></h5>
 
 					<div class="form-group">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
@@ -290,63 +160,116 @@
 						</div>
 					</div>
 
-						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Number of participants')" /></label>
-								<input type="hidden" class="form-control" data-validation="number_participants">
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Number of participants is required')" />
-									</xsl:attribute>
-								</input>
-								<table id="agegroup" class="pure-table pure-table-bordered">
-									<thead>
-										<tr>
-											<th/>
-											<th>
-												<xsl:value-of select="php:function('lang', 'Male')" />
-											</th>
-											<th>
-												<xsl:value-of select="php:function('lang', 'Female')" />
-											</th>
-										</tr>
-									</thead>
-									<tbody id="agegroup_tbody">
-										<xsl:for-each select="agegroups">
-											<xsl:variable name="id">
-												<xsl:value-of select="id"/>
-											</xsl:variable>
-											<tr>
-												<th>
-													<xsl:value-of select="name"/>
-												</th>
-												<td>
-													<input type="text" class="form-control" size="4">
-														<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-														<xsl:attribute name="value">
-															<xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/>
-														</xsl:attribute>
-													</input>
-												</td>
-												<td>
-													<input type="text" class="form-control" size="4">
-														<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-														<xsl:attribute name="value">
-															<xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
+								<label class="text-uppercase" for="field_activity">
+									<xsl:value-of select="php:function('lang', 'Activity')" />
+								</label>
+								<select name="activity_id" class="form-control" id="field_activity">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please select an activity')" />
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', '-- select an activity --')" />
+										</option>
+										<xsl:for-each select="activities">
+											<option>
+												<xsl:if test="../event/activity_id = id">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+												<xsl:attribute name="value">
+													<xsl:value-of select="id"/>
+												</xsl:attribute>
+												<xsl:value-of select="name"/>
+											</option>
 										</xsl:for-each>
-									</tbody>
-								</table>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Event type')"/></label>
+								<select id="field_public" class="form-control" name="is_public">
+									<option value="1">
+										<xsl:if test="event/is_public=1">
+											<xsl:attribute name="selected">checked</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', 'Public event')"/>
+									</option>
+									<option value="0">
+										<xsl:if test="event/is_public=0">
+											<xsl:attribute name="selected">checked</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', 'Private event')"/>
+									</option>
+								</select>
+							</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
+						<input type="text" class="form-control" name="name" value="{event/name}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organizer')" /></label>
+						<input type="text" class="form-control" name="organizer" value="{event/organizer}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Homepage for the event')" /></label>
+						<input type="text" class="form-control" name="homepage" value="{event/homepage}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'description')" /></label>
+						<textarea id="field_description" class="form-control" rows="3" name="description">
+							<xsl:value-of select="application/description"/>
+						</textarea>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="config/application_equipment"/></label>
+						<textarea class="form-control" name="equipment">
+							<xsl:value-of select="event/equipment"/>
+						</textarea>
+					</div>
+
+					<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
+						<div class="p-2 border">
+							<div class="row mb-2">
+								<div class="col-3">
+									<span class="span-label mt-2"></span>
+								</div>
+								<div class="col-4">
+									<span><xsl:value-of select="php:function('lang', 'Male')" /></span>
+								</div>
+								<div class="col-4">
+									<xsl:value-of select="php:function('lang', 'Female')" />
+								</div>
+							</div>
+
+							<div class="row mb-2" data-bind="foreach: agegroup">
+								<span data-bind="text: id, visible: false"/>
+								<div class="col-3">
+									<span class="mt-2" data-bind="text: agegroupLabel"></span>
+								</div>
+								<div class="col-4">
+									<input class="form-control sm-input maleInput" placeholder="mann" data-bind=""/>
+								</div>
+								<div class="col-4">
+									<input class="form-control sm-input femaleInput" placeholder="kvinne" data-bind=""/>
+								</div>
 							</div>
 						</div>
+					</div>
 
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'Contact information')" />
-						</dt>
 
-						<div class="col-12">
+					<hr class="mt-5 mb-5"></hr>
+
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Contact and invoice information')" /></h5>
+
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
 								<input id="field_contact_name" class="form-control" name="contact_name" type="text">
@@ -361,9 +284,7 @@
 									</xsl:attribute>
 								</input>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Email')" /></label>
 								<input id="field_contact_mail" class="form-control" name="contact_email" type="text">
@@ -372,9 +293,7 @@
 									</xsl:attribute>
 								</input>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Phone')" /></label>
 								<input id="field_contact_phone" class="form-control" name="contact_phone" type="text">
@@ -383,9 +302,7 @@
 									</xsl:attribute>
 								</input>
 							</div>
-						</div>
 
-						<div class="col-12">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Cost')" /></label>
 								<input id="field_cost" class="form-control" name="cost" type="text" readonly="readonly">
@@ -400,19 +317,6 @@
 									</xsl:attribute>
 								</input>
 							</div>
-						</div>
-
-						<dt class="heading mt-4 mb-4">
-							<xsl:value-of select="php:function('lang', 'Invoice information')" />
-						</dt>
-
-<!--
-						<div class="col-12">
-							<div class="form-group">
-								<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>
-							</div>
-						</div>
--->
 
 					<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
 					<div class="form-check form-check-inline">
@@ -450,7 +354,7 @@
 							</a>
 						</div>
 					</form>
-            	</div>         
+				</div>
             
         	</div>
     	
