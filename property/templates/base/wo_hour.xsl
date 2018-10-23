@@ -567,7 +567,7 @@
 </xsl:template>
 
 <!-- New template-->
-<xsl:template match="email_data">
+<xsl:template match="email_data"  xmlns:php="http://php.net/xsl">
 	<font size="-1">
 		<table align="left">
 			<tr>
@@ -597,6 +597,19 @@
 								</xsl:choose>
 							</td>
 						</tr>
+						<xsl:choose>
+							<xsl:when test="contract_name !=''">
+								<tr>
+									<td class="th_text" align="left">
+										<xsl:value-of select="php:function('lang', 'contract')"/>
+									</td>
+									<td align="left" colspan="2">
+										<xsl:value-of select="contract_name"/>
+									</td>
+								</tr>
+							</xsl:when>
+						</xsl:choose>
+
 						<tr>
 							<td class="th_text" align="left">
 								<xsl:value-of select="lang_to"/>
@@ -807,18 +820,18 @@
 						<td colspand="3">
 							<xsl:choose>
 								<xsl:when test="use_yui_table='1'">
-										<xsl:for-each select="//datatable_def">
-											<xsl:if test="container = 'datatable-container_0'">
-												<xsl:call-template name="table_setup">
-													<xsl:with-param name="container" select ='container'/>
-													<xsl:with-param name="requestUrl" select ='requestUrl' />
-													<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-													<xsl:with-param name="tabletools" select ='tabletools' />
-													<xsl:with-param name="data" select ='data' />
-													<xsl:with-param name="config" select ='config' />
-												</xsl:call-template>
-											</xsl:if>
-										</xsl:for-each>
+									<xsl:for-each select="//datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
 									<table width="100%" cellpadding="2" cellspacing="2" align="left" border="1">

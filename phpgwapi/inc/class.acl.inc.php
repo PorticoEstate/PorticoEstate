@@ -2124,8 +2124,8 @@
 						'account_id'        => $this->_db->f('account_id'),
 						'account_lid'       => $this->_db->f('account_lid'),
 						'account_type'      => $this->_db->f('account_type'),
-						'account_firstname' => $this->_db->f('account_firstname'),
-						'account_lastname'  => $this->_db->f('account_lastname'),
+						'account_firstname' => $this->_db->f('account_firstname', true),
+						'account_lastname'  => $this->_db->f('account_lastname', true),
 						'account_status'    => $this->_db->f('account_status'),
 						'account_expires'   => $this->_db->f('account_expires')
 					);
