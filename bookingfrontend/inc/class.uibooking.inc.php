@@ -238,7 +238,7 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id']));
 					}
 				}
@@ -409,7 +409,7 @@
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id']));
 					}
 				}
@@ -512,7 +512,7 @@
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
@@ -1117,7 +1117,7 @@
 //				self::add_javascript('booking', 'base', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id'], 'date' => $booking['from_']));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));

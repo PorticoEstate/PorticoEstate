@@ -16,7 +16,7 @@
 		<xsl:if test="orginfo">
 			<a href="{orginfo/link}">
 				<xsl:value-of select="orginfo/name"/>
-			</a>:
+			</a>
 		</xsl:if>
 	</div>
 
