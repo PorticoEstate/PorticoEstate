@@ -225,8 +225,8 @@
 								</input>
 								<div id="audience">
 									<xsl:for-each select="audience">
-										
-											<input type="radio" class="form-control" name="audience[]">
+										<div class="d-block">
+											<input type="radio" class="mr-2" name="audience[]">
 												<xsl:attribute name="value">
 													<xsl:value-of select="id"/>
 												</xsl:attribute>
@@ -234,10 +234,8 @@
 													<xsl:attribute name="checked">checked</xsl:attribute>
 												</xsl:if>
 											</input>
-											<label>
-												<xsl:value-of select="name"/>
-											</label>
-										
+											<xsl:value-of select="name"/>
+										</div>
 									</xsl:for-each>
 								</div>
 							</div>
