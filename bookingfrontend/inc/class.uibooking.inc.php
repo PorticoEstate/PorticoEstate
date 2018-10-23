@@ -188,7 +188,7 @@
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id']));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
@@ -258,7 +258,7 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
@@ -410,7 +410,7 @@
 					{
 						$receipt = $this->bo->update($booking);
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id']));
+							'id' => $booking['building_id'], 'date' => $_POST['from_']));
 					}
 				}
 				else
@@ -859,7 +859,7 @@
 					$system_message['message'] = $system_message['message'] . "\n\n" . lang('To cancel booking use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $system_message['building_id']));
 				}
 
@@ -870,7 +870,7 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 
 				$this->flash_form_errors($errors);
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id']));
 
 				self::rich_text_editor('field-message');
@@ -983,7 +983,7 @@
 						$system_message['message'] = $system_message['message'] . "<br />" . $info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id']));
 					}
 					else
@@ -1095,7 +1095,7 @@
 							$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $allocation['building_id']));
 						}
 					}

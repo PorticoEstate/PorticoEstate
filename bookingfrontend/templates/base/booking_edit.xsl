@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-<div id="systemmessage-page-content" class="margin-top-content">
+<div id="booking-edit-page-content" class="margin-top-content">
     <div class="container wrapper">
 		<div class="location">
 			<span><a>

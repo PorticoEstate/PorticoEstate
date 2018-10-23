@@ -975,7 +975,9 @@ ORGANIZATION / DELEGATE PAGE STYLE
 #systemmessage-page-content label, .span-label,
 #event-edit-page-content label, .span-label,
 #event-delete-page-content label, .span-label,
-#booking-new-page-content label, .span-label {
+#booking-new-page-content label, .span-label,
+#booking-edit-page-content label, .span-label,
+#booking-delete-page-content label, .span-label {
     font-size: 0.8em;
     color: #373737;
     display: block;
