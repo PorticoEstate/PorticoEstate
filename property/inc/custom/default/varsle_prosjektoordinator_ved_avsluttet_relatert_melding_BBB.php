@@ -68,7 +68,7 @@
 			$coordinator_name = $GLOBALS['phpgw_info']['server']['site_title'];
 
 			$subject = "WO ID: {$external_ticket_id} er håndtert uten bestilling";
-			$message = "Saken er avsluttet<br>Vårt nummer er: {$id}";
+			$message = "Saken er avsluttet\nVårt nummer er: {$id}";
 
 			try
 			{
