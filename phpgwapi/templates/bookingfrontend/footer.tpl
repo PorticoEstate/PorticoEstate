@@ -24,16 +24,8 @@
     <div class="row">
         <div class="col-md-6">
             <h5 class="font-weight-bold">{site_title}</h5>
-            <span><a href="#">Om tjeneste</a></span>
-            <span><a href="{manual_url}">{manual_text}</a></span>
-            <span><a href="#">Om Personvern</a></span>
-        </div>
-        <div class="col-md-6">
-            <span class="font-weight-bold">Adresse</span>
-            <span>Bergen kommune</span>
-            <span>Olav Kyrres gate 19</span>
-            <span>Postboks 8001</span>
-            <span>4068 Bergen</span>
+            <span><a href="https://www.aktiv-kommune.no/">{footer_about}</a></span>
+            <span><a href="{footer_privacy_link}">{footer_privacy_title}</a></span>
         </div>
     </div>
     </div>

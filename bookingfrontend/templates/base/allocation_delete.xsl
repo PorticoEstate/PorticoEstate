@@ -22,40 +22,31 @@
 						<input id="field_from" name="from_" type="hidden" value="{allocation/from_}" />
 						<input id="field_to" name="to_" type="hidden" value="{allocation/to_}" />
 
-						<div class="col-12 mb-5">
+					<div class="form-group">
 							<xsl:value-of select="php:function('lang', 'Delete Information')"/>&#160;
 							<xsl:value-of select="php:function('lang', 'Delete Information2')"/>
-						</div>
+					</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
 								<xsl:value-of select="allocation/building_name"/>
 							</div>
-						</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organization')" /></label>
 								<xsl:value-of select="allocation/organization_name"/>
 							</div>
-						</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'From')" /></label>
 								<xsl:value-of select="allocation/from_"/>
 							</div>
-						</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'To')" /></label>
 								<xsl:value-of select="allocation/to_"/>
 							</div>
-						</div>
 						
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label>
 								
@@ -83,9 +74,7 @@
 									</xsl:attribute>
 								</input>
 							</div>
-						</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Interval')" /></label>
 								<xsl:value-of select="../field_interval" />
@@ -116,18 +105,14 @@
 									</option>
 								</select>
 							</div>
-						</div>
 
-						<div class="col-12 mb-5">
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Message')" /></label>
 								<textarea id="field-message" class="form-control" name="message" type="text">
 									<xsl:value-of select="system_message/message"/>
 								</textarea>
 							</div>
-						</div>
 
-						<div class="col mt-5">
 							<input type="submit" class="btn btn-light mr-4">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'Delete')"/>
@@ -139,7 +124,6 @@
 								</xsl:attribute>
 								<xsl:value-of select="php:function('lang', 'Cancel')" />
 							</a>
-						</div>
 
 					</form>
 				</div>
