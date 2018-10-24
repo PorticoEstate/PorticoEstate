@@ -14,6 +14,11 @@
 	 * Description
 	 * @package sms
 	 */
+
+	$interlink = CreateObject('property.interlink');
+	$historylog_tts = CreateObject('property.historylog', 'tts');
+	$botts = CreateObject('property.botts');
+
 	$status_code = array
 		(
 		1 => 'utført',
@@ -95,6 +100,54 @@
 							$historylog_project->add('S', $project_id, $project_status_on_last_order_closed, $old_status);
 							$historylog_project->add('RM', $project_id, 'Status endret ved at siste bestilling er satt til utført');
 						}
+
+						/**
+						 * Avslutte meldinger som er relatert til bestillinger som settes til utført
+						 * @param type $project_id
+						 * @param type $workorder_id
+						 */
+						if($status_id == 1)
+						{
+							$origin_data = $interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
+							$origin_data = array_merge($origin_data, $interlink->get_relation('property', '.project', $project_id, 'origin'));
+
+							$tickets = array();
+							foreach ($origin_data as $__origin)
+							{
+								if($__origin['location'] != '.ticket')
+								{
+									continue;
+								}
+
+								foreach ($__origin['data'] as $_origin_data)
+								{
+									$tickets[] = (int)$_origin_data['id'];
+								}
+							}
+
+							$note_closed = "Meldingen er automatisk avsluttet fra bestilling som er satt til utført";
+
+							foreach ($tickets as $ticket_id)
+							{
+								$this->db->query("SELECT status, cat_id, finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$ticket_id'", __LINE__, __FILE__);
+								$this->db->next_record();
+
+								/**
+								 * Oppdatere kun åpne meldinger
+								 */
+
+								$ticket_status = $this->db->f('status');
+								$ticket_category = $this->db->f('cat_id');
+								if ($ticket_status == 'X' || $ticket_category == 34) // klargjøring (48)
+								{
+									continue;
+								}
+
+								$botts->update_status( array('status' => 'X'), $ticket_id );
+								$historylog_tts->add('C', $ticket_id, $note_closed);
+							}
+
+						}
 					}
 
 					$command_output = 'success';
@@ -104,4 +157,3 @@
 
 		$i++;
 	}
-

@@ -560,6 +560,11 @@
 						}
 					}
 
+					if($status_id == 1)
+					{
+						$this->close_ticket($project_id, $order_id);
+					}
+
 					$ok = true;
 				}
 			}
@@ -570,6 +575,59 @@
 			}
 
 			return $ok;
+		}
+
+		/**
+		 * Avslutte meldinger som er relatert til bestillinger som settes til utført
+		 * @param type $project_id
+		 * @param type $order_id
+		 */
+		function close_ticket( $project_id, $order_id )
+		{
+			$interlink = CreateObject('property.interlink');
+			$historylog = CreateObject('property.historylog', 'tts');
+			$botts = CreateObject('property.botts');
+
+			$origin_data = $interlink->get_relation('property', '.project.workorder', $order_id, 'origin');
+			$origin_data = array_merge($origin_data, $interlink->get_relation('property', '.project', $project_id, 'origin'));
+
+
+			$tickets = array();
+			foreach ($origin_data as $__origin)
+			{
+				if($__origin['location'] != '.ticket')
+				{
+					continue;
+				}
+
+				foreach ($__origin['data'] as $_origin_data)
+				{
+					$tickets[] = (int)$_origin_data['id'];
+				}
+			}
+
+			$note_closed = "Meldingen er automatisk avsluttet fra bestilling som er satt til utført";
+
+			foreach ($tickets as $ticket_id)
+			{
+				$this->db->query("SELECT status, cat_id, finnish_date, finnish_date2 FROM fm_tts_tickets WHERE id='$ticket_id'", __LINE__, __FILE__);
+				$this->db->next_record();
+
+				/**
+				 * Oppdatere kun åpne meldinger
+				 */
+
+
+				$status = $this->db->f('status');
+				$ticket_category = $this->db->f('cat_id');
+				if ($status == 'X' || $ticket_category == 34) // klargjøring (48)
+				{
+					continue;
+				}
+
+				$botts->update_status( array('status' => 'X'), $ticket_id );
+				$historylog->add('C', $ticket_id, $note_closed);
+			}
 		}
 
 		function create_ticket ($subject, $body)
