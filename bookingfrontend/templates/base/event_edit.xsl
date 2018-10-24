@@ -83,8 +83,8 @@
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
 						</span>
 					</div>
-
-							<div class="form-group">
+					<div class="row">
+							<div class="form-group col-lg-6">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'From')" /></label>
 								<xsl:value-of select="event/from_"/>
 								<br />
@@ -113,8 +113,7 @@
 								</input>
 							</div>
 
-
-							<div class="form-group">
+							<div class="form-group col-lg-6">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'To')" /></label>
 								<xsl:value-of select="event/to_"/>
 								<br />
@@ -142,6 +141,7 @@
 									</xsl:if>
 								</input>
 							</div>
+						</div>
 
 					<hr class="mt-5 mb-5"></hr>
 
@@ -224,7 +224,7 @@
 					<div class="form-group">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'description')" /></label>
 						<textarea id="field_description" class="form-control" rows="3" name="description">
-							<xsl:value-of select="application/description"/>
+							<xsl:value-of select="event/description"/>
 						</textarea>
 					</div>
 
@@ -318,7 +318,7 @@
 								</input>
 							</div>
 
-					<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
+					<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{event/customer_identifier_type}"/>
 					<div class="form-check form-check-inline">
 						<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
 						<label class="form-check-label" for="privateRadio"><xsl:value-of select="php:function('lang', 'Private event')" /></label>
@@ -327,16 +327,16 @@
 						<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
 						<label class="form-check-label" for="orgRadio"><xsl:value-of select="php:function('lang', 'organization')" /></label>
 					</div>
-					<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage"><xsl:value-of select="php:function('lang', 'choose a')" /></p>
+					<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage mt-2 mb-2"><xsl:value-of select="php:function('lang', 'choose a')" /></p>
 
-					<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+					<div class="form-group mt-2" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'organization number')" /></label>
-						<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>
+						<input name="customer_organization_number" value="{event/customer_organization_number}" type="text" class="form-control"/>
 					</div>
 
-					<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
+					<div class="form-group mt-2" data-bind="visible: typeApplicationRadio() === 'ssn'">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Ssn')" /></label>
-						<input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>
+						<input type="text" class="form-control" name="customer_ssn" value="{event/customer_ssn}"/>
 					</div>
 
 
@@ -363,7 +363,22 @@
 
 	<script type="text/javascript">
 		var initialSelection = <xsl:value-of select="event/resources_json" />;
+		var initialSelectionAudience = <xsl:value-of select="event/audiences_json" />;
+		var initialSelectionAgegroup = <xsl:value-of select="event/agegroups_json" />;
+		var building_id = <xsl:value-of select="event/building_id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
+		
+		$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
+  		$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
+		
+		EventEditModel = GenerateUIModelForResourceAudienceAndAgegroup();
+		eem = new EventEditModel();
+        ko.applyBindings(eem, document.getElementById("event-edit-page-content"));
+		
+		AddBookableResourceData(building_id, initialSelection, eem.bookableresource);
+		AddAudiencesAndAgegroupData(building_id, eem.agegroup, initialSelectionAgegroup, eem.audiences, initialSelectionAudience);
+		eem.audienceSelectedValue(<xsl:value-of select="event/audience" />);
+		eem.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
 		YUI({ lang: 'nb-no' }).use(
 			'aui-timepicker',
 			function(Y) {

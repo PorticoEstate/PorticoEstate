@@ -211,3 +211,79 @@ function formatDate(date, end) {
         return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
                 ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2);
       }
+
+
+function GenerateUIModelForResourceAudienceAndAgegroup() {
+    function Model() {
+        var self = this;
+        self.bookableresource = ko.observableArray();
+        self.isResourceSelected = ko.observable(false);
+        self.audiences = ko.observableArray();
+        self.audienceSelectedValue =  ko.observable();
+        self.audienceSelected = (function(e) {        
+            $("#audienceDropdownBtn").text(e.name);
+            self.audienceSelectedValue(e.id);
+        });
+        self.agegroup = ko.observableArray();
+        self.typeApplicationRadio = ko.observable();
+        self.typeApplicationSelected = ko.computed(function() {
+            if(self.typeApplicationRadio() != "undefined" && self.typeApplicationRadio() != null) {
+                return true;
+            }
+            return false;        
+        });
+            
+        self.typeApplicationValidationMessage = ko.observable(false);
+    }
+
+    return Model;
+}
+
+function AddBookableResourceData(building_id, initialSelection, bookableresource) {
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id: building_id, sort: "name", phpgw_return_as: "json"}, true);
+          $.getJSON(getJsonURL, function(result){
+              for(var i=0; i<result.results.length; i++) {
+                  if(result.results[i].building_id == building_id) {
+                      var tempSelected = false;
+                      if($.inArray(result.results[i].id, initialSelection) > -1) {
+                        tempSelected = true;
+                      }
+                                            
+                      bookableresource.push({id: result.results[i].id, name: result.results[i].name, selected: ko.observable(tempSelected)});
+                  }
+              }
+              return bookableresource;
+          });
+}
+
+function AddAudiencesAndAgegroupData(building_id, agegroup, initialAgegroups, audiences, initialAudience) {
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: building_id, phpgw_return_as: "json"}, true);
+      $.getJSON(getJsonURL, function(result){
+          for(var i=0; i<result.agegroups.length; i++) {
+            agegroup.push({name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name, 
+                inputCountMale: ko.observable("").extend({ number: true }),
+                inputCountFemale: ko.observable("").extend({ number: true }), 
+                malename: 'male[' + result.agegroups[i].id + ']',
+                femalename: 'female[' + result.agegroups[i].id + ']',
+                id: result.agegroups[i].id});                          
+          }
+          if(initialAgegroups != null) {
+            for(var i=0; i<initialAgegroups.length; i++) {
+                var id = initialAgegroups[i].agegroup_id;
+                var find = ko.utils.arrayFirst(agegroup(), function(current) {
+                    return current.id == id;
+                });
+                if(find) {
+                    find.inputCountMale(initialAgegroups[i].male);
+                    find.inputCountFemale(initialAgegroups[i].female);
+                }                
+            }
+          } 
+          for(var i=0; i<result.audience.length; i++) {
+            if($.inArray(result.audience[i].id, initialAudience) > -1) {
+                $("#audienceDropdownBtn").text(result.audience[i].name);
+              }
+              audiences.push({id: result.audience[i].id, name: result.audience[i].name })
+          }  
+        });
+}
