@@ -394,7 +394,7 @@
 					}
 
 					$subject = "WO ID: {$ticket['external_ticket_id']} er bestilt fra {$vendor_name}";
-					$message = "Forventet sluttdato: {$end_date}";
+					$message = "Forventet sluttdato: {$end_date}\nVårt nr er {$ticket_id}";
 
 					try
 					{
