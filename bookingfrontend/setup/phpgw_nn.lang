@@ -433,8 +433,11 @@ User	bookingfrontend	nn	Brukar
 account status	bookingfrontend	nn	konto status
 last login	bookingfrontend	nn	siste innlogging
 last password change	bookingfrontend	nn	siste passordendring
+About the service	bookingfrontend	nn	Om tjenesten
 Activities (2018)	bookingfrontend	nn	Tilrettelagt for
 application add	bookingfrontend	nn	søknad
 back	bookingfrontend	nn	tilbake
+footer privacy link	bookingfrontend	nn	Footer: Lenke til personvern
 Information about the event (edit)	bookingfrontend	nn	Informasjon om arrangementet
+Privacy statement	bookingfrontend	nn	Personvern
 update results	bookingfrontend	nn	Oppdater søkeresultat

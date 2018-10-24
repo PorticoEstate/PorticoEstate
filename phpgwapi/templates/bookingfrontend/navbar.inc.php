@@ -34,10 +34,20 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
+		$config_frontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+
 		$footer_info = phpgwapi_cache::session_get('phpgwapi', 'footer_info');
+		$footer_privacy_link = "https://www.aktiv-kommune.no/";
+		if (!empty($config_frontend['footer_privacy_link']))
+		{
+			$footer_privacy_link = $config_frontend['footer_privacy_link'];
+		}
 		$var = array
 		(
+			'footer_about'         => lang('About the service'),
 			'footer_info'	=> $footer_info, //'Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen',
+			'footer_privacy_link'  => $footer_privacy_link,
+			'footer_privacy_title' => lang('Privacy statement'),
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);
