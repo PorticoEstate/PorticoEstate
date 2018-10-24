@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $gab_insert_level;
+		var $custom;
 		var $public_functions = array
 			(
 			'read' => true,
@@ -49,16 +50,12 @@
 			'delete' => true,
 		);
 
-		function __construct( $session = false )
+		function __construct( )
 		{
 			$this->solocation = CreateObject('property.solocation');
 			$this->so = CreateObject('property.sogab');
+			$this->custom = createObject('property.custom_fields');
 			$this->gab_insert_level = $this->so->gab_insert_level;
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
 
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query = phpgw::get_var('query');
@@ -103,29 +100,6 @@
 			}
 		}
 
-		function save_sessiondata( $data )
-		{
-			if ($this->use_session)
-			{
-				$GLOBALS['phpgw']->session->appsession('session_data', 'gab', $data);
-			}
-		}
-
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'gab');
-
-			//_debug_array($data);
-
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->filter = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
-		}
-
 		function read( $data )
 		{
 			if ($allrows)
@@ -133,25 +107,21 @@
 				$this->allrows = true;
 			}
 
-			/* $gab = $this->so->read(array('start' => $this->start,'sort' => $this->sort,'order' => $this->order,'allrows'=>$this->allrows,
-			  'cat_id' => $this->cat_id,'location_code' => $location_code,
-			  'gaards_nr' => $gaards_nr,'bruksnr' => $bruksnr,'feste_nr' => $feste_nr,
-			  'seksjons_nr' => $seksjons_nr,'address' => $address,'check_payments' => $check_payments)); */
-
 			$gab = $this->so->read(array
 				(
-				'start' => $data['start'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'allrows' => $data['allrows'],
-				'cat_id' => $this->cat_id,
-				'location_code' => $data['location_code'],
-				'gaards_nr' => $data['gaards_nr'],
-				'bruksnr' => $data['bruksnr'],
-				'feste_nr' => $data['feste_nr'],
-				'seksjons_nr' => $data['seksjons_nr'],
-				'address' => $data['address'],
-				'check_payments' => $data['check_payments'])
+					'start' => $data['start'],
+					'sort' => $data['sort'],
+					'order' => $data['order'],
+					'allrows' => $data['allrows'],
+					'cat_id' => $this->cat_id,
+					'location_code' => $data['location_code'],
+					'gaards_nr' => $data['gaards_nr'],
+					'bruksnr' => $data['bruksnr'],
+					'feste_nr' => $data['feste_nr'],
+					'seksjons_nr' => $data['seksjons_nr'],
+					'address' => $data['address'],
+					'check_payments' => $data['check_payments']
+				)
 			);
 
 			/*
@@ -211,14 +181,16 @@
 
 		function read_single( $gab_id = '', $location_code = '' )
 		{
-			$gab = $this->so->read_single($gab_id, $location_code);
+			$values['attributes'] = $this->custom->find('property', '.location.gab', 0, '', 'ASC', 'attrib_sort', true, true);
+			$values = $this->so->read_single($gab_id, $location_code, $values);
+			$values = $this->custom->prepare($values, 'property', '.location.gab', $data['view']);
 
-			if ($gab['location_code'])
+			if ($values['location_code'])
 			{
-				$gab['location_data'] = $this->solocation->read_single($gab['location_code']);
+				$values['location_data'] = $this->solocation->read_single($gab['location_code']);
 			}
 
-			return $gab;
+			return $values;
 		}
 
 		function save( $values )
@@ -235,6 +207,11 @@
 				}
 
 				$values['location_code'] = implode("-", $location);
+			}
+
+			if ($values['attributes'] && is_array($values['attributes']))
+			{
+				$values['attributes'] = $this->custom->convert_attribute_save($values['attributes']);
 			}
 
 			if ($values['action'] == 'edit')

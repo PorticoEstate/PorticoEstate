@@ -1485,7 +1485,7 @@
 			$groups = $this->find_group($appname, $location, 0, '', 'ASC', 'group_sort', true);
 			if(!$skip_no_group)
 			{
-			$groups = array_merge($no_group, $groups);
+				$groups = array_merge($no_group, $groups);
 			}
 		
 			foreach ($groups as &$group)
