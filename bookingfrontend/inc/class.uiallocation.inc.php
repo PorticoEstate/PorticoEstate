@@ -115,12 +115,12 @@
 					$system_message['message'] = $system_message['message'] . "<br /><br />" . lang('To cancel allocation use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $system_message['building_id']));
 				}
 
 				$this->flash_form_errors($errors);
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $allocation['building_id']));
 
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
@@ -209,8 +209,8 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->bo->so->delete_allocation($id);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-								'id' => $allocation['building_id']));
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($allocation['from_']))));
 						}
 					}
 					else
@@ -304,7 +304,7 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $allocation['building_id']));
 						}
 					}
@@ -314,8 +314,8 @@
 
 				$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 #				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show', 'id' => $allocation['id']));
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $allocation['building_id'], 'date' => $allocation['from_']));
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($allocation['from_']))));
 				$allocation['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.show',
 						'id' => $allocation['application_id']));
 
