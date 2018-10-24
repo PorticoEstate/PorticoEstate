@@ -1262,8 +1262,19 @@
 				$important_imformation .= implode("<br/>", $important_imformation_arr);
 			}
 
+			$contract_list = $this->bocommon->get_vendor_contract($workorder['vendor_id'], $workorder['contract_id']);
+			foreach ($contract_list as $contract)
+			{
+				if($contract['selected'])
+				{
+					$contract_name = $contract['name'];
+					break;
+				}
+			}
+
 			$email_data = array
 			(
+				'contract_name' => $contract_name,
 				'formatted_gab_id' => $formatted_gab_id,
 				'org_name' => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 				'location_data_local' => $location_data,
@@ -2082,6 +2093,17 @@ HTML;
 			{
 				$data[] = array('col1' => lang('deadline for execution'), 'col2' =>"<b>{$common_data['workorder']['end_date']}</b>");
 			}
+
+			$contract_list = $this->bocommon->get_vendor_contract($common_data['workorder']['vendor_id'],$common_data['workorder']['contract_id']);
+			foreach ($contract_list as $contract)
+			{
+				if($contract['selected'])
+				{
+					$data[] = array('col1' => lang('contract'), 'col2' =>"<b>{$contract['name']}</b>");
+					break;
+				}
+			}
+
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), ''
 				, array('showHeadings' => 0, 'shaded' => 0, 'xPos' => 0,

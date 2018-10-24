@@ -3479,6 +3479,7 @@ HTML;
 				)
 			));
 
+			$solocation = createObject('property.solocation');
 
 			$delivery_address = lang('delivery address') . ':';
 			if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
@@ -3487,7 +3488,7 @@ HTML;
 			}
 			else
 			{
-				$delivery_address .= "\n" . createObject('property.solocation')->get_location_address($ticket['location_code'])."\n";
+				$delivery_address .= "\n" . $solocation->get_location_address($ticket['location_code'])."\n";
 				$location_code = $ticket['location_data']['location_code'];
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
 				foreach ($address_element as $entry)
@@ -3495,6 +3496,10 @@ HTML;
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
 			}
+
+			$district_name = $solocation->get_district_name($ticket['location_code']);
+
+			$delivery_address.="\nSone: {$district_name}";
 
 			$data = array
 				(
@@ -3832,16 +3837,19 @@ HTML;
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 //			$location = $ticket['address'];
 
-			$location = createObject('property.solocation')->get_location_address($ticket['location_code'])  . '<br/>';
+			$solocation = createObject('property.solocation');
+			$location = $solocation->get_location_address($ticket['location_code'])  . '<br>';
 
 			$address_element = $this->bo->get_address_element($ticket['location_code']);
 
 			foreach ($address_element as $address_entry)
 			{
-				$location .= " <br/>{$address_entry['text']}: {$address_entry['value']}";
+				$location .= "<br>{$address_entry['text']}: {$address_entry['value']}";
 			}
 
-	//		$location = rtrim($location, '<br/>');
+			$district_name = $solocation->get_district_name($ticket['location_code']);
+
+			$location.="<br>Sone: {$district_name}";
 
 			$order_description = $ticket['order_descr'];
 

@@ -2301,6 +2301,23 @@
 
 		}
 
+		public function get_district_name( $location_code)
+		{
+			$location_code = $this->db->db_addslashes($location_code);
+
+			$sql = "SELECT fm_district.descr"
+				. " FROM fm_locations"
+				. " {$this->join} fm_location1 ON (fm_locations.loc1 = fm_locations.loc1)"
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)"
+				. " {$this->join} fm_district ON (fm_part_of_town.district_id = fm_district.id)"
+				. " WHERE fm_locations.location_code = '{$location_code}'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$district_name = $this->db->f('descr', true);
+
+			return $district_name;
+		}
+
 		/**
 		 * Get location by location_code
 		 *
