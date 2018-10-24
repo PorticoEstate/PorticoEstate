@@ -627,6 +627,8 @@
 
 				$botts->update_status( array('status' => 'X'), $ticket_id );
 				$historylog->add('C', $ticket_id, $note_closed);
+				$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er avsluttet");
+
 			}
 		}
 
