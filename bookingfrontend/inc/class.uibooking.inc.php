@@ -406,12 +406,13 @@
 #					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2))
 #					{
 #						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
-#					}										
+#					}
+					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");										
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id'], 'date' => $_POST['from_']));
+							'id' => $booking['building_id'], 'date' => $temp_date));
 					}
 				}
 				else
@@ -522,6 +523,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
 					'active' => 1)));
