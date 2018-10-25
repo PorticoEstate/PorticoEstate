@@ -217,7 +217,15 @@ function GenerateUIModelForResourceAudienceAndAgegroup() {
     function Model() {
         var self = this;
         self.bookableresource = ko.observableArray();
-        self.isResourceSelected = ko.observable(false);
+        self.isResourceSelected = ko.computed(function() {
+            var match = ko.utils.arrayFirst(self.bookableresource(), function(item) {
+                return item.selected() === true;
+            });
+            if (match) {
+                return true;
+            }
+            return false;        
+        });
         self.audiences = ko.observableArray();
         self.audienceSelectedValue =  ko.observable();
         self.audienceSelected = (function(e) {        
