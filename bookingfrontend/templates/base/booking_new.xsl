@@ -153,24 +153,23 @@
 
 							<div class="form-group">
 								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Recurring booking')" /></label>
+								<div>
+									<input type="checkbox" class="mr-2" name="outseason" id="outseason">
+										<xsl:if test="outseason='on'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'Out season')" />
+								</div>
 
-								<input type="checkbox" class="mr-2" name="outseason" id="outseason">
-									<xsl:if test="outseason='on'">
-										<xsl:attribute name="checked">checked</xsl:attribute>
-									</xsl:if>
-								</input>
-								<xsl:value-of select="php:function('lang', 'Out season')" />
-							</div>
-
-							<div class="form-group">
-								
-								<input type="checkbox" class="mr-2" name="recurring" id="recurring">
-									<xsl:if test="recurring='on'">
-										<xsl:attribute name="checked">checked</xsl:attribute>
-									</xsl:if>
-								</input>
-								<xsl:value-of select="php:function('lang', 'Repeat until')" />
-								
+								<div>
+									<input type="checkbox" class="mr-2" name="recurring" id="recurring">
+										<xsl:if test="recurring='on'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'Repeat until')" />
+								</div>
 
 								<input class="form-control" id="field_repeat_until" name="repeat_until" type="text">
 									<xsl:attribute name="value">
