@@ -75,6 +75,7 @@
 
 	</div>
 </div>
+<div class="push"></div>
 
 	<script type="text/javascript">
 		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
