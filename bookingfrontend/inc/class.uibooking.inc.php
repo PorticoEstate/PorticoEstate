@@ -189,7 +189,7 @@
 				{
 					$receipt = $this->bo->add($booking);
 					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $booking['building_id']));
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
 				{
@@ -239,7 +239,7 @@
 					if ($step == 3)
 					{
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id']));
+							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 					}
 				}
 			}

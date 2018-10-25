@@ -36,6 +36,7 @@
 
 		var $gab_insert_level;
 		var $payment_date = array();
+		var $custom;
 
 		function __construct()
 		{
@@ -46,6 +47,7 @@
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
 			$this->like = & $this->db->like;
+			$this->custom = createObject('property.custom_fields');
 
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
@@ -61,8 +63,8 @@
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
 				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
-				$gaards_nr = isset($data['gaards_nr']) ? (int)$data['gaards_nr'] : '';
+				$location_code = isset($data['location_code']) ? $data['location_code'] : '0000';
+				$gaards_nr = isset($data['gaards_nr']) ? $data['gaards_nr'] : '';
 				$bruksnr = isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
 				$feste_nr = isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
 				$seksjons_nr = isset($data['seksjons_nr']) ? (int)$data['seksjons_nr'] : '';
@@ -160,20 +162,20 @@
 				$j = $this->gab_insert_level;
 			}
 
-			$joinmethod = "$this->join fm_location" . ($j);
+			$joinmethod = "{$this->left_join} fm_location{$j}";
 			$on = 'ON';
 			for ($i = ($j); $i > 0; $i--)
 			{
-				$joinmethod .= " $on (fm_gab_location.loc" . ($i) . " = fm_location" . ($j) . ".loc" . ($i) . ")";
+				$joinmethod .= " {$on} (fm_gab_location.loc{$i} = fm_location{$j}.loc{$i})";
 				$on = 'AND';
 			}
 
 
 			if ($check_payments)
 			{
-				//				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
-				//				$sql = "SELECT DISTINCT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
-				//				$sql = "SELECT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
+//				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
+//				$sql = "SELECT DISTINCT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
+//				$sql = "SELECT gab_id, fm_gab_location.loc1 as location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.loc1,address,owner ";
 
 				$spvend_code = 9901;
 				$spbudact_code = '11954111';
@@ -416,26 +418,34 @@
 			return $gab_list;
 		}
 
-		function read_single( $gab_id = '', $location_code = '' )
+		function read_single( $gab_id = '', $location_code = '0000', $values = array() )
 		{
-			$sql = "SELECT * from fm_gab_location where gab_id='$gab_id' and location_code='$location_code' ";
+			$sql = "SELECT * FROM fm_gab_location WHERE gab_id='{$gab_id}' and location_code='{$location_code}' ";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			if ($this->db->next_record())
-			{
-				$gab['location_code'] = $location_code;
-				$gab['remark'] = $this->db->f('remark');
-				$gab['owner'] = $this->db->f('owner');
-			}
+			$this->db->next_record();
+			
+			$gab['location_code'] = $location_code;
+			$gab['remark'] = $this->db->f('remark');
+			$gab['owner'] = $this->db->f('owner');
 
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				$gab['attributes'] = $values['attributes'];
+				foreach ($gab['attributes'] as &$attr)
+				{
+					$attr['value'] = $this->db->f($attr['column_name'], true);
+				}
+			}
+		
 			//_debug_array($gab);
 			return $gab;
 		}
 
-		function exist_gab_location( $gab_id = '', $location_code = '' )
+		function exist_gab_location( $gab_id = '', $location_code = '0000' )
 		{
-			$this->db2->query("SELECT count(*) as cnt FROM fm_gab_location where gab_id='$gab_id' and location_code='$location_code'");
+			$this->db2->query("SELECT count(*) as cnt FROM fm_gab_location WHERE gab_id='$gab_id' AND location_code='$location_code'");
 
 			$this->db2->next_record();
 
@@ -512,7 +522,7 @@
 
 			if ($gab_insert)
 			{
-				$receipt = $this->insert($gab_insert);
+				$receipt = $this->insert($gab_insert, $gab['attributes']);
 			}
 			else
 			{
@@ -521,7 +531,7 @@
 
 			if ($gab_update)
 			{
-				$receipt = $this->update($gab_update, $receipt);
+				$receipt = $this->update($gab_update, $gab['attributes'], $receipt);
 			}
 
 			$receipt['gab_id'] = $gab_id;
@@ -529,31 +539,44 @@
 			return $receipt;
 		}
 
-		function insert( $gab_insert )
+		function insert( $gab_insert, $values_attribute = array() )
 		{
 			$receipt['message'][] = array('msg' => lang('gab %1 has been added', $gab_insert[0]['gab_id']));
 
-			for ($i = 0; $i < count($gab_insert); $i++)
-			{
-				$location = explode('-', $gab_insert[$i]['location_code']);
+			$value_set = array();
 
-                                if (is_array($location))
-                                {
-                                    foreach($location as $input_name => $value)
+			$data_attribute = $this->custom->prepare_for_db('fm_gab_location', $values_attribute);
+			if (isset($data_attribute['value_set']))
+			{
+				foreach ($data_attribute['value_set'] as $input_name => $value)
 				{
-					if ($value)
+					if (isset($value) && $value)
 					{
-						$col[] = 'loc' . ($input_name + 1);
-						$val[] = $value;
+						$value_set[$input_name] = $value;
 					}
 				}
-                                }
+			}
+			unset($value);
 
-				if ($col)
+			for ($i = 0; $i < count($gab_insert); $i++)
+			{
+				$_value_set = $value_set;
+				$location = explode('-', $gab_insert[$i]['location_code']);
+
+				if (is_array($location))
 				{
-					$cols = "," . implode(",", $col);
-					$vals = ",'" . implode("','", $val) . "'";
+					foreach($location as $input_name => $value)
+					{
+						if ($value)
+						{
+							$key = 'loc' . ($input_name + 1);
+							$_value_set[$key] = $value;
+						}
+					}
 				}
+
+				unset($value);
+
 
 				if ($gab_insert[$i]['street_name'])
 				{
@@ -567,23 +590,22 @@
 					$address = $this->db->db_addslashes($gab_insert[$i]['location_name']);
 				}
 
-				$this->db->query("INSERT INTO fm_gab_location (location_code,gab_id,remark,owner,entry_date,user_id,address $cols) "
-					. "VALUES ('"
-					. $gab_insert[$i]['location_code'] . "','"
-					. $gab_insert[$i]['gab_id'] . "','"
-					. $gab_insert[$i]['remark'] . "','"
-					. $gab_insert[$i]['owner'] . "','"
-					. time() . "','"
-					. $this->account . "','"
-					. $address . "' $vals )", __LINE__, __FILE__);
+				$_value_set['location_code']= $gab_insert[$i]['location_code'];
+				$_value_set['gab_id']= $gab_insert[$i]['gab_id'];
+				$_value_set['remark']=$gab_insert[$i]['remark'];
+				$_value_set['owner']=$gab_insert[$i]['owner'];
+				$_value_set['entry_date']=time();
+				$_value_set['user_id']= $this->account;
+				$_value_set['address']=$address;
+
+				$cols = implode(',', array_keys($_value_set));
+				$values = $this->db->validate_insert(array_values($_value_set));
+
+				$this->db->query("INSERT INTO fm_gab_location ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 				$receipt['message'][] = array('msg' => lang('at location %1', $gab_insert[$i]['location_code']));
 
 				unset($location);
-				unset($col);
-				unset($val);
-				unset($cols);
-				unset($vals);
 				unset($address);
 			}
 
@@ -591,19 +613,36 @@
 			return $receipt;
 		}
 
-		function update( $gab_update, $receipt )
+		function update( $gab_update, $values_attribute = array(), $receipt )
 		{
+			$value_set = array();
+
+			$data_attribute = $this->custom->prepare_for_db('fm_gab_location', $values_attribute);
+			if (isset($data_attribute['value_set']))
+			{
+				foreach ($data_attribute['value_set'] as $input_name => $value)
+				{
+					if (isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+			}
+			unset($value);
 			$receipt['message'][] = array('msg' => lang('gab %1 has been updated', $gab_update[0]['gab_id']));
 
 			for ($i = 0; $i < count($gab_update); $i++)
 			{
-				$this->db->query("UPDATE fm_gab_location set
-					remark			='" . $gab_update[$i]['remark'] . "',
-					owner			='" . $gab_update[$i]['owner'] . "',
-					entry_date		='" . time() . "',
-					user_id			='" . $this->account
-					. "' WHERE location_code = '" . $gab_update[$i]['location_code'] . "' AND gab_id= '" . $gab_update[$i]['gab_id'] . "'", __LINE__, __FILE__);
+				$_value_set = $value_set;
+				$_value_set['remark']		= $gab_update[$i]['remark'];
+				$_value_set['owner']		= $gab_update[$i]['owner'];
+				$_value_set['entry_date']	= time();
+				$_value_set['user_id']		= $this->account;
 
+				$value_update = $this->db->validate_update($_value_set);
+
+				$this->db->query("update fm_gab_location SET $value_update"
+					. " WHERE location_code = '{$gab_update[$i]['location_code']}' AND gab_id ='{$gab_update[$i]['gab_id']}'", __LINE__, __FILE__);
 				$receipt['message'][] = array('msg' => lang('at location %1', $gab_update[$i]['location_code']));
 			}
 
@@ -612,6 +651,20 @@
 
 		function edit( $gab )
 		{
+			$data_attribute = $this->custom->prepare_for_db('fm_gab_location', (array)$gab['attributes']);
+			$value_set = array();
+			if (isset($data_attribute['value_set']))
+			{
+				foreach ($data_attribute['value_set'] as $input_name => $value)
+				{
+					if (isset($value) && $value)
+					{
+						$value_set[$input_name] = $value;
+					}
+				}
+			}
+			unset($value);
+
 			$location = explode('-', $gab['location_code']);
 
 			//_debug_array($gab);
@@ -624,12 +677,15 @@
 			if (count($location) == $this->gab_insert_level)
 			{
 
-				$this->db->query("UPDATE fm_gab_location set
-					remark			='" . $gab['remark'] . "',
-					owner			='" . $gab['owner'] . "',
-					entry_date		='" . time() . "',
-					user_id			='" . $this->account
-					. "' WHERE location_code= '" . $gab['location_code'] . "' and gab_id= '" . $gab['gab_id'] . "'", __LINE__, __FILE__);
+				$value_set['remark']	= $gab['remark'];
+				$value_set['owner']		= $gab['owner'];
+				$value_set['entry_date']= time();
+				$value_set['user_id']	= $this->account;
+
+				$value_update = $this->db->validate_update($value_set);
+
+				$this->db->query("UPDATE fm_gab_location SET $value_update"
+					. " WHERE location_code = '{$gab['location_code']}' AND gab_id ='{$gab['gab_id']}'", __LINE__, __FILE__);
 
 				$receipt['message'][] = array('msg' => lang('gab %1 has been edited', "'" . $gab['gab_id'] . "'"));
 				$receipt['message'][] = array('msg' => lang('at location %1', $gab['location_code']));
@@ -642,7 +698,7 @@
 			return $receipt;
 		}
 
-		function delete( $gab_id = '', $location_code = '' )
+		function delete( $gab_id = '', $location_code = '0000' )
 		{
 			$this->db->query("DELETE FROM fm_gab_location WHERE gab_id='$gab_id' and location_code='$location_code'", __LINE__, __FILE__);
 		}
