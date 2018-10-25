@@ -262,6 +262,7 @@
 					'id' => $booking['building_id']));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
+			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));

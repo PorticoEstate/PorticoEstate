@@ -273,8 +273,21 @@
     <div class="push"></div>
 
 	<script type="text/javascript">
-		var initialSelection = <xsl:value-of select="booking/resources_json" />;
+		var initialSelection = <xsl:value-of select="booking/resources_json" />;		
 		var initialAudience = <xsl:value-of select="booking/audience_json" />;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+		var initialSelectionAgegroup = <xsl:value-of select="booking/agegroups_json" />;
+		var building_id = <xsl:value-of select="booking/building_id"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
+		
+		$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
+  		$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
+		
+		BookingNewModel = GenerateUIModelForResourceAudienceAndAgegroup();
+		bnm = new BookingNewModel();
+        ko.applyBindings(bnm, document.getElementById("booking-new-page-content"));
+		
+		AddBookableResourceData(building_id, initialSelection, bnm.bookableresource);
+		AddAudiencesAndAgegroupData(building_id, bnm.agegroup, initialSelectionAgegroup, bnm.audiences, initialAudience);
+		bnm.audienceSelectedValue(<xsl:value-of select="booking/audience" />);
 	</script>
 </xsl:template>
