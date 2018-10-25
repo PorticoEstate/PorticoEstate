@@ -47,6 +47,7 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
+		var $custom;
 		var $public_functions = array
 			(
 			'index' => true,
@@ -72,6 +73,7 @@
 			$this->bo = CreateObject('property.bogab', true);
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->bolocation = CreateObject('property.bolocation');
+			$this->custom = createObject('property.custom_fields');
 
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->acl = & $GLOBALS['phpgw']->acl;
@@ -95,7 +97,8 @@
 		{
 			$gab_id = phpgw::get_var('gab_id');
 			$location_code = phpgw::get_var('location_code');
-			$values = phpgw::get_var('values');
+			$values = (array)phpgw::get_var('values');
+			$values_attribute = (array)phpgw::get_var('values_attribute');
 
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 			$values = $this->bocommon->collect_locationdata($values, $insert_record);
@@ -106,31 +109,51 @@
 
 			if (!$values['location_code'] && !$values['location'])
 			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
+				$values['location_code'] = '0000-00';
+//				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
 			}
 
 			if ((count($values['location']) < $this->gab_insert_level) && !$values['propagate'] && !$values['location_code'])
 			{
-				$this->receipt['error'][] = array('msg' => lang('Either select propagate - or choose location level %1 !', $this->gab_insert_level));
+				$values['location_code'] = '0000-00';
+			//	$this->receipt['error'][] = array('msg' => lang('Either select propagate - or choose location level %1 !', $this->gab_insert_level));
+			}
+
+			if (isset($values_attribute) && is_array($values_attribute))
+			{
+				foreach ($values_attribute as &$attribute)
+				{
+					if ($attribute['nullable'] != 1 && (!$attribute['value'] && empty($values['extra'][$attribute['name']])))
+					{
+						$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
+					}
+
+					if (isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'I' && !ctype_digit($attribute['value']))
+					{
+						$receipt['error'][] = array('msg' => lang('Please enter integer for attribute %1', $attribute['input_text']));
+					}
+
+					if (isset($attribute['value']) && $attribute['value'] && $attribute['datatype'] == 'V' && strlen($attribute['value']) > $attribute['precision'])
+					{
+						$receipt['error'][] = array('msg' => lang('Max length for attribute %1 is: %2', "\"{$attribute['input_text']}\"", $attribute['precision']));
+						$attribute['value'] = substr($attribute['value'], 0, $attribute['precision']);
+					}
+				}
+			}
+
+			$values['attributes'] = $values_attribute;
+
+			foreach ($data as $key => $original_value)
+			{
+				if ((!isset($values[$key]) || !$values[$key]) && $data[$key])
+				{
+					$values[$key] = $original_value;
+				}
 			}
 
 			return $values;
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'allrows' => $this->allrows
-			);
-			$this->bo->save_sessiondata($data);
-		}
 
 		function download()
 		{
@@ -389,7 +412,7 @@ JS;
 		{
 			$address = phpgw::get_var('address');
 			$location_code = phpgw::get_var('location_code');
-			$gaards_nr = phpgw::get_var('gaards_nr', 'int');
+			$gaards_nr = phpgw::get_var('gaards_nr', 'string');
 			$bruksnr = phpgw::get_var('bruksnr', 'int');
 			$feste_nr = phpgw::get_var('feste_nr', 'int');
 			$seksjons_nr = phpgw::get_var('seksjons_nr', 'int');
@@ -744,8 +767,6 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl(array('gab', 'datatable_inline'), array('list_gab_detail' => $data));
-
-			$this->save_sessiondata();
 		}
 
 		public function query_detail()
@@ -802,9 +823,15 @@ JS;
 				$location_code = $values['location_code'];
 			}
 
-			if ($gab_id && !$new)
+//			if ($gab_id && !$new)
+			if ($gab_id)
 			{
 				$values = $this->bo->read_single($gab_id, $location_code);
+			}
+
+			if(empty($values['attributes']))
+			{
+				$values['attributes'] = $this->bo->custom->find('property', '.location.gab', 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			if ($values['location_code'])
@@ -839,7 +866,7 @@ JS;
 				'no_link' => false, // disable lookup links for location type less than type_id
 				'tenant' => false,
 				'lookup_type' => $lookup_type,
-				'required_level' => 2
+				'required_level' => 0
 			));
 
 			$link_data = array
@@ -876,8 +903,47 @@ JS;
 				$msgbox_data = '';
 			}
 
+			$attributes_groups = $this->custom->get_attribute_groups('property', '.location.gab',  $values['attributes']);
+//				_debug_array($attributes_groups);
+			$attributes_general = array();
+			$i = -1;
+			$attributes = array();
+
+			$active_tab = phpgw::get_var('active_tab');
+
+			foreach ($attributes_groups as $_key => $group)
+			{
+				if (!isset($group['attributes']))
+				{
+					$group['attributes'] = array(array());
+				}
+				if (!$group['level'])
+				{
+					$_tab_name = str_replace(array(' ', '/', '?', '.', '*', '(', ')', '[', ']'), '_', $group['name']);
+					$tabs[$_tab_name] = array('label' => $group['name'], 'link' => "#{$_tab_name}",
+						'disable' => 0);
+					$group['link'] = $_tab_name;
+					$attributes[] = $group;
+					$i ++;
+				}
+				else
+				{
+					$attributes[$i]['attributes'][] = array
+						(
+						'datatype' => 'section',
+						'descr' => '<H' . ($group['level'] + 1) . "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
+						'level' => $group['level'],
+					);
+					$attributes[$i]['attributes'] = array_merge($attributes[$i]['attributes'], $group['attributes']);
+				}
+				unset($_tab_name);
+
+			}
+			unset($attributes_groups);
+
 			$data = array
-				(
+			(
+				'attributes_group' => $attributes,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_owner' => $values['owner'],
 				'lang_owner' => lang('owner'),
@@ -913,8 +979,13 @@ JS;
 			$appname = lang('gab');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$attribute_template = 'attributes_form';
+			if($mode == 'view')
+			{
+				$attribute_template = 'attributes_view';
+			}
 
-			self::render_template_xsl(array('gab'), array('edit' => $data));
+			self::render_template_xsl(array('gab', $attribute_template), array('edit' => $data));
 		}
 
 		public function save()
@@ -923,10 +994,15 @@ JS;
 			{
 				return $this->edit();
 			}
+
+			$gab_id = phpgw::get_var('gab_id');
+			$location_code = phpgw::get_var('location_code');
+
 			/*
 			 * Overrides with incoming data from POST
 			 */
-			$data = $this->_populate();
+			$data = $this->bo->read_single($gab_id, $location_code);
+			$data = $this->_populate($data);
 
 			if ($this->receipt['error'])
 			{
@@ -937,8 +1013,8 @@ JS;
 				try
 				{
 					$receipt = $this->bo->save($data);
-					$location_code = $values['location_code'] = $receipt['location_code'];
-					$gab_id = $values['gab_id'] = $receipt['gab_id'];
+					$location_code = $data['location_code'] = $receipt['location_code'];
+					$gab_id = $data['gab_id'] = $receipt['gab_id'];
 					$this->receipt = $receipt;
 				}
 				catch (Exception $e)
@@ -957,7 +1033,7 @@ JS;
 						'from' => phpgw::get_var('from')));
 				}
 
-				$this->edit($values);
+				$this->edit($data);
 				return;
 			}
 		}
@@ -1012,7 +1088,6 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function view()
