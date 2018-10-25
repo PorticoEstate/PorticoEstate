@@ -159,7 +159,7 @@
 		{
 			$address = phpgw::get_var('address');
 			$location_code = phpgw::get_var('location_code');
-			$gaards_nr = phpgw::get_var('gaards_nr', 'int');
+			$gaards_nr = phpgw::get_var('gaards_nr', 'string');
 			$bruksnr = phpgw::get_var('bruksnr', 'int');
 			$feste_nr = phpgw::get_var('feste_nr', 'int');
 			$seksjons_nr = phpgw::get_var('seksjons_nr', 'int');
@@ -175,7 +175,7 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'allrows' => true,
-				'location_code' => $location_code,
+				'location_code' => $location_code ? $location_code : $search['value'],
 				'gaards_nr' => $gaards_nr,
 				'bruksnr' => $bruksnr,
 				'feste_nr' => $feste_nr,
@@ -190,32 +190,66 @@
 			}
 
 			$gab_list = $this->bo->read($params);
+			$uicols = $this->get_uicols();
+			$content = array();
 
-			foreach($gab_list as $key => $gab)
+			if (isset($gab_list) && is_array($gab_list))
 			{
-				$value_gaards_nr = substr($gab['gab_id'], 4, 5);
-				$value_bruks_nr = substr($gab['gab_id'], 9, 4);
-				$value_feste_nr = substr($gab['gab_id'], 13, 4);
-				$value_seksjons_nr = substr($gab['gab_id'], 17, 3);
+				$j = 0;
+				foreach ($gab_list as $gab)
+				{
+					for ($i = 0; $i < count($uicols['name']); $i++)
+					{
+						if($uicols['input_type'][$i] == 'hidden')
+						{
+							continue;
+						}
 
-				$content[] = array
-					(
-					'owner' => lang($gab['owner']),
-					'hits' => $gab['hits'],
-					'address' => $gab['address'],
-					'gaards_nr' => $value_gaards_nr,
-					'bruks_nr' => $value_bruks_nr,
-					'feste_nr' => $value_feste_nr,
-					'seksjons_nr' => $value_seksjons_nr,
-					'location_code' => $gab['location_code'],
-				);
+						if ($uicols['name'][$i] == 'gaards_nr')
+						{
+							$value_gaards_nr = substr($gab['gab_id'], 4, 5);
+							$value = $value_gaards_nr;
+						}
+						else if ($uicols['name'][$i] == 'bruksnr')
+						{
+							$value_bruks_nr = substr($gab['gab_id'], 9, 4);
+							$value = $value_bruks_nr;
+						}
+						else if ($uicols['name'][$i] == 'feste_nr')
+						{
+							$value_feste_nr = substr($gab['gab_id'], 13, 4);
+							$value = $value_feste_nr;
+						}
+						else if ($uicols['name'][$i] == 'seksjons_nr')
+						{
+							$value_seksjons_nr = substr($gab['gab_id'], 17, 3);
+							$value = $value_seksjons_nr;
+						}
+						else if ($uicols['name'][$i] == 'owner')
+						{
+							$value = $lang_yes_no[$gab[$uicols['name'][$i]]];
+						}
+						else
+						{
+							$value = isset($gab[$uicols['name'][$i]]) ? $gab[$uicols['name'][$i]] : '';
+						}
+
+						$content[$j][$uicols['name'][$i]] = $value;
+					}
+
+					$j++;
+				}
 			}
 
-			//_debug_array($content);
-			$table_header['name'] = array('owner', 'hits', 'address', 'gaards_nr', 'bruks_nr',
-				'feste_nr', 'seksjons_nr', 'location_code');
-			$table_header['descr'] = array(lang('owner'), lang('hits'), lang('address'),
-				'gaards_nr', 'bruks_nr', 'feste_nr', 'seksjons_nr', 'location_code');
+			$table_header = array();
+			for ($i = 0; $i < count($uicols['name']); $i++)
+			{
+				if($uicols['input_type'][$i] != 'hidden')
+				{
+					$table_header['name'][] = $uicols['name'][$i];
+					$table_header['descr'][] = $uicols['descr'][$i];
+				}
+			}
 
 			$this->bocommon->download($content, $table_header['name'], $table_header['descr'], array());
 		}
@@ -269,18 +303,7 @@
 				)
 			);
 
-			$uicols = array(
-				'input_type' => array('hidden', 'text', 'text', 'text', 'text', 'hidden', 'text',
-					'text', 'text', 'link', 'link'),
-				'name' => array('gab_id', 'gaards_nr', 'bruksnr', 'feste_nr', 'seksjons_nr',
-					'hits', 'owner', 'location_code', 'address', 'map', 'gab'),
-				'formatter' => array('', '', '', '', '', '', '', '', '', 'linktToMap', 'linktToGab'),
-				'sortable' => array('', true, true, true, true, '', '', true, true, '', ''),
-				'descr' => array('dummy', lang('Gaards nr'), lang('Bruks nr'), lang('Feste nr'),
-					lang('Seksjons nr'), lang('hits'), lang('Owner'), lang('Location'), lang('Address'),
-					lang('Map'), lang('Gab')),
-				'className' => array('', '', '', '', '', '', '', 'center', '', 'center', 'center')
-			);
+			$uicols = $this->get_uicols();
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -408,6 +431,40 @@ JS;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+
+		/**
+		 *
+		 * @return array uicols
+		 */
+		private function get_uicols( )
+		{
+			$uicols = array(
+				'input_type' => array('hidden', 'text', 'text', 'text', 'text',  'text',
+					'text', 'text', 'link', 'link'),
+				'name' => array('gab_id', 'gaards_nr', 'bruksnr', 'feste_nr', 'seksjons_nr',
+					'owner', 'location_code', 'address', 'map', 'gab'),
+				'formatter' => array('', '', '', '', '', '', '', '', 'linktToMap', 'linktToGab'),
+				'sortable' => array('', true, true, true, true, '', true, true, '', ''),
+				'descr' => array('dummy', lang('Gaards nr'), lang('Bruks nr'), lang('Feste nr'),
+					lang('Seksjons nr'), lang('Owner'), lang('Location'), lang('Address'),
+					lang('Map'), lang('Gab')),
+				'className' => array('', '', '', '', '', '', 'center', '', 'center', 'center')
+			);
+
+			$custom_fields = $this->bo->custom->find('property', '.location.gab', 0, '', 'ASC', 'attrib_sort', true, true);
+			foreach ($custom_fields as $custom_field)
+			{
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = $custom_field['column_name'];
+				$uicols['formatter'][] = $custom_field['formatter'];
+				$uicols['sortable'][] = false;
+				$uicols['descr'][] = $custom_field['input_text'];
+				$uicols['className'][] = '';
+			}
+
+			return $uicols;
+		}
+
 		public function query()
 		{
 			$address = phpgw::get_var('address');
@@ -458,17 +515,7 @@ JS;
 				$text_gab = lang('GAB');
 			}
 
-			$uicols = array(
-				'input_type' => array('hidden', 'text', 'text', 'text', 'text', 'hidden', 'text',
-					'text', 'text', 'link', 'link'),
-				'name' => array('gab_id', 'gaards_nr', 'bruksnr', 'feste_nr', 'seksjons_nr',
-					'hits', 'owner', 'location_code', 'address', 'map', 'gab'),
-				'formatter' => array('', '', '', '', '', '', '', '', '', '', ''),
-				'descr' => array('dummy', lang('Gaards nr'), lang('Bruks nr'), lang('Feste nr'),
-					lang('Seksjons nr'), lang('hits'), lang('Owner'), lang('Location'), lang('Address'),
-					lang('Map'), lang('Gab')),
-				'className' => array('', '', '', '', '', '', '', '', '', '', '')
-			);
+			$uicols = $this->get_uicols();
 
 			$lang_yes_no = array(
 				'yes' => lang('yes'),
@@ -591,7 +638,7 @@ JS;
 			$top_toolbar = array
 				(
 				array
-					(
+				(
 					'type' => 'button',
 					'id' => 'btn_add',
 					'value' => lang('Add'),
@@ -604,7 +651,7 @@ JS;
 					))
 				),
 				array
-					(
+				(
 					'type' => 'button',
 					'id' => 'btn_cancel',
 					'value' => lang('Cancel'),
