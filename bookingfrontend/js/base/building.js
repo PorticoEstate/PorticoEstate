@@ -115,8 +115,8 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
-                        }
-                        eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
+						}
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -142,7 +142,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -168,7 +168,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             color = "#898989";
                         }
 
-                        eventsArray.push({ id: result.ResultSet.Result[k].Tue.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -194,7 +194,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             color = "#898989";
                         }
 
-                        eventsArray.push({ id: result.ResultSet.Result[k].Wed.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -220,7 +220,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             color = "#898989";
                         }
 
-                        eventsArray.push({ id: result.ResultSet.Result[k].Thu.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -246,7 +246,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             color = "#898989";
                         }
 
-                        eventsArray.push({ id: result.ResultSet.Result[k].Fri.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
@@ -272,7 +272,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             color = "#898989";
                         }
 
-                        eventsArray.push({ id: result.ResultSet.Result[k].Sat.id + result.ResultSet.Result[k].resource,
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, i, k].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: color,
