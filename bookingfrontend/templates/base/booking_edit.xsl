@@ -102,7 +102,7 @@
 							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
 						</span>
 						<div data-bind="foreach: bookableresource">
-							<span class="selectedItems mr-2" data-bind='text: selected() ? name : ""'></span>
+							<span class="selectedItems mr-2" data-bind='text: selected() ? name : "", visible: selected()'></span>
 						</div>
 						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
@@ -254,7 +254,7 @@
 						<xsl:value-of select="php:function('lang', 'Go back')"/>
 					</a>
 
-
+	
 			</form>   
 		</div>
 
