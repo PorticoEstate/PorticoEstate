@@ -28,8 +28,8 @@ $(document).ready(function ()
 	$(".calendar-tool").removeClass("invisible");
 
     $(document).on('change', '.choosenResource', function (e) {
+		console.log("test");
         for(var i=0; i<resourceIds.length; i++) {
-
             if($("#"+e.target.id).text() == resourceIds[i].name) {
                 resourceIds[i].visible = e.target.checked;
             }
@@ -93,7 +93,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     var m = 0;
-    
+    var colors = { "allocation": "#2875c2", "booking": "#123456", "event": "#898989"}
     for(var i=0; i<resourceIds.length; i++) {
 	    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
         
@@ -106,21 +106,16 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     color = "";
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
-                    {
-                        if(result.ResultSet.Result[k].Sun.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Sun.type == "event") {
-                            color = "#898989";
-                        }
+                    {                       
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
                         eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type].join(""),
-                            name: result.ResultSet.Result[k].resource,
+							name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Sun.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -133,11 +128,6 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
                     {
                         
-                        if(result.ResultSet.Result[k].Mon.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Mon.type == "event") {
-                            color = "#898989";
-                        }
                         var event_infourl = result.ResultSet.Result[k].Mon.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
@@ -145,8 +135,8 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Mon.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Mon.description,
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
@@ -162,17 +152,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        if(result.ResultSet.Result[k].Tue.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Tue.type == "event") {
-                            color = "#898989";
-                        }
 
                         eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Tue.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Tue.description,
                             startDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString()),
@@ -188,17 +173,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        if(result.ResultSet.Result[k].Wed.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Wed.type == "event") {
-                            color = "#898989";
-                        }
 
                         eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Wed.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Wed.description,
                             startDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString()),
@@ -214,17 +194,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        if(result.ResultSet.Result[k].Thu.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Thu.type == "event") {
-                            color = "#898989";
-                        }
 
                         eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Thu.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Thu.description,
                             startDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString()),
@@ -240,17 +215,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        if(result.ResultSet.Result[k].Fri.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Fri.type == "event") {
-                            color = "#898989";
-                        }
 
                         eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Fri.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Fri.description,
                             startDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString()),
@@ -266,17 +236,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-                        if(result.ResultSet.Result[k].Sat.type == "allocation") {
-                            color = "#2875c2";
-                        } else if(result.ResultSet.Result[k].Sat.type == "event") {
-                            color = "#898989";
-                        }
 
                         eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
-                            color: color,
-                            content: "<span data-url='"+event_infourl+"' class='event-id' ></span>",
+                            color: colors[result.ResultSet.Result[k].Sat.type],
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"' ></span>",
                             description: result.ResultSet.Result[k].Sat.description,
                             startDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString()),
@@ -293,9 +258,11 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     m++;
                     if (m == resourceIds.length) {
                         events = eventsArray;
-                        events.sort(compare);
-                        GenerateCalendarForEvents(date);    
-                        
+						events.sort(compare);
+						setTimeout(function() {
+							GenerateCalendarForEvents(date);
+							$(".overlay").hide();
+						},1000);                       
                     }
                 });
     }    
@@ -365,11 +332,11 @@ function PopulateBookableResources(baseURL, urlParams) {
     });
 }
 
-function EventsOptionsChanged(building, checkValue) {
+function EventsOptionsChanged(resource, checkValue) {
     
     $(".scheduler-event").each(function (index) {
         //console.log(index + ": " + $(this).text());
-        if ($(this).find(".event-resource").attr("value") == building) {            
+        if ($(this).find(".event-id").attr("value") == resource) {            
             if (checkValue && checkValue != undefined) {                
                 $(this).removeClass("scheduler-event-hidden");
             } else if(!checkValue && checkValue != undefined) {

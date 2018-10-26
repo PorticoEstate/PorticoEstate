@@ -87,8 +87,8 @@
 						</span>
                         <div data-bind="foreach: date">
                             <div class="d-block">
-                                <input name="from_[]" data-bind="value: from_"/>
-                                <input name="to_[]" data-bind="value: to_"/>                              
+                                <input name="from_[]" hidden="hidden" data-bind="value: from_"/>
+                                <input name="to_[]" hidden="hidden" data-bind="value: to_"/>                              
                                 <span class="selectedItems" data-bind='text: formatedPeriode'></span>
                                 <butoon class="ml-2" data-bind="click: $parent.removeDate"><i class="fas fa-minus-circle"></i></butoon>
                             </div>

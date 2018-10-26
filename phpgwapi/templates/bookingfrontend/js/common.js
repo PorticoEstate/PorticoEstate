@@ -295,3 +295,10 @@ function AddAudiencesAndAgegroupData(building_id, agegroup, initialAgegroups, au
           }  
         });
 }
+
+function RemoveCharacterFromURL(url, character) {
+    while(url.indexOf(character) !== -1) {
+        url = url.replace(character,'');
+    }
+    return url;
+}

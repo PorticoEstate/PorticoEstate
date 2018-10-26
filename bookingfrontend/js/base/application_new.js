@@ -193,7 +193,7 @@ $(".navbar-search").removeClass("d-none");
                         checked = true;
                       }
                   }                  
-                  am.termAcceptDocs.push({docName: result.data[i].name, itemLink: result.data[i].link, checkedStatus: ko.observable(checked), docId: result.data[i].id.replace( /^\D+/g, '') });
+                  am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace( /^\D+/g, '') });
               }
           });
           

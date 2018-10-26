@@ -984,7 +984,8 @@ ORGANIZATION / DELEGATE PAGE STYLE
 #allocation-delete-preview-page-content label, .span-label,
 #booking-delete-preview-page-content  label, .span-label,
 #booking-edit-preview-page-content label, .span-label,
-#booking-new-preview-page-content label, .span-label{
+#booking-new-preview-page-content label, .span-label,
+#report-numbers-page-content label, .span-label {
     font-size: 0.8em;
     color: #373737;
     display: block;

@@ -73,7 +73,7 @@
 								</textarea>
 							</div>
 
-						<div class="col mt-5">
+						<div class="form-group mt-5">
 							<input type="submit" class="btn btn-light mr-4">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'Delete')"/>

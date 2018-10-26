@@ -4,19 +4,23 @@
                     
                     <i class="booking-cart-icon fas fa-plus float-right mr-2"></i>
                 </div>
-                <div class="booking-cart-items" data-bind="foreach: applicationCartItems" style="display: none;">
-                    <div class="booking-cart-item">
-                        <div class="row">                            
-                            <div class="col-5" data-bind="text: building_name"></div>
-                            <div class="col-6 d-inline" data-bind="foreach: resources"><span class="mr-3" data-bind="text: name"></span></div>
-                            <div class="col-1 float-right"><span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span></div>
-                        </div>
-                        <div class="row" data-bind="foreach: dates">
-                            <div class="col-5" data-bind="text: date"></div>
-                            <div class="col-6" data-bind="text: 'kl. ' + periode"></div>                        
+                <div class="booking-cart-items" style="display: none;">
+                    <div data-bind="foreach: applicationCartItems">
+                        <div class="booking-cart-item">
+                            <div class="row">                            
+                                <div class="col-5" data-bind="text: building_name"></div>
+                                <div class="col-6 d-inline" data-bind="foreach: resources"><span class="mr-3" data-bind="text: name"></span></div>
+                                <div class="col-1 float-right"><span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span></div>
+                            </div>
+                            <div class="row" data-bind="foreach: dates">
+                                <div class="col-5" data-bind="text: date"></div>
+                                <div class="col-6" data-bind="text: 'kl. ' + periode"></div>                        
+                            </div>
                         </div>
                     </div>
+                    <div class="m-2"><button onclick="window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false)" class="btn btn-light m-2">Send</a></div>                  
                 </div>
+                
             </div> 
             
 <footer class="footer">
