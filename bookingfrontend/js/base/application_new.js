@@ -70,14 +70,20 @@ $(".navbar-search").removeClass("d-none");
               end.setMinutes(new Date(self.bookingEndTime()).getMinutes());
               
               if(start.getTime() < end.getTime()) {
-                  self.date.push({from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
-                  setTimeout(function() {
-                    self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime("");
-                  },500); //self.repeat(false);
+                var match = ko.utils.arrayFirst(self.date(), function(item) {
+                    return item.id === [start,end].join("");
+                });
+                if (!match) {
+                    self.date.push({id: [start,end].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
+                    setTimeout(function() {
+                      self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime("");
+                    },500); //self.repeat(false);
+                }    
+                
               } else {
                   $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
               }
-              
+            
           }
       };
       
