@@ -1,4 +1,4 @@
-<div class="booking-cart" id="applications-cart-content" data-bind="visible: applicationCartItems().length > 0">
+<div class="booking-cart" id="applications-cart-content" data-bind="visible: applicationCartItems().length > 0 && visible">
                 <div class="booking-cart-title">
                     <span class="font-weight-bold">Søknader </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
                     
