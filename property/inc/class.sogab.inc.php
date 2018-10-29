@@ -63,7 +63,7 @@
 				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 				$order = isset($data['order']) ? $data['order'] : '';
 				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$location_code = isset($data['location_code']) ? $data['location_code'] : '0000';
+				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
 				$gaards_nr = isset($data['gaards_nr']) ? $data['gaards_nr'] : '';
 				$bruksnr = isset($data['bruksnr']) ? (int)$data['bruksnr'] : '';
 				$feste_nr = isset($data['feste_nr']) ? (int)$data['feste_nr'] : '';
@@ -170,6 +170,9 @@
 				$on = 'AND';
 			}
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.gab');
+
+			$custom_cols = $this->custom->find('property', '.location.gab', 0, '', 'ASC', 'attrib_sort', true, true);
 
 			if ($check_payments)
 			{
@@ -195,7 +198,7 @@
 			}
 			else
 			{
-				$sql = "SELECT gab_id,count(gab_id) as hits, address ,fm_gab_location.location_code, fm_gab_location.owner as owner FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,address,owner ";
+				$sql = "SELECT fm_gab_location.* FROM fm_gab_location $joinmethod $filtermethod GROUP BY gab_id,fm_gab_location.location_code,address,owner ";
 			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -210,19 +213,35 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
+			$cols_return = array(
+				'gab_id' => false,
+				'location_code' => false,
+				'address' => true,
+				'owner' => false
+			);
+
+
 			$gab_list = array();
 			if (!$check_payments)
 			{
 				while ($this->db->next_record())
 				{
-					$gab_list[] = array
-						(
-						'gab_id' => $this->db->f('gab_id'),
-						'location_code' => $this->db->f('location_code'),
-						'address' => $this->db->f('address', true),
-						'hits' => $this->db->f('hits'),
-						'owner' => $this->db->f('owner')
-					);
+					$row = array();
+					foreach ($cols_return as $key => $stripslashes)
+					{
+						$row[$key] = $this->db->f($key,$stripslashes );
+					}
+
+					foreach ($custom_cols as $custom_col)
+					{
+						if ($custom_value = $this->db->f($custom_col['column_name'], true))
+						{
+							$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+								'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
+						}
+						$row[$custom_col['column_name']] = $custom_value;
+					}
+					$gab_list[] = $row;
 				}
 			}
 			else
@@ -371,19 +390,32 @@
 			$this->uicols['name'][] = 'owner';
 			$this->uicols['descr'][] = lang('owner');
 			$this->uicols['statustext'][] = lang('owner');
+
 			$this->uicols['input_type'][] = 'text';
 			$this->uicols['name'][] = 'location_code';
 			$this->uicols['descr'][] = 'location code';
 			$this->uicols['statustext'][] = 'location code';
+
 			$this->uicols['input_type'][] = 'text';
 			$this->uicols['name'][] = 'address';
 			$this->uicols['descr'][] = lang('address');
 			$this->uicols['statustext'][] = lang('address');
 
+			$custom_fields = $this->custom->find('property', '.location.gab', 0, '', 'ASC', 'attrib_sort', true, true);
+			foreach ($custom_fields as $custom_field)
+			{
+				$this->uicols['input_type'][] = 'text';
+				$this->uicols['name'][] = $custom_field['column_name'];
+				$this->uicols['descr'][] = $custom_field['input_text'];
+				$this->uicols['statustext'][] = $custom_field['input_text'];
+			}
+
 			$cols_return = $this->bocommon->cols_return;
 			$type_id = $this->bocommon->type_id;
 			$this->cols_extra = $this->bocommon->cols_extra;
 
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.gab');
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -411,6 +443,16 @@
 				{
 					$gab_list[$j]['loc' . ($m + 1)] = $location[$m];
 					$gab_list[$j]['query_location']['loc' . ($m + 1)] = implode("-", array_slice($location, 0, ($m + 1)));
+				}
+
+				foreach ($custom_fields as $custom_col)
+				{
+					if ($custom_value = $this->db->f($custom_col['column_name'], true))
+					{
+						$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+							'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
+					}
+					$gab_list[$j][$custom_col['column_name']] = $custom_value;
 				}
 
 				$j++;
