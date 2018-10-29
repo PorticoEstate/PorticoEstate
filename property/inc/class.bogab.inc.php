@@ -102,7 +102,7 @@
 
 		function read( $data )
 		{
-			if ($allrows)
+			if ($data['allrows'])
 			{
 				$this->allrows = true;
 			}
@@ -120,7 +120,7 @@
 					'feste_nr' => $data['feste_nr'],
 					'seksjons_nr' => $data['seksjons_nr'],
 					'address' => $data['address'],
-					'check_payments' => $data['check_payments']
+		//			'check_payments' => $data['check_payments']
 				)
 			);
 

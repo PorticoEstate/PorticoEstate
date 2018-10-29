@@ -759,7 +759,7 @@ Main activity	booking	no	Hovedaktivitet
 New facility	booking	no	Ny fasilitet
 New resource category	booking	no	Ny ressurskategori
 No partial applications exist for this session, contact details are not saved	booking	no	Ingen delsøknader finnes for denne sesjonen, avbryter lagring av kontaktinformasjon
-No resource chosen (2018)	booking	no	Intet lokale valgt!
+No resource chosen (2018)	booking	no	Ingen lokaler valgt
 No session ID found, application aborted	booking	no	Ingen sesjons-ID funnet, lagring av søknaden er avbrutt
 Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	no	Bare én filtreringsboks per linje
