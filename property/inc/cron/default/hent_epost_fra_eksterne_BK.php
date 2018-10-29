@@ -212,7 +212,7 @@
 						$attachments = array();
 						foreach ($response_message2->Items->Message as $item3)
 						{
-							$target = $this->handle_message($client, $item3, $folder_info);
+							$target = $this->handle_message($item3);
 
 							// If there are no attachments for the item, move on to the next
 							// message.
@@ -307,7 +307,7 @@
 			return $folder_info;
 		}
 
-		function handle_message($client, $item3, $folder_info)
+		function handle_message( $item3 )
 		{
 			$target = array();
 			$subject = $item3->Subject;
