@@ -853,6 +853,30 @@ BUILDING PAGE STYLE
     margin-bottom: 1em;
 }
 
+.event-color-desc {
+    text-align: right;
+}
+
+.square {
+    width: 14px;
+    height: 14px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    display: inline-block;
+}
+  
+.allocation {
+  background: #2875c2;
+}
+ 
+.booking {
+  background: #123456;
+}
+  
+.event {
+  background: #898989;
+}
+
+
 .scheduler-view-day-header-day span:nth-child(1) {
     text-transform: capitalize;
 }
@@ -904,7 +928,8 @@ BUILDING PAGE STYLE
 }
 
 .yui3-calendar-nextmonth-day,
-.yui3-calendar-prevmonth-day {
+.yui3-calendar-prevmonth-day,
+.scheduler-base-nav-date {
     visibility: hidden;
 }
 

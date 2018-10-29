@@ -154,31 +154,39 @@
 		</div>
 
 		<div class="container wrapper">
-		<div class="row margin-top-and-bottom">
+		<div class="row margin-top-and-bottom">		
+			<xsl:if test="building/deactivate_calendar=0">
+				<div class="col-6">
+					<div class="button-group dropdown calendar-tool invisible">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								Velg lokaler
+								<span class="caret"></span>
+							</button>
 
-					<xsl:if test="building/deactivate_calendar=0">
-						<div class="button-group dropdown calendar-tool invisible">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					Velg lokaler
-					<span class="caret"></span>
-				</button>
+							<ul class="dropdown-menu px-2" data-bind="foreach: bookableResource">
+								<li>
+									<div class="form-check checkbox checkbox-primary">
 
-				<ul class="dropdown-menu px-2" data-bind="foreach: bookableResource">
-					<li>
-						<div class="form-check checkbox checkbox-primary">
+										<label class="check-box-label">
+											<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="text: name"/>
+											<span class="label-text" data-bind="text: name"></span>
+										</label>
+									</div>
+								</li>
+							</ul>
 
-							<label class="check-box-label">
-								<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="text: name"/>
-								<span class="label-text" data-bind="text: name"></span>
-							</label>
+							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
+								<i class="far fa-calendar-alt"></i> Velg dato
+							</button>
 						</div>
-					</li>
-				</ul>
+				</div>
 
-				<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
-					<i class="far fa-calendar-alt"></i> Velg dato</button>
-						</div>
-					</xsl:if>
+				<div class="col-6 event-color-desc mt-2">
+					<div class="d-block"><div class="square allocation"></div><span>Tildeling</span></div>
+					<div class="d-block"><div class="square booking"></div><span>Intern tildeling</span></div>
+					<div class="d-block"><div class="square event"></div><span>Arrangement</span></div>
+				</div>				
+			</xsl:if>
 
 
 

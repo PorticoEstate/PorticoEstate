@@ -188,8 +188,14 @@
         <div class="row margin-top-and-bottom">
             
 			<xsl:if test="building/deactivate_calendar=0">
-				<div class="button-group dropdown calendar-tool">
-                <button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
+				<div class="col-6 button-group dropdown calendar-tool">
+                	<button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
+				</div>
+
+				<div class="col-6 mt-2 event-color-desc">
+					<div class="d-block"><div class="square allocation"></div><span>Tildeling</span></div>
+					<div class="d-block"><div class="square booking"></div><span>Intern tildeling</span></div>
+					<div class="d-block"><div class="square event"></div><span>Arrangement</span></div>
 				</div>
 			</xsl:if>
                 
@@ -203,7 +209,7 @@
 
             
 			<xsl:if test="building/deactivate_calendar=0">
-            <div id="myScheduler" class="d-none d-sm-block d-xs-block margin-top-and-bottom"></div>
+            <div id="myScheduler" class="d-none d-sm-block d-xs-block"></div>
             <div id="mySchedulerSmallDeviceView" class="d-block d-sm-none d-xs-none margin-top-and-bottom"></div>
 			</xsl:if>
 
