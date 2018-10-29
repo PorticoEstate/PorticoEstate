@@ -863,9 +863,11 @@
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $system_message['building_id']));
+						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 				}
 
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 
@@ -873,8 +875,6 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 
 				$this->flash_form_errors($errors);
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $booking['building_id']));
 
 				self::rich_text_editor('field-message');
 				self::render_template_xsl('booking_cancel', array('booking' => $booking));

@@ -32,7 +32,7 @@
 						<input type="hidden" name="to_" value="{booking/to_}" />
 
 						<div class="form-group">
-							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
 							<xsl:value-of select="booking/building_name"/>
 						</div>
 
