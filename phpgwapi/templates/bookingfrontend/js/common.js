@@ -45,6 +45,7 @@ function ApplicationsCartModel()  {
            }
            
        };
+       self.visible = ko.observable(true);
    }
   
    function GetApplicationsCartItems(bc) {
@@ -93,7 +94,7 @@ $(document).ready(function ()
             window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.index", searchterm: $(".navbar-search input").val() }, false);
         }        
     });
-
+    
     bc = new ApplicationsCartModel();
     ko.applyBindings(bc, document.getElementById("applications-cart-content"));
     GetApplicationsCartItems(bc);
