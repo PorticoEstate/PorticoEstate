@@ -18,7 +18,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="m-2"><button onclick="window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false)" class="btn btn-light m-2">Send</a></div>                  
+		<div class="m-2">
+			<button onclick="window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false)" class="btn btn-light m-2">
+				{cart_complete_application}
+			</button>
+		</div>
                 </div>
                 
             </div> 

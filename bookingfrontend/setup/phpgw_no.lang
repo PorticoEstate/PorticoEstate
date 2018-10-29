@@ -431,6 +431,7 @@ bookingfrontend host	bookingfrontend	no	Bookingfrontend vert
 Needed for the return from the external logout	bookingfrontend	no	Nødvendig for retur fra ekstern logg ut
 About the service	bookingfrontend	no	Om tjenesten
 Activities (2018)	bookingfrontend	no	Tilrettelagt for
+Complete applications	bookingfrontend	no	Fullfører søknader
 footer privacy link	bookingfrontend	no	Footer: Lenke til personvern
 Information about the event (edit)	bookingfrontend	no	Informasjon om arrangementet
 metadata settings	bookingfrontend	no	Metadata innstillinger
