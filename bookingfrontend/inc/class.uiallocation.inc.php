@@ -116,12 +116,12 @@
 					$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $system_message['building_id']));
+						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($allocation['from_']))));
 				}
 
 				$this->flash_form_errors($errors);
 				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $allocation['building_id']));
+						'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($allocation['from_']))));
 
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
