@@ -115,14 +115,7 @@ $(".navbar-search").removeClass("d-none");
           }
           return list;
       });
-      self.noApplicationsInCart = ko.observable(false);     
-      self.GoToConfirmPage = function () {
-          if(bc.applicationCartItems().length > 0) {
-              window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add_contact", building_id: urlParams['building_id'] }, false);
-          } else {
-            self.noApplicationsInCart(true);
-          }
-      }
+      self.noApplicationsInCart = ko.observable(false);
   }
   
         
