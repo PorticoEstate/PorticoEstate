@@ -51,15 +51,7 @@
                     </div>
 					<div class="col-12 mt-4" id="item-description">
 						<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
-					</div>
-
-						<xsl:if test="building/deactivate_application=0">
-							<div class="col-auto mt-4">
-								<a href="" class="btn btn-light bookBtnForward"><i class="fas fa-plus"></i>&#160;
-									<xsl:value-of select="php:function('lang', 'Book resource')" />
-								</a>
-							</div>
-						</xsl:if>
+					</div>					
 					
 						<xsl:if test="building/deactivate_calendar=0">
 							<div class="col-auto mt-4 mb-4">
@@ -189,7 +181,12 @@
             
 			<xsl:if test="building/deactivate_calendar=0">
 				<div class="col-6 button-group dropdown calendar-tool">
-                	<button class="btn btn-default datepicker-btn"><i class="far fa-calendar-alt"></i> Velg dato</button>
+                	<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0"><i class="far fa-calendar-alt"></i> Velg dato</button>
+					<xsl:if test="building/deactivate_application=0">
+						<a href="" class="btn btn-default bookBtnForward"><i class="fas fa-plus"></i>&#160;
+							<xsl:value-of select="php:function('lang', 'Book resource')" />
+						</a>
+					</xsl:if>
 				</div>
 
 				<div class="col-6 event-color-desc mt-2">
@@ -224,8 +221,8 @@
 
             
 			<xsl:if test="building/deactivate_calendar=0">
-            <div id="myScheduler" class="d-none d-sm-block d-xs-block"></div>
-            <div id="mySchedulerSmallDeviceView" class="d-block d-sm-none d-xs-none margin-top-and-bottom"></div>
+            <div id="myScheduler" class="d-none d-sm-block d-xs-block col-12"></div>
+            <div id="mySchedulerSmallDeviceView" class="d-block d-sm-none d-xs-none margin-top-and-bottom col-12"></div>
 			</xsl:if>
 
         </div>
