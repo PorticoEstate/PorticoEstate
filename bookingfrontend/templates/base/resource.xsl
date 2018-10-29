@@ -194,7 +194,7 @@
 
 				<div class="col-6 mt-2 event-color-desc">
 					<div class="d-block"><div class="square allocation"></div><span>Tildeling</span></div>
-					<div class="d-block"><div class="square booking"></div><span>Intern tildeling</span></div>
+					<div class="d-block"><div class="square booking"></div><span>Interntildeling</span></div>
 					<div class="d-block"><div class="square event"></div><span>Arrangement</span></div>
 				</div>
 			</xsl:if>
