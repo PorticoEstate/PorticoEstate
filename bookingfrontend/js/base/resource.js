@@ -264,7 +264,10 @@ function GenerateCalendarForEvents(date) {
                     }
                 });
                 
-                               
+                var initDateTime = new Date();
+                initDateTime.setHours(07);
+                initDateTime.setMinutes(00);
+                           
                 new Y.Scheduler(
                         {
                             boundingBox: '#myScheduler',
@@ -278,7 +281,8 @@ function GenerateCalendarForEvents(date) {
                                 new Y.SchedulerWeekView({
                                     isoTime: true,
                                     strings: nb_NO_strings_allDay,
-                                    headerView: false
+                                    headerView: false,
+                                    initialScroll: new Date(initDateTime),
                                 })
                             ]
 
@@ -298,7 +302,8 @@ function GenerateCalendarForEvents(date) {
                                 new Y.SchedulerDayView({
                                     isoTime: true,
                                     strings: nb_NO_strings_allDay,
-                                    headerView: false
+                                    headerView: false,
+                                    initialScroll: new Date(initDateTime),
                                 })
                             ]
 
