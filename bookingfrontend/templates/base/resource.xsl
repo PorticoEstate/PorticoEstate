@@ -189,10 +189,25 @@
 					</xsl:if>
 				</div>
 
-				<div class="col-6 mt-2 event-color-desc">
-					<div class="d-block"><div class="square allocation"></div><span>Tildeling</span></div>
-					<div class="d-block"><div class="square booking"></div><span>Interntildeling</span></div>
-					<div class="d-block"><div class="square event"></div><span>Arrangement</span></div>
+				<div class="col-6 event-color-desc mt-2">
+					<div class="d-block">
+						<div class="square allocation"></div>
+						<span>
+							<xsl:value-of select="php:function('lang', 'allocation')"/>
+						</span>
+					</div>
+					<div class="d-block">
+						<div class="square booking"></div>
+						<span>
+							<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
+						</span>
+					</div>
+					<div class="d-block">
+						<div class="square event"></div>
+						<span>
+							<xsl:value-of select="php:function('lang', 'event')"/>
+						</span>
+					</div>
 				</div>
 			</xsl:if>
                 

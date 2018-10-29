@@ -730,6 +730,7 @@ applicationcart empty	booking	nn	Ingen søknader finnes
 At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
 Book resource	booking	nn	Lei lokale
 Bookable resources (2018)	booking	nn	Lokaler til leie
+Booking (2018)	booking	nn	Interntildeling
 Building (2018)	booking	nn	Anlegg
 Calendar	booking	nn	Kalender
 choose a	booking	nn	Ingen valgt
@@ -779,4 +780,4 @@ Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
 Text and activity IDs for each filter box	booking	nn	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
 Title for upcoming events	booking	nn	Tittel for liste med kommende arrangementer
 Upcoming events	booking	nn	Kommende arrangementer
-Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad med informasjon om aktiviteten/arrangementet er lagt til. Du kan legge til en ny søknad, eller fullføre søknaden ved å legge til kontaktinformasjon.
+Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad med informasjon om aktiviteten/arrangementet er lagt til. Du kan legge til en ny søknad, eller gå til søknadslisten nederst for å fullføre søknadene.
