@@ -250,7 +250,10 @@
 							<xsl:value-of select="php:function('lang', 'Save')"/>
 						</xsl:attribute>
 					</input>
-					<a class="cancel" href="" onclick="history.back(1); return false">
+					<a class="cancel">
+						<xsl:attribute name="href">
+							<xsl:value-of select="booking/cancel_link"/>
+						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'Go back')"/>
 					</a>
 

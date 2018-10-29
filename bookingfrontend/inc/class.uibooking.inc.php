@@ -259,7 +259,7 @@
 
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-					'id' => $booking['building_id']));
+					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
@@ -515,7 +515,7 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-					'id' => $booking['building_id']));
+					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
