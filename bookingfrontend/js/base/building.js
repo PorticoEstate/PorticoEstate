@@ -635,12 +635,16 @@ function GenerateCalendarForEvents(date) {
 			for (var i=0; i<resourceIds.length; i++) {
 				resourceslist.push(resourceIds[i].id);
 			}
+			var initDateTime = new Date();
+			initDateTime.setHours(07);
+			initDateTime.setMinutes(00);
 			var resourceWeekView = new SchedulerResourceWeekView(
 				{
 					isoTime: true,
 					strings: nb_NO_strings_allDay,
 					headerView: false,
-					resources: resourceslist
+					resources: resourceslist,
+					initialScroll: new Date(initDateTime)
 				}
 			);
 			var resourceDayView = new SchedulerResourceDayView(
@@ -648,7 +652,8 @@ function GenerateCalendarForEvents(date) {
 					isoTime: true,
 					strings: nb_NO_strings_allDay,
 					headerView: false,
-					resources: resourceslist
+					resources: resourceslist,
+					initialScroll: new Date(initDateTime)
 				}
 			);
 
@@ -679,7 +684,6 @@ function GenerateCalendarForEvents(date) {
 				views: [resourceWeekView]
 			  }
 			);
-
 			new Y.Scheduler(
 			  {
 				boundingBox: '#mySchedulerSmallDeviceView',
