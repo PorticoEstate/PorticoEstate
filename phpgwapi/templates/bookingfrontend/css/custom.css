@@ -865,15 +865,15 @@ BUILDING PAGE STYLE
 }
   
 .allocation {
-  background: #2875c2;
+  background: rgb(110, 163, 216);
 }
  
 .booking {
-  background: #123456;
+  background: rgb(31, 71, 112);
 }
   
 .event {
-  background: #898989;
+  background: rgb(191, 191, 191);
 }
 
 
