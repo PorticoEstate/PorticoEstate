@@ -63,6 +63,7 @@
                             </xsl:if>
                         </div>                
 
+								<xsl:if test="organization/logged_on">
                         <div class="building-card">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
@@ -86,12 +87,13 @@
                                     </div>
                                 </div>
                         </div>
+								</xsl:if>
 
                         <div class="building-card">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseBuildingsUsedBy" aria-expanded="false">
-                                            <xsl:value-of select="php:function('lang', 'Used buildings')" />
+                                            <xsl:value-of select="php:function('lang', 'Used buildings (2018)')" />
                                         </button>
                                         <button data-toggle="collapse" data-target="#collapseBuildingsUsedBy" class="btn fas fa-plus float-right"></button>
                                         
@@ -120,26 +122,6 @@
 								</div>
 							</div>
 							</div>
-
-                        <div class="building-card">
-                                <div class="building-card-header">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseDocuments" aria-expanded="false">
-                                            <xsl:value-of select="php:function('lang', 'documents')" />
-                                        </button>
-                                        <button data-toggle="collapse" data-target="#collapseDocuments" class="btn fas fa-plus float-right"></button>
-                                        
-                                    </h5>
-                                    
-                                </div>
-
-                                <div id="collapseDocuments" class="collapse">
-                                    <div class="card-body">
-                                        <div id="documents_container"/>
-                                    </div>
-                                </div>
-                        </div>                        
-                        
 
                         <div class="building-card">
                             <xsl:if test="organization/email and normalize-space(organization/email) or
@@ -244,7 +226,6 @@
             var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id}, true);
             var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1'},true);
             var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id}, true);
-            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index', sort:'name', no_images:1, filter_owner_id:organization_id}, true);
             var document_organizationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index_images', sort:'name', filter_owner_id:organization_id}, true);
             ]]>
                     
@@ -256,12 +237,10 @@
             ];
 
             var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
-            var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
                 
             createTable('delegates_container', delegateURL, colDefsDelegate, '', 'table table-hover');
             createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding, 'table table-hover');
     
-            createTable('documents_container', documentURL, colDefsDocument, '', 'table table-hover');
             $(window).on('load', function(){
             // Load image
             //JqueryPortico.booking.inlineImages('images_container', document_organizationURL);
