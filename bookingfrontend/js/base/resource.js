@@ -271,7 +271,7 @@ function GenerateCalendarForEvents(date) {
                 new Y.Scheduler(
                         {
                             boundingBox: '#myScheduler',
-                            eventRecorder: eventRecorder,
+                            //eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
                             date: date,
                             items: events,
                             render: true,
@@ -293,7 +293,7 @@ function GenerateCalendarForEvents(date) {
                 new Y.Scheduler(
                         {
                             boundingBox: '#mySchedulerSmallDeviceView',
-                            eventRecorder: eventRecorder,
+                            //eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
                             date: date,
                             items: events,
                             render: true,
