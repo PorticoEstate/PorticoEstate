@@ -53,7 +53,8 @@
               </ul>
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link font-weight-bold" href="{login_url}"><strong>{login_text}</strong></a>
+						<a class="nav-link" href="{org_url}">{login_text_org}</a>
+						<a class="nav-link font-weight-bold" href="{login_url}"><strong>{login_text}</strong></a>
                 </li>
               </ul>
             </div>
