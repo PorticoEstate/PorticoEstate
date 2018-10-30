@@ -157,27 +157,6 @@
 							</div>
 						</xsl:if>
 
-						<!--<xsl:if test="not(new_form) and (currentapp = 'booking')">-->
-						<div class="form-group">
-							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Show in portal')"/></label>
-							<select id="field_show_in_portal" class="form-control" name="show_in_portal">
-										<option value="0">
-											<xsl:if test="organization/show_in_portal=0">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'No')"/>
-										</option>
-										<option value="1">
-											<xsl:if test="organization/show_in_portal=1">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'Yes')"/>
-										</option>
-									</select>
-						</div>
-						<!--</xsl:if>-->
-
-						
 						<div class="form-group">
 							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')" /></label>
 							<select name="activity_id" class="form-control" id="field_activity">
