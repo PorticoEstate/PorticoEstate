@@ -227,6 +227,14 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'Help text calendar: Book')"/>
+						</label>
+						<textarea id="field_help_calendar_book" name="config_data[help_calendar_book]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/help_calendar_book"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Help text group: Edit group')"/>
 						</label>
 						<textarea id="field_help_group_edit" name="config_data[help_group_edit]" class="pure-input-1-2">
