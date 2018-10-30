@@ -440,6 +440,15 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$building = $this->building_bo->read_single($building_info['id']);
 
+			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			} else {
+				$end = new DateTime($event['to_']);				
+				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}
+			$event['when'] = $when;
 			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
