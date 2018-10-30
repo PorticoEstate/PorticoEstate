@@ -37,7 +37,7 @@
 		$config_frontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
 
 		$footer_info = phpgwapi_cache::session_get('phpgwapi', 'footer_info');
-		$footer_privacy_link = "https://www.aktiv-kommune.no/";
+		$footer_privacy_link = "https://www.aktiv-kommune.no/hva-er-aktivkommune/";
 		if (!empty($config_frontend['footer_privacy_link']))
 		{
 			$footer_privacy_link = $config_frontend['footer_privacy_link'];
