@@ -375,6 +375,8 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$this->check_active('booking.uibuilding.show');
 			$building = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
 
@@ -414,6 +416,6 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
-			self::render_template_xsl('building', array("building" => $building));
+			self::render_template_xsl('building', array('building' => $building, 'config_data' => $config->config_data));
 		}
 	}

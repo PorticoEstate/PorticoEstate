@@ -49,6 +49,8 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
 			$array_resource = array(&$resource);
 			$this->bo->add_activity_facility_data($array_resource);
@@ -115,7 +117,8 @@
 			$data = array(
 				'resource' => $resource,
 				'building' => $buildinginfo,
-				'pathway' => $pathway
+				'pathway' => $pathway,
+				'config_data' => $config->config_data
 			);
 
 			self::render_template_xsl('resource', $data);
