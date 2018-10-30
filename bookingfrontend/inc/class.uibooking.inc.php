@@ -812,10 +812,12 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$id = phpgw::get_var('id', 'int');
+			$original_from = null;
 
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
 				$booking = $this->bo->read_single($id);
+				$original_from = $booking['from_'];
 				$errors = array();
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
@@ -863,11 +865,11 @@
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
 					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
+						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				}
 
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 
@@ -887,6 +889,7 @@
 				$field_interval = phpgw::get_var('field_interval', 'int');
 				$delete_allocation = phpgw::get_var('delete_allocation');
 				$booking = $this->bo->read_single($id);
+				$original_from = $booking['from_'];
 				$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
 				$season = $this->season_bo->read_single($booking['season_id']);
 				$step = phpgw::get_var('step', 'int', 'POST');
@@ -987,7 +990,7 @@
 						$receipt = $this->system_message_bo->add($system_message);
 
 						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id']));
+							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 					}
 					else
 					{
@@ -1099,7 +1102,7 @@
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
 							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-								'id' => $allocation['building_id']));
+								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
 					}
 				}
@@ -1121,7 +1124,7 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $booking['building_id'], 'date' => $booking['from_']));
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
 
