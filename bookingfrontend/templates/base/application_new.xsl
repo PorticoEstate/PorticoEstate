@@ -61,12 +61,14 @@
                     <div class="form-group">
 						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Date and time')" /></label>
                         <div class="form-group">
-                            <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-sm-6 col-6">
+                        <div class="row">
+                                <div class="form-group col-lg-5 col-sm-12 col-12">
+                                    <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
+                                </div>                            
+                                <div class="form-group col-lg-3 col-sm-6 col-6">
                                     <input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime" placeholder="Fra"/>
                                 </div>
-                                <div class="form-group col-lg-6 col-sm-6 col-6">
+                                <div class="form-group col-lg-3 col-sm-6 col-6">
                                     <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
                                 </div>
                             </div>
