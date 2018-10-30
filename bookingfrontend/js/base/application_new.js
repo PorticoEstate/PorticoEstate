@@ -68,7 +68,7 @@ $(".navbar-search").removeClass("d-none");
               var end =  new Date(self.bookingDate());
               end.setHours(new Date(self.bookingEndTime()).getHours());
               end.setMinutes(new Date(self.bookingEndTime()).getMinutes());
-           
+              
               if(start.getTime() < end.getTime()) {
                 var match = ko.utils.arrayFirst(self.date(), function(item) {
                     return item.id === [start,end].join("");
@@ -78,7 +78,6 @@ $(".navbar-search").removeClass("d-none");
                     setTimeout(function() {
                       self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime("");
                     },500); //self.repeat(false);
-                    return;
                 }    
                 
               } else {
@@ -207,17 +206,12 @@ $(".navbar-search").removeClass("d-none");
       });
   });
   
-  function parseDate(date) {
-    var parts = date.split('-');
-    return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
-  }
-
   function PopulatePostedDate() {
     if(initialDates != null) {
         for(var i=0; i<initialDates.length; i++) {
             var from_ = initialDates[i].from_;
             var to_ = initialDates[i].to_;
-            am.date.push({from_: formatSingleDate(new Date(parseDate(from_))), to_: formatSingleDate(new Date(parseDate(to_))), formatedPeriode: formatDate(new Date(from_), new Date(to_) ) });
+            am.date.push({from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_) ) });
           }
       } else {
         if(typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
@@ -237,7 +231,7 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
-          mask: '%d/%m/%y',
+          mask: '%d-%m-%G',
           on: {
             selectionChange: function(event) { 
                 new Date(event.newSelection);
