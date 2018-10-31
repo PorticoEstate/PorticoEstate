@@ -80,7 +80,7 @@ $(".navbar-search").removeClass("d-none");
                     },500); //self.repeat(false);
                 }    
                 
-              } else {
+              } else if(start.getTime() >= end.getTime()){
                   $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
               }
             
@@ -209,8 +209,8 @@ $(".navbar-search").removeClass("d-none");
   function PopulatePostedDate() {
     if(initialDates != null) {
         for(var i=0; i<initialDates.length; i++) {
-            var from_ = initialDates[i].from_;
-            var to_ = initialDates[i].to_;
+            var from_ = (initialDates[i].from_).replace(" ", "T");
+            var to_ = (initialDates[i].to_).replace(" ", "T");
             am.date.push({from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_) ) });
           }
       } else {
