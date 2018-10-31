@@ -30,10 +30,10 @@ function applicationModel() {
 
 var am = new applicationModel();
 
-ko.applyBindings(am, document.getElementById("new-application-partialtwo"));
 
 $(document).ready(function ()
 {
+    ko.applyBindings(am, document.getElementById("new-application-partialtwo"));
     am.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
     bc.visible(false);
 });
