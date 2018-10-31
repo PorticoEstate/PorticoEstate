@@ -54,23 +54,22 @@ function ApplicationsCartModel()  {
        getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.get_partials", phpgw_return_as: "json"}, true);
            $.getJSON(getJsonURL, function(result){
                for(var i=0; i<result.length; i++) {                
-                   var dates = [];
+                  var dates = [];
                   var resources = [];
                   var exist = ko.utils.arrayFirst(bc.applicationCartItems(), function(item) {
                        return item.id == result[i].id;
                   });
-                  console.log(result[i].id); 
                   if(!exist) {
-                       for(var k =0; k<result[i].dates.length; k++) {
-                           dates.push({date: formatSingleDateWithoutHours(new Date(result[i].dates[k].from_)), 
-                           from_: result[i].dates[k].from_, to_: result[i].dates[k].to_ ,
-                           periode: formatPeriodeHours(result[i].dates[k].from_, result[i].dates[k].to_)});
-                       }
-                       for(var k =0; k<result[i].resources.length; k++) {
-                           resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id });
-                       }
+                    for(var k =0; k<result[i].dates.length; k++) {                           
+                        dates.push({date: formatSingleDateWithoutHours(new Date((result[i].dates[k].from_).replace(" ","T"))), 
+                        from_: result[i].dates[k].from_, to_: result[i].dates[k].to_ ,
+                        periode: formatPeriodeHours(new Date((result[i].dates[k].from_).replace(" ","T")), new Date((result[i].dates[k].to_).replace(" ","T")) )});
+                    }
+                    for(var k =0; k<result[i].resources.length; k++) {
+                        resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id });
+                    }
                     bc.applicationCartItems.push({id: result[i].id, building_name: result[i].building_name, dates: dates, resources: ko.observableArray(resources)});
-                    }                
+                  }                  
                 }
             });
     }
