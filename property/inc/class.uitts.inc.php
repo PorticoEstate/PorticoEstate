@@ -1280,26 +1280,30 @@ HTML;
 				foreach ($list_categories['cat_list'] as $_category)
 				{
 					$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
-					$_categories[$_category['cat_id']] = array('label'=>$_category['name'], 'count' => 0, 
-						'backgroundColor' => $color, 'hoverBackgroundColor' => $color);
+					$_categories[$_category['cat_id']] = array
+						(
+							'label'=>$_category['name'],
+							'count' => 0,
+							'backgroundColor' => $color,
+							'hoverBackgroundColor' => $color
+						);
 				}
 
 				foreach ($values as $item) 
 				{
-					if ($_categories[$item['cat_id']]) {
+					if ($_categories[$item['cat_id']])
+					{
 						$_categories[$item['cat_id']]['count'] = (int)$item['count_category'];
 					}
 				}
 
 				return $_categories;
 			} 
-			else {
+			else
+			{
 				
 				$list_status = $this->bo->filter(array('format' => '', 'filter' => $this->status_id, 'default' => 'O'));
-				if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
-				{
-					array_unshift($list_status, array('id' => 'O2', 'name' => $this->bo->config->config_data['tts_lang_open']));
-				}
+				array_unshift($list_status, array('id' => 'O', 'name' => !empty($this->bo->config->config_data['tts_lang_open']) ? $this->bo->config->config_data['tts_lang_open'] : lang('open')));
 
 				$_status = array();
 				foreach ($list_status as $_item)
@@ -1309,13 +1313,19 @@ HTML;
 						continue;
 					}
 					$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
-					$_status[$_item['id']] = array('label'=>$_item['name'], 'count' => 0, 
-						'backgroundColor' => $color, 'hoverBackgroundColor' => $color);					
+					$_status[$_item['id']] = array
+						(
+							'label'=>$_item['name'],
+							'count' => 0,
+							'backgroundColor' => $color,
+							'hoverBackgroundColor' => $color
+						);
 				}
 
 				foreach ($values as $item) 
 				{
-					if ($_status[$item['status']]) {
+					if ($_status[$item['status']])
+					{
 						$_status[$item['status']]['count']  = (int)$item['count_status'];
 					}
 				}
