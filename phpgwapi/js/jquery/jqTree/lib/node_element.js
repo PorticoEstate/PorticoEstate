@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -31,13 +34,15 @@ var NodeElement = /** @class */ (function () {
             return new GhostDropHint(this.node, this.$element, position);
         }
     };
-    NodeElement.prototype.select = function () {
+    NodeElement.prototype.select = function (mustSetFocus) {
         var $li = this.getLi();
         $li.addClass("jqtree-selected");
         $li.attr("aria-selected", "true");
         var $span = this.getSpan();
         $span.attr("tabindex", this.tree_widget.options.tabIndex);
-        $span.focus();
+        if (mustSetFocus) {
+            $span.focus();
+        }
     };
     NodeElement.prototype.deselect = function () {
         var $li = this.getLi();
@@ -80,7 +85,7 @@ var FolderElement = /** @class */ (function (_super) {
             $button.html("");
             var button_el = $button.get(0);
             if (button_el) {
-                var icon = this.tree_widget.renderer.opened_icon_element.cloneNode(false);
+                var icon = this.tree_widget.renderer.opened_icon_element.cloneNode(true);
                 button_el.appendChild(icon);
             }
             var doOpen = function () {
@@ -115,7 +120,7 @@ var FolderElement = /** @class */ (function (_super) {
             $button.html("");
             var button_el = $button.get(0);
             if (button_el) {
-                var icon = this.tree_widget.renderer.closed_icon_element.cloneNode(false);
+                var icon = this.tree_widget.renderer.closed_icon_element.cloneNode(true);
                 button_el.appendChild(icon);
             }
             var doClose = function () {
