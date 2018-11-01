@@ -20,7 +20,7 @@
                         <div class="col-md-4 mb-4 col-item-img">
                             <img class="img-fluid image-circle" id="item-main-picture" src=""/>
                         </div>
-                        <div class="col-md-8 mb-5">
+                        <div class="col-md-8 mb-4">
                             <h3 id="main-item-header"><xsl:value-of select="organization/name"/></h3>
                             <xsl:if test="organization/street and normalize-space(organization/street)">
                                 <i class="fas fa-map-marker d-inline"> </i>
@@ -38,32 +38,15 @@
                                 </button>
                             </xsl:if>
                         </div>
-                    
 
-                    
-                    <div class="building-accordion mt-4">
-                        <div class="building-card">
+                        <div class="col-12 ml-1">
                             <xsl:if test="organization/description and normalize-space(organization/description)">
-                                <div class="building-card-header">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
-                                            <xsl:value-of select="php:function('lang', 'description')" />
-                                        </button>
-                                        <button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
-                                        
-                                    </h5>
-                                    
-                                </div>
-
-                                <div id="collapseOne" class="collapse">
-                                    <div class="card-body">
-                                        <xsl:value-of disable-output-escaping="yes" select="organization/description"/>
-                                    </div>
-                                </div>
+                                <xsl:value-of disable-output-escaping="yes" select="organization/description"/>
                             </xsl:if>
-                        </div>                
-
-								<xsl:if test="organization/logged_on">
+                        </div>
+                                           
+                    <div class="building-accordion mt-4">
+						<xsl:if test="organization/logged_on">
                         <div class="building-card">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
