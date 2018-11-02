@@ -549,9 +549,10 @@ HTML;
 			}
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
-				'contact_id' => $ticket['contact_id'],
-				'field' => 'contact',
-				'type' => 'form'));
+					'contact_id' => $ticket['contact_id'],
+					'field' => 'contact'
+				)
+			);
 
 			if (isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
 			{

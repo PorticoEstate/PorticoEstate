@@ -606,17 +606,23 @@
 			//_debug_array($data);
 
 			$field = $data['field'];
-			if (isset($data['type']) && $data['type'] == 'view')
+			if (!empty($data['type']))
 			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_view'), $this->xsl_rootdir);
-			}
-			else
-			{
-				$GLOBALS['phpgw']->xslttpl->add_file(array('contact_form'), $this->xsl_rootdir);
+				switch ($data['type'])
+				{
+					case 'view':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('contact_view'), $this->xsl_rootdir);
+						break;
+					case 'form':
+						$GLOBALS['phpgw']->xslttpl->add_file(array('contact_form'), $this->xsl_rootdir);
+						break;
+					default:
+						break;
+				}
 			}
 
 			$contact['value_contact_id'] = $data['contact_id'];
-			//			$contact['value_contact_name']		= $data['contact_name'];
+//			$contact['value_contact_name']		= $data['contact_name'];
 
 			if (isset($data['contact_id']) && $data['contact_id'] && !$data['contact_name'])
 			{
