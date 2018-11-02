@@ -676,7 +676,7 @@
 			else
 			{
 				$priority = 3;
-				$message_cat_id = 10006; // IK eksterne
+				$message_cat_id = 10100; // Melding fra eksterne -> vaktmesteravtale
 				$ticket = array
 				(
 					'location_code' => $location_code,
