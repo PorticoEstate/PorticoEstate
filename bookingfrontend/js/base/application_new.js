@@ -231,7 +231,7 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
-          mask: '%d-%m-%G',
+          mask: '%d/%m/%G',
           on: {
             selectionChange: function(event) { 
                 new Date(event.newSelection);
