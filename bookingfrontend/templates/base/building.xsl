@@ -105,7 +105,7 @@
 														<i class="fas fa-envelope"></i>&#160;
 														<xsl:value-of select="php:function('lang', 'Send message')" />
 													</button>
-													- Melding til saksbehandler for bygg
+													- <xsl:value-of select="php:function('lang', 'Send message to case officer for building')" />
 												</xsl:if>
 								</div>
 								</div>

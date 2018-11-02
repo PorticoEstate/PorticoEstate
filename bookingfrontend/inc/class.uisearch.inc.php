@@ -43,13 +43,22 @@
 			$criteria = phpgw::get_var('criteria');
 //			_debug_array($criteria);die();
 
+			if ($config->config_data['frontpagetitle'] != '')
+			{
+				$frontpagetitle = $config->config_data['frontpagetitle'];
+			}
+			else
+			{
+				$frontpagetitle = 'Aktiv kommune';
+			}
+
 			if ($config->config_data['frontpagetext'] != '')
 			{
 				$frontpagetext = $config->config_data['frontpagetext'];
 			}
 			else
 			{
-				$frontpagetext = 'Velkommen til AktivBy.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
+				$frontpagetext = 'Velkommen til Aktiv kommune.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
 			}
 
 			if ($config->config_data['frontimagetext'] != '')
@@ -64,6 +73,7 @@
 			$params = array(
 				'baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}",
 				'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg",
+				'frontpagetitle' => $frontpagetitle,
 				'frontpagetext' => $frontpagetext,
 				'frontimagetext' => $frontimagetext,
 				'activity_top_level' => $activity_top_level

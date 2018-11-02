@@ -2,7 +2,7 @@
    <div id="search-page-content">
     <div class="jumbotron jumbotron-fluid">
         <div class="container searchContainer">            
-            <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
+            <h2 class="text-center font-weight-bold"><xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/></h2>
             
             <div class="text-center mt-4 mb-5">
 				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
