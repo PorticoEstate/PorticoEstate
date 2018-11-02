@@ -8,8 +8,7 @@
         <div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 
             <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'Contact and invoice information')" /></h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+            <p><xsl:value-of select="config/application_contact"/></p>
 
             <hr class="mt-5 mb-5"></hr>
             <div class="mb-4"><xsl:call-template name="msgbox"/></div>
