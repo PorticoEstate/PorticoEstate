@@ -97,12 +97,6 @@
 									</p>
 								</xsl:if>
 								<textarea rows="6" id="field_description" class="full-width pure-input-1" name="description">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a description')"/>
-									</xsl:attribute>
 									<xsl:value-of select="application/description"/>
 								</textarea>
 							</div>

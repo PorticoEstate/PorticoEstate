@@ -81,12 +81,6 @@
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a description')" />
-									</xsl:attribute>
 									<xsl:value-of select="event/description"/>
 								</textarea>
 							</div>

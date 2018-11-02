@@ -46,7 +46,7 @@
 				'name' => array('type' => 'string', 'query' => true, 'required' => false),
 				'organizer' => array('type' => 'string', 'query' => true, 'required' => false),
 				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
-				'description' => array('type' => 'string', 'query' => true, 'required' => true),
+				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'contact_name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'contact_email' => array('type' => 'string', 'required' => true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
