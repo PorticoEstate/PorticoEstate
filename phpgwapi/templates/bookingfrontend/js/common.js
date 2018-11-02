@@ -35,7 +35,6 @@ function ApplicationsCartModel()  {
        var self = this;
        self.applicationCartItems = ko.observableArray([]);
        self.deleteItem = function(e) {
-           console.log(e);
            requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.delete_partial"}, true);
            var answer = confirm('Er du sikker på slette søknad fra handlekurv?');
            if (answer) {

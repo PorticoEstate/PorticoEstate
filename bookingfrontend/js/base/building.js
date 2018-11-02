@@ -28,7 +28,6 @@ $(document).ready(function ()
 	$(".calendar-tool").removeClass("invisible");
 
     $(document).on('change', '.choosenResource', function (e) {
-		console.log("test");
         for(var i=0; i<resourceIds.length; i++) {
             if($("#"+e.target.id).text() == resourceIds[i].name) {
                 resourceIds[i].visible = e.target.checked;
