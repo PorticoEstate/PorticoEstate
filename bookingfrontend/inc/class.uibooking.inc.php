@@ -340,6 +340,15 @@
 			$agegroups = $agegroups['results'];
 			$building = $this->building_bo->read_single($booking['building_id']);
 
+			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			} else {
+				$end = new DateTime($booking['to_']);				
+				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}
+			$booking['when'] = $when;
 			if ($booking['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
