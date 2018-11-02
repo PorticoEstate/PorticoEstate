@@ -219,7 +219,8 @@
 					'id' => $procedure_id));
 			}
 
-			$edit_mode = phpgw::get_var('edit_mode');
+			$_edit_mode = phpgw::get_var('edit_mode');
+			$edit_mode = $_edit_mode ? $_edit_mode : 'edit_procedure';
 
 			$error = false;
 
