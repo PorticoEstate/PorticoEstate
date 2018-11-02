@@ -663,6 +663,23 @@
 					}
 				}
 
+				$audval_present = false;
+				if (!empty($_POST['audience']))
+				{
+					foreach ($_POST['audience'] as $audval)
+					{
+						if (!empty($audval))
+						{
+							$audval_present = true;
+							break;
+						}
+					}
+				}
+				if (!$audval_present)
+				{
+					$errors['audience'] = lang("Select a target audience");
+				}
+
 				foreach ($application['agegroups'] as $ag)
 				{
 					if ($ag['male'] > 9999 || $ag['female'] > 9999)

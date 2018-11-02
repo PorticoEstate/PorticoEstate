@@ -777,6 +777,7 @@ responsible_city	booking	no	Poststed
 responsible_street	booking	no	Gate
 responsible_zip_code	booking	no	Postnummer
 Select a date and time	booking	no	Velg et tidspunkt
+Select a target audience	booking	no	Det må velges en målgruppe
 Selected date and time	booking	no	Valgte tidspunkter
 Send as sms	booking	no	Send som sms
 Send sms to contact	booking	no	Send sms til registrerte kontaktpersoner
