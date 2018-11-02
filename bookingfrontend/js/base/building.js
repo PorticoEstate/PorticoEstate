@@ -88,7 +88,8 @@ function getResourceVisible(resourceName) {
 }
 
 function PopulateCalendarEvents(baseURL, urlParams) {
-    $(".overlay").show();
+	$(".overlay").show();
+	$('.weekNumber').remove();
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     var m = 0;
@@ -706,7 +707,8 @@ function GenerateCalendarForEvents(date) {
 			$('.popover-title').remove();
 
 			$(".scheduler-event-title").text("");
-
+			$(".scheduler-base-nav-date").remove();
+			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
 			$(".scheduler-event-disabled").hover(function () {
                 if($(".tooltip").length == 0) {
                     $('.scheduler-event-disabled').tooltip({

@@ -82,6 +82,11 @@ function CreateUrlParams(params) {
     }    
 }
 
+Date.prototype.getWeek = function() {
+    var onejan = new Date(this.getFullYear(),0,1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+};
+
 $(document).ready(function ()
 {   setTimeout(function() {
         $('.showMe').css("display", "");
@@ -185,7 +190,7 @@ function formatDate(date, end) {
       
         var year = date.getFullYear();
       
-        return ("0" + date.getDate()).slice(-2) + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + year + " " + 
+        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
                 ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2) + 
                 " - " +
                ("0" + (end.getHours())).slice(-2)  + ":" + ("0" + (end.getMinutes())).slice(-2);

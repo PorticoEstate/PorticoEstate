@@ -55,6 +55,7 @@ function PopulateResourceData() {
 
 function PopulateCalendarEvents() {
     $(".overlay").show();
+    $('.weekNumber').remove();
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     var colors = { "allocation": "#2875c2", "booking": "#123456", "event": "#898989"}
@@ -320,6 +321,8 @@ function GenerateCalendarForEvents(date) {
                 
                 $('.popover-title').remove();
 
+                $(".scheduler-base-nav-date").remove();
+			    $(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
                 $(".scheduler-event-title").text("");                
 
                 $(".scheduler-event-disabled").hover(function () {
