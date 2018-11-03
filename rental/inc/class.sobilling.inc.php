@@ -64,7 +64,7 @@
 			}
 			else
 			{
-				$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.location_id, rb.title, rb.export_format, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year, rcr.title as responsibility_title';
+				$cols = 'rb.id, rb.total_sum, rb.success, rb.created_by, rb.timestamp_start, rb.timestamp_stop, rb.timestamp_commit, rb.voucher_id, rb.location_id, rb.title, rb.export_format, rbi.id as billing_info_id, rbi.term_id, rbi.month, rbi.year, rcr.title as responsibility_title';
 				$dir = $ascending ? 'ASC' : 'DESC';
 				$order = $sort_field ? "ORDER BY rb.{$this->marshal($sort_field, 'field')} {$dir}" : 'ORDER BY rb.timestamp_stop DESC';
 			}
@@ -82,6 +82,7 @@
 				$billing->set_timestamp_start($this->db->f('timestamp_start', true));
 				$billing->set_timestamp_stop($this->db->f('timestamp_stop', true));
 				$billing->set_timestamp_commit($this->db->f('timestamp_commit', true));
+				$billing->set_voucher_id($this->db->f('voucher_id'));
 				$billing->set_export_format($this->db->f('export_format', true));
 				$billing->set_responsibility_title(lang($this->unmarshal($this->db->f('responsibility_title'), 'string')));
 
@@ -168,12 +169,13 @@
 				$this->marshal($billing->get_timestamp_start(), 'int'),
 				$this->marshal($billing->get_timestamp_stop(), 'int'),
 				$this->marshal($billing->get_timestamp_commit(), 'int'),
+				$this->marshal($billing->get_voucher_id(), 'int'),
 				$this->marshal($billing->get_location_id(), 'int'),
 				$this->marshal($billing->get_title(), 'string'),
 				$billing->is_deleted() ? 'true' : 'false',
 				$this->marshal($billing->get_export_format(), 'string'),
 			);
-			$query = "INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, deleted, export_format) VALUES (" . join(',', $values) . ")";
+			$query = "INSERT INTO rental_billing(total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, voucher_id, location_id, title, deleted, export_format) VALUES (" . join(',', $values) . ")";
 			$receipt = null;
 			if ($this->db->query($query))
 			{
@@ -193,6 +195,7 @@
 				'timestamp_start = ' . $this->marshal($billing->get_timestamp_start(), 'int'),
 				'timestamp_stop = ' . $this->marshal($billing->get_timestamp_stop(), 'int'),
 				'timestamp_commit = ' . $this->marshal($billing->get_timestamp_commit(), 'int'),
+				'voucher_id = ' . $this->marshal($billing->get_voucher_id(), 'int'),
 				'location_id = ' . $this->marshal($billing->get_location_id(), 'int'),
 				'title = ' . $this->marshal($billing->get_title(), 'string'),
 				"deleted = '" . ($billing->is_deleted() ? 'true' : 'false') . "'",

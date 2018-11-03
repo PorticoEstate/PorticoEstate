@@ -1488,15 +1488,27 @@ JS;
 
 			$id = phpgw::get_var('id', 'int');
 
+			rental_sobilling::get_instance()->transaction_begin();
+
 			$billing_job = rental_sobilling::get_instance()->get_single($id);
 			$export_format = $billing_job->get_export_format();
+
 			$result_transfer = $this->transfer($id, $export_format);
 			$result = null;
 
-			if($result_transfer)
+			if($result_transfer['transfer_ok'])
 			{
 				$billing_job->set_timestamp_commit(time());
+				$billing_job->set_voucher_id($result_transfer['voucher_id']);
 				$result = rental_sobilling::get_instance()->store($billing_job);
+				rental_sobilling::get_instance()->transaction_commit();
+			}
+			else
+			{
+				/**
+				 * Revert voucher increment
+				 */
+				rental_sobilling::get_instance()->transaction_abort();
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -1516,6 +1528,7 @@ JS;
 
 		private function transfer( $id, $export_format )
 		{
+			$voucher_id = null;
 			$export_format_arr = explode('_', $export_format);
 			$file_ending = $export_format_arr[1];
 			if ($file_ending == 'gl07')
@@ -1539,7 +1552,12 @@ JS;
 					return true;
 				}
 
-				$filename = '14PU' . sprintf("%08s",$id) . ".txt";
+				/**
+				 * Get voucher number
+				 */
+				$voucher_id = rental_sobilling::get_instance()->increment_id('faktura_buntnr');
+
+				$filename = '14PU' . sprintf("%08s",$voucher_id) . ".txt";
 			}
 			else
 			{
@@ -1613,8 +1631,10 @@ JS;
 				$this->message['error'][] = array('msg' => lang('transfer is not configured'));
 				$transfer_ok = true;
 			}
-			return $transfer_ok;
-
+			return array(
+				'transfer_ok' => $transfer_ok,
+				'voucher_id'	=> $voucher_id
+				);
 		}
 
 		protected function phpftp_connect($config)
@@ -1788,6 +1808,9 @@ JS;
 			//$browser = CreateObject('phpgwapi.browser');
 			//$browser->content_header('export.txt','text/plain');
 
+			$id = phpgw::get_var('id', 'int');
+			$billing_job = rental_sobilling::get_instance()->get_single($id);
+
 			$config = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 			$organization = empty($config->config_data['organization']) ? 'bergen' : $config->config_data['organization'];
@@ -1800,7 +1823,6 @@ JS;
 			{
 				if ($toExcel == null)
 				{
-					$id = phpgw::get_var('id', 'int');
 					$export_format = explode('_', phpgw::get_var('export_format'));
 					$file_ending = $export_format[1];
 					if ($file_ending == 'gl07')
@@ -1814,8 +1836,10 @@ JS;
 					$date = date('Ymd', $stop);
 					if($organization == 'nlsh')
 					{
-//						$filename = '14PU' . sprintf("%08s",$id) . ".{$file_ending}";
-						$filename = '14PU' . sprintf("%08s",$id) . ".txt";
+						$voucher_id = $billing_job->get_voucher_id();
+						$_id = $voucher_id ? $voucher_id : $id;
+//						$filename = '14PU' . sprintf("%08s",$_id) . ".{$file_ending}";
+						$filename = '14PU' . sprintf("%08s",$_id) . ".txt";
 					}
 					else
 					{
@@ -1842,7 +1866,6 @@ JS;
 				}
 				else
 				{
-					$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 					$billing_info_array = rental_sobilling_info::get_instance()->get(0, 0, '', false, '', '', array(
 						'billing_id' => phpgw::get_var('id')));
 					$type = phpgw::get_var('type', 'string', 'GET', 'bk');

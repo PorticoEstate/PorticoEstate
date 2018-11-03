@@ -369,6 +369,7 @@
 				'timestamp_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'timestamp_stop' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'timestamp_commit' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'voucher_id' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false), // Contract type
 				'title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'deleted' => array('type' => 'bool', 'default' => 'false'),

@@ -1013,3 +1013,25 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.39';
+	function rental_upgrade0_1_0_39()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator(name,value,descr) "
+			. "VALUES('faktura_buntnr', 0, 'buntnr utgående faktura')", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_billing', 'voucher_id', array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.40';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
