@@ -29,7 +29,7 @@
 
          <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top">
             <!-- Brand -->
-            <a href="{site_url}"><img class="navbar-brand brand-site-img" src="{logoimg}" width="40"/></a>
+			<a href="{site_url}"><img class="navbar-brand brand-site-img" src="{logoimg}" alt="{logo_title}" width="40"/></a>
             <a class="navbar-brand brand-site-title" href="{site_url}">{site_title}</a>
 
             <!-- Toggler/collapsibe Button -->

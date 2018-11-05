@@ -74,6 +74,15 @@ JS;
 		$logoimg = $GLOBALS['phpgw_info']['server']['logo_url'];
 		$GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
 	}
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_title']))
+	{
+		$logo_title = $GLOBALS['phpgw_info']['server']['logo_title'];
+	}
+	else
+	{
+		$logo_title = 'Logo';
+	}
+	$GLOBALS['phpgw']->template->set_var( 'logo_title', $logo_title );
 
 	//loads jquery
 	phpgwapi_jquery::load_widget('core');
