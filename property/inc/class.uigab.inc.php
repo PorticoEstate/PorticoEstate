@@ -285,6 +285,7 @@
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uigab.index',
+//						'location_code'	=> $location_code,
 						'phpgw_return_as' => 'json'
 					)),
 					'new_item' => self::link(array(
@@ -443,7 +444,7 @@ JS;
 					'text', 'text', 'link', 'link'),
 				'name' => array('gab_id', 'gaards_nr', 'bruksnr', 'feste_nr', 'seksjons_nr',
 					'owner', 'location_code', 'address', 'map', 'gab'),
-				'formatter' => array('', '', '', '', '', '', '', '', 'linktToMap', 'linktToGab'),
+				'formatter' => array('', '', '', '', '', '', 'linktToLocation', '', 'linktToMap', 'linktToGab'),
 				'sortable' => array('', true, true, true, true, '', true, true, '', ''),
 				'descr' => array('dummy', lang('Gaards nr'), lang('Bruks nr'), lang('Feste nr'),
 					lang('Seksjons nr'), lang('Owner'), lang('Location'), lang('Address'),
@@ -554,6 +555,11 @@ JS;
 						else if ($uicols['name'][$i] == 'owner')
 						{
 							$value = $lang_yes_no[$gab[$uicols['name'][$i]]];
+						}
+						else if ($uicols['name'][$i] == 'location_code'  && !preg_match('/^0000/', $gab[$uicols['name'][$i]]))
+						{
+							$values[$j]['link_location'] = self::link(array('menuaction' => 'property.uilocation.view','location_code' => $gab[$uicols['name'][$i]]));
+							$value = $gab[$uicols['name'][$i]];
 						}
 						else
 						{
