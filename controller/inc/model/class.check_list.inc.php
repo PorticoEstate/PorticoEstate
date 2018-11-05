@@ -413,8 +413,8 @@
 			//Validate COMPLETED DATE against DEADLINE
 			if ($this->completed_date > $this->deadline)
 			{
-				$status = false;
-				$this->error_msg_array['completed_date'] = "error_msg_9";
+//				$status = false;
+//				$this->error_msg_array['completed_date'] = "error_msg_9";
 			}
 
 			// Validate connection to COMPONENT/LOCATION
