@@ -941,7 +941,9 @@
 					{
 						$found = false;
 
-                        if(($b['from_'] >= $from_ && $b['from_'] <= $to_) 
+                        //Sigurd: altered 20181104
+						//if(($b['from_'] >= $from_ && $b['from_'] <= $to_)
+                        if(($b['from_'] > $from_ && $b['from_'] < $to_)
 							|| ($b['to_'] > $from_ && $b['to_'] < $to_)
 							|| ($b['from_'] <= $from_ && $b['to_'] >= $to_))
 						{

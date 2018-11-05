@@ -282,3 +282,6 @@
 			. " (id, name) VALUES (1, 'Type 1' )", __LINE__, __FILE__);
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
 			. " (id, name) VALUES (2, 'Type 2' )", __LINE__, __FILE__);
+
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator(name,value,descr) "
+		. "VALUES('faktura_buntnr', 0, 'buntnr utgående faktura')", __LINE__, __FILE__);

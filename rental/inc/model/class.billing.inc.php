@@ -27,6 +27,7 @@
 		protected $contract_type_title;
 		protected $billing_info;
 		protected $responsibility_title;
+		protected $voucher_id;
 		public static $so;
 
 		public function __construct( int $id, int $location_id, $title, int $created_by )
@@ -134,6 +135,15 @@
 		public function get_timestamp_commit()
 		{
 			return $this->timestamp_commit;
+		}
+		public function set_voucher_id( $voucher_id )
+		{
+			$this->voucher_id = $voucher_id;
+		}
+
+		public function get_voucher_id()
+		{
+			return $this->voucher_id;
 		}
 
 		/**
