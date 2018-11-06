@@ -332,8 +332,10 @@
 				. " JOIN bb_resource as res ON ( res.id=$resource_id)"
 				. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
 				. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
-				. " WHERE bb_season.building_id=bb_building_resource.building_id AND bb_season.active=1"
-				. " AND bb_season.status='PUBLISHED' AND ((bb_allocation.from_ >= '$start'"
+				. " WHERE bb_season.building_id=bb_building_resource.building_id"
+				. " AND bb_season.active=1"
+				. " AND bb_season.status='PUBLISHED'"
+				. " AND ((bb_allocation.from_ >= '$start'"
 				. " AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start'"
 				. " AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))";
 

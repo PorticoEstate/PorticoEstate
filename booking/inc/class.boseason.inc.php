@@ -127,11 +127,17 @@
 					$errors = $this->bo_allocation->validate($allocation);
 
 					if (!$errors)
+					{
 						$valid[] = $allocation;
+					}
 					elseif (count($this->bo_allocation->filter_conflict_errors($errors)) === 0)
+					{
 						$invalid[] = $allocation;
+					}
 					else
+					{
 						throw new UnexpectedValueException('Encountered an unexpected validation error');
+					}
 				}
 				if ($date->format('N') == 7) // sunday
 				{
