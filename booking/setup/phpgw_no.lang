@@ -57,7 +57,6 @@ cancelled	booking	no	Avbestilt
 case officer	booking	no	Saksbehandler
 category	booking	no	Kategori
 choose a date	booking	no	Velg dato
-choose a date	booking	no	Velg en dato
 choose file	booking	no	Velg dokument
 city	booking	no	Poststed
 click to sort ascending	booking	no	Klikk for å sortere stigende

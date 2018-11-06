@@ -43,7 +43,7 @@
                   <li class="nav-item">
                       <form id="navbar-search-form">
                       <div class="input-group mb-3">
-                        <input class="form-control" type="text" placeholder="Søk sted, hall, aktivitet, utstyr" />
+								<input class="form-control" type="text" placeholder="{placeholder_search}" />
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
                           </div>

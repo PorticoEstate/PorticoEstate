@@ -99,7 +99,7 @@
 								<div class="building-card-header">
 									<h5 class="mb-0">
 										<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
-											Fasiliteter
+											<xsl:value-of select="php:function('lang', 'Facilities')"/>
 										</button>
 										<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
 									</h5>
@@ -123,7 +123,7 @@
 							<div class="building-card-header">
 								<h5 class="mb-0">
 									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePictures" aria-expanded="false">
-										Bilder
+										<xsl:value-of select="php:function('lang', 'Pictures')"/>
 									</button>
 									<button data-toggle="collapse" data-target="#collapsePictures" class="btn fas fa-plus float-right"></button>
 								</h5>
@@ -139,7 +139,7 @@
 								<div class="building-card-header">
 									<h5 class="mb-0">
 										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
-											Åpningstider
+											<xsl:value-of select="php:function('lang', 'Opening hours')"/>
 										</button>
 										<button data-toggle="collapse" data-target="#collapseTwo" class="btn fas fa-plus float-right"></button>
 									</h5>
@@ -157,7 +157,7 @@
 								<div class="building-card-header">
 									<h5 class="mb-0">
 										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
-											Kontaktinformasjon
+											<xsl:value-of select="php:function('lang', 'contact information')"/>
 										</button>
 										<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
 									</h5>
@@ -189,7 +189,10 @@
             
 			<xsl:if test="building/deactivate_calendar=0">
 				<div class="col-6 button-group dropdown calendar-tool">
-                	<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0"><i class="far fa-calendar-alt"></i> Velg dato</button>
+					<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0">
+						<i class="far fa-calendar-alt"></i>&#160;
+						<xsl:value-of select="php:function('lang', 'choose a date')"/>
+					</button>
 					<xsl:if test="building/deactivate_application=0">
 						<a href="" class="btn btn-default bookBtnForward"><i class="fas fa-plus"></i>&#160;
 							<xsl:value-of select="php:function('lang', 'Book resource')" />

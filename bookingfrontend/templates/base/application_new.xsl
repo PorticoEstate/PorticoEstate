@@ -63,13 +63,25 @@
                         <div class="form-group">
                         <div class="row">
                                 <div class="form-group col-lg-5 col-sm-12 col-12">
-                                    <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
+									<input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate">
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="php:function('lang', 'Date')"/>
+										</xsl:attribute>
+									</input>
                                 </div>                            
                                 <div class="form-group col-lg-3 col-sm-6 col-6">
-                                    <input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime" placeholder="Fra"/>
+									<input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime">
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="php:function('lang', 'from')"/>
+										</xsl:attribute>
+									</input>
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-6 col-6">
-                                    <input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime" placeholder="Til"/>
+									<input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime">
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="php:function('lang', 'to')"/>
+										</xsl:attribute>
+									</input>
                                 </div>
                             </div>
                                                       
@@ -170,10 +182,10 @@
                                     <span class="mt-2" data-bind="text: agegroupLabel"></span>
                                 </div>
                                 <div class="col-4">                                    
-                                    <input class="form-control sm-input maleInput" placeholder="mann" data-bind=""/>
+                                    <input class="form-control sm-input maleInput" data-bind=""/>
                                 </div>
                                 <div class="col-4">
-                                    <input class="form-control sm-input femaleInput" placeholder="kvinne" data-bind=""/>
+                                    <input class="form-control sm-input femaleInput" data-bind=""/>
                                 </div>
                             </div>
                                                                                        
@@ -218,7 +230,9 @@
                     <hr class="mt-5 mb-5"></hr>
                     
                     <div class="form-group float-right">
-                        <button class="btn btn-light" type="submit">Legg til søknad</button>
+						<button class="btn btn-light" type="submit">
+							<xsl:value-of select="php:function('lang', 'Add application')" />
+						</button>
                     </div>
                 </div>
             </div>

@@ -5,7 +5,10 @@
 
 	<span class="d-block"><xsl:value-of select="booking/when"/></span>
 	
-	<div><span class="font-weight-bold text-uppercase">STED: </span>
+	<div>
+		<span class="font-weight-bold text-uppercase">
+			<xsl:value-of select="php:function('lang', 'Place')"/>:
+		</span>
 		<a href="{booking/building_link}">
 			<xsl:value-of select="booking/building_name"/>
 		</a>

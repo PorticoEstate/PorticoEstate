@@ -5,14 +5,20 @@
 
 	<span class="d-block"><xsl:value-of select="event/when"/></span>
 	
-	<div><span class="font-weight-bold text-uppercase">STED: </span>
+	<div>
+		<span class="font-weight-bold text-uppercase">
+			<xsl:value-of select="php:function('lang', 'Place')"/>:
+		</span>
 		<a href="{event/building_link}">
 				<xsl:value-of select="event/building_name"/>
 			</a>
 		(<xsl:value-of select="event/resource_info"/>)
 	</div>
 
-	<div><span class="font-weight-bold text-uppercase">ARRANGØR: </span>
+	<div>
+		<span class="font-weight-bold text-uppercase">
+			<xsl:value-of select="php:function('lang', 'Organizer')"/>:
+		</span>
 		<xsl:if test="orginfo">
 			<a href="{orginfo/link}">
 				<xsl:value-of select="orginfo/name"/>
@@ -28,11 +34,11 @@
 					<!--<xsl:value-of select="event/contact_name"/>-->
 					<xsl:if test="event/contact_email != ''">
 						<br/>
-						E-post: <xsl:value-of select="event/contact_email"/>
+					<xsl:value-of select="php:function('lang', 'contact_email')"/>: <xsl:value-of select="event/contact_email"/>
 					</xsl:if>
 					<xsl:if test="event/contact_phone != ''">
 						<br/>
-						Telefon: <xsl:value-of select="event/contact_phone"/>
+					<xsl:value-of select="php:function('lang', 'contact_phone')"/>: <xsl:value-of select="event/contact_phone"/>
 					</xsl:if>
 			</xsl:if>
 			<xsl:if test="event/is_public=0">

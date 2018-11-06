@@ -58,7 +58,7 @@
 							<div class="building-card-header">
 								<h5 class="mb-0">
 									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
-										Bilder
+												<xsl:value-of select="php:function('lang', 'Pictures')" />
 									</button>
 									<button data-toggle="collapse" data-target="#collapseTwo" class="btn fas fa-plus float-right"></button>
 								</h5>
@@ -74,7 +74,7 @@
 								<div class="building-card-header">
 									<h5 class="mb-0">
 										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
-											Åpningstider
+													<xsl:value-of select="php:function('lang', 'Opening hours')" />
 										</button>
 										<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
 									</h5>
@@ -92,7 +92,7 @@
 								<div class="building-card-header">
 									<h5 class="mb-0">
 										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
-											Kontaktinformasjon
+													<xsl:value-of select="php:function('lang', 'contact information')" />
 										</button>
 										<button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
 									</h5>
@@ -127,12 +127,16 @@
 						</a>
 						
 						<div data-bind="foreach: activitiesList">							
-									<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt for: </span>
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
+									</span>
 							<span class="mr-2 textTagsItems" data-bind="text: $data"></span>
 						</div>
 
 								<div class="mt-2" data-bind="foreach: facilitiesList">
-									<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Facilities')"/>:
+									</span>
 									<span class="textTagsItems" data-bind="text: $data"></span>
 								</div>
 
@@ -158,7 +162,7 @@
 				<div class="col-6">
 					<div class="button-group dropdown calendar-tool invisible">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								Velg lokaler
+								<xsl:value-of select="php:function('lang', 'Choose resources')"/>
 								<span class="caret"></span>
 							</button>
 
@@ -175,7 +179,8 @@
 							</ul>
 
 							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
-								<i class="far fa-calendar-alt"></i> Velg dato
+								<i class="far fa-calendar-alt"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'choose a date')"/>
 							</button>
 
 							<xsl:if test="building/deactivate_application=0">

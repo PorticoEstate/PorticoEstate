@@ -209,6 +209,7 @@ JS;
 		'metainfo_description' => $description,
 		'metainfo_robots' => $robots,
 		'lbl_search'   	=> lang('Search'),
+		'placeholder_search'	=> lang('Search building, resource, organization'),
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);

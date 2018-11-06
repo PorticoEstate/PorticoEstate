@@ -8,7 +8,11 @@
 				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 			</div>
             <div class="input-group input-group-lg">
-                <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large" aria-describedby="inputGroup-sizing-sm" placeholder="Søk sted, hall, aktivitet, utstyr el"/>
+					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+						</xsl:attribute>
+					</input>
                 <div class="input-group-prepend">
                     <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
                         <i class="fas fa-search"></i>
@@ -18,7 +22,7 @@
             <div id="search-autocomplete"></div>
 
              <!-- FILTER BOXES> -->
-             <h5 class="mt-5 font-weight-bold">Velg kategorier</h5>
+				<h5 class="mt-5 font-weight-bold"><xsl:value-of select="php:function('lang', 'Choose categories')"/></h5>
             <div class="row mx-auto" data-bind="if: filterboxes().length > 0">
                 <div data-bind="foreach: filterboxes">
                         <div class="dropdown d-inline-block mr-2">
@@ -35,7 +39,7 @@
             <div class="row mx-auto mt-3" data-bind="if: selectedFilterbox">
                 <div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
                     <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Tilrettelagt for
+							<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
                     </button>
                     <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
@@ -44,7 +48,7 @@
 
                 <div class="dropdown d-inline-block" data-bind="if: facilities().length > 0">
                     <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Fasiliteter      
+							<xsl:value-of select="php:function('lang', 'Facilities')"/>
                     </button>
                     <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
                         <div class="dropdown-item d-block">
@@ -56,7 +60,7 @@
 
                 <div class="dropdown d-inline-block" data-bind="if: towns().length > 0">
                     <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Bydel      
+							<xsl:value-of select="php:function('lang', 'Part of town (2018)')"/>
                     </button>
                     <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
                         <div class="dropdown-item d-block">
@@ -113,7 +117,7 @@
         
         <!-- SEARCH RESULT -->
         <div id="searchResult" data-bind="if: notFilterSearch">
-            <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: items().length"></span>)</h1>
+				<h1 class="text-center result-title"><xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
            
             <div class="row" id="result-items" data-bind="foreach: items">
                 <div class="col-lg-6 card-positioncorrect">
@@ -151,7 +155,7 @@
         
         <!-- FILTER SEARCH RESULT -->
         <div id="filterSearchResult" data-bind="if: selectedFilterbox"> 
-            <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: filterSearchItems().length"></span>)</h1>
+				<h1 class="text-center result-title"><xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>
             <div data-bind="if: filterSearchItems().length > 0">
             
             <div class="row" data-bind="foreach: filterSearchItems">
@@ -188,20 +192,34 @@
                                             <h5 class="font-weight-bold" data-bind="html: name"></h5>
                                         </div>
                                         <div class="col-6">
-                                            <a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">Book</a>
+										<a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">
+											<xsl:value-of select="php:function('lang', 'Book resource')"/>
+										</a>
                                         </div>
                                     </div>
                                     <div data-bind="foreach: activities">
-										<span class="tagTitle" data-bind="if: $index() == 0">Tilrettelagt for: </span>
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
+									</span>
                                         <span class="mr-2 textTagsItems" data-bind="html: name" ></span>
                                     </div>
 									<div data-bind="foreach: facilities">
-										<span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Facilities')"/>:
+									</span>
 										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
 									</div>
                         </div>                                
                     </div>
-                    <div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2"><i class="fas fa-angle-down"></i> Se <span data-bind="text: (filterSearchItemsResources().length - 2) "></span> flere</div>
+							<div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2">
+								<i class="fas fa-angle-down"></i>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'See')"/>
+								<xsl:text> </xsl:text>
+								<span data-bind="text: (filterSearchItemsResources().length - 2) "></span>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'more')"/>
+							</div>
 
                 </div>
             </div>
