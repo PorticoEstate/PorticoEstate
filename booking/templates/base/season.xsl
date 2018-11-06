@@ -7,6 +7,12 @@
 			<xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
 			<div id="season_show" class="booking-container">
 				<div class="pure-control-group">
+					<label for="field_name">
+						<xsl:value-of select="php:function('lang', 'Name')" />
+					</label>
+					<xsl:value-of select="season/name"/>
+				</div>
+				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Case officer')" />
 					</label>

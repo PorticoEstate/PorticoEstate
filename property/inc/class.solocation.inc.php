@@ -2307,7 +2307,7 @@
 
 			$sql = "SELECT fm_district.descr"
 				. " FROM fm_locations"
-				. " {$this->join} fm_location1 ON (fm_locations.loc1 = fm_locations.loc1)"
+				. " {$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)"
 				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)"
 				. " {$this->join} fm_district ON (fm_part_of_town.district_id = fm_district.id)"
 				. " WHERE fm_locations.location_code = '{$location_code}'";

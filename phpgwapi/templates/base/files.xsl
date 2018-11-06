@@ -16,7 +16,7 @@
 	
 	<div class="pure-control-group">
 		<xsl:choose>
-			<xsl:when test="multiple_uploader!=''">
+			<xsl:when test="multiple_uploader=1">
 				<label>
 					<a href="javascript:fileuploader('{$section}')" class="pure-button">
 						<xsl:attribute name="title">

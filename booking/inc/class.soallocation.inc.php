@@ -93,7 +93,7 @@
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			set_time_limit(300);
-			$allocation_id = $entity['id'] ? $entity['id'] : -1;
+			$allocation_id = !empty($entity['id']) ? $entity['id'] : -1;
 
 			// FIXME: Validate: Season contains all resources
 
