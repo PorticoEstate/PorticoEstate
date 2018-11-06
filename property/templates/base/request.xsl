@@ -3,11 +3,11 @@
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
-		<xsl:call-template name="jquery_phpgw_i18n"/>
+			<xsl:call-template name="jquery_phpgw_i18n"/>
 			<xsl:apply-templates select="edit"/>
 		</xsl:when>
 		<xsl:when test="view">
-		<xsl:call-template name="jquery_phpgw_i18n"/>
+			<xsl:call-template name="jquery_phpgw_i18n"/>
 			<xsl:apply-templates select="view"/>
 		</xsl:when>
 		<xsl:when test="priority_form">
@@ -254,7 +254,7 @@
 				<div class="clearBoth">&nbsp;</div>
 				<hr/>
 				<div>
-				<div class="pure-u-1">
+					<div class="pure-u-1">
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible unit')"/>
@@ -296,8 +296,8 @@
 							<xsl:call-template name="user_id_select"/>
 						</div>
 					</div>
-				<div class="pure-u-1">
-							<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
+					<div class="pure-u-1">
+						<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
 						<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
 						<xsl:choose>
 							<xsl:when test="mode ='edit'">
@@ -423,154 +423,154 @@
 				</div>
 				<div class="clearBoth">&nbsp;</div>
 				<hr/>
-					<div class="pure-u-1 pure-u-lx-1-3">
-						<h3>
-							<xsl:value-of select="php:function('lang', 'action year')"/>
-						</h3>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'recommended year')"/>
-							</label>
-							<input type="text" data-validation="number" id="recommended_year" name="values[recommended_year]" size="10" value="{value_recommended_year}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'year')"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-optional">
-									<xsl:text>true</xsl:text>
-								</xsl:attribute>
-							</input>
-						</div>
-						<xsl:choose>
-							<xsl:when test="show_dates !=''">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'start date')"/>
-									</label>
-									<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_start_date_statustext"/>
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'end date')"/>
-									</label>
-									<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_end_date_statustext"/>
-										</xsl:attribute>
-									</input>
-								</div>
-							</xsl:when>
-						</xsl:choose>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'entry date')"/>
-							</label>
-							<xsl:value-of select="value_entry_date"/>
-						</div>
+				<div class="pure-u-1 pure-u-lx-1-3">
+					<h3>
+						<xsl:value-of select="php:function('lang', 'action year')"/>
+					</h3>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'recommended year')"/>
+						</label>
+						<input type="text" data-validation="number" id="recommended_year" name="values[recommended_year]" size="10" value="{value_recommended_year}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'year')"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
 					</div>
-					<div class="pure-u-1 pure-u-lx-1-3">
+					<xsl:choose>
+						<xsl:when test="show_dates !=''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'start date')"/>
+								</label>
+								<input type="text" id="values_start_date" name="values[start_date]" size="10" value="{value_start_date}" readonly="readonly">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_start_date_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'end date')"/>
+								</label>
+								<input type="text" id="values_end_date" name="values[end_date]" size="10" value="{value_end_date}" readonly="readonly">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_end_date_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'entry date')"/>
+						</label>
+						<xsl:value-of select="value_entry_date"/>
+					</div>
+				</div>
+				<div class="pure-u-1 pure-u-lx-1-3">
 
-						<h3>
-							<!-- xsl:value-of select="php:function('lang', 'economy and progress')"/ -->
-							<xsl:value-of select="php:function('lang', 'action cost overview')"/>
-						</h3>
-						<div class="pure-control-group">
-							<label class="requirement-action-label">
-								<xsl:value-of select="php:function('lang', 'cost operation')"/>
-							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" id="amount_operation" name="values[amount_operation]" value="{value_amount_operation}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_budget_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-optional">
-									<xsl:text>true</xsl:text>
-								</xsl:attribute>
-							</input>
-							<xsl:text> </xsl:text>
-						</div>
-						<div class="pure-control-group">
-							<label class="requirement-action-label">
-								<xsl:value-of select="php:function('lang', 'cost investment')"/>
-							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" id="amount_investment" name="values[amount_investment]" value="{value_amount_investment}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_budget_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-optional">
-									<xsl:text>true</xsl:text>
-								</xsl:attribute>
-							</input>
-							<xsl:text> </xsl:text>
-						</div>
-						<div class="pure-control-group">
-							<label class="requirement-action-label">
-								<xsl:value-of select="php:function('lang', 'cost estimate')"/>
-							</label>
-							<xsl:value-of select="value_budget"/>
-							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-						</div>
-						<div class="pure-control-group">
-							<label class="requirement-action-label">
-								<xsl:value-of select="php:function('lang', 'multiplier')"/>
-							</label>
-							<xsl:value-of select="value_multiplier"/>
-						</div>
-						<div class="pure-control-group">
-							<label class="requirement-action-label">
-								<xsl:value-of select="php:function('lang', 'total cost estimate')"/>
-							</label>
-							<xsl:value-of select="value_total_cost_estimate"/>
-							<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
-						</div>
+					<h3>
+						<!-- xsl:value-of select="php:function('lang', 'economy and progress')"/ -->
+						<xsl:value-of select="php:function('lang', 'action cost overview')"/>
+					</h3>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'cost operation')"/>
+						</label>
+						<input type="text" data-validation="number" data-validation-allowing="float" id="amount_operation" name="values[amount_operation]" value="{value_amount_operation}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_budget_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text>
 					</div>
-					<div class="pure-u-1 pure-u-lx-1-3">
-						<h3>
-							<xsl:value-of select="php:function('lang', 'extra')"/>
-						</h3>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'cost investment')"/>
+						</label>
+						<input type="text" data-validation="number" data-validation-allowing="float" id="amount_investment" name="values[amount_investment]" value="{value_amount_investment}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_budget_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text>
+					</div>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'cost estimate')"/>
+						</label>
+						<xsl:value-of select="value_budget"/>
+						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+					</div>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'multiplier')"/>
+						</label>
+						<xsl:value-of select="value_multiplier"/>
+					</div>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'total cost estimate')"/>
+						</label>
+						<xsl:value-of select="value_total_cost_estimate"/>
+						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+					</div>
+				</div>
+				<div class="pure-u-1 pure-u-lx-1-3">
+					<h3>
+						<xsl:value-of select="php:function('lang', 'extra')"/>
+					</h3>
 
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'potential grants')"/>
-							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="lang_budget_statustext"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-optional">
-									<xsl:text>true</xsl:text>
-								</xsl:attribute>
-							</input>
-							<xsl:text> </xsl:text>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'category')"/>
-							</label>
-							<xsl:call-template name="categories"/>
-						</div>
-						<xsl:choose>
-							<xsl:when test="notify='yes'">
-								<div class="pure-control-group">
-									<label class="requirement-action-label-wide">
-										<xsl:value-of select="lang_notify"/>
-									</label>
-									<input type="checkbox" name="values[notify]" value="True">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_notify_statustext"/>
-										</xsl:attribute>
-									</input>
-									<input type="text" name="values[mail_address]" value="{value_notify_mail_address}">
-										<xsl:attribute name="title">
-											<xsl:value-of select="lang_notify_statustext"/>
-										</xsl:attribute>
-									</input>
-								</div>
-							</xsl:when>
-						</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'potential grants')"/>
+						</label>
+						<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_potential_grants]" value="{value_amount_potential_grants}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_budget_statustext"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
+						<xsl:text> </xsl:text>
 					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'category')"/>
+						</label>
+						<xsl:call-template name="categories"/>
+					</div>
+					<xsl:choose>
+						<xsl:when test="notify='yes'">
+							<div class="pure-control-group">
+								<label class="requirement-action-label-wide">
+									<xsl:value-of select="lang_notify"/>
+								</label>
+								<input type="checkbox" name="values[notify]" value="True">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_notify_statustext"/>
+									</xsl:attribute>
+								</input>
+								<input type="text" name="values[mail_address]" value="{value_notify_mail_address}">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_notify_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+				</div>
 				<div class="clearBoth">&nbsp;</div>
 				<hr/>
 				<div class="pure-u-1">
@@ -594,7 +594,7 @@
 			</div>
 			<div id="documents">
 				<xsl:choose>
-					<xsl:when test="files!=''">
+					<xsl:when test="fileupload = 1">
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="//lang_files"/>
@@ -616,6 +616,10 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="fileupload = 1">
+						<script type="text/javascript">
+							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+							var project_id = '<xsl:value-of select="value_request_id"/>';
+						</script>
 						<div class="pure-control-group">
 							<xsl:call-template name="file_upload"/>
 						</div>
