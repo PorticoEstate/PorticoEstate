@@ -256,10 +256,10 @@
 									<span class="mt-2" data-bind="text: agegroupLabel"></span>
 								</div>
 								<div class="col-4">
-									<input class="form-control sm-input maleInput" placeholder="mann" data-bind=""/>
+									<input class="form-control sm-input maleInput" data-bind=""/>
 								</div>
 								<div class="col-4">
-									<input class="form-control sm-input femaleInput" placeholder="kvinne" data-bind=""/>
+									<input class="form-control sm-input femaleInput" data-bind=""/>
 								</div>
 							</div>
 						</div>
