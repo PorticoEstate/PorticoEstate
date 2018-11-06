@@ -59,7 +59,11 @@
 			'view_file' => true,
 			'download' => true,
 			'columns' => true,
-			'get_related' => true
+			'get_related' => true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true,
+			'get_files'				=> true,
+			'view_image'			=> true,
 		);
 
 		public function __construct()
@@ -196,6 +200,186 @@
 				'recommended_year' => $this->recommended_year
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+			(
+				'menuaction' => 'property.uirequest.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$values = $this->bo->get_files($id);
+
+			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$z = 0;
+			foreach ($values as $_entry)
+			{
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'property.uirequest.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir'] = 'request/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uirequest.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
+
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
 		}
 
 		private function _get_filters()
@@ -1359,14 +1543,23 @@ JS;
 				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '" >';
 			}
 
+			$files_def = array
+				(
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
+				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+					'resizeable' => true)
+			);
+
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_1',
-				'requestUrl' => "''",
-				'ColumnDefs' => array(array('key' => 'file_name', 'label' => lang('Filename'),
-						'sortable' => false, 'resizeable' => true),
-					array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
-						'resizeable' => true, 'formatter' => 'FormatterCenter')),
+//				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uirequest.get_files',
+						'id' => $id, 'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $files_def,
 				'data' => json_encode($content_files),
 				'config' => array(
 					array('disableFilter' => true),
@@ -1588,7 +1781,9 @@ JS;
 				'value_multiplier' => $values['multiplier'],
 				'value_total_cost_estimate' => $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']), 0, ',', ' ') : '',
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+					'date', 'security', 'file')),
+				'multiple_uploader' => !!$id,
+				'multi_upload_parans' => "{menuaction:'property.uirequest.build_multi_upload_file', id:'{$id}'}",
 			);
 
 			$appname = lang('request');
