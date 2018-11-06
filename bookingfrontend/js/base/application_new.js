@@ -115,7 +115,6 @@ $(".navbar-search").removeClass("d-none");
           }
           return list;
       });
-      self.noApplicationsInCart = ko.observable(false);
   }
   
         

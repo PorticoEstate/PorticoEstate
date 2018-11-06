@@ -217,10 +217,6 @@
                     
                     <hr class="mt-5 mb-5"></hr>
                     
-                    <div class="alert alert-warning" data-bind="visible: noApplicationsInCart" role="alert">
-                        <span>Legg til søknad først!</span>
-                    </div>
-
                     <div class="form-group float-right">
                         <button class="btn btn-light" type="submit">Legg til søknad</button>
                     </div>
