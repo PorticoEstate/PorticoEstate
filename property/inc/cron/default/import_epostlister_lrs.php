@@ -57,7 +57,7 @@
 
 		public function execute()
 		{
-			$this->get_files();
+	//		$this->get_files();
 
 			$dirname = $this->config->config_data['import']['local_path_email'];
 			$dirname = "/var/lib/phpgw/lrs/files/home";
@@ -190,8 +190,6 @@
 		{
 			$ok = true;
 
-			$file_name = basename($file);
-
 			$fp = fopen($file, 'rb');
 
 			$values = array();
@@ -214,26 +212,17 @@
 				'AgrHRRef'		=> 4,	//LRSAnsatteRefusjon
 			);
 
-
-
-			$i = 0;
 			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
 			{
-				//Stien, Maren Kolsrud ; Maren.Stien@bergen.kommune.no ; AgrHRLeder
-				$name = utf8_encode(trim($data[0]));
+				$name =  trim(mb_convert_encoding($data[0], "UTF-8", "utf-16"));
+				$email = trim(mb_convert_encoding($data[1], "UTF-8", "utf-16"));
+				$liste = trim(mb_convert_encoding($data[2], "UTF-8", "utf-16"));
+				$liste_id = $email_list[$liste];
 
-				if($i === 0)
-				{
-					$name = ltrim($name, 'ÿþ');
-				}
-
-				$email = trim($data[1]);
-				$liste = trim($data[2]);
 				if($liste)
 				{
-					$values[$liste][$email] = $name;
+					$values[$liste_id][$email] = $name;
 				}
-				$i++;
 			}
 
 			$ok = $this->update_email( $values );
@@ -249,7 +238,7 @@
 			if ($this->debug)
 			{
 				_debug_array(array_keys($values));
-				die();
+					_debug_array($values);
 			}
 die();
 
