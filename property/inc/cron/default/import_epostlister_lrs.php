@@ -221,7 +221,14 @@
 
 				if($liste)
 				{
-					$values[$liste_id][$email] = $name;
+					if($email)
+					{
+						$values[$liste_id][$email] = $name;
+					}
+					else
+					{
+						$this->receipt['error'][] = array('msg' => "{$name} i liste \"{$liste}\" mangler epost");
+					}
 				}
 			}
 
@@ -240,10 +247,14 @@
 				_debug_array(array_keys($values));
 					_debug_array($values);
 			}
-die();
+
+			if(!$values)
+			{
+				return;
+			}
 
 			$metadata = $GLOBALS['phpgw']->db->metadata('phpgw_helpdesk_email_out_recipient_list_temp');
-//_debug_array($metadata);
+_debug_array($metadata);
 			if (!$metadata)
 			{
 				$sql_table = <<<SQL
@@ -252,15 +263,15 @@ die();
 				  set_id integer NOT NULL,
 				  name character varying(255) NOT NULL,
 				  email character varying(255) NOT NULL,
-				  active smallint DEFAULT 0,
-				  public smallint,
+				  active smallint DEFAULT 1,
+				  public smallint DEFAULT 1,
 				  user_id integer,
 				  created bigint DEFAULT date_part('epoch'::text, now()),
 				  modified bigint DEFAULT date_part('epoch'::text, now()),
 				  CONSTRAINT phpgw_helpdesk_email_out_recipient_list_temp_pkey PRIMARY KEY (set_id, email),
 				  CONSTRAINT phpgw_helpdesk_email_out_recipient_list_set_id_fkey FOREIGN KEY (set_id)
 					  REFERENCES public.phpgw_helpdesk_email_out_recipient_set (id) MATCH SIMPLE
-					  ON UPDATE NO ACTION ON DELETE NO ACTION,
+					  ON UPDATE NO ACTION ON DELETE NO ACTION
 				);
 SQL;
 				$GLOBALS['phpgw']->db->query($sql_table, __LINE__, __FILE__);
@@ -272,79 +283,36 @@ SQL;
 			$error = false;
 
 
-			$GLOBALS['phpgw']->db->transaction_begin();
 
-			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list_temp (id, status, navn, adresse, postnummer, sted, organisasjonsnr, bankkontonr, aktiv)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list_temp (set_id, name, email)'
+				. ' VALUES(?, ?, ?)';
 
-			//remove duplicates
-
-			if(empty($values[0]['leverandornummer']))
-			{
-				_debug_array($values);
-				$error = true;
-			}
-			$vendors = array();
-			foreach ($values as $entry)
-			{
-				$vendors[$entry['leverandornummer']] = $entry;
-			}
-
-			unset($entry);
-//			_debug_array($vendors);die();
 
 			$valueset = array();
 
-			foreach ($vendors as $key => $entry)
+			foreach ($values as $set_id => $sub_list)
 			{
-				$valueset[] = array
-					(
-					1 => array
+				foreach ($sub_list as $email => $name)
+				{
+					$valueset[] = array
 						(
-						'value' => (int)$entry['leverandornummer'],
-						'type' => PDO::PARAM_INT
-					),
-					2 => array
-						(
-						'value' => $entry['status'],
-						'type' => PDO::PARAM_STR
-					),
-					3 => array
-						(
-						'value' => $entry['navn'],
-						'type' => PDO::PARAM_STR
-					),
-					4 => array
-						(
-						'value' => $entry['adresse'],
-						'type' => PDO::PARAM_STR
-					),
-					5 => array
-						(
-						'value' => $entry['postnummer'],
-						'type' => PDO::PARAM_STR
-					),
-					6 => array
-						(
-						'value' => $entry['sted'],
-						'type' => PDO::PARAM_STR
-					),
-					7 => array
-						(
-						'value' => $entry['organisasjonsNr'],
-						'type' => PDO::PARAM_STR
-					),
-					8 => array
-						(
-						'value' => $entry['bankkontoNr'],
-						'type' => PDO::PARAM_STR
-					),
-					9 => array
-						(
-						'value' => (int)$entry['aktiv'],
-						'type' => PDO::PARAM_INT
-					)
-				);
+						1 => array
+							(
+							'value' => (int)$set_id,
+							'type' => PDO::PARAM_INT
+						),
+						2 => array
+							(
+							'value' => $name,
+							'type' => PDO::PARAM_STR
+						),
+						3 => array
+							(
+							'value' => $email,
+							'type' => PDO::PARAM_STR
+						)
+					);
+				}
 			}
 
 			if($valueset && !$error)
@@ -352,18 +320,7 @@ SQL;
 				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
 
-/*
-            [leverandornummer] => 9906
-            [status] => N
-            [navn] => Bergen Vann KF (BV)
-            [adresse] => Postboks 7700
-            [postnummer] => 5020
-            [sted] => BERGEN
-            [organisasjonsNr] => 987328096
-            [bankkontoNr] => 52020801786
-            [aktiv] => 1
-*/
-//			_debug_array($valueset);die();
+return true;
 
 
 			$sql = "SELECT phpgw_helpdesk_email_out_recipient_list.*"
@@ -436,7 +393,6 @@ SQL;
 					. " FROM phpgw_helpdesk_email_out_recipient_list_temp WHERE phpgw_helpdesk_email_out_recipient_list.id = phpgw_helpdesk_email_out_recipient_list_temp.id", __LINE__, __FILE__);
 			}
 
-			$GLOBALS['phpgw']->db->transaction_commit();
 		}
 
 
