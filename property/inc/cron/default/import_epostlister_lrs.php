@@ -37,8 +37,6 @@
 
 		var $function_name = 'import_epostlister_lrs';
 		var $debug = true;
-		protected $updated_tickects = array();
-		protected $updated_tickects_per_file = array();
 		protected $receipt = array();
 
 		function __construct()
@@ -49,18 +47,15 @@
 			$this->sub_location = lang('ticket');
 			$this->function_msg = 'Importer predefinerte epostlister fra Outlook';
 
-			$this->sotts = CreateObject('property.sotts');
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->send = CreateObject('phpgwapi.send');
-			$this->historylog = CreateObject('property.historylog', 'tts');
 		}
 
 		public function execute()
 		{
-	//		$this->get_files();
+			$this->get_files();
 
 			$dirname = $this->config->config_data['import']['local_path_email'];
-			$dirname = "/var/lib/phpgw/lrs/files/home";
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
@@ -126,6 +121,7 @@
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
+			error_reporting(E_ALL);
 
 			// try to authenticate with username root, password secretpassword
 			if (!ftp_login($connection, $user, $password))
@@ -139,7 +135,7 @@
 
 				if (!ftp_chdir($connection, $directory_remote))
 				{
-					echo ("Change Dir Failed: $dir<BR>\r\n");
+					echo ("Change Dir Failed: $directory_remote<BR>\r\n");
 					return false;
 				}
 
@@ -154,35 +150,18 @@
 					_debug_array($files);
 				}
 
-				foreach ($files as $file_name)
-				{
-					if ($file_name == 'Hele_Listen.txt')
-					{
-						$file_remote = $file_name;
-						$file_local = "{$directory_local}/{$file_name}";
+				$file_name = 'Hele_Listen.txt';
 
-						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
-						{
-//							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
-//							{
-//								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
-//								echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-//							}
-//							else
-//							{
-//								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/arkiv/{$file_name}<br/>";
-//								if (unlink($file_local))
-//								{
-//									echo "Lokal file was deleted: {$file_local}<br/>";
-//								}
-//							}
-						}
-						else
-						{
-							echo "Feiler på ftp_fget()<br/>";
-						}
-					}
+				$file_remote = $file_name;
+				$file_local = "{$directory_local}/{$file_name}";
+
+				ftp_pasv($connection, true);
+				if(!ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+				{
+					echo "Feiler på ftp_fget()<br/>";
 				}
+
+				ftp_close($connection);
 			}
 		}
 
@@ -232,9 +211,10 @@
 				}
 			}
 
+			fclose($fp);
+
 			$ok = $this->update_email( $values );
 
-			fclose($fp);
 
 			return $ok;
 		}
@@ -242,6 +222,7 @@
 
 		function update_email($values = array())
 		{
+			$ok = false;
 			if ($this->debug)
 			{
 				_debug_array(array_keys($values));
@@ -254,7 +235,7 @@
 			}
 
 			$metadata = $GLOBALS['phpgw']->db->metadata('phpgw_helpdesk_email_out_recipient_list_temp');
-_debug_array($metadata);
+
 			if (!$metadata)
 			{
 				$sql_table = <<<SQL
@@ -281,8 +262,6 @@ SQL;
 
 
 			$error = false;
-
-
 
 			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list_temp (set_id, name, email)'
 				. ' VALUES(?, ?, ?)';
@@ -320,79 +299,71 @@ SQL;
 				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
 
-return true;
-
-
-			$sql = "SELECT phpgw_helpdesk_email_out_recipient_list.*"
-				. " FROM phpgw_helpdesk_email_out_recipient_list RIGHT OUTER JOIN phpgw_helpdesk_email_out_recipient_list_temp ON (phpgw_helpdesk_email_out_recipient_list.id = phpgw_helpdesk_email_out_recipient_list_temp.id)"
+			$sql = "SELECT phpgw_helpdesk_email_out_recipient_list_temp.*"
+				. " FROM phpgw_helpdesk_email_out_recipient_list RIGHT"
+				. " OUTER JOIN phpgw_helpdesk_email_out_recipient_list_temp"
+				. " ON (phpgw_helpdesk_email_out_recipient_list.email = phpgw_helpdesk_email_out_recipient_list_temp.email AND phpgw_helpdesk_email_out_recipient_list.set_id = phpgw_helpdesk_email_out_recipient_list_temp.set_id)"
 				. " WHERE phpgw_helpdesk_email_out_recipient_list.id IS NULL";
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			$vendors = array();
+			$valueset = array();
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$vendors[] = array(
-					1 => array(
-						'value' => (int)$GLOBALS['phpgw']->db->f('id'),
-						'type' => PDO::PARAM_INT
-					),
-					2 => array(
-						'value' => $GLOBALS['phpgw']->db->f('navn'),
-						'type' => PDO::PARAM_STR
-					),
-					3 => array(
-						'value' => 1,
-						'type' => PDO::PARAM_INT
-					),
-					4 => array(
-						'value' => 6,
-						'type' => PDO::PARAM_INT
-					),
-					5 => array(
-						'value' => (int)$GLOBALS['phpgw']->db->f('aktiv'),
-						'type' => PDO::PARAM_INT
-					),
-					6 => array(
-						'value' => $GLOBALS['phpgw']->db->f('adresse'),
-						'type' => PDO::PARAM_STR
-					),
-					7 => array(
-						'value' => $GLOBALS['phpgw']->db->f('postnummer'),
-						'type' => PDO::PARAM_STR
-					),
-					8 => array(
-						'value' => $GLOBALS['phpgw']->db->f('sted'),
-						'type' => PDO::PARAM_STR
-					),
-					9 => array(
-						'value' => $GLOBALS['phpgw']->db->f('organisasjonsnr'),
-						'type' => PDO::PARAM_STR
-					),
-					10 => array(
-						'value' => $GLOBALS['phpgw']->db->f('bankkontonr'),
-						'type' => PDO::PARAM_STR
-					)
+				$name = $GLOBALS['phpgw']->db->f('name');
+				$set_id = (int)$GLOBALS['phpgw']->db->f('set_id');
+				$email = $GLOBALS['phpgw']->db->f('email');
+
+				$this->receipt['message'][] = array('msg' => "Ny epost: {$name} [{$email}] i liste \"{$set_id}\"");
+
+				$valueset[] = array(
+						1 => array
+							(
+							'value' => $set_id,
+							'type' => PDO::PARAM_INT
+						),
+						2 => array
+							(
+							'value' => $name,
+							'type' => PDO::PARAM_STR
+						),
+						3 => array
+							(
+							'value' => $email,
+							'type' => PDO::PARAM_STR
+						),
+						4 => array
+							(
+							'value' => 1,
+							'type' => PDO::PARAM_INT
+						),
+						5 => array
+							(
+							'value' => 1,
+							'type' => PDO::PARAM_INT
+						)
 				);
 			}
-			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (set_id, name, email, active, public)'
+				. ' VALUES(?, ?, ?, ?, ?)';
 
-			if($vendors && !$error)
+			if($valueset && !$error)
 			{
-				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
+				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 
 				$GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET active = 0", __LINE__, __FILE__);
 
-				$GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET"
-					. " active = 1,"
-					. " org_name = phpgw_helpdesk_email_out_recipient_list_temp.navn,"
-					. " adresse = phpgw_helpdesk_email_out_recipient_list_temp.adresse,"
-					. " postnr = phpgw_helpdesk_email_out_recipient_list_temp.postnummer,"
-					. " poststed = phpgw_helpdesk_email_out_recipient_list_temp.sted,"
-					. " org_nr = phpgw_helpdesk_email_out_recipient_list_temp.organisasjonsnr"
-					. " FROM phpgw_helpdesk_email_out_recipient_list_temp WHERE phpgw_helpdesk_email_out_recipient_list.id = phpgw_helpdesk_email_out_recipient_list_temp.id", __LINE__, __FILE__);
+				$ok = $GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET"
+					. " active = 1"
+					. " FROM phpgw_helpdesk_email_out_recipient_list_temp"
+					. " WHERE phpgw_helpdesk_email_out_recipient_list.set_id = phpgw_helpdesk_email_out_recipient_list_temp.set_id"
+					. " AND phpgw_helpdesk_email_out_recipient_list.email = phpgw_helpdesk_email_out_recipient_list_temp.email", __LINE__, __FILE__);
 			}
-
+			
+			
+			if($ok || !$error)
+			{
+				return true;
+			}
 		}
 
 
