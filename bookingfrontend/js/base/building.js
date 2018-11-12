@@ -373,6 +373,14 @@ function GenerateCalendarForEvents(date) {
 			var TPL_SCHEDULER_VIEW_DAY_HEADER_DAY = '<th class="' + CSS_SCHEDULER_VIEW_DAY_HEADER_DAY +
 				'" data-colnumber="{colNumber}" colspan="{colSpan}"><a href="#">&nbsp;</a></th>';
 
+			var roundToNearestMultiple = function(n, multiple) {
+				return Math.round(n / multiple) * multiple;
+			};
+
+			var toNumber = function(v) {
+				return parseFloat(v) || 0;
+			};
+
 			var SchedulerResourceWeekView = Y.Component.create({
 				NAME: 'scheduler-view-week-resource',
 				EXTENDS: Y.SchedulerWeekView,
@@ -381,7 +389,10 @@ function GenerateCalendarForEvents(date) {
 						value: 'resources'
 					},
 					resources: {
-						value: ['no resource']
+						value: [0]
+					},
+					resourcenames: {
+						value: ['Ingen']
 					}
 				},
 
@@ -464,6 +475,42 @@ function GenerateCalendarForEvents(date) {
 						this.gridContainer.attr('colspan', this.get('resources').length*this.get('days'));
 					},
 
+					_prepareEventCreation: function(event, duration) {
+						var resources = this.get('resources');
+						var resourcenames = this.get('resourcenames');
+						var clickLeftTop = this.getXYDelta(event),
+							colNumber = toNumber(event.currentTarget.attr('data-colnumber')),
+							endDate,
+							startDate = this.getDateByColumn(Math.floor(colNumber/resources.length)),
+							recorder = this.get('scheduler').get('eventRecorder');
+
+						this.startXY = [event.pageX, event.pageY];
+
+						this.roundToNearestHour(startDate, this.getYCoordTime(clickLeftTop[1]));
+
+						if (!duration) {
+							duration = recorder.get('duration');
+						}
+						endDate = Y.DataType.DateMath.add(startDate, Y.DataType.DateMath.MINUTES, duration);
+
+						recorder.move(startDate, {
+							silent: true
+						});
+
+						recorder.setAttrs({
+							allDay: false,
+							resource: resources[colNumber % resources.length],
+							resourcename: resourcenames[colNumber % resources.length],
+							endDate: endDate
+						}, {
+							silent: true
+						});
+
+						this.creationStartDate = startDate;
+
+						event.halt();
+					},
+
 					_valueColDaysNode: function() {
 						var buffer = [];
 						var colNumber = 0;
@@ -507,7 +554,10 @@ function GenerateCalendarForEvents(date) {
 						value: 'resources'
 					},
 					resources: {
-						value: ['no resource']
+						value: [0]
+					},
+					resourcenames: {
+						value: ['Ingen']
 					}
 				},
 
@@ -590,6 +640,42 @@ function GenerateCalendarForEvents(date) {
 						this.gridContainer.attr('colspan', this.get('resources').length);
 					},
 
+					_prepareEventCreation: function(event, duration) {
+						var resources = this.get('resources');
+						var resourcenames = this.get('resourcenames');
+						var clickLeftTop = this.getXYDelta(event),
+							colNumber = toNumber(event.currentTarget.attr('data-colnumber')),
+							endDate,
+							startDate = this.getDateByColumn(Math.floor(colNumber/resources.length)),
+							recorder = this.get('scheduler').get('eventRecorder');
+
+						this.startXY = [event.pageX, event.pageY];
+
+						this.roundToNearestHour(startDate, this.getYCoordTime(clickLeftTop[1]));
+
+						if (!duration) {
+							duration = recorder.get('duration');
+						}
+						endDate = Y.DataType.DateMath.add(startDate, Y.DataType.DateMath.MINUTES, duration);
+
+						recorder.move(startDate, {
+							silent: true
+						});
+
+						recorder.setAttrs({
+							allDay: false,
+							resource: resources[colNumber % resources.length],
+							resourcename: resourcenames[colNumber % resources.length],
+							endDate: endDate
+						}, {
+							silent: true
+						});
+
+						this.creationStartDate = startDate;
+
+						event.halt();
+					},
+
 					_valueColDaysNode: function() {
 						var buffer = [];
 						var colNumber = 0;
@@ -621,6 +707,38 @@ function GenerateCalendarForEvents(date) {
 				}
 			});
 
+			var SchedulerResourceEventRecorder = Y.Component.create({
+				NAME: 'scheduler-event-recorder-resource',
+				EXTENDS: Y.SchedulerEventRecorder,
+				ATTRS: {
+					resource: {
+						value: 0
+					},
+					resourcename: {
+						value: 'Ingen'
+					}
+				},
+
+				prototype: {
+					getTemplateData: function() {
+						var instance = this,
+							strings = instance.get('strings'),
+							evt = instance.get('event') || instance,
+							content = evt.get('content');
+
+						return {
+							content: content,
+							resource: evt.get('resource'),
+							resourcename: evt.get('resourcename'),
+							date: instance.getFormattedDate(),
+							endDate: evt.get('endDate').getTime(),
+							startDate: evt.get('startDate').getTime()
+						};
+					},
+				}
+			});
+
+
 			var nb_NO_strings_allDay = {allDay: 'Hel dag'};
 			var strings = {
 				agenda: 'Agenda',
@@ -632,8 +750,10 @@ function GenerateCalendarForEvents(date) {
 			};
 
 			var resourceslist = [];
+			var resourcenames = [];
 			for (var i=0; i<resourceIds.length; i++) {
 				resourceslist.push(resourceIds[i].id);
+				resourcenames.push(resourceIds[i].name);
 			}
 			var initDateTime = new Date();
 			initDateTime.setHours(07);
@@ -644,6 +764,7 @@ function GenerateCalendarForEvents(date) {
 					strings: nb_NO_strings_allDay,
 					headerView: false,
 					resources: resourceslist,
+					resourcenames: resourcenames,
 					initialScroll: new Date(initDateTime)
 				}
 			);
@@ -653,21 +774,21 @@ function GenerateCalendarForEvents(date) {
 					strings: nb_NO_strings_allDay,
 					headerView: false,
 					resources: resourceslist,
+					resourcenames: resourcenames,
 					initialScroll: new Date(initDateTime)
 				}
 			);
 
-			var eventRecorder = new Y.SchedulerEventRecorder({
+			var eventRecorder = new SchedulerResourceEventRecorder({
 				content: "",
-				headerTemplate: "<span>Ny søknad</span>",
-				//bodyTemplate: NewEventContentGenerate(),
+				headerTemplate: lang['new application'],
+				bodyTemplate:   lang['Resource (2018)'] + ": {resourcename}<br/>{date}",
 				strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
 				on: {
 					save: function(event) {
-						//alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
 						$(".overlay").show();
-						console.log(new Date(this.getTemplateData().startDate));
-						ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
+						var templatedata = this.getTemplateData();
+						ForwardToNewApplication(templatedata.startDate, templatedata.endDate, templatedata.resource);
 					}
 				}
 			});
@@ -675,7 +796,7 @@ function GenerateCalendarForEvents(date) {
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',
-				//eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
+				eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
 				date: date,
 				items: events,
 				render: true,
@@ -687,7 +808,7 @@ function GenerateCalendarForEvents(date) {
 			new Y.Scheduler(
 			  {
 				boundingBox: '#mySchedulerSmallDeviceView',
-				//eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
+				eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
 				date: date,
 				items: events,
 				render: true,

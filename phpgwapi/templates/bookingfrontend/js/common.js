@@ -180,10 +180,14 @@ $(document).ready(function ()
 });
 
 
-function ForwardToNewApplication(start, end) {
-    //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.add&building_id="+urlParams['id'];
-
-    window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'], start: (typeof start === 'undefined') ? "" : start, end: (typeof end === 'undefined') ? "" : end}, false);
+function ForwardToNewApplication(start, end, resource) {
+	window.location.href = phpGWLink('bookingfrontend/', {
+		menuaction:  "bookingfrontend.uiapplication.add",
+		building_id: urlParams['id'],
+		start:       (typeof start === 'undefined') ? "" : start,
+		end:         (typeof end === 'undefined') ? "" : end,
+		resource_id: (typeof resource === 'undefined') ? "" : resource
+	}, false);
 }
 
 function formatDate(date, end) {
