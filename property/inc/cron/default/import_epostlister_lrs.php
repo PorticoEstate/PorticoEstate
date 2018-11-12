@@ -186,9 +186,9 @@
 			(
 				'AgrHRLeder'	=> 1,	//AgressoHR-LedereGruppe1
 				'AgrHRSak'		=> 2,	//AgressoHR-SaksbehandlereGruppe1, AgressoHR-SaksbehandlereGruppe2
-				'AgrHRSysr'		=> 5,	//HR-seksjonen-Systemforvaltning
-				'AgrHRLonn'		=> 4,	//LRSAnsatteLønn
-				'AgrHRRef'		=> 4,	//LRSAnsatteRefusjon
+				'AgrHRLonn'		=> 3,	//LRSAnsatteLønn
+				'AgrHRRef'		=> 3,	//LRSAnsatteRefusjon
+				'AgrHRSysr'		=> 4,	//HR-seksjonen-Systemforvaltning
 			);
 
 			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
