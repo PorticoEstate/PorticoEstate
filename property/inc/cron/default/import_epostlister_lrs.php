@@ -173,15 +173,6 @@
 
 			$values = array();
 
-
-//1	Ledere Gruppe 1
-//2	Saksbehandlere Gruppe 1
-//3	Saksbehandlere Gruppe 2
-//4	LRS Lønn_Refusjon - medarbeidere
-//5	Medarbeider i forvaltningen
-//6	Ragnar Buset
-//
-
 			$email_list = array
 			(
 				'AgrHRLeder'	=> 1,	//AgressoHR-LedereGruppe1
