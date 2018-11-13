@@ -244,6 +244,7 @@
 
     
     <script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
             var script = document.createElement("script"); 
 //            script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/resource.js";
