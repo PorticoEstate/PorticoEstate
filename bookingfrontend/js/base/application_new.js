@@ -81,7 +81,7 @@ $(".navbar-search").removeClass("d-none");
                 }    
                 
               } else if(start.getTime() >= end.getTime()){
-                  $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
+				$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
               }
             
           }
