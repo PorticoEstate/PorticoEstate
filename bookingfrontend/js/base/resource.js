@@ -53,6 +53,18 @@ function PopulateResourceData() {
     });
 }
 
+
+function ForwardToNewApplication(start, end, resource) {
+	window.location.href = phpGWLink('bookingfrontend/', {
+		menuaction:  "bookingfrontend.uiapplication.add",
+		building_id: urlParams['buildingid'],
+		resource_id: (typeof resource === 'undefined') ? "" : resource,
+		start:       (typeof start === 'undefined') ? "" : start,
+		end:         (typeof end === 'undefined') ? "" : end
+	}, false);
+}
+
+
 function PopulateCalendarEvents() {
     $(".overlay").show();
     $('.weekNumber').remove();
