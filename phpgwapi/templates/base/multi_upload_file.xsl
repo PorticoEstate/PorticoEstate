@@ -13,7 +13,10 @@
 				<!-- The fileinput-button span is used to style the file input field as button -->
 				<span class="fileinput-button pure-button">
 					<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
-					<input type="file" id="files" name="files[]" multiple=""/>
+					<input type="file" id="files" name="files[]" multiple="">
+						<xsl:attribute name="accept">image/*</xsl:attribute>
+						<xsl:attribute name="capture">camera</xsl:attribute>
+					</input>
 				</span>
 				<button type="submit" class="start pure-button"><xsl:value-of select="php:function('lang', 'Start upload')"/></button>
 				<button type="reset" class="cancel pure-button"><xsl:value-of select="php:function('lang', 'Cancel upload')"/></button>
