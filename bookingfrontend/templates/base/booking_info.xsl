@@ -2,6 +2,14 @@
 	<h3>
 		<xsl:value-of select="booking/group/organization_name"/>
 	</h3>
+	<div class="mb-3">
+		<span class="font-weight-bold text-uppercase">
+			<xsl:value-of select="php:function('lang', 'Group')"/>:
+		</span>
+		<a href="{booking/group_link}">
+			<xsl:value-of select="booking/group/name"/>
+		</a>
+	</div>
 
 	<span class="d-block"><xsl:value-of select="booking/when"/></span>
 	
@@ -13,11 +21,7 @@
 			<xsl:value-of select="booking/building_name"/>
 		</a>
 		(<xsl:value-of select="booking/resource_info"/>)
-	</div>
-
-	<a href="{booking/group_link}">
-		<xsl:value-of select="booking/group/name"/>
-	</a>
+	</div>	
 
 	<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
