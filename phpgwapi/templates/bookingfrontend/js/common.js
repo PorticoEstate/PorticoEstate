@@ -148,10 +148,6 @@ $(document).ready(function ()
          
     });
     
-    $(document).on('click', '#newApplicationBtn', function () {
-        ForwardToNewApplication();
-    });
-
     $(document).on('click', '.img-thumbnail', function () {
         $("#lightbox").find($('img')).attr("src",$(this).attr('src'));
         $("#lightbox").find($('img')).attr("id",$(this).attr('id'));
@@ -179,12 +175,6 @@ $(document).ready(function ()
         });
 });
 
-
-function ForwardToNewApplication(start, end) {
-    //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.add&building_id="+urlParams['id'];
-
-    window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'], start: (typeof start === 'undefined') ? "" : start, end: (typeof end === 'undefined') ? "" : end}, false);
-}
 
 function formatDate(date, end) {
       

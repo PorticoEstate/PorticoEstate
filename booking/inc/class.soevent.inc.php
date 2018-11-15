@@ -257,7 +257,7 @@
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$errors['event'] = lang('Overlaps with existing event');
+					$errors['event'] = lang('Overlaps with existing event') . " #" . $this->db->f('id');
 				}
 				// Check if we overlap with any existing allocation
 				$this->db->query("SELECT a.id FROM bb_allocation a 

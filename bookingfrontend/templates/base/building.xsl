@@ -184,10 +184,10 @@
 							</button>
 
 							<xsl:if test="building/deactivate_application=0">
-								<button class="btn btn-default" id="newApplicationBtn">
+								<a href="" class="btn btn-default bookBtnForward">
 									<i class="fas fa-plus"></i>&#160;
 										<xsl:value-of select="php:function('lang', 'Book resource')" />
-								</button>
+								</a>
 							</xsl:if>
 						</div>						
 				</div>
@@ -247,6 +247,7 @@
 
 </div>
 	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/building.js";

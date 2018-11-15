@@ -53,6 +53,18 @@ function PopulateResourceData() {
     });
 }
 
+
+function ForwardToNewApplication(start, end, resource) {
+	window.location.href = phpGWLink('bookingfrontend/', {
+		menuaction:  "bookingfrontend.uiapplication.add",
+		building_id: urlParams['buildingid'],
+		resource_id: (typeof resource === 'undefined') ? "" : resource,
+		start:       (typeof start === 'undefined') ? "" : start,
+		end:         (typeof end === 'undefined') ? "" : end
+	}, false);
+}
+
+
 function PopulateCalendarEvents() {
     $(".overlay").show();
     $('.weekNumber').remove();
@@ -238,142 +250,139 @@ function GenerateCalendarForEvents(date) {
     $("#myScheduler .scheduler-base-content").first().remove();
     $("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
 
-    YUI({lang: 'nb-NO'}).use('aui-scheduler',
-            function (Y) {
-                var nb_NO_strings_allDay = {allDay: 'Hel dag'};
-                var strings = {
-                    agenda: 'Agenda',
-                    day: 'Dag',
-                    month: 'Måned',
-                    today: 'Idag',
-                    week: 'Uke',
-                    year: 'År'
-                };
-                
-                var eventRecorder = new Y.SchedulerEventRecorder({
-                    content: "",
-                    headerTemplate: "<span>Ny søknad</span>",
-                    //bodyTemplate: NewEventContentGenerate(),
-                    strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
-                    on: {
-                        save: function(event) {
-                            //alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
-                            $(".overlay").show();
-                            console.log(new Date(this.getTemplateData().startDate));
-                            ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
-                        }
-                    }
-                });
-                
-                var initDateTime = new Date();
-                initDateTime.setHours(07);
-                initDateTime.setMinutes(00);
-                           
-                new Y.Scheduler(
-                        {
-                            boundingBox: '#myScheduler',
-                            //eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
-                            date: date,
-                            items: events,
-                            render: true,
-                            strings: strings,
-                            firstDayOfWeek: 1,
-                            views: [
-                                new Y.SchedulerWeekView({
-                                    isoTime: true,
-                                    strings: nb_NO_strings_allDay,
-                                    headerView: false,
-                                    initialScroll: new Date(initDateTime),
-                                })
-                            ]
+    YUI({lang: 'nb-NO'}).use(
+		'aui-scheduler-view-dayweek-resource',
+		function (Y) {
+			var nb_NO_strings_allDay = {allDay: 'Hel dag'};
+			var strings = {
+				agenda: 'Agenda',
+				day: 'Dag',
+				month: 'Måned',
+				today: 'Idag',
+				week: 'Uke',
+				year: 'År'
+			};
 
-                        }
-                );
+			var resourceslist = [parseInt(urlParams['id'])];
+			var resourcenames = [resourcename];
+			var initDateTime = new Date();
+			initDateTime.setHours(07);
+			initDateTime.setMinutes(00);
 
-                var dayView = new Y.SchedulerDayView();
-                new Y.Scheduler(
-                        {
-                            boundingBox: '#mySchedulerSmallDeviceView',
-                            //eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
-                            date: date,
-                            items: events,
-                            render: true,
-                            strings: strings,
-                            views: [
-                                new Y.SchedulerDayView({
-                                    isoTime: true,
-                                    strings: nb_NO_strings_allDay,
-                                    headerView: false,
-                                    initialScroll: new Date(initDateTime),
-                                })
-                            ]
+			var resourceWeekView = new Y.SchedulerResourceWeekView({
+				isoTime: true,
+				strings: nb_NO_strings_allDay,
+				headerView: false,
+				resources: resourceslist,
+				resourcenames: resourcenames,
+				initialScroll: new Date(initDateTime)
+			});
 
-                        }
-                );
-                
-                $(".scheduler-base-views").hide();
-                $(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
-                $(".scheduler-base-icon-next").addClass("fas fa-chevron-right");
+			var resourceDayView = new Y.SchedulerResourceDayView({
+				isoTime: true,
+				strings: nb_NO_strings_allDay,
+				headerView: false,
+				resources: resourceslist,
+				resourcenames: resourcenames,
+				initialScroll: new Date(initDateTime)
+			});
 
-                $("[data-toggle='tooltip']").tooltip();
-                $(".overlay").hide();
-				$(".scheduler-view-day-current-time").hide();
-                
-                $('.popover-title').remove();
+			var eventRecorder = new Y.SchedulerResourceEventRecorder({
+				content: "",
+				headerTemplate: lang['new application'],
+				bodyTemplate:   lang['Resource (2018)'] + ": {resourcename}<br/>{date}",
+				strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
+				on: {
+					save: function(event) {
+						$(".overlay").show();
+						var templatedata = this.getTemplateData();
+						ForwardToNewApplication(templatedata.startDate, templatedata.endDate, templatedata.resource);
+					}
+				}
+			});
 
-                $(".scheduler-base-nav-date").remove();
-			    $(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
-                $(".scheduler-event-title").text("");                
+			new Y.Scheduler({
+				boundingBox: '#myScheduler',
+				eventRecorder: eventRecorder,
+				date: date,
+				items: events,
+				render: true,
+				strings: strings,
+				firstDayOfWeek: 1,
+				views: [resourceWeekView]
+			});
 
-                $(".scheduler-event-disabled").hover(function () {
-                    if($(".tooltip").length == 0) {
-                        $('.scheduler-event-disabled').tooltip({
-                            delay: 500,
-                            placement: "right",
-                            title: tooltipDetails,
-                            html: true,
-                            trigger: 'manual'
-                        });
-                        $(this).tooltip('show');
-                        
-                    } else {
-                        if($('.tooltip:hover').length === 0) {
-                            $('.tooltip').tooltip('hide');
-                            $(this).tooltip('show');
-                        }
-                    }
-                });
+			new Y.Scheduler({
+				boundingBox: '#mySchedulerSmallDeviceView',
+				eventRecorder: eventRecorder,
+				date: date,
+				items: events,
+				render: true,
+				strings: strings,
+				views: [resourceDayView]
+			});
+
+			$(".scheduler-base-views").hide();
+			$(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
+			$(".scheduler-base-icon-next").addClass("fas fa-chevron-right");
+
+			$("[data-toggle='tooltip']").tooltip();
+			$(".overlay").hide();
+			$(".scheduler-view-day-current-time").hide();
+
+			$('.popover-title').remove();
+
+			$(".scheduler-base-nav-date").remove();
+			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
+			$(".scheduler-event-title").text("");
+
+			$(".scheduler-event-disabled").hover(function () {
+				if($(".tooltip").length == 0) {
+					$('.scheduler-event-disabled').tooltip({
+						delay: 500,
+						placement: "right",
+						title: tooltipDetails,
+						html: true,
+						trigger: 'manual'
+					});
+					$(this).tooltip('show');
+				} else {
+					if($('.tooltip:hover').length === 0) {
+						$('.tooltip').tooltip('hide');
+						$(this).tooltip('show');
+					}
+				}
+			});
     
-                $(".scheduler-event-disabled").click(function () {
-                    $('.tooltip').tooltip('hide');
-                    $('.scheduler-event-disabled').tooltip({
-                        delay: 500,
-                        placement: "right",
-                        title: tooltipDetails,
-                        html: true,
-                        trigger: "click"
-                    });
-                    $(this).tooltip('show');
-                    
-                });                
-                
-                $( ".tooltip" ).mouseleave(function() {
-                    $('.tooltip').tooltip('hide');
-                });
-    
-                $( ".scheduler-event-disabled" ).mouseleave(function() {
-                    if($('.tooltip:hover').length === 0) {
-                        $('.tooltip').tooltip('hide');
-                    }
-                });
-                
-                $(".scheduler-view-day-table-col").hover(function () {
-                    if($(this).find('.scheduler-event-disabled').length == 0) {
-                        $('.tooltip').tooltip('hide');
-                    }
-                });
-            }
-    );
+			$(".scheduler-event-disabled").click(function () {
+				$('.tooltip').tooltip('hide');
+				$('.scheduler-event-disabled').tooltip({
+					delay: 500,
+					placement: "right",
+					title: tooltipDetails,
+					html: true,
+					trigger: "click"
+				});
+				$(this).tooltip('show');
+			});
+
+			$( ".tooltip" ).mouseleave(function() {
+				$('.tooltip').tooltip('hide');
+			});
+
+			$( ".scheduler-event-disabled" ).mouseleave(function() {
+				if($('.tooltip:hover').length === 0) {
+					$('.tooltip').tooltip('hide');
+				}
+			});
+
+			$(".scheduler-view-day-table-col").hover(function () {
+				if($(this).find('.scheduler-event-disabled').length == 0) {
+					$('.tooltip').tooltip('hide');
+				}
+			});
+		}
+	);
 }
 
 YUI({ lang: 'nb-no' }).use(
