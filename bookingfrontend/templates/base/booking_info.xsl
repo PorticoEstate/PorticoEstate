@@ -4,7 +4,7 @@
 	</h3>
 	<div class="mb-3">
 		<span class="font-weight-bold text-uppercase">
-			<xsl:value-of select="php:function('lang', 'Group')"/>:
+			<xsl:value-of select="php:function('lang', 'Group (2018)')"/>:
 		</span>
 		<a href="{booking/group_link}">
 			<xsl:value-of select="booking/group/name"/>
