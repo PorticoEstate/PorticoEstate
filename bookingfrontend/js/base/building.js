@@ -466,6 +466,7 @@ function GenerateCalendarForEvents(date) {
 			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
 			$(".scheduler-event-disabled").hover(function () {
                 if($(".tooltip").length == 0) {
+					$('.tooltip').tooltip('hide');
                     $('.scheduler-event-disabled').tooltip({
                         delay: 500,
                         placement: "right",
@@ -476,7 +477,7 @@ function GenerateCalendarForEvents(date) {
                     $(this).tooltip('show');
                 } else {
                     if($('.tooltip:hover').length === 0) {
-                        $('.tooltip').tooltip('hide');
+                    	$('.tooltip').tooltip('hide');
                         $(this).tooltip('show');
                     }
                 }
@@ -495,18 +496,18 @@ function GenerateCalendarForEvents(date) {
             });
 
             $( ".tooltip" ).mouseleave(function() {
-                $('.tooltip').tooltip('hide');
+                //$('.tooltip').tooltip('hide');
             });
 
             $( ".scheduler-event-disabled" ).mouseleave(function() {
                 if($('.tooltip:hover').length === 0) {
-                    $('.tooltip').tooltip('hide');
+                    //$('.tooltip').tooltip('hide');
                 }
             });
 
             $(".scheduler-view-day-table-col").hover(function () {
                 if($(this).find('.scheduler-event-disabled').length == 0) {
-                    $('.tooltip').tooltip('hide');
+                    //$('.tooltip').tooltip('hide');
                 }
             });
 		}

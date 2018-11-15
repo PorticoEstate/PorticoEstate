@@ -27,6 +27,15 @@ var ViewModel = function(data) {
     self.selectedTowns = ko.observableArray("");
     self.selectedTags = ko.observableArray();
     self.clearTag = function(e) {
+        
+        if(e.type == "main_filterbox") {
+            self.selectedActivity("");
+            self.selectedFacilities.removeAll();
+            self.selectedTowns.removeAll();
+            self.selectedTags.removeAll();
+            self.selectedFilterbox(false);
+            self.notFilterSearch(true);
+        }
         if(e.type == "activity") {
             self.selectedActivity("");
         }
@@ -46,9 +55,10 @@ var ViewModel = function(data) {
         self.selectedFacilities.removeAll();
         self.selectedTowns.removeAll();
         self.selectedFilterboxValue(e.filterboxOptionId);
-        self.selectedTags.removeAll();
+        self.selectedTags.removeAll();        
         self.selectedFilterbox(true);
         self.notFilterSearch(false);
+        self.selectedTags.push({id: e.filterboxOptionId, type: "main_filterbox", value: e.filterboxOption});
         DoFilterSearch(e.filterboxOptionId);
     };
     self.facilities = ko.observableArray();
