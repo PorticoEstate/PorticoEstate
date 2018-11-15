@@ -70,8 +70,18 @@
 				$frontimagetext = '<h2>Din portal til</h2><h1><b>AKTIVITETER OG LOKALER</b></h1><h2>Nært deg.</h2>';
 			}
 
+			if ($config->config_data['frontpage_filterboxtitle'] != '')
+			{
+				$filterboxtitle = $config->config_data['frontpage_filterboxtitle'];
+			}
+			else
+			{
+				$filterboxtitle = lang('Choose categories');
+			}
+
 			$params = array(
 				'baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}",
+				'filterboxtitle' => $filterboxtitle,
 				'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg",
 				'frontpagetitle' => $frontpagetitle,
 				'frontpagetext' => $frontpagetext,
