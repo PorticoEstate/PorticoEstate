@@ -41,7 +41,10 @@ $(document).ready(function ()
         $(this).parent().toggleClass('show');
     });
 
-    $(".goToCal").click(function() {
+	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'] }, false);
+	$(".bookBtnForward").attr("href", bookBtnURL);
+
+	$(".goToCal").click(function() {
         $('html,body').animate({
             scrollTop: $(".calendar-tool").offset().top - 140},
             'slow');
@@ -86,6 +89,18 @@ function getResourceVisible(resourceName) {
         }
     }
 }
+
+
+function ForwardToNewApplication(start, end, resource) {
+	window.location.href = phpGWLink('bookingfrontend/', {
+		menuaction:  "bookingfrontend.uiapplication.add",
+		building_id: urlParams['id'],
+		start:       (typeof start === 'undefined') ? "" : start,
+		end:         (typeof end === 'undefined') ? "" : end,
+		resource_id: (typeof resource === 'undefined') ? "" : resource
+	}, false);
+}
+
 
 function PopulateCalendarEvents(baseURL, urlParams) {
 	$(".overlay").show();
@@ -354,273 +369,8 @@ function GenerateCalendarForEvents(date) {
 	events.reverse();
 
 	YUI({lang: 'nb-NO'}).use(
-		'aui-scheduler',
+		'aui-scheduler-view-dayweek-resource',
 		function(Y) {
-			var CSS_SCHEDULER_TODAY = Y.getClassName('scheduler', 'today');
-
-			var CSS_SCHEDULER_VIEW_DAY_TABLE_COL = Y.getClassName('scheduler-view', 'day', 'table', 'col');
-			var CSS_SCHEDULER_VIEW_DAY_TABLE_COL_SHIM = Y.getClassName('scheduler-view', 'day', 'table', 'col', 'shim');
-			var CSS_SCHEDULER_VIEW_DAY_TABLE_COLDAY = Y.getClassName('scheduler-view', 'day', 'table', 'colday');
-			var TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY = '<td class="' + [CSS_SCHEDULER_VIEW_DAY_TABLE_COL,
-				CSS_SCHEDULER_VIEW_DAY_TABLE_COLDAY].join(' ') + '" data-colnumber="{colNumber}" style="border-left-style: {borderStyle}">' +
-				'<div class="' + CSS_SCHEDULER_VIEW_DAY_TABLE_COL_SHIM + '">&nbsp;</div>' +
-				'</td>';
-
-			var CSS_SCHEDULER_VIEW_DAY_HEADER_DAY = Y.getClassName('scheduler-view', 'day', 'header', 'day');
-			var CSS_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST = Y.getClassName('scheduler-view', 'day', 'header', 'day', 'first');
-			var TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST = '<td class="' + [CSS_SCHEDULER_VIEW_DAY_HEADER_DAY,
-				CSS_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST].join(' ') + '"></td>';
-			var TPL_SCHEDULER_VIEW_DAY_HEADER_DAY = '<th class="' + CSS_SCHEDULER_VIEW_DAY_HEADER_DAY +
-				'" data-colnumber="{colNumber}" colspan="{colSpan}"><a href="#">&nbsp;</a></th>';
-
-			var SchedulerResourceWeekView = Y.Component.create({
-				NAME: 'scheduler-view-week-resource',
-				EXTENDS: Y.SchedulerWeekView,
-				ATTRS: {
-					name: {
-						value: 'resources'
-					},
-					resources: {
-						value: ['no resource']
-					}
-				},
-
-				prototype: {
-					getColumnShimByDateAndResource: function(date,resource) {
-						var resources = this.get('resources');
-						var index = this.getDateDaysOffset(date)*resources.length + resources.indexOf(resource);
-						if (0 <= index && index < this.columnShims.size()) {
-							return this.columnShims.item(index);
-						}
-						else {
-							return null;
-						}
-					},
-
-					plotEvent: function(evt) {
-						var nodeList = evt.get('node');
-						if (nodeList.size() < 2) {
-							evt.addPaddingNode();
-						}
-						var node = evt.get('node').item(0);
-						var paddingNode = evt.get('node').item(1);
-						var shim = this.getColumnShimByDateAndResource(evt.get('startDate'), evt.get('resource'));
-						if (shim) {
-							shim.append(node);
-							if (evt.get('visible')) {
-								node.show();
-							}
-						}
-						else {
-							node.hide();
-						}
-						evt.syncUI();
-						this.syncEventTopUI(evt);
-						this.syncEventHeightUI(evt);
-					},
-
-					plotEvents: function() {
-						var scheduler = this.get('scheduler');
-						var filterFn = this.get('filterFn');
-						var resources = this.get('resources');
-						scheduler.flushEvents();
-						var view = this;
-						this.columnShims.each(function(colShimNode, i) {
-							var events = scheduler.getEventsByDay(view.getDateByColumn(Math.floor(i/resources.length)), true);
-							var plottedEvents = [];
-							var columnEvents = Y.Array.filter(
-								events,
-								function(event) {
-									return event.get('resource') === resources[i % resources.length];
-								}
-							);
-							colShimNode.empty();
-							Y.Array.each(columnEvents, function(evt) {
-								if (filterFn.apply(view, [evt])) {
-									view.plotEvent(evt);
-									plottedEvents.push(evt);
-								}
-							});
-							view.syncEventsIntersectionUI(plottedEvents);
-						});
-						this.syncHeaderViewUI();
-						this.syncCurrentTimeUI();
-					},
-
-					syncColumnsUI: function() {
-						var resources = this.get('resources');
-						var todayDate = this.get('scheduler').get('todayDate');
-						var view = this;
-						this.colDaysNode.each(function(columnNode, i) {
-							var columnDate = view.getDateByColumn(Math.floor(i/resources.length));
-							columnNode.toggleClass(
-								CSS_SCHEDULER_TODAY, !Y.DataType.DateMath.isDayOverlap(columnDate, todayDate));
-						});
-						this.syncCurrentTimeUI();
-					},
-
-					syncUI: function() {
-						SchedulerResourceWeekView.superclass.syncUI.apply(this, arguments);
-						this.gridContainer.attr('colspan', this.get('resources').length*this.get('days'));
-					},
-
-					_valueColDaysNode: function() {
-						var buffer = [];
-						var colNumber = 0;
-						for (i = 0; i < this.get('days'); i++) {
-							var resourceIndex = 0;
-							for (var r in this.get('resources')) {
-								var borderStyle = resourceIndex++ == 0 ? 'solid' : 'none';
-								buffer.push(
-									Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY, {
-										colNumber: colNumber++,
-										borderStyle: borderStyle
-									})
-								);
-							}
-						}
-						return Y.NodeList.create(buffer.join(''));
-					},
-
-					_valueColHeaderDaysNode: function() {
-						var buffer = [];
-						var colNumber = 0;
-						buffer.push(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST);
-						for (i = 0; i < this.get('days'); i++) {
-							buffer.push(
-								Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY, {
-									colNumber: colNumber++ * this.get('resources').length,
-									colSpan: this.get('resources').length
-								})
-							);
-						}
-						return Y.NodeList.create(buffer.join(''));
-					}
-				}
-			});
-
-			var SchedulerResourceDayView = Y.Component.create({
-				NAME: 'scheduler-view-day-resource',
-				EXTENDS: Y.SchedulerDayView,
-				ATTRS: {
-					name: {
-						value: 'resources'
-					},
-					resources: {
-						value: ['no resource']
-					}
-				},
-
-				prototype: {
-					getColumnShimByResource: function(resource) {
-						var resources = this.get('resources');
-						var index = resources.indexOf(resource);
-						if (0 <= index && index < this.columnShims.size()) {
-							return this.columnShims.item(index);
-						}
-						else {
-							return null;
-						}
-					},
-
-					plotEvent: function(evt) {
-						var nodeList = evt.get('node');
-						if (nodeList.size() < 2) {
-							evt.addPaddingNode();
-						}
-						var node = evt.get('node').item(0);
-						var paddingNode = evt.get('node').item(1);
-						var shim = this.getColumnShimByResource(evt.get('resource'));
-						if (shim) {
-							shim.append(node);
-							if (evt.get('visible')) {
-								node.show();
-							}
-						}
-						else {
-							node.hide();
-						}
-						evt.syncUI();
-						this.syncEventTopUI(evt);
-						this.syncEventHeightUI(evt);
-					},
-
-					plotEvents: function() {
-						var scheduler = this.get('scheduler');
-						var filterFn = this.get('filterFn');
-						var events = scheduler.getEventsByDay(scheduler.get('date'), true);
-						var resources = this.get('resources');
-						scheduler.flushEvents();
-						var view = this;
-						this.columnShims.each(function(colShimNode, i) {
-							var plottedEvents = [];
-							var columnEvents = Y.Array.filter(
-								events,
-								function(event) {
-									return event.get('resource') === resources[i];
-								}
-							);
-							colShimNode.empty();
-							Y.Array.each(columnEvents, function(evt) {
-								if (filterFn.apply(view, [evt])) {
-									view.plotEvent(evt);
-										plottedEvents.push(evt);
-								}
-							});
-							view.syncEventsIntersectionUI(plottedEvents);
-						});
-						this.syncHeaderViewUI();
-						this.syncCurrentTimeUI();
-					},
-
-					syncColumnsUI: function() {
-						var resources = this.get('resources');
-						var todayDate = this.get('scheduler').get('todayDate');
-						var view = this;
-						this.colDaysNode.each(function(columnNode, i) {
-							var columnDate = view.getDateByColumn(Math.floor(i/resources.length));
-							columnNode.toggleClass(
-								CSS_SCHEDULER_TODAY, !Y.DataType.DateMath.isDayOverlap(columnDate, todayDate));
-						});
-						this.syncCurrentTimeUI();
-					},
-
-					syncUI: function() {
-						SchedulerResourceDayView.superclass.syncUI.apply(this, arguments);
-						this.gridContainer.attr('colspan', this.get('resources').length);
-					},
-
-					_valueColDaysNode: function() {
-						var buffer = [];
-						var colNumber = 0;
-						var resourceIndex = 0;
-						for (var r in this.get('resources')) {
-							var borderStyle = resourceIndex++ == 0 ? 'solid' : 'none';
-							buffer.push(
-								Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY, {
-									colNumber: colNumber++,
-									borderStyle: borderStyle
-								})
-							);
-						}
-						return Y.NodeList.create(buffer.join(''));
-					},
-
-					_valueColHeaderDaysNode: function() {
-						var buffer = [];
-						var colNumber = 0;
-						buffer.push(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY_FIRST);
-						buffer.push(
-							Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_HEADER_DAY, {
-								colNumber: colNumber,
-								colSpan: this.get('resources').length
-							})
-						);
-						return Y.NodeList.create(buffer.join(''));
-					}
-				}
-			});
-
 			var nb_NO_strings_allDay = {allDay: 'Hel dag'};
 			var strings = {
 				agenda: 'Agenda',
@@ -630,52 +380,56 @@ function GenerateCalendarForEvents(date) {
 				week: 'Uke',
 				year: 'År'
 			};
-
 			var resourceslist = [];
+			var resourcenames = [];
 			for (var i=0; i<resourceIds.length; i++) {
 				resourceslist.push(resourceIds[i].id);
+				resourcenames.push(resourceIds[i].name);
 			}
 			var initDateTime = new Date();
 			initDateTime.setHours(07);
 			initDateTime.setMinutes(00);
-			var resourceWeekView = new SchedulerResourceWeekView(
+
+			var resourceWeekView = new Y.SchedulerResourceWeekView(
 				{
 					isoTime: true,
 					strings: nb_NO_strings_allDay,
 					headerView: false,
 					resources: resourceslist,
-					initialScroll: new Date(initDateTime)
-				}
-			);
-			var resourceDayView = new SchedulerResourceDayView(
-				{
-					isoTime: true,
-					strings: nb_NO_strings_allDay,
-					headerView: false,
-					resources: resourceslist,
+					resourcenames: resourcenames,
 					initialScroll: new Date(initDateTime)
 				}
 			);
 
-			var eventRecorder = new Y.SchedulerEventRecorder({
+			var resourceDayView = new Y.SchedulerResourceDayView(
+				{
+					isoTime: true,
+					strings: nb_NO_strings_allDay,
+					headerView: false,
+					resources: resourceslist,
+					resourcenames: resourcenames,
+					initialScroll: new Date(initDateTime)
+				}
+			);
+
+			var eventRecorder = new Y.SchedulerResourceEventRecorder({
 				content: "",
-				headerTemplate: "<span>Ny søknad</span>",
-				//bodyTemplate: NewEventContentGenerate(),
+				headerTemplate: lang['new application'],
+				bodyTemplate:   lang['Resource (2018)'] + ": {resourcename}<br/>{date}",
 				strings: {save: 'Fortsett', cancel: "Avbryt", delete: "Slett"},
 				on: {
 					save: function(event) {
-						//alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
 						$(".overlay").show();
-						console.log(new Date(this.getTemplateData().startDate));
-						ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
+						var templatedata = this.getTemplateData();
+						ForwardToNewApplication(templatedata.startDate, templatedata.endDate, templatedata.resource);
 					}
 				}
 			});
-            
+
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',
-				//eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
+				eventRecorder: eventRecorder,
 				date: date,
 				items: events,
 				render: true,
@@ -684,10 +438,11 @@ function GenerateCalendarForEvents(date) {
 				views: [resourceWeekView]
 			  }
 			);
+
 			new Y.Scheduler(
 			  {
 				boundingBox: '#mySchedulerSmallDeviceView',
-				//eventRecorder: eventRecorder, // disable clicking in calendar for activating popup
+				eventRecorder: eventRecorder,
 				date: date,
 				items: events,
 				render: true,
@@ -711,6 +466,7 @@ function GenerateCalendarForEvents(date) {
 			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
 			$(".scheduler-event-disabled").hover(function () {
                 if($(".tooltip").length == 0) {
+					$('.tooltip').tooltip('hide');
                     $('.scheduler-event-disabled').tooltip({
                         delay: 500,
                         placement: "right",
@@ -719,10 +475,9 @@ function GenerateCalendarForEvents(date) {
                         trigger: 'manual'
                     });
                     $(this).tooltip('show');
-                    
                 } else {
                     if($('.tooltip:hover').length === 0) {
-                        $('.tooltip').tooltip('hide');
+                    	$('.tooltip').tooltip('hide');
                         $(this).tooltip('show');
                     }
                 }
@@ -738,26 +493,23 @@ function GenerateCalendarForEvents(date) {
                     trigger: "click"
                 });
                 $(this).tooltip('show');
-                
-            });                
-            
+            });
+
             $( ".tooltip" ).mouseleave(function() {
-                $('.tooltip').tooltip('hide');
+                //$('.tooltip').tooltip('hide');
             });
 
             $( ".scheduler-event-disabled" ).mouseleave(function() {
                 if($('.tooltip:hover').length === 0) {
-                    $('.tooltip').tooltip('hide');
+                    //$('.tooltip').tooltip('hide');
                 }
             });
-            
+
             $(".scheduler-view-day-table-col").hover(function () {
                 if($(this).find('.scheduler-event-disabled').length == 0) {
-                    $('.tooltip').tooltip('hide');
+                    //$('.tooltip').tooltip('hide');
                 }
             });
-            
-            
 		}
 	);
 }
