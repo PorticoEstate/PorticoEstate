@@ -102,7 +102,7 @@
 							</div>
 							<div class="pure-control-group">
 								<label for="field_name">
-									<xsl:value-of select="php:function('lang', 'Name')" />
+									<xsl:value-of select="php:function('lang', 'Event name')" />
 								</label>
 								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
 									<xsl:attribute name="value">

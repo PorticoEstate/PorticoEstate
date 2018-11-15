@@ -216,7 +216,7 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Name')" />
+									<xsl:value-of select="php:function('lang', 'Event name')" />
 								</label>
 								<span>
 									<xsl:value-of select="application/name" disable-output-escaping="yes"/>

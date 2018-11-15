@@ -743,6 +743,7 @@ edit resource activities	booking	nn	Rediger ressursaktiviteter
 edit resource category	booking	nn	Rediger ressurskategori
 edit resource facilities	booking	nn	Rediger ressursfasiliteter
 Equipment (2018)	booking	nn	Spesielle behov
+Event name	booking	nn	Navn på arrangement
 Facilities	booking	nn	Fasiliteter
 Facility	booking	nn	Fasilitet
 Front page filtering	booking	nn	Filtrering på forside
