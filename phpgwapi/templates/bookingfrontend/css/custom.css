@@ -47,7 +47,7 @@ button {
 }
 
 .navbar {
-    padding-bottom: 1.4em;
+    padding-bottom: 2.37em;
     -webkit-transform: scale(1); /* Saf3.1+, Chrome */
      -moz-transform: scale(1); /* FF3.5+ */
       -ms-transform: scale(1); /* IE9 */
@@ -135,7 +135,6 @@ button {
 .msg_good {
     text-align: center;
     margin-bottom: 0px;
-    margin-top: -5px;
     border-radius: 0;
     background-color: #dff0d8;
     border-color: #d0e9c6;
@@ -303,8 +302,8 @@ footer {
 }
 
 .tooltip.show {
-    margin-top: -30px;
-    margin-left: -10px;
+    margin-top: -50px;
+    margin-left: -20px;
 }
 
 .tooltip .arrow {
@@ -866,6 +865,7 @@ BUILDING PAGE STYLE
     height: 14px;
     border: 1px solid rgba(0, 0, 0, .2);
     display: inline-block;
+    margin: 5px 5px 0 0;
 }
   
 .allocation {
