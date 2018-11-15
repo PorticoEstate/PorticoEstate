@@ -23,9 +23,9 @@
 		(<xsl:value-of select="booking/resource_info"/>)
 	</div>	
 
-	<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
+	<!--<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
-	</div>
+	</div>-->
 	
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
