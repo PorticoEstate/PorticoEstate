@@ -475,7 +475,7 @@
 
 			$fields_events = array('building_name','from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
-			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.description != '')";
+			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.name != '')";
 			$event_result = $this->soevent->read(array("sort" => "from_", "dir" => "asc",
 				"filters" => array('where' => $conditions)));
 			foreach ($event_result['results'] as &$event)

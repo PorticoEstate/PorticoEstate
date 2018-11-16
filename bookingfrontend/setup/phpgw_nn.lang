@@ -439,7 +439,7 @@ application add	bookingfrontend	nn	søknad
 back	bookingfrontend	nn	tilbake
 Choose categories	bookingfrontend	nn	Velg kategorier
 Choose resources	bookingfrontend	nn	Velg lokaler
-Complete applications	bookingfrontend	nn	Fullfører søknader
+Complete applications	bookingfrontend	nn	Fullfører søknad
 Date	bookingfrontend	nn	Dato
 footer privacy link	bookingfrontend	nn	Footer: Lenke til personvern
 Information about the event (edit)	bookingfrontend	nn	Informasjon om arrangementet

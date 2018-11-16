@@ -22,7 +22,7 @@
             <div id="search-autocomplete"></div>
 
              <!-- FILTER BOXES> -->
-				<h5 class="mt-5 font-weight-bold"><xsl:value-of select="php:function('lang', 'Choose categories')"/></h5>
+				<h5 class="mt-5 font-weight-bold"><xsl:value-of select="filterboxtitle"/></h5>
             <div class="row mx-auto" data-bind="if: filterboxes().length > 0">
                 <div data-bind="foreach: filterboxes">
                         <div class="dropdown d-inline-block mr-2">

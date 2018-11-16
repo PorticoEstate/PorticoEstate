@@ -200,6 +200,16 @@
 						<xsl:value-of select="php:function('lang', 'Front page filtering')"/>
 					</div>
 					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Title for filter boxes')"/>
+						</label>
+						<input id="field_frontpage_filterboxtitle" type="text" name="config_data[frontpage_filterboxtitle]" class="pure-input-1-2" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/frontpage_filterboxtitle"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
 						<xsl:value-of select="php:function('lang', 'Text and activity IDs for each filter box')"/>
 					</div>
 					<div class="pure-control-group">

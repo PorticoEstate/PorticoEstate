@@ -207,7 +207,7 @@
 							</div>
 
 					<div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Event name')" /></label>
 						<input type="text" class="form-control" name="name" value="{event/name}"/>
 					</div>
 

@@ -171,7 +171,7 @@
 								</xsl:for-each>
 						</dd>
 						<dt>
-							<xsl:value-of select="php:function('lang', 'Name')" />
+							<xsl:value-of select="php:function('lang', 'Event name')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="application/name"/>
