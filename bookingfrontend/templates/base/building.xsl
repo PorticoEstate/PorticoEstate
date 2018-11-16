@@ -38,10 +38,6 @@
 						</div>
 					</div>
 
-					<div class="col-12 mt-4 mb-4" id="item-description">
-						<xsl:value-of disable-output-escaping="yes" select="building/description"/>
-					</div>						
-
 							<xsl:if test="building/deactivate_calendar=0">
 					<div class="col-auto">
 							<div>
@@ -54,6 +50,24 @@
 							</xsl:if>
 
 					<div class="building-accordion">
+								<xsl:if test="building/description and normalize-space(building/description)">
+									<div class="building-card">
+										<div class="building-card-header">
+											<h5 class="mb-0">
+												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
+													<xsl:value-of select="php:function('lang', 'Building information')" />
+												</button>
+												<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
+											</h5>
+										</div>
+										<div id="collapseOne" class="collapse">
+											<div class="card-body">
+												<xsl:value-of disable-output-escaping="yes" select="building/description"/>
+											</div>
+										</div>
+									</div>
+								</xsl:if>
+
 						<div class="building-card card-img-thumbs">
 							<div class="building-card-header">
 								<h5 class="mb-0">
