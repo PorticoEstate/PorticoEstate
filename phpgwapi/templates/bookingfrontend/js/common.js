@@ -177,6 +177,9 @@ $(document).ready(function ()
         });
 });
 
+function GoToApplicationPartialTwo() {
+    window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false);   
+}
 
 function formatDate(date, end) {
       
