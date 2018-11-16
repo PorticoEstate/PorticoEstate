@@ -24,6 +24,9 @@ $(".navbar-search").removeClass("d-none");
   function applicationModel()  {
       var self = this;
       self.showErrorMessages = ko.observable(false);
+      self.applicationCartItems = ko.computed(function() {
+            return bc.applicationCartItems();
+      });
       self.bookingDate = ko.observable("");
       self.bookingStartTime = ko.observable("");
       self.bookingEndTime = ko.observable("");

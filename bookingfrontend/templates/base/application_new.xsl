@@ -3,11 +3,14 @@
                         
                         
 	<div class="container new-application-page" id="new-application-page">
-               
+            <div class="d-flex flex-row-reverse">
+                <button onclick="GoToApplicationPartialTwo()"
+                class="btn mt-5" data-bind="visible: applicationCartItems().length > 0">Gå videre</button>
+            </div>   
             <form action="" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
             <div class="row">
                 
-                <div class="col-md-8 offset-md-2">
+                <div class="col-md-8 offset-md-2">                   
                     
                     <h1 class="font-weight-bold"><xsl:value-of select="php:function('lang', 'New application')"/></h1>
                     
