@@ -195,7 +195,7 @@
 					</button>
 					<xsl:if test="building/deactivate_application=0">
 						<a href="" class="btn btn-default bookBtnForward"><i class="fas fa-plus"></i>&#160;
-							<xsl:value-of select="php:function('lang', 'Book resource')" />
+							<xsl:value-of select="php:function('lang', 'Application')" />
 						</a>
 					</xsl:if>
 				</div>
