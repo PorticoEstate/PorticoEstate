@@ -242,6 +242,14 @@
         <div class="push"></div>
     </div>
 
+	<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-body lightbox-body">
+				<a href="#" class="close">&#215;</a>
+				<img src="" alt="" />
+			</div>
+		</div>
+	</div>
     
     <script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;

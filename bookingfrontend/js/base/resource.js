@@ -36,7 +36,7 @@ function PopulateResourceData() {
         if(result.ResultSet.Result.length > 0) {
             for(var i=0; i<result.ResultSet.Result.length; i++) {
                 var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.ResultSet.Result[i].id, filter_owner_id:urlParams['id']}, false);
-                var imgTag = '<img src="'+src+'" class="img-thumbnail m-1" alt=""></img>';
+                var imgTag = '<img src="'+src+'"  data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
                 $(".resource-images").append(imgTag);
                 if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
                     mainPictureFound = true;
