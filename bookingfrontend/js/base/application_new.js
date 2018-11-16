@@ -81,7 +81,7 @@ $(".navbar-search").removeClass("d-none");
                 }    
                 
               } else if(start.getTime() >= end.getTime()){
-				$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
+                  $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
               }
             
           }
@@ -242,7 +242,6 @@ $(".navbar-search").removeClass("d-none");
       );
     }
   );
-  
   YUI({ lang: 'nb-no' }).use(
     'aui-timepicker',
     function(Y) {
@@ -254,6 +253,7 @@ $(".navbar-search").removeClass("d-none");
           },
 		  values: timepickerValues,
           mask: 'kl. %H:%M',
+          popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingStartTime-popover",
           on: {
             selectionChange: function(event) { 
                 new Date(event.newSelection);
@@ -266,7 +266,7 @@ $(".navbar-search").removeClass("d-none");
       );
     }
   );
-  
+
   YUI({ lang: 'nb-no' }).use(
     'aui-timepicker',
     function(Y) {
@@ -278,6 +278,7 @@ $(".navbar-search").removeClass("d-none");
           },
 		  values: timepickerValues,
           mask: 'kl. %H:%M',
+          popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingEndTime-popover",
           on: {
             selectionChange: function(event) { 
                 new Date(event.newSelection);
@@ -290,3 +291,53 @@ $(".navbar-search").removeClass("d-none");
       );
     }
   );
+
+var startTimeScrollTopValue = 800;
+var endTimeScrollTopValue = 825;
+$(document).ready(function(){
+    document.addEventListener('scroll', function (event) {
+        if(typeof event.target.className !== "undefined") {            
+            if(!$(".bookingStartTime-popover").hasClass("popover-hidden")) {
+                
+                if((event.target.className).indexOf("popover-content") > 0) {                
+                    startTimeScrollTopValue = (event.target.scrollTop);
+                }
+            } else if (!$(".bookingEndTime-popover").hasClass("popover-hidden")) {
+                
+                if((event.target.className).indexOf("popover-content") > 0) {                
+                    endTimeScrollTopValue = (event.target.scrollTop);
+                }
+            }
+            
+        }                
+    }, true);
+});
+
+$(".bookingStartTime").on( "click", function() {
+    console.log(startTimeScrollTopValue);
+    setTimeout(function() {
+        //var topPos = ($('.yui3-aclist-item')[32]).offsetTop;
+        if(am.bookingEndTime() != "") {
+            if(startTimeScrollTopValue > endTimeScrollTopValue) {
+                $(".popover-content").scrollTop(endTimeScrollTopValue-100);
+            }
+        } else {
+            $(".popover-content").scrollTop(startTimeScrollTopValue);
+        }
+        
+    },200);    
+});
+
+$(".bookingEndTime").on( "click", function() {
+    console.log(endTimeScrollTopValue);
+    setTimeout(function() {
+        if(am.bookingStartTime() != "") {
+            if(endTimeScrollTopValue < startTimeScrollTopValue) {
+                $(".popover-content").scrollTop(startTimeScrollTopValue+100);
+            }
+        } else {
+            $(".popover-content").scrollTop(endTimeScrollTopValue);
+        }     
+        
+    },200);    
+});
