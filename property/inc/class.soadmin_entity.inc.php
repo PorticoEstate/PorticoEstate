@@ -277,7 +277,7 @@
 		 * @param integer $level is increased when we go deeper into the tree,
 		 * @return array $child Children
 		 */
-		protected function get_children( $entity_id, $parent, $level, $menuaction )
+		public function get_children( $entity_id, $parent, $level, $menuaction )
 		{
 			$table = "fm_{$this->type}_category";
 			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";

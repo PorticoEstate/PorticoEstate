@@ -64,7 +64,27 @@
 																			</label>
 																		</div>
 																		<div class="component_descr">
-																			<xsl:value-of select="component_descr"/>
+																			<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
+																		</div>
+																	</xsl:when>
+																</xsl:choose>
+																<xsl:choose>
+																	<xsl:when test="condition_degree &gt; 0">
+																		<div class="row">
+																			<label>Tilstandsgrad:</label>
+																			<span class="measurement">
+																				<xsl:value-of select="condition_degree"/>
+																			</span>
+																		</div>
+																	</xsl:when>
+																</xsl:choose>
+																<xsl:choose>
+																	<xsl:when test="consequence &gt; 0">
+																		<div class="row">
+																			<label>Konsekvens:</label>
+																			<span class="measurement">
+																				<xsl:value-of select="consequence"/>
+																			</span>
 																		</div>
 																	</xsl:when>
 																</xsl:choose>

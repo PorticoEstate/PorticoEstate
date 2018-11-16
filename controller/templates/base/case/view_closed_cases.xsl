@@ -1,6 +1,7 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text>
+	<xsl:variable name="session_url">
+		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
 
@@ -63,7 +64,27 @@
 																			</label>
 																		</div>
 																		<div class="component_descr">
-																			<xsl:value-of select="component_descr"/>
+																			<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
+																		</div>
+																	</xsl:when>
+																</xsl:choose>
+																<xsl:choose>
+																	<xsl:when test="condition_degree &gt; 0">
+																		<div class="row">
+																			<label>Tilstandsgrad:</label>
+																			<span class="measurement">
+																				<xsl:value-of select="condition_degree"/>
+																			</span>
+																		</div>
+																	</xsl:when>
+																</xsl:choose>
+																<xsl:choose>
+																	<xsl:when test="consequence &gt; 0">
+																		<div class="row">
+																			<label>Tilstandsgrad:</label>
+																			<span class="measurement">
+																				<xsl:value-of select="consequence"/>
+																			</span>
 																		</div>
 																	</xsl:when>
 																</xsl:choose>

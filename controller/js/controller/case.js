@@ -12,6 +12,9 @@ $(document).ready(function ()
 		var requestUrl = $(thisForm).attr("action");
 
 		var location_code = $("#choose-building-on-property  option:selected").val();
+
+		var component_child = $("#choose-child-on-component  option:selected").val();
+
 		$(thisForm).find("input[name=location_code]").val(location_code);
 
 		var control_group_id = $(thisForm).find("input[name=control_group_id]").val();
@@ -33,6 +36,7 @@ $(document).ready(function ()
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
+				data: {component_child:component_child},
 				success: function (data)
 				{
 					if (data)

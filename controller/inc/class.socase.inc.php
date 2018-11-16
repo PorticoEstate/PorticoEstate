@@ -93,6 +93,10 @@
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+				$case->set_component_child_location_id($this->unmarshal($this->db->f('component_child_location_id'), 'int'));
+				$case->set_component_child_item_id($this->unmarshal($this->db->f('component_child_item_id'), 'int'));
+				$case->set_condition_degree($this->unmarshal($this->db->f('condition_degree'), 'int'));
+				$case->set_consequence($this->unmarshal($this->db->f('consequence'), 'int'));
 
 				return $case;
 			}
@@ -137,6 +141,10 @@
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+				$case->set_component_child_location_id($this->unmarshal($this->db->f('component_child_location_id'), 'int'));
+				$case->set_component_child_item_id($this->unmarshal($this->db->f('component_child_item_id'), 'int'));
+				$case->set_condition_degree($this->unmarshal($this->db->f('condition_degree'), 'int'));
+				$case->set_consequence($this->unmarshal($this->db->f('consequence'), 'int'));
 
 				$cases_array[] = $case;
 			}
@@ -187,7 +195,11 @@
 					'measurement' => $this->db->f('measurement', true),
 					'user_id' => $this->db->f('user_id'),
 					'status' => $this->db->f('status'),
-					'modified_date' => $this->db->f('modified_date')
+					'modified_date' => $this->db->f('modified_date'),
+					'component_child_location_id' => $this->db->f('component_child_location_id'),
+					'component_child_item_id' => $this->db->f('component_child_item_id'),
+					'condition_degree' => $this->db->f('condition_degree'),
+					'consequence' => $this->db->f('consequence')
 				);
 			}
 
@@ -217,7 +229,11 @@
 				'measurement',
 				'location_code',
 				'component_location_id',
-				'component_id'
+				'component_id',
+				'component_child_location_id',
+				'component_child_item_id',
+				'condition_degree',
+				'consequence'
 			);
 
 			$values = array(
@@ -234,7 +250,12 @@
 				$this->marshal($case->get_location_code(), 'string'),
 				$this->marshal($case->get_component_location_id(), 'int'),
 				$this->marshal($case->get_component_id(), 'int'),
+				$this->marshal($case->get_component_child_location_id(), 'int'),
+				$this->marshal($case->get_component_child_item_id(), 'int'),
+				$this->marshal($case->get_condition_degree(), 'int'),
+				$this->marshal($case->get_consequence(), 'int'),
 			);
+
 
 			$sql = 'INSERT INTO controller_check_item_case (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')';
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -328,6 +349,8 @@
 				'status = ' . $case->get_status(),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
+				'condition_degree = ' . $this->marshal($case->get_condition_degree(), 'int'),
+				'consequence = ' . $this->marshal($case->get_consequence(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),
 				'user_id = ' . $this->marshal($case->get_user_id(), 'int'),
 				'entry_date = ' . $this->marshal($case->get_entry_date(), 'int'),

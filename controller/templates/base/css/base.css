@@ -1896,6 +1896,7 @@ li.check_item_case ul li .col_3 {
 .frm_register_case label {
   display: inline-block;
   width: 18%;
+  margin-left: 50px;
 }
 
 .frm_register_case .what-to-do, .frm_register_case .how-to-do {
