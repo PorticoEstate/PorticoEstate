@@ -55,6 +55,7 @@ function ApplicationsCartModel()  {
                for(var i=0; i<result.length; i++) {                
                   var dates = [];
                   var resources = [];
+                  var joinedResources = [];
                   var exist = ko.utils.arrayFirst(bc.applicationCartItems(), function(item) {
                        return item.id == result[i].id;
                   });
@@ -63,11 +64,12 @@ function ApplicationsCartModel()  {
                         dates.push({date: formatSingleDateWithoutHours(new Date((result[i].dates[k].from_).replace(" ","T"))), 
                         from_: result[i].dates[k].from_, to_: result[i].dates[k].to_ ,
                         periode: formatPeriodeHours(new Date((result[i].dates[k].from_).replace(" ","T")), new Date((result[i].dates[k].to_).replace(" ","T")) )});
-                    }
+                    }                    
                     for(var k =0; k<result[i].resources.length; k++) {
                         resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id });
+                        joinedResources.push(result[i].resources[k].name);
                     }
-                    bc.applicationCartItems.push({id: result[i].id, building_name: result[i].building_name, dates: dates, resources: ko.observableArray(resources)});
+                    bc.applicationCartItems.push({id: result[i].id, building_name: result[i].building_name, dates: dates, resources: ko.observableArray(resources), joinedResources: joinedResources.join(", ")});
                   }                  
                 }
             });

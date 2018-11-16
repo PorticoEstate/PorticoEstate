@@ -20,7 +20,7 @@
                 <div class="applications p-4 mb-2">
                     <div class="row">
                         <span class="col-5" data-bind="text: building_name"></span>
-                        <div data-bind="foreach: resources" class="col-5"><span class="mr-3" data-bind="text: name"></span></div>
+                        <div data-bind="" class="col-5"><span class="mr-3" data-bind="text: joinedResources"></span></div>
                         <div class="col-2 text-right">
                             <span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span>
                         </div>
