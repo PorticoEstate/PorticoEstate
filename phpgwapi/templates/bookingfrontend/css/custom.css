@@ -880,7 +880,9 @@ BUILDING PAGE STYLE
   background: rgb(191, 191, 191);
 }
 
-
+.scheduler-view-week-resource {
+    height: 100% !important;
+}
 .scheduler-view-day-header-day span:nth-child(1) {
     text-transform: capitalize;
 }
