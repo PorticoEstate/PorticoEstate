@@ -3,10 +3,6 @@
                         
                         
 	<div class="container new-application-page" id="new-application-page">
-            <div class="d-flex flex-row-reverse">
-                <button onclick="GoToApplicationPartialTwo()"
-                class="btn btn-light mt-5" data-bind="visible: applicationCartItems().length > 0">Gå videre</button>
-            </div>   
             <form action="" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
             <div class="row">
                 

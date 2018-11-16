@@ -732,7 +732,12 @@
 					$this->bo->so->update_id_string();
 					if ($is_partial1)
 					{
-						phpgwapi_cache::message_set(lang("Your application with event details has been added. You can add another application, or finalise the application with contact details."));
+						phpgwapi_cache::message_set(
+							lang("Your application with event details has been added. You can add another application, or finalise the application with contact details.") .
+							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("Complete applications") .
+							'</button>'
+						);
 						// Redirect to same URL so as to present a new, empty form
 						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => phpgw::get_var('building_id', 'int')));
 					}

@@ -32,8 +32,8 @@
     <div class="row">
         <div class="col-md-6">
             <h5 class="font-weight-bold">{site_title}</h5>
-            <span><a href="https://www.aktiv-kommune.no/">{footer_about}</a></span>
-            <span><a href="{footer_privacy_link}">{footer_privacy_title}</a></span>
+            <span><a href="https://www.aktiv-kommune.no/" target="_blank">{footer_about}</a></span>
+            <span><a href="{footer_privacy_link}" target="_blank">{footer_privacy_title}</a></span>
         </div>
     </div>
     </div>

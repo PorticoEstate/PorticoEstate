@@ -729,7 +729,6 @@ Add date and time	booking	no	Legg til tidspunkt
 Application for	booking	no	Søknaden gjelder
 applicationcart empty	booking	no	Ingen søknader finnes
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
-Book resource	booking	no	Lei lokale
 Bookable resources (2018)	booking	no	Lokaler til leie
 Booking (2018)	booking	no	Interntildeling
 Building (2018)	booking	no	Anlegg
@@ -786,4 +785,4 @@ Text and activity IDs for each filter box	booking	no	Tekst og aktivitet-IDer for
 Title for filter boxes	booking	no	Tittel for filtreringsbokser
 Title for upcoming events	booking	no	Tittel for liste med kommende arrangementer
 Upcoming events	booking	no	Kommende arrangementer
-Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	no	Din søknad med informasjon om aktiviteten/arrangementet er lagt til. Du kan legge til en ny søknad, eller gå til søknadslisten nederst for å fullføre søknadene.
+Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	no	Din søknad er lagt til. Du kan legge til en ny søknad, eller gå videre for å fullføre søknadsprosessen
