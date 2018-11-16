@@ -77,11 +77,12 @@ $(".navbar-search").removeClass("d-none");
                     self.date.push({id: [start,end].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end) });  /*repeat: self.repeat(),*/
                     setTimeout(function() {
                       self.bookingDate(""); self.bookingStartTime(""); self.bookingEndTime("");
+                      $(".applicationSelectedDates").html("");
                     },500); //self.repeat(false);
                 }    
                 
               } else if(start.getTime() >= end.getTime()){
-                  $(".applicationSelectedDates").html("Startid m&aring; v&aelig;re tidligere enn sluttid");
+                  $(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
               }
             
           }
