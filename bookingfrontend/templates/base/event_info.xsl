@@ -19,11 +19,7 @@
 		<span class="font-weight-bold text-uppercase">
 			<xsl:value-of select="php:function('lang', 'Organizer')"/>:
 		</span>
-		<xsl:if test="orginfo">
-			<a href="{orginfo/link}">
-				<xsl:value-of select="orginfo/name"/>
-			</a>
-		</xsl:if>
+		<xsl:value-of select="event/organizer"/>
 	</div>
 
 	<div class="tooltip-desc-btn">
