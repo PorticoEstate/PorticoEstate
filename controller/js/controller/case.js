@@ -192,6 +192,11 @@ $(document).ready(function ()
 							$(clickRow).find(".case_info .measurement").text(measurement_text);
 						}
 
+						var case_condition_degree = $(thisForm).find("select[name='condition_degree'] option:selected").text();
+						$(clickRow).find(".case_info .case_condition_degree").empty().text(case_condition_degree);
+						var case_consequence = $(thisForm).find("select[name='consequence'] option:selected").text();
+						$(clickRow).find(".case_info .case_consequence").empty().text(case_consequence);
+
 						// Text from forms textarea
 						var desc_text = $(thisForm).find("textarea").val();
 						// Puts new text into description tag in case_info	    				   				

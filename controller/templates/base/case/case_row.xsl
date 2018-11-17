@@ -67,7 +67,7 @@
 										<xsl:when test="condition_degree &gt; 0">
 											<div class="row">
 												<label>Tilstandsgrad:</label>
-												<span class="measurement">
+												<span class="case_condition_degree">
 													<xsl:value-of select="condition_degree"/>
 												</span>
 											</div>
@@ -78,7 +78,7 @@
 										<xsl:when test="consequence &gt; 0">
 											<div class="row">
 												<label>Konsekvens:</label>
-												<span class="measurement">
+												<span class="case_consequence">
 													<xsl:value-of select="consequence"/>
 												</span>
 											</div>
