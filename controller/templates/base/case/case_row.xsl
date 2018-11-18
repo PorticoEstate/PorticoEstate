@@ -318,9 +318,3 @@
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
-<xsl:template match="option_names">
-	<xsl:param name="selected" />
-	<xsl:if test="$selected = id">
-		<xsl:value-of disable-output-escaping="yes" select="name"/>
-	</xsl:if>
-</xsl:template>
