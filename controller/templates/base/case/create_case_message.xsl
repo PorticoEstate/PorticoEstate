@@ -70,33 +70,33 @@
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
-		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+				<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
 
 				<xsl:variable name="action_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
-					</xsl:variable>
-					<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
-						<input type="hidden" name="check_list_id" value="{check_list/id}" />
-						<xsl:choose>
-							<xsl:when test="check_list/status = 0">
-								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-								<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'set status: done')" />
-									</xsl:attribute>
-								</input>
-							</xsl:when>
-							<xsl:otherwise>
-								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-								<input type="submit" class="pure-button pure-button-primary bigmenubutton">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'is_executed')" />
-									</xsl:attribute>
-								</input>
-							</xsl:otherwise>
-						</xsl:choose>
-					</form>
-				</div>
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
+				</xsl:variable>
+				<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
+					<input type="hidden" name="check_list_id" value="{check_list/id}" />
+					<xsl:choose>
+						<xsl:when test="check_list/status = 0">
+							<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
+							<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'set status: done')" />
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+						<xsl:otherwise>
+							<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
+							<input type="submit" class="pure-button pure-button-primary bigmenubutton">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'is_executed')" />
+								</xsl:attribute>
+							</input>
+						</xsl:otherwise>
+					</xsl:choose>
+				</form>
+			</div>
 
 			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 			<xsl:call-template name="check_list_menu" />
@@ -184,6 +184,12 @@
 													<xsl:variable name="cases_id">
 														<xsl:value-of select="id"/>
 													</xsl:variable>
+													<xsl:variable name="condition_degree">
+														<xsl:value-of select="condition_degree"/>
+													</xsl:variable>
+													<xsl:variable name="consequence">
+														<xsl:value-of select="consequence"/>
+													</xsl:variable>
 													<li>
 														<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
 														<xsl:choose>
@@ -194,10 +200,30 @@
 																	</label>
 																</div>
 																<div class="component_descr">
-																	<xsl:value-of select="component_descr"/>
+																	<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
 																</div>
 															</xsl:when>
 														</xsl:choose>
+														<div class="row">
+															<label>Tilstandsgrad:</label>
+															<span class="case_condition_degree">
+																<xsl:for-each select="//degree_list/options">
+																	<xsl:if test="$condition_degree = id">
+																		<xsl:value-of disable-output-escaping="yes" select="name"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</span>
+														</div>
+														<div class="row">
+															<label>Konsekvens:</label>
+															<span class="case_consequence">
+																<xsl:for-each select="//consequence_list/options">
+																	<xsl:if test="$consequence = id">
+																		<xsl:value-of disable-output-escaping="yes" select="name"/>
+																	</xsl:if>
+																</xsl:for-each>
+															</span>
+														</div>
 														<div class="row">
 															<label>Beskrivelse:</label>
 														</div>

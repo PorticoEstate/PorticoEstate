@@ -12,6 +12,9 @@ $(document).ready(function ()
 		var requestUrl = $(thisForm).attr("action");
 
 		var location_code = $("#choose-building-on-property  option:selected").val();
+
+		var component_child = $("#choose-child-on-component  option:selected").val();
+
 		$(thisForm).find("input[name=location_code]").val(location_code);
 
 		var control_group_id = $(thisForm).find("input[name=control_group_id]").val();
@@ -33,6 +36,7 @@ $(document).ready(function ()
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
+				data: {component_child:component_child},
 				success: function (data)
 				{
 					if (data)
@@ -187,6 +191,11 @@ $(document).ready(function ()
 							var measurement_text = $(thisForm).find("input:radio[name='measurement']:checked").val();
 							$(clickRow).find(".case_info .measurement").text(measurement_text);
 						}
+
+						var case_condition_degree = $(thisForm).find("select[name='condition_degree'] option:selected").text();
+						$(clickRow).find(".case_info .case_condition_degree").empty().text(case_condition_degree);
+						var case_consequence = $(thisForm).find("select[name='consequence'] option:selected").text();
+						$(clickRow).find(".case_info .case_consequence").empty().text(case_consequence);
 
 						// Text from forms textarea
 						var desc_text = $(thisForm).find("textarea").val();

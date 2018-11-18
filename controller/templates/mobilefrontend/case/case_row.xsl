@@ -27,6 +27,12 @@
 						<xsl:variable name="cases_id">
 							<xsl:value-of select="id"/>
 						</xsl:variable>
+						<xsl:variable name="condition_degree">
+							<xsl:value-of select="condition_degree"/>
+						</xsl:variable>
+						<xsl:variable name="consequence">
+							<xsl:value-of select="consequence"/>
+						</xsl:variable>
 						<li>
 							<!--  ==================== COL1: ORDERNR ===================== -->
 							<div class="col_1">
@@ -45,7 +51,7 @@
 												</label>
 											</div>
 											<div class="component_descr">
-												<xsl:value-of select="component_descr"/>
+												<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
 											</div>
 										</xsl:when>
 									</xsl:choose>
@@ -60,6 +66,27 @@
 												<xsl:when test="status = 1">Lukket</xsl:when>
 												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
 											</xsl:choose>
+										</span>
+									</div>
+
+									<div class="row">
+										<label>Tilstandsgrad:</label>
+										<span class="case_condition_degree">
+											<xsl:for-each select="//degree_list/options">
+												<xsl:if test="$condition_degree = id">
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</xsl:if>
+											</xsl:for-each>
+										</span>
+									</div>
+									<div class="row">
+										<label>Konsekvens:</label>
+										<span class="case_consequence">
+											<xsl:for-each select="//consequence_list/options">
+												<xsl:if test="$consequence = id">
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</xsl:if>
+											</xsl:for-each>
 										</span>
 									</div>
 
@@ -157,6 +184,42 @@
 											</xsl:choose>
 										</select>
 									</div>
+									<div class="row first">
+										<label>
+											<xsl:attribute name="title">
+												<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
+											</xsl:attribute>
+											<xsl:value-of select="php:function('lang', 'condition degree')"/>
+										</label>
+										<select name="condition_degree">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'select value')"/>
+											</xsl:attribute>
+											<xsl:apply-templates select="//degree_list/options">
+												<xsl:with-param name="selected">
+													<xsl:value-of select="condition_degree"/>
+												</xsl:with-param>
+											</xsl:apply-templates>
+										</select>
+									</div>
+									<div class="row first">
+										<label>
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'consequence')"/>
+											</xsl:attribute>
+											<xsl:value-of select="php:function('lang', 'consequence')"/>
+										</label>
+										<select name="consequence">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'select value')"/>
+											</xsl:attribute>
+											<xsl:apply-templates select="//consequence_list/options">
+												<xsl:with-param name="selected">
+													<xsl:value-of select="consequence"/>
+												</xsl:with-param>
+											</xsl:apply-templates>
+										</select>
+									</div>
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
 										<xsl:choose>
 											<xsl:when test="$control_item_type = 'control_item_type_2'">
@@ -241,4 +304,14 @@
 			</xsl:when>
 		</xsl:choose>
 	</li>
+</xsl:template>
+
+<xsl:template match="options">
+	<xsl:param name="selected" />
+	<option value="{id}">
+		<xsl:if test="$selected = id">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>
