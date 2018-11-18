@@ -1202,12 +1202,14 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','condition_degree',array(
 			'type' => 'int',
 			'precision' => 2,
-			'nullable' => true
+			'nullable' => true,
+			'default'=> 2
 		));
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','consequence',array(
 			'type' => 'int',
 			'precision' => 2,
-			'nullable' => true
+			'nullable' => true,
+			'default'=> 2
 		));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

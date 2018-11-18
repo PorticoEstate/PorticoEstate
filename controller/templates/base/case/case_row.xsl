@@ -26,6 +26,13 @@
 						<xsl:variable name="cases_id">
 							<xsl:value-of select="id"/>
 						</xsl:variable>
+						<xsl:variable name="condition_degree">
+							<xsl:value-of select="condition_degree"/>
+						</xsl:variable>
+						<xsl:variable name="consequence">
+							<xsl:value-of select="consequence"/>
+						</xsl:variable>
+
 						<li>
 							<!--  ==================== COL1: ORDERNR ===================== -->
 							<div class="col_1">
@@ -63,27 +70,26 @@
 										</span>
 									</div>
 
-									<xsl:choose>
-										<xsl:when test="condition_degree &gt; 0">
-											<div class="row">
-												<label>Tilstandsgrad:</label>
-												<span class="case_condition_degree">
-													<xsl:value-of select="condition_degree"/>
-												</span>
-											</div>
-										</xsl:when>
-									</xsl:choose>
-
-									<xsl:choose>
-										<xsl:when test="consequence &gt; 0">
-											<div class="row">
-												<label>Konsekvens:</label>
-												<span class="case_consequence">
-													<xsl:value-of select="consequence"/>
-												</span>
-											</div>
-										</xsl:when>
-									</xsl:choose>
+									<div class="row">
+										<label>Tilstandsgrad:</label>
+										<span class="case_condition_degree">
+											<xsl:for-each select="//degree_list/options">
+												<xsl:if test="$condition_degree = id">
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</xsl:if>
+											</xsl:for-each>
+										</span>
+									</div>
+									<div class="row">
+										<label>Konsekvens:</label>
+										<span class="case_consequence">
+											<xsl:for-each select="//consequence_list/options">
+												<xsl:if test="$consequence = id">
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</xsl:if>
+											</xsl:for-each>
+										</span>
+									</div>
 
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
                  
@@ -311,4 +317,10 @@
 		</xsl:if>
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
+</xsl:template>
+<xsl:template match="option_names">
+	<xsl:param name="selected" />
+	<xsl:if test="$selected = id">
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</xsl:if>
 </xsl:template>

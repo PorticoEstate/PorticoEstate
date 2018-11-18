@@ -370,7 +370,7 @@
 				'cases_view' => 'add_case',
 				'get_locations'	=> $case_data['get_locations'],
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
-				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $degree_value = 1 ))
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 ))
 			);
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
@@ -1189,8 +1189,8 @@
 				'current_month_nr' => $month,
 				'open_check_items_and_cases' => $open_check_items_and_cases,
 				'cases_view' => 'open_cases',
-				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
-				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $degree_value = 1 ))
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -1343,7 +1343,9 @@
 				'closed_check_items_and_cases' => $closed_check_items_and_cases,
 				'check_list' => $check_list,
 				'cases_view' => 'closed_cases',
-				'building_location_code' => $building_location_code
+				'building_location_code' => $building_location_code,
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
 
 			phpgwapi_jquery::load_widget('core');
