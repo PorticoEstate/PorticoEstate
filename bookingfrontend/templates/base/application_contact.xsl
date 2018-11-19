@@ -107,6 +107,7 @@
         <div class="push"></div>
     </div>
     <script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
         var script = document.createElement("script"); 
         //script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_contact.js";
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_contact.js";

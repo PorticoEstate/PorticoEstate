@@ -37,7 +37,7 @@ function ApplicationsCartModel()  {
        self.applicationCartItemsEmpty = ko.observable();
        self.deleteItem = function(e) {
            requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.delete_partial"}, true);
-           var answer = confirm('Er du sikker på slette søknad fra handlekurv?');
+		var answer = confirm(footerlang['Do you want to delete application?']);
            if (answer) {
             $.post( requestUrl, { id: e.id } ).done(function(response) {
                 GetApplicationsCartItems(self);
