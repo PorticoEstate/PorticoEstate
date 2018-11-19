@@ -17,7 +17,7 @@ function applicationModel() {
             if(self.applicationCartItems().length < 1) {
                 window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uisearch.index' }, false);            
             }
-        },1000);        
+        },2000);        
     });
     self.deleteItem = (function(e) {
         bc.deleteItem(e);
