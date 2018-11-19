@@ -909,7 +909,7 @@
 			{
 				$partial2 = $this->extract_form_data();
 				// Application contains only contact details. Use dummy values for event fields
-				$dummyfields_string = array('building_name','description','secret','status');
+				$dummyfields_string = array('building_name','name','organizer','secret','status');
 				foreach ($dummyfields_string as $field)
 				{
 					$partial2[$field] = 'dummy';

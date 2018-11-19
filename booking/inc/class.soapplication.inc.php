@@ -43,8 +43,8 @@
 						'key' => 'id',
 						'column' => 'name'
 					)),
-				'name' => array('type' => 'string', 'query' => true, 'required' => false),
-				'organizer' => array('type' => 'string', 'query' => true, 'required' => false),
+				'name' => array('type' => 'string', 'query' => true, 'required' => true),
+				'organizer' => array('type' => 'string', 'query' => true, 'required' => true),
 				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
