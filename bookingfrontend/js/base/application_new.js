@@ -318,13 +318,14 @@ $(document).ready(function(){
 });
 
 $(".bookingStartTime").on( "click", function() {
-    console.log(startTimeScrollTopValue);
     setTimeout(function() {
         //var topPos = ($('.yui3-aclist-item')[32]).offsetTop;
         if(am.bookingEndTime() != "") {
             if(startTimeScrollTopValue > endTimeScrollTopValue) {
                 $(".popover-content").scrollTop(endTimeScrollTopValue-100);
+                return;
             }
+            $(".popover-content").scrollTop(startTimeScrollTopValue);
         } else {
             $(".popover-content").scrollTop(startTimeScrollTopValue);
         }
@@ -333,12 +334,13 @@ $(".bookingStartTime").on( "click", function() {
 });
 
 $(".bookingEndTime").on( "click", function() {
-    console.log(endTimeScrollTopValue);
     setTimeout(function() {
         if(am.bookingStartTime() != "") {
             if(endTimeScrollTopValue < startTimeScrollTopValue) {
                 $(".popover-content").scrollTop(startTimeScrollTopValue+100);
+                return;
             }
+            $(".popover-content").scrollTop(endTimeScrollTopValue);
         } else {
             $(".popover-content").scrollTop(endTimeScrollTopValue);
         }     
