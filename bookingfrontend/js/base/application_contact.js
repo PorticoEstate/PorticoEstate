@@ -10,15 +10,13 @@ ko.validation.locale('nb-NO');
 function applicationModel() {
     var self = this;    
     self.applicationCartItems = ko.computed(function() {
-         return bc.applicationCartItems();
+        return bc.applicationCartItems();
     });
-    self.redirectToHome = ko.computed(function() {
-        setTimeout(function() {
-            if(self.applicationCartItems().length < 1) {
-                window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uisearch.index' }, false);            
-            }
-        },2000);        
-    });
+    self.applicationCartItemsEmpty = ko.computed(function() {
+        if(bc.applicationCartItemsEmpty()) {
+            window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uisearch.index' }, false);
+        }
+    })
     self.deleteItem = (function(e) {
         bc.deleteItem(e);
     });        

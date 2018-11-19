@@ -34,6 +34,7 @@ function phpGWLink(strURL, oArgs, bAsJSON)
 function ApplicationsCartModel()  {
        var self = this;
        self.applicationCartItems = ko.observableArray([]);
+       self.applicationCartItemsEmpty = ko.observable();
        self.deleteItem = function(e) {
            requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.delete_partial"}, true);
            var answer = confirm('Er du sikker på slette søknad fra handlekurv?');
@@ -52,6 +53,11 @@ function ApplicationsCartModel()  {
        
        getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.get_partials", phpgw_return_as: "json"}, true);
            $.getJSON(getJsonURL, function(result){
+                if(result.length < 1) {
+                    bc.applicationCartItemsEmpty(true);  
+                } else {
+                    bc.applicationCartItemsEmpty(false);
+                }
                for(var i=0; i<result.length; i++) {                
                   var dates = [];
                   var resources = [];
