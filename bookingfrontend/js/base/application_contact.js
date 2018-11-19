@@ -8,9 +8,16 @@ ko.validation.locale('nb-NO');
 
 
 function applicationModel() {
-    var self = this;
+    var self = this;    
     self.applicationCartItems = ko.computed(function() {
          return bc.applicationCartItems();
+    });
+    self.redirectToHome = ko.computed(function() {
+        setTimeout(function() {
+            if(self.applicationCartItems().length < 1) {
+                window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uisearch.index' }, false);            
+            }
+        },1000);        
     });
     self.deleteItem = (function(e) {
         bc.deleteItem(e);
