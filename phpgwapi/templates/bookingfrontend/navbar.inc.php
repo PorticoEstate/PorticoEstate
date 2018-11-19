@@ -45,6 +45,7 @@
 		$var = array
 		(
 			'cart_complete_application' => lang('Complete applications'),
+			'cart_confirm_delete'       => lang('Do you want to delete application?'),
 			'cart_header'				=> lang('applications'),
 			'footer_about'         => lang('About the service'),
 			'footer_info'	=> $footer_info, //'Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen',
