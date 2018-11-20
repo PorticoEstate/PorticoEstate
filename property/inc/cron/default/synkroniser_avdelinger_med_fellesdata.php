@@ -70,16 +70,16 @@
 			$fellesdata->get_org_unit_ids_from_top();
 
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/art
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148&ordreNr=45000224
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148&ordreNr=45000224
 
 			if ($this->debug)
 			{
@@ -373,7 +373,7 @@
 
 		function update_customer_id(  )
 		{
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
 			$sql = "SELECT id, identifier FROM rental_party"
 				. " WHERE (customer_id = 0 OR customer_id IS NULL)"
 				. " AND (length(identifier) = 9 OR length(identifier) = 11)";
@@ -426,7 +426,7 @@
 		{
 			//det er for mange...16396 stk...
 			//return;
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt
 
 //			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt';
 			$url = "{$this->soap_url}/prosjekt";
@@ -476,7 +476,7 @@
 		{
 			//det er for mange...
 			return;
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/art
 
 //			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/art';
 			$url = "{$this->soap_url}/art";
@@ -497,7 +497,7 @@
 		{
 			//det er for mange...
 			return;
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 			//fm_eco_service
 
 //			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste';
@@ -571,7 +571,7 @@ SQL;
 			}
 			$GLOBALS['phpgw']->db->query('DELETE FROM fm_vendor_temp', __LINE__, __FILE__);
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**
 			//fm_vendor
 
 //			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**';
@@ -765,7 +765,7 @@ SQL;
 
 			/*Test server*/
 //			$username = 'portico';
-//			$password = 'BgPor790gfol';
+//			$password = '********';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);

@@ -1181,3 +1181,41 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.55';
+	function controller_upgrade0_1_55()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','component_child_location_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','component_child_item_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','condition_degree',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true,
+			'default'=> 2
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','consequence',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true,
+			'default'=> 2
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.56';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+

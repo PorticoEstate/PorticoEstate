@@ -18,6 +18,14 @@
 			</xsl:when>
 		</xsl:choose>
 
+		<xsl:choose>
+			<xsl:when test="component_children/child::node()">
+				<div id="choose-building-wrp">
+					<xsl:call-template name="select_component_children" />
+				</div>
+			</xsl:when>
+		</xsl:choose>
+
 		<div id="view_cases">
 
 			<h3 class="box_header ext">Registrer sak/måling</h3>
@@ -108,6 +116,34 @@
 																</div>
 															</xsl:when>
 														</xsl:choose>
+														<div class="pure-control-group row">
+															<label>
+																<xsl:attribute name="title">
+																	<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
+																</xsl:attribute>
+																<xsl:value-of select="php:function('lang', 'condition degree')"/>
+															</label>
+															<select name="condition_degree">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'select value')"/>
+																</xsl:attribute>
+																<xsl:apply-templates select="//degree_list/options"/>
+															</select>
+														</div>
+														<div class="pure-control-group row">
+															<label>
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'consequence')"/>
+																</xsl:attribute>
+																<xsl:value-of select="php:function('lang', 'consequence')"/>
+															</label>
+															<select name="consequence">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'select value')"/>
+																</xsl:attribute>
+																<xsl:apply-templates select="//consequence_list/options"/>
+															</select>
+														</div>
 
 														<xsl:choose>
 															<xsl:when test="type = 'control_item_type_1'">
@@ -326,3 +362,11 @@
 	</option>
 </xsl:template>
 
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>

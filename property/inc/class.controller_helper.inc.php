@@ -388,6 +388,17 @@ HTML;
 						$_value_arr[] = $case->get_descr();
 					}
 
+					$component_child_location_id = $case->get_component_child_location_id();
+					$component_child_item_id = $case->get_component_child_item_id();
+
+					if($component_child_location_id && $component_child_item_id)
+					{
+						$short_desc = execMethod('property.soentity.get_short_description', array(
+						'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+
+						array_unshift($_value_arr, $short_desc);
+					}
+
 					$_cases[] = array
 						(
 						'url' => "<a href=\"{$_link}\" > {$check_list_id}</a>",

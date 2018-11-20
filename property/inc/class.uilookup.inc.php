@@ -130,7 +130,8 @@
 					'sort' => strtoupper($order[0]['dir']),
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
-					'filter' => ''
+					'filter' => '',
+					'offset' => 0
 				);
 
 				$result_data = array('results' =>  $this->bo->read_addressbook($params));
@@ -210,11 +211,11 @@ JS;
 			);
 
 			$uicols = array(
-				'name' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile','enabled'),
-				'sort_field' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile','enabled'),
+				'name' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile'),
+				'sort_field' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile'),
 				'sortable' => array(false, true, true, true, false, false, false),
 				'formatter' => array('', '', '', '', '', '', ''),
-				'descr' => array(lang('ID'), lang('lid'), lang('lastname'),lang('firstname'), lang('email'),  lang('mobile'),lang('enabled'))
+				'descr' => array(lang('ID'), lang('lid'), lang('lastname'),lang('firstname'), lang('email'),  lang('mobile'))
 			);
 
 			$count_uicols_name = count($uicols['name']);

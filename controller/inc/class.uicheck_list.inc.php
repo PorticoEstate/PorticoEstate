@@ -489,8 +489,27 @@
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
-				$component_id = $check_list->get_component_id();
+				$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
 
+				$system_location_arr = explode('.', $system_location['location']);
+
+				$property_soadmin_entity = createObject('property.soadmin_entity');
+				$location_children = $property_soadmin_entity->get_children( $system_location_arr[2], $system_location_arr[3], 0, '' );
+				$property_soentity = createObject('property.soentity');
+
+				$component_children = array();
+				foreach ($location_children as $key => $location_children_info)
+				{
+					$_component_children = $property_soentity->get_eav_list(array
+					(
+						'location_id' => $location_children_info['location_id'],
+						'allrows'	=> true
+					));
+
+					$component_children = array_merge($component_children, $_component_children);
+				}
+
+//				_debug_array($component_children);
 
 				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
@@ -590,6 +609,7 @@
 				'control' => $control,
 				'check_list' => $check_list,
 				'buildings_on_property' => $buildings_on_property,
+				'component_children'	=> $component_children,
 				'get_locations' => $get_locations,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
