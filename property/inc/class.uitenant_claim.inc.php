@@ -157,20 +157,14 @@
 
 		function index( $project_id = '' )
 		{
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim',
-				'receipt',
-				'search_field',
-				'nextmatchs'));
-
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => PHPGW_ACL_READ, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->query(array('project_id' => $project_id));
+				return $this->query(array('project_id' => phpgw::get_var('project_id')));
 			}
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -194,6 +188,7 @@
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uitenant_claim.index',
+						'project_id' => $this->project_id,
 						'phpgw_return_as' => 'json'
 					)),
 					'new_item' => self::link(array(
@@ -279,18 +274,6 @@
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
-
-			$link_data = array
-				(
-				'menuaction' => 'property.uitenant_claim.index',
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'cat_id' => $this->cat_id,
-				'user_id' => $this->user_id,
-				'status_id' => $this->status_id,
-				'project_id' => $this->project_id,
-				'query' => $this->query
-			);
 
 			$parameters = array
 				(
@@ -431,18 +414,20 @@
 		{
 			$project_id = phpgw::get_var('project_id', 'int');
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_claim'));
-
 			$claim = $this->bo->check_claim_project($project_id);
 			$total_records = $this->bo->total_records;
 
-			if ($total_records > 0)
+			if ($total_records > 1)
 			{
-				$receipt['message'][] = array('msg' => lang('%1 claim is already registered for this project', $total_records));
+				phpgwapi_cache::message_set(lang('%1 claim is already registered for this project', $total_records),'message');
 				$GLOBALS['phpgw']->session->appsession('session_data', 'tenant_claim_receipt', $receipt);
 				$this->bo->status = 'all';
 				$this->status = 'all';
 				$this->index($project_id);
+			}
+			else if( !empty($claim[0]['claim_id']))
+			{
+				$this->edit($project_id, $claim[0]['claim_id']);
 			}
 			else
 			{
@@ -452,15 +437,14 @@
 			return;
 		}
 
-		function edit( $project_id = '' )
+		function edit( $project_id = '', $claim_id = 0 )
 		{
 			if (!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
-			$claim_id = phpgw::get_var('claim_id', 'int');
+			$claim_id = $claim_id ? $claim_id : phpgw::get_var('claim_id', 'int');
 
 			$values = phpgw::get_var('values');
 			//_debug_array($values);die;
