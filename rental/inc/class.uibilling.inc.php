@@ -1557,6 +1557,9 @@ JS;
 				 */
 				$voucher_id = rental_sobilling::get_instance()->increment_id('faktura_buntnr');
 
+				$old_buntnr =  'PU' . sprintf("%08s",$id);
+				$new_buntnr =  'PU' . sprintf("%08s",$voucher_id);
+
 				$filename = '14PU' . sprintf("%08s",$voucher_id) . ".txt";
 			}
 			else
@@ -1576,6 +1579,11 @@ JS;
 					'relatives' => array( RELATIVE_NONE)
 				)
 			);
+
+			if(!empty($new_buntnr))
+			{
+				$content = str_replace($old_buntnr, $new_buntnr, $content);
+			}
 
 			if(empty($content))
 			{
@@ -1840,6 +1848,8 @@ JS;
 						$_id = $voucher_id ? $voucher_id : $id;
 //						$filename = '14PU' . sprintf("%08s",$_id) . ".{$file_ending}";
 						$filename = '14PU' . sprintf("%08s",$_id) . ".txt";
+						$old_buntnr =  'PU' . sprintf("%08s",$id);
+						$new_buntnr =  'PU' . sprintf("%08s",$_id);
 					}
 					else
 					{
@@ -1854,7 +1864,7 @@ JS;
 					$vfs = CreateObject('phpgwapi.vfs');
 					$vfs->override_acl = 1;
 
-					print $vfs->read(
+					$content = $vfs->read(
 							array
 							(
 								'string' => $path,
@@ -1862,7 +1872,11 @@ JS;
 							)
 					);
 
-					//print rental_sobilling::get_instance()->get_export_data((int)phpgw::get_var('id'));
+					if(!empty($new_buntnr))
+					{
+						$content = str_replace($old_buntnr, $new_buntnr, $content);
+					}
+					echo $content;
 				}
 				else
 				{
