@@ -179,7 +179,7 @@
 		function read_addressbook( $data = array() )
 		{
 			$accounts = & $GLOBALS['phpgw']->accounts;
-			$users = $accounts->get_list('accounts', $data['start'], $data['sort'], $data['order'], $data['query'], $data['offset']);
+			$users = $accounts->get_list('accounts', $data['start'], $data['sort'], $data['order'], $data['query'], $data['offset'], array('active' => true));
 			$values = array();
 			$addressbook = CreateObject('addressbook.boaddressbook');
 			$socommon = CreateObject('property.socommon');
