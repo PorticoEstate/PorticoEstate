@@ -1788,15 +1788,27 @@
 
 			if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 			{
-				foreach ($entity['lookup_entity'] as $lookup_id)
-				{
-					$entity_lookup = $this->soadmin_entity->read_single($lookup_id);
-					$lookup_entity[] = array
-						(
-						'id' => $lookup_id,
-						'name' => $entity_lookup['name']
-					);
-				}
+				$lookup_entity_id = array_values($entity['lookup_entity']);
+			}
+			else
+			{
+				$lookup_entity_id = array();
+			}
+
+			if(!empty($category['parent_id']))
+			{
+				$lookup_entity_id[$category['entity_id']] = $category['parent_id'];
+			}
+
+			foreach ($lookup_entity_id as $lookup_id => $lookup_category_id)
+			{
+				$entity_lookup = $this->soadmin_entity->read_single($lookup_id);
+				$lookup_entity[] = array
+				(
+					'id' => $lookup_id,
+					'category_id' => $lookup_category_id,
+					'name' => $entity_lookup['name']
+				);
 			}
 
 			if (isset($category['lookup_tenant']) && $category['lookup_tenant'])

@@ -21,6 +21,12 @@ control_item_type_3	controller	nn	Ved valg av verdi fra nedtrekksliste
 control_item_type_4	controller	nn	Ved valg av verdi fra radioknapper
 control_item_type_5	controller	nn	Ved valg av verdi fra Avkrysning
 control_helptext	controller	nn	Her kommer hjelpetekst for å opprette en kontroll
+condition degree	controller	nn	Tilstandsgrad
+minor symptoms	controller	nn	Ikkje vesentleg avvik
+medium symptoms	controller	nn	Vesentleg avvik
+serious symptoms	controller	nn	Stort eller vesentleg avvik
+condition not assessed	controller	nn	Ikkje udersøkt. Mogleg risiko
+consequence	controller	nn	Konsekvens
 Check_list	controller	nn	Sjekkliste
 chosen attributes	controller	nn	Valgte datafelter
 Calendar_overview	controller	nn	Kontrollplan

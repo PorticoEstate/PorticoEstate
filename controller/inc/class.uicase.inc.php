@@ -159,6 +159,26 @@
 				$type = 'component';
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 				$buildings_on_property = array();
+
+///
+				$system_location_arr = explode('.', $location_info['location']);
+
+				$property_soadmin_entity = createObject('property.soadmin_entity');
+				$location_children = $property_soadmin_entity->get_children( $system_location_arr[2], $system_location_arr[3], 0, '' );
+				$property_soentity = createObject('property.soentity');
+
+				$component_children = array();
+				foreach ($location_children as $key => $location_children_info)
+				{
+					$_component_children = $property_soentity->get_eav_list(array
+					(
+						'location_id' => $location_children_info['location_id'],
+						'allrows'	=> true
+					));
+
+					$component_children = array_merge($component_children, $_component_children);
+				}
+//
 			}
 			else
 			{
@@ -298,6 +318,7 @@
 				'control' => $control,
 				'check_list' => $check_list,
 				'buildings_on_property' => $buildings_on_property,
+				'component_children'	=> $component_children,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'control_groups_with_items_array' => $control_groups_with_items_array,
@@ -338,6 +359,7 @@
 				'buildings_on_property' => $case_data['buildings_on_property'],
 				'location_array' => $case_data['location_array'],
 				'component_array' => $case_data['component_array'],
+				'component_children' => $case_data['component_children'],
 				'control_groups_with_items_array' => $case_data['control_groups_with_items_array'],
 				'type' => $case_data['type'],
 				'location_level' => $level,
@@ -346,9 +368,11 @@
 				'mandatory_location' => $mandatory_location,
 				'location_required' => $mandatory_location,
 				'cases_view' => 'add_case',
-				'get_locations'	=> $case_data['get_locations']
+				'get_locations'	=> $case_data['get_locations'],
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 ))
 			);
-
+//			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
@@ -359,7 +383,8 @@
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
-				'check_list/fragments/select_buildings_on_property'), $data);
+				'check_list/fragments/select_buildings_on_property',
+				'check_list/fragments/select_component_children'), $data);
 		}
 
 		public function get_case_data_ajax()
@@ -387,6 +412,23 @@
 			$location_code = phpgw::get_var('location_code');
 			$component_location_id = phpgw::get_var('component_location_id', 'int');
 			$component_id = phpgw::get_var('component_id', 'int');
+
+
+			$component_child =  phpgw::get_var('component_child');
+			$condition_degree =  phpgw::get_var('condition_degree');
+			$consequence =  phpgw::get_var('consequence');
+
+			if($component_child)
+			{
+				$component_child_arr = explode('_', $component_child);
+				$component_child_location_id = $component_child_arr[0];
+				$component_child_item_id = $component_child_arr[1];
+			}
+			else
+			{
+				$component_child_location_id = null;
+				$component_child_item_id = null;
+			}
 
 			$check_list = $this->so_check_list->get_single($check_list_id);
 
@@ -424,6 +466,10 @@
 			$case->set_location_code($location_code);
 			$case->set_component_location_id($component_location_id);
 			$case->set_component_id($component_id);
+			$case->set_component_child_location_id($component_child_location_id);
+			$case->set_component_child_item_id($component_child_item_id);
+			$case->set_condition_degree($condition_degree);
+			$case->set_consequence($consequence);
 
 			// Saves selected value from  or measurement
 			if ($type == 'control_item_type_2')
@@ -469,11 +515,16 @@
 
 			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
+			$condition_degree =  phpgw::get_var('condition_degree');
+			$consequence =  phpgw::get_var('consequence');
+
 			$case = $this->so->get_single($case_id);
 			$case->set_descr($case_descr);
 			$case->set_modified_date($todays_date_ts);
 			$case->set_measurement($measurement);
 			$case->set_status($case_status);
+			$case->set_condition_degree($condition_degree);
+			$case->set_consequence($consequence);
 
 			if ($case->validate())
 			{
@@ -533,6 +584,16 @@
 						{
 							$short_desc = execMethod('property.soentity.get_short_description', array(
 								'location_id' => $component_location_id, 'id' => $component_id));
+
+							$component_child_location_id = $case->get_component_child_location_id();
+							$component_child_item_id = $case->get_component_child_item_id();
+
+							if($component_child_location_id && $component_child_item_id)
+							{
+								$short_desc .= "<br>" . execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+							}
+
 						}
 
 						$case->set_component_descr($short_desc);
@@ -699,8 +760,27 @@
 					{
 						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id,
 							'id' => $component_id));
+						$component_child_location_id = $case->get_component_child_location_id();
+						$component_child_item_id = $case->get_component_child_item_id();
+
+						if($component_child_location_id && $component_child_item_id)
+						{
+							$short_desc .= "\n" . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+						}
+
 					}
 					$message_details .= "Hvor: {$short_desc}\n";
+				}
+
+				if($case->get_condition_degree())
+				{
+					$message_details .= lang('condition degree') . ': ' . $case->get_condition_degree() . "\n";
+				}
+
+				if($case->get_consequence())
+				{
+					$message_details .= lang('consequence') . ': ' . $case->get_consequence() . "\n";
 				}
 
 				$message_details .= 'Hva: ' . $case->get_descr() . "\n\n";
@@ -881,7 +961,7 @@
 
 			if (!empty($cases_array))
 			{
-				// Updates status for cases related to message  
+				// Updates status for cases related to message
 				foreach ($cases_array as $case)
 				{
 					$case->set_status($updateStatus);
@@ -1076,6 +1156,15 @@
 						{
 							$short_desc = execMethod('property.soentity.get_short_description', array(
 								'location_id' => $component_location_id, 'id' => $component_id));
+
+							$component_child_location_id = $case->get_component_child_location_id();
+							$component_child_item_id = $case->get_component_child_item_id();
+
+							if($component_child_location_id && $component_child_item_id)
+							{
+								$short_desc .= "<br>" . execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+							}
 						}
 						$case->set_component_descr($short_desc);
 					}
@@ -1099,7 +1188,9 @@
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'open_check_items_and_cases' => $open_check_items_and_cases,
-				'cases_view' => 'open_cases'
+				'cases_view' => 'open_cases',
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -1215,6 +1306,16 @@
 						{
 							$short_desc = execMethod('property.soentity.get_short_description', array(
 								'location_id' => $component_location_id, 'id' => $component_id));
+
+							$component_child_location_id = $case->get_component_child_location_id();
+							$component_child_item_id = $case->get_component_child_item_id();
+
+							if($component_child_location_id && $component_child_item_id)
+							{
+								$short_desc .= "<br>" . execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+							}
+
 						}
 						$case->set_component_descr($short_desc);
 					}
@@ -1242,7 +1343,9 @@
 				'closed_check_items_and_cases' => $closed_check_items_and_cases,
 				'check_list' => $check_list,
 				'cases_view' => 'closed_cases',
-				'building_location_code' => $building_location_code
+				'building_location_code' => $building_location_code,
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
 
 			phpgwapi_jquery::load_widget('core');

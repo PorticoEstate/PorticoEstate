@@ -1080,7 +1080,7 @@ mask	property	no	Masker
 material cost	property	no	Materiell
 materials:__________	property	no	Materialer:__________
 m_cost	property	no	Materialkost
-medium consequences	property	no	Middels store konsekvenser
+medium consequences	common	no	Middels store konsekvenser
 member	property	no	Medlem
 member of	property	no	Medlem av
 memo	property	no	Memo
@@ -1098,7 +1098,7 @@ mine orders	property	no	Mine bestillinger
 mine projects	property	no	Mine prosjekter
 mine vouchers	property	no	Mine bilag
 minor	property	no	Liten
-minor consequences	property	no	Små konsekvenser
+minor consequences	common	no	Små konsekvenser
 minute	property	no	Minutt
 minutes before the event	property	no	Minutter til hendelse
 Missing log message	property	no	Angi grunn for endring
@@ -1163,7 +1163,7 @@ no location	property	no	Lokalisering ikke valgt
 no mailaddress is selected	property	no	E-post ikke valgt
 no member	property	no	Ingen medlem
 no method	property	no	Ingen metode
-none consequences	property	no	Ingen konsekvenser
+none consequences	common	no	Ingen konsekvenser
 no part of town	property	no	Bydel ikke valgt
 no revision	property	no	Ingen revisjon
 no role	property	no	Rolle ikke valgt
@@ -1678,7 +1678,7 @@ send the following sms-message to %1 to update status for this order:	property	n
 send this order by email	property	no	Send denne ordren med e-post
 send workorder	property	no	Send ordre
 serious	property	no	Kraftig
-serious consequences	property	no	Store konsekvenser
+serious consequences	common	no	Store konsekvenser
 service	property	no	Tjeneste
 service agreement	property	no	Serviceavtale
 service agreement attributes	property	no	Serviceavtale egenskaper

@@ -584,6 +584,11 @@
 					$m++;
 
 					$p_cat_id = isset($data['entity_data'][$entity['id']]['p_cat_id']) ? $data['entity_data'][$entity['id']]['p_cat_id'] : '';
+
+					if(!$p_cat_id && !empty($entity['category_id']))
+					{
+						$p_cat_id = $entity['category_id'];
+					}
 					$lookup_functions[] = array
 						(
 						'filter_level' => count($location_types),

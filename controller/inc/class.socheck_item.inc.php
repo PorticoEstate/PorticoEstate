@@ -320,7 +320,7 @@
 				$sql .= "AND cic.location_code = '$location_code' ";
 			}
 
-			$sql .= "ORDER BY ci.id";
+			$sql .= "ORDER BY ci.id, cic.id";
 
 			$this->db->query($sql);
 
@@ -371,6 +371,11 @@
 					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
 					$case->set_component_location_id($this->db->f('component_location_id'), 'int');
 					$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
+					$case->set_component_child_location_id($this->unmarshal($this->db->f('component_child_location_id'), 'int'));
+					$case->set_component_child_item_id($this->unmarshal($this->db->f('component_child_item_id'), 'int'));
+					$case->set_condition_degree($this->unmarshal($this->db->f('condition_degree'), 'int'));
+					$case->set_consequence($this->unmarshal($this->db->f('consequence'), 'int'));
+
 					$cases_array[] = $case;
 				}
 
@@ -451,6 +456,10 @@
 					$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
 					$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
+					$case->set_component_child_location_id($this->unmarshal($this->db->f('component_child_location_id'), 'int'));
+					$case->set_component_child_item_id($this->unmarshal($this->db->f('component_child_item_id'), 'int'));
+					$case->set_condition_degree($this->unmarshal($this->db->f('condition_degree'), 'int'));
+					$case->set_consequence($this->unmarshal($this->db->f('consequence'), 'int'));
 
 					$cases_array[] = $case;
 				}

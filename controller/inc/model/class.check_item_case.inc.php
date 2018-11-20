@@ -53,6 +53,10 @@
 		protected $component_location_id; // komponent type
 		protected $component_id;
 		protected $component_descr;
+		protected $component_child_location_id; //subtype til komponent, eksempel: lekeplassutstyr til lekeplass
+		protected $component_child_item_id; //forekomst av subtype til komponent
+		protected $condition_degree;
+		protected $consequence;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -214,6 +218,47 @@
 		{
 			$this->component_descr = $component_descr;
 		}
+
+		public function get_component_child_location_id()
+		{
+			return (int)$this->component_child_location_id;
+		}
+
+		public function set_component_child_location_id( $component_child_location_id )
+		{
+			$this->component_child_location_id = $component_child_location_id;
+		}
+
+		public function get_component_child_item_id()
+		{
+			return (int)$this->component_child_item_id;
+		}
+
+		public function set_component_child_item_id( $component_child_item_id )
+		{
+			$this->component_child_item_id = $component_child_item_id;
+		}
+
+		public function get_condition_degree()
+		{
+			return (int)$this->condition_degree;
+		}
+
+		public function set_condition_degree( $condition_degree )
+		{
+			$this->condition_degree = $condition_degree;
+		}
+
+		public function get_consequence()
+		{
+			return (int)$this->consequence;
+		}
+
+		public function set_consequence( $consequence )
+		{
+			$this->consequence = $consequence;
+		}
+
 
 		public function validate()
 		{

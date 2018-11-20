@@ -57,14 +57,14 @@
 		{
 			$start = time();
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/art
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
 
 			if ($this->debug)
 			{
@@ -214,10 +214,10 @@
 
 		function check_payment( $voucher_id )
 		{
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148
+			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148
 			$url = "{$this->soap_url}/utlignetfaktura?bilagsNr={$voucher_id}";
 			$username	= $this->soap_username; //'portico';
-			$password	= $this->soap_password; //'BgPor790gfol';
+			$password	= $this->soap_password; //'********';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
