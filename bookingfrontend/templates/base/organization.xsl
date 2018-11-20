@@ -159,19 +159,12 @@
                 <div class="custom-card p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
                     <div data-bind="foreach: groups">
                         <div class="custom-subcard mb-0">
-                            <a class="group_link"><span data-bind="text: name"></span></a>
-                            <!--<div class="d-block">
-                                <label class="font-weight-bold" data-bind="if: group_contact_person_name">Navn:&#160;</label>
-                                <span data-bind="text: group_contact_person_name"></span>
-                            </div>
-                            <div class="d-block">
-                                <label class="font-weight-bold" data-bind="if: group_contact_person_email">Email:&#160;</label>
-                                <span data-bind="text: group_contact_person_email"></span>
-                            </div>
-                            <div class="d-block mb-2">
-                                <label class="font-weight-bold" data-bind="if: group_contact_person_phone">Tel:&#160;</label>
-                                <span data-bind="text: group_contact_person_phone" class="d-inline-block"></span>
-                            </div>-->
+									<xsl:if test="organization/permission/write">
+									    <a class="group_link"><span data-bind="text: name"></span></a>
+									</xsl:if>
+									<xsl:if test="not(organization/permission/write)">
+										<span data-bind="text: name"></span>
+									</xsl:if>
                         </div>
                     </div>
                 </div>

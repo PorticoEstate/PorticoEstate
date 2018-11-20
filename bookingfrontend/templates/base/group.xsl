@@ -1,6 +1,15 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="group-page-content" class="margin-top-content">
         	<div class="container wrapper">
+
+			<xsl:if test="not(group/logged_on)">
+				<div class="error">
+					<xsl:value-of select="php:function('lang', 'Access denied')" />
+				</div>
+			</xsl:if>
+
+			<xsl:if test="group/logged_on">
+
 				<div class="location">
 					<span>
 						<a><xsl:attribute name="href">
@@ -80,9 +89,9 @@
 					</xsl:for-each>
 
 				</div>         
+			</xsl:if>
             
         	</div>
-    	
 	</div>
     <div class="push"></div>
 </xsl:template>
