@@ -320,7 +320,7 @@
 				$sql .= "AND cic.location_code = '$location_code' ";
 			}
 
-			$sql .= "ORDER BY ci.id";
+			$sql .= "ORDER BY ci.id, cic.id";
 
 			$this->db->query($sql);
 
