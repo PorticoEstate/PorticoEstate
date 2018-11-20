@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
-	<div class="content">
+	<div class="col-md-8 offset-md-2">
 		<xsl:if test="backend != 'true'">
 			<ul class="pathway">
 				<li>
@@ -59,6 +59,20 @@
 	<div id="dialog_schedule"></div>
 
 	<script type="text/javascript">
+		var link = document.createElement( "link" );
+		link.href =  strBaseURL.split('?')[0] + "bookingfrontend/css/bookingfrontend.css";
+		link.type = "text/css";
+		link.rel = "stylesheet";
+		link.media = "screen,print";
+		document.getElementsByTagName( "head" )[0].appendChild( link );
+
+		var link = document.createElement( "link" );
+		link.href =  strBaseURL.split('?')[0] + "phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
+		link.type = "text/css";
+		link.rel = "stylesheet";
+		link.media = "screen,print";
+		document.getElementsByTagName( "head" )[0].appendChild( link );
+		
 		var lang = <xsl:value-of select="php:function('js_lang', 'free')"/>;
 		schedule.createDialogSchedule(300);
 		$(window).on('load', function() {

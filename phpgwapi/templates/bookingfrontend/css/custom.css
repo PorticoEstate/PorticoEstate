@@ -883,6 +883,11 @@ BUILDING PAGE STYLE
 .scheduler-view-week-resource {
     height: 100% !important;
 }
+
+.scheduler-view-scrollable {
+    height: 599px !important;
+}
+
 .scheduler-view-day-header-day span:nth-child(1) {
     text-transform: capitalize;
 }
