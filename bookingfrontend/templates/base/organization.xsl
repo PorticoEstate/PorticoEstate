@@ -29,9 +29,6 @@
                                     <span class="d-block" id="item-zip-city"><xsl:value-of select="organization/zip_code"/>&#160;<xsl:value-of select="organization/city"/></span>
                             </div>
                             </xsl:if>
-                            <a id="item-web-href" class="d-block mt-2" href="">
-                                <span id="item-web-url"><xsl:value-of select="organization/homepage"/></span>
-                            </a>
                             <xsl:if test="organization/permission/write">
                                 <button class="btn btn-light" onclick="window.location.href='{organization/edit_link}'">
                                     <xsl:value-of select="php:function('lang', 'edit')" />
@@ -107,8 +104,7 @@
 							</div>
 
                         <div class="building-card">
-                            <xsl:if test="organization/email and normalize-space(organization/email) or
-                            organization/phone and normalize-space(organization/phone)">
+									<xsl:if test="organization/contact_info and normalize-space(organization/contact_info)">
                                 <div class="building-card-header">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseContacts" aria-expanded="false">
@@ -119,34 +115,10 @@
                                 </div>
                                 <div id="collapseContacts" class="collapse">
                                     <div class="card-body" >
-                                        <div>
-                                            <div class="d-block">
-                                                <xsl:if test="organization/email and normalize-space(organization/email)">
-                                                    <dt>
-                                                        <xsl:value-of select="php:function('lang', 'Email')" />
-                                                    </dt>
-                                                    <dd>
-                                                        <a href="mailto:{organization/email}">
-                                                            <xsl:value-of select="organization/email"/>
-                                                        </a>
-                                                    </dd>
-                                                </xsl:if>
-                                            </div>
-                                            <div class="d-block mb-2">
-                                                <xsl:if test="organization/phone and normalize-space(organization/phone)">
-                                                        <dt>
-                                                            <xsl:value-of select="php:function('lang', 'Phone')" />
-                                                        </dt>
-                                                        <dd>
-                                                            <xsl:value-of select="organization/phone"/>
-                                                        </dd>
-                                                    </xsl:if>
-                                            </div>
-                                        </div>
-
+												<xsl:value-of disable-output-escaping="yes" select="organization/contact_info"/>
                                     </div>
                                 </div>
-                            </xsl:if>    
+									</xsl:if>
                         </div>
                     </div>
                 </div>
