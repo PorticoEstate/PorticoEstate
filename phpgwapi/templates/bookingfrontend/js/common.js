@@ -180,7 +180,13 @@ $(document).ready(function ()
             $('.brand-site-img').addClass('tiny-logo');
             $('.navbar').addClass('tiny-navbar');
         }
-        });
+    });
+
+    if($("#organsation_select").length > 0) {
+        var content = $("#organsation_select select").html();
+        $("#organsation_select").remove();
+        $(".navbar-organization-select").append('<select id="session_org_id" name="session_org_id">'+content+'</select>');
+    }
 });
 
 function GoToApplicationPartialTwo() {

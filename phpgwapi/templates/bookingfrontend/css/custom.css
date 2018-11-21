@@ -47,7 +47,7 @@ button {
 }
 
 .navbar {
-    padding-bottom: 2.37em;
+    padding-bottom: 2.45em;
     -webkit-transform: scale(1); /* Saf3.1+, Chrome */
      -moz-transform: scale(1); /* FF3.5+ */
       -ms-transform: scale(1); /* IE9 */
@@ -117,6 +117,12 @@ button {
     outline: none !important;
 }
 
+.navbar-organization-select {
+    position: absolute;
+    right: 10px;
+    top: 64px;
+}
+
 .tiny-logo {
     -webkit-transform: scale(0.7); /* Saf3.1+, Chrome */
      -moz-transform: scale(0.7); /* FF3.5+ */
@@ -128,7 +134,7 @@ button {
 }
 
 .tiny-navbar {
-    padding-bottom: 0.5em;
+    padding-bottom: 0.9em;
     -webkit-transition: ease 0.3s; /* Safari */
     transition: ease 0.3s;
 }

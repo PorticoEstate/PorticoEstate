@@ -60,6 +60,9 @@
 					</li>
               </ul>
             </div>
+
+            <div class="navbar-organization-select">
+            </div>
           </nav> 
                 
          <div class="overlay">
