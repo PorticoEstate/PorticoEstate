@@ -21,7 +21,13 @@
 
 					<p>
 						<xsl:value-of select="php:function('lang', 'Application for')"/>:
-						<xsl:value-of select="application/building_name"/>
+						<xsl:value-of select="application/building_name"/><br/>
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="application/frontpage_link"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Choose another building')"/>
+						</a>
 					</p>
                                         
                     <div class="form-group">
