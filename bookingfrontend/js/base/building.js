@@ -114,14 +114,12 @@ function PopulateCalendarEvents(baseURL, urlParams) {
         
         $.getJSON(getJsonURL, function(result){
             if(result.ResultSet.totalResultsAvailable > 1) {
-
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
-                    //var visible = getResourceVisible(result.ResultSet.Result[k].resource);
                     var visible = true;
-                    color = "";
+
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
-                    {                       
+					{
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
@@ -142,7 +140,6 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Mon !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Mon.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
@@ -162,12 +159,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Tue !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Tue.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Tue.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -183,12 +178,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Wed !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Wed.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Wed.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -204,12 +197,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Thu !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Thu.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Thu.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -225,12 +216,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Fri !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Fri.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Fri.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -246,12 +235,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Sat !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sat.id, eventsArray))
                     {
-                        
                         var event_infourl = result.ResultSet.Result[k].Sat.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
