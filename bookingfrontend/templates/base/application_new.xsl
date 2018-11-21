@@ -42,7 +42,7 @@
                                 <div class="form-check checkbox checkbox-primary">
                                     <label class="check-box-label">
                                         <input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
-                                        <span class="label-text" data-bind="text: name"></span>
+										<span class="label-text" data-bind="html: name"></span>
 
                                     </label>
                                 </div>
