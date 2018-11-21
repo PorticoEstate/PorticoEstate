@@ -117,6 +117,7 @@
 				. " OR last_name {$this->like} '%{$query}%'"
 				. " OR fm_project.location_code {$this->like} '{$query}%'"
 				. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
+				. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
 				. " OR project_id=" . (int)$query . ')';
 			}
 
