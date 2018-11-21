@@ -191,8 +191,8 @@ $(".navbar-search").removeClass("d-none");
                   }                  
                   am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace( /^\D+/g, '') });
               }
-          });
-          
+          });      
+                
       }).done(function() {
           am = new applicationModel();
           am.activityId(activityId);
@@ -207,6 +207,14 @@ $(".navbar-search").removeClass("d-none");
       $('.resourceDropdown').on('click', function () {
           $(this).parent().toggleClass('show');
       });
+
+      $( "#application_form" ).submit(function( event ) {
+        var allowSubmit = am.termAccept();
+        if (!allowSubmit) {
+            event.preventDefault();
+        }          
+     });
+     
   });
   
   function PopulatePostedDate() {
@@ -224,7 +232,10 @@ $(".navbar-search").removeClass("d-none");
         }
       }      
   }
-    
+  
+  function validate() {
+      
+  }
   YUI({ lang: 'nb-no' }).use(
     'aui-datepicker',
     function(Y) {
