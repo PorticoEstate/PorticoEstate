@@ -47,7 +47,7 @@ button {
 }
 
 .navbar {
-    padding-bottom: 2.45em;
+    padding-bottom: 3.7em;
     -webkit-transform: scale(1); /* Saf3.1+, Chrome */
      -moz-transform: scale(1); /* FF3.5+ */
       -ms-transform: scale(1); /* IE9 */
@@ -216,7 +216,7 @@ input[type="checkbox"]:disabled + .label-text:before{
 }
 
 .margin-top-content {
-    margin-top: 140px;
+    margin-top: 170px;
 }
 .dropdown-menu {
     transform: none !important;
