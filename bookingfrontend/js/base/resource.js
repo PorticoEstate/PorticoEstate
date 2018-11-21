@@ -86,9 +86,11 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
-                        eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
+						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type].join(""),
+							name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sun.type],
-                            content: "<span data-url='"+event_infourl+"' class='event-id'></span>",
+							content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -104,9 +106,12 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
-                        eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
+						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type].join(""),
+							name: result.ResultSet.Result[k].resource,
+							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Mon.type],
-                            content: "<span data-url='"+event_infourl+"' class='event-id'></span>",
+							content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
+							description: result.ResultSet.Result[k].Mon.description,
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
                             disabled: true,
@@ -120,7 +125,6 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -140,7 +144,6 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -160,7 +163,6 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -180,7 +182,6 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -200,7 +201,6 @@ function PopulateCalendarEvents() {
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-
                         eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -216,8 +216,6 @@ function PopulateCalendarEvents() {
 
                 }
             }
-
-
 
         })
                 .done(function () {
