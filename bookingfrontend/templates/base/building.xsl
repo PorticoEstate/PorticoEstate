@@ -137,21 +137,21 @@
 				<div data-bind="foreach: bookableResource">
 					<div class="custom-card">
 						<a class="bookable-resource-link-href" href="" data-bind="">
-							<span data-bind="text: name"></span>
+									<span data-bind="html: name"></span>
 						</a>
 						
 						<div data-bind="foreach: activitiesList">							
 									<span class="tagTitle" data-bind="if: $index() == 0">
 										<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
 									</span>
-							<span class="mr-2 textTagsItems" data-bind="text: $data"></span>
+									<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
 						</div>
 
 								<div class="mt-2" data-bind="foreach: facilitiesList">
 									<span class="tagTitle" data-bind="if: $index() == 0">
 										<xsl:value-of select="php:function('lang', 'Facilities')"/>:
 									</span>
-									<span class="textTagsItems" data-bind="text: $data"></span>
+									<span class="textTagsItems" data-bind="html: $data"></span>
 								</div>
 
 					</div>
@@ -185,8 +185,8 @@
 									<div class="form-check checkbox checkbox-primary">
 
 										<label class="check-box-label">
-											<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="text: name"/>
-											<span class="label-text" data-bind="text: name"></span>
+											<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="html: name"/>
+											<span class="label-text" data-bind="html: name"></span>
 										</label>
 									</div>
 								</li>
