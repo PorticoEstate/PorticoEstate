@@ -87,6 +87,8 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$id = phpgw::get_var('id', 'int');
 
 			$session_org_id = phpgw::get_var('session_org_id');
@@ -146,6 +148,6 @@
 
 			phpgwapi_jquery::load_widget("core");
 
-			self::render_template_xsl('organization', array('organization' => $organization));
+			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
 	}

@@ -144,6 +144,11 @@
                     <a href="{organization/new_group_link}">
                         <xsl:value-of select="php:function('lang', 'new group')" />
                     </a>
+							<xsl:if test="config_data/help_group_edit and normalize-space(config_data/help_group_edit)">
+								<div class="margin-top-and-bottom">
+									<xsl:value-of select="config_data/help_group_edit"/>
+								</div>
+							</xsl:if>
                 </xsl:if>
             </div>
         </div>
