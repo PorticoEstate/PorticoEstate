@@ -587,12 +587,14 @@
 					'bookingfrontend.uiorganization.show' AS menuaction,
 					bb_organization.id AS id
 					FROM bb_organization
+					WHERE bb_organization.active=1
 					UNION
 					SELECT DISTINCT bb_building.name AS names,
 					'bygg' AS type,
 					'bookingfrontend.uibuilding.show' AS menuaction,
 					bb_building.id AS id
 					FROM bb_building
+					WHERE bb_building.active=1
 					ORDER BY names asc";
 
 			$results = array();
