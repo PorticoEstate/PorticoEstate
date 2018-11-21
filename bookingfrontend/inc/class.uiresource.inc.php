@@ -94,7 +94,7 @@
 							{
 								$value = 'http://' . $value;
 							}
-							$value = sprintf('<a href="%s">%s</a>', $value, $value);
+							$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
 						}
 						$contactdata[] = sprintf('%s: %s', lang($field), $value);
 					}

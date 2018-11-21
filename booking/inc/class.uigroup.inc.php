@@ -225,8 +225,6 @@
 
 		public function edit()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
 			$id = phpgw::get_var('id', 'int');
 
 
@@ -339,7 +337,7 @@
 					'date', 'security', 'file'));
 
 			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module,
-				'activities' => $activities, 'config_data' => $config->config_data));
+				'activities' => $activities));
 		}
 
 		public function show()

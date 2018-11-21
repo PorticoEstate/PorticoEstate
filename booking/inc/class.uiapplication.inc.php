@@ -826,6 +826,7 @@
 						'id' => phpgw::get_var('building_id', 'int')));
 				$filter_activity_top = $top_level_activity > 0 ? $top_level_activity : 0;
 			}
+			$application['frontpage_link'] = self::link(array());
 			array_set_default($application, 'activity_id', $activity_id);
 			$activities = $this->activity_bo->fetch_activities($filter_activity_top);
 			$activities = $activities['results'];

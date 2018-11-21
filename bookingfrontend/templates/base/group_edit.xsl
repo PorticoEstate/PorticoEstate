@@ -29,12 +29,6 @@
 							<xsl:call-template name="msgbox"/>
 						</div>
 
-					<xsl:if test="config_data/help_group_new and normalize-space(config_data/help_group_new)">
-						<div class="col-12 margin-bottom">
-							<xsl:value-of select="config_data/help_group_edit"/>
-						</div>
-					</xsl:if>
-
 						<div class="col-12">
 							<div class="form-group">
 							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Group (2018)')" /></label>
