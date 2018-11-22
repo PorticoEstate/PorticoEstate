@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 
 
-    <div class="container new-application-page my-container-top-fix" id="new-application-partialtwo">    
+    <div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">    
 
         <form action="" method="POST" id='application_form' name="form">
         <div class="row mb-5">

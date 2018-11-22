@@ -47,7 +47,7 @@ button {
 }
 
 .navbar {
-    padding-bottom: 3.7em;
+    padding-bottom: 2.7em;
     -webkit-transform: scale(1); /* Saf3.1+, Chrome */
      -moz-transform: scale(1); /* FF3.5+ */
       -ms-transform: scale(1); /* IE9 */
@@ -212,7 +212,7 @@ input[type="checkbox"]:disabled + .label-text:before{
 }
 
 .container-top-fix {
-    margin-top: 119px;
+    margin-top: 115px;
 }
 
 .margin-top-content {
@@ -893,6 +893,10 @@ BUILDING PAGE STYLE
 
 .scheduler-view-scrollable {
     height: 599px !important;
+}
+
+.scheduler-event-recorder-popover {
+    z-index: 2000 !important;
 }
 
 .scheduler-view-day-header-day span:nth-child(1) {
