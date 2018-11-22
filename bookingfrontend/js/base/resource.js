@@ -59,8 +59,8 @@ function ForwardToNewApplication(start, end, resource) {
 		menuaction:  "bookingfrontend.uiapplication.add",
 		building_id: urlParams['buildingid'],
 		resource_id: (typeof resource === 'undefined') ? "" : resource,
-		start:       (typeof start === 'undefined') ? "" : start,
-		end:         (typeof end === 'undefined') ? "" : end
+		start:       (typeof start === 'undefined') ? "" : roundMinutes(start),
+		end:         (typeof end === 'undefined') ? "" : roundMinutes(end)
 	}, false);
 }
 

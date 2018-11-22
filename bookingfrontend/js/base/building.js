@@ -95,12 +95,11 @@ function ForwardToNewApplication(start, end, resource) {
 	window.location.href = phpGWLink('bookingfrontend/', {
 		menuaction:  "bookingfrontend.uiapplication.add",
 		building_id: urlParams['id'],
-		start:       (typeof start === 'undefined') ? "" : start,
-		end:         (typeof end === 'undefined') ? "" : end,
+		start:       (typeof start === 'undefined') ? "" : roundMinutes(start),
+		end:         (typeof end === 'undefined') ? "" : roundMinutes(end),
 		resource_id: (typeof resource === 'undefined') ? "" : resource
 	}, false);
 }
-
 
 function PopulateCalendarEvents(baseURL, urlParams) {
 	$(".overlay").show();
@@ -794,7 +793,7 @@ function GenerateCalendarForEvents(date) {
 					}
 				}
 			});
-						
+
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',
