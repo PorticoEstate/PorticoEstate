@@ -29,11 +29,11 @@ $(document).ready(function ()
 
     $(document).on('change', '.choosenResource', function (e) {
         for(var i=0; i<resourceIds.length; i++) {
-            if($("#"+e.target.id).text() == resourceIds[i].name) {
+            if($(e.target).text() == resourceIds[i].name) {
                 resourceIds[i].visible = e.target.checked;
             }
         }
-        EventsOptionsChanged($("#"+e.target.id).text(), e.target.checked);   // get the current value of the input field.
+        EventsOptionsChanged($(e.target).text(), e.target.checked);   // get the current value of the input field.
     });    
 
     
@@ -794,7 +794,7 @@ function GenerateCalendarForEvents(date) {
 					}
 				}
 			});
-
+						
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',

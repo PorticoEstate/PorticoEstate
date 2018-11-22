@@ -42,7 +42,7 @@
               <ul class="navbar-nav navbar-search d-none">
                   <li class="nav-item">
                       <form id="navbar-search-form">
-                      <div class="input-group mb-3">
+                      <div class="input-group">
 								<input class="form-control" type="text" placeholder="{placeholder_search}" />
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
