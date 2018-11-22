@@ -101,6 +101,20 @@ function ForwardToNewApplication(start, end, resource) {
 	}, false);
 }
 
+function roundMinutes(date) {
+	var date = new Date(date);
+	if(date.getMinutes <= 7 || date.getMinutes >= 53) {
+		date.setMinutes(00);
+	} else if(date.getMinutes >= 8 || date.getMinutes <= 22){
+		date.setMinutes(15);
+	} else if(date.getMinutes >= 23 || date.getMinutes <= 37){
+		date.setMinutes(30);
+	} else if(date.getMinutes >= 38 || date.getMinutes <= 52){
+		date.setMinutes(45);
+	}
+	return date.getTime();
+}
+
 function PopulateCalendarEvents(baseURL, urlParams) {
 	$(".overlay").show();
 	$('.weekNumber').remove();
