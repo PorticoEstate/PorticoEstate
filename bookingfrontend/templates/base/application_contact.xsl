@@ -2,7 +2,13 @@
 
 
     <div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">    
-
+        <a class="btn btn-light">
+			<xsl:attribute name="href">
+			    <xsl:value-of select="application/frontpage_url"/>
+			</xsl:attribute>
+			<xsl:value-of select="php:function('lang', 'Go back')" />
+		</a>
+        
         <form action="" method="POST" id='application_form' name="form">
         <div class="row mb-5">
         <div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
