@@ -211,7 +211,7 @@ $(".navbar-search").removeClass("d-none");
       $( "#application_form" ).submit(function( event ) {
         var allowSubmit = am.termAccept();
         if (!allowSubmit) {
-            alert("For å bestille idrettsanlegg må du bekrefte at du har lest de juridiske betingelsene.");
+			alert(errorAcceptedDocs);
             event.preventDefault();
         }          
      });
