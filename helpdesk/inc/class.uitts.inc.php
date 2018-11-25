@@ -1532,10 +1532,32 @@ JS;
 				{
 					if ($_cat['active'] != 2)
 					{
+						if($_cat['level'] > 1)
+						{
+							$cat_name_arr = array();
+							$cat_path = $this->cats->get_path($_cat['id']);
+
+							foreach ($cat_path as $cat_path_entry)
+							{
+								if($this->parent_cat_id == $cat_path_entry['id'])
+								{
+									continue;
+								}
+								$cat_name_arr[] = $cat_path_entry['name'];
+
+							}
+							$cat_name = implode(' -> ', $cat_name_arr);
+
+						}
+						else
+						{
+							$cat_name	= str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']);
+						}
+//						$cat_name	= str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']);
 						$cat_select['cat_list'][] = array
 						(
 							'cat_id'	=> $_cat['id'],
-							'name'		=> str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']),
+							'name'		=> $cat_name,
 							'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
 							'description' => $_cat['description']
 						);
@@ -2119,10 +2141,32 @@ JS;
 				{
 					if ($_cat['active'] != 2)
 					{
+						if($_cat['level'] > 1)
+						{
+							$cat_name_arr = array();
+							$cat_path = $this->cats->get_path($_cat['id']);
+
+							foreach ($cat_path as $cat_path_entry)
+							{
+								if($this->parent_cat_id == $cat_path_entry['id'])
+								{
+									continue;
+								}
+								$cat_name_arr[] = $cat_path_entry['name'];
+
+							}
+							$cat_name = implode(' -> ', $cat_name_arr);
+
+						}
+						else
+						{
+							$cat_name	= str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']);
+						}
+//						$cat_name	= str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']);
 						$cat_select['cat_list'][] = array
 						(
 							'cat_id'	=> $_cat['id'],
-							'name'		=> str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']),
+							'name'		=> $cat_name,
 							'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
 							'description' => $_cat['description']
 						);
