@@ -425,12 +425,12 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="simple !='1'">
-							<!--div class="pure-control-group">
+							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'group')"/>
 								</label>
 								<xsl:call-template name="group_select"/>
-							</div-->
+							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'assigned to')"/>
