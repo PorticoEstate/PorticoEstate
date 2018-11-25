@@ -811,7 +811,7 @@ function GenerateCalendarForEvents(date) {
 			new Y.Scheduler(
 			  {
 				boundingBox: '#myScheduler',
-				eventRecorder: eventRecorder,
+				eventRecorder: deactivate_application ? null : eventRecorder,
 				date: date,
 				items: events,
 				render: true,
@@ -824,7 +824,7 @@ function GenerateCalendarForEvents(date) {
 			new Y.Scheduler(
 			  {
 				boundingBox: '#mySchedulerSmallDeviceView',
-				eventRecorder: eventRecorder,
+				eventRecorder: deactivate_application ? null : eventRecorder,
 				date: date,
 				items: events,
 				render: true,

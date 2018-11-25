@@ -262,6 +262,7 @@
 </div>
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
+		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/building.js";
