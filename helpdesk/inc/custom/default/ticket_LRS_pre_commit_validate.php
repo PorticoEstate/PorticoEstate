@@ -59,42 +59,53 @@
 			$category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($data['cat_id']);
 			$parent_id =  (int)$category[0]['parent'];
 
-			if($parent_id == 255)
+			if($parent_id == 255)//LRS-Lønn
 			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+				$data['group_id'] = 3159;
+//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+			}
+			else if($parent_id == 256)//LRS-refusjon
+			{
+				$data['group_id'] = 3233;
+			}
+			else if($parent_id == 268)//LRS-Økonomi
+			{
+				$data['group_id'] = 4169;
 			}
 			else
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 			}
 
-
-			$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
-			. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
-			. " AND CAST(json_representation->>'arbeidssted_slutt' AS INTEGER) >= {$arbeidssted}";
-
-			$this->db->query($sql);
-			$this->db->next_record();
-			$alias = strtolower($this->db->f('alias'));
-			
-			if(!$data['assignedto'] = $GLOBALS['phpgw']->accounts->name2id($alias))
+			if(empty($data['group_id']) && $location_id)
 			{
-				$data['assignedto'] = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '';
-			}
+				$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
+				. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
+				. " AND CAST(json_representation->>'arbeidssted_slutt' AS INTEGER) >= {$arbeidssted}";
 
-			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
-			if(empty($current_prefs_user['email']))
-			{
-				$GLOBALS['phpgw']->preferences->add('helpdesk', 'email', "{$GLOBALS['phpgw_info']['user']['account_lid']}@bergen.kommune.no");
-				$GLOBALS['phpgw']->preferences->save_repository();
-			}
+				$this->db->query($sql);
+				$this->db->next_record();
+				$alias = strtolower($this->db->f('alias'));
 
-			$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
-			$assigned_prefs_data = $assigned_prefs->read();
-			if(empty($assigned_prefs_data['helpdesk']['email']))
-			{
-				$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
-				$assigned_prefs->save_repository();
+				if(!$data['assignedto'] = $GLOBALS['phpgw']->accounts->name2id($alias))
+				{
+					$data['assignedto'] = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '';
+				}
+
+				$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
+				if(empty($current_prefs_user['email']))
+				{
+					$GLOBALS['phpgw']->preferences->add('helpdesk', 'email', "{$GLOBALS['phpgw_info']['user']['account_lid']}@bergen.kommune.no");
+					$GLOBALS['phpgw']->preferences->save_repository();
+				}
+
+				$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
+				$assigned_prefs_data = $assigned_prefs->read();
+				if(empty($assigned_prefs_data['helpdesk']['email']))
+				{
+					$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
+					$assigned_prefs->save_repository();
+				}
 			}
 
 			return true;
