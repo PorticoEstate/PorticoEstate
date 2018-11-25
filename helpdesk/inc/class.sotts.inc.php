@@ -552,7 +552,7 @@
 				}
 			}
 
-			$sql = "SELECT * FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
+			$sql = "SELECT DISTINCT phpgw_helpdesk_tickets.* FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -919,6 +919,16 @@
 
 					$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'", __LINE__, __FILE__);
 					$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
+				}
+
+				if($oldgroup_id || $ticket['group_id'])
+				{
+					if($oldassigned && ! $ticket['assignedto'])
+					{
+						$this->fields_updated[] = 'assignedto';
+						$this->db->query("UPDATE phpgw_helpdesk_tickets SET assignedto = NULL WHERE id={$id}", __LINE__, __FILE__);
+						$this->historylog->add('A', $id, '0', $oldassigned);
+					}
 				}
 
 				if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
