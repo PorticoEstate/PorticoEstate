@@ -1,11 +1,21 @@
 # jQuery File Upload Plugin
 
-## Demo
-[Demo File Upload](https://blueimp.github.io/jQuery-File-Upload/)
-
 ## Description
 File Upload widget with multiple file selection, drag&amp;drop support, progress bars, validation and preview images, audio and video for jQuery.  
 Supports cross-domain, chunked and resumable file uploads and client-side image resizing. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.
+
+## Demo
+[Demo File Upload](https://blueimp.github.io/jQuery-File-Upload/)
+
+## ⚠️ Security Notice
+Security related releases:
+
+* [v9.25.1](https://github.com/blueimp/jQuery-File-Upload/releases/tag/v9.25.1) Mitigates some [Potential vulnerabilities with PHP+ImageMagick](VULNERABILITIES.md#potential-vulnerabilities-with-php-imagemagick).
+* [v9.24.1](https://github.com/blueimp/jQuery-File-Upload/releases/tag/v9.24.1) Fixes a [Remote code execution vulnerability in the PHP component](VULNERABILITIES.md#remote-code-execution-vulnerability-in-the-php-component).
+* v[9.10.1](https://github.com/blueimp/jQuery-File-Upload/releases/tag/9.10.1) Fixes an [Open redirect vulnerability in the GAE components](VULNERABILITIES.md#open-redirect-vulnerability-in-the-gae-components).
+* Commit [4175032](https://github.com/blueimp/jQuery-File-Upload/commit/41750323a464e848856dc4c5c940663498beb74a) (*fixed in all tagged releases*) Fixes a [Cross-site scripting vulnerability in the Iframe Transport](VULNERABILITIES.md#cross-site-scripting-vulnerability-in-the-iframe-transport).
+
+Please read the [SECURITY](SECURITY.md) document for instructions on how to securely configure your Webserver for file uploads.
 
 ## Setup
 * [How to setup the plugin on your website](https://github.com/blueimp/jQuery-File-Upload/wiki/Setup)
@@ -15,7 +25,7 @@ Supports cross-domain, chunked and resumable file uploads and client-side image 
 * **Multiple file upload:**  
   Allows to select multiple files at once and upload them simultaneously.
 * **Drag & Drop support:**  
-  Allows to upload files by dragging them from your desktop or filemanager and dropping them on your browser window.
+  Allows to upload files by dragging them from your desktop or file manager and dropping them on your browser window.
 * **Upload progress bar:**  
   Shows a progress bar indicating the upload progress for individual files and for all uploads combined.
 * **Cancelable uploads:**  
@@ -39,7 +49,7 @@ Supports cross-domain, chunked and resumable file uploads and client-side image 
 * **Multiple plugin instances:**  
   Allows to use multiple plugin instances on the same webpage.
 * **Customizable and extensible:**  
-  Provides an API to set individual options and define callBack methods for various upload events.
+  Provides an API to set individual options and define callback methods for various upload events.
 * **Multipart and file contents stream uploads:**  
   Files can be uploaded as standard "multipart/form-data" or file contents stream (HTTP PUT file upload).
 * **Compatible with any server-side application platform:**  
@@ -60,7 +70,7 @@ Supports cross-domain, chunked and resumable file uploads and client-side image 
 * [Bootstrap](http://getbootstrap.com/) v. 3.2.0+
 * [Glyphicons](http://glyphicons.com/)
 
-The user interface of all versions except the jQuery UI version is built with [Bootstrap](http://getbootstrap.com/) and icons from [Glyphicons](http://glyphicons.com/).
+The user interface of all versions, except the jQuery UI version, is built with [Bootstrap](http://getbootstrap.com/) and icons from [Glyphicons](http://glyphicons.com/).
 
 ### Cross-domain requirements
 [Cross-domain File Uploads](https://github.com/blueimp/jQuery-File-Upload/wiki/Cross-domain-uploads) using the [Iframe Transport plugin](https://github.com/blueimp/jQuery-File-Upload/blob/master/js/jquery.iframe-transport.js) require a redirect back to the origin server to retrieve the upload results. The [example implementation](https://github.com/blueimp/jQuery-File-Upload/blob/master/js/main.js) makes use of [result.html](https://github.com/blueimp/jQuery-File-Upload/blob/master/cors/result.html) as a static redirect page for the origin server.
@@ -104,4 +114,4 @@ This project is actively maintained, but there is no official support channel.
 If you have a question that another developer might help you with, please post to [Stack Overflow](http://stackoverflow.com/questions/tagged/blueimp+jquery+file-upload) and tag your question with `blueimp jquery file upload`.
 
 ## License
-Released under the [MIT license](http://www.opensource.org/licenses/MIT).
+Released under the [MIT license](https://opensource.org/licenses/MIT).

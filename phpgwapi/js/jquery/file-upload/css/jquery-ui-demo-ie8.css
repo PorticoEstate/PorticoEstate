@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*
- * jQuery File Upload Plugin NoScript CSS
+ * jQuery File Upload Demo CSS Fixes for IE<9
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2013, Sebastian Tschan
@@ -10,13 +10,12 @@
  * https://opensource.org/licenses/MIT
  */
 
-.fileinput-button input {
-  position: static;
-  opacity: 1;
-  filter: none;
-  font-size: inherit !important;
-  direction: inherit;
+.navigation {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0;
 }
-.fileinput-button span {
-  display: none;
+.navigation li {
+  display: inline;
+  margin-right: 10px;
 }
