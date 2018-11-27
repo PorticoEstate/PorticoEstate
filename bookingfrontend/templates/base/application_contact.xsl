@@ -39,9 +39,7 @@
                 </div>
                 
                 <hr class="mt-5 mb-5"></hr>
-				<label class="text-uppercase">
-					<xsl:value-of select="php:function('lang', 'invoice information')" />
-				</label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
                 <input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
@@ -55,47 +53,47 @@
 
                 
                 <div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'organization number')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'organization number')" />*</label>
                     <input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>  
                 </div>
                 
                 <div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Ssn')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Ssn')" />*</label>
                     <input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>  
                 </div>
                 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_name')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_name')" />*</label>
                     <input type="text" class="form-control" name="contact_name" value="{application/contact_name}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_street')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_street')" />*</label>
                     <input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"/>  
                 </div>                
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_zip_code')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
                     <input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_city')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'responsible_city')" />*</label>
                     <input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"/>  
                 </div>
                 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_email')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_email')" />*</label>
                     <input type="text" class="form-control" name="contact_email" value="{application/contact_email}"/>  
                 </div>
 
                 <div class="form-group">
-                    <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')" />*</label>
                     <input type="text" class="form-control" name="contact_email2" value="{application/contact_email2}"/>  
                 </div>
                 
                 <div class="form-group">
-							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_phone')" /></label>
+							<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'contact_phone')" />*</label>
                     <input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"/>  
                 </div>
                 

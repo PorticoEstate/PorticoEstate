@@ -31,7 +31,7 @@
 
 						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Title')" /></label>
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Title')" />*</label>
 								<input name="title" class="form-control" type="text" value="{system_message/title}">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -45,7 +45,7 @@
 
 						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Message')" /></label>
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Message')" />*</label>
 								<textarea id="field-message" class="form-control" name="message" type="text">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
@@ -60,7 +60,7 @@
 
 						<div class="col-12">
 							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" /></label>
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Name')" />*</label>
 								<input name="name" class="form-control" type="text" value="{system_message/name}" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>

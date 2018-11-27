@@ -31,7 +31,7 @@
 					</p>
                                         
                     <div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
                         <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
                             <xsl:value-of select="php:function('lang', 'choose')" /> 
                             <span class="caret"></span>
@@ -64,7 +64,7 @@
                     </div>
                     
                     <div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Date and time')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Date and time')" />*</label>
                         <div class="form-group">
                         <div class="row">
                                 <div class="form-group col-lg-5 col-sm-12 col-12">
@@ -140,7 +140,7 @@
                     <h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Information about the event')" /></h5>
                     
                     <div class="form-group">
-                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Target audience')" />*</label>
                         
                         <div class="dropdown d-inline-block">
                             <button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -155,12 +155,12 @@
                     </div>
 
 					<div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Event name')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Event name')" />*</label>
 						<input type="text" class="form-control" name="name" value="{application/name}"/>
 					</div>
 
 					<div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organizer')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organizer')" />*</label>
 						<input type="text" class="form-control" name="organizer" value="{application/organizer}"/>
 					</div>
 
@@ -185,7 +185,7 @@
 					</div>
 
                     <div class="form-group">
-                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Estimated number of participants')" />*</label>
                         <div class="p-2 border">
                             <div class="row mb-2">
                                 <div class="col-3">
@@ -236,7 +236,7 @@
                         </input>  
                     </div>
                     <div class="form-group termAccept mt-5 mb-5">
-                        <label class="text-uppercase"><xsl:value-of select="php:function('lang', 'legal condition')" /></label>
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'legal condition')" />*</label>
                         <span data-bind="ifnot: termAccept" class="validationMessage"><xsl:value-of select="config/application_terms2"/></span>                         
                         <div class="form-check checkbox" data-bind="foreach: termAcceptDocs">
                             <div>
