@@ -89,7 +89,7 @@
 							</div>
 							<div class="pure-control-group">
 								<label for="field_description">
-									<xsl:value-of select="php:function('lang', 'Information about the event')" />
+									<xsl:value-of select="php:function('lang', 'description')" />
 								</label>
 								<xsl:if test="config/application_description">
 									<p>
