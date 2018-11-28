@@ -206,24 +206,24 @@
 						</div>						
 				</div>
 
-					<div class="col-6 event-color-desc mt-2">
-						<div class="d-flex flex-row-reverse">							
+					<div class="col-6 col-md-3 offset-md-3 col-lg-2 offset-lg-4 mt-2">
+						<div class="">
+							<div class="square allocation"></div>							
 							<span>
 								<xsl:value-of select="php:function('lang', 'allocation')"/>
-							</span>
-							<div class="square allocation"></div>
+							</span>							
 						</div>
-						<div class="d-flex flex-row-reverse">							
+						<div class="">
+							<div class="square booking"></div>							
 							<span>
 								<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
-							</span>
-							<div class="square booking"></div>
+							</span>							
 						</div>
-						<div class="d-flex flex-row-reverse">							
+						<div class="">
+							<div class="square event"></div>							
 							<span>
 								<xsl:value-of select="php:function('lang', 'event')"/>
-							</span>
-							<div class="square event"></div>
+							</span>							
 						</div>
 					</div>
 			</xsl:if>
