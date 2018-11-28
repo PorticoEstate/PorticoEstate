@@ -301,11 +301,13 @@ function doSearch(searchterm_value) {
                     type: response.results.results[i].type,
                     tagItems: []
                 });
-            }
-            $('html, body').animate({
-                scrollTop: $("#searchResult").offset().top - 100
-            }, 1000);
-            
+            }            
+            setTimeout(function() {
+                $('html, body').animate({
+                    scrollTop: $("#searchResult").offset().top - 100
+                }, 1000); 
+            },400);
+
             $(".overlay").hide();
             
         },
