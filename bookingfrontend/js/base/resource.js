@@ -24,7 +24,7 @@ $(document).ready(function ()
 
     $(".goToCal").click(function() {
         $('html,body').animate({
-            scrollTop: $(".calendar-tool").offset().top - 140},
+            scrollTop: $(".calendar-tool").offset().top - 154},
             'slow');
     });	
 });
