@@ -41,7 +41,8 @@
 				<br/><xsl:value-of select="php:function('lang', 'Private event')"/>
 			</xsl:if>
 			<xsl:if test="event/is_public=1">
-				<br/><xsl:value-of select="event/description" disable-output-escaping="yes"/>
+				<!--<br/><xsl:value-of select="event/description" disable-output-escaping="yes"/>-->
+				<br/><xsl:value-of select="php:function('lang', 'equipment')"/>: <xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
 			</xsl:if>
 		</span>
 		</p>

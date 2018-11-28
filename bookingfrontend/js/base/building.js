@@ -832,7 +832,7 @@ function GenerateCalendarForEvents(date) {
 				views: [resourceDayView]
 			  }
 			);
-
+			$('.tooltip').tooltip('hide');
 			$(".scheduler-base-views").hide();
 			$(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
 			$(".scheduler-base-icon-next").addClass("fas fa-chevron-right");

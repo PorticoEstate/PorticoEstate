@@ -53,6 +53,8 @@ button {
       -ms-transform: scale(1); /* IE9 */
        -o-transform: scale(1); /* Opera 10.5+ */
           transform: scale(1);
+          -webkit-transition: ease 0.5s; /* Safari */
+          transition: ease 0.5s;
 }
 
 .nav-link {
@@ -333,7 +335,6 @@ footer {
 }
 
 .tooltip-desc {
-    margin-top: 10px;
     display: none;
 }
 
