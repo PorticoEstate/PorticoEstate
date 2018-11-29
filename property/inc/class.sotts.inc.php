@@ -156,7 +156,7 @@
 		{
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'O'; //O='Open'
-			$user_id = isset($data['user_id']) && $data['user_id'] ? abs((int)$data['user_id']) : 0;
+			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$reported_by = isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -371,8 +371,16 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where cat_id=" . (int)$cat_id;
-				$where = 'AND';
+				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $cat_id);
+				$_filter_cat = array($cat_id);
+				foreach ($_cats as $_cat)
+				{
+					$_filter_cat[] = $_cat['id'];
+
+				}
+
+				$filtermethod .= " $where cat_id IN (" . implode(',', $_filter_cat) . ')';
+				$where= 'AND';
 			}
 
 			if ($vendor_id > 0)
@@ -406,22 +414,43 @@
 				$where = 'AND';
 			}
 
-			if ($user_id > 0)
-			{
-				$filtermethod .= " {$where} (assignedto={$user_id}";
-				$where = 'AND';
 
-				if (!$membership = $GLOBALS['phpgw']->accounts->membership($user_id))
+
+			if ($user_id)
+			{
+				$_membership = array();
+				$membership = array(-1);
+				if (is_array($user_id))
 				{
-					$membership = array(-1 => 0);
+					$user_ids = array(-1);
+					foreach ($user_id as &$_user_id)
+					{
+						if($_user_id < 0)
+						{
+							$_membership = array_merge($_membership ,$GLOBALS['phpgw']->accounts->membership(abs($_user_id)));
+						}
+						$user_ids[] = abs($_user_id);
+					}
 				}
-				$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',', array_keys($membership)) . ')))';
-			}
+				else if ($user_id > 0)
+				{
+					$user_ids = array((int)abs($user_id));
+				}
+				else if ($user_id < 0)
+				{
+					$user_ids = array((int)abs($user_id));
+					$_membership = $GLOBALS['phpgw']->accounts->membership(abs($user_id));
+				}
 
-			if ($user_id < 0)
-			{
-				$filtermethod .= " {$where} fm_tts_tickets.user_id=" . (int)abs($user_id);
+				foreach ($_membership as $_key => $group_member)
+				{
+					$membership[] = $group_member->id;
+				}
+
+				$filtermethod .= " {$where} (assignedto IN (" . implode(', ' ,$user_ids) . ')';
 				$where = 'AND';
+				$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
+
 			}
 
 			if ($reported_by > 0)
