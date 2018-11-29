@@ -67,6 +67,7 @@
 			else if($parent_id == 256)//LRS-refusjon
 			{
 				$data['group_id'] = 3233;
+//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 			}
 			else if($parent_id == 268)//LRS-Økonomi
 			{
