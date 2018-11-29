@@ -95,9 +95,9 @@
 				$querymethod = " {$where} {$table}.title {$this->_like} '%{$query}%' OR {$table}.address {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY {$table}_status.descr, $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
+			$groupmethod = "GROUP BY {$table}_status.descr, $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier, {$table}_status.closed";
 			$sql = "SELECT DISTINCT $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, $table.multiplier,"
-				. " COUNT(condition_survey_id) AS cnt, org_name AS vendor, {$table}_status.descr AS status"
+				. " COUNT(condition_survey_id) AS cnt, org_name AS vendor, {$table}_status.descr AS status, {$table}_status.closed"
 				. " FROM {$table} "
 				. " {$this->_left_join} {$table}_status ON {$table}_status.id = {$table}.status_id"
 				. " {$this->_left_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
@@ -131,6 +131,7 @@
 					'multiplier' => $this->_db->f('multiplier'),
 					'cnt' => $this->_db->f('cnt'),
 					'status' => $this->_db->f('status', true),
+					'closed' => $this->_db->f('closed'),
 				);
 			}
 

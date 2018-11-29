@@ -1770,6 +1770,11 @@
 
 			foreach ($survey_list as $survey)
 			{
+				if($survey['closed'])
+				{
+					continue;
+				}
+
 				$surveys[] = array
 					(
 					'id' => $survey['id'],
