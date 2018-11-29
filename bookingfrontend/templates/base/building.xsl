@@ -206,7 +206,7 @@
 						</div>						
 				</div>
 
-					<div class="col-6 col-md-3 offset-md-3 col-lg-2 offset-lg-4 mt-2">
+					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
 						<div class="">
 							<div class="square allocation"></div>							
 							<span>

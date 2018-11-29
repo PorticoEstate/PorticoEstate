@@ -306,7 +306,7 @@ function doSearch(searchterm_value) {
                 $('html, body').animate({
                     scrollTop: $("#searchResult").offset().top - 100
                 }, 1000); 
-            },400);
+            },800);
 
             $(".overlay").hide();
             

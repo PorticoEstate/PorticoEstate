@@ -200,7 +200,7 @@
 					</xsl:if>
 				</div>
 
-				<div class="col-6 event-color-desc mt-2">
+				<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 event-color-desc mt-2">
 					<div class="d-block">
 						<div class="square allocation"></div>
 						<span>
@@ -232,8 +232,8 @@
 
             
 			<xsl:if test="building/deactivate_calendar=0">
-            <div id="myScheduler" class="d-none d-sm-block d-xs-block col-12"></div>
-            <div id="mySchedulerSmallDeviceView" class="d-block d-sm-none d-xs-none margin-top-and-bottom col-12"></div>
+            <div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom col-12"></div>
+            <div id="mySchedulerSmallDeviceView" class="d-lg-none margin-top-and-bottom col-12"></div>
 			</xsl:if>
 
         </div>
