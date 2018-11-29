@@ -17,10 +17,10 @@
                 
                 <div class="row">
                     
-                        <div class="col-md-4 mb-4 col-item-img">
+                        <div class="col-xl-4 col-lg-5 col-md-4 col-sm-4 mb-4 col-item-img">
                             <img class="img-fluid image-circle" id="item-main-picture" src=""/>
                         </div>
-                        <div class="col-md-8 mb-4">
+                        <div class="col-xl-6 col-lg-7 col-md-8 col-sm-8 col-xs-12 mb-4">
                             <h3 id="main-item-header"><xsl:value-of select="organization/name"/></h3>
                             <xsl:if test="organization/street and normalize-space(organization/street)">
                                 <i class="fas fa-map-marker d-inline"> </i>

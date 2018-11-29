@@ -24,11 +24,11 @@
             <div class="col-lg-6">
                 
                 <div class="row">
-                    <div class="col-md-4 mb-4 col-item-img">
+                    <div class="col-xl-4 col-lg-5 col-md-4 col-sm-5 mb-4 col-item-img">
 						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
 
-                    <div class="col-md-8">
+                    <div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
 						<h3>
 							<xsl:value-of select="resource/name"/>
 						</h3>
