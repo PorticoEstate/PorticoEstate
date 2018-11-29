@@ -171,8 +171,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
-				return;
+				phpgw::no_access();
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -184,6 +183,8 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
+			$status_list = execMethod('property.bogeneric.get_list', array(
+						'type' => 'condition_survey_status', 'selected' => 0, 'add_empty' => true));
 
 			$data = array(
 				'datatable_name' => lang('condition survey'),
@@ -194,6 +195,11 @@
 								'name' => 'cat_id',
 								'text' => lang('category') . ':',
 								'list' => $categories,
+							),
+							array('type' => 'filter',
+								'name' => 'status_id',
+								'text' => lang('status') . ':',
+								'list' => $status_list,
 							)
 						),
 					),
@@ -249,6 +255,12 @@
 						array(
 							'key' => 'cnt',
 							'label' => lang('count'),
+							'sortable' => false,
+							'className' => 'center'
+						),
+						array(
+							'key' => 'status',
+							'label' => lang('status'),
 							'sortable' => false,
 							'className' => 'center'
 						),
@@ -370,6 +382,7 @@
 				'sort' => phpgw::get_var('sort'),
 				'dir' => phpgw::get_var('dir'),
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
+				'status_id'=> phpgw::get_var('status_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export
 			);
 
