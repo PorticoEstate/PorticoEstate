@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 
-	require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+	require_once PHPGW_SERVER_ROOT . "/phpgwapi/js/jquery/file-upload/server/php/UploadHandler.php";
 
 	class property_multiuploader extends UploadHandler
 	{
