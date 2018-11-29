@@ -72,6 +72,14 @@
 			{
 				$data['group_id'] = 4169;
 			}
+			else if($parent_id == 286)//LRS-Bestilling av endring i UBW
+			{
+				$data['group_id'] = 4173;
+			}
+			else if($parent_id == 301)//LRS-EDD telefon
+			{
+				$data['group_id'] = 4174;
+			}
 			else
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
