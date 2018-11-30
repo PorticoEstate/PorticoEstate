@@ -46,7 +46,7 @@ $(document).ready(function ()
 
 	$(".goToCal").click(function() {
         $('html,body').animate({
-            scrollTop: $(".calendar-tool").offset().top - 134},
+            scrollTop: $(".calendar-content").offset().top - 100},
             'slow');
     });
 

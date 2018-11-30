@@ -162,7 +162,7 @@
 		</div>
 		</div>
 
-		<div class="container wrapper">
+		<div class="container wrapper calendar-content">
 			<xsl:if test="building/deactivate_application=0 and config_data/help_calendar_book and normalize-space(config_data/help_calendar_book)">
 				<div class="row margin-top-and-bottom">
 					<div class="col">
