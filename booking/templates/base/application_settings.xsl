@@ -14,6 +14,14 @@
 					</textarea>
 				</div>
 				<div class="pure-control-group">
+					<label for="field_application_contact">
+						<xsl:value-of select="php:function('lang', 'Contact and invoice information')"/>
+					</label>
+					<textarea id="field_application_contact" class="pure-input-1-2" name="application_contact" type="text">
+						<xsl:value-of select="config_data/application_contact"/>
+					</textarea>
+				</div>
+				<div class="pure-control-group">
 					<label for="field_application_activities">
 						<xsl:value-of select="php:function('lang', 'Activity')"/>
 					</label>

@@ -375,8 +375,34 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$this->check_active('booking.uibuilding.show');
 			$building = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+
+			$building['contact_info'] = "";
+			$contactdata = array();
+			foreach (array('homepage','email','phone') as $field)
+			{
+				if (!empty(trim($building[$field])))
+				{
+					$value = trim($building[$field]);
+					if ($field == 'homepage')
+					{
+						if (!preg_match("/^(http|https):\/\//",$value))
+						{
+							$value = 'http://' . $value;
+						}
+						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
+					}
+					$contactdata[] = sprintf('%s: %s', lang($field), $value);
+				}
+			}
+			if (!empty($contactdata))
+			{
+				$building['contact_info'] = sprintf('<p>%s</p>', join('<br/>',$contactdata));
+			}
+
 			$building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
 					'id' => $building['id']));
 			$building['extra_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.extraschedule',
@@ -390,6 +416,6 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
-			self::render_template_xsl('building', array("building" => $building));
+			self::render_template_xsl('building', array('building' => $building, 'config_data' => $config->config_data));
 		}
 	}

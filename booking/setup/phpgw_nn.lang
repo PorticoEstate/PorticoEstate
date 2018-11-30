@@ -55,7 +55,6 @@ cancelled	booking	nn	Avbestilt
 case officer	booking	nn	Saksbehandlar
 category	booking	nn	Kategori
 choose a date	booking	nn	Velg dato
-choose a date	booking	nn	Velg ein dato
 choose file	booking	nn	Velg dokument
 city	booking	nn	Poststed
 click to sort ascending	booking	nn	Klikk for å sortere stigande
@@ -397,7 +396,9 @@ Select Type	booking	nn	Velg type
 Customer number	booking	nn	Ressursnummer
 Send	booking	nn	Send
 Your application has now been registered and a confirmation email has been sent to you.	booking	nn	Søknaden er sendt inn, og ein kvittering er sendt til deg på e-post.
+Your applications have now been registered and confirmation emails have been sent to you.	booking	nn	Søknadene har nå blitt sendt inn, og bekreftelser har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	nn	Ein saksbehandler vil behandle søknaden så fort som mogeleg.
+A Case officer will review your applications as soon as possible.	booking	nn	En saksbehandler vil behandle søknadene så fort som mulig.
 Please check your Spam Filter if you are missing mail.	booking	nn	Vi gjer merksam på at e-postsvar blir automatisk generert og derfor av og til vil ende i spamfilter/nettsøppel.
 customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	nn	Fødselsdato/fødselsnummer er ikkje gyldig. Nummeret må bestå av 6 eller 11 siffer
 customer_organization_number is invalid	booking	nn	Organisasjonsnummer er ugyldig
@@ -409,6 +410,7 @@ Add Resource	booking	nn	Ny ressurs
 activity_id	booking	nn	Aktivitet
 contact_email	booking	nn	E-post
 contact_name	booking	nn	Namn
+contact_phone	booking	nn	Telefon
 customer_identifier_type	booking	nn	Fakturainformasjon
 Or	booking	nn	eller
 group_id	booking	nn	Gruppe/Lag
@@ -721,5 +723,64 @@ approve	booking	nn	Godkjenn
 return to application	booking	nn	Tilbake til søknad
 application add	booking	nn	Ny søknad
 duplicate in name	booking	nn	Navnet finnest frå før
+Add date and time	booking	nn	Legg til tidspunkt
+Application for	booking	nn	Søknaden gjelder
+applicationcart empty	booking	nn	Ingen søknader finnes
+At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
+Bookable resources (2018)	booking	nn	Lokaler til leie
+Booking (2018)	booking	nn	Interntildeling
+Building (2018)	booking	nn	Anlegg
+Calendar	booking	nn	Kalender
+choose a	booking	nn	Ingen valgt
+Chosen resources (2018)	booking	nn	Valgte lokaler
+Contact and invoice information	booking	nn	Kontakt- og fakturainformasjon
+Date and time	booking	nn	Tidspunkt
+Edit activities	booking	nn	Rediger aktiviteter
+Edit facilities	booking	nn	Rediger fasiliteter
+edit facility	booking	nn	Rediger fasilitet
+edit resource activities	booking	nn	Rediger ressursaktiviteter
+edit resource category	booking	nn	Rediger ressurskategori
+edit resource facilities	booking	nn	Rediger ressursfasiliteter
+Equipment (2018)	booking	nn	Spesielle behov
+Event name	booking	nn	Navn på arrangement
+Facilities	booking	nn	Fasiliteter
+Facility	booking	nn	Fasilitet
+Front page filtering	booking	nn	Filtrering på forside
+Frontpage title	booking	nn	Forsidetittel
+Group (2018)	booking	nn	Gruppe
+Groups (2018)	booking	nn	Grupper
+Help text calendar: Book	booking	nn	Kalender: Hvordan søke
+Help text organization: Edit group	booking	nn	Organisasjon: Opprett eller rediger gruppe
+Help texts	booking	nn	Hjelpetekster
+Homepage for the event	booking	nn	Hjemmeside for aktiviteten/arrangementet
+Include in event list	booking	nn	Vis i arrangementsliste på forsiden
+legal condition	booking	nn	Juridiske betingelser
+Main activity	booking	nn	Hovedaktivitet
+New facility	booking	nn	Ny fasilitet
+New resource category	booking	nn	Ny ressurskategori
+No partial applications exist for this session, contact details are not saved	booking	nn	Ingen delsøknader finnes for denne sesjonen, avbryter lagring av kontaktinformasjon
+No resource chosen (2018)	booking	nn	Ingen lokaler valgt
+No session ID found, application aborted	booking	nn	Ingen sesjons-ID funnet, lagring av søknaden er avbrutt
+Not a top level activity	booking	nn	Det er valgt aktiviteter som ikke er på toppnivå
+One filter box per line	booking	nn	Bare én filtreringsboks per linje
+Opening hours	booking	nn	Åpningstider
+Organizer	booking	nn	Arrangør
+Picture main	booking	nn	Hovedbilde
+Please select a resource category	booking	nn	Velg en ressurskategori
+Resource (2018)	booking	nn	Lokale
+Resource categories	booking	nn	Ressurskategorier
+Resource category	booking	nn	Ressurskategori
+Resources (2018)	booking	nn	Lokaler
+responsible_city	booking	nn	Poststed
+responsible_street	booking	nn	Gate
+responsible_zip_code	booking	nn	Postnummer
+Select a date and time	booking	nn	Velg et tidspunkt
+Select a target audience	booking	nn	Det må velges en målgruppe
+Selected date and time	booking	nn	Valgte tidspunkter
 Send as sms	booking	nn	Send som sms
 Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
+Text and activity IDs for each filter box	booking	nn	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
+Title for filter boxes	booking	nn	Tittel for filtreringsbokser
+Title for upcoming events	booking	nn	Tittel for liste med kommende arrangementer
+Upcoming events	booking	nn	Kommende arrangementer
+Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad er lagt til. Du kan legge til en ny søknad, eller gå videre for å fullføre søknadsprosessen

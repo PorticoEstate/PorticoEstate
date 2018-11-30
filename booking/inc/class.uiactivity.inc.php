@@ -56,11 +56,16 @@
 
 		public function query()
 		{
-			
+			return $this->jquery_results($this->bo->populate_grid_data());
 		}
 
 		public function index()
 		{
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
 			$show_all = phpgw::get_var('show_all') || false;
 			$activities = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC'));
 			$children = array();

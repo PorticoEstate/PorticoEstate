@@ -6,6 +6,7 @@
 
 		const CATEGORY_HMS_DOCUMENT = 'HMS_document';
 		const CATEGORY_PRICE_LIST = 'price_list';
+		const CATEGORY_PICTURE_MAIN = 'picture_main';
 		const CATEGORY_PICTURE = 'picture';
 		const CATEGORY_DRAWING = 'drawing';
 		const CATEGORY_REGULATION = 'regulation';
@@ -15,6 +16,7 @@
 			$defaultCategories = array(
 				self::CATEGORY_HMS_DOCUMENT,
 				self::CATEGORY_PRICE_LIST,
+				self::CATEGORY_PICTURE_MAIN,
 				self::CATEGORY_PICTURE,
 				self::CATEGORY_DRAWING,
 				self::CATEGORY_REGULATION,
@@ -241,7 +243,7 @@
 
 		public function is_image( array &$entity )
 		{
-			if ($entity['category'] != self::CATEGORY_PICTURE)
+			if (!in_array($entity['category'], array(self::CATEGORY_PICTURE_MAIN,self::CATEGORY_PICTURE)))
 			{
 				return false;
 			}
@@ -264,7 +266,7 @@
 			{
 				$params['filters'] = array();
 			}
-			$params['filters']['category'] = booking_sodocument::CATEGORY_PICTURE;
+			$params['filters']['category'] = array(booking_sodocument::CATEGORY_PICTURE_MAIN, booking_sodocument::CATEGORY_PICTURE);
 
 			$documents = $this->read($params);
 			$images = array('results' => array(), 'total_records' => 0);

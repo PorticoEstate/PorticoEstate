@@ -75,8 +75,38 @@
 								</select>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_name">
+									<xsl:value-of select="php:function('lang', 'Event name')" />
+								</label>
+								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="application/name"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_organizer">
+									<xsl:value-of select="php:function('lang', 'Organizer')" />
+								</label>
+								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="application/organizer"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_homepage">
+									<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
+								</label>
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="application/homepage"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_description">
-									<xsl:value-of select="php:function('lang', 'Information about the event')" />
+									<xsl:value-of select="php:function('lang', 'description')" />
 								</label>
 								<xsl:if test="config/application_description">
 									<p>
@@ -84,12 +114,6 @@
 									</p>
 								</xsl:if>
 								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a description')" />
-									</xsl:attribute>
 									<xsl:value-of select="application/description"/>
 								</textarea>
 							</div>

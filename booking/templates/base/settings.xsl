@@ -195,6 +195,63 @@
 							<xsl:value-of select="config_data/emails"/>
 						</textarea>
 					</div>
+
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Front page filtering')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Title for filter boxes')"/>
+						</label>
+						<input id="field_frontpage_filterboxtitle" type="text" name="config_data[frontpage_filterboxtitle]" class="pure-input-1-2" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/frontpage_filterboxtitle"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Text and activity IDs for each filter box')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'One filter box per line')"/>
+						</label>
+						<textarea id="field_frontpage_filterboxdata" name="config_data[frontpage_filterboxdata]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/frontpage_filterboxdata"/>
+						</textarea>
+					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Title for upcoming events')"/>
+						</label>
+						<input id="field_frontpage_upcomingevents" type="text" name="config_data[frontpage_upcomingevents]" class="pure-input-1-2" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/frontpage_upcomingevents"/>
+							</xsl:attribute>
+						</input>
+					</div>
+
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Help texts')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Help text calendar: Book')"/>
+						</label>
+						<textarea id="field_help_calendar_book" name="config_data[help_calendar_book]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/help_calendar_book"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Help text organization: Edit group')"/>
+						</label>
+						<textarea id="field_help_group_edit" name="config_data[help_group_edit]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/help_group_edit"/>
+						</textarea>
+					</div>
+
 					<div class="pure-control-group">					
 						<xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/>
 					</div>

@@ -70,7 +70,7 @@
 			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
 			{
 				$date = substr($event['from_'], 0, 10);
-				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
 
@@ -128,7 +128,7 @@
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
 					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $event['building_id'], 'date' => $date));
 				}
 			}
@@ -145,7 +145,9 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$event['audiences_json'] = json_encode(array_map('intval', $event['audience']));
+			$event['agegroups_json'] = json_encode($event['agegroups']);
+			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 
 			$activity_path = $this->activity_bo->get_path($event['activity_id']);
@@ -174,7 +176,7 @@
 				'file'), 'event_form');
 
 			self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments));
+				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments, 'config' => $config->config_data));
 		}
 
 		public function cancel()
@@ -237,7 +239,7 @@
 							$this->bo->update($event);
 						}
 						$date = substr($event['from_'], 0, 10);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $event['building_id'], 'date' => $date));
 					}
 					else
@@ -254,7 +256,7 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
@@ -390,7 +392,7 @@
 			{
 				$orginfo = array();
 			}
-
+			//echo $event['name'];
 			$event['resources'] = $resources['results'];
 			$res_names = array();
 			foreach ($event['resources'] as $res)
@@ -400,7 +402,15 @@
 			$event['resource_info'] = join(', ', $res_names);
 			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id']));
-			$event['when'] = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			} else {
+				$end = new DateTime($event['to_']);				
+				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$event['when'] = $when;
 			$bouser = CreateObject('bookingfrontend.bouser');
 			if ($bouser->is_organization_admin($event['customer_organization_id']))
 			{
@@ -430,6 +440,15 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$building = $this->building_bo->read_single($building_info['id']);
 
+			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			} else {
+				$end = new DateTime($event['to_']);				
+				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}
+			$event['when'] = $when;
 			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template

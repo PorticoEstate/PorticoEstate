@@ -39,8 +39,10 @@
 			$auth_forward = "?redirect_menuaction={$this->module}.uigroup.show&redirect_id={$group['id']}";
 			$group['login_link'] = 'login.php' . $auth_forward;
 			$group['logoff_link'] = 'logoff.php' . $auth_forward;
-			if ($bouser->is_organization_admin())
+			if ($bouser->is_organization_admin($group['organization_id']))
+			{
 				$group['logged_on'] = true;
+			}
 
 			self::render_template_xsl('group', array('group' => $group, 'loggedin' => $loggedin,
 				'edit_self_link' => $edit_self_link));

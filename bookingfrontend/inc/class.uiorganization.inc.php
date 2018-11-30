@@ -87,6 +87,8 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$id = phpgw::get_var('id', 'int');
 
 			$session_org_id = phpgw::get_var('session_org_id');
@@ -102,10 +104,30 @@
 					'id' => $organization['id']));
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
 					'type' => "organization"));
-			if (trim($organization['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($organization['homepage'])))
+
+			$organization['contact_info'] = "";
+			$contactdata = array();
+			foreach (array('homepage','email','phone') as $field)
 			{
-				$organization['homepage'] = 'http://' . $organization['homepage'];
+				if (!empty(trim($organization[$field])))
+				{
+					$value = trim($organization[$field]);
+					if ($field == 'homepage')
+					{
+						if (!preg_match("/^(http|https):\/\//",$value))
+						{
+							$value = 'http://' . $value;
+						}
+						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
+					}
+					$contactdata[] = sprintf('%s: %s', lang($field), $value);
+				}
 			}
+			if (!empty($contactdata))
+			{
+				$organization['contact_info'] = sprintf('<p>%s</p>', join('<br/>',$contactdata));
+			}
+
 			$auth_forward = "?redirect_menuaction={$this->module}.uiorganization.show&redirect_id={$organization['id']}";
 
 			// BEGIN EVIL HACK
@@ -126,6 +148,6 @@
 
 			phpgwapi_jquery::load_widget("core");
 
-			self::render_template_xsl('organization', array('organization' => $organization));
+			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
 	}

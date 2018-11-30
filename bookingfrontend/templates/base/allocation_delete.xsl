@@ -1,208 +1,136 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div class="content">
+		<div id="allocation-delete-page-content" class="margin-top-content">
+			<div class="container wrapper">
+				<div class="location">
+					<span><a><xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
+					</a></span>
+					<span><xsl:value-of select="php:function('lang', 'Delete allocation')"/></span>										
+				</div>
 
-		<dl class="form">
-			<dt class="heading">
-				<xsl:value-of select="php:function('lang', 'Delete allocation')"/>
-			</dt>
-		</dl>
-		<xsl:call-template name="msgbox"/>
-		<dl class="form">
-			<dd>
-				<xsl:value-of select="php:function('lang', 'Delete Information')"/>
-			</dd>
-			<dd>
-				<xsl:value-of select="php:function('lang', 'Delete Information2')"/>
-			</dd>
-		</dl>
-		<!--div class="clr"/-->
-		<form action="" method="POST">
-			<input type="hidden" name="application_id" value="{allocation/application_id}"/>
-			<input id="field_org_id" name="organization_id" type="hidden" value="{allocation/organization_id}" />
-			<input id="field_building_id" name="building_id" type="hidden" value="{allocation/building_id}" />
-			<input id="field_from" name="from_" type="hidden" value="{allocation/from_}" />
-			<input id="field_to" name="to_" type="hidden" value="{allocation/to_}" />
+				<div class="row">
+					<form action="" method="POST" class="col-md-8">
+						<div class="col mb-4">
+							<xsl:call-template name="msgbox"/>
+						</div>
 
-			<div class="pure-g">
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<label for="field_building">
-								<xsl:value-of select="php:function('lang', 'Building')" />
-							</label>
-						</dt>
-						<dd>
-							<div class="autocomplete">
+						<input type="hidden" name="application_id" value="{allocation/application_id}"/>
+						<input id="field_org_id" name="organization_id" type="hidden" value="{allocation/organization_id}" />
+						<input id="field_building_id" name="building_id" type="hidden" value="{allocation/building_id}" />
+						<input id="field_from" name="from_" type="hidden" value="{allocation/from_}" />
+						<input id="field_to" name="to_" type="hidden" value="{allocation/to_}" />
+
+					<div class="form-group">
+							<xsl:value-of select="php:function('lang', 'Delete Information')"/>&#160;
+							<xsl:value-of select="php:function('lang', 'Delete Information2')"/>
+					</div>
+
+							<div class="form-group">
+						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></label>
 								<xsl:value-of select="allocation/building_name"/>
 							</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<label for="field_org">
-								<xsl:value-of select="php:function('lang', 'Organization')" />
-							</label>
-						</dt>
-						<dd>
-							<div class="autocomplete">
+
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Organization')" /></label>
 								<xsl:value-of select="allocation/organization_name"/>
 							</div>
-						</dd>
-					</dl>
-				</div>
-			</div>
 
-			<div class="pure-g">
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<label for="field_from">
-								<xsl:value-of select="php:function('lang', 'From')" />
-							</label>
-						</dt>
-						<dd>
-							<div>
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'From')" /></label>
 								<xsl:value-of select="allocation/from_"/>
 							</div>
-						</dd>
-					</dl>
-				</div>
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<label for="field_to">
-								<xsl:value-of select="php:function('lang', 'To')" />
-							</label>
-						</dt>
-						<dd>
-							<div>
+
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'To')" /></label>
 								<xsl:value-of select="allocation/to_"/>
 							</div>
-						</dd>
-					</dl>
-				</div>
-			</div>
-        
-			<div class="pure-g">
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<label for="field_repeat_until">
-								<xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" />
-							</label>
-						</dt>
-						<dd>
-							<label>
-								<input type="checkbox" name="outseason" id="outseason">
-									<xsl:if test="outseason='on'">
-										<xsl:attribute name="checked">checked</xsl:attribute>
-									</xsl:if>
+						
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Recurring allocation deletion')" /></label>
+								
+								<div>
+									<input type="checkbox" class="mr-2" name="outseason" id="outseason">
+										<xsl:if test="outseason='on'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'Out season')" />
+								</div>
+
+								<div>
+									<input type="checkbox" class="mr-2" name="recurring" id="recurring">
+										<xsl:if test="recurring='on'">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'Delete until')" />
+								</div>
+
+								<input class="form-control" id="field_repeat_until" name="repeat_until" type="text">
+									<xsl:attribute name="value">
+										<xsl:value-of select="repeat_until"/>
+									</xsl:attribute>
 								</input>
-								<xsl:value-of select="php:function('lang', 'Out season')" />
-							</label>
-						</dd>
-						<dd>
-							<label>
-								<input type="checkbox" name="recurring" id="recurring">
-									<xsl:if test="recurring='on'">
-										<xsl:attribute name="checked">checked</xsl:attribute>
-									</xsl:if>
-								</input>
-								<xsl:value-of select="php:function('lang', 'Delete until')" />
-							</label>
-						</dd>
-						<dd>
-							<!--input id="field_repeat_until" name="repeat_until" type="text">
-					<xsl:attribute name="value"><xsl:value-of select="repeat_until"/></xsl:attribute>
-							</input-->
-							<input class="datetime" id="field_repeat_until" name="repeat_until" type="text">
+							</div>
+
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Interval')" /></label>
+								<xsl:value-of select="../field_interval" />
+								<select id="field_interval" class="form-control" name="field_interval">
+									<option value="1">
+										<xsl:if test="interval=1">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', '1 week')" />
+									</option>
+									<option value="2">
+										<xsl:if test="interval=2">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', '2 weeks')" />
+									</option>
+									<option value="3">
+										<xsl:if test="interval=3">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', '3 weeks')" />
+									</option>
+									<option value="4">
+										<xsl:if test="interval=4">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', '4 weeks')" />
+									</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Message')" /></label>
+								<textarea id="field-message" class="form-control" name="message" type="text">
+									<xsl:value-of select="system_message/message"/>
+								</textarea>
+							</div>
+
+							<input type="submit" class="btn btn-light mr-4">
 								<xsl:attribute name="value">
-									<xsl:value-of select="repeat_until"/>
+									<xsl:value-of select="php:function('lang', 'Delete')"/>
 								</xsl:attribute>
 							</input>
-						</dd>
-					</dl>
-				</div>
-			</div>
-        
-			<div class="pure-g">
-				<div class="pure-u-1 pure-u-md-2-5 pure-u-lg-1-4">
-					<dl class="form-col">
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Interval')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="../field_interval" />
-							<select id="field_interval" name="field_interval">
-								<option value="1">
-									<xsl:if test="interval=1">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="php:function('lang', '1 week')" />
-								</option>
-								<option value="2">
-									<xsl:if test="interval=2">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="php:function('lang', '2 weeks')" />
-								</option>
-								<option value="3">
-									<xsl:if test="interval=3">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="php:function('lang', '3 weeks')" />
-								</option>
-								<option value="4">
-									<xsl:if test="interval=4">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="php:function('lang', '4 weeks')" />
-								</option>
-							</select>
-						</dd>
-					</dl>
-				</div>
-			</div>
+							<a class="cancel">
+								<xsl:attribute name="href">
+									<xsl:value-of select="allocation/cancel_link"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Cancel')" />
+							</a>
 
-			<div class="pure-g">
-				<div class="pure-u-1 pure-u-lg-4-5">
-					<dl class="form-col">
-						<dt>
-							<label for="field_message">
-								<xsl:value-of select="php:function('lang', 'Message')" />
-							</label>
-						</dt>
-						<dd>
-							<textarea id="field-message" name="message" type="text">
-								<xsl:value-of select="system_message/message"/>
-							</textarea>
-						</dd>
-					</dl>
+					</form>
 				</div>
-			</div>
 
-			<div class="pure-g">
-				<div class="pure-u-1">
-					<div class="form-buttons">
-						<input type="submit">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'Delete')"/>
-							</xsl:attribute>
-						</input>
-						<a class="cancel">
-							<xsl:attribute name="href">
-								<xsl:value-of select="allocation/cancel_link"/>
-							</xsl:attribute>
-							<xsl:value-of select="php:function('lang', 'Cancel')" />
-						</a>
-					</div>
-				</div>
 			</div>
+		</div>
 
-		</form>
-	</div>
 	<script>
 		var season_id = '<xsl:value-of select="allocation/season_id"/>';
 		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;

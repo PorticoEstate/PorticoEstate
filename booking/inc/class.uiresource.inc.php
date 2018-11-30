@@ -17,10 +17,13 @@
 			'query' => true,
 			'add' => true,
 			'edit' => true,
+			'edit_activities' => true,
+			'edit_facilities' => true,
 			'get_custom' => true,
 			'show' => true,
 			'schedule' => true,
 			'toggle_show_inactive' => true,
+			'get_rescategories' => true,
 			'get_buildings' => true,
 			'add_building' => true,
 			'remove_building' => true
@@ -35,14 +38,21 @@
 
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->facility_bo = CreateObject('booking.bofacility');
+			$this->rescategory_bo = CreateObject('booking.borescategory');
 			$this->fields = array(
 				'name' => 'string',
 				'description' => 'html',
+				'opening_hours' => 'html',
+				'contact_info' => 'html',
 				'activity_id' => 'int',
 				'active' => 'int',
 				'type' => 'string',
 				'sort' => 'string',
 				'organizations_ids' => 'string',
+				'rescategory_id' => 'int',
+				'activities' => 'int',
+				'facilities' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources');
 		}
@@ -93,7 +103,11 @@
 						),
 						array(
 							'key' => 'activity_name',
-							'label' => lang('Activity')
+							'label' => lang('Main activity')
+						),
+						array(
+							'key' => 'rescategory_name',
+							'label' => lang('Resource category'),
 						),
 						array(
 							'key' => 'building_street',
@@ -170,7 +184,7 @@
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			self::rich_text_editor('field_description');
+			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -236,12 +250,15 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('field_description');
+			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach ($activity_data['results'] as $acKey => $acValue)
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
+			$activity_path = $this->activity_bo->get_path($resource['activity_id']);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+			$rescategory_data = $this->rescategory_bo->get_rescategories_by_activities($top_level_activity);
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
@@ -251,7 +268,7 @@
 					'date', 'security', 'file'));
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_building_datatable_def($id),
-				'resource' => $resource, 'activitydata' => $activity_data));
+				'resource' => $resource, 'activitydata' => $activity_data, 'rescategorydata' => $rescategory_data));
 		}
 
 		private function get_location()
@@ -261,6 +278,112 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 			return ".resource.{$top_level_activity}";
 		}
+
+
+		public function edit_activities()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$resource = $this->bo->read_single($id);
+			$resource['id'] = $id;
+
+			$errors = array();
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('edit resource activities'), 'link' => '#resource_edit_activities');
+			$active_tab = 'generic';
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				array_set_default($_POST, 'activities', array());
+				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($resource);
+				if (!$errors)
+				{
+					// Exclude any activities that don't belong to the main activity. Such activities can't normally be
+					// added in UI, but check for this nonetheless. Also check that the activities are active
+					$activitylist = $this->activity_bo->fetch_activities_hierarchy();
+					$childactivities = array();
+					if (array_key_exists($resource['activity_id'], $activitylist))
+					{
+						$childactivities = $activitylist[$resource['activity_id']]['children'];
+					}
+					$resactivities = array();
+					foreach ($resource['activities'] as $activity_id)
+					{
+						if (array_key_exists($activity_id, $childactivities))
+						{
+							$childactivity = $childactivities[$activity_id];
+							if ($childactivity['active'])
+							{
+								$resactivities[] = $activity_id;
+							}
+						}
+					}
+					$resource['activities'] = $resactivities;
+
+					try
+					{
+						$receipt = $this->bo->update($resource);
+						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					}
+					catch (booking_unauthorized_exception $e)
+					{
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
+				}
+			}
+
+			$this->flash_form_errors($errors);
+			$resource['activities_json'] = json_encode(array_map('intval', $resource['activities']));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('resource_edit_activities', array('resource' => $resource));
+		}
+
+
+		public function edit_facilities()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$resource = $this->bo->read_single($id);
+			$resource['id'] = $id;
+
+			$errors = array();
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('edit resource facilities'), 'link' => '#resource_edit_facilities');
+			$active_tab = 'generic';
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				array_set_default($_POST, 'facilities', array());
+				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($resource);
+				if (!$errors)
+				{
+					// Unlike the editing of activities, a check for active facilities is not done, as adding an
+					// inactive facility in UI is unlikely and the consequences are not grave (an inactive facility
+					// will be excluded when the resource is used)
+					try
+					{
+						$receipt = $this->bo->update($resource);
+						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					}
+					catch (booking_unauthorized_exception $e)
+					{
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
+				}
+			}
+
+			$this->flash_form_errors($errors);
+			$resource['facilities_json'] = json_encode(array_map('intval', $resource['facilities']));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('resource_edit_facilities', array('resource' => $resource));
+		}
+
 
 		public function get_custom()
 		{
@@ -300,6 +423,17 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array("attributes_{$type}"));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('custom_fields' => $data));
 		}
+
+
+		function get_rescategories()
+		{
+			$activity_id = phpgw::get_var('activity_id', 'int');
+			$activity_path = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+			$rescategory_data = $this->rescategory_bo->get_rescategories_by_activities($top_level_activity);
+			return $rescategory_data;
+		}
+
 
 		private static function get_building_columns()
 		{
@@ -407,12 +541,27 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
+			$array_resource = array(&$resource);
+			$this->bo->add_activity_facility_data($array_resource);
 
 			$_filter_building['id'] = array_merge(array(-1), $resource['buildings']);
 
 			$bui_result = $this->sobuilding->read(array("sort" => "name", "dir" => "asc",
 				"filters" => $_filter_building));
 
+			// Create text strings for the activity and facility lists
+			$activitynames = array();
+			foreach ($resource['activities_list'] as $activity)
+			{
+				$activitynames[] = $activity['name'];
+			}
+			$resource['activities_names'] = implode(', ', $activitynames);
+			$facilitynames = array();
+			foreach ($resource['facilities_list'] as $facility)
+			{
+				$facilitynames[] = $facility['name'];
+			}
+			$resource['facilities_names'] = implode(', ', $facilitynames);
 
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
 					'id' => $resource['id']));
@@ -424,6 +573,10 @@
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
+			$resource['edit_activities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_activities',
+					'id' => $resource['id']));
+			$resource['edit_facilities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_facilities',
+					'id' => $resource['id']));
 
 			$tabs = array();
 			$tabs['generic'] = array(

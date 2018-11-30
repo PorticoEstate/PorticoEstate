@@ -38,6 +38,7 @@
 				'name' => 'string',
 				'homepage' => 'url',
 				'description' => 'html',
+				'opening_hours' => 'html',
 				'email' => 'email',
 				'tilsyn_name' => 'string',
 				'tilsyn_email' => 'email',
@@ -212,7 +213,7 @@
 			$activity_data = $this->activity_bo->get_top_level();
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('field_description');
+			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('new building'), 'link' => '#building_form');
@@ -269,7 +270,7 @@
 			$this->flash_form_errors($errors);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('field_description');
+			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');

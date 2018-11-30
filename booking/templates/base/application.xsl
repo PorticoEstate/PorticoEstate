@@ -216,6 +216,35 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'Event name')" />
+								</label>
+								<span>
+									<xsl:value-of select="application/name" disable-output-escaping="yes"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Organizer')" />
+								</label>
+								<span>
+									<xsl:value-of select="application/organizer" disable-output-escaping="yes"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Homepage')" />
+								</label>
+								<xsl:if test="application/homepage and normalize-space(application/homepage)">
+									<a>
+										<xsl:attribute name="href">
+											<xsl:value-of select="application/homepage"/>
+										</xsl:attribute>
+										<xsl:value-of select="application/homepage"/>
+									</a>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<span>

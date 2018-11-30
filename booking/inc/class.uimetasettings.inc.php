@@ -16,6 +16,7 @@
 			$this->fields = array(
 				'metatag_author' => 'string',
 				'metatag_robots' => 'string',
+				'frontpagetitle' => 'string',
 				'frontpagetext' => 'html',
 				'frontimagetext' => 'html'
 			);

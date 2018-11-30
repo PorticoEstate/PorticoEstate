@@ -313,6 +313,26 @@
 
 			return $this->so->read($params);
 		}
+
+
+		function get_partials_list($session_id = '')
+		{
+			$list = array();
+			if (!empty($session_id))
+			{
+				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
+				$params = array('filters' => $filters);
+				$applications = $this->so->read($params);
+				$list = $applications;
+			}
+			return $list;
+		}
+
+
+		function delete_application($id)
+		{
+			$this->so->delete_application($id);
+		}
 	}
 
 	class booking_boapplication_association extends booking_bocommon
