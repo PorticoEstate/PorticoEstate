@@ -61,13 +61,13 @@
 
 			if($parent_id == 255)//LRS-Lønn
 			{
-				$data['group_id'] = 3159;
-//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+//				$data['group_id'] = 3159;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
 			}
 			else if($parent_id == 256)//LRS-refusjon
 			{
-				$data['group_id'] = 3233;
-//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
+//				$data['group_id'] = 3233;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 			}
 			else if($parent_id == 268)//LRS-Økonomi
 			{
@@ -86,7 +86,7 @@
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 			}
 
-			if(empty($data['group_id']) && $location_id)
+			if($location_id)
 			{
 				$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
 				. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
