@@ -61,13 +61,13 @@
 
 			if($parent_id == 255)//LRS-Lønn
 			{
-				$data['group_id'] = 3159;
-//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+//				$data['group_id'] = 3159;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
 			}
 			else if($parent_id == 256)//LRS-refusjon
 			{
-				$data['group_id'] = 3233;
-//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
+//				$data['group_id'] = 3233;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 			}
 			else if($parent_id == 268)//LRS-Økonomi
 			{
