@@ -179,6 +179,7 @@
 				return $this->query();
 			}
 
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -264,6 +265,13 @@
 							'label' => lang('status'),
 							'sortable' => false,
 							'className' => 'center'
+						),
+						array(
+							'key' => 'summation',
+							'label' => lang('summation'),
+							'sortable' => false,
+							'className' => 'right',
+							'formatter' => 'JqueryPortico.FormatterAmount0'
 						),
 						array(
 							'key' => 'link',
