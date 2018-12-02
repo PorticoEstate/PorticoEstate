@@ -50,6 +50,7 @@
 			$dir = isset($data['dir']) ? $data['dir'] : 'DESC';
 			$cat_id = isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$status_id = isset($data['status_id']) ? (int)$data['status_id'] : 0;
+			$status_open = empty($data['status_open']) ? false : true;
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
@@ -89,6 +90,12 @@
 				$where = 'AND';
 			}
 
+			if($status_open)
+			{
+				$filtermethod .= " {$where} {$table}_status.closed IS NULL";
+				$where = 'AND';
+
+			}
 			if ($query)
 			{
 				$query = $this->_db->db_addslashes($query);
@@ -305,6 +312,37 @@
 			return $id;
 		}
 
+		public function edit_multiplier( $data )
+		{
+			$id = (int)$data['id'];
+
+			$value_set = array
+			(
+				'multiplier' => $data['multiplier']
+			);
+
+			$this->_db->transaction_begin();
+
+			try
+			{
+				$this->_edit($id, $value_set, 'fm_condition_survey');
+				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}", __LINE__, __FILE__);
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->_db->transaction_abort();
+					throw $e;
+				}
+			}
+
+			$this->_db->transaction_commit();
+
+			return $id;
+		}
+
+
 		public function import( $survey, $import_data = array() )
 		{
 			if (!isset($survey['id']) || !$survey['id'])
@@ -471,7 +509,7 @@
 					$request['location_code'] = $survey['location_code'];
 					$request['origin_id'] = $origin_id;
 					$request['origin_item_id'] = (int)$survey['id'];
-					$request['title'] = substr($entry['title'], 0, 255);
+					$request['title'] = $entry['title'];
 					$request['descr'] = phpgw::clean_value($entry['descr'], 'string');
 					$request['building_part'] = phpgw::clean_value($entry['building_part'], 'string');
 					$request['coordinator'] = $survey['coordinator_id'];
