@@ -46,7 +46,7 @@
 			'delete_imported_records' => true,
 			'get_vendors' => true,
 			'get_users' => true,
-			'edit_survey_title' => true,
+			'edit_survey_value' => true,
 			'get_files' => true,
 			'get_request' => true,
 			'get_summation' => true,
@@ -211,7 +211,7 @@
 						'export' => true, 'allrows' => true)),
 					'new_item' => self::link(array('menuaction' => 'property.uicondition_survey.add')),
 					'allrows' => true,
-					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_title')),
+					'editor_action' => self::link(array('menuaction' => 'property.uicondition_survey.edit_survey_value')),
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -250,7 +250,8 @@
 							'key' => 'multiplier',
 							'label' => lang('multiplier'),
 							'sortable' => false,
-							'className' => 'right'
+							'className' => 'right',
+							'editor' => true
 						),
 						array(
 							'key' => 'cnt',
@@ -1633,16 +1634,18 @@
 		}
 
 		/**
-		 * Edit title fo entity directly from table
+		 * Edit values for entity directly from table
 		 *
 		 * @param int  $id  id of entity
 		 * @param string  $value new title of entity
 		 *
 		 * @return string text to appear in ui as receipt on action
 		 */
-		public function edit_survey_title()
+		public function edit_survey_value()
 		{
 			$id = phpgw::get_var('id', 'int', 'POST');
+
+			$field_name =  phpgw::get_var('field_name');
 
 			if (!$this->acl_edit)
 			{
@@ -1652,11 +1655,19 @@
 			if ($id)
 			{
 				$values = $this->bo->read_single(array('id' => $id, 'view' => true));
-				$values['title'] = phpgw::get_var('value');
 
 				try
 				{
-					$this->bo->edit_title($values);
+					if($field_name == 'title')
+					{
+						$values['title'] = phpgw::get_var('value');
+						$this->bo->edit_title($values);
+					}
+					else if ($field_name == 'multiplier')
+					{
+						$values['multiplier'] = phpgw::get_var('value', 'float');
+						$this->bo->edit_multiplier($values);
+					}
 				}
 				catch (Exception $e)
 				{

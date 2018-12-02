@@ -286,6 +286,22 @@
 			}
 		}
 
+		public function edit_multiplier( $data )
+		{
+			try
+			{
+				$this->so->edit_multiplier($data);
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					throw $e;
+				}
+			}
+		}
+
+
 		public function import( $survey, $import_data )
 		{
 			try
@@ -309,7 +325,7 @@
 
 			if ($id == -1)
 			{
-				$values = $this->so->read(array('allrows' => true));
+				$values = $this->so->read(array('allrows' => true, 'status_open' => true));
 				foreach ($values as $survey)
 				{
 					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
