@@ -142,6 +142,18 @@
 				);
 			}
 
+			foreach ($values as &$entry)
+			{
+				$summation = $this->get_summation($entry['id']);
+
+				$entry['summation'] = 0;
+				foreach ($summation as $sum)
+				{
+					$entry['summation'] += $sum['amount'] * $entry['multiplier'];
+				}
+			}
+
+
 			return $values;
 		}
 
