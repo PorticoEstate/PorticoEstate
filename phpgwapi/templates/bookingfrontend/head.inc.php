@@ -44,19 +44,15 @@ JS;
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
 
-	phpgwapi_jquery::load_widget('core');
-
 	$stylesheets = array();
-	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
-	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
-	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
-	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-	$stylesheets[] = "/{$app}/css/bookingfrontend.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
+	
+
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
+	$stylesheets[] = "https://fonts.googleapis.com/css?family=Work+Sans";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/custom.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -73,14 +69,35 @@ JS;
 		}
 	}
 
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_url']))
+	{
+		$logoimg = $GLOBALS['phpgw_info']['server']['logo_url'];
+		$GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
+	}
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_title']))
+	{
+		$logo_title = $GLOBALS['phpgw_info']['server']['logo_title'];
+	}
+	else
+	{
+		$logo_title = 'Logo';
+	}
+	$GLOBALS['phpgw']->template->set_var( 'logo_title', $logo_title );
+
+	//loads jquery
+	phpgwapi_jquery::load_widget('core');
+
 	$javascripts = array();
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/aui-min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/common.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
+
 	
-	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
-
-//FIXME: To consider...
-//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
-//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
-
 	foreach ( $javascripts as $javascript )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
@@ -91,8 +108,7 @@ JS;
 	}
 
 	$config	= CreateObject('phpgwapi.config','booking')->read();
-	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
-
+	
 	$bodoc = CreateObject('booking.bodocumentation');
 	$manual  =  $bodoc->so->getFrontendDoc();	
 
@@ -174,13 +190,13 @@ JS;
 
    phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
 
-	$test = $GLOBALS['phpgw']->common->get_on_events();
+	//$test = $GLOBALS['phpgw']->common->get_on_events();
 	$test = str_replace('window.onload = function()','$(document).ready(function()',$test);
 	$test = str_replace("\n}\n","\n})\n",$test);
 
 	$tpl_vars = array
 	(
-		'css'			=> $GLOBALS['phpgw']->common->get_css(),
+		'css'		   => $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'	  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
@@ -193,23 +209,21 @@ JS;
 		'metainfo_description' => $description,
 		'metainfo_robots' => $robots,
 		'lbl_search'   	=> lang('Search'),
+		'placeholder_search'	=> lang('Search building, resource, organization'),
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
-	if ($manual !== null) 
-	{
+
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
-	}
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$org = CreateObject('bookingfrontend.uiorganization');
-	$orgid = $org->get_orgid($bouser->orgnr);
+
 	if($bouser->is_logged_in())
 	{
-
 		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
 		$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
@@ -245,10 +259,10 @@ JS;
 		{
 			$tpl_vars['login_text_org'] = $bouser->orgname;
 			$tpl_vars['login_text'] = lang('Logout');
-			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $orgid));
+			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $org->get_orgid($bouser->orgnr)));
 		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
-		$tpl_vars['login_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/logout.php', array());
+		$tpl_vars['login_url'] = 'logout.php';
 	}
 	else
 	{

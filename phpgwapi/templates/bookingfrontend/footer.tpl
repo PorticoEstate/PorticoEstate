@@ -1,84 +1,46 @@
+<div class="booking-cart" id="applications-cart-content" data-bind="visible: applicationCartItems().length > 0 && visible">
+                <div class="booking-cart-title">
+                    <span class="font-weight-bold">{cart_header} </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
+                    
+                    <i class="booking-cart-icon fas fa-plus float-right mr-2"></i>
+                </div>
+                <div class="booking-cart-items" style="display: none;">
+                    <div data-bind="foreach: applicationCartItems">
+                        <div class="booking-cart-item">
+                            <div class="row">                            
+                                <div class="col-5" data-bind="text: building_name"></div>
+                                <div class="col-5 d-inline"><span class="mr-3" data-bind="text: joinedResources"></span></div>
+                                <div class="col-2 float-right"><span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span></div>
+                            </div>
+                            <div class="row" data-bind="foreach: dates">
+                                <div class="col-5" data-bind="text: date"></div>
+                                <div class="col-6" data-bind="text: 'kl. ' + periode"></div>                        
+                            </div>
+                        </div>
+                    </div>
+		<div class="m-2">
+			<button onclick="window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false)" class="btn btn-light m-2">
+				{cart_complete_application}
+			</button>
+		</div>
+                </div>
+                
+            </div> 
+            
+<footer class="footer">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="font-weight-bold">{site_title}</h5>
+            <span><a href="https://www.aktiv-kommune.no/" target="_blank">{footer_about}</a></span>
+            <span><a href="{footer_privacy_link}" target="_blank">{footer_privacy_title}</a></span>
+        </div>
+    </div>
+    </div>
+</footer>
 </div>
-<div id="footer">
-
-</div>
-<div class="footer l-box is-center">
-	{footer_info}
-</div>
-{javascript_end}
-<script type="text/javascript">
-	(function (window, document)
-	{
-		document.getElementById('toggle').addEventListener('click', function (e)
-		{
-			document.getElementById('tuckedMenu').classList.toggle('custom-menu-tucked');
-			document.getElementById('toggle').classList.toggle('x');
-		});
-	})(this, this.document);
-
-
-//<!--
-function orgbox() {
-	var orgarray = eval('(' + '{organization_json}' + ')');
-	var div = document.createElement('div');
-	document.body.appendChild(div);
-	div.className = 'changeorg';
-	div.id = 'test';
-	div.innerHTML = '<div style="float: right;" id="changeClose"><i class="fa fa-times-circle"></i></div>';
-	div.innerHTML += '<div id="changeHeader">{change_org_header}</div>';
-	div.innerHTML += '<div id="orglist"></div>';
-	var oList = document.getElementById("orglist");
-	for(var i=0,len=orgarray.length; i < len; i++) {
-		oList.innerHTML += '<div style="padding-bottom: 5px;"><a href="change.php?orgnumber='+orgarray[i]['orgnumber']+'">'+orgarray[i]['orgname']+'</a></div>';
-	}
-	div.style.backgroundColor= 'white';
-	div.style.border = '1px solid black';
-	div.style.height = 'auto';
-	div.style.padding = '5px 10px 5px 10px';
-	var oHeader = document.getElementById("changeHeader");
-	oHeader.style.paddingBottom="5px";
-	var oClose = document.getElementById("changeClose")
-	oClose.style.cursor='pointer';
-	var oElement = document.getElementById("change");
-	oElement.onclick = function(){
-		div.parentNode.removeChild(div);
-		oElement.setAttribute('onclick', 'orgbox();');
-	}
-   	oClose.onclick = function(){
-		div.parentNode.removeChild(div);
-		oElement.setAttribute('onclick', 'orgbox();');
-	}
-}
-function clearCookie() {
-    setCookie('orgbox',0);
-    var oElement = document.getElementById("login");
-    oElement.removeAttribute('onclick');
-}
-function init() {
-    if ('{organization_json}' != 'null' && '{organization_json}' != '') {
-		var oElement = document.getElementById("change");
-		oElement.innerHTML = '<i class="fa fa-users"></i>';
-		oElement.setAttribute('onclick', 'orgbox();');
-		oElement.style.color='black';
-		oElement.style.padding='6px 0px 0px 5px';
-		oElement.style.cursor='pointer';
-        var oElement = document.getElementById("login");
-        oElement.setAttribute('onclick', 'clearCookie();');
-
-		var cookie = getCookie('orgbox');
-//		if (cookie != 1)
-		{
-			orgbox();
-			var oList = document.getElementById("orglist");
-			oList.innerHTML += '<div style="padding-top: 10px">PS: Du kan bruke <i class="fa fa-users"></i> ikonet for Ã¥ bytte organisasjon.</div>';
-			setCookie('orgbox',1);
-		}
-	}
-}
-window.onload = init;
-
-
-//-->
-</script>
+		<script type="text/javascript">
+			var footerlang = {"Do you want to delete application?": "{cart_confirm_delete}"};
+		</script>
 </body>
 </html>

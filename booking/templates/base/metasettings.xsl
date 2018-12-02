@@ -39,6 +39,16 @@
 					<br/>
 					<br/>
 					<div class="pure-control-group">
+						<label for="field_frontpagetitle">
+							<xsl:value-of select="php:function('lang', 'Frontpage title')"/>
+						</label>
+						<input id="field_frontpagetitle" name="frontpagetitle" type="text" size="50">
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/frontpagetitle"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
 						<label for="field_frontpagetext">
 							<xsl:value-of select="php:function('lang', 'Frontpage text')"/>
 						</label>

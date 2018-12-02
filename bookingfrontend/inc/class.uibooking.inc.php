@@ -188,8 +188,8 @@
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $booking['building_id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
 				{
@@ -238,8 +238,8 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-							'id' => $booking['building_id']));
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 					}
 				}
 			}
@@ -258,10 +258,11 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-					'id' => $booking['building_id']));
+			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
+			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
@@ -339,6 +340,15 @@
 			$agegroups = $agegroups['results'];
 			$building = $this->building_bo->read_single($booking['building_id']);
 
+			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			} else {
+				$end = new DateTime($booking['to_']);				
+				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}
+			$booking['when'] = $when;
 			if ($booking['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template
@@ -405,12 +415,13 @@
 #					if (strtotime($_POST['from_']) < ($today[0]-60*60*24*7*2))
 #					{
 #						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
-#					}										
+#					}
+					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");										
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-							'id' => $booking['building_id']));
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $booking['building_id'], 'date' => $temp_date));
 					}
 				}
 				else
@@ -512,8 +523,8 @@
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-					'id' => $booking['building_id']));
+			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
@@ -521,6 +532,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
 					'active' => 1)));
@@ -809,10 +821,12 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$id = phpgw::get_var('id', 'int');
+			$original_from = null;
 
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
 				$booking = $this->bo->read_single($id);
+				$original_from = $booking['from_'];
 				$errors = array();
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
@@ -859,10 +873,12 @@
 					$system_message['message'] = $system_message['message'] . "\n\n" . lang('To cancel booking use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $system_message['building_id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				}
 
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 
@@ -870,8 +886,6 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 
 				$this->flash_form_errors($errors);
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $booking['building_id']));
 
 				self::rich_text_editor('field-message');
 				self::render_template_xsl('booking_cancel', array('booking' => $booking));
@@ -884,6 +898,7 @@
 				$field_interval = phpgw::get_var('field_interval', 'int');
 				$delete_allocation = phpgw::get_var('delete_allocation');
 				$booking = $this->bo->read_single($id);
+				$original_from = $booking['from_'];
 				$allocation = $this->allocation_bo->read_single($booking['allocation_id']);
 				$season = $this->season_bo->read_single($booking['season_id']);
 				$step = phpgw::get_var('step', 'int', 'POST');
@@ -983,8 +998,8 @@
 						$system_message['message'] = $system_message['message'] . "<br />" . $info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-							'id' => $booking['building_id']));
+						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 					}
 					else
 					{
@@ -1095,8 +1110,8 @@
 							$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-								'id' => $allocation['building_id']));
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
 					}
 				}
@@ -1117,8 +1132,8 @@
 //				self::add_javascript('booking', 'base', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $booking['building_id'], 'date' => $booking['from_']));
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
 
@@ -1196,7 +1211,15 @@
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id']));
 			}
-			$booking['when'] = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			} else {
+				$end = new DateTime($booking['to_']);				
+				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$booking['when'] = $when;
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}

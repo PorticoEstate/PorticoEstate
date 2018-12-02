@@ -13,7 +13,11 @@
 				'active' => array('type' => 'int', 'required' => true),
 				'activity_id' => array('type' => 'int', 'required' => true),
 				'application_id' => array('type' => 'int', 'required' => false),
-				'description' => array('type' => 'string', 'required' => true, 'query' => true),
+				'name' => array('type' => 'string', 'query' => true, 'required' => true),
+				'organizer' => array('type' => 'string', 'query' => true, 'required' => true),
+				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
+				'description' => array('type' => 'string', 'required' => false, 'query' => true),
+				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'building_id' => array('type' => 'int', 'required' => true),
 				'building_name' => array('type' => 'string', 'required' => true, 'query' => true),
 				'from_' => array('type' => 'string', 'required' => true),
@@ -40,6 +44,7 @@
 				'customer_organization_number' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
 						'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
+				'include_in_list' => array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 				'activity_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(

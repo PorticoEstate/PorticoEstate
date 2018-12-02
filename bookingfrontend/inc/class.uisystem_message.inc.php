@@ -44,15 +44,15 @@
 
 				if ($system_message['title'] == '')
 				{
-					$errors['system_message'] = lang('Missing title');
+					$errors['system_message'] = lang("Field %1 is required", lang('title'));
 				}
 				elseif ($system_message['message'] == '')
 				{
-					$errors['system_message'] = lang('Missing message');
+					$errors['system_message'] = lang("Field %1 is required", lang('message'));
 				}
 				elseif ($system_message['name'] == '')
 				{
-					$errors['system_message'] = lang('Missing name');
+					$errors['system_message'] = lang("Field %1 is required", lang('name'));
 				}
 
 				if (!$errors)

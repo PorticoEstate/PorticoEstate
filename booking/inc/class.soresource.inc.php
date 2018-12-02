@@ -17,9 +17,12 @@
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'type' => array('type' => 'string', 'query' => true, 'required' => true),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
+				'opening_hours' => array('type' => 'string'),
+				'contact_info' => array('type' => 'string'),
 				'activity_id' => array('type' => 'int', 'required' => false),
 				'organizations_ids' => array('type' => 'string'),
 				'json_representation' => array('type' => 'json'),
+				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
@@ -69,11 +72,37 @@
 						'key' => 'id',
 						'column' => 'name'
 					)),
+				'rescategory_name' => array('type' => 'string', 'query' => true,
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'name',
+					)),
+				'rescategory_active' => array('type' => 'int',
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'active',
+					)),
 				'buildings' => array('type' => 'int', 'required' => true,
 					'manytomany' => array(
 						'table' => 'bb_building_resource',
 						'key' => 'resource_id',
 						'column' => 'building_id'
+					)),
+				'activities' => array('type' => 'int',
+					'manytomany' => array(
+						'table' => 'bb_resource_activity',
+						'key' => 'resource_id',
+						'column' => 'activity_id',
+					)),
+				'facilities' => array('type' => 'int',
+					'manytomany' => array(
+						'table' => 'bb_resource_facility',
+						'key' => 'resource_id',
+						'column' => 'facility_id',
 					)),
 				)
 			);

@@ -227,8 +227,9 @@
 				$organization_id = phpgw::get_var('organization_id', 'int');
 				if($organization_id)
 				{
-					$delegate['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
+					$delegate['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 						'id' => $organization_id));
+					$delegate['cancel_link'] = $delegate['organization_link'];
 					$delegate['organization_id'] = $organization_id;
 					$organization = CreateObject('booking.boorganization')->read_single($organization_id);
 					$delegate['organization_name'] = $organization['name'];

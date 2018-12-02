@@ -49,20 +49,60 @@
 
 		public function show()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+			$array_resource = array(&$resource);
+			$this->bo->add_activity_facility_data($array_resource);
 			$pathway = array();
 			$lang_home = lang('home');
+			$buildinginfo = array();
+			$building_fields = array('city', 'deactivate_application', 'deactivate_calendar',
+				'email', 'homepage', 'name', 'opening_hours', 'phone', 'street', 'zip_code');
 			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
+				$building_link = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
 				$pathway[] = array(
 					'lang_home' => $lang_home,
 					'building_name' => $building['name'],
 					'building_name' => $building['name'],
-					'building_link' => self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $building['id'])),
+					'building_link' => $building_link,
 					'resource_name' => $resource['name'],
 				);
+				foreach ($building_fields as $field)
+				{
+					$buildinginfo[$field] = $building[$field];
+				}
+				$buildinginfo['link'] = $building_link;
+			}
+			if (empty($resource['opening_hours']))
+			{
+				$resource['opening_hours'] = $buildinginfo['opening_hours'];
+			}
+			if (empty($resource['contact_info']))
+			{
+				$contactdata = array();
+				foreach (array('homepage','email','phone') as $field)
+				{
+					if (!empty(trim($buildinginfo[$field])))
+					{
+						$value = trim($buildinginfo[$field]);
+						if ($field == 'homepage')
+						{
+							if (!preg_match("/^(http|https):\/\//",$value))
+							{
+								$value = 'http://' . $value;
+							}
+							$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
+						}
+						$contactdata[] = sprintf('%s: %s', lang($field), $value);
+					}
+				}
+				if (!empty($contactdata))
+				{
+					$resource['contact_info'] = sprintf('<p>%s</p>', join('<br/>',$contactdata));
+				}
 			}
 
 //			$resource['building']		 = ExecMethod('booking.bobuilding.read_single', $resource['building_id']);
@@ -76,7 +116,9 @@
 					'id' => $resource['id']));
 			$data = array(
 				'resource' => $resource,
-				'pathway' => $pathway
+				'building' => $buildinginfo,
+				'pathway' => $pathway,
+				'config_data' => $config->config_data
 			);
 
 			self::render_template_xsl('resource', $data);

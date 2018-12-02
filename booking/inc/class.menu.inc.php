@@ -249,10 +249,22 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index',
 								'appname' => 'booking'))
 						),
+						'rescategory' => array
+							(
+							'text' => lang('Resource categories'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uirescategory.index',
+								'appname' => 'booking'))
+						),
 						'activity' => array
 							(
 							'text' => lang('Activity'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index',
+								'appname' => 'booking'))
+						),
+						'facility' => array
+							(
+							'text' => lang('Facilities'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uifacility.index',
 								'appname' => 'booking'))
 						),
 						'custom_fields_example' => array
@@ -376,10 +388,22 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
 							'acl_app' => 'booking'))
 					),
+					'rescategory' => array
+						(
+						'text' => lang('Resource categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uirescategory.index',
+							'appname' => 'booking'))
+					),
 					'activity' => array
 						(
 						'text' => lang('Activity'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index',
+							'appname' => 'booking'))
+					),
+					'facility' => array
+						(
+						'text' => lang('Facilities'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uifacility.index',
 							'appname' => 'booking'))
 					),
 					'audience' => array

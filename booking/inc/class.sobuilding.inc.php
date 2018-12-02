@@ -12,6 +12,7 @@
 				'homepage' => array('type' => 'string'),
 				'calendar_text' => array('type' => 'string'),
 				'description' => array('type' => 'string'),
+				'opening_hours' => array('type' => 'string'),
 				'phone' => array('type' => 'string'),
 				'email' => array('type' => 'string'),
 				'tilsyn_name' => array('type' => 'string'),

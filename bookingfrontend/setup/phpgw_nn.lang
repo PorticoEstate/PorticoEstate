@@ -66,7 +66,6 @@ cancelled	bookingfrontend	nn	Avbestilt
 case officer	bookingfrontend	nn	Sakshandsamar
 category	bookingfrontend	nn	Kategori
 choose a date	bookingfrontend	nn	Vel ein dato
-choose a date	bookingfrontend	nn	Vel ein dato
 choose file	bookingfrontend	nn	Vel fil du vil leggja til
 city	bookingfrontend	nn	Poststad
 click to sort ascending	bookingfrontend	nn	Klikk for å sortere stigande
@@ -433,6 +432,29 @@ User	bookingfrontend	nn	Brukar
 account status	bookingfrontend	nn	konto status
 last login	bookingfrontend	nn	siste innlogging
 last password change	bookingfrontend	nn	siste passordendring
+About the service	bookingfrontend	nn	Om tjenesten
+Activities (2018)	bookingfrontend	nn	Tilrettelagt for
+Add application	bookingfrontend	nn	Legg til søknad
 application add	bookingfrontend	nn	søknad
+Application cart	bookingfrontend	nn	Handlekurv
 back	bookingfrontend	nn	tilbake
+Building information	bookingfrontend	nn	Informasjon om anlegget
+Choose another building	bookingfrontend	nn	Velg annet anlegg
+Choose categories	bookingfrontend	nn	Velg kategorier
+Choose resources	bookingfrontend	nn	Velg lokaler
+Complete applications	bookingfrontend	nn	Fullfør søknad
+Date	bookingfrontend	nn	Dato
+Do you want to delete application?	bookingfrontend	nn	Er du sikker på at du vil slette søknad fra handlekurv?
+footer privacy link	bookingfrontend	nn	Footer: Lenke til personvern
+Information about the event (edit)	bookingfrontend	nn	Informasjon om arrangementet
+more	bookingfrontend	nn	flere
+Part of town (2018)	bookingfrontend	nn	Bydel
+Pictures	bookingfrontend	nn	Bilder
+Place	bookingfrontend	nn	Sted
+Privacy statement	bookingfrontend	nn	Personvern
+Search building, resource, organization	bookingfrontend	nn	Søk anlegg, lokale, organisasjon
+Search results	bookingfrontend	nn	Søkeresultat
+See	bookingfrontend	nn	Se
+Send message to case officer for building	bookingfrontend	nn	Melding til saksbehandler for anlegget
 update results	bookingfrontend	nn	Oppdater søkeresultat
+Used buildings (2018)	bookingfrontend	nn	Anlegg du kan bruke

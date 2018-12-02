@@ -43,12 +43,15 @@
 						'key' => 'id',
 						'column' => 'name'
 					)),
-				'description' => array('type' => 'string', 'query' => true, 'required' => true),
+				'name' => array('type' => 'string', 'query' => true, 'required' => true),
+				'organizer' => array('type' => 'string', 'query' => true, 'required' => true),
+				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
+				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'contact_name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'contact_email' => array('type' => 'string', 'required' => true, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
-				'contact_phone' => array('type' => 'string'),
+				'contact_phone' => array('type' => 'string', 'required' => true),
 				'case_officer_name' => array('type' => 'string', 'query' => true,
 					'join' => array(
 						'table' => 'phpgw_accounts',
@@ -93,6 +96,7 @@
 				'responsible_street' => array('type' => 'string', 'required' => true),
 				'responsible_zip_code' => array('type' => 'string', 'required' => true),
 				'responsible_city' => array('type' => 'string', 'required' => true),
+				'session_id' => array('type' => 'string', 'required' => false),
 				)
 			);
 		}
@@ -299,6 +303,25 @@
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
 		}
+
+
+		public function delete_application($id)
+		{
+			$db = $this->db;
+			$db->transaction_begin();
+			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
+			foreach ($tablesuffixes as $suffix)
+			{
+				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
+				$sql = "DELETE FROM $table_name WHERE application_id=$id";
+				$db->query($sql, __LINE__, __FILE__);
+			}
+			$table_name = $this->table_name;
+			$sql = "DELETE FROM $table_name WHERE id=$id";
+			$db->query($sql, __LINE__, __FILE__);
+			return	$db->transaction_commit();
+		}
+
 
 		function check_collision( $resources, $from_, $to_ )
 		{

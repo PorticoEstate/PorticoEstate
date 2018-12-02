@@ -296,8 +296,9 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
+			$organization['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 					'id' => $id));
+			$organization['cancel_link'] = $organization['organization_link'];
 			$organization['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 

@@ -69,6 +69,7 @@
 			{
 
 				$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'int')));
+				$original_from = $allocation['from_'];
 				$organization = $this->organization_bo->read_single($allocation['organization_id']);
 				$errors = array();
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -115,13 +116,13 @@
 					$system_message['message'] = $system_message['message'] . "<br /><br />" . lang('To cancel allocation use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $system_message['building_id']));
+					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				}
 
 				$this->flash_form_errors($errors);
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $allocation['building_id']));
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
@@ -141,6 +142,7 @@
 				$repeat_until = phpgw::get_var('repeat_until', 'string');
 				$field_interval = phpgw::get_var('field_interval', 'int');
 				$allocation = $this->bo->read_single($id);
+				$original_from = $allocation['from_'];
 				$organization = $this->organization_bo->read_single($allocation['organization_id']);
 				$season = $this->season_bo->read_single($allocation['season_id']);
 				$step = phpgw::get_var('step', 'string', 'REQUEST', 1);
@@ -209,8 +211,8 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->bo->so->delete_allocation($id);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-								'id' => $allocation['building_id']));
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
 					}
 					else
@@ -304,8 +306,8 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-								'id' => $allocation['building_id']));
+							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
 					}
 				}
@@ -314,8 +316,8 @@
 
 				$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 #				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show', 'id' => $allocation['id']));
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $allocation['building_id'], 'date' => $allocation['from_']));
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				$allocation['application_link'] = self::link(array('menuaction' => 'bookingfrontend.uiapplication.show',
 						'id' => $allocation['application_id']));
 
@@ -397,7 +399,15 @@
 						'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
 						'resource' => $allocation['resource']));
 			}
-			$allocation['when'] = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			$interval = (new DateTime($allocation['from_']))->diff(new DateTime($allocation['to_']));
+			$when = "";
+			if($interval->days > 0) {
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			} else {
+				$end = new DateTime($allocation['to_']);				
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . $end->format('H:i');
+			}			
+			$allocation['when'] = $when;
 			self::render_template_xsl('allocation_info', array('allocation' => $allocation,
 				'user_can_delete_allocations' => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome

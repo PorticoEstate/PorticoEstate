@@ -963,7 +963,7 @@ function createTable(d, u, c, r, cl, l)
 	}
 
 	r = (r) ? r : 'data';
-	var tableClass = (cl) ? cl : "pure-table pure-table-striped";
+	var tableClass = (cl) ? cl : "table";
 
 	xTable.setAttribute('class', tableClass);
 

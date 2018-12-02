@@ -101,17 +101,49 @@
 								</select>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_name">
+									<xsl:value-of select="php:function('lang', 'Event name')" />
+								</label>
+								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="event/name"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_organizer">
+									<xsl:value-of select="php:function('lang', 'Organizer')" />
+								</label>
+								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="event/organizer"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_homepage">
+									<xsl:value-of select="php:function('lang', 'Homepage')" />
+								</label>
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="value">
+										<xsl:value-of select="event/homepage"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_description">
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a description')" />
-									</xsl:attribute>
 									<xsl:value-of select="event/description"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_equipment">
+									<xsl:value-of select="php:function('lang', 'Equipment (2018)')" />
+								</label>
+								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="equipment">
+									<xsl:value-of select="event/equipment"/>
 								</textarea>
 							</div>
 							<div class="pure-control-group">
@@ -132,6 +164,12 @@
 										<xsl:value-of select="php:function('lang', 'Private event')"/>
 									</option>
 								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Include in event list')"/>
+								</label>
+								<xsl:copy-of select="phpgw:option_checkbox(event/include_in_list, 'include_in_list')"/>
 							</div>
 						</div>
 					</div>

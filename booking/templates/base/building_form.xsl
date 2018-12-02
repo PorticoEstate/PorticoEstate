@@ -262,6 +262,16 @@
 						</textarea>
 					</div>
 				</div>
+				<div class="pure-control-group">
+					<label for="field_opening_hours">
+						<xsl:value-of select="php:function('lang', 'Opening hours')" />
+					</label>
+					<div class="custom-container">
+						<textarea id="field_opening_hours" name="opening_hours" type="text" class="pure-input-1-2" >
+							<xsl:value-of select="building/opening_hours"/>
+						</textarea>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="form-buttons">

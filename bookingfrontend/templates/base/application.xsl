@@ -17,524 +17,300 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
-	<div class="content">
-		<ul class="pathway">
-			<li>
-				<a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="application/applications_link"/>
-					</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Applications')" />
-				</a>
-			</li>
-			<li>#<xsl:value-of select="application/id"/></li>
-			<li>
-				<xsl:if test="frontend and application/status='ACCEPTED'">
-					<form method="POST">
-						<input type="hidden" name="print" value="ACCEPTED"/>
-						<input type="submit" value="{php:function('lang', 'Print as PDF')}" />
-					</form>
-				</xsl:if>
-			</li>
-		</ul>
-
-		<xsl:call-template name="msgbox"/>
-        
-		<div class="pure-g">
-			<div class="pure-u-1">
-				<xsl:if test="not(frontend)">
-					<div style="border: 3px solid red; padding: 3px 4px 3px 4px">
-						<xsl:choose>
-							<xsl:when test="not(application/case_officer)">
-								<xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
-								<xsl:text> </xsl:text>
-								<a href="#assign">
-									<xsl:value-of select="php:function('lang', 'assign yourself')"/>
-								</a>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-							</xsl:when>
-							<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
-								<xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>'<xsl:text> </xsl:text>
-								<xsl:value-of select="application/case_officer/name"/>'.
-								<br/>
-								<xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
-								<xsl:text> </xsl:text>
-								<a href="#assign">
-									<xsl:value-of select="php:function('lang', 'assign yourself')"/>
-								</a>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="style">display:none</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</xsl:if>
-
-				<xsl:if test="not(frontend)">
-					<dl class="proplist-col">
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Status')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="php:function('lang', string(application/status))"/>
-						</dd>
-					</dl>
-					<dl class="proplist-col">
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Created')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="php:function('pretty_timestamp', application/created)"/>
-						</dd>
-					</dl>
-					<dl class="proplist-col">
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Modified')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="php:function('pretty_timestamp', application/modified)"/>
-						</dd>
-					</dl>
-				</xsl:if>
-				<xsl:if test="frontend">
-					<dl class="proplist">
-						<span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span>
-						<span class="text">, opprettet <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>, sist endret <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
-						<span class="text">
-							<br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span>
-					</dl>
-				</xsl:if>
-
-				<dl class="proplist">
-					<dt class="heading">
-						<xsl:value-of select="php:function('lang', 'Add a comment')" />
-					</dt>
-					<dd>
-						<form method="POST">
-							<textarea name="comment" style="width: 60%; height: 7em"></textarea>
-							<br/>
-							<input type="submit" value="{php:function('lang', 'Add comment')}" />
-						</form>
-					</dd>
-				</dl>
+	<div id="application-show-content" class="margin-top-content">
+        <div class="container wrapper">
+			<div class="location">
+					<span>
+						<a><xsl:attribute name="href">
+								<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Home')" />
+						</a>
+					</span>
+					<span>
+						#<xsl:value-of select="application/id"/>
+					</span>															
 			</div>
-		</div>
 
-		<div class="pure-g">
-			<div class="pure-u-1">
-				<dl class="proplist">
-					<dt class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
-					<xsl:for-each select="application/comments[author]">
-						<dt>
-							<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-						</dt>
-						<xsl:choose>
-							<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
-								<dd>
-									<xsl:value-of select="comment" disable-output-escaping="yes"/>
-								</dd>
-							</xsl:when>
-							<xsl:otherwise>
-								<dd>
-									<div style="width: 80%;">
-										<xsl:value-of select="comment" disable-output-escaping="yes"/>
-									</div>
-								</dd>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</dl>
-			</div>
-			<div class="pure-u-1">
-				<dl class="proplist">
-					<dt class="heading">
-						1.1 <xsl:value-of select="php:function('lang', 'attachments')" />
-					</dt>
-					<dd>
-						<div id="attachments_container"/>
-					</dd>
-					<dd>
-						<form method="POST" enctype='multipart/form-data' id='file_form'>
-							<input name="name" id='field_name' type='file' >
-								<xsl:attribute name='title'>
-									<xsl:value-of select="document/name"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation">
-									<xsl:text>mime size</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-allowing">
-									<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-max-size">
-									<xsl:text>2M</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-								</xsl:attribute>
-							</input>
-							<br/>
-							<input type="submit" value="{php:function('lang', 'Add attachment')}" />
-						</form>
-					</dd>
-				</dl>
-			</div>
-		</div>
-
-		<div class="pure-g">
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="proplist">
-					<dt class="heading">2. <xsl:value-of select="php:function('lang', 'Why?')" /></dt>
-					<dt>
-						<xsl:value-of select="php:function('lang', 'Activity')" />
-					</dt>
-					<dd>
-						<xsl:value-of select="application/activity_name"/>
-					</dd>
-					<dt>
-						<xsl:value-of select="php:function('lang', 'Information about the event')" />
-					</dt>
-					<dd>
-						<div style="width: 80%;">
-							<xsl:value-of disable-output-escaping="yes" select="application/description"/>
-						</div>
-					</dd>
-				</dl>
-			</div>
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="proplist-col">
-					<dt class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></dt>
-					<dt>
-						<xsl:value-of select="php:function('lang', 'Building')" />
-					</dt>
-					<dd>
-						<xsl:value-of select="application/building_name"/>
-						(<a href="javascript: void(0)"
-							onclick="window.open('{application/schedule_link}',
-                                 '', 
-                                   'width=1048, height=600, scrollbars=yes');
-                                      return false;">
-							<xsl:value-of select="php:function('lang', 'Building schedule')" />
-						</a>)</dd>
-					<dd>
-						<div id="resources_container"/>
-					</dd>
-				</dl>
-			</div>
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="proplist-col">
-					<dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
-					<script type="text/javascript">
-						var allocationParams = {};
-						var bookingParams = {};
-						var eventParams = {};
-					</script>
-					<xsl:for-each select="application/dates">
-						<dd>
-							<span style="font-weight:bold;">
-								<xsl:value-of select="php:function('lang', 'From')" />: &nbsp;</span>
-							<span>
-								<xsl:value-of select="php:function('pretty_timestamp', from_)"/>
-							</span>
-						</dd>
-						<dd>
-							<span style="font-weight:bold;">
-								<xsl:value-of select="php:function('lang', 'To')" />: &nbsp;</span>
-							<span>
-								<xsl:value-of select="php:function('pretty_timestamp', to_)"/>
-							</span>
-						</dd>
-						<xsl:if test="../edit_link">
-							<script type="text/javascript">
-								allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
-								bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
-								eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
-								var allocationaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uiallocation.add'});
-								var bookingaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uibooking.add'});
-								var eventaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uievent.add'});
-							</script>
-							<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl(allocationaddURL, allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl(bookingaddURL, eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl(eventaddURL, eventParams[{id}]);">
-								<xsl:if test="not(../case_officer/is_current_user)">
-									<xsl:attribute name="disabled">disabled</xsl:attribute>
-								</xsl:if>
-
-								<option>
-									<xsl:value-of select="php:function('lang', '- Actions -')" />
-								</option>
-								<option>
-									<xsl:value-of select="php:function('lang', 'Create allocation')" />
-								</option>
-								<option>
-									<xsl:value-of select="php:function('lang', 'Create booking')" />
-								</option>
-								<option>
-									<xsl:value-of select="php:function('lang', 'Create event')" />
-								</option>
-							</select>
+			<div class="row">
+				<div class="col">
+					<!--
+					<div class="mb-4 float-right">
+						<xsl:if test="frontend and application/status='ACCEPTED'">
+							<form method="POST">
+								<input type="hidden" name="print" value="ACCEPTED"/>
+								<button class="btn btn-light" type="submit"><xsl:value-of select="php:function('lang', 'Print as PDF')"/></button>
+							</form>
 						</xsl:if>
-					</xsl:for-each>
-				</dl>
-			</div>
-		</div>
+					</div>
+					-->
+					<xsl:call-template name="msgbox"/>
 
-		<div class="pure-g">
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="proplist-col">
-					<dt class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></dt>
-					<dt>
-						<xsl:value-of select="php:function('lang', 'Target audience')" />
-					</dt>
-					<dd>
-						<ul>
-							<xsl:for-each select="audience">
-								<xsl:if test="../application/audience=id">
-									<li>
-										<xsl:value-of select="name"/>
-									</li>
-								</xsl:if>
-							</xsl:for-each>
-						</ul>
-					</dd>
-					<dt>
-						<xsl:value-of select="php:function('lang', 'Number of participants')" />
-					</dt>
-					<dd>
-						<table id="agegroup" class="pure-table pure-table-bordered">
-							<thead>
-								<tr>
-									<th/>
-									<th>
-										<xsl:value-of select="php:function('lang', 'Male')" />
-									</th>
-									<th>
-										<xsl:value-of select="php:function('lang', 'Female')" />
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								<xsl:for-each select="agegroups">
-									<xsl:variable name="id">
-										<xsl:value-of select="id"/>
-									</xsl:variable>
-									<tr>
-										<th>
-											<xsl:value-of select="name"/>
-										</th>
-										<td>
-											<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-										</td>
-										<td>
-											<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-										</td>
-									</tr>
-								</xsl:for-each>
-							</tbody>
-						</table>
-					</dd>
-				</dl>
-			</div>
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="form-col">
-					<div class="heading">6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
-					<dt>
-						<label for="field_contact_name">
-							<xsl:value-of select="php:function('lang', 'Name')" />
-						</label>
-					</dt>
-					<dd>
-						<xsl:value-of select="application/contact_name"/>
-					</dd>
-					<dt>
-						<label for="field_contact_email">
-							<xsl:value-of select="php:function('lang', 'Email')" />
-						</label>
-					</dt>
-					<dd>
-						<xsl:value-of select="application/contact_email"/>
-					</dd>
-					<dt>
-						<label for="field_contact_phone">
-							<xsl:value-of select="php:function('lang', 'Phone')" />
-						</label>
-					</dt>
-					<dd>
-						<xsl:value-of select="application/contact_phone"/>
-					</dd>
-				</dl>
-			</div>
-			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
-				<dl class="form-col">
-					<div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
-					<xsl:if test="application/customer_identifier_type = 'organization_number'">
-						<dt>
-							<label for="field_organization_number">
-								<xsl:value-of select="php:function('lang', 'organization number')" />
-							</label>
-						</dt>
-						<dd>
-							<xsl:value-of select="application/customer_organization_number"/>
-						</dd>
+					<xsl:if test="frontend">
+						<dl>
+							<span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span>
+							<span class="text">, opprettet <xsl:value-of select="php:function('pretty_timestamp', application/created)"/>, sist endret <xsl:value-of select="php:function('pretty_timestamp', application/modified)"/></span>
+							<span class="text">
+								<br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span>
+						</dl>
 					</xsl:if>
-					<xsl:if test="application/customer_identifier_type = 'ssn'">
+				</div>
+
+				<div class="col-12">
+							<div class="form-group">
+								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Add a comment')" /></label>
+								<form method="POST">
+									<textarea name="comment" class="form-control" style="width: 60%; height: 7em"></textarea>
+									<br/>
+									<input type="submit" class="btn btn-light" value="{php:function('lang', 'Add comment')}" />
+								</form>
+							</div>
+				</div>
+
+				<div class="col-12 mt-4">
+					<dl>
+						<dt><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+						<xsl:for-each select="application/comments[author]">
+							<dt>
+								<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+							</dt>
+							<xsl:choose>
+								<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
+									<dd>
+										<xsl:value-of select="comment" disable-output-escaping="yes"/>
+									</dd>
+								</xsl:when>
+								<xsl:otherwise>
+									<dd>
+										<div style="width: 80%;">
+											<xsl:value-of select="comment" disable-output-escaping="yes"/>
+										</div>
+									</dd>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</dl>
+				</div>
+
+				<div class="col-12 mt-4">
+					<dl>
 						<dt>
-							<label for="field_ssn_number">
-								<xsl:value-of select="php:function('lang', 'SSN')" />
-							</label>
+							<xsl:value-of select="php:function('lang', 'attachments')" />
 						</dt>
 						<dd>
-							<xsl:value-of select="application/customer_ssn"/>
+							<div id="attachments_container"/>
+						</dd>
+						<dd>
+							<form method="POST" enctype='multipart/form-data' id='file_form'>
+								<input name="name" id='field_name' type='file' >
+									<xsl:attribute name='title'>
+										<xsl:value-of select="document/name"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>mime size</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-allowing">
+										<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-max-size">
+										<xsl:text>2M</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+									</xsl:attribute>
+								</input>
+								<br/>
+								<input type="submit" class="btn btn-light mt-4" value="{php:function('lang', 'Add attachment')}" />
+							</form>
+						</dd>
+					</dl>
+				</div>
+
+				<div class="col-12 mt-4">
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></h5>
+					<dl>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Building (2018)')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/building_name"/>
+						</dd>
+						<dd>
+							<div id="resources_container"/>
+						</dd>
+						<xsl:for-each select="application/dates">
+							<dd>
+								<span style="font-weight:bold;">
+									<xsl:value-of select="php:function('lang', 'From')" />: &nbsp;</span>
+								<span>
+									<xsl:value-of select="php:function('pretty_timestamp', from_)"/>
+								</span>
+							</dd>
+							<dd>
+								<span style="font-weight:bold;">
+									<xsl:value-of select="php:function('lang', 'To')" />: &nbsp;</span>
+								<span>
+									<xsl:value-of select="php:function('pretty_timestamp', to_)"/>
+								</span>
+							</dd>
+						</xsl:for-each>
+					</dl>
+				</div>
+
+				<div class="col-12 mt-4">
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Information about the event')" /></h5>
+					<dl>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Target audience')" />
+						</dt>
+						<dd>
+								<xsl:for-each select="audience">
+									<xsl:if test="../application/audience=id">
+											<xsl:value-of select="name"/>
+									</xsl:if>
+								</xsl:for-each>
 						</dd>
 						<dt>
-							<label for="field_street">
-								<xsl:value-of select="php:function('lang', 'Street')"/>
-							</label>
+							<xsl:value-of select="php:function('lang', 'Event name')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/name"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Organizer')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/organizer"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/homepage"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'description')" />
+						</dt>
+						<dd>
+							<xsl:value-of disable-output-escaping="yes" select="application/description"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="config/application_equipment"/>
+						</dt>
+						<dd>
+							<xsl:value-of disable-output-escaping="yes" select="application/equipment"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Number of participants')" />
+						</dt>
+						<dd>
+							<table id="agegroup">
+								<thead>
+									<tr>
+										<th/>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Male')" />
+										</th>
+										<th>
+											<xsl:value-of select="php:function('lang', 'Female')" />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<xsl:for-each select="agegroups">
+										<xsl:variable name="id">
+											<xsl:value-of select="id"/>
+										</xsl:variable>
+										<tr>
+											<th>
+												<xsl:value-of select="name"/>
+											</th>
+											<td>
+												<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+											</td>
+											<td>
+												<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</tbody>
+							</table>
+						</dd>
+					</dl>
+				</div>
+
+				<div class="col-12 mt-4">
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Contact and invoice information')" /></h5>
+					<dl>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Name')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/contact_name"/>
+						</dd>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'street')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="application/responsible_street"/>
-
 						</dd>
 						<dt>
-							<label for="field_zip_code">
-								<xsl:value-of select="php:function('lang', 'Zip code')"/>
-							</label>
+							<xsl:value-of select="php:function('lang', 'zip code')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="application/responsible_zip_code"/>
 						</dd>
 						<dt>
-							<label for="field_responsible_city">
-								<xsl:value-of select="php:function('lang', 'Postal City')"/>
-							</label>
+							<xsl:value-of select="php:function('lang', 'postal city')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="application/responsible_city"/>
 						</dd>
-
-					</xsl:if>
-				</dl>
-			</div>
-		</div>
-
-		<div class="pure-g">
-			<div class="pure-u-1">
-				<dl class="form-col">
-					<div class="heading">
-						<br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" />
-					</div>
-						<xsl:if test="config/application_terms">
-							<p>
-								<xsl:value-of select="config/application_terms"/>
-							</p>
-						</xsl:if>
-					<br />
-					<div id='regulation_documents'>&nbsp;</div>
-					<br />
-					<p>
-						<xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" />
-					</p>
-				</dl>
-			</div>
-		</div>
-
-		<xsl:if test="application/edit_link">
-			<button>
-				<xsl:if test="application/case_officer/is_current_user">
-					<xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="not(application/case_officer/is_current_user)">
-					<xsl:attribute name="disabled">disabled</xsl:attribute>
-				</xsl:if>
-				<xsl:value-of select="php:function('lang', 'Edit')" />
-			</button>
-		</xsl:if>
-		<xsl:if test="not(frontend)">
-			<div class="pure-g">
-				<div class="pure-u-1">
-					<dl class="proplist">
-						<dt class="heading">
-							<xsl:value-of select="php:function('lang', 'Associated items')" />
+						<dt>
+							<xsl:value-of select="php:function('lang', 'Email')" />
 						</dt>
 						<dd>
-							<div id="associated_container"/>
+							<xsl:value-of select="application/contact_email"/>
 						</dd>
+						<dt>
+								<xsl:value-of select="php:function('lang', 'Phone')" />
+						</dt>
+						<dd>
+							<xsl:value-of select="application/contact_phone"/>
+						</dd>
+						<xsl:if test="application/customer_identifier_type = 'organization_number'">
+							<dt>
+									<xsl:value-of select="php:function('lang', 'organization number')" />
+							</dt>
+							<dd>
+								<xsl:value-of select="application/customer_organization_number"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="application/customer_identifier_type = 'ssn'">
+							<dt>
+									<xsl:value-of select="php:function('lang', 'SSN')" />
+							</dt>
+							<dd>
+								<xsl:value-of select="application/customer_ssn"/>
+							</dd>
+						</xsl:if>
 					</dl>
 				</div>
+
+				<div class="col-12 mt-4">
+					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h5>
+					<dl>
+						<div id='regulation_documents'>&nbsp;</div>
+						<br />
+						<p>
+							<xsl:value-of select="php:function('lang', 'To borrow premises you must verify that you have read terms and conditions')" />
+						</p>
+					</dl>
+				</div>
+
+				
 			</div>
-		</xsl:if>
-
-		<xsl:if test="application/edit_link">
-			<dl class="proplist">
-				<dt class="heading">
-					<xsl:value-of select="php:function('lang', 'Actions')" />
-				</dt>
-				<dt>
-					<xsl:if test="application/case_officer/is_current_user">
-						<form method="POST" style="display:inline">
-							<input type="hidden" name="unassign_user"/>
-							<input type="submit" value="{php:function('lang', 'Unassign me')}"/>
-						</form>
-						<form method="POST" style="display:inline">
-							<input type="hidden" name="display_in_dashboard" value="{phpgw:conditional(application/display_in_dashboard='1', '0', '1')}"/>
-							<input type="submit" value="{php:function('lang', phpgw:conditional(application/display_in_dashboard='1', 'Hide from my Dashboard until new activity occurs', 'Display in my Dashboard'))}"/>
-						</form>
-					</xsl:if>
-
-					<xsl:if test="not(application/case_officer/is_current_user)">
-						<a name="assign"/>
-						<form method="POST">
-							<input type="hidden" name="assign_to_user"/>
-							<input type="hidden" name="status" value="PENDING"/>
-							<input type="submit" value="{php:function('lang', phpgw:conditional(application/case_officer, 'Re-assign to me', 'Assign to me'))}"/>
-
-							<xsl:if test="application/case_officer">
-								<xsl:value-of select="php:function('lang', 'Currently assigned to user:')"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="application/case_officer/name"/>
-							</xsl:if>
-						</form>
-					</xsl:if>
-				</dt>
-
-				<xsl:if test="application/status!='REJECTED'">
-					<dt>
-						<form method="POST">
-							<input type="hidden" name="status" value="REJECTED"/>
-							<input onclick="return confirm('{php:function('lang', 'Are you sure you want to delete?')}')" type="submit" value="{php:function('lang', 'Reject application')}">
-								<xsl:if test="not(application/case_officer)">
-									<xsl:attribute name="disabled">disabled</xsl:attribute>
-								</xsl:if>
-							</input>
-						</form>
-					</dt>
-				</xsl:if>
-				<xsl:if test="application/status='PENDING'">
-					<xsl:if test="num_associations='0'">
-						<input type="submit" disabled="" value="{php:function('lang', 'Accept application')}"/>
-						<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
-					</xsl:if>
-					<xsl:if test="num_associations!='0'">
-						<dt>
-							<form method="POST">
-								<input type="hidden" name="status" value="ACCEPTED"/>
-								<input type="submit" value="{php:function('lang', 'Accept application')}">
-									<xsl:if test="not(application/case_officer)">
-										<xsl:attribute name="disabled">disabled</xsl:attribute>
-									</xsl:if>
-								</input>
-							</form>
-						</dt>
-					</xsl:if>
-				</xsl:if>
-				<dd>
-					<br/>
-					<a href="{application/dashboard_link}">
-						<xsl:value-of select="php:function('lang', 'Back to Dashboard')" />
-					</a>
-				</dd>
-			</dl>
-		</xsl:if>
+		</div>
 	</div>
 
 	<script type="text/javascript">
@@ -542,29 +318,21 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resources Type', 'ID', 'Type', 'From', 'To', 'Document', 'Name')" />;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources (2018)', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
 
         <![CDATA[
             var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
-            var applicationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiapplication.associated', filter_application_id:app_id}, true);
             var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id}, true);
         ]]>
 
 		if (resourceIds) {
-		var colDefsResource = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+		var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
 		createTable('resources_container', resourcesURL, colDefsResource, 'results');
-		var colDefsApplication = [
-		{key: 'id', label: lang['ID'], formatter: genericLink},
-		{key: 'type', label: lang['Type']},
-		{key: 'from_', label: lang['From']},
-		{key: 'to_', label: lang['To']}
-		];
-		createTable('associated_container', applicationURL, colDefsApplication);
 		}
 
 		var colDefsDocument = [{key: 'name', label: lang['Document'], formatter: genericLink}];

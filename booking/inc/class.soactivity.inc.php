@@ -96,4 +96,25 @@
 			}
 			return $this->activity_tree;
 		}
+
+
+		/*
+		 * Gets data on activities which are children of the given parent. Note that there is only one level of
+		 * activities being fetched, ie. any children of a child activity are ignored and are not part of the return
+		 * list
+		 */
+		public function get_children_detailed($parent)
+		{
+			$activitylist = array();
+			$parent = (int)$parent;
+			$sql = "SELECT * FROM bb_activity WHERE parent_id={$parent} ORDER BY name";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$id = $this->db->f('id');
+				$activitylist[$id] = array('id' => $id, 'name' => $this->db->f('name'), 'active' => $this->db->f('active'));
+			}
+			return $activitylist;
+		}
+
 	}

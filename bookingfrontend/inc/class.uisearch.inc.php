@@ -6,8 +6,12 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true
+			'autocomplete'      => true,
+			'events'            => true,
+			'get_filterboxdata' => true,
+			'index'             => true,
+			'query'             => true,
+			'resquery'          => true,
 		);
 
 		function __construct()
@@ -39,13 +43,22 @@
 			$criteria = phpgw::get_var('criteria');
 //			_debug_array($criteria);die();
 
+			if ($config->config_data['frontpagetitle'] != '')
+			{
+				$frontpagetitle = $config->config_data['frontpagetitle'];
+			}
+			else
+			{
+				$frontpagetitle = 'Aktiv kommune';
+			}
+
 			if ($config->config_data['frontpagetext'] != '')
 			{
 				$frontpagetext = $config->config_data['frontpagetext'];
 			}
 			else
 			{
-				$frontpagetext = 'Velkommen til AktivBy.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
+				$frontpagetext = 'Velkommen til Aktiv kommune.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
 			}
 
 			if ($config->config_data['frontimagetext'] != '')
@@ -57,9 +70,20 @@
 				$frontimagetext = '<h2>Din portal til</h2><h1><b>AKTIVITETER OG LOKALER</b></h1><h2>Nært deg.</h2>';
 			}
 
+			if ($config->config_data['frontpage_filterboxtitle'] != '')
+			{
+				$filterboxtitle = $config->config_data['frontpage_filterboxtitle'];
+			}
+			else
+			{
+				$filterboxtitle = lang('Choose categories');
+			}
+
 			$params = array(
 				'baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}",
+				'filterboxtitle' => $filterboxtitle,
 				'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg",
+				'frontpagetitle' => $frontpagetitle,
 				'frontpagetext' => $frontpagetext,
 				'frontimagetext' => $frontimagetext,
 				'activity_top_level' => $activity_top_level
@@ -207,4 +231,51 @@
 			}
 			self::render_template_xsl('search_details', $data);
 		}
+
+
+		function resquery()
+		{
+			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
+			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', null);
+			$fields_multiids = array('facility_id', 'part_of_town_id');
+			$multiids = array();
+			foreach ($fields_multiids as $field)
+			{
+				$_ids = explode(',', phpgw::get_var($field, 'string', 'REQUEST', null));
+				$ids = array();
+				foreach ($_ids as $id)
+				{
+					if (ctype_digit($id))
+					{
+						$ids[] = (int)$id;
+					}
+				}
+				$multiids[$field] = array_unique($ids);
+			}
+			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $activity_id,
+				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id']));
+		}
+
+
+		function events()
+		{
+			return $this->bo->events();
+		}
+
+
+		function get_filterboxdata()
+		{
+			return $this->bo->get_filterboxdata();
+		}
+
+
+		function autocomplete()
+		{
+			self::link(array(
+				'menuaction' => 'bookingfrontend.uisearch.autocomplete',
+					'phpgw_return_as' => 'json'));
+			echo json_encode($this->bo->getAutoCompleteData());
+			exit();
+		}
+
 	}

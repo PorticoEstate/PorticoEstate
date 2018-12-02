@@ -45,6 +45,7 @@
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'calendar_text' => array('type' => 'text', 'nullable' => True),
+				'opening_hours' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -125,12 +126,42 @@
 				'sort' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				'organizations_ids' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
+				'rescategory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'opening_hours' => array('type' => 'text', 'nullable' => True),
+				'contact_info' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_activity' => array('activity_id' => 'id')),
+				'bb_activity' => array('activity_id' => 'id'),
+				'bb_rescategory' => array('rescategory_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'bb_resource_activity' => array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'activity_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_resource_facility' => array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'facility_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'facility_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_facility' => array('facility_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
 		),
 		'bb_building_resource' => array(
 			'fd' => array(
@@ -228,7 +259,10 @@
 				'building_name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False,
 					'default' => 'changeme'),
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'description' => array('type' => 'text', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'organizer' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'homepage' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'description' => array('type' => 'text', 'nullable' => True),
 				'equipment' => array('type' => 'text', 'nullable' => True),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
 				'contact_email' => array('type' => 'text', 'nullable' => False),
@@ -246,6 +280,7 @@
 				'responsible_street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'responsible_zip_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => True),
 				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'session_id' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -652,7 +687,11 @@
 					'default' => '0'),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
 				'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
-				'description' => array('type' => 'text', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'organizer' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'homepage' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'description' => array('type' => 'text', 'nullable' => True),
+				'equipment' => array('type' => 'text', 'nullable' => True),
 				'from_' => array('type' => 'timestamp', 'nullable' => False),
 				'to_' => array('type' => 'timestamp', 'nullable' => False),
 				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,
@@ -679,7 +718,8 @@
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'customer_internal' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
 					'default' => '1'),
-				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'include_in_list' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -975,5 +1015,40 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'bb_rescategory' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_rescategory_activity' => array(
+			'fd' => array(
+				'rescategory_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('rescategory_id', 'activity_id'),
+			'fk' => array(
+				'bb_rescategory' => array('rescategory_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_facility' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
 	);

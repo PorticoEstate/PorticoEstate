@@ -67,7 +67,6 @@ cancelled	bookingfrontend	no	Avbestilt
 case officer	bookingfrontend	no	Saksbehandler
 category	bookingfrontend	no	Kategori
 choose a date	bookingfrontend	no	Velg dato
-choose a date	bookingfrontend	no	Velg en dato
 choose file	bookingfrontend	no	Velg dokument
 city	bookingfrontend	no	Poststed
 click to sort ascending	bookingfrontend	no	Klikk for å sortere stigende
@@ -429,5 +428,28 @@ url to external logout	bookingfrontend	no	Url for ekstern logg ut
 Redirect is computed if url ends with	bookingfrontend	no	Omdirigering blir kalkulert hvis url slutter med
 bookingfrontend host	bookingfrontend	no	Bookingfrontend vert
 Needed for the return from the external logout	bookingfrontend	no	Nødvendig for retur fra ekstern logg ut
+About the service	bookingfrontend	no	Om tjenesten
+Activities (2018)	bookingfrontend	no	Tilrettelagt for
+Add application	bookingfrontend	no	Legg til søknad
+Application cart	bookingfrontend	no	Handlekurv
+Building information	bookingfrontend	no	Informasjon om anlegget
+Choose another building	bookingfrontend	no	Velg annet anlegg
+Choose categories	bookingfrontend	no	Velg kategorier
+Choose resources	bookingfrontend	no	Velg lokaler
+Complete applications	bookingfrontend	no	Fullfør søknad
+Date	bookingfrontend	no	Dato
+Do you want to delete application?	bookingfrontend	no	Er du sikker på at du vil slette søknad fra handlekurv?
+footer privacy link	bookingfrontend	no	Footer: Lenke til personvern
+Information about the event (edit)	bookingfrontend	no	Informasjon om arrangementet
 metadata settings	bookingfrontend	no	Metadata innstillinger
+more	bookingfrontend	no	flere
+Part of town (2018)	bookingfrontend	no	Bydel
+Pictures	bookingfrontend	no	Bilder
+Place	bookingfrontend	no	Sted
+Privacy statement	bookingfrontend	no	Personvern
+Search building, resource, organization	bookingfrontend	no	Søk anlegg, lokale, organisasjon
+Search results	bookingfrontend	no	Søkeresultat
+See	bookingfrontend	no	Se
+Send message to case officer for building	bookingfrontend	no	Melding til saksbehandler for anlegget
 update results	bookingfrontend	no	Oppdater resultater
+Used buildings (2018)	bookingfrontend	no	Anlegg som brukes

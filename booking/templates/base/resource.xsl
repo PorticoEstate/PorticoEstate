@@ -24,6 +24,22 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Opening hours')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="resource/opening_hours" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Contact information')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="resource/contact_info" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Building')"/>
 					</label>
 					<div class = 'pure-u-md-1-2'>
@@ -42,16 +58,11 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
-						<xsl:value-of select="php:function('lang', 'Activity')" />
+						<xsl:value-of select="php:function('lang', 'Resource category')"/>
 					</label>
 					<span>
-						<xsl:value-of select="resource/activity_name"/>
+						<xsl:value-of select="resource/rescategory_name"/>
 					</span>
-					<script type="text/javascript">
-						var default_schema = "<xsl:value-of select="resource/activity_name"/>";
-						var schema_type = "view";
-					</script>
-
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -62,6 +73,60 @@
 					</span>
 				</div>
 				<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Main activity')" />
+					</label>
+					<span>
+						<xsl:value-of select="resource/activity_name"/>
+					</span>
+					<script type="text/javascript">
+						var default_schema = "<xsl:value-of select="resource/activity_name"/>";
+						var schema_type = "view";
+					</script>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Activities')"/>
+					</label>
+					<span>
+						<xsl:value-of select="resource/activities_names"/>
+					</span>
+				</div>
+				<xsl:if test="resource/permission/write">
+					<div class="pure-control-group">
+						<label></label>
+					    <span>
+							<a class='button'>
+								<xsl:attribute name="href">
+									<xsl:value-of select="resource/edit_activities_link"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Edit activities')" />
+							</a>
+						</span>
+					</div>
+				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Facilities')"/>
+					</label>
+					<span>
+						<xsl:value-of select="resource/facilities_names"/>
+					</span>
+				</div>
+				<xsl:if test="resource/permission/write">
+					<div class="pure-control-group">
+						<label></label>
+					    <span>
+							<a class='button'>
+								<xsl:attribute name="href">
+									<xsl:value-of select="resource/edit_facilities_link"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Edit facilities')" />
+							</a>
+						</span>
+					</div>
+				</xsl:if>
 				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>
