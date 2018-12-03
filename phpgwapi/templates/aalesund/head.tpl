@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+ <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
 		{metainfo_author}
 		{metainfo_description}
 		{metainfo_keywords}
@@ -16,69 +10,57 @@ and open the template in the editor.
 		<title>{site_title}</title>
 		<link rel="icon" href="{img_icon}" type="image/x-ico">
 		<link rel="shortcut icon" href="{img_icon}">
-
-		<style type="text/css">
-		{css_background}
-		</style>
-
-		<!-- BEGIN stylesheet -->
-		<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
-		<!-- END stylesheet -->
-		<!-- BEGIN javascript -->
+        <!-- BEGIN stylesheet -->
+        <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
+        <!-- END stylesheet -->
+		{css}
+		{javascript}
+    		<!-- BEGIN javascript -->
 		<script type="text/javascript" src="{javascript_uri}"></script>
 		<!-- END javascript -->
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-
-		{css}
-
 		<script type="text/javascript">
 			<!--
 				var strBaseURL = '{str_base_url}';
 			//-->
 		</script>
+                 
+     </head>
+    
+    <body>
+         <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top">
+            <!-- Brand -->
+            
+           <a href="{site_url}"><img class="navbar-brand brand-site-img" src="{headlogoimg}" alt="{logo_title}"/></a>
+                        
+             <a class="navbar-brand brand-site-title" href="{site_url}">{site_title} </a>   
 
-		{javascript}
-		<script type="text/javascript" src="{samplejs}"></script>
-		<script type="text/javascript" src="{bootstrapjs}"></script>
-		<script type="text/javascript" src="{bootstrapmainjs}"></script>
+            <!-- Toggler/collapsibe Button -->
+           <!--     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+              <span class="navbar-toggler-icon"></span>
+            </button> -->
 
-		<script type="text/javascript">
-		<!--
-			{win_on_events}
-			//-->
-		</script>
+            <!-- Navbar links -->
+           <div class="collapse navbar-collapse     grow-left  "    id="collapsibleNavbar"    > 
+                
+               <ul class="   navbar-nav   mac-style   navbar-search   d-none   "   >   
+                  <li class="nav-item"> 
+                     
+                      <form id="navbar-search-form">
+                      <div class="input-group mb-3"> 
+                      <input class="  form-control"   type="text" placeholder="{placeholder_search}"      />
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                          </div>
+                      </div>
+                      </form>            
+                  </li>
+               </ul>    
 
-	</head>
-	<body class="">
-		<nav class="navbar navbar-light navbar-expand-md">
-
-				<div class="container header-container">
-					<button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<a class="navbar-brand" href="{site_url}">
-						<img src="{logoimg}" alt="{logo_title}" style="height: 100px;">
-					</a>
-					<div class="collapse navbar-collapse text-center" id="Navbar">
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item active">
-								<a class="nav-link" href="{site_url}">{home_text}</a>
-							</li>
-   <!--						 <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
-							<li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li> -->
-							<li class="nav-item active">
-								<a class="nav-link" href="{manual_url}">{manual_text}</a>
-							</li>
-							<li class="nav-item active">
-								<a class="nav-link" href="{org_url}">{login_text_org}</a>
-							</li>
-							<li class="nav-item active">
-								<a id="login" class="nav-link" href="{login_url}">{login_text}</a>
-								<span id="change"></span>
-							</li>
-						</ul>
-					</div>
-				</div>
-
-			</nav>
-
+            </div>
+          </nav> 
+                
+         <div class="overlay">
+            <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
+        </div>
+        <div class="container-top-fix"></div><div class="showMe" style="display: none">
