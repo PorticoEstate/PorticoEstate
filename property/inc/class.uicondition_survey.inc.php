@@ -381,15 +381,18 @@
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
+			$sort = phpgw::get_var('sort');
 			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
 			$export = phpgw::get_var('export', 'bool');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'sort' => phpgw::get_var('sort'),
-				'dir' => phpgw::get_var('dir'),
+				'order' => is_array($order) ? $columns[$order[0]['column']]['data'] : $order,
+				'sort' => is_array($order) ? $order[0]['dir'] : $sort,
+				'dir' => is_array($order) ? $order[0]['dir'] : $sort,
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'status_id'=> phpgw::get_var('status_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export

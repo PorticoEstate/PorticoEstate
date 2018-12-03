@@ -47,6 +47,7 @@
 			$filter = isset($data['filter']) ? $data['filter'] : 'none';
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) ? $data['sort'] : '';
+			$order = isset($data['order']) ? $data['order'] : '';
 			$dir = isset($data['dir']) ? $data['dir'] : 'DESC';
 			$cat_id = isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
 			$status_id = isset($data['status_id']) ? (int)$data['status_id'] : 0;
@@ -55,9 +56,9 @@
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$table = 'fm_condition_survey';
-			if ($sort)
+			if ($order)
 			{
-				switch ($sort)
+				switch ($order)
 				{
 					case 'year':
 						$sort = 'entry_date';
@@ -67,9 +68,9 @@
 				}
 
 				$metadata = $this->_db->metadata($table);
-				if (isset($metadata[$sort]))
+				if (isset($metadata[$order]))
 				{
-					$ordermethod = " ORDER BY {$table}.$sort $dir";
+					$ordermethod = " ORDER BY {$table}.$order $dir";
 				}
 			}
 			else
