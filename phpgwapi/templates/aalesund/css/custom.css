@@ -145,7 +145,7 @@ a:hover {
 }
 }
 
-.input-group {
+.mainpageserchcontainer {
       margin-top: 15%;
 
 }
@@ -1625,8 +1625,8 @@ NEW APPLICATION PAGE STYLE
 }
 
 .footer-brand-site-img{
-       width: 150px !important;
-       height: 100px !important;
+       width: 180px !important;
+       height: 88px !important;
 }
 
 @media (max-width: 767px) { 
