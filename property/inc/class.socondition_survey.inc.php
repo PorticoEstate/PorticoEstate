@@ -616,7 +616,10 @@
 				. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
 				. " recommended_year as year"
 				. " FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
-				. " WHERE {$id_filter} AND fm_request_status.closed IS NULL"
+				. " {$this->_join} fm_request_condition ON fm_request_condition.request_id = fm_request.id"
+				. " WHERE {$id_filter}"
+				. " AND fm_request_status.closed IS NULL"
+				. " AND degree > 1"
 				. " GROUP BY condition_survey_id, building_part_ , year ORDER BY building_part_";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
