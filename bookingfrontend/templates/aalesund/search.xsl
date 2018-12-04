@@ -260,7 +260,7 @@
 	<script type="text/javascript">
             
 		var script = document.createElement("script"); 
-		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/aalesund/search.js";
 		document.head.appendChild(script);			
 	</script>
   
