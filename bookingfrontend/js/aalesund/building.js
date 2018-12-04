@@ -1,72 +1,103 @@
 $(".navbar-search").removeClass("d-none");
+var bookableResources = ko.observableArray();
 var events = ko.observableArray();
+var resourceIds = [];
 var date = new Date();
-//var urlParams = new URLSearchParams(window.location.search);
+var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
-CreateUrlParams(window.location.search);
-//var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
-
-$(document).ready(function ()
-{    
-    $(".overlay").show();
+$(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
+function BuildingModel() {
+    var self = this;
+    self.bookableResource = bookableResources;
+    self.items = events;
+}
     
-    PopulateResourceData();
-	if (deactivate_calendar == 0) {
-		PopulateCalendarEvents();
-	}
-     $(document).on('click', '#list-img-thumbs img', function () {
-         $(".main-picture").attr("src", this.src);
-     });
+buildingModel = new BuildingModel();
+ko.applyBindings(buildingModel, document.getElementById("building-page-content")); 
+$(document).ready(function ()
+{
+    //urlParams = new URLSearchParams(window.location.search); //not ie supported
+    $(".overlay").show();
+    CreateUrlParams(window.location.search);
+    if(typeof urlParams['date']  !== "undefined") {
+        date = new Date(urlParams['date']);
+    }    
+    PopulateBuildingData(baseURL, urlParams);
+    PopulateBookableResources(baseURL, urlParams);    
+    
+	$(".calendar-tool").removeClass("invisible");
 
-    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['buildingid'], resource_id:  urlParams['id'] }, false);
-    $(".bookBtnForward").attr("href", bookBtnURL);
+    $(document).on('change', '.choosenResource', function (e) {
+        for(var i=0; i<resourceIds.length; i++) {
+            if($(e.target).text() == resourceIds[i].name) {
+                resourceIds[i].visible = e.target.checked;
+            }
+        }
+        EventsOptionsChanged($(e.target).text(), e.target.checked);   // get the current value of the input field.
+    });    
 
-    $(".goToCal").click(function() {
+    
+    $('.dropdown-menu').on('click', function () {
+        $(this).parent().toggleClass('show');
+    });
+
+	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id'] }, false);
+	$(".bookBtnForward").attr("href", bookBtnURL);
+
+	$(".goToCal").click(function() {
         $('html,body').animate({
             scrollTop: $(".calendar-content").offset().top - 100},
             'slow');
     });
 
-	$(document).on('click', '.tooltip-desc-btn', function () {
-        $(this).find(".tooltip-desc").show();
+    $(document).on('click', '.tooltip-desc-btn', function () {
+        $(this).find(".tooltip-desc").show();    
     });
 
 	$(".overlay").hide();
 });
 
-function PopulateResourceData() {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.index_images", filter_owner_id:urlParams['id']}, true);
-    $.getJSON(getJsonURL, function(result){
-        var mainPictureFound = false;
-        if(result.ResultSet.Result.length > 0) {
-            for(var i=0; i<result.ResultSet.Result.length; i++) {
-                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.ResultSet.Result[i].id, filter_owner_id:urlParams['id']}, false);
-                var imgTag = '<img src="'+src+'"  data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
-                $(".resource-images").append(imgTag);
-                if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
-                    mainPictureFound = true;
-					$("#item-main-picture").attr("src", src);
-				}
-            }               
-        } else {
-			$(".card-img-thumbs").remove();
-		}
-        if(!mainPictureFound) {
-            $(".col-item-img").remove();
-        }
-        
+function tooltipDetails() {
+    var tooltipText = "";
+    var url = $(this).find('.event-id')[0];
+    url = url.getAttribute("data-url");
+
+    $.ajax({
+    url: url,
+    type: 'GET',
+    async: false,
+    success: function(response){
+        tooltipText = response;
+    }
     });
+    
+    return tooltipText;
+}
+
+function HideUncheckResources() {
+    for(var i=0; i<resourceIds.length; i++) {
+        if(resourceIds[i].visible == false) {
+            EventsOptionsChanged(resourceIds[i].name, false);
+        }
+    }
+}
+
+function getResourceVisible(resourceName) {
+    for(var i=0; i<resourceIds.length; i++) {
+        if(resourceIds[i].name == resourceName) {
+            return resourceIds[i].visible;
+        }
+    }
 }
 
 
 function ForwardToNewApplication(start, end, resource) {
 	window.location.href = phpGWLink('bookingfrontend/', {
 		menuaction:  "bookingfrontend.uiapplication.add",
-		building_id: urlParams['buildingid'],
-		resource_id: (typeof resource === 'undefined') ? "" : resource,
+		building_id: urlParams['id'],
 		start:       (typeof start === 'undefined') ? "" : roundMinutes(start),
-		end:         (typeof end === 'undefined') ? "" : roundMinutes(end)
+		end:         (typeof end === 'undefined') ? "" : roundMinutes(end),
+		resource_id: (typeof resource === 'undefined') ? "" : resource
 	}, false);
 }
 
@@ -84,32 +115,33 @@ function roundMinutes(date) {
 	return date.getTime();
 }
 
-function PopulateCalendarEvents() {
-    $(".overlay").show();
-    $('.weekNumber').remove();
+function PopulateCalendarEvents(baseURL, urlParams) {
+	$(".overlay").show();
+	$('.weekNumber').remove();
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-    var colors = { "allocation": "#2875c2", "booking": "#123456", "event": "#898989"}
-//  getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+urlParams['id']+"&date="+paramDate+"&phpgw_return_as=json";
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:urlParams['id'], date:paramDate}, true);
-
+    var m = 0;
+    var colors = { "allocation": "#82368c", "booking": "#27348b", "event": "#6c9ad1"}
+    for(var i=0; i<resourceIds.length; i++) {
+	    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
+        
         $.getJSON(getJsonURL, function(result){
             if(result.ResultSet.totalResultsAvailable > 1) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     var visible = true;
-                    
+
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
-                    {
+					{
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
-						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type].join(""),
 							name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sun.type],
-							content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -120,17 +152,17 @@ function PopulateCalendarEvents() {
                     
                     if(typeof result.ResultSet.Result[k].Mon !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
-                    {                        
+                    {
                         var event_infourl = result.ResultSet.Result[k].Mon.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
-						}
-						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type].join(""),
-							name: result.ResultSet.Result[k].resource,
+                        }
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type].join(""),
+                            name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Mon.type],
-							content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
-							description: result.ResultSet.Result[k].Mon.description,
+                            content: "<span data-url='"+event_infourl+"' class='event-id' value='"+result.ResultSet.Result[k].resource+"'></span>",
+                            description: result.ResultSet.Result[k].Mon.description,
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
                             disabled: true,
@@ -238,38 +270,107 @@ function PopulateCalendarEvents() {
 
         })
                 .done(function () {
-                    events = eventsArray;
-                    setTimeout(function() {
-                        GenerateCalendarForEvents(date);
-                        $(".overlay").hide();
-                    },1000);
-                });    
+                    m++;
+                    if (m == resourceIds.length) {
+                        events = eventsArray;
+						events.sort(compare);
+						setTimeout(function() {
+							GenerateCalendarForEvents(date);
+							$(".overlay").hide();
+						},1000);                       
+                    }
+                });
+    }    
+
 }
 
-function tooltipDetails() {
-    var tooltipText = "";
-    var url = $(this).find('.event-id')[0];
-    url = url.getAttribute("data-url");
+function compare(a,b) {
+    if (a.name < b.name)
+      return -1;
+    if (a.name > b.name)
+      return 1;
+    return 0;
+  }
 
-    $.ajax({
-    url: url,
-    type: 'GET',
-    async: false,
-    success: function(response){
-        tooltipText = response;
-    }
+function PopulateBuildingData(baseURL, urlParams) {
+
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", filter_owner_id:urlParams['id']}, true);    
+    $.getJSON(getJsonURL, function(result){
+        var mainPictureFound = false;
+        if(result.ResultSet.Result.length > 0) {			
+            for(var i=0; i<result.ResultSet.Result.length; i++) {
+                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
+                var imgTag = '<img id="modal-img-'+i+'" src="'+src+'" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
+                $(".building-images").append(imgTag);
+				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
+					mainPictureFound = true;
+					$("#item-main-picture").attr("src", src);
+				}
+            }            
+        } else {
+			$(".card-img-thumbs").remove();
+        }
+        if(!mainPictureFound) {
+            $(".col-item-img").remove();
+        }
     });
+}
+
+function PopulateBookableResources(baseURL, urlParams) {
+    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['id'], sort: 'sort'}, true);
+    $.getJSON(getJsonURL, function(result){
+        for(var i=0; i<result.results.length; i++) {
+//          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
+            var facilitiesList = []; activitiesList = [];
+            for(var k=0; k<result.results[i].facilities_list.length; k++) {
+                facilitiesList.push(result.results[i].facilities_list[k].name);
+            }            
+            for(var k=0; k<result.results[i].activities_list.length; k++) {
+                activitiesList.push(result.results[i].activities_list[k].name);
+            }
+            
+            bookableResources.push({
+				name: result.results[i].name,
+				resourceItemLink: phpGWLink('bookingfrontend/',{
+					menuaction:'bookingfrontend.uiresource.show',
+					id:result.results[i].id,
+					buildingid:urlParams['id']
+                }),
+                facilitiesList: ko.observableArray(facilitiesList),
+                activitiesList: ko.observableArray(activitiesList)
+			});
+            resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
+        }
+		if (deactivate_calendar == 0) {
+			PopulateCalendarEvents(baseURL, urlParams);
+		}
+    });
+}
+
+function EventsOptionsChanged(resource, checkValue) {
     
-    return tooltipText;
+    $(".scheduler-event").each(function (index) {
+        //console.log(index + ": " + $(this).text());
+        if ($(this).find(".event-id").attr("value") == resource) {            
+            if (checkValue && checkValue != undefined) {                
+                $(this).removeClass("scheduler-event-hidden");
+            } else if(!checkValue && checkValue != undefined) {
+                $(this).addClass("scheduler-event-hidden");
+            }
+
+        }
+    });
 }
 
 function GenerateCalendarForEvents(date) {
-    $("#myScheduler .scheduler-base-content").first().remove();
-    $("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
 
-    YUI({lang: 'nb-NO'}).use(
+	$("#myScheduler .scheduler-base-content").first().remove();
+	$("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
+	events.reverse();
+
+	YUI({lang: 'nb-NO'}).use(
 		'aui-scheduler',
-		function (Y) {
+		function(Y) {
 			var CSS_SCHEDULER_TODAY = Y.getClassName('scheduler', 'today');
 
 			var CSS_SCHEDULER_VIEW_DAY_TABLE_COL = Y.getClassName('scheduler-view', 'day', 'table', 'col');
@@ -661,30 +762,37 @@ function GenerateCalendarForEvents(date) {
 				week: 'Uke',
 				year: 'År'
 			};
-
-			var resourceslist = [parseInt(urlParams['id'])];
-			var resourcenames = [resourcename];
+			var resourceslist = [];
+			var resourcenames = [];
+			for (var i=0; i<resourceIds.length; i++) {
+				resourceslist.push(resourceIds[i].id);
+				resourcenames.push(resourceIds[i].name);
+			}
 			var initDateTime = new Date();
 			initDateTime.setHours(07);
 			initDateTime.setMinutes(00);
 
-			var resourceWeekView = new SchedulerResourceWeekView({
-				isoTime: true,
-				strings: nb_NO_strings_allDay,
-				headerView: false,
-				resources: resourceslist,
-				resourcenames: resourcenames,
-				initialScroll: new Date(initDateTime)
-			});
+			var resourceWeekView = new SchedulerResourceWeekView(
+				{
+					isoTime: true,
+					strings: nb_NO_strings_allDay,
+					headerView: false,
+					resources: resourceslist,
+					resourcenames: resourcenames,
+					initialScroll: new Date(initDateTime)
+				}
+			);
 
-			var resourceDayView = new SchedulerResourceDayView({
-				isoTime: true,
-				strings: nb_NO_strings_allDay,
-				headerView: false,
-				resources: resourceslist,
-				resourcenames: resourcenames,
-				initialScroll: new Date(initDateTime)
-			});
+			var resourceDayView = new SchedulerResourceDayView(
+				{
+					isoTime: true,
+					strings: nb_NO_strings_allDay,
+					headerView: false,
+					resources: resourceslist,
+					resourcenames: resourcenames,
+					initialScroll: new Date(initDateTime)
+				}
+			);
 
 			var eventRecorder = new SchedulerResourceEventRecorder({
 				content: "",
@@ -700,7 +808,8 @@ function GenerateCalendarForEvents(date) {
 				}
 			});
 
-			new Y.Scheduler({
+			new Y.Scheduler(
+			  {
 				boundingBox: '#myScheduler',
 				eventRecorder: deactivate_application ? null : eventRecorder,
 				date: date,
@@ -709,9 +818,11 @@ function GenerateCalendarForEvents(date) {
 				strings: strings,
 				firstDayOfWeek: 1,
 				views: [resourceWeekView]
-			});
+			  }
+			);
 
-			new Y.Scheduler({
+			new Y.Scheduler(
+			  {
 				boundingBox: '#mySchedulerSmallDeviceView',
 				eventRecorder: deactivate_application ? null : eventRecorder,
 				date: date,
@@ -719,69 +830,69 @@ function GenerateCalendarForEvents(date) {
 				render: true,
 				strings: strings,
 				views: [resourceDayView]
-			});
-
+			  }
+			);
 			$('.tooltip').tooltip('hide');
 			$(".scheduler-base-views").hide();
 			$(".scheduler-base-icon-prev").addClass("fas fa-chevron-left");
 			$(".scheduler-base-icon-next").addClass("fas fa-chevron-right");
-
+			HideUncheckResources();
 			$("[data-toggle='tooltip']").tooltip();
 			$(".overlay").hide();
 			$(".scheduler-view-day-current-time").hide();
 
 			$('.popover-title').remove();
 
+			$(".scheduler-event-title").text("");
 			$(".scheduler-base-nav-date").remove();
 			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
-			$(".scheduler-event-title").text("");
-
 			$(".scheduler-event-disabled").hover(function () {
-				if($(".tooltip").length == 0 && $(".scheduler-event-recorder").length < 1) {
-					$('.scheduler-event-disabled').tooltip({
-						delay: 500,
-						placement: "right",
-						title: tooltipDetails,
-						html: true,
-						trigger: 'manual'
-					});
-					$(this).tooltip('show');
-				} else {
-					if($('.tooltip:hover').length === 0 && $(".scheduler-event-recorder").length < 1) {
-						$('.tooltip').tooltip('hide');
-						$(this).tooltip('show');
-					}
-				}
-			});
-    
-			$(".scheduler-event-disabled").click(function () {
-				$('.tooltip').tooltip('hide');
-				$('.scheduler-event-disabled').tooltip({
-					delay: 500,
-					placement: "right",
-					title: tooltipDetails,
-					html: true,
-					trigger: "click"
-				});
-				$(this).tooltip('show');
-			});
+                if($(".tooltip").length == 0 && $(".scheduler-event-recorder").length < 1) {
+					$('.tooltip').tooltip('hide');
+                    $('.scheduler-event-disabled').tooltip({
+                        delay: 500,
+                        placement: "right",
+                        title: tooltipDetails,
+                        html: true,
+                        trigger: 'manual'
+                    });
+                    $(this).tooltip('show');
+                } else {
+                    if($('.tooltip:hover').length === 0 && $(".scheduler-event-recorder").length < 1) {
+                    	$('.tooltip').tooltip('hide');
+                        $(this).tooltip('show');
+                    }
+                }
+            });
 
-			$( ".tooltip" ).mouseleave(function() {
-				//$('.tooltip').tooltip('hide');
-			});
+            $(".scheduler-event-disabled").click(function () {
+                $('.tooltip').tooltip('hide');
+                $('.scheduler-event-disabled').tooltip({
+                    delay: 500,
+                    placement: "right",
+                    title: tooltipDetails,
+                    html: true,
+                    trigger: "click"
+                });
+                $(this).tooltip('show');
+            });
 
-			$( ".scheduler-event-disabled" ).mouseleave(function() {
-				if($('.tooltip:hover').length === 0) {
-					//$('.tooltip').tooltip('hide');
-				}
-			});
+            $( ".tooltip" ).mouseleave(function() {
+                //$('.tooltip').tooltip('hide');
+            });
 
-			$(".scheduler-view-day-table-col").hover(function () {
-				if($(this).find('.scheduler-event-disabled').length == 0) {
-					//$('.tooltip').tooltip('hide');
-				}
-			});
+            $( ".scheduler-event-disabled" ).mouseleave(function() {
+                if($('.tooltip:hover').length === 0) {
+                    //$('.tooltip').tooltip('hide');
+                }
+            });
 
+            $(".scheduler-view-day-table-col").hover(function () {
+                if($(this).find('.scheduler-event-disabled').length == 0) {
+                    //$('.tooltip').tooltip('hide');
+                }
+			});
+			
 			$(".scheduler-view-day-table-col").hover(function () {
 				if($(".scheduler-event-recorder").length > 0) {					
                 	$('.tooltip').tooltip('hide');
@@ -801,7 +912,7 @@ YUI({ lang: 'nb-no' }).use(
           zIndex: 99999
         },
         on: {
-          selectionChange: function(event) {
+          selectionChange: function(event) { 
               date = new Date(event.newSelection);
               PopulateCalendarEvents(baseURL, urlParams);
 

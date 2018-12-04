@@ -1,283 +1,272 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:call-template name="jquery_phpgw_i18n"/>
-	
-	<div class="container">
-              
-         
-		<ul class="pathway">
-			<li>
-				<a>
+
+<div id="building-page-content">
+	<div class="info-content">
+	<div class="container wrapper">
+		
+		<div class="location">
+			<span><a>
 					<xsl:attribute name="href">
 						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
 					</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
-			</li>
-			<li>
-				<a href="{resource/building_link}">
-					<xsl:value-of select="building/name"/>
-				</a>
-			</li>
-		</ul>
-         
-        
-		<xsl:for-each select="building">
-           
-			<xsl:if test="deactivate_calendar=0">
-				<div>
-					<button class="btn btn-main btn-md" onclick="window.location.href='{schedule_link}'">
-						<xsl:value-of select="php:function('lang', 'Building schedule')" />
-					</button>
-					- Søk ledig tid/informasjon om hva som skjer
-				</div>
-			</xsl:if>
-                    
+			</span>
+		</div>
 
-			<div class="row details-wrapper">
-                    
-				<div class="col-lg-7">
-					<dl>
-						<xsl:if test="normalize-space(description)">
-							<dl>
-								<dt>
-									<h2>
-										<xsl:value-of select="php:function('lang', 'Description')" />
-									</h2>
-								</dt>
-                                                                
-								<dd>
-									<xsl:value-of select="description" disable-output-escaping="yes"/>
-								</dd>
-							</dl>
-						</xsl:if>
-				
-						<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
-							<h3>
-								<xsl:value-of select="php:function('lang', 'Contact information')" />
-							</h3>
-							<xsl:if test="deactivate_sendmessage=0">
-								<div>
-									<button class="btn btn-main" onclick="window.location.href='{message_link}'">
-										<xsl:value-of select="php:function('lang', 'Send message')" />
-									</button>
-									- Melding til saksbehandler for bygg
-								</div>
-							</xsl:if>
+		<div class="row p-3">
+			<div class="col-lg-6">
 
-							<dl class="contactinfo">
-								<xsl:if test="homepage and normalize-space(homepage)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Homepage')" />
-									</dt>
-									<dd>
-										<a href="{homepage}">
-											<xsl:value-of select="homepage"/>
-										</a>
-									</dd>
-								</xsl:if>
-					
-								<xsl:if test="email and normalize-space(email)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Email')" />
-									</dt>
-									<dd>
-										<a href='mailto:{email}'>
-											<xsl:value-of select="email"/>
-										</a>
-									</dd>
-								</xsl:if>
-					
-								<xsl:if test="phone and normalize-space(phone)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Telephone')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="phone"/>
-									</dd>
-								</xsl:if>
-					
-								<xsl:if test="street and normalize-space(street)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Address')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="street"/>
-										<br/>
-										<xsl:value-of select="zip_code"/>
-										<span>&nbsp; </span>
-										<xsl:value-of select="city"/>
-										<br/>
-										<xsl:value-of select="district"/>
-									</dd>
-								</xsl:if>
-								<xsl:if test="tilsyn_name and normalize-space(tilsyn_name)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="tilsyn_name"/>
-									</dd>
-								</xsl:if>
-
-								<xsl:if test="tilsyn_email and normalize-space(tilsyn_email)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" />
-									</dt>
-									<dd>
-										<a href='mailto:{tilsyn_email}'>
-											<xsl:value-of select="tilsyn_email"/>
-										</a>
-									</dd>
-								</xsl:if>
-
-								<xsl:if test="tilsyn_phone and normalize-space(tilsyn_phone)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="tilsyn_phone"/>
-									</dd>
-								</xsl:if>
-
-								<xsl:if test="tilsyn_name and normalize-space(tilsyn_name2)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt name')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="tilsyn_name2"/>
-									</dd>
-								</xsl:if>
-
-								<xsl:if test="tilsyn_email and normalize-space(tilsyn_email2)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt email')" />
-									</dt>
-									<dd>
-										<a href='mailto:{tilsyn_email2}'>
-											<xsl:value-of select="tilsyn_email2"/>
-										</a>
-									</dd>
-								</xsl:if>
-
-								<xsl:if test="tilsyn_phone and normalize-space(tilsyn_phone2)">
-									<dt>
-										<xsl:value-of select="php:function('lang', 'Tilsynsvakt telephone')" />
-									</dt>
-									<dd>
-										<xsl:value-of select="tilsyn_phone2"/>
-									</dd>
-								</xsl:if>
-
-							</dl>
-						</xsl:if>
-				
+				<div class="row">
+					<div class="col-xl-4 col-lg-5 mb-4 col-item-img">
+						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
+					</div>
+					<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
 						<h3>
-							<xsl:value-of select="php:function('lang', 'Bookable resources')" />
+							<xsl:value-of select="building/name"/>
 						</h3>
-						<div id="resources_container"/>
-
-						<h3>
-							<xsl:value-of select="php:function('lang', 'Building users')" />
-						</h3>
-						<div id="building_users_container"/>
-
-						<h3>
-							<xsl:value-of select="php:function('lang', 'Documents')" />
-						</h3>
-						<div id="documents_container"/>
-					</dl>
-                    
-				</div>
-                    
-				<div class="col-lg-5">
-					<dl class="images">
-						<div id="images_container">
-                                                    
-                                                    
-						</div>
-					</dl>
-					<dl class="images map">
-						<!--div id="images_container"></div-->
-						<xsl:if test="street and normalize-space(street)">
-							<div class="gmap-container">
-								<iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe>
-							</div>
-							<small>
-								<a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a>
-							</small>
-						</xsl:if>
-					</dl>
-
-				</div>
-			</div>
-            
-             
-			<div class="modal fade" id="mediaModal" role="dialog">
-				<div class="modal-dialog modal-xl">
-					<!-- Content of modal -->
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">x</button>
-							<h4 class="modal-title" id="mediaTitle"></h4>
-						</div>
-						<div class="modal-body" id="fullSizeImage">
-
-                
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Avslutt</button>
+						<i class="fas fa-map-marker d-inline"> </i>
+						<div class="building-place-adr">
+							<span>
+								<xsl:value-of select="building/street"/>
+							</span>
+							<span class="d-block">
+								<xsl:value-of select="building/zip_code"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="building/city"/>
+							</span>
 						</div>
 					</div>
+
+							<xsl:if test="building/deactivate_calendar=0">
+					<div class="col-auto">
+							<div>
+								<button class="btn btn-light goToCal">
+									<i class="fa fa-calendar"></i>&#160;
+									<xsl:value-of select="php:function('lang', 'Calendar')" />
+								</button>
+							</div>
+					</div>
+							</xsl:if>
+
+					<div class="building-accordion">
+								<xsl:if test="building/description and normalize-space(building/description)">
+									<div class="building-card">
+										<div class="building-card-header">
+											<h5 class="mb-0">
+												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
+													<xsl:value-of select="php:function('lang', 'Building information')" />
+												</button>
+												<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
+											</h5>
+										</div>
+										<div id="collapseOne" class="collapse">
+											<div class="card-body">
+												<xsl:value-of disable-output-escaping="yes" select="building/description"/>
+											</div>
+										</div>
+									</div>
+								</xsl:if>
+
+						<div class="building-card card-img-thumbs">
+							<div class="building-card-header">
+								<h5 class="mb-0">
+									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
+												<xsl:value-of select="php:function('lang', 'Pictures')" />
+									</button>
+									<button data-toggle="collapse" data-target="#collapseTwo" class="btn fas fa-plus float-right"></button>
+								</h5>
+							</div>
+							<div id="collapseTwo" class="collapse">
+								<div class="card-body building-images" id="list-img-thumbs">
+								</div>
+							</div>
+						</div>
+
+						<xsl:if test="building/opening_hours and normalize-space(building/opening_hours)">
+							<div class="building-card">
+								<div class="building-card-header">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
+													<xsl:value-of select="php:function('lang', 'Opening hours')" />
+										</button>
+										<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
+									</h5>
+								</div>
+								<div id="collapseThree" class="collapse">
+									<div class="card-body">
+										<xsl:value-of disable-output-escaping="yes" select="building/opening_hours"/>
+									</div>
+								</div>
+							</div>
+						</xsl:if>
+
+						<xsl:if test="building/contact_info and normalize-space(building/contact_info)">
+							<div class="building-card">
+								<div class="building-card-header">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
+													<xsl:value-of select="php:function('lang', 'contact information')" />
+										</button>
+										<button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
+									</h5>
+								</div>
+								<div id="collapseFour" class="collapse">
+									<div class="card-body">
+											<xsl:value-of disable-output-escaping="yes" select="building/contact_info"/>
+												<xsl:if test="building/deactivate_sendmessage=0">
+													<button class="btn btn-light" onclick="window.location.href='{building/message_link}'">
+														<i class="fas fa-envelope"></i>&#160;
+														<xsl:value-of select="php:function('lang', 'Send message')" />
+													</button>
+													- <xsl:value-of select="php:function('lang', 'Send message to case officer for building')" />
+												</xsl:if>
+								</div>
+								</div>
+							</div>
+						</xsl:if>
+					</div>
 				</div>
+
 			</div>
-             
-             
-              
-                
-                    
-			<script type="text/javascript">
-				var building_id = <xsl:value-of select="id"/>;
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
-				var address = '<xsl:value-of select="street"/>, <xsl:value-of select="zip_code"/>, <xsl:value-of select="city"/>';
-				<![CDATA[
-                var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json',sort:'name', filter_building_id:building_id}, true);
-                var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index', sort:'name', no_images:1, filter_owner_id:building_id}, true);
-                var building_usersURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiorganization.building_users', sort:'name', building_id:building_id}, true);
-                var document_buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index_images', sort:'name', filter_owner_id:building_id}, true);
-				var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
-				var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
-                ]]>
 
-				var rResources = 'results';
-				var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
+			<div class="col-lg-6 building-bookable">
+				<h3 class="">
+					<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
+				</h3>
+				<div data-bind="foreach: bookableResource">
+					<div class="custom-card">
+						<a class="bookable-resource-link-href" href="" data-bind="">
+									<span data-bind="html: name"></span>
+						</a>
+						
+						<div data-bind="foreach: activitiesList">							
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
+									</span>
+									<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
+						</div>
 
-				var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
-				var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
-				var colDefsBuilding_users = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'activity_name', label: lang['Activity']}];
+								<div class="mt-2" data-bind="foreach: facilitiesList">
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'Facilities')"/>:
+									</span>
+									<span class="textTagsItems" data-bind="html: $data"></span>
+								</div>
 
-				var paginatorTableBuilding_users = new Array();
-				paginatorTableBuilding_users.limit = 10;
-				createPaginatorTable('building_users_container', paginatorTableBuilding_users);
+					</div>
+				</div>
 
-				createTable('resources_container', resourcesURL, colDefsResources, rResources, 'table table-hover');
-				createTable('documents_container', documentURL, colDefsDocument, '', 'table table-hover');
-				createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'table table-hover', paginatorTableBuilding_users);
+			</div>
+		</div>
+		</div>
+		</div>
 
-				$(window).on('load', function(){
-				// Load image
-				JqueryPortico.booking.inlineImages('images_container', document_buildingURL);
+		<div class="container wrapper calendar-content">
+			<xsl:if test="building/deactivate_application=0 and config_data/help_calendar_book and normalize-space(config_data/help_calendar_book)">
+				<div class="row margin-top-and-bottom">
+					<div class="col">
+						<xsl:value-of select="config_data/help_calendar_book"/>
+					</div>
+				</div>
+			</xsl:if>
 
-				// Load Google map
-				if( iurl.length > 0 ) {
-				$("#googlemapiframe").attr("src", iurl);
-				$("#googlemaplink").attr("href", linkurl);
-				}
-				});
-				
-			</script>
-		</xsl:for-each>
-        
-        
-            
+		<div class="row margin-top-and-bottom">		
+			<xsl:if test="building/deactivate_calendar=0">
+				<div class="col-6">
+					<div class="button-group dropdown calendar-tool invisible">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<xsl:value-of select="php:function('lang', 'Choose resources')"/>
+								<span class="caret"></span>
+							</button>
+
+							<ul class="dropdown-menu px-2" data-bind="foreach: bookableResource">
+								<li>
+									<div class="form-check checkbox checkbox-primary">
+
+										<label class="check-box-label">
+											<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="html: name"/>
+											<span class="label-text" data-bind="html: name"></span>
+										</label>
+									</div>
+								</li>
+							</ul>
+
+							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
+								<i class="far fa-calendar-alt"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'choose a date')"/>
+							</button>
+
+							<xsl:if test="building/deactivate_application=0">
+								<a href="" class="btn btn-default bookBtnForward">
+									<i class="fas fa-plus"></i>&#160;
+										<xsl:value-of select="php:function('lang', 'Application')" />
+								</a>
+							</xsl:if>
+						</div>						
+				</div>
+
+					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
+						<div class="">
+							<div class="square allocation"></div>							
+							<span>
+								<xsl:value-of select="php:function('lang', 'allocation')"/>
+							</span>							
+						</div>
+						<div class="">
+							<div class="square booking"></div>							
+							<span>
+								<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
+							</span>							
+						</div>
+						<div class="">
+							<div class="square event"></div>							
+							<span>
+								<xsl:value-of select="php:function('lang', 'event')"/>
+							</span>							
+						</div>
+					</div>
+			</xsl:if>
+
+
+
+			<!--<div class="input-group date" id="datepicker" data-provide="datepicker">
+				<input type="text" class="form-control" />
+				<div class="input-group-addon">
+					<span class="glyphicon glyphicon-th"></span>
+				</div>
+			</div>-->
+
+
+			<xsl:if test="building/deactivate_calendar=0">
+			<div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom col-12"></div>
+			<div id="mySchedulerSmallDeviceView" class="d-lg-none margin-top-and-bottom col-12"></div>
+			</xsl:if>
+
+		</div>
+
+
+		<div class="push"></div>
 	</div>
+
+
+	<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-body lightbox-body">
+				<a href="#" class="close">&#215;</a>
+				<img src="" alt="" />
+			</div>
+		</div>
+	</div>
+
+</div>
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
+		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
+		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+		var script = document.createElement("script");
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/aalesund/building.js";
+
+		document.head.appendChild(script);
+	</script>
 </xsl:template>
