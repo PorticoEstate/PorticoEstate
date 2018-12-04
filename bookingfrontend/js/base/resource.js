@@ -26,7 +26,13 @@ $(document).ready(function ()
         $('html,body').animate({
             scrollTop: $(".calendar-content").offset().top - 100},
             'slow');
-    });	
+    });
+
+	$(document).on('click', '.tooltip-desc-btn', function () {
+        $(this).find(".tooltip-desc").show();
+    });
+
+	$(".overlay").hide();
 });
 
 function PopulateResourceData() {
