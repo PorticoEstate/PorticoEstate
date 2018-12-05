@@ -344,7 +344,23 @@
 			$i = 0;
 			foreach ($data as $entry)
 			{
-				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
+
+				if($entry['multiplier'] > 1)
+				{
+					if($entry['area_gross'] )
+					{
+						if($entry['amount'] && ($entry['amount'] / $entry['area_gross']) < 700) // filtrere ekstremverdier
+						{
+							$entry['amount'] = $entry['amount'] * $entry['multiplier'];
+						}
+					}
+					else
+					{
+						$entry['amount'] = $entry['amount'] * $entry['multiplier'];
+					}
+				}
+
+//				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
 				$i = "{$entry['building_part']}_{$entry['category']}";
 
 				$values[$entry['condition_survey_id']][$i]['building_part'] = $entry['building_part'];

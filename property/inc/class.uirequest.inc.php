@@ -1660,6 +1660,12 @@ JS;
 
 			$conditions = "";
 
+			$link_survey = '';
+			if(empty($values['origin_data']) && !empty($values['condition_survey_id']))
+			{
+				$link_survey = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.edit', 'id' => $values['condition_survey_id']));
+			}
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -1667,6 +1673,8 @@ JS;
 				'ticket_link' => $GLOBALS['phpgw']->link('/index.php', $ticket_link_data),
 				'value_authorities_demands' => isset($this->config->config_data['authorities_demands']) && $this->config->config_data['authorities_demands'] ? $this->config->config_data['authorities_demands'] : 0,
 				'suppressmeter' => isset($this->config->config_data['project_suppressmeter']) && $this->config->config_data['project_suppressmeter'] ? 1 : '',
+				'value_condition_survey_id' => $values['condition_survey_id'],
+				'value_link_survey' => $link_survey,
 				'show_dates' => $show_dates,
 				'custom_attributes' => array('attributes' => $values['attributes']),
 				'tabs' => self::_generate_tabs(),
@@ -1780,6 +1788,8 @@ JS;
 				'value_consume' => isset($receipt['error']) ? $values['consume_value'] : '',
 				'value_multiplier' => $values['multiplier'],
 				'value_total_cost_estimate' => $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']), 0, ',', ' ') : '',
+				'value_representative' => $values['representative'],
+				'value_total_cost_estimate' => $values['representative'] ? number_format(($values['budget'] * $values['representative']), 0, ',', ' ') : '',
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader' => !!$id,
