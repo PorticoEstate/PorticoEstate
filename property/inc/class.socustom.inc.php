@@ -322,7 +322,7 @@
 			{
 				for ($i = 0; $i < $n; $i++)
 				{
-					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name']);
+					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name'], true);
 				}
 				$j++;
 			}
