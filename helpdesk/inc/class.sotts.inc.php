@@ -447,6 +447,8 @@
 						'estimate'			=> $this->db2->f('budget'),
 						'new_ticket'		=> $this->db2->f('view') ? false : true,
 						'billable_hours'	=> $this->db2->f('billable_hours'),
+						'details' =>		$this->db2->f('details', true),
+
 					);
 					foreach ($custom_cols as $custom_col)
 					{

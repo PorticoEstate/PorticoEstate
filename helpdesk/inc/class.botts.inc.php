@@ -175,6 +175,13 @@
 					$this->custom_filters[] = $custom_col['column_name'];
 				}
 			}
+
+			$columns['details'] = array
+				(
+				'id' => 'details',
+				'name' => lang('details')
+			);
+
 			return $columns;
 		}
 
@@ -367,6 +374,8 @@
 			$this->sum_actual_cost = $this->so->sum_actual_cost;
 			$this->sum_difference = $this->so->sum_difference;
 
+			$selected_columns = !empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
+
 			$custom_status = $this->so->get_custom_status();
 			$closed_status = array('X');
 			foreach ($custom_status as $custom)
@@ -379,6 +388,16 @@
 
 			foreach ($tickets as & $ticket)
 			{
+				if(in_array('details', $selected_columns))
+				{
+					$ticket['details'] = "#1: {$ticket['details']}";
+					$additional_notes = $this->read_additional_notes((int)$ticket['id'] );
+					foreach ($additional_notes as $additional_note)
+					{
+						$ticket['details'] .= "<br/>#{$additional_note['value_count']}: {$additional_note['value_note']}";
+					}
+				}
+
 				if (!isset($category_name[$ticket['cat_id']]))
 				{
 					$category_name[$ticket['cat_id']] = $this->get_category_name($ticket['cat_id']);
@@ -673,6 +692,107 @@
 			}
 
 			return $record_history;
+		}
+
+		/**
+		 * Simplified method for adding tickets from external apps
+		 * 	$data = array
+		 * 	(
+		 * 		'assignedto' 		=> $assignedto,
+		 * 		'group_id' 			=> $group_id,
+		 *		'origin' 			=> $location_id,
+		 * 		'origin_id'			=> $location_item_id,
+		 * 		'cat_id'			=> $cat_id,
+		 * 		'priority'			=> $priority, //optional (1-3)
+		 * 		'title'				=> $title,
+		 * 		'details'			=> $details,
+		 * 		'file_input_name'	=> 'file' // default, optional
+		 * 	);
+		 *
+		 */
+		function add_ticket( $data )
+		{
+
+			$cancel_attachment = empty($data['cancel_attachment']) ? false : true;
+
+			$group_or_user = '';
+			$assignedto = $data['assignedto'];
+			if($assignedto)
+			{
+				$group_or_user = get_class($GLOBALS['phpgw']->accounts->get($assignedto));
+			}
+
+			if($group_or_user == "phpgwapi_group")
+			{
+				$data['group_id'] = !empty($data['group_id']) ? $data['group_id'] : $assignedto;
+				$assignedto = 0;
+			}
+
+
+			if (!$assignedto)
+			{
+				$default_group = (int)$this->config->config_data['tts_default_group'];
+			}
+			else
+			{
+				$default_group = 0;
+			}
+
+			$priority_list = $this->get_priority_list();
+
+			$default_priority = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : count($priority_list);
+
+			$ticket = array
+			(
+				'origin_id' => isset($data['origin_id']) ? $data['origin_id'] : null,
+				'origin_item_id' => isset($data['origin_item_id']) ? $data['origin_item_id'] : null,
+				'cat_id' => $data['cat_id'],
+				'group_id' => isset($data['group_id']) && $data['group_id'] ? $data['group_id'] : $default_group,
+				'assignedto' => $assignedto,
+				'priority' => isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
+				'status' => 'O', // O = Open
+				'subject' => $data['title'],
+				'details' => $data['details'],
+				'apply' => true,
+				'contact_id' => 0,
+				'send_mail'		=> true,
+				'external_ticket_id' => !empty($data['external_ticket_id']) ? $data['external_ticket_id'] : null,
+			);
+
+			$result = $this->add($ticket);
+
+			// Files
+			$file_input_name = isset($data['file_input_name']) && $data['file_input_name'] ? $data['file_input_name'] : 'file';
+
+			$file_name = @str_replace(' ', '_', $_FILES[$file_input_name]['name']);
+			if (!$cancel_attachment && $file_name && $result['id'])
+			{
+				$bofiles = CreateObject('property.bofiles', '/helpdesk');
+				$to_file = "{$bofiles->fakebase}/{$result['id']}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => array(RELATIVE_NONE)
+					)))
+				{
+					$msglog['error'][] = array('msg' => lang('This file already exists !'));
+				}
+				else
+				{
+					$bofiles->create_document_dir("{$result['id']}");
+					$bofiles->vfs->override_acl = 1;
+
+					if (!$bofiles->vfs->cp(array(
+							'from' => $_FILES[$file_input_name]['tmp_name'],
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$msglog['error'][] = array('msg' => lang('Failed to upload file!'));
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+			return (int)$result['id'];
 		}
 
 		function add( $data, $values_attribute = array() )
