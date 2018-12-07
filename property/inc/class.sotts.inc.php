@@ -371,7 +371,7 @@
 
 			if ($cat_id > 0)
 			{
-				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $cat_id);
+				$_cats	= CreateObject('phpgwapi.categories', -1, 'property', '.ticket')->return_sorted_array(0, false, '', '', '', false, $cat_id);
 				$_filter_cat = array($cat_id);
 				foreach ($_cats as $_cat)
 				{
