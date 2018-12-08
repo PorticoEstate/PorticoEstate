@@ -90,7 +90,7 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 
-			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin'));
 		}
 
 		function execute()
@@ -126,9 +126,9 @@
 		function process_messages()
 		{
 			// Set connection information.
-			$host = !empty($this->config->config_data['xPortico']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
-			$username = !empty($this->config->config_data['xPortico']['username']) ? $this->config->config_data['xPortico']['username'] : 'xPortico';
-			$password = $this->config->config_data['xPortico']['password'];
+			$host = !empty($this->config->config_data['xLRS ']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
+			$username = !empty($this->config->config_data['xLRS ']['username']) ? $this->config->config_data['xPortico']['username'] : 'xLRS';
+			$password = $this->config->config_data['xLRS ']['password'];
 			$version = Client::VERSION_2016;
 
 			$client = new Client($host, $username, $password, $version);
