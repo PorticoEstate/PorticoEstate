@@ -241,7 +241,7 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public function link( $data )
+		public static function link( $data )
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{

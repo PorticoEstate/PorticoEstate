@@ -160,7 +160,7 @@
 						{
 							if (is_array($files) && count($files))
 							{
-								foreach ($files as $file => $ignored)
+								foreach ($files as $file => $type)
 								{
 									if($combine)
 									{
@@ -170,7 +170,7 @@
 									else
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
-										$links .= '<script type="text/javascript" '
+										$links .= "<script type=\"{$type}\" "
 										. "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
 									}
@@ -289,25 +289,25 @@ HTML;
 		* @param string $app application directory to search - default = phpgwapi
 		* @returns bool was the file found?
 		*/
-		public function validate_file($package, $file, $app='phpgwapi')
+		public function validate_file($package, $file, $app='phpgwapi', $type ='text/javascript')
 		{
 			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
 
 			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$template_set/$file.js"))
 			{
-				$this->files[$app][$template_set][$file] = True;
+				$this->files[$app][$template_set][$file] = $type;
 				return True;
 			}
 			else if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$package/$file.js"))
 			{
-				$this->files[$app][$package][$file] = True;
+				$this->files[$app][$package][$file] = $type;
 				return True;
 			}
 			elseif($app != 'phpgwapi')
 			{
 				if(is_readable(PHPGW_INCLUDE_ROOT . "/phpgwapi/js/$package/$file.js"))
 				{
-					$this->files['phpgwapi'][$package][$file] = True;
+					$this->files['phpgwapi'][$package][$file] = $type;
 					return True;
 				}
 				return False;
