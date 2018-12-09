@@ -296,6 +296,8 @@
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 
+		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
+
 		function open_print_view()
 		{
 		var oArgs = {menuaction:'helpdesk.uitts._print',id: $('#id').val()};

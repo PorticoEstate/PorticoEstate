@@ -74,7 +74,7 @@
 
 	use \jamesiarmes\PhpEws\Request\MoveItemType;
 
-	class hent_epost_fra_eksterne_BK extends property_cron_parent
+	class hent_epost_fra_eksterne_BK_LRS extends property_cron_parent
 	{
 
 		var $items_to_move = array();
@@ -126,14 +126,19 @@
 		function process_messages()
 		{
 			// Set connection information.
-			$host = !empty($this->config->config_data['xLRS ']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
-			$username = !empty($this->config->config_data['xLRS ']['username']) ? $this->config->config_data['xPortico']['username'] : 'xLRS';
-			$password = $this->config->config_data['xLRS ']['password'];
+			$host = !empty($this->config->config_data['xPortico']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
+			$username = !empty($this->config->config_data['xPortico']['username']) ? $this->config->config_data['xPortico']['username'] : 'xLRS';
+			$password = $this->config->config_data['xPortico']['password'];
 			$version = Client::VERSION_2016;
 
 			$client = new Client($host, $username, $password, $version);
 
+			//read messages from this folder
+			$root_folder = $this->find_root_folder($client);
+
+			//move messages to this folder.
 			$folder_info = $this->find_folder($client);
+
 			$IsEqualTo_isread = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI = new PathToUnindexedFieldType();
 			$IsEqualTo_isread->FieldURI->FieldURI = 'message:IsRead';
@@ -152,10 +157,12 @@
 			$request->ItemShape = new ItemResponseShapeType();
 			$request->ItemShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
 
-			// Search in the user's inbox.
-			$folder_id = new DistinguishedFolderIdType();
-			$folder_id->Id = DistinguishedFolderIdNameType::INBOX;
-			$request->ParentFolderIds->DistinguishedFolderId[] = $folder_id;
+			// Search in another user's inbox.
+			$folder_id =new jamesiarmes\PhpEws\Type\FolderIdType();
+			$folder_id->ChangeKey = $root_folder['changekey'];
+			$folder_id->Id = $root_folder['id'];
+
+			$request->ParentFolderIds->FolderId[] = $folder_id;
 
 			$response = $client->FindItem($request);
 
@@ -251,6 +258,72 @@
 			}
 		}
 
+		function find_root_folder($client)
+		{
+
+			// Build the request.
+			$request = new FindFolderType();
+			$request->FolderShape = new FolderResponseShapeType();
+			$request->FolderShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
+			$request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
+			$request->Restriction = new RestrictionType();
+
+			// Search recursively.
+			$request->Traversal = FolderQueryTraversalType::DEEP;
+
+			// Search within the root folder. Combined with the traversal set above, this
+			// should search through all folders in the user's mailbox.
+			$parent = new DistinguishedFolderIdType();
+			$parent->Id = DistinguishedFolderIdNameType::ROOT;
+
+			// New Properties:
+			$_mailbox = !empty($this->config->config_data['xPortico']['mailbox']) ? $this->config->config_data['xPortico']['mailbox'] : 'lrs@bergen.kommune.no';
+			$parent->Mailbox = new StdClass;
+			$parent->Mailbox->EmailAddress = $_mailbox;
+			// End of new Props.
+
+			$request->ParentFolderIds->DistinguishedFolderId[] = $parent;
+
+			// Build the restriction that will search for folders containing "Cal".
+			$contains = new \jamesiarmes\PhpEws\Type\ContainsExpressionType();
+			$contains->FieldURI = new PathToUnindexedFieldType();
+			$contains->FieldURI->FieldURI = UnindexedFieldURIType::FOLDER_DISPLAY_NAME;
+			$contains->Constant = new ConstantValueType();
+			$contains->Constant->Value = 'Innboks';
+			$contains->ContainmentComparison = ContainmentComparisonType::EXACT;
+			$contains->ContainmentMode = ContainmentModeType::EXACT_PHRASE;
+			$request->Restriction->Contains = $contains;
+
+			$response = $client->FindFolder($request);
+
+			// Iterate over the results, printing any error messages or folder names and
+			// ids.
+			$response_messages = $response->ResponseMessages->FindFolderResponseMessage;
+
+			foreach ($response_messages as $response_message)
+			{
+				// Make sure the request succeeded.
+				if ($response_message->ResponseClass != ResponseClassType::SUCCESS)
+				{
+					$code = $response_message->ResponseCode;
+					$message = $response_message->MessageText;
+					fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
+					continue;
+				}
+
+				$folders = $response_message->RootFolder->Folders->Folder;
+
+				$folder_info = array(
+					'name' => $folders[0]->DisplayName,
+					'id' => $folders[0]->FolderId->Id,
+					'changekey' => $folders[0]->FolderId->ChangeKey
+				);
+			}
+
+			return $folder_info;
+		}
+
+
 		function find_folder($client)
 		{
 			// Build the request.
@@ -267,6 +340,13 @@
 			// should search through all folders in the user's mailbox.
 			$parent = new DistinguishedFolderIdType();
 			$parent->Id = DistinguishedFolderIdNameType::ROOT;
+
+			// New Properties:
+			$_mailbox = !empty($this->config->config_data['xPortico']['mailbox']) ? $this->config->config_data['xPortico']['mailbox'] : 'lrs@bergen.kommune.no';
+			$parent->Mailbox = new StdClass;
+			$parent->Mailbox->EmailAddress = $_mailbox;
+			// End of new Props.
+
 			$request->ParentFolderIds->DistinguishedFolderId[] = $parent;
 
 			// Build the restriction that will search for folders containing "Cal".
@@ -322,6 +402,7 @@
 			$body = $newArray['text'];
 
 			if(preg_match("/helpdesk@bergen.kommune.no/i" , $sender ))
+//			if(preg_match("/sigurd.nes@bergen.kommune.no/i" , $sender ))
 			{
 				$ticket_id = $this->create_ticket($subject, $body);
 				if($ticket_id)
@@ -385,7 +466,7 @@
 				}
 
 				return $ticket_id;
-			}	
+			}
 		}
 
 		function get_ticket ($subject)

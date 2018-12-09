@@ -1775,7 +1775,7 @@ JS;
 
 			if ($add_external_communication)
 			{
-				self::redirect(array('menuaction' => 'property.uiexternal_communication.edit','ticket_id' => $id,
+				self::redirect(array('menuaction' => 'helpdesk.uiexternal_communication.edit','ticket_id' => $id,
 					'type_id' => $add_external_communication ));
 			}
 
@@ -2360,7 +2360,8 @@ JS;
 						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false
+				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
+				'parent_cat_id' => $this->parent_cat_id,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
