@@ -24,7 +24,7 @@
 			'links' => true,
 		);
 
-		function sms_menu( $sub = '' )
+		function __construct( $sub = '' )
 		{
 			if (!$sub)
 			{
