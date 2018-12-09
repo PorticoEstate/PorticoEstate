@@ -255,3 +255,86 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.18.006';
+
+	function helpdesk_upgrade0_9_18_006()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_tickets', 'external_ticket_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw']->locations->add('.ticket.external_communication', 'Helpdesk external communication', 'helpdesk', $allow_grant = false, $custom_tbl = false, $c_function = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_external_communication', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'order_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'type_id' => array('type' => 'int', 'precision' => 2, 'nullable' => False),
+					'vendor_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'subject' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'mail_recipients' => array('type' => 'text', 'nullable' => True),
+					'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(
+					'phpgw_helpdesk_tickets' => array('ticket_id' => 'id')
+					),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_external_communication_type', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_external_communication_msg',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'excom_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'message' => array('type' => 'text', 'nullable' => False),
+					'timestamp_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+					'mail_recipients' => array('type' => 'text', 'nullable' => True),
+					'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'sender_email_address' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(
+					'phpgw_helpdesk_external_communication' => array('excom_id' => 'id')
+					),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.007';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}

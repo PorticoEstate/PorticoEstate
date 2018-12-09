@@ -36,16 +36,17 @@
 
 		var $fields_updated = array();
 		var $historylog;
-		private $db, $like, $join, $left_join, $account;
-
+		private $db, $like, $join, $left_join, $account, $currentapp;
 
 		public function __construct()
 		{
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->like = & $this->db->like;
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->historylog = CreateObject('phpgwapi.historylog', 'property', 'external_communication');
+			$this->historylog = CreateObject('phpgwapi.historylog', $this->currentapp, 'external_communication');
 			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
@@ -87,7 +88,17 @@
 
 			$this->db->transaction_begin();
 
-			$table = 'fm_tts_external_communication';
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($table, 'id');
@@ -105,7 +116,18 @@
 		{
 			$receipt = array();
 			$id = (int)$values['id'];
-			$table = 'fm_tts_external_communication';
+
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
 
 			$this->db->query("SELECT * FROM {$table} WHERE id={$id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -195,7 +217,17 @@
 
 		function get_messages($id, $sort = 'ASC')
 		{
-			$table = 'fm_tts_external_communication_msg';
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication_msg';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication_msg';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
 
 			$this->db->query("SELECT * FROM {$table} WHERE excom_id = " .(int)$id . " ORDER BY id {$sort}", __LINE__, __FILE__);
 			$values = array();
@@ -235,7 +267,17 @@
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
 
-			$table = 'fm_tts_external_communication_msg';
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication_msg';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication_msg';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			return $this->db->get_last_insert_id($table, 'id');
@@ -243,7 +285,18 @@
 
 		function update_msg($excom_id, $mail_recipients, $file_attachments = '' )
 		{
-			$table = 'fm_tts_external_communication_msg';
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication_msg';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication_msg';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
+
 			$this->db->query("SELECT max(id) as id FROM {$table} WHERE excom_id = " .(int)$excom_id, __LINE__, __FILE__);
 			$this->db->next_record();
 			$id	= (int) $this->db->f('id');
@@ -309,7 +362,20 @@
 
 		function read( $ticket_id )
 		{
-			$sql = 'SELECT * FROM fm_tts_external_communication WHERE ticket_id = ' . (int) $ticket_id;
+
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
+
+			$sql = "SELECT * FROM {$table} WHERE ticket_id = " . (int) $ticket_id;
 			$this->db->query($sql, __LINE__, __FILE__);
 			$values = array();
 			$fields = $this->get_fields();
@@ -334,7 +400,19 @@
 		}
 		function read_single( $id )
 		{
-			$sql = 'SELECT * FROM fm_tts_external_communication WHERE id = ' . (int) $id;
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table = 'fm_tts_external_communication';
+					break;
+				case 'helpdesk':
+					$table = 'phpgw_helpdesk_external_communication';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
+
+			$sql = "SELECT * FROM {$table} WHERE id = " . (int) $id;
 			$this->db->query($sql, __LINE__, __FILE__);
 			$values = array();
 			$fields = $this->get_fields();

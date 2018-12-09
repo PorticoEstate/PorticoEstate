@@ -458,7 +458,7 @@
 		{
 			foreach ($entities as $entity_name)
 			{
-				$link = $this - get_ilink($entity_name);
+				$link = $this->get_ilink($entity_name);
 				$field = $this->real_field($link['lfield']);
 				$fields_to_prototype[$field] = '{' . $link['lfield'] . '}';
 			}

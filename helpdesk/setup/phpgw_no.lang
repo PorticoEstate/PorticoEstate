@@ -222,3 +222,14 @@ email_create_account_title	helpdesk	no	LRS systemtilgang
 email_create_account_message	helpdesk	no	Systemmelding fra LRS til %1 %2:<br/>Det er opprettet en tilgang for deg i LRS<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg fra LRS listen.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til LRS brukerstøtte.<br/>
 choose a section from the menu	helpdesk	no	Velg en avdeling fra menyen
 please enter value for attribute %1	helpdesk	no	Vennligst angi verdi for feltet %1
+external communication	helpdesk	no	Ekstern melding
+internal communication	helpdesk	no	Intern melding
+comma separated list	helpdesk	no	Kommaseparert liste
+external communication type	helpdesk	no	Ekstern meldingstype
+message	helpdesk	no	Melding
+messages	helpdesk	no	Meldinger
+message has been saved	helpdesk	no	Melding er lagret
+who	helpdesk	no	Hvem
+extra mail address	helpdesk	no	Ekstra adresse
+preview html	helpdesk	no	Forhåndsvis som HTML
+

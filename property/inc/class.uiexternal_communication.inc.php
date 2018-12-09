@@ -54,18 +54,31 @@
 		public function __construct()
 		{
 			parent::__construct();
+
+			switch ($this->currentapp)
+			{
+				case 'property':
+					self::set_active_menu("property::helpdesk");
+					break;
+				case 'helpdesk':
+					self::set_active_menu("helpdesk");
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('external communication');
-			self::set_active_menu("property::helpdesk");
+
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.ticket';
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->bo = createObject('property.boexternal_communication');
-			$this->botts = createObject('property.botts');
+			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->currentapp);
+			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->currentapp);
+			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->currentapp);
+			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->currentapp);
+			$this->bo = createObject("{$this->currentapp}.boexternal_communication");
+			$this->botts = createObject("{$this->currentapp}.botts");
 			$this->bocommon = createObject('property.bocommon');
-			$this->config = CreateObject('phpgwapi.config', 'property')->read();
+			$this->config = CreateObject('phpgwapi.config', $this->currentapp)->read();
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$this->historylog = & $this->bo->historylog;
 			$this->preview_html = $this->bo->preview_html;
@@ -298,7 +311,7 @@ JS;
 				)
 			);
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view_file'));
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uitts.view_file"));
 
 			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
@@ -387,7 +400,7 @@ JS;
 			);
 
 			$type_list = array();
-			$type_list =  execMethod('property.bogeneric.get_list', array('type' => 'external_com_type',
+			$type_list =  execMethod("{$this->currentapp}.bogeneric.get_list", array('type' => 'external_com_type',
 				'selected' => (int) $values['type_id']));
 
 			if(count($type_list) > 1)
@@ -399,9 +412,9 @@ JS;
 			$data = array(
 				'type_list' => array('options' => $type_list),
 				'datatable_def' => $datatable_def,
-				'form_action' => self::link(array('menuaction' => "property.uiexternal_communication.{$mode}", 'id' => $id)),
-				'edit_action' => self::link(array('menuaction' => "property.uiexternal_communication.edit", 'id' => $id)),
-				'cancel_url' => self::link(array('menuaction' => "property.uitts.view", 'id' => $ticket_id)),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.{$mode}", 'id' => $id)),
+				'edit_action' => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit", 'id' => $id)),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uitts.view", 'id' => $ticket_id)),
 				'value_ticket_id' => $ticket_id,
 				'value_ticket_subject' => $ticket['subject'],
 				'value_subject'		=> !empty($values['subject']) ? $values['subject'] : $ticket['subject'],
@@ -413,12 +426,12 @@ JS;
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab' => 0,
-				'base_java_url' => "{menuaction:'property.uitts.update_data',id:{$ticket_id}}",
+				'base_java_url' => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('property', 'portico', 'external_communication.edit.js');
+			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array('edit' => $data));
 
 		}
@@ -465,7 +478,7 @@ JS;
 				}
 				else
 				{
-					self::redirect(array('menuaction' => 'property.uiexternal_communication.edit',
+					self::redirect(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit",
 							'id' => $id,
 							'ticket_id' => $values['ticket_id'],
 							'type_id' => $values['type_id'],
@@ -573,8 +586,19 @@ JS;
 				return false;
 			}
 
-			$historylog_ticket = CreateObject('property.historylog', 'tts');
-			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'))->read();
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$historylog_ticket = CreateObject('property.historylog', 'tts');
+					break;
+				case 'helpdesk':
+					$historylog_ticket = CreateObject('phpgwapi.historylog','helpdesk');
+					break;
+				default:
+					break;
+			}
+
+			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->currentapp, '.admin'))->read();
 
 			if(!empty($config_admin['xPortico']['sender_email_address']))
 			{

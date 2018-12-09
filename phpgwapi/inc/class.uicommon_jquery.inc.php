@@ -181,7 +181,7 @@
 			$this->add_js_event('load', $js);
 		}
 
-		function get_link_base()
+		static function get_link_base()
 		{
 			$base = '/index.php';
 
@@ -203,7 +203,7 @@
 			return $base;
 		}
 
-		public function link( $data )
+		public static function link( $data )
 		{
 			$base = self::get_link_base();
 			return $GLOBALS['phpgw']->link($base, $data);
@@ -261,9 +261,9 @@
 		 * @return type
 		 */
 
-		public function add_javascript( $app, $pkg, $name )
+		public function add_javascript( $app, $pkg, $name, $type = 'text/javascript')
 		{
-			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);
+			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app, $type);
 		}
 
 		public function set_active_menu( $item )

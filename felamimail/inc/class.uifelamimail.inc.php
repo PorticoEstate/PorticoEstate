@@ -16,7 +16,7 @@
 		throw new Exception('missing egw-pear package');
 	}
 
-	class uifelamimail
+	class felamimail_uifelamimail
 	{
 		var $public_functions = array
 		(

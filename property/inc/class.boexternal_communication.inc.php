@@ -34,14 +34,15 @@
 	class property_boexternal_communication
 	{
 
-		var $so, $historylog, $config, $bocommon,$preview_html, $dateformat;
+		var $so, $historylog, $config, $bocommon,$preview_html, $dateformat, $currentapp;
 
 		public function __construct()
 		{
-			$this->so = createObject('property.soexternal_communication');
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->so = createObject("{$this->currentapp}.soexternal_communication");
 			$this->historylog = & $this->so->historylog;
 			$this->bocommon = createObject('property.bocommon');
-			$this->config = CreateObject('phpgwapi.config', 'property')->read();
+			$this->config = CreateObject('phpgwapi.config', $this->currentapp)->read();
 			$this->preview_html = phpgw::get_var('preview_html', 'bool');
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -102,7 +103,7 @@
 
 			$criteria = array
 				(
-				'appname' => 'property',
+				'appname' => $this->currentapp,
 				'location' => ".ticket.external_communication",
 				'allrows' => true
 			);
@@ -117,7 +118,7 @@
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/{$this->currentapp}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
 				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
 				{
@@ -158,7 +159,7 @@
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/{$this->currentapp}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
 				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
 				{
@@ -222,7 +223,7 @@
 			$message_info = $this->read_single($id);
 
 			$ticket_id = $message_info['ticket_id'];
-			$botts = createObject('property.botts');
+			$botts = createObject("{$this->currentapp}.botts");
 			$ticket = $botts->read_single($ticket_id);
 
 			$contact_data = $this->get_contact_data($ticket);
@@ -245,7 +246,7 @@
 				return false;
 			}
 
-			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'))->read();
+			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->currentapp, '.admin'))->read();
 
 			if(!empty($config_admin['xPortico']['sender_email_address']))
 			{
@@ -273,7 +274,7 @@
 			$id = $message_info['id'];
 
 			$ticket_id = $message_info['ticket_id'];
-			$botts = createObject('property.botts');
+			$botts = createObject("{$this->currentapp}.botts");
 
 			$ticket = $botts->read_single($ticket_id);
 
@@ -300,7 +301,7 @@ HTML;
 HTML;
 			if(!$preview)
 			{
-				$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.view',
+				$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uiexternal_communication.view",
 					'id' => $id), false, true) . '">' . lang('Ticket') . " # {$ticket_id}::{$id} </a>" . "\n";
 			}
 
@@ -569,11 +570,14 @@ HTML;
 
 			$order_id = $ticket['order_id'];
 	//account_display
-			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
-			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
+			$user_phone = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['cellphone'];
+			$user_email = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+//			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_email_template'];
+			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_contact_block_1'];
 
+			/**
+			 * Only relevant for $this->currentapp = 'property'
+			 */
 			if (!empty($this->config['contact_at_location']))
 			{
 				$contact_at_location = $this->config['contact_at_location'];

@@ -211,7 +211,7 @@
 
 			$where = 'WHERE';
 
-			$config = $GLOBALS['phpgw']->config->read();
+			$config = CreateObject('phpgwapi.config', 'property')->read();
 
 			if (!$start_date && (!isset($config['bypass_acl_at_tickets']) || !$config['bypass_acl_at_tickets']))
 			{
@@ -2169,7 +2169,7 @@
 
 		function add_relation( $add_relation, $id )
 		{
-			$config = $GLOBALS['phpgw']->config->read();
+			$config = CreateObject('phpgwapi.config', 'property')->read();
 			$interlink = CreateObject('property.interlink');
 			$this->db->transaction_begin();
 
