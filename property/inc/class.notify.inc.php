@@ -39,8 +39,7 @@
 		/**
 		 * @var object $_db Database connection
 		 */
-		protected $_db;
-		protected $account;
+		protected $_db, $_db2, $_join, $_left_join, $account;
 		var $public_functions = array
 			(
 			'update_data' => true,
@@ -55,6 +54,7 @@
 			$this->_db = & $GLOBALS['phpgw']->db;
 			$this->_db2 = clone($this->_db);
 			$this->_join = & $this->_db->join;
+			$this->_left_join = & $this->_db->left_join;
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
