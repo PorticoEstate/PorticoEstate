@@ -660,7 +660,7 @@ HTML;
 		* @param string $appname application name optional can be derived from $GLOBALS['phpgw_info']['flags']['currentapp'];
 		* @param string? $layout optional can force the template set to a specific layout
 		*/
-		public function get_tpl_dir($appname = '',$layout = '')
+		public static function get_tpl_dir($appname = '',$layout = '')
 		{
 			if (! $appname)
 			{

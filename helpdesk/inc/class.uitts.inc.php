@@ -1799,6 +1799,24 @@ JS;
 
 			if (isset($values['save']))
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				$notified = createObject('property.notify')->read(array('location_id' => $location_id, 'location_item_id' => $id));
+
+				$additional_users = array();
+				foreach ($notified as $entry)
+				{
+					if($entry['account_id'])
+					{
+						$additional_users[] = $entry['account_id'];
+					}
+				}
+
+				if(in_array($this->account, $additional_users));
+				{
+					$this->acl_edit = true;
+				}
+
 				if (!$this->acl_edit)
 				{
 					phpgw::no_access();

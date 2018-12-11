@@ -38,6 +38,11 @@
 	define('PHPGW_SQL_RETURN_SQL', 2);
 
 	/**
+	* SQL sql lazy key
+	*/
+	define('PHPGW_SQL_LAZY_KEY', 1);
+
+	/**
 	 * SQL Generator ENTITY - helps to construct queries statements
 	 *
 	 * This class provide common methods to create transaction sql queries.
