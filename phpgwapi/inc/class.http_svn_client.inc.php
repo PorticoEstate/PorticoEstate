@@ -132,7 +132,7 @@
 		* @internal The only supported authentication type is "basic", returned value are the pure xml answer
 		* @access private
 		*/
-		function report($uri,$startvers,$endvers)
+		function report($uri,$startvers,$endvers,  $dummy_to_match_parent_class='')
 		{
 			$svnxml = '<?xml version="1.0" encoding="utf-8" ?>
 			<S:log-report xmlns:S="svn:" xmlns:D="DAV">';
