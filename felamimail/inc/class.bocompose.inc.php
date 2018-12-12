@@ -12,7 +12,7 @@
 	\***************************************************************************/
 	/* $Id$ */
 
-	class bocompose
+	class felamimail_bocompose
 	{
 		var $public_functions = array
 		(

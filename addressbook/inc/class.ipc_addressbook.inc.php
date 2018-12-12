@@ -30,7 +30,7 @@
 		* @var     object   $vcard  import/export vcard object
 		*/
 		protected $vcard;
-	
+
 
 		/**
 		* Constructor
@@ -42,7 +42,7 @@
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->vcard    = CreateObject('phpgwapi.vcard');
 		}
-  
+
 
 		/**
 		* Add data in a certain mime type format to the application.
@@ -60,7 +60,7 @@
 
 			$data = str_replace("\n\n", "\r\n", $data);
 			$data_lines = explode("\r\n", $data);
-		
+
 			$buffer = array();
 			$temp_line = '';
 
@@ -187,7 +187,7 @@
 						$adr = 'adr_two_';
 						break;
 					default:
-						continue;
+						continue 2;
 						break;
 					}
 					$fields[$adr.'street']       = $loc_data['add1'];
@@ -270,7 +270,7 @@
 		{
 			$idList = array();
 			$lastmod = intval($lastmod);
-		
+
 			//$this->contacts->read(null, false, null, null, null, null, null, $lastmod);
 			// read_contacts doesnt allow lastmod time -workaround:
 			$owner = intval($GLOBALS['phpgw_info']['user']['account_id']);
@@ -337,7 +337,7 @@
 			{
 				return false;
 			}
-		
+
 			if(!$this->contacts->check_read($id))
 			{
 				return false;
@@ -345,7 +345,7 @@
 
 			$data = str_replace("\n\n", "\r\n", $data);
 			$data_lines = explode("\r\n", $data);
-		
+
 			$buffer = array();
 			$temp_line = '';
 

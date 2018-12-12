@@ -14,7 +14,7 @@
 
 	phpgw::import_class('felamimail.html');	
 
-	class uicompose
+	class felamimail_uicompose
 	{
 
 		var $public_functions = array

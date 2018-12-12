@@ -40,7 +40,7 @@
 		$URL .= "&from=" . urlencode($sms_from) . "&to=" . urlencode($sms_to) . "&text=" . urlencode($sms_msg);
 		$URL .= "&dlr-mask=31&dlr-url=" . urlencode($kannel_param['phpgwsms_web'] . "/plugin/gateway/kannel/dlr.php?type=%d&slid=$smslog_id&uid=$uid");
 		$URL .= "&mclass=$sms_type";
-		$connection = fsockopen($kannel_param['bearerbox_host'], $kannel_param['sendsms_port'], &$error_number, &$error_description, 60);
+		$connection = fsockopen($kannel_param['bearerbox_host'], $kannel_param['sendsms_port'], $error_number, $error_description, 60);
 		if ($connection)
 		{
 			socket_set_blocking($connection, false);
