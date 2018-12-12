@@ -51,4 +51,4 @@
 	* Include the PhpSpreadsheet class
 	* @see PhpSpreadsheet
 	*/
-	require_once PHPGW_API_INC . '/phpspreadsheet/vendor/autoload.php';
+	require_once PHPGW_API_INC . '/phpspreadsheet/autoload.php';
