@@ -295,7 +295,7 @@ class Mail_mimeDecode
                     break;
 
                 case 'message/rfc822':
-                    $obj = &new Mail_mimeDecode($body);
+                    $obj = new Mail_mimeDecode($body);
                     $return->parts[] = $obj->decode(array('include_bodies' => $this->_include_bodies));
                     unset($obj);
                     break;

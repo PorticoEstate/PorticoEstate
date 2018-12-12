@@ -17,7 +17,7 @@
 	phpgw::import_class('felamimail.html');	
 	require_once(PHPGW_INCLUDE_ROOT.'/felamimail/inc/class.felamimail_bosignatures.inc.php');
 
-	class uipreferences
+	class felamimail_uipreferences
 	{
 
 		var $public_functions = array

@@ -185,9 +185,9 @@
 				$where= 'AND';
 			}
 
-			$GLOBALS['phpgw']->config->read();
+			$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
 
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			if(!empty($config['acl_at_tts_category']))
 			{
 				$filtermethod .= " {$where} phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
 				$where= 'AND';
@@ -322,29 +322,39 @@
 
 			if ($user_id)
 			{
+				$_membership = array();
+				$membership = array(-1);
 				if (is_array($user_id))
 				{
+					$user_ids = array(-1);
 					foreach ($user_id as &$_user_id)
 					{
-						$_user_id = abs($_user_id);
+						if($_user_id < 0)
+						{
+							$_membership = array_merge($_membership ,$GLOBALS['phpgw']->accounts->membership(abs($_user_id)));
+						}
+						$user_ids[] = abs($_user_id);
 					}
-					$filtermethod .= " {$where} assignedto IN (" . implode(', ' ,$user_id) . ')';
-					$where = 'AND';
 				}
 				else if ($user_id > 0)
 				{
-					$filtermethod .= " {$where} (assignedto={$user_id}";
-					$where = 'AND';
-
-					$membership = $GLOBALS['phpgw']->accounts->membership($user_id);
-					array_unshift($membership, array(-1));
-					$filtermethod .= ' OR (assignedto IS NULL AND phpgw_helpdesk_tickets.group_id IN (' . implode(',',array_keys($membership)) . ')))';
+					$user_ids = array((int)abs($user_id));
 				}
 				else if ($user_id < 0)
 				{
-					$filtermethod .= " {$where} assignedto=" . (int)abs($user_id);
-					$where = 'AND';
+					$user_ids = array((int)abs($user_id));
+					$_membership = $GLOBALS['phpgw']->accounts->membership(abs($user_id));
 				}
+
+				foreach ($_membership as $_key => $group_member)
+				{
+					$membership[] = $group_member->id;
+				}
+
+				$filtermethod .= " {$where} (assignedto IN (" . implode(', ' ,$user_ids) . ')';
+				$where = 'AND';
+				$filtermethod .= ' OR (assignedto IS NULL AND phpgw_helpdesk_tickets.group_id IN (' . implode(',',$membership) . ')))';
+
 			}
 
 			if ($reported_by > 0)
@@ -437,6 +447,8 @@
 						'estimate'			=> $this->db2->f('budget'),
 						'new_ticket'		=> $this->db2->f('view') ? false : true,
 						'billable_hours'	=> $this->db2->f('billable_hours'),
+						'details' =>		$this->db2->f('details', true),
+
 					);
 					foreach ($custom_cols as $custom_col)
 					{
@@ -489,12 +501,30 @@
 		{
 			$id = (int) $id;
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+			$notified = createObject('property.notify')->read(array('location_id' => $location_id, 'location_item_id' => $id));
+
+			$additional_users = array();
+			foreach ($notified as $entry)
+			{
+				if($entry['account_id'])
+				{
+					$additional_users[] = $entry['account_id'];
+				}
+			}
 
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
 
 			$acl_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
 			$acl_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
+
+			if($additional_users)
+			{
+				$acl_join .= "{$this->left_join} phpgw_notification ON (phpgw_notification.location_item_id = phpgw_helpdesk_tickets.id AND phpgw_notification.location_id = {$location_id})";
+				$acl_join .= "{$this->left_join} phpgw_accounts AS additional_users ON (phpgw_notification.contact_id = additional_users.person_id)";
+			}
 
 			$categories = $GLOBALS['phpgw']->locations->get_subs('helpdesk', '.ticket.category');
 
@@ -507,18 +537,23 @@
 					$grant_category[] = $category[3];
 				}
 			}
-
 			$grant_category[] = -1;//If no one found - not breaking the query
 
+			$_additional_user_filter = array();
 
-			$GLOBALS['phpgw']->config->read();
-
-			$filtermethod = '';
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			if($additional_users)
 			{
-				$filtermethod = " AND phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+				$_additional_user_filter[] = 'additional_users.account_id = ' . (int) $this->account;
 			}
 
+			$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+
+			$filtermethod = 'AND (phpgw_helpdesk_tickets.user_id = ' . (int) $this->account;
+
+			if(!empty($config['acl_at_tts_category']))
+			{
+				$filtermethod .= " AND (phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+			}
 
 			if (is_array($this->grants))
 			{
@@ -531,7 +566,7 @@
 					}
 					unset($user);
 					reset($public_user_list);
-					$filtermethod .= " AND (phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+					$_additional_user_filter[] = "phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
 				}
 
 				$public_group_list = array();
@@ -543,16 +578,24 @@
 					}
 					unset($user);
 					reset($public_group_list);
-					$where = $public_user_list ? 'OR' : 'AND';
-					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
-				}
-				if($public_user_list && !$public_group_list)
-				{
-					$filtermethod .=')';
+					$_additional_user_filter[] = "phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
 				}
 			}
 
-			$sql = "SELECT DISTINCT phpgw_helpdesk_tickets.* FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
+			if($_additional_user_filter)
+			{
+				$filtermethod .= ' OR(' . implode(' OR ',  $_additional_user_filter) . ')';
+			}
+
+			$filtermethod .=')';
+
+
+			if(!empty($config['acl_at_tts_category']))
+			{
+				$filtermethod .=')';
+			}
+
+			$sql = "SELECT DISTINCT phpgw_helpdesk_tickets.* FROM phpgw_helpdesk_tickets {$acl_join} WHERE phpgw_helpdesk_tickets.id = {$id} {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -1246,7 +1289,7 @@
 				foreach ($_cats as $_cat)
 				{
 					$_filter_cat[] = $_cat['id'];
-			
+
 				}
 
 				$filtermethod = ' WHERE cat_id IN (' . implode(',', $_filter_cat) . ')';

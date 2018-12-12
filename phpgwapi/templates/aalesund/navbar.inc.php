@@ -12,8 +12,8 @@
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			foreach($msgbox_data as & $message)
 			{
-				echo "<div class='{$message['msgbox_class']}'>";
-				echo $message['msgbox_text'];
+				echo "<div class='alert {$message['msgbox_class']}' role='alert'>";
+				echo "<p class='msgbox_text'>".$message['msgbox_text']."</p>";
 				echo '</div>';
 			}
 		}
@@ -34,10 +34,23 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
+		$config_frontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+
 		$footer_info = phpgwapi_cache::session_get('phpgwapi', 'footer_info');
+		$footer_privacy_link = "https://www.aktiv-kommune.no/hva-er-aktivkommune/";
+		if (!empty($config_frontend['footer_privacy_link']))
+		{
+			$footer_privacy_link = $config_frontend['footer_privacy_link'];
+		}
 		$var = array
 		(
+			'cart_complete_application' => lang('Complete applications'),
+			'cart_confirm_delete'       => lang('Do you want to delete application?'),
+			'cart_header'				=> lang('Application cart'),
+			'footer_about'         => lang('About the service'),
 			'footer_info'	=> $footer_info, //'Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen',
+			'footer_privacy_link'  => $footer_privacy_link,
+			'footer_privacy_title' => lang('Privacy statement'),
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);

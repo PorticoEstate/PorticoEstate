@@ -196,7 +196,7 @@
 				case SYNCML_ALERT_ONEWAYFROMSERVERBYSERVER:
 				case SYNCML_ALERT_REFRESHFROMSERVER:
 				case SYNCML_ALERT_REFRESHFROMSERVERBYSERVER:
-					return $this->_send_sync(&$response, &$session, $database,
+					return $this->_send_sync($response, $session, $database,
 						$open_channel);
 				case SYNCML_ALERT_REFRESHFROMCLIENT:
 				case SYNCML_ALERT_REFRESHFROMCLIENTBYSERVER:

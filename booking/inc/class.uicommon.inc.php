@@ -132,7 +132,7 @@
 			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
 		}
 
-//		$text = date($dateformat, $timestamp - phpgwapi_datetime::user_timezone());
+//		$text = date($dateformat, $timestamp + phpgwapi_datetime::user_timezone());
 		$text = date($dateformat, $timestamp);
 
 		return $text;
@@ -241,7 +241,7 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public function link( $data )
+		public static function link( $data )
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{

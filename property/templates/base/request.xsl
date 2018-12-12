@@ -194,6 +194,20 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>
+						<xsl:when test="value_link_survey!=''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'condition survey')"/>
+								</label>
+								<div class="pure-custom">
+									<a href="{value_link_survey}">
+										<xsl:value-of select="value_condition_survey_id"/>
+									</a>
+								</div>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:choose>
 						<xsl:when test="value_request_id!=''">
 							<xsl:for-each select="value_origin">
 								<div class="pure-control-group">
@@ -517,6 +531,19 @@
 							<xsl:value-of select="php:function('lang', 'multiplier')"/>
 						</label>
 						<xsl:value-of select="value_multiplier"/>
+					</div>
+					<div class="pure-control-group">
+						<label class="requirement-action-label">
+							<xsl:value-of select="php:function('lang', 'representative')"/>
+						</label>
+						<input type="text" data-validation="number" data-validation-allowing="float" id="representative" name="values[representative]" value="{value_representative}">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'representative')"/>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-optional">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+						</input>
 					</div>
 					<div class="pure-control-group">
 						<label class="requirement-action-label">

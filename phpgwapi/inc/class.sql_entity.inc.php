@@ -38,6 +38,11 @@
 	define('PHPGW_SQL_RETURN_SQL', 2);
 
 	/**
+	* SQL sql lazy key
+	*/
+	define('PHPGW_SQL_LAZY_KEY', 1);
+
+	/**
 	 * SQL Generator ENTITY - helps to construct queries statements
 	 *
 	 * This class provide common methods to create transaction sql queries.
@@ -458,7 +463,7 @@
 		{
 			foreach ($entities as $entity_name)
 			{
-				$link = $this - get_ilink($entity_name);
+				$link = $this->get_ilink($entity_name);
 				$field = $this->real_field($link['lfield']);
 				$fields_to_prototype[$field] = '{' . $link['lfield'] . '}';
 			}

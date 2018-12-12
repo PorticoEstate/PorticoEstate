@@ -286,6 +286,22 @@
 			}
 		}
 
+		public function edit_multiplier( $data )
+		{
+			try
+			{
+				$this->so->edit_multiplier($data);
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					throw $e;
+				}
+			}
+		}
+
+
 		public function import( $survey, $import_data )
 		{
 			try
@@ -309,7 +325,7 @@
 
 			if ($id == -1)
 			{
-				$values = $this->so->read(array('allrows' => true));
+				$values = $this->so->read(array('allrows' => true, 'status_open' => true));
 				foreach ($values as $survey)
 				{
 					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
@@ -328,7 +344,23 @@
 			$i = 0;
 			foreach ($data as $entry)
 			{
-				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
+
+				if($entry['multiplier'] > 1)
+				{
+					if($entry['area_gross'] )
+					{
+						if($entry['amount'] && ($entry['amount'] / $entry['area_gross']) < 700) // filtrere ekstremverdier
+						{
+							$entry['amount'] = $entry['amount'] * $entry['multiplier'];
+						}
+					}
+					else
+					{
+						$entry['amount'] = $entry['amount'] * $entry['multiplier'];
+					}
+				}
+
+//				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
 				$i = "{$entry['building_part']}_{$entry['category']}";
 
 				$values[$entry['condition_survey_id']][$i]['building_part'] = $entry['building_part'];

@@ -79,7 +79,16 @@
 						'index'	=> array
 						(
 							'text'	=> lang('Configuration'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'helpdesk') )
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'helpdesk') ),
+							'children' => array
+								(
+								'custom_config' => array
+									(
+									'text' => lang('custom config'),
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+										'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin')))
+								)
+							)
 						),
 						'ticket_attribs' => array
 							(
@@ -107,6 +116,12 @@
 						(
 							'text'	=> lang('Configure Access Permissions'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'helpdesk') )
+						),
+						'external_com_type' => array
+							(
+							'text' => lang('external communication type'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'external_com_type'))
 						),
 						'custom_menu_items' => array
 							(

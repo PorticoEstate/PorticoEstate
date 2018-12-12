@@ -83,7 +83,7 @@
 				$contacts = $d->get_persons($fields, 0, 0, 'per_last_name', 'ASC', '', $criteria_token);
 			}
 
-			$response = & new xajaxResponse();
+			$response =  new xajaxResponse();
 
 			if (is_array($contacts))
 			{

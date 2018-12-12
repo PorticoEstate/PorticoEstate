@@ -1918,7 +1918,7 @@
 								}
 								elseif (floor(($search_beg_day - $event_beg_day)/86400) % $freq)
 								{
-									continue;
+									continue 2;
 								}
 								else
 								{
@@ -1963,7 +1963,7 @@
 							case MCAL_RECUR_MONTHLY_WDAY:
 								if ((($search_date_year - $rep_events['start']['year']) * 12 + $search_date_month - $rep_events['start']['month']) % $freq)
 								{
-									continue;
+									continue 2;
 								}
 	  
 								if ((phpgwapi_datetime::day_of_week($rep_events['start']['year'],$rep_events['start']['month'],$rep_events['start']['mday']) == phpgwapi_datetime::day_of_week($search_date_year,$search_date_month,$search_date_day)) &&
@@ -1975,7 +1975,7 @@
 							case MCAL_RECUR_MONTHLY_MDAY:
 								if ((($search_date_year - $rep_events['start']['year']) * 12 + $search_date_month - $rep_events['start']['month']) % $freq)
 								{
-									continue;
+									continue 2;
 								}
 								if ($search_date_day == $rep_events['start']['mday'])
 								{
@@ -1985,7 +1985,7 @@
 							case MCAL_RECUR_YEARLY:
 								if (($search_date_year - $rep_events['start']['year']) % $freq)
 								{
-									continue;
+									continue 2;
 								}
 								if (date('dm',$datetime) == date('dm',$event_beg_day))
 								{

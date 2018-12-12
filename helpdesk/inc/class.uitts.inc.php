@@ -1771,6 +1771,13 @@ JS;
 			}
 
 			$id = phpgw::get_var('id', 'int', 'GET');
+			$add_external_communication = phpgw::get_var('external_communication', 'int');
+
+			if ($add_external_communication)
+			{
+				self::redirect(array('menuaction' => 'helpdesk.uiexternal_communication.edit','ticket_id' => $id,
+					'type_id' => $add_external_communication ));
+			}
 
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
@@ -1792,6 +1799,24 @@ JS;
 
 			if (isset($values['save']))
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				$notified = createObject('property.notify')->read(array('location_id' => $location_id, 'location_item_id' => $id));
+
+				$additional_users = array();
+				foreach ($notified as $entry)
+				{
+					if($entry['account_id'])
+					{
+						$additional_users[] = $entry['account_id'];
+					}
+				}
+
+				if(in_array($this->account, $additional_users));
+				{
+					$this->acl_edit = true;
+				}
+
 				if (!$this->acl_edit)
 				{
 					phpgw::no_access();
@@ -2124,6 +2149,56 @@ JS;
 				)
 			);
 
+			$external_messages_def = array(
+				array(
+					'key' => 'id',
+					'label' => lang('id'),
+					'hidden' => false
+					),
+				array(
+					'key' => 'subject_link',
+					'label' => lang('subject'),
+					'hidden' => false,
+					'sortable' => true,
+					),
+				array(
+					'key' => 'mail_recipients',
+					'label' => lang('email'),
+					'hidden' => false,
+					'sortable' => true,
+					),
+				array(
+					'key' => 'modified_date',
+					'label' => lang('modified date'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+				);
+
+			$external_messages = createObject('helpdesk.soexternal_communication')->read($id);
+
+			foreach ($external_messages as &$external_message)
+			{
+				$external_message['modified_date'] = $GLOBALS['phpgw']->common->show_date($external_message['modified_date']);
+				$external_message['mail_recipients'] = implode(', ', $external_message['mail_recipients']);
+				$external_message['subject_link'] = "<a href=\"" . self::link(array('menuaction' => 'helpdesk.uiexternal_communication.edit',
+						'id' => $external_message['id'], 'ticket_id' => $id)) . "\">{$external_message['subject']}</a>";
+			}
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_7',
+				'requestUrl' => "''",
+				'data' => json_encode($external_messages),
+				'ColumnDefs' => $external_messages_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
+				)
+			);
+
 			//----------------------------------------------datatable settings--------
 
 //_debug_array($supervisor_email);die();
@@ -2303,7 +2378,8 @@ JS;
 						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false
+				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
+				'parent_cat_id' => $this->parent_cat_id,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

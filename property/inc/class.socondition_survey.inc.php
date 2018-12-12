@@ -47,15 +47,18 @@
 			$filter = isset($data['filter']) ? $data['filter'] : 'none';
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) ? $data['sort'] : '';
+			$order = isset($data['order']) ? $data['order'] : '';
 			$dir = isset($data['dir']) ? $data['dir'] : 'DESC';
 			$cat_id = isset($data['cat_id']) ? (int)$data['cat_id'] : 0;
+			$status_id = isset($data['status_id']) ? (int)$data['status_id'] : 0;
+			$status_open = empty($data['status_open']) ? false : true;
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$table = 'fm_condition_survey';
-			if ($sort)
+			if ($order)
 			{
-				switch ($sort)
+				switch ($order)
 				{
 					case 'year':
 						$sort = 'entry_date';
@@ -65,9 +68,9 @@
 				}
 
 				$metadata = $this->_db->metadata($table);
-				if (isset($metadata[$sort]))
+				if (isset($metadata[$order]))
 				{
-					$ordermethod = " ORDER BY {$table}.$sort $dir";
+					$ordermethod = " ORDER BY {$table}.$order $dir";
 				}
 			}
 			else
@@ -82,15 +85,29 @@
 				$where = 'AND';
 			}
 
+			if ($status_id)
+			{
+				$filtermethod .= " {$where} {$table}.status_id = {$status_id}";
+				$where = 'AND';
+			}
+
+			if($status_open)
+			{
+				$filtermethod .= " {$where} {$table}_status.closed IS NULL";
+				$where = 'AND';
+
+			}
 			if ($query)
 			{
 				$query = $this->_db->db_addslashes($query);
 				$querymethod = " {$where} {$table}.title {$this->_like} '%{$query}%' OR {$table}.address {$this->_like} '%{$query}%'";
 			}
 
-			$groupmethod = "GROUP BY $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
+			$groupmethod = "GROUP BY {$table}_status.descr, $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier, {$table}_status.closed";
 			$sql = "SELECT DISTINCT $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, $table.multiplier,"
-				. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
+				. " COUNT(condition_survey_id) AS cnt, org_name AS vendor, {$table}_status.descr AS status, {$table}_status.closed"
+				. " FROM {$table} "
+				. " {$this->_left_join} {$table}_status ON {$table}_status.id = {$table}.status_id"
 				. " {$this->_left_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
 				. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
@@ -121,8 +138,22 @@
 					'user' => $this->_db->f('user_id'),
 					'multiplier' => $this->_db->f('multiplier'),
 					'cnt' => $this->_db->f('cnt'),
+					'status' => $this->_db->f('status', true),
+					'closed' => $this->_db->f('closed'),
 				);
 			}
+
+			foreach ($values as &$entry)
+			{
+				$summation = $this->get_summation($entry['id']);
+
+				$entry['summation'] = 0;
+				foreach ($summation as $sum)
+				{
+					$entry['summation'] += $sum['amount'] * $entry['multiplier'];
+				}
+			}
+
 
 			return $values;
 		}
@@ -294,6 +325,37 @@
 			return $id;
 		}
 
+		public function edit_multiplier( $data )
+		{
+			$id = (int)$data['id'];
+
+			$value_set = array
+			(
+				'multiplier' => $data['multiplier']
+			);
+
+			$this->_db->transaction_begin();
+
+			try
+			{
+				$this->_edit($id, $value_set, 'fm_condition_survey');
+				$this->_db->query("UPDATE fm_request SET multiplier = '{$data['multiplier']}' WHERE condition_survey_id = {$id}", __LINE__, __FILE__);
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->_db->transaction_abort();
+					throw $e;
+				}
+			}
+
+			$this->_db->transaction_commit();
+
+			return $id;
+		}
+
+
 		public function import( $survey, $import_data = array() )
 		{
 			if (!isset($survey['id']) || !$survey['id'])
@@ -460,7 +522,7 @@
 					$request['location_code'] = $survey['location_code'];
 					$request['origin_id'] = $origin_id;
 					$request['origin_item_id'] = (int)$survey['id'];
-					$request['title'] = substr($entry['title'], 0, 255);
+					$request['title'] = $entry['title'];
 					$request['descr'] = phpgw::clean_value($entry['descr'], 'string');
 					$request['building_part'] = phpgw::clean_value($entry['building_part'], 'string');
 					$request['coordinator'] = $survey['coordinator_id'];
@@ -491,7 +553,7 @@
 							'degree' => $entry['condition_degree'],
 							'condition_type' => $entry['condition_type'],
 							'consequence' => $entry['consequence'],
-							'probability' => $entry['probability']
+							'probability' => $entry['probability'] ? $entry['probability'] : 2
 						)
 					);
 
@@ -550,12 +612,18 @@
 				$id_filter = "condition_survey_id = {$condition_survey_id}";
 			}
 
-			$sql = "SELECT condition_survey_id, substr(building_part, 1,1) as building_part_,"
+			$sql = "SELECT condition_survey_id, substr(building_part, 1,3) as building_part_,"
 				. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
-				. " recommended_year as year"
+				. " recommended_year as year, fm_request.multiplier, area_gross"
 				. " FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
-				. " WHERE {$id_filter} AND fm_request_status.closed IS NULL"
-				. " GROUP BY condition_survey_id, building_part_ , year ORDER BY building_part_";
+				. " {$this->_join} fm_request_condition ON fm_request_condition.request_id = fm_request.id"
+				. " {$this->_join} fm_location1 ON fm_request.loc1 = fm_location1.loc1"
+				. " {$this->_join} fm_condition_survey ON fm_request.condition_survey_id = fm_condition_survey.id"
+				. " {$this->_join} fm_condition_survey_status ON fm_condition_survey.status_id = fm_condition_survey_status.id"
+				. " WHERE {$id_filter}"
+				. " AND fm_condition_survey_status.closed IS NULL"
+				. " AND degree > 1"
+				. " GROUP BY condition_survey_id, building_part_ , year, fm_request.multiplier, area_gross ORDER BY building_part_";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -563,6 +631,7 @@
 			while ($this->_db->next_record())
 			{
 				$amount = $this->_db->f('investment') + $this->_db->f('operation');
+				$_multiplier = $this->_db->f('multiplier');
 
 				$values[] = array
 					(
@@ -571,6 +640,8 @@
 					'amount_investment' => $this->_db->f('investment'),
 					'amount_operation' => $this->_db->f('operation'),
 					'year' => $this->_db->f('year'),
+					'multiplier'	=> $_multiplier ? (float) $_multiplier : 1,
+					'area_gross' => (float) $this->_db->f('area_gross'),
 				);
 			}
 
@@ -589,6 +660,8 @@
 						'amount' => $entry['amount_investment'],
 						'year' => $entry['year'],
 						'category' => $lang_investment,
+						'multiplier'	=> $entry['multiplier'],
+						'area_gross' => $entry['area_gross'],
 					);
 				}
 				if ($entry['amount_operation'])
@@ -600,6 +673,8 @@
 						'amount' => $entry['amount_operation'],
 						'year' => $entry['year'],
 						'category' => $lang_operation,
+						'multiplier'	=> $entry['multiplier'],
+						'area_gross' => $entry['area_gross'],
 					);
 				}
 			}

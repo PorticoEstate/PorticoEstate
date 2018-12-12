@@ -7,7 +7,7 @@ var FormatterCenter = function (key, oData)
 
 this.confirm_session = function (action)
 {
-	if (action == 'save' || action == 'apply')
+	if (action == 'save' || action == 'apply' || action === 'external_communication')
 	{
 		conf = {
 			modules: 'date, security, file',

@@ -14,13 +14,13 @@
 	* @internal Based on Aeromail http://the.cushman.net/
 	*/
 
-	
+
 	/**
 	* Preferences
 	*
 	* @package email
-	*/		
-	class uipreferences
+	*/
+	class email_uipreferences
 	{
 		var $public_functions = array
 		(
@@ -46,18 +46,18 @@
 			$temp_prefs = $GLOBALS['phpgw']->preferences->create_email_preferences();
 			$this->prefs = $temp_prefs['email'];
 		}
-		
+
 		/**
-		 * create 2 columns TR's (TableRows) from preference data as standardized in email 
+		 * create 2 columns TR's (TableRows) from preference data as standardized in email
 		*
 		 * bopreferences class vars ->std_prefs[]  and ->cust_prefs[], various HTML widgets supported
-		 * @param $feed_prefs : array : preference data as standardized in email bopreferences class 
+		 * @param $feed_prefs : array : preference data as standardized in email bopreferences class
 		 * vars ->std_prefs[]  and ->cust_prefs[]
 		 * @return : string : HTML data accumulated for parsed prefernce widget TR's
 		 *  email bopreferences class vars ->std_prefs[]  and ->cust_prefs[], as filled by
 		 * email bopreferences->init_available_prefs(), represent a standardized preferences schema,
-		 * this function generates TR's from that data, using elements "id", "widget", "other_props", 
-		 * "lang_blurb", and "values" from that array structure. This function uses that data to fill 
+		 * this function generates TR's from that data, using elements "id", "widget", "other_props",
+		 * "lang_blurb", and "values" from that array structure. This function uses that data to fill
 		 * a template block that contatains the requested widget and the appropriate data.
 		 * Available HTML widgets are:
 		 * 	* textarea
@@ -65,7 +65,7 @@
 		 * 	* passwordbox
 		 * 	* combobox
 		 * 	* checkbox
-		 * If prefs data "other_props" contains "hidden", as with password data, then the actual 
+		 * If prefs data "other_props" contains "hidden", as with password data, then the actual
 		 * preference value is not shown and the "text blurb" is appended with "(hidden)".
 		 * Array can contain any number of preference "records", all generated TR's are cumulative.
 		 * @author	Angles
@@ -84,11 +84,11 @@
 				if ($this->debug > 0 ) { echo 'email.uipreferences.create_prefs_block: LEAVING early, $feed_prefs param was empty<br />'; }
 				return $return_block;
 			}
-			
+
 			// initialial backcolor, will be alternated between row_on and row_off
 			$back_color = $this->theme['row_off'];
 			$back_color_class = 'row_off';
-			
+
 			// what existing user preferences data do we use to retrieve what the user has already saved for a particular pref
 			if (($this->bo->account_group == 'extra_accounts')
 			&& (isset($this->bo->acctnum)))
@@ -107,21 +107,21 @@
 				$actual_user_prefs = $this->prefs;
 			}
 			if ($this->debug > 2) { echo 'email.uipreferences.create_prefs_block: $this->bo->account_group: ['.$this->bo->account_group.'] ; $this->bo->acctnum: ['.$this->bo->acctnum.'] ; $actual_user_prefs dump:<pre>'; print_r($actual_user_prefs); echo '</pre>'; }
-			
+
 			$c_prefs = count($feed_prefs);
 			// ---  Prefs Loops  ---
 			for($i=0;$i<$c_prefs;$i++)
 			{
 				$this_item = $feed_prefs[$i];
 				if ($this->debug > 2) { echo '** loop ['.$i.'] **: email.uipreferences.create_prefs_block: $this_item = $feed_prefs['.$i.'] = [<code>'.serialize($this_item).'</code>] ; $this_item DUMP <pre>'; print_r($this_item); echo '</pre>'; }
-				
+
 				// ---- do not show logic  ----
 				// do we show this for "default" account and/or "extra_accounts"
 				if (($this->bo->account_group == 'default')
 				&& (!stristr($this_item['accts_usage'] , 'default')))
 				{
 					// we are not supposed to show this item for the default account, skip this pref item
-					// continue is used within looping structures to skip the rest of the current loop 
+					// continue is used within looping structures to skip the rest of the current loop
 					// iteration and continue execution at the beginning of the next iteration
 					if ($this->debug > 1) { echo ' * email.uipreferences.create_prefs_block: skip showing this item because it is not applicable to the default account<br />'; }
 					continue;
@@ -140,14 +140,14 @@
 					if ($this->debug > 1) { echo ' * email.uipreferences.create_prefs_block: skip showing this item because "INACTIVE" is in $this_item[type] : ['.$this_item['type'].']<br />'; }
 					continue;
 				}
-				
+
 				// ----  ok to show this, continue...  ----
 				if ($this->debug > 1) { echo ' * email.uipreferences.create_prefs_block:  ... this item passed skip test, so it should be displayed ...<br />'; }
 				// ROW BACK COLOR
 				//$back_color = $this->nextmatchs->alternate_row_color($back_color);
 				$back_color = (($i + 1)/2 == floor(($i + 1)/2)) ? $this->theme['row_off'] : $this->theme['row_on'];
 				$back_color_class = (($i + 1)/2 == floor(($i + 1)/2)) ? 'row_off' : 'row_on';
-				
+
 				$var = array
 				(
 					'back_color'	=> $back_color,
@@ -156,7 +156,7 @@
 					'extra_text'	=> ''
 				);
 				$this->tpl->set_var($var);
-				
+
 				// this will be the HTTP_POST_VARS[*key*] key value, the "id" for the submitted pref item
 				if ($this->bo->account_group == 'default')
 				{
@@ -173,7 +173,7 @@
 					if ($this->debug > 1) { echo ' * email.uipreferences.create_prefs_block: html post array $key for this item is $html_pref_id: '.$html_pref_id.'<br />'; }
 					$this->tpl->set_var('pref_id', $html_pref_id);
 				}
-				
+
 				// we don't want to show a hidden value
 				if ( !isset($this_item['write_props']) || !stristr($this_item['write_props'], 'hidden'))
 				{
@@ -218,13 +218,13 @@
 					//$this_item_value = $actual_user_prefs[$this_item['id']];
 					$this->tpl->set_var('pref_value', $this_item_value);
 					$this->tpl->parse('V_tr_textarea','B_tr_textarea');
-					$done_widget = $this->tpl->get_var('V_tr_textarea');	
+					$done_widget = $this->tpl->get_var('V_tr_textarea');
 				}
 				elseif ($this_item['widget'] == 'textbox')
 				{
 					$this->tpl->set_var('pref_value', $this_item_value);
 					$this->tpl->parse('V_tr_textbox','B_tr_textbox');
-					$done_widget = $this->tpl->get_var('V_tr_textbox');	
+					$done_widget = $this->tpl->get_var('V_tr_textbox');
 				}
 				elseif ($this_item['widget'] == 'passwordbox')
 				{
@@ -232,14 +232,14 @@
 					// if $this_item['write_props'] contains the word "hidden"
 					$this->tpl->set_var('pref_value', $this_item_value);
 					$this->tpl->parse('V_tr_passwordbox','B_tr_passwordbox');
-					$done_widget = $this->tpl->get_var('V_tr_passwordbox');	
+					$done_widget = $this->tpl->get_var('V_tr_passwordbox');
 				}
 				elseif ($this_item['widget'] == 'combobox')
 				{
 					// set up combobox available options as KEYS array with empty VALUES
 					//reset($this_item['values']);
 					$combo_availables = Array();
-					$x = 0; 
+					$x = 0;
 					//while ( list ($key,$prop) = each ($this_item['values']))
 					if (is_array($this_item['values']))
 					{
@@ -264,7 +264,7 @@
 							{
 								$combo_available[$key] = '';
 							}
-							$combobox_html .= 
+							$combobox_html .=
 								'<option value="'.$key.'"'.$combo_available[$key].'>'.$prop.'</option>' ."\r\n";
 							$x++;
 						}
@@ -272,7 +272,7 @@
 					$this_item_value = $combobox_html;
 					$this->tpl->set_var('pref_value', $this_item_value);
 					$this->tpl->parse('V_tr_combobox','B_tr_combobox');
-					$done_widget = $this->tpl->get_var('V_tr_combobox');	
+					$done_widget = $this->tpl->get_var('V_tr_combobox');
 				}
 				elseif ($this_item['widget'] == 'checkbox')
 				{
@@ -286,7 +286,7 @@
 					}
 					$this->tpl->set_var('pref_value', $this_item_value);
 					$this->tpl->parse('V_tr_checkbox','B_tr_checkbox');
-					$done_widget = $this->tpl->get_var('V_tr_checkbox');	
+					$done_widget = $this->tpl->get_var('V_tr_checkbox');
 				}
 				else
 				{
@@ -295,7 +295,7 @@
 					$this->tpl->set_var('back_color_class', $back_color_class);
 					$this->tpl->set_var('section_title', 'call for unsupported widget:'.$this_item['widget']);
 					$this->tpl->parse('V_tr_sec_title','B_tr_sec_title');
-					$done_widget = $this->tpl->get_var('V_tr_sec_title');	
+					$done_widget = $this->tpl->get_var('V_tr_sec_title');
 				}
 				// add long help if requested
 				if ((isset($GLOBALS['phpgw']->msg->ref_GET['show_help']))
@@ -310,7 +310,7 @@
 			if ($this->debug > 0 ) { echo 'email.uipreferences.create_prefs_block: LEAVING, returning $return_block if widgets<br />'; }
 			return $return_block;
 		}
-		
+
 		/**
 		 * call this function to display the typical UI html page for email preferences
 		*
@@ -341,7 +341,7 @@
 				$this->preferences_default_acct_zero();
 			}
 		}
-		
+
 		/**
 		 * call this function to display the UI html page for email preferences for the Default Account
 		*
@@ -358,7 +358,7 @@
 			if ($this->debug > 1) { echo 'email.uipreferences.preferences: about to set $this->bo->account_group<br />'; }
 			$this->bo->account_group = 'default';
 			if ($this->debug > 1) { echo 'email.uipreferences.preferences: just set $this->bo->account_group to ['.$this->bo->account_group.']<br />'; }
-			
+
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				// we point to the global template for this version of phpgw templatings
@@ -370,7 +370,7 @@
 				// we use a PRIVATE template object for 0.9.14 conpat and during xslt porting
 				$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			}
-			
+
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				unset($GLOBALS['phpgw_info']['flags']['noheader']);
@@ -384,7 +384,7 @@
 			{
 				$GLOBALS['phpgw']->xslttpl->add_file(array('app_data'));
 			}
-			
+
 			$this->tpl->set_file(
 				Array(
 					'T_prefs_ui_out'	=> 'class_prefs_ui.tpl',
@@ -401,7 +401,7 @@
 			$this->tpl->set_block('T_pref_blocks','B_tr_checkbox','V_tr_checkbox');
 			$this->tpl->set_block('T_pref_blocks','B_submit_btn_only','V_submit_btn_only');
 			$this->tpl->set_block('T_pref_blocks','B_submit_and_cancel_btns','V_submit_and_cancel_btns');
-			
+
 			$var = Array(
 				'pref_errors'		=> '',
 				'page_title'		=> lang('E-Mail preferences'),
@@ -422,16 +422,16 @@
 				'btn_cancel_url'	=> $GLOBALS['phpgw']->link('/preferences/index.php',array())
 			);
 			$this->tpl->set_var($var);
-			
+
 			// this will fill the $this->bo->std_prefs[] and cust_prefs[]  "schema" arrays
 			if ($this->debug > 1) { echo 'email.uipreferences.preferences: calling $this->bo->init_available_prefs() to init $this->bo->std_prefs[] and cust_prefs[]  "schema" arrays<br />'; }
-			$this->bo->init_available_prefs();			
-			
+			$this->bo->init_available_prefs();
+
 			if ($this->debug > 3) { echo 'email.uipreferences.preferences: initiated schema dump:'; $this->bo->debug_dump_prefs(); }
-			
+
 			// initialize a local var to hold the cumulative main block data
 			$prefs_ui_rows = '';
-			
+
 			// ---  Standars Prefs  ---
 			// section title for standars prefs
 			$this->tpl->set_var('section_title', lang('Standard E-Mail preferences'));
@@ -463,12 +463,12 @@
 			// generate Std Prefs HTML Block
 			if ($this->debug > 1) { echo 'email.uipreferences.preferences: about to generate the html for standard email prefs block<br />'; }
 			$prefs_ui_rows .= $this->create_prefs_block($this->bo->std_prefs);
-			
+
 			// blank row
 			$this->tpl->set_var('back_color', $this->theme['bg_color']);
 			$done_widget = $this->tpl->parse('V_tr_blank','B_tr_blank');
 			$prefs_ui_rows .= $done_widget;
-			
+
 			// ---  Custom Prefs  ---
 			$this->tpl->set_var('section_title', lang('Custom E-Mail preferences'));
 			$done_widget = $this->tpl->parse('V_tr_sec_title','B_tr_sec_title');
@@ -476,26 +476,26 @@
 			// generate Custom Prefs HTML Block
 			if ($this->debug > 1) { echo 'email.uipreferences.preferences: about to generate the html for custom email prefs block<br />'; }
 			$prefs_ui_rows .= $this->create_prefs_block($this->bo->cust_prefs);
-			
+
 			// blank row
 			$this->tpl->set_var('back_color', $this->theme['bg_color']);
 			$done_widget = $this->tpl->parse('V_tr_blank','B_tr_blank');
 			$prefs_ui_rows .= $done_widget;
-			
+
 			// ---  Commit HTML Prefs rows to Main Template
 			// put all widget rows data into the template var
 			$this->tpl->set_var('prefs_ui_rows', $prefs_ui_rows);
-			
+
 			// Submit Button only
 			//$submit_btn_row = $this->tpl->parse('V_submit_btn_only','B_submit_btn_only');
 			//$this->tpl->set_var('submit_btn_row', $submit_btn_row);
 			// Submit Button and Cancel button
 			$submit_btn_row = $this->tpl->parse('V_submit_and_cancel_btns','B_submit_and_cancel_btns');
 			$this->tpl->set_var('submit_btn_row', $submit_btn_row);
-			
+
 			// new way to handle debug data, if there is debug data, this will put it in the template source data vars
 			$this->tpl->set_var('debugdata', $GLOBALS['phpgw']->msg->dbug->notice_pagedone());
-			
+
 			// output the template
 			if ($this->debug > 0) { echo 'email.uipreferences.preferences: LEAVING, about to output the template<br />'; }
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
@@ -517,7 +517,7 @@
 				$GLOBALS['phpgw']->xslttpl->pp();
 			}
 		}
-		
+
 		/**
 		 * call this function to display the typical UI html page Extra Email Accounts Preferences
 		*
@@ -531,13 +531,13 @@
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: about to set $this->bo->account_group<br />'; }
 			$this->bo->account_group = 'extra_accounts';
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: just set $this->bo->account_group to ['.$this->bo->account_group.']<br />'; }
-			
+
 			// obtain the acctnum for the extra email account we are dealing with here
 			$acctnum = $this->bo->obtain_ex_acctnum();
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: $this->bo->obtain_ex_acctnum() returns ['.serialize($acctnum).']<br />'; }
 			$this->bo->acctnum = $acctnum;
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: we just set $this->bo->acctnum to ['.serialize($this->bo->acctnum).']<br />'; }
-			
+
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				// we point to the global template for this version of phpgw templatings
@@ -549,7 +549,7 @@
 				// we use a PRIVATE template object for 0.9.14 conpat and during xslt porting
 				$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			}
-			
+
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				unset($GLOBALS['phpgw_info']['flags']['noheader']);
@@ -563,7 +563,7 @@
 			{
 				$GLOBALS['phpgw']->xslttpl->add_file(array('app_data'));
 			}
-			
+
 			$this->tpl->set_file(
 				Array(
 					'T_prefs_ui_out'	=> 'class_prefs_ui.tpl',
@@ -580,7 +580,7 @@
 			$this->tpl->set_block('T_pref_blocks','B_tr_checkbox','V_tr_checkbox');
 			$this->tpl->set_block('T_pref_blocks','B_submit_btn_only','V_submit_btn_only');
 			$this->tpl->set_block('T_pref_blocks','B_submit_and_cancel_btns','V_submit_and_cancel_btns');
-			
+
 			$var = Array(
 				'pref_errors'		=> '',
 				'page_title'		=> lang('E-Mail Extra Accounts'),
@@ -607,16 +607,16 @@
 				)
 			);
 			$this->tpl->set_var($var);
-			
+
 			// this will fill the $this->bo->std_prefs[] and cust_prefs[]  "schema" arrays
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: calling $this->bo->init_available_prefs() to init $this->bo->std_prefs[] and cust_prefs[]  "schema" arrays<br />'; }
-			$this->bo->init_available_prefs();			
-			
+			$this->bo->init_available_prefs();
+
 			if ($this->debug > 3) { echo 'email.uipreferences.ex_accounts_edit: initiated schema dump:'; $this->bo->debug_dump_prefs(); }
-			
+
 			// initialize a local var to hold the cumulative main block data
 			$prefs_ui_rows = '';
-			
+
 			// ---  Extra Account Pref Items  ---
 			// section title
 			$this->tpl->set_var('section_title', '*** '.lang('E-Mail Extra Account').' *** '.lang('Number').' '.$this->bo->acctnum);
@@ -647,7 +647,7 @@
 			$done_widget = $this->tpl->parse('V_tr_sec_title','B_tr_sec_title');
 			// add the finished widget row to the main block variable
 			$prefs_ui_rows .= $done_widget;
-			
+
 			// instructions: fill in everything you need
 			$this->tpl->set_var('section_title', lang('Please fill in everything you need'));
 			// parse the block,
@@ -656,10 +656,10 @@
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: about to generate the html for standard email prefs block<br />'; }
 			// add the finished widget row to the main block variable
 			$prefs_ui_rows .= $done_widget;
-			
+
 			// generate Std Prefs HTML Block
 			$prefs_ui_rows .= $this->create_prefs_block($this->bo->std_prefs);
-			
+
 			// ---  Custom Prefs  ---
 			$this->tpl->set_var('section_title', lang('Custom E-Mail Settings').' &#040;'.lang('required').'&#041;');
 			$done_widget = $this->tpl->parse('V_tr_sec_title','B_tr_sec_title');
@@ -671,23 +671,23 @@
 			// generate Custom Prefs HTML Block
 			if ($this->debug > 1) { echo 'email.uipreferences.ex_accounts_edit: about to generate the html for custom email prefs block<br />'; }
 			$prefs_ui_rows .= $this->create_prefs_block($this->bo->cust_prefs);
-			
+
 			// blank row
 			$this->tpl->set_var('back_color', $this->theme['bg_color']);
 			$done_widget = $this->tpl->parse('V_tr_blank','B_tr_blank');
 			$prefs_ui_rows .= $done_widget;
-			
+
 			// ---  Commit HTML Prefs rows to Main Template
 			// put all widget rows data into the template var
 			$this->tpl->set_var('prefs_ui_rows', $prefs_ui_rows);
-			
+
 			// Submit Button and Cancel button
 			$submit_btn_row = $this->tpl->parse('V_submit_and_cancel_btns','B_submit_and_cancel_btns');
 			$this->tpl->set_var('submit_btn_row', $submit_btn_row);
-			
+
 			// new way to handle debug data, if there is debug data, this will put it in the template source data vars
 			$this->tpl->set_var('debugdata', $GLOBALS['phpgw']->msg->dbug->notice_pagedone());
-			
+
 			// output the template
 			if ($this->debug > 0) { echo 'email.uipreferences.ex_accounts_edit: LEAVING, about to output the template<br />'; }
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
@@ -709,8 +709,8 @@
 				$GLOBALS['phpgw']->xslttpl->pp();
 			}
 		}
-		
-		
+
+
 		function ex_accounts_list()
 		{
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
@@ -724,7 +724,7 @@
 				// we use a PRIVATE template object for 0.9.14 conpat and during xslt porting
 				$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			}
-			
+
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{
 				unset($GLOBALS['phpgw_info']['flags']['noheader']);
@@ -738,14 +738,14 @@
 			{
 				$GLOBALS['phpgw']->xslttpl->add_file(array('app_data'));
 			}
-			
+
 			$this->tpl->set_file(
 				Array(
 					'T_prefs_ex_accounts'	=> 'class_prefs_ex_accounts.tpl'
 				)
 			);
 			$this->tpl->set_block('T_prefs_ex_accounts','B_accts_list','V_accts_list');
-			
+
 			$var = Array(
 				'pref_errors'		=> '',
 				'font'				=> $this->theme['font'],
@@ -759,10 +759,10 @@
 				'lang_delete'		=> lang('Delete')
 			);
 			$this->tpl->set_var($var);
-			
+
 			$acctount_list = array();
 			$acctount_list = $this->bo->ex_accounts_list();
-			
+
 			// here's what we get back
 			//$acctount_list[$X]['acctnum']
 			//$acctount_list[$X]['status']
@@ -773,9 +773,9 @@
 			//$acctount_list[$X]['edit_href']
 			//$acctount_list[$X]['delete_url']
 			//$acctount_list[$X]['delete_href']
-			
+
 			if ($this->debug) { echo 'email: uipreferences.ex_accounts_list: $acctount_list dump<pre>'; print_r($acctount_list); echo '</pre>'; }
-			
+
 			$tr_color = $this->theme['row_off'];
 			$loops = count($acctount_list);
 			if ($loops == 0)
@@ -816,15 +816,15 @@
 									'ex_acctnum'=>$this->bo->add_new_account_token));
 			$add_new_acct_href = '<a href="'.$add_new_acct_url.'">'.lang('New Account').'</a>';
 			$this->tpl->set_var('add_new_acct_href',$add_new_acct_href);
-			
+
 			$done_url = $GLOBALS['phpgw']->link(
 									'/preferences/index.php');
 			$done_href = '<a href="'.$done_url.'">'.lang('Done').'</a>';
 			$this->tpl->set_var('done_href',$done_href);
-			
+
 			// new way to handle debug data, if there is debug data, this will put it in the template source data vars
 			$this->tpl->set_var('debugdata', $GLOBALS['phpgw']->msg->dbug->notice_pagedone());
-			
+
 			// output the template
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
 			{

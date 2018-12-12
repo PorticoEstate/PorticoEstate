@@ -882,9 +882,10 @@
 				$recommended_year = $this->_db->f('recommended_year');
 
 				$request = array
-					(
+				(
 					'id' => $this->_db->f('id'),
 					'request_id' => $this->_db->f('id'), // FIXME
+					'condition_survey_id' => $this->_db->f('condition_survey_id'),
 					'title' => $this->_db->f('title', true),
 					'location_code' => $this->_db->f('location_code'),
 					'descr' => $this->_db->f('descr', true),
@@ -916,6 +917,7 @@
 					'delivered_date' => $this->_db->f('delivered_date'),
 					'regulations' => explode(',', $this->_db->f('regulations')),
 					'multiplier' => (float)$this->_db->f('multiplier'),
+					'representative' => (float)$this->_db->f('representative'),
 				);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
@@ -1047,6 +1049,7 @@
 			$value_set['responsible_unit'] = $request['responsible_unit'];
 			$value_set['recommended_year'] = (int)$request['recommended_year'];
 			$value_set['multiplier'] = $request['multiplier'] ? (float)$request['multiplier'] : 1;
+			$value_set['representative'] = $request['representative'] ? (float)$request['representative'] : 1;
 
 
 			if ((isset($request['origin']) && $request['origin'] == '.project.condition_survey') && isset($request['origin_id']) && !$value_set['condition_survey_id'])
@@ -1197,22 +1200,23 @@
 				'regulations' => $request['regulations'] ? ',' . implode(',', $request['regulations']) . ',' : '',
 				'responsible_unit' => $request['responsible_unit'],
 				'recommended_year' => (int)$request['recommended_year'],
+				'representative'	=> (float) $request['representative']
 			);
 
 			if (is_array($request['location']))
-                        {
-                            foreach($request['location'] as $input_name => $value)
 			{
-				$value_set[$input_name] = $value;
-			}
+				foreach($request['location'] as $input_name => $value)
+				{
+					$value_set[$input_name] = $value;
+				}
 			}
 
 			if (is_array($request['extra']))
-                        {
-                            foreach($request['extra'] as $input_name => $value)
 			{
-				$value_set[$input_name] = $value;
-			}
+				foreach($request['extra'] as $input_name => $value)
+				{
+					$value_set[$input_name] = $value;
+				}
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute, $request['id']);

@@ -1148,7 +1148,7 @@ $this->debug('cp : success '.$result);
 				//while (list ($num, $entry) = each ($ls))
 				foreach($ls as $num => $entry)
 				{
-					$newdir = str_replace ($f->fake_full_path, "$t->fake_full_path", $entry['directory'], 1);
+					$newdir =  str_ireplace ($f->fake_full_path, "{$t->fake_full_path}", $entry['directory']);
 					if ($this->mkdir (array(
 							'string'	=> $newdir.'/'.$entry['name'],
 							'relatives'	=> array ($t->mask)
@@ -1174,7 +1174,7 @@ $this->debug('cp : success '.$result);
 						continue;
 					}
 
-					$newdir = str_replace ($f->fake_full_path, "$t->fake_full_path", $entry['directory'], 1);
+					$newdir =  str_ireplace ($f->fake_full_path, "{$t->fake_full_path}", $entry['directory']);
 					$this->cp (array(
 							'from'	=> "$entry[directory]/$entry[name]",
 							'to'	=> "$newdir/$entry[name]",

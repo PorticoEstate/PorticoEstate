@@ -16,7 +16,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	class error
+	class phpgwapi_error
 	{
 		var $severity = 'E';
 		var $code = 'Unknown';
