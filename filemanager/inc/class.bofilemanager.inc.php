@@ -1186,7 +1186,7 @@
 			}
 			elseif (preg_match("/^{$this->hostname}/",$string))
 			{
-				$rstring = str_replace("{$this->hostname}/",'',$string, 1);
+				$rstring = str_ireplace("{$this->hostname}/",'',$string);
 				$rstring = preg_replace("/(.*)(\/|$)/Ue","rawurlencode (base64_encode ('\\1')).'\\2'",$rstring);
 				$rstring = $this->hostname.'/'.$rstring;
 			}
