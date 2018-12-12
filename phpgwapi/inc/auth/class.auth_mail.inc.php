@@ -81,7 +81,7 @@
 	 		return !! @imap_open("\{{$server}{$extra}:{$port}\}INBOX", $username , $passwd);
 		}
 
-		function change_password($old_passwd, $new_passwd)
+		function change_password($old_passwd, $new_passwd, $account_id = 0)
 		{
 			return '';
 		}

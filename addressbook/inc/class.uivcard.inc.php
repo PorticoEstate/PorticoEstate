@@ -12,7 +12,7 @@
   \**************************************************************************/
 
   /* $Id$ */
-	
+
 	phpgw::import_class('phpgwapi.uicommon');
 
 	class uivcard extends phpgwapi_uicommon
@@ -36,7 +36,7 @@
 		function __construct()
 		{
 			parent::__construct();
-			
+
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->browser  = CreateObject('phpgwapi.browser');
 			$this->vcard    = CreateObject('phpgwapi.vcard');
@@ -55,7 +55,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab' => 0
 			);
-				
+
 			self::render_template_xsl(array('vcard'), array('in' => $data));
 		}
 
@@ -80,7 +80,7 @@
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index'));
 			}
-			
+
 			// First, make sure they have permission to this entry
 			$fieldlist = $this->contacts->person_complete_data($ab_id);
 			$type_work = $this->contacts->search_location_type('work');
@@ -114,7 +114,7 @@
 			//$fields['tel_prefer']         = $fieldlist[''];
 			$fields['email_type']           = 'INTERNET';
 			$fields['email_home_type']      = 'INTERNET';
-			
+
 			// locations contains a list of loc_id and its date
 			if (isset($fieldlist['locations']) && is_array($fieldlist['locations']))
 			{
@@ -133,7 +133,7 @@
 							$adr = 'adr_two_';
 						break;
 						default:
-							continue;
+							continue 2;
 						break;
 					}
 					$fields[$adr.'street']       = $loc_data['add1'];
@@ -144,7 +144,7 @@
 					$fields[$adr.'countryname']	 = $loc_data['country'];
 				}
 			}
-			
+
 			$fields['tel_work']             = $fieldlist['comm_media']['work phone'];
 			$fields['tel_home']             = $fieldlist['comm_media']['home phone'];
 			$fields['tel_voice']            = $fieldlist['comm_media']['voice phone'];
@@ -222,7 +222,7 @@
 
 				// create a vcard from this translated array
 				$entry = $this->vcard->out($buffer);
-				
+
 				// print it using browser class for headers
 				// filename, mimetype, no length, default nocache True
 				$this->browser->content_header($filename,'text/x-vcard');

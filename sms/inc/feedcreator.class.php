@@ -243,7 +243,7 @@
 		 * Optional attributes of a feed.
 		 */
 		var $image = null;
-		var $SyndicationURL, $image, $language, $copyright, $pubDate, $lastBuildDate, $editor, $webmaster, $category, $docs, $ttl, $rating, $skipHours, $skipDays;
+		var $SyndicationURL, $language, $copyright, $pubDate, $lastBuildDate, $editor, $webmaster, $category, $docs, $ttl, $rating, $skipHours, $skipDays;
 
 		/**
 		 * @access private
@@ -325,7 +325,7 @@
 		 */
 		function createFeed()
 		{
-			
+
 		}
 
 		/**

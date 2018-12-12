@@ -115,17 +115,20 @@ function make_footer ()
 }
 
 
-function get_var ( $var_name )
+if (!function_exists('get_var'))
 {
-	if ( isset($_GET[$var_name]) )
+	function get_var ( $var_name )
 	{
-		return str_replace("\'", "'", $_GET[$var_name]);
+		if ( isset($_GET[$var_name]) )
+		{
+			return str_replace("\'", "'", $_GET[$var_name]);
+		}
+		else if ( isset($_POST[$var_name]) )
+		{
+			return str_replace("\'", "'", $_POST[$var_name]);
+		}
+		return null;
 	}
-	elseif ( isset($_POST[$var_name]) )
-	{
-		return str_replace("\'", "'", $_POST[$var_name]);
-	}
-	return null;
 }
 
 

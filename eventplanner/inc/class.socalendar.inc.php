@@ -103,7 +103,7 @@
 						case 'to_':
 							if(($old_value + phpgwapi_datetime::user_timezone()) == $new_value)
 							{
-								continue;
+								continue 2;
 							}
 
 							$old_value = $GLOBALS['phpgw']->common->show_date($old_value);
