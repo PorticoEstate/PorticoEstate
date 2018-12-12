@@ -38,6 +38,7 @@
 	* @see Cezpdf
 	*/
 	require_once PHPGW_API_INC . '/pdf/autoload.php';
+	require_once PHPGW_API_INC . '/pdf/rospdf/pdf-php/extensions/CezTableImage.php';
 
 	/**
 	* Document me!
@@ -45,12 +46,12 @@
 	* @package phpgwapi
 	* @subpackage utilities
 	*/
-	class phpgwapi_pdf extends Cezpdf
+	class phpgwapi_pdf extends CezTableImage
 	{
 
 		public function __construct()
 		{
-			parent::__construct();
+			parent::__construct('a4');
 			$this->tempPath = $GLOBALS['phpgw_info']['server']['temp_dir'];
 		}
 		/**
