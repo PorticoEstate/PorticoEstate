@@ -180,7 +180,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get( int $start_index, int $num_of_objects, string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters )
+		public function get( int $start_index, int $num_of_objects, string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters ,$allrows='')
 		{
 			$results = array();   // Array to store result objects
 			$map = array(); // Array to hold number of records per target object

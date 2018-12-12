@@ -133,11 +133,11 @@ class calendar_calendar_ extends calendar_calendar__
 		return $this->event;
 	}
 
-	function list_events($startYear,$startMonth,$startDay,$endYear='',$endMonth='',$endYear='')
+	function list_events($startYear,$startMonth,$startDay,$endYear='',$endMonth='',$endDay='')
 	{
 		if($endYear != '' && $endMonth != '' && $endDay != '')
 		{
-			$events = mcal_list_events($this->stream,$startYear,$startMonth,$startDay,$endYear,$endMonth,$endYear);
+			$events = mcal_list_events($this->stream,$startYear,$startMonth,$startDay,$endYear,$endMonth,$endDay);
 		}
 		else
 		{

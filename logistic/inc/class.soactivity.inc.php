@@ -198,7 +198,7 @@
 			$dir = $ascending ? 'ASC' : 'DESC';
 			$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : '';
 
-			return "SELECT {$cols} FROM {$tables} WHERE {$condition} {$order}";
+			return "SELECT DISTINCT {$cols} FROM {$tables} WHERE {$condition} {$order}";
 		}
 
 		/**
@@ -215,7 +215,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get( $start_index, $num_of_objects, $sort_field, $ascending, $search_for, $search_type, $filters, $allrows )
+		public function get( int $start_index, int $num_of_objects, string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters , $allrows)
 		{
 			if ($sort_field == null || $sort_field == 'id' || $sort_field == '')
 			{
@@ -368,7 +368,8 @@
 			{
 				$this->db->query("SELECT * FROM lg_activity WHERE id ={$_activity['id']}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$activity_obj = $this->populate($_activity['id']);
+				$dummy = null;
+				$activity_obj = $this->populate($_activity['id'], $dummy);
 				$activity_obj->set_name($_activity['name']);
 				$result[] = $activity_obj;
 			}
