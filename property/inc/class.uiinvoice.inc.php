@@ -3070,7 +3070,7 @@ JS;
 			//error_reporting(E_ALL);
 			set_time_limit(1800);
 			$pdf->ezSetMargins(50, 70, 50, 50);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 
 			// put a line top and bottom on all the pages
 			$all = $pdf->openObject();
