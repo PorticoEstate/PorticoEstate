@@ -895,7 +895,7 @@
 			$this->msg_bootstrap->ensure_mail_msg_exists('emai.html_widgets.get_toolbar', 0);
 			
 			// we use a PRIVATE template object to produce this toolbar
-			$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			
 			// if we already made this toolbar, retuen it from L1 cache ????
 			//$my_acctnum = $GLOBALS['phpgw']->msg->get_acctnum();

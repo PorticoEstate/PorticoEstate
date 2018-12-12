@@ -210,7 +210,7 @@
 		{
 			//We create our template
 						
-			$this->template=CreateObject('phpgwapi.Template');
+			$this->template=CreateObject('phpgwapi.template');
 			//We set its root (we need to be called from other apps as well)
 			//$this->template->set_root(PHPGW_SERVER_ROOT."/email/templates/".$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']);
 			// (angles) fix suggested by Dave Hall allows email app compose page to be used with any template, 

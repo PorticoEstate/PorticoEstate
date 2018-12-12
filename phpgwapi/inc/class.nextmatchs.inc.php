@@ -63,7 +63,7 @@
 				if ( !isset($GLOBALS['phpgw']->template)
 					|| is_object($GLOBALS['phpgw']->template) )
 				{
-					$GLOBALS['phpgw']->template = createObject('phpgwapi.Template', PHPGW_TEMPLATE_DIR);
+					$GLOBALS['phpgw']->template = createObject('phpgwapi.template', PHPGW_TEMPLATE_DIR);
 				}
 				$this->template =& $GLOBALS['phpgw']->template;
 				$this->template->set_file(array

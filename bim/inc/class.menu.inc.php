@@ -127,6 +127,13 @@
 				);
 			}
 
+			$menus['navigation']['viewer'] = array
+			(
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bim.uiviewer.index')),
+				'text'		=> lang('viewer'),
+				'image'		=> array('bim', 'ifc'),
+			);
+
 			$menus['navigation']['item'] = array
             (
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bim.uiitem.index')),

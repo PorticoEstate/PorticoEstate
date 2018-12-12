@@ -57,7 +57,7 @@
 	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
 							. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['login_template_set']}";
 
-	$tmpl = CreateObject('phpgwapi.Template', PHPGW_SERVER_ROOT . '/property/templates/base');
+	$tmpl = CreateObject('phpgwapi.template', PHPGW_SERVER_ROOT . '/property/templates/base');
 
 	// This is used for system downtime, to prevent new logins.
 	if(isset($GLOBALS['phpgw_info']['server']['deny_all_logins']) && $GLOBALS['phpgw_info']['server']['deny_all_logins'])

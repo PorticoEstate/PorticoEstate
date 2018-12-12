@@ -51,7 +51,7 @@
 	$ConfigDomain = phpgw::get_var('ConfigDomain');
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
-	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
+	$setup_tpl = CreateObject('phpgwapi.template',$tpl_root);
 	$setup_tpl->set_file(array
 	(
 		'T_head' => 'head.tpl',

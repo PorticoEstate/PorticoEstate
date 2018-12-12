@@ -132,7 +132,7 @@
 
 		function return_html($filter_out,$orderby = '',$sort = '', $record_id)
 		{
-			$this->template   = createObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+			$this->template   = createObject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 			$this->nextmatchs = createObject('phpgwapi.nextmatchs');
 
 			$this->template->set_file('_history','history_list.tpl');

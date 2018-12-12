@@ -34,7 +34,7 @@
 		function __construct()
 		{
 			$this->nextmatchs   =& CreateObject('phpgwapi.nextmatchs');
-			$this->t            =& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t            =& CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->boemailadmin = CreateObject('emailadmin.emailadmin_bo');
 		//	$this->boemailadmin = new emailadmin_bo();
 		}
@@ -489,7 +489,7 @@
 
 		function nextMatchTable($_rows, $_data, $_description, $_start, $_total, $_menuAction)
 		{
-			$template =& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$template =& CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$template->set_file(array("body" => "nextMatch.tpl"));
 			$template->set_block('body','row_list','rowList');
 			$template->set_block('body','header_row','headerRow');

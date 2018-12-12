@@ -25,7 +25,7 @@
  * @subpackage gui
  */
 
-class Template
+class phpgwapi_template
 {
 	/**
 	 * Serialization helper, the name of this class.

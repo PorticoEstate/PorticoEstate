@@ -317,7 +317,7 @@
 		*/
 		function make_mlist_box()
 		{
-			$this->template = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->template = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->template->set_file(array(		
 				'T_index_blocks' => 'index_blocks.tpl'
 			));
