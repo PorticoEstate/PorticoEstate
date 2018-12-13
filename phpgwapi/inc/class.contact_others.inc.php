@@ -112,7 +112,7 @@
 
 		function __construct( $ali = '', $field = '', $criteria = '' )
 		{
-			$this->_constructor('phpgw_contact_others', 'contact_others');
+			parent::__construct('phpgw_contact_others', 'contact_others');
 			if ($field)
 			{
 				$this->add_select($field);

@@ -93,7 +93,7 @@
 
 		function __construct( $ali = '', $field = '', $criteria = '' )
 		{
-			$this->_constructor('phpgw_contact', 'contact_central');
+			parent::__construct('phpgw_contact', 'contact_central');
 
 			if ($field)
 			{

@@ -46,7 +46,7 @@
 
 		function __construct( $ali = '', $field = '', $criteria = '' )
 		{
-			$this->_constructor('phpgw_categories', 'contact_categories');
+			parent::__construct('phpgw_categories', 'contact_categories');
 			if ($field)
 			{
 				$this->add_select($field);
