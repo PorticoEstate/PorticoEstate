@@ -71,7 +71,7 @@
 			$this->sortReverse 	= $this->bofelamimail->sessionData['sortReverse'];
 	#		$this->filter 		= $this->bofelamimail->sessionData['activeFilter'];
 
-			$this->t			= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t			= CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			#$this->grants[$this->account]	= PHPGW_ACL_READ + PHPGW_ACL_ADD + PHPGW_ACL_EDIT + PHPGW_ACL_DELETE;
 			// this need to fixed
 			// this does not belong to here

@@ -60,7 +60,7 @@
 
 			$this->displayCharset	= 'utf-8';
 
-			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t 		= CreateObject('phpgwapi.template',PHPGW_APP_TPL);
  			$this->botranslation	= CreateObject('phpgwapi.translation');
 
 			$this->bopreferences    = CreateObject('felamimail.bopreferences');

@@ -16,7 +16,7 @@
 	}
 
 	// we hack the template root here as this is the template set of last resort
-	$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
+	$tpl = CreateObject('phpgwapi.template', dirname(__FILE__), "remove");
 	$tpl->set_file(array('head' => 'head.tpl'));
 	$tpl->set_block('head', 'theme_stylesheet', 'theme_stylesheets');
 

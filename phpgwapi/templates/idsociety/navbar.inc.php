@@ -17,7 +17,7 @@
 	*/
 	function parse_navbar($force = False)
 	{
-		$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR, 'remove');
+		$tpl = CreateObject('phpgwapi.template',PHPGW_TEMPLATE_DIR, 'remove');
 
 		$tpl->set_file('navbar', 'navbar.tpl');
 		$tpl->set_block('navbar','app', 'apps');
@@ -185,7 +185,7 @@
 	*/
 	function parse_navbar_end()
 	{
-		$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+		$tpl = CreateObject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 		$tpl->set_unknowns('remove');
 
 		$tpl->set_file(array('footer' => 'footer.tpl'));

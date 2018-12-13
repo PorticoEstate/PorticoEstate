@@ -22,8 +22,8 @@
 	*	$pdf	= createObject('phpgwapi.pdf');
 	*
 	*	set_time_limit(1800); //allows for generation of complex documents
-	*	$pdf -> ezSetMargins(50,70,50,50);
-	*	$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+	*	$pdf->ezSetMargins(50,70,50,50);
+	*	$pdf->selectFont('Helvetica');
 	*	
 	*	//have a look at the function tender in /property/inc/class.uiwo_hour.inc.php for usage.
 	*	
@@ -32,17 +32,26 @@
 	* </code>
 	*/
 
+
+	/**
+	* Include the pdf class
+	* @see Cezpdf
+	*/
+	require_once PHPGW_API_INC . '/pdf/autoload.php';
+	require_once PHPGW_API_INC . '/pdf/rospdf/pdf-php/extensions/CezTableImage.php';
+
 	/**
 	* Document me!
 	*
 	* @package phpgwapi
 	* @subpackage utilities
 	*/
-	class pdf___
+	class phpgwapi_pdf extends CezTableImage
 	{
- 
+
 		public function __construct()
 		{
+			parent::__construct('a4');
 			$this->tempPath = $GLOBALS['phpgw_info']['server']['temp_dir'];
 		}
 		/**
@@ -52,7 +61,7 @@
 		* @param string $document_name the name to save the document as
 		*/
 		function print_pdf($document = '', $document_name = 'document')
-		{	
+		{
 			$browser = createObject('phpgwapi.browser');
 
 			$size = strlen($document);
@@ -60,9 +69,3 @@
 			echo $document;
 		}
 	}
-
-	/**
-	* Include the pdf class
-	* @see pdf_
-	*/
-	require_once PHPGW_API_INC . '/pdf/extensions/CezTableImage.php';

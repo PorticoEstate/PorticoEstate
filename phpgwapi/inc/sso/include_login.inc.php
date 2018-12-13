@@ -64,7 +64,7 @@
 	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
 	 		. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
-	$tmpl = CreateObject('phpgwapi.Template', $GLOBALS['phpgw_info']['server']['template_dir']);
+	$tmpl = CreateObject('phpgwapi.template', $GLOBALS['phpgw_info']['server']['template_dir']);
 
 	/*
 	 * Generic include for mapping / remoteuser mode

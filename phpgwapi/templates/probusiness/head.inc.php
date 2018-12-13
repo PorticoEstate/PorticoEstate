@@ -30,7 +30,7 @@
 		$stylesheets[] = $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/css/styles.css';
 	}
 
-	$tpl = CreateObject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+	$tpl = CreateObject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 	$tpl->set_unknowns('remove');
 
 	$tpl->set_file(array('head' => 'head.tpl'));

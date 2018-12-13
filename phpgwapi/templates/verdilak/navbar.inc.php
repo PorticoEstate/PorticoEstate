@@ -18,7 +18,7 @@
 	function parse_navbar($force = False)
 	{
 
-		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+		$tpl = createobject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 
 		$tpl->set_file('navbartpl', 'navbar.tpl');
 		$tpl->set_block('navbartpl','preferences');
@@ -185,7 +185,7 @@ HTML;
 	*/
 	function parse_navbar_end()
 	{
-		$tpl = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+		$tpl = createobject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
   
 		$tpl->set_file(
 			array(

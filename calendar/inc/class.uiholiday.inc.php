@@ -148,7 +148,7 @@
 			unset($GLOBALS['phpgw_info']['flags']['nonavbar']);
 			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
 			$GLOBALS['phpgw']->common->phpgw_header(True);
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file(Array('locale'=>'locales.tpl'));
 			$p->set_block('locale','list','list');
 			$p->set_block('locale','row','row');
@@ -386,7 +386,7 @@
 			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
 			$GLOBALS['phpgw']->common->phpgw_header();
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file(Array('form'=>'delete_common.tpl','form_button'=>'form_button_script.tpl'));
 		
 			$p->set_var('messages',lang('Are you sure you want to delete this Country ?')."<br />".$this->bo->locales[0]);
@@ -426,7 +426,7 @@
 			$GLOBALS['phpgw_info']['flags']['noappfooter'] = True;
 			$GLOBALS['phpgw']->common->phpgw_header();
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file(Array('form'=>'delete_common.tpl','form_button'=>'form_button_script.tpl'));
 		
 			$p->set_var('messages',lang('Are you sure you want to delete this holiday ?')."<br />".$holiday['name'].' ('.$this->bo->locales[0].') '.$this->bo->rule_string($holiday));

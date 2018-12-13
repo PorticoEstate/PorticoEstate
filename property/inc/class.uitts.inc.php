@@ -3388,7 +3388,7 @@ HTML;
 			$pdf = CreateObject('phpgwapi.pdf');
 
 			$pdf->ezSetMargins(50, 70, 50, 50);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 
 			// put a line top and bottom on all the pages
 			$all = $pdf->openObject();
@@ -3566,9 +3566,9 @@ HTML;
 			));
 
 			$pdf->ezSetDy(-10);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->selectFont('Helvetica-Bold');
 			$pdf->ezText(lang('descr') . ':', 20);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id' => $ticket['contact_id'],
@@ -3683,9 +3683,9 @@ HTML;
 				$contact_block = '';
 			}
 
-//			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+//			$pdf->selectFont('Helvetica-Bold');
 //			$pdf->ezText('Kontakt på bygget:', 14);
-//			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+//			$pdf->selectFont('Helvetica');
 //			$pdf->ezText($contact_name, 14);
 //			$pdf->ezText($contact_email, 14);
 //			$pdf->ezText($contact_phone, 14);
@@ -3697,9 +3697,9 @@ HTML;
 			if($location_exceptions)
 			{
 				$pdf->ezSetDy(-20);
-				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+				$pdf->selectFont('Helvetica-Bold');
 				$pdf->ezText(lang('important information'), 14);
-				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+				$pdf->selectFont('Helvetica');
 			}
 
 			foreach ($location_exceptions as $location_exception)
@@ -3712,9 +3712,9 @@ HTML;
 				}
 			}
 			$pdf->ezSetDy(-20);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+			$pdf->selectFont('Helvetica-Bold');
 			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 			if ($content)
 			{
 				$pdf->ezSetDy(-20);

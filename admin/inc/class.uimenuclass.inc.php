@@ -18,7 +18,7 @@
 		
 		function __construct()
 		{
-			$this->t = CreateObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir('admin'));
+			$this->t = CreateObject('phpgwapi.template',$GLOBALS['phpgw']->common->get_tpl_dir('admin'));
 
 			$this->t->set_file(array('menurow' => 'menurow.tpl'));
 			$this->t->set_block('menurow','menu_links','menu_links');
