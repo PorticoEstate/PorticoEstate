@@ -295,6 +295,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if(typeof result.ResultSet.Result[k].Fri !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Fri.id, eventsArray))
                     {
+						var event_infourl = result.ResultSet.Result[k].Fri.info_url;
+                        while(event_infourl.indexOf("amp;") !== -1) {
+                            event_infourl = event_infourl.replace("amp;",'');
+						}
                         var currentStartDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString());
 						currentStartDate.setHours((result.ResultSet.Result[k].Fri.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Fri.from_).substring(3, 5));
