@@ -104,16 +104,21 @@ function PopulateCalendarEvents() {
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
-						}
+						}						
 						var currentStartDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString());
 						currentStartDate.setHours((result.ResultSet.Result[k].Sun.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Sun.from_).substring(3, 5));
-						
-						var currentEndDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Sun.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Sun.to_).substring(3, 5));
 
-						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type].join(""),
+						var currentEndDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString());
+						if((result.ResultSet.Result[k].Sun.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Sun.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Sun.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
+
+						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday].join(""),
 							name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sun.type],
@@ -138,10 +143,16 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Mon.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Mon.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Mon.to_).substring(3, 5));
+						
+						if((result.ResultSet.Result[k].Mon.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Mon.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Mon.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
 
-						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type].join(""),
+						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join(""),
 							name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Mon.type],
@@ -165,10 +176,15 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Tue.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Tue.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Tue.to_).substring(3, 5));
+						if((result.ResultSet.Result[k].Tue.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Tue.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Tue.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Tue.type],
@@ -192,10 +208,15 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Wed.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Wed.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Wed.to_).substring(3, 5));
+						if((result.ResultSet.Result[k].Wed.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Wed.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Wed.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Wed.type],
@@ -219,10 +240,15 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Thu.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Thu.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Thu.to_).substring(3, 5));
+						if((result.ResultSet.Result[k].Thu.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Thu.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Thu.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Thu.type],
@@ -246,10 +272,15 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Fri.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Fri.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Fri.to_).substring(3, 5));
+						if((result.ResultSet.Result[k].Fri.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Fri.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Fri.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
 						
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Fri.type],
@@ -273,10 +304,15 @@ function PopulateCalendarEvents() {
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Sat.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString());
-						currentEndDate.setHours((result.ResultSet.Result[k].Sat.to_).substring(0, 2));
-						currentEndDate.setMinutes((result.ResultSet.Result[k].Sat.to_).substring(3, 5));
-						
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type].join(""),
+						if((result.ResultSet.Result[k].Sat.to_).substring(0, 2) != "24") {
+							currentEndDate.setHours((result.ResultSet.Result[k].Sat.to_).substring(0, 2));
+							currentEndDate.setMinutes((result.ResultSet.Result[k].Sat.to_).substring(3, 5));
+						} else {
+							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
+							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
+						}
+
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday].join(""),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sat.type],
