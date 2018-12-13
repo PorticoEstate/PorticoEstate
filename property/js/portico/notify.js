@@ -3,7 +3,7 @@ var notify_contact = 0;
 
 formatLink_notify = function (key, oData)
 {
-	var oArgs = {menuaction: 'addressbook.uiaddressbook.view_person', ab_id: oData[key]};
+	var oArgs = {menuaction: 'addressbook.uiaddressbook_persons.view', ab_id: oData[key]};
 	var strURL = phpGWLink('index.php', oArgs);
 	return "<a href=" + strURL + " title='" + oData[key] + "'>" + notify_lang_view + "</a>";
 };

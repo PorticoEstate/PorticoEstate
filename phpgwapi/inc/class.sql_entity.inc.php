@@ -70,25 +70,18 @@
 		var $ondebug;
 		var $table;
 
-		function __construct()
+		function __construct( $table = '', $alias = '')
 		{
+			$this->table = $table;
+			// Temp alias name, just if not empty
+			$this->alias = ($alias) ? $alias : $alias;
+			$this->ldebug('__construct', array('Table' => $table,
+				'Alias' => $alias));
 
 		}
 		/*		 * ***********************************************************\
 		 * Entity, class and general section                           *
 		  \************************************************************ */
-
-		/**
-		 * FIXME - wrong name of constructor
-		 */
-		public function _constructor( $table = '', $alias = '' )
-		{
-			$this->table = $table;
-			// Temp alias name, just if not empty
-			$this->alias = ($alias) ? $alias : $alias;
-			$this->ldebug('_constructor', array('Table' => $table,
-				'Alias' => $alias));
-		}
 
 		/**
 		 * Set the alias for the table

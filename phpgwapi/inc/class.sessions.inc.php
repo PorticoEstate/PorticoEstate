@@ -177,13 +177,15 @@
 			$this->_db			=& $GLOBALS['phpgw']->db;
 			$this->_use_cookies = false;
 			$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('eventplannerfrontend','mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
+
+			$this->_phpgw_set_cookie_params();
+
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
 				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
 
-				$this->_phpgw_set_cookie_params();
 			}
 			else if (!empty($_GET[session_name()]))
 			{
