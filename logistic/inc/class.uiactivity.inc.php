@@ -269,7 +269,7 @@
 			);
 
 			$start_index = $params['start'];
-			$num_of_objects = $params['results'] < 0 ? null : $params['results'];
+			$num_of_objects = $params['results'] < 0 ? 0 : $params['results'];
 			$sort_field = $params['order'];
 			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 			// Form variables
@@ -286,7 +286,7 @@
 			if (isset($exp_param))
 			{
 				$export = true;
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			//Retrieve the type of query and perform type specific logic

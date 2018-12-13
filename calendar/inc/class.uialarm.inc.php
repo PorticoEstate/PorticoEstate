@@ -71,7 +71,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw_info']['apps']['calendar']['title'].' - '.lang('Alarm Management');
 			$GLOBALS['phpgw']->common->phpgw_header(True);
 
-			$this->template = CreateObject('phpgwapi.Template',$this->template_dir);
+			$this->template = CreateObject('phpgwapi.template',$this->template_dir);
 
 			$this->template->set_unknowns('remove');
 			$this->template->set_file(

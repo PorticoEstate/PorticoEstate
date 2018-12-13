@@ -2001,7 +2001,7 @@ HTML;
 			// or 'even'.
 			$pdf->addObject($all, 'all');
 
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 
 //			$pdf->ezSetDy(-100);
 			$pdf->openHere('Fit');
@@ -2168,9 +2168,9 @@ HTML;
 			if($location_exceptions)
 			{
 				$pdf->ezSetDy(-10);
-				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+				$pdf->selectFont('Helvetica-Bold');
 				$pdf->ezText(lang('important information'), 14);
-				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+				$pdf->selectFont('Helvetica');
 			}
 
 			foreach ($location_exceptions as $location_exception)
@@ -2238,7 +2238,7 @@ HTML;
 			//error_reporting(E_ALL);
 			set_time_limit(1800);
 			$pdf->ezSetMargins(50, 70, 50, 50);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			$pdf->selectFont('Helvetica');
 
 			// put a line top and bottom on all the pages
 			$all = $pdf->openObject();

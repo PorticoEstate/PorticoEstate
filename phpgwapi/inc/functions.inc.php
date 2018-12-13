@@ -936,7 +936,7 @@ HTML;
 		if ( !isset($GLOBALS['phpgw_info']['flags']['disable_Template_class'])
 			|| !$GLOBALS['phpgw_info']['flags']['disable_Template_class'] )
 		{
-			$GLOBALS['phpgw']->template = createObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->template = createObject('phpgwapi.template',PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates',PHPGW_APP_TPL);
 		}
 

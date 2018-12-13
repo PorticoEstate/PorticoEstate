@@ -43,7 +43,7 @@
 	$phpgw->common->phpgw_header();
 	echo parse_navbar();
 
-	$t = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+	$t = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 	$t->set_file(array('admin' => 'admin.tpl'));
 
 	$t->set_var('action_url',$phpgw->link('/addressbook/admin.php'));

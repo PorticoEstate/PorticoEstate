@@ -115,7 +115,7 @@
 			
 			$this->cat_id   = $this->bo->cat_id;
 
-			$this->link_tpl = CreateObject('phpgwapi.Template',$this->template_dir);
+			$this->link_tpl = CreateObject('phpgwapi.template',$this->template_dir);
 			$this->link_tpl->set_unknowns('remove');
 			
 			$this->link_tpl->set_file('link_picture', 'link_pict.tpl');
@@ -204,7 +204,7 @@
 
 			if(!is_object($mini_cal_tpl))
 			{
-				$mini_cal_tpl = CreateObject('phpgwapi.Template',$this->template_dir);
+				$mini_cal_tpl = CreateObject('phpgwapi.template',$this->template_dir);
 				$mini_cal_tpl->set_unknowns('remove');
 				$mini_cal_tpl->set_file(
 					array(
@@ -376,7 +376,7 @@
 				'large_month'			=> $this->display_month($this->bo->month,$this->bo->year,True,$this->bo->owner),
 			);
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('remove');
 			$p->set_file(
 				array(
@@ -459,7 +459,7 @@
 				),
 			);
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file('week_t', 'week.tpl');
 
 			$var = $this->insert_tooltip_js($var);
@@ -500,7 +500,7 @@
 				'right_link'=> $right_link,
 			);
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file(
 				array(
 					'year_t' => 'year.tpl'
@@ -2947,7 +2947,7 @@ HTML;
 		{
 			$this->weekstarttime = phpgwapi_datetime::get_weekday_start($year,$month,1);
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('remove');
 			$p->set_file('month_header', 'month_header.tpl');
 
@@ -2986,7 +2986,7 @@ HTML;
 			$temp_owner = $this->bo->owner;
 
 			$str = '';
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('keep');
 		
 			$p->set_file(
@@ -3130,7 +3130,7 @@ HTML;
 				echo '<!-- display_month:start = '.date('Ymd H:i:s',$start).' -->'."\n";
 			}
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('keep');
 		
 			$p->set_file(
@@ -3177,7 +3177,7 @@ HTML;
 			$showyear = $params['showyear'];
 			$owners = $params['owners'];
 			
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('keep');
 
 			$p->set_file(
@@ -3345,7 +3345,7 @@ HTML;
 				)
 			);
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_unknowns('keep');
 
 			$templates = array(
@@ -4287,7 +4287,7 @@ HTML;
 			$control_data['delete'] = array();
 			$control_data['part'] = array();
 
-			$p = CreateObject('phpgwapi.Template',$this->template_dir);
+			$p = CreateObject('phpgwapi.template',$this->template_dir);
 			$p->set_file(
 				array(
 					'T_edit_partlist' => 'edit_partlist.tpl',

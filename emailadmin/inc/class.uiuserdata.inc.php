@@ -23,7 +23,7 @@
 
 		function __construct()
 		{
-			$this->t			=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t			=& CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->boemailadmin		= new emailadmin_bo();
 		}
 	

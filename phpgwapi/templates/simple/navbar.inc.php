@@ -17,7 +17,7 @@
  	function parse_navbar($force = False)
 	{
 		// we hack the template root here as this is the template set of last resort
-		$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
+		$tpl = CreateObject('phpgwapi.template', dirname(__FILE__), "remove");
 
 		$tpl->set_file('navbar', 'navbar.tpl');
 		$tpl->set_block('navbar', 'app', 'apps');
@@ -113,7 +113,7 @@
 	function parse_navbar_end()
 	{
 		// we hack the template root here as this is the template set of last resort
-		$tpl = CreateObject('phpgwapi.Template', dirname(__FILE__), "remove");
+		$tpl = CreateObject('phpgwapi.template', dirname(__FILE__), "remove");
 
 		$tpl->set_file('footer', 'footer.tpl');
 

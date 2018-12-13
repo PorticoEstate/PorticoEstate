@@ -162,7 +162,7 @@
 				$layout = '2';
 			}
 			// the stats template and the mail email template *may* collide var names during this cleanup, so seperate templates
-			$tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			//$tpl->set_unknowns('comment');
 			$tpl->set_unknowns('remove');
 			$tpl->set_file(array('T_index_blocks' => 'index_blocks.tpl'));

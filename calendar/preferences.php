@@ -108,7 +108,7 @@
 	$phpgw->common->phpgw_header();
 	echo parse_navbar();
 
-	$p = CreateObject('phpgwapi.Template',$phpgw->common->get_tpl_dir('calendar'));
+	$p = CreateObject('phpgwapi.template',$phpgw->common->get_tpl_dir('calendar'));
 	$templates = Array(
 		'pref'		=>	'pref.tpl',
 		'pref_colspan'	=>	'pref_colspan.tpl',

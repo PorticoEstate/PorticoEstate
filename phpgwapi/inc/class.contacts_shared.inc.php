@@ -331,7 +331,7 @@
 
 		function formatted_address( $id, $business = True, $afont = '', $asize = '2' )
 		{
-			$t = createObject('phpgwapi.Template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
+			$t = createObject('phpgwapi.template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
 			$s = createObject('phpgwapi.sbox');
 
 			$fields = array
@@ -431,7 +431,7 @@
 
 		function formatted_address_full( $id, $business = True, $afont = '', $asize = '2' )
 		{
-			$t = createObject('phpgwapi.Template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
+			$t = createObject('phpgwapi.template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
 			$s = createObject('phpgwapi.sbox');
 
 			$fields = array
@@ -549,7 +549,7 @@
 
 		function formatted_address_line( $id, $business = True, $afont = '', $asize = '2' )
 		{
-			$t = createObject('phpgwapi.Template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
+			$t = createObject('phpgwapi.template', $GLOBALS['phpgw']->common->get_tpl_dir('addressbook'));
 			$s = createObject('phpgwapi.sbox');
 
 			$fields = array

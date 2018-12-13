@@ -47,12 +47,12 @@
 			{
 				// we point to the global template for this version of phpgw templatings
 				$this->tpl =& $GLOBALS['phpgw']->template;
-				//$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+				//$this->tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			}
 			else
 			{
 				// we use a PRIVATE template object for 0.9.14 conpat and during xslt porting
-				$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+				$this->tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			}
 			
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)
@@ -469,13 +469,13 @@
 			{
 				// we point to the global template for this version of phpgw templatings
 				$this->tpl =& $GLOBALS['phpgw']->template;
-				//$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+				//$this->tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			}
 			else
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = True;
 				// we use a PRIVATE template object for 0.9.14 conpat and during xslt porting
-				$this->tpl = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+				$this->tpl = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			}
 			
 			if ($GLOBALS['phpgw']->msg->phpgw_before_xslt)

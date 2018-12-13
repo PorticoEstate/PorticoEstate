@@ -594,7 +594,7 @@ EOD;
 			$this->bo->xi['my_layout'] = $GLOBALS['phpgw']->msg->prefs['layout'];
 			$this->bo->xi['my_browser'] = $GLOBALS['phpgw']->msg->browser;
 			
-			//$GLOBALS['phpgw']->template = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			//$GLOBALS['phpgw']->template = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$GLOBALS['phpgw']->template->set_file(array(		
 				//'T_form_delmov_init' => 'index_form_delmov_init.tpl',
 				'T_index_blocks' => 'index_blocks.tpl',

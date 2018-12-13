@@ -80,7 +80,7 @@
 			$dot_atom = $atext.'+(\.'.$atext.'+)*';
 			$Email_RegExp_Match = $dot_atom.'(%'.$Host_RegExp_Match.')?@'.$Host_RegExp_Match;
 
-			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t 		= CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->displayCharset   = 'utf-8';
 			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$this->bopreferences	= CreateObject('felamimail.bopreferences');

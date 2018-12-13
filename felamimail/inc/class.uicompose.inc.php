@@ -67,7 +67,7 @@
 					$this->composeID = $_GET['composeid'];
 				$this->bocompose   = CreateObject('felamimail.bocompose',$this->composeID,$this->displayCharset);
 			}
-			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t 		= CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$this->mailPreferences  = ExecMethod('felamimail.bopreferences.getPreferences');
 

@@ -40,7 +40,7 @@
 		 */
 		function __construct()
 		{
-			$this->t = createobject('phpgwapi.Template',PHPGW_TEMPLATE_DIR);
+			$this->t = createobject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 		}
 
 		/**

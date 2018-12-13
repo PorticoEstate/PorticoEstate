@@ -34,7 +34,7 @@
 			$this->bofilter		= CreateObject('felamimail.bofilter');
 			$this->sessionData	= $this->bofelamimail->sessionData;
 
-			$this->t = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->t->set_unknowns('remove');
 			
 			$this->rowColor[0] = $GLOBALS['phpgw_info']["theme"]["bg01"];

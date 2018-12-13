@@ -1928,7 +1928,7 @@
 							case MCAL_RECUR_WEEKLY:
 								if (floor(($search_beg_day - $event_beg_day)/604800) % $freq)
 								{
-									continue;
+									continue 2;
 								}
 								$check = 0;
 								switch($search_date_dow)

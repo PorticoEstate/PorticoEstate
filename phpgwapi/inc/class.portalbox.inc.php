@@ -78,7 +78,7 @@
 
 		function start_template()
 		{
-			$this->p = createObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir('home'));
+			$this->p = createObject('phpgwapi.template',$GLOBALS['phpgw']->common->get_tpl_dir('home'));
 			$this->p->set_file('portal', 'portal.tpl');
 
 			$this->p->set_block('portal','portal_box','portal_box');

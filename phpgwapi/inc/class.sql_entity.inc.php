@@ -37,10 +37,6 @@
 	 */
 	define('PHPGW_SQL_RETURN_SQL', 2);
 
-	/**
-	* SQL sql lazy key
-	*/
-	define('PHPGW_SQL_LAZY_KEY', 1);
 
 	/**
 	 * SQL Generator ENTITY - helps to construct queries statements
@@ -74,25 +70,18 @@
 		var $ondebug;
 		var $table;
 
-		function __construct()
+		function __construct( $table = '', $alias = '')
 		{
+			$this->table = $table;
+			// Temp alias name, just if not empty
+			$this->alias = ($alias) ? $alias : $alias;
+			$this->ldebug('__construct', array('Table' => $table,
+				'Alias' => $alias));
 
 		}
 		/*		 * ***********************************************************\
 		 * Entity, class and general section                           *
 		  \************************************************************ */
-
-		/**
-		 * FIXME - wrong name of constructor
-		 */
-		public function _constructor( $table = '', $alias = '' )
-		{
-			$this->table = $table;
-			// Temp alias name, just if not empty
-			$this->alias = ($alias) ? $alias : $alias;
-			$this->ldebug('_constructor', array('Table' => $table,
-				'Alias' => $alias));
-		}
 
 		/**
 		 * Set the alias for the table

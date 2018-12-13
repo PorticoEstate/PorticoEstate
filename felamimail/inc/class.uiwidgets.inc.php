@@ -53,7 +53,7 @@
 		*/
 		function __construct()
 		{
-			$template = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$template = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->template = $template;
 			$this->template->set_file(array("body" => 'uiwidgets.tpl'));
 			$this->charset = 'utf-8';
@@ -239,7 +239,7 @@
 		// $_rowStyle felamimail or outlook
 		function messageTable($_headers, $_folderType, $_folderName, $_readInNewWindow, $_rowStyle='felamimail')
 		{
-			$this->t = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => 'mainscreen.tpl'));
 			$this->t->set_block('body','header_row_felamimail');
 			$this->t->set_block('body','header_row_outlook');
@@ -604,7 +604,7 @@
 
 		function quotaDisplay($_usage, $_limit)
 		{
-			$this->t = CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t = CreateObject('phpgwapi.template',PHPGW_APP_TPL);
 			$this->t->set_file(array("body" => 'mainscreen.tpl'));
 			$this->t->set_block('body','quota_block');
 

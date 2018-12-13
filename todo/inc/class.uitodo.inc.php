@@ -65,7 +65,7 @@
 			$GLOBALS['phpgw']->categories = $this->cats;
 			$this->matrix     = CreateObject('phpgwapi.matrixview');
 			$this->account    = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->t          = CreateObject('phpgwapi.Template',$GLOBALS['phpgw']->common->get_tpl_dir('todo'));
+			$this->t          = CreateObject('phpgwapi.template',$GLOBALS['phpgw']->common->get_tpl_dir('todo'));
 			$this->grants     = $GLOBALS['phpgw']->acl->get_grants('todo','.');
 
 			$this->start      = $this->botodo->start;

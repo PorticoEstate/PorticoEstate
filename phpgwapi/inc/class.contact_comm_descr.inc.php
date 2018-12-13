@@ -61,7 +61,7 @@
 
 		function __construct( $ali = '', $field = '', $criteria = '' )
 		{
-			$this->_constructor('phpgw_contact_comm_descr', 'contact_comm_descr');
+			parent::__construct('phpgw_contact_comm_descr', 'contact_comm_descr');
 			if ($field)
 			{
 				$this->add_select($field);
