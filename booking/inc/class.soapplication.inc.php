@@ -15,10 +15,10 @@
 				'type' => array('type' => 'string'),
 				'status' => array('type' => 'string', 'required' => true),
 				'secret' => array('type' => 'string', 'required' => true),
-				'created' => array('type' => 'timestamp'),
-				'modified' => array('type' => 'timestamp'),
+				'created' => array('type' => 'timestamp','read_callback' => 'modify_by_timezone'),
+				'modified' => array('type' => 'timestamp','read_callback' => 'modify_by_timezone'),
 				'building_name' => array('type' => 'string', 'required' => true, 'query' => true),
-				'frontend_modified' => array('type' => 'timestamp'),
+				'frontend_modified' => array('type' => 'timestamp','read_callback' => 'modify_by_timezone'),
 				'owner_id' => array('type' => 'int', 'required' => true),
 				'case_officer_id' => array('type' => 'int', 'required' => false),
 				'activity_id' => array('type' => 'int', 'required' => true),
@@ -84,7 +84,7 @@
 					'manytomany' => array(
 						'table' => 'bb_application_comment',
 						'key' => 'application_id',
-						'column' => array('time', 'author', 'comment', 'type'),
+						'column' => array('time' => array('type' => 'timestamp', 'read_callback' => 'modify_by_timezone'), 'author', 'comment', 'type'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 				'resources' => array('type' => 'int', 'required' => true,
