@@ -384,14 +384,16 @@
 									{
 										$col = $intOrCol;
 										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+										$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : $modifier;
 									}
 									else
 									{
 										$col = $paramsOrCol;
 										$type = $params['type'];
+										$_modifier = $modifier;
 									}
 
-									$data[$col] = $this->_unmarshal($this->db2->f($col, false), $type, $modifier);
+									$data[$col] = $this->_unmarshal($this->db2->f($col, false), $type, $_modifier);
 								}
 								$row[$field][] = $data;
 							}
@@ -699,14 +701,16 @@
 									{
 										$col = $intOrCol;
 										$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+										$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : $modifier;
 									}
 									else
 									{
 										$col = $paramsOrCol;
 										$type = $params['type'];
+										$_modifier = $modifier;
 									}
 
-									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type, $modifier);
+									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type, $_modifier);
 								}
 								$row[$field][] = $data;
 								$results[$id_map[$id]][$field][] = $data;
@@ -718,7 +722,7 @@
 							$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
 							while ($this->db->next_record())
 							{
-								$id = $this->_unmarshal($this->db->f($key, false), 'int', $modifier);
+								$id = $this->_unmarshal($this->db->f($key, false), 'int');
 								if(empty($results[$id_map[$id]][$field]))
 								{
 									$results[$id_map[$id]][$field] = array();

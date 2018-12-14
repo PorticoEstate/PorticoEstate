@@ -84,7 +84,7 @@
 					'manytomany' => array(
 						'table' => 'bb_application_comment',
 						'key' => 'application_id',
-						'column' => array('time', 'author', 'comment', 'type'),
+						'column' => array('time' => array('type' => 'timestamp', 'read_callback' => 'modify_by_timezone'), 'author', 'comment', 'type'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 				'resources' => array('type' => 'int', 'required' => true,
