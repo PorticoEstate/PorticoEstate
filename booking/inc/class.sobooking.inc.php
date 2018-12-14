@@ -86,7 +86,7 @@
 					'manytomany' => array(
 						'table' => 'bb_booking_cost',
 						'key' => 'booking_id',
-						'column' => array('time', 'author', 'comment', 'cost'),
+						'column' => array('time' => array('type' => 'timestamp', 'read_callback' => 'modify_by_timezone'), 'author', 'comment', 'cost'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 				)
