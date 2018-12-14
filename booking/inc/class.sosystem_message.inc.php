@@ -8,7 +8,7 @@
 		{
 			parent::__construct('bb_system_message', array(
 				'id' => array('type' => 'int'),
-				'created' => array('type' => 'string'),
+				'created' => array('type' => 'timestamp','read_callback' => 'modify_by_timezone'),
 				'title' => array('type' => 'string', 'query' => true, 'required' => true),
 				'display_in_dashboard' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
 					'default' => 1),

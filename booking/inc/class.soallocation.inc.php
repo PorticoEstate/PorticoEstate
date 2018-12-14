@@ -70,7 +70,7 @@
 					'manytomany' => array(
 						'table' => 'bb_allocation_cost',
 						'key' => 'allocation_id',
-						'column' => array('time', 'author', 'comment', 'cost'),
+						'column' => array('time' => array('type' => 'timestamp', 'read_callback' => 'modify_by_timezone'), 'author', 'comment', 'cost'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 				)
