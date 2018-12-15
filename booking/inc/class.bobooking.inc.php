@@ -465,6 +465,9 @@
 				$allocation['name'] = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
+				unset($allocation['costs']);
+				unset($allocation['comments']);
+				unset($allocation['secret']);
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
@@ -477,6 +480,9 @@
 				$booking['type'] = 'booking';
 				unset($booking['audience']);
 				unset($booking['agegroups']);
+				unset($booking['costs']);
+				unset($booking['comments']);
+				unset($booking['secret']);
 			}
 
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -493,6 +499,8 @@
 				unset($event['audience']);
 				unset($event['agegroups']);
 				unset($event['dates']);
+				unset($event['costs']);
+				unset($event['secret']);
 			}
 
 			$bookings = array_merge($allocations, $bookings);
@@ -786,6 +794,9 @@
 				$allocation['name'] = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
+				unset($allocation['costs']);
+				unset($allocation['comments']);
+				unset($allocation['secret']);
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
@@ -798,6 +809,9 @@
 				$booking['type'] = 'booking';
 				unset($booking['audience']);
 				unset($booking['agegroups']);
+				unset($booking['costs']);
+				unset($booking['comments']);
+				unset($booking['secret']);
 			}
 
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -814,6 +828,8 @@
 				unset($event['comments']);
 				unset($event['audience']);
 				unset($event['agegroups']);
+				unset($event['costs']);
+				unset($event['secret']);
 			}
 
 			$bookings = array_merge($allocations, $bookings);
@@ -868,6 +884,9 @@
 				$allocation['name'] = $allocation['organization_name'];
 				$allocation['shortname'] = $allocation['organization_shortname'];
 				$allocation['type'] = 'allocation';
+				unset($allocation['costs']);
+				unset($allocation['comments']);
+				unset($allocation['secret']);
 			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
 			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids)));
@@ -877,6 +896,9 @@
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
+				unset($booking['costs']);
+				unset($booking['comments']);
+				unset($booking['secret']);
 			}
 
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -888,6 +910,9 @@
 			{
 				$event['name'] = $event['description'];
 				$event['type'] = 'event';
+				unset($event['costs']);
+				unset($event['comments']);
+				unset($event['secret']);
 			}
 			$bookings = array_merge($allocations, $bookings);
 			$bookings = $this->_remove_event_conflicts($bookings, $events);
