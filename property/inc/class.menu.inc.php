@@ -602,7 +602,12 @@
 								'text' => lang('custom config'),
 								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 									'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.admin')))
-							)
+							),
+							'klassifikasjonssystemet' => array
+								(
+								'text' => 'Klassifikasjonssystemet',
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.login'	))
+							),
 						)
 					),
 					'import' => array
