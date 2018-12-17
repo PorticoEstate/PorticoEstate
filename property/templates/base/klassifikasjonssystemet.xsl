@@ -44,10 +44,16 @@
 
 						<input type="password" id="external_password" name="external_password" value="" required = '1' class="pure-input-1-2" >
 							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
+								<xsl:value-of select="php:function('lang', 'password')"/>
 							</xsl:attribute>
 						</input>
 					</div>
+					<xsl:if test="value_token != ''">
+						<label>
+							<xsl:value-of select="php:function('lang', 'token')"/>
+						</label>
+						<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+					</xsl:if>
 				</fieldset>
 			</div>
 			<div id="general">

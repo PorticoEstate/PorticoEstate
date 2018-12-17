@@ -53,10 +53,12 @@
 			$username = phpgw::get_var('external_username', 'string');
 			$password = phpgw::get_var('external_password', 'raw');
 
+			$token = phpgwapi_cache::session_get('property', 'klassifikasjonssystemet_token');
+
 			if($username && $password)
 			{
 				$token = $this->get_token($username, $password);
-				_debug_array($token); die();
+				phpgwapi_cache::session_set('property', 'klassifikasjonssystemet_token', $token);
 			}
 
 
@@ -65,13 +67,14 @@
 			$data = array(
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.login')),
 				'value_external_username' => $username,
+				'value_token' => $token,
 				'tabs' => self::_generate_tabs( $active_tab, $_disable = array(
-					'organizations' => !$id && empty($this->receipt['error']) ? true : false,
-					'wings' => !$id && empty($this->receipt['error']) ? true : false,
-					'buildings' => $id ? false : true,
-					'rooms' => $id ? false : true,
-					'floors' => $id ? false : true,
-					'locations' => $id ? false : true
+					'organizations' => $token ? false : true,
+					'wings' => $token ? false : true,
+					'buildings' => $token ? false : true,
+					'rooms' => $token ? false : true,
+					'floors' => $token ? false : true,
+					'locations' => $token ? false : true,
 					)),
 
 			);
@@ -124,16 +127,18 @@
 
 			$post_string = http_build_query($post_data);
 
-			$this->log('webservicehost', print_r($webservicehost, true));
+			$url = "{$webservicehost}/Token";
+
+			$this->log('webservicehost', print_r($url, true));
 			$this->log('POST data', print_r($post_data, true));
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $webservicehost);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
-//			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded'));
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 			$result = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -145,14 +150,12 @@
 			$this->log('webservice returdata as json', $result);
 			$this->log('webservice returdata as array', print_r($ret, true));
 
-			if(isset($ret['orgnr']))
+			$access_token ='';
+			if(isset($ret['access_token']))
 			{
-				return array($ret);
+				$access_token =  $ret['access_token'];
 			}
-			else
-			{
-				return $ret;
-			}
+			return $access_token;
 
 		}
 
