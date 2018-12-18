@@ -6,13 +6,28 @@
 		<xsl:when test="login">
 			<xsl:apply-templates select="login"/>
 		</xsl:when>
-		<xsl:when test="view">
-			<xsl:apply-templates select="view"/>
+		<xsl:when test="organizations">
+			<xsl:apply-templates select="organizations"/>
+		</xsl:when>
+		<xsl:when test="wings">
+			<xsl:apply-templates select="wings"/>
+		</xsl:when>
+		<xsl:when test="buildings">
+			<xsl:apply-templates select="buildings"/>
+		</xsl:when>
+		<xsl:when test="rooms">
+			<xsl:apply-templates select="rooms"/>
+		</xsl:when>
+		<xsl:when test="floors">
+			<xsl:apply-templates select="floors"/>
+		</xsl:when>
+		<xsl:when test="locations">
+			<xsl:apply-templates select="locations"/>
 		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
-<!-- add -->
+<!-- login -->
 <xsl:template xmlns:php="http://php.net/xsl" match="login">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:variable name="form_action">
@@ -36,7 +51,7 @@
 							</xsl:attribute>
 						</input>
 					</div>
-	
+
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'password')"/>
@@ -56,33 +71,141 @@
 					</xsl:if>
 				</fieldset>
 			</div>
-			<div id="general">
-			</div>
+		</div>
+		<xsl:call-template name="submit_data"/>
 
+	</form>
+</xsl:template>
+
+<!-- organizations -->
+<xsl:template xmlns:php="http://php.net/xsl" match="organizations">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
+	<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{$form_action}">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+
+			<div id="message" class='message'/>
+
+			<div id="organizations">
+				<fieldset>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'action')"/>
+						</label>
+
+						<select name="action" id="action" class="pure-input-1-2" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'action')"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="action_list/options"/>
+						</select>
+					</div>
+					<xsl:if test="value_token != ''">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'token')"/>
+							</label>
+							<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+						</div>
+					</xsl:if>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'data')"/>
+						</label>
+						<xsl:value-of disable-output-escaping="yes" select="data_from_api"/>
+					</div>
+
+				</fieldset>
+			</div>
 		</div>
-		<div class="proplist-col">
-			<xsl:variable name="lang_send">
-				<xsl:value-of select="php:function('lang', 'send')"/>
-			</xsl:variable>
-			<xsl:variable name="lang_cancel">
-				<xsl:value-of select="php:function('lang', 'cancel')"/>
-			</xsl:variable>
-			<input class="pure-button pure-button-primary" type="submit" name="save" value="{$lang_send}">
-				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
-				</xsl:attribute>
-			</input>
-			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{$lang_cancel}">
-				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
-				</xsl:attribute>
-			</input>
+		<xsl:call-template name="submit_data"/>
+
+	</form>
+</xsl:template>
+
+<!-- buildings -->
+<xsl:template xmlns:php="http://php.net/xsl" match="buildings">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
+	<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{$form_action}">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+
+			<div id="message" class='message'/>
+
+			<div id="buildings">
+				<fieldset>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'action')"/>
+						</label>
+
+						<select name="action" id="action" class="pure-input-1-2" >
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'action')"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="action_list/options"/>
+						</select>
+					</div>
+					<xsl:if test="value_token != ''">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'token')"/>
+							</label>
+							<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+						</div>
+					</xsl:if>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'data')"/>
+						</label>
+						<xsl:value-of disable-output-escaping="yes" select="data_from_api"/>
+					</div>
+
+				</fieldset>
+			</div>
 		</div>
+		<xsl:call-template name="submit_data"/>
+
 	</form>
 </xsl:template>
 
 
+<xsl:template xmlns:php="http://php.net/xsl" name="submit_data">
+	<div class="proplist-col">
+		<xsl:variable name="lang_send">
+			<xsl:value-of select="php:function('lang', 'send')"/>
+		</xsl:variable>
+		<xsl:variable name="lang_cancel">
+			<xsl:value-of select="php:function('lang', 'cancel')"/>
+		</xsl:variable>
+		<input class="pure-button pure-button-primary" type="submit" name="save" value="{$lang_send}">
+			<xsl:attribute name="title">
+				<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
+			</xsl:attribute>
+		</input>
+		<input class="pure-button pure-button-primary" type="button" name="cancel" value="{$lang_cancel}">
+			<xsl:attribute name="title">
+				<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+			</xsl:attribute>
+		</input>
+	</div>
 
+
+</xsl:template>
 
 <!-- New template-->
 <xsl:template match="options">

@@ -35,16 +35,29 @@
 	class property_uiklassifikasjonssystemet extends phpgwapi_uicommon_jquery
 	{
 
-		private $config;
+		private $config,$webservicehost;
 		var $public_functions = array
 			(
 				'login' => true,
+				'organizations' =>  true,
+				'wings' =>  true,
+				'buildings' =>  true,
+				'rooms' =>  true,
+				'floors' =>  true,
+				'locations' =>  true,
 		);
 
 		public function __construct( )
 		{
 			parent::__construct();
 			$this->config = CreateObject('phpgwapi.config', 'property')->read();
+			$this->webservicehost = !empty($this->config['webservicehost']) ? $this->config['webservicehost'] : 'https://apitest.klassifikasjonssystemet.no';
+
+			if(!$this->webservicehost)
+			{
+				throw new Exception('Missing parametres for webservice');
+			}
+
 		}
 
 		function login( )
@@ -62,13 +75,11 @@
 			}
 
 
-
-
 			$data = array(
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.login')),
 				'value_external_username' => $username,
 				'value_token' => $token,
-				'tabs' => self::_generate_tabs( $active_tab, $_disable = array(
+				'tabs' => self::_generate_tabs( 'login', $_disable = array(
 					'organizations' => $token ? false : true,
 					'wings' => $token ? false : true,
 					'buildings' => $token ? false : true,
@@ -84,19 +95,131 @@
 			self::render_template_xsl( array('klassifikasjonssystemet'), $data, $xsl_rootdir = '' , 'login');
 		}
 
+		function organizations( )
+		{
+
+			$token = phpgwapi_cache::session_get('property', 'klassifikasjonssystemet_token');
+
+			if(!$token)
+			{
+				parent::redirect(array('menuaction' => 'property.uiklassifikasjonssystemet.login'));
+			}
+
+			$action = phpgw::get_var('action', 'string');
+
+			switch ($action)
+			{
+				case 'get_all':
+					$organizations = $this->get_all($token, __FUNCTION__);
+					$data_from_api = _debug_array($organizations, false);
+					break;
+
+				default:
+					break;
+			}
+
+
+			$_action_list = array(
+
+				'get_children' => 'get_children', //Get a list of all organizations underneath a specified ParentId. This will give you the entire organizational hierarchy of a HF if you supply the HF Id as ParentId.
+				'get_all'		=> 'get_all', // Get the entire organizational hierarchy of the HF you have access to.
+				'get_single'	=> 'get_single', //Get information about a given organization (level)
+				'post_single'	=> 'post_single',
+				'put_single'	=> 'put_single'
+			);
+			$action_list = array();
+			foreach ($_action_list as $key => $name)
+			{
+				$action_list[] = array('id' => $key, 'name' => $name , 'selected' => $key == $action ? 1 : 0);
+			}
+
+			$data = array(
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.' . __FUNCTION__)),
+				'value_external_username' => $username,
+				'value_token' => $token,
+				'tabs' => self::_generate_tabs(  __FUNCTION__ ),
+				'action_list' => array('options' => $action_list),
+				'data_from_api'	=> $data_from_api
+
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - Klassifikasjonssystemet';
+
+			self::render_template_xsl( array('klassifikasjonssystemet'), $data, $xsl_rootdir = '' , __FUNCTION__);
+		}
+
+		function buildings( )
+		{
+
+			$token = phpgwapi_cache::session_get('property', 'klassifikasjonssystemet_token');
+
+			if(!$token)
+			{
+				parent::redirect(array('menuaction' => 'property.uiklassifikasjonssystemet.login'));
+			}
+
+			$action = phpgw::get_var('action', 'string');
+
+			switch ($action)
+			{
+				case 'get_all':
+					$organizations = $this->get_all($token, __FUNCTION__);
+					$data_from_api = _debug_array($organizations, false);
+					break;
+
+				default:
+					break;
+			}
+
+
+			$_action_list = array(
+
+				'get_children' => 'get_children', //Get a list of all organizations underneath a specified ParentId. This will give you the entire organizational hierarchy of a HF if you supply the HF Id as ParentId.
+				'get_all'		=> 'get_all', // Get the entire organizational hierarchy of the HF you have access to.
+				'get_single'	=> 'get_single', //Get information about a given organization (level)
+				'post_single'	=> 'post_single',
+				'put_single'	=> 'put_single'
+			);
+			$action_list = array();
+			foreach ($_action_list as $key => $name)
+			{
+				$action_list[] = array('id' => $key, 'name' => $name , 'selected' => $key == $action ? 1 : 0);
+			}
+
+			$data = array(
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.' . __FUNCTION__)),
+				'value_external_username' => $username,
+				'value_token' => $token,
+				'tabs' => self::_generate_tabs(  __FUNCTION__),
+				'action_list' => array('options' => $action_list),
+				'data_from_api'	=> $data_from_api
+
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - Klassifikasjonssystemet';
+
+			self::render_template_xsl( array('klassifikasjonssystemet'), $data, $xsl_rootdir = '' , __FUNCTION__);
+		}
+
 		protected function _generate_tabs( $active_tab = 'login', $_disable = array() )
 		{
 			$tabs = array
 			(
-				'login' => array('label' => lang('login'), 'link' => '#login'),//, 'function' => "set_tab('location')"),
-				'organizations' => array('label' => lang('organizations'), 'link' => '#organizations'),//, 'function' => "set_tab('budget')"),
-				'wings' => array('label' => lang('wings'), 'link' => '#wings'),//, 'function' => "set_tab('general')"),
-				'buildings' => array('label' => lang('buildings'), 'link' => '#buildings'),//,'function' => "set_tab('coordination')"),
-				'rooms' => array('label' => lang('rooms'), 'link' => '#rooms'),//,'function' => "set_tab('coordination')"),
-				'floors' => array('label' => lang('floors'), 'link' => '#floors'),//, 'function' => "set_tab('documents')"),
-				'locations' => array('label' => lang('locations'), 'link' => '#locations'),//, 'function' => "set_tab('history')"),
-
+				'login' => array('label' => lang('login'), 'link' => '#login'),
+				'organizations' => array('label' => lang('organizations'), 'link' => '#organizations'),
+				'wings' => array('label' => lang('wings'), 'link' => '#wings'),
+				'buildings' => array('label' => lang('buildings'), 'link' => '#buildings'),
+				'rooms' => array('label' => lang('rooms'), 'link' => '#rooms'),
+				'floors' => array('label' => lang('floors'), 'link' => '#floors'),
+				'locations' => array('label' => lang('locations'), 'link' => '#locations')
 			);
+
+			foreach ($tabs as $key => &$tab)
+			{
+				$tab['link'] = self::link(array('menuaction' => "property.uiklassifikasjonssystemet.{$key}"));
+
+			}
+			unset($tab);
 
 			foreach ($_disable as $tab => $disable)
 			{
@@ -111,12 +234,7 @@
 
 		private function get_token($username, $password)
 		{
-			$webservicehost = !empty($this->config['webservicehost']) ? $this->config['webservicehost'] : 'https://apitest.klassifikasjonssystemet.no';
-
-			if(!$webservicehost)
-			{
-				throw new Exception('Missing parametres for webservice');
-			}
+			$webservicehost = $this->webservicehost;
 
 			$post_data = array
 			(
@@ -136,9 +254,9 @@
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			$result = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -159,6 +277,32 @@
 
 		}
 
+		private function get_all($token, $what ='organizations')
+		{
+			$webservicehost = $this->webservicehost;
+
+			$url = "{$webservicehost}/api/{$what}";
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 
+				"Authorization: Bearer {$token}"
+				));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+			curl_close($ch);
+
+			$ret = json_decode($result, true);
+
+			return $ret;
+
+		}
+
 		private function log( $what, $value = '' )
 		{
 			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['login']))
@@ -174,7 +318,7 @@
 				unset($bt);
 			}
 		}
-		
+
 		function query()
 		{
 			;
