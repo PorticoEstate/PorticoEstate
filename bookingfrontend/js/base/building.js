@@ -115,6 +115,15 @@ function roundMinutes(date) {
 	return date.getTime();
 }
 
+function IsExistingEvent(id, eventsArray) {
+	for(var i = 0; i<eventsArray.length; i++) {
+		if(eventsArray[i].id == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function PopulateCalendarEvents(baseURL, urlParams) {
 	$(".overlay").show();
 	$('.weekNumber').remove();
@@ -129,11 +138,11 @@ function PopulateCalendarEvents(baseURL, urlParams) {
             if(result.ResultSet.totalResultsAvailable > 1) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     var visible = true;
-
+					
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday].join("."), eventsArray))
 					{
-                        var event_infourl = result.ResultSet.Result[k].Sun.info_url;
+						var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
@@ -141,8 +150,8 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 						currentStartDate.setHours((result.ResultSet.Result[k].Sun.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Sun.from_).substring(3, 5));
 
-						var currentEndDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString());
-						if((result.ResultSet.Result[k].Sun.to_).substring(0, 2) != "24") {
+						var currentEndDate = new Date((result.ResultSet.Result[k].Sun.date  + "T" + result.ResultSet.Result[k].Sun.to_).toString());
+						if((result.ResultSet.Result[k].Sun.to_).substring(0, 2) != "24") {							
 							currentEndDate.setHours((result.ResultSet.Result[k].Sun.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Sun.to_).substring(3, 5));
 						} else {
@@ -150,7 +159,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday].join(""),
+						eventsArray.push({ id: [result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday].join("."),
 							name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sun.type],
@@ -164,17 +173,17 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     }
                     
                     if(typeof result.ResultSet.Result[k].Mon !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join("."), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Mon.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
-						var currentStartDate = new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString());
+						var currentStartDate = new Date((result.ResultSet.Result[k].Mon.date  + "T" + result.ResultSet.Result[k].Mon.from_).toString());
 						currentStartDate.setHours((result.ResultSet.Result[k].Mon.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Mon.from_).substring(3, 5));
 						
-						var currentEndDate = new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString());
+						var currentEndDate = new Date((result.ResultSet.Result[k].Mon.date  + "T" + result.ResultSet.Result[k].Mon.to_).toString());
 						
 						if((result.ResultSet.Result[k].Mon.to_).substring(0, 2) != "24") {
 							currentEndDate.setHours((result.ResultSet.Result[k].Mon.to_).substring(0, 2));
@@ -184,7 +193,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join(""),
+						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join("."),
 						    name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Mon.type],
@@ -197,7 +206,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         });       
                     }
                     if(typeof result.ResultSet.Result[k].Tue !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Tue.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday].join("."), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Tue.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -216,7 +225,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday].join("."),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Tue.type],
@@ -229,7 +238,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Wed !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Wed.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday].join("."), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Wed.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -239,7 +248,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 						currentStartDate.setHours((result.ResultSet.Result[k].Wed.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Wed.from_).substring(3, 5));
 						
-						var currentEndDate = new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString());
+						var currentEndDate = new Date((result.ResultSet.Result[k].Wed.date  + "T" + result.ResultSet.Result[k].Wed.to_).toString());
 						if((result.ResultSet.Result[k].Wed.to_).substring(0, 2) != "24") {
 							currentEndDate.setHours((result.ResultSet.Result[k].Wed.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Wed.to_).substring(3, 5));
@@ -248,7 +257,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday].join("."),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Wed.type],
@@ -261,17 +270,17 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Thu !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Thu.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday].join("."), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Thu.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
-						var currentStartDate = new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString());
+						var currentStartDate = new Date((result.ResultSet.Result[k].Thu.date  + "T" + result.ResultSet.Result[k].Thu.from_).toString());
 						currentStartDate.setHours((result.ResultSet.Result[k].Thu.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Thu.from_).substring(3, 5));
 						
-						var currentEndDate = new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString());
+						var currentEndDate = new Date((result.ResultSet.Result[k].Thu.date  + "T" + result.ResultSet.Result[k].Thu.to_).toString());
 						if((result.ResultSet.Result[k].Thu.to_).substring(0, 2) != "24") {
 							currentEndDate.setHours((result.ResultSet.Result[k].Thu.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Thu.to_).substring(3, 5));
@@ -280,7 +289,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday].join("."),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Thu.type],
@@ -293,7 +302,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Fri !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Fri.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday].join("."), eventsArray))
                     {
 						var event_infourl = result.ResultSet.Result[k].Fri.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -312,7 +321,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 						
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday].join(""),
+                        eventsArray.push({ id: [result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday].join("."),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Fri.type],
@@ -325,7 +334,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Sat !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Sat.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday].join("."), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Sat.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -344,7 +353,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
 
-                        eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday].join(""),
+						eventsArray.push({ id: [result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday].join("."),
                             name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
                             color: colors[result.ResultSet.Result[k].Sat.type],

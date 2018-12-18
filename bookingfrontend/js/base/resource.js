@@ -84,6 +84,15 @@ function roundMinutes(date) {
 	return date.getTime();
 }
 
+function IsExistingEvent(id, eventsArray) {
+	for(var i = 0; i<eventsArray.length; i++) {
+		if(eventsArray[i].id == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function PopulateCalendarEvents() {
     $(".overlay").show();
     $('.weekNumber').remove();
@@ -99,8 +108,8 @@ function PopulateCalendarEvents() {
                     var visible = true;
                     
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
-                    {
+					!IsExistingEvent([result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday].join(""), eventsArray))
+					{
                         var event_infourl = result.ResultSet.Result[k].Sun.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
                             event_infourl = event_infourl.replace("amp;",'');
@@ -132,7 +141,7 @@ function PopulateCalendarEvents() {
                     }
                     
                     if(typeof result.ResultSet.Result[k].Mon !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Mon.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join(""), eventsArray))
                     {                        
                         var event_infourl = result.ResultSet.Result[k].Mon.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -165,7 +174,7 @@ function PopulateCalendarEvents() {
                         });       
                     }
                     if(typeof result.ResultSet.Result[k].Tue !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Tue.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday].join(""), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Tue.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -197,7 +206,7 @@ function PopulateCalendarEvents() {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Wed !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Wed.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday].join(""), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Wed.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -229,7 +238,7 @@ function PopulateCalendarEvents() {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Thu !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Thu.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday].join(""), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Thu.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -261,7 +270,7 @@ function PopulateCalendarEvents() {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Fri !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Fri.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday].join(""), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Fri.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
@@ -293,7 +302,7 @@ function PopulateCalendarEvents() {
                         });
                     }
                     if(typeof result.ResultSet.Result[k].Sat !== "undefined" &&
-                            $.inArray(result.ResultSet.Result[k].Sat.id, eventsArray))
+					!IsExistingEvent([result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday].join(""), eventsArray))
                     {
                         var event_infourl = result.ResultSet.Result[k].Sat.info_url;
                         while(event_infourl.indexOf("amp;") !== -1) {
