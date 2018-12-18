@@ -749,9 +749,12 @@
 		protected function modify_by_timezone( &$value )
 		{
 			$timezone = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
-			$datetime = new DateTime($value, new DateTimeZone('UTC'));
-			$datetime->setTimeZone(new DateTimeZone($timezone));
-			$value = $datetime->format('Y-m-d H:i:s');			
+			if(!empty($timezone))
+			{
+				$datetime = new DateTime($value, new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($timezone));
+				$value = $datetime->format('Y-m-d H:i:s');
+			}
 		}
 
 		protected function is_auto_field_def( array &$field_def, $action )
