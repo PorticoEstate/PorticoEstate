@@ -10,13 +10,18 @@
 	 */
 
 
-	if(!empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) || $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt' )
+
+
+	if(!empty($GLOBALS['phpgw_info']['server']['enable_crypto']))
 	{
-		require_once PHPGW_API_INC . '/class.crypto_mcrypt.inc.php';
-	}
-	else if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
-	{
-		require_once PHPGW_API_INC . '/class.crypto_libsodium.inc.php';
+		if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
+		{
+			require_once PHPGW_API_INC . '/class.crypto_libsodium.inc.php';
+		}
+		else if ($GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt' || !empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']))
+		{
+			require_once PHPGW_API_INC . '/class.crypto_mcrypt.inc.php';
+		}
 	}
 	else
 	{
