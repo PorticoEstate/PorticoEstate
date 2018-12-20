@@ -16,6 +16,7 @@
 				'id' => array('type' => 'int', 'precision' => '2', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -28,6 +29,7 @@
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
 				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array('fm_district' => array('district_id' => 'id')),
@@ -204,7 +206,8 @@
 					'nullable' => True, 'default' => '0.00'),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('loc1'),
 			'fk' => array('fm_location1_category' => array('category' => 'id')),
@@ -238,7 +241,8 @@
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
 				'exp_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array(),
 			'fk' => array(),
@@ -280,7 +284,8 @@
 				'area_usable' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => True, 'default' => '0.00'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('loc1', 'loc2'),
 			'fk' => array(
@@ -316,7 +321,8 @@
 					'nullable' => True, 'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array(),
 			'fk' => array(),
@@ -356,7 +362,8 @@
 				'area_usable' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => True, 'default' => '0.00'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('loc1', 'loc2', 'loc3'),
 			'fk' => array(
@@ -390,7 +397,8 @@
 					'nullable' => True, 'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array(),
 			'fk' => array(),
@@ -432,7 +440,8 @@
 				'area_usable' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => True, 'default' => '0.00'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('loc1', 'loc2', 'loc3', 'loc4'),
 			'fk' => array(
@@ -468,7 +477,8 @@
 					'nullable' => True, 'default' => '0.00'),
 				'exp_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
+				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array(),
 			'fk' => array(),
@@ -1319,7 +1329,8 @@
 				'created_on' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+				'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'external_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

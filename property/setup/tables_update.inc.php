@@ -10387,3 +10387,70 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	*
+	* Update property version from 0.9.17.737 to 0.9.17.738
+	*
+	*/
+	$test[] = '0.9.17.737';
+	function property_upgrade0_9_17_737()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for($location_type = 1; $location_type < ($locations + 1); $location_type++)
+		{
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}", 'external_id', array
+					(
+						'type'		=> 'int',
+						'precision' => '4',
+						'nullable'	=> True
+					)
+				);
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}_history", 'external_id', array
+					(
+						'type'		=> 'int',
+						'precision' => '4',
+						'nullable'	=> True
+					)
+				);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_district", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_part_of_town", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_org_unit", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.738';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
