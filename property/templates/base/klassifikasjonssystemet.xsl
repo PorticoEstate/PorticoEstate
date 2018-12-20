@@ -6,23 +6,11 @@
 		<xsl:when test="login">
 			<xsl:apply-templates select="login"/>
 		</xsl:when>
-		<xsl:when test="organizations">
-			<xsl:apply-templates select="organizations"/>
+		<xsl:when test="get_all">
+			<xsl:apply-templates select="get_all"/>
 		</xsl:when>
-		<xsl:when test="wings">
-			<xsl:apply-templates select="wings"/>
-		</xsl:when>
-		<xsl:when test="buildings">
-			<xsl:apply-templates select="buildings"/>
-		</xsl:when>
-		<xsl:when test="rooms">
-			<xsl:apply-templates select="rooms"/>
-		</xsl:when>
-		<xsl:when test="floors">
-			<xsl:apply-templates select="floors"/>
-		</xsl:when>
-		<xsl:when test="locations">
-			<xsl:apply-templates select="locations"/>
+		<xsl:when test="export_data">
+			<xsl:apply-templates select="export_data"/>
 		</xsl:when>
 	</xsl:choose>
 </xsl:template>
@@ -77,8 +65,8 @@
 	</form>
 </xsl:template>
 
-<!-- organizations -->
-<xsl:template xmlns:php="http://php.net/xsl" match="organizations">
+<!-- get_all -->
+<xsl:template xmlns:php="http://php.net/xsl" match="get_all">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
@@ -89,7 +77,7 @@
 
 			<div id="message" class='message'/>
 
-			<div id="organizations">
+			<div id="get_all">
 				<fieldset>
 					<div class="pure-control-group">
 						<label>
@@ -130,8 +118,8 @@
 	</form>
 </xsl:template>
 
-<!-- buildings -->
-<xsl:template xmlns:php="http://php.net/xsl" match="buildings">
+<!-- export_data -->
+<xsl:template xmlns:php="http://php.net/xsl" match="export_data">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
@@ -142,7 +130,7 @@
 
 			<div id="message" class='message'/>
 
-			<div id="buildings">
+			<div id="export_data">
 				<fieldset>
 					<div class="pure-control-group">
 						<label>

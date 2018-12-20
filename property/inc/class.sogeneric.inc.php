@@ -78,6 +78,11 @@
 								'type' => 'text'
 							),
 							array(
+								'name' => 'external_id',
+								'descr' => lang('external id'),
+								'type' => 'int'
+							),
+							array(
 								'name' => 'district_id',
 								'descr' => lang('district'),
 								'type' => 'select',
