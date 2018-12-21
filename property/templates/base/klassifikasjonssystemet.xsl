@@ -94,6 +94,16 @@
 							<xsl:apply-templates select="action_list/options"/>
 						</select>
 					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'allrows')"/>
+						</label>
+						<input type="checkbox" name="allrows" value="1">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'allrows')"/>
+							</xsl:attribute>
+						</input>
+					</div>
 					<xsl:if test="value_token != ''">
 						<div class="pure-control-group">
 							<label>
@@ -160,7 +170,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'data')"/>
 						</label>
-						<xsl:value-of disable-output-escaping="yes" select="data_from_api"/>
+						<xsl:value-of disable-output-escaping="yes" select="data_for_export"/>
 					</div>
 
 				</fieldset>

@@ -1510,7 +1510,12 @@
 								'values_def' => array(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
 								)
-							)
+							),
+							array(
+								'name' => 'external_id',
+								'descr' => lang('external id'),
+								'type' => 'int'
+							),
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),

@@ -429,6 +429,16 @@
 				$uicols['datatype'][] = '';
 				$uicols['formatter'][] = '';
 
+				$cols_return[] = 'external_id';
+				$uicols['input_type'][] = 'hidden';
+				$uicols['name'][] = 'external_id';
+				$uicols['descr'][] = 'dummy';
+				$uicols['statustext'][] = 'dummy';
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+
 				for ($i = 0; $i < ($type_id); $i++)
 				{
 					$uicols['input_type'][] = 'text';
@@ -1421,6 +1431,9 @@
 				$cols = "fm_location{$type_id}.id,";
 				$cols_return[] = 'id';
 			}
+
+			$cols .= "fm_location{$type_id}.external_id";
+			$cols_return[] = 'external_id';
 
 			$cols .= "fm_location{$type_id}.category as cat_id";
 			$cols .= ",fm_location{$type_id}_category.descr as category_name";

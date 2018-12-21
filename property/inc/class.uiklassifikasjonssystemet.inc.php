@@ -111,15 +111,18 @@
 			}
 
 			$action = phpgw::get_var('action', 'string');
+			$allrows = phpgw::get_var('allrows', 'bool');
+
 
 			if ($action)
 			{
-				$data = $this->get_all_from_external($token, $action);
+				$data = $this->get_all_from_external($token, $action, $allrows);
 				$data_from_api = _debug_array($data, false);
 			}
 
 
 			$_action_list = array(
+				'regHelseforetak'	=> 'RegHelseforetak',
 				'helseforetak'	=> 'Helseforetak',
 				'organizations' => 'organizations',
 				'wings' =>  'wings',
@@ -127,6 +130,9 @@
 				'rooms' =>  true,
 				'floors' =>  true,
 				'locations' =>  true,
+				'ownership'	=> 'Ownership',
+				'hovedfunksjon' => 'Hovedfunksjon',
+				'delfunksjon'	=> 'Delfunksjon'
 			);
 			$action_list = array();
 			foreach ($_action_list as $key => $name)
@@ -161,14 +167,18 @@
 
 			$action = phpgw::get_var('action', 'string');
 
+			set_time_limit(600);
 
 			switch ($action)
 			{
 				case 'dry_run':
-					$data = $this->get_data_for_export(true);
-					$data_from_api = _debug_array($data, false);
+					$dry_run = true;
+					$data_for_export = $this->get_data_for_export($dry_run);
 					break;
-
+				case 'export':
+					$dry_run = false;
+					$data_for_export = $this->get_data_for_export($dry_run);
+					break;
 				default:
 					break;
 			}
@@ -189,8 +199,7 @@
 				'value_token' => $token,
 				'tabs' => self::_generate_tabs(  __FUNCTION__ ),
 				'action_list' => array('options' => $action_list),
-				'data_from_api'	=> $data_from_api
-
+				'data_for_export'	=> !empty($data_for_export) ? _debug_array($data_for_export, false) : ''
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - Klassifikasjonssystemet';
@@ -265,7 +274,7 @@
 
 				if(!$dry_run && empty($part_of_town_result['id']))
 				{
-					throw new Exception('Update api/Locations failed');
+					throw new Exception('Update api/Locations failed:' . _debug_array($part_of_town_result,false));
 				}
 
 				if(!$dry_run && $part_of_town_result['id'] && !$part_of_town['external_id'])
@@ -294,7 +303,7 @@
 
 					if(!$dry_run && empty($building_result['id']))
 					{
-						throw new Exception('Update api/Locations failed');
+						throw new Exception('Update api/Buildings failed:' . _debug_array($building_result,false));
 					}
 
 					if(!$dry_run && $building_result['id'] && !$building['external_id'])
@@ -328,7 +337,7 @@
 
 					if(!$dry_run && empty($floor_result['id']))
 					{
-						throw new Exception('Update api/Locations failed');
+						throw new Exception('Update api/Floors failed:' . _debug_array($floor_result,false));
 					}
 
 					if(!$dry_run && $floor_result['id'] && !$floor['external_id'])
@@ -363,7 +372,7 @@
 
 					if(!$dry_run && empty($room_result['id']))
 					{
-						throw new Exception('Update api/Locations failed');
+						throw new Exception('Update api/Rooms failed:' . _debug_array($floor_result,false));
 					}
 
 					if(!$dry_run && $room_result['id'] && !$room['external_id'])
@@ -552,7 +561,7 @@
 				//	"WingId" => 0,
 				//	"CapacityToday" => 9,
 				//	"CapacityBuiltFor" => 10,
-				//	"VersionNumber" => "sample string 11",
+					"VersionNumber" => "3.1.4",
 					"ExternalId" => $param['portico_id'],
 				)
 			);
@@ -631,11 +640,16 @@
 
 		}
 
-		private function get_all_from_external($token, $what ='organizations')
+		private function get_all_from_external($token, $what ='organizations', $allrows)
 		{
 			$webservicehost = $this->webservicehost;
 
-			$url = "{$webservicehost}/api/{$what}?limit=10";
+			$url = "{$webservicehost}/api/{$what}";
+
+			if(!$allrows)
+			{
+				$url .= "?limit=10";
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -674,7 +688,16 @@
 				));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $mehod);
+			
+			if($mehod == 'POST')
+			{
+				curl_setopt($ch, CURLOPT_POST, 1);
+			}
+			else
+			{
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $mehod);
+			}
+
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
 
