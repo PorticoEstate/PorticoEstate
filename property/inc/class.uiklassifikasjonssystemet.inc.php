@@ -372,7 +372,7 @@
 
 					if(!$dry_run && empty($room_result['id']))
 					{
-						throw new Exception('Update api/Rooms failed:' . _debug_array($floor_result,false));
+						throw new Exception('Update api/Rooms failed:' . _debug_array($room_result,false));
 					}
 
 					if(!$dry_run && $room_result['id'] && !$room['external_id'])
