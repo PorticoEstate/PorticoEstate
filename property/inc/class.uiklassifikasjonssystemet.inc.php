@@ -376,7 +376,7 @@
 			$rooms = array();
 			foreach ($floors as $floor)
 			{
-				$_rooms = $solocation->read(array('type_id' => 5, 'location_code' => $floor['location_code'], 'allrows' => $allrows));
+				$_rooms = $solocation->read(array('type_id' => 5, 'location_code' => $floor['location_code'], 'allrows' => $allrows, 'additional_fields' => array('nettoareal', 'area_gross', 'id_delfunsjon')));
 
 				foreach ($_rooms as &$room)
 				{
@@ -384,11 +384,13 @@
 						(
 							'floor_id' => $floor['external_id'] ,
 							'name' => "{$room['loc1_name']},  {$room['loc2_name']} ,  {$room['loc3_name']} ,  {$room['loc4_name']} ,  {$room['loc5_name']}",
-							'descr'	=> '',
+							'descr'	=> $room['romspesifikasjon'],
 							'rom_nr_id' => $room['rom_nr_id'],
-							'nettoareal' => $room['nettoareal'],
+							'area_net' => $room['nettoareal'],
+							'area_gross' => $room['area_gross'],
 							'portico_id' => $room['location_code'],
-							'category'	=> $room['category']
+							'category'	=> $room['category'],
+							'id_delfunsjon'	=> $room['id_delfunsjon']
 						)
 						, $room['external_id'], $dry_run);
 
@@ -572,12 +574,12 @@
 			$data = array(
 				"FloorId" => $param['floor_id'],
 				"RoomDetails" => array(
-					"ClassificationId" => $param['category'], // for now..
+					"ClassificationId" => $param['id_delfunsjon'] ? $param['id_delfunsjon'] : $param['category'], // for now..
 					"RoomNumber" => $param['rom_nr_id'],
 					"Name" => $param['name'],
 					"Description" => $param['descr'],
-					"NetArea" => (float)$param['nettoareal'],
-				//	"GrossArea" => 6.0,
+					"NetArea" => (float)$param['area_net'],
+					"GrossArea" => (float)$param['area_gross'],
 				//	"OrganizationId" => 7,
 				//	"RoomOwnershipId" => 8,
 				//	"WingId" => 0,

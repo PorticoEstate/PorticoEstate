@@ -356,6 +356,7 @@
 			$control_id = isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$filter_item = isset($data['filter_item']) && $data['filter_item'] ? (array)$data['filter_item'] : array();
+			$additional_fields = !empty($data['additional_fields']) ? (array)$data['additional_fields'] : array();
 
 			if($location_id && !$type_id)
 			{
@@ -1161,6 +1162,19 @@
 			$location_count = $type_id - 1;
 
 			$cols_return = $uicols['name'];
+
+			if($additional_fields)
+			{
+				foreach ($additional_fields as $additional_field)
+				{
+					if(!in_array($additional_field, $cols_return))
+					{
+						$cols_return[] = $additional_field;
+						$uicols['datatype'][] = '';
+					}
+				}
+			}
+
 			$dataset = array();
 			while ($this->db->next_record())
 			{
