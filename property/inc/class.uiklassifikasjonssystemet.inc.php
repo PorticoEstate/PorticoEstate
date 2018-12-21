@@ -366,7 +366,8 @@
 							'descr'	=> '',
 							'rom_nr_id' => $room['rom_nr_id'],
 							'nettoareal' => $room['nettoareal'],
-							'portico_id' => $room['location_code']
+							'portico_id' => $room['location_code'],
+							'category'	=> $room['category']
 						)
 						, $room['external_id'], $dry_run);
 
@@ -550,7 +551,7 @@
 			$data = array(
 				"FloorId" => $param['floor_id'],
 				"RoomDetails" => array(
-					"ClassificationId" => "",
+					"ClassificationId" => $param['category'], // for now..
 					"RoomNumber" => $param['rom_nr_id'],
 					"Name" => $param['name'],
 					"Description" => $param['descr'],
