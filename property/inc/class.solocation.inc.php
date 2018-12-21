@@ -1435,7 +1435,7 @@
 			$cols .= "fm_location{$type_id}.external_id";
 			$cols_return[] = 'external_id';
 
-			$cols .= "fm_location{$type_id}.category as cat_id";
+			$cols .= ",fm_location{$type_id}.category as cat_id";
 			$cols .= ",fm_location{$type_id}_category.descr as category_name";
 			$cols_return[] = 'cat_id';
 			$cols_return[] = 'category_name';
