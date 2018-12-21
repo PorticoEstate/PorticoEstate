@@ -165,6 +165,22 @@
 				parent::redirect(array('menuaction' => 'property.uiklassifikasjonssystemet.login'));
 			}
 
+
+			$helseforetak = $this->get_all_from_external($token, 'helseforetak', true);
+
+
+			$helseforetak_id = phpgw::get_var('helseforetak_id', 'int');
+
+			$helseforetak_list = array();
+			if ($helseforetak)
+			{
+				$helseforetak_list[] = array(
+					'id' => $helseforetak['Id'],
+					'name' => $helseforetak['Name'],
+					'selected' => $helseforetak['Id'] == $helseforetak_id ? 1 : 0
+				);
+			}
+
 			$action = phpgw::get_var('action', 'string');
 
 			set_time_limit(600);
@@ -173,11 +189,11 @@
 			{
 				case 'dry_run':
 					$dry_run = true;
-					$data_for_export = $this->get_data_for_export($dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $dry_run);
 					break;
 				case 'export':
 					$dry_run = false;
-					$data_for_export = $this->get_data_for_export($dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $dry_run);
 					break;
 				default:
 					break;
@@ -199,6 +215,7 @@
 				'value_token' => $token,
 				'tabs' => self::_generate_tabs(  __FUNCTION__ ),
 				'action_list' => array('options' => $action_list),
+				'helseforetak_list' => array('options' => $helseforetak_list),
 				'data_for_export'	=> !empty($data_for_export) ? _debug_array($data_for_export, false) : ''
 			);
 
@@ -235,8 +252,12 @@
 		}
 
 
-		private function get_data_for_export($dry_run = true )
+		private function get_data_for_export($helseforetak_id, $dry_run = true )
 		{
+			if(!$helseforetak_id)
+			{
+				throw new Exception('Missing helseforetak_id');
+			}
 			//Locations (part_of_town)
 			//Organizations
 			//Buildings
@@ -267,7 +288,7 @@
 
 				$part_of_town_result = $this->save_location(array
 					(
-							"HelseforetakId" => 71813,
+							"HelseforetakId" => $helseforetak_id,
 							"name"=> $part_of_town['name'],
 							"portico_id"=> $part_of_town['id'])
 					, $part_of_town['external_id'], $dry_run);
@@ -668,7 +689,7 @@
 
 			$ret = json_decode($result, true);
 
-			return $ret;
+			return (array)$ret;
 
 		}
 

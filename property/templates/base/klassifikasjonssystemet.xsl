@@ -144,6 +144,14 @@
 				<fieldset>
 					<div class="pure-control-group">
 						<label>
+							Helseforetak
+						</label>
+						<select name="helseforetak_id" id="helseforetak_id" class="pure-input-1-2" >
+							<xsl:apply-templates select="helseforetak_list/options"/>
+						</select>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'action')"/>
 						</label>
 
