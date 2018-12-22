@@ -152,6 +152,46 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'category')"/>
+						</label>
+
+						<table class="pure-table pure-table-bordered pure-custom">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'name')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<xsl:for-each select="categories">
+									<tr>
+										<td>
+											<xsl:value-of select="id"/>
+										</td>
+										<td>
+											<xsl:value-of select="name"/>
+										</td>
+										<td>
+											<input id="option-{id}" type="checkbox" name = "selected_categories[]" value="{id}">
+
+												<xsl:if test="selected != 0">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</xsl:for-each>
+							</tbody>
+						</table>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'action')"/>
 						</label>
 

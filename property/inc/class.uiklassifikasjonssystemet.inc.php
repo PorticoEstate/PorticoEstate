@@ -166,8 +166,28 @@
 			}
 
 
-			$helseforetak = $this->get_all_from_external($token, 'helseforetak', true);
+			$categories = execMethod('property.sogeneric.get_list', array(
+				'type' => 'location',
+				'type_id' =>5, //room
+				'order' => 'descr'));
 
+			if($_POST)
+			{
+				$selected_categories = (array) phpgw::get_var('selected_categories');
+				phpgwapi_cache::system_set('klassifikasjonssystemet', 'selected_categories', $selected_categories, true);
+			}
+			else
+			{
+				$selected_categories = (array) phpgwapi_cache::system_get('klassifikasjonssystemet', 'selected_categories', true);
+			}
+
+			foreach ($categories as &$category)
+			{
+				$category['selected'] = in_array($category['id'],$selected_categories) ? 1 : 0;
+			}
+
+
+			$helseforetak = $this->get_all_from_external($token, 'helseforetak', true);
 
 			$helseforetak_id = phpgw::get_var('helseforetak_id', 'int');
 
@@ -189,11 +209,11 @@
 			{
 				case 'dry_run':
 					$dry_run = true;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $dry_run);
 					break;
 				case 'export':
 					$dry_run = false;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $dry_run);
 					break;
 				default:
 					break;
@@ -216,6 +236,7 @@
 				'tabs' => self::_generate_tabs(  __FUNCTION__ ),
 				'action_list' => array('options' => $action_list),
 				'helseforetak_list' => array('options' => $helseforetak_list),
+				'categories'	=> $categories,
 				'data_for_export'	=> !empty($data_for_export) ? _debug_array($data_for_export, false) : ''
 			);
 
@@ -252,7 +273,7 @@
 		}
 
 
-		private function get_data_for_export($helseforetak_id, $dry_run = true )
+		private function get_data_for_export($helseforetak_id, $selected_categories, $dry_run = true )
 		{
 			if(!$helseforetak_id)
 			{
@@ -274,9 +295,14 @@
 
 			$part_of_towns = $bogeneric->read();
 
-			$allrows = false;
+			$allrows = true;
 
 
+			if($selected_categories)
+			{
+				$rooms_by_categories = $this->get_rooms_by_categories($selected_categories);
+			}
+//			_debug_array($rooms_by_categories);			die();
 			$buildings = array();
 
 			foreach ($part_of_towns as $part_of_town)
@@ -305,8 +331,28 @@
 					$part_of_town['external_id'] = (int) $part_of_town_result['id'];
 				}
 
+				$__buildings = $solocation->read(array('type_id' => 2, 'part_of_town_id' => $part_of_town['id'], 'allrows' => $allrows));
 
-				$_buildings = $solocation->read(array('type_id' => 2, 'part_of_town_id' => $part_of_town['id'], 'allrows' => $allrows));
+				$_buildings = array();
+
+				foreach ($__buildings as $building)
+				{
+
+					if($selected_categories)
+					{
+						if(preg_match("/{$building['location_code']}/", $rooms_by_categories))
+						{
+							$_buildings[] = $building;
+						}
+					}
+					else
+					{
+						$_buildings[] = $building;
+					}
+
+				}
+
+				unset($building);
 
 				foreach ($_buildings as &$building)
 				{
@@ -335,14 +381,38 @@
 					}
 
 				}
-				$buildings = array_merge($buildings, $_buildings);
-			}
+				unset($building);
 
+				if($_buildings)
+				{
+					$buildings = array_merge($buildings, $_buildings);
+//					_debug_array($_buildings);
+				}
+			}
 
 			$floors = array();
 			foreach ($buildings as $building)
 			{
-				$_floors = $solocation->read(array('type_id' => 3, 'location_code' => $building['location_code'], 'allrows' => $allrows));
+				$__floors = $solocation->read(array('type_id' => 3, 'location_code' => $building['location_code'], 'allrows' => $allrows));
+
+				$_floors = array();
+				foreach ($__floors as $floor)
+				{
+					if($selected_categories)
+					{
+						if(preg_match("/{$floor['location_code']}/", $rooms_by_categories))
+						{
+							$_floors[] = $floor;
+						}
+					}
+					else
+					{
+						$_floors[] = $floor;
+					}
+
+				}
+
+				unset($floor);
 
 				foreach ($_floors as &$floor)
 				{
@@ -369,6 +439,7 @@
 					}
 
 				}
+				unset($floor);
 
 				$floors = array_merge($floors, $_floors);
 			}
@@ -376,7 +447,7 @@
 			$rooms = array();
 			foreach ($floors as $floor)
 			{
-				$_rooms = $solocation->read(array('type_id' => 5, 'location_code' => $floor['location_code'], 'allrows' => $allrows, 'additional_fields' => array('nettoareal', 'area_gross', 'id_delfunsjon')));
+				$_rooms = $solocation->read(array('type_id' => 5, 'location_code' => $floor['location_code'], 'allrows' => $allrows, 'additional_fields' => array('nettoareal', 'area_gross', 'id_delfunsjon'), 'cat_id' => $selected_categories));
 
 				foreach ($_rooms as &$room)
 				{
@@ -406,6 +477,8 @@
 						$room['external_id'] = (int) $room_result['id'];
 					}
 				}
+
+				unset($room);
 
 				$rooms = array_merge($rooms, $_rooms);
 
@@ -755,6 +828,32 @@
 		{
 			$sql = "UPDATE {$table} SET external_id = " . (int) $external_id . " {$where}";
 			return $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+		}
+
+
+		private function get_rooms_by_categories( $cat_id )
+		{
+			$table = 'fm_location5';
+
+			$values = array();
+
+			if ($cat_id)
+			{
+				foreach ($cat_id as &$_cat_id)
+				{
+					$_cat_id = $GLOBALS['phpgw']->db->db_addslashes($_cat_id);
+				}
+
+				$sql = "SELECT DISTINCT location_code FROM {$table} WHERE category IN ('" . implode("','",$cat_id) . "')";
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+
+				while ($GLOBALS['phpgw']->db->next_record())
+				{
+					$values[] = $GLOBALS['phpgw']->db->f('location_code');
+				}
+			}
+//			_debug_array($values);die();
+			return implode(' #', $values);
 		}
 
 		function query()

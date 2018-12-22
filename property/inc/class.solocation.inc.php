@@ -881,8 +881,21 @@
 
 			if ($cat_id)
 			{
-				$cat_id = $this->db->db_addslashes($cat_id);
-				$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
+				if(is_array($cat_id))
+				{
+					foreach ($cat_id as &$_cat_id)
+					{
+						$_cat_id = $this->db->db_addslashes($_cat_id);
+					}
+
+					$filtermethod .= " {$where} fm_location{$type_id}.category IN ('" . implode("','",$cat_id) . "')";
+					
+				}
+				else
+				{
+					$cat_id = $this->db->db_addslashes($cat_id);
+					$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
+				}
 				$where = 'AND';
 			}
 			else
