@@ -35,7 +35,7 @@
 	class property_uiklassifikasjonssystemet extends phpgwapi_uicommon_jquery
 	{
 
-		private $config,$webservicehost,$acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage;
+		private $config,$webservicehost,$acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage, $nextmatchs, $start, $maxmatches;
 		var $public_functions = array
 			(
 				'login' => true,
@@ -61,6 +61,15 @@
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage = $this->acl->check($this->acl_location, 16, 'property');
+
+			$this->start = (int) phpgw::get_var('start', 'int');
+			$this->maxmatches = 15;
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) &&
+				(int) $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0 )
+			{
+				$this->maxmatches =& $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			}
+
 
 			if(!$this->acl_manage)
 			{
@@ -109,6 +118,7 @@
 			{
 				parent::redirect(array('menuaction' => 'property.uiklassifikasjonssystemet.login'));
 			}
+			$this->nextmatchs	= CreateObject('phpgwapi.nextmatchs');
 
 			$action = phpgw::get_var('action', 'string');
 			$allrows = phpgw::get_var('allrows', 'bool');
@@ -116,23 +126,23 @@
 
 			if ($action)
 			{
-				$data = $this->get_all_from_external($token, $action, $allrows);
-				$data_from_api = _debug_array($data, false);
+				$data_from_external = $this->get_all_from_external($token, $action, $allrows);
+//				$data_from_api = _debug_array($data_from_external, false);
 			}
 
 
 			$_action_list = array(
-				'regHelseforetak'	=> 'RegHelseforetak',
+	//			'regHelseforetak'	=> 'RegHelseforetak',
 				'helseforetak'	=> 'Helseforetak',
 				'organizations' => 'organizations',
-				'wings' =>  'wings',
-				'buildings' =>  true,
-				'rooms' =>  true,
-				'floors' =>  true,
-				'locations' =>  true,
 				'ownership'	=> 'Ownership',
 				'hovedfunksjon' => 'Hovedfunksjon',
-				'delfunksjon'	=> 'Delfunksjon'
+				'delfunksjon'	=> 'Delfunksjon',
+				'locations' =>  'Locations',
+				'buildings' =>  'Buildings',
+				'wings' =>  'Wings',
+				'floors' =>  'Floors',
+				'rooms' =>  'Room',
 			);
 			$action_list = array();
 			foreach ($_action_list as $key => $name)
@@ -140,16 +150,103 @@
 				$action_list[] = array('id' => $key, 'name' => $key , 'selected' => $key == $action ? 1 : 0);
 			}
 
+			$link_data = array
+			(
+				'menuaction' => 'property.uiklassifikasjonssystemet.get_all',
+				'action'	=> $action
+			);
+			$nm = array
+			(
+				'start'			=> $this->start,
+				'start_record'	=> $this->start,
+ 				'num_records'	=> !empty($data_from_external) ? $data_from_external['Paging']['Returned'] : 0,
+ 				'all_records'	=> !empty($data_from_external) ? $data_from_external['Paging']['Total']: 0,
+				'link_data'		=> $link_data,
+				'allow_all_rows'=> true,
+				'allrows'		=> $allrows
+			);
+
+			$table_heading = array();
+			$_table_heading = array();
+			$table_data = array();
+			$_data_from_external = array();
+
+			if($data_from_external && empty($data_from_external['Data']))
+			{
+				$_data_from_external[] = $data_from_external;
+				foreach ($data_from_external as $key => $dummy)
+				{
+					if($key == 'RoomDetails')
+					{
+						continue;//later
+					}
+					$table_heading[] = array('name' => $key);
+					$_table_heading[] = $key;
+				}
+			}
+			else if($data_from_external)
+			{
+				$_data_from_external = $data_from_external['Data'];
+				foreach ($data_from_external['Data'][0] as $key => $dummy)
+				{
+					if($key == 'RoomDetails')
+					{
+						continue;//later
+					}
+					$table_heading[] = array('name' => $key);
+					$_table_heading[] = $key;
+				}
+
+			}
+
+			foreach ($_data_from_external as  $row)
+			{
+				$table_data_columns = array();
+				foreach ($row as $key => $value)
+				{
+					if(is_array($value))
+					{
+						$__value = '<table><tr>';
+						
+						foreach ($value[0] as $_key => $_value)
+						{
+							$table_data_columns[] = array('value' => $_value);
+
+				//			$__value .=  "<td>$_value</td>";
+
+							if(!in_array("detail_{$_key}", $_table_heading))
+							{
+								$_table_heading[] = "detail_{$_key}";
+								$table_heading[] = array('name' => "detail_{$_key}");
+							}
+						}
+				//		$__value .= '</tr></table>';
+						
+				//		$table_data_columns[] = array('value' => $__value);
+					}
+					else
+					{
+						$table_data_columns[] = array('value' => $value);
+					}
+				}
+				$table_data[] = array('values' => $table_data_columns);
+			}
+
+//			_debug_array($table_data);
+//				die();
 			$data = array(
+				'nm_data'	=> $this->nextmatchs->xslt_nm($nm),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.' . __FUNCTION__)),
 				'value_external_username' => $username,
 				'value_token' => $token,
 				'tabs' => self::_generate_tabs(  __FUNCTION__ ),
 				'action_list' => array('options' => $action_list),
-				'data_from_api'	=> $data_from_api
+				'table_heading' => array('heading' => $table_heading),
+				'table_data' => $table_data,
+				'nm_colspan' => count($table_heading),
+//				'data_from_api'	=> $data_from_api
 
 			);
-
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - Klassifikasjonssystemet';
 
 			self::render_template_xsl( array('klassifikasjonssystemet'), $data, $xsl_rootdir = '' , __FUNCTION__);
@@ -170,21 +267,45 @@
 				'type' => 'location',
 				'type_id' =>5, //room
 				'order' => 'descr'));
-
+			$_part_of_towns = execMethod('property.sogeneric.get_list', array(
+				'type' => 'part_of_town',
+				'order' => 'name',
+				'sort' => 'ASC',
+				));
+			$part_of_towns = array();
+			foreach ($_part_of_towns as $part_of_town)
+			{
+				if(!$part_of_town['id'])
+				{
+					continue;
+				}
+				$part_of_towns[] = $part_of_town;
+			}
+			unset($part_of_town);
 			if($_POST)
 			{
 				$selected_categories = (array) phpgw::get_var('selected_categories');
 				phpgwapi_cache::system_set('klassifikasjonssystemet', 'selected_categories', $selected_categories, true);
+				$selected_part_of_towns = (array) phpgw::get_var('selected_part_of_towns');
+				phpgwapi_cache::system_set('klassifikasjonssystemet', 'selected_part_of_towns', $selected_part_of_towns, true);
 			}
 			else
 			{
 				$selected_categories = (array) phpgwapi_cache::system_get('klassifikasjonssystemet', 'selected_categories', true);
+				$selected_part_of_towns = (array) phpgwapi_cache::system_get('klassifikasjonssystemet', 'selected_part_of_towns', true);
 			}
 
 			foreach ($categories as &$category)
 			{
 				$category['selected'] = in_array($category['id'],$selected_categories) ? 1 : 0;
 			}
+			unset($category);
+
+			foreach ($part_of_towns as &$part_of_town)
+			{
+				$part_of_town['selected'] = in_array($part_of_town['id'],$selected_part_of_towns) ? 1 : 0;
+			}
+			unset($part_of_town);
 
 
 			$helseforetak = $this->get_all_from_external($token, 'helseforetak', true);
@@ -209,11 +330,11 @@
 			{
 				case 'dry_run':
 					$dry_run = true;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run);
 					break;
 				case 'export':
 					$dry_run = false;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run);
 					break;
 				default:
 					break;
@@ -237,6 +358,7 @@
 				'action_list' => array('options' => $action_list),
 				'helseforetak_list' => array('options' => $helseforetak_list),
 				'categories'	=> $categories,
+				'part_of_towns' => $part_of_towns,
 				'data_for_export'	=> !empty($data_for_export) ? _debug_array($data_for_export, false) : ''
 			);
 
@@ -273,7 +395,7 @@
 		}
 
 
-		private function get_data_for_export($helseforetak_id, $selected_categories, $dry_run = true )
+		private function get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run = true )
 		{
 			if(!$helseforetak_id)
 			{
@@ -293,7 +415,7 @@
 			$solocation = createObject('property.solocation');
 
 
-			$part_of_towns = $bogeneric->read();
+			$part_of_towns = $bogeneric->read(array('order' => 'name', 'sort' => 'ASC', 'allrows' => true));
 
 			$allrows = true;
 
@@ -303,11 +425,22 @@
 				$rooms_by_categories = $this->get_rooms_by_categories($selected_categories);
 			}
 //			_debug_array($rooms_by_categories);			die();
+			$part_of_town_buildings = array();
 			$buildings = array();
 
 			foreach ($part_of_towns as $part_of_town)
 			{
 				if(!$part_of_town['id'])
+				{
+					continue;
+				}
+
+				if (!in_array($part_of_town['id'], $selected_part_of_towns))
+				{
+					continue;
+				}
+
+				if(!$selected_categories)
 				{
 					continue;
 				}
@@ -388,6 +521,8 @@
 					$buildings = array_merge($buildings, $_buildings);
 //					_debug_array($_buildings);
 				}
+
+				$part_of_town_buildings[$part_of_town['name']] = count($_buildings);
 			}
 
 			$floors = array();
@@ -484,10 +619,11 @@
 
 			}
 
-			$values['part_of_town'] = $part_of_towns;
-			$values['buildings'] = $buildings;
-			$values['floors'] = $floors;
-			$values['rooms'] = $rooms;
+			$values['part_of_town'] = count($part_of_towns);
+			$values['part_of_town_buildings'] = $part_of_town_buildings;
+			$values['buildings'] = count($buildings);
+			$values['floors'] = count($floors);
+			$values['rooms'] = count($rooms);;
 
 
 			return $values;
@@ -745,7 +881,8 @@
 
 			if(!$allrows)
 			{
-				$url .= "?limit=10";
+				$url .= "?limit={$this->maxmatches}";
+				$url .= "&Offset={$this->start}";
 			}
 
 			$ch = curl_init();
@@ -785,7 +922,7 @@
 				));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			
+
 			if($mehod == 'POST')
 			{
 				curl_setopt($ch, CURLOPT_POST, 1);

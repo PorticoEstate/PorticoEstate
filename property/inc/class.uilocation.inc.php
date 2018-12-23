@@ -144,7 +144,8 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
-				'lookup_tenant' => $lookup_tenant
+				'lookup_tenant' => $lookup_tenant,
+				'dry_run' => false
 			);
 
 			$values = $this->bo->read($params);
@@ -1046,7 +1047,7 @@ JS;
 				}
 				else
 				{
-					$function_msg = $uicols['descr'][($type_id+1)];
+					$function_msg = $uicols['descr'][($type_id+2)];
 				}
 			}
 

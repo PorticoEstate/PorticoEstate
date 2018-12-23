@@ -52,10 +52,17 @@
 						</input>
 					</div>
 					<xsl:if test="value_token != ''">
-						<label>
-							<xsl:value-of select="php:function('lang', 'token')"/>
-						</label>
-						<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'token')"/>
+							</label>
+							<textarea class="pure-input-1-2" rows="12" >
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+							</textarea>
+						</div>
 					</xsl:if>
 				</fieldset>
 			</div>
@@ -94,22 +101,17 @@
 							<xsl:apply-templates select="action_list/options"/>
 						</select>
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'allrows')"/>
-						</label>
-						<input type="checkbox" name="allrows" value="1">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'allrows')"/>
-							</xsl:attribute>
-						</input>
-					</div>
 					<xsl:if test="value_token != ''">
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'token')"/>
 							</label>
-							<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+							<textarea class="pure-input-1-2" rows="12" >
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+							</textarea>
 						</div>
 					</xsl:if>
 
@@ -118,14 +120,45 @@
 							<xsl:value-of select="php:function('lang', 'data')"/>
 						</label>
 						<xsl:value-of disable-output-escaping="yes" select="data_from_api"/>
+						<table class="pure-table pure-table-bordered pure-custom">
+							<tr>
+								<td colspan="{nm_colspan}" width="100%">
+									<xsl:call-template name="nextmatchs" />
+								</td>
+							</tr>
+							<tr>
+								<xsl:apply-templates select="table_heading/heading"/>
+							</tr>
+							<xsl:for-each select="table_data">
+								<!--								<xsl:variable name="details" select="child::*/details"/>-->
+								<tr>
+									<xsl:for-each select="values">
+										<td>
+											<xsl:value-of disable-output-escaping="yes" select="value"/>
+										</td>
+										
+										<!--										<xsl:value-of disable-output-escaping="yes" select="$details/ID"/>-->
+
+									</xsl:for-each>
+								</tr>
+							</xsl:for-each>
+						</table>
 					</div>
 
 				</fieldset>
 			</div>
 		</div>
 		<xsl:call-template name="submit_data"/>
-
 	</form>
+	<script type="text/javascript">
+
+		$(function() {
+			$('#action').change(function() {
+				this.form.submit();
+			});
+		});
+	</script>
+
 </xsl:template>
 
 <!-- export_data -->
@@ -152,41 +185,98 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'category')"/>
+							<xsl:value-of select="php:function('lang', 'select')"/>
 						</label>
 
 						<table class="pure-table pure-table-bordered pure-custom">
 							<thead>
 								<tr>
-									<th>#</th>
 									<th>
-										<xsl:value-of select="php:function('lang', 'name')"/>
+										<xsl:value-of select="php:function('lang', 'category')"/>
+
 									</th>
 									<th>
-										<xsl:value-of select="php:function('lang', 'select')"/>
+										<xsl:value-of select="php:function('lang', 'part of town')"/>
+
 									</th>
 								</tr>
 							</thead>
 
 							<tbody>
-								<xsl:for-each select="categories">
-									<tr>
-										<td>
-											<xsl:value-of select="id"/>
-										</td>
-										<td>
-											<xsl:value-of select="name"/>
-										</td>
-										<td>
-											<input id="option-{id}" type="checkbox" name = "selected_categories[]" value="{id}">
+								<tr>
+									<td>
+										<table class="pure-table pure-table-bordered pure-custom">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'name')"/>
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'select')"/>
+													</th>
+												</tr>
+											</thead>
 
-												<xsl:if test="selected != 0">
-													<xsl:attribute name="checked" value="checked"/>
-												</xsl:if>
-											</input>
-										</td>
-									</tr>
-								</xsl:for-each>
+											<tbody>
+												<xsl:for-each select="categories">
+													<tr>
+														<td>
+															<xsl:value-of select="id"/>
+														</td>
+														<td>
+															<xsl:value-of select="name"/>
+														</td>
+														<td>
+															<input id="option-{id}" type="checkbox" name = "selected_categories[]" value="{id}">
+
+																<xsl:if test="selected != 0">
+																	<xsl:attribute name="checked" value="checked"/>
+																</xsl:if>
+															</input>
+														</td>
+													</tr>
+												</xsl:for-each>
+											</tbody>
+										</table>
+									</td>
+									<td>
+										<table class="pure-table pure-table-bordered pure-custom">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'name')"/>
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'select')"/>
+													</th>
+												</tr>
+											</thead>
+
+											<tbody>
+												<xsl:for-each select="part_of_towns">
+													<tr>
+														<td>
+															<xsl:value-of select="id"/>
+														</td>
+														<td>
+															<xsl:value-of select="name"/>
+														</td>
+														<td>
+															<input id="option-{id}" type="checkbox" name = "selected_part_of_towns[]" value="{id}">
+
+																<xsl:if test="selected != 0">
+																	<xsl:attribute name="checked" value="checked"/>
+																</xsl:if>
+															</input>
+														</td>
+													</tr>
+												</xsl:for-each>
+											</tbody>
+										</table>
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -210,7 +300,12 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'token')"/>
 							</label>
-							<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+							<textarea class="pure-input-1-2" rows="12" >
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of disable-output-escaping="yes" select="value_token"/>
+							</textarea>
 						</div>
 					</xsl:if>
 
@@ -225,7 +320,6 @@
 			</div>
 		</div>
 		<xsl:call-template name="submit_data"/>
-
 	</form>
 </xsl:template>
 
@@ -233,7 +327,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" name="submit_data">
 	<div class="proplist-col">
 		<xsl:variable name="lang_send">
-			<xsl:value-of select="php:function('lang', 'send')"/>
+			<xsl:value-of select="php:function('lang', 'save')"/>
 		</xsl:variable>
 		<xsl:variable name="lang_cancel">
 			<xsl:value-of select="php:function('lang', 'cancel')"/>
@@ -243,11 +337,11 @@
 				<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 			</xsl:attribute>
 		</input>
-		<input class="pure-button pure-button-primary" type="button" name="cancel" value="{$lang_cancel}">
+<!--		<input class="pure-button pure-button-primary" type="button" name="cancel" value="{$lang_cancel}">
 			<xsl:attribute name="title">
 				<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
 			</xsl:attribute>
-		</input>
+		</input>-->
 	</div>
 
 
@@ -263,3 +357,15 @@
 	</option>
 </xsl:template>
 
+<!-- New template-->
+<xsl:template match="heading">
+	<th>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</th>
+</xsl:template>
+<!-- New template-->
+<xsl:template match="data">
+	<th>
+		<xsl:value-of disable-output-escaping="yes" select="value"/>
+	</th>
+</xsl:template>
