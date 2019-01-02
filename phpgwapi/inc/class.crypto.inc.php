@@ -8,7 +8,7 @@
 	 * @subpackage network
 	 * @version $Id$
 	 */
-
+/*
 	if(!empty($GLOBALS['phpgw_info']['server']['enable_crypto']))
 	{
 		if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
@@ -22,6 +22,22 @@
 	}
 
 	if (!class_exists("phpgwapi_crypto"))
+	{
+		class phpgwapi_crypto extends phpgwapi_crypto_
+		{
+		}
+	}
+*/
+
+	if(!empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) || $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt' )
+	{
+		require_once PHPGW_API_INC . '/class.crypto_mcrypt.inc.php';
+	}
+	else if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
+	{
+		require_once PHPGW_API_INC . '/class.crypto_libsodium.inc.php';
+	}
+	else
 	{
 		//Fall back
 		class phpgwapi_crypto extends phpgwapi_crypto_
