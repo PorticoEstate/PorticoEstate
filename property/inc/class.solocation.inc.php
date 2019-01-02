@@ -356,6 +356,7 @@
 			$control_id = isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$filter_item = isset($data['filter_item']) && $data['filter_item'] ? (array)$data['filter_item'] : array();
+			$additional_fields = !empty($data['additional_fields']) ? (array)$data['additional_fields'] : array();
 
 			if($location_id && !$type_id)
 			{
@@ -422,6 +423,16 @@
 				$cols_return[] = 'location_code';
 				$uicols['input_type'][] = 'hidden';
 				$uicols['name'][] = 'location_code';
+				$uicols['descr'][] = 'dummy';
+				$uicols['statustext'][] = 'dummy';
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = '';
+
+				$cols_return[] = 'external_id';
+				$uicols['input_type'][] = 'hidden';
+				$uicols['name'][] = 'external_id';
 				$uicols['descr'][] = 'dummy';
 				$uicols['statustext'][] = 'dummy';
 				$uicols['exchange'][] = false;
@@ -764,8 +775,8 @@
 					'column_name' => $this->db->f('column_name'),
 					'lookup_form' => 	$this->db->f('lookup_form'),
 					'list' =>	$this->db->f('list'),
-					'input_text' =>	$this->db->f('input_text'),
-					'statustext' =>	$this->db->f('statustext'),
+					'input_text' =>	$this->db->f('input_text',true),
+					'statustext' =>	$this->db->f('statustext',true),
 					'datatype' =>	$this->db->f('datatype'),
 					'id' =>	$this->db->f('id')
 				);
@@ -870,8 +881,21 @@
 
 			if ($cat_id)
 			{
-				$cat_id = $this->db->db_addslashes($cat_id);
-				$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
+				if(is_array($cat_id))
+				{
+					foreach ($cat_id as &$_cat_id)
+					{
+						$_cat_id = $this->db->db_addslashes($_cat_id);
+					}
+
+					$filtermethod .= " {$where} fm_location{$type_id}.category IN ('" . implode("','",$cat_id) . "')";
+					
+				}
+				else
+				{
+					$cat_id = $this->db->db_addslashes($cat_id);
+					$filtermethod .= " {$where} fm_location{$type_id}.category='{$cat_id}'";
+				}
 				$where = 'AND';
 			}
 			else
@@ -1151,6 +1175,19 @@
 			$location_count = $type_id - 1;
 
 			$cols_return = $uicols['name'];
+
+			if($additional_fields)
+			{
+				foreach ($additional_fields as $additional_field)
+				{
+					if(!in_array($additional_field, $cols_return))
+					{
+						$cols_return[] = $additional_field;
+						$uicols['datatype'][] = '';
+					}
+				}
+			}
+
 			$dataset = array();
 			while ($this->db->next_record())
 			{
@@ -1422,7 +1459,10 @@
 				$cols_return[] = 'id';
 			}
 
-			$cols .= "fm_location{$type_id}.category as cat_id";
+			$cols .= "fm_location{$type_id}.external_id";
+			$cols_return[] = 'external_id';
+
+			$cols .= ",fm_location{$type_id}.category as cat_id";
 			$cols .= ",fm_location{$type_id}_category.descr as category_name";
 			$cols_return[] = 'cat_id';
 			$cols_return[] = 'category_name';

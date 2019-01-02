@@ -116,7 +116,7 @@
 //        $link .= $event['building_id'].'&building_name='.urlencode($event['building_name']).'&from_[]=';
 //        $link .= urlencode($event['from_']).'&to_[]='.urlencode($event['to_']).'&resource='.implode(",",$event['resources']);
 
-			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show&id=';
+			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';
 			$link .= $event['building_id'] . '&date=' . substr($event['from_'], 0, 10);
 			$body = "";
 			$subject = "";

@@ -50,7 +50,8 @@
 				'controller' => array('location_bookmark' => true),
 				'phpgwapi' => array('bookmark_menu' => true)
 				);
-			return !!$use_database[$module][$id];
+//			return !!$use_database[$module][$id];
+			return empty($use_database[$module][$id]) ? false : true;
 		}
 
 		/**

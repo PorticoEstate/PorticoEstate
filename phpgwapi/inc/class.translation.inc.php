@@ -18,6 +18,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
+	phpgw::import_class('phpgwapi.cache');
 	class phpgwapi_translation
 	{
 		/**
@@ -66,7 +67,7 @@
 
 			$this->set_userlang($userlang);
 
-			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations']) 
+			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations'])
 				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
 			{
 				 $this->collect_missing = true;
@@ -78,14 +79,14 @@
 		*/
 		protected function reset_lang()
 		{
-			$lang = $GLOBALS['phpgw']->cache->system_get('phpgwapi', "lang_{$this->userlang}", true);
-			if ( is_array($lang) )
+			$lang = phpgwapi_cache::system_get('phpgwapi', "lang_{$this->userlang}", true);
+			if ( $lang && is_array($lang) )
 			{
-				$this->lang = $lang;
+				self::$lang = $lang;
 				$this->lang_is_cached = true;
 				return;
 			}
-			$this->lang = array();
+			self::$lang = array();
 		}
 
 		/**
@@ -165,13 +166,13 @@
 			{
 				foreach($language as $lang)
 				{
-					$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang], true);
+					phpgwapi_cache::system_set('phpgwapi', "lang_{$lang}", $lang_set[$lang], true);
 
 //FIXME: evaluate beenefits from chunking into app_lang
 /*
 					foreach ($lang_set[$lang] as $app => $app_lang)
 					{
-						$GLOBALS['phpgw']->cache->system_set('phpgwapi', "lang_{$lang}_{$app}", $app_lang, true);
+						phpgwapi_cache::system_set('phpgwapi', "lang_{$lang}_{$app}", $app_lang, true);
 					}
 */
 				}
@@ -197,7 +198,7 @@
 			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array($this->lang)	|| (!isset($this->lang[$app_name][$lookup_key])	&& !isset($this->lang['common'][$lookup_key])) || (!$only_common && !isset($this->lang[$app_name][$lookup_key])))
+			if ( !is_array(self::$lang)	|| (!isset(self::$lang[$app_name][$lookup_key])	&& !isset(self::$lang['common'][$lookup_key])) || (!$only_common && !isset(self::$lang[$app_name][$lookup_key])))
 			{
 				$applist = "'common'";
 				if ( !$only_common )
@@ -218,7 +219,8 @@
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 				while ($GLOBALS['phpgw']->db->next_record())
 				{
-					$this->lang[$GLOBALS['phpgw']->db->f('app_name')][$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
+					$_app_name = $GLOBALS['phpgw']->db->f('app_name');
+					self::$lang[$_app_name][$lookup_key] = $GLOBALS['phpgw']->db->f('content', true);
 				}
 
 			}
@@ -226,20 +228,20 @@
 			$key = $lookup_key;
 			$ret = '';
 
-			if ( isset($this->lang[$app_name][$key]) )
+			if ( !empty(self::$lang[$app_name][$key]) )
 			{
-				$ret = $this->lang[$app_name][$key];
+				$ret = self::$lang[$app_name][$key];
 			}
-			else if ( isset($this->lang['common'][$key]) )
+			else if ( !empty(self::$lang['common'][$key]) )
 			{
-				$ret = $this->lang['common'][$key];
+				$ret = self::$lang['common'][$key];
 			}
 
 			if (!$ret)
 			{
 				$ret = "!{$key}";	// save key if we dont find a translation
 				//don't look for it again
-				$this->lang[$app_name][$key] = $ret;
+				self::$lang[$app_name][$key] = $ret;
 
 				if ($this->collect_missing)
 				{
@@ -273,9 +275,9 @@
 		*/
 		public function add_app($app)
 		{
-			if ( !is_array($this->lang) )
+			if ( !is_array(self::$lang) )
 			{
-				$this->lang = array();
+				self::$lang = array();
 			}
 
 			if ( !$userlang = $this->userlang )
@@ -293,7 +295,7 @@
 			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			while ( $GLOBALS['phpgw']->db->next_record() )
 			{
-				$this->lang[$GLOBALS['phpgw_info']['flags']['currentapp']][strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
+				self::$lang[$GLOBALS['phpgw_info']['flags']['currentapp']][strtolower(trim(substr($GLOBALS['phpgw']->db->f('message_id', true), 0, self::MAX_MESSAGE_ID_LENGTH)))] = $GLOBALS['phpgw']->db->f('content', true);
 			}
 		}
 
@@ -368,7 +370,7 @@
 					}
 
 					//echo '<br />Working on: ' . $lang;
-					$GLOBALS['phpgw']->cache->system_clear('phpgwapi', "lang_{$lang}");
+					phpgwapi_cache::system_clear('phpgwapi', "lang_{$lang}");
 
 					if ($upgrademethod == 'addonlynew')
 					{
@@ -412,9 +414,9 @@
 
 							$raw[$app_name][$message_id] = $content;
 						}
-						
+
 						// Override with localised translations
-						
+
 						$ConfigDomain = phpgw::get_var('ConfigDomain');
 						$appfile_override = PHPGW_SERVER_ROOT . "/{$app}/setup/{$ConfigDomain}/phpgw_{$lang}.lang";
 

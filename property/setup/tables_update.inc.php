@@ -10387,3 +10387,150 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	*
+	* Update property version from 0.9.17.737 to 0.9.17.738
+	*
+	*/
+	$test[] = '0.9.17.737';
+	function property_upgrade0_9_17_737()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+
+		for($location_type = 1; $location_type < ($locations + 1); $location_type++)
+		{
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}", 'external_id', array
+					(
+						'type'		=> 'int',
+						'precision' => '4',
+						'nullable'	=> True
+					)
+				);
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$location_type}_history", 'external_id', array
+					(
+						'type'		=> 'int',
+						'precision' => '4',
+						'nullable'	=> True
+					)
+				);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_district", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_part_of_town", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_org_unit", 'external_id', array
+				(
+					'type'		=> 'int',
+					'precision' => '4',
+					'nullable'	=> True
+				)
+			);
+
+
+		/* check for missing area-fields
+		 * Disabled for now
+		 *
+		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		$cust = array
+		(
+			'datatype'		=> 'N',
+			'precision_'	=> 20,
+			'scale'			=> 2,
+			'default_value'	=> '0.00',
+			'nullable'		=> 'True',
+			'custom'		=> 1
+		);
+
+		$area_fields = array();
+
+		$area_fields[] = array
+		(
+			'name' => 'area_gross',
+			'descr' => 'gross area',
+			'statustext' => 'Sum of the areas included within the outside face of the exterior walls of a building.',
+			'cust'	=> $cust
+		);
+		$area_fields[] = array
+		(
+			'name' => 'area_net',
+			'descr' => 'net area',
+			'statustext' => 'The wall-to-wall floor area of a room.',
+			'cust'	=> $cust
+		);
+		$area_fields[] = array
+		(
+			'name' => 'area_usable',
+			'descr' => 'usable area',
+			'statustext' => 'generally measured from "paint to paint" inside the permanent walls and to the middle of partitions separating rooms',
+			'cust'	=> $cust
+		);
+
+		$db->query("SELECT count(*) as levels FROM fm_location_type");
+
+		$db->next_record();
+		$levels = $db->f('levels');
+
+		for($i = 1; $i < $levels + 1; $i++)
+		{
+			$metadata = $GLOBALS['phpgw_setup']->db->metadata("fm_location{$i}");
+			foreach($area_fields as & $field)
+			{
+				if(!isset($metadata[$field['name']]))
+				{
+					$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}", $field['name'], array(
+						'type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True,
+						'default' => '0.00'));
+					$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_location{$i}_history", $field['name'], array(
+						'type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True,
+						'default' => '0.00'));
+				}
+
+				$field['cust']['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$i}");
+				$db->query("SELECT max(id) as id FROM phpgw_cust_attribute WHERE location_id = {$field['cust']['location_id']}");
+				$db->next_record();
+				$id = (int)$db->f('id');
+				$db->query("SELECT max(attrib_sort) as attrib_sort FROM phpgw_cust_attribute WHERE id = {$id} AND location_id = {$field['cust']['location_id']}");
+				$db->next_record();
+
+				$field['cust']['id']			= $id + 1;
+				$field['cust']['attrib_sort'] = (int)$db->f('attrib_sort') + 1;
+				$field['cust']['column_name']	= $field['name'];
+				$field['cust']['input_text']	= $field['descr'];
+				$field['cust']['statustext']	= $field['statustext'];
+
+				$sql = 'INSERT INTO phpgw_cust_attribute(' . implode(',', array_keys($field['cust'])) . ') '
+					 . ' VALUES (' . $db->validate_insert($field['cust']) . ')';
+				$db->query($sql, __LINE__, __FILE__);
+			}
+		}
+*/
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.738';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+

@@ -407,6 +407,7 @@
 				'nullable' => True, 'default' => '0.00');
 			$fd['modified_by'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['modified_on'] = array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp');
+			$fd['external_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => True);
 
 			$ix = array('location_code');
 			$uc = array();
