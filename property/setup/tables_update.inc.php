@@ -10448,9 +10448,10 @@
 			);
 
 
-// check for area-fields
+		/* check for missing area-fields
+		 * Disabled for now
+		 *
 		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
-
 
 		$cust = array
 		(
@@ -10524,7 +10525,7 @@
 				$db->query($sql, __LINE__, __FILE__);
 			}
 		}
-
+*/
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.738';

@@ -775,8 +775,8 @@
 					'column_name' => $this->db->f('column_name'),
 					'lookup_form' => 	$this->db->f('lookup_form'),
 					'list' =>	$this->db->f('list'),
-					'input_text' =>	$this->db->f('input_text'),
-					'statustext' =>	$this->db->f('statustext'),
+					'input_text' =>	$this->db->f('input_text',true),
+					'statustext' =>	$this->db->f('statustext',true),
 					'datatype' =>	$this->db->f('datatype'),
 					'id' =>	$this->db->f('id')
 				);
