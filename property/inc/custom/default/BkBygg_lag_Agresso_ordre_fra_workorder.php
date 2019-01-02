@@ -230,6 +230,13 @@
 						break;
 				}
 
+				//art 0230...
+				//	->69'
+				if($workorder['b_account_id'] == '023020')
+				{
+						$tax_code = '69';
+				}
+
 				$tjeneste = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
 
 				$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET service_id = {$tjeneste} WHERE id = {$workorder['id']}");
