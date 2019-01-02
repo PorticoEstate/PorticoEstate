@@ -9,9 +9,6 @@
 	 * @version $Id$
 	 */
 
-
-
-
 	if(!empty($GLOBALS['phpgw_info']['server']['enable_crypto']))
 	{
 		if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
@@ -23,7 +20,8 @@
 			require_once PHPGW_API_INC . '/class.crypto_mcrypt.inc.php';
 		}
 	}
-	else
+
+	if (!class_exists("phpgwapi_crypto"))
 	{
 		//Fall back
 		class phpgwapi_crypto extends phpgwapi_crypto_
