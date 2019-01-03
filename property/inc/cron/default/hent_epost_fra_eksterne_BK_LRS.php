@@ -404,13 +404,38 @@
 			if(preg_match("/helpdesk@bergen.kommune.no/i" , $sender ))
 //			if(preg_match("/sigurd.nes@bergen.kommune.no/i" , $sender ))
 			{
-				$ticket_id = $this->create_ticket($subject, $body);
+
+				$message_cat_id = 302; // Fra postmottak LRS
+				$group_id = 4174; //LRS-EDD telefoni
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
 				if($ticket_id)
 				{
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
 					$target['type'] = 'helpdesk';
 					$target['id'] = $ticket_id;
 				}
+			}
+			else if (preg_match("/noreply@altinn.no/i" , $sender ))
+			{
+				if(preg_match("/Skatt/i" , $subject ))
+				{
+					$message_cat_id = 264; //LRS Lønn - Skatt
+					$group_id = 3159; //LRS Lønn
+
+				}
+				if(preg_match("/Sykmelding/i" , $subject ))
+				{
+					$message_cat_id = 306; //LRS Refusjon - Altinn
+					$group_id = 3233; //LRS Refusjon
+				}
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+
 			}
 			else if(preg_match("/\[PorticoTicket/" , $subject ))
 			{
@@ -485,7 +510,7 @@
 		}
 
 
-		function create_ticket ($subject, $body)
+		function create_ticket ($subject, $body, $message_cat_id, $group_id)
 		{
 			$ticket_id = $this->get_ticket($subject);
 
@@ -515,11 +540,10 @@
 			else
 			{
 				$priority = 3;
-				$message_cat_id = 302; // Fra postmottak LRS
 				$ticket = array
 				(
 					'assignedto'=> false,
-					'group_id' => 4174, //LRS-EDD telefoni
+					'group_id' => $group_id,
 					'cat_id' => $message_cat_id,
 					'priority' => $priority, //valgfri (1-3)
 					'title' => $subject,
