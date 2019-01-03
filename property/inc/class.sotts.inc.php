@@ -434,6 +434,13 @@
 				}
 				else if ($user_id > 0)
 				{
+					$_user = $GLOBALS['phpgw']->accounts->get($user_id);
+
+					if($_user->type =='g')
+					{
+						$group_filter = " {$where} group_id = " . (int)$user_id . " AND assignedto IS NULL";
+					}
+
 					$user_ids = array((int)abs($user_id));
 				}
 				else if ($user_id < 0)
@@ -447,10 +454,16 @@
 					$membership[] = $group_member->id;
 				}
 
-				$filtermethod .= " {$where} (assignedto IN (" . implode(', ' ,$user_ids) . ')';
-				$where = 'AND';
-				$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
-
+				if($group_filter)
+				{
+					$filtermethod .= $group_filter;
+				}
+				else
+				{
+					$filtermethod .= " {$where} (assignedto IN (" . implode(', ' ,$user_ids) . ')';
+					$where = 'AND';
+					$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
+				}
 			}
 
 			if ($reported_by > 0)
@@ -2158,13 +2171,103 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array
-					(
+				(
 					'id' => $this->db->f('id'),
 					'name' => $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true)
 				);
 			}
 
 			return $values;
+		}
+
+		public function get_assigned_groups( $status_id = 'O' )
+		{
+			$custom_status = $this->get_custom_status();
+			$closed_status = array('X');
+			foreach ($custom_status as $custom)
+			{
+				if ($custom['closed'])
+				{
+					$closed_status[] = "C{$custom['id']}";
+				}
+			}
+			reset($custom_status);
+
+			$filtermethod = ' WHERE assignedto IS NULL';
+			$where = 'AND';
+
+			//get variants of closed
+			if ($status_id == 'X')
+			{
+				$filtermethod .= " $where fm_tts_tickets.status IN ('" . implode("','", $closed_status) . "')";
+				$where = 'AND';
+			}
+			else if ($status_id == 'O2') // explicite 'open'
+			{
+				$filtermethod .= " $where  fm_tts_tickets.status='O'";
+				$where = 'AND';
+			}
+			else if ($status_id == 'O')
+			{
+				$open = '';
+				foreach ($custom_status as $custom)
+				{
+					if (!$custom['closed'])
+					{
+						$open .= " OR fm_tts_tickets.status = 'C{$custom['id']}'";
+					}
+				}
+
+				$filtermethod .= " $where  (fm_tts_tickets.status='O'{$open})";
+				$where = 'AND';
+			}
+			else if ($status_id == 'all')
+			{
+				$filtermethod .= "{$where} (1=1";//nothing
+				$where = 'AND';
+			}
+			else if (is_array($status_id) && count($status_id))
+			{
+				$or = '';
+				$filtermethod .= "{$where} (";
+
+				foreach ($status_id as $value)
+				{
+					if ($value)
+					{
+						$filtermethod .= "{$or} fm_tts_tickets.status = '{$value}'";
+						$or = ' OR';
+					}
+				}
+
+				$filtermethod .= ')';
+
+				$where = 'AND';
+			}
+			else
+			{
+				$filtermethod .= " $where fm_tts_tickets.status='{$status_id}'";
+			}
+
+			$values = array();
+			$sql = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM fm_tts_tickets"
+				. " $this->join phpgw_accounts ON fm_tts_tickets.group_id = phpgw_accounts.account_id"
+				. " {$filtermethod}"
+				. " ORDER BY account_lastname ASC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('account_firstname', true)
+				);
+			}
+
+			return $values;
+
 		}
 
 		function add_relation( $add_relation, $id )

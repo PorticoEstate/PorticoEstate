@@ -818,6 +818,13 @@ HTML;
 
 				$values_combo_box[4] = $this->_get_user_list($this->user_id);
 
+				$assigned_groups = $this->bo->get_assigned_groups($this->status_id);
+
+				foreach ($assigned_groups as $assigned_group)
+				{
+					array_unshift($values_combo_box[4], array('id' => $assigned_group['id'], 'name' => $assigned_group['name']));
+				}
+
 				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
 
 				array_unshift($values_combo_box[4], array(
