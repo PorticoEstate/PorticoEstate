@@ -372,8 +372,8 @@
 			$tabs = array
 			(
 				'login' => array('label' => lang('login'), 'link' => '#login'),
-				'get_all' => array('label' => lang('get all'), 'link' => '#get_all'),
-				'export_data' => array('label' => lang('export data'), 'link' => '#export_data'),
+				'get_all' => array('label' => 'Data fra API', 'link' => '#get_all'),
+				'export_data' => array('label' => 'Eksporter til API', 'link' => '#export_data'),
 			);
 
 			foreach ($tabs as $key => &$tab)
