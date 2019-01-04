@@ -19,14 +19,19 @@
 		<span class="font-weight-bold text-uppercase">
 			<xsl:value-of select="php:function('lang', 'Organizer')"/>:
 		</span>
-		<xsl:value-of select="event/organizer"/>
+		<xsl:if test="event/is_public=0">
+				<br/><xsl:value-of select="php:function('lang', 'Private event')"/>
+		</xsl:if>
+		<xsl:if test="event/is_public=1">
+			<xsl:value-of select="event/organizer"/>
+		</xsl:if>
 	</div>
 
-	<div class="tooltip-desc-btn">
-		<span><i class="fas fa-info-circle"></i></span>
-		<p class="tooltip-desc">
-    	<span class="d-block font-weight-normal">
-			<xsl:if test="event/is_public=1">				
+	<xsl:if test="event/is_public=1">
+		<div class="tooltip-desc-btn">
+			<span><i class="fas fa-info-circle"></i></span>
+			<p class="tooltip-desc">
+			<span class="d-block font-weight-normal">								
 					<!--<xsl:value-of select="event/contact_name"/>-->
 					<xsl:if test="event/contact_email != ''">
 						<br/>
@@ -36,16 +41,14 @@
 						<br/>
 					<xsl:value-of select="php:function('lang', 'contact_phone')"/>: <xsl:value-of select="event/contact_phone"/>
 					</xsl:if>
-				<xsl:if test="event/equipment != ''">
-					<br/><xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
-				</xsl:if>
-			</xsl:if>
-			<xsl:if test="event/is_public=0">
-				<br/><xsl:value-of select="php:function('lang', 'Private event')"/>
-			</xsl:if>
-		</span>
-		</p>
-	</div>	
+					<xsl:if test="event/equipment != ''">
+						<br/><xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
+					</xsl:if>
+				
+			</span>
+			</p>
+		</div>
+	</xsl:if>	
 	
 	<xsl:if test="event/edit_link">
 		<div class="actions">
