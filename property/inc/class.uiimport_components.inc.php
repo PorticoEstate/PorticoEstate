@@ -254,8 +254,11 @@ HTML;
 				return;
 			}
 
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$AllSheets = $objPHPExcel->getSheetNames();
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($cached_file);
+			$AllSheets = $reader->listWorksheetNames($cached_file);
 
 			$sheets = array();
 			if ($AllSheets)
@@ -283,10 +286,16 @@ HTML;
 				return;
 			}
 
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($cached_file);
+
+			$spreadsheet->setActiveSheetIndex((int)($sheet_id - 1));
+
+			$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$i = 0;
@@ -297,7 +306,7 @@ HTML;
 			}
 
 			$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
-			foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
+			foreach ($spreadsheet->getActiveSheet()->getRowIterator() as $row)
 			{
 				if ($i > 20)
 				{
@@ -352,10 +361,18 @@ HTML;
 			$start_line = phpgwapi_cache::session_get('property', 'start_line');
 			$template_id = phpgwapi_cache::session_get('property', 'template_id');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($cached_file);
+
+			$spreadsheet->setActiveSheetIndex((int)($sheet_id - 1));
+
+			$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+
+
 
 			$profile = array();
 
@@ -385,10 +402,10 @@ HTML;
 				$_options_data_type[$row['id']] = $row['name'];
 			}
 
-			for ($j = 0; $j < $highestColumnIndex; $j++)
+			for ($j = 1; $j <= $highestColumnIndex; $j++)
 			{
 				$_column = $this->_getexcelcolumnname($j);
-				$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+				$_value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
 				$selected = isset($profile['columns']['columns'][$_column]) && $profile['columns']['columns'][$_column] ? $profile['columns']['columns'][$_column] : '';
 
 				$_listbox = $this->_getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
@@ -476,9 +493,13 @@ HTML;
 			$template_id = phpgwapi_cache::session_get('property', 'template_id');
 			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
-			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($cached_file);
+			$spreadsheet->setActiveSheetIndex((int)($sheet_id - 1));
+
+			$rows = $spreadsheet->getActiveSheet()->getHighestRow();
 
 			$import_entity_categories = new import_entity_categories($template_id);
 			$import_components = new import_components();
@@ -497,7 +518,7 @@ HTML;
 				}
 			}
 
-			$rows = $rows ? $rows + 1 : 0;
+			$rows = $rows ? $rows : 1;
 
 			$building_part_out_table = array();
 			$building_part_in_table = array();
@@ -505,13 +526,13 @@ HTML;
 
 			$list_entity_categories = $import_entity_categories->list_entity_categories();
 
-			for ($i = $start_line; $i < $rows; $i++)
+			for ($i = $start_line; $i <= $rows; $i++)
 			{
 				$_result = array();
 
 				foreach ($columns as $_row_key => $_value_key)
 				{
-					$_result[$_value_key] = htmlspecialchars($objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue(), ENT_QUOTES, 'UTF-8');
+					$_result[$_value_key] = htmlspecialchars($spreadsheet->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue(), ENT_QUOTES, 'UTF-8');
 				}
 
 				if ((int)$_result['building_part'] || $_result['building_part'] === '0')
@@ -704,7 +725,7 @@ HTML;
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$save = phpgw::get_var('save', 'int', 'REQUEST');
 
-			phpgw::import_class('phpgwapi.phpexcel');
+			phpgw::import_class('phpgwapi.phpspreadsheet');
 
 			if ($step == 1)
 			{
