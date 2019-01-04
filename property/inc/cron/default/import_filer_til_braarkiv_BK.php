@@ -401,7 +401,7 @@
 
 			$start++; // first data line
 
-			$rows = $rows ? $rows + 1 : 0;
+			$rows = $rows ? $rows : 1;
 			for ($row = $start; $row < $rows; $row++)
 			{
 				$_result = array();

@@ -996,34 +996,36 @@
 
 		protected function getexceldata( $path )
 		{
-			phpgw::import_class('phpgwapi.phpexcel');
+			phpgw::import_class('phpgwapi.phpspreadsheet');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($path);
-			$objPHPExcel->setActiveSheetIndex(0);
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($path);
+
+			$spreadsheet->setActiveSheetIndex(0);
 
 			$result = array();
 
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
-
-			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+			$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+			$rows = (int)$spreadsheet->getActiveSheet()->getHighestRow();
 
 			$start = 2; // Read the first line to get the headers out of the way
 
-			for ($j = 0; $j < $highestColumnIndex; $j++)
+			for ($j = 1; $j <= $highestColumnIndex; $j++)
 			{
-				$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
+				$this->fields[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 			}
 
-			$rows = $rows ? $rows + 1 : 0;
-			for ($row = $start; $row < $rows; $row++)
+			$rows = $rows ? $rows : 1;
+			for ($row = $start; $row <= $rows; $row++)
 			{
 				$_result = array();
 
-				for ($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 1; $j <= $highestColumnIndex; $j++)
 				{
-					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
+					$_result[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 				}
 
 				$result[] = $_result;

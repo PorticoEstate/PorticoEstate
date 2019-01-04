@@ -1005,12 +1005,17 @@
 			}
 			else if ($cached_file)
 			{
-				phpgw::import_class('phpgwapi.phpexcel');
+				phpgw::import_class('phpgwapi.phpspreadsheet');
 
 				try
 				{
-					$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-					$AllSheets = $objPHPExcel->getSheetNames();
+					$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
+					$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+					$reader->setReadDataOnly(true);
+					$spreadsheet	= $reader->load($cached_file);
+					$AllSheets = $reader->listWorksheetNames($cached_file);
+
+
 
 					$sheets = array();
 					if ($AllSheets)
@@ -1024,7 +1029,7 @@
 							);
 					}
 
-					$objPHPExcel->setActiveSheetIndex((int)$sheet_id);
+					$spreadsheet->setActiveSheetIndex((int)$sheet_id);
 				}
 				catch (Exception $e)
 				{
@@ -1039,9 +1044,9 @@
 
 			$survey = $this->bo->read_single(array('id' => $id, 'view' => $mode == 'view'));
 
-			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+			$rows = $spreadsheet->getActiveSheet()->getHighestRow();
+			$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
 			$i = 0;
 			$html_table = '<table border="1">';
@@ -1055,7 +1060,7 @@
 				}
 
 				$html_table .= "<tr><th align = 'center'>" . lang('start') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr>';
-				foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
+				foreach ($spreadsheet->getActiveSheet()->getRowIterator() as $row)
 				{
 					if ($i > 20)
 					{
@@ -1119,7 +1124,7 @@
 				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
 					$_column = $this->getexcelcolumnname($j);
-					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+					$_value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j +1, $start_line)->getCalculatedValue();
 					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
 					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true);
@@ -1129,12 +1134,12 @@
 			else if ($rows > 1 && $step == 4)
 			{
 
-				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-				$rows = $rows ? $rows + 1 : 0;
+				$rows = $spreadsheet->getActiveSheet()->getHighestDataRow();
+				$rows = $rows ? $rows : 1;
 
 				$import_data = array();
 
-				for ($i = $start_line; $i < $rows; $i++)
+				for ($i = $start_line; $i <= $rows; $i++)
 				{
 					$_result = array();
 
@@ -1142,7 +1147,7 @@
 					{
 						if ($_value_key != '_skip_import_')
 						{
-							$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
+							$_result[$_value_key] = $spreadsheet->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
 						}
 					}
 					$import_data[] = $_result;

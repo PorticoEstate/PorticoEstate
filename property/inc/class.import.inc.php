@@ -128,10 +128,14 @@
 
 			$this->uicols2 = $uicols2;
 
-			phpgw::import_class('phpgwapi.phpexcel');
+			phpgw::import_class('phpgwapi.phpspreadsheet');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($importfile);
-			$sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($importfile);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($importfile);
+
+			$sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
 			foreach ($fields as &$entry)
 			{
