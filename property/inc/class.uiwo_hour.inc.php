@@ -3395,14 +3395,14 @@ HTML;
 
 		protected function getexceldata( $path )
 		{
-			phpgw::import_class('phpgwapi.phpexcel');
+			phpgw::import_class('phpgwapi.phpspreadsheet');
 
-			$inputFileType = PHPExcel_IOFactory::identify($path); // Identify the type of file.
-			$objReader = PHPExcel_IOFactory::createReader($inputFileType); // Create a reader of the identified file type.
-			$worksheetNames = $objReader->listWorksheetNames($path);
-//			_debug_array($worksheetNames);
 
-			$objPHPExcel = PHPExcel_IOFactory::load($path);
+			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$reader->setReadDataOnly(true);
+			$spreadsheet	= $reader->load($path);
+			$worksheetNames = $reader->listWorksheetNames($path);
 
 			$result = array();
 
@@ -3413,32 +3413,28 @@ HTML;
 					continue;
 				}
 				$result[$_index]['name'] = $sheet_name;
-				$objPHPExcel->setActiveSheetIndex($_index);
+				$spreadsheet->setActiveSheetIndex($_index);
 
-//				$objWorksheet = $objPHPExcel->getActiveSheet();
-//				_debug_array($objWorksheet->getTitle());
+				$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
 
-				$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+				$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
-				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
-
-				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$rows = (int)$spreadsheet->getActiveSheet()->getHighestRow();
 
 				$start = 9; // Read the first line to get the headers out of the way
 
-				for ($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 1; $j <= $highestColumnIndex; $j++)
 				{
-					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
+					$this->fields[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
 				}
 
-				$rows = $rows ? $rows + 1 : 0;
-				for ($row = $start; $row < $rows; $row++)
+				for ($row = $start; $row <= $rows; $row++)
 				{
 					$_data = array();
 
-					for ($j = 0; $j < $highestColumnIndex; $j++)
+					for ($j = 1; $j <= $highestColumnIndex; $j++)
 					{
-						$_data[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
+						$_data[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
 					}
 
 					$result[$_index]['data'][] = $_data;
