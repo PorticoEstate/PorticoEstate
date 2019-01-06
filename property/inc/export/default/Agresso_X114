@@ -884,6 +884,22 @@
 					$descr = substr($order_info['title'], 0, 60);
 				}
 
+				/*
+				 * Sigurd 20190106: i tilfelle formatet på startperioden er feil...
+				if($line['periodization_start'])
+				{
+					$d1 = new DateTime("{$periode}01");
+					$d2 = new DateTime("{$line['periodization_start']}01");
+					$diff = $d2->diff($d1);
+					$periode_diff = $diff->m;
+				}
+				else
+				{
+					$periode_diff = 0;
+				}
+				 *
+				 */
+
 				$sum_amount += $amount;
 				$accountline[] = array
 					(
