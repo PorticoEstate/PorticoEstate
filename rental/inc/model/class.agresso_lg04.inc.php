@@ -13,6 +13,7 @@
 		protected $prizebook;
 		protected $batch_id;
 		protected $check_customer_id;
+		protected $dateformat;
 
 		public function __construct( $billing_job = null)
 		{
@@ -34,6 +35,8 @@
 			{
 				$this->check_customer_id = true;
 			}
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
 		}
 
 		public static function get_instance()
@@ -55,7 +58,7 @@
 
 		/**
 		 * Returns the file contents as a string.
-		 * 
+		 *
 		 * @see rental_exportable
 		 */
 		public function get_contents()
@@ -197,7 +200,7 @@
 					$data['article_code'] = $price_item->get_agresso_id();
 					$price_item_data[] = $data;
 				}
-				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id(), $organization);
+				$this->orders[] = $this->get_order($invoice, $this->billing_job->get_year(), $this->billing_job->get_month(), $price_item_data, $building_location_code, $composite_name, $serial_number, $organization);
 				$invoice->set_serial_number($serial_number);
 				$serial_number++;
 			}
@@ -256,7 +259,6 @@
 			// We need all invoices for this billing
 			$invoices = rental_soinvoice::get_instance()->get(0, 0, 'id', true, '', '', array(
 				'billing_id' => $this->billing_job->get_id()));
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			foreach ($invoices as $invoice) // Runs through all invoices
 			{
@@ -281,10 +283,10 @@
 				$contract_type_label = lang(rental_socontract::get_instance()->get_contract_type_label($current_contract_type_id));
 				$contract_id = $contract->get_old_contract_id();
 				$party_names = explode('<br/>', rtrim($contract->get_party_name(), '<br/>'));
-				$start_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $dateformat);
-				$end_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $dateformat);
-				$billing_start_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(), $dateformat);
-				$billing_end_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(), $dateformat);
+				$start_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $this->dateformat);
+				$end_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $this->dateformat);
+				$billing_start_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(), $this->dateformat);
+				$billing_end_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(), $this->dateformat);
 
 				/*				 * End contract type* */
 
@@ -342,15 +344,32 @@
 
 		/**
 		 * Builds one single order of the Agresso file.
-		 * 
+		 *
 		 */
-		protected function get_order( $header, $party, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id, $organization )
+		protected function get_order( $invoice, $bill_year, $bill_month, $product_items,  $building, $text, $serial_number, $organization )
 		{
-
+			$header = $invoice->get_header();
+			$party = $invoice->get_party();
 			$party_id = $party->get_identifier();
+			$order_id = $invoice->get_id();
+			$account = $invoice->get_account_out();
+			$responsibility = $invoice->get_responsibility_id();
+			$service = $invoice->get_service_id();
+			$project = $invoice->get_project_id();
+			$client_ref = $invoice->get_reference();
+			$customer_order_id = $invoice->get_customer_order_id();
+
+			$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
+			$party_names = implode(';' ,explode('<br/>', rtrim($contract->get_party_name(), '<br/>')));
+
+			$start_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $this->dateformat);
+			$end_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $this->dateformat);
+
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$order = array();
+			$extra_text = "";
+			$extra_text2 = "";
 
 			if(!$organization || $organization == 'bergen') //Bergen kommune
 			{
@@ -370,6 +389,10 @@
 			}
 			else if($organization == 'nlsh')
 			{
+				$extra_text = $party_names; // leieboer
+				$contract_id = $contract->get_old_contract_id();
+				$extra_text2 = "Kontrakt: $contract_id [{$start_date} - {$end_date}]"; // Kontrakt, fra dato – til dato.
+
 				$att_1_id = 'DR';
 				$dim_value_1 = ''; //endre til k.sted?
 				$dim_1 = $responsibility; //k.sted
@@ -554,13 +577,59 @@
 					. $voucher_type // 	94		voucher_type			DATA
 					. sprintf("%19s", '')   //	95-96	just white space..
 				;
+
+				if($extra_text)
+				{
+					$order[] = // Text line
+						'0' . //	1
+						sprintf("%345s", '')   //	2-19	just white space..		DATA
+						. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
+						. sprintf("%2s", $client) // 	21		client					DATA
+						. sprintf("%692s", '')   //	22-53	just white space..
+						. sprintf("%04.4s", $item_counter)   // 	54		line_no					DATA
+						. sprintf("%469s", '')   //	55-64	just white space..
+						. sprintf("%09.9s", $serial_number)   // 	65		order_id				DATA
+						. sprintf("%110s", '')   //	66-74	just white space..
+						. sprintf("%08s", 2) // 	75		sequence_no				DATA
+						. sprintf("%28s", '')   //	76-77	just white space..
+						. sprintf("%-60.60s", utf8_decode($extra_text)) // 	78		shot_info				DATA
+						. sprintf("%63s", '')   //	79-88	just white space..
+						. '42' // 	89		trans_type				DATA
+						. sprintf("%79s", '')   //	90-93	just white space..
+						. $voucher_type // 	94		voucher_type			DATA
+						. sprintf("%19s", '')   //	95-96	just white space..
+					;
+				}
+
+				if($extra_text2)
+				{
+					$order[] = // Text line
+						'0' . //	1
+						sprintf("%345s", '')   //	2-19	just white space..		DATA
+						. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
+						. sprintf("%2s", $client) // 	21		client					DATA
+						. sprintf("%692s", '')   //	22-53	just white space..
+						. sprintf("%04.4s", $item_counter)   // 	54		line_no					DATA
+						. sprintf("%469s", '')   //	55-64	just white space..
+						. sprintf("%09.9s", $serial_number)   // 	65		order_id				DATA
+						. sprintf("%110s", '')   //	66-74	just white space..
+						. sprintf("%08s", 3) // 	75		sequence_no				DATA
+						. sprintf("%28s", '')   //	76-77	just white space..
+						. sprintf("%-60.60s", utf8_decode($extra_text2)) // 	78		shot_info				DATA
+						. sprintf("%63s", '')   //	79-88	just white space..
+						. '42' // 	89		trans_type				DATA
+						. sprintf("%79s", '')   //	90-93	just white space..
+						. $voucher_type // 	94		voucher_type			DATA
+						. sprintf("%19s", '')   //	95-96	just white space..
+					;
+				}
 			}
 			return str_replace(array("\n", "\r"), '', $order);
 		}
 
 		/**
 		 * Builds one single order of the excel file.
-		 * 
+		 *
 		 */
 		protected function get_order_excel_bk(
 		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id, $customer_id )
@@ -608,7 +677,7 @@
 		protected function get_order_excel_nlsh(
 		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id, $customer_id )
 		{
-		
+
 			$article_price = $this->prizebook[$product_item['article_code']];
 
 			switch ($article_price['type'])
@@ -626,7 +695,7 @@
 					$monthly_rent = '';
 					break;
 			}
-			
+
 //			_debug_array($product_item);
 //_debug_array(func_get_args());
 			$item_counter = $counter;
