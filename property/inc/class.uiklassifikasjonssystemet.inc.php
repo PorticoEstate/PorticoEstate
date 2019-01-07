@@ -35,7 +35,18 @@
 	class property_uiklassifikasjonssystemet extends phpgwapi_uicommon_jquery
 	{
 
-		private $config,$webservicehost,$acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage, $nextmatchs, $start, $maxmatches;
+		private $config,
+			$webservicehost,
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$acl_manage,
+			$nextmatchs,
+			$start,
+			$maxmatches,
+			$token;
 		var $public_functions = array
 			(
 				'login' => true,
@@ -334,7 +345,7 @@
 					break;
 				case 'export':
 					$dry_run = false;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run, $token);
 					break;
 				default:
 					break;
@@ -395,12 +406,15 @@
 		}
 
 
-		private function get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run = true )
+		private function get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run = true, $token = false )
 		{
 			if(!$helseforetak_id)
 			{
 				throw new Exception('Missing helseforetak_id');
 			}
+
+			$this->token = $token;
+
 			//Locations (part_of_town)
 			//Organizations
 			//Buildings
@@ -908,6 +922,7 @@
 		private function save_to_external_api($local_url, $mehod, $data = array())
 		{
 			$webservicehost = $this->webservicehost;
+			$token = $this->token;
 
 			$url = "{$webservicehost}/{$local_url}";
 			$data_json = json_encode($data);
@@ -923,6 +938,8 @@
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+//			curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
 			if($mehod == 'POST')
 			{
 				curl_setopt($ch, CURLOPT_POST, 1);
@@ -935,14 +952,13 @@
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
 
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//			$curl_info = curl_getinfo($ch);
+//			_debug_array($curl_info);
 
 			curl_close($ch);
 
 			$ret = json_decode($result, true);
-
 			return $ret;
-
 		}
 
 		private function log( $what, $value = '' )
