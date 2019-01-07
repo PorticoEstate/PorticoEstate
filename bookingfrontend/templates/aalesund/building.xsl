@@ -135,11 +135,16 @@
 					<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
 				</h3>
 				<div data-bind="foreach: bookableResource">
+                                    
+                                    
+                                                                                          <a class="bookable-resource-link-href" href="" data-bind="">
 					<div class="custom-card">
-						<a class="bookable-resource-link-href" href="" data-bind="">
+<!--						<a class="bookable-resource-link-href" href="" data-bind="">
 									<span data-bind="html: name"></span>
-						</a>
-						
+						</a>-->
+                                                
+						<span data-bind="html: name"></span>
+                                                
 						<div data-bind="foreach: activitiesList">							
 									<span class="tagTitle" data-bind="if: $index() == 0">
 										<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
@@ -155,6 +160,8 @@
 								</div>
 
 					</div>
+                                        
+                                                                                            </a>
 				</div>
 
 			</div>
