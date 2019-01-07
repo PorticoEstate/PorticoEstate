@@ -197,7 +197,7 @@
 		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
 
-		createTable('documents_container',documentsURL,colDefsDocuments);
-		createTable('permissions_container',permissionsURL,colDefsPermissions);
+		createTable('documents_container',documentsURL,colDefsDocuments, '', 'pure-table pure-table-bordered');
+		createTable('permissions_container',permissionsURL,colDefsPermissions, '', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>

@@ -156,7 +156,7 @@
 		{key: 'name', label: lang['Name']}
 		];
 
-		createTable('resources_container', resourcesURL, colDefsRespurces);
+		createTable('resources_container', resourcesURL, colDefsRespurces, '', 'pure-table pure-table-bordered');
 	
 	</script>
 </xsl:template>

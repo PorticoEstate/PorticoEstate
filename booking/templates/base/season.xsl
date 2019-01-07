@@ -102,7 +102,7 @@
 		{key: 'role', label: lang['Role']},
 		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
-		createTable('resources_container', resourcesURL, colDefsRespurces);
-		createTable('permissions_container', permissionsURL, colDefsPermissions);
+		createTable('resources_container', resourcesURL, colDefsRespurces, '', 'pure-table pure-table-bordered');
+		createTable('permissions_container', permissionsURL, colDefsPermissions, '', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>

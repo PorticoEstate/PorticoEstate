@@ -697,12 +697,12 @@
 
 		var colDefsDocuments = [{key: 'name', label: lang['Document'], formatter: genericLink}];
 
-		createTable('resources_container',resourcesURL,colDefsResources);
-		createTable('associated_container',associatedURL,colDefsAssociated,'results');
-		createTable('regulation_documents',documentsURL,colDefsDocuments);
+		createTable('resources_container',resourcesURL,colDefsResources, '', 'pure-table pure-table-bordered');
+		createTable('associated_container',associatedURL,colDefsAssociated,'results', 'pure-table pure-table-bordered');
+		createTable('regulation_documents',documentsURL,colDefsDocuments, '', 'pure-table pure-table-bordered');
 
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
-		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource);
+		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
 
 	</script>
 </xsl:template>
