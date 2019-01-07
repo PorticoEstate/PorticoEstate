@@ -1013,9 +1013,7 @@
 					$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 					$reader->setReadDataOnly(true);
 					$spreadsheet	= $reader->load($cached_file);
-					$AllSheets = $reader->listWorksheetNames($cached_file);
-
-
+					$AllSheets = $spreadsheet->getSheetNames();
 
 					$sheets = array();
 					if ($AllSheets)
@@ -1054,9 +1052,9 @@
 			{
 
 				$cols = array();
-				for ($j = 0; $j < $highestColumnIndex; $j++)
+				for ($j = 1; $j <= $highestColumnIndex; $j++)
 				{
-					$cols[] = $this->getexcelcolumnname($j);
+					$cols[] =  \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j);
 				}
 
 				$html_table .= "<tr><th align = 'center'>" . lang('start') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr>';
@@ -1219,18 +1217,7 @@
 		 */
 		private function getexcelcolumnname( $index )
 		{
-			//Get the quotient : if the index superior to base 26 max ?
-			$quotient = $index / 26;
-			if ($quotient >= 1)
-			{
-				//If yes, get top level column + the current column code
-				return getexcelcolumnname($quotient - 1) . chr(($index % 26) + 65);
-			}
-			else
-			{
-				//If no just return the current column code
-				return chr(65 + $index);
-			}
+			return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index);
 		}
 
 		/**

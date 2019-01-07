@@ -3401,7 +3401,7 @@ HTML;
 			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 			$reader->setReadDataOnly(true);
 			$spreadsheet	= $reader->load($path);
-			$worksheetNames = $reader->listWorksheetNames($path);
+			$worksheetNames = $spreadsheet->getSheetNames();
 
 			$result = array();
 
