@@ -1,3 +1,4 @@
+
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
@@ -7,7 +8,6 @@ and open the template in the editor.
     Created on : Feb 20, 2018, 11:08:19 AM
     Author     : niruban
 */
-
 
 html {
     font-size: 1rem;
@@ -20,19 +20,28 @@ html {
 body {
     position: relative;
     margin: 0;
-    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+/*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
+    
+    font-family: FuturaStd-Light,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+  
     font-size: 16px;
+    
+  
 }
 }
 
+
 body {
-    
    background-color: #f5f5f5;
     min-height: 100% !important;
     position: relative;
     margin: 0;
-    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
-    font-size: 16px;
+    
+/*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
+/*     font-family: FuturaStd-Light  !important;*/
+     
+     font-family: FuturaStd-Light,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+     font-size: 18px;
 }
 
 a:active {
@@ -219,7 +228,23 @@ a:hover {
     position: absolute;
     color:#26348B;    
     text-decoration: none !important;
+    margin-top: 1.2%  !important;
 }
+
+
+@media (max-width: 767px) {
+    .brand-site-title {
+    font-size: 45px;
+    transform: translateX(-50%);
+    left: 50%;
+    position: absolute;
+/*    color:#26348B;   */
+    
+    text-decoration: none !important;
+    margin-top: 3.7%  !important;
+}
+}
+
 
 .brand-site-img {
     -webkit-transition: ease 0.2s; /* Safari */
@@ -271,12 +296,34 @@ a:hover {
  }
  
  
+/* #searchmotor  {
+     border: 1px solid #26348B  !important;
+ }*/
+ 
 .grow-left {
   direction: rtl;
 }
 
 .grow-left > * {
   direction: ltr;
+}
+
+
+.mac-style {
+/*     display: inline-block !important;
+     position:  relative  !important;*/
+     
+    width: 10%;
+      height: 35px  !important;
+       -webkit-transition: width 1s ease-in-out;
+    -moz-transition:width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+    float:right ;
+}
+
+ .mac-style:hover {
+    width: 70%;
 }
 
 
@@ -317,19 +364,58 @@ a:hover {
 }
 
 
-#collapsibleNavbar  ul {
-   
-/*   margin-left: 80% !important;
-   margin-top: 0% !important;
-   position: static  !important;*/
-   
-/*   border: solid  yellow  !important;*/
-
+.info-content {
+    padding-top: 2em;
 }
 
-#collapsibleNavbar   {
-/*   display: inline-block !important;
-   position:  static  !important;*/
+  .parentdiv  {   
+      position: relative !important;
+      margin-right: 27px !important;
+      margin-top: -30px !important;
+      display: inline-block !important;
+    padding-right: 15px;
+    padding-left: 15px;
+    width: 100%;
+ }
+
+ .childdiv  {
+       position:  absolute  !important;
+       top: 25% !important;
+       right: 4% !important;
+       display: inline-block !important;
+       width: 250px;
+       height: 50px;    
+}
+
+ #globalsearchbuttong  input#searchmotor {
+    
+     width: 150px;
+     height: 50px;
+     border: 1px solid #26348B !important;
+     font-size: 16pt;
+     float: right;
+ 
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+ 
+  -webkit-transition: width .55s ease;
+  -moz-transition: width .55s ease;
+  -ms-transition: width .55s ease;
+  -o-transition: width .55s ease;
+  transition: width .55s ease;
+  
+ }
+ 
+ 
+ #globalsearchbuttong  input#searchmotor:hover {
+width: 300px;
+}
+
+#searchbuttons {
+    border: 1px solid #26348B !important;
+    margin-left: 100% !important;
+   height: 50px;
+   margin-top: -32% !important;
 }
 
 
@@ -474,6 +560,7 @@ color: white;
 
 .margin-top-and-bottom {
     margin: 1.9em 0em;
+ 
 }
 
 .margin-bottom {
@@ -523,7 +610,9 @@ color: white;
 
 
 .footer a {
-    color: #000;
+/*    color: #000;
+    */
+    color: #007bff;
     text-decoration: none;
     display:inline-block !important;
 }
@@ -755,9 +844,28 @@ border: 2px solid #26348B !important;
 }
 
 .searchBtn:hover {
-    background-color: #3d3d3d !important;
+/*    background-color: #3d3d3d !important;*/
+    background-color: white  !important;
 }
 
+
+/*#searchbuttons {
+    background-color: #3d3d3d !important;
+    border: 1px solid #26348B !important;
+    margin-top: 140% !important;
+}*/
+
+
+/*#searchmotor  {
+     border: 1px solid #26348B  !important;
+      margin-top: 25% !important;
+ }*/
+
+ 
+/* #globalsearchbuttong  {
+      margin-top: 20% !important;
+ }*/
+ 
 .dropdown .btn,
 .dropdown .btn:hover,
 .dropdown .btn:active,
@@ -825,12 +933,14 @@ border: 2px solid #26348B !important;
     margin-bottom: 10px;
     width: 100%;
     border: 1px black solid;
-	text-decoration: none !important;
+    text-decoration: none !important;
+    
+    
 }
 
 .custom-card:hover   {
      background-color: rgb(137, 38, 106);
-	 text-decoration: none !important;
+     text-decoration: none !important;
 }
 
 .custom-card a{
@@ -1157,37 +1267,42 @@ BUILDING PAGE STYLE
     height:     100%; 
 }
 
-.info-content {
+/*.info-content {
     padding-top: 2em;
-}
+    
+    border-left:solid 6px red !important;
+   border-right:solid 6px red !important;
+   height:     100px; 
+}*/
 
 .location {
     margin-bottom: 2em;
 }
 
 .location span {
-    font-size: 14px;
+    font-size: 16px;
     padding: 0.5em;
     border-right: none;
     display: inline-block;
-    text-decoration: underline;
-    
+/*    text-decoration: underline;*/
+    padding-top: 2em;
+/*    background-color: red;*/
 }
 
-.location span:last-child {
+/*.location span:last-child {
 
-}
+}*/
 
 .location span:last-child:before {
-     content: " ";
+     content: ""  !important;
 }
 
 .location span:last-child:after {
-     content: " ";
+     content: ""  !important;
 }
 
 .location span:after {
-    content: "|";
+    content: "|" !important;
     margin-left: 10px;
 }
 
@@ -1251,14 +1366,18 @@ BUILDING PAGE STYLE
 .square {
     width: 14px;
     height: 14px;
-    border: 1px solid rgba(0, 0, 0, .2);
+/*    border: 1px solid rgba(0, 0, 0, .2);*/
     display: inline-block;
+    
+/*   border: 1px solid red;*/
 }
   
 .allocation {
 /*  background: rgb(110, 163, 216);*/
       
     background: #82368c;
+    
+   
 }
  
 .booking {
@@ -1310,10 +1429,17 @@ BUILDING PAGE STYLE
       color: red !important;
 }
 
+/*.yui3-widget-bd {
+  
+     background-color: red;
+
+border: 1px red solid !important;
+}*/
+
 
 .yui3-calendar-header {
     padding: 0.5em;
-
+/*     background-color: red;*/
 }
 
 .yui3-calendar-header-label {
@@ -1646,6 +1772,12 @@ NEW APPLICATION PAGE STYLE
   height: 350px !important;
   border-radius: 0;
   margin-bottom: 0;
+  
+  
+/*
+	border-top: 10px solid red !important;
+        border-bottom: 10px solid red;*/
+	
 }
 
 @media screen and (max-width: 560px) {
