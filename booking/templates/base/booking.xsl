@@ -88,6 +88,6 @@
             var resourcesURL = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort:'name'}, true) + '&' + resourceIds;
        ]]>
 		var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
-		createTable('resources_container',resourcesURL,colDefsResources);
+		createTable('resources_container',resourcesURL,colDefsResources, '', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>

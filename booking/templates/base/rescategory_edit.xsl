@@ -91,6 +91,6 @@
 				value: 'id', checked: initialSelection},
 			{key: 'name', label: lang['Name']},
 		];
-		createTable('activities_container', activitiesURL, colDefsRespurces);
+		createTable('activities_container', activitiesURL, colDefsRespurces, '', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>

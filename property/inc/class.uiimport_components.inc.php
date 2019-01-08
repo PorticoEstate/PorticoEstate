@@ -101,18 +101,7 @@
 
 		private function _getexcelcolumnname( $index )
 		{
-			//Get the quotient : if the index superior to base 26 max ?
-			$quotient = $index / 26;
-			if ($quotient >= 1)
-			{
-				//If yes, get top level column + the current column code
-				return $this->_getexcelcolumnname($quotient - 1) . chr(($index % 26) + 65);
-			}
-			else
-			{
-				//If no just return the current column code
-				return chr(65 + $index);
-			}
+			return \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($index);
 		}
 
 		public function import_component_files()
@@ -257,7 +246,6 @@ HTML;
 			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($cached_file);
 			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 			$reader->setReadDataOnly(true);
-			$spreadsheet	= $reader->load($cached_file);
 			$AllSheets = $reader->listWorksheetNames($cached_file);
 
 			$sheets = array();
@@ -300,9 +288,9 @@ HTML;
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$i = 0;
 			$cols = array();
-			for ($j = 0; $j < $highestColumnIndex; $j++)
+			for ($j = 1; $j <= $highestColumnIndex; $j++)
 			{
-				$cols[] = $this->_getexcelcolumnname($j);
+				$cols[] = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j);
 			}
 
 			$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
@@ -404,7 +392,7 @@ HTML;
 
 			for ($j = 1; $j <= $highestColumnIndex; $j++)
 			{
-				$_column = $this->_getexcelcolumnname($j);
+				$_column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($j);
 				$_value = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
 				$selected = isset($profile['columns']['columns'][$_column]) && $profile['columns']['columns'][$_column] ? $profile['columns']['columns'][$_column] : '';
 

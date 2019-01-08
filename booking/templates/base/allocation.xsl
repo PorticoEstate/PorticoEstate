@@ -71,6 +71,6 @@
         var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
     ]]>
 		var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink()}, {key: 'type', label: lang['Resource Type']}];
-		createTable('resources_container',resourcesURL,colDefs);
+		createTable('resources_container',resourcesURL,colDefs, 'data', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>

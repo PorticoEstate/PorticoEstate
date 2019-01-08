@@ -204,8 +204,8 @@
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
 		var colDefsPermissions = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label: 'Edit'}, {name: 'delete', label:lang['Delete']})}];
 
-		createTable('resources_container',resourcesURL,colDefsResources);
-		createTable('documents_container',documentsURL,colDefsDocuments);
-		createTable('permissions_container',permissionsURL,colDefsPermissions);
+		createTable('resources_container',resourcesURL,colDefsResources, '', 'pure-table pure-table-bordered');
+		createTable('documents_container',documentsURL,colDefsDocuments, '', 'pure-table pure-table-bordered');
+		createTable('permissions_container',permissionsURL,colDefsPermissions, '', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>
