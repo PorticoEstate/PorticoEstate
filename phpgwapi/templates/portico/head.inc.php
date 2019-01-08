@@ -51,11 +51,6 @@
 
 
 	$stylesheets = array();
-	// added aalesund stylesheet
-	$stylesheets[] = "/phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
-	$stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
-	$stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
-
 //	$stylesheets[] = "/phpgwapi/js/materialize/css/materialize.min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";

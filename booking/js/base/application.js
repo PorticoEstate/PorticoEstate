@@ -326,7 +326,7 @@ function populateTableResources(url, container, colDefs)
 	}
 	else
 	{
-		createTable(container, url, colDefs, 'results');
+		createTable(container, url, colDefs, 'results', 'pure-table pure-table-bordered');
 	}
 }
 
@@ -338,7 +338,7 @@ function populateTableRegulations(url, container, colDefs)
 	}
 	else
 	{
-		createTable(container, url, colDefs);
+		createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
 	}
 
 }
