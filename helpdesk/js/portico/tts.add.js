@@ -93,25 +93,23 @@ upload_canvas = function ()
 $(document).ready(function ()
 {
 
-
 	var CLIPBOARD = new CLIPBOARD_CLASS("my_canvas", true);
 
 	/**
 	 * image pasting into canvas
 	 *
-	 * @param string canvas_id canvas id
-	 * @param boolean autoresize if canvas will be resized
+	 * @param {string} canvas_id - canvas id
+	 * @param {boolean} autoresize - if canvas will be resized
 	 */
 	function CLIPBOARD_CLASS(canvas_id, autoresize)
 	{
-		var canvas = document.getElementById(canvas_id);
 		var _self = this;
+		var canvas = document.getElementById(canvas_id);
 		var ctx = document.getElementById(canvas_id).getContext("2d");
 		var ctrl_pressed = false;
-		var reading_dom = false;
-		var text_top = 15;
+		var command_pressed = false;
+		var paste_event_support;
 		var pasteCatcher;
-		var paste_mode;
 
 		//handlers
 		document.addEventListener('keydown', function (e)
@@ -127,56 +125,60 @@ $(document).ready(function ()
 			_self.paste_auto(e);
 		}, false); //official paste handler
 
-		//constructor - prepare
+		//constructor - we ignore security checks here
 		this.init = function ()
 		{
-			//if using auto
-			if (window.Clipboard)
-			{
-				return true;
-			}
-
 			pasteCatcher = document.createElement("div");
 			pasteCatcher.setAttribute("id", "paste_ff");
 			pasteCatcher.setAttribute("contenteditable", "");
-			pasteCatcher.style.cssText = 'opacity:0;position:fixed;top:0px;left:0px;';
-			pasteCatcher.style.marginLeft = "-20px";
-			pasteCatcher.style.width = "10px";
+			pasteCatcher.style.cssText = 'opacity:0;position:fixed;top:0px;left:0px;width:10px;margin-left:-20px;';
 			document.body.appendChild(pasteCatcher);
-			document.getElementById('paste_ff').addEventListener('DOMSubtreeModified', function ()
+
+			// create an observer instance
+			var observer = new MutationObserver(function (mutations)
 			{
-				if (paste_mode == 'auto' || ctrl_pressed == false)
+				mutations.forEach(function (mutation)
 				{
-					return true;
-				}
-				//if paste handle failed - capture pasted object manually
-				if (pasteCatcher.children.length == 1)
-				{
-					if (pasteCatcher.firstElementChild.src != undefined)
+					if (paste_event_support === true || ctrl_pressed == false || mutation.type != 'childList')
 					{
-						//image
-						_self.paste_createImage(pasteCatcher.firstElementChild.src);
+						//we already got data in paste_auto()
+						return true;
 					}
-				}
-				//register cleanup after some time.
-				setTimeout(function ()
-				{
-					pasteCatcher.innerHTML = '';
-				}, 20);
-			}, false);
+
+					//if paste handle failed - capture pasted object manually
+					if (mutation.addedNodes.length == 1)
+					{
+						if (mutation.addedNodes[0].src != undefined)
+						{
+							//image
+							_self.paste_createImage(mutation.addedNodes[0].src);
+						}
+						//register cleanup after some time.
+						setTimeout(function ()
+						{
+							pasteCatcher.innerHTML = '';
+						}, 20);
+					}
+				});
+			});
+			var target = document.getElementById('paste_ff');
+			var config = {attributes: true, childList: true, characterData: true};
+			observer.observe(target, config);
 		}();
 		//default paste action
 		this.paste_auto = function (e)
 		{
-			paste_mode = '';
-			pasteCatcher.innerHTML = '';
-			var plain_text_used = false;
+			paste_event_support = false;
+			if (pasteCatcher != undefined)
+			{
+				pasteCatcher.innerHTML = '';
+			}
 			if (e.clipboardData)
 			{
 				var items = e.clipboardData.items;
 				if (items)
 				{
-					paste_mode = 'auto';
+					paste_event_support = true;
 					//access data directly
 					for (var i = 0; i < items.length; i++)
 					{
@@ -189,7 +191,7 @@ $(document).ready(function ()
 							this.paste_createImage(source);
 						}
 					}
-		//			e.preventDefault();
+					e.preventDefault();
 				}
 				else
 				{
@@ -198,7 +200,7 @@ $(document).ready(function ()
 				}
 			}
 		};
-		//on keyboard press -
+		//on keyboard press
 		this.on_keyboard_action = function (event)
 		{
 			k = event.keyCode;
@@ -206,11 +208,9 @@ $(document).ready(function ()
 			if (k == 17 || event.metaKey || event.ctrlKey)
 			{
 				if (ctrl_pressed == false)
-				{
 					ctrl_pressed = true;
-				}
 			}
-			//c
+			//v
 			if (k == 86)
 			{
 				if (document.activeElement != undefined && document.activeElement.type == 'text')
@@ -219,7 +219,7 @@ $(document).ready(function ()
 					return false;
 				}
 
-				if (ctrl_pressed == true && !window.Clipboard)
+				if (ctrl_pressed == true && pasteCatcher != undefined)
 				{
 					pasteCatcher.focus();
 				}
@@ -228,14 +228,19 @@ $(document).ready(function ()
 		//on kaybord release
 		this.on_keyboardup_action = function (event)
 		{
-			k = event.keyCode;
 			//ctrl
-			if (k == 17 || event.metaKey || event.ctrlKey || event.key == 'Meta')
+			if (event.ctrlKey == false && ctrl_pressed == true)
 			{
 				ctrl_pressed = false;
 			}
+			//command
+			else if (event.metaKey == false && command_pressed == true)
+			{
+				command_pressed = false;
+				ctrl_pressed = false;
+			}
 		};
-		//draw image
+		//draw pasted image to canvas
 		this.paste_createImage = function (source)
 		{
 			var pastedImage = new Image();
@@ -243,7 +248,7 @@ $(document).ready(function ()
 			{
 				if (autoresize == true)
 				{
-					//resize canvas
+					//resize
 					canvas.width = pastedImage.width;
 					canvas.height = pastedImage.height;
 				}
