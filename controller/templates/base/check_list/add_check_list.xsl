@@ -3,7 +3,9 @@
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
-	<xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
+	<xsl:variable name="serie_id">
+		<xsl:value-of select="serie_id" />
+	</xsl:variable>
 
 
 	<!-- ==================  ADD CHECKLIST  ========================= -->
@@ -153,42 +155,41 @@
 							</xsl:if>
 						</input>
 					</div>
-				</fieldset>
-				<!-- ASSIGNMET -->
-				<div class="row">
-					<label>Tildelt</label>
-					<select name="assigned_to">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'select')"/>
-						</xsl:attribute>
-						<option value="0">
-							<xsl:value-of select="php:function('lang', 'select')"/>
-						</option>
-						<xsl:apply-templates select="user_list/options"/>
-					</select>
-				</div>
-				<xsl:if test="required_actual_hours = 1">
+					<!-- ASSIGNMET -->
 					<div class="row">
-						<label>Egne Timer</label>
-						<input class="date">
-						  <xsl:attribute name="id">billable_hours</xsl:attribute>
-						  <xsl:attribute name="name">billable_hours</xsl:attribute>
-						  <xsl:attribute name="type">text</xsl:attribute>
-						</input>
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="check_list/billable_hours"/>
+						<label>Tildelt</label>
+						<select name="assigned_to">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</xsl:attribute>
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="user_list/options"/>
+						</select>
 					</div>
-				</xsl:if>
+					<xsl:if test="required_actual_hours = 1">
+						<div class="row">
+							<label>Egne Timer</label>
+							<input class="date">
+								<xsl:attribute name="id">billable_hours</xsl:attribute>
+								<xsl:attribute name="name">billable_hours</xsl:attribute>
+								<xsl:attribute name="type">text</xsl:attribute>
+							</input>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="check_list/billable_hours"/>
+						</div>
+					</xsl:if>
 
-				<!-- COMMENT -->
-				<div class="comment">
-					<label>Kommentar</label>
-					<textarea>
-						<xsl:attribute name="name">comment</xsl:attribute>
-						<xsl:value-of select="check_list/comment"/>
-					</textarea>
-				</div>
-			
+					<!-- COMMENT -->
+					<div class="comment">
+						<label>Kommentar</label>
+						<textarea>
+							<xsl:attribute name="name">comment</xsl:attribute>
+							<xsl:value-of select="check_list/comment"/>
+						</textarea>
+					</div>
+				</fieldset>
 				<div class="form-buttons">
 					<xsl:variable name="lang_save">
 						<xsl:value-of select="php:function('lang', 'save_check_list')" />
@@ -207,12 +208,12 @@
 	</div>
 </xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="options">
-		<option value="{id}">
-			<xsl:if test="selected != 0">
-				<xsl:attribute name="selected" value="selected"/>
-			</xsl:if>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</option>
-	</xsl:template>
+<!-- New template-->
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
