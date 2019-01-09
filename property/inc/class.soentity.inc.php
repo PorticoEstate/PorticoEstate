@@ -3094,4 +3094,15 @@
 			}
 			return $id;
 		}
+
+		function get_location_code($location_id, $item_id)
+		{
+			$sql = 'SELECT location_code from fm_bim_item WHERE location_id = '. (int) $location_id;
+			$sql .= ' AND id = '. (int) $item_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$location_code = $this->db->f('location_code');
+			return $location_code;
+		}
 	}
