@@ -161,6 +161,7 @@
 					'category' => $this->db->f('category'),
 					'location_code' => $this->db->f('location_code'),
 					'claim_category' => $this->db->f('claim_category', true),
+					'amount' => $this->db->f('amount')
 				);
 			}
 			return $claims;
@@ -212,7 +213,7 @@
 				$claim['id'] = $id;
 				$claim['project_id'] = $this->db->f('project_id');
 				$claim['tenant_id'] = $this->db->f('tenant_id');
-				$claim['remark'] = stripslashes($this->db->f('remark'));
+				$claim['remark'] = $this->db->f('remark',true);
 				$claim['entry_date'] = $this->db->f('entry_date');
 				$claim['cat_id'] = (int)$this->db->f('category');
 				$claim['amount'] = $this->db->f('amount');
@@ -357,5 +358,33 @@
 			$this->db->query('DELETE FROM fm_tenant_claim WHERE id=' . intval($id), __LINE__, __FILE__);
 			$this->interlink->delete_from_target('property', '.tenant_claim', $id, $this->db);
 			$this->db->transaction_commit();
+		}
+
+		public function close($id)
+		{
+			$claim_id = (int)$id;
+			$historylog = CreateObject('property.historylog', 'tenant_claim');
+
+			$this->db->transaction_begin();
+
+			$this->db->query("SELECT status, project_id FROM fm_tenant_claim WHERE id=" . $claim_id, __LINE__, __FILE__);
+			$this->db->next_record();
+			$old_status = $this->db->f('status');
+
+
+			$value_set = array(
+				'status' => 'closed',
+			);
+
+			$value_set_update = $this->db->validate_update($value_set);
+
+			$this->db->query("UPDATE fm_tenant_claim SET {$value_set_update} WHERE id={$claim_id}", __LINE__, __FILE__);
+
+			if ($old_status != 'closed')
+			{
+				$historylog->add('S', $claim_id, 'closed', $old_status);
+			}
+
+			return $this->db->transaction_commit();
 		}
 	}
