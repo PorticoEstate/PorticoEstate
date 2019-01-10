@@ -62,6 +62,7 @@
 			);
 
 			$_to = implode(';', $recipients);
+//			$bcc = 'hc483@bergen.kommune.no';
 			$bcc = 'hc483@bergen.kommune.no';
 			$cc = '';
 			$coordinator_email = 'IkkeSvar@bergen.kommune.no';
