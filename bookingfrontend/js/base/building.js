@@ -180,19 +180,21 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
                         }
 						var currentStartDate = new Date((result.ResultSet.Result[k].Mon.date  + "T" + result.ResultSet.Result[k].Mon.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Mon.date).substring(8, 10));	
 						currentStartDate.setHours((result.ResultSet.Result[k].Mon.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Mon.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Mon.date  + "T" + result.ResultSet.Result[k].Mon.to_).toString());
 						
 						if((result.ResultSet.Result[k].Mon.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Mon.date).substring(8, 10));							
 							currentEndDate.setHours((result.ResultSet.Result[k].Mon.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Mon.to_).substring(3, 5));
 						} else {
 							currentStartDate =  new Date(currentStartDate.getFullYear(), currentStartDate.getMonth(), currentStartDate.getDate());
 							currentEndDate =  new Date(currentEndDate.getFullYear(), currentEndDate.getMonth(), currentEndDate.getDate());
 						}
-
+						
 						eventsArray.push({ id: [result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday].join("."),
 						    name: result.ResultSet.Result[k].resource,
 							resource: result.ResultSet.Result[k].resource_id,
@@ -213,11 +215,13 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
 						var currentStartDate = new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Tue.date).substring(8, 10));
 						currentStartDate.setHours((result.ResultSet.Result[k].Tue.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Tue.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString());
 						if((result.ResultSet.Result[k].Tue.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Tue.date).substring(8, 10));
 							currentEndDate.setHours((result.ResultSet.Result[k].Tue.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Tue.to_).substring(3, 5));
 						} else {
@@ -245,11 +249,13 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
 						var currentStartDate = new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Wed.date).substring(8, 10));
 						currentStartDate.setHours((result.ResultSet.Result[k].Wed.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Wed.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Wed.date  + "T" + result.ResultSet.Result[k].Wed.to_).toString());
 						if((result.ResultSet.Result[k].Wed.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Wed.date).substring(8, 10));
 							currentEndDate.setHours((result.ResultSet.Result[k].Wed.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Wed.to_).substring(3, 5));
 						} else {
@@ -277,11 +283,13 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
 						var currentStartDate = new Date((result.ResultSet.Result[k].Thu.date  + "T" + result.ResultSet.Result[k].Thu.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Thu.date).substring(8, 10));
 						currentStartDate.setHours((result.ResultSet.Result[k].Thu.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Thu.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Thu.date  + "T" + result.ResultSet.Result[k].Thu.to_).toString());
 						if((result.ResultSet.Result[k].Thu.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Thu.date).substring(8, 10));
 							currentEndDate.setHours((result.ResultSet.Result[k].Thu.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Thu.to_).substring(3, 5));
 						} else {
@@ -309,11 +317,13 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
                         var currentStartDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Fri.date).substring(8, 10));
 						currentStartDate.setHours((result.ResultSet.Result[k].Fri.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Fri.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString());
 						if((result.ResultSet.Result[k].Fri.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Fri.date).substring(8, 10));
 							currentEndDate.setHours((result.ResultSet.Result[k].Fri.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Fri.to_).substring(3, 5));
 						} else {
@@ -341,11 +351,13 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                             event_infourl = event_infourl.replace("amp;",'');
 						}
 						var currentStartDate = new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString());
+						currentStartDate.setDate((result.ResultSet.Result[k].Sat.date).substring(8, 10));
 						currentStartDate.setHours((result.ResultSet.Result[k].Sat.from_).substring(0, 2));
 						currentStartDate.setMinutes((result.ResultSet.Result[k].Sat.from_).substring(3, 5));
 						
 						var currentEndDate = new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString());
 						if((result.ResultSet.Result[k].Sat.to_).substring(0, 2) != "24") {
+							currentEndDate.setDate((result.ResultSet.Result[k].Sat.date).substring(8, 10));
 							currentEndDate.setHours((result.ResultSet.Result[k].Sat.to_).substring(0, 2));
 							currentEndDate.setMinutes((result.ResultSet.Result[k].Sat.to_).substring(3, 5));
 						} else {
