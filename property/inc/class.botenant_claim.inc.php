@@ -340,4 +340,9 @@
 
 			return $files;
 		}
+
+		public function close($id)
+		{
+			return $this->so->close($id);
+		}
 	}
