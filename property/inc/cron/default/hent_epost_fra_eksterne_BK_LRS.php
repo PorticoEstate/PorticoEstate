@@ -423,7 +423,7 @@
 					$group_id = 3159; //LRS Lønn
 
 				}
-				if(preg_match("/Sykmelding/i" , $subject ))
+				if(preg_match("/Sykmelding/i" , $subject ) || preg_match("/sykepenger/i" , $subject ))
 				{
 					$message_cat_id = 306; //LRS Refusjon - Altinn
 					$group_id = 3233; //LRS Refusjon
@@ -512,7 +512,14 @@
 
 		function create_ticket ($subject, $body, $message_cat_id, $group_id)
 		{
-			$ticket_id = $this->get_ticket($subject);
+
+			if(!$message_cat_id)
+			{
+				return false;
+			}
+
+//			$ticket_id = $this->get_ticket($subject);
+			$ticket_id = false;
 
 			$subject_arr = explode('#', $subject);
 			$id_arr = explode(':', $subject_arr[1]);
