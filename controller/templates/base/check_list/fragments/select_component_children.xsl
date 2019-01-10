@@ -1,7 +1,7 @@
 <xsl:template name="select_component_children" xmlns:php="http://php.net/xsl">
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">
 		<xsl:attribute name="action">
-			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image')" />
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
 		</xsl:attribute>
 
 		<input type="hidden" name="period_type" value="view_year" />

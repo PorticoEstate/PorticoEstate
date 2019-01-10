@@ -172,11 +172,17 @@
 							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
 						$bofiles->vfs->override_acl = 0;
-						return json_encode(array("status" => "saved"));
+						return array(
+							'status' => 'saved',
+							'message' => lang('saved')
+							);
 					}
 				}
 
-				return json_encode(array("status" => lang('Failed to upload file !')));
+				return array(
+					'status' => 'error',
+					'message' => lang('Failed to upload file !')
+					);
 
 			}
 		}
