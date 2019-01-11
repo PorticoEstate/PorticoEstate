@@ -194,6 +194,7 @@
 				phpgw::no_access();
 			}
 
+			$dry_run = phpgw::get_var('dry_run', 'bool');
 			$component_arr = explode("_", phpgw::get_var('component'));
 
 			$location_id = $component_arr[0];
@@ -221,6 +222,25 @@
 			$vfs->override_acl = 0;
 
 			$file = end($files);
+
+			if($dry_run)
+			{
+				if(!empty($file['file_id']))
+				{
+					return array(
+						'status' => '200',
+						'message' => lang('file found')
+						);
+					}
+				else
+				{
+					return array(
+						'status' => '404',
+						'message' => lang('file not found')
+						);
+				}
+			}
+
 			if(!empty($file['file_id']))
 			{
 				ExecMethod('property.bofiles.get_file', $file['file_id']);
