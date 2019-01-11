@@ -1,6 +1,84 @@
 $(document).ready(function ()
 {
 
+	$("#choose-child-on-component").change(function ()
+	{
+		$("#submit_update_component").hide();
+		$("#component_picture_file").val('');
+
+		if($(this).val())
+		{
+			show_picture_component();
+			$("#new_picture").show();
+
+		}
+		else
+		{
+			$('#equipment_picture_container').html('');
+			$("#new_picture").hide();
+
+		}
+	});
+
+	show_picture_component = function()
+	{
+		var component = $("#choose-child-on-component").val();
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$('#equipment_picture_container').html('<img alt="Mangler bilde" id="equipment_picture" src="' + ImageUrl+ '" style="width:100%;max-width:300px"/>');
+
+	};
+
+	show_picture_submit = function()
+	{
+		$("#submit_update_component").show();
+
+	};
+
+
+	// REGISTER PICTURE
+	$("#frm_add_picture").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache       : false,
+			contentType : false,
+			processData : false,
+			type: 'POST',
+			url: requestUrl,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function(data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component").hide();
+						$("#component_picture_file").val('');
+						show_picture_component();
+
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
 	{

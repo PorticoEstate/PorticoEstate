@@ -75,7 +75,9 @@
 			'open_case' => true,
 			'view_open_cases' => true,
 			'view_closed_cases' => true,
-			'get_case_data_ajax' => true
+			'get_case_data_ajax' => true,
+			'get_image'			=> true,
+			'add_component_image'=> true
 		);
 
 		function __construct()
@@ -109,6 +111,122 @@
 			}
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
+
+
+		function add_component_image()
+		{
+			if(!$this->edit )
+			{
+				phpgw::no_access();
+			}
+
+			$component_arr = explode("_", phpgw::get_var('component'));
+
+			$location_id = $component_arr[0];
+			$id	 = $component_arr[1];
+			if (empty($id))
+			{
+				throw new Exception('controller_uicase::_add_component_image() - missing id');
+			}
+
+			$soentity = createObject('property.soentity');
+
+			$location_code = $soentity->get_location_code($location_id, $id);
+			$location_arr = explode('-', $location_code);
+			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+			$bofiles = CreateObject('property.bofiles');
+
+//			if (isset($values['file_action']) && is_array($values['file_action']))
+//			{
+//				$bofiles->delete_file("/{$category_dir}/{$loc1}/{$id}/" ,$values);
+//			}
+
+			$files = array();
+			if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
+			{
+				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+				$to_file = "{$bofiles->fakebase}/{$category_dir}/{$loc1}/{$id}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array
+						(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					$this->receipt['error'][] = array('msg' => lang('This file already exists !'));
+				}
+				else
+				{
+					$from_file = $_FILES['file']['tmp_name'];
+					$bofiles->create_document_dir("{$category_dir}/{$loc1}/{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if ($bofiles->vfs->cp(array(
+							'from' => $from_file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$bofiles->vfs->override_acl = 0;
+						return array(
+							'status' => 'saved',
+							'message' => lang('saved')
+							);
+					}
+				}
+
+				return array(
+					'status' => 'error',
+					'message' => lang('Failed to upload file !')
+					);
+
+			}
+		}
+
+		function get_image()
+		{
+			if(!$this->read )
+			{
+				phpgw::no_access();
+			}
+
+			$component_arr = explode("_", phpgw::get_var('component'));
+
+			$location_id = $component_arr[0];
+			$item_id	 = $component_arr[1];
+
+			$soentity = createObject('property.soentity');
+
+			$location_code = $soentity->get_location_code($location_id, $item_id);
+			$location_arr = explode('-', $location_code);
+			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'orderby' => 'file_id',
+				'mime_type'	=> 'image/jpeg',
+				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$file = end($files);
+			if(!empty($file['file_id']))
+			{
+				ExecMethod('property.bofiles.get_file', $file['file_id']);
+			}
+		}
+
 
 		private function _get_case_data()
 		{

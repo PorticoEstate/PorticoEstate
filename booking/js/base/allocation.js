@@ -67,6 +67,6 @@ function populateTableChkResources(building_id, selection)
 
 function populateTableChk(url, container, colDefs)
 {
-	createTable(container, url, colDefs);
+	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
 }
 
