@@ -53,4 +53,15 @@
 
 		</div>
 	</form>
+		<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">
+		<xsl:attribute name="action">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
+		</xsl:attribute>
+
+			<button id = "submit_new_component" type="submit" class="pure-button pure-button-primary">
+			<xsl:value-of select="php:function('lang', 'new equipment')" />
+		</button>
+
+
+		</form>
 </xsl:template>
