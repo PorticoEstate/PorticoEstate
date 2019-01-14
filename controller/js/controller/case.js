@@ -6,11 +6,10 @@ $(document).ready(function ()
 		$("#submit_update_component").hide();
 		$("#component_picture_file").val('');
 
-		if($(this).val())
+		if ($(this).val())
 		{
 			show_picture_component();
 			$("#new_picture").show();
-
 		}
 		else
 		{
@@ -20,17 +19,38 @@ $(document).ready(function ()
 		}
 	});
 
-	show_picture_component = function()
+	show_picture_component = function ()
 	{
 		var component = $("#choose-child-on-component").val();
 		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
-		$('#equipment_picture_container').html('<img alt="Mangler bilde" id="equipment_picture" src="' + ImageUrl+ '" style="width:100%;max-width:300px"/>');
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "200")
+					{
+						$('#equipment_picture_container').html('<img alt="Bilde" id="equipment_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$('#equipment_picture_container').html(data.message);
+					}
+				}
+			}
+		});
+
 
 	};
 
-	show_picture_submit = function()
+	show_picture_submit = function ()
 	{
 		$("#submit_update_component").show();
 
@@ -53,13 +73,13 @@ $(document).ready(function ()
 		}
 
 		$.ajax({
-			cache       : false,
-			contentType : false,
-			processData : false,
+			cache: false,
+			contentType: false,
+			processData: false,
 			type: 'POST',
 			url: requestUrl,
 			data: formdata ? formdata : thisForm.serialize(),
-			success: function(data, textStatus, jqXHR)
+			success: function (data, textStatus, jqXHR)
 			{
 				if (data)
 				{
@@ -77,6 +97,30 @@ $(document).ready(function ()
 				}
 			}
 		});
+	});
+
+
+	// REGISTER NEW CHILD COMPONENT
+	$(".form_new_component").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+//		alert(requestUrl);
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(thisForm).serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+
 	});
 
 	// REGISTER CASE
@@ -114,7 +158,7 @@ $(document).ready(function ()
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
-				data: {component_child:component_child},
+				data: {component_child: component_child},
 				success: function (data)
 				{
 					if (data)

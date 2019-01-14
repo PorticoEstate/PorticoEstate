@@ -272,10 +272,9 @@
             var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;
             var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
+ 			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
             var script = document.createElement("script"); 
-			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js";
-           //script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/application_new.js";
-
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
             document.head.appendChild(script);			
         </script>
 </xsl:template>
