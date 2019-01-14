@@ -402,11 +402,22 @@
 			$body = $newArray['text'];
 
 			if(preg_match("/helpdesk@bergen.kommune.no/i" , $sender ))
-//			if(preg_match("/sigurd.nes@bergen.kommune.no/i" , $sender ))
 			{
 
 				$message_cat_id = 302; // Fra postmottak LRS
 				$group_id = 4174; //LRS-EDD telefoni
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
+			{
+				$message_cat_id = 264; //LRS Lønn - Skatt
+				$group_id = 3159; //LRS Lønn
 				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
 				if($ticket_id)
 				{

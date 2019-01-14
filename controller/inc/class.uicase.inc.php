@@ -77,7 +77,8 @@
 			'view_closed_cases' => true,
 			'get_case_data_ajax' => true,
 			'get_image'			=> true,
-			'add_component_image'=> true
+			'add_component_image'=> true,
+			'add_new_component_child' => true
 		);
 
 		function __construct()
@@ -110,6 +111,22 @@
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+		}
+
+
+		function add_new_component_child()
+		{
+			if(!$this->edit )
+			{
+				phpgw::no_access();
+			}
+
+			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
+			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
+			$location_id = phpgw::get_var('location_id', 'int');
+
+			return 'Parent: '. $parent_location_id . '_' . $parent_component_id;
+			
 		}
 
 
@@ -194,6 +211,7 @@
 				phpgw::no_access();
 			}
 
+			$dry_run = phpgw::get_var('dry_run', 'bool');
 			$component_arr = explode("_", phpgw::get_var('component'));
 
 			$location_id = $component_arr[0];
@@ -221,6 +239,25 @@
 			$vfs->override_acl = 0;
 
 			$file = end($files);
+
+			if($dry_run)
+			{
+				if(!empty($file['file_id']))
+				{
+					return array(
+						'status' => '200',
+						'message' => lang('file found')
+						);
+					}
+				else
+				{
+					return array(
+						'status' => '404',
+						'message' => lang('file not found')
+						);
+				}
+			}
+
 			if(!empty($file['file_id']))
 			{
 				ExecMethod('property.bofiles.get_file', $file['file_id']);
@@ -286,8 +323,15 @@
 				$property_soentity = createObject('property.soentity');
 
 				$component_children = array();
-				foreach ($location_children as $key => $location_children_info)
+				if($location_children)
 				{
+					$component_children[] = array('id' => '', 'short_description' => lang('select'));
+				}
+				foreach ($location_children as $key => &$location_children_info)
+				{
+					$location_children_info['parent_location_id'] = $location_id;
+					$location_children_info['parent_component_id'] = $component_id;
+
 					$_component_children = $property_soentity->get_eav_list(array
 					(
 						'location_id' => $location_children_info['location_id'],
@@ -437,6 +481,7 @@
 				'check_list' => $check_list,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
+				'location_children'	=> $location_children,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'control_groups_with_items_array' => $control_groups_with_items_array,
@@ -478,6 +523,7 @@
 				'location_array' => $case_data['location_array'],
 				'component_array' => $case_data['component_array'],
 				'component_children' => $case_data['component_children'],
+				'location_children' => $case_data['location_children'],
 				'control_groups_with_items_array' => $case_data['control_groups_with_items_array'],
 				'type' => $case_data['type'],
 				'location_level' => $level,
@@ -511,7 +557,6 @@
 			$case_location_code = phpgw::get_var('location_code');
 			$case_data = $this->_get_case_data();
 
-			$control_groups_with_items_array;
 			return json_encode(array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']));
 		}
 
