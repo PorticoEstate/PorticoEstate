@@ -99,20 +99,19 @@ $(document).ready(function ()
 		});
 	});
 
+
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
 	{
 		e.preventDefault();
 
 		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var type = $(thisForm).find("input[name='type']").val();
 		var requestUrl = $(thisForm).attr("action");
-		alert(requestUrl);
+//		alert(requestUrl);
 		$.ajax({
 			type: 'POST',
-			url: requestUrl  + "&" + $(thisForm).serialize(),
-			data: thisForm.serialize(),
+			url: requestUrl,
+			data: $(thisForm).serialize(),
 			success: function (data)
 			{
 				if (data)

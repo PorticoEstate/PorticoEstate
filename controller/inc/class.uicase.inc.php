@@ -121,11 +121,81 @@
 				phpgw::no_access();
 			}
 
+			$check_list_id= phpgw::get_var('check_list_id', 'int');
+			$get_form = phpgw::get_var('get_form', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 
-			return 'Parent: '. $parent_location_id . '_' . $parent_component_id;
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+			$values = array();
+			$custom = createObject('property.custom_fields');
+			$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+
+
+			if($get_form)
+			{
+				$values = $custom->prepare($values, 'property', $system_location['location'], false);
+				$data = array(
+					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child')),
+					'check_list_id'	=> $check_list_id,
+					'parent_location_id' => $parent_location_id,
+					'parent_component_id' => $parent_component_id,
+					'location_id' => $location_id,
+					'custom_attributes' => array('attributes' => $values['attributes']),
+					);
+
+				$this->create_html = CreateObject('phpgwapi.xslttemplates');
+
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
+				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+
+				$this->create_html->set_var('phpgw', array('new_component' => $data));
+
+
+				$this->create_html->set_output('html');
+				$this->create_html->xsl_parse();
+				$this->create_html->xml_parse();
+
+				$xml = new DOMDocument;
+				$xml->loadXML($this->create_html->xmldata);
+				$xsl = new DOMDocument;
+				$xsl->loadXML($this->create_html->xsldata);
+
+				// Configure the transformer
+				$proc = new XSLTProcessor;
+				$proc->registerPHPFunctions(); // enable php functions
+				$proc->importStyleSheet($xsl); // attach the xsl rules
+
+
+				$html = trim($proc->transformToXML($xml));
+				$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+				$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
+
+				return $html;
+			}
+
+			if($_POST)
+			{
+				$system_location_arr = explode('.', $system_location['location']);
+				$p_entity_id = 	$system_location_arr[2];
+				$p_cat_id = 	$system_location_arr[3];
+
+				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
+				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
+				$values['p'][$p_entity_id]['p_num'] = $parent_component_id;
+
+				$values_attribute = phpgw::get_var('values_attribute');
+				$soentity = CreateObject('property.soentity', $p_entity_id, $p_cat_id);
+
+				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
+				_debug_array($parent_item);
+				die();
+
+			}
+
+			self::redirect(array('menuaction' => 'controller.uicase.add_case', 'check_list_id' => $check_list_id));
 			
 		}
 
