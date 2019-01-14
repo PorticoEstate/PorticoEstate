@@ -1824,7 +1824,7 @@
 
 				$location_data = $bolocation->initiate_ui_location(array(
 					'values' => $_location_data,
-					'type_id' => $mode == 'edit' ? $max_level : count(explode('-', $_location_data['location_data']['location_code'])),
+					'type_id' => $mode == 'edit' ? $max_level : count(explode('-', $_location_data['location_code'])),
 					'no_link' => false, // disable lookup links for location type less than type_id
 					'tenant' => true,
 					'block_parent' => $location_level,

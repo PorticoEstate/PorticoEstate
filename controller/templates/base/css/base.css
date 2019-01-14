@@ -366,7 +366,7 @@ select {
 }
 
 fieldset {
-  border-bottom:0px solid #ccc;
+ /* border-bottom:0px solid #ccc;*/
 }
 
 textarea{

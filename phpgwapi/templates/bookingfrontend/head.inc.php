@@ -12,6 +12,12 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+	$cache_refresh_token = '';
+	if(!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+	{
+		$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+	}
+
 	$config_frontend	= CreateObject('phpgwapi.config',$app)->read();
 
 	$tracker_id = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
@@ -64,7 +70,7 @@ JS;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet . $cache_refresh_token);
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -102,7 +108,7 @@ JS;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -196,8 +202,8 @@ JS;
 
 	$tpl_vars = array
 	(
-		'css'		   => $GLOBALS['phpgw']->common->get_css(),
-		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
+		'css'		   => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
+		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
 		'img_icon'	  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),

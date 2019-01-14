@@ -173,7 +173,7 @@
         ]]>
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
 
-		createTable('documents_container',documentsURL,colDefsDocuments);
+		createTable('documents_container',documentsURL,colDefsDocuments, '', 'pure-table pure-table-bordered');
 	</script>
 
 </xsl:template>

@@ -145,51 +145,51 @@
 							<xsl:value-of select="check_list/billable_hours"/>
 						</div>
 					</xsl:if>
-				</fieldset>
-				<fieldset class="col_2">
-					<div class="row">
-						<label>Antall åpne saker</label>
-						<xsl:value-of select="check_list/num_open_cases"/>
-					</div>
-					<div class="row">
-						<label>Antall ventende saker</label>
-						<xsl:value-of select="check_list/num_pending_cases"/>
-					</div>
-				</fieldset>
+					<fieldset class="col_2">
+						<div class="row">
+							<label>Antall åpne saker</label>
+							<xsl:value-of select="check_list/num_open_cases"/>
+						</div>
+						<div class="row">
+							<label>Antall ventende saker</label>
+							<xsl:value-of select="check_list/num_pending_cases"/>
+						</div>
+					</fieldset>
 		    
-				<div class="comment">
-					<label>Kommentar</label>
-					<textarea>
-						<xsl:attribute name="name">comment</xsl:attribute>
-						<xsl:value-of select="check_list/comment"/>
-					</textarea>
-				</div>
-
-				<div class="comment">
-					<label>
-						<xsl:value-of select="php:function('lang', 'files')"/>
-					</label>
-					<div class="pure-u pure-custom" >
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_0'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl'/>
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-									<xsl:with-param name="data" select ='data'/>
-									<xsl:with-param name="tabletools" select ='tabletools' />
-									<xsl:with-param name="config" select ='config'/>
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
+					<div class="comment">
+						<label>Kommentar</label>
+						<textarea>
+							<xsl:attribute name="name">comment</xsl:attribute>
+							<xsl:value-of select="check_list/comment"/>
+						</textarea>
 					</div>
-				</div>
-				<script type="text/javascript">
-					var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-				</script>
-				<div class="comment">
-					<xsl:call-template name="file_upload"/>
-				</div>
+
+					<div class="comment">
+						<label>
+							<xsl:value-of select="php:function('lang', 'files')"/>
+						</label>
+						<div class="pure-u pure-custom" >
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+					<script type="text/javascript">
+						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+					</script>
+					<div class="comment">
+						<xsl:call-template name="file_upload"/>
+					</div>
+				</fieldset>
 
 				<xsl:if test="check_list_locked != '1'">
 					<div class="form-buttons">

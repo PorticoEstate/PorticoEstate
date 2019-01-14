@@ -360,7 +360,6 @@
 			$customer_order_id = $invoice->get_customer_order_id();
 
 			$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
-			$party_names = implode(';' ,explode('<br/>', rtrim($contract->get_party_name(), '<br/>')));
 
 			$start_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $this->dateformat);
 			$end_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $this->dateformat);
@@ -389,7 +388,35 @@
 			}
 			else if($organization == 'nlsh')
 			{
-				$extra_text = $party_names; // leieboer
+
+				$parties = $contract->get_parties();
+				$payer_id = $contract->get_payer_id();
+
+				$_party_names = array();
+
+				foreach ($parties as $_party_key => $_party)
+				{
+					if($_party_key == $payer_id)
+					{
+						continue;
+					}
+					$_party_name = $_party->get_last_name() . ', ' . $_party->get_first_name();
+					if($_party->get_department())
+					{
+						$_party_name .= ' (' . $_party->get_department() . ')';
+					}
+
+					$_party_names[] = $_party_name;
+
+				}
+
+				if($_party_names)
+				{
+					$extra_text = implode('; ', $_party_names); // leieboer
+				}
+
+				$extra_text_sequence_no = 1;
+
 				$contract_id = $contract->get_old_contract_id();
 				$extra_text2 = "Kontrakt: $contract_id [{$start_date} - {$end_date}]"; // Kontrakt, fra dato – til dato.
 
@@ -580,6 +607,8 @@
 
 				if($extra_text)
 				{
+					$extra_text_sequence_no++;
+
 					$order[] = // Text line
 						'0' . //	1
 						sprintf("%345s", '')   //	2-19	just white space..		DATA
@@ -590,7 +619,7 @@
 						. sprintf("%469s", '')   //	55-64	just white space..
 						. sprintf("%09.9s", $serial_number)   // 	65		order_id				DATA
 						. sprintf("%110s", '')   //	66-74	just white space..
-						. sprintf("%08s", 2) // 	75		sequence_no				DATA
+						. sprintf("%08s", $extra_text_sequence_no) // 	75		sequence_no				DATA
 						. sprintf("%28s", '')   //	76-77	just white space..
 						. sprintf("%-60.60s", utf8_decode($extra_text)) // 	78		shot_info				DATA
 						. sprintf("%63s", '')   //	79-88	just white space..
@@ -603,6 +632,8 @@
 
 				if($extra_text2)
 				{
+					$extra_text_sequence_no++;
+
 					$order[] = // Text line
 						'0' . //	1
 						sprintf("%345s", '')   //	2-19	just white space..		DATA
@@ -613,7 +644,7 @@
 						. sprintf("%469s", '')   //	55-64	just white space..
 						. sprintf("%09.9s", $serial_number)   // 	65		order_id				DATA
 						. sprintf("%110s", '')   //	66-74	just white space..
-						. sprintf("%08s", 3) // 	75		sequence_no				DATA
+						. sprintf("%08s", $extra_text_sequence_no) // 	75		sequence_no				DATA
 						. sprintf("%28s", '')   //	76-77	just white space..
 						. sprintf("%-60.60s", utf8_decode($extra_text2)) // 	78		shot_info				DATA
 						. sprintf("%63s", '')   //	79-88	just white space..

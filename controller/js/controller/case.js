@@ -1,6 +1,128 @@
 $(document).ready(function ()
 {
 
+	$("#choose-child-on-component").change(function ()
+	{
+		$("#submit_update_component").hide();
+		$("#component_picture_file").val('');
+
+		if ($(this).val())
+		{
+			show_picture_component();
+			$("#new_picture").show();
+		}
+		else
+		{
+			$('#equipment_picture_container').html('');
+			$("#new_picture").hide();
+
+		}
+	});
+
+	show_picture_component = function ()
+	{
+		var component = $("#choose-child-on-component").val();
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "200")
+					{
+						$('#equipment_picture_container').html('<img alt="Bilde" id="equipment_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$('#equipment_picture_container').html(data.message);
+					}
+				}
+			}
+		});
+
+
+	};
+
+	show_picture_submit = function ()
+	{
+		$("#submit_update_component").show();
+
+	};
+
+
+	// REGISTER PICTURE
+	$("#frm_add_picture").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component").hide();
+						$("#component_picture_file").val('');
+						show_picture_component();
+
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
+
+	// REGISTER NEW CHILD COMPONENT
+	$(".form_new_component").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+//		alert(requestUrl);
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(thisForm).serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+
+	});
+
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
 	{
@@ -36,7 +158,7 @@ $(document).ready(function ()
 			$.ajax({
 				type: 'POST',
 				url: requestUrl + "&" + $(thisForm).serialize(),
-				data: {component_child:component_child},
+				data: {component_child: component_child},
 				success: function (data)
 				{
 					if (data)

@@ -35,7 +35,18 @@
 	class property_uiklassifikasjonssystemet extends phpgwapi_uicommon_jquery
 	{
 
-		private $config,$webservicehost,$acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage, $nextmatchs, $start, $maxmatches;
+		private $config,
+			$webservicehost,
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$acl_manage,
+			$nextmatchs,
+			$start,
+			$maxmatches,
+			$token;
 		var $public_functions = array
 			(
 				'login' => true,
@@ -109,6 +120,54 @@
 			self::render_template_xsl( array('klassifikasjonssystemet'), $data, $xsl_rootdir = '' , 'login');
 		}
 
+
+		private function remove_old( $token )
+		{
+			$this->token = $token;
+
+			$_action_list = array(
+				'locations' =>  'Locations',
+				'buildings' =>  'Buildings',
+				'wings' =>  'Wings',
+				'floors' =>  'Floors',
+				'rooms' =>  'Room',
+			);
+
+			$clean_candiates = array_reverse($_action_list);
+
+			foreach ($clean_candiates as $key => $value)
+			{
+				$data_from_external = $this->get_all_from_external($token, $key, $allrows = true);
+				
+				if(empty($data_from_external['Data']))
+				{
+					continue;
+				}
+
+				foreach ($data_from_external['Data'] as $value)
+				{
+					$url = "api/" . ucfirst($key) . "/{$value['Id']}";
+					if($key == 'rooms')
+					{
+						if(empty($value['RoomDetails'][0]['ExternalId']))
+						{
+							$this->save_to_external_api($url, 'DELETE');
+						}
+					}
+					else
+					{
+						if(empty($value['ExternalId']))
+						{
+							$this->save_to_external_api($url, 'DELETE');
+						}
+					}
+				}
+			}
+
+			parent::redirect(array('menuaction' => 'property.uiklassifikasjonssystemet.get_all'));
+
+		}
+
 		function get_all( )
 		{
 
@@ -132,7 +191,7 @@
 
 
 			$_action_list = array(
-	//			'regHelseforetak'	=> 'RegHelseforetak',
+				'regHelseforetak'	=> 'RegHelseforetak',
 				'helseforetak'	=> 'Helseforetak',
 				'organizations' => 'organizations',
 				'ownership'	=> 'Ownership',
@@ -212,17 +271,12 @@
 						{
 							$table_data_columns[] = array('value' => $_value);
 
-				//			$__value .=  "<td>$_value</td>";
-
 							if(!in_array("detail_{$_key}", $_table_heading))
 							{
 								$_table_heading[] = "detail_{$_key}";
 								$table_heading[] = array('name' => "detail_{$_key}");
 							}
-						}
-				//		$__value .= '</tr></table>';
-						
-				//		$table_data_columns[] = array('value' => $__value);
+						}						
 					}
 					else
 					{
@@ -334,7 +388,11 @@
 					break;
 				case 'export':
 					$dry_run = false;
-					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run);
+					$data_for_export = $this->get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run, $token);
+					break;
+				case 'remove_old':
+					$dry_run = false;
+					$data_for_export = $this->remove_old($token);
 					break;
 				default:
 					break;
@@ -343,6 +401,7 @@
 			$_action_list = array(
 				'dry_run' => 'Dry run',
 				'export' =>  'Export',
+				'remove_old' =>  'Slett gamle data',
 			);
 			$action_list = array();
 			foreach ($_action_list as $key => $name)
@@ -395,12 +454,32 @@
 		}
 
 
-		private function get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run = true )
+		private function get_data_for_export($helseforetak_id, $selected_categories, $selected_part_of_towns, $dry_run = true, $token = false )
 		{
+
+			/**
+			 * Her er det ein feil: helseforetaket forsvant når gamle bygg vart sletta
+			 */
+
 			if(!$helseforetak_id)
 			{
+				$helseforetak_id = 71813;
+				$helseforetak_result = $this->save_helseforetak(array
+					(
+							"name"=> 'Nordlandssykehuset HF',
+					)
+					, $helseforetak_id, $dry_run);
+
+				if(!$dry_run && empty($helseforetak_result['id']))
+				{
+					throw new Exception('Update api/Locations failed:' . _debug_array($helseforetak_result,false));
+				}
+
 				throw new Exception('Missing helseforetak_id');
 			}
+
+			$this->token = $token;
+
 			//Locations (part_of_town)
 			//Organizations
 			//Buildings
@@ -630,6 +709,32 @@
 
 		}
 
+		private function save_helseforetak( $param, $id = false, $dry_run = true)
+		{
+			$data = array(
+	//			"RegionaltHelseforetakId" => 71813,
+				"Name"=> $param['name'],
+	//			"ExternalId"=> $param['portico_id']
+			);
+
+			if($id)
+			{
+				$data['Id'] = $id;
+				$mehod = 'PUT';
+				$url = "api/Helseforetak/{$id}";
+			}
+			else
+			{
+				$mehod = 'POST';
+				$url = "api/Helseforetak";
+			}
+
+			if($dry_run)
+			{
+				return array();
+			}
+			return $this->save_to_external_api($url, $mehod, $data);
+		}
 
 		private function save_location( $param, $id = false, $dry_run = true)
 		{
@@ -908,6 +1013,7 @@
 		private function save_to_external_api($local_url, $mehod, $data = array())
 		{
 			$webservicehost = $this->webservicehost;
+			$token = $this->token;
 
 			$url = "{$webservicehost}/{$local_url}";
 			$data_json = json_encode($data);
@@ -923,6 +1029,8 @@
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+//			curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
 			if($mehod == 'POST')
 			{
 				curl_setopt($ch, CURLOPT_POST, 1);
@@ -935,14 +1043,13 @@
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
 
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//			$curl_info = curl_getinfo($ch);
+//			_debug_array($curl_info);
 
 			curl_close($ch);
 
 			$ret = json_decode($result, true);
-
 			return $ret;
-
 		}
 
 		private function log( $what, $value = '' )

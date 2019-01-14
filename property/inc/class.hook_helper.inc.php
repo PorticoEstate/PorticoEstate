@@ -460,7 +460,7 @@
 					paginatorTableTicket_info.limit = 10;
 					createPaginatorTable('ticket_info_container', paginatorTableTicket_info);
 
-					createTable('ticket_info_container', ticket_infoURL, colDefsTicket_info, rTicket_info, '', paginatorTableTicket_info);
+					createTable('ticket_info_container', ticket_infoURL, colDefsTicket_info, rTicket_info, 'pure-table pure-table-bordered', paginatorTableTicket_info);
 
 					</script>
 

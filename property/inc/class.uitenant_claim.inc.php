@@ -50,7 +50,8 @@
 			'view' => true,
 			'edit' => true,
 			'delete' => true,
-			'view_file' => true
+			'view_file' => true,
+			'close'		=> true
 		);
 
 		function __construct()
@@ -260,6 +261,16 @@
 							'sortable' => FALSE
 						),
 						array(
+							'key' => 'amount',
+							'label' => lang('amount'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'remark',
+							'label' => lang('remark'),
+							'sortable' => false
+						),
+						array(
 							'key' => 'tenant_id',
 							'label' => lang('tenant_id'),
 							'sortable' => FALSE,
@@ -276,11 +287,11 @@
 			}
 
 			$parameters = array
-				(
+			(
 				'parameter' => array
-					(
+				(
 					array
-						(
+					(
 						'name' => 'claim_id',
 						'source' => 'claim_id'
 					),
@@ -319,7 +330,26 @@
 				);
 			}
 
-			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
+			if ($this->acl_edit)
+			{
+				$lang_close = lang('close');
+				$data['datatable']['actions'][] = array
+				(
+					'my_name' => 'status',
+					'statustext' => lang('Close the claim'),
+					'text' => $lang_close,
+					'confirm_msg' => lang('do you really want to change the status to %1', $lang_close),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+							'menuaction' => 'property.uitenant_claim.close',
+							'delete' => 'dummy'// FIXME to trigger the json in property.js.
+						)
+					),
+					'parameters' => json_encode($parameters)
+				);
+			}
+
+			$jasper = array();//execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
 			foreach ($jasper as $report)
 			{
@@ -435,6 +465,20 @@
 			}
 
 			return;
+		}
+
+		function close()
+		{
+			if ( !$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+			$claim_id = phpgw::get_var('claim_id', 'int');
+
+			if($this->bo->close($claim_id))
+			{
+				return lang('Tenant claim') . " " . $claim_id . " " . lang("has been closed");
+			}
 		}
 
 		function edit( $project_id = '', $claim_id = 0 )
