@@ -7,9 +7,9 @@
 </xsl:template>
 
 <!-- new_component-->
-<xsl:template match="new_component"  xmlns:php="http://php.net/xsl">
+<xsl:template match="new_component" xmlns:php="http://php.net/xsl">
 
-	<form class="pure-form pure-form-aligned" method="post" action="{action}">
+	<form class="pure-form pure-form-aligned" action="{action}" onsubmit="return submitNewComponent(event, this);">
 		<fieldset>
 			<xsl:apply-templates select="custom_attributes/attributes"/>
 			<input type="text" name="check_list_id" value="{check_list_id}" />
