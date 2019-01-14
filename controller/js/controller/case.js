@@ -99,6 +99,31 @@ $(document).ready(function ()
 		});
 	});
 
+	// REGISTER NEW CHILD COMPONENT
+	$(".form_new_component").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		var type = $(thisForm).find("input[name='type']").val();
+		var requestUrl = $(thisForm).attr("action");
+		alert(requestUrl);
+		$.ajax({
+			type: 'POST',
+			url: requestUrl  + "&" + $(thisForm).serialize(),
+			data: thisForm.serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+
+	});
+
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
 	{

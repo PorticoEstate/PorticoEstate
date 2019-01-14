@@ -1,6 +1,11 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<h3>
-		<xsl:value-of select="event/name"/>
+		<xsl:if test="event/is_public=0">
+			<xsl:value-of select="php:function('lang', 'Private event')"/>
+		</xsl:if>
+		<xsl:if test="event/is_public=1">
+			<xsl:value-of select="event/name"/>
+		</xsl:if>	
 	</h3>
 
 	<span class="d-block"><xsl:value-of select="event/when"/></span>
