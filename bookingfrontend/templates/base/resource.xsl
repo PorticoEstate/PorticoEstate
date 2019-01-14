@@ -256,9 +256,9 @@
 		var resourcename = "<xsl:value-of select="resource/name" />";
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+ 			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
             var script = document.createElement("script"); 
-//            script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "/js/base/resource.js";
-			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/resource.js";
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/resource.js?n=" + cache_refresh_token;
 
             document.head.appendChild(script);			
         </script>

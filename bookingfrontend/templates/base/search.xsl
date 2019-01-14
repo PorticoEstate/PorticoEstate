@@ -232,10 +232,10 @@
           
       
         <script type="text/javascript">
-            
+ 			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";           
             var script = document.createElement("script"); 
-			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
-            document.head.appendChild(script);			
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js?n=" + cache_refresh_token;
+            document.head.appendChild(script);
         </script>
   
 </xsl:template>

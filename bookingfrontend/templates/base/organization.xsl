@@ -167,9 +167,10 @@
     </div>
 
     <script type="text/javascript">
-            JqueryPortico.booking = {};
+           JqueryPortico.booking = {};
+  			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
             var script = document.createElement("script"); 
-			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/organization.js";
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/organization.js?n=" + cache_refresh_token;
             document.head.appendChild(script);
 
             var organization_id = <xsl:value-of select="organization/id"/>;

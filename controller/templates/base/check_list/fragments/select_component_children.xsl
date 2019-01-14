@@ -16,7 +16,6 @@
 				<xsl:value-of select="php:function('lang', 'equipment')" />
 			</label>
 			<select id="choose-child-on-component" name = "component" class="select-component">
-				<option value="">Velg utstyr</option>
 				<xsl:for-each select="component_children">
 					<option>
 						<xsl:if test="id = //current_child/id">
@@ -47,10 +46,32 @@
 				<xsl:attribute name="accept">image/*</xsl:attribute>
 				<xsl:attribute name="capture">camera</xsl:attribute>
 			</input>
-		<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
-			<xsl:value-of select="php:function('lang', 'add picture')" />
-		</button>
+			<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
+				<xsl:value-of select="php:function('lang', 'add picture')" />
+			</button>
 
 		</div>
 	</form>
+
+	<xsl:for-each select="location_children">
+		<form class="pure-form pure-form-aligned form_new_component" method="post">
+			<xsl:attribute name="action">
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_new_component_child, phpgw_return_as:json')" />
+			</xsl:attribute>
+			<input type="hidden" name="check_list_id" value="{//check_list/id}" />
+			<input type="hidden" name="get_form" value="1" />
+			<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
+			<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
+			<input type="hidden" name="location_id" value="{location_id}" />
+			<button id = "submit_new_component" type="submit" class="pure-button pure-button-primary">
+				<xsl:value-of select="php:function('lang', 'new')" />
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="name" />
+			</button>
+		</form>
+	</xsl:for-each>
+	<div id = "form_new_component_2">
+		
+	</div>
+
 </xsl:template>
