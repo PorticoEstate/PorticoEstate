@@ -463,18 +463,6 @@
 
 			if(!$helseforetak_id)
 			{
-				$helseforetak_id = 71813;
-				$helseforetak_result = $this->save_helseforetak(array
-					(
-							"name"=> 'Nordlandssykehuset HF',
-					)
-					, $helseforetak_id, $dry_run);
-
-				if(!$dry_run && empty($helseforetak_result['id']))
-				{
-					throw new Exception('Update api/Locations failed:' . _debug_array($helseforetak_result,false));
-				}
-
 				throw new Exception('Missing helseforetak_id');
 			}
 
@@ -531,16 +519,16 @@
 							"portico_id"=> $part_of_town['id'])
 					, $part_of_town['external_id'], $dry_run);
 
-				if(!$dry_run && empty($part_of_town_result['id']))
+				if(!$dry_run && empty($part_of_town_result['Id']))
 				{
 					throw new Exception('Update api/Locations failed:' . _debug_array($part_of_town_result,false));
 				}
 
-				if(!$dry_run && $part_of_town_result['id'] && !$part_of_town['external_id'])
+				if(!$dry_run && $part_of_town_result['Id'] && !$part_of_town['external_id'])
 				{
 					$where = "id=" . (int) $part_of_town['id'];
-					$this->update_external_id('fm_part_of_town', $part_of_town_result['id'], $where );
-					$part_of_town['external_id'] = (int) $part_of_town_result['id'];
+					$this->update_external_id('fm_part_of_town', $part_of_town_result['Id'], $where );
+					$part_of_town['external_id'] = (int) $part_of_town_result['Id'];
 				}
 
 				$__buildings = $solocation->read(array('type_id' => 2, 'part_of_town_id' => $part_of_town['id'], 'allrows' => $allrows));
@@ -580,16 +568,16 @@
 						)
 						, $building['external_id'], $dry_run);
 
-					if(!$dry_run && empty($building_result['id']))
+					if(!$dry_run && empty($building_result['Id']))
 					{
 						throw new Exception('Update api/Buildings failed:' . _debug_array($building_result,false));
 					}
 
-					if(!$dry_run && $building_result['id'] && !$building['external_id'])
+					if(!$dry_run && $building_result['Id'] && !$building['external_id'])
 					{
 						$where = "location_code='{$building['location_code']}'";
-						$this->update_external_id('fm_location2', $building_result['id'], $where );
-						$building['external_id'] = (int) $building_result['id'];
+						$this->update_external_id('fm_location2', $building_result['Id'], $where );
+						$building['external_id'] = (int) $building_result['Id'];
 					}
 
 				}
@@ -640,16 +628,16 @@
 						)
 						, $floor['external_id'], $dry_run);
 
-					if(!$dry_run && empty($floor_result['id']))
+					if(!$dry_run && empty($floor_result['Id']))
 					{
 						throw new Exception('Update api/Floors failed:' . _debug_array($floor_result,false));
 					}
 
-					if(!$dry_run && $floor_result['id'] && !$floor['external_id'])
+					if(!$dry_run && $floor_result['Id'] && !$floor['external_id'])
 					{
 						$where = "location_code='{$floor['location_code']}'";
-						$this->update_external_id('fm_location3', $floor_result['id'], $where );
-						$floor['external_id'] = (int) $floor_result['id'];
+						$this->update_external_id('fm_location3', $floor_result['Id'], $where );
+						$floor['external_id'] = (int) $floor_result['Id'];
 					}
 
 				}
@@ -679,16 +667,16 @@
 						)
 						, $room['external_id'], $dry_run);
 
-					if(!$dry_run && empty($room_result['id']))
+					if(!$dry_run && empty($room_result['Id']))
 					{
 						throw new Exception('Update api/Rooms failed:' . _debug_array($room_result,false));
 					}
 
-					if(!$dry_run && $room_result['id'] && !$room['external_id'])
+					if(!$dry_run && $room_result['Id'] && !$room['external_id'])
 					{
 						$where = "location_code='{$room['location_code']}'";
-						$this->update_external_id('fm_location5', $room_result['id'], $where );
-						$room['external_id'] = (int) $room_result['id'];
+						$this->update_external_id('fm_location5', $room_result['Id'], $where );
+						$room['external_id'] = (int) $room_result['Id'];
 					}
 				}
 
@@ -712,7 +700,7 @@
 		private function save_helseforetak( $param, $id = false, $dry_run = true)
 		{
 			$data = array(
-	//			"RegionaltHelseforetakId" => 71813,
+				"RegionaltHelseforetakId" => $param['RegionaltHelseforetakId'],
 				"Name"=> $param['name'],
 	//			"ExternalId"=> $param['portico_id']
 			);
@@ -885,22 +873,25 @@
 		}
 		private function save_room( $param, $id = false, $dry_run = true)
 		{
-			$data = array(
+			$data = array();
+			$data[] = array(
 				"FloorId" => $param['floor_id'],
 				"RoomDetails" => array(
-					"ClassificationId" => $param['id_delfunsjon'] ? $param['id_delfunsjon'] : $param['category'], // for now..
-					"RoomNumber" => $param['rom_nr_id'],
-					"Name" => $param['name'],
-					"Description" => $param['descr'],
-					"NetArea" => (float)$param['area_net'],
-					"GrossArea" => (float)$param['area_gross'],
-				//	"OrganizationId" => 7,
-				//	"RoomOwnershipId" => 8,
-				//	"WingId" => 0,
-				//	"CapacityToday" => 9,
-				//	"CapacityBuiltFor" => 10,
-					"VersionNumber" => "3.1.4",
-					"ExternalId" => $param['portico_id'],
+					array(
+						"ClassificationId" => $param['id_delfunsjon'] ? $param['id_delfunsjon'] : $param['category'], // for now..
+						"RoomNumber" => $param['rom_nr_id'],
+						"Name" => $param['name'],
+						"Description" => $param['descr'],
+						"NetArea" => (float)$param['area_net'],
+						"GrossArea" => (float)$param['area_gross'],
+					//	"OrganizationId" => 7,
+					//	"RoomOwnershipId" => 8,
+					//	"WingId" => 0,
+					//	"CapacityToday" => 9,
+					//	"CapacityBuiltFor" => 10,
+						"VersionNumber" => "3.1.4",
+						"ExternalId" => $param['portico_id'],
+					)
 				)
 			);
 
@@ -1017,7 +1008,7 @@
 
 			$url = "{$webservicehost}/{$local_url}";
 			$data_json = json_encode($data);
-
+			_debug_array($data_json);
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -1070,7 +1061,7 @@
 
 		private function update_external_id($table, $external_id, $where )
 		{
-			$sql = "UPDATE {$table} SET external_id = " . (int) $external_id . " {$where}";
+			$sql = "UPDATE {$table} SET external_id = " . (int) $external_id . " WHERE {$where}";
 			return $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 
