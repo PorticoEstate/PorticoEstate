@@ -33,24 +33,24 @@
 			
 			<div class="col-md-6 order-md-1 col-lg-3 order-lg-1">
                             
-                                                                  <span><a href="https://www.aktiv-kommune.no/"><img class="footer-brand footer-brand-site-img" src="{footer_logo_img}" alt="{logo_title}"/></a></span>    
+                <span><a href="https://www.alesund.kommune.no"><img class="footer-brand footer-brand-site-img" src="{footer_logo_img}" alt="{logo_title}"/></a></span>    
 
 			</div>
 				
 				
 			<div class="col-md-6 order-md-3 col-lg-3 order-lg-2"     id="logowidth">
-				<span><a target="_blank" rel="noopener noreferrer"  href="https://www.aktiv-kommune.no/">{municipality}</a></span>             
+				<span><a target="_blank" rel="noopener noreferrer"  href="https://www.alesund.kommune.no">{municipality}</a></span>             
 
-				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:webmaster@example.com">{municipality_email}</a><br> </span>  
+				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:{municipality_email}">{municipality_email}</a><br> </span>  
 			</div>
 
 			<div class="col-md-6 order-md-2 col-lg-3 order-lg-3">
 	
 				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{wwwmunicipality}</a></span>
                                    
-				 <span><a   target="_blank" rel="noopener noreferrer"    href="{manual_url}">{guidances}</a></span>  
+				<span><a   target="_blank" rel="noopener noreferrer"    href="{manual_url}">{guidances}</a></span>  
                                  
-                                                                                         <span><a   target="_blank" rel="noopener noreferrer"    href="{footer_privacy_link}">{privacy}</a></span>  
+                <span><a   target="_blank" rel="noopener noreferrer"    href="{footer_privacy_link}">{privacy}</a></span>  
                                                        
 			</div>
 
