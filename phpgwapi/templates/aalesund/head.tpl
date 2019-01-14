@@ -31,7 +31,7 @@
     
     <body    >
         
-           <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top"    style="border-bottom: 1.5px solid rgb(137, 38, 106);"      id="headcon">  
+           <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top"    style="border-bottom: 1.5px solid rgb(137, 38, 106);"  id="headcon">  
                  
                <div class="container   header-container   my_class"    >
                     
@@ -46,11 +46,11 @@
                   <li class="nav-item"> 
                  <form id="navbar-search-form"   class="expanding-search-form">
                      
-                      <div class="childdiv   input-group mb-3  globalsearchbuttoncl    "   id="globalsearchbuttong"> 
+                      <div class="childdiv input-group mb-3  globalsearchbuttoncl"   id="globalsearchbuttong"> 
                                          
                       <input class="  form-control  search-input"   type="text" placeholder="{placeholder_search}"    id="searchmotor"  />
                       
-                      <button class="btn btn-outline-secondary" type="button"    id="searchbuttons"><i class="fas fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"   id="searchbuttons"><i class="fas fa-search"></i></button>
                                     
                       </div>
                       </form>        

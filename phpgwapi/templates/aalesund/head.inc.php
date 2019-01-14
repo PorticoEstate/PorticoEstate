@@ -149,6 +149,7 @@ $javascripts[] = "/phpgwapi/templates/aalesund/js/knockout.validation.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/aui-min.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/jquery.autocompleter.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/common.js";
+$javascripts[] = "/phpgwapi/templates/aalesund/js/custom.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/nb-NO.js";
 
 

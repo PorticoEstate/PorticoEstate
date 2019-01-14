@@ -70,6 +70,9 @@ a:hover {
     text-decoration: underline;
 }
 
+a {
+	color: #27348B;
+}
 
 @media (max-width: 567px) { 
 #logowidth  img {
@@ -228,7 +231,7 @@ a:hover {
     position: absolute;
     color:#26348B;    
     text-decoration: none !important;
-    margin-top: 1.2%  !important;
+    margin-top: 24px  !important;
 }
 
 
@@ -239,9 +242,8 @@ a:hover {
     left: 50%;
     position: absolute;
 /*    color:#26348B;   */
-    
+    margin-top: 8px  !important;
     text-decoration: none !important;
-    margin-top: 3.7%  !important;
 }
 }
 
@@ -390,13 +392,15 @@ a:hover {
  #globalsearchbuttong  input#searchmotor {
     
      width: 150px;
-     height: 50px;
+     height: 45px;
      border: 1px solid #26348B !important;
      font-size: 16pt;
      float: right;
- 
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
+	 border-radius: 0px;
+	 margin-top: 10px;
+	 outline:none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
  
   -webkit-transition: width .55s ease;
   -moz-transition: width .55s ease;
@@ -409,13 +413,16 @@ a:hover {
  
  #globalsearchbuttong  input#searchmotor:hover {
 width: 300px;
+outline:none;
 }
+
 
 #searchbuttons {
     border: 1px solid #26348B !important;
     margin-left: 100% !important;
-   height: 50px;
-   margin-top: -32% !important;
+   height: 45px;
+   margin-top: -30% !important;
+   outline:none;
 }
 
 
@@ -612,7 +619,7 @@ color: white;
 .footer a {
 /*    color: #000;
     */
-    color: #007bff;
+    color: #27348B;
     text-decoration: none;
     display:inline-block !important;
 }
@@ -721,6 +728,7 @@ color: white;
 @media (max-width: 575px) {
     .brand-site-title {
         font-size: 26px;
+		margin-top: 14px !important;
     }
     .dropdown {
         margin-top: 10px !important;
@@ -840,15 +848,28 @@ SEARCH PAGE STYLE
 }
 
 .searchBtn {
-border: 2px solid #26348B !important;
+border: 2px solid #89266a !important;
 background-color: #89266a !important;
 }
 
 .searchBtn:hover {
-/*    background-color: #3d3d3d !important;*/
-    background-color: white  !important;
+border: 2px solid #ce4ba4 !important;
+background-color: #ce4ba4 !important;
 }
 
+.building-card-header .btn-link{
+	color: #27348B !important;
+}
+
+input:focus{
+    outline: none;
+}
+
+.form-control:focus {
+  border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 
 /*#searchbuttons {
     background-color: #3d3d3d !important;
