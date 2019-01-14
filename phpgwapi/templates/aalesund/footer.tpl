@@ -39,9 +39,9 @@
 				
 				
 			<div class="col-md-6 order-md-3 col-lg-3 order-lg-2"     id="logowidth">
-				<span><a target="_blank" rel="noopener noreferrer"  href="https://www.aktiv-kommune.no/">{municipality}</a></span>             
+				<span><a target="_blank" rel="noopener noreferrer"  href="{footer_privacy_link}">{municipality}</a></span>             
 
-				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:webmaster@example.com">{municipality_email}</a><br> </span>  
+				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:{municipality_email}">{municipality_email}</a><br> </span>  
 			</div>
 
 			<div class="col-md-6 order-md-2 col-lg-3 order-lg-3">
