@@ -157,6 +157,7 @@
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
 			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'O'; //O='Open'
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$group_id = !empty($data['group_id']) ? (int)$data['group_id'] : 0;
 			$reported_by = isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
@@ -464,6 +465,12 @@
 					$where = 'AND';
 					$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
 				}
+			}
+
+			if($group_id)
+			{
+				$filtermethod .= " $where fm_tts_tickets.group_id=" . (int)$group_id;
+				$where = 'AND';
 			}
 
 			if ($reported_by > 0)
@@ -2182,6 +2189,7 @@
 
 		public function get_assigned_groups( $status_id = 'O' )
 		{
+			$status_id = $status_id ? $status_id : 'O';
 			$custom_status = $this->get_custom_status();
 			$closed_status = array('X');
 			foreach ($custom_status as $custom)
@@ -2263,6 +2271,31 @@
 				(
 					'id' => $this->db->f('id'),
 					'name' => $this->db->f('account_firstname', true)
+				);
+			}
+
+			return $values;
+
+		}
+		public function get_assigned_groups2( $selected = 0)
+		{
+	
+			$values = array();
+			$sql = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM fm_tts_tickets"
+				. " $this->join phpgw_accounts ON fm_tts_tickets.group_id = phpgw_accounts.account_id"
+				. " {$filtermethod}"
+				. " ORDER BY account_lastname ASC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$id = $this->db->f('id');
+				$values[] = array
+				(
+					'id' => $id,
+					'name' => $this->db->f('account_firstname', true),
+					'selected' => $id = $selected ? 1 : 0
 				);
 			}
 
