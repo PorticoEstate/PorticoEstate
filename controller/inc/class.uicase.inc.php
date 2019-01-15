@@ -176,29 +176,47 @@
 				return $html;
 			}
 
-			if($_POST)
+			if($_POST && $parent_location_id && $parent_component_id)
 			{
+				$parent_system_location = $GLOBALS['phpgw']->locations->get_name($parent_location_id);
+
 				$system_location_arr = explode('.', $system_location['location']);
-				$p_entity_id = 	$system_location_arr[2];
-				$p_cat_id = 	$system_location_arr[3];
+				$entity_id		= 	$system_location_arr[2];
+				$cat_id			= 	$system_location_arr[3];
+				$parent_system_location_arr = explode('.', $parent_system_location['location']);
+				$p_entity_id	= 	$parent_system_location_arr[2];
+				$p_cat_id		= 	$parent_system_location_arr[3];
+
+				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
+				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
+
 
 				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
 				$values['p'][$p_entity_id]['p_num'] = $parent_component_id;
 
-				$values_attribute = phpgw::get_var('values_attribute');
-				$soentity = CreateObject('property.soentity', $p_entity_id, $p_cat_id);
+				$values['location_code'] = $parent_item['location_code'];
+				$values['location_data'] = createObject('property.bolocation')->read_single($parent_item['location_code'], array('view' => true));
 
-				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
-				$dump = '<pre>' . print_r($parent_item, true) . '</pre>';
-				return $dump;
+				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
+				$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
+//				$dump = '<pre>' . print_r($receipt, true) . '</pre>';
+//				return $dump;
+
+				if($receipt['id'])
+				{
+					return lang('saved');
+				}
+				else
+				{
+					return lang('error');
+
+				}
 			}
 
-			return 'error';
-
-//			self::redirect(array('menuaction' => 'controller.uicase.add_case', 'check_list_id' => $check_list_id));
-			
+			return lang('error');
+		
 		}
 
 

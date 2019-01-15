@@ -17,8 +17,9 @@ $(document).ready(function ()
 
 	if(parent_cat_id == 301) //LRS-EDD telefoni
 	{
-		alert(parent_cat_id);
 		$("#arbeidssted_name").removeAttr("data-validation");
+		$("#arbeidssted_name").hide();
+		$("#label_arbeidssted").hide();
 	}
 
 });

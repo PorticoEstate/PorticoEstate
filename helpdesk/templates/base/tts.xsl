@@ -27,6 +27,9 @@
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
+
+		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
+
 	</script>
 
 	<dl>
