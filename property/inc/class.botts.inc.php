@@ -1102,7 +1102,7 @@
 				'origin_item_id' => isset($data['origin_item_id']) ? $data['origin_item_id'] : null,
 				'cat_id' => $data['cat_id'],
 				'group_id' => isset($data['group_id']) && $data['group_id'] ? $data['group_id'] : $default_group,
-				'assignedto' => $assignedto,
+				'assignedto' => !empty($data['assignedto']) ? $data['assignedto'] : $assignedto,
 				'priority' => isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
 				'status' => 'O', // O = Open
 				'subject' => $data['title'],
