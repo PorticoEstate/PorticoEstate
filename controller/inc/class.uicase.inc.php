@@ -138,7 +138,7 @@
 			{
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 				$data = array(
-					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child')),
+					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child', 'phpgw_return_as'=>'json')),
 					'check_list_id'	=> $check_list_id,
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
@@ -190,12 +190,14 @@
 				$soentity = CreateObject('property.soentity', $p_entity_id, $p_cat_id);
 
 				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
-				_debug_array($parent_item);
-				die();
+				$dump = '<pre>' . print_r($parent_item, true) . '</pre>';
+				return $dump;
 
 			}
 
-			self::redirect(array('menuaction' => 'controller.uicase.add_case', 'check_list_id' => $check_list_id));
+			return 'error';
+
+//			self::redirect(array('menuaction' => 'controller.uicase.add_case', 'check_list_id' => $check_list_id));
 			
 		}
 

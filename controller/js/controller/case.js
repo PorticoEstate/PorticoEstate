@@ -99,6 +99,30 @@ $(document).ready(function ()
 		});
 	});
 
+	submitNewComponent = function(e, form)
+	{
+		e.preventDefault();
+	//	console.log(form);
+		var thisForm = form;
+		var requestUrl = $(thisForm).attr("action");
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(thisForm).serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+
+
+		return false;
+
+
+	};
 
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
@@ -107,7 +131,6 @@ $(document).ready(function ()
 
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");
-//		alert(requestUrl);
 		$.ajax({
 			type: 'POST',
 			url: requestUrl,
