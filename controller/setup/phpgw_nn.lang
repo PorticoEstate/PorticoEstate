@@ -434,3 +434,9 @@ bulk update assigned	controller	nn	Masseoppdatering av tildeling
 deadline	controller	nn	Frist
 planned	controller	nn	Planlagt
 serie	controller	nn	Serie
+picture	controller	nn	Bilete
+saved	controller	nn	Lagra
+new picture	controller	nn	Nytt bilete
+equipment	controller	nn	Utstyr
+file not found	controller	nn	Fil ikke funnen
+error	controller	nn	Feil
