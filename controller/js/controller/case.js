@@ -102,7 +102,6 @@ $(document).ready(function ()
 	submitNewComponent = function(e, form)
 	{
 		e.preventDefault();
-	//	console.log(form);
 		var thisForm = form;
 		var requestUrl = $(thisForm).attr("action");
 		$.ajax({
@@ -111,17 +110,25 @@ $(document).ready(function ()
 			data: $(thisForm).serialize(),
 			success: function (data)
 			{
-				if (data)
+				if (data.status == "saved")
 				{
-					$("#form_new_component_2").html(data);
+					$("#choose-child-on-component").empty();
+
+					var component_children = data.component_children;
+
+					$.each(component_children, function (i, val) {
+						   $('#choose-child-on-component').append($('<option>', {
+							   value: val.location_id + '_' + val.id,
+							   text : val.short_description
+						   }));
+					   });
 				}
+
+				$("#form_new_component_2").html(data.message);
 			}
 		});
 
-
 		return false;
-
-
 	};
 
 	// REGISTER NEW CHILD COMPONENT

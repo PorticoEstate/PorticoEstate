@@ -47,6 +47,7 @@
 		var $fields_updated = false;
 		var $status_id;
 		var $user_id;
+		var $group_id;
 		var $reported_by;
 		var $part_of_town_id;
 		var $district_id;
@@ -153,6 +154,7 @@
 			$this->order = phpgw::get_var('order');
 			$this->status_id = phpgw::get_var('status_id', 'string');
 			$this->user_id = phpgw::get_var('user_id', 'int');
+			$this->group_id = phpgw::get_var('group_id', 'int');
 			$this->reported_by = phpgw::get_var('reported_by', 'int');
 			$this->cat_id = phpgw::get_var('cat_id', 'int');
 			$this->part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
@@ -1102,7 +1104,7 @@
 				'origin_item_id' => isset($data['origin_item_id']) ? $data['origin_item_id'] : null,
 				'cat_id' => $data['cat_id'],
 				'group_id' => isset($data['group_id']) && $data['group_id'] ? $data['group_id'] : $default_group,
-				'assignedto' => $assignedto,
+				'assignedto' => !empty($data['assignedto']) ? $data['assignedto'] : $assignedto,
 				'priority' => isset($data['priority']) && $data['priority'] ? $data['priority'] : $default_priority,
 				'status' => 'O', // O = Open
 				'subject' => $data['title'],
@@ -1887,6 +1889,11 @@ HTML;
 		public function get_assigned_groups($status_id)
 		{
 			return $this->so->get_assigned_groups($status_id);
+		}
+
+		public function get_assigned_groups2($selected)
+		{
+			return $this->so->get_assigned_groups2($selected);
 		}
 
 		public function receive_order( $id, $received_amount, $external_voucher_id = 0 )

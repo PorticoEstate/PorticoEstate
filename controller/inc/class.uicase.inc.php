@@ -121,7 +121,6 @@
 				phpgw::no_access();
 			}
 
-			$check_list_id= phpgw::get_var('check_list_id', 'int');
 			$get_form = phpgw::get_var('get_form', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
@@ -139,7 +138,6 @@
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 				$data = array(
 					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child', 'phpgw_return_as'=>'json')),
-					'check_list_id'	=> $check_list_id,
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
@@ -195,8 +193,16 @@
 				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
 				$values['p'][$p_entity_id]['p_num'] = $parent_component_id;
 
+				$location_code_arr = explode('-', $parent_item['location_code']);
 				$values['location_code'] = $parent_item['location_code'];
-				$values['location_data'] = createObject('property.bolocation')->read_single($parent_item['location_code'], array('view' => true));
+				$values['loc1'] = $location_code_arr[0];
+
+				$bolocation = createObject('property.bolocation');
+
+				$values['location_data'] = $bolocation->read_single($parent_item['location_code'], array('view' => true));
+
+
+				$values['location_name'] = createObject('property.solocation')->get_location_address($parent_item['location_code']);
 
 				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
@@ -206,11 +212,40 @@
 
 				if($receipt['id'])
 				{
-					return lang('saved');
+					$property_soadmin_entity = createObject('property.soadmin_entity');
+					$location_children = $property_soadmin_entity->get_children( $p_entity_id, $p_cat_id, 0, '' );
+
+					$component_children = array();
+					if($location_children)
+					{
+						$component_children[] = array('id' => '', 'short_description' => lang('select'));
+					}
+					foreach ($location_children as $key => &$location_children_info)
+					{
+						$location_children_info['parent_location_id'] = $location_id;
+						$location_children_info['parent_component_id'] = $component_id;
+
+						$_component_children = $soentity->get_eav_list(array
+						(
+							'location_id' => $location_children_info['location_id'],
+							'allrows'	=> true
+						));
+
+						$component_children = array_merge($component_children, $_component_children);
+					}
+
+					return array(
+						'status' => 'saved',
+						'message' => lang('saved'),
+						'component_children' => $component_children
+						);
 				}
 				else
 				{
-					return lang('error');
+					return array(
+						'status' => 'saved',
+						'message' => lang('error')
+						);
 
 				}
 			}
@@ -634,7 +669,7 @@
 			self::add_javascript('controller', 'controller', 'case.js');
 			self::add_javascript('controller', 'controller', 'check_list.js');
 			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
-
+			phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
 				'check_list/fragments/select_buildings_on_property',

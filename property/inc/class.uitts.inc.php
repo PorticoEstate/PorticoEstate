@@ -108,6 +108,7 @@
 			$this->order = $this->bo->order;
 			$this->status_id = $this->bo->status_id;
 			$this->user_id = $this->bo->user_id;
+			$this->group_id = $this->bo->group_id;
 			$this->reported_by = $this->bo->reported_by;
 			$this->cat_id = $this->bo->cat_id;
 			$this->vendor_id = $this->bo->vendor_id;
@@ -145,6 +146,7 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'status_id' => $this->bo->status_id,
 				'user_id' => $this->bo->user_id,
+				'group_id' => $this->bo->group_id,
 				'reported_by' => $this->bo->reported_by,
 				'cat_id' => $this->bo->cat_id,
 				'vendor_id' => $this->bo->vendor_id,
@@ -816,10 +818,17 @@ HTML;
 					'list' => $_categories
 				);
 
+				$assigned_groups2 = $this->bo->get_assigned_groups2($this->group_id);
+				array_unshift($assigned_groups2, array('id' => '', 'name' => lang('group')));
+				$combos[] = array('type' => 'filter',
+					'name' => 'group_id',
+					'extra' => '',
+					'text' => lang('group'),
+					'list' => $assigned_groups2
+				);
+
 				$values_combo_box[4] = $this->_get_user_list($this->user_id);
-
 				$assigned_groups = $this->bo->get_assigned_groups($this->status_id);
-
 				foreach ($assigned_groups as $assigned_group)
 				{
 					array_unshift($values_combo_box[4], array('id' => $assigned_group['id'], 'name' => $assigned_group['name']));
