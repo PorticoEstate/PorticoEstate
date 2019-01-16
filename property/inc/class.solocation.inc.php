@@ -2464,6 +2464,28 @@
 
 		}
 
+		function get_location_data($location_code = '')
+		{
+			$locaction_code = $this->db->db_addslashes($location_code);
+
+			$location_arr = explode('-', $location_code);
+			$current_level = count($location_arr);
+
+			$values = array();
+
+			if(!$locaction_code)
+			{
+				return $values;
+			}
+
+			for ($i = 1; $i <= $current_level; $i++)
+			{
+				$values['location']["loc{$i}"] = $location_arr[($i-1)];
+			}
+
+			$values['location_name'] = $this->get_location_address($location_code);
+			return $values;
+		}
 		function get_location_address($location_code = '')
 		{
 			$locaction_code = $this->db->db_addslashes($location_code);

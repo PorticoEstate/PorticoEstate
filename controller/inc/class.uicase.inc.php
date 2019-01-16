@@ -195,14 +195,19 @@
 
 				$location_code_arr = explode('-', $parent_item['location_code']);
 				$values['location_code'] = $parent_item['location_code'];
-				$values['loc1'] = $location_code_arr[0];
+				
+				$location_data = createObject('property.solocation')->get_location_data($parent_item['location_code']);
 
-				$bolocation = createObject('property.bolocation');
+				$values = array_merge($values, $location_data);
 
-				$values['location_data'] = $bolocation->read_single($parent_item['location_code'], array('view' => true));
+//				$values['loc1'] = $location_code_arr[0];
+
+//				$bolocation = createObject('property.bolocation');
+
+//				$values['location_data'] = $bolocation->read_single($parent_item['location_code'], array('view' => true));
 
 
-				$values['location_name'] = createObject('property.solocation')->get_location_address($parent_item['location_code']);
+//				$values['location_name'] = createObject('property.solocation')->get_location_address($parent_item['location_code']);
 
 				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
