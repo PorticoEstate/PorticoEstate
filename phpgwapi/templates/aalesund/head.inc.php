@@ -97,9 +97,13 @@ $GLOBALS['phpgw']->template->set_var('footer_logo_img', $footerlogoimg);
 $GLOBALS['phpgw']->template->set_var('logo_title', $logo_title);
 
 $guidance = 'Veiledning';
-$GLOBALS['phpgw']->template->set_var('guidance', $guidance);
+$GLOBALS['phpgw']->template->set_var('guidances', $guidance);
 
-$wwwmunicipality = 'www.aktiv-kommune.no';
+$privacy = 'Personvern';
+$GLOBALS['phpgw']->template->set_var('privacy', $privacy);
+
+//$wwwmunicipality = 'www.aktiv-kommune.no';
+$wwwmunicipality = 'Om Aktiv kommune';
 $GLOBALS['phpgw']->template->set_var('wwwmunicipality', $wwwmunicipality);
 
 $textaboutmunicipality = 'OM AKTIV KOMMUNE';
@@ -108,8 +112,11 @@ $GLOBALS['phpgw']->template->set_var('textaboutmunicipality', $textaboutmunicipa
 $SIGNINN = 'LOGG INN';
 $GLOBALS['phpgw']->template->set_var('SIGNINN', $SIGNINN);
 
-$executiveofficer = 'saksbehandler';
+$executiveofficer = 'Logg inn for saksbehandler';
 $GLOBALS['phpgw']->template->set_var('executiveofficer', $executiveofficer);
+
+$executiveofficer_url = $webserver_url . "/";
+$GLOBALS['phpgw']->template->set_var('executiveofficer_url', $executiveofficer_url);
 
 $stringmunicipality = '  kommune';
 
@@ -127,7 +134,7 @@ if (!empty($GLOBALS['phpgw_info']['server']['support_address'])) {
 	$GLOBALS['phpgw']->template->set_var('municipality_email', $municipality_email);
 } else {
 //		$supportaddress  = 'Logo';
-	$municipality_email = 'servicetorget@alesund.kommune.no';
+	$municipality_email = 'Servicetorget@alesund.kommune.no';
 	$GLOBALS['phpgw']->template->set_var('municipality_email', $municipality_email);
 }
 
@@ -145,6 +152,7 @@ $javascripts[] = "/phpgwapi/templates/aalesund/js/knockout.validation.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/aui-min.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/jquery.autocompleter.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/common.js";
+$javascripts[] = "/phpgwapi/templates/aalesund/js/custom.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/nb-NO.js";
 
 
@@ -234,13 +242,18 @@ $tpl_vars = array
 	'metainfo_description' => $description,
 	'metainfo_robots' => $robots,
 	'lbl_search' => lang('Search'),
-	'placeholder_search' => lang('Search building, resource, organization'),
+                
+//	'placeholder_search' => lang('Search building, resource, organization'),
+                
+                'placeholder_search' => lang('Search'),
+                
 	'logofile' => $logofile_frontend,
 	'header_search_class' => 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 );
 
 $tpl_vars['manual_text'] = lang('manual');
 $tpl_vars['manual_url'] = $manual;
+
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 

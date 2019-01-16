@@ -1,33 +1,26 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+    
 	<div id="search-page-content">
-		<div class="frontpageimage" id="main-page">
+                                                       
+	<div class="frontpageimage" id="main-page">
 
 			<div class="header-text"    style="color:#26348B;"  >                       
 				<a href="{site_url}"    >
-					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>        
+				        <xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>        
 				</a>
 			</div>
-		</div>
+	</div>
     
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container searchContainer"     >  
 	
-
-        
-				<div     id="frontpagetitle">  
-                  
-                
-                
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>       
-                 
+				<div    id="frontpagetitle">  
+			                            <xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>           
 				</div>
                 
-
 				<div   id="ssd" >  
-
 				</div>
            
-
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
 						<xsl:attribute name="placeholder">
@@ -260,7 +253,7 @@
 	<script type="text/javascript">
             
 		var script = document.createElement("script"); 
-		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/aalesund/search.js";
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
 		document.head.appendChild(script);			
 	</script>
   
