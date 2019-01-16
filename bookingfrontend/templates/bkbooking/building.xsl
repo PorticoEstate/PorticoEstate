@@ -162,7 +162,7 @@
 
 				createTable('resources_container', resourcesURL, colDefsResources, rResources, 'pure-table pure-table-bordered');
 				createTable('documents_container', documentURL, colDefsDocument, '', 'pure-table pure-table-bordered');
-				createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
+				createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'pure-table pure-table-bordered', paginatorTableBuilding_users);
 
 				$(window).on('load', function(){
 				// Load image
