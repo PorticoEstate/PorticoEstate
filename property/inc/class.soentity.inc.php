@@ -246,6 +246,8 @@
 			$location_code = isset($data['location_code']) ? $data['location_code'] : '';
 			$query = isset($data['query']) ? $data['query'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$parent_location_id = !empty($data['parent_location_id']) ? (int)$data['parent_location_id'] : 0;
+			$parent_id = !empty($data['parent_id']) ? (int)$data['parent_id'] : 0;
 
 			if (!$location_id)
 			{
@@ -326,6 +328,12 @@
 				$querymethod = " $where (" . implode(' AND ', $_querymethod) . ')';
 				unset($_querymethod);
 			}
+
+			if($parent_location_id && $parent_id)
+			{
+				$querymethod .= " $where p_location_id = {$parent_location_id} AND p_id = $parent_id";
+			}
+
 			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, json_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
 			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
