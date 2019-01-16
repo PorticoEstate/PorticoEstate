@@ -331,7 +331,7 @@
 
 			if($parent_location_id && $parent_id)
 			{
-				$querymethod .= " $where p_location_id = {$parent_location_id} AND p_id = $parent_id";
+				$querymethod .= " {$where} p_location_id = {$parent_location_id} AND p_id = {$parent_id}";
 			}
 
 			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, json_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
