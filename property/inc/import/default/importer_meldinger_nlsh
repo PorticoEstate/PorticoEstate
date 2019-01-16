@@ -7,7 +7,7 @@
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
-		public $fields = array('location_code','cat_id','priority','title','details','Tildelt_gruppe','Tildelt_person');
+		public $fields = array('location_code','cat_id','priority','title','details','Tildelt_gruppe(id)','Tildelt_person(brukernavn)');
 		public $filename_template;
 
 		public function __construct( $location_id, $debug = false)
@@ -37,7 +37,7 @@
 			$message_title  = phpgw::clean_value($data[3]);
 			$message_details  = phpgw::clean_value($data[4]);
 			$group_id  = (int)$data[5];
-			$assignedto = (int)$data[6];
+			$assignedto = (int)$GLOBALS['phpgw']->accounts->name2id($data[6]);
 
 			$ticket = array
 			(
