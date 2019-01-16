@@ -55,9 +55,10 @@
 			</div>
 
 			<div class="col-md-6 order-md-4 col-lg-3 order-lg-4">
-
-				<!-- <h6 class="font-weight-bold">{SIGNINN}</h6>  -->     
-				<a   target="_blank" rel="noopener noreferrer"    href="{login_url}">{executiveofficer}</a>   
+ 
+				<span><a  href="{login_url}">{login_text}</a></span>  
+				<span><a   target="_blank" rel="noopener noreferrer"    href="{executiveofficer_url}">{executiveofficer}</a></span>  
+				
 
 			</div>
 

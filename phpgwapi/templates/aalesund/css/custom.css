@@ -22,7 +22,7 @@ body {
     margin: 0;
 /*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
     
-    font-family: FuturaStd-Light,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+    font-family: Open Sans,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
   
     font-size: 16px;
     
@@ -40,8 +40,8 @@ body {
 /*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
 /*     font-family: FuturaStd-Light  !important;*/
      
-     font-family: FuturaStd-Light,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
-     font-size: 18px;
+     font-family: Open Sans,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+     font-size: 16px;
 }
 
 a:active {
@@ -150,6 +150,11 @@ a {
                       position: absolute;               
 }
 
+@media (max-width: 992px){
+	#frontpagetitle{
+		width: 80%;
+	}
+}
 
 @media (max-width: 768px) { 
     #frontpagetitle {
@@ -234,6 +239,10 @@ a {
     margin-top: 24px  !important;
 }
 
+/* IE 10+ */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   .brand-site-title { margin-top: -18px  !important; }
+}
 
 @media (max-width: 767px) {
     .brand-site-title {
@@ -421,7 +430,7 @@ outline:none;
     border: 1px solid #26348B !important;
     margin-left: 100% !important;
    height: 45px;
-   margin-top: -30% !important;
+   margin-top: -29% !important;
    outline:none;
 }
 
@@ -848,13 +857,14 @@ SEARCH PAGE STYLE
 }
 
 .searchBtn {
-border: 2px solid #89266a !important;
-background-color: #89266a !important;
+border: 2px solid #26348B !important;
+background-color: white !important;
+transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .searchBtn:hover {
-border: 2px solid #ce4ba4 !important;
-background-color: #ce4ba4 !important;
+background-color: #89266a !important;
+color: white !important;
 }
 
 .building-card-header .btn-link{
@@ -1041,6 +1051,12 @@ custom-card-link-href:hover {
     display: none;
 }
 
+.custom-card-org{
+	background-color: #fff;
+	color: #000;
+	width: 100%;
+	
+}
 
 #welcomeResult .custom-card .desc span {
     font-size: 12px;
@@ -1794,12 +1810,6 @@ NEW APPLICATION PAGE STYLE
   height: 350px !important;
   border-radius: 0;
   margin-bottom: 0;
-  
-  
-/*
-	border-top: 10px solid red !important;
-        border-bottom: 10px solid red;*/
-	
 }
 
 @media screen and (max-width: 560px) {
@@ -1827,7 +1837,6 @@ NEW APPLICATION PAGE STYLE
 
 .header-text a{
     color: white;
-    font-family: Raleway;
 }
 
 .header-text a:hover{
@@ -1852,6 +1861,10 @@ footer .container {
 	text-decoration: none !important;
 }
 
-.searchBtn .fa-search{
-	color: white !important;
+.modal-dialog{
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	margin: 0;
 }

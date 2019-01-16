@@ -17,8 +17,9 @@ $(document).ready(function ()
 
 	if(parent_cat_id == 301) //LRS-EDD telefoni
 	{
-		alert(parent_cat_id);
 		$("#arbeidssted_name").removeAttr("data-validation");
+		$("#arbeidssted_name").hide();
+		$("#label_arbeidssted").hide();
 	}
 
 });
@@ -43,7 +44,16 @@ function show_ressursnr()
 			$("#label_ressursnr_navn").show();
 			$("#id_ressursnr_navn").show();
 			break;
+		case '306': //xAltinn
+			$("#arbeidssted_name").removeAttr("data-validation");
+			$("#arbeidssted_name").hide();
+			$("#label_arbeidssted").hide();
+			break;
 		default:
+			$("#arbeidssted_name").removeAttr("data-validation-optional");
+			$("#arbeidssted_name").attr("data-validation", "required");
+			$("#arbeidssted_name").show();
+			$("#label_arbeidssted").show();
 	}
 }
 

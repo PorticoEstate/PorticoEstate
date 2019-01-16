@@ -115,6 +115,9 @@ $GLOBALS['phpgw']->template->set_var('SIGNINN', $SIGNINN);
 $executiveofficer = 'Logg inn for saksbehandler';
 $GLOBALS['phpgw']->template->set_var('executiveofficer', $executiveofficer);
 
+$executiveofficer_url = $webserver_url . "/";
+$GLOBALS['phpgw']->template->set_var('executiveofficer_url', $executiveofficer_url);
+
 $stringmunicipality = '  kommune';
 
 //                             $municipality =     $site_title   .   $stringmunicipality;      

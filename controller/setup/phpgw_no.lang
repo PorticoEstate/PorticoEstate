@@ -435,3 +435,9 @@ bulk update assigned	controller	no	Masseoppdatering av tildeling
 deadline	controller	no	Frist
 planned	controller	no	Planlagt
 serie	controller	no	Serie
+picture	controller	no	Bilde
+saved	controller	no	Lagret
+new picture	controller	no	Nytt bilde
+equipment	controller	no	Utstyr
+file not found	controller	no	Fil ikke funnet
+error	controller	no	Feil

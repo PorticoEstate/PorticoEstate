@@ -99,6 +99,70 @@ $(document).ready(function ()
 		});
 	});
 
+	remove_form = function()
+	{
+		$("#form_new_component_2").html('');
+	};
+
+	submitNewComponent = function(e, form)
+	{
+		e.preventDefault();
+		var requestUrl = $(form).attr("action");
+
+		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
+        for(var i = 0, len = inputs.length; i < len; i++)
+		{
+            input = inputs[i];
+
+			if($(input).attr("data-validation")=="required")
+			{
+				if(!input.value)
+				{
+					$(input).addClass('error');
+					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
+					$(input).focus();
+					flag = false;
+				}
+				else
+				{
+					$(input).removeClass('error');
+					$(input).removeAttr("style");
+					$(input).addClass('valid');
+				}
+			}
+		}
+
+		if(!flag)
+		{
+			return false;
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(form).serialize(),
+			success: function (data)
+			{
+				if (data.status == "saved")
+				{
+					$("#choose-child-on-component").empty();
+
+					var component_children = data.component_children;
+
+					$.each(component_children, function (i, val) {
+						   $('#choose-child-on-component').append($('<option>', {
+							   value: val.location_id + '_' + val.id,
+							   text : val.short_description
+						   }));
+					   });
+				}
+
+				$("#form_new_component_2").html(data.message);
+			}
+		});
+
+		return false;
+	};
 
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
@@ -107,7 +171,6 @@ $(document).ready(function ()
 
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");
-//		alert(requestUrl);
 		$.ajax({
 			type: 'POST',
 			url: requestUrl,
