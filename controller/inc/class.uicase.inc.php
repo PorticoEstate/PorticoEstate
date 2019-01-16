@@ -465,6 +465,8 @@
 					$_component_children = $property_soentity->get_eav_list(array
 					(
 						'location_id' => $location_children_info['location_id'],
+						'parent_location_id' => $location_id,
+						'parent_id' => $component_id,
 						'allrows'	=> true
 					));
 
