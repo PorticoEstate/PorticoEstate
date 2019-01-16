@@ -18,7 +18,9 @@
 			<button id = "submit_new_component" type="submit" class="pure-button pure-button-primary">
 				<xsl:value-of select="php:function('lang', 'save')" />
 			</button>
-
+			<button id = "submit_new_component" type="button" class="pure-button pure-button-primary" onclick="remove_form();">
+				<xsl:value-of select="php:function('lang', 'cancel')" />
+			</button>
 		</fieldset>
 	</form>
 

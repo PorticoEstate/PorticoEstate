@@ -99,15 +99,48 @@ $(document).ready(function ()
 		});
 	});
 
+	remove_form = function()
+	{
+		$("#form_new_component_2").html('');
+	};
+
 	submitNewComponent = function(e, form)
 	{
 		e.preventDefault();
-		var thisForm = form;
-		var requestUrl = $(thisForm).attr("action");
+		var requestUrl = $(form).attr("action");
+
+		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
+        for(var i = 0, len = inputs.length; i < len; i++)
+		{
+            input = inputs[i];
+
+			if($(input).attr("data-validation")=="required")
+			{
+				if(!input.value)
+				{
+					$(input).addClass('error');
+					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
+					$(input).focus();
+					flag = false;
+				}
+				else
+				{
+					$(input).removeClass('error');
+					$(input).removeAttr("style");
+					$(input).addClass('valid');
+				}
+			}
+		}
+
+		if(!flag)
+		{
+			return false;
+		}
+
 		$.ajax({
 			type: 'POST',
 			url: requestUrl,
-			data: $(thisForm).serialize(),
+			data: $(form).serialize(),
 			success: function (data)
 			{
 				if (data.status == "saved")
