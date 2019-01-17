@@ -22,9 +22,11 @@
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 						<xsl:attribute name="value">
-							<xsl:value-of select="location_id"/>
-							<xsl:text>_</xsl:text>
-							<xsl:value-of select="id"/>
+							<xsl:if test="id &gt; 0">
+								<xsl:value-of select="location_id"/>
+								<xsl:text>_</xsl:text>
+								<xsl:value-of select="id"/>
+							</xsl:if>
 						</xsl:attribute>
 						<xsl:value-of select="short_description" />
 					</option>

@@ -11,7 +11,10 @@
 
 	<form class="pure-form pure-form-aligned" action="{action}" onsubmit="return submitNewComponent(event, this);">
 		<fieldset>
-			<xsl:apply-templates select="custom_attributes/attributes"/>
+			<!--<xsl:apply-templates select="custom_attributes/attributes"/>-->
+			<!--<xsl:call-template name="attributes_values"/>-->
+			<xsl:apply-templates select="attributes_general/attributes"/>
+
 			<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
 			<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
 			<input type="hidden" name="location_id" value="{location_id}" />

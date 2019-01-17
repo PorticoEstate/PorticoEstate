@@ -8,7 +8,8 @@ $(document).ready(function ()
 
 		if ($(this).val())
 		{
-			show_picture_component();
+			show_component_information($(this).val());
+			show_component_picture();
 			$("#new_picture").show();
 		}
 		else
@@ -19,7 +20,7 @@ $(document).ready(function ()
 		}
 	});
 
-	show_picture_component = function ()
+	show_component_picture = function ()
 	{
 		var component = $("#choose-child-on-component").val();
 		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
@@ -87,7 +88,7 @@ $(document).ready(function ()
 					{
 						$("#submit_update_component").hide();
 						$("#component_picture_file").val('');
-						show_picture_component();
+						show_component_picture();
 
 					}
 					else
@@ -163,6 +164,33 @@ $(document).ready(function ()
 
 		return false;
 	};
+
+
+	// REGISTER NEW CHILD COMPONENT
+	show_component_information = function (component)
+	{
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.add_new_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			get_info:1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+	};
+
 
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
