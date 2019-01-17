@@ -500,14 +500,16 @@
 	</xsl:variable>
 	<div class="pure-custom">
 		<xsl:for-each select="choice">
-			<xsl:choose>
-				<xsl:when test="checked='checked'">
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}" checked="checked"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}">
+				<xsl:attribute name="disabled">
+					<xsl:text>disabled</xsl:text>
+				</xsl:attribute>
+				<xsl:if test="checked='checked'">
+					<xsl:attribute name="checked">
+						<xsl:text> checked</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
+			</input>
 			<xsl:value-of select="value"/>
 			<br></br>
 		</xsl:for-each>

@@ -122,44 +122,68 @@
 			}
 
 			$get_form = phpgw::get_var('get_form', 'bool');
+			$get_edit_form = phpgw::get_var('get_edit_form', 'bool');
+			$get_info = phpgw::get_var('get_info', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
+			$component_id = phpgw::get_var('component_id', 'int');
 
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$entity_id		= 	$system_location_arr[2];
+			$cat_id			= 	$system_location_arr[3];
 
 			$values = array();
 			$custom = createObject('property.custom_fields');
 			$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 
 
-			if($get_form)
+			if($get_form || $get_edit_form || $get_info)
 			{
+				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
+
+				if($component_id)
+				{
+					$values = $soentity->read_single(array('location_id' => $location_id, 'id' => $component_id), $values);
+				}
+
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 				$data = array(
 					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child', 'phpgw_return_as'=>'json')),
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
-					'custom_attributes' => array('attributes' => $values['attributes']),
+					'component_id'=> $component_id,
+					'attributes_general' => array('attributes' => $values['attributes']),
+					'get_form'	=> $get_form,
+					'get_info'	=> $get_info,
+					'get_edit_form' => $get_edit_form
 					);
 
-				$this->create_html = CreateObject('phpgwapi.xslttemplates');
+				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+				$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
+				if($get_form || $get_edit_form)
+				{
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+				}
+				else
+				{
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_view'));
+				}
 
-				$this->create_html->set_var('phpgw', array('new_component' => $data));
+				$xslttemplates->set_var('phpgw', array('new_component' => $data));
 
 
-				$this->create_html->set_output('html');
-				$this->create_html->xsl_parse();
-				$this->create_html->xml_parse();
+				$xslttemplates->set_output('html');
+				$xslttemplates->xsl_parse();
+				$xslttemplates->xml_parse();
 
 				$xml = new DOMDocument;
-				$xml->loadXML($this->create_html->xmldata);
+				$xml->loadXML($xslttemplates->xmldata);
 				$xsl = new DOMDocument;
-				$xsl->loadXML($this->create_html->xsldata);
+				$xsl->loadXML($xslttemplates->xsldata);
 
 				// Configure the transformer
 				$proc = new XSLTProcessor;
@@ -176,11 +200,10 @@
 
 			if($_POST && $parent_location_id && $parent_component_id)
 			{
+				$values = array();
+
 				$parent_system_location = $GLOBALS['phpgw']->locations->get_name($parent_location_id);
 
-				$system_location_arr = explode('.', $system_location['location']);
-				$entity_id		= 	$system_location_arr[2];
-				$cat_id			= 	$system_location_arr[3];
 				$parent_system_location_arr = explode('.', $parent_system_location['location']);
 				$p_entity_id	= 	$parent_system_location_arr[2];
 				$p_cat_id		= 	$parent_system_location_arr[3];
@@ -188,32 +211,27 @@
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
 				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
 
+				$values['extra']['p_entity_id'] = $p_entity_id;
+				$values['extra']['p_cat_id'] = $p_cat_id;
+				$values['extra']['p_num'] = $parent_component_id;
 
-				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
-				$values['p'][$p_entity_id]['p_num'] = $parent_component_id;
-
-				$location_code_arr = explode('-', $parent_item['location_code']);
 				$values['location_code'] = $parent_item['location_code'];
 				
 				$location_data = createObject('property.solocation')->get_location_data($parent_item['location_code']);
 
 				$values = array_merge($values, $location_data);
 
-//				$values['loc1'] = $location_code_arr[0];
-
-//				$bolocation = createObject('property.bolocation');
-
-//				$values['location_data'] = $bolocation->read_single($parent_item['location_code'], array('view' => true));
-
-
-//				$values['location_name'] = createObject('property.solocation')->get_location_address($parent_item['location_code']);
-
 				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
-				$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
-//				$dump = '<pre>' . print_r($receipt, true) . '</pre>';
-//				return $dump;
+				if($component_id)
+				{
+					$values['id'] = $component_id;
+					$receipt = $soentity->edit($values, $values_attribute, $entity_id, $cat_id);
+				}
+				else
+				{
+					$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
+				}
 
 				if($receipt['id'])
 				{
@@ -227,12 +245,14 @@
 					}
 					foreach ($location_children as $key => &$location_children_info)
 					{
-						$location_children_info['parent_location_id'] = $location_id;
-						$location_children_info['parent_component_id'] = $component_id;
+						$location_children_info['parent_location_id'] = $parent_location_id;
+						$location_children_info['parent_component_id'] = $parent_component_id;
 
 						$_component_children = $soentity->get_eav_list(array
 						(
 							'location_id' => $location_children_info['location_id'],
+							'parent_location_id' => $parent_location_id,
+							'parent_id' => $parent_component_id,
 							'allrows'	=> true
 						));
 
