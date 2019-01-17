@@ -16,6 +16,7 @@ $(document).ready(function ()
 		{
 			$('#equipment_picture_container').html('');
 			$("#new_picture").hide();
+			$("#form_new_component_2").html('');
 
 		}
 	});
@@ -175,6 +176,43 @@ $(document).ready(function ()
 			location_id: component_arr[0],
 			component_id: component_arr[1],
 			get_info:1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+	};
+
+	get_edit_form = function ()
+	{
+		var component = $("#choose-child-on-component").val();
+		
+		if(!component)
+		{
+			alert('komponent ikke valgt');
+			return false;
+		}
+
+		var parent_location_id = $('input[name=parent_location_id]')[0];
+		var parent_component_id = $('input[name=parent_component_id]')[0];
+
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.add_new_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			parent_location_id:$(parent_location_id).val(),
+			parent_component_id:$(parent_component_id).val(),
+			get_edit_form:1
 		};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 

@@ -122,6 +122,7 @@
 			}
 
 			$get_form = phpgw::get_var('get_form', 'bool');
+			$get_edit_form = phpgw::get_var('get_edit_form', 'bool');
 			$get_info = phpgw::get_var('get_info', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
@@ -138,7 +139,7 @@
 			$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 
 
-			if($get_form || $get_info)
+			if($get_form || $get_edit_form || $get_info)
 			{
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
 
@@ -153,16 +154,17 @@
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
-			//		'attributes_group' => array('attributes' => $values['attributes']),
+					'component_id'=> $component_id,
 					'attributes_general' => array('attributes' => $values['attributes']),
-
-					'get_info'	=> $get_info
+					'get_form'	=> $get_form,
+					'get_info'	=> $get_info,
+					'get_edit_form' => $get_edit_form
 					);
 
 				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 
 				$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
-				if($get_form)
+				if($get_form || $get_edit_form)
 				{
 					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
 				}
@@ -221,7 +223,15 @@
 
 				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
-				$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
+				if($component_id)
+				{
+					$values['id'] = $component_id;
+					$receipt = $soentity->edit($values, $values_attribute, $entity_id, $cat_id);
+				}
+				else
+				{
+					$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
+				}
 
 				if($receipt['id'])
 				{
