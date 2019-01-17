@@ -181,7 +181,7 @@
 			var $voucher_id;
 			var $batch_id;
 
-			public function __construct( $param, $transfer_action )
+			public function __construct( $param )
 			{
 				parent::__construct($param);
 			}
