@@ -1219,3 +1219,25 @@
 		}
 	}
 
+	$test[] = '0.1.56';
+	function controller_upgrade0_1_56()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','proposed_counter_measure',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('controller_check_item_case','measurement',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.57';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+

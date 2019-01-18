@@ -709,7 +709,7 @@
 			$case_location_code = phpgw::get_var('location_code');
 			$case_data = $this->_get_case_data();
 
-			return json_encode(array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']));
+			return array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']);
 		}
 
 		function save_case_ajax()
@@ -722,6 +722,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
+			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$type = phpgw::get_var('type');
 			$status = phpgw::get_var('status');
 			$location_code = phpgw::get_var('location_code');
@@ -772,6 +773,7 @@
 			$case = new controller_check_item_case();
 			$case->set_check_item_id($check_item->get_id());
 			$case->set_descr($case_descr);
+			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date_ts);
 			$case->set_modified_date($todays_date_ts);
@@ -824,6 +826,7 @@
 
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
+			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$case_status = phpgw::get_var('case_status');
 			$measurement = phpgw::get_var('measurement');
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -835,6 +838,7 @@
 
 			$case = $this->so->get_single($case_id);
 			$case->set_descr($case_descr);
+			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
 			$case->set_measurement($measurement);
 			$case->set_status($case_status);
@@ -1098,7 +1102,14 @@
 					$message_details .= lang('consequence') . ': ' . $case->get_consequence() . "\n";
 				}
 
-				$message_details .= 'Hva: ' . $case->get_descr() . "\n\n";
+				$message_details .= 'Hva: ' . $case->get_descr() . "\n";
+
+				if($case->get_proposed_counter_measure())
+				{
+					$message_details .= lang('proposed counter measure') . ': ' . $case->get_proposed_counter_measure() . "\n";
+				}
+
+				$message_details .= "\n";
 				$counter++;
 			}
 

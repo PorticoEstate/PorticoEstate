@@ -163,8 +163,15 @@
 																			<xsl:text>required</xsl:text>
 																		</xsl:attribute>
 																	</xsl:if>
-
 																	<xsl:value-of select="comment"/>
+																</textarea>
+															</div>
+															<div>
+																<label class="comment">
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																</label>
+																<textarea name="proposed_counter_measure" >
+																	<xsl:value-of select="proposed_counter_measure"/>
 																</textarea>
 															</div>
 															<input type="submit" class="btn" name="save_control" value="Lagre sak" />
@@ -201,6 +208,14 @@
 																<label class="comment">Beskrivelse av sak</label>
 																<textarea name="case_descr">
 																	<xsl:value-of select="comment"/>
+																</textarea>
+															</div>
+															<div>
+																<label class="comment">
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																</label>
+																<textarea name="proposed_counter_measure" >
+																	<xsl:value-of select="proposed_counter_measure"/>
 																</textarea>
 															</div>
 															<xsl:variable name="lang_save">
@@ -245,6 +260,14 @@
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
+															<div>
+																<label class="comment">
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																</label>
+																<textarea name="proposed_counter_measure" >
+																	<xsl:value-of select="proposed_counter_measure"/>
+																</textarea>
+															</div>
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -286,6 +309,14 @@
 																<label class="comment">Beskrivelse av sak</label>
 																<textarea name="case_descr">
 																	<xsl:value-of select="comment"/>
+																</textarea>
+															</div>
+															<div>
+																<label class="comment">
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																</label>
+																<textarea name="proposed_counter_measure" >
+																	<xsl:value-of select="proposed_counter_measure"/>
 																</textarea>
 															</div>
 															<xsl:variable name="lang_save">
