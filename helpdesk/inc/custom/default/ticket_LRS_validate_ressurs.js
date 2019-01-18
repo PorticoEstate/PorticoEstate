@@ -78,7 +78,7 @@ function validate_submit()
 
 	if(!arbeidssted_id)
 	{
-		if(category_id != 306) //xAltinn
+		if($("#arbeidssted_name").attr("data-validation") == "required")  //LRS-EDD telefoni og LRS-Refusjon xAltinn
 		{
 			$("#arbeidssted_name").removeClass('valid');
 			$("#arbeidssted_name").addClass('error');
