@@ -533,6 +533,15 @@ HTML;
 
 		public function get_contact_data( $ticket )
 		{
+			if ((int)$ticket['assignedto'])
+			{
+				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['assignedto'], true);
+			}
+			else if ((int)$ticket['user_id'])
+			{
+				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['user_id'], true);
+			}
+
 			$organisation = '';
 			$contact_name = '';
 			$contact_email = '';
