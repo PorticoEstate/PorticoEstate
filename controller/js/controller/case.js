@@ -160,6 +160,8 @@ $(document).ready(function ()
 				}
 
 				$("#form_new_component_2").html(data.message);
+				$('#equipment_picture_container').html('');
+				$("#new_picture").hide();
 			}
 		});
 
@@ -301,6 +303,26 @@ $(document).ready(function ()
 
 							clear_form(thisForm);
 
+//							var selects = $(thisForm).find("select");
+//							var  select = null;
+//							for(var i = 0, len = selects.length; i < len; i++)
+//							{
+//								select = selects[i];
+//								console.log(select);
+//
+//								$.each(select, function (i, option)
+//								{
+//									if(i==0)
+//									{
+//										$(option).attr('selected', true);
+//									}
+//									else
+//									{
+//										$(option).removeAttr('selected');
+//									}
+//								});
+//							}
+
 							// Changes text on save button back to original
 							window.setTimeout(function ()
 							{
@@ -341,7 +363,9 @@ $(document).ready(function ()
 				{
 					if (data != null)
 					{
-						var obj = JSON.parse(data);
+//						var obj = JSON.parse(data);
+						//returned as json
+						var obj = data;
 
 						$.each(obj, function (i, control_group)
 						{
@@ -449,9 +473,11 @@ $(document).ready(function ()
 						$(clickRow).find(".case_info .case_consequence").empty().text(case_consequence);
 
 						// Text from forms textarea
-						var desc_text = $(thisForm).find("textarea").val();
+						var desc_text = $(thisForm).find("textarea[name='case_descr']").val();
+						var proposed_counter_measure_text = $(thisForm).find("textarea[name='proposed_counter_measure']").val();
 						// Puts new text into description tag in case_info	    				   				
 						$(clickRow).find(".case_info .case_descr").text(desc_text);
+						$(clickRow).find(".case_info .proposed_counter_measure").text(proposed_counter_measure_text);
 
 						$(clickRow).find(".case_info").show();
 						$(clickRow).find(".frm_update_case").hide();
