@@ -223,6 +223,7 @@
 															</xsl:variable>
 															<input type="submit" name="save_control" value="Lagre måling" title="{$lang_save}" />
 
+
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_3'">
 															<input name="type" type="hidden" value="control_item_type_3" />
@@ -326,7 +327,39 @@
 
 														</xsl:when>
 													</xsl:choose>
+													<input type="hidden" name="case_id" value=""></input>
+													<xsl:variable name="lang_reset_form">
+														<xsl:value-of select="php:function('lang', 'reset form')" />
+													</xsl:variable>
+													<input type="button" name="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="pure-button pure-button-primary" onclick="resetForm(form);"/>
+
 												</form>
+												<form class="pure-form pure-form-aligned add_picture_to_case" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">  <!--style="display:none">-->
+													<xsl:attribute name="action">
+														<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
+													</xsl:attribute>
+
+													<div class="pure-control-group">
+														<label>
+															<xsl:value-of select="php:function('lang', 'picture')" />
+														</label>
+														<div class="pure-custom" name="picture_container"/>
+													</div>
+													<div id="new_picture" class="pure-control-group">
+														<label>
+															<xsl:value-of select="php:function('lang', 'new picture')" />
+														</label>
+														<input type="file" id="component_picture_file" name="file" onchange="show_picture_submit();">
+															<xsl:attribute name="accept">image/*</xsl:attribute>
+															<xsl:attribute name="capture">camera</xsl:attribute>
+														</input>
+														<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
+															<xsl:value-of select="php:function('lang', 'add picture')" />
+														</button>
+
+													</div>
+												</form>
+
 											</li>
 										</xsl:for-each>
 									</ul>

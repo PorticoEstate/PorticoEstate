@@ -48,8 +48,37 @@ $(document).ready(function ()
 				}
 			}
 		});
+	};
+
+	show_case_picture = function (case_id, form)
+	{
+		var oArgs = {menuaction: 'controller.uicase.get_case_image', case_id: case_id};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					var picture_container = $(form).find("div[name='picture_container']");
 
 
+					if (data.status == "200")
+					{
+						$(picture_container).html('<img alt="Bilde" id="equipment_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$(picture_container).html(data.message);
+					}
+				}
+			}
+		});
 	};
 
 	show_picture_submit = function ()
@@ -59,7 +88,7 @@ $(document).ready(function ()
 	};
 
 
-	// REGISTER PICTURE
+	// REGISTER PICTURE TO CHILD COMPONENT
 	$("#frm_add_picture").on("submit", function (e)
 	{
 		e.preventDefault();
@@ -91,6 +120,47 @@ $(document).ready(function ()
 						$("#component_picture_file").val('');
 						show_component_picture();
 
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
+	$(".add_picture_to_case").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+
+		var case_id = $("form").prev().find("input[name='case_id']").val();
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl + '&case_id=' + case_id,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component").hide();
+						$("#component_picture_file").val('');
+						show_case_picture(case_id, thisForm);
 					}
 					else
 					{
@@ -197,7 +267,7 @@ $(document).ready(function ()
 	get_edit_form = function ()
 	{
 		var component = $("#choose-child-on-component").val();
-		
+
 		if(!component)
 		{
 			alert('komponent ikke valgt');
@@ -254,12 +324,23 @@ $(document).ready(function ()
 
 	});
 
+	resetForm = function(form)
+	{
+		clear_form(form);
+	};
+
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
 	{
 		e.preventDefault();
 
 		var thisForm = $(this);
+
+		//		Test...
+//		var add_picture_to_case_form = thisForm.next().next();
+//		add_picture_to_case_form.hide();
+//		console.log(add_picture_to_case_form);
+
 		var submitBnt = $(thisForm).find("input[type='submit']");
 		var type = $(thisForm).find("input[name='type']").val();
 		var requestUrl = $(thisForm).attr("action");
@@ -288,8 +369,8 @@ $(document).ready(function ()
 		{
 			$.ajax({
 				type: 'POST',
-				url: requestUrl + "&" + $(thisForm).serialize(),
-				data: {component_child: component_child},
+				url: requestUrl + "&component_child=" + component_child,
+				data: $(thisForm).serialize(),
 				success: function (data)
 				{
 					if (data)
@@ -301,7 +382,7 @@ $(document).ready(function ()
 							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
-							clear_form(thisForm);
+//							clear_form(thisForm);
 
 //							var selects = $(thisForm).find("select");
 //							var  select = null;
@@ -323,6 +404,8 @@ $(document).ready(function ()
 //								});
 //							}
 
+
+							 $(thisForm).find("input[name='case_id']").val(jsonObj.case_id);
 							// Changes text on save button back to original
 							window.setTimeout(function ()
 							{
@@ -340,7 +423,7 @@ $(document).ready(function ()
 
 							/*
 							 $(thisForm).delay(1500).slideUp(500, function(){
-							 $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");  
+							 $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");
 							 });
 							 */
 
@@ -475,7 +558,7 @@ $(document).ready(function ()
 						// Text from forms textarea
 						var desc_text = $(thisForm).find("textarea[name='case_descr']").val();
 						var proposed_counter_measure_text = $(thisForm).find("textarea[name='proposed_counter_measure']").val();
-						// Puts new text into description tag in case_info	    				   				
+						// Puts new text into description tag in case_info
 						$(clickRow).find(".case_info .case_descr").text(desc_text);
 						$(clickRow).find(".case_info .proposed_counter_measure").text(proposed_counter_measure_text);
 
@@ -539,7 +622,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -589,7 +672,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -639,7 +722,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -681,7 +764,7 @@ $(document).ready(function ()
 	/*
 	 $("#choose-building-on-property.view-cases").change(function () {
 	 var location_code = $(this).val();
-	 
+
 	 var reloadPageUrl = location.pathname + location.search + "&location_code=" + location_code;
 	 alert(reloadPageUrl);
 	 location.href = reloadPageUrl;
