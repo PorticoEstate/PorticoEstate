@@ -60,6 +60,7 @@ function show_ressursnr()
 function validate_submit()
 {
 	var error = false;
+	var arbeidssted_id = $("#arbeidssted_id").val();
 	var ressursnr_id = $("#id_ressursnr").val();
 	var category_id = $("#global_category_id").val();
 
@@ -69,16 +70,27 @@ function validate_submit()
 			if (!ressursnr_id)
 			{
 				error = true;
+				alert('Ressursnr må angis');
 			}
 			break;
 		default:
 	}
 
-	if (error)
+	if(!arbeidssted_id)
 	{
-		alert('Ressursnr må angis');
+		if(category_id != 306) //xAltinn
+		{
+			$("#arbeidssted_name").removeClass('valid');
+			$("#arbeidssted_name").addClass('error');
+			$("#arbeidssted_name").attr("style", 'border-color: rgb(185, 74, 72);');
+			$("#arbeidssted_name").focus();
+
+			error = true;
+			alert('arbeidssted må angis (velg fra liste)');
+		}
 	}
-	else
+
+	if (!error)
 	{
 		document.form.submit();
 	}
