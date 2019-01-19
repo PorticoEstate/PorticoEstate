@@ -964,8 +964,12 @@ HTML;
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id,
 						'phpgw_return_as' => 'json')),
-					'download' => self::link(array('menuaction' => 'helpdesk.uitts.download',
-						'export' => true, 'allrows' => true)),
+					'download' => self::link(array(
+						'menuaction' => 'helpdesk.uitts.download',
+						'parent_cat_id' => $this->parent_cat_id,
+						'export' => true,
+						'allrows' => true
+						)),
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
