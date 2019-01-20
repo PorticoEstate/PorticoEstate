@@ -218,7 +218,7 @@
 				$values['extra']['p_num'] = $parent_component_id;
 
 				$values['location_code'] = $parent_item['location_code'];
-				
+
 				$location_data = createObject('property.solocation')->get_location_data($parent_item['location_code']);
 
 				$values = array_merge($values, $location_data);
@@ -278,9 +278,77 @@
 			}
 
 			return lang('error');
-		
+
 		}
 
+		function resize_image( $source, $dest, $target_height = 800 )
+		{
+			$size = getimagesize($source);
+			$width = $size[0];
+			$height = $size[1];
+
+
+			$target_width = round($width * ($target_height / $height));
+
+			$x = 0;
+			$y = 0;
+
+//			if ($width > $height)
+//			{
+//				$x = ceil(($width - $height) / 2);
+//				$width = $height;
+//			}
+//			else if ($height > $width)
+//			{
+//				$y = ceil(($height - $width) / 2);
+//				$height = $width;
+//			}
+
+			$new_im = ImageCreatetruecolor($target_width, $target_height);
+
+			@$imgInfo = getimagesize($source);
+
+			if ($imgInfo[2] == IMAGETYPE_JPEG)
+			{
+				$im = imagecreatefromjpeg($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagejpeg($new_im, $dest, 95); // Thumbnail quality (Value from 1 to 100)
+			}
+			else if ($imgInfo[2] == IMAGETYPE_GIF)
+			{
+				$im = imagecreatefromgif($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagegif($new_im, $dest);
+			}
+			else if ($imgInfo[2] == IMAGETYPE_PNG)
+			{
+				$im = imagecreatefrompng($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagepng($new_im, $dest);
+			}
+		}
+
+		function is_image( $fileName )
+		{
+			// Verifies that a file is an image
+			if ($fileName !== '.' && $fileName !== '..')
+			{
+				@$imgInfo = getimagesize($fileName);
+
+				$imgType = array
+					(
+					IMAGETYPE_JPEG,
+					IMAGETYPE_GIF,
+					IMAGETYPE_PNG,
+				);
+
+				if (in_array($imgInfo[2], $imgType))
+				{
+					return true;
+				}
+				return false;
+			}
+		}
 
 		function add_case_image()
 		{
@@ -293,6 +361,12 @@
 
 			if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
 			{
+
+				if ($this->is_image($_FILES['file']['tmp_name']))
+				{
+					$this->resize_image($_FILES['file']['tmp_name'], $_FILES['file']['tmp_name'], $thumb_size = 800);
+				}
+
 				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
 				$bofiles = CreateObject('property.bofiles', '/controller/case');
@@ -439,7 +513,8 @@
 				{
 					return array(
 						'status' => '200',
-						'message' => lang('file found')
+						'message' => lang('file found'),
+						'file_id' => $file['file_id']
 						);
 					}
 				else
