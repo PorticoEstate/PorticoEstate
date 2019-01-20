@@ -77,7 +77,9 @@
 			'view_closed_cases' => true,
 			'get_case_data_ajax' => true,
 			'get_image'			=> true,
+			'get_case_image'	=> true,
 			'add_component_image'=> true,
+			'add_case_image'	=> true,
 			'add_new_component_child' => true
 		);
 
@@ -280,6 +282,60 @@
 		}
 
 
+		function add_case_image()
+		{
+			if(!$this->edit )
+			{
+				phpgw::no_access();
+			}
+
+			$case_id = phpgw::get_var('case_id', 'int');
+
+			if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
+			{
+				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+
+				$bofiles = CreateObject('property.bofiles', '/controller/case');
+				$to_file = "{$bofiles->fakebase}/{$case_id}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array
+						(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					return array(
+						'status' => 'error',
+						'message' => lang('This file already exists !')
+						);
+				}
+				else
+				{
+					$from_file = $_FILES['file']['tmp_name'];
+					$bofiles->create_document_dir("$case_id");
+					$bofiles->vfs->override_acl = 1;
+
+					if ($bofiles->vfs->cp(array(
+							'from' => $from_file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$bofiles->vfs->override_acl = 0;
+						return array(
+							'status' => 'saved',
+							'message' => lang('saved')
+							);
+					}
+				}
+
+				return array(
+					'status' => 'error',
+					'message' => lang('Failed to upload file !')
+					);
+
+			}
+		}
+
 		function add_component_image()
 		{
 			if(!$this->edit )
@@ -352,6 +408,54 @@
 					);
 
 			}
+		}
+
+		function get_case_image()
+		{
+			if(!$this->read )
+			{
+				phpgw::no_access();
+			}
+
+			$dry_run = phpgw::get_var('dry_run', 'bool');
+			$case_id = phpgw::get_var('case_id', 'int');
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'orderby' => 'file_id',
+	//			'mime_type'	=> 'image/jpeg',
+				'string' => "/controller/case/{$case_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$file = end($files);
+
+			if($dry_run)
+			{
+				if(!empty($file['file_id']))
+				{
+					return array(
+						'status' => '200',
+						'message' => lang('file found')
+						);
+					}
+				else
+				{
+					return array(
+						'status' => '404',
+						'message' => lang('file not found')
+						);
+				}
+			}
+
+			if(!empty($file['file_id']))
+			{
+				ExecMethod('property.bofiles.get_file', $file['file_id']);
+			}
+
 		}
 
 		function get_image()
@@ -809,7 +913,11 @@
 
 			if ($case_id > 0)
 			{
-				return json_encode(array("status" => "saved"));
+				return json_encode(array
+					(
+					"status" => "saved",
+					'case_id' => $case_id
+					));
 			}
 			else
 			{

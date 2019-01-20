@@ -187,6 +187,17 @@
 			{
 				$this->lang_app_name = lang('helpdesk');
 			}
+
+			if($this->parent_cat_id)
+			{
+				$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
+
+				if(!empty($parent_category[0]['name']))
+				{
+					$this->lang_app_name .= ": {$parent_category[0]['name']}";
+				}
+			}
+
 		}
 
 		/**
@@ -928,12 +939,6 @@ HTML;
 
 			$appname = $this->lang_app_name;
 
-			if($this->parent_cat_id)
-			{
-				$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
-				$appname = !empty($parent_category[0]['name']) ? $parent_category[0]['name'] : $this->lang_app_name;
-			}
-
 			$function_msg = lang('list ticket');
 
 			$data = array(
@@ -964,8 +969,12 @@ HTML;
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id,
 						'phpgw_return_as' => 'json')),
-					'download' => self::link(array('menuaction' => 'helpdesk.uitts.download',
-						'export' => true, 'allrows' => true)),
+					'download' => self::link(array(
+						'menuaction' => 'helpdesk.uitts.download',
+						'parent_cat_id' => $this->parent_cat_id,
+						'export' => true,
+						'allrows' => true
+						)),
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
@@ -1800,6 +1809,14 @@ JS;
 
 			if (isset($values['save']))
 			{
+				$change_category = explode('_', phpgw::get_var('change_category', 'string', 'POST'));
+
+				if(!empty($change_category[1]))
+				{
+					$this->parent_cat_id = $change_category[0];
+					$values['cat_id'] = (int)$change_category[1];
+				}
+
 				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 				$notified = createObject('property.notify')->read(array('location_id' => $location_id, 'location_item_id' => $id));
@@ -1938,6 +1955,10 @@ JS;
 					$sms->websend2pv($this->account, $to_sms_phone, $values['response_text']);
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
+
+				self::redirect(array('menuaction' => 'helpdesk.uitts.view','id' => $id,
+					'parent_cat_id' => $this->parent_cat_id ));
+
 			}
 
 			/* Preserve attribute values from post */
@@ -2249,7 +2270,7 @@ JS;
 					}
 				}
 			}
-
+			unset($_cat);
 
 			$_ticket_cat_found = false;
 			if (isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))
@@ -2281,6 +2302,51 @@ JS;
 //_debug_array($cat_select);die();
 			}
 
+
+			/**
+			 * change parent category
+			 */
+
+			$_cats = $this->cats->return_sorted_array(0, false);
+			$cat_change_list = array();
+			foreach ($_cats as $_cat)
+			{
+				if ($_cat['active'] != 2)
+				{
+					if($_cat['level'] == 0)
+					{
+						$cat_opt_group_id = $_cat['id'];
+						$cat_change_list[$cat_opt_group_id] = array
+						(
+							'label' => $GLOBALS['phpgw']->strip_html($_cat['name'])
+						);
+					}
+					else if($_cat['level'] > 0)
+					{
+						$cat_name_arr = array();
+						$cat_path = $this->cats->get_path($_cat['id']);
+
+						foreach ($cat_path as $cat_path_entry)
+						{
+							if($cat_path_entry['id'] == $cat_opt_group_id)
+							{
+								continue;
+							}
+
+							$cat_name_arr[] = $cat_path_entry['name'];
+						}
+						$cat_name = implode(' -> ', $cat_name_arr);
+
+						$cat_change_list[$cat_opt_group_id]['options'][] = array
+						(
+							'id'	=> "{$_cat['parent']}_{$_cat['id']}",
+							'name'	=> $cat_name,
+							'title' => $_cat['description']
+						);
+					}
+
+				}
+			}
 
 			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$my_groups = array();
@@ -2381,6 +2447,7 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
+				'cat_change_list' => $cat_change_list
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

@@ -504,6 +504,28 @@
 								</label>
 								<xsl:call-template name="categories"/>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'change category')"/>
+								</label>
+								<select id="change category_id" name="change_category" class="pure-input-1-2" >
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'change category')"/>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'change category')"/>
+									</option>
+									<xsl:for-each select="cat_change_list">
+										<optgroup label="{label}">
+											<xsl:for-each select="options">
+												<option value="{id}" title="{title}">
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</option>
+											</xsl:for-each>
+										</optgroup>
+									</xsl:for-each>
+								</select>
+							</div>
 							<xsl:choose>
 								<xsl:when test="show_finnish_date ='1'">
 									<div class="pure-control-group">

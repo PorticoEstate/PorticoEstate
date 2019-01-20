@@ -170,7 +170,7 @@
 				$subs = false;
 				foreach ($_cats as $_cat)
 				{
-					if ($_cat['level'] == 0 && $_cat['active'] != 2)
+					if ($_cat['level'] == 0 && $_cat['active'] != 2 && $acl->check(".ticket.category.{$_cat['id']}",PHPGW_ACL_READ, 'helpdesk') )
 					{
 						$_categories[] = $_cat;
 					}
