@@ -67,14 +67,13 @@ $(document).ready(function ()
 				{
 					var picture_container = $(form).find("div[name='picture_container']");
 
-
 					if (data.status == "200")
 					{
-						$(picture_container).html('<img alt="Bilde" id="equipment_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"/>');
+						$(picture_container).append('<br><img alt="Bilde" src="' + ImageUrl +'&file_id=' + data.file_id + '" style="width:100%;max-width:300px"/>');
 					}
 					else
 					{
-						$(picture_container).html(data.message);
+						$(picture_container).append('<br>' + data.message);
 					}
 				}
 			}
@@ -135,14 +134,27 @@ $(document).ready(function ()
 		e.preventDefault();
 
 		var thisForm = $(this);
-		var requestUrl = $(thisForm).attr("action");
 
-		var case_id = $("form").prev().find("input[name='case_id']").val();
+		var oArgs = {menuaction: 'controller.uicase.add_case_image'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+//		var requestUrl = $(thisForm).attr("action");
+
+//		var case_id = $("form").prev().find("input[name='case_id']").val();
+
+		var case_id = $("#cache_case_id").val();
 
 		var formdata = false;
 		if (window.FormData)
 		{
-			formdata = new FormData(thisForm[0]);
+			try
+			{
+				formdata = new FormData(thisForm[0]);
+			}
+			catch (e)
+			{
+
+			}
 		}
 
 		$.ajax({
@@ -158,8 +170,7 @@ $(document).ready(function ()
 				{
 					if (data.status == "saved")
 					{
-						$("#submit_update_component").hide();
-						$("#component_picture_file").val('');
+						$("#case_picture_file").val('');
 						show_case_picture(case_id, thisForm);
 					}
 					else
@@ -327,6 +338,10 @@ $(document).ready(function ()
 	resetForm = function(form)
 	{
 		clear_form(form);
+		$(form).find("input[type='submit']").removeAttr('disabled');
+		$(form).find("input[type='submit']").removeClass("case_saved");
+		var picture_container = $(form).next('div').find("div[name='picture_container']");
+		picture_container.html('');
 	};
 
 	// REGISTER CASE
@@ -335,18 +350,8 @@ $(document).ready(function ()
 		e.preventDefault();
 
 		var thisForm = $(this);
-
-		//		Test...
-//		var add_picture_to_case_form = thisForm.next().next();
-//		add_picture_to_case_form.hide();
-//		console.log(add_picture_to_case_form);
-
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var type = $(thisForm).find("input[name='type']").val();
 		var requestUrl = $(thisForm).attr("action");
-
 		var location_code = $("#choose-building-on-property  option:selected").val();
-
 		var component_child = $("#choose-child-on-component  option:selected").val();
 
 		$(thisForm).find("input[name=location_code]").val(location_code);
@@ -379,8 +384,12 @@ $(document).ready(function ()
 
 						if (jsonObj.status == "saved")
 						{
+							var type = $(thisForm).find("input[name='type']").val();
 							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
+
+							var add_picture_to_case_form = thisForm.next('.add_picture_to_case');
+							$(add_picture_to_case_form).show();
 
 //							clear_form(thisForm);
 
@@ -405,7 +414,9 @@ $(document).ready(function ()
 //							}
 
 
-							 $(thisForm).find("input[name='case_id']").val(jsonObj.case_id);
+//							 $(thisForm).find("input[name='case_id']").val(jsonObj.case_id);
+							 $("#cache_case_id").val(jsonObj.case_id);
+
 							// Changes text on save button back to original
 							window.setTimeout(function ()
 							{
@@ -419,6 +430,7 @@ $(document).ready(function ()
 								}
 
 								$(submitBnt).addClass("case_saved");
+								$(submitBnt).attr("disabled", true);
 							}, 1000);
 
 							/*
