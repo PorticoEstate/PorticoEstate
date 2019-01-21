@@ -116,10 +116,11 @@
 
 		private function check_missing()
 		{
-			$data = (array)$this->get_data($voucher['voucher_id']);
+			$data = (array)$this->get_data();
+
+			$this->check_if_received($data);
 			$send = CreateObject('phpgwapi.send');
 
-			$subject = 'Manglende varemottak';
 			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
 				_debug_array($data);
@@ -146,7 +147,29 @@
 
 		}
 
-		function get_data( $voucher_id )
+		function check_if_received(&$data)
+		{
+
+			foreach ($data as &$valueset)
+			{
+				$sql = <<<SQL
+					SELECT fakturamottak.regtid
+					FROM ( SELECT  fm_ecobilagoverf.regtid
+						FROM fm_ecobilagoverf WHERE external_voucher_id = {$valueset['bilagsNr']}
+							UNION ALL
+						SELECT fm_ecobilag.regtid
+						FROM fm_ecobilag WHERE external_voucher_id = {$valueset['bilagsNr']}
+						 ) fakturamottak
+SQL;
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$regtid = $this->db->f('regtid');
+
+				$valueset['Mottatt_fra_Agresso'] = $regtid ? $regtid : 'Ikke mottatt';
+			}
+		}
+
+		function get_data()
 		{
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
 			$url = "{$this->soap_url}/manglendevaremottak";

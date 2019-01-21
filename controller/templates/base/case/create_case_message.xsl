@@ -230,6 +230,18 @@
 														<div class="case_descr">
 															<xsl:value-of select="descr"/>
 														</div>
+														<xsl:if test="proposed_counter_measure !=''">
+															<div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	<xsl:text>:</xsl:text>
+																</label>
+															</div>
+															<div class="proposed_counter_measure">
+																<xsl:value-of select="proposed_counter_measure"/>
+															</div>
+
+														</xsl:if>
 													</li>
 												</xsl:for-each>
 											</ul>

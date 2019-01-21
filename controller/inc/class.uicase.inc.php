@@ -77,7 +77,9 @@
 			'view_closed_cases' => true,
 			'get_case_data_ajax' => true,
 			'get_image'			=> true,
+			'get_case_image'	=> true,
 			'add_component_image'=> true,
+			'add_case_image'	=> true,
 			'add_new_component_child' => true
 		);
 
@@ -122,44 +124,68 @@
 			}
 
 			$get_form = phpgw::get_var('get_form', 'bool');
+			$get_edit_form = phpgw::get_var('get_edit_form', 'bool');
+			$get_info = phpgw::get_var('get_info', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
+			$component_id = phpgw::get_var('component_id', 'int');
 
 			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$entity_id		= 	$system_location_arr[2];
+			$cat_id			= 	$system_location_arr[3];
 
 			$values = array();
 			$custom = createObject('property.custom_fields');
 			$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 
 
-			if($get_form)
+			if($get_form || $get_edit_form || $get_info)
 			{
+				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
+
+				if($component_id)
+				{
+					$values = $soentity->read_single(array('location_id' => $location_id, 'id' => $component_id), $values);
+				}
+
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 				$data = array(
 					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child', 'phpgw_return_as'=>'json')),
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
-					'custom_attributes' => array('attributes' => $values['attributes']),
+					'component_id'=> $component_id,
+					'attributes_general' => array('attributes' => $values['attributes']),
+					'get_form'	=> $get_form,
+					'get_info'	=> $get_info,
+					'get_edit_form' => $get_edit_form
 					);
 
-				$this->create_html = CreateObject('phpgwapi.xslttemplates');
+				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
-				$this->create_html->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+				$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
+				if($get_form || $get_edit_form)
+				{
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+				}
+				else
+				{
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_view'));
+				}
 
-				$this->create_html->set_var('phpgw', array('new_component' => $data));
+				$xslttemplates->set_var('phpgw', array('new_component' => $data));
 
 
-				$this->create_html->set_output('html');
-				$this->create_html->xsl_parse();
-				$this->create_html->xml_parse();
+				$xslttemplates->set_output('html');
+				$xslttemplates->xsl_parse();
+				$xslttemplates->xml_parse();
 
 				$xml = new DOMDocument;
-				$xml->loadXML($this->create_html->xmldata);
+				$xml->loadXML($xslttemplates->xmldata);
 				$xsl = new DOMDocument;
-				$xsl->loadXML($this->create_html->xsldata);
+				$xsl->loadXML($xslttemplates->xsldata);
 
 				// Configure the transformer
 				$proc = new XSLTProcessor;
@@ -176,11 +202,10 @@
 
 			if($_POST && $parent_location_id && $parent_component_id)
 			{
+				$values = array();
+
 				$parent_system_location = $GLOBALS['phpgw']->locations->get_name($parent_location_id);
 
-				$system_location_arr = explode('.', $system_location['location']);
-				$entity_id		= 	$system_location_arr[2];
-				$cat_id			= 	$system_location_arr[3];
 				$parent_system_location_arr = explode('.', $parent_system_location['location']);
 				$p_entity_id	= 	$parent_system_location_arr[2];
 				$p_cat_id		= 	$parent_system_location_arr[3];
@@ -188,32 +213,27 @@
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
 				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
 
+				$values['extra']['p_entity_id'] = $p_entity_id;
+				$values['extra']['p_cat_id'] = $p_cat_id;
+				$values['extra']['p_num'] = $parent_component_id;
 
-				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
-				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
-				$values['p'][$p_entity_id]['p_num'] = $parent_component_id;
-
-				$location_code_arr = explode('-', $parent_item['location_code']);
 				$values['location_code'] = $parent_item['location_code'];
-				
+
 				$location_data = createObject('property.solocation')->get_location_data($parent_item['location_code']);
 
 				$values = array_merge($values, $location_data);
 
-//				$values['loc1'] = $location_code_arr[0];
-
-//				$bolocation = createObject('property.bolocation');
-
-//				$values['location_data'] = $bolocation->read_single($parent_item['location_code'], array('view' => true));
-
-
-//				$values['location_name'] = createObject('property.solocation')->get_location_address($parent_item['location_code']);
-
 				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
 
-				$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
-//				$dump = '<pre>' . print_r($receipt, true) . '</pre>';
-//				return $dump;
+				if($component_id)
+				{
+					$values['id'] = $component_id;
+					$receipt = $soentity->edit($values, $values_attribute, $entity_id, $cat_id);
+				}
+				else
+				{
+					$receipt = $soentity->add($values, $values_attribute, $entity_id, $cat_id);
+				}
 
 				if($receipt['id'])
 				{
@@ -227,12 +247,14 @@
 					}
 					foreach ($location_children as $key => &$location_children_info)
 					{
-						$location_children_info['parent_location_id'] = $location_id;
-						$location_children_info['parent_component_id'] = $component_id;
+						$location_children_info['parent_location_id'] = $parent_location_id;
+						$location_children_info['parent_component_id'] = $parent_component_id;
 
 						$_component_children = $soentity->get_eav_list(array
 						(
 							'location_id' => $location_children_info['location_id'],
+							'parent_location_id' => $parent_location_id,
+							'parent_id' => $parent_component_id,
 							'allrows'	=> true
 						));
 
@@ -256,9 +278,137 @@
 			}
 
 			return lang('error');
-		
+
 		}
 
+		function resize_image( $source, $dest, $target_height = 800 )
+		{
+			$size = getimagesize($source);
+			$width = $size[0];
+			$height = $size[1];
+
+
+			$target_width = round($width * ($target_height / $height));
+
+			$x = 0;
+			$y = 0;
+
+//			if ($width > $height)
+//			{
+//				$x = ceil(($width - $height) / 2);
+//				$width = $height;
+//			}
+//			else if ($height > $width)
+//			{
+//				$y = ceil(($height - $width) / 2);
+//				$height = $width;
+//			}
+
+			$new_im = ImageCreatetruecolor($target_width, $target_height);
+
+			@$imgInfo = getimagesize($source);
+
+			if ($imgInfo[2] == IMAGETYPE_JPEG)
+			{
+				$im = imagecreatefromjpeg($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagejpeg($new_im, $dest, 95); // Thumbnail quality (Value from 1 to 100)
+			}
+			else if ($imgInfo[2] == IMAGETYPE_GIF)
+			{
+				$im = imagecreatefromgif($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagegif($new_im, $dest);
+			}
+			else if ($imgInfo[2] == IMAGETYPE_PNG)
+			{
+				$im = imagecreatefrompng($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagepng($new_im, $dest);
+			}
+		}
+
+		function is_image( $fileName )
+		{
+			// Verifies that a file is an image
+			if ($fileName !== '.' && $fileName !== '..')
+			{
+				@$imgInfo = getimagesize($fileName);
+
+				$imgType = array
+					(
+					IMAGETYPE_JPEG,
+					IMAGETYPE_GIF,
+					IMAGETYPE_PNG,
+				);
+
+				if (in_array($imgInfo[2], $imgType))
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+
+		function add_case_image()
+		{
+			if(!$this->edit )
+			{
+				phpgw::no_access();
+			}
+
+			$case_id = phpgw::get_var('case_id', 'int');
+
+			if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
+			{
+
+				if ($this->is_image($_FILES['file']['tmp_name']))
+				{
+					$this->resize_image($_FILES['file']['tmp_name'], $_FILES['file']['tmp_name'], $thumb_size = 800);
+				}
+
+				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+
+				$bofiles = CreateObject('property.bofiles', '/controller/case');
+				$to_file = "{$bofiles->fakebase}/{$case_id}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array
+						(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					return array(
+						'status' => 'error',
+						'message' => lang('This file already exists !')
+						);
+				}
+				else
+				{
+					$from_file = $_FILES['file']['tmp_name'];
+					$bofiles->create_document_dir("$case_id");
+					$bofiles->vfs->override_acl = 1;
+
+					if ($bofiles->vfs->cp(array(
+							'from' => $from_file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$bofiles->vfs->override_acl = 0;
+						return array(
+							'status' => 'saved',
+							'message' => lang('saved')
+							);
+					}
+				}
+
+				return array(
+					'status' => 'error',
+					'message' => lang('Failed to upload file !')
+					);
+
+			}
+		}
 
 		function add_component_image()
 		{
@@ -332,6 +482,55 @@
 					);
 
 			}
+		}
+
+		function get_case_image()
+		{
+			if(!$this->read )
+			{
+				phpgw::no_access();
+			}
+
+			$dry_run = phpgw::get_var('dry_run', 'bool');
+			$case_id = phpgw::get_var('case_id', 'int');
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'orderby' => 'file_id',
+	//			'mime_type'	=> 'image/jpeg',
+				'string' => "/controller/case/{$case_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$file = end($files);
+
+			if($dry_run)
+			{
+				if(!empty($file['file_id']))
+				{
+					return array(
+						'status' => '200',
+						'message' => lang('file found'),
+						'file_id' => $file['file_id']
+						);
+					}
+				else
+				{
+					return array(
+						'status' => '404',
+						'message' => lang('file not found')
+						);
+				}
+			}
+
+			if(!empty($file['file_id']))
+			{
+				ExecMethod('property.bofiles.get_file', $file['file_id']);
+			}
+
 		}
 
 		function get_image()
@@ -465,6 +664,8 @@
 					$_component_children = $property_soentity->get_eav_list(array
 					(
 						'location_id' => $location_children_info['location_id'],
+						'parent_location_id' => $location_id,
+						'parent_id' => $component_id,
 						'allrows'	=> true
 					));
 
@@ -687,7 +888,7 @@
 			$case_location_code = phpgw::get_var('location_code');
 			$case_data = $this->_get_case_data();
 
-			return json_encode(array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']));
+			return array("control_groups_with_items_array" => $case_data['control_groups_with_items_array']);
 		}
 
 		function save_case_ajax()
@@ -700,6 +901,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$control_item_id = phpgw::get_var('control_item_id');
 			$case_descr = phpgw::get_var('case_descr');
+			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$type = phpgw::get_var('type');
 			$status = phpgw::get_var('status');
 			$location_code = phpgw::get_var('location_code');
@@ -750,6 +952,7 @@
 			$case = new controller_check_item_case();
 			$case->set_check_item_id($check_item->get_id());
 			$case->set_descr($case_descr);
+			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_user_id($user_id);
 			$case->set_entry_date($todays_date_ts);
 			$case->set_modified_date($todays_date_ts);
@@ -785,7 +988,11 @@
 
 			if ($case_id > 0)
 			{
-				return json_encode(array("status" => "saved"));
+				return json_encode(array
+					(
+					"status" => "saved",
+					'case_id' => $case_id
+					));
 			}
 			else
 			{
@@ -802,6 +1009,7 @@
 
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
+			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$case_status = phpgw::get_var('case_status');
 			$measurement = phpgw::get_var('measurement');
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -813,6 +1021,7 @@
 
 			$case = $this->so->get_single($case_id);
 			$case->set_descr($case_descr);
+			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
 			$case->set_measurement($measurement);
 			$case->set_status($case_status);
@@ -1076,7 +1285,14 @@
 					$message_details .= lang('consequence') . ': ' . $case->get_consequence() . "\n";
 				}
 
-				$message_details .= 'Hva: ' . $case->get_descr() . "\n\n";
+				$message_details .= 'Hva: ' . $case->get_descr() . "\n";
+
+				if($case->get_proposed_counter_measure())
+				{
+					$message_details .= lang('proposed counter measure') . ': ' . $case->get_proposed_counter_measure() . "\n";
+				}
+
+				$message_details .= "\n";
 				$counter++;
 			}
 

@@ -232,10 +232,11 @@
 				'id'							=> array('type' => 'auto', 'nullable' => false),
 				'check_item_id'					=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'status'						=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'measurement'					=> array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'measurement'					=> array('type' => 'text','nullable' => true),
 				'location_id'					=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
 				'location_item_id'				=> array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
 				'descr'							=> array('type' => 'text','nullable' => true),
+				'proposed_counter_measure'		=> array('type' => 'text','nullable' => true),
 				'user_id'						=> array('type' => 'int','precision' => '4','nullable' => true),
 				'entry_date'					=> array('type' => 'int', 'precision' => 8,'nullable' => false),
 				'modified_date'					=> array('type' => 'int', 'precision' => 8,'nullable' => True),

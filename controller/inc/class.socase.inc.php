@@ -85,6 +85,7 @@
 				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+				$case->set_proposed_counter_measure($this->unmarshal($this->db->f('proposed_counter_measure', true), 'string'));
 				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));
 				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
@@ -133,6 +134,7 @@
 				$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 				$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 				$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+				$case->set_proposed_counter_measure($this->unmarshal($this->db->f('proposed_counter_measure', true), 'string'));
 				$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));
 				$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
@@ -192,6 +194,7 @@
 					'check_list_id' => $this->db->f('check_list_id'),
 					'title' => $this->db->f('title', true),
 					'descr' => $this->db->f('descr', true),
+					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
 					'measurement' => $this->db->f('measurement', true),
 					'user_id' => $this->db->f('user_id'),
 					'status' => $this->db->f('status'),
@@ -222,6 +225,7 @@
 				'location_id',
 				'location_item_id',
 				'descr',
+				'proposed_counter_measure',
 				'user_id',
 				'entry_date',
 				'modified_date',
@@ -242,6 +246,7 @@
 				$this->marshal($case->get_location_id(), 'int'),
 				$this->marshal($case->get_location_item_id(), 'int'),
 				$this->marshal($case->get_descr(), 'string'),
+				$this->marshal($case->get_proposed_counter_measure(), 'string'),
 				$this->marshal($case->get_user_id(), 'int'),
 				$this->marshal($case->get_entry_date(), 'int'),
 				$this->marshal($case->get_modified_date(), 'int'),
@@ -352,6 +357,7 @@
 				'condition_degree = ' . $this->marshal($case->get_condition_degree(), 'int'),
 				'consequence = ' . $this->marshal($case->get_consequence(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),
+				'proposed_counter_measure = ' . $this->marshal($case->get_proposed_counter_measure(), 'string'),
 				'user_id = ' . $this->marshal($case->get_user_id(), 'int'),
 				'entry_date = ' . $this->marshal($case->get_entry_date(), 'int'),
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),

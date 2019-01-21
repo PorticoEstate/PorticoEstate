@@ -643,6 +643,10 @@
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '000000000';
 				}
+				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
+				{
+					$application['name'] = $application['description'] ;
+				}
 
 				$errors = $this->validate($application);
 				if (!$session_id_ok)
