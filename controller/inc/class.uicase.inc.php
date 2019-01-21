@@ -1120,6 +1120,8 @@
 						}
 
 						$case->set_component_descr($short_desc);
+						$case_files = $this->get_case_images($case->get_id());
+						$case->set_case_files($case_files);
 					}
 				}
 			}
@@ -1198,8 +1200,10 @@
 				'type' => $type,
 				'get_locations'	=> $get_locations,
 				'location_level' => $level,
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
-
+//			_debug_array($check_items_and_cases);die();
 			if (count($buildings_array) > 0)
 			{
 				$data['buildings_array'] = $buildings_array;
@@ -1852,6 +1856,8 @@
 
 						}
 						$case->set_component_descr($short_desc);
+						$case_files = $this->get_case_images($case->get_id());
+						$case->set_case_files($case_files);
 					}
 				}
 				//		$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
