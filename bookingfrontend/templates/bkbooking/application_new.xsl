@@ -7,6 +7,7 @@
 		<xsl:call-template name="msgbox"/>
 
 		<form action="" method="POST" id='application_form' enctype='multipart/form-data' name="form">
+			<input type="hidden" name="formstage" value="legacy"/>
 			<xsl:if test="config/application_new_application">
 				<p >
 					<xsl:value-of select="config/application_new_application"/>
@@ -22,9 +23,9 @@
 								<xsl:value-of select="php:function('lang', 'Activity')" />
 							</label>
 							<xsl:if test="config/application_activities">
-							<p>
-								<xsl:value-of select="config/application_activities"/>
-							</p>
+								<p>
+									<xsl:value-of select="config/application_activities"/>
+								</p>
 							</xsl:if>
 						</dt>
 						<dd>
@@ -56,9 +57,9 @@
 								<xsl:value-of select="php:function('lang', 'Information about the event')" />
 							</label>
 							<xsl:if test="config/application_description">
-							<p>
-								<xsl:value-of select="config/application_description"/>
-							</p>
+								<p>
+									<xsl:value-of select="config/application_description"/>
+								</p>
 							</xsl:if>
 						</dt>
 						<dd>
@@ -80,17 +81,29 @@
 							</xsl:if>
 						</dt>
 						<dd>
-							<textarea id="field_equipment" class="full-width" name="equipment"><xsl:value-of select="application/equipment"/></textarea>
+							<textarea id="field_equipment" class="full-width" name="equipment">
+								<xsl:value-of select="application/equipment"/>
+							</textarea>
 						</dd>
 					</dl>
+					<dt>
+						<label for="field_homepage">
+							<xsl:value-of select="php:function('lang', 'homepage')"/>
+						</label>
+					</dt>
+					<dd>
+						<input id="field_homepage" name="homepage" type="text" value="{application/homepage}">
+						</input>
+					</dd>
+
 				</div>
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
 					<dl class="form-col">
 						<div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
 						<xsl:if test="config/application_howmany">
-						<p>
-							<xsl:value-of select="config/application_howmany"/>
-						</p>
+							<p>
+								<xsl:value-of select="config/application_howmany"/>
+							</p>
 						</xsl:if>
 						<dt>
 							<label for="field_agegroups">
@@ -444,6 +457,21 @@
 							</p>
 						</xsl:if>
 						<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
+						<dt>
+							<label for="field_organizer">
+								<xsl:value-of select="php:function('lang', 'organizer')"/>
+							</label>
+						</dt>
+						<dd>
+							<input id="field_organizer" name="organizer" type="text" value="{application/organizer}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'organizer')"/>
+								</xsl:attribute>
+							</input>
+						</dd>
 						<dt>
 							<label for="field_street">
 								<xsl:value-of select="php:function('lang', 'Street')"/>

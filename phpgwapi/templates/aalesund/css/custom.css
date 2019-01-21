@@ -66,6 +66,11 @@ header-text a:hover {
   color: #26348B;
 }
 
+.termAccept a:hover{
+	text-decoration: underline;
+	color: black;
+}
+
 a:hover {
     text-decoration: underline;
 }
@@ -169,7 +174,7 @@ a {
 
 
 @media (max-width: 768px) { 
-    .input-group {
+    .mainpageserchcontainer {
       margin-top: 75%;
 }
 }
@@ -277,9 +282,7 @@ a {
 }
 
 .custom-card  a:hover {
-  
     text-decoration: underline   !important;
-    
     color: #26348B  !important;
 }
 
@@ -554,9 +557,6 @@ input[type="checkbox"]:disabled + .label-text:before{
 
 .bookable-resource-link-href span,
 .termAcceptDocsUrl {
-/*    color: #26348B;*/
-    text-decoration: none  !important;
-/*    border-bottom: 2px solid #000;*/
     line-height: 1.4em;
     display: inline-block;  
     
@@ -1002,6 +1002,13 @@ input:focus{
     color:white;
 }
 
+#welcomeResult .custom-card:hover span{
+	color:black;
+}
+
+#welcomeResult .custom-card:hover h4{
+	color:black;
+}
 
 custom-card-link-href:hover {
  
@@ -1682,7 +1689,7 @@ NEW APPLICATION PAGE STYLE
 }
 
 .new-application-page .validationMessage {
-    color: #FFA500;
+    color: #ff0d0d;
 }
 
 .new-application-page .fa-minus-circle {
@@ -1848,7 +1855,7 @@ h1{
 }
 
 h2{
-     font-size: 2rem;
+     font-size: 1.5rem;
 }
 
 @media (min-width: 1200px) {

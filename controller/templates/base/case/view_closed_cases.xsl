@@ -108,11 +108,19 @@
 																<div class="row">
 																	<label>Beskrivelse:</label>
 																</div>
-
-																<!--  DESCRIPTION -->
 																<div class="case_descr">
 																	<xsl:value-of select="descr"/>
 																</div>
+																<div class="row">
+																	<label>
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																		<xsl:text>:</xsl:text>
+																	</label>
+																</div>
+																<div class="case_descr">
+																	<xsl:value-of select="proposed_counter_measure"/>
+																</div>
+
 																<!-- === QUICK EDIT MENU === -->
 																<div class="quick_menu">
 																	<a class="open_case">

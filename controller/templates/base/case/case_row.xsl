@@ -109,7 +109,16 @@
 									<div class="case_descr">
 										<xsl:value-of select="descr"/>
 									</div>
-                              
+									<div class="row">
+										<label>
+											<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+											<xsl:text>:</xsl:text>
+										</label>
+									</div>
+									<div class="proposed_counter_measure">
+										<xsl:value-of select="proposed_counter_measure"/>
+									</div>
+
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
 										<a class="quick_edit_case first" href="">
@@ -274,6 +283,15 @@
 									<div class="row">
 										<textarea name="case_descr">
 											<xsl:value-of select="descr"/>
+										</textarea>
+									</div>
+									<label>
+										<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+										<xsl:text>:</xsl:text>
+									</label>
+									<div class="row">
+										<textarea name="proposed_counter_measure">
+											<xsl:value-of select="proposed_counter_measure"/>
 										</textarea>
 									</div>
 									<div>

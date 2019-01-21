@@ -364,6 +364,7 @@
 					$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 					$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));
 					$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
+					$case->set_proposed_counter_measure($this->unmarshal($this->db->f('proposed_counter_measure', true), 'string'));
 					$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));
 					$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
 					$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));

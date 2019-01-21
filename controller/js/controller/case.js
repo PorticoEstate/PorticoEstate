@@ -8,18 +8,20 @@ $(document).ready(function ()
 
 		if ($(this).val())
 		{
-			show_picture_component();
+			show_component_information($(this).val());
+			show_component_picture();
 			$("#new_picture").show();
 		}
 		else
 		{
 			$('#equipment_picture_container').html('');
 			$("#new_picture").hide();
+			$("#form_new_component_2").html('');
 
 		}
 	});
 
-	show_picture_component = function ()
+	show_component_picture = function ()
 	{
 		var component = $("#choose-child-on-component").val();
 		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
@@ -46,8 +48,36 @@ $(document).ready(function ()
 				}
 			}
 		});
+	};
 
+	show_case_picture = function (case_id, form)
+	{
+		var oArgs = {menuaction: 'controller.uicase.get_case_image', case_id: case_id};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					var picture_container = $(form).find("div[name='picture_container']");
+
+					if (data.status == "200")
+					{
+						$(picture_container).append('<br><img alt="Bilde" src="' + ImageUrl +'&file_id=' + data.file_id + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$(picture_container).append('<br>' + data.message);
+					}
+				}
+			}
+		});
 	};
 
 	show_picture_submit = function ()
@@ -57,7 +87,7 @@ $(document).ready(function ()
 	};
 
 
-	// REGISTER PICTURE
+	// REGISTER PICTURE TO CHILD COMPONENT
 	$("#frm_add_picture").on("submit", function (e)
 	{
 		e.preventDefault();
@@ -87,8 +117,61 @@ $(document).ready(function ()
 					{
 						$("#submit_update_component").hide();
 						$("#component_picture_file").val('');
-						show_picture_component();
+						show_component_picture();
 
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
+	$(".add_picture_to_case").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+
+		var oArgs = {menuaction: 'controller.uicase.add_case_image'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+//		var requestUrl = $(thisForm).attr("action");
+
+//		var case_id = $("form").prev().find("input[name='case_id']").val();
+
+		var case_id = $("#cache_case_id").val();
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			try
+			{
+				formdata = new FormData(thisForm[0]);
+			}
+			catch (e)
+			{
+
+			}
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl + '&case_id=' + case_id,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#case_picture_file").val('');
+						show_case_picture(case_id, thisForm);
 					}
 					else
 					{
@@ -158,11 +241,77 @@ $(document).ready(function ()
 				}
 
 				$("#form_new_component_2").html(data.message);
+				$('#equipment_picture_container').html('');
+				$("#new_picture").hide();
 			}
 		});
 
 		return false;
 	};
+
+
+	// REGISTER NEW CHILD COMPONENT
+	show_component_information = function (component)
+	{
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.add_new_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			get_info:1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+	};
+
+	get_edit_form = function ()
+	{
+		var component = $("#choose-child-on-component").val();
+
+		if(!component)
+		{
+			alert('komponent ikke valgt');
+			return false;
+		}
+
+		var parent_location_id = $('input[name=parent_location_id]')[0];
+		var parent_component_id = $('input[name=parent_component_id]')[0];
+
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.add_new_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			parent_location_id:$(parent_location_id).val(),
+			parent_component_id:$(parent_component_id).val(),
+			get_edit_form:1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data);
+				}
+			}
+		});
+	};
+
 
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
@@ -186,18 +335,23 @@ $(document).ready(function ()
 
 	});
 
+	resetForm = function(form)
+	{
+		clear_form(form);
+		$(form).find("input[type='submit']").removeAttr('disabled');
+		$(form).find("input[type='submit']").removeClass("case_saved");
+		var picture_container = $(form).next('div').find("div[name='picture_container']");
+		picture_container.html('');
+	};
+
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
 	{
 		e.preventDefault();
 
 		var thisForm = $(this);
-		var submitBnt = $(thisForm).find("input[type='submit']");
-		var type = $(thisForm).find("input[name='type']").val();
 		var requestUrl = $(thisForm).attr("action");
-
 		var location_code = $("#choose-building-on-property  option:selected").val();
-
 		var component_child = $("#choose-child-on-component  option:selected").val();
 
 		$(thisForm).find("input[name=location_code]").val(location_code);
@@ -220,8 +374,8 @@ $(document).ready(function ()
 		{
 			$.ajax({
 				type: 'POST',
-				url: requestUrl + "&" + $(thisForm).serialize(),
-				data: {component_child: component_child},
+				url: requestUrl + "&component_child=" + component_child,
+				data: $(thisForm).serialize(),
 				success: function (data)
 				{
 					if (data)
@@ -230,10 +384,38 @@ $(document).ready(function ()
 
 						if (jsonObj.status == "saved")
 						{
+							var type = $(thisForm).find("input[name='type']").val();
 							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
-							clear_form(thisForm);
+							var add_picture_to_case_form = thisForm.next('.add_picture_to_case');
+							$(add_picture_to_case_form).show();
+
+//							clear_form(thisForm);
+
+//							var selects = $(thisForm).find("select");
+//							var  select = null;
+//							for(var i = 0, len = selects.length; i < len; i++)
+//							{
+//								select = selects[i];
+//								console.log(select);
+//
+//								$.each(select, function (i, option)
+//								{
+//									if(i==0)
+//									{
+//										$(option).attr('selected', true);
+//									}
+//									else
+//									{
+//										$(option).removeAttr('selected');
+//									}
+//								});
+//							}
+
+
+//							 $(thisForm).find("input[name='case_id']").val(jsonObj.case_id);
+							 $("#cache_case_id").val(jsonObj.case_id);
 
 							// Changes text on save button back to original
 							window.setTimeout(function ()
@@ -248,11 +430,12 @@ $(document).ready(function ()
 								}
 
 								$(submitBnt).addClass("case_saved");
+								$(submitBnt).attr("disabled", true);
 							}, 1000);
 
 							/*
 							 $(thisForm).delay(1500).slideUp(500, function(){
-							 $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");  
+							 $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");
 							 });
 							 */
 
@@ -275,7 +458,9 @@ $(document).ready(function ()
 				{
 					if (data != null)
 					{
-						var obj = JSON.parse(data);
+//						var obj = JSON.parse(data);
+						//returned as json
+						var obj = data;
 
 						$.each(obj, function (i, control_group)
 						{
@@ -383,9 +568,11 @@ $(document).ready(function ()
 						$(clickRow).find(".case_info .case_consequence").empty().text(case_consequence);
 
 						// Text from forms textarea
-						var desc_text = $(thisForm).find("textarea").val();
-						// Puts new text into description tag in case_info	    				   				
+						var desc_text = $(thisForm).find("textarea[name='case_descr']").val();
+						var proposed_counter_measure_text = $(thisForm).find("textarea[name='proposed_counter_measure']").val();
+						// Puts new text into description tag in case_info
 						$(clickRow).find(".case_info .case_descr").text(desc_text);
+						$(clickRow).find(".case_info .proposed_counter_measure").text(proposed_counter_measure_text);
 
 						$(clickRow).find(".case_info").show();
 						$(clickRow).find(".frm_update_case").hide();
@@ -447,7 +634,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -497,7 +684,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -547,7 +734,7 @@ $(document).ready(function ()
 
 						var next_row = $(clickRow).next();
 
-						// Updating order numbers for rows below deleted row  
+						// Updating order numbers for rows below deleted row
 						while ($(next_row).length > 0)
 						{
 							update_order_nr_for_row(next_row, "-");
@@ -589,7 +776,7 @@ $(document).ready(function ()
 	/*
 	 $("#choose-building-on-property.view-cases").change(function () {
 	 var location_code = $(this).val();
-	 
+
 	 var reloadPageUrl = location.pathname + location.search + "&location_code=" + location_code;
 	 alert(reloadPageUrl);
 	 location.href = reloadPageUrl;
