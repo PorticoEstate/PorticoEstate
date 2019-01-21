@@ -149,8 +149,10 @@
 					$url = "api/" . ucfirst($key) . "/{$value['Id']}";
 					if($key == 'rooms')
 					{
-						if(empty($value['RoomDetails'][0]['ExternalId']))
+						if(empty($value['RoomDetails'][0]['ExternalId'])
+							|| $this->check_room_external_id($value['Id']) != $value['RoomDetails'][0]['ExternalId'])
 						{
+//							_debug_array($value);
 							$this->save_to_external_api($url, 'DELETE');
 						}
 					}
@@ -378,7 +380,7 @@
 
 			$action = phpgw::get_var('action', 'string');
 
-			set_time_limit(600);
+			set_time_limit(900);
 
 			switch ($action)
 			{
@@ -507,10 +509,10 @@
 					continue;
 				}
 
-				if(!$selected_categories)
-				{
-					continue;
-				}
+//				if(!$selected_categories)
+//				{
+//					continue;
+//				}
 
 				$part_of_town_result = $this->save_location(array
 					(
@@ -667,16 +669,16 @@
 						)
 						, $room['external_id'], $dry_run);
 
-					if(!$dry_run && empty($room_result['Id']))
+					if(!$dry_run && empty($room_result[0]['Room']['Id']))
 					{
 						throw new Exception('Update api/Rooms failed:' . _debug_array($room_result,false));
 					}
 
-					if(!$dry_run && $room_result['Id'] && !$room['external_id'])
+					if(!$dry_run && $room_result[0]['Room']['Id'] && !$room['external_id'])
 					{
 						$where = "location_code='{$room['location_code']}'";
-						$this->update_external_id('fm_location5', $room_result['Id'], $where );
-						$room['external_id'] = (int) $room_result['Id'];
+						$this->update_external_id('fm_location5', $room_result[0]['Room']['Id'], $where );
+						$room['external_id'] = (int) $room_result[0]['Room']['Id'];
 					}
 				}
 
@@ -734,6 +736,7 @@
 
 			if($id)
 			{
+				return array('Id' => $id);
 				$data['Id'] = $id;
 				$mehod = 'PUT';
 				$url = "api/Locations/{$id}";
@@ -846,6 +849,7 @@
 
 			if($id)
 			{
+				return array('Id' => $id);
 				$data['Id'] = $id;
 				$mehod = 'PUT';
 				$url = "api/Floors/{$id}";
@@ -878,14 +882,14 @@
 				"FloorId" => $param['floor_id'],
 				"RoomDetails" => array(
 					array(
-						"ClassificationId" => $param['id_delfunsjon'] ? $param['id_delfunsjon'] : $param['category'], // for now..
+						"ClassificationId" => '10.1.81.0',//10.1 Internt trafikkareal , korridor
 						"RoomNumber" => $param['rom_nr_id'],
 						"Name" => $param['name'],
 						"Description" => $param['descr'],
 						"NetArea" => (float)$param['area_net'],
 						"GrossArea" => (float)$param['area_gross'],
-					//	"OrganizationId" => 7,
-					//	"RoomOwnershipId" => 8,
+						"OrganizationId" => 3948,
+						"RoomOwnershipId" => 1,
 					//	"WingId" => 0,
 					//	"CapacityToday" => 9,
 					//	"CapacityBuiltFor" => 10,
@@ -897,6 +901,7 @@
 
 			if($id)
 			{
+				return array(array('Room' => array('Id' => $id)));
 				$data['Id'] = $id;
 				$mehod = 'PUT';
 				$url = "api/Rooms/{$id}";
@@ -1033,6 +1038,7 @@
 
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
+			_debug_array($result);
 
 //			$curl_info = curl_getinfo($ch);
 //			_debug_array($curl_info);
@@ -1065,6 +1071,14 @@
 			return $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 
+		private function check_room_external_id( $external_id )
+		{
+			$sql = "SELECT location_code FROM fm_location5 WHERE external_id = " . (int) $external_id;
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$location_code = $GLOBALS['phpgw']->db->f('location_code');
+			return $location_code;
+		}
 
 		private function get_rooms_by_categories( $cat_id )
 		{

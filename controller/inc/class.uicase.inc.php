@@ -61,6 +61,7 @@
 		private $add;
 		private $edit;
 		private $delete;
+		private $vfs;
 		var $public_functions = array
 			(
 			'add_case' => true,
@@ -112,6 +113,8 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$this->vfs = CreateObject('phpgwapi.vfs');
+
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
@@ -494,16 +497,15 @@
 			$dry_run = phpgw::get_var('dry_run', 'bool');
 			$case_id = phpgw::get_var('case_id', 'int');
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$this->vfs->override_acl = 1;
 
-			$files = $vfs->ls(array(
+			$files = $this->vfs->ls(array(
 				'orderby' => 'file_id',
 	//			'mime_type'	=> 'image/jpeg',
 				'string' => "/controller/case/{$case_id}",
 				'relatives' => array(RELATIVE_NONE)));
 
-			$vfs->override_acl = 0;
+			$this->vfs->override_acl = 0;
 
 			$file = end($files);
 
@@ -530,7 +532,19 @@
 			{
 				ExecMethod('property.bofiles.get_file', $file['file_id']);
 			}
+		}
 
+		function get_case_images($case_id)
+		{
+			$this->vfs->override_acl = 1;
+
+			$files = $this->vfs->ls(array(
+				'orderby' => 'file_id',
+				'string' => "/controller/case/{$case_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$this->vfs->override_acl = 0;
+			return $files;
 		}
 
 		function get_image()
@@ -538,6 +552,14 @@
 			if(!$this->read )
 			{
 				phpgw::no_access();
+			}
+
+			$file_id = phpgw::get_var('file_id', 'int');
+
+			if($file_id)
+			{
+				ExecMethod('property.bofiles.get_file', $file_id);
+				return;
 			}
 
 			$dry_run = phpgw::get_var('dry_run', 'bool');
@@ -556,16 +578,15 @@
 			$system_location_arr = explode('.', $system_location['location']);
 			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$this->vfs->override_acl = 1;
 
-			$files = $vfs->ls(array(
+			$files = $this->vfs->ls(array(
 				'orderby' => 'file_id',
 				'mime_type'	=> 'image/jpeg',
 				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
 				'relatives' => array(RELATIVE_NONE)));
 
-			$vfs->override_acl = 0;
+			$this->vfs->override_acl = 0;
 
 			$file = end($files);
 
@@ -1099,6 +1120,8 @@
 						}
 
 						$case->set_component_descr($short_desc);
+						$case_files = $this->get_case_images($case->get_id());
+						$case->set_case_files($case_files);
 					}
 				}
 			}
@@ -1177,8 +1200,10 @@
 				'type' => $type,
 				'get_locations'	=> $get_locations,
 				'location_level' => $level,
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
-
+//			_debug_array($check_items_and_cases);die();
 			if (count($buildings_array) > 0)
 			{
 				$data['buildings_array'] = $buildings_array;
@@ -1676,6 +1701,10 @@
 							}
 						}
 						$case->set_component_descr($short_desc);
+
+						$case_files = $this->get_case_images($case->get_id());
+						$case->set_case_files($case_files);
+
 					}
 				}
 
@@ -1701,7 +1730,7 @@
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
-
+//			_debug_array($open_check_items_and_cases); die();
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'controller', 'case.js');
 			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
@@ -1827,6 +1856,8 @@
 
 						}
 						$case->set_component_descr($short_desc);
+						$case_files = $this->get_case_images($case->get_id());
+						$case->set_case_files($case_files);
 					}
 				}
 				//		$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
