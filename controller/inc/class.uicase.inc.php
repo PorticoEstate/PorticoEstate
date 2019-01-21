@@ -554,6 +554,14 @@
 				phpgw::no_access();
 			}
 
+			$file_id = phpgw::get_var('file_id', 'int');
+
+			if($file_id)
+			{
+				ExecMethod('property.bofiles.get_file', $file_id);
+				return;
+			}
+
 			$dry_run = phpgw::get_var('dry_run', 'bool');
 			$component_arr = explode("_", phpgw::get_var('component'));
 
