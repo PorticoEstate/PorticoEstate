@@ -39,23 +39,24 @@
 				
 				
 			<div class="col-md-6 order-md-3 col-lg-3 order-lg-2"     id="logowidth">
+				<span><b>1. Kontakt</b></span>
 				<span><a target="_blank" rel="noopener noreferrer"  href="https://www.alesund.kommune.no">{municipality}</a></span>             
 
 				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:{municipality_email}">{municipality_email}</a><br> </span>  
 			</div>
 
 			<div class="col-md-6 order-md-2 col-lg-3 order-lg-3">
-	
+				<span><b>2. Aktiv kommune</b></span>
 				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{wwwmunicipality}</a></span>
                                    
-				<span><a   target="_blank" rel="noopener noreferrer"    href="{manual_url}">{guidances}</a></span>  
+				<span><a   target="_blank" rel="noopener noreferrer"    href="https://www.aktiv-kommune.no/manual/">{guidances}</a></span>  
                                  
                 <span><a   target="_blank" rel="noopener noreferrer"    href="{footer_privacy_link}">{privacy}</a></span>  
                                                        
 			</div>
 
 			<div class="col-md-6 order-md-4 col-lg-3 order-lg-4">
- 
+				<span><b>3. Logg inn</b></span>
 				<span><a  href="{login_url}">{login_text}</a></span>  
 				<span><a   target="_blank" rel="noopener noreferrer"    href="{executiveofficer_url}">{executiveofficer}</a></span>  
 				
