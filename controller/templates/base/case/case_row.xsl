@@ -58,7 +58,7 @@
 									</xsl:choose>
 
 									<!-- STATUS -->
-           	
+
 									<div class="row first">
 										<label>Status:</label>
 										<span class="case_status">
@@ -92,7 +92,7 @@
 									</div>
 
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
-                 
+
 										<!--  MEASUREMENT -->
 										<div class="row">
 											<label>Måleverdi:</label>
@@ -118,6 +118,21 @@
 									<div class="proposed_counter_measure">
 										<xsl:value-of select="proposed_counter_measure"/>
 									</div>
+
+
+									<xsl:if test="case_files/child::node()">
+										<div class="row">
+											<label>
+												<xsl:value-of select="php:function('lang', 'files')"/>
+												<xsl:text>:</xsl:text>
+											</label>
+										</div>
+										<xsl:for-each select="case_files">
+
+											<xsl:value-of select="file_id"/>
+
+										</xsl:for-each>
+									</xsl:if>
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
@@ -154,7 +169,7 @@
 										</xsl:choose>
 									</div>
 								</div>
-                  
+
 								<!--  =================== UPDATE CASE FORM =================== -->
 								<form class="frm_update_case">
 									<xsl:attribute name="action">
@@ -173,7 +188,7 @@
 											<xsl:value-of select="//control_item/type" />
 										</xsl:attribute>
 									</input>
-                 	
+
 									<!--  STATUS -->
 									<div class="row first">
 										<label>Status:</label>
@@ -277,7 +292,7 @@
 											</xsl:when>
 										</xsl:choose>
 									</xsl:if>
-                              
+
 									<!--  DESCRIPTION -->
 									<label>Beskrivelse:</label>
 									<div class="row">
