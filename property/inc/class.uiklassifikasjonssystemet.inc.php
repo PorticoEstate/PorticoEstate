@@ -149,8 +149,10 @@
 					$url = "api/" . ucfirst($key) . "/{$value['Id']}";
 					if($key == 'rooms')
 					{
-						if(empty($value['RoomDetails'][0]['ExternalId']))
+						if(empty($value['RoomDetails'][0]['ExternalId'])
+							|| $this->check_room_external_id($value['Id']) != $value['RoomDetails'][0]['ExternalId'])
 						{
+//							_debug_array($value);
 							$this->save_to_external_api($url, 'DELETE');
 						}
 					}
@@ -1069,6 +1071,14 @@
 			return $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 
+		private function check_room_external_id( $external_id )
+		{
+			$sql = "SELECT location_code FROM fm_location5 WHERE external_id = " . (int) $external_id;
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$location_code = $GLOBALS['phpgw']->db->f('location_code');
+			return $location_code;
+		}
 
 		private function get_rooms_by_categories( $cat_id )
 		{
