@@ -613,8 +613,8 @@
 			}
 
 			$sql = "SELECT condition_survey_id, substr(building_part, 1,3) as building_part_,"
-				. " sum(amount_investment) as investment ,sum(amount_operation) as operation,"
-				. " recommended_year as year, fm_request.multiplier, area_gross"
+				. " amount_investment as investment ,amount_operation as operation,"
+				. " recommended_year as year, fm_request.multiplier, area_gross, representative"
 				. " FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id"
 				. " {$this->_join} fm_request_condition ON fm_request_condition.request_id = fm_request.id"
 				. " {$this->_join} fm_location1 ON fm_request.loc1 = fm_location1.loc1"
@@ -623,7 +623,8 @@
 				. " WHERE {$id_filter}"
 				. " AND fm_condition_survey_status.closed IS NULL"
 				. " AND degree > 1"
-				. " GROUP BY condition_survey_id, building_part_ , year, fm_request.multiplier, area_gross ORDER BY building_part_";
+		//		. " GROUP BY condition_survey_id, building_part_ , year, fm_request.multiplier, area_gross"
+				. " ORDER BY building_part_";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -632,6 +633,7 @@
 			{
 				$amount = $this->_db->f('investment') + $this->_db->f('operation');
 				$_multiplier = $this->_db->f('multiplier');
+				$_representative = $this->_db->f('representative');
 
 				$values[] = array
 					(
@@ -642,6 +644,7 @@
 					'year' => $this->_db->f('year'),
 					'multiplier'	=> $_multiplier ? (float) $_multiplier : 1,
 					'area_gross' => (float) $this->_db->f('area_gross'),
+					'representative'	=> $_representative ? (float) $_representative : 1,
 				);
 			}
 
@@ -662,6 +665,7 @@
 						'category' => $lang_investment,
 						'multiplier'	=> $entry['multiplier'],
 						'area_gross' => $entry['area_gross'],
+						'representative' => $entry['representative'],
 					);
 				}
 				if ($entry['amount_operation'])
@@ -675,6 +679,7 @@
 						'category' => $lang_operation,
 						'multiplier'	=> $entry['multiplier'],
 						'area_gross' => $entry['area_gross'],
+						'representative' => $entry['representative'],
 					);
 				}
 			}
