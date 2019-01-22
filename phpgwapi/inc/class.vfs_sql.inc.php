@@ -1312,6 +1312,10 @@
 					{
 						$_document_id = $this->fileoperation->touch($data, $t);
 					}
+					else
+					{
+						$_document_id = null;
+					}
 
 					if(!$this->fileoperation->copy($f, $t, $_document_id))
 					{
