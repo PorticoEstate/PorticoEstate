@@ -1270,6 +1270,7 @@
 				$group_name = $control_group->get_group_name();
 				$component_location_id = $case->get_component_location_id();
 
+				$message_details .= "Ref: {$case_id}: \n";
 				$message_details .= "{$group_name}::Gjøremål {$counter}: \n";
 
 				if ($component_id = $case->get_component_id())
@@ -1381,6 +1382,48 @@
 				$case->set_location_id($location_id_ticket);
 				$case->set_location_item_id($message_ticket_id);
 				$this->so->store($case);
+			}
+
+			/*
+			 * Transfer pictures
+			 */
+			$files = array();
+			foreach ($case_ids as $case_id)
+			{
+				$files = array_merge($files, $this->get_case_images($case_id));
+			}
+
+			$bofiles = CreateObject('property.bofiles', '');
+
+			foreach ($files as $file)
+			{
+				$file_name = "{$case_id}_{$file['name']}";
+
+				$to_file = "/property/fmticket/{$message_ticket_id}/{$case_id}_{$file['name']}";
+				$from_file = "{$file['directory']}/{$file['name']}";
+
+				if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => array(RELATIVE_NONE)
+					)))
+				{
+					$receipt['error'][] = array('msg' => lang('This file already exists !'));
+					phpgwapi_cache::message_set($file_name . ': ' . lang('This file already exists !'), 'error');
+				}
+				else
+				{
+					$bofiles->create_document_dir("fmticket/{$message_ticket_id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if (!$bofiles->vfs->cp(array(
+							'from' => $from_file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE, RELATIVE_NONE))))
+					{
+						phpgwapi_cache::message_set($file_name . ': ' . lang('Failed to upload file !'), 'error');
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
 			}
 
 			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
