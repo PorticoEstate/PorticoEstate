@@ -439,7 +439,7 @@
 
 					if($_user->type =='g')
 					{
-						$group_filter = " {$where} group_id = " . (int)$user_id . " AND assignedto IS NULL";
+						$group_filter = " {$where} group_id = " . (int)$user_id . " AND (assignedto IS NULL OR assignedto = 0)";
 					}
 
 					$user_ids = array((int)abs($user_id));
@@ -463,7 +463,7 @@
 				{
 					$filtermethod .= " {$where} (assignedto IN (" . implode(', ' ,$user_ids) . ')';
 					$where = 'AND';
-					$filtermethod .= ' OR (assignedto IS NULL AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
+					$filtermethod .= ' OR ((assignedto IS NULL OR assignedto = 0) AND fm_tts_tickets.group_id IN (' . implode(',',$membership) . ')))';
 				}
 			}
 
