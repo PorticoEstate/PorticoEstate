@@ -150,7 +150,7 @@
 				$entry['summation'] = 0;
 				foreach ($summation as $sum)
 				{
-					$entry['summation'] += $sum['amount'] * $entry['multiplier'];
+					$entry['summation'] += $sum['amount'] * $sum['multiplier'] * $sum['representative'];
 				}
 			}
 
