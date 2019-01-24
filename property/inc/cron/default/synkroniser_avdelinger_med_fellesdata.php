@@ -62,7 +62,7 @@
 			{
 				$fellesdata->update_customer_id();
 			}
-			$fellesdata->update_vendor();
+	//		$fellesdata->update_vendor(); // separert ut i egen rutine
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
 	//		$fellesdata->update_tjeneste();
