@@ -22,9 +22,9 @@
 						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
 					<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
-						<h3>
+						<h2>
 							<xsl:value-of select="building/name"/>
-						</h3>
+						</h2>
 						<i class="fas fa-map-marker d-inline"> </i>
 						<div class="building-place-adr">
 							<span>
@@ -131,9 +131,9 @@
 			</div>
 
 			<div class="col-lg-6 building-bookable">
-				<h3 class="">
+				<h2 class="">
 					<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
-				</h3>
+				</h2>
 				<div data-bind="foreach: bookableResource">
                                     
                                     
@@ -212,7 +212,7 @@
 							</xsl:if>
 						</div>						
 				</div>
-
+					
 					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
 						<div class="">
 							<div class="square allocation"></div>							
@@ -243,7 +243,6 @@
 					<span class="glyphicon glyphicon-th"></span>
 				</div>
 			</div>-->
-
 
 			<xsl:if test="building/deactivate_calendar=0">
 			<div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom col-12"></div>

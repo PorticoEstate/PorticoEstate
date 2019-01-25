@@ -66,10 +66,18 @@ function ApplicationsCartModel()  {
                        return item.id == result[i].id;
                   });
                   if(!exist) {
-                    for(var k =0; k<result[i].dates.length; k++) {                           
-                        dates.push({date: formatSingleDateWithoutHours(new Date((result[i].dates[k].from_).replace(" ","T"))), 
+                    for(var k =0; k<result[i].dates.length; k++) {
+                        var currentStartDate = new Date((result[i].dates[k].from_).replace(" ","T"));                        
+                        currentStartDate.setHours((result[i].dates[k].from_).substring(11, 13));
+                        currentStartDate.setMinutes((result[i].dates[k].from_).substring(14, 16));
+
+                        var currentEndDate = new Date((result[i].dates[k].to_).replace(" ","T"));
+                        currentEndDate.setHours((result[i].dates[k].to_).substring(11, 13));
+                        currentEndDate.setMinutes((result[i].dates[k].to_).substring(14, 16));
+                                                  
+                        dates.push({date: formatSingleDateWithoutHours(currentStartDate), 
                         from_: result[i].dates[k].from_, to_: result[i].dates[k].to_ ,
-                        periode: formatPeriodeHours(new Date((result[i].dates[k].from_).replace(" ","T")), new Date((result[i].dates[k].to_).replace(" ","T")) )});
+                        periode: formatPeriodeHours(currentStartDate, currentEndDate )});
                     }                    
                     for(var k =0; k<result[i].resources.length; k++) {
                         resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id });
