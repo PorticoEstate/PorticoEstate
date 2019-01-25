@@ -22,9 +22,9 @@
 						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
 					<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
-						<h3>
+						<h2>
 							<xsl:value-of select="building/name"/>
-						</h3>
+						</h2>
 						<i class="fas fa-map-marker d-inline"> </i>
 						<div class="building-place-adr">
 							<span>
@@ -131,9 +131,9 @@
 			</div>
 
 			<div class="col-lg-6 building-bookable">
-				<h3 class="">
+				<h2 class="">
 					<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
-				</h3>
+				</h2>
 				<div data-bind="foreach: bookableResource">
                                     
                                     

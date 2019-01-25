@@ -1,5 +1,8 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="get_image_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
+	</xsl:variable>
 
 	<div id="main_content" class="medium">
 
@@ -241,6 +244,38 @@
 																<xsl:value-of select="proposed_counter_measure"/>
 															</div>
 
+														</xsl:if>
+
+														<xsl:if test="case_files/child::node()">
+															<div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'files')"/>
+																	<xsl:text>:</xsl:text>
+																</label>
+															</div>
+															<!-- Slideshow container -->
+															<div class="slideshow-container">
+
+																<xsl:variable name="file_count">
+																	<xsl:value-of select="count(case_files)" />
+																</xsl:variable>
+
+																<xsl:for-each select="case_files">
+
+																	<!-- Full-width images with number and caption text -->
+																	<div class="mySlides fade">
+																		<div class="numbertext">
+																			<xsl:number />	/ <xsl:value-of select="$file_count"/>
+																		</div>
+																		<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
+																		<div class="text">
+																			<xsl:value-of select="name"/>
+																		</div>
+																	</div>
+
+																</xsl:for-each>
+															</div>
+															<br/>
 														</xsl:if>
 													</li>
 												</xsl:for-each>

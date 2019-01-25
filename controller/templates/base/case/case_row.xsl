@@ -7,6 +7,9 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
+	<xsl:variable name="get_image_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
+	</xsl:variable>
 	<li class="check_item_case">
 		<xsl:choose>
 			<xsl:when test="cases_array/child::node()">
@@ -58,7 +61,7 @@
 									</xsl:choose>
 
 									<!-- STATUS -->
-           	
+
 									<div class="row first">
 										<label>Status:</label>
 										<span class="case_status">
@@ -92,7 +95,7 @@
 									</div>
 
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
-                 
+
 										<!--  MEASUREMENT -->
 										<div class="row">
 											<label>Måleverdi:</label>
@@ -118,6 +121,39 @@
 									<div class="proposed_counter_measure">
 										<xsl:value-of select="proposed_counter_measure"/>
 									</div>
+
+
+									<xsl:if test="case_files/child::node()">
+										<div class="row">
+											<label>
+												<xsl:value-of select="php:function('lang', 'files')"/>
+												<xsl:text>:</xsl:text>
+											</label>
+										</div>
+										<!-- Slideshow container -->
+										<div class="slideshow-container">
+											
+											<xsl:variable name="file_count">
+												<xsl:value-of select="count(case_files)" />
+											</xsl:variable>
+
+											<xsl:for-each select="case_files">
+
+												<!-- Full-width images with number and caption text -->
+												<div class="mySlides fade">
+													<div class="numbertext">
+														<xsl:number />	/ <xsl:value-of select="$file_count"/>
+													</div>
+													<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
+													<div class="text">
+														<xsl:value-of select="name"/>
+													</div>
+												</div>
+
+											</xsl:for-each>
+										</div>
+										<br/>
+									</xsl:if>
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
@@ -154,7 +190,7 @@
 										</xsl:choose>
 									</div>
 								</div>
-                  
+
 								<!--  =================== UPDATE CASE FORM =================== -->
 								<form class="frm_update_case">
 									<xsl:attribute name="action">
@@ -173,7 +209,7 @@
 											<xsl:value-of select="//control_item/type" />
 										</xsl:attribute>
 									</input>
-                 	
+
 									<!--  STATUS -->
 									<div class="row first">
 										<label>Status:</label>
@@ -277,7 +313,7 @@
 											</xsl:when>
 										</xsl:choose>
 									</xsl:if>
-                              
+
 									<!--  DESCRIPTION -->
 									<label>Beskrivelse:</label>
 									<div class="row">

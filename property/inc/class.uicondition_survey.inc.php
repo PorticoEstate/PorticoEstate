@@ -806,12 +806,18 @@
 			$values = $this->bo->get_summation($id, $year);
 
 			$total_records = count($values);
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
 
-			$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			if(!$num_rows)
+			{
+				$num_rows = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			}
+
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 
+			$allrows = phpgw::get_var('length', 'int') == -1;
+
 			$allrows = true;
-			$num_rows = $total_records;
 
 			if ($allrows)
 			{
@@ -828,7 +834,7 @@
 				'recordsTotal' => $total_records,
 				'recordsFiltered' => $total_records,
 				'draw' => phpgw::get_var('draw', 'int'),
-				'data' => $out
+				'data' => (array)$out
 			);
 		}
 
@@ -1819,15 +1825,20 @@
 
 			$datatable_def = array();
 			$datatable_def[] = array
-				(
+			(
 				'container' => 'datatable-container_0',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uicondition_survey.get_summation',
 						'id' => $id, 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $summation_def
+				'ColumnDefs' => $summation_def,
+//				'config' => array(
+//					array('disableFilter' => true),
+//					array('disablePagination' => true),
+//					array('order' => json_encode(array(0,'asc')))
+//				),
 			);
 
 			$data = array
-				(
+			(
 				'datatable_def' => $datatable_def,
 				'surveys' => array('options' => $surveys),
 				'years' => array('options' => $years),
