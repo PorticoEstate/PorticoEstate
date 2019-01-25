@@ -58,6 +58,7 @@
 		protected $component_child_item_id; //forekomst av subtype til komponent
 		protected $condition_degree;
 		protected $consequence;
+		protected $case_files = array();
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -269,7 +270,15 @@
 		{
 			$this->consequence = $consequence;
 		}
+		public function get_case_files()
+		{
+			return (array)$this->case_files;
+		}
 
+		public function set_case_files( $case_files )
+		{
+			$this->case_files = $case_files;
+		}
 
 		public function validate()
 		{

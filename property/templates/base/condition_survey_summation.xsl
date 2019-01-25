@@ -8,45 +8,41 @@
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
-	        	<xsl:value-of select="$true"/>
+				<xsl:value-of select="$true"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$false"/>
 			</xsl:otherwise>
 		</xsl:choose>
-  	</func:result>
+	</func:result>
 </func:function>
 
 <xsl:template match="data" xmlns:formvalidator="http://www.w3.org/TR/html4/" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 
-		<div class="yui-navset" id="survey_edit_tabview">
+	<div class="yui-navset" id="survey_edit_tabview">
 		<h1>
 			<xsl:value-of select="php:function('lang', 'summation')" />
 		</h1>
-			<div class="yui-content">
-				<dl class="proplist-col">
-					<dt>
-					<label for="category">
-						<xsl:value-of select="php:function('lang', 'condition survey')" />
-					</label>
-					</dt>
-					<dd>
-						<select id="survey_id" name="survey_id" onChange="update_summation();" >
-							<xsl:apply-templates select="surveys/options"/>
-						</select>
-					</dd>
-					<dt>
-					<label for="category">
-						<xsl:value-of select="php:function('lang', 'year')" /> 0</label>
-					</dt>
-					<dd>
-						<select id="year" name="year" onChange="update_summation();" >
-							<xsl:apply-templates select="years/options"/>
-						</select>
-					</dd>
-				</dl>
+		<div class="pure-g">
+			<div class="pure-u-1-2 pure-u-md-1-6">
+					
+				<label for="category">
+					<xsl:value-of select="php:function('lang', 'condition survey')" />
+				</label>
+				<select id="survey_id" name="survey_id" onChange="update_summation();" class="pure-u-24-24">
+					<xsl:apply-templates select="surveys/options"/>
+				</select>
 			</div>
+			<div class="pure-u-1-2 pure-u-md-1-6">
+				<label for="category">
+					<xsl:value-of select="php:function('lang', 'year')" /> 0
+				</label>
+				<select id="year" name="year" onChange="update_summation();" class="pure-u-24-24">
+					<xsl:apply-templates select="years/options"/>
+				</select>
+			</div>
+		</div>
 		<div>
 			<xsl:for-each select="datatable_def">
 				<xsl:if test="container = 'datatable-container_0'">
@@ -115,7 +111,7 @@
 	<script>
 		var PreColumns = [
 		<xsl:for-each select="$ColumnDefs">
-					{
+			{
 			data:			"<xsl:value-of select="key"/>",
 			<xsl:if test="className">
 				<xsl:choose>
@@ -131,7 +127,7 @@
 						class:	'dt-left',
 					</xsl:otherwise>
 				</xsl:choose>
-						</xsl:if>
+			</xsl:if>
 			orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
 			<xsl:choose>
 				<xsl:when test="hidden">
@@ -147,7 +143,7 @@
 					visible:		true,
 				</xsl:otherwise>
 			</xsl:choose>
-						<xsl:if test="formatter">
+			<xsl:if test="formatter">
 				render: function (dummy1, dummy2, oData) {
 				try {
 				var ret = <xsl:value-of select="formatter"/>("<xsl:value-of select="key"/>", oData);
@@ -157,14 +153,14 @@
 				}
 				return ret;
 				},
-						</xsl:if>
-						<xsl:if test="editor">
-						editor: <xsl:value-of select="editor"/>,
-					    </xsl:if>
+			</xsl:if>
+			<xsl:if test="editor">
+				editor: <xsl:value-of select="editor"/>,
+			</xsl:if>
 			defaultContent:	"<xsl:value-of select="defaultContent"/>"
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
-				</xsl:for-each>
-				];
+			}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+		</xsl:for-each>
+		];
 		<![CDATA[
 				columns = [];
 			
@@ -177,7 +173,7 @@
 				}
 		]]>
 
-		var options = {disableFilter:true};
+		var options = {disableFilter:true, disablePagination:true};
 		var oTable = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns, options);
 
 		$(document).ready(function ()
@@ -209,7 +205,7 @@
 				
 		pageTotal = $.number( pageTotal, 0, ',', '.' );
 		$(api.column(col).footer()).html(pageTotal);
-  	});
+		});
 		}
 
 		function update_summation()
