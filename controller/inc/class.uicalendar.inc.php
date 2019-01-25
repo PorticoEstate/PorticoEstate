@@ -248,7 +248,7 @@
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 				self::render_template_xsl(array('calendar/view_calendar_month', 'calendar/check_list_status_manager',
 					'calendar/icon_color_map', 'calendar/select_my_locations',
 					'calendar/select_buildings_on_property', 'calendar/nav_calendar_month',
@@ -262,7 +262,7 @@
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 
 				self::render_template_xsl('calendar/calendar_month_no_loc', $data);
 			}
@@ -465,7 +465,7 @@
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 
 				self::render_template_xsl(array('calendar/view_calendar_year', 'calendar/check_list_status_manager',
 					'calendar/icon_color_map', 'calendar/select_my_locations',
@@ -479,7 +479,7 @@
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 
 				self::render_template_xsl('calendar/calendar_year_no_loc', $data);
 			}
@@ -606,8 +606,8 @@
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');
-				self::add_javascript('controller', 'controller', 'ajax.js');
-				self::add_javascript('controller', 'controller', 'ajax_calendar_for_locations.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax_calendar_for_locations.js');
 
 				self::render_template_xsl(array('calendar/view_calendar_aggregated', 'calendar/check_list_status_manager',
 					'calendar/icon_color_map', 'calendar/nav_calendar_year',
@@ -656,7 +656,7 @@
 					'update_action' => self::link(array('menuaction' => 'controller.uicalendar.query'))
 				);
 
-				self::add_javascript('controller', 'controller', 'ajax_calendar_for_locations.js');
+				self::add_javascript('controller', 'base', 'ajax_calendar_for_locations.js');
 
 				self::render_template_xsl(array('calendar/view_calendar_aggregated'), $data);
 			}
@@ -1058,7 +1058,7 @@
 				'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_year'), $data);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 		}
 
 		public function view_calendar_month_for_locations()
@@ -1266,7 +1266,7 @@
 				'calendar/icon_color_map', 'calendar/select_my_locations', 'calendar/nav_calendar_month'), $data);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 		}
 
 		public function populate_controls_with_check_lists( $controls_for_location_array, $control_id_with_check_list_array )
