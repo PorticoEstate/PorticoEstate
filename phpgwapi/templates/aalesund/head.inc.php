@@ -252,7 +252,7 @@ $tpl_vars = array
 );
 
 $tpl_vars['manual_text'] = lang('manual');
-$tpl_vars['manual_url'] = $manual;
+$GLOBALS['phpgw']->template->set_var('manual_url', "testing");
 
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);

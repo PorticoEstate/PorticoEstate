@@ -217,9 +217,13 @@
                     
                     <div class="form-group">
                         <label><xsl:value-of select="php:function('lang', 'Attachment')" /></label>
-                        <input name="name" id='field_name' type='file' >
+						<label for="field_name" class="upload-button">
+							<xsl:value-of select="php:function('lang', 'Upload')" />
+						</label> 
+						<label id="field_name_input"></label>
+                        <input name="name" id='field_name' type='file' style="display: none">
                             <xsl:attribute name='title'>
-                                <xsl:value-of select="document/name"/>
+                                <xsl:value-of select="document/name"/>test
                             </xsl:attribute>
                             <xsl:attribute name="data-validation">
                                 <xsl:text>mime size</xsl:text>
@@ -275,6 +279,14 @@
  			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
             var script = document.createElement("script"); 
 			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
-            document.head.appendChild(script);			
+            document.head.appendChild(script);	
+			
+			document.getElementById('field_name').onchange = function () {
+				var filePath = this.value;
+				if (filePath) {
+					var fileName = filePath.split(/(\\|\/)/g).pop();
+					$("#field_name_input").append(fileName);
+				}
+			};		
         </script>
 </xsl:template>

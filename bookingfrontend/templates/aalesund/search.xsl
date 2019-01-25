@@ -37,9 +37,9 @@
 				<div id="search-autocomplete"></div>
 
 				<!-- FILTER BOXES> -->
-				<h5 class="mt-5 font-weight-bold">
+				<h2 class="mt-5 font-weight-bold">
 					<xsl:value-of select="php:function('lang', 'Choose categories')"/>
-				</h5>
+				</h2>
 				<div class="row mx-auto" data-bind="if: filterboxes().length > 0">
 					<div data-bind="foreach: filterboxes">
 						<div class="dropdown d-inline-block mr-2">
@@ -123,11 +123,11 @@
 							</div>
 							<div class="col-md-9 col-sm-8 col-8 desc">
 								<h5 class="font-weight-bold title" data-bind="text: name"></h5>                                
-								<span class="text-uppercase" data-bind="text: datetime_time"></span>
-								<span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
-								<span class="text-uppercase mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+								<span  data-bind="text: datetime_time"></span>
+								<span  data-bind="text: 'STED: ' +building_name"></span>
+								<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
 								<a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									<span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span>
+									<span class="font-weight-normal" data-bind="visible: homepage != ''">Les mer</span>
 								</a>
 							</div>
 						</div>
@@ -162,7 +162,7 @@
 										<span class="d-block" data-bind="html: postcode"></span>
 									</div>
 									<div data-bind="foreach: tagItems">
-										<span class="badge badge-pill badge-default text-uppercase" data-bind="text: $rawData, click: selectThisTag" ></span>
+										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
 									</div>
 								</div>
 							</div>
