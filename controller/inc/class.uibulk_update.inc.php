@@ -179,7 +179,7 @@
 				'datatable_def' => $datatable_def,
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . ' :: ' . lang('bulk update assigned');
-			self::add_javascript('controller', 'controller', 'bulk_update.js');
+			self::add_javascript('controller', 'base', 'bulk_update.js');
 			self::render_template_xsl(array('bulk_update', 'datatable_inline'), array('assign' => $data));
 		}
 

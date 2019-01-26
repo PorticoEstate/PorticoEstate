@@ -123,7 +123,7 @@
 																</xsl:attribute>
 																<xsl:value-of select="php:function('lang', 'condition degree')"/>
 															</label>
-															<select name="condition_degree">
+															<select name="condition_degree" class="pure-input-1">
 																<xsl:attribute name="title">
 																	<xsl:value-of select="php:function('lang', 'select value')"/>
 																</xsl:attribute>
@@ -137,7 +137,7 @@
 																</xsl:attribute>
 																<xsl:value-of select="php:function('lang', 'consequence')"/>
 															</label>
-															<select name="consequence">
+															<select name="consequence" class="pure-input-1">
 																<xsl:attribute name="title">
 																	<xsl:value-of select="php:function('lang', 'select value')"/>
 																</xsl:attribute>
@@ -151,7 +151,7 @@
 																<input type="hidden" name="type" value="control_item_type_1" />
 																<div class="pure-control-group">
 																	<label>Status</label>
-																	<select name="status" class="pure-button">
+																	<select name="status" class="pure-input-1">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -169,6 +169,14 @@
 																		<xsl:value-of select="comment"/>
 																	</textarea>
 																</div>
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
 																<input type="submit" class="pure-button pure-button-primary" name="save_control" value="Lagre sak" />
 
 															</xsl:when>
@@ -177,7 +185,7 @@
 
 																<div class="pure-control-group">
 																	<label>Status</label>
-																	<select name="status" class="pure-button">
+																	<select name="status" class="pure-input-1">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -205,6 +213,14 @@
 																		<xsl:value-of select="comment"/>
 																	</textarea>
 																</div>
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure"  class="pure-input-1">
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
@@ -216,7 +232,7 @@
 
 																<div class="pure-control-group">
 																	<label>Status</label>
-																	<select name="status" class="pure-button">
+																	<select name="status" class="pure-input-1">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -224,7 +240,7 @@
 																</div>
 																<div class="pure-control-group">
 																	<label class="comment">Velg verdi fra liste</label>
-																	<select name="option_value" class="pure-button">
+																	<select name="option_value" class="pure-input-1">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
 																				<xsl:text>pure-button required</xsl:text>
@@ -247,6 +263,14 @@
 																		<xsl:value-of select="comment"/>
 																	</textarea>
 																</div>
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure"  class="pure-input-1">
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
@@ -259,7 +283,7 @@
 
 																<div class="pure-control-group">
 																	<label>Status</label>
-																	<select name="status" class="pure-button">
+																	<select name="status" class="pure-input-1">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -267,7 +291,7 @@
 																</div>
 																<div class="pure-control-group">
 																	<label class="comment">Velg verdi fra lister</label>
-																	<select name="option_value">
+																	<select name="option_value" class="pure-input-1">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
 																				<xsl:text>required</xsl:text>
@@ -288,6 +312,14 @@
 																	<label class="comment">Beskrivelse av sak</label>
 																	<textarea name="case_descr" class="pure-input-1">
 																		<xsl:value-of select="comment"/>
+																	</textarea>
+																</div>
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure"  class="pure-input-1">
+																		<xsl:value-of select="proposed_counter_measure"/>
 																	</textarea>
 																</div>
 																<xsl:variable name="lang_save">
@@ -323,6 +355,14 @@
 																		<xsl:value-of select="comment"/>
 																	</textarea>
 																</div>
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure"  class="pure-input-1">
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
@@ -330,7 +370,38 @@
 
 															</xsl:when>
 														</xsl:choose>
+														<xsl:variable name="lang_reset_form">
+															<xsl:value-of select="php:function('lang', 'reset form')" />
+														</xsl:variable>
+														<input type="button" name="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="pure-button pure-button-primary" onclick="resetForm(form);"/>
 													</form>
+													<div class="add_picture_to_case" style="display:none">
+														<form class="pure-form pure-form-aligned add_picture_to_case" ENCTYPE="multipart/form-data" method="post">
+															<xsl:attribute name="action">
+																<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
+															</xsl:attribute>
+
+															<div class="pure-control-group">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'picture')" />
+																</label>
+																<div class="pure-custom" name="picture_container"/>
+															</div>
+															<div id="new_picture" class="pure-control-group">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'new picture')" />
+																</label>
+																<input type="file" id="case_picture_file" name="file" class="pure-input-1">
+																	<xsl:attribute name="accept">image/*</xsl:attribute>
+																	<xsl:attribute name="capture">camera</xsl:attribute>
+																</input>
+																<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
+																	<xsl:value-of select="php:function('lang', 'add picture')" />
+																</button>
+
+															</div>
+														</form>
+													</div>
 												</li>
 											</xsl:for-each>
 										</ul>

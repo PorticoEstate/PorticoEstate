@@ -15,6 +15,17 @@ html {
     color: red !important;
 }
 
+h1{
+	font-size: 30px;
+}
+
+h2{
+	font-size: 20px;
+}
+
+h3{
+	font-size: 16px;
+}
 
 @media (max-width: 767px) { 
 body {
@@ -64,6 +75,11 @@ header-text a:hover {
 .showMe header-text a {
   text-decoration: underline;
   color: #26348B;
+}
+
+.termAccept a:hover{
+	text-decoration: underline;
+	color: black;
 }
 
 a:hover {
@@ -169,7 +185,7 @@ a {
 
 
 @media (max-width: 768px) { 
-    .input-group {
+    .mainpageserchcontainer {
       margin-top: 75%;
 }
 }
@@ -277,9 +293,7 @@ a {
 }
 
 .custom-card  a:hover {
-  
     text-decoration: underline   !important;
-    
     color: #26348B  !important;
 }
 
@@ -554,9 +568,6 @@ input[type="checkbox"]:disabled + .label-text:before{
 
 .bookable-resource-link-href span,
 .termAcceptDocsUrl {
-/*    color: #26348B;*/
-    text-decoration: none  !important;
-/*    border-bottom: 2px solid #000;*/
     line-height: 1.4em;
     display: inline-block;  
     
@@ -929,7 +940,7 @@ input:focus{
 
 /* SEARCH CONTAINER */
 .circle {
-    fill: #000;
+    fill: #89266a;
 }
 
 .pageResults {
@@ -1002,6 +1013,13 @@ input:focus{
     color:white;
 }
 
+#welcomeResult .custom-card:hover span{
+	color:black;
+}
+
+#welcomeResult .custom-card:hover h4{
+	color:black;
+}
 
 custom-card-link-href:hover {
  
@@ -1682,7 +1700,7 @@ NEW APPLICATION PAGE STYLE
 }
 
 .new-application-page .validationMessage {
-    color: #FFA500;
+    color: #212529;
 }
 
 .new-application-page .fa-minus-circle {
@@ -1848,7 +1866,7 @@ h1{
 }
 
 h2{
-     font-size: 2rem;
+     font-size: 1.5rem;
 }
 
 @media (min-width: 1200px) {
@@ -1867,4 +1885,45 @@ footer .container {
 	left: 50% !important;
 	transform: translate(-50%, -50%) !important;
 	margin: 0;
+}
+
+footer{
+	font-size: 14px;
+}
+
+footer h3{
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.file-upload-button{
+	-webkit-appearance: button;
+	margin: 0;
+	font-size: 16px !important;
+	border: 1px solid #4d4c4c !important;
+	width: 120px;
+	
+}
+
+.file-upload-button:hover{
+	background-color: #89266a !important;
+	color: white !important;
+}
+
+.upload-button{
+	border: 1px solid black;
+	padding: .375rem .75rem;
+	font-size: 16px !important;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 1.5;
+	background-color: #f8f9fa;
+	width: 150px;
+	transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.upload-button:hover   {
+     background-color: rgb(137, 38, 106);
+     text-decoration: none !important;
+	 color: white;
 }

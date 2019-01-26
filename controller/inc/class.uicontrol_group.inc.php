@@ -210,7 +210,7 @@
 		public function edit()
 		{
 	//		phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));	a
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 
 			$tabs = array
 				(
@@ -429,7 +429,7 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 				self::render_template_xsl(array('control_group/control_group_tabs', 'control_group/control_group',
 					'control_group/control_group_items'), $data);
 			}
@@ -657,7 +657,7 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'controller', 'control_group_to_component.js');
+				self::add_javascript('controller', 'base', 'control_group_to_component.js');
 				self::render_template_xsl(array('control_group/control_group_tabs', 'control_group/control_group',
 					'control_group/control_group_items'), $data);
 			}

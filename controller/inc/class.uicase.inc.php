@@ -891,11 +891,11 @@
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'case.js');
-			self::add_javascript('controller', 'controller', 'check_list.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'custom_ui.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'case.js');
+			self::add_javascript('controller', 'base', 'check_list.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
@@ -1215,9 +1215,9 @@
 
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'custom_ui.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
 		}
@@ -1520,9 +1520,9 @@
 
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'custom_ui.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/view_case_message'), $data);
 		}
@@ -1775,8 +1775,8 @@
 			);
 //			_debug_array($open_check_items_and_cases); die();
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'case.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'case.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
 				'case/view_open_cases', 'case/case_row',
@@ -1932,8 +1932,8 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'case.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'case.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
 				'case/view_closed_cases', 'case/case_row',
