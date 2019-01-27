@@ -134,6 +134,9 @@
 					<xsl:variable name="action_url">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.send_case_message')" />
 					</xsl:variable>
+					<xsl:variable name="lang_select">
+						<xsl:value-of select="php:function('lang', 'select')" />
+					</xsl:variable>
 
 					<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post" class="pure-form pure-form-stacked">
 						<input>
@@ -161,11 +164,11 @@
 						<!-- === TITLE === -->
 
 						<label>Tittel på melding:</label>
-						<input name="message_title" type="text" class="pure-input-1-2 required" required="required"/>
+						<input name="message_title" type="text" class="pure-input-1 required" required="required"/>
 
 						<!-- === CATEGORY === -->
 						<label>Kategori:</label>
-						<select name="message_cat_id" class="pure-input-1-2 required" required="required">
+						<select name="message_cat_id" class="pure-input-1 required" required="required">
 							<option value="">Velg kategori</option>
 							<xsl:for-each select="categories/cat_list">
 								<xsl:variable name="cat_id">
@@ -178,7 +181,7 @@
 						</select>
 						<!-- === UPLOAD FILE === -->
 						<label>Filvedlegg:</label>
-						<input type="file" id="file" name="file" >
+						<input type="file" id="file" name="file" class="pure-input-1">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
 						</input>
@@ -209,7 +212,11 @@
 														<xsl:value-of select="consequence"/>
 													</xsl:variable>
 													<li>
-														<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+														<label for="remember" class="pure-checkbox">
+															<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+															<xsl:value-of select="$lang_select"/>
+														</label>
+
 														<xsl:choose>
 															<xsl:when test="component_descr != ''">
 																<div class="row">
@@ -305,7 +312,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="pure-button pure-button-primary" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="pure-button pure-button-primary bigmenubutton" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>
