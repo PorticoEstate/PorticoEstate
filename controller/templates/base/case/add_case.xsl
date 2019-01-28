@@ -335,7 +335,7 @@
 
 												</form>
 												<div class="add_picture_to_case" style="display:none">
-													<form class="pure-form pure-form-aligned add_picture_to_case" ENCTYPE="multipart/form-data" method="post">
+													<form class="pure-form pure-form-aligned add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
 														<xsl:attribute name="action">
 															<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
 														</xsl:attribute>

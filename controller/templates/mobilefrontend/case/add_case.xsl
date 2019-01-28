@@ -30,6 +30,7 @@
 
 			<h3 class="box_header ext">Registrer sak/måling</h3>
 			<div class="tab_item active ext">
+			<input type="hidden" id="cache_case_id" value=""></input>
 
 				<xsl:variable name="action_url">
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.save_case_ajax,phpgw_return_as:json')" />
@@ -366,7 +367,7 @@
 										<input type="button" name="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="pure-button pure-button-primary bigmenubutton" onclick="resetForm(form);"/>
 									</form>
 									<div class="add_picture_to_case" style="display:none">
-										<form class="pure-form pure-form-aligned add_picture_to_case" ENCTYPE="multipart/form-data" method="post">
+										<form class="pure-form pure-form-aligned add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
 											<xsl:attribute name="action">
 												<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
 											</xsl:attribute>
