@@ -129,7 +129,7 @@ $(document).ready(function ()
 		});
 	});
 
-	$(".add_picture_to_case").on("submit", function (e)
+	$(".add_picture_to_case_form").on("submit", function (e)
 	{
 		e.preventDefault();
 
@@ -342,8 +342,8 @@ $(document).ready(function ()
 		$(form).find("input[type='submit']").removeClass("case_saved");
 		var picture_container = $(form).next('div').find("div[name='picture_container']");
 		picture_container.html('');
-		var add_picture_to_case_form = $(form).next('div').find('.add_picture_to_case');
-		$(add_picture_to_case_form).hide();
+		var add_picture_to_case_container = $(form).next('.add_picture_to_case');
+		$(add_picture_to_case_container).hide();
 	};
 
 	// REGISTER CASE
@@ -390,8 +390,8 @@ $(document).ready(function ()
 							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
-							var add_picture_to_case_form = thisForm.next('.add_picture_to_case');
-							$(add_picture_to_case_form).show();
+							var add_picture_to_case_container = thisForm.next('.add_picture_to_case');
+							$(add_picture_to_case_container).show();
 
 //							clear_form(thisForm);
 
