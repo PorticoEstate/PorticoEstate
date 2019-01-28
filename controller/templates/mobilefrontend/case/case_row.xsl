@@ -7,6 +7,9 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
+	<xsl:variable name="get_image_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
+	</xsl:variable>
 	<li class="check_item_case">
 		<xsl:choose>
 			<xsl:when test="cases_array/child::node()">
@@ -57,7 +60,7 @@
 									</xsl:choose>
 
 									<!-- STATUS -->
-           	
+
 									<div class="row first">
 										<label>Status:</label>
 										<span class="case_status">
@@ -91,7 +94,7 @@
 									</div>
 
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
-                 
+
 										<!--  MEASUREMENT -->
 										<div class="row">
 											<label>Måleverdi:</label>
@@ -108,7 +111,48 @@
 									<div class="case_descr">
 										<xsl:value-of select="descr"/>
 									</div>
-                              
+
+									<div class="row">
+										<label>
+											<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+											<xsl:text>:</xsl:text>
+										</label>
+									</div>
+									<div class="proposed_counter_measure">
+										<xsl:value-of select="proposed_counter_measure"/>
+									</div>
+  									<xsl:if test="case_files/child::node()">
+										<div class="row">
+											<label>
+												<xsl:value-of select="php:function('lang', 'files')"/>
+												<xsl:text>:</xsl:text>
+											</label>
+										</div>
+										<!-- Slideshow container -->
+										<div class="slideshow-container">
+
+											<xsl:variable name="file_count">
+												<xsl:value-of select="count(case_files)" />
+											</xsl:variable>
+
+											<xsl:for-each select="case_files">
+
+												<!-- Full-width images with number and caption text -->
+												<div class="mySlides fade">
+													<div class="numbertext">
+														<xsl:number />	/ <xsl:value-of select="$file_count"/>
+													</div>
+													<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
+													<div class="text">
+														<xsl:value-of select="name"/>
+													</div>
+												</div>
+
+											</xsl:for-each>
+										</div>
+										<br/>
+									</xsl:if>
+
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
 										<a class="quick_edit_case first" href="">
@@ -144,7 +188,7 @@
 										</xsl:choose>
 									</div>
 								</div>
-                  
+
 								<!--  =================== UPDATE CASE FORM =================== -->
 								<form class="pure-form pure-form-stacked frm_update_case">
 									<xsl:attribute name="action">
@@ -163,11 +207,11 @@
 											<xsl:value-of select="//control_item/type" />
 										</xsl:attribute>
 									</input>
-                 	
+
 									<!--  STATUS -->
 									<div class="row first">
 										<label>Status:</label>
-										<select name="case_status">
+										<select name="case_status" class="pure-input-1">
 											<xsl:choose>
 												<xsl:when test="status = 0">
 													<option value="0" SELECTED="SELECTED">Åpen</option>
@@ -191,7 +235,7 @@
 											</xsl:attribute>
 											<xsl:value-of select="php:function('lang', 'condition degree')"/>
 										</label>
-										<select name="condition_degree">
+										<select name="condition_degree" class="pure-input-1">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'select value')"/>
 											</xsl:attribute>
@@ -209,7 +253,7 @@
 											</xsl:attribute>
 											<xsl:value-of select="php:function('lang', 'consequence')"/>
 										</label>
-										<select name="consequence">
+										<select name="consequence" class="pure-input-1">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'select value')"/>
 											</xsl:attribute>
@@ -237,7 +281,7 @@
 												<!--  MEASUREMENT -->
 												<div class="row">
 													<label class="comment">Velg verdi fra liste</label>
-													<select name="measurement">
+													<select name="measurement" class="pure-input-1">
 														<xsl:for-each select="../control_item/options_array">
 															<option>
 																<xsl:attribute name="value">
@@ -265,12 +309,21 @@
 											</xsl:when>
 										</xsl:choose>
 									</xsl:if>
-                              
+
 									<!--  DESCRIPTION -->
 									<label>Beskrivelse:</label>
 									<div class="row">
 										<textarea name="case_descr" class="pure-input-1">
 											<xsl:value-of select="descr"/>
+										</textarea>
+									</div>
+									<label>
+										<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+										<xsl:text>:</xsl:text>
+									</label>
+									<div class="row">
+										<textarea name="proposed_counter_measure" class="pure-input-1">
+											<xsl:value-of select="proposed_counter_measure"/>
 										</textarea>
 									</div>
 									<div>

@@ -155,7 +155,7 @@
 				'update_action' => self::link(array('menuaction' => 'controller.uicontrol_register_to_location.edit_location'))
 			);
 
-			self::add_javascript('controller', 'controller', 'ajax_control_to_location.js');
+			self::add_javascript('controller', 'base', 'ajax_control_to_location.js');
 
 			self::render_template_xsl(array('control_location/register_control_to_location'), $data);
 		}

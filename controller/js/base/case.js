@@ -342,6 +342,8 @@ $(document).ready(function ()
 		$(form).find("input[type='submit']").removeClass("case_saved");
 		var picture_container = $(form).next('div').find("div[name='picture_container']");
 		picture_container.html('');
+		var add_picture_to_case_form = $(form).next('div').find('.add_picture_to_case');
+		$(add_picture_to_case_form).hide();
 	};
 
 	// REGISTER CASE

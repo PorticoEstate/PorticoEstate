@@ -427,9 +427,9 @@
 				)
 			);
 
-			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'check_list.js');
+			self::add_javascript('controller', 'base', 'custom_ui.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'check_list.js');
 
 			self::render_template_xsl(array('check_list/add_check_list', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/fragments/add_check_list_menu',
@@ -637,10 +637,10 @@
 				)
 			);
 
-			self::add_javascript('controller', 'controller', 'custom_ui.js');
-			self::add_javascript('controller', 'controller', 'ajax.js');
-			self::add_javascript('controller', 'controller', 'check_list.js');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'custom_ui.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'check_list.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
@@ -1553,7 +1553,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
+			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/check_list_top_section',
 				'check_list/fragments/nav_control_plan', 'check_list/view_control_info',

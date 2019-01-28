@@ -15,7 +15,7 @@
 			<label>
 				<xsl:value-of select="php:function('lang', 'equipment')" />
 			</label>
-			<select id="choose-child-on-component" name = "component" class="select-component">
+			<select id="choose-child-on-component" name = "component" class="pure-input-1-2 select-component">
 				<xsl:for-each select="component_children">
 					<option>
 						<xsl:if test="id = //current_child/id">
@@ -72,7 +72,7 @@
 		</form>
 	</xsl:for-each>
 	<div id = "form_new_component_2">
-		
+
 	</div>
 
 </xsl:template>

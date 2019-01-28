@@ -4,6 +4,9 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
+	<xsl:variable name="get_image_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
+	</xsl:variable>
 
 	<div id="main_content" class="medium">
 		<xsl:call-template name="check_list_top_section">
@@ -18,12 +21,12 @@
 			</xsl:when>
 		</xsl:choose>
 
- 
+
 		<div id="view_cases">
 			<xsl:call-template name="cases_tab_menu">
 				<xsl:with-param name="active_tab">view_closed_cases</xsl:with-param>
 			</xsl:call-template>
-	
+
 			<div class="tab_item active">
 				<xsl:choose>
 					<xsl:when test="closed_check_items_and_cases/child::node()">
@@ -55,13 +58,13 @@
 																<xsl:number />
 															</span>.
 														</div>
-										
+
 														<!--  ==================== COL2: CASE CONTENT ===================== -->
 														<div class="col_2">
-										
+
 															<!--  =============== SHOW CASE INFO ============= -->
 															<div class="case_info">
-																								
+
 																<xsl:choose>
 																	<xsl:when test="component_descr != ''">
 																		<div class="row">
@@ -114,6 +117,46 @@
 																<div class="case_descr">
 																	<xsl:value-of select="descr"/>
 																</div>
+																<div class="row">
+																	<label>
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																		<xsl:text>:</xsl:text>
+																	</label>
+																</div>
+																<div class="case_descr">
+																	<xsl:value-of select="proposed_counter_measure"/>
+																</div>
+																<xsl:if test="case_files/child::node()">
+																	<div class="row">
+																		<label>
+																			<xsl:value-of select="php:function('lang', 'files')"/>
+																			<xsl:text>:</xsl:text>
+																		</label>
+																	</div>
+																	<!-- Slideshow container -->
+																	<div class="slideshow-container">
+
+																		<xsl:variable name="file_count">
+																			<xsl:value-of select="count(case_files)" />
+																		</xsl:variable>
+
+																		<xsl:for-each select="case_files">
+
+																			<!-- Full-width images with number and caption text -->
+																			<div class="mySlides fade">
+																				<div class="numbertext">
+																					<xsl:number />	/ <xsl:value-of select="$file_count"/>
+																				</div>
+																				<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
+																				<div class="text">
+																					<xsl:value-of select="name"/>
+																				</div>
+																			</div>
+
+																		</xsl:for-each>
+																	</div>
+																	<br/>
+																</xsl:if>
 																<!-- === QUICK EDIT MENU === -->
 																<div class="quick_menu">
 																	<a class="open_case">
@@ -166,7 +209,7 @@
 																</xsl:otherwise>
 															</xsl:choose>
 														</div>
-										
+
 													</li>
 												</xsl:for-each>
 											</ul>
