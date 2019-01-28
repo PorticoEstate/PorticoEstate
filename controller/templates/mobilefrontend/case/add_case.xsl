@@ -164,7 +164,7 @@
 													<label class="comment">
 														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 													</label>
-													<textarea name="proposed_counter_measure" >
+													<textarea name="proposed_counter_measure" class="pure-input-1">
 														<xsl:value-of select="proposed_counter_measure"/>
 													</textarea>
 												</div>
@@ -208,7 +208,7 @@
 													<label class="comment">
 														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 													</label>
-													<textarea name="proposed_counter_measure"  class="pure-input-1">
+													<textarea name="proposed_counter_measure" class="pure-input-1">
 														<xsl:value-of select="proposed_counter_measure"/>
 													</textarea>
 												</div>
@@ -258,7 +258,7 @@
 													<label class="comment">
 														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 													</label>
-													<textarea name="proposed_counter_measure"  class="pure-input-1">
+													<textarea name="proposed_counter_measure" class="pure-input-1">
 														<xsl:value-of select="proposed_counter_measure"/>
 													</textarea>
 												</div>
@@ -309,7 +309,7 @@
 													<label class="comment">
 														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 													</label>
-													<textarea name="proposed_counter_measure"  class="pure-input-1">
+													<textarea name="proposed_counter_measure" class="pure-input-1">
 														<xsl:value-of select="proposed_counter_measure"/>
 													</textarea>
 												</div>
@@ -350,7 +350,7 @@
 													<label class="comment">
 														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 													</label>
-													<textarea name="proposed_counter_measure"  class="pure-input-1">
+													<textarea name="proposed_counter_measure" class="pure-input-1">
 														<xsl:value-of select="proposed_counter_measure"/>
 													</textarea>
 												</div>
