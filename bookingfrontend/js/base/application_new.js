@@ -237,7 +237,12 @@ $(".navbar-search").removeClass("d-none");
   function validate() {
       
   }
+  
+  var d = new Date();
+	var strDate = $.datepicker.formatDate('mm/dd/yy', new Date());
+
   YUI({ lang: 'nb-no' }).use(
+	
     'aui-datepicker',
     function(Y) {
       new Y.DatePicker(
@@ -247,17 +252,23 @@ $(".navbar-search").removeClass("d-none");
             zIndex: 99999
           },
           mask: '%d/%m/%G',
+		  calendar: {
+			minimumDate: new Date(strDate) 
+		  },
+		  disabledDatesRule: 'minimumDate',
           on: {
-            selectionChange: function(event) { 
+            selectionChange: function(event) {
                 new Date(event.newSelection);
                 $(".datepicker-btn").val(event.newSelection);
                 am.bookingDate(event.newSelection);
+				return false;
             }
           }
         }
       );
     }
   );
+  
   YUI({ lang: 'nb-no' }).use(
     'aui-timepicker',
     function(Y) {
