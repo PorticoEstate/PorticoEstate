@@ -44,20 +44,72 @@
 						<xsl:when test="editable">
 							<xsl:choose>
 								<xsl:when test="$required_item = 1">
-									<input type="checkbox" name="required" id="required" checked="true"/>
+									<input type="checkbox" name="required" value="1" id="required" checked="true"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<input type="checkbox" name="required" id="required"/>
+									<input type="checkbox" name="required" value="1" id="required"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="$required_item = 1">
-									<input type="checkbox" name="required" id="required" checked="true" disabled="true"/>
+									<input type="checkbox" name="required" value="1" id="required" checked="true" disabled="true"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<input type="checkbox" name="required" id="required" disabled="true" />
+									<input type="checkbox" name="required" value="1" id="required" disabled="true" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dt>
+				<dt>
+					<label for="include_condition_degree" class="line">Skal inkludere tilstand og konsekvens</label>
+					<xsl:variable name="include_condition_degree"><xsl:value-of select="control_item/include_condition_degree" /></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:choose>
+								<xsl:when test="$include_condition_degree = 1">
+									<input type="checkbox" name="include_condition_degree" value="1" id="include_condition_degree" checked="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="include_condition_degree" value="1" id="include_condition_degree"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$include_condition_degree = 1">
+									<input type="checkbox" name="include_condition_degree" value="1" id="include_condition_degree" checked="true" disabled="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="include_condition_degree" value="1" id="include_condition_degree" disabled="true" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dt>
+				<dt>
+					<label for="include_counter_measure" class="line">Skal inkludere forslag til tiltak</label>
+					<xsl:variable name="include_counter_measure"><xsl:value-of select="control_item/include_counter_measure" /></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="editable">
+							<xsl:choose>
+								<xsl:when test="$include_counter_measure = 1">
+									<input type="checkbox" name="include_counter_measure" value="1" id="include_counter_measure" checked="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="include_counter_measure" value="1" id="include_counter_measure"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$include_counter_measure = 1">
+									<input type="checkbox" name="include_counter_measure" value="1" id="include_counter_measure" checked="true" disabled="true"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="checkbox" name="include_counter_measure" value="1" id="include_counter_measure" disabled="true" />
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>

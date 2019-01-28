@@ -44,6 +44,8 @@
 		protected $id;
 		protected $title;
 		protected $required;
+		protected $include_counter_measure;
+		protected $include_condition_degree;
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
@@ -94,6 +96,26 @@
 		public function get_required()
 		{
 			return $this->required;
+		}
+
+		public function set_include_condition_degree( $include_condition_degree )
+		{
+			$this->include_condition_degree = $include_condition_degree;
+		}
+
+		public function get_include_condition_degree()
+		{
+			return $this->include_condition_degree;
+		}
+
+		public function set_include_counter_measure( $include_counter_measure )
+		{
+			$this->include_counter_measure = $include_counter_measure;
+		}
+
+		public function get_include_counter_measure()
+		{
+			return $this->include_counter_measure;
 		}
 
 		public function set_what_to_do( $what_to_do )
@@ -222,6 +244,8 @@
 			$result['id'] = $this->get_id();
 			$result['title'] = $this->get_title();
 			$result['required'] = $this->get_required();
+			$result['include_condition_degree'] = $this->get_include_condition_degree();
+			$result['include_counter_measure'] = $this->get_include_counter_measure();
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();

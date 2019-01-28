@@ -47,7 +47,7 @@
 
 			<div class="col-md-6 order-md-2 col-lg-3 order-lg-3">
 				<h3>Aktiv kommune</h3>
-				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{wwwmunicipality}</a></span>
+				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{textaboutmunicipality}</a></span>
                                    
 				<span><a   target="_blank" rel="noopener noreferrer"    href="https://www.aktiv-kommune.no/manual/">{guidances}</a></span>  
                                  
@@ -57,8 +57,8 @@
 
 			<div class="col-md-6 order-md-4 col-lg-3 order-lg-4">
 				<h3>Logg inn</h3>
-				<span><a  href="{login_url}">{login_text}</a></span>  
-				<span><a   target="_blank" rel="noopener noreferrer"    href="{executiveofficer_url}">{executiveofficer}</a></span>  
+				<span><img class="login-logo" src="{loginlogo}" alt="Logg inn"></img><a href="{login_url}">{login_text}</a></span>
+				<span><img class="login-logo" src="{loginlogo}" alt="Logg inn"></img><a target="_blank" rel="noopener noreferrer" href="{executiveofficer_url}">{executiveofficer}</a></span>  
 				
 
 			</div>
