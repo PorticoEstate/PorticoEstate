@@ -488,7 +488,7 @@
 				),
 			);
 
-			self::add_javascript('controller', 'controller', 'component.index.js');
+			self::add_javascript('controller', 'base', 'component.index.js');
 
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}

@@ -34,14 +34,18 @@ input.date {
 	background-color: #f44336;
 	width: 140px;
 }
-
+/*
 .pure-button
 {
 	width: 140px;
-}
+}*/
 .case_saved
 {
 	background-color: #4CAF50;
+}
+
+ul {
+    list-style-type: none;
 }
 ul.add-cases {
     list-style-type: none;

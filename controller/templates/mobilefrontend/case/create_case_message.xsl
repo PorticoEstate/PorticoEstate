@@ -1,5 +1,8 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="get_image_url">
+		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
+	</xsl:variable>
 
 	<div id="main_content" class="medium">
 
@@ -131,6 +134,9 @@
 					<xsl:variable name="action_url">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.send_case_message')" />
 					</xsl:variable>
+					<xsl:variable name="lang_select">
+						<xsl:value-of select="php:function('lang', 'select')" />
+					</xsl:variable>
 
 					<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post" class="pure-form pure-form-stacked">
 						<input>
@@ -158,11 +164,11 @@
 						<!-- === TITLE === -->
 
 						<label>Tittel på melding:</label>
-						<input name="message_title" type="text" class="pure-input-1-2 required" required="required"/>
+						<input name="message_title" type="text" class="pure-input-1 required" required="required"/>
 
 						<!-- === CATEGORY === -->
 						<label>Kategori:</label>
-						<select name="message_cat_id" class="pure-input-1-2 required" required="required">
+						<select name="message_cat_id" class="pure-input-1 required" required="required">
 							<option value="">Velg kategori</option>
 							<xsl:for-each select="categories/cat_list">
 								<xsl:variable name="cat_id">
@@ -175,7 +181,7 @@
 						</select>
 						<!-- === UPLOAD FILE === -->
 						<label>Filvedlegg:</label>
-						<input type="file" id="file" name="file" >
+						<input type="file" id="file" name="file" class="pure-input-1">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
 						</input>
@@ -206,7 +212,11 @@
 														<xsl:value-of select="consequence"/>
 													</xsl:variable>
 													<li>
-														<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+														<label for="remember" class="pure-checkbox">
+															<input type="checkbox"  name="case_ids[]" value="{$cases_id}" />
+															<xsl:value-of select="$lang_select"/>
+														</label>
+
 														<xsl:choose>
 															<xsl:when test="component_descr != ''">
 																<div class="row">
@@ -245,6 +255,50 @@
 														<div class="case_descr">
 															<xsl:value-of select="descr"/>
 														</div>
+														<xsl:if test="proposed_counter_measure !=''">
+															<div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	<xsl:text>:</xsl:text>
+																</label>
+															</div>
+															<div class="proposed_counter_measure">
+																<xsl:value-of select="proposed_counter_measure"/>
+															</div>
+
+														</xsl:if>
+
+														<xsl:if test="case_files/child::node()">
+															<div class="row">
+																<label>
+																	<xsl:value-of select="php:function('lang', 'files')"/>
+																	<xsl:text>:</xsl:text>
+																</label>
+															</div>
+															<!-- Slideshow container -->
+															<div class="slideshow-container">
+
+																<xsl:variable name="file_count">
+																	<xsl:value-of select="count(case_files)" />
+																</xsl:variable>
+
+																<xsl:for-each select="case_files">
+
+																	<!-- Full-width images with number and caption text -->
+																	<div class="mySlides fade">
+																		<div class="numbertext">
+																			<xsl:number />	/ <xsl:value-of select="$file_count"/>
+																		</div>
+																		<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
+																		<div class="text">
+																			<xsl:value-of select="name"/>
+																		</div>
+																	</div>
+
+																</xsl:for-each>
+															</div>
+															<br/>
+														</xsl:if>
 													</li>
 												</xsl:for-each>
 											</ul>
@@ -258,7 +312,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="pure-button pure-button-primary" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="pure-button pure-button-primary bigmenubutton" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>

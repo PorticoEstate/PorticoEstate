@@ -442,3 +442,5 @@ equipment	controller	no	Utstyr
 file not found	controller	no	Fil ikke funnet
 error	controller	no	Feil
 proposed counter measure	controller	no	Forslag til tiltak
+reset form	controller	no	Tøm skjema
+add picture	controller	no	Legg til bilde

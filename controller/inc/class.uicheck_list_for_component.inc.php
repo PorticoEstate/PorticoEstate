@@ -149,7 +149,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 
 			self::render_template_xsl(array('control_component_tabs', 'common', 'view_component_for_control'), $data);
 		}
@@ -253,7 +253,7 @@
 
 				phpgwapi_jquery::load_widget('core');
 
-				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'base', 'ajax.js');
 
 				self::render_template_xsl(array('control_component_tabs', 'common', 'add_component_to_control'), $data);
 			}

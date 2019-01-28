@@ -157,7 +157,7 @@
 				'update_action' => self::link(array('menuaction' => 'controller.uicontrol_register_to_component.edit_component'))
 			);
 
-			self::add_javascript('controller', 'controller', 'ajax_control_to_component.js');
+			self::add_javascript('controller', 'base', 'ajax_control_to_component.js');
 			self::render_template_xsl(array('control_location/register_control_to_component'), $data);
 		}
 		/*

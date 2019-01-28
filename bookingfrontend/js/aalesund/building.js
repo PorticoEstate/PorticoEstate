@@ -846,6 +846,8 @@ function GenerateCalendarForEvents(date) {
 			$(".scheduler-event-title").text("");
 			$(".scheduler-base-nav-date").remove();
 			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke "+date.getWeek()+"</div>");
+			$(".scheduler-base-controls").append("<div class='d-inline ml-2 building_name'><h3>" +$("#building_name").text()+ "</h3></div>");
+		
 			$(".scheduler-event-disabled").hover(function () {
                 if($(".tooltip").length == 0 && $(".scheduler-event-recorder").length < 1) {
 					$('.tooltip').tooltip('hide');

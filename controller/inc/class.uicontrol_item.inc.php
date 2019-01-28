@@ -193,7 +193,7 @@
 				'parameters' => json_encode($parameters)
 			);
 			
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
@@ -262,7 +262,7 @@
 			$this->use_yui_editor(array('what_to_do', 'how_to_do'));
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'base', 'ajax.js');
 
 			self::render_template_xsl('control_item/control_item', $data);
 		}

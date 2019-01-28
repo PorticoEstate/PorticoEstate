@@ -50,7 +50,7 @@
                                          
                       <input class="  form-control  search-input"   type="text" placeholder="{placeholder_search}"    id="searchmotor"  />
                       
-                      <button class="btn btn-outline-secondary" type="submit"   id="searchbuttons"><i class="fas fa-search"></i></button>
+                      <button class="btn btn-outline-secondary searchBtn" type="submit"   id="searchbuttons"><i class="fas fa-search"></i></button>
                                     
                       </div>
                       </form>        

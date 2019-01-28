@@ -67,7 +67,7 @@ a:active {
 
 
 header-text a:hover {
-    color: #26348B;
+    color: #27348B;
     text-decoration: underline;
   
 }
@@ -441,27 +441,15 @@ outline:none;
 
 
 #searchbuttons {
-    border: 1px solid #26348B !important;
-    margin-left: 100% !important;
+   border: 1px solid #26348B !important;
+   margin-left: 100% !important;
    height: 45px;
    margin-top: -29% !important;
    outline:none;
+   border-left: none;
+   border-radius: 0;
 }
 
-
-.navbar-search button {
-    border-left: none;
-    background-color: #fff;
-    border: 1px solid #4b4b4b;
-    border-radius: 0;
-}
-
-.navbar-search button:hover,
-.navbar-search button:active {
-    background-color: #fff !important;
-    color: #6c757d !important;
-    outline: none !important;
-}
 
 .tiny-logo {
     -webkit-transform: scale(0.7); /* Saf3.1+, Chrome */
@@ -561,7 +549,7 @@ input[type="checkbox"]:disabled + .label-text:before{
     top: auto !important;
     left: auto !important;
 }
-
+F
 .bookable-resource-link-href {
     text-decoration: none;
 }
@@ -572,10 +560,6 @@ input[type="checkbox"]:disabled + .label-text:before{
     display: inline-block;  
     
     color: black;
-}
-
-.bookable-resource-link-href span {
-    font-size: 20px;
 }
 
 .bookable-resource-link-href span:hover,
@@ -876,6 +860,7 @@ transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color
 .searchBtn:hover {
 background-color: #89266a !important;
 color: white !important;
+cursor: pointer;
 }
 
 .building-card-header .btn-link{
@@ -1077,9 +1062,8 @@ custom-card-link-href:hover {
 }
 
 #welcomeResult .custom-card .desc span {
-    font-size: 12px;
+    font-size: 16px;
     display: block;
-    font-weight: bold;
 }
 
 #welcomeResult .title {
@@ -1470,6 +1454,8 @@ BUILDING PAGE STYLE
 
 .scheduler-base-controls {
     margin-left: 1em;
+	margin-right: 1em;
+	width: 100%;
 }
 
 .scheduler-event-disabled {
@@ -1926,4 +1912,19 @@ footer h3{
      background-color: rgb(137, 38, 106);
      text-decoration: none !important;
 	 color: white;
+	 cursor: pointer;
+}
+
+.login-logo{
+	padding-right: 5px;
+}
+
+.building_name{
+	float: right;
+}
+
+.yui3-calendar-selection-disabled{
+	background-color: #e6e6e6;
+	cursor: not-allowed !important;
+	font-style: italic; 
 }

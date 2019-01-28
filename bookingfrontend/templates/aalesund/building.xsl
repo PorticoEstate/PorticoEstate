@@ -22,7 +22,7 @@
 						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 					</div>
 					<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
-						<h2>
+						<h2 id="building_name">
 							<xsl:value-of select="building/name"/>
 						</h2>
 						<i class="fas fa-map-marker d-inline"> </i>
