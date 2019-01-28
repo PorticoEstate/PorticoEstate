@@ -892,7 +892,7 @@
 
 				for ($i = 0; $i < $count_cols_return; $i++)
 				{
-					$workorder[$cols_return[$i]] = $this->db->f($cols_return[$i]);
+					$workorder[$cols_return[$i]] = $this->db->f($cols_return[$i],true);
 				}
 				$workorder['actual_cost'] = 0;
 				$workorder['obligation'] = 0;
@@ -976,8 +976,8 @@
 					'id' => $this->db->f('id'),
 					'workorder_id' => $this->db->f('id'), // FIXME
 					'project_id' => $this->db->f('project_id'),
-					'title' => $this->db->f('title'),
-					'name' => $this->db->f('name'),
+					'title' => $this->db->f('title', true),
+					'name' => $this->db->f('name', true),
 					'key_fetch' => $this->db->f('key_fetch'),
 					'key_deliver' => $this->db->f('key_deliver'),
 					'key_responsible' => $this->db->f('key_responsible'),
