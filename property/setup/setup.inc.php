@@ -64,7 +64,7 @@
 	<b>Workorder</b> can be used as a general tool for producing tender for bidding - the document is presented as a pdf-document.
 	</div>';
 
-	$setup_info['property']['note'] = 'I am also planning to add maintenance planning as events in the calendar app.';
+	$setup_info['property']['note'] = '';
 
 
 	$setup_info['property']['tables'] = array(
@@ -99,6 +99,7 @@
 		'fm_building_part',
 		'fm_b_account',
 		'fm_b_account_category',
+		'fm_b_account_user',
 		'fm_workorder',
 		'fm_workorder_budget',
 		'fm_workorder_history',
