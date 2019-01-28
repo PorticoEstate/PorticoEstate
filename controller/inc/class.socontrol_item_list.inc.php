@@ -179,6 +179,8 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
+				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
+				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -214,6 +216,8 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
+				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
+				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -262,6 +266,8 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('id'), 'int'));
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
+				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
+				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 				$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
@@ -330,6 +336,8 @@
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('ci_id'), 'int'));
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
+					$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
+					$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
 					$control_item->set_control_group_id($this->unmarshal($this->db->f('control_group_id'), 'int'));
