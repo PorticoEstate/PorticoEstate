@@ -91,28 +91,27 @@ if (!empty($GLOBALS['phpgw_info']['server']['site_title'])) {
 $headlogoimg = $webserver_url . "/phpgwapi/templates/aalesund/img/Aktiv-kommune-logo.png";
 $GLOBALS['phpgw']->template->set_var('headlogoimg', $headlogoimg);
 
+$loginlogo = $webserver_url . "/phpgwapi/templates/aalesund/img/login-logo.svg";
+$GLOBALS['phpgw']->template->set_var('loginlogo', $loginlogo);
 
 $GLOBALS['phpgw']->template->set_var('logo_img', $logoimg);
 $GLOBALS['phpgw']->template->set_var('footer_logo_img', $footerlogoimg);
 $GLOBALS['phpgw']->template->set_var('logo_title', $logo_title);
 
-$guidance = 'Veiledning';
+$guidance = lang('Guidance');
 $GLOBALS['phpgw']->template->set_var('guidances', $guidance);
 
-$privacy = 'Personvern';
+$privacy = lang('Privacy');
 $GLOBALS['phpgw']->template->set_var('privacy', $privacy);
 
-//$wwwmunicipality = 'www.aktiv-kommune.no';
-$wwwmunicipality = 'Om Aktiv kommune';
-$GLOBALS['phpgw']->template->set_var('wwwmunicipality', $wwwmunicipality);
 
-$textaboutmunicipality = 'OM AKTIV KOMMUNE';
+$textaboutmunicipality = lang('About Active kommune');
 $GLOBALS['phpgw']->template->set_var('textaboutmunicipality', $textaboutmunicipality);
 
-$SIGNINN = 'LOGG INN';
+$SIGNINN = lang('sign in');
 $GLOBALS['phpgw']->template->set_var('SIGNINN', $SIGNINN);
 
-$executiveofficer = 'Logg inn for saksbehandler';
+$executiveofficer = lang('executiveofficer');
 $GLOBALS['phpgw']->template->set_var('executiveofficer', $executiveofficer);
 
 $executiveofficer_url = $webserver_url . "/";
@@ -251,8 +250,6 @@ $tpl_vars = array
 	'header_search_class' => 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 );
 
-$tpl_vars['manual_text'] = lang('manual');
-$GLOBALS['phpgw']->template->set_var('manual_url', "testing");
 
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
@@ -294,7 +291,7 @@ if ($bouser->is_logged_in()) {
 } else {
 	$tpl_vars['login_text_org'] = '';
 	$tpl_vars['org_url'] = '#';
-	$tpl_vars['login_text'] = lang('For brukere');
+	$tpl_vars['login_text'] = lang('User');
 	$tpl_vars['login_url'] = 'login.php?after=' . urlencode($_SERVER['QUERY_STRING']);
 	$login_parameter = !empty($config_frontend['login_parameter']) ? $config_frontend['login_parameter'] : '';
 	$custom_login_url = !empty($config_frontend['custom_login_url']) ? $config_frontend['custom_login_url'] : '';
