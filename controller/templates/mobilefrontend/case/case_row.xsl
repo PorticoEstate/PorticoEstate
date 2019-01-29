@@ -327,8 +327,8 @@
 										</textarea>
 									</div>
 									<div>
-										<input class='btn_m' type='submit' value='Oppdater' />
-										<input class='btn_m cancel' type='button' value='Avbryt' />
+										<input class='btn_m first pure-button pure-button-primary bigmenubutton' type='submit' value='Oppdater' />
+										<input class='btn_m cancel first pure-button pure-button-primary bigmenubutton' type='button' value='Avbryt' />
 									</div>
 								</form>
 							</div>
