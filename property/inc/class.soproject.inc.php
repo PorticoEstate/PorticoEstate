@@ -749,7 +749,7 @@
 //_debug_array("{$sql} WHERE fm_project.id = '{$project['project_id']}' {$group_method}");
 					for ($i = 0; $i < $count_cols_return; $i++)
 					{
-						$project[$cols_return[$i]] = $this->db->f($cols_return[$i]);
+						$project[$cols_return[$i]] = $this->db->f($cols_return[$i], true);
 					}
 
 					$location_code = $this->db->f('location_code');
@@ -910,8 +910,8 @@
 					'id' => $project_id,
 					'project_id' => $this->db->f('id'),//consider this one
 					'project_type_id' => $this->db->f('project_type_id'),
-					'title' => $this->db->f('title'),
-					'name' => $this->db->f('name'),
+					'title' => $this->db->f('title', true),
+					'name' => $this->db->f('name', true),
 					'location_code' => $this->db->f('location_code'),
 					'key_fetch' => $this->db->f('key_fetch'),
 					'key_deliver' => $this->db->f('key_deliver'),
@@ -949,7 +949,7 @@
 					$project['attributes'] = $values['attributes'];
 					foreach ($project['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 					}
 				}
 
