@@ -220,10 +220,11 @@
 				try
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
+					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)
 				{
-					// TODO: Inform user if something goes wrong
+					phpgwapi_cache::message_set("Epost feilet til {$adr}", 'error');
 					$GLOBALS['phpgw']->log->error(array(
 						'text'	=> 'booking_boapplication::send_admin_notification() : error when trying to send email. Error: %1',
 						'p1'	=> $e->getMessage(),
