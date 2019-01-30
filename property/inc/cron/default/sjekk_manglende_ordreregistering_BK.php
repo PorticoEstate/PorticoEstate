@@ -65,9 +65,10 @@
 				. " account_firstname, account_lastname"
 				. " FROM fm_workorder JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " JOIN phpgw_accounts ON fm_workorder.user_id = phpgw_accounts.account_id"
-				. " WHERE ( order_sent IS NOT NULL OR (canceled IS NULL OR closed IS NULL) )"
+				. " WHERE (order_sent IS NOT NULL OR canceled IS NULL )"
 				. " AND fm_workorder.id > 45000000"
 				. " AND verified_transfered IS NULL"
+				. " AND closed IS NULL"
 				. " ORDER BY sorteringsdato , fm_workorder.id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
