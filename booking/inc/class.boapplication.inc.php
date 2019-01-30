@@ -214,12 +214,22 @@
 			$body .= '<b>Epost:</b> ' . $application['contact_email'] . '<br />';
 			$body .= '<b>Telefon:</b> ' . $application['contact_phone'] . '<br /><br />';
 			$body .= '<a href="' . $link . '">Lenke til søknad</a><br /><br />';
+			$html = <<<HTML
+<!DOCTYPE html>
+<html lang="no">
+	<head>
+		<meta charset="utf-8">
+		<title>$subject</title>
+	</head>
+	<body>{$body}</body>
+</html>
+HTML;
 
 			foreach ($mailadresses as $adr)
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+					$send->msg('email', $adr, $subject, $html, '', '', '', $from, 'AktivKommune', 'html');
 					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)
