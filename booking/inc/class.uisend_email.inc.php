@@ -126,7 +126,7 @@
 			{
 				try
 				{
-					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
+					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 					$result['ok'][] = $contact;
 				}
 				catch (Exception $e)

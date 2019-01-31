@@ -159,7 +159,7 @@
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
+					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 				}
 				catch (Exception $e)
 				{
@@ -288,7 +288,7 @@
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
+					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 				}
 				catch (Exception $e)
 				{
