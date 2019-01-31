@@ -329,7 +329,7 @@
 
 				if ($export_ok)
 				{
-					phpgwapi_cache::message_set("Ordre #{$workorder['id']} er overført");
+					phpgwapi_cache::message_set("Ordre #{$workorder['id']} er overført til UBW");
 					$this->log_transfer( $workorder['id'] );
 
 					$interlink = CreateObject('property.interlink');
@@ -357,6 +357,10 @@
 						$this->alert_external($workorder['id'], $tickets, $vendor['name'], $workorder['end_date']);
 					}
 
+				}
+				else
+				{
+					throw new Exception("Overføring til UBW av Ordre #{$workorder['id']} feilet");
 				}
 			}
 

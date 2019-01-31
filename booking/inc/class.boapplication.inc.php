@@ -229,7 +229,7 @@ HTML;
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $html, '', '', '', $from, 'AktivKommune', 'html');
+					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)
