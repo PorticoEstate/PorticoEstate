@@ -556,7 +556,7 @@
 				{
 					try
 					{
-						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
 					}
 					catch (Exception $e)
 					{

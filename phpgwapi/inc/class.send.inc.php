@@ -14,7 +14,7 @@
 	use PHPMailer\PHPMailer\Exception;
 	/**
 	* SMTP mailer
-	* 
+	*
 	* @package phpgwapi
 	* @package communication
 	* This module should replace php's mail() function. It is fully syntax
@@ -98,7 +98,7 @@
 			}
 			$delimiter = ';';
 			$to = explode($delimiter, $to);
-			
+
 			try
 			{
 				foreach ($to as $entry)
@@ -125,7 +125,7 @@
 			{
 				$delimiter = ';';
 				$cc = explode($delimiter, $cc);
-			
+
 				foreach ($cc as $entry)
 				{
 					$entry = str_replace(array('[',']'),array('<','>'),$entry);
@@ -144,7 +144,7 @@
 			{
 				$delimiter = ';';
 				$bcc = explode($delimiter, $bcc);
-			
+
 				foreach ($bcc as $entry)
 				{
 					$entry = str_replace(array('[',']'),array('<','>'),$entry);
@@ -161,11 +161,6 @@
 			}
 			$mail->IsSMTP();
 			$mail->Subject = $subject;
-			$mail->Body    = $body;
-			/**
-			 * Implement me...
-			 */
-//			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 			$mail->addCustomHeader('X-Mailer: fmsystem (http://www.fmsystem.no)');
 			if($receive_notification)
@@ -181,7 +176,20 @@
 			{
 				$mail->IsHTML(false);
 				$mail->WordWrap = 76;
+				$text_message  = array('text' => $body);
+				$newArray = array_map(function($v)
+				{
+					return trim(strip_tags($v));
+				 }, $text_message);
+
+				$body = $newArray['text'];
 			}
+
+			$mail->Body    = $body;
+			/**
+			 * Implement me...
+			 */
+//			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 			switch($msgtype)
 			{
@@ -247,7 +255,7 @@
 
 			return true;
 		}
-	
+
 			// ==================================================[ some sub-functions ]===
 
 		/**

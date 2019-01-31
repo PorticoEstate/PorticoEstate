@@ -80,7 +80,8 @@
 							array(
 								'name' => 'external_id',
 								'descr' => lang('external id'),
-								'type' => 'int'
+								'type' => 'int',
+								'nullable' => true,
 							),
 							array(
 								'name' => 'district_id',

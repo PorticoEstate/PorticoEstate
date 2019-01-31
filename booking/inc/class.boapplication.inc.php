@@ -125,7 +125,7 @@
 						{
 							try
 							{
-								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, 'AktivKommune', 'html');
+								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, 'AktivKommune', 'text');
 							}
 							catch (Exception $e)
 							{
@@ -155,7 +155,7 @@
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
 			}
 			catch (Exception $e)
 			{
@@ -229,7 +229,7 @@ HTML;
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $html, '', '', '', $from, 'AktivKommune', 'html');
+					$send->msg('email', $adr, $subject, $html, '', '', '', $from, 'AktivKommune', 'text');
 					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)

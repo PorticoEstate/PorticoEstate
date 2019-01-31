@@ -626,7 +626,7 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'text');
 				}
 				catch (Exception $e)
 				{
