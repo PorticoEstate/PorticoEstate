@@ -1031,6 +1031,7 @@
 			{
 				$completed_date_ts = 0;
 				$status = controller_check_list::STATUS_NOT_DONE;
+				$assigned_to = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 			else if ($completed_date != '')
 			{
@@ -1167,7 +1168,9 @@
 				/**
 				 * Add an iCal-event if there is a serie - and the checklist is visited the first time - or assigned is changed
 				 */
-				if (($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to))
+				if (!$submit_deviation && 
+					(($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to))
+				)
 				{
 					$bocommon = CreateObject('property.bocommon');
 					$current_prefs_user = $bocommon->create_preferences('property', $GLOBALS['phpgw_info']['user']['account_id']);

@@ -115,6 +115,41 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_rescategory' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_rescategory_activity' => array(
+			'fd' => array(
+				'rescategory_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('rescategory_id', 'activity_id'),
+			'fk' => array(
+				'bb_rescategory' => array('rescategory_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_facility' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
 		'bb_resource' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -1015,40 +1050,5 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		),
-		'bb_rescategory' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
-				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array(),
-		),
-		'bb_rescategory_activity' => array(
-			'fd' => array(
-				'rescategory_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-			),
-			'pk' => array('rescategory_id', 'activity_id'),
-			'fk' => array(
-				'bb_rescategory' => array('rescategory_id' => 'id'),
-				'bb_activity' => array('activity_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array(),
-		),
-		'bb_facility' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
-				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array(),
-		),
+		)
 	);

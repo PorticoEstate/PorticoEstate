@@ -449,6 +449,11 @@
 			$files = array();
 			if (isset($_FILES['file']['name']) && $_FILES['file']['name'])
 			{
+				if ($this->is_image($_FILES['file']['tmp_name']))
+				{
+					$this->resize_image($_FILES['file']['tmp_name'], $_FILES['file']['tmp_name'], $thumb_size = 800);
+				}
+
 				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 				$to_file = "{$bofiles->fakebase}/{$category_dir}/{$loc1}/{$id}/{$file_name}";
 
@@ -1387,42 +1392,40 @@
 			/*
 			 * Transfer pictures
 			 */
+			$bofiles = CreateObject('property.bofiles', '');
 			$files = array();
 			foreach ($case_ids as $case_id)
 			{
-				$files = array_merge($files, $this->get_case_images($case_id));
-			}
-
-			$bofiles = CreateObject('property.bofiles', '');
-
-			foreach ($files as $file)
-			{
-				$file_name = "{$case_id}_{$file['name']}";
-
-				$to_file = "/property/fmticket/{$message_ticket_id}/{$case_id}_{$file['name']}";
-				$from_file = "{$file['directory']}/{$file['name']}";
-
-				if ($bofiles->vfs->file_exists(array(
-						'string' => $to_file,
-						'relatives' => array(RELATIVE_NONE)
-					)))
+				$files = $this->get_case_images($case_id);
+				foreach ($files as $file)
 				{
-					$receipt['error'][] = array('msg' => lang('This file already exists !'));
-					phpgwapi_cache::message_set($file_name . ': ' . lang('This file already exists !'), 'error');
-				}
-				else
-				{
-					$bofiles->create_document_dir("fmticket/{$message_ticket_id}");
-					$bofiles->vfs->override_acl = 1;
+					$file_name = "{$case_id}_{$file['name']}";
 
-					if (!$bofiles->vfs->cp(array(
-							'from' => $from_file,
-							'to' => $to_file,
-							'relatives' => array(RELATIVE_NONE, RELATIVE_NONE))))
+					$to_file = "/property/fmticket/{$message_ticket_id}/{$case_id}_{$file['name']}";
+					$from_file = "{$file['directory']}/{$file['name']}";
+
+					if ($bofiles->vfs->file_exists(array(
+							'string' => $to_file,
+							'relatives' => array(RELATIVE_NONE)
+						)))
 					{
-						phpgwapi_cache::message_set($file_name . ': ' . lang('Failed to upload file !'), 'error');
+						$receipt['error'][] = array('msg' => lang('This file already exists !'));
+						phpgwapi_cache::message_set($file_name . ': ' . lang('This file already exists !'), 'error');
 					}
-					$bofiles->vfs->override_acl = 0;
+					else
+					{
+						$bofiles->create_document_dir("fmticket/{$message_ticket_id}");
+						$bofiles->vfs->override_acl = 1;
+
+						if (!$bofiles->vfs->cp(array(
+								'from' => $from_file,
+								'to' => $to_file,
+								'relatives' => array(RELATIVE_NONE, RELATIVE_NONE))))
+						{
+							phpgwapi_cache::message_set($file_name . ': ' . lang('Failed to upload file !'), 'error');
+						}
+						$bofiles->vfs->override_acl = 0;
+					}
 				}
 			}
 

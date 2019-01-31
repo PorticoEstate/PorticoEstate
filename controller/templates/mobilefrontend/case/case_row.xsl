@@ -155,10 +155,10 @@
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
-										<a class="quick_edit_case first" href="">
+										<a class="quick_edit_case first pure-button pure-button-primary bigmenubutton" href="">
 											endre
 										</a>
-										<a class="close_case">
+										<a class="close_case pure-button pure-button-primary bigmenubutton">
 											<xsl:attribute name="href">
 												<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
 												<xsl:text>&amp;case_id=</xsl:text>
@@ -172,7 +172,7 @@
 										</a>
 										<xsl:choose>
 											<xsl:when test="location_item_id = 0">
-												<a class="delete_case">
+												<a class="delete_case pure-button pure-button-primary bigmenubutton">
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>
@@ -327,8 +327,8 @@
 										</textarea>
 									</div>
 									<div>
-										<input class='btn_m' type='submit' value='Oppdater' />
-										<input class='btn_m cancel' type='button' value='Avbryt' />
+										<input class='btn_m first pure-button pure-button-primary bigmenubutton' type='submit' value='Oppdater' />
+										<input class='btn_m cancel first pure-button pure-button-primary bigmenubutton' type='button' value='Avbryt' />
 									</div>
 								</form>
 							</div>
