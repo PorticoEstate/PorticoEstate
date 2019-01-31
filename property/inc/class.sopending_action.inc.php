@@ -239,15 +239,32 @@
 				throw new Exception("'{$responsible_type}' is not a valid responsible_type");
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			$location_ids = array();
+			$location_map = array();
 
-			if (!$location_id)
+			if($location && is_array($location))
+			{
+				foreach ($location as $_location)
+				{
+					$_location_id =	$GLOBALS['phpgw']->locations->get_id($appname, $_location);
+					$location_ids[] = $_location_id;
+					$location_map[$_location_id] = $_location;
+				}
+			}
+			else
+			{
+				$_location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+				$location_ids[] = $_location_id;
+				$location_map[$_location_id] = $location;
+			}
+
+			if (!$location_ids)
 			{
 				throw new Exception("phpgwapi_locations::get_id ({$appname}, {$location}) returned 0");
 			}
 
 			$ret = array();
-			$condition = " WHERE num = '{$action}' AND location_id = {$location_id}";
+			$condition = " WHERE num = '{$action}' AND location_id IN (" . implode(',', $location_ids) . ')';
 
 			if (is_array($responsible))
 			{
@@ -313,11 +330,11 @@
 
 			foreach ($ret as &$entry)
 			{
-				if (!$location)
+				if (!$location_map)
 				{
-					$location = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+					$location_map[$entry['location_id']] = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				}
-				$entry['url'] = $interlink->get_relation_link($location, $entry['item_id'], 'edit');
+				$entry['url'] = $interlink->get_relation_link($location_map[$entry['location_id']], $entry['item_id'], 'edit');
 			}
 			return $ret;
 		}

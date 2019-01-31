@@ -665,7 +665,7 @@ JS;
 			if (isset($prefs['property']['mainscreen_showapprovals_request']) && $prefs['property']['mainscreen_showapprovals_request'] == 'yes')
 			{
 				$total_records = 0;
-				$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title'] ? "{$prefs['property']['mainscreen_showapprovals_request_title']} ({$total_records})" : lang('approvals request') . " ({$total_records})";
+				$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title'] ? "{$prefs['property']['mainscreen_showapprovals_request_title']}" : lang('approvals request');
 
 				//TODO Make listbox css compliant
 				$portalbox = CreateObject('phpgwapi.listbox', array
@@ -693,95 +693,61 @@ JS;
 					//			$portalbox->set_controls($key,$value);
 				}
 
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.project',
-					//	'id'				=> $id,
-					'responsible' => '',
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => $accound_id,
-					'allrows' => true
-				);
-
-				$obj = CreateObject('property.sopending_action');
-				$pending_approvals = $obj->get_pending_action($action_params);
-				$total_records = $obj->total_records;
-
-				$portalbox->data = array();
-				foreach ($pending_approvals as $entry)
-				{
-					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
-					$portalbox->data[] = array
-						(
-						'text' => "{$responsible}: Prosjekt venter på godkjenning: {$entry['item_id']}",
-						'link' => $entry['url']
-					);
-				}
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.project.workorder',
-					//	'id'				=> $id,
-					'responsible' => '',
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => $accound_id,
-					'allrows' => true
-				);
-
-				$pending_approvals = $obj->get_pending_action($action_params);
-				$total_records = $total_records + $obj->total_records;
-
-				foreach ($pending_approvals as $entry)
-				{
-					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
-					$portalbox->data[] = array
-						(
-						'text' => "{$responsible}: Ordre venter på godkjenning: {$entry['item_id']}",
-						'link' => $entry['url']
-					);
-				}
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.ticket',
-					//	'id'				=> $id,
-					'responsible' => '',
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => $accound_id,
-					'allrows' => true
-				);
-
-				$pending_approvals = $obj->get_pending_action($action_params);
-				$total_records = $total_records + $obj->total_records;
-
-				foreach ($pending_approvals as $entry)
-				{
-					$responsible = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
-					$portalbox->data[] = array
-						(
-						'text' => "{$responsible}: Melding venter på godkjenning: {$entry['item_id']}",
-						'link' => $entry['url']
-					);
-				}
-
 				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
-				unset($obj);
-				unset($pending_approvals);
+
+				echo '<div id="approval_info_container"></div>';
+
+					$lang = js_lang( 'responsible', 'id', 'date');
+
+					$js = <<<JS
+						<script type="text/javascript">
+						var building_id = 1;
+						var lang = $lang;
+						var approval_infoURL = phpGWLink('index.php', {
+							menuaction:'property.bopending_action.get_pending_action_ajax',
+							order:'id',
+							sort:'asc',
+							appname: 'property',
+				//			location: '.project',
+							responsible: '',
+							responsible_type: 'user',
+							action: 'approval',
+							deadline: '',
+							created_by:{$accound_id},
+							result:10
+							}, true);
+
+							approval_infoURL += '&location[]=.project&location[]=.ticket';
+
+						var rMyApproval_info = [{n: 'ResultSet'},{n: 'Result'}];
+
+						var colDefsApproval_info = [
+							{key: 'id', label: lang['id'], formatter: genericLink},
+							{key: 'responsible_name', label: lang['responsible']},
+							{key: 'requested_date', label: lang['date']}
+
+							];
+
+						var paginatorTableApproval_info = new Array();
+						paginatorTableApproval_info.limit = 10;
+						createPaginatorTable('approval_info_container', paginatorTableApproval_info);
+
+						createTable('approval_info_container', approval_infoURL, colDefsApproval_info, rMyApproval_info, 'pure-table pure-table-bordered', paginatorTableApproval_info);
+
+					</script>
+
+JS;
+
+				echo $js;
+
 			}
 
 			if (isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
 			{
 				$total_records = 0;
-				$title = 'dummy';
+				$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title'] ? "{$prefs['property']['mainscreen_showapprovals_title']}" : lang('approvals');
 				//TODO Make listbox css compliant
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
@@ -805,174 +771,73 @@ JS;
 
 				foreach ($var as $key => $value)
 				{
-					//			$portalbox->set_controls($key,$value);
+		//			$portalbox->set_controls($key,$value);
 				}
 
-				$users_for_substitute = CreateObject('property.sosubstitute')->get_users_for_substitute( $accound_id);
-				$users_for_substitute[] = $accound_id;
 
-
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.project',
-					'responsible' => $users_for_substitute,
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => '',
-					'allrows' => true
-				);
-
-				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
-
-				$portalbox->data = array();
-				foreach ($pending_approvals as $entry)
-				{
-					$portalbox->data[] = array
-						(
-						'text' => 'Prosjekt venter på godkjenning: ' . $entry['item_id'],
-						'link' => $entry['url']
-					);
-					$total_records++;
-				}
-
-				//		echo "\n".'<!-- BEGIN approval info -->'."\n".$portalbox->draw()."\n".'<!-- END approval info -->'."\n";
-
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.project.workorder',
-					//	'id'				=> $id,
-					'responsible' => $accound_id,
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => '',
-					'allrows' => true
-				);
-
-				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
-
-				//		$portalbox->data = array();
-				foreach ($pending_approvals as $entry)
-				{
-					$portalbox->data[] = array
-						(
-						'text' => 'Ordre venter på godkjenning: ' . $entry['item_id'],
-						'link' => $entry['url']
-					);
-					$total_records++;
-				}
-
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.ticket',
-					//	'id'				=> $id,
-					'responsible' => $accound_id,
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => '',
-					'allrows' => true
-				);
-
-				$pending_approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
-
-				//		$portalbox->data = array();
-				foreach ($pending_approvals as $entry)
-				{
-					$portalbox->data[] = array
-						(
-						'text' => 'Melding venter på godkjenning: ' . $entry['item_id'],
-						'link' => $entry['url']
-					);
-					$total_records++;
-				}
-				//Hack
-				$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title'] ? "{$prefs['property']['mainscreen_showapprovals_title']} ({$total_records})" : lang('approvals') . " ({$total_records})";
 				$portalbox->setvar('title', $title);
 				$portalbox->start_template();
+
 
 				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
-				unset($pending_approvals);
-			}
 
-			//Sigurd: Consider remove
-//			if ( isset($prefs['property']['mainscreen_showvendor_reminder'])
-//			&& $prefs['property']['mainscreen_showvendor_reminder']  == 'yes' )
-			if (false)
-			{
-				$total_records = 0;
-				$title = 'dummy';
-				//TODO Make listbox css compliant
-				$portalbox = CreateObject('phpgwapi.listbox', array
-					(
-					'title' => $title,
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-				));
+				$users_for_substitute = CreateObject('property.sosubstitute')->get_users_for_substitute( $accound_id);
+				$users_for_substitute[] = $accound_id;
 
-				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				$responsible_filter = '';
+
+				foreach ($users_for_substitute as $_accound_id)
 				{
-					$GLOBALS['portal_order'][] = $app_id;
+					$responsible_filter .= "&responsible[]={$_accound_id}";
 				}
 
-				$var = $this->get_controls($app_id);
+				unset($_accound_id);
 
-				foreach ($var as $key => $value)
-				{
-					//			$portalbox->set_controls($key,$value);
-				}
+				echo '<div id="my_responsibility_approval_info_container"></div>';
 
-				$action_params = array
-					(
-					'appname' => 'property',
-					'location' => '.project.workorder',
-					//	'id'				=> $id,
-					'responsible' => '',
-					'responsible_type' => 'vendor',
-					'action' => 'remind',
-					'deadline' => '',
-					'created_by' => $accound_id,
-					'allrows' => true
-				);
+				$lang = js_lang( 'responsible', 'id', 'date');
 
-				$pending_reminder = execMethod('property.sopending_action.get_pending_action', $action_params);
+				$js = <<<JS
+					<script type="text/javascript">
+					var building_id = 1;
+					var lang = $lang;
+					var approval_infoURL = phpGWLink('index.php', {
+						menuaction:'property.bopending_action.get_pending_action_ajax',
+						order:'id',
+						sort:'asc',
+						appname: 'property',
+						responsible_type: 'user',
+						action: 'approval',
+						deadline: '',
+						created_by:'',
+						result:10
+						}, true);
 
-				$portalbox->data = array();
-				foreach ($pending_reminder as $entry)
-				{
-					$sql = 'SELECT org_name FROM fm_vendor where id=' . (int)$entry['responsible'];
-					$GLOBALS['phpgw']->db;
-					$GLOBALS['phpgw']->db->query($sql);
-					$GLOBALS['phpgw']->db->next_record();
-					$vendor_name = $GLOBALS['phpgw']->db->f('org_name', true);
+						approval_infoURL += '&location[]=.project&location[]=.ticket';
+						approval_infoURL += '{$responsible_filter}';
 
-					$portalbox->data[] = array
-						(
-						'text' => "påminning nr {$entry['reminder']} til leverandør {$vendor_name}- ordre nr: {$entry['item_id']}",
-						'link' => $entry['url']
-					);
-					$total_records++;
-				}
+					var rApproval_info = [{n: 'ResultSet'},{n: 'Result'}];
 
-				$title = isset($prefs['property']['mainscreen_showvendor_reminder_title']) && $prefs['property']['mainscreen_showvendor_reminder_title'] ? "{$prefs['property']['mainscreen_showvendor_reminder_title']} ({$total_records})" : lang('vendor reminder') . " ({$total_records})";
-				$portalbox->setvar('title', $title);
-				$portalbox->start_template();
+					var colDefsApproval_info = [
+						{key: 'id', label: lang['id'], formatter: genericLink},
+						{key: 'responsible_name', label: lang['responsible']},
+						{key: 'requested_date', label: lang['date']}
 
-				echo "\n" . '<!-- BEGIN reminder info -->' . "\n<div class='property_reminder' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END reminder info -->' . "\n";
+						];
 
-				unset($pending_reminder);
-				unset($portalbox);
+					var paginatorTableMyApproval_info = new Array();
+					paginatorTableMyApproval_info.limit = 10;
+					createPaginatorTable('my_responsibility_approval_info_container', paginatorTableMyApproval_info);
+
+					createTable('my_responsibility_approval_info_container', approval_infoURL, colDefsApproval_info, rApproval_info, 'pure-table pure-table-bordered', paginatorTableMyApproval_info);
+
+				</script>
+
+JS;
+
+				echo $js;
 			}
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
