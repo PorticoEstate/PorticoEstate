@@ -125,7 +125,7 @@
 						{
 							try
 							{
-								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, '', 'html');
+								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, 'AktivKommune', 'html');
 							}
 							catch (Exception $e)
 							{
@@ -155,7 +155,7 @@
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'html');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 			}
 			catch (Exception $e)
 			{
@@ -214,16 +214,27 @@
 			$body .= '<b>Epost:</b> ' . $application['contact_email'] . '<br />';
 			$body .= '<b>Telefon:</b> ' . $application['contact_phone'] . '<br /><br />';
 			$body .= '<a href="' . $link . '">Lenke til søknad</a><br /><br />';
+			$html = <<<HTML
+<!DOCTYPE html>
+<html lang="no">
+	<head>
+		<meta charset="utf-8">
+		<title>$subject</title>
+	</head>
+	<body>{$body}</body>
+</html>
+HTML;
 
 			foreach ($mailadresses as $adr)
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
+					$send->msg('email', $adr, $subject, $html, '', '', '', $from, 'AktivKommune', 'html');
+					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)
 				{
-					// TODO: Inform user if something goes wrong
+					phpgwapi_cache::message_set("Epost feilet til {$adr}", 'error');
 					$GLOBALS['phpgw']->log->error(array(
 						'text'	=> 'booking_boapplication::send_admin_notification() : error when trying to send email. Error: %1',
 						'p1'	=> $e->getMessage(),

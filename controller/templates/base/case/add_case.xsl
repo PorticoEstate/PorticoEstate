@@ -29,7 +29,7 @@
 
 			<h3 class="box_header ext">Registrer sak/måling</h3>
 			<div class="tab_item active ext">
-			<input type="hidden" id="cache_case_id" value=""></input>
+				<input type="hidden" id="cache_case_id" value=""></input>
 
 				<xsl:variable name="action_url">
 					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.save_case_ajax,phpgw_return_as:json')" />
@@ -116,34 +116,36 @@
 															</div>
 														</xsl:when>
 													</xsl:choose>
-													<div class="row">
-														<label>
-															<xsl:attribute name="title">
-																<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
-															</xsl:attribute>
-															<xsl:value-of select="php:function('lang', 'condition degree')"/>
-														</label>
-														<select name="condition_degree">
-															<xsl:attribute name="title">
-																<xsl:value-of select="php:function('lang', 'select value')"/>
-															</xsl:attribute>
-															<xsl:apply-templates select="//degree_list/options"/>
-														</select>
-													</div>
-													<div class="row">
-														<label>
-															<xsl:attribute name="title">
+													<xsl:if test="include_condition_degree = 1">
+														<div class="row">
+															<label>
+																<xsl:attribute name="title">
+																	<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
+																</xsl:attribute>
+																<xsl:value-of select="php:function('lang', 'condition degree')"/>
+															</label>
+															<select name="condition_degree">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'select value')"/>
+																</xsl:attribute>
+																<xsl:apply-templates select="//degree_list/options"/>
+															</select>
+														</div>
+														<div class="row">
+															<label>
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'consequence')"/>
+																</xsl:attribute>
 																<xsl:value-of select="php:function('lang', 'consequence')"/>
-															</xsl:attribute>
-															<xsl:value-of select="php:function('lang', 'consequence')"/>
-														</label>
-														<select name="consequence">
-															<xsl:attribute name="title">
-																<xsl:value-of select="php:function('lang', 'select value')"/>
-															</xsl:attribute>
-															<xsl:apply-templates select="//consequence_list/options"/>
-														</select>
-													</div>
+															</label>
+															<select name="consequence">
+																<xsl:attribute name="title">
+																	<xsl:value-of select="php:function('lang', 'select value')"/>
+																</xsl:attribute>
+																<xsl:apply-templates select="//consequence_list/options"/>
+															</select>
+														</div>
+													</xsl:if>
 													<xsl:choose>
 														<xsl:when test="type = 'control_item_type_1'">
 															<input type="hidden" name="status" value="0" />
@@ -167,14 +169,16 @@
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
-															<div>
-																<label class="comment">
-																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-																</label>
-																<textarea name="proposed_counter_measure" >
-																	<xsl:value-of select="proposed_counter_measure"/>
-																</textarea>
-															</div>
+															<xsl:if test="include_counter_measure = 1">
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
+															</xsl:if>
 															<input type="submit" class="btn" name="save_control" value="Lagre sak" />
 
 														</xsl:when>
@@ -211,14 +215,16 @@
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
-															<div>
-																<label class="comment">
-																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-																</label>
-																<textarea name="proposed_counter_measure" >
-																	<xsl:value-of select="proposed_counter_measure"/>
-																</textarea>
-															</div>
+															<xsl:if test="include_counter_measure = 1">
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
+															</xsl:if>
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -262,14 +268,16 @@
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
-															<div>
-																<label class="comment">
-																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-																</label>
-																<textarea name="proposed_counter_measure" >
-																	<xsl:value-of select="proposed_counter_measure"/>
-																</textarea>
-															</div>
+															<xsl:if test="include_counter_measure = 1">
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
+															</xsl:if>
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -313,14 +321,16 @@
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
-															<div>
-																<label class="comment">
-																	<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-																</label>
-																<textarea name="proposed_counter_measure" >
-																	<xsl:value-of select="proposed_counter_measure"/>
-																</textarea>
-															</div>
+															<xsl:if test="include_counter_measure = 1">
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
+															</xsl:if>
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -335,7 +345,7 @@
 
 												</form>
 												<div class="add_picture_to_case" style="display:none">
-													<form class="pure-form pure-form-aligned add_picture_to_case" ENCTYPE="multipart/form-data" method="post">
+													<form class="pure-form pure-form-aligned add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
 														<xsl:attribute name="action">
 															<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
 														</xsl:attribute>

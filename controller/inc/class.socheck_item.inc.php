@@ -128,6 +128,8 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id'), 'int'));
 				$control_item->set_title($this->db->f('title', true), 'string');
 				$control_item->set_required($this->db->f('required', true), 'string');
+				$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
+				$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 				$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
@@ -246,6 +248,8 @@
 				$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id'), 'int'));
 				$control_item->set_title($this->db->f('title', true), 'string');
 				$control_item->set_required($this->db->f('required', true), 'string');
+				$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
+				$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 				$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
@@ -346,6 +350,8 @@
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id'), 'int'));
 					$control_item->set_title($this->db->f('title', true), 'string');
 					$control_item->set_required($this->db->f('required', true), 'string');
+					$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
+					$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 					$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');
@@ -434,6 +440,8 @@
 					$control_item = new controller_control_item($this->unmarshal($this->db->f('coi_id'), 'int'));
 					$control_item->set_title($this->db->f('title', true), 'string');
 					$control_item->set_required($this->db->f('required', true), 'string');
+					$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
+					$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
 					$control_item->set_control_group_id($this->db->f('control_group_id'), 'int');

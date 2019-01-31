@@ -1946,7 +1946,10 @@ HTML;
 		 */
 		public function check_purchase_right($ecodimb = 0, $amount = 0, $order_id = 0)
 		{
+			$sosubstitute = CreateObject('property.sosubstitute');
+
 			$need_approval = empty($this->config->config_data['workorder_approval']) ? false : true;
+
 			if(!$need_approval)
 			{
 				return array();
@@ -1971,6 +1974,11 @@ HTML;
 				$supervisor_id = $invoice->get_default_dimb_role_user(3, $ecodimb);
 				if($supervisor_id)
 				{
+					$substitute = $sosubstitute->get_substitute($supervisor_id);
+					if($substitute)
+					{
+						$supervisor_id = $substitute;
+					}
 					$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => false, 'default' => true);
 					$default_found = true;
 				}
@@ -1987,6 +1995,11 @@ HTML;
 				{
 					foreach ($sodimb_role_users[$ecodimb][2] as $supervisor_id => $entry)
 					{
+						$substitute = $sosubstitute->get_substitute($supervisor_id);
+						if($substitute)
+						{
+							$supervisor_id = $substitute;
+						}
 						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' =>  !$default_found ? !!$entry['default_user'] : false);
 					}
 				}
@@ -2054,6 +2067,11 @@ HTML;
 				if($supervisor_lid)
 				{
 					$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+					$substitute = $sosubstitute->get_substitute($supervisor_id);
+					if($substitute)
+					{
+						$supervisor_id = $substitute;
+					}
 					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
 				}
 			}
@@ -2068,6 +2086,11 @@ HTML;
 
 				if ($supervisor_id)
 				{
+					$substitute = $sosubstitute->get_substitute($supervisor_id);
+					if($substitute)
+					{
+						$supervisor_id = $substitute;
+					}
 					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true, 'default' => true);
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
@@ -2098,6 +2121,11 @@ HTML;
 				$supervisor_id = $invoice->get_default_dimb_role_user(1, $ecodimb);
 				if($supervisor_id)
 				{
+					$substitute = $sosubstitute->get_substitute($supervisor_id);
+					if($substitute)
+					{
+						$supervisor_id = $substitute;
+					}
 					$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => $level_1_required, 'default' => $level_1_required);
 				}
 			}
@@ -2106,6 +2134,11 @@ HTML;
 //				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
 //			{
 //				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+//				$substitute = $sosubstitute->get_substitute($supervisor_id);
+//				if($substitute)
+//				{
+//					$supervisor_id = $substitute;
+//				}
 //				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
 //			}
 

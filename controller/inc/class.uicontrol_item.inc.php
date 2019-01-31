@@ -276,7 +276,7 @@
 
 			$control_item_id = phpgw::get_var('id');
 			$title = phpgw::get_var('title');
-			$required = phpgw::get_var('required') == 'on' ? true : false;
+			$required = phpgw::get_var('required', 'bool');
 			$type = phpgw::get_var('control_item_type');
 			$control_group_id = phpgw::get_var('control_group');
 			$control_area_id = phpgw::get_var('control_area');
@@ -296,6 +296,8 @@
 
 			$control_item->set_title($title);
 			$control_item->set_required($required);
+			$control_item->set_include_counter_measure(phpgw::get_var('include_counter_measure', 'bool'));
+			$control_item->set_include_condition_degree(phpgw::get_var('include_condition_degree', 'bool'));
 			$control_item->set_control_group_id($control_group_id);
 			$control_item->set_control_area_id($control_area_id);
 			$control_item->set_type($type);
