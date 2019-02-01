@@ -484,7 +484,7 @@
 			{
 				return false;
 			}
-			$soexternal = createObject('property.soexternal_communication');
+			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			$message_arr = explode('========', $body);
 			$message = $message_arr[0];
@@ -498,7 +498,7 @@
 				$assignedto = $this->db->f('assignedto');
 				if($assignedto)
 				{
-					createObject('property.boexternal_communication')->alert_assigned($msg_id);
+					createObject('helpdesk.boexternal_communication')->alert_assigned($msg_id);
 				}
 
 				return $ticket_id;
