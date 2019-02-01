@@ -36,9 +36,9 @@
 
 		var $so, $historylog, $config, $bocommon,$preview_html, $dateformat, $currentapp;
 
-		public function __construct()
+		public function __construct($currentapp = 'property')
 		{
-			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->so = createObject("{$this->currentapp}.soexternal_communication");
 			$this->historylog = & $this->so->historylog;
 			$this->bocommon = createObject('property.bocommon');
