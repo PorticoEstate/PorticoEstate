@@ -91,6 +91,8 @@
 			$this->join = & $this->db->join;
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin'));
+
+			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 		}
 
 		function execute()

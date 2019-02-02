@@ -176,13 +176,13 @@
 			{
 				$mail->IsHTML(false);
 				$mail->WordWrap = 76;
-				$text_message  = array('text' => $body);
-				$newArray = array_map(function($v)
-				{
-					return trim(strip_tags($v));
-				 }, $text_message);
-
-				$body = $newArray['text'];
+//				$text_message  = array('text' => $body);
+//				$newArray = array_map(function($v)
+//				{
+//					return trim(strip_tags($v));
+//				 }, $text_message);
+//
+//				$body = $newArray['text'];
 			}
 
 			$mail->Body    = $body;
