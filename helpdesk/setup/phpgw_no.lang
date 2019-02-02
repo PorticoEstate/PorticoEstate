@@ -188,7 +188,7 @@ recipients	helpdesk	no	Mottakere
 candidates	helpdesk	no	Kandidater
 send email	helpdesk	no	Send epost
 remark	helpdesk	no	Merknad
-subject	helpdesk	no	Overskrift
+subject	helpdesk	no	Emnefelt
 content	helpdesk	no	Innhold
 select all	helpdesk	no	Velg alle
 planned	helpdesk	no	Planlagt

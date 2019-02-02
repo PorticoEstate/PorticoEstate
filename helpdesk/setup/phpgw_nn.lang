@@ -188,7 +188,7 @@ recipients	helpdesk	nn	Mottakere
 candidates	helpdesk	nn	Kandidater
 send email	helpdesk	nn	Send epost
 remark	helpdesk	nn	Merknad
-subject	helpdesk	nn	Overskrift
+subject	helpdesk	nn	Emnefelt
 content	helpdesk	nn	Innhold
 select all	helpdesk	nn	Velg alle
 planned	helpdesk	nn	Planlagt
