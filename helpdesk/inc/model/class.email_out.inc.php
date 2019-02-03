@@ -113,6 +113,11 @@
 					'sortable' => false,
 //					'history'	=> true
 					),
+				'created' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
+					'type' => 'date',
+					'label' => 'created',
+					'sortable' => true,
+					),
 				'modified' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label' => 'modified',
