@@ -1969,6 +1969,15 @@ JS;
 
 			$ticket = $this->bo->read_single($id, $values);
 
+			if($ticket && !$this->parent_cat_id)
+			{
+				$cat_path = $this->cats->get_path($ticket['cat_id']);
+
+				if(count($cat_path) > 1)
+				{
+					$this->parent_cat_id = $cat_path[0]['id'];
+				}
+			}
 			if(!$ticket)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
