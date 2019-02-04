@@ -161,6 +161,20 @@ upload_canvas = function ()
 
 $(document).ready(function ()
 {
+
+	var conf_on_load = {
+			modules: 'date, file',
+			validateOnBlur: true,
+			scrollToTopOnError: false,
+			errorMessagePosition: 'inline'
+		   };
+
+	setTimeout(function ()
+	{
+		$('form').isValid(validateLanguage, conf_on_load, true);
+	}, 500);
+
+
 	var CLIPBOARD = new CLIPBOARD_CLASS("my_canvas", true);
 
 	/**

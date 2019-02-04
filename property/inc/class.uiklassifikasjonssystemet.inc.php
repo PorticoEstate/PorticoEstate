@@ -737,7 +737,7 @@
 			if($id)
 			{
 				return array('Id' => $id);
-				$data['Id'] = $id;
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Locations/{$id}";
 			}
@@ -803,16 +803,17 @@
 		private function save_building( $param, $id = false, $dry_run = true)
 		{
 			$data = array(
-				'LocationId' => $param['location_id'],
+				'LocationId' => (int)$param['location_id'],
 				"Name" => $param['name'],
-				"BuiltYear" => $param['built_year'],
+				"BuiltYear" => (int)$param['built_year'],
 				"ExternalId" => $param['portico_id'],
-				'isClosed'	=> $param['is_closed']
+				'isClosed'	=> !!$param['is_closed']
 				);
 
 			if($id)
 			{
-				$data['Id'] = $id;
+				return array('Id' => $id);
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Buildings/{$id}";
 			}
@@ -840,17 +841,18 @@
 		private function save_floor( $param, $id = false, $dry_run = true)
 		{
 			$data = array(
-				'BuildingId' => $param['building_id'],
+				'BuildingId' => (int)$param['building_id'],
 				"Name" => $param['name'],
-				"NetArea" => $param['nettoareal'],
-				"BuiltYear" =>$param['built_year'],
-				"ExternalId" => $param['portico_id']
+				"NetArea" => (int)$param['nettoareal'],
+				"BuiltYear" =>(int)$param['built_year'],
+				"ExternalId" => $param['portico_id'],
+				"isClosed"	=> false
 			);
 
 			if($id)
 			{
 				return array('Id' => $id);
-				$data['Id'] = $id;
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Floors/{$id}";
 			}
@@ -901,8 +903,10 @@
 
 			if($id)
 			{
-				return array(array('Room' => array('Id' => $id)));
-				$data['Id'] = $id;
+//				return array(array('Room' => array('Id' => $id)));
+				$data[0] = array_merge( array('Id' => (int)$id), $data[0]);
+				$data[0]['RoomDetails'][0] = array_merge( array('Id' => (int)$id), $data[0]['RoomDetails'][0]);
+
 				$mehod = 'PUT';
 				$url = "api/Rooms/{$id}";
 			}
@@ -1013,6 +1017,7 @@
 
 			$url = "{$webservicehost}/{$local_url}";
 			$data_json = json_encode($data);
+			_debug_array($url);
 			_debug_array($data_json);
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -1038,8 +1043,15 @@
 
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
-			_debug_array($result);
 
+			if(!$result)
+			{
+				die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
+			}
+
+
+			_debug_array($result);
+die();
 //			$curl_info = curl_getinfo($ch);
 //			_debug_array($curl_info);
 

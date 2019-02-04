@@ -188,7 +188,7 @@ recipients	helpdesk	no	Mottakere
 candidates	helpdesk	no	Kandidater
 send email	helpdesk	no	Send epost
 remark	helpdesk	no	Merknad
-subject	helpdesk	no	Overskrift
+subject	helpdesk	no	Emnefelt
 content	helpdesk	no	Innhold
 select all	helpdesk	no	Velg alle
 planned	helpdesk	no	Planlagt
@@ -233,3 +233,5 @@ who	helpdesk	no	Hvem
 extra mail address	helpdesk	no	Ekstra adresse
 preview html	helpdesk	no	Forhåndsvis som HTML
 change category	helpdesk	no	Flytt saken
+created	helpdesk	no	Registrert
+internal remark on email	helpdesk	no	Intern kommentar til epost

@@ -1,4 +1,12 @@
 
+	var conf_on_changed = {
+			modules: 'date, file',
+			validateOnBlur: true,
+			scrollToTopOnError: false,
+			errorMessagePosition: 'inline'
+		   };
+
+
 $(document).ready(function ()
 {
 
@@ -55,6 +63,8 @@ function show_ressursnr()
 			$("#arbeidssted_name").show();
 			$("#label_arbeidssted").show();
 	}
+
+	$('form').isValid(validateLanguage, conf_on_changed, true);
 }
 
 function validate_submit()

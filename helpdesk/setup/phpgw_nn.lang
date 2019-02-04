@@ -188,7 +188,7 @@ recipients	helpdesk	nn	Mottakere
 candidates	helpdesk	nn	Kandidater
 send email	helpdesk	nn	Send epost
 remark	helpdesk	nn	Merknad
-subject	helpdesk	nn	Overskrift
+subject	helpdesk	nn	Emnefelt
 content	helpdesk	nn	Innhold
 select all	helpdesk	nn	Velg alle
 planned	helpdesk	nn	Planlagt
@@ -233,3 +233,5 @@ who	helpdesk	nn	Kven
 extra mail address	helpdesk	nn	Ekstra adresse
 preview html	helpdesk	nn	Forhåndsvis som HTML
 change category	helpdesk	nn	Flytt saka
+created	helpdesk	nn	Registrert
+internal remark on email	helpdesk	nn	Intern merknad til epost
