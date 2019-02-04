@@ -90,6 +90,7 @@
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'label' => 'name',
+					'sortable'=> true,
 					'required' => true,
 					'query' => true,
 					),

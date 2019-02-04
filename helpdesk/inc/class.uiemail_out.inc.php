@@ -92,6 +92,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
+					'sorted_by'	=> array('key' => 0, 'dir' => 'desc'),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uiemail_out.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()

@@ -234,3 +234,4 @@ extra mail address	helpdesk	no	Ekstra adresse
 preview html	helpdesk	no	Forhåndsvis som HTML
 change category	helpdesk	no	Flytt saken
 created	helpdesk	no	Registrert
+internal remark on email	helpdesk	no	Intern kommentar til epost

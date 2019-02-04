@@ -59,7 +59,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'remark')"/>
+								<xsl:value-of select="php:function('lang', 'internal remark on email')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
 								<xsl:value-of select="email_out/remark"/>
@@ -80,9 +80,9 @@
 							<label>
 								<a href="javascript:template_lookup();">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'content')"/>
+										<xsl:value-of select="php:function('lang', 'standard text')"/>
 									</xsl:attribute>
-									<xsl:value-of select="php:function('lang', 'content')"/>
+									<xsl:value-of select="php:function('lang', 'standard text')"/>
 								</a>
 							</label>
 							<textarea cols="47" rows="7" id="content" name="content">
@@ -187,7 +187,14 @@
 				</xsl:variable>
 				<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
 					<xsl:attribute name="value">
-						<xsl:value-of select="php:function('lang', 'cancel')"/>
+						<xsl:choose>
+							<xsl:when test="email_out/id > 0">
+								<xsl:value-of select="php:function('lang', 'new')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="php:function('lang', 'cancel')"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:attribute>
 				</input>
 			</div>
