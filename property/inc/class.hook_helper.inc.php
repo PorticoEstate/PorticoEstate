@@ -215,6 +215,53 @@
 
 			if (isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
 			{
+
+
+				echo '<div id="project_overdue_info_container"></div>';
+
+				$lang = js_lang( 'Name', 'address', 'status','subject', 'id', 'assigned to', 'modified date');
+				$now = time();
+
+				$js = <<<JS
+					<script type="text/javascript">
+					var building_id = 1;
+					var lang = $lang;
+					var project_overdue_infoURL = phpGWLink('index.php', {
+						menuaction:'property.boproject.overdue_end_date',
+						order:'end_date',
+						sort:'asc',
+						overdue: {$now},
+						filter:{$accound_id},
+						result:10
+						}, true);
+
+					var rProject_overdue_info = [{n: 'ResultSet'},{n: 'Result'}];
+
+					var colDefsTicket_info = [
+						{key: 'id', label: lang['id'], formatter: genericLink},
+						{key: 'subject', label: lang['subject']},
+						{key: 'status', label: lang['status']},
+						{key: 'address', label: lang['address']},
+						{key: 'assignedto', label: lang['assigned to']},
+						{key: 'modified_date', label: lang['modified date']}
+
+						];
+
+					var paginatorTableProject_overdue = new Array();
+					paginatorTableProject_overdue.limit = 10;
+					createPaginatorTable('project_overdue_info_container', paginatorTableProject_overdue);
+
+					createTable('project_overdue_info_container', project_overdue_infoURL, colDefsTicket_info, rProject_overdue_info, 'pure-table pure-table-bordered', paginatorTableProject_overdue);
+
+					</script>
+
+JS;
+
+//				echo $js;
+
+
+
+
 				$soproject = CreateObject('property.soproject');
 
 				$values = $soproject->read(array(
