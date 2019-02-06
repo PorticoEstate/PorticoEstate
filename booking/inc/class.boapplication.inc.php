@@ -202,10 +202,12 @@
 				$orgid = $this->organization_bo->so->get_orgid($application['customer_organization_number']);
 				$organization = $this->organization_bo->read_single($orgid);
 				$body = '<b>Kommentar fra ' . $organization['name'] . '</b><br />' . $message . '<br /><br/>';
+				$plain_text = "Kommentar fra {$organization['name']} \n{$message}\n";
 			}
 			else
 			{
 				$body = '<b>Kommentar fra ' . $application['contact_name'] . '</b><br />' . $message . '<br /><br/>';
+				$plain_text = "Kommentar fra {$application['name']} \n{$message}\n";
 			}
 
 			$body .= '<b>Bygg: </b>' . $application['building_name'] . '<br />';
@@ -214,6 +216,14 @@
 			$body .= '<b>Epost:</b> ' . $application['contact_email'] . '<br />';
 			$body .= '<b>Telefon:</b> ' . $application['contact_phone'] . '<br /><br />';
 			$body .= '<a href="' . $link . '">Lenke til søknad</a><br /><br />';
+
+			$plain_text .= "Bygg: {$application['building_name']}\n";
+			$plain_text .= "Aktivitet: {$activity['name']}\n";
+			$plain_text .= "Kontaktperson:{$application['contact_name']}\n";
+			$plain_text .= "Epost: {$application['contact_email']}\n";
+			$plain_text .= "Telefon: {$application['contact_phone']}\n";
+			$plain_text .= "Lenke til søknad: {$link}\n";
+
 			$html = <<<HTML
 <!DOCTYPE html>
 <html lang="no">
@@ -229,7 +239,7 @@ HTML;
 			{
 				try
 				{
-					$send->msg('email', $adr, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+					$send->msg('email', $adr, $subject, $plain_text, '', '', '', $from, 'AktivKommune', 'text');
 					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
 				}
 				catch (Exception $e)

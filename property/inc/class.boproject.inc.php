@@ -51,6 +51,7 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
+			'overdue_end_date' => true,
 		);
 
 		function __construct( $session = false )
@@ -469,18 +470,81 @@
 			return $this->bocommon->select_list($selected, $key_location_entries);
 		}
 
+		function overdue_end_date( )
+		{
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$start_date = urldecode(phpgw::get_var('start_date'));
+			$end_date = urldecode(phpgw::get_var('end_date'));
+			$skip_origin = phpgw::get_var('skip_origin', 'bool');
+			$export = phpgw::get_var('export', 'bool');
+
+			if ($start_date && empty($end_date))
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
+			}
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'skip_origin' => $skip_origin,
+				'overdue' => phpgw::get_var('overdue', 'int', 'REQUEST', 0),
+			);
+
+			$values = $this->so->read(array(
+				'filter' => $this->filter,
+				'overdue' => $params['overdue'],
+				'start' => $params['start'],
+				'query' => $params['query'],
+				'sort' => $params['sort'],
+				'order' => $params['order'],
+				'allrows' => isset($params['allrows']) ? $params['allrows'] : '',
+				'results' => $params['results'],
+				'dry_run' => $params['dry_run'],
+				'filter' => $this->filter,
+				'cat_id' => $this->cat_id,
+				'status_id' => $this->status_id,
+				'wo_hour_cat_id' => $this->wo_hour_cat_id,
+				'start_date' => $this->bocommon->date_to_timestamp($params['start_date']),
+				'end_date' => $this->bocommon->date_to_timestamp($params['end_date']),
+				'district_id' => $this->district_id,
+				'criteria' => $this->get_criteria($this->criteria_id),
+				'project_type_id' => $this->project_type_id,
+				'filter_year' => $this->filter_year
+
+				));
+				$total_records = $this->so->total_records;
+
+				return array(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $total_records,
+					"totalRecords" => $total_records,
+					"Result" => $values,
+					'recordsReturned' => count( $values),
+					'pageSize' => $params['results'],
+					'startIndex' => $this->start,
+					'sortKey' => $this->order,
+					'sortDir' => $this->sort,
+				)
+			);
+
+		}
+
 		function read( $data = array() )
 		{
 			if (isset($this->allrows) && $this->allrows)
 			{
 				$data['allrows'] = true;
 			}
-
-//			$project = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-//				'filter' => $this->filter,'cat_id' => $this->cat_id,'status_id' => $this->status_id,'wo_hour_cat_id' => $this->wo_hour_cat_id,
-//				'start_date'=>$start_date,'end_date'=>$end_date,'allrows'=>isset($data['allrows']) ? $data['allrows'] : '','dry_run' => $data['dry_run'],
-//				'district_id' => $this->district_id, 'criteria' => $this->get_criteria($this->criteria_id),
-//				'project_type_id'	=> $this->project_type_id, 'filter_year' => $this->filter_year));
 
 			$project = $this->so->read(array(
 				'start' => $data['start'],
