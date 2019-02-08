@@ -61,6 +61,8 @@
 			$cols = array(
 				'title',
 				'required',
+				'include_counter_measure',
+				'include_condition_degree',
 				'type',
 				'what_to_do',
 				'how_to_do',
