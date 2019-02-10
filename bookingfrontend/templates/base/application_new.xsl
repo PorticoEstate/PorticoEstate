@@ -266,7 +266,10 @@
             <div class="push"></div>
         </div>
 	<script type="text/javascript">
-            var initialSelection = <xsl:value-of select="application/resources_json"/>;
+			var dateformat_backend = "<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />";
+			var dateformat_datepicker = dateformat_backend.replace(/d/gi, "%d").replace(/m/gi, "%m").replace(/y/gi, "%Y");
+			var initialAcceptAllTerms = false;
+           var initialSelection = <xsl:value-of select="application/resources_json"/>;
             var initialAudience = <xsl:value-of select="application/audience_json"/>;
             var initialDates = <xsl:value-of select="application/dates_json"/>;
             var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;

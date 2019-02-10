@@ -251,7 +251,8 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
-          mask: '%d/%m/%G',
+//        mask: '%d/%m/%G',
+          mask: dateformat_datepicker,
 		  calendar: {
 			minimumDate: new Date(strDate) 
 		  },
