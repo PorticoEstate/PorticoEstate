@@ -17,17 +17,20 @@
         <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
 		{css}
+		<script type="text/javascript">
+			<!--
+				var strBaseURL = '{str_base_url}';
+				var dateformat_backend = '{dateformat_backend}';
+			//-->
+		</script>
+
 		{javascript}
     		<!-- BEGIN javascript -->
 		<script type="text/javascript" src="{javascript_uri}"></script>
 		<!-- END javascript -->
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-		<script type="text/javascript">
-			<!--
-				var strBaseURL = '{str_base_url}';
-			//-->
-		</script>        
-     </head>
+
+	</head>
     
     <body    >
         

@@ -1,3 +1,6 @@
+
+var dateformat_javascript = dateformat_backend.replace(/d/gi, "dd").replace(/m/gi, "mm").replace(/y/gi, "yyyy");
+
 /**
 * Emulate phpGW's link function
 *
@@ -203,32 +206,25 @@ function GoToApplicationPartialTwo() {
 
 function formatDate(date, end) {
       
-        var year = date.getFullYear();
-      
-        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
-                ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2) + 
-                " - " +
-               ("0" + (end.getHours())).slice(-2)  + ":" + ("0" + (end.getMinutes())).slice(-2);
+		return dateFormat(date, dateformat_javascript + " HH:MM") + " - " + dateFormat(end, "HH:MM");
+
       }
       
       function formatSingleDateWithoutHours(date) {
       
-          return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();;
+		return dateFormat(date, dateformat_javascript);
       }
       
       function formatPeriodeHours(from_, to_) {
           from_ = new Date(from_);
           to_ = new Date(to_);
-          return ("0" + (from_.getHours())).slice(-2) + ":" + ("0" + (from_.getMinutes())).slice(-2) + 
-          " - " + ("0" + (to_.getHours())).slice(-2) + ":" + ("0" + (to_.getMinutes())).slice(-2);
+
+		return dateFormat(from_, dateformat_javascript + " HH:MM") + " - " + dateFormat(to_, dateformat_javascript + " HH:MM");
       }
       
       function formatSingleDate(date) {
-        
-        var year = date.getFullYear();
-      
-        return ("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + year + " " + 
-                ("0" + (date.getHours())).slice(-2)  + ":" + ("0" + (date.getMinutes())).slice(-2);
+
+		return  dateFormat(date, dateformat_javascript + " HH:MM");
       }      
       
 
