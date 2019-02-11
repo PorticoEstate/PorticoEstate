@@ -416,6 +416,71 @@
 					$target['id'] = $ticket_id;
 				}
 			}
+			else if(preg_match("/Manglende informasjon på mottatt/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Mottatt faktura blir ikke behandlet/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Faktura avvises og vil ikke bli betalt/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/gangs purring/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Kreditnota/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
 			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
 			{
 				$message_cat_id = 264; //LRS Lønn - Skatt

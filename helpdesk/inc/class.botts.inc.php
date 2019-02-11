@@ -931,10 +931,6 @@
 			// build subject
 			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
-			$prefs_user = $this->bocommon->create_preferences('helpdesk',$ticket['user_id']);
-
-			$from_address=$prefs_user['email'];
-
 			//-----------from--------
 
 			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
@@ -1244,6 +1240,18 @@ HTML;
 			}
 			unset($entry);
 
+
+			if(!empty($this->config->config_data['from_email']))
+			{
+				$from_address = $this->config->config_data['from_email'];
+				$from_name = 'NoReply';
+			}
+			else
+			{
+				$from_address = $current_user_address;
+				$from_name = $GLOBALS['phpgw_info']['user']['fullname'];			
+			}
+
 			$rc = false;
 			if($toarray)
 			{
@@ -1253,7 +1261,7 @@ HTML;
 				{
 					try
 					{
-						$rc = $this->send->msg('email', $to, $subject, $html, '', $cc, $bcc,$current_user_address,$GLOBALS['phpgw_info']['user']['fullname'],'html');
+						$rc = $this->send->msg('email', $to, $subject, $html, '', $cc, $bcc,$from_address, $from_name,'html');
 					}
 					catch (Exception $e)
 					{
