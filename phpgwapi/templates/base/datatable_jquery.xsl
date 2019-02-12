@@ -1131,6 +1131,8 @@
 									{
 										if(value.constructor == Array)
 										{
+											$(oControl).find("option").removeAttr('selected');
+
 											$.each(value, function(i,e){
 												 oControl.find("option[value="+e+"]").prop("selected", "selected");
 											});
@@ -1142,11 +1144,19 @@
 											catch(err)
 											{
 											}
-
 										}
 										else
 										{
 											oControl.val( value );
+											try
+											{
+												$(oControl).removeAttr('selected').find("option[value='"+value+"']").attr('selected', 'selected');
+												$(oControl).material_select();
+											}
+											catch(err)
+											{
+											}
+
 										}
 									}
 								}
