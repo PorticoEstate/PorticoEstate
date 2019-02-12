@@ -236,3 +236,5 @@ change category	helpdesk	no	Flytt saken
 created	helpdesk	no	Registrert
 internal remark on email	helpdesk	no	Intern kommentar til epost
 recipient set	helpdesk	no	Adresseliste
+publish text	helpdesk	no	Publiser tekst
+Check to publish text	helpdesk	no	Merk av for å publisere til alle

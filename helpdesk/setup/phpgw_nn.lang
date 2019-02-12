@@ -236,3 +236,5 @@ change category	helpdesk	nn	Flytt saka
 created	helpdesk	nn	Registrert
 internal remark on email	helpdesk	nn	Intern merknad til epost
 recipient set	helpdesk	nn	Adresseliste
+publish text	helpdesk	nn	Publiser tekst
+Check to publish text	helpdesk	nn	Merk av for å publisere til alle

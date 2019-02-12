@@ -572,6 +572,23 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:apply-templates select="custom_attributes/attributes"/>
+
+					<xsl:if  test="simple !='1'">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'publish text')"/>
+							</label>
+							<input type="checkbox" name="values[publish_text]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Check to publish text')"/>
+								</xsl:attribute>
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</input>
+						</div>
+					</xsl:if>
+
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">

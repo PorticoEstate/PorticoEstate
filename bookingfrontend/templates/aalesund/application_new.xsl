@@ -270,6 +270,7 @@
             <div class="push"></div>
         </div>
 	<script type="text/javascript">
+			var initialAcceptAllTerms = false;
             var initialSelection = <xsl:value-of select="application/resources_json"/>;
             var initialAudience = <xsl:value-of select="application/audience_json"/>;
             var initialDates = <xsl:value-of select="application/dates_json"/>;

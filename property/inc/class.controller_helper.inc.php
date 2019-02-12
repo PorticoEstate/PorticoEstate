@@ -674,7 +674,7 @@ HTML;
 				'action' => phpgw::get_var('action', 'string'),
 				'assigned_to' => phpgw::get_var('control_responsible', 'int'),
 				'start_date' => $start_date,
-//				'repeat_type'		=> phpgw::get_var('repeat_type', 'int'),
+				'repeat_type'		=> phpgw::get_var('repeat_type', 'int'),
 				'repeat_interval' => phpgw::get_var('repeat_interval', 'int'),
 				'controle_time' => phpgw::get_var('controle_time', 'float'),
 				'service_time' => phpgw::get_var('service_time', 'float')
