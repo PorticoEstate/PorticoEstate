@@ -1650,6 +1650,12 @@
 					throw new Exception("controller_socontrol::update_control_serie - not av valid action: '{$action}'");
 					break;
 			}
+
+			if(!$value_set)
+			{
+				return 0;
+			}
+
 			$value_set_update = $this->db->validate_update($value_set);
 
 			$sql = "UPDATE controller_control_serie SET {$value_set_update} WHERE id IN (" . implode(',', $ids) . ')';
