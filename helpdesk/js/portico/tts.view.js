@@ -162,6 +162,18 @@ upload_canvas = function ()
 $(document).ready(function ()
 {
 
+	$("#publish_text").change(function ()
+	{
+		if($(this).prop("checked") == true)
+		{
+			$("#send_email").prop("checked", true);
+		}
+		else
+		{
+			$("#send_email").prop("checked", false);
+		}
+	});
+
 	var conf_on_load = {
 			modules: 'date, file',
 			validateOnBlur: true,

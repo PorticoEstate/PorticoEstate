@@ -23,12 +23,25 @@ $(document).ready(function ()
 		get_ressursname();
 	});
 
-	if(parent_cat_id == 301) //LRS-EDD telefoni
+	switch (parent_cat_id)
 	{
-		$("#arbeidssted_name").removeAttr("data-validation");
-		$("#arbeidssted_name").hide();
-		$("#label_arbeidssted").hide();
+		case '268':  //LRS Økonomi
+		case '301':  //LRS-EDD telefoni
+		case '314':  //LRS System ØK
+			$("#arbeidssted_name").removeAttr("data-validation");
+			$("#arbeidssted_name").hide();
+			$("#label_arbeidssted").hide();
+			break;
+		default:
+
 	}
+
+//	if(parent_cat_id == 301) //LRS-EDD telefoni
+//	{
+//		$("#arbeidssted_name").removeAttr("data-validation");
+//		$("#arbeidssted_name").hide();
+//		$("#label_arbeidssted").hide();
+//	}
 
 });
 
