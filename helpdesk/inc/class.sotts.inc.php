@@ -1014,7 +1014,10 @@
 				$this->fields_updated[] = 'note';
 				$this->historylog->add('C', $id, $ticket['note'], $old_note);
 				$_history_id = $this->db->get_last_insert_id('phpgw_history_log', 'history_id');
-				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
+				if($simple || $ticket['publish_text'] == 1)
+				{
+					$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
+				}
 				unset($_history_id);
 
 				$check_old_custom = (int)trim($old_status, 'C');

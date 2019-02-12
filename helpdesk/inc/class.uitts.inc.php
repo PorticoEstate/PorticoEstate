@@ -197,6 +197,7 @@
 					$this->lang_app_name .= ": {$parent_category[0]['name']}";
 				}
 			}
+//			$this->_simple = true;
 
 		}
 
@@ -2025,7 +2026,7 @@ JS;
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
-			$additional_notes = $this->bo->read_additional_notes($id);
+			$_additional_notes = $this->bo->read_additional_notes($id);
 			$record_history = $this->bo->read_record_history($id);
 
 			$notes = array(
@@ -2039,7 +2040,44 @@ JS;
 				)
 			);
 
-			$additional_notes = array_merge($notes, $additional_notes);
+			$_additional_notes = array_merge($notes, $_additional_notes);
+			$additional_notes = array();
+
+			if ($this->_simple)
+			{
+				$i = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$note['value_count'] = $i++;
+						$additional_notes[] = $note;
+					}
+				}
+			}
+			else
+			{
+				$i = 0;
+				$j = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$i++;
+						$j = 1;
+					}
+					else
+					{
+						if($i)
+						{
+							$j++;
+						}
+					}
+					$i = max(array(1, $i));
+					$note['value_count'] = "{$i}.{$j}";
+					$additional_notes[] = $note;
+				}
+			}
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
 			{
@@ -2056,6 +2094,17 @@ JS;
 				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
+
+			if (!$this->_simple)
+			{
+				$note_def[] = array('key' => 'publish_note', 'label' => lang('publish text'),
+					'sortable' => false, 'resizeable' => true, 'formatter' => 'FormatterCenter');
+				foreach ($additional_notes as &$note)
+				{
+					$_checked = $note['value_publish'] ? 'checked' : '';
+					$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='" . lang('Check to publish text') . "'>";
+				}
+			}
 
 			foreach ($additional_notes as &$note)
 			{
