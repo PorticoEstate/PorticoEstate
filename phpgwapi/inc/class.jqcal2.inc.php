@@ -122,6 +122,7 @@
 			{
 				$( "#{$id}" ).attr('readonly', false);
 				$( "#{$id}" ).attr('placeholder', '{$placeholder}');
+				$( "#{$id}" ).attr('autocomplete', 'off');
 
 				jQuery.datetimepicker.setLocale('{$this->userlang}');
 				$( "#{$id}" ).datetimepicker(
