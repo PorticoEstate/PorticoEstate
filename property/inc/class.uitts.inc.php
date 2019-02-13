@@ -1861,10 +1861,20 @@ HTML;
 					'id' => $id));
 			}
 
-			$add_relation = phpgw::get_var('add_request');
-			if($add_relation)
+			$relation_type = phpgw::get_var('relation_type');
+			if($relation_type == 'project')
 			{
-				$receipt = $this->bo->add_relation($add_relation, $id);
+				$add_relation = phpgw::get_var('add_relation');
+				if($add_relation)
+				{
+					$receipt = $this->bo->add_relation($add_relation, $id, $relation_type);
+				}
+
+			}
+			else if($add_relation)
+			{
+				$add_relation = phpgw::get_var('add_request');
+				$receipt = $this->bo->add_relation($add_relation, $id , 'request');
 			}
 
 			$bolocation = CreateObject('property.bolocation');
@@ -3082,10 +3092,10 @@ HTML;
 					'id'	=> 'property.uirequest.index',
 					'name'	=> lang('request')
 				),
-//				array(
-//					'id'	=> 'property.uiproject.index',
-//					'name'	=> lang('project')
-//				),
+				array(
+					'id'	=> 'property.uiproject.index',
+					'name'	=> lang('project')
+				),
 //				array(
 //					'id'	=> 'property.uilookup.entity',
 //					'name'	=> 'Everything else'
