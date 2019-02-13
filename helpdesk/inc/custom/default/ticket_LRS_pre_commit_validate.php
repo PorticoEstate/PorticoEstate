@@ -90,7 +90,7 @@
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 				}
 
-				if($location_id)
+				if($location_id && empty($data['group_id']) && $php_sapi_name != 'cli')
 				{
 					$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
 					. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
@@ -112,12 +112,15 @@
 						$GLOBALS['phpgw']->preferences->save_repository();
 					}
 
-					$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
-					$assigned_prefs_data = $assigned_prefs->read();
-					if(empty($assigned_prefs_data['helpdesk']['email']))
+					if($data['assignedto'])
 					{
-						$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
-						$assigned_prefs->save_repository();
+						$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
+						$assigned_prefs_data = $assigned_prefs->read();
+						if(empty($assigned_prefs_data['helpdesk']['email']))
+						{
+							$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
+							$assigned_prefs->save_repository();
+						}
 					}
 				}
 

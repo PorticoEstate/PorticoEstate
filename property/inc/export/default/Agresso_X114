@@ -927,6 +927,10 @@
 					'ALLOCATION.KEY' => $line['periodization'], //0
 					'ALLOCATION.PERIOD' => $line['periodization_start'] //dummy
 				);
+
+				$periodization = $line['periodization'];
+				$periodization_start = $line['periodization_start'];
+
 			}
 
 			if ($accountline)
@@ -957,9 +961,9 @@
 					'POLINENUMBER' => '',
 					'RECEIVER.FULLNAME' => '',
 					'STATUS' => 5,
-					'SUBACCOUNT' => '',
-					'ALLOCATION.KEY' => '',
-					'ALLOCATION.PERIOD' => '',
+					'SUBACCOUNT' => $periode, //200905 Accounting period YYYYMM
+					'ALLOCATION.KEY' => $periodization, //0
+					'ALLOCATION.PERIOD' => $periodization_start //dummy
 				);
 			}
 
