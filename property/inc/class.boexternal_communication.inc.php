@@ -61,6 +61,10 @@
 				{
 					$value_user = $value['sender_email_address'];
 				}
+				else if(!empty($this->config['department']))
+				{
+					$value_user = $this->config['department'];
+				}
 				else if($value['created_by'])
 				{
 					$value_user = $GLOBALS['phpgw']->accounts->get($value['created_by'])->__toString();
@@ -315,28 +319,37 @@ HTML;
 			}
 
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>\n";
-			$body .= '<tr><td>'. lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] ."</td></tr>\n";
-			$body .= '<tr><td>'. lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] ."</td></tr>\n";
-			if (isset($address_element) AND is_array($address_element))
+			if($ticket['location_code'])
 			{
-				foreach ($address_element as $address_entry)
+				$body .= '<tr><td>'. lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] ."</td></tr>\n";
+			}
+
+			if($ticket['address'])
+			{
+				$body .= '<tr><td>'. lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] ."</td></tr>\n";
+				if (isset($address_element) AND is_array($address_element))
 				{
-					$body .= '<tr><td>'. $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] ."</td></tr>\n";
+					foreach ($address_element as $address_entry)
+					{
+						$body .= '<tr><td>'. $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] ."</td></tr>\n";
+					}
 				}
 			}
 
-			$body .= '<tr><td>'. lang('from') . "</td><td>:&nbsp;{$contact_data['user_name']}</td></tr>\n";
-			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_email']}</td></tr>\n";
-			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_phone']}</td></tr>\n";
+//			$body .= '<tr><td>'. lang('from') . "</td><td>:&nbsp;{$contact_data['user_name']}</td></tr>\n";
+//			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_email']}</td></tr>\n";
+//			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_phone']}</td></tr>\n";
 
 			if($contact_data['organisation'])
 			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['organisation']}</td></tr>\n";
+				$body .= '<tr><td>'. lang('from') . "</td><td>:&nbsp;{$contact_data['organisation']}";
+				if($contact_data['department'])
+				{
+					$body .= ",&nbsp;{$contact_data['department']}";
+				}
+				$body .= "</td></tr>\n";
 			}
-			if($contact_data['department'])
-			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['department']}</td></tr>\n";
-			}
+/*
 			if($contact_data['contact_name'])
 			{
 				$body .= '<tr><td>'. lang('contact') . " 1</td><td>:&nbsp;{$contact_data['contact_name']}</td></tr>\n";
@@ -365,7 +378,7 @@ HTML;
 			{
 				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>\n";
 			}
-
+*/
 			$body .= "__ATTACHMENTS__\n</table><br/><br/>\n";
 
 			$lang_date = lang('date');
