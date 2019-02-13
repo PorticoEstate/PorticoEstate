@@ -1534,7 +1534,7 @@
 				{
 					$this->fields_updated[] = 'assignedto';
 					$this->db->query("UPDATE fm_tts_tickets SET assignedto = NULL WHERE id={$id}", __LINE__, __FILE__);
-					$this->historylog->add('A', $id, '', $oldassigned);					
+					$this->historylog->add('A', $id, '', $oldassigned);
 				}
 			}
 
@@ -2279,7 +2279,7 @@
 		}
 		public function get_assigned_groups2( $selected = 0)
 		{
-	
+
 			$values = array();
 			$sql = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM fm_tts_tickets"
 				. " $this->join phpgw_accounts ON fm_tts_tickets.group_id = phpgw_accounts.account_id"
@@ -2303,16 +2303,48 @@
 
 		}
 
-		function add_relation( $add_relation, $id )
+		function add_relation( $_add_relation, $id, $relation_type)
 		{
+
+			if($_add_relation && !is_array($_add_relation))
+			{
+				$add_relation = array();
+				$add_relation['request_id'][] = $_add_relation;
+			}
+			else
+			{
+				$add_relation = $_add_relation;
+			}
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 			$interlink = CreateObject('property.interlink');
 			$this->db->transaction_begin();
 
+			switch ($relation_type)
+			{
+				case 'request':
+					$acl_location = '.project.request';
+					break;
+				case 'project':
+					$acl_location = '.project';
+					break;
+
+				default:
+					$acl_location = '.project.request';
+					break;
+			}
+
 			foreach ($add_relation['request_id'] as $relation_id)
 			{
 				$target_id = false;
-				$target = $interlink->get_specific_relation('property', '.project.request', '.ticket', $relation_id, 'target');
+				if($relation_type == 'request')
+				{
+					$target = $interlink->get_specific_relation('property', $acl_location, '.ticket', $relation_id, 'target');
+				}
+				else //reverse
+				{
+					$target = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
+				}
+
 				if ($target)
 				{
 					$target_id =  $target[0];
@@ -2320,28 +2352,43 @@
 
 				if (!$target_id)
 				{
-					$interlink_data = array(
-						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
-						'location1_item_id' => $relation_id,
-						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
-						'location2_item_id' => $id,
-						'account_id' => $this->account
-					);
+					if($relation_type == 'request')
+					{
+						$interlink_data = array(
+							'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $acl_location),
+							'location1_item_id' => $relation_id,
+							'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+							'location2_item_id' => $id,
+							'account_id' => $this->account
+						);
+					}
+					else
+					{
+						$interlink_data = array(
+							'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', $acl_location),
+							'location2_item_id' => $relation_id,
+							'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+							'location1_item_id' => $id,
+							'account_id' => $this->account
+						);
+					}
 
 					$interlink->add($interlink_data);
 
-					$request_ticket_hookup_status = isset($config['request_ticket_hookup_status']) && $config['request_ticket_hookup_status'] ? $config['request_ticket_hookup_status'] : false;
-
-					if ($request_ticket_hookup_status)
+					if($relation_type == 'request')
 					{
-						$this->db->query("UPDATE fm_request SET status='{$request_ticket_hookup_status}' WHERE id='" . $relation_id . "'", __LINE__, __FILE__);
-					}
+						$request_ticket_hookup_status = isset($config['request_ticket_hookup_status']) && $config['request_ticket_hookup_status'] ? $config['request_ticket_hookup_status'] : false;
 
-					phpgwapi_cache::message_set(lang('request %1 has been added', $relation_id), 'message');
+						if ($request_ticket_hookup_status)
+						{
+							$this->db->query("UPDATE fm_request SET status='{$request_ticket_hookup_status}' WHERE id='" . $relation_id . "'", __LINE__, __FILE__);
+						}
+					}
+					phpgwapi_cache::message_set(lang('relation %1 has been added', $relation_id), 'message');
 				}
 				else
 				{
-					phpgwapi_cache::message_set(lang('request %1 has already been added to ticket %2', $relation_id, $target_id), 'error');
+					phpgwapi_cache::message_set(lang('relation %1 has already been added to ticket %2', $relation_id, $target_id), 'error');
 				}
 			}
 			$this->db->transaction_commit();

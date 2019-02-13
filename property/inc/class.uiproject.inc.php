@@ -564,6 +564,26 @@
 			}
 
 			$lookup = phpgw::get_var('lookup', 'bool');
+			$make_relation = phpgw::get_var('make_relation', 'bool');
+			$relation_id = phpgw::get_var('relation_id', 'int');
+			$relation_type = phpgw::get_var('relation_type');
+			if ($make_relation)
+			{
+				$lookup = true;
+			}
+
+			switch ($relation_type)
+			{
+				case 'ticket':
+					$update_menuaction = 'property.uitts.view';
+					$lang_update_relation = lang('update ticket');
+					break;
+				default:
+					break;
+			}
+
+
+
 			$from = phpgw::get_var('from');
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
@@ -620,6 +640,9 @@
 						'menuaction' => 'property.uiproject.index',
 						'lookup' => $lookup,
 						'from' => $from,
+						'make_relation' => $make_relation,
+						'relation_id' => $relation_id,
+						'relation_type' => $relation_type,
 						'phpgw_return_as' => 'json'
 					)),
 					'download' => self::link(array(
@@ -633,6 +656,7 @@
 						'menuaction' => 'property.uiproject.add'
 					)),
 					'allrows' => true,
+					'select_all' => $make_relation,
 					'editor_action' => '',
 					'field' => array(),
 					'query'	=> phpgw::get_var('query')
@@ -830,12 +854,22 @@
 			unset($parameters);
 
 			$function_exchange_values = '';
-			if ($lookup)
+			if ($lookup && !$make_relation)
 			{
 				$oArg = "{menuaction: 'property.ui{$from}.edit',"
 					. "origin:'" . phpgw::get_var('origin') . "',"
 					. "origin_id:'" .  phpgw::get_var('origin_id') ."',"
 					. "project_id: aData['project_id']}";
+
+				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
+			}
+
+			if($make_relation)
+			{
+				$oArg = "{menuaction: '{$update_menuaction}',"
+					. "add_relation:aData['project_id'],"
+					. "relation_type:'project',"
+					. "id: '{$relation_id}'}";
 
 				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
 			}
