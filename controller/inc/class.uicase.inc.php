@@ -1653,7 +1653,6 @@
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
-				$component_id = $check_list->get_component_id();
 				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
 				if (substr($location_info['location'], 1, 8) == 'location')
@@ -1704,6 +1703,9 @@
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
 
+			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $case_location_code, $component_id);
+
+			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
 
 			if ($buildings_on_property)
 			{

@@ -3,6 +3,8 @@
 <xsl:template name="case_row" xmlns:php="http://php.net/xsl">
 
 	<xsl:param name="control_item_type" />
+	<xsl:param name="check_list_id" />
+	<xsl:param name="date_format" />
 	<xsl:variable name="session_url">
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
@@ -46,6 +48,19 @@
 							<!--  ==================== COL2: CASE CONTENT ===================== -->
 							<div class="col_2">
 								<div class="case_info">
+									<div class="row">
+										<label>
+											<xsl:value-of select="php:function('lang','date')" />
+										</label>
+										<xsl:value-of select="php:function('date', $date_format, number(entry_date))"/>
+										<xsl:if test="$check_list_id != //check_list/id">
+											<xsl:text> (</xsl:text>
+											<xsl:value-of select="php:function('lang','other controll')" />
+											<xsl:text>: </xsl:text>
+											<xsl:value-of  select="$check_list_id"/>
+											<xsl:text>)</xsl:text>
+										</xsl:if>
+									</div>
 
 									<xsl:choose>
 										<xsl:when test="component_descr != ''">
@@ -132,7 +147,7 @@
 										</div>
 										<!-- Slideshow container -->
 										<div class="slideshow-container">
-											
+
 											<xsl:variable name="file_count">
 												<xsl:value-of select="count(case_files)" />
 											</xsl:variable>
@@ -157,7 +172,7 @@
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
-										<a class="quick_edit_case first" href="">
+										<a class="quick_edit_case first" href="#">
 											endre
 										</a>
 										<a class="close_case">
@@ -166,7 +181,7 @@
 												<xsl:text>&amp;case_id=</xsl:text>
 												<xsl:value-of select="id"/>
 												<xsl:text>&amp;check_list_id=</xsl:text>
-												<xsl:value-of select="//check_list/id"/>
+												<xsl:value-of select="$check_list_id"/>
 												<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 												<xsl:value-of select="$session_url"/>
 											</xsl:attribute>
@@ -180,7 +195,7 @@
 														<xsl:text>&amp;case_id=</xsl:text>
 														<xsl:value-of select="id"/>
 														<xsl:text>&amp;check_list_id=</xsl:text>
-														<xsl:value-of select="//check_list/id"/>
+														<xsl:value-of select="$check_list_id"/>
 														<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 														<xsl:value-of select="$session_url"/>
 													</xsl:attribute>
@@ -198,7 +213,7 @@
 										<xsl:text>&amp;case_id=</xsl:text>
 										<xsl:value-of select="id"/>
 										<xsl:text>&amp;check_list_id=</xsl:text>
-										<xsl:value-of select="//check_list/id"/>
+										<xsl:value-of select="$check_list_id"/>
 										<xsl:text>&amp;control_item_type=</xsl:text>
 										<xsl:value-of select="//control_item/type" />
 										<xsl:text>&amp;phpgw_return_as=json</xsl:text>
