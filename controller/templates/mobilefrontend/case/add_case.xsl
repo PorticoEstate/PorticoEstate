@@ -326,17 +326,20 @@
 
 												<div class="pure-control-group">
 													<label class="pure-checkbox">Velg verdi fra lister</label>
-													<xsl:for-each select="options_array">
-														<input name="option_value" value="option_value" type="checkbox">
-															<xsl:if test="required = 1">
-																<xsl:attribute name="class" >
-																	<xsl:text>required</xsl:text>
-																</xsl:attribute>
-															</xsl:if>
-														</input>
-														<xsl:value-of select="option_value"/>
-
-													</xsl:for-each>
+													<br/>
+													<div>
+														<xsl:if test="required = 1">
+															<xsl:attribute name="class" >
+																<xsl:text>required</xsl:text>
+															</xsl:attribute>
+														</xsl:if>
+														<xsl:for-each select="options_array">
+															<input type="checkbox" name="option_value[]" value="{option_value}">
+															</input>
+															<xsl:value-of select="option_value"/>
+															<br/>
+														</xsl:for-each>
+													</div>
 												</div>
 												<div class="pure-control-group">
 													<label class="comment">

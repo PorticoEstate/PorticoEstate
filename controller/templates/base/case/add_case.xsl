@@ -285,9 +285,7 @@
 
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_4'">
-
 															<input name="type" type="hidden" value="control_item_type_4" />
-
 															<div class="row">
 																<label>Status</label>
 																<select name="status">
@@ -298,7 +296,19 @@
 															</div>
 															<div class="row">
 																<label class="comment">Velg verdi fra lister</label>
-																<select name="option_value">
+																<br/>
+																<xsl:for-each select="options_array">
+																	<input type="radio" name="option_value" value="{option_value}">
+																		<xsl:if test="required = 1">
+																			<xsl:attribute name="required" >
+																				<xsl:text>required</xsl:text>
+																			</xsl:attribute>
+																		</xsl:if>
+																	</input>
+																	<xsl:value-of select="option_value"/>
+																	<br/>
+																</xsl:for-each>
+																<!--<select name="option_value">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
 																			<xsl:text>required</xsl:text>
@@ -313,7 +323,56 @@
 																			<xsl:value-of select="option_value"/>
 																		</option>
 																	</xsl:for-each>
+																</select>-->
+															</div>
+															<div class="row">
+																<label class="comment">Beskrivelse av sak</label>
+																<textarea name="case_descr">
+																	<xsl:value-of select="comment"/>
+																</textarea>
+															</div>
+															<xsl:if test="include_counter_measure = 1">
+																<div>
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+																	</label>
+																	<textarea name="proposed_counter_measure" >
+																		<xsl:value-of select="proposed_counter_measure"/>
+																	</textarea>
+																</div>
+															</xsl:if>
+															<xsl:variable name="lang_save">
+																<xsl:value-of select="php:function('lang', 'register_error')" />
+															</xsl:variable>
+															<input type="submit" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+
+														</xsl:when>
+														<xsl:when test="type = 'control_item_type_5'">
+															<input name="type" type="hidden" value="control_item_type_5" />
+															<div class="row">
+																<label>Status</label>
+																<select name="status">
+																	<option value="0" SELECTED="SELECTED">Åpen</option>
+																	<option value="1" >Lukket</option>
+																	<option value="2" >Venter på tilbakemelding</option>
 																</select>
+															</div>
+															<div class="row">
+																<label class="comment">Velg verdi fra lister</label>
+																<br/>
+																<div>
+																	<xsl:if test="required = 1">
+																		<xsl:attribute name="class" >
+																			<xsl:text>required</xsl:text>
+																		</xsl:attribute>
+																	</xsl:if>
+																	<xsl:for-each select="options_array">
+																		<input type="checkbox" name="option_value[]" value="{option_value}">
+																		</input>
+																		<xsl:value-of select="option_value"/>
+																		<br/>
+																	</xsl:for-each>
+																</div>
 															</div>
 															<div class="row">
 																<label class="comment">Beskrivelse av sak</label>

@@ -16,6 +16,10 @@ input.date {
   width: 125px;
 }
 
+.bigmenubutton
+{
+	min-width: 140px;
+}
 .save_check_list
 {
 /*	text-align: center;*/
@@ -74,6 +78,10 @@ ul.expand_list h4 {
 }
 .frm_update_case label {
   display: block;
+}
+
+label {
+  margin-right: 5px;
 }
 
 #check_list_details fieldset {
