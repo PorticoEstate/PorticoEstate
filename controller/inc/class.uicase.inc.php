@@ -1009,6 +1009,11 @@
 				$option_value = phpgw::get_var('option_value');
 				$case->set_measurement($option_value);
 			}
+			else if ($type == 'control_item_type_5')
+			{
+				$option_value = phpgw::get_var('option_value');
+				$case->set_measurement(serialize($option_value));
+			}
 
 			$case_id = $this->so->store($case);
 
@@ -1049,7 +1054,14 @@
 			$case->set_descr($case_descr);
 			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
-			$case->set_measurement($measurement);
+			if($measurement && is_array($measurement))
+			{
+				$case->set_measurement(serialize($measurement));
+			}
+			else
+			{
+				$case->set_measurement($measurement);
+			}
 			$case->set_status($case_status);
 			$case->set_condition_degree($condition_degree);
 			$case->set_consequence($consequence);
@@ -1721,6 +1733,13 @@
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
+					$measurement = $case->get_measurement();
+
+					if(unserialize($measurement))
+					{
+						$case->set_measurement(unserialize($measurement));
+					}
+
 					$component_location_id = $case->get_component_location_id();
 					$component_id = $case->get_component_id();
 					if ($component_id)
@@ -1759,7 +1778,7 @@
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-
+//			_debug_array($open_check_items_and_cases);die();
 			$data = array
 				(
 				'control' => $control,

@@ -19,7 +19,7 @@
 					<span>
 						<xsl:value-of select="control_item/title"/>
 					</span>
-					<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+					<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4' or $control_item_type = 'control_item_type_5'">
 						<span style="margin-left:3px;">(Måling)</span>
 					</xsl:if>
 				</h4>
@@ -109,13 +109,23 @@
 										</span>
 									</div>
 
-									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4' or $control_item_type = 'control_item_type_5'">
 
 										<!--  MEASUREMENT -->
 										<div class="row">
 											<label>Måleverdi:</label>
 											<span class="measurement">
-												<xsl:value-of select="measurement"/>
+												<xsl:choose>
+													<xsl:when test="$control_item_type = 'control_item_type_5'">
+														<xsl:for-each select="measurement">
+															<br/>
+															<xsl:value-of disable-output-escaping="yes" select="node()"/>
+														</xsl:for-each>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="measurement"/>
+													</xsl:otherwise>
+												</xsl:choose>
 											</span>
 										</div>
 									</xsl:if>
@@ -283,7 +293,7 @@
 										</select>
 									</div>
 
-									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4'">
+									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4' or $control_item_type = 'control_item_type_5'">
 										<xsl:choose>
 											<xsl:when test="$control_item_type = 'control_item_type_2'">
 												<!--  MEASUREMENT -->
@@ -317,12 +327,29 @@
 												<div class="row">
 													<label class="comment">Velg verdi fra liste</label>
 													<xsl:for-each select="../control_item/options_array">
-														<input type="radio" name="measurement" value="female">
+														<input type="radio" name="measurement">
 															<xsl:attribute name="value">
 																<xsl:value-of select="option_value"/>
 															</xsl:attribute>
 														</input>
 														<xsl:value-of select="option_value"/>
+													</xsl:for-each>
+												</div>
+											</xsl:when>
+											<xsl:when test="$control_item_type = 'control_item_type_5'">
+												<!--  MEASUREMENT -->
+												<div class="row">
+													<label class="comment">Velg verdi fra liste</label>
+													<br/>
+													<xsl:for-each select="../control_item/options_array">
+														<input type="checkbox" name="measurement[]">
+															<xsl:attribute name="value">
+																<xsl:value-of select="option_value"/>
+															</xsl:attribute>
+														</input>
+														<xsl:value-of select="option_value"/>
+														<br/>
+
 													</xsl:for-each>
 												</div>
 											</xsl:when>

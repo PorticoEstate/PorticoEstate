@@ -61,6 +61,18 @@
 											</xsl:with-param>
 										</xsl:call-template>
 									</xsl:when>
+									<!--  ==================== CONTROL TYPE 5 ===================== -->
+									<xsl:when test="control_item/type = 'control_item_type_5'">
+										<xsl:call-template name="case_row">
+											<xsl:with-param name="control_item_type">control_item_type_5</xsl:with-param>
+											<xsl:with-param name="check_list_id">
+												<xsl:value-of select="check_list_id"/>
+											</xsl:with-param>
+											<xsl:with-param name="date_format">
+												<xsl:value-of select="$date_format"/>
+											</xsl:with-param>
+										</xsl:call-template>
+									</xsl:when>
 								</xsl:choose>
 							</xsl:for-each>
 						</ul>
