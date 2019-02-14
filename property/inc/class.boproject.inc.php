@@ -474,6 +474,7 @@
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
+			$sort = phpgw::get_var('sort');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			$start_date = urldecode(phpgw::get_var('start_date'));
@@ -487,12 +488,13 @@
 				$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
 			}
 
+			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'start' => $start,
 				'results' => phpgw::get_var('results', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
+				'query' => $search,
+				'order' => $order,
+				'sort' => $sort,
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
 				'end_date' => $end_date,
@@ -510,7 +512,6 @@
 				'allrows' => isset($params['allrows']) ? $params['allrows'] : '',
 				'results' => $params['results'],
 				'dry_run' => $params['dry_run'],
-				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
 				'status_id' => $this->status_id,
 				'wo_hour_cat_id' => $this->wo_hour_cat_id,
@@ -522,18 +523,26 @@
 				'filter_year' => $this->filter_year
 
 				));
-				$total_records = $this->so->total_records;
 
-				return array(
+			$total_records = $this->so->total_records;
+			foreach ($values as &$entry)
+			{
+				$entry['id'] = $entry['project_id'];
+				$entry['delay'] = ceil(phpgwapi_datetime::get_working_days($entry['end_date'], time()));
+				$entry['link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
+						'id' => $entry['project_id'], 'tab' => 'budget'));
+			}
+
+			return array(
 				'ResultSet' => array(
 					"totalResultsAvailable" => $total_records,
 					"totalRecords" => $total_records,
-					"Result" => $values,
 					'recordsReturned' => count( $values),
 					'pageSize' => $params['results'],
-					'startIndex' => $this->start,
+					'startIndex' => $start,
 					'sortKey' => $this->order,
 					'sortDir' => $this->sort,
+					"Result" => $values
 				)
 			);
 

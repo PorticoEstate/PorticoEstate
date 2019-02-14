@@ -216,10 +216,55 @@
 			if (isset($prefs['property']['mainscreen_show_project_overdue']) && $prefs['property']['mainscreen_show_project_overdue'] == 'yes')
 			{
 
+//				$soproject = CreateObject('property.soproject');
+//
+//				$values = $soproject->read(array(
+//					'filter' => $accound_id,
+//					'overdue' => time(),
+//					'sort'	=>  'ASC',
+//					'order' =>  'end_date'
+//
+//				));
+//				$total_records = $soproject->total_records;
+
+				$portalbox = CreateObject('phpgwapi.listbox', array
+					(
+					'title' => lang('end date delay'),
+					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width' => '100%',
+					'outerborderwidth' => '0',
+					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+				));
+
+				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
+				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
+				{
+					$GLOBALS['portal_order'][] = $app_id;
+				}
+
+				$var = $this->get_controls($app_id);
+
+				foreach ($var as $key => $value)
+				{
+	//				$portalbox->set_controls($key,$value);
+				}
+//				foreach ($values as $entry)
+//				{
+//					$entry['delay'] = ceil(phpgwapi_datetime::get_working_days($entry['end_date'], time()));
+//					$portalbox->data[] = array
+//						(
+//						'text' => "Forsinkelse: {$entry['delay']} dager :: prosjekt nr:{$entry['project_id']} :: {$entry['location_code']} :: {$entry['address']}",
+//						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
+//							'id' => $entry['project_id'], 'tab' => 'budget'))
+//					);
+//				}
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 				echo '<div id="project_overdue_info_container"></div>';
 
-				$lang = js_lang( 'Name', 'address', 'status','subject', 'id', 'assigned to', 'modified date');
+				$lang = js_lang( 'Name', 'address', 'status', 'id', 'delay', 'location');
 				$now = time();
 
 				$js = <<<JS
@@ -239,12 +284,9 @@
 
 					var colDefsTicket_info = [
 						{key: 'id', label: lang['id'], formatter: genericLink},
-						{key: 'subject', label: lang['subject']},
-						{key: 'status', label: lang['status']},
+						{key: 'delay', label: lang['delay']},
 						{key: 'address', label: lang['address']},
-						{key: 'assignedto', label: lang['assigned to']},
-						{key: 'modified_date', label: lang['modified date']}
-
+						{key: 'location_code', label: lang['location']}
 						];
 
 					var paginatorTableProject_overdue = new Array();
@@ -257,55 +299,7 @@
 
 JS;
 
-//				echo $js;
-
-
-
-
-				$soproject = CreateObject('property.soproject');
-
-				$values = $soproject->read(array(
-					'filter' => $accound_id,
-					'overdue' => time(),
-					'sort'	=>  'ASC',
-					'order' =>  'end_date'
-
-				));
-				$total_records = $soproject->total_records;
-				$portalbox = CreateObject('phpgwapi.listbox', array
-					(
-					'title' => lang('end date delay') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-				));
-
-				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
-				if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
-				{
-					$GLOBALS['portal_order'][] = $app_id;
-				}
-
-				$var = $this->get_controls($app_id);
-
-				foreach ($var as $key => $value)
-				{
-					//				$portalbox->set_controls($key,$value);
-				}
-				foreach ($values as $entry)
-				{
-					$entry['delay'] = ceil(phpgwapi_datetime::get_working_days($entry['end_date'], time()));
-					$portalbox->data[] = array
-						(
-						'text' => "Forsinkelse: {$entry['delay']} dager :: prosjekt nr:{$entry['project_id']} :: {$entry['location_code']} :: {$entry['address']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
-							'id' => $entry['project_id'], 'tab' => 'budget'))
-					);
-				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				echo $js;
 
 				unset($tts);
 				unset($portalbox);
