@@ -265,17 +265,17 @@
 				$this->error_msg_array['title'] = "error_msg_1";
 			}
 
-			if ($this->what_to_do == '' | strlen($this->what_to_do) == 0)
-			{
-				$status = false;
-				$this->error_msg_array['what_to_do'] = "error_msg_1";
-			}
-
-			if ($this->how_to_do == '')
-			{
-				$status = false;
-				$this->error_msg_array['how_to_do'] = "error_msg_1";
-			}
+//			if ($this->what_to_do == '' | strlen($this->what_to_do) == 0)
+//			{
+//				$status = false;
+//				$this->error_msg_array['what_to_do'] = "error_msg_1";
+//			}
+//
+//			if ($this->how_to_do == '')
+//			{
+//				$status = false;
+//				$this->error_msg_array['how_to_do'] = "error_msg_1";
+//			}
 
 			if ($this->control_area_id == '' && intval($this->control_area_id) > 0)
 			{
