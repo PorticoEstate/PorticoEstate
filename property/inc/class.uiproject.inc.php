@@ -866,12 +866,32 @@
 
 			if($make_relation)
 			{
-				$oArg = "{menuaction: '{$update_menuaction}',"
-					. "add_relation:aData['project_id'],"
-					. "relation_type:'project',"
-					. "id: '{$relation_id}'}";
+				$parameters3 = array
+				(
+					'parameter' => array
+					(
+						array
+						(
+							'name' => 'add_relation',
+							'source' => 'project_id'
+						),
+					)
+				);
 
-				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'update_ticket',
+					'text' => lang('update ticket'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+							'menuaction' => $update_menuaction,
+							'id' => $relation_id,
+							'relation_type'=>'project',
+
+						)
+					),
+					'parameters' => json_encode($parameters3)
+				);
 			}
 
 			$query = phpgw::get_var('query');
