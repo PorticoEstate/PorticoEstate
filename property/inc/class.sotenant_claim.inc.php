@@ -142,11 +142,12 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
+
 			$claims = array();
 			while ($this->db->next_record())
 			{
 				$claims[] = array
-					(
+				(
 					'claim_id' => $this->db->f('id'),
 					'project_id' => $this->db->f('project_id'),
 					'tenant_id' => $this->db->f('tenant_id'),
@@ -164,6 +165,20 @@
 					'amount' => $this->db->f('amount')
 				);
 			}
+
+			$soproject = CreateObject('property.soproject');
+			foreach ($claims as &$claim)
+			{
+				$project_budget = $soproject->get_budget($claim['project_id']);
+				$actual_cost = 0;
+				foreach ($project_budget  as $entry)
+				{
+					$actual_cost += (float)$entry['actual_cost'];
+				}
+
+				$claim['actual_cost'] = $actual_cost;
+			}
+
 			return $claims;
 		}
 
