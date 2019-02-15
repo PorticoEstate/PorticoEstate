@@ -167,7 +167,7 @@
 			{
 				return $this->query(array('project_id' => phpgw::get_var('project_id')));
 			}
-
+			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
@@ -263,7 +263,14 @@
 						array(
 							'key' => 'amount',
 							'label' => lang('amount'),
-							'sortable' => true
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.FormatterAmount0'
+						),
+						array(
+							'key' => 'actual_cost',
+							'label' => lang('actual cost'),
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.FormatterAmount0'
 						),
 						array(
 							'key' => 'remark',
