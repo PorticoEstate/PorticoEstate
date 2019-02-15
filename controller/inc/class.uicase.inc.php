@@ -1715,7 +1715,8 @@
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
 
-			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $case_location_code, $component_id);
+			$historic_location_code = $case_location_code ? $case_location_code : $check_list_location_code;
+			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $historic_location_code, $component_id);
 
 			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
 
@@ -1769,10 +1770,9 @@
 						}
 						$case->set_component_descr($short_desc);
 
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
-
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());

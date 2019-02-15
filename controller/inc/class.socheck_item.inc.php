@@ -287,12 +287,19 @@
 			$sql .= "LEFT JOIN controller_control_item as coi ON ci.control_item_id = coi.id ";
 			$sql .= "LEFT JOIN controller_check_item_case as cic ON ci.id = cic.check_item_id ";
 
-			if($status == 'open_or_waiting_old' && $component_id)
+			if($status == 'open_or_waiting_old')
 			{
 				$sql .= "WHERE ci.check_list_id != {$check_list_id} ";
 				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
 				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
-				$sql .= "AND cic.component_id = " . (int) $component_id . " ";
+				if($component_id)
+				{
+					$sql .= "AND cic.component_id = " . (int) $component_id . " ";
+				}
+				else if (!$location_code)
+				{
+					return array();
+				}
 			}
 			else
 			{
