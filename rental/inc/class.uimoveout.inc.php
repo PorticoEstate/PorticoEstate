@@ -315,9 +315,9 @@
 		 *
 		 * @return void
 		 */
-		protected function _handle_files( $id )
-		{
-			parent::_handle_files('rental', 'moveout', $id);
-		}
+//		protected function _handle_files( $id )
+//		{
+//			parent::_handle_files('rental', 'moveout', $id);
+//		}
 
 	}
