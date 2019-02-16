@@ -38,6 +38,7 @@
 	{
 		var $uicols_related = array();
 		var $acl_location = '.ticket';
+		protected $account;
 
 		public $soap_functions = array
 			(
@@ -819,6 +820,38 @@
 				$this->db->query('UPDATE phpgw_helpdesk_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
+
+			return $receipt;
+
+		}
+
+		function take_over( $id = 0 )
+		{
+			$id = (int)$id;
+			$receipt = array();
+			$this->fields_updated = false;
+
+			$this->db->query("SELECT assignedto FROM phpgw_helpdesk_tickets WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$oldassigned = $this->db->f('assignedto');
+
+			$this->db->transaction_begin();
+
+			if ($oldassigned != $this->account)
+			{
+				$this->fields_updated = true;
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET assignedto='" . $this->account
+					. "' WHERE id={$id}", __LINE__, __FILE__);
+				$this->historylog->add('A', $id, $this->account, $oldassigned);
+			}
+
+			if ($this->fields_updated)
+			{
+				$this->db->query('UPDATE phpgw_helpdesk_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
+			}
+
+			$this->db->transaction_commit();
 
 			return $receipt;
 

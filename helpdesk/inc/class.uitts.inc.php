@@ -45,7 +45,8 @@
 				'download'			=> true,
 				'view_file'			=> true,
 				'edit_status'		=> true,
-				'edit_priority' => true,
+				'edit_priority'		=> true,
+				'take_over'			=> true,
 				'get_vendor_email'	=> true,
 				'_print'			=> true,
 				'columns'			=> true,
@@ -502,6 +503,17 @@ HTML;
 			$this->bocommon->download($list,$name,$descr);
 		}
 
+		function take_over()
+		{
+			if(!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$id 		= phpgw::get_var('id', 'int');
+			$receipt 	= $this->bo->take_over($id);
+			return lang('assignment has been changed for %1', $id);
+		}
 		function edit_status()
 		{
 			if(!$this->acl_edit)
@@ -1175,6 +1187,29 @@ JS;
 						);
 					}
 				}
+
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'take_over',
+					'statustext' => lang('take over'),
+					'text' => lang('take over'),
+					'confirm_msg' => lang('do you really want to take over the assignment'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'helpdesk.uitts.take_over',
+						'second_display' => true,
+						'sort' => $this->sort,
+						'order' => $this->order,
+						'cat_id' => $this->cat_id,
+						'filter' => $this->filter,
+						'user_filter' => $this->user_filter,
+						'query' => $this->query,
+						'district_id' => $this->district_id,
+						'allrows' => $this->allrows,
+						'delete' => 'dummy'// FIXME to trigger the json in property.js.
+					)),
+					'parameters' => json_encode($parameters)
+				);
 			}
 
 			if (count($data['datatable']['actions']) < 10)
