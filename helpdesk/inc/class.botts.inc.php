@@ -1298,6 +1298,12 @@ HTML;
 			return $this->so->get_custom_status();
 		}
 
+		public function take_over($id = 0)
+		{
+			$receipt 	= $this->so->take_over($id);
+			$this->fields_updated = $this->so->fields_updated;
+			return $receipt;
+		}
 		public function update_status($data, $id = 0)
 		{
 			$receipt 	= $this->so->update_status($data, $id);

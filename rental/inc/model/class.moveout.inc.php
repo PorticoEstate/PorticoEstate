@@ -28,6 +28,7 @@
 	 */
 
 	phpgw::import_class('rental.bomoveout');
+	phpgw::import_class('rental.socontract');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
@@ -197,6 +198,12 @@
 
 		protected function doValidate( $entity, &$errors )
 		{
+			if(!$entity->contract_id ||!rental_socontract::get_instance()->get_single($entity->contract_id))
+			{
+				$errors['contract_id'] = lang("contract %1 is not valid", $entity->contract_id);
+				return;
+			}
+
 			$values =  rental_somoveout::get_instance()->read(array('filters' => array('contract_id' => $entity->contract_id)));
 
 			//Duplicate
