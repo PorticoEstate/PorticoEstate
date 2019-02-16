@@ -1526,11 +1526,12 @@ JS;
 
 				}
 
-				$party =  rental_soparty::get_instance()->get_single($party_id);
-	//			_debug_array($party);
-
-				$ret['identifier'] = $party->get_identifier();
-				$ret['mobile_phone'] = $party->get_mobile_phone();
+				if($party_id)
+				{
+					$party =  rental_soparty::get_instance()->get_single($party_id);
+					$ret['identifier'] = $party->get_identifier();
+					$ret['mobile_phone'] = $party->get_mobile_phone();
+				}
 
 				return $ret;
 			}

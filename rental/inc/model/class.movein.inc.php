@@ -197,9 +197,20 @@
 
 		protected function doValidate( $entity, &$errors )
 		{
-			if(!$entity->contract_id ||!rental_socontract::get_instance()->get_single($entity->contract_id))
+			
+			$contract = rental_socontract::get_instance()->get_single($entity->contract_id);
+			
+			if(!$entity->contract_id ||!$contract)
 			{
 				$errors['contract_id'] = lang("contract %1 is not valid", $entity->contract_id);
+				return;
+			}
+
+			$parties =  $contract->get_parties();
+
+			if(!$parties)
+			{
+				$errors['contract_id'] = lang("contract %1 has no parties", $entity->contract_id);
 				return;
 			}
 
