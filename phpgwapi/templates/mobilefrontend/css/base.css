@@ -53,11 +53,13 @@ height:100%;
 {
 	padding: 32px 5px;
 	border: 1px solid #E7E1DA;
+	min-width: 140px;
 }
 
 .pure-button
 {
 	padding: 32px 10px;
+	min-width: 140px;
 }
 
 body {
