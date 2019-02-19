@@ -87,7 +87,7 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/grids-responsive-min.css');
 			}
 			$GLOBALS['phpgw']->css->add_external_file('registration/templates/base/css/rainbow_baby-blue.css');
-			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
+//			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
 
 			$form_header = !empty($this->config['form_header']) ? $this->config['form_header'] : $GLOBALS['phpgw_info']['server']['system_name'];
 
