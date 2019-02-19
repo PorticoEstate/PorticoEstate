@@ -500,7 +500,7 @@
 					$target['id'] = $ticket_id;
 				}
 			}
-			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
+/*			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
 			{
 				$message_cat_id = 264; //LRS Lønn - Skatt
 				$group_id = 3159; //LRS Lønn
@@ -532,9 +532,8 @@
 					$target['type'] = 'helpdesk';
 					$target['id'] = $ticket_id;
 				}
-
 			}
-
+*/
 			/**
 			 * Ticket created / updated
 			 */
