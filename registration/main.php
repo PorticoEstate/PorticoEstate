@@ -22,7 +22,7 @@
 
 	// Note: This is current not a drop in install, it requires some manual installation
 	//       Take a look at the README file
-	$domain = isset($_REQUEST['logindomain']) && $_REQUEST['logindomain'] ? $_REQUEST['logindomain'] : 'default';
+	$domain = !empty($_REQUEST['logindomain']) ? $_REQUEST['logindomain'] : 'default';
 	$template_set = 'checkwithmom';
 
 
