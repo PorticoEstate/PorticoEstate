@@ -133,6 +133,8 @@
 			$password = $this->config->config_data['xPortico']['password'];
 			$version = Client::VERSION_2016;
 
+			$filter_ulest = !empty($this->config->config_data['xPortico']['filter_ulest']) ? true : false;
+
 			$client = new Client($host, $username, $password, $version);
 
 			//read messages from this folder
@@ -152,8 +154,11 @@
 			$request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
 
 			// Build the restriction.
-			$request->Restriction = new RestrictionType();
-			$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			if($filter_ulest)
+			{
+				$request->Restriction = new RestrictionType();
+				$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			}
 
 			// Return all message properties.
 			$request->ItemShape = new ItemResponseShapeType();
@@ -495,7 +500,7 @@
 					$target['id'] = $ticket_id;
 				}
 			}
-			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
+/*			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
 			{
 				$message_cat_id = 264; //LRS Lønn - Skatt
 				$group_id = 3159; //LRS Lønn
@@ -527,9 +532,8 @@
 					$target['type'] = 'helpdesk';
 					$target['id'] = $ticket_id;
 				}
-
 			}
-
+*/
 			/**
 			 * Ticket created / updated
 			 */

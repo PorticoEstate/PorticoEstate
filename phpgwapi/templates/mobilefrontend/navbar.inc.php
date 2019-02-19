@@ -78,6 +78,18 @@ HTML;
 
 		}
 
+		if($acl->check('run', PHPGW_ACL_READ, 'helpdesk'))
+		{
+			$helpdesk_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+			$helpdesk_text = $GLOBALS['phpgw']->translation->translate('helpdesk', array(), false, 'helpdesk');
+
+			$topmenu .= <<<HTML
+				<li class="pure-menu-item">
+					<a href="{$helpdesk_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$helpdesk_text}</a>
+				</li>
+HTML;
+
+		}
 
 		$topmenu .= <<<HTML
 			</ul>
