@@ -6,9 +6,9 @@
 	</xsl:variable>
 
 	<div id="main_content" class="medium">
-		 <a href="#" class="scrollup">
+		<a href="#" class="scrollup">
 			<xsl:value-of select="php:function('lang', 'scroll to top')" />
-		 </a>
+		</a>
 
 		<xsl:call-template name="check_list_top_section">
 		</xsl:call-template>
@@ -171,7 +171,6 @@
 													</textarea>
 												</div>
 												<xsl:if test="include_counter_measure = 1">
-
 													<div>
 														<label class="comment">
 															<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
@@ -217,14 +216,16 @@
 														<xsl:value-of select="comment"/>
 													</textarea>
 												</div>
-												<div>
-													<label class="comment">
-														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-													</label>
-													<textarea name="proposed_counter_measure" class="pure-input-1">
-														<xsl:value-of select="proposed_counter_measure"/>
-													</textarea>
-												</div>
+												<xsl:if test="include_counter_measure = 1">
+													<div>
+														<label class="comment">
+															<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+														</label>
+														<textarea name="proposed_counter_measure" class="pure-input-1">
+															<xsl:value-of select="proposed_counter_measure"/>
+														</textarea>
+													</div>
+												</xsl:if>
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="php:function('lang', 'register_error')" />
 												</xsl:variable>
@@ -267,14 +268,16 @@
 														<xsl:value-of select="comment"/>
 													</textarea>
 												</div>
-												<div>
-													<label class="comment">
-														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-													</label>
-													<textarea name="proposed_counter_measure" class="pure-input-1">
-														<xsl:value-of select="proposed_counter_measure"/>
-													</textarea>
-												</div>
+												<xsl:if test="include_counter_measure = 1">
+													<div>
+														<label class="comment">
+															<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+														</label>
+														<textarea name="proposed_counter_measure" class="pure-input-1">
+															<xsl:value-of select="proposed_counter_measure"/>
+														</textarea>
+													</div>
+												</xsl:if>
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="php:function('lang', 'register_error')" />
 												</xsl:variable>
@@ -318,14 +321,16 @@
 														<xsl:value-of select="comment"/>
 													</textarea>
 												</div>
-												<div>
-													<label class="comment">
-														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-													</label>
-													<textarea name="proposed_counter_measure" class="pure-input-1">
-														<xsl:value-of select="proposed_counter_measure"/>
-													</textarea>
-												</div>
+												<xsl:if test="include_counter_measure = 1">
+													<div>
+														<label class="comment">
+															<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+														</label>
+														<textarea name="proposed_counter_measure" class="pure-input-1">
+															<xsl:value-of select="proposed_counter_measure"/>
+														</textarea>
+													</div>
+												</xsl:if>
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="php:function('lang', 'register_error')" />
 												</xsl:variable>
@@ -362,14 +367,16 @@
 														<xsl:value-of select="comment"/>
 													</textarea>
 												</div>
-												<div>
-													<label class="comment">
-														<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-													</label>
-													<textarea name="proposed_counter_measure" class="pure-input-1">
-														<xsl:value-of select="proposed_counter_measure"/>
-													</textarea>
-												</div>
+												<xsl:if test="include_counter_measure = 1">
+													<div>
+														<label class="comment">
+															<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+														</label>
+														<textarea name="proposed_counter_measure" class="pure-input-1">
+															<xsl:value-of select="proposed_counter_measure"/>
+														</textarea>
+													</div>
+												</xsl:if>
 												<xsl:variable name="lang_save">
 													<xsl:value-of select="php:function('lang', 'register_error')" />
 												</xsl:variable>
