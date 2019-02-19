@@ -28,9 +28,10 @@
 
 		$acl = & $GLOBALS['phpgw']->acl;
 
+//		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 
 		$topmenu = <<<HTML
-		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+		<div class="pure-menu pure-menu-horizontal">
 			<ul class="pure-menu-list">
 				<li class="pure-menu-heading pure-menu-link pure-menu-selected">
 					<a href="{$site_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$GLOBALS['phpgw_info']['user']['fullname']}</a>
@@ -84,10 +85,36 @@ HTML;
 			$helpdesk_text = $GLOBALS['phpgw']->translation->translate('helpdesk', array(), false, 'helpdesk');
 
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
+				<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
 					<a href="{$helpdesk_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$helpdesk_text}</a>
+					<ul class="pure-menu-children">
+HTML;
+				if ('helpdesk' == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					$menu_gross = execMethod("helpdesk.menu.get_menu");
+					$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+					$level = 0;
+					$navigation = get_sub_menu($menu_gross['navigation'], $selection, $level);
+				}
+				else
+				{
+					$navigation = array();
+				}
+				
+				foreach ($navigation as $menu_item)
+				{
+					$topmenu .= <<<HTML
+							<li class="pure-menu-item">
+								<a href="{$menu_item['url']}" class="pure-menu-link"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$menu_item['text']}</a>
+							</li>
+HTML;
+				}
+
+				$topmenu .= <<<HTML
+					</ul>
 				</li>
 HTML;
+
 
 		}
 
@@ -125,6 +152,32 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
+		function get_sub_menu( $children = array(), $selection = array(), $level = '' )
+		{
+			$level++;
+			$i = 0;
+			foreach ($children as $key => $vals)
+			{
+				$menu[] = $vals;
+				if ($key == $selection[$level])
+				{
+					$menu[$i]['this'] = true;
+					if (isset($menu[$i]['children']))
+					{
+						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'], $selection, $level);
+					}
+				}
+				else
+				{
+					if (isset($menu[$i]['children']))
+					{
+						unset($menu[$i]['children']);
+					}
+				}
+				$i++;
+			}
+			return $menu;
+		}
 
 	function parse_footer_end()
 	{

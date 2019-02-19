@@ -200,6 +200,11 @@
 			}
 //			$this->_simple = true;
 
+//			$GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] = 'yes';
+//
+//			$menu = $this->bocommon->get_menu('helpdesk');
+//
+//			_debug_array($menu);die();
 		}
 
 		/**
