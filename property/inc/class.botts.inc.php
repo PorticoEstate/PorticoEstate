@@ -2392,4 +2392,9 @@ HTML;
 			}
 			return $purchase_grant_ok;
 		}
+
+		function reset_views($id)
+		{
+			return $this->so->reset_views($id);;
+		}
 	}

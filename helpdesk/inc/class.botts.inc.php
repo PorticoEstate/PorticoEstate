@@ -1388,6 +1388,7 @@ HTML;
 			$values = $this->custom->prepare($values, 'helpdesk', '.ticket', false);
 			return $values;
 		}
+
 		function get_group_list( $selected = 0 )
 		{
 			$query = '';
@@ -1431,4 +1432,8 @@ HTML;
 			}
 		}
 
+		function reset_views($id)
+		{
+			return $this->so->reset_views($id);
+		}
 	}

@@ -162,7 +162,7 @@
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'value_note', 'label' => lang('message'), 'sortable' => true, 'resizeable' => true)
 			);
 
 			foreach ($additional_message_notes as &$message_note)

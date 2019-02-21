@@ -1349,4 +1349,30 @@
 
 			return $values;
 		}
+
+		function reset_views($id)
+		{
+			$this->db->transaction_begin();
+
+			$this->db->query("SELECT status FROM phpgw_helpdesk_tickets WHERE id =" . (int)$id, __LINE__, __FILE__);
+			$this->db->next_record();
+			$status = $this->db->f('status');
+
+			$custom_status  = (int)trim($status,'C');
+			$this->db->query("SELECT * FROM phpgw_helpdesk_status WHERE id = {$custom_status}",__LINE__,__FILE__);
+			$this->db->next_record();
+			if($status == 'X' || $this->db->f('closed'))
+			{
+				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+				$this->fields_updated[] = 'status';
+				$this->historylog->add('R', $id, $new_status, $old_status);
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
+	//			$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
+			}
+
+			$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id=" . (int)$id, __LINE__, __FILE__);
+
+			return $this->db->transaction_commit();
+		}
 	}
