@@ -84,6 +84,14 @@
 		{
 			parent::__construct();
 
+			$system_user_lid = 'LRS_system';
+			$system_user_id = $GLOBALS['phpgw']->accounts->name2id($system_user_lid);
+			if($system_user_id)
+			{
+				$GLOBALS['phpgw_info']['user']['account_id'] = $system_user_id;
+				$GLOBALS['phpgw']->preferences->set_account_id($system_user_id, true);
+			}
+
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('helpdesk');
 			$this->function_msg = 'Hent epost fra postmottak til LRS';
