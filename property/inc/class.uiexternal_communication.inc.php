@@ -184,6 +184,11 @@
 				)
 			);
 
+			if(!$id)
+			{
+				$initial_message =  $ticket['details'];
+			}
+
 			$additional_notes = array_merge($notes, $additional_notes);
 
 	//		_debug_array($additional_notes);die();
@@ -427,6 +432,7 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab' => 0,
 				'base_java_url' => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
+				'value_initial_message' => $initial_message
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
