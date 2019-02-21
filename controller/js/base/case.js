@@ -196,81 +196,13 @@ $(document).ready(function ()
 		});
 	});
 
-	remove_form = function ()
-	{
-		$("#form_new_component_2").html('');
-	};
-
-	submitNewComponent = function (e, form)
-	{
-		e.preventDefault();
-		var requestUrl = $(form).attr("action");
-
-		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
-		for (var i = 0, len = inputs.length; i < len; i++)
-		{
-			input = inputs[i];
-
-			if ($(input).attr("data-validation") == "required")
-			{
-				if (!input.value)
-				{
-					$(input).addClass('error');
-					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
-					$(input).focus();
-					flag = false;
-				}
-				else
-				{
-					$(input).removeClass('error');
-					$(input).removeAttr("style");
-					$(input).addClass('valid');
-				}
-			}
-		}
-
-		if (!flag)
-		{
-			return false;
-		}
-
-		$.ajax({
-			type: 'POST',
-			url: requestUrl,
-			data: $(form).serialize(),
-			success: function (data)
-			{
-				if (data.status == "saved")
-				{
-					$("#choose-child-on-component").empty();
-
-					var component_children = data.component_children;
-
-					$.each(component_children, function (i, val)
-					{
-						$('#choose-child-on-component').append($('<option>', {
-							value: val.location_id + '_' + val.id,
-							text: val.short_description
-						}));
-					});
-				}
-
-				$("#form_new_component_2").html(data.message);
-				$('#equipment_picture_container').html('');
-				$("#new_picture").hide();
-			}
-		});
-
-		return false;
-	};
-
 
 	// REGISTER NEW CHILD COMPONENT
 	show_component_information = function (component)
 	{
 		var component_arr = component.split('_');
 		var oArgs = {
-			menuaction: 'controller.uicase.add_new_component_child',
+			menuaction: 'controller.uicase.edit_component_child',
 			location_id: component_arr[0],
 			component_id: component_arr[1],
 			get_info: 1
@@ -305,7 +237,7 @@ $(document).ready(function ()
 
 		var component_arr = component.split('_');
 		var oArgs = {
-			menuaction: 'controller.uicase.add_new_component_child',
+			menuaction: 'controller.uicase.edit_component_child',
 			location_id: component_arr[0],
 			component_id: component_arr[1],
 			parent_location_id: $(parent_location_id).val(),

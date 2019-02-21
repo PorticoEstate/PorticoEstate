@@ -58,13 +58,13 @@
 	<xsl:for-each select="location_children">
 		<form class="pure-form pure-form-aligned form_new_component" method="post">
 			<xsl:attribute name="action">
-				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_new_component_child, phpgw_return_as:json')" />
+				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.edit_component_child, phpgw_return_as:json')" />
 			</xsl:attribute>
 			<input type="hidden" name="get_form" value="1" />
 			<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
 			<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
 			<input type="hidden" name="location_id" value="{location_id}" />
-			<button id = "submit_new_component" type="submit" class="pure-button pure-button-primary">
+			<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
 				<xsl:value-of select="php:function('lang', 'new')" />
 				<xsl:text>: </xsl:text>
 				<xsl:value-of select="name" />

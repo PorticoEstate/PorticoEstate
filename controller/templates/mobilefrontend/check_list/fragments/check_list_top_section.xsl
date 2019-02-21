@@ -14,6 +14,10 @@
 					<h2>
 						<xsl:value-of select="component_array/xml_short_desc"/>
 					</h2>
+					<button id = "submit_parent_component" type="button" class="pure-button pure-button-primary" onclick="show_parent_component_information({component_array/location_id}, {component_array/id});">
+						<xsl:value-of select="php:function('lang', 'details')" />
+					</button>
+					<div id = "form_parent_component_2"></div>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
@@ -27,9 +31,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		
-		
-		
+
 		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
 		<xsl:choose>
 			<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
@@ -71,7 +73,7 @@
 								<xsl:value-of select="$active_tab" />
 							</xsl:with-param>
 						</xsl:call-template>
-					<xsl:call-template name="nav_control_plan" />
+						<xsl:call-template name="nav_control_plan" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="add_check_list_menu" />
@@ -81,5 +83,5 @@
 			</ul>
 		</div>
 	</div>
-		
+
 </xsl:template>
