@@ -229,7 +229,6 @@
 			$ticket_id = $message_info['ticket_id'];
 			$botts = createObject("{$this->currentapp}.botts");
 			$ticket = $botts->read_single($ticket_id);
-
 			$contact_data = $this->get_contact_data($ticket);
 
 			$_to = $contact_data['user_email'];
@@ -244,6 +243,8 @@
 			$subject = $html_content['subject'];
 
 			$html = str_replace('__ATTACHMENTS__', '', $html_content['html']);
+
+			$botts->reset_views($ticket_id);
 
 			if (!$_to)
 			{

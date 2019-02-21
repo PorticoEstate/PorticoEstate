@@ -178,6 +178,7 @@
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
 											</xsl:if>
+											<xsl:value-of select="value_initial_message"/>
 										</textarea>
 									</div>
 									<xsl:call-template name="vendor_form"/>
