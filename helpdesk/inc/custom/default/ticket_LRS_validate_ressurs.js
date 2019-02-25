@@ -10,6 +10,19 @@
 $(document).ready(function ()
 {
 
+	switch (parent_cat_id)
+	{
+		case 255:  //LRS Lønn
+		case 256:  //LRS Refusjon
+			// Leave as is...
+			break;
+		default:
+			$("#arbeidssted_name").removeAttr("data-validation");
+			$("#arbeidssted_name").hide();
+			$("#label_arbeidssted").hide();
+
+	}
+
 	$("#id_ressursnr").attr("data-validation-error-msg", "Ressursnummer");
 	show_ressursnr();
 
@@ -22,26 +35,6 @@ $(document).ready(function ()
 	{
 		get_ressursname();
 	});
-
-	switch (parent_cat_id)
-	{
-		case 268:  //LRS Økonomi
-		case 301:  //LRS-EDD telefoni
-		case 314:  //LRS System ØK
-			$("#arbeidssted_name").removeAttr("data-validation");
-			$("#arbeidssted_name").hide();
-			$("#label_arbeidssted").hide();
-			break;
-		default:
-
-	}
-
-//	if(parent_cat_id == 301) //LRS-EDD telefoni
-//	{
-//		$("#arbeidssted_name").removeAttr("data-validation");
-//		$("#arbeidssted_name").hide();
-//		$("#label_arbeidssted").hide();
-//	}
 
 });
 
@@ -71,10 +64,10 @@ function show_ressursnr()
 			$("#label_arbeidssted").hide();
 			break;
 		default:
-			$("#arbeidssted_name").removeAttr("data-validation-optional");
-			$("#arbeidssted_name").attr("data-validation", "required");
-			$("#arbeidssted_name").show();
-			$("#label_arbeidssted").show();
+//			$("#arbeidssted_name").removeAttr("data-validation-optional");
+//			$("#arbeidssted_name").attr("data-validation", "required");
+//			$("#arbeidssted_name").show();
+//			$("#label_arbeidssted").show();
 	}
 
 	$('form').isValid(validateLanguage, conf_on_changed, true);

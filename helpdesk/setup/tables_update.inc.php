@@ -368,4 +368,54 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+	$test[] = '0.9.18.008';
+
+	function helpdesk_upgrade0_9_18_008()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'alias',array(
+			'type' => 'varchar',
+			'precision' => 25,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'office',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'department',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'alias_supervisor',array(
+			'type' => 'varchar',
+			'precision' => 25,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'name_supervisor',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_email_out_recipient_list', 'email_supervisor',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.009';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
 
