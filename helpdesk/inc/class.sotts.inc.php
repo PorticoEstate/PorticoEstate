@@ -831,9 +831,10 @@
 			$receipt = array();
 			$this->fields_updated = false;
 
-			$this->db->query("SELECT assignedto FROM phpgw_helpdesk_tickets WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->query("SELECT status, assignedto FROM phpgw_helpdesk_tickets WHERE id={$id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$oldassigned = $this->db->f('assignedto');
+			$old_status = $this->db->f('status');
 
 			$this->db->transaction_begin();
 
@@ -843,6 +844,14 @@
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET assignedto='" . $this->account
 					. "' WHERE id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('A', $id, $this->account, $oldassigned);
+
+				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : '0';
+				if ($old_status != $new_status)
+				{
+					$this->historylog->add('C1', $id, $new_status, $old_status);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
+				}
 			}
 
 			if ($this->fields_updated)
