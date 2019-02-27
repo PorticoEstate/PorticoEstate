@@ -150,7 +150,7 @@
 					_debug_array($files);
 				}
 
-				$file_name = 'Hele_Listen4.txt';
+				$file_name = 'Hele_Listen.txt';
 
 				$file_remote = $file_name;
 				$file_local = "{$directory_local}/{$file_name}";
@@ -368,7 +368,7 @@ SQL;
 				. " WHERE phpgw_helpdesk_email_out_recipient_list.id IS NULL";
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			$valueset = array();
+			$valueset_diff = array();
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
 				$set_id				= (int)$GLOBALS['phpgw']->db->f('set_id');
@@ -383,7 +383,7 @@ SQL;
 
 				$this->receipt['message'][] = array('msg' => "Ny epost: {$name} [{$email}] i liste \"{$set_id}\"");
 
-				$valueset[] = array(
+				$valueset_diff[] = array(
 						1 => array
 							(
 							'value' => $set_id,
@@ -444,10 +444,13 @@ SQL;
 			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (set_id, alias, name, email, office, department, alias_supervisor, name_supervisor, email_supervisor , active, public)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-			if($valueset && !$error)
+			if($valueset_diff && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+			}
 
+			if($valueset && !$error)
+			{
 				$GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET active = 0", __LINE__, __FILE__);
 
 				$ok = $GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET"
