@@ -77,6 +77,14 @@
 				</select>
 			</td>
 		<tr>
+		<tr>
+			<td>{lang_take_over_status}:</td>
+			<td>
+				<select name="newsettings[take_over_status]">
+					{hook_take_over_status}
+				</select>
+			</td>
+		<tr>
 		<tr class="pure-table-odd">
 			<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
 			<td>
