@@ -190,11 +190,11 @@
 				$ids[] = $this->db2->f('id');
 			}
 
-			if ($enable_controller)
-			{
-				$bypass = false;
-			}
-			else
+//			if ($enable_controller)
+//			{
+//				$bypass = false;
+//			}
+//			else
 			{
 				$bypass = true;
 			}
