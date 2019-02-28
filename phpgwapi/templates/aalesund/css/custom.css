@@ -1067,9 +1067,9 @@ custom-card-link-href:hover {
 }
 
 #welcomeResult .title {
-    min-height: 45px;
+    min-height: 30px;
     overflow: hidden;
-    max-height: 45px;
+    max-height: 30px;
 }
 
 #welcomeResult .custom-card {
@@ -1927,4 +1927,12 @@ footer h3{
 	background-color: #e6e6e6;
 	cursor: not-allowed !important;
 	font-style: italic; 
+}
+
+.upcomming-event-href{
+	color: #27348b;
+}
+
+.header_borderline{
+	border-bottom: 1.5px solid rgb(137, 38, 106);
 }

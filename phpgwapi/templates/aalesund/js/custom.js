@@ -11,8 +11,16 @@
 
 $(document).ready(function(){
 	if (document.getElementById("main-page")) {
-		$('#headcon').removeAttr('style');
+		$('#headcon').removeClass('header_borderline');
 	}
+	
 });
 
+$(window).scroll(function() {
+	if (document.getElementById("main-page") &&  $(window).scrollTop() < 10) {
+		$('#headcon').removeClass('header_borderline'); 
+	} else {
+		$('#headcon').addClass('header_borderline');
+	}
+});
 

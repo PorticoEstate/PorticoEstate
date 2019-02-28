@@ -130,13 +130,19 @@ $(document).ready(function ()
     }    
     
     $(".searchBtn").click(function () {
+		if($('#mainSearchInput').val() === ''){
+			return false;
+		} else {
         doSearch();
-        searchViewModel.notFilterSearch(true);
+        searchViewModel.notFilterSearch(true); }
     });
 
     $('#mainSearchInput').bind("enterKey", function (e) {
+		if($('#mainSearchInput').val() === ''){
+			return false;
+		} else {
         doSearch();
-        searchViewModel.notFilterSearch(true);
+        searchViewModel.notFilterSearch(true); }
     });
 
     $('#mainSearchInput').keyup(function (e) {
