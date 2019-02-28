@@ -73,6 +73,13 @@ if (!empty($GLOBALS['phpgw_info']['server']['logo_url'])) {
 	$footerlogoimg = $webserver_url . "/phpgwapi/templates/aalesund/img/Aktiv-kommune-footer-logo.png";
 	$GLOBALS['phpgw']->template->set_var('logoimg', $footerlogoimg);
 }
+
+if (!empty($GLOBALS['phpgw_info']['server']['bakcground_image'])) {
+	$footer_logo_url = $GLOBALS['phpgw_info']['server']['bakcground_image'];
+	$GLOBALS['phpgw']->template->set_var('footer_logo_url', $footer_logo_url);
+} 
+
+
 if (!empty($GLOBALS['phpgw_info']['server']['logo_title'])) {
 	$logo_title = $GLOBALS['phpgw_info']['server']['logo_title'];
 } else {
@@ -98,8 +105,8 @@ $GLOBALS['phpgw']->template->set_var('logo_img', $logoimg);
 $GLOBALS['phpgw']->template->set_var('footer_logo_img', $footerlogoimg);
 $GLOBALS['phpgw']->template->set_var('logo_title', $logo_title);
 
-$guidance = lang('Guidance');
-$GLOBALS['phpgw']->template->set_var('guidances', $guidance);
+$langmanual = lang('Manual');
+$GLOBALS['phpgw']->template->set_var('manual', $langmanual);
 
 $privacy = lang('Privacy');
 $GLOBALS['phpgw']->template->set_var('privacy', $privacy);
@@ -129,15 +136,11 @@ $GLOBALS['phpgw']->template->set_var('municipality', $municipality);
 //                             $GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
 
 if (!empty($GLOBALS['phpgw_info']['server']['support_address'])) {
-	$municipality_email = $GLOBALS['phpgw_info']['server']['support_address'];
-	$GLOBALS['phpgw']->template->set_var('municipality_email', $municipality_email);
+	$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
+	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 } else {
-//		$supportaddress  = 'Logo';
-	$municipality_email = 'Servicetorget@alesund.kommune.no';
-	$GLOBALS['phpgw']->template->set_var('municipality_email', $municipality_email);
+	$GLOBALS['phpgw']->template->set_var('support_email', 'support@aktivkommune.no');
 }
-
-$GLOBALS['phpgw']->template->set_var('ssupportaddress', $supportaddress);
 
 
 //loads jquery
