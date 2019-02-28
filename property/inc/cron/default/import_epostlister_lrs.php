@@ -102,6 +102,8 @@
 				}
 			}
 
+
+			$this->register_new_users();
 			$this->send_error_messages_as_email();
 		}
 
@@ -419,22 +421,22 @@ SQL;
 							'value' => $alias_supervisor,
 							'type' => PDO::PARAM_STR
 						),
-						7 => array
+						8 => array
 							(
 							'value' => $name_supervisor,
 							'type' => PDO::PARAM_STR
 						),
-						8 => array
+						9 => array
 							(
 							'value' => $email_supervisor,
 							'type' => PDO::PARAM_STR
 						),
-						9 => array
+						10 => array
 							(
 							'value' => 1,
 							'type' => PDO::PARAM_INT
 						),
-						10 => array
+						11 => array
 							(
 							'value' => 1,
 							'type' => PDO::PARAM_INT
@@ -446,7 +448,7 @@ SQL;
 
 			if($valueset_diff && !$error)
 			{
-				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+				$GLOBALS['phpgw']->db->insert($sql, $valueset_diff, __LINE__, __FILE__);
 			}
 
 			if($valueset && !$error)
@@ -510,4 +512,89 @@ SQL;
 			}
 
 		}
+
+		private function register_new_users()
+		{
+			$sql = "SELECT DISTINCT phpgw_helpdesk_email_out_recipient_list.*"
+				. " FROM phpgw_accounts RIGHT"
+				. " OUTER JOIN phpgw_helpdesk_email_out_recipient_list"
+				. " ON phpgw_accounts.account_lid = phpgw_helpdesk_email_out_recipient_list.alias"
+				. " WHERE phpgw_accounts.account_id IS NULL"
+				. " AND phpgw_helpdesk_email_out_recipient_list.active = 1";
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$alias	= $GLOBALS['phpgw']->db->f('alias');
+
+				$values[$alias] = array(
+					'alias'	=> $alias,
+					'name'	=> $GLOBALS['phpgw']->db->f('name'),
+					'email'	=> $GLOBALS['phpgw']->db->f('email')
+				);
+			}
+
+			$sql = "SELECT DISTINCT phpgw_helpdesk_email_out_recipient_list.*"
+				. " FROM phpgw_accounts RIGHT"
+				. " OUTER JOIN phpgw_helpdesk_email_out_recipient_list"
+				. " ON phpgw_accounts.account_lid = phpgw_helpdesk_email_out_recipient_list.alias_supervisor"
+				. " WHERE phpgw_accounts.account_id IS NULL"
+				. " AND phpgw_helpdesk_email_out_recipient_list.active = 1";
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$alias_supervisor	= $GLOBALS['phpgw']->db->f('alias_supervisor');
+				$values[$alias_supervisor] = array(
+					'alias'	=> $alias_supervisor,
+					'name'	=> $GLOBALS['phpgw']->db->f('name_supervisor'),
+					'email'	=> $GLOBALS['phpgw']->db->f('email_supervisor'),
+					'supervisor' => true
+				);
+			}
+
+			$helpdesk_account = new helpdesk_account();
+			$helpdesk_account->register_accounts($values);
+			
+		}
 	}
+
+	phpgw::import_class('helpdesk.hook_helper');
+
+	class helpdesk_account extends helpdesk_hook_helper
+	{
+		public function __construct()
+		{
+			$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+		}
+
+		public function register_accounts( $values )
+		{
+			foreach ($values as $account_lid => $entry)
+			{
+				if (!$GLOBALS['phpgw']->accounts->exists($account_lid))
+				{
+
+					$autocreate_user = isset($this->config['autocreate_user']) && $this->config['autocreate_user'] ? $this->config['autocreate_user'] : 0;
+
+					if ($autocreate_user)
+					{
+						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($account_lid);
+						if ($fellesdata_user && $fellesdata_user['firstname'])
+						{
+							// Read default assign-to-group from config
+							$default_group_id = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
+							$group_lid = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
+							$group_lid = $group_lid ? $group_lid : 'frontend_delegates';
+
+							$password = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
+							$account_id = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
+						}
+					}
+				}
+			}
+		}
+	}
+
