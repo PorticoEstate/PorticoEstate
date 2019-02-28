@@ -43,7 +43,7 @@
 			 * Sjekk om epost allerede er sendt
 			 */
 
-			$this->db->query("SELECT json_representation->>'epost_bkk' as epost_bkk"
+			$this->db->query("SELECT json_representation->>'epost_bkk' as epost_bkk, json_representation->>'innmeldingsdato' AS innmeldingsdato"
 				. " FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_rapport}"
 				. " AND id='{$values['id']}'", __LINE__, __FILE__);
@@ -54,9 +54,13 @@
 				return;
 			}
 
+			$innmeldingsdato = $this->db->f('innmeldingsdato');
+
+			$_innmeldingsdato = $innmeldingsdato ? strtotime($innmeldingsdato) : time();
+
 			$kundenummer= '';
 			$objekt = $values['location_code'];
-			$fra_dato = date("d/m-Y");
+			$fra_dato = date("d/m-Y", $_innmeldingsdato);
 			$tidligere_person = "{$values['location_data']['last_name']}, {$values['location_data']['first_name']}";
 
 			if ($values['street_name'])

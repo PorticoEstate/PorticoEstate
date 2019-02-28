@@ -237,7 +237,9 @@ $(".navbar-search").removeClass("d-none");
   function validate() {
       
   }
-  
+
+	var dateformat_datepicker = dateformat_backend.replace(/d/gi, "%d").replace(/m/gi, "%m").replace(/y/gi, "%Y");
+
   var d = new Date();
 	var strDate = $.datepicker.formatDate('mm/dd/yy', new Date());
 
@@ -251,7 +253,8 @@ $(".navbar-search").removeClass("d-none");
           popover: {
             zIndex: 99999
           },
-          mask: '%d/%m/%G',
+//        mask: '%d/%m/%G',
+          mask: dateformat_datepicker,
 		  calendar: {
 			minimumDate: new Date(strDate) 
 		  },

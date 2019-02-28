@@ -835,7 +835,7 @@
 									var target = "<xsl:value-of select="target"/>";
 									if(!target)
 									{
-									target = '_self';
+										target = '_self';
 									}
 
 									if (numSelected &gt; 1){
@@ -854,39 +854,39 @@
 
 									<xsl:if test="parameters">
 										var parameters = <xsl:value-of select="parameters"/>;
-										//						console.log(parameters.parameter);
+				//						console.log(parameters.parameter);
 										var i = 0;
 										len = parameters.parameter.length;
 										for (; i &lt; len; ) {
-										action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-										i++;
+											action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+											i++;
 										}
 									</xsl:if>
 
-									// look for the word "DELETE" in URL and my_name
-									if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
-									{
-									action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-									execute_ajax(action, function(result){
-									document.getElementById("message").innerHTML += '<br/>' + result;
-									oTable.fnDraw();
-									});
-									}
-									else if (target == 'ajax')
-									{
-									action += "&amp;phpgw_return_as=json";
-									execute_ajax(action, function(result){
-									document.getElementById("message").innerHTML += '<br/>' + result;
-									oTable.fnDraw();
-									});
-									}
-									else
-									{
-									window.open(action,target);
-									}
-									n++;
-									}
-									}
+												// look for the word "DELETE" in URL and my_name
+												if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
+												{
+													action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+													execute_ajax(action, function(result){
+														document.getElementById("message").innerHTML += '<br/>' + result;
+														oTable.fnDraw();
+													});
+												}
+												else if (target == 'ajax')
+												{
+													action += "&amp;phpgw_return_as=json";
+													execute_ajax(action, function(result){
+														document.getElementById("message").innerHTML += '<br/>' + result;
+														oTable.fnDraw();
+													});
+												}
+												else
+												{
+													window.open(action,target);
+												}
+												n++;
+											}
+										}
 									});
 								</xsl:otherwise>
 							</xsl:choose>
@@ -1131,6 +1131,8 @@
 									{
 										if(value.constructor == Array)
 										{
+											$(oControl).find("option").removeAttr('selected');
+
 											$.each(value, function(i,e){
 												 oControl.find("option[value="+e+"]").prop("selected", "selected");
 											});
@@ -1142,11 +1144,19 @@
 											catch(err)
 											{
 											}
-
 										}
 										else
 										{
 											oControl.val( value );
+											try
+											{
+												$(oControl).removeAttr('selected').find("option[value='"+value+"']").attr('selected', 'selected');
+												$(oControl).material_select();
+											}
+											catch(err)
+											{
+											}
+
 										}
 									}
 								}

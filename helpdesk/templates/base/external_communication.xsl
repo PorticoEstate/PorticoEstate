@@ -45,7 +45,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'ticket')"/>
 								</label>
-								<a href="{cancel_url}">
+								<a href="{cancel_url}" class="pure-button pure-button-primary">
 									<xsl:value-of select="value_ticket_id"/>
 								</a>
 							</div>
@@ -178,6 +178,7 @@
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
 											</xsl:if>
+											<xsl:value-of select="value_initial_message"/>
 										</textarea>
 									</div>
 									<xsl:call-template name="vendor_form"/>

@@ -81,7 +81,8 @@
 			'get_case_image'	=> true,
 			'add_component_image'=> true,
 			'add_case_image'	=> true,
-			'add_new_component_child' => true
+			'edit_component_child' => true,
+			'edit_parent_component'	=> true
 		);
 
 		function __construct()
@@ -119,7 +120,12 @@
 		}
 
 
-		function add_new_component_child()
+		function edit_parent_component()
+		{
+			return $this->edit_component_child(true);
+		}
+
+		function edit_component_child($edit_parent = false)
 		{
 			if(!$this->edit )
 			{
@@ -154,8 +160,12 @@
 				}
 
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
+
+				$menuaction = $edit_parent ? 'controller.uicase.edit_parent_component' : 'controller.uicase.edit_component_child';
+
 				$data = array(
-					'action'=> self::link(array('menuaction' => 'controller.uicase.add_new_component_child', 'phpgw_return_as'=>'json')),
+					'action'=> self::link(array('menuaction' => $menuaction, 'phpgw_return_as'=>'json')),
+					'edit_parent' => $edit_parent,
 					'parent_location_id' => $parent_location_id,
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
@@ -203,7 +213,15 @@
 				return $html;
 			}
 
-			if($_POST && $parent_location_id && $parent_component_id)
+			if($_POST && !$parent_location_id && !$parent_component_id && $component_id)
+			{
+				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
+				$item = $soentity->read_single(array('location_id' => $location_id, 'id' => $component_id));
+				$parent_component_id = (int)$values['p_num'];
+				$parent_location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$values['p_entity_id']}.{$values['p_cat_id']}");
+			}
+
+			if($_POST && ( ($parent_location_id && $parent_component_id) || $edit_parent) )
 			{
 				$values = array();
 
@@ -214,7 +232,15 @@
 				$p_cat_id		= 	$parent_system_location_arr[3];
 
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
-				$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
+				
+				if($parent_location_id)
+				{
+					$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
+				}
+				else//self
+				{
+					$parent_item = $soentity->read_single(array('location_id' => $location_id, 'id' => $component_id));
+				}
 
 				$values['extra']['p_entity_id'] = $p_entity_id;
 				$values['extra']['p_cat_id'] = $p_cat_id;
@@ -664,6 +690,8 @@
 				$component = new controller_component();
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
 				$component_array = $component->toArray();
 
 				$type = 'component';
@@ -896,6 +924,7 @@
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
 
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'case.js');
@@ -1009,6 +1038,11 @@
 				$option_value = phpgw::get_var('option_value');
 				$case->set_measurement($option_value);
 			}
+			else if ($type == 'control_item_type_5')
+			{
+				$option_value = phpgw::get_var('option_value');
+				$case->set_measurement(serialize($option_value));
+			}
 
 			$case_id = $this->so->store($case);
 
@@ -1049,7 +1083,14 @@
 			$case->set_descr($case_descr);
 			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
-			$case->set_measurement($measurement);
+			if($measurement && is_array($measurement))
+			{
+				$case->set_measurement(serialize($measurement));
+			}
+			else
+			{
+				$case->set_measurement($measurement);
+			}
 			$case->set_status($case_status);
 			$case->set_condition_degree($condition_degree);
 			$case->set_consequence($consequence);
@@ -1220,6 +1261,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
@@ -1522,7 +1564,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
@@ -1653,7 +1695,6 @@
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
-				$component_id = $check_list->get_component_id();
 				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
 				if (substr($location_info['location'], 1, 8) == 'location')
@@ -1704,6 +1745,10 @@
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
 
+			$historic_location_code = $case_location_code ? $case_location_code : $check_list_location_code;
+			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $historic_location_code, $component_id);
+
+			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
 
 			if ($buildings_on_property)
 			{
@@ -1719,6 +1764,13 @@
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
+					$measurement = $case->get_measurement();
+
+					if(unserialize($measurement))
+					{
+						$case->set_measurement(unserialize($measurement));
+					}
+
 					$component_location_id = $case->get_component_location_id();
 					$component_id = $case->get_component_id();
 					if ($component_id)
@@ -1748,16 +1800,15 @@
 						}
 						$case->set_component_descr($short_desc);
 
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
-
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-
+//			_debug_array($open_check_items_and_cases);die();
 			$data = array
 				(
 				'control' => $control,
@@ -1778,6 +1829,7 @@
 			);
 //			_debug_array($open_check_items_and_cases); die();
 			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'case.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
@@ -1935,6 +1987,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'case.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 

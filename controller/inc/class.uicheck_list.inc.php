@@ -426,7 +426,7 @@
 //					'max_date' => date('Y/m/d',  $check_list->get_deadline())
 				)
 			);
-
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list.js');
@@ -636,7 +636,7 @@
 //					'max_date' => date('Y/m/d', $check_list->get_planned_date())
 				)
 			);
-
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list.js');
@@ -1556,6 +1556,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
+			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/check_list_top_section',

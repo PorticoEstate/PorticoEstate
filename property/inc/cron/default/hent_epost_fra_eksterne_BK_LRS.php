@@ -84,6 +84,14 @@
 		{
 			parent::__construct();
 
+			$system_user_lid = 'LRS_system';
+			$system_user_id = $GLOBALS['phpgw']->accounts->name2id($system_user_lid);
+			if($system_user_id)
+			{
+				$GLOBALS['phpgw_info']['user']['account_id'] = $system_user_id;
+				$GLOBALS['phpgw']->preferences->set_account_id($system_user_id, true);
+			}
+
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('helpdesk');
 			$this->function_msg = 'Hent epost fra postmottak til LRS';
@@ -91,6 +99,8 @@
 			$this->join = & $this->db->join;
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin'));
+
+			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 		}
 
 		function execute()
@@ -131,6 +141,8 @@
 			$password = $this->config->config_data['xPortico']['password'];
 			$version = Client::VERSION_2016;
 
+			$filter_ulest = !empty($this->config->config_data['xPortico']['filter_ulest']) ? true : false;
+
 			$client = new Client($host, $username, $password, $version);
 
 			//read messages from this folder
@@ -150,8 +162,11 @@
 			$request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
 
 			// Build the restriction.
-			$request->Restriction = new RestrictionType();
-			$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			if($filter_ulest)
+			{
+				$request->Restriction = new RestrictionType();
+				$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			}
 
 			// Return all message properties.
 			$request->ItemShape = new ItemResponseShapeType();
@@ -401,12 +416,26 @@
 
 			$body = $newArray['text'];
 
-			if(preg_match("/helpdesk@bergen.kommune.no/i" , $sender ))
+			if(preg_match("/\[PorticoTicket/" , $subject ))
+			{
+				preg_match_all("/\[[^\]]*\]/", $subject, $matches);
+				$identificator_str =  trim($matches[0][0],  "[]" );
+				$identificator_arr = explode("::", $identificator_str);
+
+				$ticket_id = $this->update_external_communication($identificator_arr, $body, $sender);
+
+				if($ticket_id)
+				{
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/helpdesk@bergen.kommune.no/i" , $sender ))
 			{
 
 				$message_cat_id = 302; // Fra postmottak LRS
 				$group_id = 4174; //LRS-EDD telefoni
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if($ticket_id)
 				{
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -414,11 +443,76 @@
 					$target['id'] = $ticket_id;
 				}
 			}
-			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
+			else if(preg_match("/Manglende informasjon på mottatt/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Mottatt faktura blir ikke behandlet/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Faktura avvises og vil ikke bli betalt/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/gangs purring/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/Kreditnota/i" , $subject ))
+			{
+
+				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
+				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+/*			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
 			{
 				$message_cat_id = 264; //LRS Lønn - Skatt
 				$group_id = 3159; //LRS Lønn
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if($ticket_id)
 				{
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -439,30 +533,15 @@
 					$message_cat_id = 306; //LRS Refusjon - Altinn
 					$group_id = 3233; //LRS Refusjon
 				}
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if($ticket_id)
 				{
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
 					$target['type'] = 'helpdesk';
 					$target['id'] = $ticket_id;
 				}
-
 			}
-			else if(preg_match("/\[PorticoTicket/" , $subject ))
-			{
-				preg_match_all("/\[[^\]]*\]/", $subject, $matches);
-				$identificator_str =  trim($matches[0][0],  "[]" );
-				$identificator_arr = explode("::", $identificator_str);
-
-				$ticket_id = $this->update_external_communication($identificator_arr, $body, $sender);
-
-				if($ticket_id)
-				{
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				}
-			}
-
+*/
 			/**
 			 * Ticket created / updated
 			 */
@@ -484,7 +563,7 @@
 			{
 				return false;
 			}
-			$soexternal = createObject('property.soexternal_communication');
+			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			$message_arr = explode('========', $body);
 			$message = $message_arr[0];
@@ -498,7 +577,7 @@
 				$assignedto = $this->db->f('assignedto');
 				if($assignedto)
 				{
-					createObject('property.boexternal_communication')->alert_assigned($msg_id);
+					createObject('helpdesk.boexternal_communication')->alert_assigned($msg_id);
 				}
 
 				return $ticket_id;
@@ -521,7 +600,7 @@
 		}
 
 
-		function create_ticket ($subject, $body, $message_cat_id, $group_id)
+		function create_ticket ($subject, $body, $message_cat_id, $group_id, $sender)
 		{
 
 			if(!$message_cat_id)
@@ -549,6 +628,12 @@
 				$message_details_arr[] = trim($line);
 			}
 			$message_details = implode(PHP_EOL, $message_details_arr);
+
+			$pattern = "/{$sender}/i";
+			if(!preg_match($pattern , $message_details ))
+			{
+				$message_details .= "\n\nAvsender: {$sender}";
+			}
 
 			if($ticket_id)
 			{

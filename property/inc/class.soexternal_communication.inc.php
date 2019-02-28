@@ -38,9 +38,9 @@
 		var $historylog;
 		private $db, $like, $join, $left_join, $account, $currentapp;
 
-		public function __construct()
+		public function __construct($currentapp = 'property')
 		{
-			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->like = & $this->db->like;

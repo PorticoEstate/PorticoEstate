@@ -251,16 +251,23 @@
 						'table' => 'phpgw_helpdesk_email_out_recipient_list',
 						'id' => array('name' => 'id', 'type' => 'auto'),
 						'fields' => array
-							(
+						(
 							array
-								(
+							(
+								'name' => 'alias',
+								'descr' => lang('alias'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array
+							(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar',
 								'nullable' => false
 							),
 							array
-								(
+							(
 								'name' => 'email',
 								'descr' => lang('email'),
 								'type' => 'varchar',
@@ -278,6 +285,34 @@
 									'get_single_value' => 'helpdesk.sogeneric.get_name',
 									'method_input' => array('type' => 'email_recipient_set', 'selected' => '##set_id##')
 								)
+							),
+							array
+							(
+								'name' => 'office',
+								'descr' => lang('office'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array
+							(
+								'name' => 'department',
+								'descr' => lang('department'),
+								'type' => 'varchar',
+								'nullable' => true
+							),
+							array
+							(
+								'name' => 'alias_supervisor',
+								'descr' => lang('alias supervisor'),
+								'type' => 'varchar',
+								'nullable' => true
+							),
+							array
+							(
+								'name' => 'email_supervisor',
+								'descr' => lang('email supervisor'),
+								'type' => 'varchar',
+								'nullable' => true
 							),
 							array(
 								'name' => 'active',

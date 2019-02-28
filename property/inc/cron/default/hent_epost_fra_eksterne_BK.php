@@ -91,6 +91,8 @@
 			$this->join = & $this->db->join;
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+
+			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 		}
 
 		function execute()
@@ -635,6 +637,7 @@
 		function create_ticket ($subject, $body)
 		{
 			$ticket_id = $this->get_ticket($subject);
+			$message_cat_id = 10100; // Melding fra eksterne -> vaktmesteravtale
 
 			$subject_arr = explode('#', $subject);
 			$id_arr = explode(':', $subject_arr[1]);
@@ -656,6 +659,15 @@
 					$location_arr = explode(':', $line);
 					$location_code = trim($location_arr[1]);
 				}
+				if(preg_match("/Kategori:/i" , $line ))
+				{
+					$category_arr = explode(':', $line);
+					$category_text = trim($category_arr[1]);
+					if(preg_match("/brann/i" , $category_text ))
+					{
+						$message_cat_id = 10103; // Melding fra eksterne -> vaktmesteravtale -> Brann
+					}
+				}
 				else if(preg_match("/Avviket gjelder:/" , $line ))
 				{
 					$message_title_arr = explode(':', $line);
@@ -676,7 +688,6 @@
 			else
 			{
 				$priority = 3;
-				$message_cat_id = 10100; // Melding fra eksterne -> vaktmesteravtale
 				$ticket = array
 				(
 					'location_code' => $location_code,

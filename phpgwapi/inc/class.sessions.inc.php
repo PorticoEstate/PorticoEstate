@@ -742,9 +742,10 @@
 
 			if($external && empty($extravars['domain']))
 			{
-				if($this->_account_domain !='default')
+				//cron..
+				if($GLOBALS['phpgw_info']['user']['domain'] !='default')
 				{
-					$extravars['domain'] = $this->_account_domain;
+					$extravars['domain'] = $GLOBALS['phpgw_info']['user']['domain'];
 				}
 			}
 

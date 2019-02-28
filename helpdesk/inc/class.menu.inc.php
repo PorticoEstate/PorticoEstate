@@ -107,6 +107,11 @@
 							'text'	=> lang('Ticket Categories'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'helpdesk', 'location' => '.ticket', 'global_cats' => 'true', 'menu_selection' => 'admin::helpdesk::ticket_cats') )
 						),
+						'cat_assignment'	=> array
+						(
+							'text'	=> lang('category assignment'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uicat_assignment.edit') )
+						),
 						'ticket_status'	=> array
 						(
 							'text'	=> lang('Ticket status'),

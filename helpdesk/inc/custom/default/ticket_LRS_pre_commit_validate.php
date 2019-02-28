@@ -18,7 +18,8 @@
 				$db,
 				$join,
 				$left_join,
-				$like;
+				$like,
+				$socat_assignment;
 			function __construct()
 			{
 				parent::__construct();
@@ -26,6 +27,7 @@
 				$this->join = & $this->db->join;
 				$this->left_join = & $this->db->left_join;
 				$this->like = & $this->db->like;
+				$this->socat_assignment = createObject('helpdesk.socat_assignment');
 			}
 
 			/**
@@ -65,13 +67,13 @@
 
 				if($parent_id == 255)//LRS-Lønn
 				{
-	//				$data['group_id'] = 3159;
-					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+					$data['group_id'] = 3159;
+	//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
 				}
 				else if($parent_id == 256)//LRS-refusjon
 				{
-	//				$data['group_id'] = 3233;
-					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
+					$data['group_id'] = 3233;
+	//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 				}
 				else if($parent_id == 268)//LRS-Økonomi
 				{
@@ -90,7 +92,14 @@
 					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
 				}
 
-				if($location_id)
+				$group_assignment = $this->socat_assignment->read_single($data['cat_id']);
+
+				if($group_assignment)
+				{
+					$data['group_id'] = $group_assignment;
+				}
+
+				if($location_id && empty($data['group_id']) && $php_sapi_name != 'cli')
 				{
 					$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
 					. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
@@ -112,12 +121,15 @@
 						$GLOBALS['phpgw']->preferences->save_repository();
 					}
 
-					$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
-					$assigned_prefs_data = $assigned_prefs->read();
-					if(empty($assigned_prefs_data['helpdesk']['email']))
+					if($data['assignedto'])
 					{
-						$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
-						$assigned_prefs->save_repository();
+						$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
+						$assigned_prefs_data = $assigned_prefs->read();
+						if(empty($assigned_prefs_data['helpdesk']['email']))
+						{
+							$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
+							$assigned_prefs->save_repository();
+						}
 					}
 				}
 

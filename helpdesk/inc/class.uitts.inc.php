@@ -45,7 +45,8 @@
 				'download'			=> true,
 				'view_file'			=> true,
 				'edit_status'		=> true,
-				'edit_priority' => true,
+				'edit_priority'		=> true,
+				'take_over'			=> true,
 				'get_vendor_email'	=> true,
 				'_print'			=> true,
 				'columns'			=> true,
@@ -197,7 +198,13 @@
 					$this->lang_app_name .= ": {$parent_category[0]['name']}";
 				}
 			}
+//			$this->_simple = true;
 
+//			$GLOBALS['phpgw_info']['user']['preferences']['property']['horisontal_menus'] = 'yes';
+//
+//			$menu = $this->bocommon->get_menu('helpdesk');
+//
+//			_debug_array($menu);die();
 		}
 
 		/**
@@ -501,6 +508,17 @@ HTML;
 			$this->bocommon->download($list,$name,$descr);
 		}
 
+		function take_over()
+		{
+			if(!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$id 		= phpgw::get_var('id', 'int');
+			$receipt 	= $this->bo->take_over($id);
+			return lang('assignment has been changed for %1', $id);
+		}
 		function edit_status()
 		{
 			if(!$this->acl_edit)
@@ -1174,6 +1192,29 @@ JS;
 						);
 					}
 				}
+
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'take_over',
+					'statustext' => lang('take over'),
+					'text' => lang('take over'),
+					'confirm_msg' => lang('do you really want to take over the assignment'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'helpdesk.uitts.take_over',
+						'second_display' => true,
+						'sort' => $this->sort,
+						'order' => $this->order,
+						'cat_id' => $this->cat_id,
+						'filter' => $this->filter,
+						'user_filter' => $this->user_filter,
+						'query' => $this->query,
+						'district_id' => $this->district_id,
+						'allrows' => $this->allrows,
+						'delete' => 'dummy'// FIXME to trigger the json in property.js.
+					)),
+					'parameters' => json_encode($parameters)
+				);
 			}
 
 			if (count($data['datatable']['actions']) < 10)
@@ -1969,6 +2010,15 @@ JS;
 
 			$ticket = $this->bo->read_single($id, $values);
 
+			if($ticket && !$this->parent_cat_id)
+			{
+				$cat_path = $this->cats->get_path($ticket['cat_id']);
+
+				if(count($cat_path) > 1)
+				{
+					$this->parent_cat_id = $cat_path[0]['id'];
+				}
+			}
 			if(!$ticket)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
@@ -2016,7 +2066,7 @@ JS;
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
-			$additional_notes = $this->bo->read_additional_notes($id);
+			$_additional_notes = $this->bo->read_additional_notes($id);
 			$record_history = $this->bo->read_record_history($id);
 
 			$notes = array(
@@ -2030,7 +2080,44 @@ JS;
 				)
 			);
 
-			$additional_notes = array_merge($notes, $additional_notes);
+			$_additional_notes = array_merge($notes, $_additional_notes);
+			$additional_notes = array();
+
+			if ($this->_simple)
+			{
+				$i = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$note['value_count'] = $i++;
+						$additional_notes[] = $note;
+					}
+				}
+			}
+			else
+			{
+				$i = 0;
+				$j = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$i++;
+						$j = 1;
+					}
+					else
+					{
+						if($i)
+						{
+							$j++;
+						}
+					}
+					$i = max(array(1, $i));
+					$note['value_count'] = "{$i}.{$j}";
+					$additional_notes[] = $note;
+				}
+			}
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['yui_table_nowrap'])
 			{
@@ -2047,6 +2134,17 @@ JS;
 				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
+
+			if (!$this->_simple)
+			{
+				$note_def[] = array('key' => 'publish_note', 'label' => lang('publish text'),
+					'sortable' => false, 'resizeable' => true, 'formatter' => 'FormatterCenter');
+				foreach ($additional_notes as &$note)
+				{
+					$_checked = $note['value_publish'] ? 'checked' : '';
+					$note['publish_note'] = "<input type='checkbox' {$_checked}  name='values[publish_note][]' value='{$id}_{$note['value_id']}' title='" . lang('Check to publish text') . "'>";
+				}
+			}
 
 			foreach ($additional_notes as &$note)
 			{

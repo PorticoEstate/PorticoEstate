@@ -190,11 +190,11 @@
 				$ids[] = $this->db2->f('id');
 			}
 
-			if ($enable_controller)
-			{
-				$bypass = false;
-			}
-			else
+//			if ($enable_controller)
+//			{
+//				$bypass = false;
+//			}
+//			else
 			{
 				$bypass = true;
 			}
@@ -279,6 +279,14 @@
 		 */
 		public function get_children( $entity_id, $parent, $level, $menuaction )
 		{
+			$entity_id = (int) $entity_id;
+			$parent = (int) $parent;
+
+			if(!$entity_id)
+			{
+				return array();
+			}
+
 			$table = "fm_{$this->type}_category";
 			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
 			$this->db2->query($sql, __LINE__, __FILE__);
