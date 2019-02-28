@@ -1931,9 +1931,9 @@ HTML;
 		}
 
 
-		function add_relation( $add_relation, $id )
+		function add_relation( $add_relation, $id, $relation_type)
 		{
-			return $this->so->add_relation($add_relation, $id);
+			return $this->so->add_relation($add_relation, $id, $relation_type);
 		}
 
 		/**
@@ -2391,5 +2391,10 @@ HTML;
 				}
 			}
 			return $purchase_grant_ok;
+		}
+
+		function reset_views($id)
+		{
+			return $this->so->reset_views($id);;
 		}
 	}

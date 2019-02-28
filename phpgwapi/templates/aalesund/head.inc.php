@@ -153,6 +153,7 @@ $javascripts[] = "/phpgwapi/templates/aalesund/js/jquery.autocompleter.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/common.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/custom.js";
 $javascripts[] = "/phpgwapi/templates/aalesund/js/nb-NO.js";
+$javascripts[] = "/phpgwapi/js/dateformat/dateformat.js";
 
 
 foreach ($javascripts as $javascript) {
@@ -233,6 +234,7 @@ $tpl_vars = array
 	'img_icon' => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 	'site_title' => $site_title,
 	'str_base_url' => $GLOBALS['phpgw']->link('/', array(), true),
+	'dateformat_backend' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 	'site_url' => $GLOBALS['phpgw']->link("/{$app}/", array()),
 	'webserver_url' => $webserver_url,
 	'win_on_events' => $test,

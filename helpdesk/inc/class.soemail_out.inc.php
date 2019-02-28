@@ -119,6 +119,7 @@
 				. " FROM phpgw_helpdesk_email_out_recipient_set"
 				. " {$this->join} phpgw_helpdesk_email_out_recipient_list ON phpgw_helpdesk_email_out_recipient_list.set_id = phpgw_helpdesk_email_out_recipient_set.id"
 				. " WHERE phpgw_helpdesk_email_out_recipient_set.id = {$recipient_set_id}"
+				. " AND phpgw_helpdesk_email_out_recipient_list.active = 1"
 				. " AND phpgw_helpdesk_email_out_recipient_list.id NOT IN (" . implode(',', $recipients) . ")";
 
 			$this->db->query($sql,__LINE__,__FILE__);

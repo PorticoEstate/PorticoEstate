@@ -1,8 +1,6 @@
 $(document).ready(function ()
 {
 
-
-
 	$(".show-control-details").click(function ()
 	{
 		var clickElem = $(this);

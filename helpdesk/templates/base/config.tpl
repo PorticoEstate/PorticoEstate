@@ -15,6 +15,18 @@
 			<td colspan="2">&nbsp;<b>{lang_helpdesk}/{lang_settings}</b></td>
 		</tr>
 		<tr>
+			<td>{lang_organisation}:</td>
+			<td><input name="newsettings[org_name]" value="{value_org_name}"></td>
+		</tr>
+		<tr>
+			<td>{lang_department}:</td>
+			<td><input name="newsettings[department]" value="{value_department}"></td>
+		</tr>
+		<tr>
+			<td>{lang_org_unit_id}:</td>
+			<td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
+		</tr>
+		<tr>
 			<td>{lang_app_name}: <br>
 				{lang_default}: {lang_Helpdesk}</td>
 			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
@@ -62,6 +74,14 @@
 			<td>
 				<select name="newsettings[reopen_status]">
 					{hook_reopen_status}
+				</select>
+			</td>
+		<tr>
+		<tr>
+			<td>{lang_take_over_status}:</td>
+			<td>
+				<select name="newsettings[take_over_status]">
+					{hook_take_over_status}
 				</select>
 			</td>
 		<tr>

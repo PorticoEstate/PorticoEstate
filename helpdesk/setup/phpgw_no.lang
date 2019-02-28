@@ -188,7 +188,7 @@ recipients	helpdesk	no	Mottakere
 candidates	helpdesk	no	Kandidater
 send email	helpdesk	no	Send epost
 remark	helpdesk	no	Merknad
-subject	helpdesk	no	Overskrift
+subject	helpdesk	no	Emnefelt
 content	helpdesk	no	Innhold
 select all	helpdesk	no	Velg alle
 planned	helpdesk	no	Planlagt
@@ -233,3 +233,12 @@ who	helpdesk	no	Hvem
 extra mail address	helpdesk	no	Ekstra adresse
 preview html	helpdesk	no	Forhåndsvis som HTML
 change category	helpdesk	no	Flytt saken
+created	helpdesk	no	Registrert
+internal remark on email	helpdesk	no	Intern kommentar til epost
+recipient set	helpdesk	no	Adresseliste
+publish text	helpdesk	no	Publiser tekst
+Check to publish text	helpdesk	no	Merk av for å publisere til alle
+assignment has been changed for %1	helpdesk	no	Tildeling er endret for %1
+do you really want to take over the assignment	helpdesk	no	Vil du ta over oppgaven
+category assignment	helpdesk	no	Tildeling pr kategori
+category assignment has been saved	helpdesk	no	Tildeling pr kategori er lagret

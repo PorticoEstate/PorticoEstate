@@ -55,6 +55,29 @@ HTML;
 		return $out;
 	}
 
+	function take_over_status( $config )
+	{
+		$status_entries = execMethod('helpdesk.botts.get_status_list');
+
+		$status_assigned = isset($config['take_over_status']) ? $config['take_over_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = '';
+			if ($status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
 
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface

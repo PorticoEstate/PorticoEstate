@@ -157,8 +157,14 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'set_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'alias' => array('type' => 'varchar', 'precision' => 25, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
 				'email' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'office' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'department' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'alias_supervisor' => array('type' => 'varchar', 'precision' => 25, 'nullable' => True),
+				'name_supervisor' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'email_supervisor' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
 				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -253,5 +259,18 @@
 				'phpgw_helpdesk_external_communication' => array('excom_id' => 'id')
 				),
 			'uc' => array()
-		)
+		),
+		'phpgw_helpdesk_cat_assignment' => array(
+			'fd' => array(
+				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('cat_id', 'group_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 	);

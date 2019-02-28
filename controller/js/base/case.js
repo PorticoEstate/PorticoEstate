@@ -1,5 +1,19 @@
 $(document).ready(function ()
 {
+	$(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.scrollup').fadeIn();
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+
+    $('.scrollup').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
 
 	$("#choose-child-on-component").change(function ()
 	{
@@ -69,7 +83,7 @@ $(document).ready(function ()
 
 					if (data.status == "200")
 					{
-						$(picture_container).append('<br><img alt="Bilde" src="' + ImageUrl +'&file_id=' + data.file_id + '" style="width:100%;max-width:300px"/>');
+						$(picture_container).append('<br><img alt="Bilde" src="' + ImageUrl + '&file_id=' + data.file_id + '" style="width:100%;max-width:300px"/>');
 					}
 					else
 					{
@@ -182,83 +196,16 @@ $(document).ready(function ()
 		});
 	});
 
-	remove_form = function()
-	{
-		$("#form_new_component_2").html('');
-	};
-
-	submitNewComponent = function(e, form)
-	{
-		e.preventDefault();
-		var requestUrl = $(form).attr("action");
-
-		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
-        for(var i = 0, len = inputs.length; i < len; i++)
-		{
-            input = inputs[i];
-
-			if($(input).attr("data-validation")=="required")
-			{
-				if(!input.value)
-				{
-					$(input).addClass('error');
-					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
-					$(input).focus();
-					flag = false;
-				}
-				else
-				{
-					$(input).removeClass('error');
-					$(input).removeAttr("style");
-					$(input).addClass('valid');
-				}
-			}
-		}
-
-		if(!flag)
-		{
-			return false;
-		}
-
-		$.ajax({
-			type: 'POST',
-			url: requestUrl,
-			data: $(form).serialize(),
-			success: function (data)
-			{
-				if (data.status == "saved")
-				{
-					$("#choose-child-on-component").empty();
-
-					var component_children = data.component_children;
-
-					$.each(component_children, function (i, val) {
-						   $('#choose-child-on-component').append($('<option>', {
-							   value: val.location_id + '_' + val.id,
-							   text : val.short_description
-						   }));
-					   });
-				}
-
-				$("#form_new_component_2").html(data.message);
-				$('#equipment_picture_container').html('');
-				$("#new_picture").hide();
-			}
-		});
-
-		return false;
-	};
-
 
 	// REGISTER NEW CHILD COMPONENT
 	show_component_information = function (component)
 	{
 		var component_arr = component.split('_');
 		var oArgs = {
-			menuaction: 'controller.uicase.add_new_component_child',
+			menuaction: 'controller.uicase.edit_component_child',
 			location_id: component_arr[0],
 			component_id: component_arr[1],
-			get_info:1
+			get_info: 1
 		};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -279,7 +226,7 @@ $(document).ready(function ()
 	{
 		var component = $("#choose-child-on-component").val();
 
-		if(!component)
+		if (!component)
 		{
 			alert('komponent ikke valgt');
 			return false;
@@ -290,12 +237,12 @@ $(document).ready(function ()
 
 		var component_arr = component.split('_');
 		var oArgs = {
-			menuaction: 'controller.uicase.add_new_component_child',
+			menuaction: 'controller.uicase.edit_component_child',
 			location_id: component_arr[0],
 			component_id: component_arr[1],
-			parent_location_id:$(parent_location_id).val(),
-			parent_component_id:$(parent_component_id).val(),
-			get_edit_form:1
+			parent_location_id: $(parent_location_id).val(),
+			parent_component_id: $(parent_component_id).val(),
+			get_edit_form: 1
 		};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -335,7 +282,7 @@ $(document).ready(function ()
 
 	});
 
-	resetForm = function(form)
+	resetForm = function (form)
 	{
 		clear_form(form);
 		$(form).find("input[type='submit']").removeAttr('disabled');
@@ -417,7 +364,7 @@ $(document).ready(function ()
 
 
 //							 $(thisForm).find("input[name='case_id']").val(jsonObj.case_id);
-							 $("#cache_case_id").val(jsonObj.case_id);
+							$("#cache_case_id").val(jsonObj.case_id);
 
 							// Changes text on save button back to original
 							window.setTimeout(function ()
@@ -562,6 +509,20 @@ $(document).ready(function ()
 
 							var measurement_text = $(thisForm).find("input:radio[name='measurement']:checked").val();
 							$(clickRow).find(".case_info .measurement").text(measurement_text);
+						}
+						else if (type == "control_item_type_5")
+						{
+							var case_status = $(thisForm).find("select[name='case_status'] option:selected").text();
+
+							$(clickRow).find(".case_info .case_status").empty().text(case_status);
+
+							var measurement_text = '';
+							$(thisForm).find("input:checkbox[name='measurement[]']:checked").each(function ()
+							{
+								measurement_text += "<br>" + $(this).val();
+							});
+
+							$(clickRow).find(".case_info .measurement").html(measurement_text);
 						}
 
 						var case_condition_degree = $(thisForm).find("select[name='condition_degree'] option:selected").text();

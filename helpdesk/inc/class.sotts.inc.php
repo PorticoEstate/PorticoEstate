@@ -38,6 +38,7 @@
 	{
 		var $uicols_related = array();
 		var $acl_location = '.ticket';
+		protected $account;
 
 		public $soap_functions = array
 			(
@@ -824,6 +825,47 @@
 
 		}
 
+		function take_over( $id = 0 )
+		{
+			$id = (int)$id;
+			$receipt = array();
+			$this->fields_updated = false;
+
+			$this->db->query("SELECT status, assignedto FROM phpgw_helpdesk_tickets WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$oldassigned = $this->db->f('assignedto');
+			$old_status = $this->db->f('status');
+
+			$this->db->transaction_begin();
+
+			if ($oldassigned != $this->account)
+			{
+				$this->fields_updated = true;
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET assignedto='" . $this->account
+					. "' WHERE id={$id}", __LINE__, __FILE__);
+				$this->historylog->add('A', $id, $this->account, $oldassigned);
+
+				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : '0';
+				if ($old_status != $new_status)
+				{
+					$this->historylog->add('C1', $id, $new_status, $old_status);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
+				}
+			}
+
+			if ($this->fields_updated)
+			{
+				$this->db->query('UPDATE phpgw_helpdesk_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
+			}
+
+			$this->db->transaction_commit();
+
+			return $receipt;
+
+		}
+
 		function update_priority( $ticket, $id = 0 )
 		{
 			$id = (int)$id;
@@ -1014,7 +1056,10 @@
 				$this->fields_updated[] = 'note';
 				$this->historylog->add('C', $id, $ticket['note'], $old_note);
 				$_history_id = $this->db->get_last_insert_id('phpgw_history_log', 'history_id');
-				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
+				if($simple || $ticket['publish_text'] == 1)
+				{
+					$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
+				}
 				unset($_history_id);
 
 				$check_old_custom = (int)trim($old_status, 'C');
@@ -1312,5 +1357,31 @@
 			}
 
 			return $values;
+		}
+
+		function reset_views($id)
+		{
+			$this->db->transaction_begin();
+
+			$this->db->query("SELECT status FROM phpgw_helpdesk_tickets WHERE id =" . (int)$id, __LINE__, __FILE__);
+			$this->db->next_record();
+			$status = $this->db->f('status');
+
+			$custom_status  = (int)trim($status,'C');
+			$this->db->query("SELECT * FROM phpgw_helpdesk_status WHERE id = {$custom_status}",__LINE__,__FILE__);
+			$this->db->next_record();
+			if($status == 'X' || $this->db->f('closed'))
+			{
+				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+				$this->fields_updated[] = 'status';
+				$this->historylog->add('R', $id, $new_status, $old_status);
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
+	//			$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
+			}
+
+			$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id=" . (int)$id, __LINE__, __FILE__);
+
+			return $this->db->transaction_commit();
 		}
 	}

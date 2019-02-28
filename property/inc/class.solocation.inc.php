@@ -1792,8 +1792,13 @@
 					if ($this->db->f('status') != 2)
 					{
 						$j++;
-						$this->db->query("UPDATE fm_location" . ($type_id - 1) . " set	status= 2  WHERE location_code= '" . $update[$i]['location_code'] . "'", __LINE__, __FILE__);
 					}
+
+					$this->db->query("UPDATE fm_location" . ($type_id - 1) . " SET"
+						. " status= 2,"
+						. " category = 99"
+						. " WHERE location_code= '{$update[$i]['location_code']}'", __LINE__, __FILE__);
+
 				}
 
 				$receipt['message'][] = array('msg' => lang('%1 location %2 has been updated to not active of %3 already not active', $j, $location_types[($type_id - 2)]['descr'], count($update)));

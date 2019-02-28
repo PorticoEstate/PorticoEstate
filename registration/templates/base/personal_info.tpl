@@ -41,12 +41,12 @@
 		<div class="pure-control-group">
 			{missing_passwd}
 			<label for="password">{lang_password}</label>
-			<input type="password" id="password" placeholder="{lang_password}" name="r_reg[passwd]" value="{value_passwd}" required>
+			<input type="password" id="password" placeholder="{lang_password}" name="r_reg[passwd]" value="{value_passwd}" required autocomplete="off">
 		</div>
 
 		<div class="pure-control-group">
 			<label for="password2">{missing_passwd_confirm}{lang_reenter_password}</label>
-			<input type="password" id="password2" placeholder="{lang_password}" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}" required oninput="check(this)">
+			<input type="password" id="password2" placeholder="{lang_password}" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}" required oninput="check(this)" autocomplete="off">
 		</div>
 		<!-- END password -->
 

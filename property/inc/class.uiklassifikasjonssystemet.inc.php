@@ -138,7 +138,7 @@
 			foreach ($clean_candiates as $key => $value)
 			{
 				$data_from_external = $this->get_all_from_external($token, $key, $allrows = true);
-				
+
 				if(empty($data_from_external['Data']))
 				{
 					continue;
@@ -268,7 +268,7 @@
 					if(is_array($value))
 					{
 						$__value = '<table><tr>';
-						
+
 						foreach ($value[0] as $_key => $_value)
 						{
 							$table_data_columns[] = array('value' => $_value);
@@ -278,7 +278,7 @@
 								$_table_heading[] = "detail_{$_key}";
 								$table_heading[] = array('name' => "detail_{$_key}");
 							}
-						}						
+						}
 					}
 					else
 					{
@@ -669,16 +669,25 @@
 						)
 						, $room['external_id'], $dry_run);
 
-					if(!$dry_run && empty($room_result[0]['Room']['Id']))
+					if($room['external_id'])
+					{
+						$room_id = !empty($room_result['Id']) ? $room_result['Id'] : 0;
+					}
+					else
+					{
+						$room_id = !empty($room_result[0]['Room']['Id']) ? $room_result[0]['Room']['Id'] : 0;
+					}
+
+					if(!$dry_run && empty($room_id))
 					{
 						throw new Exception('Update api/Rooms failed:' . _debug_array($room_result,false));
 					}
 
-					if(!$dry_run && $room_result[0]['Room']['Id'] && !$room['external_id'])
+					if(!$dry_run && $room_id && !$room['external_id'])
 					{
 						$where = "location_code='{$room['location_code']}'";
-						$this->update_external_id('fm_location5', $room_result[0]['Room']['Id'], $where );
-						$room['external_id'] = (int) $room_result[0]['Room']['Id'];
+						$this->update_external_id('fm_location5', $room_id, $where );
+						$room['external_id'] = (int) $room_id;
 					}
 				}
 
@@ -736,8 +745,8 @@
 
 			if($id)
 			{
-				return array('Id' => $id);
-				$data['Id'] = $id;
+//				return array('Id' => $id);
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Locations/{$id}";
 			}
@@ -803,16 +812,17 @@
 		private function save_building( $param, $id = false, $dry_run = true)
 		{
 			$data = array(
-				'LocationId' => $param['location_id'],
+				'LocationId' => (int)$param['location_id'],
 				"Name" => $param['name'],
-				"BuiltYear" => $param['built_year'],
+				"BuiltYear" => (int)$param['built_year'],
 				"ExternalId" => $param['portico_id'],
-				'isClosed'	=> $param['is_closed']
+				'isClosed'	=> !!$param['is_closed']
 				);
 
 			if($id)
 			{
-				$data['Id'] = $id;
+//				return array('Id' => $id);
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Buildings/{$id}";
 			}
@@ -840,17 +850,18 @@
 		private function save_floor( $param, $id = false, $dry_run = true)
 		{
 			$data = array(
-				'BuildingId' => $param['building_id'],
+				'BuildingId' => (int)$param['building_id'],
 				"Name" => $param['name'],
-				"NetArea" => $param['nettoareal'],
-				"BuiltYear" =>$param['built_year'],
-				"ExternalId" => $param['portico_id']
+				"NetArea" => (int)$param['nettoareal'],
+				"BuiltYear" =>(int)$param['built_year'],
+				"ExternalId" => $param['portico_id'],
+				"isClosed"	=> false
 			);
 
 			if($id)
 			{
-				return array('Id' => $id);
-				$data['Id'] = $id;
+//				return array('Id' => $id);
+				$data = array_merge( array('Id' => (int)$id), $data);
 				$mehod = 'PUT';
 				$url = "api/Floors/{$id}";
 			}
@@ -877,9 +888,8 @@
 		}
 		private function save_room( $param, $id = false, $dry_run = true)
 		{
-			$data = array();
-			$data[] = array(
-				"FloorId" => $param['floor_id'],
+			$_data = array(
+				"FloorId" => (int)$param['floor_id'],
 				"RoomDetails" => array(
 					array(
 						"ClassificationId" => '10.1.81.0',//10.1 Internt trafikkareal , korridor
@@ -901,13 +911,16 @@
 
 			if($id)
 			{
-				return array(array('Room' => array('Id' => $id)));
-				$data['Id'] = $id;
+//				return array(array('Room' => array('Id' => $id)));
+				$_data = array_merge( array('Id' => (int)$id), $_data);
+				$_data['RoomDetails'][0] = array_merge( array('Id' => (int)$id), $_data['RoomDetails'][0]);
+				$data = $_data;
 				$mehod = 'PUT';
 				$url = "api/Rooms/{$id}";
 			}
 			else
 			{
+				$data = array($_data);
 				$mehod = 'POST';
 				$url = "api/Rooms";
 			}
@@ -1013,6 +1026,7 @@
 
 			$url = "{$webservicehost}/{$local_url}";
 			$data_json = json_encode($data);
+			_debug_array($url);
 			_debug_array($data_json);
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -1038,8 +1052,15 @@
 
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			$result = curl_exec($ch);
-			_debug_array($result);
 
+//			if(!$result)
+//			{
+//				die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
+//			}
+//
+
+			_debug_array($result);
+//die();
 //			$curl_info = curl_getinfo($ch);
 //			_debug_array($curl_info);
 

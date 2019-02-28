@@ -2,7 +2,7 @@ this.confirm_session = function (action)
 {
 	if (action == 'save' || action == 'apply')
 	{
-		conf = {
+		var conf = {
 			modules: 'location, date, security, file',
 			validateOnBlur: false,
 			scrollToTopOnError: true,
@@ -62,6 +62,20 @@ $(document).ready(function ()
 
 	$('#group_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
 	$('#user_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
+
+	var conf_on_load = {
+			modules: 'date, file',
+			validateOnBlur: true,
+			scrollToTopOnError: false,
+			errorMessagePosition: 'inline'
+		   };
+
+	setTimeout(function ()
+	{
+		$('form').isValid(validateLanguage, conf_on_load, true);
+	}, 500);
+
+
 });
 
 $.formUtils.addValidator({

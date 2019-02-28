@@ -162,7 +162,7 @@
 				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'value_note', 'label' => lang('message'), 'sortable' => true, 'resizeable' => true)
 			);
 
 			foreach ($additional_message_notes as &$message_note)
@@ -183,6 +183,11 @@
 					'value_note' => $ticket['details'],
 				)
 			);
+
+			if(!$id)
+			{
+				$initial_message =  $ticket['details'];
+			}
 
 			$additional_notes = array_merge($notes, $additional_notes);
 
@@ -427,6 +432,7 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab' => 0,
 				'base_java_url' => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
+				'value_initial_message' => $initial_message
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 

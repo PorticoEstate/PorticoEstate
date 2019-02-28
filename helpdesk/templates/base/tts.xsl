@@ -460,7 +460,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
 								</label>
-								<input type="checkbox" name="values[send_mail]" value="1">
+								<input type="checkbox" id="send_email" name="values[send_mail]" value="1">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')"/>
 									</xsl:attribute>
@@ -572,6 +572,23 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:apply-templates select="custom_attributes/attributes"/>
+
+					<xsl:if  test="simple !='1'">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'publish text')"/>
+							</label>
+							<input type="checkbox" id="publish_text" name="values[publish_text]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Check to publish text')"/>
+								</xsl:attribute>
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</input>
+						</div>
+					</xsl:if>
+
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">

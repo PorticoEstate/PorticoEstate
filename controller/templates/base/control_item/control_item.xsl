@@ -333,7 +333,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/what_to_do" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60" class="required">
+							<textarea name="what_to_do" id="what_to_do" rows="5" cols="60">
 								<xsl:value-of select="control_item/what_to_do" disable-output-escaping="yes" />
 							</textarea>
 						</xsl:when>
@@ -350,7 +350,7 @@
 								<xsl:variable name="error_msg"><xsl:value-of select="control_item/error_msg_array/how_to_do" /></xsl:variable>
 								<div class='input_error_msg'><xsl:value-of select="php:function('lang', $error_msg)" /></div>
 							</xsl:if>
-							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60" class="required">
+							<textarea name="how_to_do" id="how_to_do" rows="5" cols="60">
 								<xsl:value-of select="control_item/how_to_do" disable-output-escaping="yes" />
 							</textarea>
 						</xsl:when>

@@ -87,7 +87,7 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/grids-responsive-min.css');
 			}
 			$GLOBALS['phpgw']->css->add_external_file('registration/templates/base/css/rainbow_baby-blue.css');
-			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
+//			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
 
 			$form_header = !empty($this->config['form_header']) ? $this->config['form_header'] : $GLOBALS['phpgw_info']['server']['system_name'];
 
@@ -312,7 +312,10 @@ HTML;
 			if ($this->config['display_tos'])
 			{
 				$this->template->set_var('tos_link', $GLOBALS['phpgw']->link('/registration/main.php', array(
-						'menuaction' => 'registration.uireg.tos', 'logindomain' => $_REQUEST['logindomain'])));
+					'menuaction' => 'registration.uireg.tos',
+					'logindomain' => $_REQUEST['logindomain']
+					), true
+				));
 				$this->template->set_var('lang_tos_agree', lang('I have read the terms and conditions and agree by them.'));
 				if ($r_reg['tos_agree'])
 				{

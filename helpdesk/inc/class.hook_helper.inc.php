@@ -57,7 +57,7 @@
 					{
 						// Read default assign-to-group from config
 						$default_group_id = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
-						$group_lid = $GLOBALS['phpgw']->accounts->name2id($default_group_id);
+						$group_lid = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
 						$group_lid = $group_lid ? $group_lid : 'frontend_delegates';
 
 						$password = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
@@ -99,8 +99,6 @@
 
 				$aclobj = & $GLOBALS['phpgw']->acl;
 				$aclobj->set_account_id($frontend_delegates, true);
-//				$aclobj->add('frontend', '.', 1);
-//				$aclobj->add('frontend', 'run', 1);
 				$aclobj->add('helpdesk', '.', 1);
 				$aclobj->add('helpdesk', 'run', 1);
 
@@ -113,9 +111,6 @@
 
 				$aclobj->add('helpdesk', '.ticket', 1);
 
-//				$aclobj->add('frontend', '.ticket', 1);
-//				$aclobj->add('frontend', '.rental.contract', 1);
-//				$aclobj->add('frontend', '.rental.contract_in', 1);
 				$aclobj->save_repository();
 			}
 			else

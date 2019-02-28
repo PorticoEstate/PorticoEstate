@@ -45,7 +45,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'ticket')"/>
 								</label>
-								<a href="{cancel_url}">
+								<a href="{cancel_url}" class="pure-button pure-button-primary">
 									<xsl:value-of select="value_ticket_id"/>
 								</a>
 							</div>
