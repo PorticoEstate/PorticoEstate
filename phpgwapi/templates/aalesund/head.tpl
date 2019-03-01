@@ -34,7 +34,7 @@
     
     <body    >
         
-           <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top"    style="border-bottom: 1.5px solid rgb(137, 38, 106);"  id="headcon">  
+           <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top header_borderline"   id="headcon">  
                  
                <div class="container   header-container   my_class"    >
                     

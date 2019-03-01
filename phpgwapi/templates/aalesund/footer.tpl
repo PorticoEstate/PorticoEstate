@@ -33,23 +33,23 @@
 			
 			<div class="col-md-6 order-md-1 col-lg-3 order-lg-1">
                             
-                <span><a href="https://www.alesund.kommune.no"><img class="footer-brand footer-brand-site-img" src="{footer_logo_img}" alt="{logo_title}"/></a></span>    
+                <span><a target="_blank" rel="noopener noreferrer" href="{footer_logo_url}"><img class="footer-brand footer-brand-site-img" src="{footer_logo_img}" alt="{logo_title}"/></a></span>    
 
 			</div>
 				
 				
 			<div class="col-md-6 order-md-3 col-lg-3 order-lg-2"     id="logowidth">
 				<h3>Kontakt</h3>
-				<span><a target="_blank" rel="noopener noreferrer"  href="https://www.alesund.kommune.no">{municipality}</a></span>             
+				<span><a target="_blank" rel="noopener noreferrer"  href="{footer_logo_url}">{municipality}</a></span>             
 
-				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:{municipality_email}">{municipality_email}</a><br> </span>  
+				<span><a target="_blank" rel="noopener noreferrer"  href="mailto:{support_email}">{support_email}</a><br> </span>  
 			</div>
 
 			<div class="col-md-6 order-md-2 col-lg-3 order-lg-3">
 				<h3>Aktiv kommune</h3>
 				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{textaboutmunicipality}</a></span>
                                    
-				<span><a   target="_blank" rel="noopener noreferrer"    href="https://www.aktiv-kommune.no/manual/">{guidances}</a></span>  
+				<span><a   target="_blank" rel="noopener noreferrer"    href="https://www.aktiv-kommune.no/manual/">{manual}</a></span>  
                                  
                 <span><a   target="_blank" rel="noopener noreferrer"    href="{footer_privacy_link}">{privacy}</a></span>  
                                                        
