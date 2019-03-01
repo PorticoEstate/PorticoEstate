@@ -846,7 +846,7 @@
 				$this->historylog->add('A', $id, $this->account, $oldassigned);
 
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : '0';
+				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : 'O';
 				if ($old_status != $new_status)
 				{
 					$this->historylog->add('C1', $id, $new_status, $old_status);
