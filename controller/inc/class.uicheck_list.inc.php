@@ -1057,6 +1057,8 @@
 			{
 				$check_list = $this->so->get_single($check_list_id);
 
+				$serie_id = $check_list->get_serie_id();
+
 				if(!$planned_date_ts)
 				{
 					$planned_date_ts = $check_list->get_planned_date();
@@ -1113,6 +1115,17 @@
 					$check_list->set_location_id($location_id);
 					$check_list->set_component_id($component_id);
 				}
+			}
+
+			$serie = $this->so_control->get_serie($serie_id);
+
+			if($serie && $serie['repeat_type'] == 3) // Year
+			{
+				/**
+				 * Move deadline to end of year
+				 */
+				$_deadline_year = date('Y', $deadline_date_ts);
+				$deadline_date_ts = strtotime("{$_deadline_year}-12-31");
 			}
 
 			$check_list->set_comment($comment);

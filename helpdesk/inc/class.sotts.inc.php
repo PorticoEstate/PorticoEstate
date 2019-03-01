@@ -846,7 +846,7 @@
 				$this->historylog->add('A', $id, $this->account, $oldassigned);
 
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : '0';
+				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : 'O';
 				if ($old_status != $new_status)
 				{
 					$this->historylog->add('C1', $id, $new_status, $old_status);
@@ -1069,7 +1069,7 @@
 				if ($old_status == 'X' || $old_closed)
 				{
 					$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-					$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+					$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 					$this->fields_updated[] = 'status';
 					$this->historylog->add('R', $id, $new_status, $old_status);
 					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
@@ -1373,7 +1373,7 @@
 			if($status == 'X' || $this->db->f('closed'))
 			{
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 				$this->fields_updated[] = 'status';
 				$this->historylog->add('R', $id, $new_status, $old_status);
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);

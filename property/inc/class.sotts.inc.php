@@ -2417,7 +2417,7 @@
 			if($status == 'X' || $this->db->f('closed'))
 			{
 				$config = CreateObject('phpgwapi.config', 'property')->read();
-				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 				$this->historylog->add('R', $id, $new_status, $old_status);
 				$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
 //				$this->db->query("UPDATE fm_tts_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
