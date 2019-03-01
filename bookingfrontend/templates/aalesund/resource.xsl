@@ -29,9 +29,9 @@
 					</div>
 
                     <div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
-						<h3>
+						<h2 id="resource_name">
 							<xsl:value-of select="resource/name"/>
-						</h3>
+						</h2>
 						<h3>
 							<xsl:value-of select="building/name"/>
 						</h3>
