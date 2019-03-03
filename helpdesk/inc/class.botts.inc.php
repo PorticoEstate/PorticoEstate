@@ -86,7 +86,7 @@
 			$user_id = phpgw::get_var('user_id', 'int');
 			$group_id = phpgw::get_var('group_id', 'int');
 
-			if(isset($_REQUEST['user_id']))
+			if(isset($_POST))
 			{
 				$this->user_id	= $user_id;
 			}
