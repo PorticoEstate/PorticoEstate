@@ -48,9 +48,9 @@
 		var $fields_updated = false;
 		var $status_id;
 		var $user_id;
-		var $part_of_town_id;
-		var $district_id;
+		var $group_id;
 		var $total_records;
+		var $use_session;
 
 		var $public_functions = array
 			(
@@ -59,7 +59,7 @@
 				'save'			=> true,
 			);
 
-		function __construct()
+		function __construct($read_session = false)
 		{
 			$this->so 					= CreateObject('helpdesk.sotts');
 			$this->custom				= & $this->so->custom;
@@ -73,12 +73,28 @@
 
 			$this->config->read();
 
+			if ($read_session)
+			{
+				$this->read_sessiondata();
+				$this->use_session = True;
+			}
 			$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$this->query = phpgw::get_var('query');
 			$this->sort = phpgw::get_var('sort');
 			$this->order = phpgw::get_var('order');
 			$this->status_id = phpgw::get_var('status_id', 'string');
-			$this->user_id = phpgw::get_var('user_id', 'int');
+			$user_id = phpgw::get_var('user_id', 'int');
+			$group_id = phpgw::get_var('group_id', 'int');
+
+			if(isset($_REQUEST['user_id']))
+			{
+				$this->user_id	= $user_id;
+			}
+			if(isset($_REQUEST['group_id']))
+			{
+				$this->group_id	= $group_id;
+			}
+
 			$this->reported_by = phpgw::get_var('reported_by', 'int');
 			$this->cat_id = phpgw::get_var('cat_id', 'int');
 			$this->parent_cat_id = phpgw::get_var('parent_cat_id', 'int');
@@ -87,6 +103,27 @@
 			$this->end_date = phpgw::get_var('filter_end_date', 'string');
 		}
 
+
+		function save_sessiondata($data)
+		{
+			if ($this->use_session)
+			{
+				$data = phpgwapi_cache::session_set('helpdesk', 'session_data',$data);
+			}
+		}
+
+		function read_sessiondata()
+		{
+			$data = phpgwapi_cache::session_get('helpdesk', 'session_data');
+
+			if(empty($data) || !is_array($data))
+			{
+				return;
+			}
+
+			$this->user_id	= $data['user_id'];
+			$this->group_id	= $data['group_id'];
+		}
 
 		function column_list( $selected = array() )
 		{
@@ -1430,6 +1467,11 @@ HTML;
 			{
 				return $group_list;
 			}
+		}
+
+		public function get_assigned_groups2($selected)
+		{
+			return $this->so->get_assigned_groups2($selected);
 		}
 
 		function reset_views($id)

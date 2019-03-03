@@ -118,24 +118,24 @@
 				<!--tbody>
 					<tr>
 						<td-->
-						<div class="pure-g">
+				<div class="pure-g">
 					<xsl:for-each select="item">
 						<script type="text/javascript">
 							number_of_toolbar_items += 1;
 						</script>
-						 <div class="pure-u-1-2 pure-u-md-1-6">
+						 <div class="pure-u-1 pure-u-md-1-3">
 
 							<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 							<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 							<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
-								<xsl:if test="name">
-									<label>
-										<xsl:attribute name="for">
-											<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
-										</xsl:attribute>
-										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-									</label>
-								</xsl:if>
+							<xsl:if test="name">
+								<label>
+									<xsl:attribute name="for">
+										<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+									</xsl:attribute>
+									<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+								</label>
+							</xsl:if>
 							<xsl:choose>
 								<xsl:when test="type = 'date-picker'">
 									<input class="pure-u-24-24" id="filter_{name}" name="filter_{name}" value="{value}" type="text">
@@ -1151,7 +1151,11 @@
 											try
 											{
 												$(oControl).removeAttr('selected').find("option[value='"+value+"']").attr('selected', 'selected');
-												$(oControl).material_select();
+
+												if($(oControl).find("option").length > 0)
+												{
+													$(oControl).material_select();
+												}
 											}
 											catch(err)
 											{
