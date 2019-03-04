@@ -14,6 +14,7 @@ $(document).ready(function ()
 	{
 		case 255:  //LRS Lønn
 		case 256:  //LRS Refusjon
+			$("#arbeidssted_name").attr("data-validation", "required");
 			// Leave as is...
 			break;
 		default:
