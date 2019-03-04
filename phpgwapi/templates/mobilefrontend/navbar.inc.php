@@ -36,17 +36,35 @@
 				<li class="pure-menu-heading pure-menu-link pure-menu-selected">
 					<a href="{$site_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$GLOBALS['phpgw_info']['user']['fullname']}</a>
 				</li>
+HTML;
+
+		if($acl->check('run', PHPGW_ACL_READ, 'controller'))
+		{
+			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$controller_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;{$controller_text}</a>
 				</li>
+HTML;
+
+		}
+		if($acl->check('.ticket', PHPGW_ACL_READ, 'property'))
+		{
+			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$tts_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$tts_text}</a>
 				</li>
+HTML;
+
+		}
+		if($acl->check('.project.condition_survey', PHPGW_ACL_READ, 'property'))
+		{
+			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$condition_survey_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>&nbsp;{$condition_survey_text}</a>
 				</li>
 HTML;
 
+		}
 		if($acl->check('.movein', PHPGW_ACL_READ, 'rental'))
 		{
 			$topmenu .= <<<HTML
@@ -105,7 +123,7 @@ HTML;
 				{
 					$navigation = array();
 				}
-				
+
 				foreach ($navigation as $menu_item)
 				{
 					$app_menu .= <<<HTML
