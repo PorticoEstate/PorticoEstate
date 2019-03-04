@@ -112,6 +112,15 @@
 			</xsl:attribute>
 			Prosedyrer
 		</a>
+		<a id="get_report">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.get_report</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+				<xsl:value-of select="$session_url"/>
+			</xsl:attribute>
+			Tilstands-rapport
+		</a>
 	</div>
 		
 	<div id="tab_content" class="content_wrp"></div>

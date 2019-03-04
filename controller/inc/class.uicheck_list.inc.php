@@ -74,7 +74,8 @@
 			'build_multi_upload_file' => true,
 			'handle_multi_upload_file'	=> true,
 			'get_files3' => true,
-			'view_file'	=> true
+			'view_file'	=> true,
+			'get_report' => true
 		);
 
 		function __construct()
@@ -2204,4 +2205,177 @@ HTML;
 
 			return $rc;
 		}
+
+		function get_report()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$case_location_code = phpgw::get_var('location_code');
+
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$report_info = $this->_get_report_info($check_list_id, $case_location_code);
+			_debug_array($report_info);
+			$pdf = CreateObject('phpgwapi.pdf');
+
+			$pdf->ezSetMargins(50, 70, 50, 50);
+			$pdf->selectFont('Helvetica');
+
+			// put a line top and bottom on all the pages
+			$all = $pdf->openObject();
+			$pdf->saveState();
+
+		}
+
+
+		/**
+		 * 
+		 * @param type $check_list_id
+		 * @param type $case_location_code
+		 */
+		private function _get_report_info( $check_list_id,  $case_location_code = '')
+		{
+			$uicase = createObject('controller.uicase');
+			$check_list = $this->so->get_single($check_list_id);
+
+			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			$check_list_location_code = $check_list->get_location_code();
+
+			$component_id = $check_list->get_component_id();
+			$get_locations = false;
+
+			if ($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+				}
+
+				$component = new controller_component();
+				$component->set_id($component_id);
+				$component->set_location_id($location_id);
+				$component->set_location_code($component_arr['location_code']);
+				$component->set_xml_short_desc($short_desc);
+				$component_array = $component->toArray();
+
+				$type = 'component';
+				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$buildings_on_property = array();
+			}
+			else
+			{
+				$user_role = false;
+
+				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
+				$type = 'location';
+				// Fetches locations on property
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+			}
+
+
+			$level = $this->location_finder->get_location_level($check_list_location_code);
+			$year = date("Y", $check_list->get_deadline());
+			$month = date("n", $check_list->get_deadline());
+
+
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, '', null, $case_location_code);
+
+			if ($buildings_on_property)
+			{
+				foreach ($buildings_on_property as &$building)
+				{
+					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
+				}
+			}
+
+			foreach ($open_check_items_and_cases as $key => $check_item)
+			{
+				$control_item_with_options = $this->so_control_item->get_single_with_options($check_item->get_control_item_id());
+
+				foreach ($check_item->get_cases_array() as $case)
+				{
+					$measurement = $case->get_measurement();
+
+					if(unserialize($measurement))
+					{
+						$case->set_measurement(unserialize($measurement));
+					}
+
+					$component_location_id = $case->get_component_location_id();
+					$component_id = $case->get_component_id();
+					if ($component_id)
+					{
+						$location_info = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+
+						if (substr($location_info['location'], 1, 8) == 'location')
+						{
+							$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $component_location_id,
+								'id' => $component_id), true);
+							$location_code = $item_arr['location_code'];
+							$short_desc = execMethod('property.bolocation.get_location_name', $location_code);
+						}
+						else
+						{
+							$short_desc = execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_location_id, 'id' => $component_id));
+
+							$component_child_location_id = $case->get_component_child_location_id();
+							$component_child_item_id = $case->get_component_child_item_id();
+
+							if($component_child_location_id && $component_child_item_id)
+							{
+								$short_desc .= "<br>" . execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_child_location_id, 'id' => $component_child_item_id));
+							}
+						}
+						$case->set_component_descr($short_desc);
+
+					}
+					$case_files = $uicase->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
+				}
+
+				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
+				$open_check_items_and_cases[$key] = $check_item;
+			}
+
+			$data = array
+			(
+				'control' => $control,
+				'check_list' => $check_list,
+				'buildings_on_property' => $buildings_on_property,
+				'location_array' => $location_array,
+				'component_array' => $component_array,
+				'type' => $type,
+				'location_level' => $level,
+				'get_locations'	=> $get_locations,
+				'current_year' => $year,
+				'current_month_nr' => $month,
+				'open_check_items_and_cases' => $open_check_items_and_cases,
+				'cases_view' => 'open_cases',
+				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
+			);
+			return $data;
+		}
+
 	}
