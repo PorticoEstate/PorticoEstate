@@ -2293,11 +2293,13 @@ JS;
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
 				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
-				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'FormatterCenter'),
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture')
 			);
-
+			if (!$this->_simple)
+			{
+				$attach_file_def[] = array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'FormatterCenter');
+			}
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_2',
