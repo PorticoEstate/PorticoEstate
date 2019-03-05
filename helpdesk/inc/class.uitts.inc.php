@@ -122,65 +122,10 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_$this->parent_cat_id";
 			}
 
-			$default_interface = isset($this->bo->config->config_data['tts_default_interface']) ? $this->bo->config->config_data['tts_default_interface'] : '';
+			$this->_simple = $this->bo->_simple;
+			$this->_group_candidates = $this->bo->_group_candidates;
+			$this->_show_finnish_date = $this->bo->_show_finnish_date;
 
-			/*
-			 * Inverted logic
-			 */
-			if($default_interface == 'simplified')
-			{
-				$this->_simple = true;
-			}
-
-			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
-			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
-			foreach ($user_groups as $group => $dummy)
-			{
-				if (in_array($group, $simple_group))
-				{
-					if($default_interface == 'simplified')
-					{
-						$this->_simple = false;
-					}
-					else
-					{
-						$this->_simple = true;
-					}
-					break;
-				}
-			}
-			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
-			{
-				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
-				{
-					if ($group_candidate)
-					{
-						$this->_group_candidates[] = $group_candidate;
-					}
-				}
-			}
-
-			reset($user_groups);
-
-			foreach ( $user_groups as $group => $dummy)
-			{
-				if ( in_array($group, $this->_group_candidates))
-				{
-					$this->_simple = false;
-					break;
-				}
-			}
-
-			reset($user_groups);
-			$group_finnish_date = isset($this->bo->config->config_data['fmtts_group_finnish_date']) ? $this->bo->config->config_data['fmtts_group_finnish_date'] : array();
-			foreach ( $user_groups as $group => $dummy)
-			{
-				if ( in_array($group, $group_finnish_date))
-				{
-					$this->_show_finnish_date = true;
-					break;
-				}
-			}
 
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
 			if (!empty($this->bo->config->config_data['app_name']))
