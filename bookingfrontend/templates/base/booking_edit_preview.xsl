@@ -2,21 +2,23 @@
 	<div id="booking-edit-preview-page-content" class="margin-top-content">
 		<div class="container wrapper">
 			<div class="location">
-				<span><a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-					</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Home')" />
-				</a></span>
-				<span><xsl:value-of select="php:function('lang', 'Mass update')"/></span>										
+				<span>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
+					</a>
+				</span>
+				<span>
+					<xsl:value-of select="php:function('lang', 'Mass update')"/>
+				</span>
 			</div>
-
 			<div class="row">
 				<form action="" method="POST" class="col-md-8">
 					<div class="col mb-4">
 						<xsl:call-template name="msgbox"/>
 					</div>
-
 					<input type="hidden" name="repeat_until" value="{repeat_until}"/>
 					<input type="hidden" name="recurring" value="{recurring}"/>
 					<input type="hidden" name="outseason" value="{outseason}"/>
@@ -35,7 +37,6 @@
 							</option>
 						</xsl:for-each>
 					</select>
-
 					<div class="col mt-5">
 						<xsl:if test="count(bookings/results) &gt; 0">
 							<div class="btn btn-light mr-4">
@@ -47,9 +48,7 @@
 							</div>
 						</xsl:if>
 					</div>
-
 				</form>
-
 				<div class="col-md-8">
 					<xsl:choose>
 						<xsl:when test="step = 2">
@@ -57,7 +56,6 @@
 								<xsl:value-of select="php:function('lang', '%1 bookings will be updated.', count(bookings/results))" />
 							</p>
 							<form action="" method="POST">
-								
 							</form>
 						</xsl:when>
 						<xsl:when test="step = 3">
@@ -72,15 +70,10 @@
 									</a>
 								</div>
 							</p>
-
 						</xsl:when>
 					</xsl:choose>
 				</div>
-
-
-
 			</div>
-
 		</div>
 	</div>
 	<div class="push"></div>

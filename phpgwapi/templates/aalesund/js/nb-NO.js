@@ -1,23 +1,31 @@
 /**
  * Localization file for Norwegian (Bokmål) - Norway (nb-NO)
  */
-(function(factory) {
-    // Module systems magic dance.
-    /*global require,ko.validation,define,module*/
-    if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
-        // CommonJS or Node
-        module.exports = factory(require('../'));
-    } else if (typeof define === 'function' && define['amd']) {
-        // AMD anonymous module
-        define(['knockout.validation'], factory);
-    } else {
-        // <script> tag: use the global `ko.validation` object
-        factory(ko.validation);
-    }
-}(function(kv) {
-    if (!kv || typeof kv.defineLocale !== 'function') {
-        throw new Error('Knockout-Validation is required, please ensure it is loaded before this localization file');
-    }
+(function (factory)
+{
+	// Module systems magic dance.
+	/*global require,ko.validation,define,module*/
+	if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object')
+	{
+		// CommonJS or Node
+		module.exports = factory(require('../'));
+	}
+	else if (typeof define === 'function' && define['amd'])
+	{
+		// AMD anonymous module
+		define(['knockout.validation'], factory);
+	}
+	else
+	{
+		// <script> tag: use the global `ko.validation` object
+		factory(ko.validation);
+	}
+}(function (kv)
+{
+	if (!kv || typeof kv.defineLocale !== 'function')
+	{
+		throw new Error('Knockout-Validation is required, please ensure it is loaded before this localization file');
+	}
 	return kv.defineLocale('nb-NO', {
 		required: 'Dette feltet er obligatorisk',
 		min: 'Fyll inn en verdi som er større eller lik {0}',
@@ -35,7 +43,7 @@
 		equal: 'Verdiene må være like',
 		notEqual: 'Vennligst velg en annen verdi',
 		unique: 'Vennligst sørg for at verdien er unik',
-                fodselNR: 'Fyll inn korrekt nummer',
-                phoneNO: 'Vennlist spesifiser ett korrekt telefonnummer'
+		fodselNR: 'Fyll inn korrekt nummer',
+		phoneNO: 'Vennlist spesifiser ett korrekt telefonnummer'
 	});
 }));

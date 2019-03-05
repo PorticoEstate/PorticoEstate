@@ -1,15 +1,15 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
-    <div class="info-content" id="building-page-content">
-    <div class="container wrapper">
-        <div class="location">
-			<span><a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-					</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Home')" />
-				</a>
-			</span>
+	<div class="info-content" id="building-page-content">
+		<div class="container wrapper">
+			<div class="location">
+				<span>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
+					</a>
+				</span>
 				<span>
 					<a>
 						<xsl:attribute name="href">
@@ -18,41 +18,35 @@
 						<xsl:value-of select="building/name"/>
 					</a>
 				</span>
-		</div>
-
-		<div class="row p-3">
-            <div class="col-lg-6">
-                
-                <div class="row">
-                    <div class="col-xl-4 col-lg-5 col-md-4 col-sm-5 mb-4 col-item-img">
-						<img class="img-fluid image-circle" id="item-main-picture" src=""/>
-					</div>
-
-                    <div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
-						<h3>
-							<xsl:value-of select="resource/name"/>
-						</h3>
-						<h3>
-							<xsl:value-of select="building/name"/>
-						</h3>
-                        <i class="fas fa-map-marker d-inline">&#160;</i>
-                        <div class="building-place-adr">
-							<span>
-								<xsl:value-of select="building/street"/>
-							</span>
-							<span class="d-block">
-								<xsl:value-of select="building/zip_code"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="building/city"/>
-							</span>
-                        </div>
-
-                        
-                    </div>
-					<div class="col-12 mt-4" id="item-description">
-						<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
-					</div>					
-					
+			</div>
+			<div class="row p-3">
+				<div class="col-lg-6">
+					<div class="row">
+						<div class="col-xl-4 col-lg-5 col-md-4 col-sm-5 mb-4 col-item-img">
+							<img class="img-fluid image-circle" id="item-main-picture" src=""/>
+						</div>
+						<div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
+							<h3>
+								<xsl:value-of select="resource/name"/>
+							</h3>
+							<h3>
+								<xsl:value-of select="building/name"/>
+							</h3>
+							<i class="fas fa-map-marker d-inline">&#160;</i>
+							<div class="building-place-adr">
+								<span>
+									<xsl:value-of select="building/street"/>
+								</span>
+								<span class="d-block">
+									<xsl:value-of select="building/zip_code"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="building/city"/>
+								</span>
+							</div>
+						</div>
+						<div class="col-12 mt-4" id="item-description">
+							<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
+						</div>
 						<xsl:if test="building/deactivate_calendar=0">
 							<div class="col-auto mt-4 mb-4">
 								<div>
@@ -63,12 +57,10 @@
 								</div>
 							</div>
 						</xsl:if>
-
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="building-accordion">
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="building-accordion">
 						<xsl:if test="count(resource/activities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">
@@ -79,7 +71,6 @@
 										<button data-toggle="collapse" data-target="#collapseActivities" class="btn fas fa-plus float-right"></button>
 									</h5>
 								</div>
-
 								<div id="collapseActivities" class="collapse">
 									<div class="card-body">
 										<ul>
@@ -93,7 +84,6 @@
 								</div>
 							</div>
 						</xsl:if>
-
 						<xsl:if test="count(resource/facilities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">
@@ -104,7 +94,6 @@
 										<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
 									</h5>
 								</div>
-
 								<div id="collapseOne" class="collapse">
 									<div class="card-body">
 										<ul>
@@ -118,7 +107,6 @@
 								</div>
 							</div>
 						</xsl:if>
-
 						<div class="building-card card-img-thumbs">
 							<div class="building-card-header">
 								<h5 class="mb-0">
@@ -133,7 +121,6 @@
 								</div>
 							</div>
 						</div>
-
 						<xsl:if test="resource/opening_hours and normalize-space(resource/opening_hours)">
 							<div class="building-card">
 								<div class="building-card-header">
@@ -151,7 +138,6 @@
 								</div>
 							</div>
 						</xsl:if>
-
 						<xsl:if test="resource/contact_info and normalize-space(resource/contact_info)">
 							<div class="building-card">
 								<div class="building-card-header">
@@ -169,14 +155,12 @@
 								</div>
 							</div>
 						</xsl:if>
-
-                    </div>
-            </div>
-        </div>
-        </div>
-        </div>
-        
-        <div class="container wrapper calendar-content">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container wrapper calendar-content">
 		<xsl:if test="building/deactivate_application=0 and config_data/help_calendar_book and normalize-space(config_data/help_calendar_book)">
 			<div class="row margin-top-and-bottom">
 				<div class="col">
@@ -184,9 +168,7 @@
 				</div>
 			</div>
 		</xsl:if>
-
-        <div class="row margin-top-and-bottom">
-            
+		<div class="row margin-top-and-bottom">
 			<xsl:if test="building/deactivate_calendar=0">
 				<div class="col-6 button-group dropdown calendar-tool">
 					<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0">
@@ -194,12 +176,12 @@
 						<xsl:value-of select="php:function('lang', 'choose a date')"/>
 					</button>
 					<xsl:if test="building/deactivate_application=0">
-						<a href="" class="btn btn-default bookBtnForward"><i class="fas fa-plus"></i>&#160;
+						<a href="" class="btn btn-default bookBtnForward">
+							<i class="fas fa-plus"></i>&#160;
 							<xsl:value-of select="php:function('lang', 'Application')" />
 						</a>
 					</xsl:if>
 				</div>
-
 				<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 event-color-desc mt-2">
 					<div class="d-block">
 						<div class="square allocation"></div>
@@ -221,27 +203,19 @@
 					</div>
 				</div>
 			</xsl:if>
-                
-                <!--<div class="input-group date" id="datepicker" data-provide="datepicker">
-                    <input type="text" class="form-control" />
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
-                    </div>
-                </div>-->
-                
-
-            
+			<!--<div class="input-group date" id="datepicker" data-provide="datepicker">
+				<input type="text" class="form-control" />
+				<div class="input-group-addon">
+					<span class="glyphicon glyphicon-th"></span>
+				</div>
+			</div>-->
 			<xsl:if test="building/deactivate_calendar=0">
-            <div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom col-12"></div>
-            <div id="mySchedulerSmallDeviceView" class="d-lg-none margin-top-and-bottom col-12"></div>
+				<div id="myScheduler" class="d-none d-lg-block margin-top-and-bottom col-12"></div>
+				<div id="mySchedulerSmallDeviceView" class="d-lg-none margin-top-and-bottom col-12"></div>
 			</xsl:if>
-
-        </div>
-        
-        
-        <div class="push"></div>
-    </div>
-
+		</div>
+		<div class="push"></div>
+	</div>
 	<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-body lightbox-body">
@@ -250,16 +224,14 @@
 			</div>
 		</div>
 	</div>
-    
-    <script type="text/javascript">
+	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var resourcename = "<xsl:value-of select="resource/name" />";
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
- 			var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
-            var script = document.createElement("script"); 
-			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/resource.js?n=" + cache_refresh_token;
-
-            document.head.appendChild(script);			
-        </script>
+		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
+		var script = document.createElement("script");
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/resource.js?n=" + cache_refresh_token;
+		document.head.appendChild(script);
+	</script>
 </xsl:template>
