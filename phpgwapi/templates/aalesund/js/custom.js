@@ -6,20 +6,23 @@
 
 
 
-
-
-
-$(document).ready(function(){
-	if (document.getElementById("main-page")) {
+$(document).ready(function ()
+{
+	if (document.getElementById("main-page"))
+	{
 		$('#headcon').removeClass('header_borderline');
 	}
-	
+
 });
 
-$(window).scroll(function() {
-	if (document.getElementById("main-page") &&  $(window).scrollTop() < 10) {
-		$('#headcon').removeClass('header_borderline'); 
-	} else {
+$(window).scroll(function ()
+{
+	if (document.getElementById("main-page") && $(window).scrollTop() < 10)
+	{
+		$('#headcon').removeClass('header_borderline');
+	}
+	else
+	{
 		$('#headcon').addClass('header_borderline');
 	}
 });

@@ -2,7 +2,6 @@
 	<xsl:param name="test"/>
 	<xsl:param name="true"/>
 	<xsl:param name="false"/>
-
 	<func:result>
 		<xsl:choose>
 			<xsl:when test="$test">
@@ -14,24 +13,23 @@
 		</xsl:choose>
 	</func:result>
 </func:function>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<div id="application-show-content" class="margin-top-content">
-        <div class="container wrapper">
+		<div class="container wrapper">
 			<div class="location">
-					<span>
-						<a><xsl:attribute name="href">
-								<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-							</xsl:attribute>
-							<xsl:value-of select="php:function('lang', 'Home')" />
-						</a>
-					</span>
-					<span>
-						#<xsl:value-of select="application/id"/>
-					</span>															
+				<span>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
+					</a>
+				</span>
+				<span>
+					#<xsl:value-of select="application/id"/>
+				</span>
 			</div>
-
 			<div class="row">
 				<div class="col">
 					<!--
@@ -45,7 +43,6 @@
 					</div>
 					-->
 					<xsl:call-template name="msgbox"/>
-
 					<xsl:if test="frontend">
 						<dl>
 							<span style="font-size: 110%; font-weight: bold;">Din søknad har status <xsl:value-of select="php:function('lang', string(application/status))"/></span>
@@ -55,21 +52,23 @@
 						</dl>
 					</xsl:if>
 				</div>
-
 				<div class="col-12">
-							<div class="form-group">
-								<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Add a comment')" /></label>
-								<form method="POST">
-									<textarea name="comment" class="form-control" style="width: 60%; height: 7em"></textarea>
-									<br/>
-									<input type="submit" class="btn btn-light" value="{php:function('lang', 'Add comment')}" />
-								</form>
-							</div>
+					<div class="form-group">
+						<label class="text-uppercase">
+							<xsl:value-of select="php:function('lang', 'Add a comment')" />
+						</label>
+						<form method="POST">
+							<textarea name="comment" class="form-control" style="width: 60%; height: 7em"></textarea>
+							<br/>
+							<input type="submit" class="btn btn-light" value="{php:function('lang', 'Add comment')}" />
+						</form>
+					</div>
 				</div>
-
 				<div class="col-12 mt-4">
 					<dl>
-						<dt><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></dt>
+						<dt>
+							<xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" />
+						</dt>
 						<xsl:for-each select="application/comments[author]">
 							<dt>
 								<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
@@ -91,7 +90,6 @@
 						</xsl:for-each>
 					</dl>
 				</div>
-
 				<div class="col-12 mt-4">
 					<dl>
 						<dt>
@@ -125,9 +123,10 @@
 						</dd>
 					</dl>
 				</div>
-
 				<div class="col-12 mt-4">
-					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Building (2018)')" /></h5>
+					<h5 class="font-weight-bold mb-4">
+						<xsl:value-of select="php:function('lang', 'Building (2018)')" />
+					</h5>
 					<dl>
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Building (2018)')" />
@@ -156,19 +155,20 @@
 						</xsl:for-each>
 					</dl>
 				</div>
-
 				<div class="col-12 mt-4">
-					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Information about the event')" /></h5>
+					<h5 class="font-weight-bold mb-4">
+						<xsl:value-of select="php:function('lang', 'Information about the event')" />
+					</h5>
 					<dl>
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Target audience')" />
 						</dt>
 						<dd>
-								<xsl:for-each select="audience">
-									<xsl:if test="../application/audience=id">
-											<xsl:value-of select="name"/>
-									</xsl:if>
-								</xsl:for-each>
+							<xsl:for-each select="audience">
+								<xsl:if test="../application/audience=id">
+									<xsl:value-of select="name"/>
+								</xsl:if>
+							</xsl:for-each>
 						</dd>
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Event name')" />
@@ -238,9 +238,10 @@
 						</dd>
 					</dl>
 				</div>
-
 				<div class="col-12 mt-4">
-					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Contact and invoice information')" /></h5>
+					<h5 class="font-weight-bold mb-4">
+						<xsl:value-of select="php:function('lang', 'Contact and invoice information')" />
+					</h5>
 					<dl>
 						<dt>
 							<xsl:value-of select="php:function('lang', 'Name')" />
@@ -273,14 +274,14 @@
 							<xsl:value-of select="application/contact_email"/>
 						</dd>
 						<dt>
-								<xsl:value-of select="php:function('lang', 'Phone')" />
+							<xsl:value-of select="php:function('lang', 'Phone')" />
 						</dt>
 						<dd>
 							<xsl:value-of select="application/contact_phone"/>
 						</dd>
 						<xsl:if test="application/customer_identifier_type = 'organization_number'">
 							<dt>
-									<xsl:value-of select="php:function('lang', 'organization number')" />
+								<xsl:value-of select="php:function('lang', 'organization number')" />
 							</dt>
 							<dd>
 								<xsl:value-of select="application/customer_organization_number"/>
@@ -288,7 +289,7 @@
 						</xsl:if>
 						<xsl:if test="application/customer_identifier_type = 'ssn'">
 							<dt>
-									<xsl:value-of select="php:function('lang', 'SSN')" />
+								<xsl:value-of select="php:function('lang', 'SSN')" />
 							</dt>
 							<dd>
 								<xsl:value-of select="application/customer_ssn"/>
@@ -296,9 +297,10 @@
 						</xsl:if>
 					</dl>
 				</div>
-
 				<div class="col-12 mt-4">
-					<h5 class="font-weight-bold mb-4"><xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h5>
+					<h5 class="font-weight-bold mb-4">
+						<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
+					</h5>
 					<dl>
 						<div id='regulation_documents'>&nbsp;</div>
 						<br />
@@ -308,38 +310,33 @@
 					</dl>
 				</div>
 
-				
 			</div>
 		</div>
 	</div>
-
 	<script type="text/javascript">
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
-		if (!resourceIds || resourceIds == "") {
-		resourceIds = false;
+		if (!resourceIds || resourceIds == "")
+		{
+			resourceIds = false;
 		}
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resources (2018)', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
-
         <![CDATA[
             var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
             var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id}, true);
         ]]>
-
-		if (resourceIds) {
-		var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
-		createTable('resources_container', resourcesURL, colDefsResource, 'results');
+		if (resourceIds)
+		{
+			var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
+			createTable('resources_container', resourcesURL, colDefsResource, 'results');
 		}
-
 		var colDefsDocument = [{key: 'name', label: lang['Document'], formatter: genericLink}];
 		createTable('regulation_documents', documentURL, colDefsDocument);
-
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource);
-
 	</script>
 </xsl:template>

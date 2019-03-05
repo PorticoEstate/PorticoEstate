@@ -10,9 +10,9 @@
 			<xsl:value-of select="booking/group/name"/>
 		</a>
 	</div>
-
-	<span class="d-block"><xsl:value-of select="booking/when"/></span>
-	
+	<span class="d-block">
+		<xsl:value-of select="booking/when"/>
+	</span>
 	<div>
 		<span class="font-weight-bold text-uppercase">
 			<xsl:value-of select="php:function('lang', 'Place')"/>:
@@ -21,12 +21,10 @@
 			<xsl:value-of select="booking/building_name"/>
 		</a>
 		(<xsl:value-of select="booking/resource_info"/>)
-	</div>	
-
+	</div>
 	<!--<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
 	</div>-->
-	
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
 			<button class="btn btn-light mt-4" onclick="location.href='{booking/edit_link}'">

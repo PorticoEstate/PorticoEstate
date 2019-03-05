@@ -12,7 +12,6 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:choose>
 		<xsl:when test="results/total_records_sum &gt; 0">
@@ -108,7 +107,6 @@
 					</u>
 				</h5>
 			</div>
-
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

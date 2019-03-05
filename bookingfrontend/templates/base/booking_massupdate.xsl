@@ -1,6 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="content">
-
 		<dl class="form">
 			<dt class="heading">
 				<xsl:value-of select="php:function('lang', 'Mass update')"/>
