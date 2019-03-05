@@ -49,11 +49,14 @@
 			'get_single_name'	=> true
 		);
 
-		function __construct( $session = false )
+		function __construct( $session = false , $call_appname = '')
 		{
-			$called_class = get_called_class();
-			$called_class_arr = explode('_', $called_class);
-			$call_appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			if(!$call_appname) // call from mobilefrontend
+			{
+				$called_class = get_called_class();
+				$called_class_arr = explode('_', $called_class);
+				$call_appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			}
 			$this->so = CreateObject("{$call_appname}.sogeneric");
 
 			$this->custom = & $this->so->custom;
