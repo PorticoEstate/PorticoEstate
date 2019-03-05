@@ -108,7 +108,7 @@
 							</xsl:variable>
 																				
 							<div class="pure-control-group">
-								<label for="name">
+								<label for="{name}">
 									<xsl:value-of select="$descr"/>
 								</label>
 								<xsl:choose>

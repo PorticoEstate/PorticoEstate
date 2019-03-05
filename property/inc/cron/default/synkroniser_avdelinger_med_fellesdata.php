@@ -316,7 +316,7 @@
 
 			$db = & $GLOBALS['phpgw']->db;
 			$db->transaction_begin();
-			$db->query("UPDATE {$table} SET active = 0", __LINE__, __FILE__);
+			$db->query("UPDATE {$table} SET active = 0 WHERE persistent != 1", __LINE__, __FILE__);
 			$units = $this->unit_ids;
 //			_debug_array($units);
 			foreach ($units as $unit)

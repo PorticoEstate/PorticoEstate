@@ -1513,9 +1513,21 @@
 								)
 							),
 							array(
+								'name' => 'persistent',
+								'descr' => lang('persistent'),
+								'type' => 'checkbox',
+								'default' => '',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('persistent'))),
+								)
+							),
+							array(
 								'name' => 'external_id',
 								'descr' => lang('external id'),
-								'type' => 'int'
+								'type' => 'int',
+								'nullable' => true,
 							),
 						),
 						'edit_msg' => lang('edit'),
