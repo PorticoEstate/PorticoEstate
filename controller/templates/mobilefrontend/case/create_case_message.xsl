@@ -175,6 +175,9 @@
 									<xsl:value-of select="./cat_id"/>
 								</xsl:variable>
 								<option value="{$cat_id}">
+									<xsl:if test="selected = 'selected'">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
 									<xsl:value-of select="./name"/>
 								</option>
 							</xsl:for-each>

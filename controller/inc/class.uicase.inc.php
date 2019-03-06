@@ -1178,8 +1178,12 @@
 			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$catsObj->supress_info = true;
 
+			$config = CreateObject('phpgwapi.config', 'controller');
+			$config->read();
+
+			$ticket_category = $config->config_data['ticket_category'];
 			$categories = $catsObj->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl));
+				'selected' => $ticket_category, 'use_acl' => $this->_category_acl));
 
 			$component_id = $check_list->get_component_id();
 
@@ -1232,8 +1236,10 @@
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
 
+
 			$data = array
-				(
+			(
+
 				'categories' => $categories,
 				'check_list' => $check_list->toArray(),
 				'control' => $control->toArray(),
