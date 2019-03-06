@@ -34,7 +34,7 @@
 			// No bookings left
 			if (count($bookings) == 0)
 			{
-				if ($t != '24:00')
+				if ($t != '23:59')
 				{
 					$data[] = array(
 						'time' => $t . '-00:00',
@@ -89,7 +89,7 @@
 					$row = array('resource' => $res['name'], 'resource_id' => $res['id']);
 					if ($first_row)
 					{
-						$tmp_t = $next_t == '24:00' ? '00:00' : $next_t;
+						$tmp_t = $next_t == '23:59' ? '00:00' : $next_t;
 						$row['time'] = $t . '-' . $tmp_t;
 					}
 

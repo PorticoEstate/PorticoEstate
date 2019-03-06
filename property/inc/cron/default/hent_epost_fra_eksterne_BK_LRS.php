@@ -498,8 +498,8 @@
 			else if(preg_match("/Kreditnota/i" , $subject ))
 			{
 
-				$message_cat_id = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
-				$group_id = 4169; //LRS-Saksbehandler-Økonomi
+				$message_cat_id = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
+				$group_id = 4169; // LRS-SERVICE_Økonomi
 				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if($ticket_id)
 				{
@@ -508,31 +508,11 @@
 					$target['id'] = $ticket_id;
 				}
 			}
-/*			else if(preg_match("/noreply@skatteetaten.no/i" , $sender ) && preg_match("/skattekort/i" , $subject ))
+			else if(preg_match("/FakturaFirewall: Ukjent leverandør/i" , $subject ))
 			{
-				$message_cat_id = 264; //LRS Lønn - Skatt
-				$group_id = 3159; //LRS Lønn
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
-				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				}
-			}
-			else if (preg_match("/noreply@altinn.no/i" , $sender ))
-			{
-				if(preg_match("/Skatt/i" , $subject ))
-				{
-					$message_cat_id = 264; //LRS Lønn - Skatt
-					$group_id = 3159; //LRS Lønn
 
-				}
-				if(preg_match("/Sykmelding/i" , $subject ) || preg_match("/sykepenger/i" , $subject ))
-				{
-					$message_cat_id = 306; //LRS Refusjon - Altinn
-					$group_id = 3233; //LRS Refusjon
-				}
+				$message_cat_id = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
+				$group_id = 4169; // LRS-SERVICE_Økonomi
 				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if($ticket_id)
 				{
@@ -541,7 +521,7 @@
 					$target['id'] = $ticket_id;
 				}
 			}
-*/
+
 			/**
 			 * Ticket created / updated
 			 */
