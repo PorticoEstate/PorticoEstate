@@ -51,3 +51,20 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	* Get HTML listbox with categories that are candidates for the ticket_category
+	*
+	* @param $config
+	* @return string HTML listbox to be placed in a table
+	*/
+	function ticket_category($config)
+	{
+		$cats	= CreateObject('phpgwapi.categories', -1,  'property', '.ticket');
+		$cats->supress_info = true;
+
+		$selected = isset($config['ticket_category']) ? $config['ticket_category'] : '';
+		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	.= $cats->formatted_list(array('selected' => $selected));
+		return $cat_select;
+	}
