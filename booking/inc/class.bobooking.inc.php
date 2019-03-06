@@ -720,8 +720,8 @@
 					$booking['weekday'] = date_format(date_create($booking['date']), 'D');
 					$booking['from_'] = $from->format('H:i');
 					$booking['to_'] = $to->format('H:i');
-					// We need to use 24:00 instead of 00:00 to sort correctly
-					$booking['to_'] = $booking['to_'] == '00:00' ? '24:00' : $booking['to_'];
+					// We need to use 23:59 instead of 00:00 to sort correctly
+					$booking['to_'] = $booking['to_'] == '00:00' ? '23:59' : $booking['to_'];
 					$new_bookings[] = $booking;
 				}
 				// Multi-day booking
@@ -745,8 +745,8 @@
 						{
 							$new_booking['to_'] = $to->format('H:i');
 						}
-						// We need to use 24:00 instead of 00:00 to sort correctly
-						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
+						// We need to use 23:59 instead of 00:00 to sort correctly
+						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '23:59' : $new_booking['to_'];
 						$new_bookings[] = $new_booking;
 
 						if ($date->format('Y-m-d') == $end->format('Y-m-d'))
@@ -1015,8 +1015,8 @@
 					$booking['wday'] = date_format(date_create($booking['date']), 'D');
 					$booking['from_'] = $from->format('H:i');
 					$booking['to_'] = $to->format('H:i');
-					// We need to use 24:00 instead of 00:00 to sort correctly
-					$booking['to_'] = $booking['to_'] == '00:00' ? '24:00' : $booking['to_'];
+					// We need to use 23:59 instead of 00:00 to sort correctly
+					$booking['to_'] = $booking['to_'] == '00:00' ? '23:59' : $booking['to_'];
 					$new_bookings[] = $booking;
 				}
 				// Multi-day booking
@@ -1040,8 +1040,8 @@
 						{
 							$new_booking['to_'] = $to->format('H:i');
 						}
-						// We need to use 24:00 instead of 00:00 to sort correctly
-						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '24:00' : $new_booking['to_'];
+						// We need to use 23:59 instead of 00:00 to sort correctly
+						$new_booking['to_'] = $new_booking['to_'] == '00:00' ? '23:59' : $new_booking['to_'];
 						$new_bookings[] = $new_booking;
 
 						if ($date->format('Y-m-d') == $end->format('Y-m-d'))
