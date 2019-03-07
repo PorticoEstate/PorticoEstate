@@ -226,7 +226,7 @@
 			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 				<dl class="proplist-col">
 					<dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
-					<script type="text/javascript">
+					<script>
 						var allocationParams = {};
 						var bookingParams = {};
 						var eventParams = {};
@@ -247,7 +247,7 @@
 							</span>
 						</dd>
 						<xsl:if test="../edit_link">
-							<script type="text/javascript">
+							<script>
 								allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 								bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 								eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
@@ -537,7 +537,7 @@
 		</xsl:if>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;

@@ -228,7 +228,7 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;

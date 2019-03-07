@@ -1085,7 +1085,7 @@ HTML;
 				if($cal_script = $GLOBALS['phpgw']->yuical->get_script())
 				{
 					$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
-						. '<script type="text/javascript">' ."\n"
+						. '<script>' ."\n"
 						. '//<[CDATA[' ."\n"
 						. $cal_script ."\n"
 						. '//]]' ."\n"

@@ -17,17 +17,17 @@
 
 		{css}
 
-		<script type="text/javascript">
+		<script>
 			<!--
 			var strBaseURL = '{str_base_url}';
 			//-->
 		</script>
 		{javascript}
 		<!-- BEGIN javascript -->
-		<script type="text/javascript" src="{javascript_uri}"></script>
+		<script src="{javascript_uri}"></script>
 		<!-- END javascript -->
 
-		<script type="text/javascript">
+		<script>
 		<!--
 			{win_on_events}
 			//-->

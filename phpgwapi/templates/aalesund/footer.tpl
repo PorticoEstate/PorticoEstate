@@ -51,7 +51,7 @@
     </div>
 </footer>
 </div>
-<script type="text/javascript">
+<script>
 	var footerlang = {"Do you want to delete application?": "{cart_confirm_delete}"};
 </script>
 </body>

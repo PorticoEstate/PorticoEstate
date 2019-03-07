@@ -6,7 +6,7 @@
 		<title>{title}</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-		<script type="text/javascript">
+		<script>
 			var userSelectBox = opener.document.forms["app_form"].elements['{select_name};
 
 			function ExchangeAccountSelect(thisform)

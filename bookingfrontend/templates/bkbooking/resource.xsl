@@ -81,7 +81,7 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var resource_id = <xsl:value-of select="resource/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'category', 'Activity')"/>;
 		var address = '<xsl:value-of select="resource/building/street"/>, <xsl:value-of select="resource/building/zip_code"/>, <xsl:value-of select="resource/building/city"/>';

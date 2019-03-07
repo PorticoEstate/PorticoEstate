@@ -140,7 +140,7 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var organization_id = <xsl:value-of select="organization/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 	

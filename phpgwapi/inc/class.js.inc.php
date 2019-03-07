@@ -170,8 +170,12 @@
 									else
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
-										$links .= "<script type=\"{$type}\" "
-										. "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
+										$links .= "<script ";
+										if($type != 'text/javascript')
+										{
+											$links .= "type=\"{$type}\" ";
+										}
+										$links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
 									}
 								}
@@ -193,7 +197,7 @@
 					else
 					{
 						$links .= <<<HTML
-						<script type="text/javascript" src="{$this->webserver_url}/{$file}{$cache_refresh_token}" >
+						<script src="{$this->webserver_url}/{$file}{$cache_refresh_token}" >
 						</script>
 HTML;
 					}
@@ -204,7 +208,7 @@ HTML;
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$jsfiles = implode(',', $jsfiles);
-				$links .= '<script type="text/javascript" '
+				$links .= '<script '
 					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
 					. "</script>\n";
 				unset($jsfiles);
@@ -318,7 +322,7 @@ HTML;
 		{
 			$key = $end_of_page ? 'java_script_end' : 'java_script';
 			$GLOBALS['phpgw_info']['flags'][$key] .= "\n"
-				. '<script type="text/javascript">' ."\n"
+				. '<script>' ."\n"
 				. '//<[CDATA[' ."\n"
 				. $code ."\n"
 				. '//]]' ."\n"

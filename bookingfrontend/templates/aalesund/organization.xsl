@@ -176,7 +176,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		JqueryPortico.booking = {};
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var script = document.createElement("script");

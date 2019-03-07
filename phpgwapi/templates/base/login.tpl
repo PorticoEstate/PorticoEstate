@@ -28,7 +28,7 @@
 
 		{onload}
 
-		<script type="text/javascript">
+		<script>
 			function do_login()
 			{
 				if (typeof (Storage) !== "undefined")

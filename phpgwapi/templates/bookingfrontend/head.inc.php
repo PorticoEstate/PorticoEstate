@@ -212,6 +212,7 @@ JS;
 		'site_url'				 => $GLOBALS['phpgw']->link("/{$app}/", array()),
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
+		'userlang'				 => $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'metainfo_author'		 => $author,
 		'metainfo_keywords'		 => $keywords,
 		'metainfo_description'	 => $description,

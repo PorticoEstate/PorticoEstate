@@ -260,7 +260,7 @@
 		<!--<pre data-bind="text: ko.toJSON(am, null, 2)"></pre>-->
 		<div class="push"></div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialAcceptAllTerms = false;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;
