@@ -126,7 +126,7 @@ function PopulateCalendarEvents(baseURL, urlParams) {
 	    getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
         
         $.getJSON(getJsonURL, function(result){
-            if(result.ResultSet.totalResultsAvailable > 1) {
+            if(result.ResultSet.totalResultsAvailable > 0) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     var visible = true;
 
