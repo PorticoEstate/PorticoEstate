@@ -17,7 +17,7 @@
 
 		{css}
 
-		<script type="text/javascript">
+		<script>
 		<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}
@@ -25,7 +25,7 @@
 		</script>
 		{javascript}
 		<!-- BEGIN javascript -->
-       		<script type="text/javascript" src="{javascript_uri}"></script>
+		<script src="{javascript_uri}"></script>
     	<!-- END javascript -->
 
 	</head>

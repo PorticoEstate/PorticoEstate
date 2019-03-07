@@ -14,7 +14,7 @@
 		<!-- BEGIN theme_stylesheet -->
 		<link href="{theme_style}" type="text/css" rel="StyleSheet">
 		<!-- END theme_stylesheet -->
-		<script type="text/javascript">
+		<script>
 			<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}

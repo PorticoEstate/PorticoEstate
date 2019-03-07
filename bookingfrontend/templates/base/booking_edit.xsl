@@ -269,7 +269,7 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;
 		var initialAudience = <xsl:value-of select="booking/audience_json"/>;
 		var initialSelectionAgegroup = <xsl:value-of select="booking/agegroups_json" />;

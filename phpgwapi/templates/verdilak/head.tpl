@@ -15,14 +15,14 @@
 		<link href="{theme_style}" type="text/css" rel="StyleSheet">
 		<!-- END theme_stylesheet -->
 		{css}
-		<script type="text/javascript">
+		<script>
 			<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}
 			-->
 		</script>
 		{javascript}
-		<script type="text/javascript">
+		<script>
 			var page;
 
 			function openwindow(url)

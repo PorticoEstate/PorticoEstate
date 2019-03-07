@@ -21,7 +21,7 @@
     
 		<link href="{theme_css}" type="text/css" rel="StyleSheet" />
 		<title>{website_title}</title>
-		<script type="text/javascript">
+		<script>
 		//<![CDATA[
 
 			var strBaseURL = '{str_base_url}';

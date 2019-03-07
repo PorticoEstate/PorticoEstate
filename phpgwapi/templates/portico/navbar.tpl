@@ -2,7 +2,7 @@
 	<div id="debug-navbar">
 		{debug}
 	</div>
-	<script type="text/javascript">
+	<script>
 		function logout()
 		{
 			if (typeof (Storage) !== "undefined")

@@ -14,7 +14,7 @@
 			</div>
 			{javascript_end}
 
-<script type="text/javascript">
+<script>
 
 (function (window, document)
 {

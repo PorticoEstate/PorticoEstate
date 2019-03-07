@@ -6,7 +6,7 @@
 			{site_title}
 		</div>
 		{javascript_end}
-		<script type="text/javascript">
+		<script>
 			(function (window, document)
 			{
 				document.getElementById('toggle').addEventListener('click', function (e)

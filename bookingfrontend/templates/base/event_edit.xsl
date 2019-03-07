@@ -377,7 +377,7 @@
 		</div>
 	</div>
 	<div class="push"></div>
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="event/resources_json" />;
 		var initialSelectionAudience = <xsl:value-of select="event/audiences_json" />;
 		var initialSelectionAgegroup = <xsl:value-of select="event/agegroups_json" />;

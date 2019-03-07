@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="{userlang}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+        <!--meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1"-->
 		{metainfo_author}
 		{metainfo_description}
 		{metainfo_keywords}
@@ -14,7 +14,7 @@
         <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
 		{css}
-		<script type="text/javascript">
+		<script>
 			<!--
 				var strBaseURL = '{str_base_url}';
 				var dateformat_backend = '{dateformat_backend}';
@@ -22,7 +22,7 @@
 		</script>
 		{javascript}
 		<!-- BEGIN javascript -->
-		<script type="text/javascript" src="{javascript_uri}"></script>
+		<script src="{javascript_uri}"></script>
 		<!-- END javascript -->
 	</head>
     <body>

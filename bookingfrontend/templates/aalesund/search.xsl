@@ -15,7 +15,7 @@
 				<div   id="ssd" >
 				</div>
 				<div class="input-group input-group-lg mainpageserchcontainer">
-					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
 							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
 						</xsl:attribute>
@@ -36,7 +36,7 @@
 						<div class="dropdown d-inline-block mr-2">
 							<button class="btn btn-secondary dropdown-toggle d-inline" data-bind="text: filterboxCaption" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							</button>
-							<div class="dropdown-menu" data-bind="foreach: filterbox" aria-labelledby="dropdownMenuButton">
+							<div class="dropdown-menu" data-bind="foreach: filterbox" aria-label="Large">
 								<a class="dropdown-item" data-bind="html: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
 							</div>
 						</div>
@@ -47,7 +47,7 @@
 						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
 						</button>
-						<div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
+						<div class="dropdown-menu" data-bind="foreach: activities" aria-label="Large">
 							<a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
 						</div>
 					</div>
@@ -55,7 +55,7 @@
 						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<xsl:value-of select="php:function('lang', 'Facilities')"/>
 						</button>
-						<div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
+						<div class="dropdown-menu" data-bind="foreach: facilities" aria-label="Large">
 							<div class="dropdown-item d-block">
 								<a class="text-dark" data-bind="html: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
 								<span data-bind="if: selected">&#160; &#10004;</span>
@@ -66,7 +66,7 @@
 						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<xsl:value-of select="php:function('lang', 'Part of town (2018)')"/>
 						</button>
-						<div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
+						<div class="dropdown-menu" data-bind="foreach: towns" aria-label="Large">
 							<div class="dropdown-item d-block">
 								<a class="text-dark" data-bind="html: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
 								<span data-bind="if: selected">&#160; &#10004;</span>
@@ -215,7 +215,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
 		document.head.appendChild(script);

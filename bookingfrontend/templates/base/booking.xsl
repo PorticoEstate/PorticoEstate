@@ -65,7 +65,7 @@
 			</xsl:if>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var resourcesIds = '<xsl:value-of select="booking/resource_ids" />';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')" />;
         <![CDATA[

@@ -313,7 +313,7 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
 		if (!resourceIds || resourceIds == "")
 		{

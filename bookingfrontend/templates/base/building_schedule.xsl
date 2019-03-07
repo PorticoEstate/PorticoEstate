@@ -54,7 +54,7 @@
 		<div id="schedule_container"/>
 	</div>
 	<div id="dialog_schedule"></div>
-	<script type="text/javascript">
+	<script>
 		var link = document.createElement( "link" );
 		link.href =  strBaseURL.split('?')[0] + "bookingfrontend/css/bookingfrontend.css";
 		link.type = "text/css";

@@ -27,7 +27,7 @@ JS;
 		}
 		catch(err)
 		{
-			alert(err);
+//			alert(err);
 		}
 JS;
 
@@ -266,6 +266,8 @@ JS;
 	$test	 = str_replace('window.onload = function()', '$(document).ready(function()', $test);
 	$test	 = str_replace("\n}\n", "\n})\n", $test);
 
+	$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+
 	$tpl_vars = array
 		(
 		'css'					 => $GLOBALS['phpgw']->common->get_css(),
@@ -278,6 +280,7 @@ JS;
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
+		'userlang'				 => $userlang,
 		'metainfo_keywords'		 => $keywords,
 		'metainfo_description'	 => $description,
 		'metainfo_robots'		 => $robots,

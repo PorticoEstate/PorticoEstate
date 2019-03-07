@@ -69,7 +69,7 @@
 		</form>
 
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
 	</script>
 </xsl:template>

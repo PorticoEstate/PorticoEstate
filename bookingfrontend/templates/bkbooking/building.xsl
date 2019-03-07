@@ -136,7 +136,7 @@
 					</dl>
 				</div>
 			</div>
-			<script type="text/javascript">
+			<script>
 				var building_id = <xsl:value-of select="id"/>;
 				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
 				var address = '<xsl:value-of select="street"/>, <xsl:value-of select="zip_code"/>, <xsl:value-of select="city"/>';

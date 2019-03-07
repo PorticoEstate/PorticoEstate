@@ -207,7 +207,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialAudience = <xsl:value-of select="booking/audience_json"/>;
 	</script>
 </xsl:template>

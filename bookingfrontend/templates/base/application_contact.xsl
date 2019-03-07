@@ -118,7 +118,7 @@
 		<!--<div class="mt-5"><pre data-bind="text: ko.toJSON(am, null, 2)"></pre></div> -->
 		<div class="push"></div>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var script = document.createElement("script");

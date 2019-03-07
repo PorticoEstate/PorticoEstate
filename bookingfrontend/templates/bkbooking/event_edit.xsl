@@ -399,7 +399,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="event/resources_json" />;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
 	</script>

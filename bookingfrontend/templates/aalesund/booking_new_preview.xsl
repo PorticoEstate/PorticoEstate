@@ -94,7 +94,7 @@
 	</div>
 	<div class="push"></div>
 
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;
 	</script>
 </xsl:template>

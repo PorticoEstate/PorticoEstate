@@ -599,7 +599,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = false;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;

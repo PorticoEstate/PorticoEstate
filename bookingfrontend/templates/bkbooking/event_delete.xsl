@@ -129,7 +129,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="booking/resources_json" />
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')" />;
 	</script>
