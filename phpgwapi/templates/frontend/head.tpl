@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- BEGIN head -->
-<html>
+<html lang="{userlang}">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

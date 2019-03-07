@@ -55,6 +55,7 @@
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'java_script'	=> $GLOBALS['phpgw']->common->get_java_script(),
+		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events()
 	);
 	$GLOBALS['phpgw']->template->set_var($var);

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- BEGIN head -->
-<html>
+<html lang="{userlang}">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
@@ -49,7 +49,7 @@
 				<div id="centerimage"></div>
 				<form action="{site_url}" method="get" id="header-search" class="{header_search_class}">
 					<input class="query" type="text" name="searchterm"/>
-					<xsl:text> </xsl:text><input type="submit" value="tralala{lbl_search}"/>
+					<input type="submit" value="{lbl_search}"/>
 				</form>
 			</div>
 			<div class="yui-skin-sam" id='frontend'>

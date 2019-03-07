@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="container new-application-page pt-5" id="new-application-page">
-		<form action="" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
+		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
@@ -82,7 +82,7 @@
 												<i class="far fa-calendar-alt"></i>
 											</span>
 										</div>
-										<input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate">
+										<input type="text" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'Date')"/>
 											</xsl:attribute>
@@ -97,7 +97,7 @@
 												<i class="far fa-clock"></i>
 											</span>
 										</div>
-										<input type="text" for="timestart" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime">
+										<input type="text" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'from')"/>
 											</xsl:attribute>
@@ -112,7 +112,7 @@
 												<i class="far fa-clock"></i>
 											</span>
 										</div>
-										<input type="text" for="timeend" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime">
+										<input type="text" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'to')"/>
 											</xsl:attribute>
@@ -139,9 +139,9 @@
 								<input name="from_[]" hidden="hidden" data-bind="value: from_"/>
 								<input name="to_[]" hidden="hidden" data-bind="value: to_"/>
 								<span data-bind='text: formatedPeriode'></span>
-								<butoon class="ml-2" data-bind="click: $parent.removeDate">
+								<button class="ml-2" data-bind="click: $parent.removeDate">
 									<i class="fas fa-minus-circle"></i>
-								</butoon>
+								</button>
 							</div>
 
 						</div>
@@ -165,7 +165,7 @@
 							<button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<xsl:value-of select="php:function('lang', 'choose')" />
 							</button>
-							<div class="dropdown-menu" data-bind="foreach: audiences" aria-labelledby="dropdownMenuButton">
+							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
 								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
 							</div>
 							<input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
