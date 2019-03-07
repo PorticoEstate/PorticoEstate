@@ -37,9 +37,9 @@
 				if ($t != '23:59')
 				{
 					$data[] = array(
-						'time' => $t . '-00:00',
+						'time' => $t . '-24:00',
 						'_from' => $t,
-						'_to' => '00:00'
+						'_to' => '24:00'
 					);
 				}
 				break;
@@ -89,7 +89,7 @@
 					$row = array('resource' => $res['name'], 'resource_id' => $res['id']);
 					if ($first_row)
 					{
-						$tmp_t = $next_t == '23:59' ? '00:00' : $next_t;
+						$tmp_t = $next_t == '23:59' ? '24:00' : $next_t;
 						$row['time'] = $t . '-' . $tmp_t;
 					}
 
