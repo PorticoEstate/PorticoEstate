@@ -29,7 +29,7 @@ JS;
 		}
 		catch(err)
 		{
-			alert(err);
+//			alert(err);
 		}
 JS;
 
