@@ -468,6 +468,21 @@
 				unset($allocation['costs']);
 				unset($allocation['comments']);
 				unset($allocation['secret']);
+				unset($allocation['customer_ssn']);
+				unset($allocation['organizer']);
+				unset($allocation['contact_name']);
+				unset($allocation['contact_email']);
+				unset($allocation['contact_phone']);
+				unset($allocation['cost']);
+				unset($allocation['sms_total']);
+				unset($allocation['customer_organization_name']);
+				unset($allocation['customer_organization_id']);
+				unset($allocation['customer_identifier_type']);
+				unset($allocation['customer_organization_number']);
+				unset($allocation['customer_internal']);
+				unset($allocation['include_in_list']);
+				unset($allocation['agegroups']);
+				unset($allocation['audience']);
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
@@ -478,11 +493,24 @@
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
-				unset($booking['audience']);
-				unset($booking['agegroups']);
 				unset($booking['costs']);
 				unset($booking['comments']);
 				unset($booking['secret']);
+				unset($booking['customer_ssn']);
+				unset($booking['organizer']);
+				unset($booking['contact_name']);
+				unset($booking['contact_email']);
+				unset($booking['contact_phone']);
+				unset($booking['cost']);
+				unset($booking['sms_total']);
+				unset($booking['customer_organization_name']);
+				unset($booking['customer_organization_id']);
+				unset($booking['customer_identifier_type']);
+				unset($booking['customer_organization_number']);
+				unset($booking['customer_internal']);
+				unset($booking['include_in_list']);
+				unset($booking['agegroups']);
+				unset($booking['audience']);
 			}
 
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -495,12 +523,24 @@
 
 				$event['name'] = $event['description'];
 				$event['type'] = 'event';
-				unset($event['comments']);
-				unset($event['audience']);
-				unset($event['agegroups']);
-				unset($event['dates']);
 				unset($event['costs']);
+				unset($event['comments']);
 				unset($event['secret']);
+				unset($event['customer_ssn']);
+				unset($event['organizer']);
+				unset($event['contact_name']);
+				unset($event['contact_email']);
+				unset($event['contact_phone']);
+				unset($event['cost']);
+				unset($event['sms_total']);
+				unset($event['customer_organization_name']);
+				unset($event['customer_organization_id']);
+				unset($event['customer_identifier_type']);
+				unset($event['customer_organization_number']);
+				unset($event['customer_internal']);
+				unset($event['include_in_list']);
+				unset($event['agegroups']);
+				unset($event['audience']);
 			}
 
 			$bookings = array_merge($allocations, $bookings);
@@ -797,6 +837,21 @@
 				unset($allocation['costs']);
 				unset($allocation['comments']);
 				unset($allocation['secret']);
+				unset($allocation['customer_ssn']);
+				unset($allocation['organizer']);
+				unset($allocation['contact_name']);
+				unset($allocation['contact_email']);
+				unset($allocation['contact_phone']);
+				unset($allocation['cost']);
+				unset($allocation['sms_total']);
+				unset($allocation['customer_organization_name']);
+				unset($allocation['customer_organization_id']);
+				unset($allocation['customer_identifier_type']);
+				unset($allocation['customer_organization_number']);
+				unset($allocation['customer_internal']);
+				unset($allocation['include_in_list']);
+				unset($allocation['agegroups']);
+				unset($allocation['audience']);
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
@@ -807,11 +862,24 @@
 				$booking['name'] = $booking['group_name'];
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
-				unset($booking['audience']);
-				unset($booking['agegroups']);
 				unset($booking['costs']);
 				unset($booking['comments']);
 				unset($booking['secret']);
+				unset($booking['customer_ssn']);
+				unset($booking['organizer']);
+				unset($booking['contact_name']);
+				unset($booking['contact_email']);
+				unset($booking['contact_phone']);
+				unset($booking['cost']);
+				unset($booking['sms_total']);
+				unset($booking['customer_organization_name']);
+				unset($booking['customer_organization_id']);
+				unset($booking['customer_identifier_type']);
+				unset($booking['customer_organization_number']);
+				unset($booking['customer_internal']);
+				unset($booking['include_in_list']);
+				unset($booking['agegroups']);
+				unset($booking['audience']);
 			}
 
 			$allocations = $this->split_allocations($allocations, $bookings);
@@ -825,11 +893,24 @@
 
 				$event['name'] = $event['description'];
 				$event['type'] = 'event';
-				unset($event['comments']);
-				unset($event['audience']);
-				unset($event['agegroups']);
 				unset($event['costs']);
+				unset($event['comments']);
 				unset($event['secret']);
+				unset($event['customer_ssn']);
+				unset($event['organizer']);
+				unset($event['contact_name']);
+				unset($event['contact_email']);
+				unset($event['contact_phone']);
+				unset($event['cost']);
+				unset($event['sms_total']);
+				unset($event['customer_organization_name']);
+				unset($event['customer_organization_id']);
+				unset($event['customer_identifier_type']);
+				unset($event['customer_organization_number']);
+				unset($event['customer_internal']);
+				unset($event['include_in_list']);
+				unset($event['agegroups']);
+				unset($event['audience']);
 			}
 
 			$bookings = array_merge($allocations, $bookings);
