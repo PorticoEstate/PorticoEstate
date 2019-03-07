@@ -115,6 +115,7 @@ HTML;
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $webserver_url,
+		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'menu_stylesheet_widescreen'=> $menu_stylesheet_widescreen,
 		'template_selector'			=> $template_selector

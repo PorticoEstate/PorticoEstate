@@ -71,6 +71,7 @@
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'site_url'		=> $GLOBALS['phpgw']->link('/home.php', array()),
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
+		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'webserver_url'	=> $webserver_url,
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'current_app_header' => isset($GLOBALS['phpgw_info']['flags']['app_header']) && $GLOBALS['phpgw_info']['flags']['app_header'] ? $GLOBALS['phpgw_info']['flags']['app_header'] : '',

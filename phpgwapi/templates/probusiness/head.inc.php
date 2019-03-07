@@ -54,6 +54,7 @@
 		'css'           => $GLOBALS['phpgw']->common->get_css(),
 		'java_script'   => $GLOBALS['phpgw']->common->get_java_script(),
 		'api_root'      => $GLOBALS['phpgw_info']['server']['webserver_url'] . '/phpgwapi/templates/probusiness/',
+		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'phpgw_root'	=> $GLOBALS['phpgw_info']['server']['webserver_url'] . '/',
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/'),
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events()

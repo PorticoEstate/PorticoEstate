@@ -16,7 +16,7 @@
 					<div class="col-lg-6">
 						<div class="row">
 							<div class="col-xl-4 col-lg-5 mb-4 col-item-img">
-								<img class="img-fluid image-circle" id="item-main-picture" src=""/>
+								<img class="img-fluid image-circle" id="item-main-picture" src="#" alt="Bygning" />
 							</div>
 							<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
 								<h2 id="building_name">
