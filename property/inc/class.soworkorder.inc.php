@@ -2040,7 +2040,7 @@
 			$sum_year_combined_cost = array();
 
 			$sql = "SELECT continuous, fm_workorder.start_date , fm_workorder_budget.budget, fm_workorder_budget.combined_cost,"
-				. " project_type_id, year, month, active, closed, fictive_periodization"
+				. " project_type_id, year, month, active, closed, canceled, fictive_periodization"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -2064,6 +2064,15 @@
 				$budget = (int)$this->db->f('budget');
 				$combined_cost = (int)$this->db->f('combined_cost');
 				$closed_order = (int)$this->db->f('closed');
+				$active = (int)$this->db->f('active');
+				$canceled_order = (int)$this->db->f('canceled');
+				if($canceled_order)
+				{
+					$active = 0;
+					$budget = 0;
+					$combined_cost = 0;
+				}
+
 				$_order_budget[$period] = array
 					(
 					'order_id' => $order_id,
@@ -2074,10 +2083,10 @@
 					'month' => $month,
 					'actual_cost' => 0, //for now..
 					'closed_order' => $closed_order,
-					'active_period' => (int)$this->db->f('active'),
+					'active_period' => $active
 				);
 
-				$active_period[$period] = (int)$this->db->f('active');
+				$active_period[$period] = $active;
 
 				/**
 				 * If the order is periodized - do not calculate fictitious periods
