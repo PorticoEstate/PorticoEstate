@@ -451,10 +451,10 @@
 					}
 					else
 					{
-						echo $error;
-						$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-						trigger_error("$error: {$ip_address}", E_USER_ERROR);
-						$GLOBALS['phpgw']->common->phpgw_exit();
+//						echo $error;
+//						$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+//						trigger_error("$error: {$ip_address}", E_USER_ERROR);
+//						$GLOBALS['phpgw']->common->phpgw_exit();
 					}
 				}
 

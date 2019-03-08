@@ -393,7 +393,7 @@
 			$soexternal = createObject('property.soexternal_communication');
 
 			$message_arr = explode('========', $body);
-			$message = $message_arr[0];
+			$message =  phpgw::clean_value($message_arr[0]);
 			if($soexternal->add_msg($msg_id, $message, $sender))
 			{
 				$sql = "SELECT assignedto"
@@ -457,7 +457,7 @@
 				}
 			}
 
-			$message_details = implode(PHP_EOL, $message_details_arr);
+			$message_details =  phpgw::clean_value(implode(PHP_EOL, $message_details_arr));
 
 			switch ($tatus_text)
 			{
@@ -678,7 +678,7 @@
 					$message_details_arr[] = trim($line);
 				}
 			}
-			$message_details = implode(PHP_EOL, $message_details_arr);
+			$message_details = phpgw::clean_value(implode(PHP_EOL, $message_details_arr));
 
 			if($ticket_id)
 			{
@@ -693,7 +693,7 @@
 					'location_code' => $location_code,
 					'cat_id' => $message_cat_id,
 					'priority' => $priority, //valgfri (1-3)
-					'title' => $message_title,
+					'title' =>  phpgw::clean_value($message_title),
 					'details' => $message_details,
 					'external_ticket_id'	=> $external_ticket_id
 				);
