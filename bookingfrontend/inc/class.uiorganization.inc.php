@@ -150,4 +150,13 @@
 
 			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
+		public function index()
+		{
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			phpgw::no_access();
+		}
 	}

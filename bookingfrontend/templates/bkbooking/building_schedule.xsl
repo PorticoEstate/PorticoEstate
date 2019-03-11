@@ -61,27 +61,30 @@
 	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'free')"/>;
 		schedule.createDialogSchedule(300);
-		$(window).on('load', function() {
-		schedule.setupWeekPicker('cal_container');
-		schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
-		schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
-		schedule.includeResource = true;
-		schedule.colFormatter = 'frontendScheduleDateColumn';
-		var handleHistoryNavigation = function (state) {
-		schedule.date = parseISO8601(state);
-		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-		};
+		$(window).on('load', function()
+		{
+			schedule.setupWeekPicker('cal_container');
+			schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
+			schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';
+			schedule.includeResource = true;
+			schedule.colFormatter = 'frontendScheduleDateColumn';
+			var handleHistoryNavigation = function (state)
+			{
+				schedule.date = parseISO8601(state);
+				schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+			};
 
-		var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
+			var initialRequest = getUrlData("date") || '<xsl:value-of select="building/date"/>';
 
-		var state = getUrlData("date") || initialRequest;
-		schedule.state = state;
-		if (state){
-		handleHistoryNavigation(state);
-		schedule.week = $.datepicker.iso8601Week(schedule.date);
-		$('#cal_container #numberWeek').text(schedule.week);
-		$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
-		}
+			var state = getUrlData("date") || initialRequest;
+			schedule.state = state;
+			if (state)
+			{
+				handleHistoryNavigation(state);
+				schedule.week = $.datepicker.iso8601Week(schedule.date);
+				$('#cal_container #numberWeek').text(schedule.week);
+				$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
+			}
 		});
 		<xsl:if test="backend = 'true'">
 			$('header').hide();

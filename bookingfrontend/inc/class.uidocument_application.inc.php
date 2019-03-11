@@ -17,4 +17,14 @@
 			parent::__construct();
 			$this->module = "bookingfrontend";
 		}
+
+		public function index()
+		{
+//			if (phpgw::get_var('phpgw_return_as') == 'json')
+//			{
+//				return $this->query();
+//			}
+
+			phpgw::no_access();
+		}
 	}

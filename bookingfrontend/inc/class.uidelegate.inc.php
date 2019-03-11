@@ -45,4 +45,13 @@
 			self::render_template_xsl('delegate', array('delegate' => $delegate, 'loggedin' => $loggedin,
 				'edit_self_link' => $edit_self_link));
 		}
+		public function index()
+		{
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			phpgw::no_access();
+		}
 	}
