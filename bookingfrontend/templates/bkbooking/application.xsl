@@ -539,20 +539,22 @@
 
 	<script>
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
-		if (!resourceIds || resourceIds == "") {
-		resourceIds = false;
+		if (!resourceIds || resourceIds == "")
+		{
+			resourceIds = false;
 		}
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resources Type', 'ID', 'Type', 'From', 'To', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
+		var secret = '<xsl:value-of select="application/secret" />';
 
         <![CDATA[
             var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
             var applicationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiapplication.associated', filter_application_id:app_id}, true);
-            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
+            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
-			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id}, true);
+			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, filter_secret: secret}, true);
         ]]>
 
 		if (resourceIds) {

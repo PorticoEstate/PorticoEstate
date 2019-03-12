@@ -315,6 +315,7 @@
 	</div>
 	<script>
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
+		var secret = '<xsl:value-of select="application/secret" />';
 		if (!resourceIds || resourceIds == "")
 		{
 			resourceIds = false;
@@ -325,9 +326,9 @@
 		var resources = <xsl:value-of select="application/resources" />;
         <![CDATA[
             var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
-            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
+            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
-			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id}, true);
+			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, filter_secret: secret}, true);
         ]]>
 		if (resourceIds)
 		{
