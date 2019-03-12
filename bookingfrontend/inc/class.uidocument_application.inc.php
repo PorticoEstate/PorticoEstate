@@ -27,4 +27,8 @@
 
 			phpgw::no_access();
 		}
+		public function download()
+		{
+			phpgw::no_access();
+		}
 	}
