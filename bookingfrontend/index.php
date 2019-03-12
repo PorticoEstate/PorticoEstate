@@ -193,6 +193,21 @@ HTML;
 		$method = 'index';
 	}
 
+	if($app != 'bookingfrontend')
+	{
+			$GLOBALS['phpgw']->common->phpgw_header(true);
+			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
+				'p1' => $app));
+
+			$lang_denied = lang('Access not permitted');
+			echo <<<HTML
+					<div class="error">$lang_denied</div>
+
+HTML;
+			$GLOBALS['phpgw']->common->phpgw_exit(True);
+
+	}
+
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
 	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
