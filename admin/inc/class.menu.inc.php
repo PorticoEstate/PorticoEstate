@@ -54,8 +54,23 @@
 				)
 			);
 
+			$local_admin = false;
+			$is_admin = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+			if(!$is_admin)
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$local_admin = true;
+						break;
+					}
+				}
+			}
+
 			$menus['admin'] = array();
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ($is_admin)
 			{
 				$menus['admin']['index'] = array
 				(
@@ -104,7 +119,7 @@
 
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['global_message'] = array
 				(
@@ -114,7 +129,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['home_screen_message'] = array
 				(
@@ -124,7 +139,7 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('account_access', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin || $local_admin)
 			{
 				$menus['admin']['users'] = array
 				(
@@ -134,7 +149,7 @@
 				);
 			}
 
-			if (! $GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin || $local_admin)
 			{
 				$menus['admin']['groups'] = array
 				(
@@ -145,7 +160,7 @@
 			}
 
 /*
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['clear_user_cache'] = array
 				(
@@ -154,7 +169,7 @@
 				);
 			}
 */
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['clear_cache'] = array
 				(
@@ -163,7 +178,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['sync_account'] = array
 				(
@@ -172,7 +187,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['apps'] = array
 				(
@@ -182,7 +197,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['categories'] = array
 				(
@@ -192,7 +207,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['addressmasters'] = array
 				(
@@ -205,7 +220,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['mainscreen'] = array
 				(
@@ -215,7 +230,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['sessions'] = array
 				(
@@ -225,7 +240,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['access_log'] = array
 				(
@@ -235,7 +250,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['error_log'] = array
 				(
@@ -245,7 +260,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['log_levels'] = array
 				(
@@ -255,7 +270,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$text = $GLOBALS['phpgw']->translation->translate('Find and Register all Application Hooks',
 						array(), true);
@@ -268,7 +283,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			if ( $is_admin)
 			{
 				$menus['admin']['async'] = array
 				(
@@ -278,7 +293,7 @@
 				);
 			}
 
-			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin')
+			if ( $is_admin
 					&& function_exists('phpinfo') ) // it is possible to disable commands in php.ini
 			{
 				$menus['admin']['phpinfo'] = array
@@ -291,6 +306,12 @@
 				);
 			}
 
+
+			if(!$is_admin && !$local_admin)
+			{
+				unset($menus['navbar']['admin']);
+				unset($menus['admin']);
+			}
 
 			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
 			{

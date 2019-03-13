@@ -56,6 +56,20 @@
 					)
 				);
 			}
+			else if($this->get_owner_type() == 'application' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$fields['secret'] = array(
+					'type' => 'string',
+					'query' => true,
+					'join' => array(
+						'table' => sprintf('bb_%s', $this->get_owner_type()),
+						'fkey' => 'owner_id',
+						'key' => 'id',
+						'column' => 'secret'
+					)
+				);
+			}
+
 			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), $fields);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 

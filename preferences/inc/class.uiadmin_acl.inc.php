@@ -40,7 +40,7 @@
 		/**
 		* @constructor
 		*/
-		function uiadmin_acl()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'preferences';
@@ -62,6 +62,21 @@
 			$this->allrows			= $this->bo->allrows;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->acl_app}::acl";
+
+			$is_admin = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+			$local_admin = false;
+			if(!$is_admin)
+			{
+				if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $this->acl_app))
+				{
+					$local_admin = true;
+				}
+			}
+
+			if(!$is_admin && !$local_admin)
+			{
+				phpgw::no_access();
+			}
 		}
 
 		function save_sessiondata()
