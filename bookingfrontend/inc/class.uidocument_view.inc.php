@@ -6,7 +6,8 @@
 
 		public $public_functions = array
 		(
-			'regulations' => true
+			'regulations' => true,
+			'download' => true
 		);
 
 		protected $module;
