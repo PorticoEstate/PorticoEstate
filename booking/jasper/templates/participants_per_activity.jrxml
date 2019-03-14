@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-25T13:52:13 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BKParticipants" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" isFloatColumnFooter="true" uuid="1873d2c1-c32a-44a8-872b-cceed58b6b0f">
 	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
 	<property name="net.sf.jasperreports.export.pdf.tag.language" value="EN-US"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Sans_Normal" isDefault="true" fontName="Serif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Bold" fontName="Serif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<subDataset name="ByBuilding_preview" uuid="c4e37eff-60df-478a-8cd1-abea5e1bd145">
@@ -14,20 +15,26 @@
 		<parameter name="BUILDING_ID" class="java.lang.Integer"/>
 		<parameter name="RESOURCES" class="java.lang.String"/>
 		<parameter name="WEEKDAYS" class="java.lang.String"/>
+		<parameter name="FROM_HOUR" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="TO_HOUR" class="java.lang.String"/>
 		<queryString>
 			<![CDATA[SELECT ag.name AS aname, ba.male, ba.female, bu.id, bu.name, ag.sort as agegroup_sort, ac.name AS activity_name
 				FROM bb_agegroup ag, bb_booking_agegroup ba, bb_booking bo, bb_allocation al, bb_season se, bb_building bu, bb_booking_resource br, bb_resource re, bb_activity ac
-				WHERE ba.agegroup_id = ag.id 
+				WHERE ba.agegroup_id = ag.id
 				AND ba.booking_id = bo.id
 				AND br.booking_id = bo.id
 				AND br.resource_id = re.id
 				AND re.activity_id = ac.id
 				AND bo.allocation_id = al.id
-				AND al.season_id = se.id 
-				AND se.building_id = bu.id 
+				AND al.season_id = se.id
+				AND se.building_id = bu.id
 				AND ag.active = 1
 				AND date_trunc('day' ,bo.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
 				AND date_trunc('day' ,bo.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND date_part('hour' ,bo.from_) >= ANY (string_to_array($P{FROM_HOUR}, ',')::int4[])
+				AND date_part('hour' ,bo.to_) <= ANY (string_to_array($P{TO_HOUR}, ',')::int4[])
 				AND re.id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				UNION
@@ -41,6 +48,8 @@
 				INNER JOIN bb_building bu ON bu.id = ev.building_id
 				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
 				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND date_part('hour' ,ev.from_) >= ANY (string_to_array($P{FROM_HOUR}, ',')::int4[])
+				AND date_part('hour' ,ev.to_) <= ANY (string_to_array($P{TO_HOUR}, ',')::int4[])
 				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				AND er.resource_id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				ORDER BY activity_name ASC, agegroup_sort]]>
@@ -62,6 +71,10 @@
 	<parameter name="BK_WEEKDAYS" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1,2,3,4,5,6,7"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="BK_FROM_HOUR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BK_TO_HOUR" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT DISTINCT bu.id AS building_id, bu.name AS building_name
 			FROM bb_booking bo
@@ -89,7 +102,7 @@
 	<field name="building_id" class="java.lang.Integer"/>
 	<field name="building_name" class="java.lang.String"/>
 	<title>
-		<band height="80" splitType="Prevent">
+		<band height="130" splitType="Prevent">
 			<staticText>
 				<reportElement x="20" y="5" width="750" height="30" uuid="e7407441-b3ae-40cf-bc16-79560cc4a81e">
 					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
@@ -107,6 +120,15 @@
 					<font size="16"/>
 				</textElement>
 				<textFieldExpression><![CDATA["(" + $P{BK_DATE_FROM} + " - " + $P{BK_DATE_TO} + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="75" width="750" height="40" uuid="881725f5-661b-44b1-b5cf-94a936e270fe">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1" value="full"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(" +$P{BK_FROM_HOUR} + ":00 - " +$P{BK_TO_HOUR} + ":00)"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -143,6 +165,12 @@
 							</datasetParameter>
 							<datasetParameter name="WEEKDAYS">
 								<datasetParameterExpression><![CDATA[$P{BK_WEEKDAYS}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="FROM_HOUR">
+								<datasetParameterExpression><![CDATA[$P{BK_FROM_HOUR}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="TO_HOUR">
+								<datasetParameterExpression><![CDATA[$P{BK_TO_HOUR}]]></datasetParameterExpression>
 							</datasetParameter>
 						</datasetRun>
 					</dataset>

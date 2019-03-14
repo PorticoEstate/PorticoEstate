@@ -1,47 +1,72 @@
 <?php
-  /**************************************************************************\
-  * phpGroupWare - Admin config                                              *
-  * Written by Miles Lott <milosch@phpgroupware.org>                         *
-  * http://www.phpgroupware.org                                              *
-  * --------------------------------------------                             *
-  *  This program is free software; you can redistribute it and/or modify it *
-  *  under the terms of the GNU General Public License as published by the   *
-  *  Free Software Foundation; either version 2 of the License, or (at your  *
-  *  option) any later version.                                              *
-  \**************************************************************************/
+	/*	 * ************************************************************************\
+	 * phpGroupWare - Admin config                                              *
+	 * Written by Miles Lott <milosch@phpgroupware.org>                         *
+	 * http://www.phpgroupware.org                                              *
+	 * --------------------------------------------                             *
+	 *  This program is free software; you can redistribute it and/or modify it *
+	 *  under the terms of the GNU General Public License as published by the   *
+	 *  Free Software Foundation; either version 2 of the License, or (at your  *
+	 *  option) any later version.                                              *
+	  \************************************************************************* */
 
-  /* $Id$ */
+	/* $Id$ */
 
 	class admin_uiconfig
 	{
+
 		public $public_functions = array('index' => True);
+		private $appname;
+
+		public function __construct()
+		{
+
+			$appname = phpgw::get_var('appname', 'string');
+
+			$this->appname = $appname;
+
+			$is_admin	 = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+			$local_admin = false;
+			if (!$is_admin)
+			{
+				if ($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $this->appname))
+				{
+					$local_admin = true;
+				}
+			}
+
+			if (!$is_admin && !$local_admin)
+			{
+				phpgw::no_access();
+			}
+		}
 
 		function index()
 		{
-			$errors = '';
+			$errors	 = '';
 			$referer = phpgw::get_var('referer', 'url', 'GET');
 
-			if($referer)
+			if ($referer)
 			{
 				$_redir = $referer;
-				$GLOBALS['phpgw']->session->appsession('session_data','admin_config',$referer);
+				$GLOBALS['phpgw']->session->appsession('session_data', 'admin_config', $referer);
 			}
 			else
 			{
-				$referer = $GLOBALS['phpgw']->session->appsession('session_data','admin_config');
-				if($referer == -1)
+				$referer = $GLOBALS['phpgw']->session->appsession('session_data', 'admin_config');
+				if ($referer == -1)
 				{
 					$referer = '';
 				}
-				$_redir  = $referer ? $referer : $GLOBALS['phpgw']->link('/admin/index.php');
+				$_redir = $referer ? $referer : $GLOBALS['phpgw']->link('/admin/index.php');
 			}
-						
-			$appname = phpgw::get_var('appname', 'string', 'GET');
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$appname}::index";
+
+			$appname											 = $this->appname;
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = "admin::{$appname}::index";
 
 			$GLOBALS['phpgw_info']['apps']['manual']['app'] = $appname; // override the appname fetched from the referer for the manual.
 
-			switch($appname)
+			switch ($appname)
 			{
 				case 'admin':
 				//case 'preferences':
@@ -51,28 +76,28 @@
 				case 'email':
 				case 'nntp':
 					/*
-					Other special apps can go here for now, e.g.:
-					case 'bogusappname':
-					*/
-					$config_appname = 'phpgwapi';
+					  Other special apps can go here for now, e.g.:
+					  case 'bogusappname':
+					 */
+					$config_appname	 = 'phpgwapi';
 					break;
 				case 'phpgwapi':
 				case '':
 					/* This keeps the admin from getting into what is a setup-only config */
-					Header('Location: ' . str_replace('&amp;', '&', $_redir) );
+					Header('Location: ' . str_replace('&amp;', '&', $_redir));
 					break;
 				default:
-					$config_appname = $appname;
+					$config_appname	 = $appname;
 					break;
 			}
 
-			$t =& $GLOBALS['phpgw']->template;
+			$t = & $GLOBALS['phpgw']->template;
 			$t->set_root($GLOBALS['phpgw']->common->get_tpl_dir($appname));
 
 			$t->set_file(array('config' => 'config.tpl'));
-			$t->set_block('config','body','body');
+			$t->set_block('config', 'body', 'body');
 
-			$c = CreateObject('phpgwapi.config',$config_appname);
+			$c = CreateObject('phpgwapi.config', $config_appname);
 			$c->read();
 
 			if ($c->config_data)
@@ -80,31 +105,36 @@
 				$current_config = $c->config_data;
 			}
 
-			if ( isset($_POST['cancel']) && $_POST['cancel'] )
+			if (isset($_POST['cancel']) && $_POST['cancel'])
 			{
-				Header('Location: ' . str_replace('&amp;', '&', $_redir) );
+				Header('Location: ' . str_replace('&amp;', '&', $_redir));
 			}
 
 			$errors = '';
-			if ( isset($_POST['submit']) && $_POST['submit'] )
+			if (isset($_POST['submit']) && $_POST['submit'])
 			{
 				/* Load hook file with functions to validate each config (one/none/all) */
-				$GLOBALS['phpgw']->hooks->single('config_validate',$appname);
+				$GLOBALS['phpgw']->hooks->single('config_validate', $appname);
 
 				//while (list($key,$config) = each($_POST['newsettings']))
-                                if (is_array($_POST['newsettings']))
-                                {
-                                    foreach($_POST['newsettings'] as $key => $config)
+				if (is_array($_POST['newsettings']))
 				{
-					if ($config || $config === '0')
+					foreach ($_POST['newsettings'] as $key => $config)
 					{
-						if(isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists($key))
+						if ($config || $config === '0')
 						{
-							call_user_func($key,$config);
-							if($GLOBALS['config_error'])
+							if (isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists($key))
 							{
-								$errors .= lang($GLOBALS['config_error']) . '&nbsp;';
-								$GLOBALS['config_error'] = False;
+								call_user_func($key, $config);
+								if ($GLOBALS['config_error'])
+								{
+									$errors					 .= lang($GLOBALS['config_error']) . '&nbsp;';
+									$GLOBALS['config_error'] = False;
+								}
+								else
+								{
+									$c->config_data[$key] = $config;
+								}
 							}
 							else
 							{
@@ -113,25 +143,20 @@
 						}
 						else
 						{
-							$c->config_data[$key] = $config;
-						}
-					}
-					else
-					{
-						/* don't erase passwords, since we also don't print them */
-						if(! preg_match('/passwd/',$key) && ! preg_match('/password/',$key) && ! preg_match('/root_pw/',$key))
-						{
-							unset($c->config_data[$key]);
+							/* don't erase passwords, since we also don't print them */
+							if (!preg_match('/passwd/', $key) && !preg_match('/password/', $key) && !preg_match('/root_pw/', $key))
+							{
+								unset($c->config_data[$key]);
+							}
 						}
 					}
 				}
-                                }
-				if(isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists('final_validation'))
+				if (isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists('final_validation'))
 				{
 					final_validation($newsettings);
-					if($GLOBALS['config_error'])
+					if ($GLOBALS['config_error'])
 					{
-						$errors .= lang($GLOBALS['config_error']) . '&nbsp;';
+						$errors					 .= lang($GLOBALS['config_error']) . '&nbsp;';
 						$GLOBALS['config_error'] = False;
 					}
 					unset($GLOBALS['phpgw_info']['server']['found_validation_hook']);
@@ -139,21 +164,21 @@
 
 				$c->save_repository(True);
 
-				if(!$errors)
+				if (!$errors)
 				{
 //					$GLOBALS['phpgw_info']['flags']['nodisplay'] = true;
-					$GLOBALS['phpgw']->session->appsession('session_data','admin_config',-1);
-					Header('Location: ' . str_replace('&amp;', '&', $_redir) );
+					$GLOBALS['phpgw']->session->appsession('session_data', 'admin_config', -1);
+					Header('Location: ' . str_replace('&amp;', '&', $_redir));
 					exit;
 				}
 			}
 
-			if(isset($errors) && $errors)
+			if (isset($errors) && $errors)
 			{
 				$t->set_var(array
-				(
-					'error'			=> lang('Error: %1', $errors),
-					'error_class'	=> 'error'
+					(
+					'error'			 => lang('Error: %1', $errors),
+					'error_class'	 => 'error'
 				));
 				unset($errors);
 				unset($GLOBALS['config_error']);
@@ -161,64 +186,65 @@
 			else
 			{
 				$t->set_var(array
-				(
-					'error'			=> '',
-					'error_class'	=> ''
+					(
+					'error'			 => '',
+					'error_class'	 => ''
 				));
 			}
 
 
 			$t->set_var(array
-			(
-				'action_url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiconfig.index', 'appname'=> $appname) ),
-				'lang_cancel'	=> lang('cancel'),
-				'lang_submit'	=> lang('save'),
-				'title'			=> lang('Site Configuration'),
+				(
+				'action_url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+					'appname' => $appname)),
+				'lang_cancel'	 => lang('cancel'),
+				'lang_submit'	 => lang('save'),
+				'title'			 => lang('Site Configuration'),
 			));
 
-	//		$t->unknown_regexp = 'loose';
+			//		$t->unknown_regexp = 'loose';
 			$vars = $t->get_undefined('body');
-	//		$t->unknown_regexp = '';
+			//		$t->unknown_regexp = '';
 
-			$GLOBALS['phpgw']->hooks->single('config',$appname);
+			$GLOBALS['phpgw']->hooks->single('config', $appname);
 
-			if(is_array($vars))
+			if (is_array($vars))
 			{
-				foreach ( $vars as $value )
+				foreach ($vars as $value)
 				{
-					$valarray = explode('_', $value);
-					$type = $valarray[0];
-					$new = array();
-					$newval = '';
+					$valarray	 = explode('_', $value);
+					$type		 = $valarray[0];
+					$new		 = array();
+					$newval		 = '';
 
-					while($chunk = next($valarray))
+					while ($chunk = next($valarray))
 					{
 						$new[] = $chunk;
 					}
-					$newval = implode(' ',$new);
+					$newval = implode(' ', $new);
 
-					switch($type)
+					switch ($type)
 					{
 						case 'lang':
-							$t->set_var($value,$GLOBALS['phpgw']->translation->translate($newval, array(),false, $appname));
+							$t->set_var($value, $GLOBALS['phpgw']->translation->translate($newval, array(), false, $appname));
 							break;
 						case 'value':
-							$newval = preg_replace('/ /','_',$newval);
+							$newval = preg_replace('/ /', '_', $newval);
 							/* Don't show passwords in the form */
-							if ( !isset($current_config[$newval]) ||  preg_match('/passwd/',$value) ||  preg_match('/password/',$value) ||  preg_match('/root_pw/',$value))
+							if (!isset($current_config[$newval]) || preg_match('/passwd/', $value) || preg_match('/password/', $value) || preg_match('/root_pw/', $value))
 							{
-								$t->set_var($value,'');
+								$t->set_var($value, '');
 							}
 							else
 							{
-								$t->set_var($value,(isset($current_config[$newval])?$current_config[$newval]:''));
+								$t->set_var($value, (isset($current_config[$newval]) ? $current_config[$newval] : ''));
 							}
 							break;
 						case 'checked':
 							/* '+' is used as a delimiter for the check value */
-							list($newvalue,$check) = preg_split('/\+/',$newval);
-							$newval = preg_replace('/ /','_',$newvalue);
-							if($current_config[$newval] == $check)
+							list($newvalue, $check) = preg_split('/\+/', $newval);
+							$newval = preg_replace('/ /', '_', $newvalue);
+							if ($current_config[$newval] == $check)
 							{
 								$t->set_var($value, ' checked');
 							}
@@ -229,43 +255,42 @@
 							break;
 						case 'selected':
 							$configs = array();
-							$config  = '';
-							$newvals = explode(' ',$newval);
+							$config	 = '';
+							$newvals = explode(' ', $newval);
 							$setting = end($newvals);
-							for ($i=0;$i<(count($newvals) - 1); $i++)
+							for ($i = 0; $i < (count($newvals) - 1); $i++)
 							{
 								$configs[] = $newvals[$i];
 							}
-							$config = implode('_',$configs);
+							$config = implode('_', $configs);
 							/* echo $config . '=' . $current_config[$config]; */
-							if ( isset($current_config[$config]) 
-								&& $current_config[$config] == $setting)
+							if (isset($current_config[$config]) && $current_config[$config] == $setting)
 							{
-								$t->set_var($value,' selected');
+								$t->set_var($value, ' selected');
 							}
 							else
 							{
-								$t->set_var($value,'');
+								$t->set_var($value, '');
 							}
 							break;
 						case 'hook':
-							$newval = preg_replace('/ /','_',$newval);
-							if(function_exists($newval))
+							$newval = preg_replace('/ /', '_', $newval);
+							if (function_exists($newval))
 							{
-								$t->set_var($value,$newval($current_config));
+								$t->set_var($value, $newval($current_config));
 							}
 							else
 							{
-								$t->set_var($value,'');
+								$t->set_var($value, '');
 							}
 							break;
 						default:
-							$t->set_var($value,'');
+							$t->set_var($value, '');
 							break;
 					}
 				}
 			}
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$t->pfp('out','config');
+			$t->pfp('out', 'config');
 		}
 	}
