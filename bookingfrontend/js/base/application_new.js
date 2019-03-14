@@ -176,7 +176,7 @@ $(".navbar-search").removeClass("d-none");
           });
   
           var parameter = {
-              menuaction: "booking.uidocument_view.regulations",
+              menuaction: "bookingfrontend.uidocument_view.regulations",
               'owner[]':  "building::"+urlParams['building_id'],
               sort: "name"
           };

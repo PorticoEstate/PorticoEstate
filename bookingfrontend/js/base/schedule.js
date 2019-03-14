@@ -256,10 +256,15 @@ schedule.closeOverlay = function ()
 	$('#schedule_overlay').hide().remove();
 }
 
+/**
+ * Not used from bookingfrontend
+ * @param {type} args
+ * @returns {undefined}
+ */
 schedule.newAllocationForm = function (args)
 {
 
-	var oArgs = {menuaction: 'booking.uiseason.wtemplate_alloc'};
+	var oArgs = {menuaction: 'bookingfrontend.uiseason.wtemplate_alloc'};
 	if (typeof (args['id']) !== 'undefined')
 	{
 		oArgs['id'] = args['id'];
