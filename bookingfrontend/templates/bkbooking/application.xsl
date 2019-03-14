@@ -251,9 +251,9 @@
 								allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 								bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 								eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
-								var allocationaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uiallocation.add'});
-								var bookingaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uibooking.add'});
-								var eventaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uievent.add'});
+								var allocationaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiallocation.add'});
+								var bookingaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibooking.add'});
+								var eventaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uievent.add'});
 							</script>
 							<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl(allocationaddURL, allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl(bookingaddURL, eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl(eventaddURL, eventParams[{id}]);">
 								<xsl:if test="not(../case_officer/is_current_user)">

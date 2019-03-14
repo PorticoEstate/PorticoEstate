@@ -191,7 +191,7 @@ if ($.formUtils)
 
 function populateTableChkResources(building_id, selection)
 {
-	var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id}, true);
+	var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiresource.index', sort: 'name', filter_building_id: building_id}, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}
