@@ -546,7 +546,10 @@
 			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			$message_arr = explode('========', $body);
-			$message = $message_arr[0];
+
+			$message = phpgw::clean_value($message_arr[0]);
+			$sender = phpgw::clean_value($sender);
+
 			if($soexternal->add_msg($msg_id, $message, $sender))
 			{
 				$sql = "SELECT assignedto"
@@ -614,6 +617,9 @@
 			{
 				$message_details .= "\n\nAvsender: {$sender}";
 			}
+
+			$message_details = phpgw::clean_value($message_details);
+			$subject = phpgw::clean_value($subject);
 
 			if($ticket_id)
 			{
