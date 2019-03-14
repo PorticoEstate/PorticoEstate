@@ -33,7 +33,7 @@
 			{
 				list($type, $id_value) = explode('::', urldecode($id), 2);
 
-				if(!in_array($type, array('building_','resource') ))
+				if(!in_array($type, array('building','resource') ))
 				{
 					throw new Exception("{$type}::Not a valid document type for download at bookingfrontend");
 				}
