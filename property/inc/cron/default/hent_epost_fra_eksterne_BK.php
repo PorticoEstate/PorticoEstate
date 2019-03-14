@@ -657,7 +657,7 @@
 				if(preg_match("/Lokasjonskode:/" , $line ))
 				{
 					$location_arr = explode(':', $line);
-					$location_code = trim($location_arr[1]);
+					$location_code = phpgw::clean_value(trim($location_arr[1]));
 				}
 				if(preg_match("/Kategori:/i" , $line ))
 				{
@@ -671,13 +671,14 @@
 				else if(preg_match("/Avviket gjelder:/" , $line ))
 				{
 					$message_title_arr = explode(':', $line);
-					$message_title = trim($message_title_arr[1]);
+					$message_title =  phpgw::clean_value(trim($message_title_arr[1]));
 				}
 				else
 				{
 					$message_details_arr[] = trim($line);
 				}
 			}
+
 			$message_details = phpgw::clean_value(implode(PHP_EOL, $message_details_arr));
 
 			if($ticket_id)
@@ -693,7 +694,7 @@
 					'location_code' => $location_code,
 					'cat_id' => $message_cat_id,
 					'priority' => $priority, //valgfri (1-3)
-					'title' =>  phpgw::clean_value($message_title),
+					'title' =>  $message_title,
 					'details' => $message_details,
 					'external_ticket_id'	=> $external_ticket_id
 				);

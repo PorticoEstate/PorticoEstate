@@ -26,4 +26,21 @@
 
 			phpgw::no_access();
 		}
+
+		public function download()
+		{
+			if ($id = phpgw::get_var('id', 'string'))
+			{
+				list($type, $id_value) = explode('::', urldecode($id), 2);
+
+				if(!in_array($type, array('building','resource') ))
+				{
+					throw new Exception("{$type}::Not a valid document type for download at bookingfrontend");
+				}
+
+				$document = $this->bo->read_single(urldecode($id));
+				self::send_file($document['filename'], array('filename' => $document['name']));
+			}
+		}
+
 	}
