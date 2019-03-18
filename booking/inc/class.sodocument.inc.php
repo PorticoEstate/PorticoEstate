@@ -192,6 +192,13 @@
 			// automatically resize pictures that are too big
 			if (preg_match('/(jpg|jpeg|gif|bmp|png)$/i', $this->newFile->getOriginalName()))
 			{
+				$imagetype = exif_imagetype($filePath);
+
+				if(!in_array($imagetype, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP)))
+				{
+					throw new LogicException('File is not a valid image');
+				}
+
 				$config = CreateObject('phpgwapi.config', 'booking');
 				$config->read();
 				$image_maxwidth = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;
