@@ -201,7 +201,7 @@
 				{
 					if ( is_array($arg) )
 					{
-						$line .= 'serialized_value = ' . serialize($arg);
+						$line .= 'serialized_value = ' . json_encode($arg, JSON_PRETTY_PRINT);
 						continue;
 					}
 
