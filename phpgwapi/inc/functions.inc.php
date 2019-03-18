@@ -845,7 +845,7 @@ HTML;
 				unset($_GET['sessionid']);
 				unset($_GET[session_name()]);
 				unset($_GET['kp3']);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime= time()+60);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($_GET),$cookietime= time()+60);
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
@@ -866,7 +866,7 @@ HTML;
 			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
 		}
 
-		$redirect = unserialize(phpgw::get_var('redirect','raw', 'COOKIE'));
+		$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
 		if ( is_array($redirect) && count($redirect) )
 		{
 			foreach($redirect as $key => $value)
