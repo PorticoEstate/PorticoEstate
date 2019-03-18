@@ -171,6 +171,11 @@
 			{
 				$errors['category'] = lang('Invalid category');
 			}
+
+			if (!preg_match('/(jpg|png|gif|xls|xlsx|doc|docx|txt|pdf|odt|ods)$/i', $this->newFile->getOriginalName()))
+			{
+				$errors['name'] = lang('Not a valid filetype');
+			}
 		}
 
 		function add( $document )
