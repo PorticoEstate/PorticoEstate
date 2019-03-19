@@ -115,6 +115,7 @@
 				}
 				else
 				{
+					$r_reg['email'] = strtolower($r_reg['email']);
 					$loginid = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 
 					if ($r_reg['email'] != $loginid)
@@ -345,14 +346,23 @@
 				$errors[] = lang('You must enter a username');
 			}
 
-			if (!is_array($errors) && !$GLOBALS['phpgw']->accounts->exists($r_reg['loginid']))
+			if(strpos($r_reg['loginid'], '@'))
+			{
+				$loginid = strtolower($r_reg['loginid']);
+			}
+			else
+			{
+				$loginid = $r_reg['loginid'];
+			}
+
+			if (!is_array($errors) && !$GLOBALS['phpgw']->accounts->exists($loginid))
 			{
 				$errors[] = lang('Sorry, that username does not exist.');
 			}
 
 			if (!is_array($errors))
 			{
-				$error = $so->lostpw1($r_reg['loginid']);
+				$error = $so->lostpw1($loginid);
 				if ($error)
 				{
 					$errors[] = $error;

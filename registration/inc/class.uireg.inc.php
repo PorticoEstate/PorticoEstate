@@ -568,9 +568,9 @@ HTML;
 			return $rstring;
 		}
 
-		function simple_screen( $template_file, $text = '' )
+		function simple_screen( $template_file, $text = '', $header_text = '' )
 		{
-			$this->header();
+			$this->header($header_text);
 			$this->template->set_file(array(
 				'screen' => $template_file
 			));
@@ -607,7 +607,8 @@ HTML;
 
 		function email_sent_lostpw()
 		{
-			$this->simple_screen('confirm_email_sent_lostpw.tpl');
+			$header_text = lang('lost password');
+			$this->simple_screen('confirm_email_sent_lostpw.tpl', '', $header_text);
 		}
 
 		function welcome_screen()
