@@ -21,33 +21,33 @@
 
 		var $template;
 		var $bomanagefields;
-		var $fields = array();
+		var $fields			 = array();
 		var $so;
 		var $config;
 		var $public_functions = array(
-			'step1' => True,
-			'step2' => True,
-			'step4' => True,
-			'lostpw1' => True,
-			'lostpw2' => True,
-			'lostpw3' => True,
-			'get_locations' => true
+			'step1'			 => True,
+			'step2'			 => True,
+			'step4'			 => True,
+			'lostpw1'		 => True,
+			'lostpw2'		 => True,
+			'lostpw3'		 => True,
+			'get_locations'	 => true
 		);
 
 		function __construct()
 		{
-			$this->so = createobject('registration.soreg');
-			$this->bomanagefields = createobject('registration.bomanagefields');
-			$this->fields = $this->bomanagefields->get_field_list();
-			$c = createobject('phpgwapi.config', 'registration');
+			$this->so				 = createobject('registration.soreg');
+			$this->bomanagefields	 = createobject('registration.bomanagefields');
+			$this->fields			 = $this->bomanagefields->get_field_list();
+			$c						 = createobject('phpgwapi.config', 'registration');
 			$c->read();
-			$this->config = $c->config_data;
+			$this->config			 = $c->config_data;
 		}
 
 		function step1()
 		{
-			$r_reg = phpgw::get_var('r_reg');
-			$o_reg = phpgw::get_var('o_reg');
+			$r_reg	 = phpgw::get_var('r_reg');
+			$o_reg	 = phpgw::get_var('o_reg');
 
 			$so = createobject('registration.soreg');
 
@@ -83,8 +83,8 @@
 
 		function step2()
 		{
-			$ui = createobject('registration.uireg');
-			if (!$r_reg = phpgw::get_var('r_reg'))
+			$ui		 = createobject('registration.uireg');
+			if (!$r_reg	 = phpgw::get_var('r_reg'))
 			{
 				$r_reg = array();
 			}
@@ -92,8 +92,8 @@
 			{
 				$o_reg = array();
 			}
-			$fields = array();
-			$errors = array();
+			$fields	 = array();
+			$errors	 = array();
 //		_debug_array($r_reg);
 //-------
 			if ($this->config['username_is'] == 'email')
@@ -110,13 +110,13 @@
 
 				if (!$r_reg['email'])
 				{
-					$missing_fields[] = 'email';
-					$errors[] = lang('you must enter a username');
+					$missing_fields[]	 = 'email';
+					$errors[]			 = lang('you must enter a username');
 				}
 				else
 				{
-					$r_reg['email'] = strtolower($r_reg['email']);
-					$loginid = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
+					$r_reg['email']	 = strtolower($r_reg['email']);
+					$loginid		 = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 
 					if ($r_reg['email'] != $loginid)
 					{
@@ -139,7 +139,7 @@
 			if ($this->config['password_is'] == 'http')
 			{
 				// remove entities to stop mangling
-				$r_reg['passwd'] = $r_reg['passwd_confirm'] = html_entity_decode(phpgw::clean_value($_SERVER['PHP_AUTH_PW']));
+				$r_reg['passwd']		 = $r_reg['passwd_confirm'] = html_entity_decode(phpgw::clean_value($_SERVER['PHP_AUTH_PW']));
 			}
 
 			if (($this->config['display_tos']) && !$r_reg['tos_agree'])
@@ -164,9 +164,9 @@
 
 			if ($r_reg['passwd'] != $r_reg['passwd_confirm'])
 			{
-				$errors[] = lang("The passwords you entered don't match");
-				$missing_fields[] = 'passwd';
-				$missing_fields[] = 'passwd_confirm';
+				$errors[]			 = lang("The passwords you entered don't match");
+				$missing_fields[]	 = 'passwd';
+				$missing_fields[]	 = 'passwd_confirm';
 			}
 
 			if ($r_reg['passwd'])
@@ -186,11 +186,11 @@
 
 			foreach ($this->fields as $field_name => $field_info)
 			{
-				$name = $field_info['field_name'];
-				$text = $field_info['field_text'];
-				$values = explode(',', $field_info['field_values']);
-				$required = $field_info['field_required'];
-				$type = $field_info['field_type'];
+				$name		 = $field_info['field_name'];
+				$text		 = $field_info['field_text'];
+				$values		 = explode(',', $field_info['field_values']);
+				$required	 = $field_info['field_required'];
+				$type		 = $field_info['field_type'];
 
 				if ($required == 'Y')
 				{
@@ -209,7 +209,7 @@
 					{
 						if ($required == 'Y')
 						{
-							$errors[] = lang('You have entered an invalid email address');
+							$errors[]		 = lang('You have entered an invalid email address');
 							$missing_field[] = $name;
 						}
 					}
@@ -221,8 +221,8 @@
 					{
 						if ($required == 'Y')
 						{
-							$errors[] = lang('You have entered an invalid birthday');
-							$missing_fields[] = $name;
+							$errors[]			 = lang('You have entered an invalid birthday');
+							$missing_fields[]	 = $name;
 						}
 					}
 					else
@@ -236,16 +236,16 @@
 					if ($post_value)
 					{
 						//while (list (, $value) = each($values))
-                                                if (is_array($values))
-                                                {
-                                                    foreach ($values as $key => $value)
+						if (is_array($values))
 						{
-							if ($value == $post_value)
+							foreach ($values as $key => $value)
 							{
-								$ok = 1;
+								if ($value == $post_value)
+								{
+									$ok = 1;
+								}
 							}
 						}
-                                                }
 
 						if (!$ok)
 						{
@@ -274,15 +274,15 @@
 			if (!$errors)
 			{
 				$headers = getallheaders();
-				$ssn = $headers['uid'];
-				if($ssn)
+				$ssn	 = $headers['uid'];
+				if ($ssn)
 				{
-					$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
-					$fields['ssn_hash'] = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+					$ssn_hash			 = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+					$fields['ssn_hash']	 = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
 				}
 
-				$so = createobject('registration.soreg');
-				$reg_id = $so->step2($fields);
+				$so		 = createobject('registration.soreg');
+				$reg_id	 = $so->step2($fields);
 			}
 
 			if ($errors)
@@ -293,17 +293,17 @@
 			{
 				$GLOBALS['phpgw']->session->appsession('loginid', 'registration', '');
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.uireg.ready_to_activate',
-					'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain']));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction'	 => 'registration.uireg.ready_to_activate',
+					'reg_id'		 => $reg_id, 'logindomain'	 => $_REQUEST['logindomain']));
 			}
 		}
 
 		function step4()
 		{
-			$reg_id = phpgw::get_var('reg_id');
-			$so = createobject('registration.soreg');
-			$ui = createobject('registration.uireg');
-			$reg_info = $so->valid_reg($reg_id);
+			$reg_id		 = phpgw::get_var('reg_id');
+			$so			 = createobject('registration.soreg');
+			$ui			 = createobject('registration.uireg');
+			$reg_info	 = $so->valid_reg($reg_id);
 
 			if (!$reg_info)
 			{
@@ -321,8 +321,8 @@
 
 		public function get_pending_user( $reg_id )
 		{
-			$so = createobject('registration.soreg');
-			$reg_info = $so->valid_reg($reg_id);
+			$so			 = createobject('registration.soreg');
+			$reg_info	 = $so->valid_reg($reg_id);
 			if (isset($reg_info['reg_info']) && $reg_info['reg_info'])
 			{
 				$reg_info['reg_info'] = unserialize(base64_decode($reg_info['reg_info']));
@@ -338,15 +338,15 @@
 		//
 		function lostpw1()
 		{
-			$r_reg = phpgw::get_var('r_reg');
-			$so = createobject('registration.soreg');
+			$r_reg	 = phpgw::get_var('r_reg');
+			$so		 = createobject('registration.soreg');
 
 			if (!$r_reg['loginid'])
 			{
 				$errors[] = lang('You must enter a username');
 			}
 
-			if(strpos($r_reg['loginid'], '@'))
+			if (strpos($r_reg['loginid'], '@'))
 			{
 				$loginid = strtolower($r_reg['loginid']);
 			}
@@ -377,8 +377,8 @@
 			else
 			{
 				// Redirect them so they don't hit refresh and make a mess
-				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.uireg.email_sent_lostpw',
-					'logindomain' => $_REQUEST['logindomain']));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction'	 => 'registration.uireg.email_sent_lostpw',
+					'logindomain'	 => $_REQUEST['logindomain']));
 			}
 		}
 
@@ -389,9 +389,9 @@
 		{
 			$reg_id = phpgw::get_var('reg_id');
 
-			$so = createobject('registration.soreg');
-			$ui = createobject('registration.uireg');
-			$reg_info = $so->valid_reg($reg_id);
+			$so			 = createobject('registration.soreg');
+			$ui			 = createobject('registration.uireg');
+			$reg_info	 = $so->valid_reg($reg_id);
 
 			if (!$reg_info)
 			{
@@ -474,8 +474,8 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.boreg.step1',
-						'r_reg[loginid]' => $_SERVER['PHP_AUTH_USER'], 'logindomain' => $_REQUEST['logindomain']));
+					$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction'	 => 'registration.boreg.step1',
+						'r_reg[loginid]' => $_SERVER['PHP_AUTH_USER'], 'logindomain'	 => $_REQUEST['logindomain']));
 				}
 			}
 
@@ -509,8 +509,8 @@
 
 		function get_locations()
 		{
-			$location_code = phpgw::get_var('location_code');
-			$field = phpgw::get_var('field');
+			$location_code	 = phpgw::get_var('location_code');
+			$field			 = phpgw::get_var('field');
 			if ($field)
 			{
 				$field_info_arr = explode('::', $this->fields[$field]['field_values']);
@@ -518,16 +518,16 @@
 
 			$criteria = array
 				(
-				'location_code' => $location_code,
-				'child_level' => $field_info_arr[0],
-				'field_name' => $field_info_arr[1]
+				'location_code'	 => $location_code,
+				'child_level'	 => $field_info_arr[0],
+				'field_name'	 => $field_info_arr[1]
 			);
 
-			$locations = execMethod('property.solocation.get_children', $criteria);
-			$values = array
+			$locations	 = execMethod('property.solocation.get_children', $criteria);
+			$values		 = array
 				(
-				'child_level' => $field_info_arr[0],
-				'locations' => $locations
+				'child_level'	 => $field_info_arr[0],
+				'locations'		 => $locations
 			);
 
 			return $values;
