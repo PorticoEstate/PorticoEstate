@@ -49,7 +49,7 @@
 			}
 
 			$sql = "INSERT INTO phpgw_reg_fields (" . implode(', ', array_keys($field_info)) . ') VALUES (' . $this->db->validate_insert(array_values($field_info)) . ')';
-			$rv = $this->db->query($sql, __LINE__, __FILE__);
+			$rv	 = $this->db->query($sql, __LINE__, __FILE__);
 
 			return $rv;
 		}
@@ -63,8 +63,8 @@
 
 		function get_field_list()
 		{
-			$rarray = array();
-			$sql = 'SELECT  ' . implode(', ', $this->db_fields) . ' FROM phpgw_reg_fields ORDER BY field_order';
+			$rarray	 = array();
+			$sql	 = 'SELECT  ' . implode(', ', $this->db_fields) . ' FROM phpgw_reg_fields ORDER BY field_order';
 			$this->db->query($sql);
 			while ($this->db->next_record())
 			{
