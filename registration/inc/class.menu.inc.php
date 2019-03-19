@@ -27,21 +27,21 @@
 		{
 			$menus = array();
 
-			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'registration';
+			$incoming_app									 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'registration';
 
 			$menus['toolbar'] = array();
 
 
 			$menus['navbar'] = array
-				(
+			(
 				'registration' => array
-					(
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uipending.index')),
-					'text' => lang('registration'),
-					'image' => array('admin', 'navbar'),
-					'order' => -4,
-					'group' => 'systools'
+				(
+					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uipending.index')),
+					'text'	 => lang('registration'),
+					'image'	 => array('admin', 'navbar'),
+					'order'	 => -4,
+					'group'	 => 'systools'
 				),
 			);
 
@@ -49,17 +49,17 @@
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'registration'))
 			{
 				$menus['admin'] = array
+				(
+					'index'	 => array
 					(
-					'index' => array
-						(
-						'text' => lang('Configuration'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
-							'appname' => 'registration'))
+						'text'	 => lang('Configuration'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname'	 => 'registration'))
 					),
 					'fields' => array
 						(
-						'text' => $GLOBALS['phpgw']->translation->translate('Manage Fields', array(), true),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uimanagefields.admin'))
+						'text'	 => $GLOBALS['phpgw']->translation->translate('Manage Fields', array(), true),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uimanagefields.admin'))
 					)
 				);
 			}
@@ -67,10 +67,10 @@
 
 //			$menus['navigation'] = array();
 			$menus['navigation']['pending'] = array
-				(
-				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uipending.index')),
-				'text' => lang('Pending for approval'),
-				'image' => array('property', 'location'),
+			(
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'registration.uipending.index')),
+				'text'	 => lang('Pending for approval'),
+				'image'	 => array('property', 'location'),
 			);
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;

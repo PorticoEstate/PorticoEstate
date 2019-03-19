@@ -26,28 +26,28 @@
 
 		var $template;
 		var $bomanagefields;
-		var $first_location = false;
+		var $first_location	 = false;
 		var $fields;
 		var $bo;
 		var $config;
 		var $public_functions = array(
-			'step1' => True,
-			'step2' => True,
-			'lostpw1' => True,
-			'lostpw3' => True,
-			'lostpw4' => True,
-			'ready_to_activate' => True,
-			'email_sent_lostpw' => True,
-			'tos' => True
+			'step1'				 => True,
+			'step2'				 => True,
+			'lostpw1'			 => True,
+			'lostpw3'			 => True,
+			'lostpw4'			 => True,
+			'ready_to_activate'	 => True,
+			'email_sent_lostpw'	 => True,
+			'tos'				 => True
 		);
 
 		function __construct()
 		{
-			$this->template = $GLOBALS['phpgw']->template;
-			$this->bo = createobject('registration.boreg');
-			$this->bomanagefields = createobject('registration.bomanagefields');
-			$this->fields = $this->bomanagefields->get_field_list();
-			$this->config = $this->bo->config;
+			$this->template			 = $GLOBALS['phpgw']->template;
+			$this->bo				 = createobject('registration.boreg');
+			$this->bomanagefields	 = createobject('registration.bomanagefields');
+			$this->fields			 = $this->bomanagefields->get_field_list();
+			$this->config			 = $this->bo->config;
 		}
 
 		function set_header_footer_blocks()
@@ -61,7 +61,7 @@
 
 		function header( $sub = '' )
 		{
-			if(!empty($this->config['debug']))
+			if (!empty($this->config['debug']))
 			{
 				$headers = getallheaders();
 				_debug_array($headers);
@@ -111,9 +111,9 @@
 				$this->simple_screen('error_general.tpl', $GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			$show_username_prompt = True;
+			$show_username_prompt	 = True;
 			/* Note that check_select_username() may not return */
-			$select_username = $this->bo->check_select_username();
+			$select_username		 = $this->bo->check_select_username();
 			if (!$select_username || is_string($select_username))
 			{
 				$this->simple_screen('error_general.tpl', $GLOBALS['phpgw']->common->error_list(array(
@@ -132,7 +132,7 @@
 			}
 
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/registration/main.php', array(
-					'menuaction' => 'registration.boreg.step1', 'logindomain' => $_REQUEST['logindomain'])));
+					'menuaction'	 => 'registration.boreg.step1', 'logindomain'	 => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_username', lang('Username'));
 			$this->template->set_var('lang_submit', lang('Submit'));
 
@@ -150,15 +150,15 @@
 			{
 				$values = array
 					(
-					'domain_select' => '',
-					'domain_from_host' => "<input type = 'hidden' name='logindomain' id='logindomain' value ='{$_SERVER['SERVER_NAME']}' />"
+					'domain_select'		 => '',
+					'domain_from_host'	 => "<input type = 'hidden' name='logindomain' id='logindomain' value ='{$_SERVER['SERVER_NAME']}' />"
 				);
 			}
 			elseif ($GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 			{
 
-				$lang_domain = lang('domain');
-				$domain_select = <<<HTML
+				$lang_domain	 = lang('domain');
+				$domain_select	 = <<<HTML
 
 	<div class="pure-control-group">
 		<label>{$lang_domain}</label>
@@ -176,7 +176,7 @@ HTML;
 					}
 
 					$domain_display_name = str_replace('_', ' ', $domain_name);
-					$options .= <<<HTML
+					$options			 .= <<<HTML
 					<option value='{$domain_name}'{$selected}>{$domain_display_name}</option>
 HTML;
 				}
@@ -189,16 +189,16 @@ HTML;
 
 				$values = array
 					(
-					'domain_select' => $domain_select,
-					'domain_from_host' => ''
+					'domain_select'		 => $domain_select,
+					'domain_from_host'	 => ''
 				);
 			}
 			else
 			{
 				$values = array
 					(
-					'domain_select' => '',
-					'domain_from_host' => ''
+					'domain_select'		 => '',
+					'domain_from_host'	 => ''
 				);
 			}
 			return $values;
@@ -209,8 +209,8 @@ HTML;
 			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('portico', 'ajax', 'registration');
 
-			$show_password_prompt = True;
-			$select_password = $this->bo->check_select_password();
+			$show_password_prompt	 = True;
+			$select_password		 = $this->bo->check_select_password();
 			if (is_string($select_password))
 			{
 				$this->simple_screen('error_general.tpl', $select_password);
@@ -229,7 +229,7 @@ HTML;
 			if (is_array($missing_fields))
 			{
 				//while (list(, $field) = each($missing_fields))
-                                foreach ($missing_fields as $key => $field)
+				foreach ($missing_fields as $key => $field)
 				{
 					$missing[$field] = True;
 					$this->template->set_var('missing_' . $field, '<font color="#CC0000">*</font>');
@@ -239,7 +239,7 @@ HTML;
 			if (is_array($r_reg))
 			{
 				//while (list($name, $value) = each($r_reg))
-                                foreach ($r_reg as $name => $value)
+				foreach ($r_reg as $name => $value)
 				{
 					$post_values[$name] = $value;
 					$this->template->set_var('value_' . $name, $value);
@@ -249,7 +249,7 @@ HTML;
 			if (is_array($o_reg))
 			{
 				//while (list($name, $value) = each($o_reg))
-                                foreach ($o_reg as $name => $value)
+				foreach ($o_reg as $name => $value)
 				{
 					$post_values[$name] = $value;
 					$this->template->set_var('value_' . $name, $value);
@@ -260,9 +260,9 @@ HTML;
 			if ($this->config['username_is'] != 'email')
 			{
 				$this->template->set_var('message', lang('username as email'));
-				$username_fields = $this->get_username_fields();
-				$username_fields['lang_username'] = '<b>' . lang('username') . '</b>';
-				$username_fields['value_username'] = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
+				$username_fields					 = $this->get_username_fields();
+				$username_fields['lang_username']	 = '<b>' . lang('username') . '</b>';
+				$username_fields['value_username']	 = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 				$this->template->set_var($username_fields);
 			}
 			else
@@ -277,7 +277,7 @@ HTML;
 			}
 
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/registration/main.php', array(
-					'menuaction' => 'registration.boreg.step2', 'logindomain' => $_REQUEST['logindomain'])));
+					'menuaction'	 => 'registration.boreg.step2', 'logindomain'	 => $_REQUEST['logindomain'])));
 			$this->template->set_var('lang_password', lang('Password'));
 			$this->template->set_var('lang_reenter_password', lang('Re-enter password'));
 			$this->template->set_var('lang_submit', lang('Submit'));
@@ -297,11 +297,11 @@ HTML;
 				$input_field = $this->get_input_field($field_info, $post_values);
 
 				$var = array(
-					'missing_indicator' => $missing[$field_info['field_name']] ? '<font color="#CC0000">*</font>' : '',
-					'bold_start' => $field_info['field_required'] == 'Y' ? '<b>' : '',
-					'bold_end' => $field_info['field_required'] == 'Y' ? '</b>' : '',
-					'lang_displayed_text' => ltrim(lang($field_info['field_text']), '!'),
-					'input_field' => $input_field
+					'missing_indicator'		 => $missing[$field_info['field_name']] ? '<font color="#CC0000">*</font>' : '',
+					'bold_start'			 => $field_info['field_required'] == 'Y' ? '<b>' : '',
+					'bold_end'				 => $field_info['field_required'] == 'Y' ? '</b>' : '',
+					'lang_displayed_text'	 => ltrim(lang($field_info['field_text']), '!'),
+					'input_field'			 => $input_field
 				);
 
 				$this->template->set_var($var);
@@ -312,9 +312,9 @@ HTML;
 			if ($this->config['display_tos'])
 			{
 				$this->template->set_var('tos_link', $GLOBALS['phpgw']->link('/registration/main.php', array(
-					'menuaction' => 'registration.uireg.tos',
-					'logindomain' => $_REQUEST['logindomain']
-					), true
+						'menuaction'	 => 'registration.uireg.tos',
+						'logindomain'	 => $_REQUEST['logindomain']
+						), true
 				));
 				$this->template->set_var('lang_tos_agree', lang('I have read the terms and conditions and agree by them.'));
 				if ($r_reg['tos_agree'])
@@ -348,18 +348,17 @@ HTML;
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
 
-			if($this->config['username_is'] == 'email')
+			if ($this->config['username_is'] == 'email')
 			{
 				$input_type = 'email';
 			}
 			else
 			{
 				$input_type = 'text';
-				
 			}
 
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/registration/main.php', array(
-					'menuaction' => 'registration.boreg.lostpw1', 'logindomain' => $_REQUEST['logindomain'])));
+					'menuaction'	 => 'registration.boreg.lostpw1', 'logindomain'	 => $_REQUEST['logindomain'])));
 			$this->template->set_var('input_type', $input_type);
 			$this->template->set_var('lang_explain', lang('After you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.'));
 			$this->template->set_var('lang_username', lang('Username'));
@@ -386,7 +385,7 @@ HTML;
 			}
 
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/registration/main.php', array(
-					'menuaction' => 'registration.boreg.lostpw3', 'logindomain' => $_REQUEST['logindomain'])));
+					'menuaction'	 => 'registration.boreg.lostpw3', 'logindomain'	 => $_REQUEST['logindomain'])));
 			$this->template->set_var('value_username', $lid);
 			$this->template->set_var('lang_changepassword', lang("Change password for user"));
 			$this->template->set_var('lang_enter_password', lang('Enter your new password'));
@@ -417,10 +416,10 @@ HTML;
 		{
 			$post_value = $post_values[$field_info['field_name']];
 
-			$name = $field_info['field_name'];
-			$values = explode(",", $field_info['field_values']);
-			$required = $field_info['field_required'];
-			$type = $field_info['field_type'];
+			$name		 = $field_info['field_name'];
+			$values		 = explode(",", $field_info['field_values']);
+			$required	 = $field_info['field_required'];
+			$type		 = $field_info['field_type'];
 
 			if (!$type)
 			{
@@ -440,7 +439,7 @@ HTML;
 			$required_attrib = '';
 			if ($required == 'Y')
 			{
-				$a = 'r_reg';
+				$a				 = 'r_reg';
 				$required_attrib = "required='required'";
 			}
 			else
@@ -454,8 +453,8 @@ HTML;
 				$type == 'last_name' || $type == 'address' || $type == 'city' ||
 				$type == 'zip' || $type == 'phone')
 			{
-				$input_type = $type == 'email' ? 'email' : 'text';
-				$placeholder =  $type == 'email' ? 'mail@website.com' : $placeholder;
+				$input_type	 = $type == 'email' ? 'email' : 'text';
+				$placeholder = $type == 'email' ? 'mail@website.com' : $placeholder;
 
 				$rstring = "<input placeholder=\"{$placeholder}\" type='{$input_type}' name=\"{$a}[{$name}]\" value=\"{$post_value}\" {$required_attrib}>";
 			}
@@ -538,12 +537,12 @@ HTML;
 HTML;
 					if (!$this->first_location)
 					{
-						$field_info_arr = explode('::', $this->fields[$name]['field_values']);
-						$criteria = array
+						$field_info_arr	 = explode('::', $this->fields[$name]['field_values']);
+						$criteria		 = array
 							(
-							'location_code' => '', //$location_code,
-							'child_level' => (int)ltrim($name, 'loc'),
-							'field_name' => isset($field_info_arr[2]) && $field_info_arr[2] ? $field_info_arr[2] : "{$name}_name"
+							'location_code'	 => '', //$location_code,
+							'child_level'	 => (int)ltrim($name, 'loc'),
+							'field_name'	 => isset($field_info_arr[2]) && $field_info_arr[2] ? $field_info_arr[2] : "{$name}_name"
 						);
 
 						$locations = execMethod('property.solocation.get_children', $criteria);
@@ -551,8 +550,8 @@ HTML;
 
 						foreach ($locations as $location)
 						{
-							$selected = $location['id'] == $post_value ? ' selected = "selected"' : '';
-							$rstring .= <<<HTML
+							$selected	 = $location['id'] == $post_value ? ' selected = "selected"' : '';
+							$rstring	 .= <<<HTML
 						<option value ="{$location['id']}" $selected>{$location['name']}</option>
 HTML;
 						}
@@ -568,9 +567,9 @@ HTML;
 			return $rstring;
 		}
 
-		function simple_screen( $template_file, $text = '' )
+		function simple_screen( $template_file, $text = '', $header_text = '' )
 		{
-			$this->header();
+			$this->header($header_text);
 			$this->template->set_file(array(
 				'screen' => $template_file
 			));
@@ -600,14 +599,15 @@ HTML;
 			else
 			{
 				/* ($this->config['activate_account'] == 'immediately') */
-				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction' => 'registration.boreg.step4',
-					'reg_id' => $reg_id, 'logindomain' => $_REQUEST['logindomain']));
+				$GLOBALS['phpgw']->redirect_link('/registration/main.php', array('menuaction'	 => 'registration.boreg.step4',
+					'reg_id'		 => $reg_id, 'logindomain'	 => $_REQUEST['logindomain']));
 			}
 		}
 
 		function email_sent_lostpw()
 		{
-			$this->simple_screen('confirm_email_sent_lostpw.tpl');
+			$header_text = lang('lost password');
+			$this->simple_screen('confirm_email_sent_lostpw.tpl', '', $header_text);
 		}
 
 		function welcome_screen()

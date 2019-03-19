@@ -82,7 +82,7 @@
 			}
 
 			$sql = "SELECT * FROM phpgw_reg_accounts {$filtermethod} {$querymethod}";
-			_debug_array($sql);
+//			_debug_array($sql);
 
 			$values = array();
 			$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' FROM')), __LINE__, __FILE__);
