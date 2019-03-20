@@ -356,7 +356,7 @@
 				$loginid = $r_reg['loginid'];
 			}
 
-			if (!is_array($errors) && !$GLOBALS['phpgw']->accounts->exists($loginid))
+			if (!$errors && !$GLOBALS['phpgw']->accounts->exists($loginid))
 			{
 				$errors[] = lang('Sorry, that username does not exist.');
 			}
@@ -371,7 +371,7 @@
 			}
 
 			$ui = createobject('registration.uireg');
-			if (is_array($errors))
+			if ($errors)
 			{
 				$ui->lostpw1($errors, $r_reg);
 			}
