@@ -275,7 +275,6 @@ HTML;
 				catch (Exception $e)
 				{
 					$error = $e->getMessage();
-					//	 $error = $GLOBALS['phpgw']->template->fp('out','message');
 				}
 			}
 			else

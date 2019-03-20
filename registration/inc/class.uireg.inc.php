@@ -373,7 +373,8 @@ HTML;
 		//
 		function lostpw3( $errors = '', $r_reg = '', $lid = '' )
 		{
-			$this->header();
+			$header_text = lang('lost password');
+			$this->header($header_text);
 			$this->template->set_file(array(
 				'_lostpw_change' => 'lostpw_change.tpl'
 			));
@@ -402,7 +403,8 @@ HTML;
 		//
 		function lostpw4()
 		{
-			$this->header();
+			$header_text = lang('lost password');
+			$this->header($header_text);
 			$this->template->set_file(array(
 				'screen' => 'lostpw_changed.tpl'
 			));
