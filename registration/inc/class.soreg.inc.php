@@ -264,7 +264,7 @@ HTML;
 				$GLOBALS['phpgw']->template->set_var('firstname', $info['firstname']);
 				$GLOBALS['phpgw']->template->set_var('lastname', $info['lastname']);
 				$GLOBALS['phpgw']->template->set_var('activate_url', "</br><a href='$url'>Link.</a></br>");
-
+				_debug_array($url);die();
 				$subject = $this->config['subject_lostpw'] ? lang($this->config['subject_lostpw']) : lang('Account password retrieval');
 				$noreply = $this->config['mail_nobody'] ? ('No reply <' . $this->config['mail_nobody'] . '>') : ('No reply <noreply@' . $GLOBALS['phpgw_info']['server']['hostname'] . '>');
 

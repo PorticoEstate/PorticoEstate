@@ -396,7 +396,8 @@
 
 			if (!$reg_info)
 			{
-				$ui->simple_screen('error_confirm.tpl');
+				$header_text = lang('lost password');
+				$ui->simple_screen('error_confirm.tpl', '', $header_text);
 				return False;
 			}
 
