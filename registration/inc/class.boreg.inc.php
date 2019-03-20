@@ -340,6 +340,7 @@
 		{
 			$r_reg	 = phpgw::get_var('r_reg');
 			$so		 = createobject('registration.soreg');
+			$errors	 = array();
 
 			if (!$r_reg['loginid'])
 			{
@@ -360,7 +361,7 @@
 				$errors[] = lang('Sorry, that username does not exist.');
 			}
 
-			if (!is_array($errors))
+			if (!$errors)
 			{
 				$error = $so->lostpw1($loginid);
 				if ($error)
