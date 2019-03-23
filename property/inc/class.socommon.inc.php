@@ -195,13 +195,12 @@
 
 		function create_preferences( $app = '', $user_id = '' )
 		{
-			$this->db->query("SELECT preference_value, preference_owner FROM phpgw_preferences where preference_app = '{$app}'"
+			$this->db->query("SELECT preference_json, preference_owner FROM phpgw_preferences where preference_app = '{$app}'"
 			. " AND preference_owner IN (-1,-2," . (int)$user_id .')', __LINE__, __FILE__);
 			$forced = $default = $user = array();
 			while($this->db->next_record())
 			{
-				// The following ereg is required for PostgreSQL to work
-				$value = unserialize($this->db->f('preference_value'));
+				$value = json_decode($this->db->f('preference_json'),true);
 				$this->unquote($value);
 				if (!is_array($value))
 				{

@@ -3618,3 +3618,57 @@
 		}
 	}
 
+	/**
+	 * Move to json as serialized preference-data
+	 */
+	$test[] = '0.9.17.559';
+	function phpgwapi_upgrade0_9_17_559()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_preferences','preference_json', array(
+			'type' => 'jsonb',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_preferences", __LINE__, __FILE__);
+
+		$preference_data = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$app = $GLOBALS['phpgw_setup']->oProc->f('preference_app');
+			$owner = intval($GLOBALS['phpgw_setup']->oProc->f('preference_owner'));
+			$prefs = unserialize($GLOBALS['phpgw_setup']->oProc->f('preference_value'));
+
+			if (is_array($prefs) && count($prefs))
+			{
+				$preference_data[] = array(
+					'app'	=> $app,
+					'owner'	=> $owner,
+					'prefs'	=> json_encode($prefs)
+				);
+			}
+		}
+		foreach ($preference_data as $value_set)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_preferences"
+				. " SET preference_json = '{$value_set['prefs']}'"
+				. " WHERE preference_owner = {$value_set['owner']} AND preference_app = '{$value_set['app']}'", __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_preferences WHERE preference_json IS NULL", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_preferences', array(), 'preference_value');
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_preferences','preference_json',array(
+			'type' => 'jsonb',
+			'nullable' => false
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.560';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
