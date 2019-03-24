@@ -279,6 +279,11 @@
 				'id' => 'details',
 				'name' => lang('details')
 			);
+			$columns['external_origin_email'] = array
+				(
+				'id' => 'external_origin_email',
+				'name' => lang('external origin email')
+			);
 
 			return $columns;
 		}
@@ -855,6 +860,7 @@
 				'contact_id' => 0,
 				'send_mail'		=> true,
 				'external_ticket_id' => !empty($data['external_ticket_id']) ? $data['external_ticket_id'] : null,
+				'external_origin_email' => !empty($data['external_origin_email']) ? $data['external_origin_email'] : null,
 			);
 
 			$result = $this->add($ticket);

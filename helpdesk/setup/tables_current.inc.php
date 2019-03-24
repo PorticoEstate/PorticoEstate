@@ -72,6 +72,7 @@
 				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => '8', 'nullable' => True),
 				'external_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'external_origin_email' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

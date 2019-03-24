@@ -391,8 +391,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where ( phpgw_helpdesk_tickets.id = " . (int) $query;
-
-				$query = $this->db->db_addslashes($query);
+				$querymethod .= " OR external_origin_email $this->like '%$query%'";
 				$querymethod .= " OR subject $this->like '%$query%')";
 			}
 
@@ -437,25 +436,26 @@
 				{
 					$tickets[]= array
 					(
-						'id'				=> (int) $this->db2->f('id'),
-						'subject'			=> $this->db2->f('subject',true),
-						'user_id'			=> $this->db2->f('user_id'),
-						'assignedto'		=> $this->db2->f('assignedto'),
-						'status'			=> $this->db2->f('status'),
-						'priority'			=> $this->db2->f('priority'),
-						'cat_id'			=> $this->db2->f('cat_id'),
-						'group_id'			=> $this->db2->f('group_id'),
-						'entry_date'		=> $this->db2->f('entry_date'),
-						'modified_date'		=> $this->db2->f('modified_date'),
-						'finnish_date'		=> $this->db2->f('finnish_date'),
-						'finnish_date2'		=> $this->db2->f('finnish_date2'),
-						'order_id'			=> $this->db2->f('order_id'),
-						'vendor_id'			=> $this->db2->f('vendor_id'),
-						'actual_cost'		=> $this->db2->f('actual_cost'),
-						'estimate'			=> $this->db2->f('budget'),
-						'new_ticket'		=> $this->db2->f('view') ? false : true,
-						'billable_hours'	=> $this->db2->f('billable_hours'),
-						'details' =>		$this->db2->f('details', true),
+						'id'					=> (int) $this->db2->f('id'),
+						'subject'				=> $this->db2->f('subject',true),
+						'user_id'				=> $this->db2->f('user_id'),
+						'assignedto'			=> $this->db2->f('assignedto'),
+						'status'				=> $this->db2->f('status'),
+						'priority'				=> $this->db2->f('priority'),
+						'cat_id'				=> $this->db2->f('cat_id'),
+						'group_id'				=> $this->db2->f('group_id'),
+						'entry_date'			=> $this->db2->f('entry_date'),
+						'modified_date'			=> $this->db2->f('modified_date'),
+						'finnish_date'			=> $this->db2->f('finnish_date'),
+						'finnish_date2'			=> $this->db2->f('finnish_date2'),
+						'order_id'				=> $this->db2->f('order_id'),
+						'vendor_id'				=> $this->db2->f('vendor_id'),
+						'actual_cost'			=> $this->db2->f('actual_cost'),
+						'estimate'				=> $this->db2->f('budget'),
+						'new_ticket'			=> $this->db2->f('view') ? false : true,
+						'billable_hours'		=> $this->db2->f('billable_hours'),
+						'details'				=> $this->db2->f('details', true),
+						'external_origin_email'	=> $this->db2->f('external_origin_email', true),
 
 					);
 					foreach ($custom_cols as $custom_col)
@@ -641,7 +641,9 @@
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
-				$ticket['modified_date'] = $this->db->f('modified_date');
+				$ticket['modified_date']	= $this->db->f('modified_date');
+				$ticket['external_ticket_id'] = $this->db->f('external_ticket_id');
+				$ticket['external_origin_email'] =  $this->db->f('external_origin_email', true);
 
 				if($ticket['reverse_id'])
 				{
@@ -720,7 +722,8 @@
 			$value_set['finnish_date'] = $ticket['finnish_date'];
 			$value_set['contact_id'] = $ticket['contact_id'];
 			$value_set['publish_note'] = 1;
-
+			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? (int)$ticket['external_ticket_id'] : null;
+			$value_set['external_origin_email'] = $this->db->db_addslashes($ticket['external_origin_email']);
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));

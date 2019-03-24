@@ -1084,7 +1084,7 @@
 			$value_set['finnish_date'] = $ticket['finnish_date'];
 			$value_set['contact_id'] = $ticket['contact_id'];
 			$value_set['publish_note'] = 1;
-			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? $ticket['external_ticket_id'] : null;
+			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? (int)$ticket['external_ticket_id'] : null;
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
