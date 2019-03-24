@@ -623,6 +623,7 @@
 
 			$message_details = phpgw::clean_value($message_details);
 			$subject = phpgw::clean_value($subject);
+			$sender = phpgw::clean_value($sender);
 
 			if($ticket_id)
 			{
@@ -634,13 +635,14 @@
 				$priority = 3;
 				$ticket = array
 				(
-					'assignedto'=> false,
-					'group_id' => $group_id,
-					'cat_id' => $message_cat_id,
-					'priority' => $priority, //valgfri (1-3)
-					'title' => $subject,
-					'details' => $message_details,
-					'external_ticket_id'	=> $external_ticket_id
+					'assignedto'			 => false,
+					'group_id'				 => $group_id,
+					'cat_id'				 => $message_cat_id,
+					'priority'				 => $priority, //valgfri (1-3)
+					'title'					 => $subject,
+					'details'				 => $message_details,
+					'external_ticket_id'	 => $external_ticket_id,
+					'external_origin_email'	 => $sender
 				);
 
 				$ticket_id =  CreateObject('helpdesk.botts')->add_ticket($ticket);
