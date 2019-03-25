@@ -88,11 +88,11 @@ function show_fields()
 			$("#label_betalingsoppfolging_type").show();
 			$("#id_betalingsoppfolging_type").show();
 			$("#id_kundenummer").attr("data-validation", "length");
-			$("#id_kundenummer").attr("data-validation-length", "10");
-			$("#id_kundenummer").attr("data-validation-error-msg", "Eksakt 10 siffer");
+			$("#id_kundenummer").attr("data-validation-length", "4-6");
+			$("#id_kundenummer").attr("data-validation-error-msg", "Kundenummer kan ha 4 eller 6 siffer (max 6 siffer)");
 			$("#id_bilagsnr").attr("data-validation", "length");
-			$("#id_bilagsnr").attr("data-validation-length", "10");
-			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 10 siffer");
+			$("#id_bilagsnr").attr("data-validation-length", "9");
+			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 9 siffer");
 			$("#id_aarsak").attr("data-validation", "length");
 			$("#id_aarsak").attr("data-validation-length", "1-200");
 			$("#id_betalingsoppfolging_type").attr("data-validation", "required");
@@ -105,11 +105,11 @@ function show_fields()
 			$("#label_bilagsnr").show();
 			$("#id_bilagsnr").show();
 			$("#id_kundenummer").attr("data-validation", "length");
-			$("#id_kundenummer").attr("data-validation-length", "10");
-			$("#id_kundenummer").attr("data-validation-error-msg", "Eksakt 10 siffer");
+			$("#id_kundenummer").attr("data-validation-length", "4-6");
+			$("#id_kundenummer").attr("data-validation-error-msg", "Kundenummer kan ha 4 eller 6 siffer (max 6 siffer)");
 			$("#id_bilagsnr").attr("data-validation", "length");
-			$("#id_bilagsnr").attr("data-validation-length", "10");
-			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 10 siffer");
+			$("#id_bilagsnr").attr("data-validation-length", "9");
+			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 9 siffer");
 			break;
 		default:
 //			$("#arbeidssted_name").removeAttr("data-validation-optional");
