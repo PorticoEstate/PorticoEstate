@@ -3414,7 +3414,11 @@
 			}
 
 			$ids = array();
-			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
+			$this->db->query("SELECT fm_workorder.id FROM fm_workorder "
+				. " $this->join fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " WHERE project_id = {$project_id}"
+				. " AND canceled != 1", __LINE__, __FILE__);
+
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
