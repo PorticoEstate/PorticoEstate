@@ -44,23 +44,23 @@
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
-			$this->async = & $GLOBALS['phpgw']->asyncservice;
-			$this->so = CreateObject('property.soalarm');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->async	 = & $GLOBALS['phpgw']->asyncservice;
+			$this->so		 = CreateObject('property.soalarm');
+			$this->bocommon	 = CreateObject('property.bocommon');
 			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$method_id = phpgw::get_var('method_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
+			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		 = phpgw::get_var('query');
+			$sort		 = phpgw::get_var('sort');
+			$order		 = phpgw::get_var('order');
+			$filter		 = phpgw::get_var('filter', 'int');
+			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$method_id	 = phpgw::get_var('method_id', 'int');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
 
 			if ($start)
 			{
@@ -113,19 +113,19 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'owner');
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
+			$this->start	 = $data['start'];
+			$this->query	 = $data['query'];
+			$this->filter	 = $data['filter'];
+			$this->sort		 = $data['sort'];
+			$this->order	 = $data['order'];
+			$this->cat_id	 = $data['cat_id'];
 			$this->method_id = $data['method_id'];
 		}
 
 		function select_method_list( $selected = '' )
 		{
-			$list = $this->so->select_method_list();
-			$list = $this->bocommon->select_list($selected, $list);
+			$list	 = $this->so->select_method_list();
+			$list	 = $this->bocommon->select_list($selected, $list);
 			return $list;
 		}
 
@@ -138,7 +138,7 @@
 		{
 //			$jobs = $this->so->read(array('id'=>'%','start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'allrows'=>$this->allrows));
-			$jobs = $this->so->read($data);
+			$jobs				 = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $jobs;
 		}
@@ -157,11 +157,11 @@
 			{
 				foreach ($jobs as $id => $job)
 				{
-					$alarm = $job['data']; // text, enabled
-					$alarm['alarm_id'] = $id;
-					$alarm['time'] = $GLOBALS['phpgw']->common->show_date($job['next']);
-					$alarm['user'] = $GLOBALS['phpgw']->accounts->id2name($alarm['owner']);
-					$alarm['text'] = $text;
+					$alarm				 = $job['data']; // text, enabled
+					$alarm['alarm_id']	 = $id;
+					$alarm['time']		 = $GLOBALS['phpgw']->common->show_date($job['next']);
+					$alarm['user']		 = $GLOBALS['phpgw']->accounts->id2name($alarm['owner']);
+					$alarm['text']		 = $text;
 
 					$alarms[] = $alarm;
 				}
@@ -182,10 +182,10 @@
 				return false;
 			}
 
-			$alarm = $jobs[$id]['data']; // text, enabled
-			$alarm['id'] = $id;
-			$alarm['time'] = $jobs[$id]['next'];
-			$alarm['times'] = $jobs[$id]['times'];
+			$alarm			 = $jobs[$id]['data']; // text, enabled
+			$alarm['id']	 = $id;
+			$alarm['time']	 = $jobs[$id]['next'];
+			$alarm['times']	 = $jobs[$id]['times'];
 			$alarm['method'] = $jobs[$id]['method'];
 
 //			echo "<p>read_alarm('$id')="; print_r($alarm); echo "</p>\n";
@@ -205,8 +205,8 @@
 			$enabled = 0;
 			foreach ($alarms as $id)
 			{
-				$temp = explode(':', $id);
-				$alarm_type = $temp[0];
+				$temp		 = explode(':', $id);
+				$alarm_type	 = $temp[0];
 
 				if (!($alarm = $this->read_alarm($alarm_type, $id)))
 				{
@@ -267,8 +267,8 @@
 
 			if (!isset($alarm['id']) || !$alarm['id'])
 			{
-				$alarms = $this->read_alarms($alarm_type, $event_id); // find a free alarm#
-				$n = count($alarms);
+				$alarms	 = $this->read_alarms($alarm_type, $event_id); // find a free alarm#
+				$n		 = count($alarms);
 				do
 				{
 					$id = $alarm_type . ':' . intval($event_id) . ':' . $n;
@@ -317,16 +317,16 @@
 			}
 
 			$alarm = Array(
-				'time' => ($event['alarm_date'] - $time), //($etime=$this->bo->maketime($event['start'])) - $time,
-				'offset' => $time,
-				'owner' => $owner,
-				'enabled' => 1,
-				'event_id' => $event['id'],
+				'time'		 => ($event['alarm_date'] - $time), //($etime=$this->bo->maketime($event['start'])) - $time,
+				'offset'	 => $time,
+				'owner'		 => $owner,
+				'enabled'	 => 1,
+				'event_id'	 => $event['id'],
 				'event_name' => $event['name']
 			);
 
-			$alarm['times'] = $alarm['time'];
-			$alarm['id'] = $this->save_alarm($alarm_type, $event['id'], $alarm);
+			$alarm['times']	 = $alarm['time'];
+			$alarm['id']	 = $this->save_alarm($alarm_type, $event['id'], $alarm);
 
 			$event['alarm'][$alarm['id']] = $alarm;
 
@@ -382,16 +382,16 @@
 		{
 
 //			echo "<p>boalarm::send_alarm("; print_r($alarm); echo ")</p>\n";
-			$GLOBALS['phpgw_info']['user']['account_id'] = $this->owner = $alarm['owner'];
+			$GLOBALS['phpgw_info']['user']['account_id'] = $this->owner								 = $alarm['owner'];
 
 			if (!$alarm['enabled'] || !$alarm['owner'])
 			{
 				return false; // event not found
 			}
 
-			$this->config = CreateObject('phpgwapi.config', 'property');
+			$this->config	 = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
-			$this->send = CreateObject('phpgwapi.send');
+			$this->send		 = CreateObject('phpgwapi.send');
 
 			$members = array();
 
@@ -413,31 +413,31 @@
 
 			$current_user_name = $user_firstname . " " . $user_lastname;
 
-			$current_prefs_user = $this->bocommon->create_preferences('property', $alarm['owner']);
-			$current_user_address = $current_prefs_user['email'];
+			$current_prefs_user		 = $this->bocommon->create_preferences('property', $alarm['owner']);
+			$current_user_address	 = $current_prefs_user['email'];
 
 			//-----------from--------
 			// build body
 
 			$info = explode(':', $alarm['id']);
 
-			$body = lang('Alarm') . ' #' . $alarm['event_id'] . "\n";
-			$body .= lang('Name') . ': ' . $alarm['event_name'] . "\n";
-			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$info[0]}.edit",
-					'id' => $info[1]), false, true) . '">' . $alarm['event_name'] . "</a>\n";
+			$body	 = lang('Alarm') . ' #' . $alarm['event_id'] . "\n";
+			$body	 .= lang('Name') . ': ' . $alarm['event_name'] . "\n";
+			$body	 .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$info[0]}.edit",
+					'id'		 => $info[1]), false, true) . '">' . $alarm['event_name'] . "</a>\n";
 			if (!is_array($alarm['time']))
 			{
-				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$body .= lang('Deadline') . ': ' . $GLOBALS['phpgw']->common->show_date(($alarm['time'] + $alarm['offset']), $dateformat) . "\n";
+				$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$body		 .= lang('Deadline') . ': ' . $GLOBALS['phpgw']->common->show_date(($alarm['time'] + $alarm['offset']), $dateformat) . "\n";
 			}
 			$body .= lang('Assigned To') . ': ' . $GLOBALS['phpgw']->accounts->id2name($alarm['owner']) . "\n";
 
 			// add assigned to recipients
 			$members[] = array('account_id' => $alarm['owner'], 'account_name' => $GLOBALS['phpgw']->accounts->id2name($alarm['owner']));
 
-			$error = Array();
+			$error	 = Array();
 			$toarray = Array();
-			$i = 0;
+			$i		 = 0;
 			for ($i = 0; $i < count($members); $i++)
 			{
 				if ($members[$i]['account_id'])
@@ -449,8 +449,8 @@
 					}
 					else
 					{
-						$receipt['error'][] = array('msg' => lang('Your message could not be sent!'));
-						$receipt['error'][] = array('msg' => lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
+						$receipt['error'][]	 = array('msg' => lang('Your message could not be sent!'));
+						$receipt['error'][]	 = array('msg' => lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
 					}
 				}
 			}
@@ -466,8 +466,8 @@
 
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
-				$body = nl2br($body);
-				$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $current_user_address, $current_user_name, 'html');
+				$body	 = nl2br($body);
+				$rc		 = $this->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $current_user_address, $current_user_name, 'html');
 			}
 			else
 			{
@@ -477,18 +477,18 @@
 			//	$rc=1;
 			if (!$rc)
 			{
-				$receipt['error'][] = array('msg' => lang('Your message could not be sent by mail!'));
-				$receipt['error'][] = array('msg' => lang('The mail server returned'));
-				$receipt['error'][] = array('msg' => 'From :' . $current_user_name . '<' . $current_user_address . '>');
-				$receipt['error'][] = array('msg' => 'to: ' . $to);
-				$receipt['error'][] = array('msg' => 'subject: ' . $subject);
-				$receipt['error'][] = array('msg' => $body);
+				$receipt['error'][]	 = array('msg' => lang('Your message could not be sent by mail!'));
+				$receipt['error'][]	 = array('msg' => lang('The mail server returned'));
+				$receipt['error'][]	 = array('msg' => 'From :' . $current_user_name . '<' . $current_user_address . '>');
+				$receipt['error'][]	 = array('msg' => 'to: ' . $to);
+				$receipt['error'][]	 = array('msg' => 'subject: ' . $subject);
+				$receipt['error'][]	 = array('msg' => $body);
 //				$receipt['error'][] = array('msg'=> 'cc: ' . $cc);
 //				$receipt['error'][] = array('msg'=> 'bcc: '.$bcc);
-				$receipt['error'][] = array('msg' => 'group: ' . $group_name);
-				$receipt['error'][] = array('msg' => 'err_code: ' . $this->send->err['code']);
-				$receipt['error'][] = array('msg' => 'err_msg: ' . htmlspecialchars($this->send->err['msg']));
-				$receipt['error'][] = array('msg' => 'err_desc: ' . $this->send->err['desc']);
+				$receipt['error'][]	 = array('msg' => 'group: ' . $group_name);
+				$receipt['error'][]	 = array('msg' => 'err_code: ' . $this->send->err['code']);
+				$receipt['error'][]	 = array('msg' => 'err_msg: ' . htmlspecialchars($this->send->err['msg']));
+				$receipt['error'][]	 = array('msg' => 'err_desc: ' . $this->send->err['desc']);
 			}
 //			return $receipt;
 		}

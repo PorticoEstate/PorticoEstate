@@ -45,43 +45,43 @@
 		var $currentapp;
 		var $public_functions = array
 			(
-			'query' => true,
-			'index' => true,
-			'view' => true,
-			'edit' => true,
+			'query'	 => true,
+			'index'	 => true,
+			'view'	 => true,
+			'edit'	 => true,
 			'delete' => true,
-			'save' => true
+			'save'	 => true
 		);
 
 		function __construct()
 		{
 			parent::__construct();
 
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::async';
+			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::async';
 
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo = CreateObject('property.boasync', true);
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bo		 = CreateObject('property.boasync', true);
+			$this->bocommon	 = CreateObject('property.bocommon');
 
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->acl_location = '.admin';
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage = $this->acl->check($this->acl_location, 16, 'property');
+			$this->acl			 = & $GLOBALS['phpgw']->acl;
+			$this->acl_location	 = '.admin';
+			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage	 = $this->acl->check($this->acl_location, 16, 'property');
 
-			$this->start = $this->bo->start;
-			$this->query = $this->bo->query;
-			$this->sort = $this->bo->sort;
-			$this->order = $this->bo->order;
-			$this->allrows = $this->bo->allrows;
+			$this->start	 = $this->bo->start;
+			$this->query	 = $this->bo->query;
+			$this->sort		 = $this->bo->sort;
+			$this->order	 = $this->bo->order;
+			$this->allrows	 = $this->bo->allrows;
 
 			if (!$this->acl_manage)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 16, 'acl_location' => $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
+					'perm'			 => 16, 'acl_location'	 => $this->acl_location));
 			}
 		}
 
@@ -89,10 +89,10 @@
 		{
 			$data = array
 				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
+				'start'	 => $this->start,
+				'query'	 => $this->query,
+				'sort'	 => $this->sort,
+				'order'	 => $this->order,
 				//			'allrows'	=> $this->allrows,
 			);
 			$this->bo->save_sessiondata($data);
@@ -100,7 +100,7 @@
 
 		function index()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
 				phpgw::no_access();
 			}
@@ -113,53 +113,53 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$appname = lang('method');
-			$function_msg = lang('list async method');
+			$appname		 = lang('method');
+			$function_msg	 = lang('list async method');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
 				'datatable_name' => $appname,
-				'form' => array(
+				'form'			 => array(
 					'toolbar' => array(
 					)
 				),
-				'datatable' => array(
-					'source' => self::link(array(
-						'menuaction' => 'property.uiasync.index',
-						'phpgw_return_as' => 'json'
+				'datatable'		 => array(
+					'source'		 => self::link(array(
+						'menuaction'		 => 'property.uiasync.index',
+						'phpgw_return_as'	 => 'json'
 					)),
-					'new_item' => self::link(array(
+					'new_item'		 => self::link(array(
 						'menuaction' => 'property.uiasync.edit'
 					)),
-					'allrows' => true,
-					'editor_action' => '',
-					'field' => array(
+					'allrows'		 => true,
+					'editor_action'	 => '',
+					'field'			 => array(
 						array(
-							'key' => 'id',
-							'label' => lang('method ID'),
-							'sortable' => true
+							'key'		 => 'id',
+							'label'		 => lang('method ID'),
+							'sortable'	 => true
 						),
 						array(
-							'key' => 'name',
-							'label' => lang('Name'),
-							'sortable' => true
+							'key'		 => 'name',
+							'label'		 => lang('Name'),
+							'sortable'	 => true
 						),
 						array(
-							'key' => 'data',
-							'label' => lang('Data'),
-							'sortable' => false
+							'key'		 => 'data',
+							'label'		 => lang('Data'),
+							'sortable'	 => false
 						),
 						array(
-							'key' => 'descr',
-							'label' => lang('Description'),
-							'sortable' => false
+							'key'		 => 'descr',
+							'label'		 => lang('Description'),
+							'sortable'	 => false
 						),
 						array(
-							'key' => 'url',
-							'label' => lang('URL'),
-							'sortable' => false,
-							'hidden' => true
+							'key'		 => 'url',
+							'label'		 => lang('URL'),
+							'sortable'	 => false,
+							'hidden'	 => true
 						)
 					)
 				)
@@ -171,7 +171,7 @@
 					(
 					array
 						(
-						'name' => 'menuaction',
+						'name'	 => 'menuaction',
 						'source' => 'url'
 					),
 				)
@@ -183,7 +183,7 @@
 					(
 					array
 						(
-						'name' => 'method_id',
+						'name'	 => 'method_id',
 						'source' => 'id'
 					)
 				)
@@ -195,7 +195,7 @@
 					(
 					array
 						(
-						'name' => 'id',
+						'name'	 => 'id',
 						'source' => 'id'
 					)
 				)
@@ -204,10 +204,10 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name' => 'run',
+				'my_name'	 => 'run',
 				'statustext' => lang('Run Now'),
-				'text' => lang('Run Now'),
-				'action' => $GLOBALS['phpgw']->link
+				'text'		 => lang('Run Now'),
+				'action'	 => $GLOBALS['phpgw']->link
 					(
 					'/index.php', array
 					(
@@ -219,10 +219,10 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name' => 'schedule',
+				'my_name'	 => 'schedule',
 				'statustext' => lang('Schedule'),
-				'text' => lang('Schedule'),
-				'action' => $GLOBALS['phpgw']->link
+				'text'		 => lang('Schedule'),
+				'action'	 => $GLOBALS['phpgw']->link
 					(
 					'/index.php', array
 					(
@@ -234,10 +234,10 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name' => 'edit',
+				'my_name'	 => 'edit',
 				'statustext' => lang('Edit'),
-				'text' => lang('Edit'),
-				'action' => $GLOBALS['phpgw']->link
+				'text'		 => lang('Edit'),
+				'action'	 => $GLOBALS['phpgw']->link
 					(
 					'/index.php', array
 					(
@@ -249,18 +249,18 @@
 
 			$data['datatable']['actions'][] = array
 				(
-				'my_name' => 'delete',
-				'statustext' => lang('Delete'),
-				'text' => lang('Delete'),
-				'confirm_msg' => lang('do you really want to delete this entry'),
-				'action' => $GLOBALS['phpgw']->link
+				'my_name'		 => 'delete',
+				'statustext'	 => lang('Delete'),
+				'text'			 => lang('Delete'),
+				'confirm_msg'	 => lang('do you really want to delete this entry'),
+				'action'		 => $GLOBALS['phpgw']->link
 					(
 					'/index.php', array
 					(
 					'menuaction' => 'property.uiasync.delete'
 					)
 				),
-				'parameters' => json_encode($parameters3)
+				'parameters'	 => json_encode($parameters3)
 			);
 
 			/* $data['datatable']['actions'][] = array
@@ -284,35 +284,35 @@
 
 		public function query()
 		{
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
+			$search	 = phpgw::get_var('search');
+			$order	 = phpgw::get_var('order');
+			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-			$export = phpgw::get_var('export', 'bool');
+			$export	 = phpgw::get_var('export', 'bool');
 
 			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'		 => $search['value'],
+				'order'		 => $columns[$order[0]['column']]['data'],
+				'sort'		 => $order[0]['dir'],
+				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
-			$result_objects = array();
-			$result_count = 0;
+			$result_objects	 = array();
+			$result_count	 = 0;
 
 			$values = $this->bo->read($params);
 			foreach ($values as &$entry)
 			{
-				$entry['url']	= "{$entry['name']}&data=" . urlencode(urlencode($entry['data']));
-				$data_set = unserialize($entry['data']);
-				$method_data=array();
+				$entry['url']	 = "{$entry['name']}&data=" . urlencode(urlencode($entry['data']));
+				$data_set		 = unserialize($entry['data']);
+				$method_data	 = array();
 				foreach ($data_set as $key => $value)
 				{
 					$method_data[] = "{$key}::{$value}";
 				}
-				$entry['data']	= @implode (',',$method_data);
+				$entry['data'] = @implode(',', $method_data);
 			}
 
 			if ($export)
@@ -320,9 +320,9 @@
 				return $values;
 			}
 
-			$result_data = array('results' => $values);
-			$result_data['total_records'] = $this->bo->total_records;
-			$result_data['draw'] = $draw;
+			$result_data					 = array('results' => $values);
+			$result_data['total_records']	 = $this->bo->total_records;
+			$result_data['draw']			 = $draw;
 
 			return $this->jquery_results($result_data);
 		}
@@ -334,27 +334,27 @@
 				return $this->edit();
 			}
 
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				phpgw::no_access();
 			}
 
-			$id = phpgw::get_var('id', 'int');
-			$values = phpgw::get_var('values');
+			$id		 = phpgw::get_var('id', 'int');
+			$values	 = phpgw::get_var('values');
 
 
 			if ($id)
 			{
-				$values['id'] = $id;
-				$action = 'edit';
+				$values['id']	 = $id;
+				$action			 = 'edit';
 			}
 			else
 			{
 				$id = $values['id'];
 			}
 
-			$data = str_replace(' ', '', stripslashes($values['data']));
-			$data = html_entity_decode(stripslashes($values['data']));
+			$data	 = str_replace(' ', '', stripslashes($values['data']));
+			$data	 = html_entity_decode(stripslashes($values['data']));
 
 			$data = explode(",", $data);
 
@@ -362,8 +362,8 @@
 			{
 				foreach ($data as $set)
 				{
-					$set = explode("::", $set);
-					$data_set[$set[0]] = $set[1];
+					$set				 = explode("::", $set);
+					$data_set[$set[0]]	 = $set[1];
 				}
 			}
 
@@ -375,8 +375,8 @@
 			try
 			{
 
-				$receipt = $this->bo->save($values, $action);
-				$id = $receipt['id'];
+				$receipt	 = $this->bo->save($values, $action);
+				$id			 = $receipt['id'];
 				$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			}
 			catch (Exception $e)
@@ -393,76 +393,76 @@
 
 			phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiasync.edit',
-				'id' => $id));
+				'id'		 => $id));
 		}
 
 		function edit()
 		{
-			if(!$this->acl_edit)
+			if (!$this->acl_edit)
 			{
 				phpgw::no_access();
 			}
-			$id = phpgw::get_var('id', 'int');
-			$tabs = array();
+			$id				 = phpgw::get_var('id', 'int');
+			$tabs			 = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
-			$active_tab = 'general';
+			$active_tab		 = 'general';
 
 			if ($id)
 			{
-				$method = $this->bo->read_single($id);
-				$data_set = unserialize($method['data']);
+				$method		 = $this->bo->read_single($id);
+				$data_set	 = unserialize($method['data']);
 
 				if (is_array($data_set))
 				{
-					foreach($data_set as $key => $value)
+					foreach ($data_set as $key => $value)
 					{
 						$method_data[] = $key . '::' . $value;
 					}
 				}
 
-				$method_data = @implode(',', $method_data);
-				$function_msg = lang('edit method');
-				$action = 'edit';
+				$method_data	 = @implode(',', $method_data);
+				$function_msg	 = lang('edit method');
+				$action			 = 'edit';
 			}
 			else
 			{
-				$function_msg = lang('add method');
-				$action = 'add';
+				$function_msg	 = lang('add method');
+				$action			 = 'add';
 			}
 
 
 			$link_data = array
 				(
 				'menuaction' => 'property.uiasync.save',
-				'id' => $id
+				'id'		 => $id
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index')),
-				'lang_id' => lang('method ID'),
-				'lang_name' => lang('Name'),
-				'lang_descr' => lang('Descr'),
-				'lang_save' => lang('save'),
-				'lang_done' => lang('done'),
-				'value_id' => $id,
-				'value_name' => $method['name'],
-				'lang_id_statustext' => lang('Enter the method ID'),
-				'lang_descr_statustext' => lang('Enter a description the method'),
-				'lang_done_statustext' => lang('Back to the list'),
-				'lang_save_statustext' => lang('Save the method'),
-				'type_id' => $method['type_id'],
-				'location_code' => $method['location_code'],
-				'value_descr' => $method['descr'],
-				'value_data' => $method_data,
-				'lang_data' => lang('Data'),
-				'lang_data_statustext' => lang('Input data for the nethod'),
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index')),
+				'lang_id'				 => lang('method ID'),
+				'lang_name'				 => lang('Name'),
+				'lang_descr'			 => lang('Descr'),
+				'lang_save'				 => lang('save'),
+				'lang_done'				 => lang('done'),
+				'value_id'				 => $id,
+				'value_name'			 => $method['name'],
+				'lang_id_statustext'	 => lang('Enter the method ID'),
+				'lang_descr_statustext'	 => lang('Enter a description the method'),
+				'lang_done_statustext'	 => lang('Back to the list'),
+				'lang_save_statustext'	 => lang('Save the method'),
+				'type_id'				 => $method['type_id'],
+				'location_code'			 => $method['location_code'],
+				'value_descr'			 => $method['descr'],
+				'value_data'			 => $method_data,
+				'lang_data'				 => lang('Data'),
+				'lang_data_statustext'	 => lang('Input data for the nethod'),
+				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'				 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
 
@@ -474,12 +474,11 @@
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl(array('async', 'datatable_inline'), array('edit' => $data));
-
 		}
 
 		function delete()
 		{
-			$id = phpgw::get_var('id', 'int');
+			$id		 = phpgw::get_var('id', 'int');
 			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -497,18 +496,18 @@
 
 			$data = array
 				(
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.delete',
-					'id' => $id)),
-				'lang_confirm_msg' => lang('do you really want to delete this entry'),
-				'lang_yes' => lang('yes'),
-				'lang_yes_statustext' => lang('Delete the entry'),
-				'lang_no_statustext' => lang('Back to the list'),
-				'lang_no' => lang('no')
+				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'delete_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.delete',
+					'id'		 => $id)),
+				'lang_confirm_msg'		 => lang('do you really want to delete this entry'),
+				'lang_yes'				 => lang('yes'),
+				'lang_yes_statustext'	 => lang('Delete the entry'),
+				'lang_no_statustext'	 => lang('Back to the list'),
+				'lang_no'				 => lang('no')
 			);
 
-			$appname = lang('async method');
-			$function_msg = lang('delete async method');
+			$appname		 = lang('async method');
+			$function_msg	 = lang('delete async method');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));

@@ -30,8 +30,6 @@
 	 * Description
 	 * @package property
 	 */
-
-
 	/**
 	 * Description of BkBygg_exporter_data_til_Agresso
 	 *
@@ -39,6 +37,7 @@
 	 */
 	if (!class_exists("BkBygg_exporter_data_til_Agresso"))
 	{
+
 		class BkBygg_exporter_data_til_Agresso
 		{
 
@@ -57,16 +56,14 @@
 			var $batchid;
 			protected $global_lock = false;
 
-
 			public function __construct( $param )
 			{
-				$this->db = & $GLOBALS['phpgw']->db;
-				$this->soXport = CreateObject('property.soXport');
-				$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-				$this->order_id = $param['order_id'];
-				$this->voucher_type = $param['voucher_type'];
-				$this->voucher_id = $param['external_voucher_id'];
-
+				$this->db			 = & $GLOBALS['phpgw']->db;
+				$this->soXport		 = CreateObject('property.soXport');
+				$this->config		 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+				$this->order_id		 = $param['order_id'];
+				$this->voucher_type	 = $param['voucher_type'];
+				$this->voucher_id	 = $param['external_voucher_id'];
 			}
 
 			public function create_transfer_xml( $param )
@@ -78,101 +75,101 @@
 				 */
 
 				$Seller = array(
-					'Name' => $param['vendor_name'],
-					'AddressInfo' => array(
+					'Name'			 => $param['vendor_name'],
+					'AddressInfo'	 => array(
 						array(
 							'Address' => $param['vendor_address']
 						)
 					),
-					'SellerNo' => $param['vendor_id'],
-	//				'SellerReferences' => array(
-	//					array(
-	//						'SalesMan' => 12573,
-	//					)
-	//				)
+					'SellerNo'		 => $param['vendor_id'],
+					//				'SellerReferences' => array(
+					//					array(
+					//						'SalesMan' => 12573,
+					//					)
+					//				)
 				);
 
 
-				$DetailInfo = array();
-				$DetailInfo[] = array(
+				$DetailInfo		 = array();
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'A0',
-						'Value' => $param['dim0'] // Art
+						'Code'	 => 'A0',
+						'Value'	 => $param['dim0'] // Art
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'C1',
-						'Value' => sprintf("%06s", $param['dim1']) // Ansvar
+						'Code'	 => 'C1',
+						'Value'	 => sprintf("%06s", $param['dim1']) // Ansvar
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'Q0',
-						'Value' => $param['dim2'] // Tjeneste
+						'Code'	 => 'Q0',
+						'Value'	 => $param['dim2'] // Tjeneste
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'F0',
-						'Value' => $param['dim3'] // Objekt
+						'Code'	 => 'F0',
+						'Value'	 => $param['dim3'] // Objekt
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'A7',
-						'Value' => $param['dim4'] // Kontrakt
+						'Code'	 => 'A7',
+						'Value'	 => $param['dim4'] // Kontrakt
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'B0',
-						'Value' => $param['dim5'] ? $param['dim5'] : 9 // Prosjekt
+						'Code'	 => 'B0',
+						'Value'	 => $param['dim5'] ? $param['dim5'] : 9 // Prosjekt
 					)
 				);
-				$DetailInfo[] = array(
+				$DetailInfo[]	 = array(
 					'ReferenceCode' => array(
-						'Code' => 'B1',
-						'Value' => $param['dim6'] // Aktivitet
+						'Code'	 => 'B1',
+						'Value'	 => $param['dim6'] // Aktivitet
 					)
 				);
 
 				$DetailInfo[] = array(
 					'ReferenceCode' => array(
-						'Code' => 'A1',
-						'Value' => $param['tax_code'] // Moms kode
+						'Code'	 => 'A1',
+						'Value'	 => $param['tax_code'] // Moms kode
 					)
 				);
 
 				$Header = array(
 					'AcceptFlag' => 1,
 					'OrderType]' => 'WB',
-					'Status' => 'N',
-					'OrderDate' => date('Y-m-d'),
+					'Status'	 => 'N',
+					'OrderDate'	 => date('Y-m-d'),
 					'HeaderText' => $param['invoice_remark'], // Fakturanotat
-					'Currency' => 'NOK',
-					'Seller' => array($Seller),
-					'Buyer' => array($param['buyer']),
+					'Currency'	 => 'NOK',
+					'Seller'	 => array($Seller),
+					'Buyer'		 => array($param['buyer']),
 					$DetailInfo
 				);
 
 				array_unshift($DetailInfo, array('TaxCode' => $param['tax_code']));
 
-				$Detail = array();
-				$i = 1;
+				$Detail	 = array();
+				$i		 = 1;
 				foreach ($param['lines'] as $line)
 				{
 
 					$Detail[] = array(
-						'LineNo' => $i,
-						'Status' => 'N',
-						'BuyerProductCode' => $line['unspsc_code'], //74000176, //UN-kode
-						'BuyerProductDescr' => $line['descr'], //'Kopipapir',
-						'UnitCode' => 'STK',
-						'Quantity' => 1,
-						'Price' => number_format($line['price'], 2, '.', ''),
-						'LineTotal'=> number_format($line['price'], 2, '.', ''),
-						'DetailInfo' => $DetailInfo
+						'LineNo'			 => $i,
+						'Status'			 => 'N',
+						'BuyerProductCode'	 => $line['unspsc_code'], //74000176, //UN-kode
+						'BuyerProductDescr'	 => $line['descr'], //'Kopipapir',
+						'UnitCode'			 => 'STK',
+						'Quantity'			 => 1,
+						'Price'				 => number_format($line['price'], 2, '.', ''),
+						'LineTotal'			 => number_format($line['price'], 2, '.', ''),
+						'DetailInfo'		 => $DetailInfo
 					);
 
 					$i++;
@@ -180,27 +177,27 @@
 
 
 				$Orders['Order'][] = array(
-					'OrderNo' => $param['order_id'],
-					'VoucherType' => $this->voucher_type,
-					'TransType' => 41,
-					'Header' => array($Header),
-					'Details' => array('Detail' => $Detail)
+					'OrderNo'		 => $param['order_id'],
+					'VoucherType'	 => $this->voucher_type,
+					'TransType'		 => 41,
+					'Header'		 => array($Header),
+					'Details'		 => array('Detail' => $Detail)
 				);
 
-	//			_debug_array($Orders);
-	//			die();
+				//			_debug_array($Orders);
+				//			die();
 
-				$root_attributes = array(
-					'Version' => "542",
-					'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-					'xsi:noNamespaceSchemaLocation' => "http://services.agresso.com/schema/ABWOrder/2004/07/02/ABWOrder.xsd"
+				$root_attributes	 = array(
+					'Version'						 => "542",
+					'xmlns:xsi'						 => "http://www.w3.org/2001/XMLSchema-instance",
+					'xsi:noNamespaceSchemaLocation'	 => "http://services.agresso.com/schema/ABWOrder/2004/07/02/ABWOrder.xsd"
 				);
-				$xml_creator = new xml_creator('ABWOrder', $root_attributes);
+				$xml_creator		 = new xml_creator('ABWOrder', $root_attributes);
 				$xml_creator->fromArray($Orders);
-				$this->transfer_xml = $xml_creator->getDocument();
+				$this->transfer_xml	 = $xml_creator->getDocument();
 				return $this->transfer_xml;
-		//		$xml_creator->output();
-		//		die();
+				//		$xml_creator->output();
+				//		die();
 			}
 
 			/**
@@ -213,7 +210,6 @@
 				header('Content-type: text/xml');
 				echo $this->transfer_xml;
 			}
-
 
 			protected function create_file_name( $ref = '' )
 			{
@@ -239,18 +235,18 @@
 				return $filename;
 			}
 
-			public function transfer( )
+			public function transfer()
 			{
-				$batchid = $this->soXport->increment_batchid();
-				$this->batchid = $batchid;
-				$filename = $this->create_file_name($this->order_id);
-				$content = $this->transfer_xml;
-				$debug = empty($this->config->config_data['export']['activate_transfer']) ? true : false;
+				$batchid		 = $this->soXport->increment_batchid();
+				$this->batchid	 = $batchid;
+				$filename		 = $this->create_file_name($this->order_id);
+				$content		 = $this->transfer_xml;
+				$debug			 = empty($this->config->config_data['export']['activate_transfer']) ? true : false;
 
-				if(!empty($this->config->config_data['export']['path']) && is_dir($this->config->config_data['export']['path'])) // keep a copy
+				if (!empty($this->config->config_data['export']['path']) && is_dir($this->config->config_data['export']['path'])) // keep a copy
 				{
-					$file_written = false;
-					$fp = fopen($filename, "wb");
+					$file_written	 = false;
+					$fp				 = fopen($filename, "wb");
 					fwrite($fp, $content);
 
 					if (fclose($fp))
@@ -293,16 +289,16 @@
 					switch ($this->config->config_data['common']['method'])
 					{
 						case 'ftp';
-							$tmp = tmpfile();
+							$tmp		 = tmpfile();
 							fwrite($tmp, $content);
 							rewind($tmp);
 							$transfer_ok = ftp_fput($connection, $remote_file, $tmp, FTP_BINARY);
 							fclose($tmp);
-						//	$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
+							//	$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
 							break;
 						case 'ssh';
-							$sftp = ssh2_sftp($connection);
-							$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+							$sftp		 = ssh2_sftp($connection);
+							$stream		 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
 							fwrite($stream, $content);
 							$transfer_ok = @fclose($stream);
 							break;
@@ -324,30 +320,30 @@
 							$this->db->transaction_abort(); // Reverse the batch_id - increment
 						}
 						$this->soXport->log_transaction($batchid, $this->order_id, lang('Failed to transfere Order %1 to Agresso', basename($filename)));
-				//		@unlink($filename);
+						//		@unlink($filename);
 					}
 				}
 				else
 				{
 					$transfer_ok = true;
 
-	//				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-	//				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-	//				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-	//				$size = strlen($content);
-	//				$browser = CreateObject('phpgwapi.browser');
-	//				$browser->content_header(basename($filename), '', $size);
-	//				echo $content;
+					//				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+					//				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+					//				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+					//				$size = strlen($content);
+					//				$browser = CreateObject('phpgwapi.browser');
+					//				$browser->content_header(basename($filename), '', $size);
+					//				echo $content;
 				}
 				return $transfer_ok;
 			}
 
 			function phpftp_connect()
 			{
-				$server = $this->config->config_data['common']['host'];
-				$user = $this->config->config_data['common']['user'];
-				$password = $this->config->config_data['common']['password'];
-				$port = 22;
+				$server		 = $this->config->config_data['common']['host'];
+				$user		 = $this->config->config_data['common']['user'];
+				$password	 = $this->config->config_data['common']['password'];
+				$port		 = 22;
 
 				switch ($this->config->config_data['common']['method'])
 				{
@@ -388,6 +384,7 @@
 
 	if (!class_exists("xml_creator"))
 	{
+
 		class xml_creator extends XMLWriter
 		{
 

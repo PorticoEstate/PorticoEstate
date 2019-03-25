@@ -49,18 +49,18 @@
 		protected $custom;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
 			//		$this->so 			= CreateObject('property.soifc');
-			$this->bocommon = createObject('property.bocommon');
-			$this->custom = createObject('property.custom_fields');
-			$this->acl_location = '.ifc';
+			$this->bocommon		 = createObject('property.bocommon');
+			$this->custom		 = createObject('property.custom_fields');
+			$this->acl_location	 = '.ifc';
 
 			if ($session)
 			{
@@ -68,12 +68,12 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	 = phpgw::get_var('query');
+			$sort	 = phpgw::get_var('sort');
+			$order	 = phpgw::get_var('order');
+			$filter	 = phpgw::get_var('filter', 'int');
+			$cat_id	 = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
 			if ($start)
@@ -113,20 +113,20 @@
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
 				case 'mssql':
-					$this->dateformat = "M d Y";
-					$this->datetimeformat = "M d Y g:iA";
+					$this->dateformat		 = "M d Y";
+					$this->datetimeformat	 = "M d Y g:iA";
 					break;
 				case 'mysql':
-					$this->dateformat = "Y-m-d";
-					$this->datetimeformat = "Y-m-d G:i:s";
+					$this->dateformat		 = "Y-m-d";
+					$this->datetimeformat	 = "Y-m-d G:i:s";
 					break;
 				case 'pgsql':
-					$this->dateformat = "Y-m-d";
-					$this->datetimeformat = "Y-m-d G:i:s";
+					$this->dateformat		 = "Y-m-d";
+					$this->datetimeformat	 = "Y-m-d G:i:s";
 					break;
 				case 'postgres':
-					$this->dateformat = "Y-m-d";
-					$this->datetimeformat = "Y-m-d G:i:s";
+					$this->dateformat		 = "Y-m-d";
+					$this->datetimeformat	 = "Y-m-d G:i:s";
 					break;
 			}
 		}
@@ -143,12 +143,12 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'ifc_app');
 
-			$this->start = (isset($data['start']) ? $data['start'] : '');
-			$this->query = (isset($data['query']) ? $data['query'] : '');
-			$this->filter = (isset($data['filter']) ? $data['filter'] : '');
-			$this->sort = (isset($data['sort']) ? $data['sort'] : '');
-			$this->order = (isset($data['order']) ? $data['order'] : '');
-			$this->cat_id = (isset($data['cat_id']) ? $data['cat_id'] : '');
+			$this->start	 = (isset($data['start']) ? $data['start'] : '');
+			$this->query	 = (isset($data['query']) ? $data['query'] : '');
+			$this->filter	 = (isset($data['filter']) ? $data['filter'] : '');
+			$this->sort		 = (isset($data['sort']) ? $data['sort'] : '');
+			$this->order	 = (isset($data['order']) ? $data['order'] : '');
+			$this->cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : '');
 		}
 
 		function import( $values = '', $ifcfile = '' )
@@ -168,17 +168,17 @@
 
 //			_debug_array($this->xml_to_array($ifcfile));
 
-			$xa = CreateObject('property.XmlToArray');
-			$xa->get_attributes = true;
-			$xml = $xa->parseFile($ifcfile);
+			$xa					 = CreateObject('property.XmlToArray');
+			$xa->get_attributes	 = true;
+			$xml				 = $xa->parseFile($ifcfile);
 			_debug_array($xml);
 		}
 
 		function read()
 		{
-			$ifc_info = $this->so->read(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'cat_id' => $this->cat_id, 'allrows' => $this->allrows, 'filter' => $this->filter));
+			$ifc_info			 = $this->so->read(array('start'		 => $this->start, 'query'		 => $this->query,
+				'sort'		 => $this->sort, 'order'		 => $this->order,
+				'cat_id'	 => $this->cat_id, 'allrows'	 => $this->allrows, 'filter'	 => $this->filter));
 			$this->total_records = $this->so->total_records;
 			return $ifc_info;
 		}
@@ -192,12 +192,12 @@
 		{
 			$custom_attributes = $this->custom->find('property', $this->acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
-			$ifc_info = $this->so->read2(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'cat_id' => $this->cat_id, 'allrows' => $this->allrows, 'filter' => $this->filter,
-				'custom_attributes' => $custom_attributes));
+			$ifc_info			 = $this->so->read2(array('start'				 => $this->start, 'query'				 => $this->query,
+				'sort'				 => $this->sort, 'order'				 => $this->order,
+				'cat_id'			 => $this->cat_id, 'allrows'			 => $this->allrows, 'filter'			 => $this->filter,
+				'custom_attributes'	 => $custom_attributes));
 			$this->total_records = $this->so->total_records;
-			$this->uicols = $this->so->uicols;
+			$this->uicols		 = $this->so->uicols;
 			return $ifc_info;
 		}
 
@@ -210,7 +210,7 @@
 				$values = $this->so->read_single($id, $values);
 			}
 
-			$values = $this->custom->prepare($values, $appname = 'property', $location = $this->acl_location);
+			$values		 = $this->custom->prepare($values, $appname	 = 'property', $location	 = $this->acl_location);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			if (isset($values['entry_date']) && $values['entry_date'])
@@ -261,9 +261,9 @@
 
 			$criteria = array
 				(
-				'appname' => 'property',
-				'location' => $this->acl_location,
-				'allrows' => true
+				'appname'	 => 'property',
+				'location'	 => $this->acl_location,
+				'allrows'	 => true
 			);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
@@ -306,29 +306,29 @@
 			$categories = $this->so->select_category_list();
 
 			//while (is_array($categories) && list(, $category) = each($categories))
-                        if (is_array($categories))
-                        {
-                            foreach($categories as $category)
+			if (is_array($categories))
 			{
-				if ($category['id'] == $selected)
+				foreach ($categories as $category)
 				{
-					$category_list[] = array
-						(
-						'cat_id' => $category['id'],
-						'name' => $category['name'],
-						'selected' => 'selected'
-					);
-				}
-				else
-				{
-					$category_list[] = array
-						(
-						'cat_id' => $category['id'],
-						'name' => $category['name'],
-					);
+					if ($category['id'] == $selected)
+					{
+						$category_list[] = array
+							(
+							'cat_id'	 => $category['id'],
+							'name'		 => $category['name'],
+							'selected'	 => 'selected'
+						);
+					}
+					else
+					{
+						$category_list[] = array
+							(
+							'cat_id' => $category['id'],
+							'name'	 => $category['name'],
+						);
+					}
 				}
 			}
-                        }
 			return $category_list;
 		}
 
@@ -348,8 +348,8 @@
 		{
 			if ($date)
 			{
-				$date_array = phpgwapi_datetime::date_array($date);
-				$date = mktime(8, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
+				$date_array	 = phpgwapi_datetime::date_array($date);
+				$date		 = mktime(8, 0, 0, $date_array['month'], $date_array['day'], $date_array['year']);
 			}
 			return $date;
 		}

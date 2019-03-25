@@ -35,6 +35,7 @@
 
 	class bilagsinfo_BK extends property_cron_parent
 	{
+
 		var $b_accounts = array();
 
 		public function __construct()
@@ -42,10 +43,10 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('property');
-			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatere Portico';
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$this->sub_location	 = lang('property');
+			$this->function_msg	 = 'Hent bilagsinformasjon fra Agresso - og oppdatere Portico';
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
 		}
 
 		function execute()
@@ -94,18 +95,17 @@
 			foreach ($bilagserie as $bilagsnr)
 			{
 				$bilag = $this->get_bilag($bilagsnr);
-				if($bilag)
+				if ($bilag)
 				{
 					$this->update_bilag($bilag, $bilagsnr);
 					$this->receipt['message'][] = array('msg' => "{$bilagsnr} er oppdatert med data fra Argesso");
 				}
 			}
 
-			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
-			$this->receipt['message'][] = array('msg' => $msg);
-
+			$this->receipt['message'][]	 = array('msg' => $msg);
 		}
 
 		function cron_log( $receipt = '' )
@@ -127,35 +127,35 @@
 
 		private function update_order()
 		{
-			$config = CreateObject('phpgwapi.config', 'property')->read();
-			$sql = "SELECT DISTINCT pmwrkord_code, external_voucher_id FROM fm_ecobilag";
+			$config		 = CreateObject('phpgwapi.config', 'property')->read();
+			$sql		 = "SELECT DISTINCT pmwrkord_code, external_voucher_id FROM fm_ecobilag";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$vouchers = array();
+			$vouchers	 = array();
 			while ($this->db->next_record())
 			{
 				$vouchers[] = array
-				(
-					'order_id' => $this->db->f('pmwrkord_code'),
+					(
+					'order_id'	 => $this->db->f('pmwrkord_code'),
 					'voucher_id' => $this->db->f('external_voucher_id')
 				);
 			}
 
-			$socommon = CreateObject('property.socommon');
-			$soworkorder = CreateObject('property.soworkorder');
-			$sotts = CreateObject('property.sotts');
+			$socommon				 = CreateObject('property.socommon');
+			$soworkorder			 = CreateObject('property.soworkorder');
+			$sotts					 = CreateObject('property.sotts');
 			$workorder_closed_status = !empty($config['workorder_closed_status']) ? $config['workorder_closed_status'] : false;
 
-			if(!$workorder_closed_status)
+			if (!$workorder_closed_status)
 			{
 				throw new Exception('Order closed status not defined');
 			}
 
-			$metadata = $this->db->metadata('fm_ecobilag');
-			$cols = array_keys($metadata);
+			$metadata	 = $this->db->metadata('fm_ecobilag');
+			$cols		 = array_keys($metadata);
 
 			foreach ($vouchers as $voucher)
 			{
-				if(!$this->get_bilag($voucher['voucher_id']))
+				if (!$this->get_bilag($voucher['voucher_id']))
 				{
 					$this->receipt['error'][] = array('msg' => "{$voucher['voucher_id']} er ikke betalt");
 					continue;
@@ -163,21 +163,22 @@
 
 				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er betalt");
 
-				$ok = false;
-				$order_type = $socommon->get_order_type($voucher['order_id']);
+				$ok			 = false;
+				$order_type	 = $socommon->get_order_type($voucher['order_id']);
 				switch ($order_type)
 				{
 					case 's_agreement':
 						break;
 					case 'workorder':
 						$workorder = $soworkorder->read_single($voucher['order_id']);
-						if($workorder['continuous'])
+						if ($workorder['continuous'])
 						{
 							$ok = true;
 						}
 						else
 						{
-							$ok = $soworkorder->update_status(array('order_id' => $voucher['order_id'],'status' => $workorder_closed_status));
+							$ok = $soworkorder->update_status(array('order_id'	 => $voucher['order_id'],
+								'status'	 => $workorder_closed_status));
 						}
 						break;
 					case 'ticket':
@@ -185,25 +186,25 @@
 						$this->db->next_record();
 						$ticket_id = $this->db->f('id');
 
-						if($this->db->f('continuous'))
+						if ($this->db->f('continuous'))
 						{
 							$ok = true;
 						}
 						else
 						{
-							$ticket = array(
-									'status' => 'C8' //Avsluttet og fakturert (C)
-								);
-							$ok = $sotts->update_status($ticket, $ticket_id);
+							$ticket	 = array(
+								'status' => 'C8' //Avsluttet og fakturert (C)
+							);
+							$ok		 = $sotts->update_status($ticket, $ticket_id);
 						}
 						break;
 					default:
 						throw new Exception('Order type not supported');
 				}
 
-				if($ok)
+				if ($ok)
 				{
-					_debug_array("Overfører {$voucher['voucher_id']} til historikk". PHP_EOL);
+					_debug_array("Overfører {$voucher['voucher_id']} til historikk" . PHP_EOL);
 
 					$this->db->transaction_begin();
 					$value_set = array();
@@ -213,32 +214,31 @@
 					{
 						$value_set[$col] = $this->db->f($col);
 					}
-					$value_set['filnavn'] = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+					$value_set['filnavn']	 = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 					$value_set['ordrebelop'] = $value_set['belop'];
 					unset($value_set['pre_transfer']);
 
-					$_cols = implode(',', array_keys($value_set));
-					$values = $this->db->validate_insert(array_values($value_set));
+					$_cols						 = implode(',', array_keys($value_set));
+					$values						 = $this->db->validate_insert(array_values($value_set));
 					$this->db->query("INSERT INTO fm_ecobilagoverf ({$_cols}) VALUES ({$values})", __LINE__, __FILE__);
 					$this->db->query("DELETE FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
 					$this->db->transaction_commit();
-					$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
-
+					$this->receipt['message'][]	 = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
 				}
 			}
 		}
 
-		function update_bilag($bilag, $bilagsnr)
+		function update_bilag( $bilag, $bilagsnr )
 		{
-			$value_set = array
-			(
-				'periode' => $bilag[0]['period'],
-	//			'pmwrkord_code' => $bilag[0]['order_id'],
-				'mvakode' => 0,
-				'netto_belop' => 0,
-				'external_updated'	=> 1
+			$value_set	 = array
+				(
+				'periode'			 => $bilag[0]['period'],
+				//			'pmwrkord_code' => $bilag[0]['order_id'],
+				'mvakode'			 => 0,
+				'netto_belop'		 => 0,
+				'external_updated'	 => 1
 			);
-			$tax_code = 0;
+			$tax_code	 = 0;
 			$netto_belop = 0;
 
 			phpgwapi_cache::system_clear('property', "budget_order_{$bilag[0]['order_id']}");
@@ -247,46 +247,45 @@
 			{
 				if ($line['account'] == 2327010)
 				{
-	//				$value_set['belop'] = $line['amount'] * -1;
+					//				$value_set['belop'] = $line['amount'] * -1;
 				}
 				if (in_array($line['account'], $this->b_accounts))
 				{
-					$value_set['netto_belop'] += $line['amount'];
-					$value_set['mvakode'] = $line['tax_code'] == '6A' ? 0 :  $line['tax_code'];
+					$value_set['netto_belop']	 += $line['amount'];
+					$value_set['mvakode']		 = $line['tax_code'] == '6A' ? 0 : $line['tax_code'];
 				}
 			}
 
 			$value_set = $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_ecobilagoverf SET {$value_set} WHERE external_voucher_id = '{$bilagsnr}'", __LINE__, __FILE__);
 
-			if($this->debug)
+			if ($this->debug)
 			{
-				_debug_array($value_set. PHP_EOL);
+				_debug_array($value_set . PHP_EOL);
 			}
-
 		}
 
-		function get_bilag_old($bilagsnr)
+		function get_bilag_old( $bilagsnr )
 		{
-			static $first_connect = false;
-			$username = 'WEBSER';
-			$password = 'wser10';
-			$client = 'BY';
-			$TemplateId = '11176'; //Spørring bilag_Portico ordrer
+			static $first_connect	 = false;
+			$username				 = 'WEBSER';
+			$password				 = 'wser10';
+			$client					 = 'BY';
+			$TemplateId				 = '11176'; //Spørring bilag_Portico ordrer
 
-			$service = new \QueryEngineV201101(array('trace' => 1));
+			$service	 = new \QueryEngineV201101(array('trace' => 1));
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
 			$Credentials->setPassword($password);
 			$Credentials->setClient($client);
 
-			echo "tester bilag {$bilagsnr}". PHP_EOL;
+			echo "tester bilag {$bilagsnr}" . PHP_EOL;
 
 			// Get the default settings for a template (templateId)
 			try
 			{
 				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
-				if(!$first_connect)
+				if (!$first_connect)
 				{
 					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
 					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
@@ -304,16 +303,16 @@
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue('201701')->setToValue('201812');
 
 			// Create the InputForTemplateResult class and set values
-			$input = new InputForTemplateResult($TemplateId);
-			$options = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
-			$options->RemoveHiddenColumns = true;
-			$options->ShowDescriptions = true;
-			$options->Aggregated = false;
-			$options->OverrideAggregation= false;
-			$options->CalculateFormulas= false;
-			$options->FormatAlternativeBreakColumns= false;
-			$options->FirstRecord= false;
-			$options->LastRecord= false;
+			$input									 = new InputForTemplateResult($TemplateId);
+			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
+			$options->RemoveHiddenColumns			 = true;
+			$options->ShowDescriptions				 = true;
+			$options->Aggregated					 = false;
+			$options->OverrideAggregation			 = false;
+			$options->CalculateFormulas				 = false;
+			$options->FormatAlternativeBreakColumns	 = false;
+			$options->FirstRecord					 = false;
+			$options->LastRecord					 = false;
 
 			$input->setTemplateResultOptions($options);
 			// Get new values to SearchCriteria (if that’s what you want to do
@@ -324,14 +323,14 @@
 
 			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
 
-			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse	 = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('utf-8');
 			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result = $xmlparse->parse($data);
+			$var_result	 = $xmlparse->parse($data);
 
-			if($var_result)
+			if ($var_result)
 			{
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
 				}
@@ -339,7 +338,7 @@
 			}
 			else
 			{
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
 				}
@@ -347,18 +346,17 @@
 			}
 
 			return $ret;
-
 		}
 
 		function get_bilag( $bilagsnr )
 		{
 			//Data, connection, auth
-			$soapUser = "WEBSER";  //  username
-			$soapPassword = "wser10"; // password
-			$CLIENT = 'BY';
+			$soapUser		 = "WEBSER";  //  username
+			$soapPassword	 = "wser10"; // password
+			$CLIENT			 = 'BY';
 
 			// xml post structure
-	$soap_request = <<<XML
+			$soap_request = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://services.agresso.com/QueryEngineService/QueryEngineV201101">
 	<SOAP-ENV:Body>
@@ -453,15 +451,15 @@
 XML;
 
 			$headers = array(
-			"Accept: text/xml",
-			"Cache-Control: no-cache",
-			"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
-			"Content-Type: text/xml; charset=utf-8",
-			"SOAPAction: http://services.agresso.com/QueryEngineService/QueryEngineV201101/GetTemplateResultAsDataSet",
-			"Content-length: ".strlen($soap_request)
+				"Accept: text/xml",
+				"Cache-Control: no-cache",
+				"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
+				"Content-Type: text/xml; charset=utf-8",
+				"SOAPAction: http://services.agresso.com/QueryEngineService/QueryEngineV201101/GetTemplateResultAsDataSet",
+				"Content-length: " . strlen($soap_request)
 			);
 
-	//		$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
+			//		$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
 			$soapUrl = "http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 
 			$ch = curl_init($soapUrl);
@@ -472,8 +470,8 @@ XML;
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_request);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	//		curl_setopt($ch, CURLOPT_VERBOSE, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT,10);
+			//		curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
 			$response = curl_exec($ch);
 
@@ -482,17 +480,17 @@ XML;
 			curl_close($ch);
 
 			// converting
-			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"),"",$response);
+			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"), "", $response);
 			// convertingc to XML
 
-			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse	 = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('utf-8');
 			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result = $xmlparse->parse($response1);
+			$var_result	 = $xmlparse->parse($response1);
 
-			if(!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
+			if (!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
 			{
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
 				}
@@ -500,7 +498,7 @@ XML;
 			}
 			else
 			{
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
 				}

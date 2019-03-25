@@ -52,8 +52,8 @@
 		 */
 		function __construct( $fakebase = '/property' )
 		{
-			$this->vfs = CreateObject('phpgwapi.vfs');
-			$this->rootdir = $this->vfs->basedir;
+			$this->vfs		 = CreateObject('phpgwapi.vfs');
+			$this->rootdir	 = $this->vfs->basedir;
 			if ($fakebase)
 			{
 				$this->fakebase = $fakebase;
@@ -88,14 +88,14 @@
 			$receipt = array();
 
 			if (!$this->vfs->file_exists(array(
-					'string' => $this->fakebase,
-					'relatives' => array(RELATIVE_NONE)
+					'string'	 => $this->fakebase,
+					'relatives'	 => array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 				if (!$this->vfs->mkdir(array(
-						'string' => $this->fakebase,
-						'relatives' => array(
+						'string'	 => $this->fakebase,
+						'relatives'	 => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -117,14 +117,14 @@
 				$catalog .= "/{$entry}";
 
 				if (!$this->vfs->file_exists(array(
-						'string' => "{$this->fakebase}{$catalog}",
-						'relatives' => array(RELATIVE_NONE)
+						'string'	 => "{$this->fakebase}{$catalog}",
+						'relatives'	 => array(RELATIVE_NONE)
 					)))
 				{
 					$this->vfs->override_acl = 1;
 					if (!$this->vfs->mkdir(array(
-							'string' => "{$this->fakebase}{$catalog}",
-							'relatives' => array(
+							'string'	 => "{$this->fakebase}{$catalog}",
+							'relatives'	 => array(
 								RELATIVE_NONE
 							)
 						)))
@@ -150,7 +150,7 @@
 		 *
 		 * @return array Array with result on the action(failed/success) for each file
 		 */
-		function delete_file($path, $values )
+		function delete_file( $path, $values )
 		{
 			$receipt = array();
 
@@ -162,27 +162,27 @@
 
 				$file = "{$file_info['directory']}/{$file_info['name']}";
 
-				if($check_path != trim($file_info['directory'], "/"))
+				if ($check_path != trim($file_info['directory'], "/"))
 				{
-					phpgwapi_cache::message_set( "deleting file from wrong location", 'error');
+					phpgwapi_cache::message_set("deleting file from wrong location", 'error');
 					return false;
 				}
 
 				if ($this->vfs->file_exists(array(
-						'string' => $file,
-						'relatives' => array(RELATIVE_NONE)
+						'string'	 => $file,
+						'relatives'	 => array(RELATIVE_NONE)
 					)))
 				{
 					$this->vfs->override_acl = 1;
 
 					if (!$this->vfs->rm(array(
-							'string' => $file,
-							'relatives' => array(
+							'string'	 => $file,
+							'relatives'	 => array(
 								RELATIVE_NONE
 							)
 						)))
 					{
-						phpgwapi_cache::message_set(lang('failed to delete file') . ' :' .$file, 'error');
+						phpgwapi_cache::message_set(lang('failed to delete file') . ' :' . $file, 'error');
 					}
 					else
 					{
@@ -203,9 +203,9 @@
 		 */
 		function get_file( $file_id, $jasper = false )
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 
 
 			if (!$jasper)
@@ -215,18 +215,18 @@
 				$document = $this->vfs->get($file_id);
 
 				$this->vfs->override_acl = 0;
-				$browser = CreateObject('phpgwapi.browser');
+				$browser				 = CreateObject('phpgwapi.browser');
 				$browser->content_header($document['name'], $document['mime_type'], $document['size']);
 				echo $document['content'];
 			}
 			else //Execute the jasper report
 			{
 				$output_type = 'PDF';
-				$file_info = $this->vfs->get_info($file_id);
-				$file = "{$file_info['directory']}/{$file_info['name']}";
+				$file_info	 = $this->vfs->get_info($file_id);
+				$file		 = "{$file_info['directory']}/{$file_info['name']}";
 
-				$report_source = "{$this->rootdir}{$file}";
-				$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
+				$report_source	 = "{$this->rootdir}{$file}";
+				$jasper_wrapper	 = CreateObject('phpgwapi.jasper_wrapper');
 				try
 				{
 					$jasper_wrapper->execute('', $output_type, $report_source);
@@ -250,16 +250,16 @@
 		 */
 		function view_file( $type = '', $file = '', $jasper = '' )
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 
 			if (!$file)
 			{
-				$file_name = html_entity_decode(urldecode(phpgw::get_var('file_name')));
-				$file_name = $this->strip_entities_from_name($file_name);
-				$id = phpgw::get_var('id');
-				$file = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
+				$file_name	 = html_entity_decode(urldecode(phpgw::get_var('file_name')));
+				$file_name	 = $this->strip_entities_from_name($file_name);
+				$id			 = phpgw::get_var('id');
+				$file		 = "{$this->fakebase}/{$type}/{$id}/{$file_name}";
 			}
 
 			// prevent path traversal
@@ -269,15 +269,15 @@
 			}
 
 			if ($this->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => array(RELATIVE_NONE)
+					'string'	 => $file,
+					'relatives'	 => array(RELATIVE_NONE)
 				)))
 			{
 				$ls_array = $this->vfs->ls(array(
-					'string' => $file,
-					'relatives' => array(RELATIVE_NONE),
-					'checksubdirs' => false,
-					'nofiles' => true
+					'string'		 => $file,
+					'relatives'		 => array(RELATIVE_NONE),
+					'checksubdirs'	 => false,
+					'nofiles'		 => true
 				));
 
 				if (!$jasper)
@@ -285,8 +285,8 @@
 					$this->vfs->override_acl = 1;
 
 					$document = $this->vfs->read(array(
-						'string' => $file,
-						'relatives' => array(RELATIVE_NONE)));
+						'string'	 => $file,
+						'relatives'	 => array(RELATIVE_NONE)));
 
 					$this->vfs->override_acl = 0;
 
@@ -298,8 +298,8 @@
 				{
 					$output_type = 'PDF';
 
-					$report_source = "{$this->rootdir}{$file}";
-					$jasper_wrapper = CreateObject('phpgwapi.jasper_wrapper');
+					$report_source	 = "{$this->rootdir}{$file}";
+					$jasper_wrapper	 = CreateObject('phpgwapi.jasper_wrapper');
 					try
 					{
 						$jasper_wrapper->execute('', $output_type, $report_source);
@@ -333,9 +333,9 @@
 
 				$attachments[] = array
 					(
-					'file' => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
-					'name' => $file_info['name'],
-					'type' => $file_info['mime_type']
+					'file'	 => "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file}",
+					'name'	 => $file_info['name'],
+					'type'	 => $file_info['mime_type']
 				);
 			}
 			return $attachments;

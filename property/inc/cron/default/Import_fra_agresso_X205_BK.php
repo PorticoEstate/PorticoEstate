@@ -36,18 +36,18 @@
 	class Import_fra_agresso_X205_BK extends property_cron_parent
 	{
 
-		protected $auto_tax = false;
-		protected $mvakode = 0;
-		protected $kildeid = 1;
-		protected $splitt = 0;
+		protected $auto_tax					 = false;
+		protected $mvakode					 = 0;
+		protected $kildeid					 = 1;
+		protected $splitt					 = 0;
 		protected $soXport;
 		protected $invoice;
-		protected $default_kostra_id = 9999; //dummy
-		protected $debug = false;
-		protected $skip_import = false;
-		protected $skip_email = false;
+		protected $default_kostra_id		 = 9999; //dummy
+		protected $debug					 = false;
+		protected $skip_import				 = false;
+		protected $skip_email				 = false;
 		protected $export;
-		protected $skip_update_voucher_id = false;
+		protected $skip_update_voucher_id	 = false;
 		protected $order_id;
 
 		function __construct()
@@ -55,17 +55,17 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('invoice');
-			$this->function_msg = 'Importer faktura fra Agresso';
+			$this->sub_location	 = lang('invoice');
+			$this->function_msg	 = 'Importer faktura fra Agresso';
 
-			$this->soXport = CreateObject('property.soXport');
-			$this->invoice = CreateObject('property.soinvoice');
-			$this->responsible = CreateObject('property.soresponsible');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->soXport		 = CreateObject('property.soXport');
+			$this->invoice		 = CreateObject('property.soinvoice');
+			$this->responsible	 = CreateObject('property.soresponsible');
+			$this->bocommon		 = CreateObject('property.bocommon');
 
-			$this->dateformat = $this->db->date_format();
-			$this->datetimeformat = $this->db->datetime_format();
-			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->dateformat		 = $this->db->date_format();
+			$this->datetimeformat	 = $this->db->datetime_format();
+			$this->config			 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
 		public function execute()
@@ -78,8 +78,8 @@
 				return array();
 			}
 
-			$file_list = array();
-			$dir = new DirectoryIterator($dirname);
+			$file_list	 = array();
+			$dir		 = new DirectoryIterator($dirname);
 			if (is_object($dir))
 			{
 				foreach ($dir as $file)
@@ -89,7 +89,7 @@
 						continue;
 					}
 
-					if(preg_match('/^X205/i', (string)$file ))
+					if (preg_match('/^X205/i', (string)$file))
 					{
 						$file_list[] = (string)"{$dirname}/{$file}";
 					}
@@ -100,9 +100,9 @@
 			{
 				foreach ($file_list as $file)
 				{
-					$this->skip_update_voucher_id = false;
+					$this->skip_update_voucher_id	 = false;
 					$this->db->transaction_begin();
-					$bilagsnr = $this->import($file);
+					$bilagsnr						 = $this->import($file);
 					if ($this->debug)
 					{
 						_debug_array("Behandler fil: {$file}");
@@ -112,9 +112,9 @@
 					if ($bilagsnr)
 					{
 						// move file
-						$_file = basename($file);
-						$movefrom = "{$dirname}/{$_file}";
-						$moveto = "{$dirname}/arkiv/{$_file}";
+						$_file		 = basename($file);
+						$movefrom	 = "{$dirname}/{$_file}";
+						$moveto		 = "{$dirname}/arkiv/{$_file}";
 
 						if (is_file($moveto))
 						{
@@ -143,23 +143,21 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/arkiv/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
-
 		}
-
 
 		protected function get_files()
 		{
 			$method = $this->config->config_data['common']['method'];
-			if($method == 'local')
+			if ($method == 'local')
 			{
 				return;
 			}
 
-			$server = $this->config->config_data['common']['host'];
-			$user = $this->config->config_data['common']['user'];
-			$password = $this->config->config_data['common']['password'];
-			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir'], '/');
-			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
+			$server				 = $this->config->config_data['common']['host'];
+			$user				 = $this->config->config_data['common']['user'];
+			$password			 = $this->config->config_data['common']['password'];
+			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir'], '/');
+			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
 
 
 			try
@@ -205,14 +203,14 @@
 						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
 					}
 
-					if(preg_match('/^X205/i', (string)$file_name ))
+					if (preg_match('/^X205/i', (string)$file_name))
 					{
 						$file_remote = $file_name;
-						$file_local = "{$directory_local}/{$file_name}";
+						$file_local	 = "{$directory_local}/{$file_name}";
 
 						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
 						{
-							ftp_delete( $connection , "arkiv/{$file_remote}");
+							ftp_delete($connection, "arkiv/{$file_remote}");
 
 							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
 							{
@@ -237,15 +235,15 @@
 			}
 		}
 
-		protected function check_storage_dir($files_path)
+		protected function check_storage_dir( $files_path )
 		{
-			if (is_dir($files_path) && is_writable($files_path) && is_readable($files_path)	)
+			if (is_dir($files_path) && is_writable($files_path) && is_readable($files_path))
 			{
 				return true;
 			}
 		}
 
-		protected function create_storage_dir($files_path)
+		protected function create_storage_dir( $files_path )
 		{
 			$dirMode = 0777;
 			if (!mkdir($files_path, $dirMode, true))
@@ -260,34 +258,34 @@
 
 		protected function import( $file )
 		{
-			$buffer = array();
-			$bilagsnr = false;
+			$buffer		 = array();
+			$bilagsnr	 = false;
 
-			$xml = new SimpleXMLElement(file_get_contents( $file ));
+			$xml = new SimpleXMLElement(file_get_contents($file));
 
 			$_data = array(
-				'KEY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/KEY'),
-				'ATTACHMENT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/ATTACHMENT'),
-				'AMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/AMOUNT'),
-				'CLIENT.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CLIENT.CODE'),
-				'CURRENCY.CURRENCYID' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CURRENCY.CURRENCYID'),
-				'EXCHANGERATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/EXCHANGERATE'),
-				'INVOICEDATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/INVOICEDATE'),
-				'LOCALAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALAMOUNT'),
-				'LOCALVATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALVATAMOUNT'),
-				'MATURITY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/MATURITY'),
-				'PAYAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PAYAMOUNT'),
-				'POSTATUSUPDATED' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/POSTATUSUPDATED'),
-				'PURCHASEORDERNO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PURCHASEORDERNO'),
-				'SUPPLIERBANKGIRO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERBANKGIRO'),
-				'SUPPLIER.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIER.CODE'),
-				'SUPPLIERREF' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERREF'),
-				'VATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/VATAMOUNT')
+				'KEY'					 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/KEY'),
+				'ATTACHMENT'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/ATTACHMENT'),
+				'AMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/AMOUNT'),
+				'CLIENT.CODE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CLIENT.CODE'),
+				'CURRENCY.CURRENCYID'	 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CURRENCY.CURRENCYID'),
+				'EXCHANGERATE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/EXCHANGERATE'),
+				'INVOICEDATE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/INVOICEDATE'),
+				'LOCALAMOUNT'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALAMOUNT'),
+				'LOCALVATAMOUNT'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALVATAMOUNT'),
+				'MATURITY'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/MATURITY'),
+				'PAYAMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PAYAMOUNT'),
+				'POSTATUSUPDATED'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/POSTATUSUPDATED'),
+				'PURCHASEORDERNO'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PURCHASEORDERNO'),
+				'SUPPLIERBANKGIRO'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERBANKGIRO'),
+				'SUPPLIER.CODE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIER.CODE'),
+				'SUPPLIERREF'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERREF'),
+				'VATAMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/VATAMOUNT')
 			);
 
 			foreach ($_data as $key => & $__data)
 			{
-				$__data = (string) $__data[0];
+				$__data = (string)$__data[0];
 			}
 
 			set_time_limit(300);
@@ -297,13 +295,13 @@
 				$regtid = date($this->datetimeformat);
 
 				$i = 0;
-				if(!empty($_data['ATTACHMENT']))
+				if (!empty($_data['ATTACHMENT']))
 				{
-					$attachment = base64_decode($_data['ATTACHMENT']);
+					$attachment				 = base64_decode($_data['ATTACHMENT']);
 //	_debug_array($_data);
-					$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
-					$directory_attachment = "{$directory_local}/attachment/{$_data['KEY']}";
-					if(!$this->check_storage_dir($directory_attachment))
+					$directory_local		 = rtrim($this->config->config_data['import']['local_path'], '/');
+					$directory_attachment	 = "{$directory_local}/attachment/{$_data['KEY']}";
+					if (!$this->check_storage_dir($directory_attachment))
 					{
 						$this->create_storage_dir($directory_attachment);
 					}
@@ -311,25 +309,24 @@
 					$tmpfname = tempnam('', 'attachment');
 //	_debug_array($tmpfname);
 
-					$handle = fopen($tmpfname, "w");
+					$handle	 = fopen($tmpfname, "w");
 					fwrite($handle, $attachment);
 					fclose($handle);
-					$zip = new ZipArchive;
+					$zip	 = new ZipArchive;
 					if ($zip->open($tmpfname) === true)
 					{
-						for($j = 0; $j < $zip->numFiles; $j++)
+						for ($j = 0; $j < $zip->numFiles; $j++)
 						{
-							$filename = $zip->getNameIndex($j);
-							$path_parts = explode('.', $filename);
-							$new_filename = $filename;
-							if(count($path_parts) == 2)
+							$filename		 = $zip->getNameIndex($j);
+							$path_parts		 = explode('.', $filename);
+							$new_filename	 = $filename;
+							if (count($path_parts) == 2)
 							{
-								$suffix_parts = explode(' ', $path_parts[1]);
-								$suffix = $suffix_parts[0];
-								$new_filename = "{$path_parts[0]}.{$suffix}";
-
+								$suffix_parts	 = explode(' ', $path_parts[1]);
+								$suffix			 = $suffix_parts[0];
+								$new_filename	 = "{$path_parts[0]}.{$suffix}";
 							}
-							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$new_filename}");
+							copy("zip://" . $tmpfname . "#" . $filename, "{$directory_attachment}/{$new_filename}");
 						}
 						$zip->close();
 					}
@@ -349,16 +346,16 @@
 
 				$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
 
-				$fakturanr = $_data['SUPPLIERREF'];
-				$fakturadato = date($this->dateformat, strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
-				$forfallsdato = date($this->dateformat, strtotime(str_replace('.', '-', $_data['MATURITY'])));
-				$periode = '';
-				$belop = $_data['AMOUNT'] / 100;
+				$fakturanr		 = $_data['SUPPLIERREF'];
+				$fakturadato	 = date($this->dateformat, strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+				$forfallsdato	 = date($this->dateformat, strtotime(str_replace('.', '-', $_data['MATURITY'])));
+				$periode		 = '';
+				$belop			 = $_data['AMOUNT'] / 100;
 
 				if (!abs($belop) > 0)
 				{
-					$this->receipt['message'][] = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
-					$belop = (float)0.0001; // imported as 0.00
+					$this->receipt['message'][]	 = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$belop						 = (float)0.0001; // imported as 0.00
 				}
 
 				if ($belop < 0)
@@ -370,55 +367,55 @@
 					$buffer[$i]['artid'] = 1;
 				}
 
-				$kidnr = $_data['KIDNO'];
-				$_order_id = $_data['PURCHASEORDERNO'];
-				$merknad = '';
-				$line_text = '';
-				$order_id = '';
-				$buffer[$i]['project_id'] = '';
+				$kidnr						 = $_data['KIDNO'];
+				$_order_id					 = $_data['PURCHASEORDERNO'];
+				$merknad					 = '';
+				$line_text					 = '';
+				$order_id					 = '';
+				$buffer[$i]['project_id']	 = '';
 
 				$order_info = $this->get_order_info($_order_id); // henter default verdier selv om  $_order_id ikke er gyldig.
 
 				if (!$_order_id)
 				{
-					$merknad = 'Mangler bestillingsnummer';
-					$this->receipt['error'][] = array('msg' => $merknad);
+					$merknad					 = 'Mangler bestillingsnummer';
+					$this->receipt['error'][]	 = array('msg' => $merknad);
 				}
 				else if (!ctype_digit($_order_id))
 				{
-					$merknad = "bestillingsnummeret er på feil format: {$_order_id}";
-					$this->receipt['error'][] = array('msg' => $merknad);
+					$merknad					 = "bestillingsnummeret er på feil format: {$_order_id}";
+					$this->receipt['error'][]	 = array('msg' => $merknad);
 				}
 				else if (!$order_info['order_exist'])
 				{
-					$merknad = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
-					$this->receipt['error'][] = array('msg' => "{$merknad}, fil: {$file}");
+					$merknad					 = 'bestillingsnummeret ikke gyldig: ' . $_order_id;
+					$this->receipt['error'][]	 = array('msg' => "{$merknad}, fil: {$file}");
 				}
 				else
 				{
-					$buffer[$i]['project_id'] = $this->soXport->get_project($_order_id);
-					$order_id = $_order_id;
-					$this->order_id = $order_id;
+					$buffer[$i]['project_id']	 = $this->soXport->get_project($_order_id);
+					$order_id					 = $_order_id;
+					$this->order_id				 = $order_id;
 				}
 
-				$buffer[$i]['external_voucher_id'] = $_data['KEY']; // => 1400050146
-				$buffer[$i]['pmwrkord_code'] = $order_id;
-				$buffer[$i]['fakturanr'] = $fakturanr;
-				$buffer[$i]['periode'] = $periode;
-				$buffer[$i]['forfallsdato'] = $forfallsdato;
-				$buffer[$i]['fakturadato'] = $fakturadato;
-				$buffer[$i]['belop'] = $belop;
-				$buffer[$i]['currency'] = $_data['CURRENCY.CURRENCYID'];
-				$buffer[$i]['godkjentbelop'] = $belop;
+				$buffer[$i]['external_voucher_id']	 = $_data['KEY']; // => 1400050146
+				$buffer[$i]['pmwrkord_code']		 = $order_id;
+				$buffer[$i]['fakturanr']			 = $fakturanr;
+				$buffer[$i]['periode']				 = $periode;
+				$buffer[$i]['forfallsdato']			 = $forfallsdato;
+				$buffer[$i]['fakturadato']			 = $fakturadato;
+				$buffer[$i]['belop']				 = $belop;
+				$buffer[$i]['currency']				 = $_data['CURRENCY.CURRENCYID'];
+				$buffer[$i]['godkjentbelop']		 = $belop;
 
-				$buffer[$i]['kidnr'] = $kidnr;
-				$buffer[$i]['bilagsnr_ut'] = $bilagsnr_ut;
-				$buffer[$i]['referanse'] = "ordre: {$order_id}";
+				$buffer[$i]['kidnr']		 = $kidnr;
+				$buffer[$i]['bilagsnr_ut']	 = $bilagsnr_ut;
+				$buffer[$i]['referanse']	 = "ordre: {$order_id}";
 
-				$buffer[$i]['dima'] = $order_info['dima'];
-				$buffer[$i]['dimb'] = $order_info['dimb'];
-				$buffer[$i]['dime'] = $order_info['dime'];
-				$buffer[$i]['loc1'] = $order_info['loc1'];
+				$buffer[$i]['dima']		 = $order_info['dima'];
+				$buffer[$i]['dimb']		 = $order_info['dimb'];
+				$buffer[$i]['dime']		 = $order_info['dime'];
+				$buffer[$i]['loc1']		 = $order_info['loc1'];
 				$buffer[$i]['line_text'] = $order_info['title'];
 
 				$buffer[$i]['mvakode'] = $order_info['tax_code'];
@@ -433,28 +430,28 @@
 					}
 				}
 
-				$update_voucher = false;
+				$update_voucher			 = false;
 				$receive_order_performed = false;
-				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
+				$sql					 = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$this->skip_update_voucher_id = true;
-					$update_voucher = true;
-					$receive_order_performed = true;
-					$bilagsnr = $this->db->f('bilagsnr');
-					$buffer[$i]['bilagsnr'] = $bilagsnr;
-					$this->receipt['message'][] = array('msg' => "Oppdatert med nye data i arbeidsregister: ordre = {$_order_id}, bilag = {$_data['KEY']}");
+					$this->skip_update_voucher_id	 = true;
+					$update_voucher					 = true;
+					$receive_order_performed		 = true;
+					$bilagsnr						 = $this->db->f('bilagsnr');
+					$buffer[$i]['bilagsnr']			 = $bilagsnr;
+					$this->receipt['message'][]		 = array('msg' => "Oppdatert med nye data i arbeidsregister: ordre = {$_order_id}, bilag = {$_data['KEY']}");
 				}
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$this->skip_update_voucher_id = true;
-					$update_voucher = true;
-					$receive_order_performed = true;
-					$bilagsnr = $this->db->f('bilagsnr');
+					$this->skip_update_voucher_id	 = true;
+					$update_voucher					 = true;
+					$receive_order_performed		 = true;
+					$bilagsnr						 = $this->db->f('bilagsnr');
 
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
 
@@ -477,14 +474,13 @@
 
 				if (!$_data['SUPPLIER.CODE'])
 				{
-					$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
-					$this->skip_import = true;
+					$this->receipt['error'][]	 = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
+					$this->skip_import			 = true;
 				}
 				else if (!$this->db->next_record())
 				{
-					$this->receipt['error'][] = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
-					$this->skip_import = true;
-
+					$this->receipt['error'][]	 = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+					$this->skip_import			 = true;
 				}
 				else if ($order_info['vendor_id'] != $vendor_id)
 				{
@@ -493,12 +489,12 @@
 
 				$buffer[$i]['kostra_id'] = $order_info['service_id'];
 
-				$buffer[$i]['merknad'] = $merknad;
-				$buffer[$i]['splitt'] = $this->splitt;
-				$buffer[$i]['kildeid'] = $this->kildeid;
+				$buffer[$i]['merknad']		 = $merknad;
+				$buffer[$i]['splitt']		 = $this->splitt;
+				$buffer[$i]['kildeid']		 = $this->kildeid;
 				$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
-				$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
-				$buffer[$i]['regtid'] = $regtid;
+				$buffer[$i]['typeid']		 = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
+				$buffer[$i]['regtid']		 = $regtid;
 
 				$buffer[$i]['spvend_code'] = $vendor_id;
 
@@ -554,7 +550,7 @@
 				{
 					$bilagsnr = $this->import_end_file($buffer);
 
-					if(!$receive_order_performed && $this->config->config_data['export']['auto_receive_order'])
+					if (!$receive_order_performed && $this->config->config_data['export']['auto_receive_order'])
 					{
 						$received_amount = $belop; //$this->get_total_received((int)$order_id);
 
@@ -565,27 +561,26 @@
 						switch ($order_type)
 						{
 							case 'workorder':
-								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
+								$received	 = createObject('property.boworkorder')->receive_order((int)$order_id, $received_amount, $_data['KEY']);
 								break;
 							case 'ticket':
-								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
+								$received	 = createObject('property.botts')->receive_order((int)$order_id, $received_amount, $_data['KEY']);
 								break;
 							default:
 								throw new Exception('Order type not supported');
 						}
 					}
-
 				}
 				catch (Exception $e)
 				{
 					if ($e)
 					{
 						$GLOBALS['phpgw']->log->error(array(
-							'text' => 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
-							'p1' => $e->getMessage(),
-							'p2' => '',
-							'line' => __LINE__,
-							'file' => __FILE__
+							'text'	 => 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
+							'p1'	 => $e->getMessage(),
+							'p2'	 => '',
+							'line'	 => __LINE__,
+							'file'	 => __FILE__
 						));
 						$this->receipt['error'][] = array('msg' => $e->getMessage());
 					}
@@ -599,15 +594,15 @@
 
 		function get_total_received( $order_id )
 		{
-			$amount = 0;
-			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilag WHERE pmwrkord_code = {$order_id}";
+			$amount	 = 0;
+			$sql	 = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilag WHERE pmwrkord_code = {$order_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$amount += (float)$this->db->f('amount');
-			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilagoverf WHERE pmwrkord_code = {$order_id}";
+			$amount	 += (float)$this->db->f('amount');
+			$sql	 = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilagoverf WHERE pmwrkord_code = {$order_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$amount += (float)$this->db->f('amount');
+			$amount	 += (float)$this->db->f('amount');
 			return $amount;
 		}
 
@@ -619,8 +614,8 @@
 			$this->db->next_record();
 			$order_type = $this->db->f('type');
 
-			$order_info = array();
-			$toarray = array();
+			$order_info	 = array();
+			$toarray	 = array();
 
 			switch ($order_type)
 			{
@@ -665,23 +660,23 @@
 			}
 			if ($this->db->f('location_code'))
 			{
-				$parts = explode('-', $this->db->f('location_code'));
-				$order_info['dima'] = implode('', $parts);
-				$order_info['loc1'] = $parts[0];
+				$parts				 = explode('-', $this->db->f('location_code'));
+				$order_info['dima']	 = implode('', $parts);
+				$order_info['loc1']	 = $parts[0];
 			}
 
-			$order_info['vendor_id'] = $this->db->f('vendor_id');
+			$order_info['vendor_id']	 = $this->db->f('vendor_id');
 			$order_info['spbudact_code'] = $this->db->f('account_id');
-			$ecodimb = $this->db->f('ecodimb');
-			$order_info['dimb'] = $ecodimb ? $ecodimb : $this->db->f('project_ecodimb');
-			$order_info['dime'] = $this->db->f('category');
-			$order_info['title'] = $this->db->f('title', true);
-			$order_info['service_id'] = $this->db->f('service_id');
-			$order_info['tax_code'] = $this->db->f('tax_code');
+			$ecodimb					 = $this->db->f('ecodimb');
+			$order_info['dimb']			 = $ecodimb ? $ecodimb : $this->db->f('project_ecodimb');
+			$order_info['dime']			 = $this->db->f('category');
+			$order_info['title']		 = $this->db->f('title', true);
+			$order_info['service_id']	 = $this->db->f('service_id');
+			$order_info['tax_code']		 = $this->db->f('tax_code');
 
-			$janitor_user_id = $this->db->f('user_id');
-			$order_info['janitor'] = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
-			$supervisor_user_id = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
+			$janitor_user_id		 = $this->db->f('user_id');
+			$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			$supervisor_user_id		 = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
 			if ($supervisor_user_id)
 			{
 				$order_info['supervisor'] = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
@@ -728,6 +723,7 @@
 			}
 			return false;
 		}
+
 		/**
 		 * rollback er initiert fra import-filteret
 		 * @param integer $rollback_internal_voucher
@@ -780,7 +776,7 @@
 			$antall = count($voucher);
 			if ($antall > 0)
 			{
-				if ( $rollback_internal_voucher)
+				if ($rollback_internal_voucher)
 				{
 					if (!$this->global_lock)
 					{
@@ -811,8 +807,8 @@
 		{
 			if ($rollback_internal_voucher)
 			{
-				$rollback_internal_voucher = (int)$rollback_internal_voucher;
-				$sql = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
+				$rollback_internal_voucher	 = (int)$rollback_internal_voucher;
+				$sql						 = "SELECT * FROM fm_ecobilagoverf WHERE bilagsnr = {$rollback_internal_voucher} AND manual_record IS NULL";
 			}
 			else
 			{
@@ -823,57 +819,56 @@
 			$invoice_rollback = array();
 			while ($this->db->next_record())
 			{
-				$invoice_rollback[] = array	(
-					'id' => $this->db->f('id'),
-					'bilagsnr' => $this->db->f('bilagsnr'),
-					'bilagsnr_ut' => $this->db->f('bilagsnr_ut'),
-					'kidnr' => $this->db->f('kidnr'),
-					'typeid' => $this->db->f('typeid'),
-					'kildeid' => $this->db->f('kildeid'),
-					'pmwrkord_code' => $this->db->f('pmwrkord_code'),
-					'belop' => $this->db->f('belop'),
-					'fakturadato' => $this->db->f('fakturadato'),
-					'periode' => $this->db->f('periode'),
-					'periodization' => $this->db->f('periodization'),
-					'periodization_start' => $this->db->f('periodization_start'),
-					'forfallsdato' => $this->db->f('forfallsdato'),
-					'fakturanr' => $this->db->f('fakturanr'),
-					'spbudact_code' => $this->db->f('spbudact_code'),
-					'regtid' => $this->db->f('regtid'),
-					'artid' => $this->db->f('artid'),
-					'godkjentbelop' => (int)$this->db->f('godkjentbelop') == 0 ? $this->db->f('belop') : $this->db->f('godkjentbelop'), //restore original amount
-					'spvend_code' => $this->db->f('spvend_code'),
-					'dima' => $this->db->f('dima'),
-					'loc1' => $this->db->f('loc1'),
-					'dimb' => $this->db->f('dimb'),
-					'mvakode' => $this->db->f('mvakode'),
-					'dimd' => $this->db->f('dimd'),
-					'dime' => $this->db->f('dime'),
-					'project_id' => $this->db->f('project_id'),
-					'kostra_id' => $this->db->f('kostra_id'),
-					'item_type' => $this->db->f('item_type'),
-					'item_id' => $this->db->f('item_id'),
-					'oppsynsmannid' => $this->db->f('oppsynsmannid'),
-					'saksbehandlerid' => $this->db->f('saksbehandlerid'),
-					'budsjettansvarligid' => $this->db->f('budsjettansvarligid'),
-					'oppsynsigndato' => $this->db->f('oppsynsigndato'),
-					'saksigndato' => $this->db->f('saksigndato'),
-		//			'budsjettsigndato'		=> $this->db->f('budsjettsigndato'), // må anvises på nytt etter tilbakerulling
-					'merknad' => $this->db->f('merknad', true),
-					'line_text' => $this->db->f('line_text', true),
-					'splitt' => $this->db->f('splitt'),
-					'ordrebelop' => $this->db->f('ordrebelop'),
-		//			'utbetalingid'			=> $this->db->f('utbetalingid'),
-		//			'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
-					'external_ref' => $this->db->f('external_ref'),
-					'external_voucher_id' => $this->db->f('external_voucher_id'),
-					'currency' => $this->db->f('currency'),
-					'process_log' => $this->db->f('process_log', true),
-					'process_code' => $this->db->f('process_code'),
+				$invoice_rollback[] = array(
+					'id'					 => $this->db->f('id'),
+					'bilagsnr'				 => $this->db->f('bilagsnr'),
+					'bilagsnr_ut'			 => $this->db->f('bilagsnr_ut'),
+					'kidnr'					 => $this->db->f('kidnr'),
+					'typeid'				 => $this->db->f('typeid'),
+					'kildeid'				 => $this->db->f('kildeid'),
+					'pmwrkord_code'			 => $this->db->f('pmwrkord_code'),
+					'belop'					 => $this->db->f('belop'),
+					'fakturadato'			 => $this->db->f('fakturadato'),
+					'periode'				 => $this->db->f('periode'),
+					'periodization'			 => $this->db->f('periodization'),
+					'periodization_start'	 => $this->db->f('periodization_start'),
+					'forfallsdato'			 => $this->db->f('forfallsdato'),
+					'fakturanr'				 => $this->db->f('fakturanr'),
+					'spbudact_code'			 => $this->db->f('spbudact_code'),
+					'regtid'				 => $this->db->f('regtid'),
+					'artid'					 => $this->db->f('artid'),
+					'godkjentbelop'			 => (int)$this->db->f('godkjentbelop') == 0 ? $this->db->f('belop') : $this->db->f('godkjentbelop'), //restore original amount
+					'spvend_code'			 => $this->db->f('spvend_code'),
+					'dima'					 => $this->db->f('dima'),
+					'loc1'					 => $this->db->f('loc1'),
+					'dimb'					 => $this->db->f('dimb'),
+					'mvakode'				 => $this->db->f('mvakode'),
+					'dimd'					 => $this->db->f('dimd'),
+					'dime'					 => $this->db->f('dime'),
+					'project_id'			 => $this->db->f('project_id'),
+					'kostra_id'				 => $this->db->f('kostra_id'),
+					'item_type'				 => $this->db->f('item_type'),
+					'item_id'				 => $this->db->f('item_id'),
+					'oppsynsmannid'			 => $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'		 => $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'	 => $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'		 => $this->db->f('oppsynsigndato'),
+					'saksigndato'			 => $this->db->f('saksigndato'),
+					//			'budsjettsigndato'		=> $this->db->f('budsjettsigndato'), // må anvises på nytt etter tilbakerulling
+					'merknad'				 => $this->db->f('merknad', true),
+					'line_text'				 => $this->db->f('line_text', true),
+					'splitt'				 => $this->db->f('splitt'),
+					'ordrebelop'			 => $this->db->f('ordrebelop'),
+					//			'utbetalingid'			=> $this->db->f('utbetalingid'),
+					//			'utbetalingsigndato'	=> $this->db->f('utbetalingsigndato'),
+					'external_ref'			 => $this->db->f('external_ref'),
+					'external_voucher_id'	 => $this->db->f('external_voucher_id'),
+					'currency'				 => $this->db->f('currency'),
+					'process_log'			 => $this->db->f('process_log', true),
+					'process_code'			 => $this->db->f('process_code'),
 				);
 			}
 
 			return $invoice_rollback;
 		}
-
 	}

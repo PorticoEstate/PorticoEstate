@@ -39,14 +39,14 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('workorder');
-			$this->function_msg = 'reset workorder cached budget';
+			$this->sub_location	 = lang('workorder');
+			$this->function_msg	 = 'reset workorder cached budget';
 		}
 
 		public function execute()
 		{
-			$orders = array();
-			$sql = "SELECT DISTINCT fm_workorder.id as order_id"
+			$orders	 = array();
+			$sql	 = "SELECT DISTINCT fm_workorder.id as order_id"
 				. " FROM fm_workorder "
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " WHERE continuous = 1"// AND fm_workorder_budget.year > " . (date('Y') -1)

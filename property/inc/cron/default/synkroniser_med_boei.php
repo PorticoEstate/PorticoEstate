@@ -40,28 +40,28 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('location');
-			$this->function_msg = 'Synkroniser_med_boei';
+			$this->sub_location	 = lang('location');
+			$this->function_msg	 = 'Synkroniser_med_boei';
 
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->db = $this->bocommon->new_db();
-			$this->join = $this->db->join;
-			$this->like = $this->db->like;
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->db		 = $this->bocommon->new_db();
+			$this->join		 = $this->db->join;
+			$this->like		 = $this->db->like;
 			$this->left_join = " LEFT JOIN ";
 
-			$this->db_boei = createObject('phpgwapi.db_adodb', null, null, true);
-			$host_info = explode(':', $GLOBALS['external_db']['boei']['db_host']);
+			$this->db_boei	 = createObject('phpgwapi.db_adodb', null, null, true);
+			$host_info		 = explode(':', $GLOBALS['external_db']['boei']['db_host']);
 
-			$host = $host_info[0];
-			$port = isset($host_info[1]) && $host_info[1] ? $host_info[1] : $GLOBALS['external_db']['boei']['db_port'];
+			$host	 = $host_info[0];
+			$port	 = isset($host_info[1]) && $host_info[1] ? $host_info[1] : $GLOBALS['external_db']['boei']['db_port'];
 
-			$this->db_boei->Host = $host;
-			$this->db_boei->Type = $GLOBALS['external_db']['boei']['db_type'];
-			$this->db_boei->Database = $GLOBALS['external_db']['boei']['db_name'];
-			$this->db_boei->Port = $port;
-			$this->db_boei->User = $GLOBALS['external_db']['boei']['db_user'];
-			$this->db_boei->Password = $GLOBALS['external_db']['boei']['db_pass'];
-			$this->db_boei->Halt_On_Error = 'yes';
+			$this->db_boei->Host			 = $host;
+			$this->db_boei->Type			 = $GLOBALS['external_db']['boei']['db_type'];
+			$this->db_boei->Database		 = $GLOBALS['external_db']['boei']['db_name'];
+			$this->db_boei->Port			 = $port;
+			$this->db_boei->User			 = $GLOBALS['external_db']['boei']['db_user'];
+			$this->db_boei->Password		 = $GLOBALS['external_db']['boei']['db_pass'];
+			$this->db_boei->Halt_On_Error	 = 'yes';
 
 			try
 			{
@@ -71,9 +71,9 @@
 			{
 				$status = lang('unable_to_connect_to_database');
 			}
-	
-			$this->db_boei2 = clone($this->db_boei);
-			$this->db2 = clone($this->db);
+
+			$this->db_boei2	 = clone($this->db_boei);
+			$this->db2		 = clone($this->db);
 		}
 
 		function execute()
@@ -98,11 +98,11 @@
 			$this->update_tenant_name();
 			$this->update_obskode();
 			$this->oppdater_namssakstatus_pr_leietaker();
- 
-			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+
+			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
-			$this->receipt['message'][] = array('msg' => $msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 		}
 
 		function cron_log( $receipt = '' )
@@ -145,7 +145,6 @@
 			$this->update_table_reskontro();
 		}
 
-
 		function update_table_LeieobjektTVSignal()
 		{
 			$metadata = $this->db->metadata('boei_leieobjekt_tv_signal');
@@ -163,33 +162,32 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_leieobjekt_tv_signal', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT id,CAST(TVSignal as TEXT) AS TVSignal FROM LeieobjektTVSignal';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT id,CAST(TVSignal as TEXT) AS TVSignal FROM LeieobjektTVSignal';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_leieobjekt_tv_signal (id, navn)'
+			$sql		 = 'INSERT INTO boei_leieobjekt_tv_signal (id, navn)'
 				. ' VALUES(?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => (int)$this->db_boei->f('id'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('id'),
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('TVSignal')),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes($this->db_boei->f('TVSignal')),
+						'type'	 => PDO::PARAM_STR
 					)
 				);
 			}
 
 			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 		}
-
 
 		function update_table_eier()
 		{
@@ -210,31 +208,31 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_eier', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT Eier_ID,CAST(Navn as TEXT) AS Navn,EierType_ID  FROM Eier';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT Eier_ID,CAST(Navn as TEXT) AS Navn,EierType_ID  FROM Eier';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_eier (eier_id, navn, eiertype_id)'
+			$sql		 = 'INSERT INTO boei_eier (eier_id, navn, eiertype_id)'
 				. ' VALUES(?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => (int)$this->db_boei->f('Eier_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Eier_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => (int)$this->db_boei->f('EierType_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('EierType_ID'),
+						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
@@ -244,9 +242,9 @@ SQL;
 
 		function update_table_Gateadresse()
 		{
-			$metadata_boei = $this->db_boei->metadata('Gateadresse');
+			$metadata_boei	 = $this->db_boei->metadata('Gateadresse');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_gateadresse');
+			$metadata		 = $this->db->metadata('boei_gateadresse');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -267,28 +265,28 @@ SQL;
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_gateadresse (gateadresse_id, gatenavn, nasjonalid)'
+			$sql		 = 'INSERT INTO boei_gateadresse (gateadresse_id, gatenavn, nasjonalid)'
 				. ' VALUES(?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => (int)$this->db_boei->f('Gateadresse_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Gateadresse_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('GateNavn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('GateNavn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => (int)$this->db_boei->f('NasjonalID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('NasjonalID'),
+						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
@@ -298,9 +296,9 @@ SQL;
 
 		function update_table_Objekt()
 		{
-			$metadata_boei = $this->db_boei->metadata('Objekt');
+			$metadata_boei	 = $this->db_boei->metadata('Objekt');
 //	_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_objekt');
+			$metadata		 = $this->db->metadata('boei_objekt');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -325,43 +323,43 @@ SQL;
 
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_objekt (objekt_id, navn, bydel_id,postnr_id,eier_id,tjenestested)'
+			$sql		 = 'INSERT INTO boei_objekt (objekt_id, navn, bydel_id,postnr_id,eier_id,tjenestested)'
 				. ' VALUES(?, ?, ?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => $this->db_boei->f('Objekt_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Objekt_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => (int)$this->db_boei->f('Bydel_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Bydel_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => $this->db_boei->f('Postnr_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Postnr_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					5 => array
+					5	 => array
 						(
-						'value' => (int)$this->db_boei->f('Eier_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Eier_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					6 => array
+					6	 => array
 						(
-						'value' => (int)$this->db_boei->f('Tjenestested'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Tjenestested'),
+						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
@@ -372,9 +370,9 @@ SQL;
 		function update_table_Bygg()
 		{
 //_debug_array($this->db_boei);
-			$metadata_boei = $this->db_boei->metadata('Bygg');
+			$metadata_boei	 = $this->db_boei->metadata('Bygg');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_bygg');
+			$metadata		 = $this->db->metadata('boei_bygg');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -393,36 +391,36 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_bygg', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, CAST(ByggNavn as TEXT) AS ByggNavn, Driftstatus FROM Bygg';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, CAST(ByggNavn as TEXT) AS ByggNavn, Driftstatus FROM Bygg';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_bygg (objekt_id, bygg_id, byggnavn, driftstatus)'
+			$sql		 = 'INSERT INTO boei_bygg (objekt_id, bygg_id, byggnavn, driftstatus)'
 				. ' VALUES(?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => $this->db_boei->f('Objekt_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Objekt_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db_boei->f('Bygg_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Bygg_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('ByggNavn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('ByggNavn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => (int)$this->db_boei->f('Driftstatus'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Driftstatus'),
+						'type'	 => PDO::PARAM_INT
 					),
 				);
 			}
@@ -432,9 +430,9 @@ SQL;
 
 		function update_table_Seksjon()
 		{
-			$metadata_boei = $this->db_boei->metadata('Seksjon');
+			$metadata_boei	 = $this->db_boei->metadata('Seksjon');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_seksjon');
+			$metadata		 = $this->db->metadata('boei_seksjon');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -452,36 +450,36 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_seksjon', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, CAST(Beskrivelse as TEXT) AS Beskrivelse  FROM Seksjon';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, CAST(Beskrivelse as TEXT) AS Beskrivelse  FROM Seksjon';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_seksjon (objekt_id, bygg_id, seksjons_id, beskrivelse)'
+			$sql		 = 'INSERT INTO boei_seksjon (objekt_id, bygg_id, seksjons_id, beskrivelse)'
 				. ' VALUES(?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => $this->db_boei->f('Objekt_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Objekt_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db_boei->f('Bygg_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Bygg_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => $this->db_boei->f('Seksjons_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Seksjons_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Beskrivelse'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Beskrivelse'))),
+						'type'	 => PDO::PARAM_STR
 					)
 				);
 			}
@@ -491,9 +489,9 @@ SQL;
 
 		function update_table_leieobjekt()
 		{
-			$metadata_boei = $this->db_boei->metadata('Leieobjekt');
+			$metadata_boei	 = $this->db_boei->metadata('Leieobjekt');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_leieobjekt');
+			$metadata		 = $this->db->metadata('boei_leieobjekt');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -533,105 +531,105 @@ SQL;
 
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr,'
+			$sql		 = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr,'
 				. ' formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal,'
 				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa, tv_signal_id)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => $this->db_boei->f('Objekt_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Objekt_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db_boei->f('Bygg_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Bygg_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => $this->db_boei->f('Seksjons_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Seksjons_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => $this->db_boei->f('Leie_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Leie_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					5 => array
+					5	 => array
 						(
-						'value' => (int)$this->db_boei->f('Flyttenr'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Flyttenr'),
+						'type'	 => PDO::PARAM_INT
 					),
-					6 => array
+					6	 => array
 						(
-						'value' => (int)$this->db_boei->f('Formaal_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Formaal_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					7 => array
+					7	 => array
 						(
-						'value' => (int)$this->db_boei->f('Gateadresse_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Gateadresse_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					8 => array
+					8	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Gatenr'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Gatenr'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					9 => array
+					9	 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Etasje')),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes($this->db_boei->f('Etasje')),
+						'type'	 => PDO::PARAM_STR
 					),
-					10 => array
+					10	 => array
 						(
-						'value' => (int)$this->db_boei->f('AntallRom'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('AntallRom'),
+						'type'	 => PDO::PARAM_INT
 					),
-					11 => array
+					11	 => array
 						(
-						'value' => (int)$this->db_boei->f('Boareal'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Boareal'),
+						'type'	 => PDO::PARAM_INT
 					),
-					12 => array
+					12	 => array
 						(
-						'value' => (int)$this->db_boei->f('AndelAvFellesareal'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('AndelAvFellesareal'),
+						'type'	 => PDO::PARAM_INT
 					),
-					13 => array
+					13	 => array
 						(
-						'value' => (int)$this->db_boei->f('Livslopsstd'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Livslopsstd'),
+						'type'	 => PDO::PARAM_INT
 					),
-					14 => array
+					14	 => array
 						(
-						'value' => (int)$this->db_boei->f('Heis'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Heis'),
+						'type'	 => PDO::PARAM_INT
 					),
-					15 => array
+					15	 => array
 						(
-						'value' => (int)$this->db_boei->f('Driftsstatus_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Driftsstatus_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					16 => array
+					16	 => array
 						(
-						'value' => (int)$this->db_boei->f('Leietaker_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					17 => array
+					17	 => array
 						(
-						'value' => (float)$this->db_boei->f('Beregnet_Boa'),
-						'type' => PDO::PARAM_STR
+						'value'	 => (float)$this->db_boei->f('Beregnet_Boa'),
+						'type'	 => PDO::PARAM_STR
 					),
-					18 => array
+					18	 => array
 						(
-						'value' => (int)$this->db_boei->f('TVSignal_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('TVSignal_ID'),
+						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
@@ -641,9 +639,9 @@ SQL;
 
 		function update_table_leietaker()
 		{
-			$metadata_boei = $this->db_boei->metadata('Leietaker');
+			$metadata_boei	 = $this->db_boei->metadata('Leietaker');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_leietaker');
+			$metadata		 = $this->db->metadata('boei_leietaker');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -667,64 +665,64 @@ SQL;
 			}
 			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
 
-			$sql_boei = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
+			$sql_boei	 = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
 				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode'
 				. ' FROM Leietaker';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
+			$sql		 = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
 				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => (int)$this->db_boei->f('Leietaker_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Fornavn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Fornavn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Etternavn'))),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Etternavn'))),
+						'type'	 => PDO::PARAM_STR
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => (int)$this->db_boei->f('Kjonn_Juridisk'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Kjonn_Juridisk'),
+						'type'	 => PDO::PARAM_INT
 					),
-					5 => array
+					5	 => array
 						(
-						'value' => $this->db_boei->f('OppsagtDato'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('OppsagtDato'),
+						'type'	 => PDO::PARAM_STR
 					),
-					6 => array
+					6	 => array
 						(
-						'value' => (int)$this->db_boei->f('NamssakStatusDrift_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('NamssakStatusDrift_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					7 => array
+					7	 => array
 						(
-						'value' => (int)$this->db_boei->f('NamssakStatusOkonomi_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('NamssakStatusOkonomi_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					8 => array
+					8	 => array
 						(
-						'value' => (int)$this->db_boei->f('hemmeligAdresse'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('hemmeligAdresse'),
+						'type'	 => PDO::PARAM_INT
 					),
-					9 => array
+					9	 => array
 						(
-						'value' => ($this->db_boei->f('OBSKode')),
-						'type' => PDO::PARAM_STR
+						'value'	 => ($this->db_boei->f('OBSKode')),
+						'type'	 => PDO::PARAM_STR
 					)
 				);
 			}
@@ -733,9 +731,9 @@ SQL;
 
 		function update_table_reskontro()
 		{
-			$metadata_boei = $this->db_boei->metadata('reskontro');
+			$metadata_boei	 = $this->db_boei->metadata('reskontro');
 //_debug_array($metadata_boei);
-			$metadata = $this->db->metadata('boei_reskontro');
+			$metadata		 = $this->db->metadata('boei_reskontro');
 //_debug_array($metadata);
 //die();
 			if (!$metadata)
@@ -754,41 +752,41 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_reskontro', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM reskontro';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT * FROM reskontro';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_reskontro (objekt_id,leie_id,flyttenr,leietaker_id, innflyttetdato )'
+			$sql		 = 'INSERT INTO boei_reskontro (objekt_id,leie_id,flyttenr,leietaker_id, innflyttetdato )'
 				. ' VALUES(?, ?, ?, ?, ?)';
-			$valueset = array();
+			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
 			{
 				$valueset[] = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => $this->db_boei->f('Objekt_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Objekt_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $this->db_boei->f('Leie_ID'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('Leie_ID'),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => (int)$this->db_boei->f('Flyttenr'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Flyttenr'),
+						'type'	 => PDO::PARAM_INT
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => (int)$this->db_boei->f('Leietaker_ID'),
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$this->db_boei->f('Leietaker_ID'),
+						'type'	 => PDO::PARAM_INT
 					),
-					5 => array
+					5	 => array
 						(
-						'value' => $this->db_boei->f('InnflyttetDato'),
-						'type' => PDO::PARAM_STR
+						'value'	 => $this->db_boei->f('InnflyttetDato'),
+						'type'	 => PDO::PARAM_STR
 					)
 				);
 			}
@@ -805,11 +803,11 @@ SQL;
 			$owners = array();
 			while ($this->db->next_record())
 			{
-				$category = $this->db->f('category');
-				$owners[] = array
+				$category	 = $this->db->f('category');
+				$owners[]	 = array
 					(
-					'id' => (int)$this->db->f('id'),
-					'category' => $category == 0 ? 4 : $category
+					'id'		 => (int)$this->db->f('id'),
+					'category'	 => $category == 0 ? 4 : $category
 				);
 			}
 			$this->db->transaction_begin();
@@ -835,12 +833,12 @@ SQL;
 
 				$owners[] = array
 					(
-					'id' => $this->db->f('eier_id'),
-					'org_name' => $this->db->f('org_name'),
-					'remark' => $this->db->f('org_name'),
-					'category' => $category == 0 ? 4 : $category,
+					'id'		 => $this->db->f('eier_id'),
+					'org_name'	 => $this->db->f('org_name'),
+					'remark'	 => $this->db->f('org_name'),
+					'category'	 => $category == 0 ? 4 : $category,
 					'entry_date' => time(),
-					'owner_id' => 6
+					'owner_id'	 => 6
 				);
 			}
 
@@ -857,8 +855,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($owners) . ' eier er lagt til: ' . @implode(",", $owner_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($owners) . ' eier er lagt til: ' . @implode(",", $owner_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -875,8 +873,8 @@ SQL;
 			{
 				$gater[] = array
 					(
-					'id' => (int)$this->db->f('gateadresse_id'),
-					'descr' => $this->db->f('gatenavn')
+					'id'	 => (int)$this->db->f('gateadresse_id'),
+					'descr'	 => $this->db->f('gatenavn')
 				);
 			}
 			$this->db->transaction_begin();
@@ -904,8 +902,8 @@ SQL;
 			{
 				$gate[] = array
 					(
-					'id' => (int)$this->db->f('gateadresse_id'),
-					'descr' => $this->db->f('gatenavn')
+					'id'	 => (int)$this->db->f('gateadresse_id'),
+					'descr'	 => $this->db->f('gatenavn')
 				);
 			}
 
@@ -934,13 +932,13 @@ SQL;
 			{
 				$objekt_latin[] = array
 					(
-					'location_code' => $this->db->f('objekt_id'),
-					'loc1' => $this->db->f('objekt_id'),
-					'loc1_name' => $this->db->f('navn'),
-					'part_of_town_id' => $this->db->f('bydel_id'),
-					'owner_id' => $this->db->f('eier_id'),
-					'kostra_id' => $this->db->f('tjenestested'),
-					'category' => 1
+					'location_code'		 => $this->db->f('objekt_id'),
+					'loc1'				 => $this->db->f('objekt_id'),
+					'loc1_name'			 => $this->db->f('navn'),
+					'part_of_town_id'	 => $this->db->f('bydel_id'),
+					'owner_id'			 => $this->db->f('eier_id'),
+					'kostra_id'			 => $this->db->f('tjenestested'),
+					'category'			 => 1
 				);
 			}
 
@@ -960,8 +958,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($objekt_latin) . ' Objekt er lagt til: ' . @implode(",", $obj_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($objekt_latin) . ' Objekt er lagt til: ' . @implode(",", $obj_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -978,11 +976,11 @@ SQL;
 			{
 				$bygg_latin[] = array
 					(
-					'location_code' => $this->db->f('location_code'),
-					'loc1' => $this->db->f('objekt_id'),
-					'loc2' => $this->db->f('bygg_id'),
-					'loc2_name' => $this->db->f('byggnavn'),
-					'category' => 98
+					'location_code'	 => $this->db->f('location_code'),
+					'loc1'			 => $this->db->f('objekt_id'),
+					'loc2'			 => $this->db->f('bygg_id'),
+					'loc2_name'		 => $this->db->f('byggnavn'),
+					'category'		 => 98
 				);
 			}
 
@@ -1002,8 +1000,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($bygg_latin) . ' Bygg er lagt til: ' . @implode(",", $bygg_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($bygg_latin) . ' Bygg er lagt til: ' . @implode(",", $bygg_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1022,12 +1020,12 @@ SQL;
 			while ($this->db->next_record())
 			{
 				$seksjon_latin[] = array(
-					'location_code' => $this->db->f('location_code'),
-					'loc1' => $this->db->f('objekt_id'),
-					'loc2' => $this->db->f('bygg_id'),
-					'loc3' => $this->db->f('seksjons_id'),
-					'loc3_name' => $this->db->f('beskrivelse'),
-					'category' => 98
+					'location_code'	 => $this->db->f('location_code'),
+					'loc1'			 => $this->db->f('objekt_id'),
+					'loc2'			 => $this->db->f('bygg_id'),
+					'loc3'			 => $this->db->f('seksjons_id'),
+					'loc3_name'		 => $this->db->f('beskrivelse'),
+					'category'		 => 98
 				);
 			}
 
@@ -1046,15 +1044,15 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($seksjon_latin) . ' Seksjon er lagt til: ' . @implode(",", $seksjon_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($seksjon_latin) . ' Seksjon er lagt til: ' . @implode(",", $seksjon_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
 		function legg_til_leieobjekt_phpgw()
 		{
 			$this->db->query("SELECT * FROM boei_leieobjekt_tv_signal", __LINE__, __FILE__);
-			
+
 			$tv_signaler = array();
 			while ($this->db->next_record())
 			{
@@ -1080,24 +1078,24 @@ SQL;
 			{
 				$leieobjekt_latin[] = array
 					(
-					'location_code' => $this->db->f('location_code'),
-					'loc1' => $this->db->f('objekt_id'),
-					'loc4' => $this->db->f('leie_id'),
-					'loc2' => $this->db->f('bygg_id'),
-					'loc3' => $this->db->f('seksjons_id'),
-					'category' => $this->db->f('formaal_id'),
-					'street_id' => $this->db->f('gateadresse_id'),
-					'street_number' => $this->db->f('gatenr'),
-					'etasje' => $this->db->f('etasje'),
-					'antallrom' => $this->db->f('antallrom'),
-					'boareal' => $this->db->f('boareal'),
-					'livslopsstd' => $this->db->f('livslopsstd'),
-					'heis' => $this->db->f('heis'),
-					'driftsstatus_id' => $this->db->f('driftsstatus_id'),
-					'tenant_id' => $this->db->f('leietaker_id'),
-					'beregnet_boa' => $this->db->f('beregnet_boa'),
-					'flyttenr' => $this->db->f('flyttenr'),
-					'tv_signal' => $tv_signaler[$this->db->f('tv_signal_id')]
+					'location_code'		 => $this->db->f('location_code'),
+					'loc1'				 => $this->db->f('objekt_id'),
+					'loc4'				 => $this->db->f('leie_id'),
+					'loc2'				 => $this->db->f('bygg_id'),
+					'loc3'				 => $this->db->f('seksjons_id'),
+					'category'			 => $this->db->f('formaal_id'),
+					'street_id'			 => $this->db->f('gateadresse_id'),
+					'street_number'		 => $this->db->f('gatenr'),
+					'etasje'			 => $this->db->f('etasje'),
+					'antallrom'			 => $this->db->f('antallrom'),
+					'boareal'			 => $this->db->f('boareal'),
+					'livslopsstd'		 => $this->db->f('livslopsstd'),
+					'heis'				 => $this->db->f('heis'),
+					'driftsstatus_id'	 => $this->db->f('driftsstatus_id'),
+					'tenant_id'			 => $this->db->f('leietaker_id'),
+					'beregnet_boa'		 => $this->db->f('beregnet_boa'),
+					'flyttenr'			 => $this->db->f('flyttenr'),
+					'tv_signal'			 => $tv_signaler[$this->db->f('tv_signal_id')]
 				);
 			}
 
@@ -1117,8 +1115,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . @implode(",", $leieobjekt_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . @implode(",", $leieobjekt_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1138,15 +1136,15 @@ SQL;
 			{
 				$leietakere[] = array
 					(
-					'id' => $this->db->f('leietaker_id'),
-					'first_name' => $this->db->f('fornavn'),
-					'last_name' => $this->db->f('etternavn'),
-					'category' => $this->db->f('kjonn_juridisk') + 1,
-					'status_eco' => $this->db->f('namssakstatusokonomi_id'),
-					'status_drift' => $this->db->f('namssakstatusdrift_id'),
-					'obskode' => $this->db->f('obskode'),
-					'entry_date' => time(),
-					'owner_id' => 6
+					'id'			 => $this->db->f('leietaker_id'),
+					'first_name'	 => $this->db->f('fornavn'),
+					'last_name'		 => $this->db->f('etternavn'),
+					'category'		 => $this->db->f('kjonn_juridisk') + 1,
+					'status_eco'	 => $this->db->f('namssakstatusokonomi_id'),
+					'status_drift'	 => $this->db->f('namssakstatusdrift_id'),
+					'obskode'		 => $this->db->f('obskode'),
+					'entry_date'	 => time(),
+					'owner_id'		 => 6
 				);
 			}
 
@@ -1164,8 +1162,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = count($leietakere) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($leietakere) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1188,8 +1186,8 @@ SQL;
 				$i++;
 			}
 
-			$msg = $i . ' Leietakere er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' Leietakere er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1208,8 +1206,8 @@ SQL;
 			{
 				$obskoder[] = array
 					(
-					'tenant_id' => (int)$this->db->f('tenant_id'),
-					'obskode' => $this->db->f('obskode')
+					'tenant_id'	 => (int)$this->db->f('tenant_id'),
+					'obskode'	 => $this->db->f('obskode')
 				);
 			}
 			foreach ($obskoder as $entry)
@@ -1220,8 +1218,8 @@ SQL;
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
 
-			$msg = count($obskoder) . ' OBSKoder er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = count($obskoder) . ' OBSKoder er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1268,8 +1266,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = $i . ' Leieobjekt er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' Leieobjekt er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1316,8 +1314,8 @@ SQL;
 			}
 			//	$this->db->transaction_commit();
 
-			$msg = $i . ' Objekt er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' Objekt er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1347,8 +1345,8 @@ SQL;
 			}
 			//	$this->db->transaction_commit();
 
-			$msg = $i . ' Bygg er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' Bygg er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1381,8 +1379,8 @@ SQL;
 			}
 			//	$this->db->transaction_commit();
 
-			$msg = $i . ' Seksjoner er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' Seksjoner er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1408,8 +1406,8 @@ SQL;
 			}
 			//	$this->db->transaction_commit();
 
-			$msg = $i . ' oppsagtdato er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' oppsagtdato er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1427,8 +1425,8 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$msg = $ant_tlf . ' Telefon nr er slettet';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $ant_tlf . ' Telefon nr er slettet';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 
@@ -1461,9 +1459,9 @@ SQL;
 
 				$this->db->next_record();
 				$leietaker_oppdatert[] = array(
-					'id' => (int)$leietaker[$i],
-					'status_drift' => (int)$this->db->f('namssakstatusdrift_id'),
-					'status_eco' => (int)$this->db->f('namssakstatusokonomi_id')
+					'id'			 => (int)$leietaker[$i],
+					'status_drift'	 => (int)$this->db->f('namssakstatusdrift_id'),
+					'status_eco'	 => (int)$this->db->f('namssakstatusokonomi_id')
 				);
 			}
 
@@ -1479,8 +1477,8 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg = $i . ' namssakstatus er oppdatert';
-			$this->receipt['message'][] = array('msg' => $msg);
+			$msg						 = $i . ' namssakstatus er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
 	}

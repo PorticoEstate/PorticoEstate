@@ -49,17 +49,17 @@
 		protected $custom;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.soagreement');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom = createObject('property.custom_fields');
+			$this->so		 = CreateObject('property.soagreement');
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->custom	 = createObject('property.custom_fields');
 
 			if ($session)
 			{
@@ -67,29 +67,29 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$vendor_id = phpgw::get_var('vendor_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$role = phpgw::get_var('role');
-			$member_id = phpgw::get_var('member_id', 'int');
-			$status_id = phpgw::get_var('status_id');
+			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		 = phpgw::get_var('query');
+			$sort		 = phpgw::get_var('sort');
+			$order		 = phpgw::get_var('order');
+			$filter		 = phpgw::get_var('filter', 'int');
+			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$vendor_id	 = phpgw::get_var('vendor_id', 'int');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
+			$role		 = phpgw::get_var('role');
+			$member_id	 = phpgw::get_var('member_id', 'int');
+			$status_id	 = phpgw::get_var('status_id');
 
-			$this->role = $role;
-			$this->so->role = $role;
+			$this->role		 = $role;
+			$this->so->role	 = $role;
 
 			$this->status_id = isset($_REQUEST['status_id']) ? $status_id : $this->status_id;
-			$this->start = isset($_REQUEST['start']) ? $start : $this->start;
-			$this->order = isset($_REQUEST['order']) ? $order : $this->order;
-			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
+			$this->start	 = isset($_REQUEST['start']) ? $start : $this->start;
+			$this->order	 = isset($_REQUEST['order']) ? $order : $this->order;
+			$this->sort		 = isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->query	 = isset($_REQUEST['query']) ? $query : $this->query;
 			$this->vendor_id = isset($_REQUEST['vendor_id']) ? $vendor_id : $this->vendor_id;
 			$this->member_id = isset($_REQUEST['member_id']) ? $member_id : $this->member_id;
-			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
+			$this->cat_id	 = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
 
 			if (!empty($filter))
 			{
@@ -116,17 +116,16 @@
 
 //			_debug_array($data);die();
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
+			$this->start	 = $data['start'];
+			$this->query	 = $data['query'];
+			$this->filter	 = $data['filter'];
+			$this->sort		 = $data['sort'];
+			$this->order	 = $data['order'];
+			$this->cat_id	 = $data['cat_id'];
 			$this->vendor_id = $data['vendor_id'];
 			$this->member_id = $data['member_id'];
 			$this->status_id = $data['status_id'];
 		}
-
 
 		function select_vendor_list( $format = '', $selected = '' )
 		{
@@ -140,7 +139,7 @@
 					break;
 			}
 
-			$input_list = $this->so->select_vendor_list();
+			$input_list	 = $this->so->select_vendor_list();
 			$vendor_list = $this->bocommon->select_list($selected, $input_list);
 
 			return $vendor_list;
@@ -155,7 +154,7 @@
 			$agreements = $this->so->read($data);
 
 			$this->total_records = $this->so->total_records;
-			$this->uicols = $this->so->uicols;
+			$this->uicols		 = $this->so->uicols;
 
 			foreach ($agreements as &$agreement)
 			{
@@ -180,20 +179,20 @@
 		{
 			if (!empty($params))
 			{
-				$sort = $params['sort'];
-				$order = $params['order'];
+				$sort	 = $params['sort'];
+				$order	 = $params['order'];
 			}
 			else
 			{
-				$sort = $this->sort;
-				$order = $this->order;
+				$sort	 = $this->sort;
+				$order	 = $this->order;
 			}
 
-			$list = $this->so->read_details(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $sort, 'order' => $order,
-				'filter' => $this->filter, 'cat_id' => $this->cat_id, 'allrows' => $this->allrows,
-				'member_id' => $this->member_id,
-				'agreement_id' => $id));
+			$list				 = $this->so->read_details(array('start'			 => $this->start, 'query'			 => $this->query,
+				'sort'			 => $sort, 'order'			 => $order,
+				'filter'		 => $this->filter, 'cat_id'		 => $this->cat_id, 'allrows'		 => $this->allrows,
+				'member_id'		 => $this->member_id,
+				'agreement_id'	 => $id));
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;
@@ -203,7 +202,7 @@
 
 		function read_prizing( $data )
 		{
-			$list = $this->so->read_prizing($data);
+			$list				 = $this->so->read_prizing($data);
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;
@@ -218,10 +217,10 @@
 
 		function read_event( $data )
 		{
-			$boalarm = CreateObject('property.boalarm');
-			$event = $this->so->read_single($data['agreement_id']);
+			$boalarm			 = CreateObject('property.boalarm');
+			$event				 = $this->so->read_single($data['agreement_id']);
 			$event['alarm_date'] = $event['termination_date'];
-			$event['alarm'] = $boalarm->read_alarms($type = 'agreement', $data['agreement_id']);
+			$event['alarm']		 = $boalarm->read_alarms($type				 = 'agreement', $data['agreement_id']);
 			return $event;
 		}
 
@@ -242,19 +241,19 @@
 				$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['entry_date'], $dateformat);
 			}
 
-			$values['start_date'] = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
-			$values['end_date'] = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
+			$values['start_date']	 = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+			$values['end_date']		 = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
 			if (isset($values['termination_date']) && $values['termination_date'])
 			{
 				$values['termination_date'] = $GLOBALS['phpgw']->common->show_date($values['termination_date'], $dateformat);
 			}
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$vfs				 = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl	 = 1;
 
 			$values['files'] = $vfs->ls(array(
-				'string' => "/property/agreement/{$data['agreement_id']}",
-				'relatives' => array(RELATIVE_NONE)));
+				'string'	 => "/property/agreement/{$data['agreement_id']}",
+				'relatives'	 => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
 
@@ -292,9 +291,9 @@
 
 		function save( $values, $values_attribute = '', $action = '' )
 		{
-			$values['start_date'] = $this->bocommon->date_to_timestamp($values['start_date']);
-			$values['end_date'] = $this->bocommon->date_to_timestamp($values['end_date']);
-			$values['termination_date'] = $this->bocommon->date_to_timestamp($values['termination_date']);
+			$values['start_date']		 = $this->bocommon->date_to_timestamp($values['start_date']);
+			$values['end_date']			 = $this->bocommon->date_to_timestamp($values['end_date']);
+			$values['termination_date']	 = $this->bocommon->date_to_timestamp($values['termination_date']);
 
 			if (is_array($values_attribute))
 			{
@@ -319,9 +318,9 @@
 		function save_item( $values, $values_attribute = '' )
 		{
 			//_debug_array($values);
-			$values['m_cost'] = str_replace(",", ".", $values['m_cost']);
-			$values['w_cost'] = str_replace(",", ".", $values['w_cost']);
-			$values['total_cost'] = $values['m_cost'] + $values['w_cost'];
+			$values['m_cost']		 = str_replace(",", ".", $values['m_cost']);
+			$values['w_cost']		 = str_replace(",", ".", $values['w_cost']);
+			$values['total_cost']	 = $values['m_cost'] + $values['w_cost'];
 
 			if ($values['index_count'] > 0)
 			{
@@ -365,7 +364,7 @@
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["agreement_columns"] : '';
 			}
 
-			$filter = array('list' => ''); // translates to "list IS NULL"
+			$filter	 = array('list' => ''); // translates to "list IS NULL"
 			$columns = $this->custom->find('property', '.agreement', 0, '', '', '', true, false, $filter);
 
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
@@ -386,8 +385,8 @@
 
 		function read_group_activity( $group_id = '', $agreement_id = '' )
 		{
-			$activity_list = $this->so->read_group_activity($group_id, $agreement_id);
-			$this->uicols = $this->so->uicols;
+			$activity_list	 = $this->so->read_group_activity($group_id, $agreement_id);
+			$this->uicols	 = $this->so->uicols;
 			return $activity_list;
 		}
 

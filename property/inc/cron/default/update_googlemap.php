@@ -40,18 +40,18 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('location');
-			$this->function_msg = 'update googlemap';
+			$this->sub_location	 = lang('location');
+			$this->function_msg	 = 'update googlemap';
 
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->db2 = clone($this->db);
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->db2		 = clone($this->db);
 		}
 
 		function execute()
 		{
-			$fieldname = 'googlemap';
-			$area = "Bergen";
-			$sql = "SELECT fm_location4.location_code,fm_location4.loc1,fm_location4.loc2,fm_location4.loc3,fm_location4.loc4,"
+			$fieldname	 = 'googlemap';
+			$area		 = "Bergen";
+			$sql		 = "SELECT fm_location4.location_code,fm_location4.loc1,fm_location4.loc2,fm_location4.loc3,fm_location4.loc4,"
 				. " fm_location1.loc1_name,fm_tenant.id as tenant_id,fm_tenant.last_name,fm_tenant.first_name,fm_tenant.contact_phone,fm_streetaddress.descr as street_name,street_number,fm_location4.street_id,fm_location4.etasje,fm_location4.antallrom,fm_location4.boareal"
 				. " FROM ((((((( fm_location4 JOIN fm_location3 ON (fm_location4.loc3 = fm_location3.loc3) AND (fm_location4.loc2 = fm_location3.loc2) AND (fm_location4.loc1 = fm_location3.loc1)) JOIN fm_location2 ON (fm_location3.loc2 = fm_location2.loc2) AND (fm_location3.loc1 = fm_location2.loc1)) JOIN fm_location1 ON (fm_location2.loc1 = fm_location1.loc1)) JOIN fm_owner ON ( fm_location1.owner_id=fm_owner.id)) JOIN fm_part_of_town ON ( fm_location1.part_of_town_id=fm_part_of_town.id)) JOIN fm_streetaddress ON ( fm_location4.street_id=fm_streetaddress.id)) JOIN fm_tenant ON ( fm_location4.tenant_id=fm_tenant.id)) WHERE (fm_location4.category !=99 OR fm_location4.category IS NULL) AND driftsstatus_id > 0 ";
 

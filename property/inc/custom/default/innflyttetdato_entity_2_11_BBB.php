@@ -10,19 +10,19 @@
 
 //	$sql = "SELECT innflyttet FROM fm_entity_2_11 WHERE location_code ='" . $values['location_code'] . "'";
 
-	$sql = "SELECT id, json_representation->>'innflyttet' as innflyttet FROM fm_bim_item"
+	$sql				 = "SELECT id, json_representation->>'innflyttet' as innflyttet FROM fm_bim_item"
 		. " WHERE location_id = {$location_id}"
 		. " AND location_code='{$values['location_code']}'"
 		. " ORDER BY id DESC";
 	$db->query($sql, __LINE__, __FILE__);
 	$db->next_record();
-	$innflyttetdato_old = $db->f('innflyttet');
+	$innflyttetdato_old	 = $db->f('innflyttet');
 
-	$sql = "SELECT innflyttetdato, tenant_id FROM fm_location4 WHERE location_code ='" . $values['location_code'] . "'";
+	$sql			 = "SELECT innflyttetdato, tenant_id FROM fm_location4 WHERE location_code ='" . $values['location_code'] . "'";
 	$db->query($sql, __LINE__, __FILE__);
 	$db->next_record();
-	$innflyttetdato = $db->f('innflyttetdato');
-	$tenant_id = $db->f('tenant_id');
+	$innflyttetdato	 = $db->f('innflyttetdato');
+	$tenant_id		 = $db->f('tenant_id');
 
 	if ($tenant_id == $values['extra']['tenant_id'] && !$innflyttetdato_old)
 	{

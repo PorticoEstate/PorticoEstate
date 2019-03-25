@@ -26,29 +26,28 @@
 	 * @subpackage helpdesk
 	 * @version $Id$
 	 */
+
 	/**
 	 * Description
 	 * @package property
 	 */
-
 	class property_boexternal_communication
 	{
 
-		var $so, $historylog, $config, $bocommon,$preview_html, $dateformat, $currentapp;
+		var $so, $historylog, $config, $bocommon, $preview_html, $dateformat, $currentapp;
 
-		public function __construct($currentapp = 'property')
+		public function __construct( $currentapp = 'property' )
 		{
-			$this->currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so = createObject("{$this->currentapp}.soexternal_communication");
-			$this->historylog = & $this->so->historylog;
-			$this->bocommon = createObject('property.bocommon');
-			$this->config = CreateObject('phpgwapi.config', $this->currentapp)->read();
-			$this->preview_html = phpgw::get_var('preview_html', 'bool');
-			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
+			$this->currentapp	 = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->so			 = createObject("{$this->currentapp}.soexternal_communication");
+			$this->historylog	 = & $this->so->historylog;
+			$this->bocommon		 = createObject('property.bocommon');
+			$this->config		 = CreateObject('phpgwapi.config', $this->currentapp)->read();
+			$this->preview_html	 = phpgw::get_var('preview_html', 'bool');
+			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
-		function read_additional_notes( $id = 0)
+		function read_additional_notes( $id = 0 )
 		{
 			$additional_notes = array();
 
@@ -57,26 +56,26 @@
 			$i = 1;
 			foreach ($history_array as $value)
 			{
-				if($value['sender_email_address'])
+				if ($value['sender_email_address'])
 				{
 					$value_user = $value['sender_email_address'];
 				}
-				else if(!empty($this->config['department']))
+				else if (!empty($this->config['department']))
 				{
 					$value_user = $this->config['department'];
 				}
-				else if($value['created_by'])
+				else if ($value['created_by'])
 				{
 					$value_user = $GLOBALS['phpgw']->accounts->get($value['created_by'])->__toString();
 				}
 
 				$additional_notes[] = array
 					(
-					'value_id' => $value['id'],
-					'value_count' => $i,
-					'value_date' => $GLOBALS['phpgw']->common->show_date($value['created_on']),
-					'value_user' => $value_user,
-					'value_note' => stripslashes($value['message']),
+					'value_id'		 => $value['id'],
+					'value_count'	 => $i,
+					'value_date'	 => $GLOBALS['phpgw']->common->show_date($value['created_on']),
+					'value_user'	 => $value_user,
+					'value_note'	 => stripslashes($value['message']),
 				);
 				$i++;
 			}
@@ -107,9 +106,9 @@
 
 			$criteria = array
 				(
-				'appname' => $this->currentapp,
-				'location' => ".ticket.external_communication",
-				'allrows' => true
+				'appname'	 => $this->currentapp,
+				'location'	 => ".ticket.external_communication",
+				'allrows'	 => true
 			);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
@@ -145,8 +144,8 @@
 			{
 				try
 				{
-					$receipt = $this->so->add($values);
-					$values['id'] = $receipt['id'];
+					$receipt		 = $this->so->add($values);
+					$values['id']	 = $receipt['id'];
 				}
 				catch (Exception $e)
 				{
@@ -172,26 +171,26 @@
 			}
 
 			return $receipt;
-
 		}
+
 		function read_record_history( $id )
 		{
 			$history_array = $this->historylog->return_array(array('C', 'O'), array(), '', '', $id);
 
-			$record_history = array();
-			$i = 0;
+			$record_history	 = array();
+			$i				 = 0;
 
 			foreach ($history_array as $value)
 			{
-				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
-				$record_history[$i]['value_user'] = $value['owner'];
+				$record_history[$i]['value_date']	 = $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user']	 = $value['owner'];
 
 				switch ($value['status'])
 				{
-					case 'S': $type = lang('Subject changed');
+					case 'S': $type					 = lang('Subject changed');
 						break;
 					case 'M':
-						$type = lang('Sent by email to');
+						$type					 = lang('Sent by email to');
 						$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
 						break;
 					default:
@@ -202,8 +201,8 @@
 				unset($type);
 				if ($value['status'] != 'O' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value'] = $value['new_value'];
-					$record_history[$i]['value_old_value'] = $value['old_value'];
+					$record_history[$i]['value_new_value']	 = $value['new_value'];
+					$record_history[$i]['value_old_value']	 = $value['old_value'];
 				}
 				else
 				{
@@ -216,26 +215,25 @@
 			return $record_history;
 		}
 
-		function update_msg($id, $to, $attachment_log = '' )
+		function update_msg( $id, $to, $attachment_log = '' )
 		{
 			$this->so->update_msg($id, $to, $attachment_log);
 		}
-
 
 		function alert_assigned( $id )
 		{
 			$message_info = $this->read_single($id);
 
-			$ticket_id = $message_info['ticket_id'];
-			$botts = createObject("{$this->currentapp}.botts");
-			$ticket = $botts->read_single($ticket_id);
-			$contact_data = $this->get_contact_data($ticket);
+			$ticket_id		 = $message_info['ticket_id'];
+			$botts			 = createObject("{$this->currentapp}.botts");
+			$ticket			 = $botts->read_single($ticket_id);
+			$contact_data	 = $this->get_contact_data($ticket);
 
-			$_to = $contact_data['user_email'];
-			$from_email = 'ikkesvar@bergen.kommune.no';
-			$from_name = $GLOBALS['phpgw_info']['server']['site_title'];
+			$_to		 = $contact_data['user_email'];
+			$from_email	 = 'ikkesvar@bergen.kommune.no';
+			$from_name	 = $GLOBALS['phpgw_info']['server']['site_title'];
 
-			$cc = '';
+			$cc	 = '';
 			$bcc = '';
 
 			$html_content = $this->get_html_content($message_info, $contact_data);
@@ -253,7 +251,7 @@
 
 			$config_admin = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->currentapp, '.admin'))->read();
 
-			if(!empty($config_admin['xPortico']['sender_email_address']))
+			if (!empty($config_admin['xPortico']['sender_email_address']))
 			{
 				$from_email = $config_admin['xPortico']['sender_email_address'];
 			}
@@ -269,24 +267,24 @@
 			}
 			catch (Exception $exc)
 			{
+				
 			}
-
 		}
 
 		function get_html_content( $message_info, $contact_data )
 		{
 			$preview = $this->preview_html;
-			$id = $message_info['id'];
+			$id		 = $message_info['id'];
 
-			$ticket_id = $message_info['ticket_id'];
-			$botts = createObject("{$this->currentapp}.botts");
+			$ticket_id	 = $message_info['ticket_id'];
+			$botts		 = createObject("{$this->currentapp}.botts");
 
 			$ticket = $botts->read_single($ticket_id);
 
 			$lang_print = lang('print');
 
 			$body = '';
-			if($preview)
+			if ($preview)
 			{
 				$body = <<<HTML
 
@@ -304,35 +302,35 @@ HTML;
 				<H2>__SUBJECT__</H2>
 
 HTML;
-			if(!$preview)
+			if (!$preview)
 			{
 				$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uiexternal_communication.view",
-					'id' => $id), false, true) . '">' . lang('Ticket') . " # {$ticket_id}::{$id} </a>" . "\n";
+						'id'		 => $id), false, true) . '">' . lang('Ticket') . " # {$ticket_id}::{$id} </a>" . "\n";
 			}
 
-			$entry_date = $GLOBALS['phpgw']->common->show_date($message_info['created_on'], $this->dateformat);
-			$body .= "<table>\n";
-			if($preview)
+			$entry_date	 = $GLOBALS['phpgw']->common->show_date($message_info['created_on'], $this->dateformat);
+			$body		 .= "<table>\n";
+			if ($preview)
 			{
 				$value_recipients = implode('<br/>:&nbsp;', $message_info['mail_recipients']);
 
-				$body .= '<tr><td valign = "top">'. lang('to')."</td><td>:&nbsp;{$value_recipients}</td></tr>\n";
+				$body .= '<tr><td valign = "top">' . lang('to') . "</td><td>:&nbsp;{$value_recipients}</td></tr>\n";
 			}
 
-			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>\n";
-			if($ticket['location_code'])
+			$body .= '<tr><td>' . lang('Date Opened') . '</td><td>:&nbsp;' . $entry_date . "</td></tr>\n";
+			if ($ticket['location_code'])
 			{
-				$body .= '<tr><td>'. lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] ."</td></tr>\n";
+				$body .= '<tr><td>' . lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] . "</td></tr>\n";
 			}
 
-			if($ticket['address'])
+			if ($ticket['address'])
 			{
-				$body .= '<tr><td>'. lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] ."</td></tr>\n";
+				$body .= '<tr><td>' . lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] . "</td></tr>\n";
 				if (isset($address_element) AND is_array($address_element))
 				{
 					foreach ($address_element as $address_entry)
 					{
-						$body .= '<tr><td>'. $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] ."</td></tr>\n";
+						$body .= '<tr><td>' . $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] . "</td></tr>\n";
 					}
 				}
 			}
@@ -341,51 +339,51 @@ HTML;
 //			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_email']}</td></tr>\n";
 //			$body .= "<tr><td></td><td>:&nbsp;{$contact_data['user_phone']}</td></tr>\n";
 
-			if($contact_data['organisation'])
+			if ($contact_data['organisation'])
 			{
-				$body .= '<tr><td>'. lang('from') . "</td><td>:&nbsp;{$contact_data['organisation']}";
-				if($contact_data['department'])
+				$body .= '<tr><td>' . lang('from') . "</td><td>:&nbsp;{$contact_data['organisation']}";
+				if ($contact_data['department'])
 				{
 					$body .= ",&nbsp;{$contact_data['department']}";
 				}
 				$body .= "</td></tr>\n";
 			}
-/*
-			if($contact_data['contact_name'])
-			{
-				$body .= '<tr><td>'. lang('contact') . " 1</td><td>:&nbsp;{$contact_data['contact_name']}</td></tr>\n";
-			}
-			if($contact_data['contact_email'])
-			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email']}</td></tr>\n";
-			}
-			if($contact_data['contact_phone'])
-			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone']}</td></tr>\n";
-			}
-			if($contact_data['contact_name2'])
-			{
-				$body .= '<tr><td>'. lang('contact') . " 2</td><td>:&nbsp;{$contact_data['contact_name2']}</td></tr>\n";
-			}
-			if($contact_data['contact_email2'])
-			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email2']}</td></tr>\n";
-			}
-			if($contact_data['contact_phone2'])
-			{
-				$body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone2']}</td></tr>\n";
-			}
-			if($ticket['assignedto'])
-			{
-				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>\n";
-			}
-*/
+			/*
+			  if($contact_data['contact_name'])
+			  {
+			  $body .= '<tr><td>'. lang('contact') . " 1</td><td>:&nbsp;{$contact_data['contact_name']}</td></tr>\n";
+			  }
+			  if($contact_data['contact_email'])
+			  {
+			  $body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email']}</td></tr>\n";
+			  }
+			  if($contact_data['contact_phone'])
+			  {
+			  $body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone']}</td></tr>\n";
+			  }
+			  if($contact_data['contact_name2'])
+			  {
+			  $body .= '<tr><td>'. lang('contact') . " 2</td><td>:&nbsp;{$contact_data['contact_name2']}</td></tr>\n";
+			  }
+			  if($contact_data['contact_email2'])
+			  {
+			  $body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_email2']}</td></tr>\n";
+			  }
+			  if($contact_data['contact_phone2'])
+			  {
+			  $body .= "<tr><td></td><td>:&nbsp;{$contact_data['contact_phone2']}</td></tr>\n";
+			  }
+			  if($ticket['assignedto'])
+			  {
+			  $body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>\n";
+			  }
+			 */
 			$body .= "__ATTACHMENTS__\n</table><br/><br/>\n";
 
-			$lang_date = lang('date');
-			$lang_who = lang('who');
-			$lang_note = lang('note');
-			$table_content = <<<HTML
+			$lang_date		 = lang('date');
+			$lang_who		 = lang('who');
+			$lang_note		 = lang('note');
+			$table_content	 = <<<HTML
 			<thead>
 				<tr>
 					<th>
@@ -409,12 +407,12 @@ HTML;
 			$i = 0;
 			foreach ($additional_notes as $value)
 			{
-				$value_note = nl2br($value['value_note']);
-				$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value_note}</td></tr>\n";
+				$value_note		 = nl2br($value['value_note']);
+				$table_content	 .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value_note}</td></tr>\n";
 				$i++;
 			}
 
-			$body.= "<table class='details'>{$table_content}</table>\n";
+			$body .= "<table class='details'>{$table_content}</table>\n";
 
 			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$location_code} {$message_info['subject']}({$i})";
 
@@ -538,10 +536,10 @@ HTML;
 
 
 			return array
-			(
-				'html' => $html,
-				'subject' => $subject,
-				'contact_data' => $contact_data,
+				(
+				'html'			 => $html,
+				'subject'		 => $subject,
+				'contact_data'	 => $contact_data,
 			);
 		}
 
@@ -556,12 +554,12 @@ HTML;
 				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['user_id'], true);
 			}
 
-			$organisation = '';
-			$contact_name = '';
-			$contact_email = '';
-			$contact_phone = '';
-			$contact_name2  = '';
-			$contact_email2 = '';
+			$organisation	 = '';
+			$contact_name	 = '';
+			$contact_email	 = '';
+			$contact_phone	 = '';
+			$contact_name2	 = '';
+			$contact_email2	 = '';
 
 			if (isset($this->config['org_name']))
 			{
@@ -573,8 +571,8 @@ HTML;
 			}
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
-					'contact_id' => $ticket['contact_id'],
-					'field' => 'contact'
+				'contact_id' => $ticket['contact_id'],
+				'field'		 => 'contact'
 				)
 			);
 
@@ -591,12 +589,12 @@ HTML;
 				$contact_phone = $contact_data['value_contact_tel'];
 			}
 
-			$order_id = $ticket['order_id'];
-	//account_display
-			$user_phone = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['cellphone'];
-			$user_email = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+			$order_id						 = $ticket['order_id'];
+			//account_display
+			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['cellphone'];
+			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
 //			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_email_template'];
-			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_contact_block_1'];
+			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_contact_block_1'];
 
 			/**
 			 * Only relevant for $this->currentapp = 'property'
@@ -605,65 +603,63 @@ HTML;
 			{
 				$contact_at_location = $this->config['contact_at_location'];
 
-				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
-					'cat_id' => $ticket['cat_id'],
-					'role_id' => $contact_at_location)
-					);
+				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'	 => explode('-', $ticket['location_code']),
+					'cat_id'	 => $ticket['cat_id'],
+					'role_id'	 => $contact_at_location)
+				);
 
-				if($_responsible)
+				if ($_responsible)
 				{
-					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
-					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'] = 'firstname';
-					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
-					$_responsible_email		= $prefs['email'];
-					$_responsible_cellphone	= $prefs['cellphone'];
-					if($contact_email  && ($contact_data['value_contact_email'] != $_responsible_email))
+					$prefs																		 = $this->bocommon->create_preferences('property', $_responsible);
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']	 = 'firstname';
+					$_responsible_name															 = $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
+					$_responsible_email															 = $prefs['email'];
+					$_responsible_cellphone														 = $prefs['cellphone'];
+					if ($contact_email && ($contact_data['value_contact_email'] != $_responsible_email))
 					{
-						$contact_name2 = $_responsible_name;
-						$contact_email2 = $_responsible_email;
-						$contact_phone2 = $_responsible_cellphone;
-						$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_2'];
+						$contact_name2					 = $_responsible_name;
+						$contact_email2					 = $_responsible_email;
+						$contact_phone2					 = $_responsible_cellphone;
+						$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_2'];
 					}
 					else
 					{
-						$contact_name = $_responsible_name;
-						$contact_email = $_responsible_email;
-						$contact_phone = $_responsible_cellphone;
+						$contact_name	 = $_responsible_name;
+						$contact_email	 = $_responsible_email;
+						$contact_phone	 = $_responsible_cellphone;
 					}
 				}
 			}
 
-			$user_phone = str_replace(' ', '', $user_phone);
-			$contact_phone = str_replace(' ', '', $contact_phone);
-			$contact_phone2 = str_replace(' ', '', $contact_phone2);
+			$user_phone		 = str_replace(' ', '', $user_phone);
+			$contact_phone	 = str_replace(' ', '', $contact_phone);
+			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
 
-			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
+			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
 			{
 				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
-			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
+			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
 			{
 				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
-			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2,  $matches ) )
+			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
 			{
 				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 
 			return array(
-				'organisation' => $organisation,
-				'department'=> $department,
-				'user_name' => $GLOBALS['phpgw_info']['user']['fullname'],
-				'user_email' => $user_email,
-				'user_phone' => $user_phone,
-				'contact_name' => $contact_name,
-				'contact_email' => $contact_email,
-				'contact_phone' => $contact_phone,
-				'contact_name2' => $contact_name2,
+				'organisation'	 => $organisation,
+				'department'	 => $department,
+				'user_name'		 => $GLOBALS['phpgw_info']['user']['fullname'],
+				'user_email'	 => $user_email,
+				'user_phone'	 => $user_phone,
+				'contact_name'	 => $contact_name,
+				'contact_email'	 => $contact_email,
+				'contact_phone'	 => $contact_phone,
+				'contact_name2'	 => $contact_name2,
 				'contact_email2' => $contact_email2,
 				'contact_phone2' => $contact_phone2
 			);
-
 		}
-
 	}

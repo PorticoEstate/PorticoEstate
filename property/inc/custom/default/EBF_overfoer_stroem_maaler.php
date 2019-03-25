@@ -8,16 +8,16 @@
 	{
 
 		protected $db;
-		protected $config = array();
-		protected $status_text = array();
+		protected $config		 = array();
+		protected $status_text	 = array();
 		protected $custom_config;
 		protected $account;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($this->acl_location != '.entity.2.17')
 			{
@@ -27,7 +27,7 @@
 
 		function update_data( $values, $values_attribute = array(), $action )
 		{
-			if(empty($values['location_code']))
+			if (empty($values['location_code']))
 			{
 				return;
 			}
@@ -42,14 +42,13 @@
 			/**
 			 * Sjekk om epost allerede er sendt
 			 */
-
 			$this->db->query("SELECT json_representation->>'epost_bkk' as epost_bkk, json_representation->>'innmeldingsdato' AS innmeldingsdato"
 				. " FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_rapport}"
 				. " AND id='{$values['id']}'", __LINE__, __FILE__);
 
 			$this->db->next_record();
-			if($this->db->f('epost_bkk'))
+			if ($this->db->f('epost_bkk'))
 			{
 				return;
 			}
@@ -58,10 +57,10 @@
 
 			$_innmeldingsdato = $innmeldingsdato ? strtotime($innmeldingsdato) : time();
 
-			$kundenummer= '';
-			$objekt = $values['location_code'];
-			$fra_dato = date("d/m-Y", $_innmeldingsdato);
-			$tidligere_person = "{$values['location_data']['last_name']}, {$values['location_data']['first_name']}";
+			$kundenummer		 = '';
+			$objekt				 = $values['location_code'];
+			$fra_dato			 = date("d/m-Y", $_innmeldingsdato);
+			$tidligere_person	 = "{$values['location_data']['last_name']}, {$values['location_data']['first_name']}";
 
 			if ($values['street_name'])
 			{
@@ -79,7 +78,7 @@
 					switch ($entry['name'])
 					{
 						case 'maaler_nr':
-								$maaler_nr = $entry['value'];
+							$maaler_nr = $entry['value'];
 							break;
 						case 'maalerstand':
 							if ($entry['value'])
@@ -95,19 +94,19 @@
 
 
 			$error = false;
-			if(!$maaler_nr)
+			if (!$maaler_nr)
 			{
-				phpgwapi_cache::message_set("Målernummer er ikke registrert",'error');
+				phpgwapi_cache::message_set("Målernummer er ikke registrert", 'error');
 				$error = true;
 			}
 
-			if(!$maalerstand)
+			if (!$maalerstand)
 			{
-				phpgwapi_cache::message_set("Målerstand er ikke registrert",'error');
+				phpgwapi_cache::message_set("Målerstand er ikke registrert", 'error');
 				$error = true;
 			}
 
-			if($error)
+			if ($error)
 			{
 				return;
 			}
@@ -136,10 +135,10 @@
 			$id = $this->db->f('id');
 
 			$maaler = createObject('property.boentity')->read_single(array(
-				'entity_id' => 1,
-				'cat_id'	=> 11,
-				'id'		=> $id,
-				'view'		=> true
+				'entity_id'	 => 1,
+				'cat_id'	 => 11,
+				'id'		 => $id,
+				'view'		 => true
 			));
 
 
@@ -148,7 +147,7 @@
 				switch ($attribute['name'])
 				{
 					case 'kunde_nr':
-						if(!empty($attribute['value']))
+						if (!empty($attribute['value']))
 						{
 							$kunde_nr_id = $attribute['value'];
 						}
@@ -160,7 +159,7 @@
 
 			foreach ($choice_list as $choice)
 			{
-				if($choice['id'] == $kunde_nr_id)
+				if ($choice['id'] == $kunde_nr_id)
 				{
 					$kundenummer = $choice['value'];
 				}
@@ -168,19 +167,19 @@
 
 			$subject = "Måleroverføring: {$address}";
 
-			$toarray = array('kundepost@bkk.no' );
+			$toarray = array('kundepost@bkk.no');
 //			$toarray = array('hc483@bergen.kommune.no' );
-			$to = implode(';', $toarray);
+			$to		 = implode(';', $toarray);
 
-			$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+			$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
+			$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 
-			$ccarray = array('Muhammed.Ibrahim@bergen.kommune.no',$from_email );
-			$cc = implode(';', $ccarray);
+			$ccarray = array('Muhammed.Ibrahim@bergen.kommune.no', $from_email);
+			$cc		 = implode(';', $ccarray);
 
 			$bcc = 'hc483@bergen.kommune.no';
 
-			$html =<<<HTML
+			$html = <<<HTML
 			<!DOCTYPE html>
 			<html>
 				<head>
@@ -247,16 +246,16 @@ HTML;
 			}
 			catch (Exception $e)
 			{
-				phpgwapi_cache::message_set($e->getMessage(),'error');
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
 			}
 
 			/**
 			 * Lagre kvittering på utført
 			 */
-			if($rc)
+			if ($rc)
 			{
 
-				phpgwapi_cache::message_set("Epost er sendt til BKK om overføring av måler",'message');
+				phpgwapi_cache::message_set("Epost er sendt til BKK om overføring av måler", 'message');
 
 				$now = date(phpgwapi_db::date_format());
 
@@ -264,12 +263,8 @@ HTML;
 					. " WHERE location_id = {$location_id_rapport}"
 					. " AND id='{$values['id']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-
 			}
-
-
 		}
-
 	}
 	$data_sync = new overfoer_stroem();
 	$data_sync->update_data($values, $values_attribute, $action);

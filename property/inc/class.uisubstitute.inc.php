@@ -42,10 +42,10 @@
 		private $config;
 		var $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'edit' => true,
-			'edit2' => true,
+			'index'		 => true,
+			'query'		 => true,
+			'edit'		 => true,
+			'edit2'		 => true,
 			'substitute' => true
 		);
 
@@ -53,14 +53,14 @@
 		{
 			parent::__construct();
 
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo = CreateObject('property.bosubstitute');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->start = $this->bo->start;
-			$this->query = $this->bo->query;
-			$this->sort = $this->bo->sort;
-			$this->order = $this->bo->order;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = true;
+			$this->account_id							 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->bo									 = CreateObject('property.bosubstitute');
+			$this->bocommon								 = CreateObject('property.bocommon');
+			$this->start								 = $this->bo->start;
+			$this->query								 = $this->bo->query;
+			$this->sort									 = $this->bo->sort;
+			$this->order								 = $this->bo->order;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::accounting::dimb_role_user2::substitute';
 		}
@@ -75,7 +75,7 @@
 			}
 
 			$msgbox_data = array();
-			if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+			if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt	 = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 			{
 				phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
@@ -86,64 +86,64 @@
 				(
 				array
 					(
-					'key' => 'id',
+					'key'	 => 'id',
 					'hidden' => true
 				),
 				array
 					(
-					'key' => 'user',
-					'label' => lang('user'),
-					'sortable' => false
+					'key'		 => 'user',
+					'label'		 => lang('user'),
+					'sortable'	 => false
 				),
 				array
 					(
-					'key' => 'substitute',
-					'label' => lang('substitute'),
-					'sortable' => false
+					'key'		 => 'substitute',
+					'label'		 => lang('substitute'),
+					'sortable'	 => false
 				),
 				array(
-					'key' => 'formatted_start_time',
-					'label' => lang('Start time'),
-					'sortable' => false),
+					'key'		 => 'formatted_start_time',
+					'label'		 => lang('Start time'),
+					'sortable'	 => false),
 				array
 					(
-					'key' => 'delete',
-					'label' => lang('delete'),
-					'sortable' => false,
-					'formatter' => 'JqueryPortico.FormatterCenter',
+					'key'		 => 'delete',
+					'label'		 => lang('delete'),
+					'sortable'	 => false,
+					'formatter'	 => 'JqueryPortico.FormatterCenter',
 				)
 			);
 
 
 			$datatable_def[] = array
 				(
-				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uisubstitute.query',
-						'phpgw_return_as' => 'json'))),
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uisubstitute.query',
+						'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => $myColumnDefs,
-				'data' => '',
-				'config' => array(
+				'data'		 => '',
+				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
 			);
 
-			$user_list = $this->_get_user_list();
+			$user_list		 = $this->_get_user_list();
 			$substitute_list = $user_list;
 
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
 			array_unshift($substitute_list, array('id' => '', 'name' => lang('select')));
 
 			$data = array
-			(
-				'datatable_def' => $datatable_def,
-				'msgbox_data' => $msgbox_data,
-				'filter_form' => array
 				(
-					'user_list' => array('options' => $user_list),
-					'substitute_list' => array('options' => $substitute_list),
+				'datatable_def'	 => $datatable_def,
+				'msgbox_data'	 => $msgbox_data,
+				'filter_form'	 => array
+					(
+					'user_list'			 => array('options' => $user_list),
+					'substitute_list'	 => array('options' => $substitute_list),
 				),
-				'update_action' => self::link(array('menuaction' => 'property.uisubstitute.edit2'))
+				'update_action'	 => self::link(array('menuaction' => 'property.uisubstitute.edit2'))
 			);
 
 			self::add_javascript('property', 'portico', 'substitute.index.js');
@@ -156,23 +156,23 @@
 
 		public function query()
 		{
-			$user_id = phpgw::get_var('user_id', 'int');
-			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int');
+			$user_id			 = phpgw::get_var('user_id', 'int');
+			$substitute_user_id	 = phpgw::get_var('substitute_user_id', 'int');
 
 			$values = $this->bo->read(array('user_id' => $user_id, 'substitute_user_id' => $substitute_user_id));
 
 			foreach ($values as &$entry)
 			{
-				$entry['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($entry['start_time']);
-				$entry['delete'] = "<input class=\"delete\" id=\"delete\" type =\"checkbox\" name=\"delete[]\" value=\"{$entry['id']}\">";
-				$results['results'][] = $entry;
+				$entry['formatted_start_time']	 = $GLOBALS['phpgw']->common->show_date($entry['start_time']);
+				$entry['delete']				 = "<input class=\"delete\" id=\"delete\" type =\"checkbox\" name=\"delete[]\" value=\"{$entry['id']}\">";
+				$results['results'][]			 = $entry;
 			}
 
 			$result_data = array
 				(
-				'results' => $values,
-				'total_records' => count($values),
-				'draw' => phpgw::get_var('draw', 'int')
+				'results'		 => $values,
+				'total_records'	 => count($values),
+				'draw'			 => phpgw::get_var('draw', 'int')
 			);
 
 
@@ -189,15 +189,15 @@
 				phpgwapi_cache::message_set(lang('you are not approved for this task'), 'error');
 			}
 
-			$user_id = phpgw::get_var('user_id', 'int');
-			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int');
-			$start_time = phpgw::get_var('start_time', 'date', 'POST', time());
+			$user_id			 = phpgw::get_var('user_id', 'int');
+			$substitute_user_id	 = phpgw::get_var('substitute_user_id', 'int');
+			$start_time			 = phpgw::get_var('start_time', 'date', 'POST', time());
 
 			$save = phpgw::get_var('save', 'string');
 
-			if($save && $user_id && $substitute_user_id)
+			if ($save && $user_id && $substitute_user_id)
 			{
-				if($this->bo->update_substitute($user_id, $substitute_user_id, $start_time))
+				if ($this->bo->update_substitute($user_id, $substitute_user_id, $start_time))
 				{
 					$result = array
 						(
@@ -242,19 +242,19 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uisubstitute.index',
-					'user_id' => $user_id, 'substitute_user_id' => $substitute_user_id));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'		 => 'property.uisubstitute.index',
+					'user_id'			 => $user_id, 'substitute_user_id' => $substitute_user_id));
 			}
 		}
 
 		public function edit()
 		{
-			$user_id = $this->account_id;
-			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int', 'POST');
-			$start_time = phpgw::get_var('start_time', 'date', 'POST');
-			$save = phpgw::get_var('save', 'string', 'POST');
+			$user_id			 = $this->account_id;
+			$substitute_user_id	 = phpgw::get_var('substitute_user_id', 'int', 'POST');
+			$start_time			 = phpgw::get_var('start_time', 'date', 'POST');
+			$save				 = phpgw::get_var('save', 'string', 'POST');
 
-			if($save)
+			if ($save)
 			{
 				$this->bo->update_substitute($user_id, $substitute_user_id, $start_time);
 				if ($delete = phpgw::get_var('delete', 'int'))
@@ -270,55 +270,61 @@
 			$i = 1;
 			foreach ($substitute_user_list as &$substitute_user)
 			{
-				$substitute_user['sort_key'] = $i++;
+				$substitute_user['sort_key']			 = $i++;
 				$substitute_user['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($substitute_user['start_time']);
-				$substitute_user['user_name']			= $GLOBALS['phpgw']->accounts->get($substitute_user['substitute_user_id'])->__toString();
-				$substitute_user['select']				= '<input type="checkbox" name="delete[]" class="mychecks" value="' . $substitute_user['id'] . '" title="'. $substitute_user['id'] .'"/>';
+				$substitute_user['user_name']			 = $GLOBALS['phpgw']->accounts->get($substitute_user['substitute_user_id'])->__toString();
+				$substitute_user['select']				 = '<input type="checkbox" name="delete[]" class="mychecks" value="' . $substitute_user['id'] . '" title="' . $substitute_user['id'] . '"/>';
 			}
 
-			$appname = lang('substitute');
-			$function_msg = lang('set substitute');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$controls_def = array
-			(
+			$appname										 = lang('substitute');
+			$function_msg									 = lang('set substitute');
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$controls_def									 = array
+				(
 				array('key' => 'id', 'hidden' => true),
-				array('key' => 'sort_key', 'label' => '#', 'sortable' => true, 'resizeable' => true,'className' => 'center'),
+				array('key'		 => 'sort_key', 'label'		 => '#', 'sortable'	 => true, 'resizeable' => true,
+					'className'	 => 'center'),
 				array('key' => 'user_name', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'formatted_start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
-				array('key' => 'select','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
+				array('key'		 => 'formatted_start_time', 'label'		 => lang('Start time'), 'sortable'	 => false,
+					'resizeable' => true),
+				array('key'		 => 'active', 'label'		 => lang('active'), 'sortable'	 => false,
+					'resizeable' => true,
+					'className'	 => 'center'),
+				array('key'		 => 'select', 'label'		 => lang('delete'), 'sortable'	 => false,
+					'resizeable' => true,
+					'className'	 => 'center'),
 			);
 
 			$tabletools = array
-			(
+				(
 				array('my_name' => 'select_all'),
 				array('my_name' => 'select_none')
 			);
 
 			$datatable_def[] = array
-			(
-				'container' => 'datatable-container_0',
+				(
+				'container'	 => 'datatable-container_0',
 				'requestUrl' => "''",
 				'ColumnDefs' => $controls_def,
-				'data' => json_encode($substitute_user_list),
+				'data'		 => json_encode($substitute_user_list),
 				'tabletools' => $tabletools,
-				'config' => array(
+				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true),
 					array('order' => json_encode(array(0, 'asc')))
 				)
 			);
 
-			$tabs = array();
-			$tabs['assign'] = array('label' => lang('assign'), 'link' => '#assign');
+			$tabs			 = array();
+			$tabs['assign']	 = array('label' => lang('assign'), 'link' => '#assign');
 
 			$data = array
-			(
-				'datatable_def' => $datatable_def,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
-				'value_active_tab' => 0,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit')),
-				'user_list' => array('options' => $this->_get_user_list()),
+				(
+				'datatable_def'		 => $datatable_def,
+				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab'	 => 0,
+				'form_action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit')),
+				'user_list'			 => array('options' => $this->_get_user_list()),
 			);
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_time', 'datetime');
@@ -328,39 +334,39 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 		}
 
-		private function _get_user_list($selected = 0)
+		private function _get_user_list( $selected = 0 )
 		{
-			$users_controller = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist', 'controller');
-			$users_property = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.project', 'property');
+			$users_controller	 = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist', 'controller');
+			$users_property		 = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.project', 'property');
 
 			$users_gross = array();
 
 
 			foreach ($users_controller as $user)
 			{
-				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
-				$users_gross[$user['account_id']] = array(
-					'id' => $user['account_id'],
-					'name' => $name
+				$name								 = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$users_gross[$user['account_id']]	 = array(
+					'id'	 => $user['account_id'],
+					'name'	 => $name
 				);
 			}
 			unset($user);
 			foreach ($users_property as $user)
 			{
-				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
-				$users_gross[$user['account_id']] = array(
-					'id' => $user['account_id'],
-					'name' => $name
+				$name								 = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$users_gross[$user['account_id']]	 = array(
+					'id'	 => $user['account_id'],
+					'name'	 => $name
 				);
 			}
 
-			$user_list = array();
-			$account_name = array();
-			$selected_found = false;
+			$user_list		 = array();
+			$account_name	 = array();
+			$selected_found	 = false;
 			foreach ($users_gross as $value)
 			{
-				$user_list[] = $value;
-				$account_name[] = $value['name'];
+				$user_list[]	 = $value;
+				$account_name[]	 = $value['name'];
 				if (!$selected_found)
 				{
 					$selected_found = $value['id'] == $selected ? true : false;
@@ -369,17 +375,17 @@
 
 			if ($selected && !$selected_found)
 			{
-				$name = $GLOBALS['phpgw']->accounts->get($selected)->__toString();
+				$name		 = $GLOBALS['phpgw']->accounts->get($selected)->__toString();
 				$user_list[] = array
 					(
-					'id' => $selected,
-					'name' => $name,
-					'selected' => 1
+					'id'		 => $selected,
+					'name'		 => $name,
+					'selected'	 => 1
 				);
 
 				$account_name[] = $name;
 			}
-	
+
 			// Sort the data with account_name ascending
 			// Add $data as the last parameter, to sort by the common key
 			if ($user_list)
@@ -389,5 +395,4 @@
 
 			return $user_list;
 		}
-
 	}

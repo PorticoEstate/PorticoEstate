@@ -137,7 +137,7 @@
 					{
 						$processed[] = $user['account_id'];
 						$users[]	 = array
-						(
+							(
 							'account_id'	 => $user['account_id'],
 							'lid'			 => $user['account_lid'],
 							'name'			 => $user['account_firstname'] . ' ' . $user['account_lastname'],
@@ -178,7 +178,7 @@
 					{
 						$processed[] = $group['account_id'];
 						$groups[]	 = array
-						(
+							(
 							'account_id'	 => $group['account_id'],
 							'lid'			 => $group['account_lid'],
 							'name'			 => $group['account_firstname'],
@@ -210,7 +210,7 @@
 			}
 
 			$table_header[] = array
-			(
+				(
 				'lang_read'		 => lang('Read'), //1
 				'lang_add'		 => lang('Add'), //2
 				'lang_edit'		 => lang('Edit'), //4
@@ -220,7 +220,7 @@
 
 
 			$link_data = array
-			(
+				(
 				'menuaction'	 => 'property.uiadmin.aclprefs',
 				'sort'			 => $this->sort,
 				'order'			 => $this->order,
@@ -265,7 +265,7 @@
 				'num_records'						 => $num_records,
 				'all_records'						 => (isset($this->bo->total_records) ? $this->bo->total_records : ''),
 				'link_url'							 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs',
-					'acl_app' => $this->acl_app)),
+					'acl_app'	 => $this->acl_app)),
 				'img_path'							 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
 				'lang_groups'						 => lang('groups'),
 				'lang_users'						 => lang('users'),
@@ -345,7 +345,7 @@
 					{
 						$processed[] = $user['account_id'];
 						$users[]	 = array
-						(
+							(
 							'account_id'				 => $user['account_id'],
 							'lid'						 => $user['account_lid'],
 							'name'						 => $user['account_firstname'] . ' ' . $user['account_lastname'] . ' [' . $user['account_lid'] . ']',
@@ -422,7 +422,7 @@
 							'edit_result'				 => (isset($group['result'][4]) ? $group['result'][4] : ''),
 							'delete_result'				 => (isset($group['result'][8]) ? $group['result'][8] : ''),
 							'manage_result'				 => (isset($group['result'][16]) ? $group['result'][16] : ''),
-				//			'initials'					=> (isset($group['initials'])?$group['initials']:''),
+							//			'initials'					=> (isset($group['initials'])?$group['initials']:''),
 							'lang_right'				 => lang('right'),
 							'lang_mask'					 => lang('mask'),
 							'lang_result'				 => lang('result'),

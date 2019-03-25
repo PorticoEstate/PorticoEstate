@@ -25,8 +25,8 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('Async service');
-			$this->function_msg = 'Update all installed apps of phpgw';
+			$this->sub_location	 = lang('Async service');
+			$this->function_msg	 = 'Update all installed apps of phpgw';
 
 			$this->bocommon = CreateObject('property.bocommon');
 		}
@@ -38,24 +38,24 @@
 
 		function perform_update_db()
 		{
-			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', true, true);
-			$setup_info = $GLOBALS['phpgw_setup']->detection->get_versions();
-			$GLOBALS['phpgw_setup']->db = CreateObject('phpgwapi.db');
-			$GLOBALS['phpgw_info']['setup']['stage']['db'] = $GLOBALS['phpgw_setup']->detection->check_db();
-			$setup_info = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
-			$setup_info = $GLOBALS['phpgw_setup']->detection->compare_versions($setup_info);
-			$setup_info = $GLOBALS['phpgw_setup']->detection->check_depends($setup_info);
+			$GLOBALS['phpgw_setup']							 = CreateObject('phpgwapi.setup', true, true);
+			$setup_info										 = $GLOBALS['phpgw_setup']->detection->get_versions();
+			$GLOBALS['phpgw_setup']->db						 = CreateObject('phpgwapi.db');
+			$GLOBALS['phpgw_info']['setup']['stage']['db']	 = $GLOBALS['phpgw_setup']->detection->check_db();
+			$setup_info										 = $GLOBALS['phpgw_setup']->detection->get_db_versions($setup_info);
+			$setup_info										 = $GLOBALS['phpgw_setup']->detection->compare_versions($setup_info);
+			$setup_info										 = $GLOBALS['phpgw_setup']->detection->check_depends($setup_info);
 			ksort($setup_info);
-			$clear_cache = '';
+			$clear_cache									 = '';
 			foreach ($setup_info as $app => $appinfo)
 			{
 				if (isset($appinfo['status']) && $appinfo['status'] == 'U' && isset($appinfo['currentver']) && $appinfo['currentver'])
 				{
-					$terror = array();
-					$terror[] = $setup_info[$appinfo['name']];
+					$terror						 = array();
+					$terror[]					 = $setup_info[$appinfo['name']];
 					$GLOBALS['phpgw_setup']->process->upgrade($terror, false);
 					$GLOBALS['phpgw_setup']->process->upgrade_langs($terror, false);
-					$this->receipt['message'][] = array('msg' => 'Upgraded application: ' . $appinfo['name']);
+					$this->receipt['message'][]	 = array('msg' => 'Upgraded application: ' . $appinfo['name']);
 					if ($appinfo['name'] == 'property')
 					{
 						$clear_cache = true;

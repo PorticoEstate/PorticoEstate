@@ -41,8 +41,8 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('catch');
-			$this->function_msg = 'Import info from files';
+			$this->sub_location	 = lang('catch');
+			$this->function_msg	 = 'Import info from files';
 
 			set_time_limit(1000);
 		}
@@ -63,24 +63,24 @@
 		{
 
 			//do the actual import
-			$config = CreateObject('catch.soconfig');
+			$config				 = CreateObject('catch.soconfig');
 			$config->read_repository();
-			$entity = CreateObject('property.soentity');
-			$entity->type = 'catch';
-			$admin_entity = CreateObject('property.soadmin_entity');
-			$admin_entity->type = 'catch';
+			$entity				 = CreateObject('property.soentity');
+			$entity->type		 = 'catch';
+			$admin_entity		 = CreateObject('property.soadmin_entity');
+			$admin_entity->type	 = 'catch';
 
 			$bofiles = CreateObject('property.bofiles');
 
 			foreach ($config->config_data as $config_data)
 			{
-				$this->pickup_path = $config_data['pickup_path'];
-				$target = $config_data['target'];
-				$target_table = "fm_catch_{$target}";
+				$this->pickup_path	 = $config_data['pickup_path'];
+				$target				 = $config_data['target'];
+				$target_table		 = "fm_catch_{$target}";
 				list($entity_id, $cat_id) = preg_split('/[_]/', $target);
-				$this->category_dir = "catch_{$entity_id}_{$cat_id}";
-				$category = $admin_entity->read_single_category($entity_id, $cat_id);
-				$schema_text = "{$target} {$category['name']}";
+				$this->category_dir	 = "catch_{$entity_id}_{$cat_id}";
+				$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
+				$schema_text		 = "{$target} {$category['name']}";
 
 				$metadata = $this->db->metadata($target_table);
 				if (!$metadata)
@@ -107,14 +107,14 @@
 					{
 						$var_result[$field] = $xml->getElementsByTagName($field)->item(0)->nodeValue;
 					}
-					$var_result['unitid'] = $xml->getElementsByTagName('UnitID')->item(0)->nodeValue;
+					$var_result['unitid']	 = $xml->getElementsByTagName('UnitID')->item(0)->nodeValue;
 //					_debug_array($var_result);die();
 //					$var_result = $xmlparse->parseFile($file);
 //					$var_result = array_change_key_case($var_result, CASE_LOWER);
 					//data
-					$insert_values = array();
-					$cols = array();
-					$val_errors = array();
+					$insert_values			 = array();
+					$cols					 = array();
+					$val_errors				 = array();
 
 					foreach ($metadata as $field => $field_info)
 					{
@@ -129,8 +129,8 @@
 						{
 							case 'string':
 							case 'varchar':
-								$max_length = intval($field_info->max_length);
-								$input_length = strlen($insert_value);
+								$max_length		 = intval($field_info->max_length);
+								$input_length	 = strlen($insert_value);
 
 								if ($input_length > $max_length)
 								{
@@ -148,18 +148,18 @@
 								  $field_info->name, $insert_value, $file);
 								  }
 								 */
-								$insert_value = $insert_value ? (int)$insert_value : '';
+								$insert_value	 = $insert_value ? (int)$insert_value : '';
 								break;
 							case 'numeric':
-								$insert_value = str_replace(',', '.', $insert_value);
-								$insert_value = floatval($insert_value);
+								$insert_value	 = str_replace(',', '.', $insert_value);
+								$insert_value	 = floatval($insert_value);
 								break;
 							case 'timestamp':
-								$insert_value = date($this->db->date_format(), strtotime($insert_value));
+								$insert_value	 = date($this->db->date_format(), strtotime($insert_value));
 								break;
 						}
 						$insert_values[] = $insert_value;
-						$cols[] = $field;
+						$cols[]			 = $field;
 					}
 
 					// Raise exception if we have validation errors
@@ -174,21 +174,21 @@
 
 						$this->db->transaction_begin();
 
-						$cols[] = 'entry_date';
+						$cols[]			 = 'entry_date';
 						$insert_values[] = time();
-						$id = $entity->generate_id(array('entity_id' => $entity_id, 'cat_id' => $cat_id));
-						$num = $entity->generate_num($entity_id, $cat_id, $id);
+						$id				 = $entity->generate_id(array('entity_id' => $entity_id, 'cat_id' => $cat_id));
+						$num			 = $entity->generate_num($entity_id, $cat_id, $id);
 						$this->db->query("SELECT * FROM fm_catch_1_1 WHERE unitid ='{$var_result['unitid']}'", __LINE__, __FILE__);
 						$this->db->next_record();
-						$user_id = $this->db->f('user_');
+						$user_id		 = $this->db->f('user_');
 						if (!$user_id)
 						{
 							throw new Exception(lang('no valid user for this UnitID: %1', $var_result['unitid']));
 						}
 
 						$bofiles->set_account_id($user_id);
-						$GLOBALS['phpgw_info']['user']['account_id'] = $user_id; // needed for the vfs::mkdir()
-						$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
+						$GLOBALS['phpgw_info']['user']['account_id']	 = $user_id; // needed for the vfs::mkdir()
+						$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
 
 						$insert_values = $this->db->validate_insert($insert_values);
 						$this->db->query("INSERT INTO $target_table (id, num, user_id, " . implode(',', $cols) . ')'
@@ -205,20 +205,20 @@
 								$bofiles->vfs->override_acl = 1;
 
 								if (!$bofiles->vfs->cp(array(
-										'from' => "{$this->pickup_path}/{$data}",
-										'to' => $to_file,
-										'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+										'from'		 => "{$this->pickup_path}/{$data}",
+										'to'		 => $to_file,
+										'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 								{
 									$this->receipt['error'][] = array('msg' => lang('Failed to upload file %1 on id %2', $data, $num));
 								}
-								$bofiles->vfs->override_acl = 0;
+								$bofiles->vfs->override_acl					 = 0;
 								// move attachment
-								$movefiles["{$this->pickup_path}/{$data}"] = "{$this->pickup_path}/imported/{$data}";
+								$movefiles["{$this->pickup_path}/{$data}"]	 = "{$this->pickup_path}/imported/{$data}";
 							}
 						}
 						// move file
-						$_file = basename($file);
-						$movefiles["{$this->pickup_path}/{$_file}"] = "{$this->pickup_path}/imported/{$_file}";
+						$_file										 = basename($file);
+						$movefiles["{$this->pickup_path}/{$_file}"]	 = "{$this->pickup_path}/imported/{$_file}";
 
 						$i++;
 
@@ -244,9 +244,9 @@
 							// finishing
 							$criteria = array
 								(
-								'appname' => 'catch',
-								'location' => '.catch.' . str_replace('_', '.', $target),
-								'allrows' => true
+								'appname'	 => 'catch',
+								'location'	 => '.catch.' . str_replace('_', '.', $target),
+								'allrows'	 => true
 							);
 
 							$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
@@ -281,8 +281,8 @@
 				return array();
 			}
 
-			$file_list = array();
-			$dir = new DirectoryIterator($dirname);
+			$file_list	 = array();
+			$dir		 = new DirectoryIterator($dirname);
 			if (is_object($dir))
 			{
 				foreach ($dir as $file)

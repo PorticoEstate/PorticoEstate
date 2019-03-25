@@ -37,10 +37,10 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
+			$this->like		 = & $this->db->like;
 		}
 
 		function get_initials( $id )
@@ -52,21 +52,21 @@
 
 		function set_initials( $initials )
 		{
-                        if (is_array($initials))
-                        {
-                            foreach($initials as $account_id => $value)
+			if (is_array($initials))
 			{
-				$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
-				if ($value)
+				foreach ($initials as $account_id => $value)
 				{
-					if (!$this->get_initials($account_id))
+					$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
+					if ($value)
 					{
-						$account_lid = $GLOBALS['phpgw']->accounts->id2lid($account_id);
-						$this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )", __LINE__, __FILE__);
+						if (!$this->get_initials($account_id))
+						{
+							$account_lid = $GLOBALS['phpgw']->accounts->id2lid($account_id);
+							$this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )", __LINE__, __FILE__);
+						}
 					}
 				}
 			}
-		}
 		}
 
 		function read_fm_id()
@@ -74,8 +74,8 @@
 			$sql = "SELECT * FROM fm_idgenerator ORDER BY descr DESC,start_date DESC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$name = '';
-			$fm_ids = array();
+			$name	 = '';
+			$fm_ids	 = array();
 			while ($this->db->next_record())
 			{
 				$old = false;
@@ -83,16 +83,16 @@
 				{
 					$old = true;
 				}
-				$new_name = $this->db->f('name');
-				$fm_ids[] = array
+				$new_name	 = $this->db->f('name');
+				$fm_ids[]	 = array
 					(
-					'name' => $new_name,
-					'descr' => $this->db->f('descr'),
-					'value' => $this->db->f('value'),
+					'name'		 => $new_name,
+					'descr'		 => $this->db->f('descr'),
+					'value'		 => $this->db->f('value'),
 					'start_date' => $this->db->f('start_date'),
-					'old' => $old
+					'old'		 => $old
 				);
-				$name = $new_name;
+				$name		 = $new_name;
 			}
 
 			return array_reverse($fm_ids);
@@ -120,9 +120,9 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$value = $this->db->f('value');
-					$descr = $this->db->f('descr');
-					$old_start_date = $this->db->f('start_date');
+					$value			 = $this->db->f('value');
+					$descr			 = $this->db->f('descr');
+					$old_start_date	 = $this->db->f('start_date');
 				}
 
 				if ($start_date > $old_start_date)

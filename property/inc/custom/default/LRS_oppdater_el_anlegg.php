@@ -24,14 +24,14 @@
 			{
 				if ($entry['name'] == 'auto_kontering')
 				{
-					$attrib_id = $entry['attrib_id'];
-					$current_value = $entry['value'];
+					$attrib_id		 = $entry['attrib_id'];
+					$current_value	 = $entry['value'];
 					break;
 				}
 			}
 
-			$historylog = CreateObject('property.historylog', 'entity_1_11');
-			$history_values = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $id, $attrib_id);
+			$historylog		 = CreateObject('property.historylog', 'entity_1_11');
+			$history_values	 = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $id, $attrib_id);
 
 			if (!$history_values)
 			{
@@ -46,10 +46,10 @@
 
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 
-					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
-					$bcc = '';
-					$cc = $coordinator_email;
+					$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
+					$coordinator_email	 = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+					$bcc				 = '';
+					$cc					 = $coordinator_email;
 
 					$_to = $coordinator_email;
 
@@ -66,14 +66,14 @@
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 
-			$id = (int)$id;
+			$id	 = (int)$id;
 			$sql = "SELECT * FROM fm_entity_1_11 WHERE id = {$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$anlegg = array();
 
-			$TreeID = $this->type;
-			$PeriodFrom = date('Ym');
+			$TreeID		 = $this->type;
+			$PeriodFrom	 = date('Ym');
 			if ($current_value)
 			{
 				$PeriodTo = 209912;

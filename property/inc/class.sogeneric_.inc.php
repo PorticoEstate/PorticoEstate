@@ -36,19 +36,19 @@
 
 		var $type;
 		var $type_id;
-		var $location_info = array();
-		var $tree = array();
+		var $location_info	 = array();
+		var $tree			 = array();
 		protected $table;
-		var $appname = 'property';
+		var $appname			 = 'property';
 
 		function __construct( $type = '', $type_id = 0 )
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->custom = createObject('property.custom_fields');
-			$this->_db = & $GLOBALS['phpgw']->db;
-			$this->_db2 = clone($this->_db);
-			$this->_like = & $this->_db->like;
-			$this->_join = & $this->_db->join;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->custom	 = createObject('property.custom_fields');
+			$this->_db		 = & $GLOBALS['phpgw']->db;
+			$this->_db2		 = clone($this->_db);
+			$this->_like	 = & $this->_db->like;
+			$this->_join	 = & $this->_db->join;
 
 			if ($type)
 			{
@@ -58,27 +58,27 @@
 
 		function read( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$disable_id_search = empty($data['disable_id_search']) ? false : true;
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$custom_criteria = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
-			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
-			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
-			$results = isset($data['results']) ? (int)$data['results'] : 0;
-			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $data['query'] : '';
+			$sort				 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$disable_id_search	 = empty($data['disable_id_search']) ? false : true;
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$custom_criteria	 = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
+			$custom_filter		 = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
+			$filter				 = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+			$dry_run			 = isset($data['dry_run']) ? $data['dry_run'] : '';
 
-			$values = array();
-			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
+			$values	 = array();
+			if (!isset($this->location_info['table']) || !$table	 = $this->location_info['table'])
 			{
 				return $values;
 			}
 
 
-			$_join_method = array();
-			$_filter_array = array();
+			$_join_method	 = array();
+			$_filter_array	 = array();
 			if ($custom_criteria)
 			{
 				foreach ($custom_criteria as $_custom_criteria)
@@ -105,21 +105,20 @@
 					else if (!empty($filter[$field['name']]) && (isset($field['values_def']['method_input']['role']) && $field['values_def']['method_input']['role'] == 'parent'))
 					{
 
-						$field_object = clone($this);
+						$field_object	 = clone($this);
 						$field_object->get_location_info($field['values_def']['method_input']['type'], 0);
-						$this->table = $field_object->location_info['table'];
-						$children = $this->get_children2(array(), $filter[$field['name']], 0, true );
-							
+						$this->table	 = $field_object->location_info['table'];
+						$children		 = $this->get_children2(array(), $filter[$field['name']], 0, true);
+
 						$_children = array($filter[$field['name']]);
-						if($children)
+						if ($children)
 						{
 							foreach ($children as $_child)
 							{
 								$_children[] = $_child['id'];
 							}
 						}
-						$_filter_array[] = "{$field['name']} IN (" . implode(',', $_children ) . ')';
-
+						$_filter_array[] = "{$field['name']} IN (" . implode(',', $_children) . ')';
 					}
 					else if (isset($filter[$field['name']]) && $filter[$field['name']])
 					{
@@ -128,32 +127,32 @@
 				}
 			}
 
-			$uicols = array();
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = $this->location_info['id']['name'];
-			$uicols['descr'][] = lang('id');
-			$uicols['datatype'][] = $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
-			$uicols['sortable'][] = true;
-			$uicols['formatter'][] = '';
+			$uicols					 = array();
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = $this->location_info['id']['name'];
+			$uicols['descr'][]		 = lang('id');
+			$uicols['datatype'][]	 = $this->location_info['id']['type'] == 'varchar' ? 'V' : 'I';
+			$uicols['sortable'][]	 = true;
+			$uicols['formatter'][]	 = '';
 
 			foreach ($this->location_info['fields'] as $field)
 			{
-				$uicols['input_type'][] = isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
-				$uicols['name'][] = $field['name'];
-				$uicols['descr'][] = $field['descr'];
-				$uicols['datatype'][] = $field['type'];
-				$uicols['sortable'][] = isset($field['sortable']) && $field['sortable'] ? true : false;
-				$uicols['formatter'][] = $field['type'] == 'int' ? 'FormatterRight' : '';
+				$uicols['input_type'][]	 = isset($field['hidden']) && $field['hidden'] ? 'hidden' : 'text';
+				$uicols['name'][]		 = $field['name'];
+				$uicols['descr'][]		 = $field['descr'];
+				$uicols['datatype'][]	 = $field['type'];
+				$uicols['sortable'][]	 = isset($field['sortable']) && $field['sortable'] ? true : false;
+				$uicols['formatter'][]	 = $field['type'] == 'int' ? 'FormatterRight' : '';
 			}
 
 			$custom_fields = false;
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
-				$custom_fields = true;
-				$choice_table = 'phpgw_cust_choice';
-				$attribute_table = 'phpgw_cust_attribute';
-				$location_id = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
-				$attribute_filter = " location_id = {$location_id}";
+				$custom_fields		 = true;
+				$choice_table		 = 'phpgw_cust_choice';
+				$attribute_table	 = 'phpgw_cust_attribute';
+				$location_id		 = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
+				$attribute_filter	 = " location_id = {$location_id}";
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"] : '';
 
@@ -168,29 +167,29 @@
 				$i = count($uicols['name']);
 				while ($this->_db->next_record())
 				{
-					$uicols['input_type'][] = 'text';
-					$uicols['name'][] = $this->_db->f('column_name');
-					$uicols['descr'][] = $this->_db->f('input_text');
-					$uicols['statustext'][] = $this->_db->f('statustext');
-					$uicols['datatype'][$i] = $this->_db->f('datatype');
-					$uicols['attib_id'][$i] = $this->_db->f('id');
+					$uicols['input_type'][]	 = 'text';
+					$uicols['name'][]		 = $this->_db->f('column_name');
+					$uicols['descr'][]		 = $this->_db->f('input_text');
+					$uicols['statustext'][]	 = $this->_db->f('statustext');
+					$uicols['datatype'][$i]	 = $this->_db->f('datatype');
+					$uicols['attib_id'][$i]	 = $this->_db->f('id');
 					$uicols['formatter'][$i] = $this->_db->f('datatype') == 'I' ? 'FormatterRight' : '';
-					$cols_return_extra[] = array(
-						'name' => $this->_db->f('column_name'),
-						'datatype' => $this->_db->f('datatype'),
-						'attrib_id' => $this->_db->f('id')
+					$cols_return_extra[]	 = array(
+						'name'		 => $this->_db->f('column_name'),
+						'datatype'	 => $this->_db->f('datatype'),
+						'attrib_id'	 => $this->_db->f('id')
 					);
 
 					$i++;
 				}
 			}
 
-			$where = 'WHERE';
-			$filtermethod = '';
+			$where			 = 'WHERE';
+			$filtermethod	 = '';
 			if (isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
 			{
-				$filtermethod = "{$where} (user_id = {$this->account} OR public = 1)";
-				$where = 'AND';
+				$filtermethod	 = "{$where} (user_id = {$this->account} OR public = 1)";
+				$where			 = 'AND';
 			}
 
 			if (isset($this->location_info['filter']) && $this->location_info['filter'] && is_array($this->location_info['filter']))
@@ -200,13 +199,13 @@
 				{
 					if (preg_match('/^##/', $_argument_value))
 					{
-						$_argument_value_name = trim($_argument_value, '#');
-						$_argument_value = $values[$_argument_value_name];
+						$_argument_value_name	 = trim($_argument_value, '#');
+						$_argument_value		 = $values[$_argument_value_name];
 					}
 					if (preg_match('/^\$this->/', $_argument_value))
 					{
-						$_argument_value_name = ltrim($_argument_value, '$this->');
-						$_argument_value = $this->$_argument_value_name;
+						$_argument_value_name	 = ltrim($_argument_value, '$this->');
+						$_argument_value		 = $this->$_argument_value_name;
 					}
 
 					$_filtermethod[] = "{$_argument} = '{$_argument_value}'";
@@ -215,26 +214,26 @@
 
 				if ($_filtermethod)
 				{
-					$filtermethod = "{$where} " . implode(' AND ', $_filtermethod);
-					$where = 'AND';
+					$filtermethod	 = "{$where} " . implode(' AND ', $_filtermethod);
+					$where			 = 'AND';
 				}
 			}
 
 			if ($_filter_array)
 			{
-				$filtermethod .= " $where " . implode(' AND ', $_filter_array);
-				$where = 'AND';
+				$filtermethod	 .= " $where " . implode(' AND ', $_filter_array);
+				$where			 = 'AND';
 			}
 
 			if ($custom_filter)
 			{
-				$filtermethod .= " $where " . implode(' AND ', $custom_filter);
-				$where = 'AND';
+				$filtermethod	 .= " $where " . implode(' AND ', $custom_filter);
+				$where			 = 'AND';
 			}
 
 			$this->uicols = $uicols;
 
-			if($dry_run)
+			if ($dry_run)
 			{
 				return array();
 			}
@@ -259,16 +258,16 @@
 					$id_query = "'{$query}'";
 				}
 
-				$_query_start = '';
-				$_query_end = '';
+				$_query_start	 = '';
+				$_query_end		 = '';
 
 				if ($filtermethod)
 				{
-					$_query_start = '(';
-					$_query_end = ')';
+					$_query_start	 = '(';
+					$_query_end		 = ')';
 				}
 				$query = $this->_db->db_addslashes($query);
-				if($disable_id_search)
+				if ($disable_id_search)
 				{
 					$querymethod = " {$where } {$_query_start} (1=0";
 				}
@@ -277,8 +276,8 @@
 					$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
 					if ($this->location_info['id']['type'] == 'varchar')
 					{
-							$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
-							$where = 'OR';
+						$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
+						$where		 = 'OR';
 					}
 					else
 					{
@@ -315,7 +314,7 @@
 						{
 							if (ctype_digit($query))
 							{
-							//	$_querymethod[] = "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+								//	$_querymethod[] = "$table." . $this->_db->f('column_name') . '=' . (int)$query;
 								$_querymethod[] = "CAST ($table." . $this->_db->f('column_name') . " AS TEXT) {$this->_like} '%" . (int)$query . "%'";
 							}
 						}
@@ -352,7 +351,7 @@
 			}
 
 			$cols_return = $uicols['name'];
-			$j = 0;
+			$j			 = 0;
 
 			$dataset = array();
 			while ($this->_db->next_record())
@@ -361,9 +360,9 @@
 				{
 					$dataset[$j][$field] = array
 						(
-						'value' => $this->_db->f($field, true),
-						'datatype' => $uicols['datatype'][$key],
-						'attrib_id' => $uicols['attib_id'][$key]
+						'value'		 => $this->_db->f($field, true),
+						'datatype'	 => $uicols['datatype'][$key],
+						'attrib_id'	 => $uicols['attib_id'][$key]
 					);
 				}
 				$j++;
@@ -521,9 +520,9 @@
 			$i = 0;
 			while ($this->_db->next_record())
 			{
-				$_extra = $this->_db->f($id_in_name, true);
-				$id = $this->_db->f('id');
-				if (!$name = $this->_db->f($mapping['name'], true))
+				$_extra	 = $this->_db->f($id_in_name, true);
+				$id		 = $this->_db->f('id');
+				if (!$name	 = $this->_db->f($mapping['name'], true))
 				{
 					$name = $this->_db->f('descr', true);
 				}
@@ -535,8 +534,8 @@
 
 				$values[$i] = array
 					(
-					'id' => $id,
-					'name' => $name
+					'id'	 => $id,
+					'name'	 => $name
 				);
 
 				foreach ($return_fields as $return_field)
@@ -588,12 +587,12 @@
 				}
 				if ($field['type'] == 'varchar')
 				{
-					$data[$field['name']] =  $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
+					$data[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
 				}
 			}
 
-			$cols = array();
-			$vals = array();
+			$cols	 = array();
+			$vals	 = array();
 
 			if (isset($data['extra']))
 			{
@@ -601,8 +600,8 @@
 				{
 					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$cols[]	 = $input_name;
+						$vals[]	 = $value;
 					}
 				}
 			}
@@ -612,8 +611,8 @@
 			{
 				if (isset($value) && ($value || $value === '0'))
 				{
-					$cols[] = $input_name;
-					$vals[] = $this->_db->db_addslashes(html_entity_decode($value));
+					$cols[]	 = $input_name;
+					$vals[]	 = $this->_db->db_addslashes(html_entity_decode($value));
 				}
 			}
 
@@ -624,8 +623,8 @@
 				{
 					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $this->_db->db_addslashes(html_entity_decode($value));
+						$cols[]	 = $input_name;
+						$vals[]	 = $this->_db->db_addslashes(html_entity_decode($value));
 					}
 				}
 			}
@@ -650,21 +649,21 @@
 				$this->_db->query("SELECT {$this->location_info['id']['name']} AS id FROM {$table} WHERE {$this->location_info['id']['name']} = '{$data[$this->location_info['id']['name']]}'", __LINE__, __FILE__);
 				if ($this->_db->next_record())
 				{
-					$receipt['error'][] = array('msg' => lang('duplicate key value'));
-					$receipt['error'][] = array('msg' => lang('record has not been saved'));
+					$receipt['error'][]	 = array('msg' => lang('duplicate key value'));
+					$receipt['error'][]	 = array('msg' => lang('record has not been saved'));
 					return $receipt;
 				}
 				$id = $data[$this->location_info['id']['name']];
 			}
 			else
 			{
-				$id = $this->_db->next_id($table);
-				$cols[] = 'id';
-				$vals[] = $id;
+				$id		 = $this->_db->next_id($table);
+				$cols[]	 = 'id';
+				$vals[]	 = $id;
 			}
 
-			$cols = implode(",", $cols);
-			$vals = $this->_db->validate_insert($vals);
+			$cols	 = implode(",", $cols);
+			$vals	 = $this->_db->validate_insert($vals);
 
 			$this->_db->query("INSERT INTO {$table} ({$cols}) VALUES ({$vals})", __LINE__, __FILE__);
 
@@ -678,8 +677,8 @@
 			  }
 			 */
 			$this->_db->transaction_commit();
-			$receipt['id'] = $id;
-			$receipt['message'][] = array('msg' => lang('record has been saved'));
+			$receipt['id']			 = $id;
+			$receipt['message'][]	 = array('msg' => lang('record has been saved'));
 			return $receipt;
 		}
 
@@ -892,9 +891,9 @@
 
 			$this->_db->query("SELECT id, {$fields} FROM {$table} {$filtermthod} {$ordermethod}", __LINE__, __FILE__);
 
-			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
+			$return_fields	 = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 //-----------
-			$mapping = array();
+			$mapping		 = array();
 			if (isset($data['mapping']) && $data['mapping'])
 			{
 				$mapping = $data['mapping'];
@@ -904,13 +903,13 @@
 				$mapping = array('name' => 'name');
 			}
 
-			$values = array();
-			$i = 0;
+			$values	 = array();
+			$i		 = 0;
 			while ($this->_db->next_record())
 			{
-				$_extra = $this->_db->f($id_in_name);
-				$id = $this->_db->f('id');
-				$name = $this->_db->f($mapping['name'], true);
+				$_extra	 = $this->_db->f($id_in_name);
+				$id		 = $this->_db->f('id');
+				$name	 = $this->_db->f($mapping['name'], true);
 
 				if ($_extra)
 				{
@@ -919,9 +918,9 @@
 
 				$values[$i] = array
 					(
-					'id' => $id,
-					'name' => $name,
-					'parent_id' => 0
+					'id'		 => $id,
+					'name'		 => $name,
+					'parent_id'	 => 0
 				);
 
 				foreach ($return_fields as $return_field)
@@ -945,7 +944,7 @@
 
 		public function get_children2( $data, $parent, $level, $reset = false )
 		{
-			$parent = (int)$parent;
+			$parent	 = (int)$parent;
 			$mapping = array();
 			if (isset($data['mapping']) && $data['mapping'])
 			{
@@ -960,8 +959,8 @@
 			{
 				$this->tree = array();
 			}
-			$db = clone($this->_db);
-			if (!$table = $this->table)
+			$db		 = clone($this->_db);
+			if (!$table	 = $this->table)
 			{
 				return $this->tree;
 			}
@@ -971,12 +970,12 @@
 
 			while ($db->next_record())
 			{
-				$id = $db->f('id');
-				$this->tree[] = array
+				$id				 = $db->f('id');
+				$this->tree[]	 = array
 					(
-					'id' => $id,
-					'name' => str_repeat('..', $level) . $db->f($mapping['name'], true),
-					'parent_id' => $parent
+					'id'		 => $id,
+					'name'		 => str_repeat('..', $level) . $db->f($mapping['name'], true),
+					'parent_id'	 => $parent
 				);
 				$this->get_children2($data, $id, $level + 1);
 			}
@@ -1041,8 +1040,8 @@
 		 */
 		public function read_tree( $data )
 		{
-			$parent_id = isset($data['node_id']) && $data['node_id'] ? (int)$data['node_id'] : 0;
-			$tree = array();
+			$parent_id	 = isset($data['node_id']) && $data['node_id'] ? (int)$data['node_id'] : 0;
+			$tree		 = array();
 
 			$this->get_location_info($data['type'], $data['type_id']);
 
@@ -1084,8 +1083,8 @@
 			{
 				$fields[] = $field['name'];
 			}
-			$node = array();
-			$i = 0;
+			$node	 = array();
+			$i		 = 0;
 			while ($this->_db2->next_record())
 			{
 				$id = $this->_db2->f('id');
@@ -1123,7 +1122,7 @@
 			{
 				return array();
 			}
-	//		$this->table = $table;
+			//		$this->table = $table;
 
 			if (isset($this->location_info['mapping']) && $this->location_info['mapping'])
 			{

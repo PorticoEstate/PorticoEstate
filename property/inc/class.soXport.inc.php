@@ -35,25 +35,25 @@
 	class property_soXport
 	{
 
-		var $db = '';
-		var $account_id = 0;
-		var $total_records = 0;
+		var $db				 = '';
+		var $account_id		 = 0;
+		var $total_records	 = 0;
 		var $bilagsnr;
 		var $voucher_id;
-		protected $global_lock = false;
-		var $debug = false;
+		protected $global_lock	 = false;
+		var $debug			 = false;
 		public $supertransaction = false;
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$this->soinvoice = CreateObject('property.soinvoice', true);
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->like = & $this->db->like;
-			$this->join = & $this->db->join;
-			$this->left_join = & $this->db->left_join;
-			$this->datetimeformat = $this->db->datetime_format();
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
+			$this->soinvoice								 = CreateObject('property.soinvoice', true);
+			$this->db										 = & $GLOBALS['phpgw']->db;
+			$this->like										 = & $this->db->like;
+			$this->join										 = & $this->db->join;
+			$this->left_join								 = & $this->db->left_join;
+			$this->datetimeformat							 = $this->db->datetime_format();
+			$this->account_id								 = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		function auto_tax( $loc1 = '' )
@@ -138,19 +138,19 @@
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			$GLOBALS['phpgw']->db->next_record();
 
-			$gabinfo['loc1'] = $GLOBALS['phpgw']->db->f('loc1');
-			$gabinfo['dima'] = $GLOBALS['phpgw']->db->f('loc1') . $GLOBALS['phpgw']->db->f('loc2') . $GLOBALS['phpgw']->db->f('loc3');
-			$gabinfo['district_id'] = $GLOBALS['phpgw']->db->f('district_id');
+			$gabinfo['loc1']		 = $GLOBALS['phpgw']->db->f('loc1');
+			$gabinfo['dima']		 = $GLOBALS['phpgw']->db->f('loc1') . $GLOBALS['phpgw']->db->f('loc2') . $GLOBALS['phpgw']->db->f('loc3');
+			$gabinfo['district_id']	 = $GLOBALS['phpgw']->db->f('district_id');
 
 			return $gabinfo;
 		}
 
 		function dima_to_address( $dima )
 		{
-			$loc1 = substr($dima, 0, 4);
-			$loc2 = substr($dima, 4, 2);
-			$loc3 = substr($dima, 6, 2);
-			$sql = "SELECT loc3_name FROM fm_location3 WHERE loc1 = '$loc1' and loc2= '$loc2' and loc3 = '$loc3' ";
+			$loc1	 = substr($dima, 0, 4);
+			$loc2	 = substr($dima, 4, 2);
+			$loc3	 = substr($dima, 6, 2);
+			$sql	 = "SELECT loc3_name FROM fm_location3 WHERE loc1 = '$loc1' and loc2= '$loc2' and loc3 = '$loc3' ";
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			$GLOBALS['phpgw']->db->next_record();
 			$address = $GLOBALS['phpgw']->db->f('loc3_name');
@@ -166,7 +166,7 @@
 
 		function get_project( $id )
 		{
-			$id = (int)$id;
+			$id	 = (int)$id;
 			$sql = "SELECT external_project_id FROM fm_workorder"
 				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id={$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -206,12 +206,12 @@
 				{
 					if (!$fields['bilagsnr'])
 					{
-						$fields['bilagsnr'] = $this->soinvoice->next_bilagsnr();
-						$this->bilagsnr = $fields['bilagsnr'];//FIXME
-						$this->voucher_id = $fields['bilagsnr'];
+						$fields['bilagsnr']	 = $this->soinvoice->next_bilagsnr();
+						$this->bilagsnr		 = $fields['bilagsnr'];//FIXME
+						$this->voucher_id	 = $fields['bilagsnr'];
 					}
 
-					if($fields['pmwrkord_code'])
+					if ($fields['pmwrkord_code'])
 					{
 						phpgwapi_cache::system_clear('property', "budget_order_{$fields['pmwrkord_code']}");
 					}
@@ -272,10 +272,10 @@
 
 					if (!$skip_update_voucher_id)
 					{
-						$now = time();
+						$now		 = time();
 						$this->db->query("SELECT start_date FROM fm_idgenerator WHERE name='Bilagsnummer' AND start_date < {$now} ORDER BY start_date DESC");
 						$this->db->next_record();
-						$start_date = (int)$this->db->f('start_date');
+						$start_date	 = (int)$this->db->f('start_date');
 						$this->db->query("UPDATE fm_idgenerator set value = {$bilagsnr} WHERE name = 'Bilagsnummer' AND start_date = {$start_date}");
 					}
 				}
@@ -385,50 +385,50 @@
 			{
 				$voucher[] = array
 					(
-					'id' => $this->db->f('id'),
-					'bilagsnr' => $bilagsnr,
-					'bilagsnr_ut' => $this->db->f('bilagsnr_ut'),
-					'kidnr' => $this->db->f('kidnr'),
-					'typeid' => $this->db->f('typeid'),
-					'kildeid' => $this->db->f('kildeid'),
-					'project_id' => $this->db->f('project_id'),
-					'pmwrkord_code' => $this->db->f('pmwrkord_code'),
-					'order_id' => $this->db->f('pmwrkord_code'),
-					'belop' => $this->db->f('belop'),
-					'fakturadato' => $this->db->f('fakturadato'),
-					'periode' => $this->db->f('periode'),
-					'periodization' => $this->db->f('periodization'),
-					'periodization_start' => $this->db->f('periodization_start'),
-					'forfallsdato' => $this->db->f('forfallsdato'),
-					'fakturanr' => $this->db->f('fakturanr'),
-					'spbudact_code' => $this->db->f('spbudact_code'),
-					'regtid' => $this->db->f('regtid'),
-					'artid' => $this->db->f('artid'),
-					'godkjentbelop' => $this->db->f('godkjentbelop'),
-					'spvend_code' => $this->db->f('spvend_code'),
-					'loc1' => $this->db->f('loc1'),
-					'dima' => $this->db->f('dima'),
-					'dimb' => $this->db->f('dimb'),
-					'mvakode' => $this->db->f('mvakode'),
-					'dimd' => $this->db->f('dimd'),
-					'dime' => $this->db->f('dime'),
-					'oppsynsmannid' => $this->db->f('oppsynsmannid'),
-					'saksbehandlerid' => $this->db->f('saksbehandlerid'),
-					'budsjettansvarligid' => $this->db->f('budsjettansvarligid'),
-					'oppsynsigndato' => $this->db->f('oppsynsigndato'),
-					'saksigndato' => $this->db->f('saksigndato'),
-					'budsjettsigndato' => $this->db->f('budsjettsigndato'),
-					'merknad' => $this->db->f('merknad', true),
-					'line_text' => $this->db->f('line_text', true),
-					'splitt' => $this->db->f('splitt'),
-					'utbetalingid' => $this->db->f('utbetalingid'),
-					'utbetalingsigndato' => $this->db->f('utbetalingsigndato'),
-					'external_ref' => $this->db->f('external_ref'),
-					'external_voucher_id' => $this->db->f('external_voucher_id'),
-					'kostra_id' => $this->db->f('kostra_id'),
-					'currency' => $this->db->f('currency'),
-					'process_log' => $this->db->f('process_log', true),
-					'process_code' => $this->db->f('process_code'),
+					'id'					 => $this->db->f('id'),
+					'bilagsnr'				 => $bilagsnr,
+					'bilagsnr_ut'			 => $this->db->f('bilagsnr_ut'),
+					'kidnr'					 => $this->db->f('kidnr'),
+					'typeid'				 => $this->db->f('typeid'),
+					'kildeid'				 => $this->db->f('kildeid'),
+					'project_id'			 => $this->db->f('project_id'),
+					'pmwrkord_code'			 => $this->db->f('pmwrkord_code'),
+					'order_id'				 => $this->db->f('pmwrkord_code'),
+					'belop'					 => $this->db->f('belop'),
+					'fakturadato'			 => $this->db->f('fakturadato'),
+					'periode'				 => $this->db->f('periode'),
+					'periodization'			 => $this->db->f('periodization'),
+					'periodization_start'	 => $this->db->f('periodization_start'),
+					'forfallsdato'			 => $this->db->f('forfallsdato'),
+					'fakturanr'				 => $this->db->f('fakturanr'),
+					'spbudact_code'			 => $this->db->f('spbudact_code'),
+					'regtid'				 => $this->db->f('regtid'),
+					'artid'					 => $this->db->f('artid'),
+					'godkjentbelop'			 => $this->db->f('godkjentbelop'),
+					'spvend_code'			 => $this->db->f('spvend_code'),
+					'loc1'					 => $this->db->f('loc1'),
+					'dima'					 => $this->db->f('dima'),
+					'dimb'					 => $this->db->f('dimb'),
+					'mvakode'				 => $this->db->f('mvakode'),
+					'dimd'					 => $this->db->f('dimd'),
+					'dime'					 => $this->db->f('dime'),
+					'oppsynsmannid'			 => $this->db->f('oppsynsmannid'),
+					'saksbehandlerid'		 => $this->db->f('saksbehandlerid'),
+					'budsjettansvarligid'	 => $this->db->f('budsjettansvarligid'),
+					'oppsynsigndato'		 => $this->db->f('oppsynsigndato'),
+					'saksigndato'			 => $this->db->f('saksigndato'),
+					'budsjettsigndato'		 => $this->db->f('budsjettsigndato'),
+					'merknad'				 => $this->db->f('merknad', true),
+					'line_text'				 => $this->db->f('line_text', true),
+					'splitt'				 => $this->db->f('splitt'),
+					'utbetalingid'			 => $this->db->f('utbetalingid'),
+					'utbetalingsigndato'	 => $this->db->f('utbetalingsigndato'),
+					'external_ref'			 => $this->db->f('external_ref'),
+					'external_voucher_id'	 => $this->db->f('external_voucher_id'),
+					'kostra_id'				 => $this->db->f('kostra_id'),
+					'currency'				 => $this->db->f('currency'),
+					'process_log'			 => $this->db->f('process_log', true),
+					'process_code'			 => $this->db->f('process_code'),
 				);
 			}
 
@@ -473,8 +473,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$hoved_bilag_temp[$i]['belop'] = $this->db->f('belop');
-				$hoved_bilag_temp[$i]['bilagsnr'] = $this->db->f('bilagsnr');
+				$hoved_bilag_temp[$i]['belop']		 = $this->db->f('belop');
+				$hoved_bilag_temp[$i]['bilagsnr']	 = $this->db->f('bilagsnr');
 				$i++;
 			}
 
@@ -484,38 +484,38 @@
 			{
 				$i = 0;
 				//while (each($hoved_bilag_temp))
-                                foreach($hoved_bilag_temp as $key => $value)
+				foreach ($hoved_bilag_temp as $key => $value)
 				{
 					//$bilagsnr = $hoved_bilag_temp[$i]['bilagsnr'];
-                                        $bilagsnr = $value['bilagsnr'];
+					$bilagsnr = $value['bilagsnr'];
 
 					$sql = "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr='{$bilagsnr}'";
 					$this->db->query($sql, __LINE__, __FILE__);
 
 					$this->db->next_record();
 
-					$hoved_bilag[$i]['id'] = $this->db->f('id');
-					$hoved_bilag[$i]['bilagsnr'] = $bilagsnr;
-					$hoved_bilag[$i]['kidnr'] = $this->db->f('kidnr');
-					$hoved_bilag[$i]['typeid'] = $this->db->f('typeid');
-					$hoved_bilag[$i]['kildeid'] = $this->db->f('kildeid');
-					$hoved_bilag[$i]['pmwrkord_code'] = $this->db->f('pmwrkord_code');
+					$hoved_bilag[$i]['id']				 = $this->db->f('id');
+					$hoved_bilag[$i]['bilagsnr']		 = $bilagsnr;
+					$hoved_bilag[$i]['kidnr']			 = $this->db->f('kidnr');
+					$hoved_bilag[$i]['typeid']			 = $this->db->f('typeid');
+					$hoved_bilag[$i]['kildeid']			 = $this->db->f('kildeid');
+					$hoved_bilag[$i]['pmwrkord_code']	 = $this->db->f('pmwrkord_code');
 					//$hoved_bilag[$i]['belop'] = $hoved_bilag_temp[$i]['belop'];
-                                        $hoved_bilag[$i]['belop'] = $value['belop'];
-					$hoved_bilag[$i]['fakturadato'] = $this->db->f('fakturadato');
-					$hoved_bilag[$i]['periode'] = $this->db->f('periode');
-					$hoved_bilag[$i]['forfallsdato'] = $this->db->f('forfallsdato');
-					$hoved_bilag[$i]['fakturanr'] = $this->db->f('fakturanr');
-					$hoved_bilag[$i]['spbudact_code'] = $this->db->f('spbudact_code');
-					$hoved_bilag[$i]['regtid'] = $this->db->f('regtid');
-					$hoved_bilag[$i]['artid'] = $this->db->f('artid');
-					$hoved_bilag[$i]['godkjentbelop'] = $hoved_bilag_temp[$i]['belop'];
-					$hoved_bilag[$i]['spvend_code'] = $this->db->f('spvend_code');
-					$hoved_bilag[$i]['dima'] = $this->db->f('dima');
-					$hoved_bilag[$i]['dimb'] = $this->db->f('dimb');
-					$hoved_bilag[$i]['mvakode'] = $this->db->f('mvakode');
-					$hoved_bilag[$i]['dimd'] = $this->db->f('dimd');
-					$hoved_bilag[$i]['dime'] = $this->db->f('dime');
+					$hoved_bilag[$i]['belop']			 = $value['belop'];
+					$hoved_bilag[$i]['fakturadato']		 = $this->db->f('fakturadato');
+					$hoved_bilag[$i]['periode']			 = $this->db->f('periode');
+					$hoved_bilag[$i]['forfallsdato']	 = $this->db->f('forfallsdato');
+					$hoved_bilag[$i]['fakturanr']		 = $this->db->f('fakturanr');
+					$hoved_bilag[$i]['spbudact_code']	 = $this->db->f('spbudact_code');
+					$hoved_bilag[$i]['regtid']			 = $this->db->f('regtid');
+					$hoved_bilag[$i]['artid']			 = $this->db->f('artid');
+					$hoved_bilag[$i]['godkjentbelop']	 = $hoved_bilag_temp[$i]['belop'];
+					$hoved_bilag[$i]['spvend_code']		 = $this->db->f('spvend_code');
+					$hoved_bilag[$i]['dima']			 = $this->db->f('dima');
+					$hoved_bilag[$i]['dimb']			 = $this->db->f('dimb');
+					$hoved_bilag[$i]['mvakode']			 = $this->db->f('mvakode');
+					$hoved_bilag[$i]['dimd']			 = $this->db->f('dimd');
+					$hoved_bilag[$i]['dime']			 = $this->db->f('dime');
 					if ($this->db->f('oppsynsmannid'))
 					{
 						$hoved_bilag[$i]['oppsynsmannid'] = $this->db->f('oppsynsmannid');
@@ -536,13 +536,13 @@
 						$hoved_bilag[$i]['saksigndato'] = $this->db->f('saksigndato');
 					}
 
-					$hoved_bilag[$i]['budsjettsigndato'] = $this->db->f('budsjettsigndato');
-					$hoved_bilag[$i]['merknad'] = $this->db->f('merknad');
-					$hoved_bilag[$i]['line_text'] = $this->db->f('line_text');
-					$hoved_bilag[$i]['splitt'] = $this->db->f('splitt');
-					$hoved_bilag[$i]['utbetalingid'] = $this->db->f('utbetalingid');
-					$hoved_bilag[$i]['utbetalingsigndato'] = $this->db->f('utbetalingsigndato');
-					$hoved_bilag[$i]['saksbehandler'] = $this->db->f('saksbehandler');
+					$hoved_bilag[$i]['budsjettsigndato']	 = $this->db->f('budsjettsigndato');
+					$hoved_bilag[$i]['merknad']				 = $this->db->f('merknad');
+					$hoved_bilag[$i]['line_text']			 = $this->db->f('line_text');
+					$hoved_bilag[$i]['splitt']				 = $this->db->f('splitt');
+					$hoved_bilag[$i]['utbetalingid']		 = $this->db->f('utbetalingid');
+					$hoved_bilag[$i]['utbetalingsigndato']	 = $this->db->f('utbetalingsigndato');
+					$hoved_bilag[$i]['saksbehandler']		 = $this->db->f('saksbehandler');
 					$i++;
 				}
 			}
@@ -561,30 +561,30 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$underbilag[$i]['id'] = $this->db->f('id');
-				$underbilag[$i]['bilagsnr'] = $this->db->f('bilagsnr');
-				$underbilag[$i]['kidnr'] = $this->db->f('kidnr');
-				$underbilag[$i]['typeid'] = $this->db->f('typeid');
-				$underbilag[$i]['kildeid'] = $this->db->f('kildeid');
+				$underbilag[$i]['id']			 = $this->db->f('id');
+				$underbilag[$i]['bilagsnr']		 = $this->db->f('bilagsnr');
+				$underbilag[$i]['kidnr']		 = $this->db->f('kidnr');
+				$underbilag[$i]['typeid']		 = $this->db->f('typeid');
+				$underbilag[$i]['kildeid']		 = $this->db->f('kildeid');
 				$underbilag[$i]['pmwrkord_code'] = $this->db->f('pmwrkord_code');
-				$underbilag[$i]['belop'] = $this->db->f('belop');
-				$underbilag[$i]['fakturadato'] = $this->db->f('fakturadato');
-				$underbilag[$i]['periode'] = $this->db->f('periode');
-				$underbilag[$i]['forfallsdato'] = $this->db->f('forfallsdato');
-				$underbilag[$i]['fakturanr'] = $this->db->f('fakturanr');
+				$underbilag[$i]['belop']		 = $this->db->f('belop');
+				$underbilag[$i]['fakturadato']	 = $this->db->f('fakturadato');
+				$underbilag[$i]['periode']		 = $this->db->f('periode');
+				$underbilag[$i]['forfallsdato']	 = $this->db->f('forfallsdato');
+				$underbilag[$i]['fakturanr']	 = $this->db->f('fakturanr');
 				$underbilag[$i]['spbudact_code'] = $this->db->f('spbudact_code');
-				$underbilag[$i]['regtid'] = $this->db->f('regtid');
-				$underbilag[$i]['artid'] = $this->db->f('artid');
+				$underbilag[$i]['regtid']		 = $this->db->f('regtid');
+				$underbilag[$i]['artid']		 = $this->db->f('artid');
 				$underbilag[$i]['godkjentbelop'] = $this->db->f('godkjentbelop');
-				$underbilag[$i]['spvend_code'] = $this->db->f('spvend_code');
-				$underbilag[$i]['dima'] = $this->db->f('dima');
-				$underbilag[$i]['loc1'] = $this->db->f('loc1');
-				$underbilag[$i]['dimb'] = $this->db->f('dimb');
-				$underbilag[$i]['mvakode'] = $this->db->f('mvakode');
-				$underbilag[$i]['dimd'] = $this->db->f('dimd');
-				$underbilag[$i]['dime'] = $this->db->f('dime');
-				$underbilag[$i]['project_id'] = $this->db->f('project_id');
-				$underbilag[$i]['kostra_id'] = $this->db->f('kostra_id');
+				$underbilag[$i]['spvend_code']	 = $this->db->f('spvend_code');
+				$underbilag[$i]['dima']			 = $this->db->f('dima');
+				$underbilag[$i]['loc1']			 = $this->db->f('loc1');
+				$underbilag[$i]['dimb']			 = $this->db->f('dimb');
+				$underbilag[$i]['mvakode']		 = $this->db->f('mvakode');
+				$underbilag[$i]['dimd']			 = $this->db->f('dimd');
+				$underbilag[$i]['dime']			 = $this->db->f('dime');
+				$underbilag[$i]['project_id']	 = $this->db->f('project_id');
+				$underbilag[$i]['kostra_id']	 = $this->db->f('kostra_id');
 				if ($this->db->f('oppsynsmannid'))
 				{
 					$underbilag[$i]['oppsynsmannid'] = $this->db->f('oppsynsmannid');
@@ -605,15 +605,15 @@
 					$underbilag[$i]['saksigndato'] = $this->db->f('saksigndato');
 				}
 
-				$underbilag[$i]['budsjettsigndato'] = $this->db->f('budsjettsigndato');
-				$underbilag[$i]['merknad'] = $this->db->f('merknad');
-				$underbilag[$i]['line_text'] = $this->db->f('line_text');
-				$underbilag[$i]['splitt'] = $this->db->f('splitt');
-				$underbilag[$i]['utbetalingid'] = $this->db->f('utbetalingid');
-				$underbilag[$i]['utbetalingsigndato'] = $this->db->f('utbetalingsigndato');
-				$underbilag[$i]['district_id'] = $this->db->f('district_id');
-				$underbilag[$i]['item_type'] = $this->db->f('item_type');
-				$underbilag[$i]['item_id'] = $this->db->f('item_id');
+				$underbilag[$i]['budsjettsigndato']		 = $this->db->f('budsjettsigndato');
+				$underbilag[$i]['merknad']				 = $this->db->f('merknad');
+				$underbilag[$i]['line_text']			 = $this->db->f('line_text');
+				$underbilag[$i]['splitt']				 = $this->db->f('splitt');
+				$underbilag[$i]['utbetalingid']			 = $this->db->f('utbetalingid');
+				$underbilag[$i]['utbetalingsigndato']	 = $this->db->f('utbetalingsigndato');
+				$underbilag[$i]['district_id']			 = $this->db->f('district_id');
+				$underbilag[$i]['item_type']			 = $this->db->f('item_type');
+				$underbilag[$i]['item_id']				 = $this->db->f('item_id');
 				$i++;
 			}
 
@@ -627,19 +627,19 @@
 
 		function log_to_deviation_table( $oRsBilag )
 		{
-			$bilagsnr = $oRsBilag['bilagsnr'];
-			$fakturadato = $oRsBilag['fakturadato'];
-			$forfallsdato = $oRsBilag['forfallsdato'];
-			$oppsynsmannid = $oRsBilag['oppsynsmannid'];
-			$oppsynsigndato = $oRsBilag['oppsynsigndato'];
-			$saksbehandlerid = $oRsBilag['saksbehandlerid'];
-			$saksigndato = $oRsBilag['saksigndato'];
+			$bilagsnr			 = $oRsBilag['bilagsnr'];
+			$fakturadato		 = $oRsBilag['fakturadato'];
+			$forfallsdato		 = $oRsBilag['forfallsdato'];
+			$oppsynsmannid		 = $oRsBilag['oppsynsmannid'];
+			$oppsynsigndato		 = $oRsBilag['oppsynsigndato'];
+			$saksbehandlerid	 = $oRsBilag['saksbehandlerid'];
+			$saksigndato		 = $oRsBilag['saksigndato'];
 			$budsjettansvarligid = $oRsBilag['budsjettansvarligid'];
-			$budsjettsigndato = $oRsBilag['budsjettsigndato'];
-			$artid = $oRsBilag['artid'];
-			$spvend_code = $oRsBilag['spvend_code'];
-			$belop = $oRsBilag['belop'];
-			$godkjentbelop = $oRsBilag['godkjentbelop'];
+			$budsjettsigndato	 = $oRsBilag['budsjettsigndato'];
+			$artid				 = $oRsBilag['artid'];
+			$spvend_code		 = $oRsBilag['spvend_code'];
+			$belop				 = $oRsBilag['belop'];
+			$godkjentbelop		 = $oRsBilag['godkjentbelop'];
 
 			$sql = "INSERT INTO fm_ecoavvik (bilagsnr,fakturadato,forfallsdato,oppsynsmannid,oppsynsigndato,saksbehandlerid,saksigndato,budsjettansvarligid,budsjettsigndato,artid,spvend_code,belop,godkjentbelop)  VALUES "
 				. "($bilagsnr','$fakturadato','$forfallsdato','$oppsynsmannid','$oppsynsigndato','$saksbehandlerid','$saksigndato','$budsjettansvarligid','$budsjettsigndato','$artid','$spvend_code','$belop','$godkjentbelop')";
@@ -660,8 +660,8 @@
 
 		function delete_voucher_from_fm_ecobilag( $bilagsnr )
 		{
-			$bilagsnr = (int)$bilagsnr;
-			$sql = "DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
+			$bilagsnr	 = (int)$bilagsnr;
+			$sql		 = "DELETE FROM fm_ecobilag WHERE bilagsnr = $bilagsnr";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
@@ -675,12 +675,12 @@
 
 		function increment_batchid()
 		{
-			$name = 'Ecobatchid';
-			$now = time();
+			$name		 = 'Ecobatchid';
+			$now		 = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
-			$next_id = $this->db->f('value') + 1;
-			$start_date = (int)$this->db->f('start_date');
+			$next_id	 = $this->db->f('value') + 1;
+			$start_date	 = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
 
 			return $next_id;
@@ -688,7 +688,7 @@
 
 		function next_batchid()
 		{
-			$now = time();
+			$now	 = time();
 			$this->db->query("SELECT value FROM fm_idgenerator WHERE name = 'Ecobatchid' AND start_date < {$now} ORDER BY start_date DESC");
 			$this->db->next_record();
 			$next_id = $this->db->f('value') + 1;
@@ -706,28 +706,28 @@
 		function add_manual_invoice( $values, $skip_update_voucher_id = false )
 		{
 			$orders_affected = array();
-			$_dateformat = $this->db->date_format();
+			$_dateformat	 = $this->db->date_format();
 
 			if (!$this->supertransaction)
 			{
 				$this->db->transaction_begin();
 			}
 
-			$num = $this->add($values, $skip_update_voucher_id);
-			$this->voucher_id = $values[0]['bilagsnr'];
+			$num				 = $this->add($values, $skip_update_voucher_id);
+			$this->voucher_id	 = $values[0]['bilagsnr'];
 
 			$voucher = $this->get_voucher($values[0]['bilagsnr']);
 			foreach ($voucher as &$line)
 			{
-				$line['overftid'] = date($_dateformat, phpgwapi_datetime::date_to_timestamp($values[0]['paid_date']));
-				$line['ordrebelop'] = $line['godkjentbelop'];
-				$line['filnavn'] = 'dummy';
-				$line['oppsynsigndato'] = date($_dateformat);
-				$line['saksigndato'] = date($_dateformat);
-				$line['budsjettsigndato'] = date($_dateformat);
-				$line['utbetalingsigndato'] = date($_dateformat);
-				$line['utbetalingid'] = $GLOBALS['phpgw']->accounts->get($this->account_id)->lid;
-				$line['manual_record'] = 1;
+				$line['overftid']			 = date($_dateformat, phpgwapi_datetime::date_to_timestamp($values[0]['paid_date']));
+				$line['ordrebelop']			 = $line['godkjentbelop'];
+				$line['filnavn']			 = 'dummy';
+				$line['oppsynsigndato']		 = date($_dateformat);
+				$line['saksigndato']		 = date($_dateformat);
+				$line['budsjettsigndato']	 = date($_dateformat);
+				$line['utbetalingsigndato']	 = date($_dateformat);
+				$line['utbetalingid']		 = $GLOBALS['phpgw']->accounts->get($this->account_id)->lid;
+				$line['manual_record']		 = 1;
 
 				$this->add_OverfBilag($line);
 			}
@@ -789,8 +789,8 @@
 				{
 					$orders[] = array
 						(
-						'order_id' => $this->db->f('order_id'),
-						'actual_cost' => $this->db->f('actual_cost')
+						'order_id'		 => $this->db->f('order_id'),
+						'actual_cost'	 => $this->db->f('actual_cost')
 					);
 				}
 
@@ -800,9 +800,9 @@
 
 					$this->db->query("SELECT max(periode) AS period, max(amount) AS amount FROM fm_orders_paid_or_pending_view WHERE order_id =  {$order['order_id']} AND periode IS NOT NULL", __LINE__, __FILE__);
 					$this->db->next_record();
-					$period = $this->db->f('period');
-					$amount = $this->db->f('amount');
-					$year = $period ? (int)substr($period, 0, 4) : date('Y');
+					$period	 = $this->db->f('period');
+					$amount	 = $this->db->f('amount');
+					$year	 = $period ? (int)substr($period, 0, 4) : date('Y');
 
 					$this->db->query("SELECT order_id FROM fm_workorder_budget WHERE order_id = {$order['order_id']} AND year = {$year}", __LINE__, __FILE__);
 
@@ -810,8 +810,8 @@
 					{
 						try
 						{
-							$soworkorder->transfer_budget($order['order_id'], array('budget_amount' => $amount,
-								'latest_year' => ($year - 1)), $year);
+							$soworkorder->transfer_budget($order['order_id'], array('budget_amount'	 => $amount,
+								'latest_year'	 => ($year - 1)), $year);
 						}
 						catch (Exception $e)
 						{
@@ -842,8 +842,8 @@
 						{
 							try
 							{
-								$soworkorder->transfer_budget($order_id, array('budget_amount' => $amount,
-									'latest_year' => ($year - 1)), $year);
+								$soworkorder->transfer_budget($order_id, array('budget_amount'	 => $amount,
+									'latest_year'	 => ($year - 1)), $year);
 							}
 							catch (Exception $e)
 							{
@@ -868,7 +868,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$table = '';
+			$table		 = '';
 			$update_paid = '';
 			switch ($this->db->f('type'))
 			{
@@ -884,8 +884,8 @@
 					}
 					break;
 				case 's_agreement':
-					$table = 'fm_s_agreement';
-					$actual_cost_field = 'actual_cost';
+					$table				 = 'fm_s_agreement';
+					$actual_cost_field	 = 'actual_cost';
 					break;
 			}
 
@@ -894,11 +894,11 @@
 			{
 				$message = 'property_soXport::correct_actual_cost() ERROR: the order id %1 seems to not correspond with any order type';
 				$GLOBALS['phpgw']->log->error(array(
-					'text' => $message,
-					'p1' => $order_id,
-					'p2' => '',
-					'line' => __LINE__,
-					'file' => __FILE__
+					'text'	 => $message,
+					'p1'	 => $order_id,
+					'p2'	 => '',
+					'line'	 => __LINE__,
+					'file'	 => __FILE__
 				));
 
 				echo $message . "\n";
@@ -914,8 +914,8 @@
 
 		public function check_voucher_id( $voucher_id )
 		{
-			$found = 0;
-			$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE bilagsnr='{$voucher_id}'";
+			$found	 = 0;
+			$sql	 = "SELECT bilagsnr FROM fm_ecobilag WHERE bilagsnr='{$voucher_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if ($this->db->next_record())
@@ -937,8 +937,8 @@
 		{
 			$found = 0;
 
-			$values['fakturanr'] = $values['invoice_id'];
-			$values['spvend_code'] = $values['vendor_id'];
+			$values['fakturanr']	 = $values['invoice_id'];
+			$values['spvend_code']	 = $values['vendor_id'];
 
 			$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE spvend_code= '{$vendor_id}' AND fakturanr='{$invoice_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);

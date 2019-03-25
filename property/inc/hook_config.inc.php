@@ -33,9 +33,9 @@
 	 */
 	function fmtts_assign_group_candidates( $config )
 	{
-		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups			 = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_assign_group_candidates']) ? $config['fmtts_assign_group_candidates'] : array();
-		$out = '';
+		$out			 = '';
 		foreach ($groups as $group => $label)
 		{
 			$checked = '';
@@ -59,9 +59,9 @@ HTML;
 	 */
 	function fmttssimple_group( $config )
 	{
-		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups			 = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
-		$out = '';
+		$out			 = '';
 		foreach ($groups as $group => $label)
 		{
 			$checked = '';
@@ -76,6 +76,7 @@ HTML;
 		}
 		return $out;
 	}
+
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface
 	 *
@@ -84,12 +85,12 @@ HTML;
 	 */
 	function fmttssimple_categories( $config )
 	{
-		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
-		$cats->supress_info = true;
-		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+		$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+		$cats->supress_info	 = true;
+		$values				 = $cats->return_sorted_array(0, false, '', '', '', $globals			 = true, '', $use_acl			 = false);
 
-		$cats_assigned = isset($config['fmttssimple_categories']) ? $config['fmttssimple_categories'] : array();
-		$out = '';
+		$cats_assigned	 = isset($config['fmttssimple_categories']) ? $config['fmttssimple_categories'] : array();
+		$out			 = '';
 		foreach ($values as $key => $group)
 		{
 			$checked = '';
@@ -113,9 +114,9 @@ HTML;
 	 */
 	function fmtts_group_finnish_date( $config )
 	{
-		$groups = $GLOBALS['phpgw']->accounts->get_list('groups');
+		$groups			 = $GLOBALS['phpgw']->accounts->get_list('groups');
 		$groups_assigned = isset($config['fmtts_group_finnish_date']) ? $config['fmtts_group_finnish_date'] : array();
-		$out = '';
+		$out			 = '';
 		foreach ($groups as $group => $label)
 		{
 			$checked = '';
@@ -139,12 +140,12 @@ HTML;
 	 */
 	function dimb_cat_1( $config )
 	{
-		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
-		$cats->supress_info = true;
+		$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
+		$cats->supress_info	 = true;
 
-		$selected = isset($config['dimb_responsible_1']) ? $config['dimb_responsible_1'] : '';
-		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		$cat_select .= $cats->formatted_list(array('selected' => $selected));
+		$selected	 = isset($config['dimb_responsible_1']) ? $config['dimb_responsible_1'] : '';
+		$cat_select	 = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	 .= $cats->formatted_list(array('selected' => $selected));
 		return $cat_select;
 	}
 
@@ -156,12 +157,12 @@ HTML;
 	 */
 	function dimb_cat_2( $config )
 	{
-		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
-		$cats->supress_info = true;
+		$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.invoice.dimb');
+		$cats->supress_info	 = true;
 
-		$selected = isset($config['dimb_responsible_2']) ? $config['dimb_responsible_2'] : '';
-		$cat_select = '<option value="">' . lang('none selected') . '</option>' . "\n";
-		$cat_select .= $cats->formatted_list(array('selected' => $selected));
+		$selected	 = isset($config['dimb_responsible_2']) ? $config['dimb_responsible_2'] : '';
+		$cat_select	 = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		$cat_select	 .= $cats->formatted_list(array('selected' => $selected));
 		return $cat_select;
 	}
 
@@ -204,8 +205,8 @@ HTML;
 	{
 		$status_assigned = isset($config['project_status_on_last_order_closed']) ? $config['project_status_on_last_order_closed'] : array();
 
-		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'project_status',
-			'selected' => $status_assigned));
+		$status_entries = execMethod('property.bogeneric.get_list', array('type'		 => 'project_status',
+			'selected'	 => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ($status_entries as $status)
@@ -257,7 +258,7 @@ HTML;
 	function ticket_approval_status( $config )
 	{
 		$status_assigned = isset($config['ticket_approval_status']) ? $config['ticket_approval_status'] : '';
-		$status_entries = execMethod('property.botts.get_status_list', $status_assigned);
+		$status_entries	 = execMethod('property.botts.get_status_list', $status_assigned);
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ($status_entries as $status)
@@ -314,8 +315,8 @@ HTML;
 	function request_project_hookup_status( $config )
 	{
 		$status_assigned = isset($config['request_project_hookup_status']) ? $config['request_project_hookup_status'] : '';
-		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
-			'selected' => $status_assigned));
+		$status_entries	 = execMethod('property.bogeneric.get_list', array('type'		 => 'request_status',
+			'selected'	 => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ($status_entries as $status)
@@ -329,6 +330,7 @@ HTML;
 
 		return $out;
 	}
+
 	/**
 	 * Get HTML listbox with request status that are to be set when request is added to a ticket
 	 *
@@ -338,8 +340,8 @@ HTML;
 	function request_ticket_hookup_status( $config )
 	{
 		$status_assigned = isset($config['request_ticket_hookup_status']) ? $config['request_ticket_hookup_status'] : '';
-		$status_entries = execMethod('property.bogeneric.get_list', array('type' => 'request_status',
-			'selected' => $status_assigned));
+		$status_entries	 = execMethod('property.bogeneric.get_list', array('type'		 => 'request_status',
+			'selected'	 => $status_assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ($status_entries as $status)
@@ -422,8 +424,8 @@ HTML;
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
-		$level_assigned = isset($config['list_location_level']) ? $config['list_location_level'] : array();
-		$out = '';
+		$level_assigned	 = isset($config['list_location_level']) ? $config['list_location_level'] : array();
+		$out			 = '';
 		foreach ($location_types as $dummy => $level)
 		{
 			$checked = '';
@@ -449,8 +451,8 @@ HTML;
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
-		$level_assigned = isset($config['request_location_level']) ? $config['request_location_level'] : 0;
-		$out = '';
+		$level_assigned	 = isset($config['request_location_level']) ? $config['request_location_level'] : 0;
+		$out			 = '';
 		foreach ($location_types as $dummy => $level)
 		{
 			$selected = '';
@@ -475,8 +477,8 @@ HTML;
 	{
 		$location_types = execMethod('property.soadmin_location.select_location_type');
 
-		$level_assigned = isset($config['survey_location_level']) ? $config['survey_location_level'] : 0;
-		$out = '';
+		$level_assigned	 = isset($config['survey_location_level']) ? $config['survey_location_level'] : 0;
+		$out			 = '';
 		foreach ($location_types as $dummy => $level)
 		{
 			$selected = '';
@@ -501,8 +503,8 @@ HTML;
 	{
 		$assigned = isset($config['contact_at_location']) ? $config['contact_at_location'] : 0;
 
-		$entries = execMethod('property.bogeneric.get_list', array('type' => 'responsibility_role',
-			'selected' => $assigned));
+		$entries = execMethod('property.bogeneric.get_list', array('type'		 => 'responsibility_role',
+			'selected'	 => $assigned));
 
 		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
 		foreach ($entries as $entry)
@@ -516,7 +518,6 @@ HTML;
 		return $out;
 	}
 
-
 	/**
 	 * Get HTML checkbox with filter buildingpart
 	 *
@@ -527,17 +528,17 @@ HTML;
 	{
 		$filters = array
 			(
-			1 => 'Filter 1',
-			2 => 'Filter 2',
-			3 => 'Filter 3',
+			1	 => 'Filter 1',
+			2	 => 'Filter 2',
+			3	 => 'Filter 3',
 //			4 => 'Filter 4'
 		);
 
 		$locations = array
 			(
-			'.project' => $GLOBALS['phpgw']->translation->translate('project', array(), false, 'property'),
-			'.b_account' => $GLOBALS['phpgw']->translation->translate('accounting', array(), false, 'property'),
-			'.project.request' => $GLOBALS['phpgw']->translation->translate('request', array(), false, 'property'),
+			'.project'			 => $GLOBALS['phpgw']->translation->translate('project', array(), false, 'property'),
+			'.b_account'		 => $GLOBALS['phpgw']->translation->translate('accounting', array(), false, 'property'),
+			'.project.request'	 => $GLOBALS['phpgw']->translation->translate('request', array(), false, 'property'),
 		);
 
 		$filter_assigned = isset($config['filter_buildingpart']) ? $config['filter_buildingpart'] : array();
@@ -579,14 +580,14 @@ HTML;
 	{
 		$filters = array
 			(
-			1 => 'Investment',
-			2 => 'Operation',
-			3 => 'Combined::Investment/Operation',
+			1	 => 'Investment',
+			2	 => 'Operation',
+			3	 => 'Combined::Investment/Operation',
 		);
 
-		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.project.request');
-		$cats->supress_info = true;
-		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+		$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.project.request');
+		$cats->supress_info	 = true;
+		$values				 = $cats->return_sorted_array(0, false, '', '', '', $globals			 = true, '', $use_acl			 = false);
 
 		$filter_assigned = isset($config['condition_survey_import_cat']) ? $config['condition_survey_import_cat'] : array();
 
@@ -719,8 +720,8 @@ HTML;
 	{
 		$entity_list = execMethod('property.soadmin_entity.read', array('allrows' => true));
 
-		$acl_bypass = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
-		$out = '';
+		$acl_bypass	 = isset($config['bypass_acl_at_entity']) ? $config['bypass_acl_at_entity'] : array();
+		$out		 = '';
 		foreach ($entity_list as $dummy => $entity)
 		{
 			$checked = '';

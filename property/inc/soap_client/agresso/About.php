@@ -1,12 +1,10 @@
 <?php
 
-class About
-{
+	class About
+	{
 
-    
-    public function __construct()
-    {
-    
-    }
+		public function __construct()
+		{
 
-}
+		}
+	}

@@ -39,18 +39,18 @@
 		 *  Data: function=organize_pdf,dir=C:/path/to/pdfs
 		 */
 
-		protected $dir = '/home/sn5607/energimerking';
-		protected $suffix = 'pdf';
-		protected $cat_id = 80;
+		protected $dir			 = '/home/sn5607/energimerking';
+		protected $suffix		 = 'pdf';
+		protected $cat_id		 = 80;
 		protected $function_name = 'organize_energy_pdf_bbb';
 
 		function __construct()
 		{
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->vfs = CreateObject('phpgwapi.vfs');
-			$this->rootdir = $this->vfs->basedir;
-			$this->fakebase = $this->vfs->fakebase = '/property';
-			$this->db = & $GLOBALS['phpgw']->db;
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->vfs			 = CreateObject('phpgwapi.vfs');
+			$this->rootdir		 = $this->vfs->basedir;
+			$this->fakebase		 = $this->vfs->fakebase = '/property';
+			$this->db			 = & $GLOBALS['phpgw']->db;
 		}
 
 		function pre_run()
@@ -78,8 +78,8 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.custom_functions.index',
-				'function' => $this->function_name,
-				'execute' => $execute,
+				'function'	 => $this->function_name,
+				'execute'	 => $execute,
 			);
 
 			$lang_confirm_msg = '';
@@ -103,22 +103,22 @@
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action' => $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'message' => $this->receipt['message'],
-				'lang_confirm_msg' => $lang_confirm_msg,
-				'lang_yes' => $lang_yes,
-				'lang_yes_statustext' => 'Organisere pdf i register og på disk',
-				'lang_no_statustext' => 'tilbake',
-				'lang_no' => lang('no'),
-				'lang_done' => 'Avbryt',
-				'lang_done_statustext' => 'tilbake'
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/admin/index.php'),
+				'run_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'message'				 => $this->receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => 'Organisere pdf i register og på disk',
+				'lang_no_statustext'	 => 'tilbake',
+				'lang_no'				 => lang('no'),
+				'lang_done'				 => 'Avbryt',
+				'lang_done_statustext'	 => 'tilbake'
 			);
 
-			$appname = 'Organisere pdf';
-			$function_msg = 'Organisere pdf i register og på disk';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname										 = 'Organisere pdf';
+			$function_msg									 = 'Organisere pdf i register og på disk';
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -155,7 +155,7 @@
 				}
 				if (!$cron)
 				{
-					$this->confirm($execute = false, $done = true);
+					$this->confirm($execute = false, $done	 = true);
 				}
 
 				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -194,29 +194,29 @@
 					{
 						continue;
 					}
-					$file_name = $file->getFilename();
-					$loc1 = substr($file_name, 0, 4);
+					$file_name	 = $file->getFilename();
+					$loc1		 = substr($file_name, 0, 4);
 
 					if ($this->check_loc1($loc1))
 					{
 						$myfilearray['valid'][] = array
 							(
-							'last_modified' => $file->getMTime(),
-							'file_name' => $file_name,
-							'file_path' => (string)"{$this->dir}/{$file_name}",
-							'loc1' => $loc1,
-							'location_code' => $loc1,
-							'cat_id' => $this->cat_id,
-							'new_file_name' => $file_name,
+							'last_modified'	 => $file->getMTime(),
+							'file_name'		 => $file_name,
+							'file_path'		 => (string)"{$this->dir}/{$file_name}",
+							'loc1'			 => $loc1,
+							'location_code'	 => $loc1,
+							'cat_id'		 => $this->cat_id,
+							'new_file_name'	 => $file_name,
 						);
 					}
 					else
 					{
 						$myfilearray['rejected'][] = array
 							(
-							'file_name' => $file_name,
-							'strlen' => strlen($file_name),
-							'building' => $this->check_loc1($file_name)
+							'file_name'	 => $file_name,
+							'strlen'	 => strlen($file_name),
+							'building'	 => $this->check_loc1($file_name)
 						);
 					}
 				}
@@ -244,13 +244,13 @@
 			$dir = "{$this->fakebase}/document/{$location_code}";
 
 			if (!$this->vfs->file_exists(array(
-					'string' => $dir,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $dir,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				if (!$this->vfs->mkdir(array(
-						'string' => $dir,
-						'relatives' => array(
+						'string'	 => $dir,
+						'relatives'	 => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -266,13 +266,13 @@
 
 			$dir = "{$this->fakebase}/document/{$location_code}/{$this->cat_id}";
 			if (!$this->vfs->file_exists(array(
-					'string' => $dir,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $dir,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				if (!$this->vfs->mkdir(array(
-						'string' => $dir,
-						'relatives' => array(
+						'string'	 => $dir,
+						'relatives'	 => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -301,8 +301,8 @@
 
 
 			if ($this->vfs->file_exists(array(
-					'string' => $to_new_file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $to_new_file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->receipt['error'][] = array('msg' => lang('File %1 already exists!', $values['new_file_name']));
@@ -310,9 +310,9 @@
 			else
 			{
 				if (!$this->vfs->cp(array(
-						'from' => $from_file,
-						'to' => $to_new_file,
-						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from'		 => $from_file,
+						'to'		 => $to_new_file,
+						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 				{
 					$this->receipt['error'][] = array('msg' => lang('Failed to copy file !') . $values['new_file_name']);
 				}
@@ -350,8 +350,8 @@
 
 					$ok = rename($from_file, "{$this->dir}/archive/{$values['file_name']}");
 
-					$this->receipt['message'][] = array('msg' => lang('File %1 copied!', $values['new_file_name']));
-					$this->receipt['message'][] = array('msg' => lang('File %1 moved!', $from_file));
+					$this->receipt['message'][]	 = array('msg' => lang('File %1 copied!', $values['new_file_name']));
+					$this->receipt['message'][]	 = array('msg' => lang('File %1 moved!', $from_file));
 				}
 			}
 

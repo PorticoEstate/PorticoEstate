@@ -35,15 +35,15 @@
 
 		function __construct()
 		{
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->so = CreateObject('property.sosubstitute');
-			$this->allrows = $this->bo->allrows;
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.sosubstitute');
+			$this->allrows		 = $this->bo->allrows;
 		}
 
 		public function read( $data )
 		{
-			static $users = array();
-			$values = $this->so->read($data);
+			static $users	 = array();
+			$values			 = $this->so->read($data);
 
 			foreach ($values as &$entry)
 			{
@@ -51,19 +51,18 @@
 				{
 					if (!$entry['user'] = $users[$entry['user_id']])
 					{
-						$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
-						$users[$entry['user_id']] = $entry['user'];
+						$entry['user']				 = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+						$users[$entry['user_id']]	 = $entry['user'];
 					}
 				}
 				if ($entry['substitute_user_id'])
 				{
 					if (!$entry['substitute'] = $users[$entry['substitute_user_id']])
 					{
-						$entry['substitute'] = $GLOBALS['phpgw']->accounts->get($entry['substitute_user_id'])->__toString();
+						$entry['substitute']				 = $GLOBALS['phpgw']->accounts->get($entry['substitute_user_id'])->__toString();
 						$users[$entry['substitute_user_id']] = $entry['substitute'];
 					}
 				}
-
 			}
 
 			return $values;
@@ -79,12 +78,12 @@
 			return $this->so->update_substitute($user_id, $substitute_user_id, $start_time);
 		}
 
-		public function get_substitute( $user_id)
+		public function get_substitute( $user_id )
 		{
 			return $this->so->get_substitute($user_id);
 		}
 
-		public function get_substitute_list( $user_id)
+		public function get_substitute_list( $user_id )
 		{
 			return $this->so->get_substitute_list($user_id);
 		}

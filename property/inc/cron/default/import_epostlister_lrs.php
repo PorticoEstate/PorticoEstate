@@ -35,20 +35,20 @@
 	class import_epostlister_lrs extends property_cron_parent
 	{
 
-		var $function_name = 'import_epostlister_lrs';
-		var $debug = true;
-		protected $receipt = array();
+		var $function_name	 = 'import_epostlister_lrs';
+		var $debug			 = true;
+		protected $receipt		 = array();
 
 		function __construct()
 		{
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('ticket');
-			$this->function_msg = 'Importer predefinerte epostlister fra Outlook';
+			$this->sub_location	 = lang('ticket');
+			$this->function_msg	 = 'Importer predefinerte epostlister fra Outlook';
 
-			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-			$this->send = CreateObject('phpgwapi.send');
+			$this->config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->send		 = CreateObject('phpgwapi.send');
 		}
 
 		public function execute()
@@ -62,8 +62,8 @@
 				return array();
 			}
 
-			$file_list = array();
-			$dir = new DirectoryIterator($dirname);
+			$file_list	 = array();
+			$dir		 = new DirectoryIterator($dirname);
 			if (is_object($dir))
 			{
 				foreach ($dir as $file)
@@ -88,7 +88,7 @@
 				}
 
 				$this->updated_tickects_per_file = array();
-				$ok = $this->import($file);
+				$ok								 = $this->import($file);
 
 				if ($ok)
 				{
@@ -109,11 +109,11 @@
 
 		protected function get_files()
 		{
-			$server = $this->config->config_data['common']['host'];
-			$user = $this->config->config_data['common']['user'];
-			$password = $this->config->config_data['common']['password'];
-			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir_email'], '/');
-			$directory_local = rtrim($this->config->config_data['import']['local_path_email'], '/');
+			$server				 = $this->config->config_data['common']['host'];
+			$user				 = $this->config->config_data['common']['user'];
+			$password			 = $this->config->config_data['common']['password'];
+			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir_email'], '/');
+			$directory_local	 = rtrim($this->config->config_data['import']['local_path_email'], '/');
 
 			try
 			{
@@ -155,10 +155,10 @@
 				$file_name = 'Hele_Listen.txt';
 
 				$file_remote = $file_name;
-				$file_local = "{$directory_local}/{$file_name}";
+				$file_local	 = "{$directory_local}/{$file_name}";
 
 				ftp_pasv($connection, true);
-				if(!ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+				if (!ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
 				{
 					echo "Feiler på ftp_fget()<br/>";
 				}
@@ -176,43 +176,42 @@
 			$values = array();
 
 			$email_list = array
-			(
-				'AgrHRLeder'	=> 1,	//AgressoHR-LedereGruppe1
-				'AgrHRSak'		=> 2,	//AgressoHR-SaksbehandlereGruppe1, AgressoHR-SaksbehandlereGruppe2
-				'AgrHRLonn'		=> 3,	//LRSAnsatteLønn
-				'AgrHRRef'		=> 3,	//LRSAnsatteRefusjon
-				'AgrHRSysr'		=> 4,	//HR-seksjonen-Systemforvaltning
+				(
+				'AgrHRLeder' => 1, //AgressoHR-LedereGruppe1
+				'AgrHRSak'	 => 2, //AgressoHR-SaksbehandlereGruppe1, AgressoHR-SaksbehandlereGruppe2
+				'AgrHRLonn'	 => 3, //LRSAnsatteLønn
+				'AgrHRRef'	 => 3, //LRSAnsatteRefusjon
+				'AgrHRSysr'	 => 4, //HR-seksjonen-Systemforvaltning
 			);
 
 			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
 			{
-				$alias =  trim(mb_convert_encoding($data[0], "UTF-8", "utf-16"));
-				$name =  trim(mb_convert_encoding($data[1], "UTF-8", "utf-16"));
-				$email = trim(mb_convert_encoding($data[2], "UTF-8", "utf-16"));
-				$liste = trim(mb_convert_encoding($data[3], "UTF-8", "utf-16"));
-				$office = trim(mb_convert_encoding($data[4], "UTF-8", "utf-16"));
-				$department = trim(mb_convert_encoding($data[5], "UTF-8", "utf-16"));
-				$alias_supervisor =  trim(mb_convert_encoding($data[6], "UTF-8", "utf-16"));
-				$name_supervisor =  trim(mb_convert_encoding($data[7], "UTF-8", "utf-16"));
-				$email_supervisor = trim(mb_convert_encoding($data[8], "UTF-8", "utf-16"));
+				$alias				 = trim(mb_convert_encoding($data[0], "UTF-8", "utf-16"));
+				$name				 = trim(mb_convert_encoding($data[1], "UTF-8", "utf-16"));
+				$email				 = trim(mb_convert_encoding($data[2], "UTF-8", "utf-16"));
+				$liste				 = trim(mb_convert_encoding($data[3], "UTF-8", "utf-16"));
+				$office				 = trim(mb_convert_encoding($data[4], "UTF-8", "utf-16"));
+				$department			 = trim(mb_convert_encoding($data[5], "UTF-8", "utf-16"));
+				$alias_supervisor	 = trim(mb_convert_encoding($data[6], "UTF-8", "utf-16"));
+				$name_supervisor	 = trim(mb_convert_encoding($data[7], "UTF-8", "utf-16"));
+				$email_supervisor	 = trim(mb_convert_encoding($data[8], "UTF-8", "utf-16"));
 
 				$liste_id = $email_list[$liste];
 
-				if($liste)
+				if ($liste)
 				{
-					if($email)
+					if ($email)
 					{
 						$values[$liste_id][$email] = array(
-							'alias' => $alias,
-							'name' => $name,
-							'email' => $email,
-							'liste' => $liste,
-							'office' => $office,
-							'department' => $department,
-							'alias_supervisor' => $alias_supervisor,
-							'name_supervisor' => $name_supervisor,
-							'email_supervisor' => $email_supervisor
-
+							'alias'				 => $alias,
+							'name'				 => $name,
+							'email'				 => $email,
+							'liste'				 => $liste,
+							'office'			 => $office,
+							'department'		 => $department,
+							'alias_supervisor'	 => $alias_supervisor,
+							'name_supervisor'	 => $name_supervisor,
+							'email_supervisor'	 => $email_supervisor
 						);
 					}
 					else
@@ -224,38 +223,37 @@
 
 			fclose($fp);
 
-			$ok = $this->update_email( $values );
+			$ok = $this->update_email($values);
 
 
 			return $ok;
 		}
 
-
-		function update_email($values = array())
+		function update_email( $values = array() )
 		{
 			$ok = false;
 			if ($this->debug)
 			{
 				_debug_array(array_keys($values));
-					_debug_array($values);
+				_debug_array($values);
 			}
 
-			if(!$values)
+			if (!$values)
 			{
 				return;
 			}
 
-			$metadata = $GLOBALS['phpgw']->db->metadata('phpgw_helpdesk_email_out_recipient_list_temp');
-			$create_temp_table = false;
+			$metadata			 = $GLOBALS['phpgw']->db->metadata('phpgw_helpdesk_email_out_recipient_list_temp');
+			$create_temp_table	 = false;
 
-			if($metadata && empty($metadata['alias']))
+			if ($metadata && empty($metadata['alias']))
 			{
 				$GLOBALS['phpgw']->db->query('DROP TABLE public.phpgw_helpdesk_email_out_recipient_list_temp', __LINE__, __FILE__);
 
 				$create_temp_table = true;
 			}
 
-			if (!$metadata ||  $create_temp_table)
+			if (!$metadata || $create_temp_table)
 			{
 				$sql_table = <<<SQL
 
@@ -299,66 +297,66 @@ SQL;
 			{
 				foreach ($sub_list as $email => $entry)
 				{
-					$alias				= $entry['alias'];
-					$name				= $entry['name'];
-					$office				= $entry['office'];
-					$department			= $entry['department'];
-					$alias_supervisor	= $entry['alias_supervisor'];
-					$name_supervisor	= $entry['name_supervisor'];
-					$email_supervisor	= $entry['email_supervisor'];
+					$alias				 = $entry['alias'];
+					$name				 = $entry['name'];
+					$office				 = $entry['office'];
+					$department			 = $entry['department'];
+					$alias_supervisor	 = $entry['alias_supervisor'];
+					$name_supervisor	 = $entry['name_supervisor'];
+					$email_supervisor	 = $entry['email_supervisor'];
 
 					$valueset[] = array
 						(
-						1 => array
+						1	 => array
 							(
-							'value' => (int)$set_id,
-							'type' => PDO::PARAM_INT
+							'value'	 => (int)$set_id,
+							'type'	 => PDO::PARAM_INT
 						),
-						2 => array
+						2	 => array
 							(
-							'value' => $alias,
-							'type' => PDO::PARAM_STR
+							'value'	 => $alias,
+							'type'	 => PDO::PARAM_STR
 						),
-						3 => array
+						3	 => array
 							(
-							'value' => $name,
-							'type' => PDO::PARAM_STR
+							'value'	 => $name,
+							'type'	 => PDO::PARAM_STR
 						),
-						4 => array
+						4	 => array
 							(
-							'value' => $email,
-							'type' => PDO::PARAM_STR
+							'value'	 => $email,
+							'type'	 => PDO::PARAM_STR
 						),
-						5 => array
+						5	 => array
 							(
-							'value' => $office,
-							'type' => PDO::PARAM_STR
+							'value'	 => $office,
+							'type'	 => PDO::PARAM_STR
 						),
-						6 => array
+						6	 => array
 							(
-							'value' => $department,
-							'type' => PDO::PARAM_STR
+							'value'	 => $department,
+							'type'	 => PDO::PARAM_STR
 						),
-						7 => array
+						7	 => array
 							(
-							'value' => $alias_supervisor,
-							'type' => PDO::PARAM_STR
+							'value'	 => $alias_supervisor,
+							'type'	 => PDO::PARAM_STR
 						),
-						8 => array
+						8	 => array
 							(
-							'value' => $name_supervisor,
-							'type' => PDO::PARAM_STR
+							'value'	 => $name_supervisor,
+							'type'	 => PDO::PARAM_STR
 						),
-						9 => array
+						9	 => array
 							(
-							'value' => $email_supervisor,
-							'type' => PDO::PARAM_STR
+							'value'	 => $email_supervisor,
+							'type'	 => PDO::PARAM_STR
 						)
 					);
 				}
 			}
 
-			if($valueset && !$error)
+			if ($valueset && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
@@ -373,85 +371,85 @@ SQL;
 			$valueset_diff = array();
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$set_id				= (int)$GLOBALS['phpgw']->db->f('set_id');
-				$alias				= $GLOBALS['phpgw']->db->f('alias');
-				$name				= $GLOBALS['phpgw']->db->f('name');
-				$email				= $GLOBALS['phpgw']->db->f('email');
-				$office				= $GLOBALS['phpgw']->db->f('office');
-				$department			= $GLOBALS['phpgw']->db->f('department');
-				$alias_supervisor	= $GLOBALS['phpgw']->db->f('alias_supervisor');
-				$name_supervisor	= $GLOBALS['phpgw']->db->f('name_supervisor');
-				$email_supervisor	= $GLOBALS['phpgw']->db->f('email_supervisor');
+				$set_id				 = (int)$GLOBALS['phpgw']->db->f('set_id');
+				$alias				 = $GLOBALS['phpgw']->db->f('alias');
+				$name				 = $GLOBALS['phpgw']->db->f('name');
+				$email				 = $GLOBALS['phpgw']->db->f('email');
+				$office				 = $GLOBALS['phpgw']->db->f('office');
+				$department			 = $GLOBALS['phpgw']->db->f('department');
+				$alias_supervisor	 = $GLOBALS['phpgw']->db->f('alias_supervisor');
+				$name_supervisor	 = $GLOBALS['phpgw']->db->f('name_supervisor');
+				$email_supervisor	 = $GLOBALS['phpgw']->db->f('email_supervisor');
 
 				$this->receipt['message'][] = array('msg' => "Ny epost: {$name} [{$email}] i liste \"{$set_id}\"");
 
 				$valueset_diff[] = array(
-						1 => array
-							(
-							'value' => $set_id,
-							'type' => PDO::PARAM_INT
-						),
-						2 => array
-							(
-							'value' => $alias,
-							'type' => PDO::PARAM_STR
-						),
-						3 => array
-							(
-							'value' => $name,
-							'type' => PDO::PARAM_STR
-						),
-						4 => array
-							(
-							'value' => $email,
-							'type' => PDO::PARAM_STR
-						),
-						5 => array
-							(
-							'value' => $office,
-							'type' => PDO::PARAM_STR
-						),
-						6 => array
-							(
-							'value' => $department,
-							'type' => PDO::PARAM_STR
-						),
-						7 => array
-							(
-							'value' => $alias_supervisor,
-							'type' => PDO::PARAM_STR
-						),
-						8 => array
-							(
-							'value' => $name_supervisor,
-							'type' => PDO::PARAM_STR
-						),
-						9 => array
-							(
-							'value' => $email_supervisor,
-							'type' => PDO::PARAM_STR
-						),
-						10 => array
-							(
-							'value' => 1,
-							'type' => PDO::PARAM_INT
-						),
-						11 => array
-							(
-							'value' => 1,
-							'type' => PDO::PARAM_INT
-						)
+					1	 => array
+						(
+						'value'	 => $set_id,
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array
+						(
+						'value'	 => $alias,
+						'type'	 => PDO::PARAM_STR
+					),
+					3	 => array
+						(
+						'value'	 => $name,
+						'type'	 => PDO::PARAM_STR
+					),
+					4	 => array
+						(
+						'value'	 => $email,
+						'type'	 => PDO::PARAM_STR
+					),
+					5	 => array
+						(
+						'value'	 => $office,
+						'type'	 => PDO::PARAM_STR
+					),
+					6	 => array
+						(
+						'value'	 => $department,
+						'type'	 => PDO::PARAM_STR
+					),
+					7	 => array
+						(
+						'value'	 => $alias_supervisor,
+						'type'	 => PDO::PARAM_STR
+					),
+					8	 => array
+						(
+						'value'	 => $name_supervisor,
+						'type'	 => PDO::PARAM_STR
+					),
+					9	 => array
+						(
+						'value'	 => $email_supervisor,
+						'type'	 => PDO::PARAM_STR
+					),
+					10	 => array
+						(
+						'value'	 => 1,
+						'type'	 => PDO::PARAM_INT
+					),
+					11	 => array
+						(
+						'value'	 => 1,
+						'type'	 => PDO::PARAM_INT
+					)
 				);
 			}
 			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (set_id, alias, name, email, office, department, alias_supervisor, name_supervisor, email_supervisor , active, public)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-			if($valueset_diff && !$error)
+			if ($valueset_diff && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $valueset_diff, __LINE__, __FILE__);
 			}
 
-			if($valueset && !$error)
+			if ($valueset && !$error)
 			{
 				$GLOBALS['phpgw']->db->query("UPDATE phpgw_helpdesk_email_out_recipient_list SET active = 0", __LINE__, __FILE__);
 
@@ -469,12 +467,11 @@ SQL;
 			}
 
 
-			if($ok || !$error)
+			if ($ok || !$error)
 			{
 				return true;
 			}
 		}
-
 
 		private function send_error_messages_as_email()
 		{
@@ -483,16 +480,16 @@ SQL;
 				return;
 			}
 
-			if(empty($this->receipt['error']))
+			if (empty($this->receipt['error']))
 			{
 				return;
 			}
 
 			$subject = 'Feil ved oppdatering av epostlister fra Outlook';
-			$from = "Ikke svar<IkkeSvarLRS@Bergen.kommune.no>";
-			$to = "Sigurd.Nes@bergen.kommune.no";
-			$cc = "";
-			$bcc = "";
+			$from	 = "Ikke svar<IkkeSvarLRS@Bergen.kommune.no>";
+			$to		 = "Sigurd.Nes@bergen.kommune.no";
+			$cc		 = "";
+			$bcc	 = "";
 
 			$errors = array();
 
@@ -510,7 +507,6 @@ SQL;
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
-
 		}
 
 		private function register_new_users()
@@ -526,12 +522,12 @@ SQL;
 			$values = array();
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$alias	= $GLOBALS['phpgw']->db->f('alias');
+				$alias = $GLOBALS['phpgw']->db->f('alias');
 
 				$values[$alias] = array(
-					'alias'	=> $alias,
-					'name'	=> $GLOBALS['phpgw']->db->f('name'),
-					'email'	=> $GLOBALS['phpgw']->db->f('email')
+					'alias'	 => $alias,
+					'name'	 => $GLOBALS['phpgw']->db->f('name'),
+					'email'	 => $GLOBALS['phpgw']->db->f('email')
 				);
 			}
 
@@ -546,25 +542,24 @@ SQL;
 
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
-				$alias_supervisor	= $GLOBALS['phpgw']->db->f('alias_supervisor');
-				$values[$alias_supervisor] = array(
-					'alias'	=> $alias_supervisor,
-					'name'	=> $GLOBALS['phpgw']->db->f('name_supervisor'),
-					'email'	=> $GLOBALS['phpgw']->db->f('email_supervisor'),
+				$alias_supervisor			 = $GLOBALS['phpgw']->db->f('alias_supervisor');
+				$values[$alias_supervisor]	 = array(
+					'alias'		 => $alias_supervisor,
+					'name'		 => $GLOBALS['phpgw']->db->f('name_supervisor'),
+					'email'		 => $GLOBALS['phpgw']->db->f('email_supervisor'),
 					'supervisor' => true
 				);
 			}
 
 			$helpdesk_account = new helpdesk_account();
 			$helpdesk_account->register_accounts($values);
-			
 		}
 	}
-
 	phpgw::import_class('helpdesk.hook_helper');
 
 	class helpdesk_account extends helpdesk_hook_helper
 	{
+
 		public function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();
@@ -585,16 +580,15 @@ SQL;
 						if ($fellesdata_user && $fellesdata_user['firstname'])
 						{
 							// Read default assign-to-group from config
-							$default_group_id = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
-							$group_lid = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
-							$group_lid = $group_lid ? $group_lid : 'frontend_delegates';
+							$default_group_id	 = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
+							$group_lid			 = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
+							$group_lid			 = $group_lid ? $group_lid : 'frontend_delegates';
 
-							$password = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
-							$account_id = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
+							$password	 = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
+							$account_id	 = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
 						}
 					}
 				}
 			}
 		}
 	}
-

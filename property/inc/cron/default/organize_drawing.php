@@ -38,18 +38,18 @@
 		 *  Data: function=organize_drawing,dir=C:/path/to/drawings
 		 */
 
-		var $dir = '/mnt/filer2/Tegninger';
-		var $suffix = 'dwg';
-		var $bypass = false; // bypass location check (only for debugging)
-		var $function_name = 'organize_drawing';
+		var $dir				 = '/mnt/filer2/Tegninger';
+		var $suffix			 = 'dwg';
+		var $bypass			 = false; // bypass location check (only for debugging)
+		var $function_name	 = 'organize_drawing';
 
 		function organize_drawing()
 		{
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->vfs = CreateObject('phpgwapi.vfs');
-			$this->rootdir = $this->vfs->basedir;
-			$this->fakebase = $this->vfs->fakebase;
-			$this->db = & $GLOBALS['phpgw']->db;
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->vfs		 = CreateObject('phpgwapi.vfs');
+			$this->rootdir	 = $this->vfs->basedir;
+			$this->fakebase	 = $this->vfs->fakebase;
+			$this->db		 = & $GLOBALS['phpgw']->db;
 		}
 
 		function pre_run( $data = '' )
@@ -59,7 +59,7 @@
 			{
 				$confirm = true;
 				$execute = true;
-				$cron = true;
+				$cron	 = true;
 				if ($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
@@ -103,10 +103,10 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.custom_functions.index',
-				'function' => $this->function_name,
-				'execute' => $execute,
-				'dir' => $this->dir,
-				'suffix' => $this->suffix,
+				'function'	 => $this->function_name,
+				'execute'	 => $execute,
+				'dir'		 => $this->dir,
+				'suffix'	 => $this->suffix,
 			);
 
 			if (!$done)
@@ -129,22 +129,22 @@
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action' => $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'message' => $this->receipt['message'],
-				'lang_confirm_msg' => $lang_confirm_msg,
-				'lang_yes' => $lang_yes,
-				'lang_yes_statustext' => 'Organisere tegninger i register og pa disk',
-				'lang_no_statustext' => 'tilbake',
-				'lang_no' => lang('no'),
-				'lang_done' => 'Avbryt',
-				'lang_done_statustext' => 'tilbake'
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/admin/index.php'),
+				'run_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'message'				 => $this->receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => 'Organisere tegninger i register og pa disk',
+				'lang_no_statustext'	 => 'tilbake',
+				'lang_no'				 => lang('no'),
+				'lang_done'				 => 'Avbryt',
+				'lang_done_statustext'	 => 'tilbake'
 			);
 
-			$appname = 'Organisere tegninger';
-			$function_msg = 'Organisere tegninger i register og pa disk';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname										 = 'Organisere tegninger';
+			$function_msg									 = 'Organisere tegninger i register og pa disk';
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -182,7 +182,7 @@
 				}
 				if (!$cron)
 				{
-					$this->confirm($execute = false, $done = true);
+					$this->confirm($execute = false, $done	 = true);
 				}
 
 				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -209,8 +209,8 @@
 			);
 
 			$category = array(
-				'plan' => 2,
-				'snitt' => 3,
+				'plan'	 => 2,
+				'snitt'	 => 3,
 				'fasade' => 4
 			);
 
@@ -220,9 +220,9 @@
 
 			$dir_handle = @opendir($this->dir);
 
-			$i = 0;
+			$i			 = 0;
 			$myfilearray = '';
-			while ($file = @readdir($dir_handle))
+			while ($file		 = @readdir($dir_handle))
 			{
 				if ((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . '/' . $file))
 				{
@@ -235,30 +235,30 @@
 
 			for ($i = 0; $i < count($myfilearray); $i++)
 			{
-				$fname = $myfilearray[$i];
-				$loc1 = substr($myfilearray[$i], 4, 4);
-				$loc2 = substr($myfilearray[$i], 8, 2);
-				$etasje = '';
-				$loc3 = '';
-				$nr = '';
-				$direction = '';
+				$fname		 = $myfilearray[$i];
+				$loc1		 = substr($myfilearray[$i], 4, 4);
+				$loc2		 = substr($myfilearray[$i], 8, 2);
+				$etasje		 = '';
+				$loc3		 = '';
+				$nr			 = '';
+				$direction	 = '';
 
 				$type = $this->get_type($myfilearray[$i]);
 				switch ($type)
 				{
 					case 'plan':
-						$etasje = substr($myfilearray[$i], 13, 2);
-						$loc3 = substr($myfilearray[$i], 10, 2);
-						$location_code = $loc1 . '-' . $loc2 . '-' . $loc3;
+						$etasje			 = substr($myfilearray[$i], 13, 2);
+						$loc3			 = substr($myfilearray[$i], 10, 2);
+						$location_code	 = $loc1 . '-' . $loc2 . '-' . $loc3;
 						break;
 					case 'snitt':
-						$location_code = $loc1 . '-' . $loc2;
-						$nr = substr($myfilearray[$i], -8, 3);
+						$location_code	 = $loc1 . '-' . $loc2;
+						$nr				 = substr($myfilearray[$i], -8, 3);
 						break;
 					case 'fasade':
-						$location_code = $loc1 . '-' . $loc2;
-						$direction = substr($myfilearray[$i], 11, 2);
-						$nr = substr($myfilearray[$i], -8, 3);
+						$location_code	 = $loc1 . '-' . $loc2;
+						$direction		 = substr($myfilearray[$i], 11, 2);
+						$nr				 = substr($myfilearray[$i], -8, 3);
 						break;
 				}
 
@@ -269,18 +269,18 @@
 				{
 					$file_list[] = array
 						(
-						'file_name' => $fname,
-						'loc1' => $loc1,
-						'loc2' => $loc2,
-						'loc3' => $loc3,
-						'type' => $type,
-						'nr' => $nr,
-						'etasje' => $etasje,
-						'branch' => $branch,
-						'branch_id' => $branch_id_array[$branch],
-						'category_id' => $category[$type],
-						'direction' => $direction,
-						'location_code' => $location_code,
+						'file_name'		 => $fname,
+						'loc1'			 => $loc1,
+						'loc2'			 => $loc2,
+						'loc3'			 => $loc3,
+						'type'			 => $type,
+						'nr'			 => $nr,
+						'etasje'		 => $etasje,
+						'branch'		 => $branch,
+						'branch_id'		 => $branch_id_array[$branch],
+						'category_id'	 => $category[$type],
+						'direction'		 => $direction,
+						'location_code'	 => $location_code,
 					);
 				}
 			}
@@ -291,9 +291,9 @@
 		function get_type( $filename = '' )
 		{
 			$drawing_type = array(
-				'p' => 'plan',
-				'f' => 'fasade',
-				's' => 'snitt'
+				'p'	 => 'plan',
+				'f'	 => 'fasade',
+				's'	 => 'snitt'
 			);
 
 			for ($i = 10; $i < strlen($filename); $i++)
@@ -327,15 +327,15 @@
 		function create_loc1_dir( $loc1 = '' )
 		{
 			if (!$this->vfs->file_exists(array(
-					'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $this->fakebase . '/' . 'document' . '/' . $loc1,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->vfs->override_acl = 1;
 
 				if (!$this->vfs->mkdir(array(
-						'string' => $this->fakebase . '/' . 'document' . '/' . $loc1,
-						'relatives' => array(
+						'string'	 => $this->fakebase . '/' . 'document' . '/' . $loc1,
+						'relatives'	 => array(
 							RELATIVE_NONE
 						)
 					)))
@@ -354,15 +354,15 @@
 
 		function copy_files( $values )
 		{
-			$to_file = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'];
-			$from_file = $this->dir . '/' . $values['file_name'];
+			$to_file				 = $this->fakebase . '/' . 'document' . '/' . $values['loc1'] . '/' . $values['file_name'];
+			$from_file				 = $this->dir . '/' . $values['file_name'];
 			$this->vfs->override_acl = 1;
 
 
 //_debug_array($to_file);
 			if ($this->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $to_file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->receipt['error'][] = array('msg' => lang('File %1 already exists!', $values['file_name']));
@@ -371,9 +371,9 @@
 			{
 
 				if (!$this->vfs->cp(array(
-						'from' => $from_file,
-						'to' => $to_file,
-						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from'		 => $from_file,
+						'to'		 => $to_file,
+						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 				{
 					$this->receipt['error'][] = array('msg' => lang('Failed to copy file !') . $values['file_name']);
 				}
@@ -424,8 +424,8 @@
 
 					unlink($from_file);
 
-					$this->receipt['message'][] = array('msg' => lang('File %1 copied!', $values['file_name']));
-					$this->receipt['message'][] = array('msg' => lang('File %1 deleted!', $from_file));
+					$this->receipt['message'][]	 = array('msg' => lang('File %1 copied!', $values['file_name']));
+					$this->receipt['message'][]	 = array('msg' => lang('File %1 deleted!', $from_file));
 				}
 			}
 
