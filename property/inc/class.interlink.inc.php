@@ -47,11 +47,11 @@
 		 */
 		function __construct()
 		{
-			$this->_db = & $GLOBALS['phpgw']->db;
-			$this->boadmin_entity = CreateObject('property.boadmin_entity');
-			$this->soadmin_entity = & $this->boadmin_entity->so;
-			$this->soadmin_entity->type = & $this->boadmin_entity->type;
-			$this->soadmin_entity->type_app = & $this->boadmin_entity->type_app;
+			$this->_db						 = & $GLOBALS['phpgw']->db;
+			$this->boadmin_entity			 = CreateObject('property.boadmin_entity');
+			$this->soadmin_entity			 = & $this->boadmin_entity->so;
+			$this->soadmin_entity->type		 = & $this->boadmin_entity->type;
+			$this->soadmin_entity->type_app	 = & $this->boadmin_entity->type_app;
 
 			$this->_join = & $this->_db->join;
 		}
@@ -69,7 +69,7 @@
 		public function get_relation( $appname, $location, $id, $role = 'origin' )
 		{
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id = (int)$id;
+			$id			 = (int)$id;
 
 			switch ($role)
 			{
@@ -83,18 +83,18 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$relation = array();
 
-			$last_type = false;
-			$i = -1;
+			$last_type	 = false;
+			$i			 = -1;
 			while ($this->_db->next_record())
 			{
 				if ($last_type != $this->_db->f('linkend_location'))
 				{
 					$i++;
 				}
-				$relation[$i]['linkend_location'] = $this->_db->f('linkend_location');
-				$relation[$i]['data'][] = array
+				$relation[$i]['linkend_location']	 = $this->_db->f('linkend_location');
+				$relation[$i]['data'][]				 = array
 					(
-					'id' => $this->_db->f('linkend_id'),
+					'id'		 => $this->_db->f('linkend_id'),
 					'account_id' => $this->_db->f('account_id'),
 					'entry_date' => $this->_db->f('entry_date')
 				);
@@ -104,17 +104,17 @@
 
 			foreach ($relation as &$entry)
 			{
-				$linkend_location = $GLOBALS['phpgw']->locations->get_name($entry['linkend_location']);
-				$entry['location'] = $linkend_location['location'];
+				$linkend_location	 = $GLOBALS['phpgw']->locations->get_name($entry['linkend_location']);
+				$entry['location']	 = $linkend_location['location'];
 
 				$entry['descr'] = $this->get_location_name($linkend_location['location']);
 
 				foreach ($entry['data'] as &$data)
 				{
-					$data['link'] = $this->get_relation_link($linkend_location, $data['id']);
-					$relation_info = $this->get_relation_info($linkend_location, $data['id']);
-					$data['statustext'] = $relation_info['statustext'];
-					$data['title'] = $relation_info['title'];
+					$data['link']		 = $this->get_relation_link($linkend_location, $data['id']);
+					$relation_info		 = $this->get_relation_info($linkend_location, $data['id']);
+					$data['statustext']	 = $relation_info['statustext'];
+					$data['title']		 = $relation_info['title'];
 				}
 			}
 			return $relation;
@@ -133,10 +133,10 @@
 		 */
 		public function get_specific_relation( $appname, $location1, $location2, $id, $role = 'origin' )
 		{
-			$location1_id = $GLOBALS['phpgw']->locations->get_id($appname, $location1);
-			$location2_id = $GLOBALS['phpgw']->locations->get_id($appname, $location2);
-			$id = (int)$id;
-			$targets = array();
+			$location1_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $location1);
+			$location2_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $location2);
+			$id				 = (int)$id;
+			$targets		 = array();
 
 			switch ($role)
 			{
@@ -166,18 +166,18 @@
 		public function get_location_name( $location )
 		{
 
-			$location = ltrim($location, '.');
-			$parts = explode('.', $location);
-			$this->boadmin_entity->type = $parts[0];
+			$location					 = ltrim($location, '.');
+			$parts						 = explode('.', $location);
+			$this->boadmin_entity->type	 = $parts[0];
 			switch ($parts[0])
 			{
 				case 'entity':
 				case 'catch':
 					$entity_category = $this->boadmin_entity->read_single_category($parts[1], $parts[2]);
-					$location_name = $entity_category['name'];
+					$location_name	 = $entity_category['name'];
 					break;
 				default:
-					$location_name = lang($location);
+					$location_name	 = lang($location);
 			}
 			return $location_name;
 		}
@@ -199,10 +199,10 @@
 			{
 				$location_code = execMethod('property.solocation.get_location_code', $id);
 
-				$location = execMethod('property.solocation.read_single', $location_code);
-				$location_arr = explode('-', $location_code);
-				$i = 1;
-				$name_arr = array();
+				$location		 = execMethod('property.solocation.read_single', $location_code);
+				$location_arr	 = explode('-', $location_code);
+				$i				 = 1;
+				$name_arr		 = array();
 				foreach ($location_arr as $_dummy)
 				{
 					$name_arr[] = $location["loc{$i}_name"];
@@ -213,8 +213,8 @@
 			}
 			else if (preg_match('/.entity./i', $system_location['location']))
 			{
-				$name = execMethod('property.soentity.get_short_description', array('location_id' => $location_id,
-					'id' => $id));
+				$name = execMethod('property.soentity.get_short_description', array('location_id'	 => $location_id,
+					'id'			 => $id));
 			}
 
 			$link = $this->get_relation_link($system_location['location'], $id, $action);
@@ -222,8 +222,8 @@
 			{
 				return array
 					(
-					'name' => $name,
-					'link' => $link
+					'name'	 => $name,
+					'link'	 => $link
 				);
 			}
 			else
@@ -287,29 +287,29 @@
 			}
 			else if (substr($type, 1, 6) == 'entity')
 			{
-				$type = explode('.', $type);
-				$entity_id = $type[2];
-				$cat_id = $type[3];
-				$link = array
+				$type		 = explode('.', $type);
+				$entity_id	 = $type[2];
+				$cat_id		 = $type[3];
+				$link		 = array
 					(
 					'menuaction' => "property.uientity.{$function}",
-					'entity_id' => $entity_id,
-					'cat_id' => $cat_id,
-					'id' => $id
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id,
+					'id'		 => $id
 				);
 			}
 			else if (substr($type, 1, 5) == 'catch')
 			{
-				$type = explode('.', $type);
-				$entity_id = $type[2];
-				$cat_id = $type[3];
-				$link = array
+				$type		 = explode('.', $type);
+				$entity_id	 = $type[2];
+				$cat_id		 = $type[3];
+				$link		 = array
 					(
 					'menuaction' => "property.uientity.{$function}",
-					'type' => 'catch',
-					'entity_id' => $entity_id,
-					'cat_id' => $cat_id,
-					'id' => $id
+					'type'		 => 'catch',
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id,
+					'id'		 => $id
 				);
 			}
 			else if ($type == '.checklist')
@@ -318,16 +318,16 @@
 			}
 			else if ($type == '.activity')
 			{
-				$link = array('menuaction' => 'logistic.uiactivity.view_resource_allocation',
-					'activity_id' => $id);
+				$link = array('menuaction'	 => 'logistic.uiactivity.view_resource_allocation',
+					'activity_id'	 => $id);
 			}
 			else if (substr($type, 1, 8) == 'location')
 			{
-				$type = explode('.', $type);
-				$link = array
+				$type	 = explode('.', $type);
+				$link	 = array
 					(
-					'menuaction' => "property.uilocation.{$function}",
-					'location_code' => $id,
+					'menuaction'	 => "property.uilocation.{$function}",
+					'location_code'	 => $id,
 				);
 			}
 
@@ -351,15 +351,15 @@
 		 */
 		public function get_relation_info( $linkend_location, $id = 0 )
 		{
-			$relation_info = array();
-			$id = isset($linkend_location['id']) ? (int)$linkend_location['id'] : (int)$id;
-			$type = $linkend_location['location'];
+			$relation_info	 = array();
+			$id				 = isset($linkend_location['id']) ? (int)$linkend_location['id'] : (int)$id;
+			$type			 = $linkend_location['location'];
 			if ($type == '.ticket')
 			{
 				$this->_db->query("SELECT status, subject as title FROM fm_tts_tickets WHERE id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();
-				$status_code = $this->_db->f('status');
-				$relation_info['title'] = $this->_db->f('title');
+				$status_code			 = $this->_db->f('status');
+				$relation_info['title']	 = $this->_db->f('title');
 
 				static $status_text;
 				if (!$status_text)
@@ -374,7 +374,7 @@
 				$this->_db->query("SELECT fm_workorder_status.descr as status, fm_workorder.title FROM fm_workorder {$this->_join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder.id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();
 				$relation_info['statustext'] = $this->_db->f('status');
-				$relation_info['title'] = $this->_db->f('title');
+				$relation_info['title']		 = $this->_db->f('title');
 				return $relation_info;
 			}
 			else if ($type == '.project.request')
@@ -382,7 +382,7 @@
 				$this->_db->query("SELECT fm_request.title, fm_request_status.descr as status FROM fm_request {$this->_join} fm_request_status ON fm_request.status = fm_request_status.id WHERE fm_request.id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();
 				$relation_info['statustext'] = $this->_db->f('status');
-				$relation_info['title'] = $this->_db->f('title');
+				$relation_info['title']		 = $this->_db->f('title');
 				return $relation_info;
 			}
 			else if ($type == '.project.condition_survey')
@@ -390,7 +390,7 @@
 				$this->_db->query("SELECT fm_condition_survey.title, fm_condition_survey_status.descr as status FROM fm_condition_survey {$this->_join} fm_condition_survey_status ON fm_condition_survey.status_id = fm_condition_survey_status.id WHERE fm_condition_survey.id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();
 				$relation_info['statustext'] = $this->_db->f('status');
-				$relation_info['title'] = $this->_db->f('title');
+				$relation_info['title']		 = $this->_db->f('title');
 				return $relation_info;
 			}
 			else if ($type == '.project')
@@ -398,14 +398,14 @@
 				$this->_db->query("SELECT fm_project.name as title, fm_project_status.descr as status FROM fm_project {$this->_join} fm_project_status ON fm_project.status = fm_project_status.id WHERE fm_project.id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();
 				$relation_info['statustext'] = $this->_db->f('status');
-				$relation_info['title'] = $this->_db->f('title');
+				$relation_info['title']		 = $this->_db->f('title');
 				return $relation_info;
 			}
 			else if (substr($type, 1, 6) == 'entity')
 			{
-				$type = explode('.', $type);
-				$entity_id = $type[2];
-				$cat_id = $type[3];
+				$type		 = explode('.', $type);
+				$entity_id	 = $type[2];
+				$cat_id		 = $type[3];
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 				if ($location_id)
 				{
@@ -417,15 +417,15 @@
 					else
 					{
 						$sql = "SELECT json_representation->>'status' as status FROM fm_bim_item"
-						. " WHERE location_id = {$location_id}"
-						. " AND id='{$id}'";
+							. " WHERE location_id = {$location_id}"
+							. " AND id='{$id}'";
 					}
 
 					$this->_db->query($sql, __LINE__, __FILE__);
 					$this->_db->next_record();
-					if($status_id = (int)$this->_db->f('status'))
+					if ($status_id = (int)$this->_db->f('status'))
 					{
-						$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
+						$sql						 = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
 							. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
 							. " AND phpgw_cust_attribute.id = phpgw_cust_choice.attrib_id WHERE phpgw_cust_attribute.column_name = 'status'"
 							. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
@@ -438,7 +438,7 @@
 				$relation_info['title'] = 'N∕A';
 
 				if ($short_desc = execMethod('property.soentity.get_short_description', array(
-					'location_id' => $location_id, 'id' => $id)))
+					'location_id'	 => $location_id, 'id'			 => $id)))
 				{
 					$relation_info['title'] = $short_desc;
 				}
@@ -447,9 +447,9 @@
 			}
 			else if (substr($type, 1, 5) == 'catch')
 			{
-				$type = explode('.', $type);
-				$entity_id = $type[2];
-				$cat_id = $type[3];
+				$type		 = explode('.', $type);
+				$entity_id	 = $type[2];
+				$cat_id		 = $type[3];
 				// Not set
 			}
 		}
@@ -470,8 +470,8 @@
 		{
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$location1_id = $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
-			$location2_id = $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
+			$location1_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
+			$location2_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
 
 			$sql = "SELECT entry_date, location2_item_id FROM phpgw_interlink WHERE location1_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id}";
 
@@ -483,7 +483,7 @@
 				$date_info[] = array
 					(
 					'entry_date' => $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'), $dateformat),
-					'target_id' => $this->_db->f('location2_item_id')
+					'target_id'	 => $this->_db->f('location2_item_id')
 				);
 			}
 
@@ -516,15 +516,15 @@
 			{
 				$db = $this->_db;
 			}
-			$location1_id = $data['location1_id'];
-			$location1_item_id = $data['location1_item_id'];
-			$location2_id = $data['location2_id'];
-			$location2_item_id = $data['location2_item_id'];
-			$account_id = $data['account_id'];
-			$entry_date = time();
-			$is_private = isset($data['is_private']) && $data['is_private'] ? $data['is_private'] : -1;
-			$start_date = isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : -1;
-			$end_date = isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : -1;
+			$location1_id		 = $data['location1_id'];
+			$location1_item_id	 = $data['location1_item_id'];
+			$location2_id		 = $data['location2_id'];
+			$location2_item_id	 = $data['location2_item_id'];
+			$account_id			 = $data['account_id'];
+			$entry_date			 = time();
+			$is_private			 = isset($data['is_private']) && $data['is_private'] ? $data['is_private'] : -1;
+			$start_date			 = isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : -1;
+			$end_date			 = isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : -1;
 
 			$db->query('INSERT INTO phpgw_interlink (location1_id,location1_item_id,location2_id,location2_item_id,account_id,entry_date,is_private,start_date,end_date) '
 				. "VALUES ({$location1_id},{$location1_item_id},{$location2_id},{$location2_item_id},{$account_id},{$entry_date},{$is_private},{$start_date},{$end_date})", __LINE__, __FILE__);
@@ -548,8 +548,8 @@
 				$db = $this->_db;
 			}
 
-			$location1_id = $GLOBALS['phpgw']->locations->get_id($appname, $location1);
-			$location2_id = $GLOBALS['phpgw']->locations->get_id($appname, $location2);
+			$location1_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $location1);
+			$location2_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $location2);
 			//			$id				= (int) $id;
 
 			$sql = "DELETE FROM phpgw_interlink WHERE location1_id = {$location1_id} AND location2_id = {$location2_id} AND location1_item_id = '{$id}'";
@@ -600,7 +600,7 @@
 			}
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			$id = (int)$id;
+			$id			 = (int)$id;
 
 			$sql = "DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}";
 

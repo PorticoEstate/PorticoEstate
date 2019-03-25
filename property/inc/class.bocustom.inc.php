@@ -42,10 +42,10 @@
 		var $cat_id;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
@@ -58,12 +58,12 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	 = phpgw::get_var('query');
+			$sort	 = phpgw::get_var('sort');
+			$order	 = phpgw::get_var('order');
+			$filter	 = phpgw::get_var('filter', 'int');
+			$cat_id	 = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
 			if ($start)
@@ -117,12 +117,12 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'custom');
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
+			$this->start	 = $data['start'];
+			$this->query	 = $data['query'];
+			$this->filter	 = $data['filter'];
+			$this->sort		 = $data['sort'];
+			$this->order	 = $data['order'];
+			$this->cat_id	 = $data['cat_id'];
 		}
 
 		function read( $data = array() )
@@ -131,7 +131,7 @@
 			  'filter' => $this->filter,'cat_id' => $this->cat_id,'allrows'=>$this->allrows));
 			  $this->total_records = $this->so->total_records; */
 
-			$custom = $this->so->read($data);
+			$custom				 = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 
 			for ($i = 0; $i < count($custom); $i++)
@@ -158,8 +158,8 @@
 			{
 				if ($custom['custom_id'] != 0)
 				{
-					$custom_id = $custom['custom_id'];
-					$receipt = $this->so->edit($custom);
+					$custom_id	 = $custom['custom_id'];
+					$receipt	 = $this->so->edit($custom);
 				}
 			}
 			else
@@ -195,8 +195,8 @@
 			}
 //			$custom = $this->so->read_custom(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'filter' => $this->filter,'custom_id' => $custom_id,'allrows'=>$this->allrows));
-			$custom = $this->so->read_custom($data);
-			$this->uicols = $this->so->uicols;
+			$custom				 = $this->so->read_custom($data);
+			$this->uicols		 = $this->so->uicols;
 			$this->total_records = $this->so->total_records;
 			return $custom;
 		}

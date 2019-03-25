@@ -38,10 +38,10 @@
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
-			$this->like = & $this->db->like;
-			$this->join = & $this->db->join;
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->db2		 = clone($this->db);
+			$this->like		 = & $this->db->like;
+			$this->join		 = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
 		}
 
@@ -50,10 +50,10 @@
 			$this->db->query("SELECT id, descr FROM fm_chapter ORDER BY id ");
 
 			$chapter_entries = array();
-			$i = 0;
+			$i				 = 0;
 			while ($this->db->next_record())
 			{
-				$chapter_entries[$i]['id'] = $this->db->f('id');
+				$chapter_entries[$i]['id']	 = $this->db->f('id');
 				$chapter_entries[$i]['name'] = $this->db->f('descr', true);
 				$i++;
 			}
@@ -67,8 +67,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$grouping_entries[$i]['id'] = $this->db->f('grouping_id');
-				$grouping_entries[$i]['name'] = $this->db->f('grouping_descr', true);
+				$grouping_entries[$i]['id']		 = $this->db->f('grouping_id');
+				$grouping_entries[$i]['name']	 = $this->db->f('grouping_descr', true);
 				$i++;
 			}
 			return $grouping_entries;
@@ -81,8 +81,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$building_part_entries[$i]['id'] = $this->db->f('id');
-				$building_part_entries[$i]['name'] = stripslashes($this->db->f('descr'));
+				$building_part_entries[$i]['id']	 = $this->db->f('id');
+				$building_part_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
 				$i++;
 			}
 			return $building_part_entries;
@@ -95,8 +95,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$branch_entries[$i]['id'] = $this->db->f('id');
-				$branch_entries[$i]['name'] = stripslashes($this->db->f('descr'));
+				$branch_entries[$i]['id']	 = $this->db->f('id');
+				$branch_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
 				$i++;
 			}
 			return $branch_entries;
@@ -124,36 +124,36 @@
 			{
 				$hour_list[] = array
 					(
-					'hour_id' => $this->db->f('id'),
-					'activity_num' => $this->db->f('activity_num'),
-					'hours_descr' => $this->db->f('hours_descr', true),
-					'owner' => $this->db->f('owner'),
-					'quantity' => $this->db->f('quantity'),
-					'grouping_id' => $this->db->f('grouping_id'),
-					'grouping_descr' => $this->db->f('grouping_descr', true),
-					'ns3420_id' => $this->db->f('ns3420_id'),
-					'tolerance' => $this->db->f('tolerance'),
-					'activity_id' => $this->db->f('activity_id'),
-					'unit' => $this->db->f('unit'),
-					'unit_name' => $this->db->f('unit_name'),
-					'record' => $this->db->f('record'),
-					'cost' => $this->db->f('cost'),
-					'billperae' => $this->db->f('billperae'),
-					'remark' => $this->db->f('remark'),
-					'building_part' => $this->db->f('building_part'),
-					'dim_d' => $this->db->f('dim_d'),
-					'wo_hour_category' => $this->db->f('wo_hour_category'),
-					'cat_per_cent' => $this->db->f('cat_per_cent')
+					'hour_id'			 => $this->db->f('id'),
+					'activity_num'		 => $this->db->f('activity_num'),
+					'hours_descr'		 => $this->db->f('hours_descr', true),
+					'owner'				 => $this->db->f('owner'),
+					'quantity'			 => $this->db->f('quantity'),
+					'grouping_id'		 => $this->db->f('grouping_id'),
+					'grouping_descr'	 => $this->db->f('grouping_descr', true),
+					'ns3420_id'			 => $this->db->f('ns3420_id'),
+					'tolerance'			 => $this->db->f('tolerance'),
+					'activity_id'		 => $this->db->f('activity_id'),
+					'unit'				 => $this->db->f('unit'),
+					'unit_name'			 => $this->db->f('unit_name'),
+					'record'			 => $this->db->f('record'),
+					'cost'				 => $this->db->f('cost'),
+					'billperae'			 => $this->db->f('billperae'),
+					'remark'			 => $this->db->f('remark'),
+					'building_part'		 => $this->db->f('building_part'),
+					'dim_d'				 => $this->db->f('dim_d'),
+					'wo_hour_category'	 => $this->db->f('wo_hour_category'),
+					'cat_per_cent'		 => $this->db->f('cat_per_cent')
 				);
 			}
 
 			for ($i = 0; $i < count($hour_list); $i++)
 			{
-				$sql = "SELECT sum(amount) as deviation, count(amount) as count_deviation FROM fm_wo_h_deviation WHERE workorder_id=$workorder_id and hour_id=" . $hour_list[$i]['hour_id'];
+				$sql								 = "SELECT sum(amount) as deviation, count(amount) as count_deviation FROM fm_wo_h_deviation WHERE workorder_id=$workorder_id and hour_id=" . $hour_list[$i]['hour_id'];
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				$hour_list[$i]['deviation'] = $this->db->f('deviation');
-				$hour_list[$i]['count_deviation'] = $this->db->f('count_deviation');
+				$hour_list[$i]['deviation']			 = $this->db->f('deviation');
+				$hour_list[$i]['count_deviation']	 = $this->db->f('count_deviation');
 			}
 
 			return $hour_list;
@@ -163,8 +163,8 @@
 		{
 			if (is_array($data))
 			{
-				$workorder_id = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
-				$hour_id = (isset($data['hour_id']) ? $data['hour_id'] : 0);
+				$workorder_id	 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
+				$hour_id		 = (isset($data['hour_id']) ? $data['hour_id'] : 0);
 			}
 
 			$ordermethod = ' order by id asc';
@@ -179,12 +179,12 @@
 			{
 				$deviation[] = array
 					(
-					'entry_date' => $this->db->f('entry_date'),
-					'workorder_id' => $workorder_id,
-					'hour_id' => $hour_id,
-					'id' => $this->db->f('id'),
-					'amount' => $this->db->f('amount'),
-					'descr' => stripslashes($this->db->f('descr'))
+					'entry_date'	 => $this->db->f('entry_date'),
+					'workorder_id'	 => $workorder_id,
+					'hour_id'		 => $hour_id,
+					'id'			 => $this->db->f('id'),
+					'amount'		 => $this->db->f('amount'),
+					'descr'			 => stripslashes($this->db->f('descr'))
 				);
 			}
 			//_debug_array($deviation);
@@ -195,22 +195,22 @@
 		{
 			if (is_array($data))
 			{
-				$workorder_id = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
-				$hour_id = (isset($data['hour_id']) ? $data['hour_id'] : 0);
-				$id = (isset($data['id']) ? $data['id'] : 0);
+				$workorder_id	 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
+				$hour_id		 = (isset($data['hour_id']) ? $data['hour_id'] : 0);
+				$id				 = (isset($data['id']) ? $data['id'] : 0);
 			}
 
-			$sql = "SELECT *  FROM fm_wo_h_deviation WHERE workorder_id=$workorder_id AND hour_id=$hour_id AND id = $id";
+			$sql		 = "SELECT *  FROM fm_wo_h_deviation WHERE workorder_id=$workorder_id AND hour_id=$hour_id AND id = $id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$deviation = array
+			$deviation	 = array
 				(
-				'entry_date' => $this->db->f('entry_date'),
-				'workorder_id' => $workorder_id,
-				'hour_id' => $hour_id,
-				'id' => $this->db->f('id'),
-				'amount' => $this->db->f('amount'),
-				'descr' => stripslashes($this->db->f('descr'))
+				'entry_date'	 => $this->db->f('entry_date'),
+				'workorder_id'	 => $workorder_id,
+				'hour_id'		 => $hour_id,
+				'id'			 => $this->db->f('id'),
+				'amount'		 => $this->db->f('amount'),
+				'descr'			 => stripslashes($this->db->f('descr'))
 			);
 			return $deviation;
 		}
@@ -220,7 +220,7 @@
 			$sql = "SELECT max(id) as current_id FROM fm_wo_h_deviation WHERE  workorder_id=" . $values['workorder_id'] . " AND hour_id=" . $values['hour_id'];
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$id = $this->db->f('current_id') + 1;
+			$id	 = $this->db->f('current_id') + 1;
 
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
@@ -249,7 +249,7 @@
 
 			$value_set = array(
 				'amount' => $values['amount'],
-				'descr' => $this->db->db_addslashes($values['descr'])
+				'descr'	 => $this->db->db_addslashes($values['descr'])
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -265,8 +265,8 @@
 		{
 			if (is_array($data))
 			{
-				$id = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
-				$deviation = (isset($data['sum_deviation']) ? $data['sum_deviation'] : 0);
+				$id			 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
+				$deviation	 = (isset($data['sum_deviation']) ? $data['sum_deviation'] : 0);
 			}
 			$this->db->query("UPDATE fm_workorder set deviation = $deviation WHERE id=$id", __LINE__, __FILE__);
 			return $receipt;
@@ -299,9 +299,9 @@
 		function add_template( $values, $workorder_id )
 		{
 
-			$values['name'] = $this->db->db_addslashes($values['name']);
-			$soworkorder = CreateObject('property.soworkorder');
-			$workorder = $soworkorder->read_single($workorder_id);
+			$values['name']	 = $this->db->db_addslashes($values['name']);
+			$soworkorder	 = CreateObject('property.soworkorder');
+			$workorder		 = $soworkorder->read_single($workorder_id);
 
 			$this->db->transaction_begin();
 
@@ -558,23 +558,23 @@
 
 			if ($this->db->next_record())
 			{
-				$hour['hour_id'] = $this->db->f('id');
-				$hour['record'] = $this->db->f('record');
-				$hour['activity_id'] = $this->db->f('activity_id');
-				$hour['activity_num'] = $this->db->f('activity_num');
-				$hour['grouping_id'] = $this->db->f('grouping_id');
-				$hour['hours_descr'] = $this->db->f('hours_descr', true);
-				$hour['remark'] = $this->db->f('remark');
-				$hour['billperae'] = $this->db->f('billperae');
-				$hour['unit'] = $this->db->f('unit');
-				$hour['ns3420_id'] = $this->db->f('ns3420_id');
-				$hour['tolerance_id'] = (int)$this->db->f('tolerance');
-				$hour['building_part_id'] = (int)$this->db->f('building_part');
-				$hour['quantity'] = $this->db->f('quantity');
-				$hour['cost'] = $this->db->f('cost');
-				$hour['dim_d'] = $this->db->f('dim_d');
-				$hour['wo_hour_cat'] = $this->db->f('category');
-				$hour['cat_per_cent'] = $this->db->f('cat_per_cent');
+				$hour['hour_id']			 = $this->db->f('id');
+				$hour['record']				 = $this->db->f('record');
+				$hour['activity_id']		 = $this->db->f('activity_id');
+				$hour['activity_num']		 = $this->db->f('activity_num');
+				$hour['grouping_id']		 = $this->db->f('grouping_id');
+				$hour['hours_descr']		 = $this->db->f('hours_descr', true);
+				$hour['remark']				 = $this->db->f('remark');
+				$hour['billperae']			 = $this->db->f('billperae');
+				$hour['unit']				 = $this->db->f('unit');
+				$hour['ns3420_id']			 = $this->db->f('ns3420_id');
+				$hour['tolerance_id']		 = (int)$this->db->f('tolerance');
+				$hour['building_part_id']	 = (int)$this->db->f('building_part');
+				$hour['quantity']			 = $this->db->f('quantity');
+				$hour['cost']				 = $this->db->f('cost');
+				$hour['dim_d']				 = $this->db->f('dim_d');
+				$hour['wo_hour_cat']		 = $this->db->f('category');
+				$hour['cat_per_cent']		 = $this->db->f('cat_per_cent');
 			}
 
 			return $hour;
@@ -583,8 +583,8 @@
 		function edit( $hour, $workorder_id )
 		{
 
-			$hour['descr'] = $this->db->db_addslashes($hour['descr']);
-			$hour['remark'] = $this->db->db_addslashes($hour['remark']);
+			$hour['descr']	 = $this->db->db_addslashes($hour['descr']);
+			$hour['remark']	 = $this->db->db_addslashes($hour['remark']);
 			if (!$hour['cat_per_cent'])
 			{
 				$hour['cat_per_cent'] = 100;
@@ -646,8 +646,8 @@
 					}
 					else
 					{
-						$hour['grouping_id'] = '';
-						$hour['grouping_descr'] = '';
+						$hour['grouping_id']	 = '';
+						$hour['grouping_descr']	 = '';
 					}
 
 					/* 					if($old_record>1)
@@ -662,28 +662,28 @@
 			}
 
 			$value_set = array(
-				'hours_descr' => $hour['descr'],
-				'remark' => $hour['remark'],
-				'billperae' => $hour['billperae'],
-				'unit' => $hour['unit'],
-				'quantity' => $hour['quantity'],
-				'cost' => $hour['cost'],
-				'ns3420_id' => $hour['ns3420_id'],
-				'tolerance' => $hour['tolerance_id'],
-				'building_part' => $hour['building_part_id'],
-				'dim_d' => $hour['dim_d'],
-				'grouping_id' => $hour['grouping_id'],
+				'hours_descr'	 => $hour['descr'],
+				'remark'		 => $hour['remark'],
+				'billperae'		 => $hour['billperae'],
+				'unit'			 => $hour['unit'],
+				'quantity'		 => $hour['quantity'],
+				'cost'			 => $hour['cost'],
+				'ns3420_id'		 => $hour['ns3420_id'],
+				'tolerance'		 => $hour['tolerance_id'],
+				'building_part'	 => $hour['building_part_id'],
+				'dim_d'			 => $hour['dim_d'],
+				'grouping_id'	 => $hour['grouping_id'],
 				'grouping_descr' => $hour['grouping_descr'],
-				'category' => $hour['wo_hour_cat'],
-				'cat_per_cent' => $hour['cat_per_cent']
+				'category'		 => $hour['wo_hour_cat'],
+				'cat_per_cent'	 => $hour['cat_per_cent']
 			);
 
 			$value_set = $this->db->validate_update($value_set);
 
 			$this->db->query("UPDATE fm_wo_hours set $value_set WHERE id= '" . $hour['hour_id'] . "'", __LINE__, __FILE__);
 
-			$receipt['hour_id'] = $hour['hour_id'];
-			$receipt['message'][] = array('msg' => lang('hour %1 has been edited', $hour['hour_id']));
+			$receipt['hour_id']		 = $hour['hour_id'];
+			$receipt['message'][]	 = array('msg' => lang('hour %1 has been edited', $hour['hour_id']));
 			return $receipt;
 		}
 
@@ -698,10 +698,10 @@
 
 		function get_email( $vendor_id = 0 )
 		{
-			$vendor_id = (int)$vendor_id;
+			$vendor_id	 = (int)$vendor_id;
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.vendor');
 			$this->db->query("SELECT column_name FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND datatype='email'", __LINE__, __FILE__);
-			$email_list = array();
+			$email_list	 = array();
 			while ($this->db->next_record())
 			{
 				$this->db2->query("SELECT " . $this->db->f('column_name') . " FROM fm_vendor WHERE id=$vendor_id", __LINE__, __FILE__);
@@ -752,7 +752,7 @@
 		{
 			if (is_array($data))
 			{
-				$id = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
+				$id			 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
 				$calculation = (isset($data['calculation']) ? $data['calculation'] : 0);
 			}
 
@@ -762,17 +762,17 @@
 			if ($calculation > 0)
 			{
 				$soworkorder = CreateObject('property.soworkorder');
-				$config = CreateObject('phpgwapi.config', 'property');
+				$config		 = CreateObject('phpgwapi.config', 'property');
 				$config->read();
-				$tax = 1 + (($config->config_data['fm_tax']) / 100);
+				$tax		 = 1 + (($config->config_data['fm_tax']) / 100);
 				$calculation = $calculation * $tax;
 
 				$this->db->query("UPDATE fm_workorder SET combined_cost = '{$calculation}' WHERE id = '{$id}'", __LINE__, __FILE__);
 
 				$this->db->query("SELECT sum(budget) AS budget, sum(contract_sum) as contract_sum FROM fm_workorder_budget WHERE order_id = '{$id}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$budget = $this->db->f('budget');
-				$contract_sum = $this->db->f('contract_sum');
+				$budget			 = $this->db->f('budget');
+				$contract_sum	 = $this->db->f('contract_sum');
 
 				$this->db->query("SELECT periodization_id, contract_sum"
 					. " FROM fm_workorder {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
@@ -780,8 +780,8 @@
 
 				$this->db->next_record();
 
-				$periodization_id = $this->db->f('periodization_id');
-				$contract_sum = $this->db->f('contract_sum');
+				$periodization_id	 = $this->db->f('periodization_id');
+				$contract_sum		 = $this->db->f('contract_sum');
 				if (!abs($contract_sum) > 0)
 				{
 					$soworkorder->_update_order_budget($id, date('Y'), $periodization_id, $budget, $contract_sum, $calculation);

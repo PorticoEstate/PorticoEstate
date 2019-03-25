@@ -35,6 +35,7 @@
 
 	class hent_leverandorer_fra_UBW_BK extends property_cron_parent
 	{
+
 		var $b_accounts = array();
 
 		public function __construct()
@@ -42,10 +43,10 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('property');
-			$this->function_msg = 'Sjekk manglende ordreregistering i Agresso fra Portico';
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$this->sub_location	 = lang('property');
+			$this->function_msg	 = 'Sjekk manglende ordreregistering i Agresso fra Portico';
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
 		}
 
 		function execute()
@@ -59,11 +60,10 @@
 			$this->update_vendor();
 
 
-			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
-			$this->receipt['message'][] = array('msg' => $msg);
-
+			$this->receipt['message'][]	 = array('msg' => $msg);
 		}
 
 		function cron_log( $receipt = '' )
@@ -82,7 +82,6 @@
 				. "VALUES ($insert_values)";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
-
 
 		function update_vendor()
 		{
@@ -135,8 +134,7 @@ SQL;
 			/**
 			 * remove duplicates
 			 */
-
-			if(empty($values[0]['apar_id']))
+			if (empty($values[0]['apar_id']))
 			{
 				_debug_array($values);
 				$error = true;
@@ -148,97 +146,97 @@ SQL;
 			}
 
 			unset($entry);
-		/*
-			[_recno] => 0
-			[_section] => D
-			[tab] => A
-			[address] => Postboks 6227
-			[apar_id] => 9901
-			[apar_name] => Bykassen (BY)
-			[comp_reg_no] => 964338531
-			[bank_account] => 52100539187
-			[zip_code] => 5893
-			[place] => BERGEN
-			[e_mail] => agresso.kunde@bergen.kommune.no
-			[status] => N
-		 */
+			/*
+			  [_recno] => 0
+			  [_section] => D
+			  [tab] => A
+			  [address] => Postboks 6227
+			  [apar_id] => 9901
+			  [apar_name] => Bykassen (BY)
+			  [comp_reg_no] => 964338531
+			  [bank_account] => 52100539187
+			  [zip_code] => 5893
+			  [place] => BERGEN
+			  [e_mail] => agresso.kunde@bergen.kommune.no
+			  [status] => N
+			 */
 
 			$valueset = array();
 
 			foreach ($vendors as $key => $entry)
 			{
-				$email_arr = explode(';', $entry['e_mail']);
-				$valueset[] = array
+				$email_arr	 = explode(';', $entry['e_mail']);
+				$valueset[]	 = array
 					(
-					1 => array
+					1	 => array
 						(
-						'value' => (int)$entry['apar_id'],
-						'type' => PDO::PARAM_INT
+						'value'	 => (int)$entry['apar_id'],
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array
+					2	 => array
 						(
-						'value' => $entry['status'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['status'],
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array
+					3	 => array
 						(
-						'value' => $entry['apar_name'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['apar_name'],
+						'type'	 => PDO::PARAM_STR
 					),
-					4 => array
+					4	 => array
 						(
-						'value' => $entry['address'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['address'],
+						'type'	 => PDO::PARAM_STR
 					),
-					5 => array
+					5	 => array
 						(
-						'value' => $entry['zip_code'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['zip_code'],
+						'type'	 => PDO::PARAM_STR
 					),
-					6 => array
+					6	 => array
 						(
-						'value' => $entry['place'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['place'],
+						'type'	 => PDO::PARAM_STR
 					),
-					7 => array
+					7	 => array
 						(
-						'value' => $entry['comp_reg_no'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['comp_reg_no'],
+						'type'	 => PDO::PARAM_STR
 					),
-					8 => array
+					8	 => array
 						(
-						'value' => $entry['bank_account'],
-						'type' => PDO::PARAM_STR
+						'value'	 => $entry['bank_account'],
+						'type'	 => PDO::PARAM_STR
 					),
-					9 => array
+					9	 => array
 						(
-						'value' => $entry['status'] == 'N' ? 1 : 0,
-						'type' => PDO::PARAM_INT
+						'value'	 => $entry['status'] == 'N' ? 1 : 0,
+						'type'	 => PDO::PARAM_INT
 					),
-					10 => array
+					10	 => array
 						(
-						'value' => $email_arr[0],
-						'type' => PDO::PARAM_STR
+						'value'	 => $email_arr[0],
+						'type'	 => PDO::PARAM_STR
 					),
 				);
 			}
 
-			if($valueset && !$error)
+			if ($valueset && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
 
-/*
-            [leverandornummer] => 9906
-            [status] => N
-            [navn] => Bergen Vann KF (BV)
-            [adresse] => Postboks 7700
-            [postnummer] => 5020
-            [sted] => BERGEN
-            [organisasjonsNr] => 987328096
-            [bankkontoNr] => 52020801786
-            [aktiv] => 1
-*/
+			/*
+			  [leverandornummer] => 9906
+			  [status] => N
+			  [navn] => Bergen Vann KF (BV)
+			  [adresse] => Postboks 7700
+			  [postnummer] => 5020
+			  [sted] => BERGEN
+			  [organisasjonsNr] => 987328096
+			  [bankkontoNr] => 52020801786
+			  [aktiv] => 1
+			 */
 //			_debug_array($valueset);die();
 
 
@@ -251,56 +249,56 @@ SQL;
 			while ($GLOBALS['phpgw']->db->next_record())
 			{
 				$vendors[] = array(
-					1 => array(
-						'value' => (int)$GLOBALS['phpgw']->db->f('id'),
-						'type' => PDO::PARAM_INT
+					1	 => array(
+						'value'	 => (int)$GLOBALS['phpgw']->db->f('id'),
+						'type'	 => PDO::PARAM_INT
 					),
-					2 => array(
-						'value' => $GLOBALS['phpgw']->db->f('navn'),
-						'type' => PDO::PARAM_STR
+					2	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('navn'),
+						'type'	 => PDO::PARAM_STR
 					),
-					3 => array(
-						'value' => 1,
-						'type' => PDO::PARAM_INT
+					3	 => array(
+						'value'	 => 1,
+						'type'	 => PDO::PARAM_INT
 					),
-					4 => array(
-						'value' => 6,
-						'type' => PDO::PARAM_INT
+					4	 => array(
+						'value'	 => 6,
+						'type'	 => PDO::PARAM_INT
 					),
-					5 => array(
-						'value' => (int)$GLOBALS['phpgw']->db->f('aktiv'),
-						'type' => PDO::PARAM_INT
+					5	 => array(
+						'value'	 => (int)$GLOBALS['phpgw']->db->f('aktiv'),
+						'type'	 => PDO::PARAM_INT
 					),
-					6 => array(
-						'value' => $GLOBALS['phpgw']->db->f('adresse'),
-						'type' => PDO::PARAM_STR
+					6	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('adresse'),
+						'type'	 => PDO::PARAM_STR
 					),
-					7 => array(
-						'value' => $GLOBALS['phpgw']->db->f('postnummer'),
-						'type' => PDO::PARAM_STR
+					7	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('postnummer'),
+						'type'	 => PDO::PARAM_STR
 					),
-					8 => array(
-						'value' => $GLOBALS['phpgw']->db->f('sted'),
-						'type' => PDO::PARAM_STR
+					8	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('sted'),
+						'type'	 => PDO::PARAM_STR
 					),
-					9 => array(
-						'value' => $GLOBALS['phpgw']->db->f('organisasjonsnr'),
-						'type' => PDO::PARAM_STR
+					9	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('organisasjonsnr'),
+						'type'	 => PDO::PARAM_STR
 					),
-					10 => array(
-						'value' => $GLOBALS['phpgw']->db->f('bankkontonr'),
-						'type' => PDO::PARAM_STR
+					10	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('bankkontonr'),
+						'type'	 => PDO::PARAM_STR
 					),
-					11 => array(
-						'value' => $GLOBALS['phpgw']->db->f('email'),
-						'type' => PDO::PARAM_STR
+					11	 => array(
+						'value'	 => $GLOBALS['phpgw']->db->f('email'),
+						'type'	 => PDO::PARAM_STR
 					)
 				);
 			}
 			$sql = 'INSERT INTO fm_vendor (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr, email)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-			if($valueset && !$error)
+			if ($valueset && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
 
@@ -320,7 +318,6 @@ SQL;
 					. " FROM fm_vendor_temp"
 					. " WHERE fm_vendor.id = fm_vendor_temp.id"
 					. " AND length(fm_vendor_temp.email) !=0  AND (fm_vendor.email IS NULL OR length(fm_vendor.email) = 0)", __LINE__, __FILE__);
-
 			}
 
 			$GLOBALS['phpgw']->db->transaction_commit();
@@ -330,13 +327,13 @@ SQL;
 		{
 			$this->debug = true;
 
-			static $first_connect = false;
-			$username = 'WEBSER';
-			$password = 'wser10';
-			$client = 'BY';
-			$TemplateId = '6039'; //Spørring på leverandører
+			static $first_connect	 = false;
+			$username				 = 'WEBSER';
+			$password				 = 'wser10';
+			$client					 = 'BY';
+			$TemplateId				 = '6039'; //Spørring på leverandører
 
-			$service = new \QueryEngineV201101(array('trace' => 1));
+			$service	 = new \QueryEngineV201101(array('trace' => 1));
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
 			$Credentials->setPassword($password);
@@ -346,7 +343,7 @@ SQL;
 			try
 			{
 				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
-				if(!$first_connect)
+				if (!$first_connect)
 				{
 //					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
 //					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
@@ -361,25 +358,24 @@ SQL;
 			}
 
 			//Kriterier
-	//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
+			//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
 
 			/**
 			 * Funkar inte
 			 */
 			//$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[1]->setFromValue($vendor_id)->setToValue($vendor_id);
 			//$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue($vendor_id)->setToValue($vendor_id);
-	
 			// Create the InputForTemplateResult class and set values
-			$input = new InputForTemplateResult($TemplateId);
-			$options = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
-			$options->RemoveHiddenColumns = true;
-			$options->ShowDescriptions = true;
-			$options->Aggregated = false;
-			$options->OverrideAggregation= false;
-			$options->CalculateFormulas= false;
-			$options->FormatAlternativeBreakColumns= false;
-			$options->FirstRecord= false;
-			$options->LastRecord= false;
+			$input									 = new InputForTemplateResult($TemplateId);
+			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
+			$options->RemoveHiddenColumns			 = true;
+			$options->ShowDescriptions				 = true;
+			$options->Aggregated					 = false;
+			$options->OverrideAggregation			 = false;
+			$options->CalculateFormulas				 = false;
+			$options->FormatAlternativeBreakColumns	 = false;
+			$options->FirstRecord					 = false;
+			$options->LastRecord					 = false;
 
 			$input->setTemplateResultOptions($options);
 			// Get new values to SearchCriteria (if that’s what you want to do
@@ -392,15 +388,15 @@ SQL;
 			echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
 			echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
 
-			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse	 = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('utf-8');
 			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result = $xmlparse->parse($data);
+			$var_result	 = $xmlparse->parse($data);
 
-			if($var_result)
+			if ($var_result)
 			{
 				$count = count($var_result['Agresso'][0]['AgressoQE']);
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("{$count} leverandører funnet" . PHP_EOL);
 				}
@@ -408,7 +404,7 @@ SQL;
 			}
 			else
 			{
-		//		if($this->debug)
+				//		if($this->debug)
 				{
 					_debug_array("Leverandører IKKE funnet" . PHP_EOL);
 				}
@@ -421,11 +417,10 @@ SQL;
 		function get_vendors()
 		{
 			//Data, connection, auth
-			$soapUser = "WEBSER";  //  username
-			$soapPassword = "wser10"; // password
-			$CLIENT = 'BY';
-			$TemplateId = '6039'; //Spørring bilag_Portico ordrer
-
+			$soapUser		 = "WEBSER";  //  username
+			$soapPassword	 = "wser10"; // password
+			$CLIENT			 = 'BY';
+			$TemplateId		 = '6039'; //Spørring bilag_Portico ordrer
 			// xml post structure
 
 			$soap_request = <<<XML
@@ -587,14 +582,14 @@ SQL;
 XML;
 
 			$headers = array(
-			"POST /UBW-webservices/service.svc HTTP/1.1",
-			"Host: agrweb04a.adm.bgo",
-			"Accept: text/xml",
-			"Cache-Control: no-cache",
-			"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
-			"Content-Type: text/xml; charset=utf-8",
-			"SOAPAction: http://services.agresso.com/QueryEngineService/QueryEngineV201101/GetTemplateResultAsDataSet",
-			"Content-length: ".strlen($soap_request)
+				"POST /UBW-webservices/service.svc HTTP/1.1",
+				"Host: agrweb04a.adm.bgo",
+				"Accept: text/xml",
+				"Cache-Control: no-cache",
+				"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
+				"Content-Type: text/xml; charset=utf-8",
+				"SOAPAction: http://services.agresso.com/QueryEngineService/QueryEngineV201101/GetTemplateResultAsDataSet",
+				"Content-length: " . strlen($soap_request)
 			);
 
 //			$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
@@ -608,33 +603,32 @@ XML;
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_request);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT,10);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
-			$response = curl_exec($ch);
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$response	 = curl_exec($ch);
+			$httpCode	 = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
 			// converting
-			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"),"",$response);
+			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"), "", $response);
 			// convertingc to XML
 
-			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse	 = CreateObject('property.XmlToArray');
 			$xmlparse->setEncoding('utf-8');
 			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result = $xmlparse->parse($response1);
-			if(!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
+			$var_result	 = $xmlparse->parse($response1);
+			if (!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
 			{
-				$ret = $var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE'];
-				$count = count($ret);
-			//	if($this->debug)
+				$ret	 = $var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE'];
+				$count	 = count($ret);
+				//	if($this->debug)
 				{
 					_debug_array("{$count} leverandører funnet" . PHP_EOL);
 				}
-
 			}
 			else
 			{
-			//	if($this->debug)
+				//	if($this->debug)
 				{
 					_debug_array("Leverandører IKKE funnet" . PHP_EOL);
 				}
@@ -643,5 +637,4 @@ XML;
 
 			return $ret;
 		}
-
 	}

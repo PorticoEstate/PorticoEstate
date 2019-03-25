@@ -39,8 +39,8 @@
 		function lag_lang_filer()
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->db = $this->bocommon->new_db();
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->db		 = $this->bocommon->new_db();
 		}
 
 		function pre_run( $data = '' )
@@ -48,7 +48,7 @@
 			if ($data['enabled'] == 1)
 			{
 				$confirm = true;
-				$cron = true;
+				$cron	 = true;
 			}
 			else
 			{
@@ -70,35 +70,35 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.custom_functions.index',
-				'function' => $this->function_name,
-				'execute' => $execute,
+				'function'	 => $this->function_name,
+				'execute'	 => $execute,
 			);
 
 			if (!$execute)
 			{
 				$lang_confirm_msg = lang('do you want to perform this action');
 			}
-			$lang_yes = lang('yes');
+			$lang_yes	 = lang('yes');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm_custom'));
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-			$data = array
+			$data		 = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action' => $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'message' => $this->receipt['message'],
-				'lang_confirm_msg' => $lang_confirm_msg,
-				'lang_yes' => $lang_yes,
-				'lang_yes_statustext' => 'lag_lang_filer fra database',
-				'lang_no_statustext' => 'tilbake',
-				'lang_no' => lang('no'),
-				'lang_done' => 'Avbryt',
-				'lang_done_statustext' => 'tilbake'
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/admin/index.php'),
+				'run_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'message'				 => $this->receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => 'lag_lang_filer fra database',
+				'lang_no_statustext'	 => 'tilbake',
+				'lang_no'				 => lang('no'),
+				'lang_done'				 => 'Avbryt',
+				'lang_done_statustext'	 => 'tilbake'
 			);
 
-			$appname = lang('location');
-			$function_msg = 'lag_lang_filer';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname										 = lang('location');
+			$function_msg									 = 'lag_lang_filer';
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -113,10 +113,10 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$str.=$this->db->f('message_id') . "\t";
-				$str.=$this->db->f('app_name') . "\t";
-				$str.=$this->db->f('lang') . "\t";
-				$str.=$this->db->f('content') . "\n";
+				$str .= $this->db->f('message_id') . "\t";
+				$str .= $this->db->f('app_name') . "\t";
+				$str .= $this->db->f('lang') . "\t";
+				$str .= $this->db->f('content') . "\n";
 				$i++;
 			}
 

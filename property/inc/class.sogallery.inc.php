@@ -40,43 +40,43 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db = & $GLOBALS['phpgw']->db;
-			$this->_join = & $this->_db->join;
-			$this->_left_join = & $this->_db->left_join;
-			$this->_like = & $this->_db->like;
+			$this->account		 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->_db			 = & $GLOBALS['phpgw']->db;
+			$this->_join		 = & $this->_db->join;
+			$this->_left_join	 = & $this->_db->left_join;
+			$this->_like		 = & $this->_db->like;
 		}
 
 		function read( $data )
 		{
 			$valid_locations_data = $this->get_gallery_location();
 
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
-			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
-			$mime_type = isset($data['mime_type']) ? $data['mime_type'] : '';
-			$start_date = isset($data['start_date']) ? $data['start_date'] : 0;
-			$end_date = isset($data['end_date']) ? $data['end_date'] : 0;
-			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
+			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query			 = isset($data['query']) ? $data['query'] : '';
+			$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
+			$order			 = isset($data['order']) ? $data['order'] : '';
+			$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
+			$dry_run		 = isset($data['dry_run']) ? $data['dry_run'] : '';
+			$user_id		 = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
+			$mime_type		 = isset($data['mime_type']) ? $data['mime_type'] : '';
+			$start_date		 = isset($data['start_date']) ? $data['start_date'] : 0;
+			$end_date		 = isset($data['end_date']) ? $data['end_date'] : 0;
+			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
 			$valid_locations = isset($valid_locations_data) && $valid_locations_data ? $valid_locations_data : array();
-			$results = (isset($data['results']) ? $data['results'] : 0);
+			$results		 = (isset($data['results']) ? $data['results'] : 0);
 
 			if ($order)
 			{
 				switch ($order)
 				{
 					case 'id':
-						$_order = 'file_id';
+						$_order	 = 'file_id';
 						break;
 					case 'date':
-						$_order = 'created';
+						$_order	 = 'created';
 						break;
 					default:
-						$_order = $order;
+						$_order	 = $order;
 				}
 
 				$ordermethod = " ORDER BY $_order $sort";
@@ -86,8 +86,8 @@
 				$ordermethod = ' ORDER BY file_id ASC';
 			}
 
-			$filtermethod = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
-			$filtermethod .= " AND (phpgw_vfs.directory {$this->_like} '%/property%' OR phpgw_vfs.directory {$this->_like} '%/catch%')";
+			$filtermethod	 = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+			$filtermethod	 .= " AND (phpgw_vfs.directory {$this->_like} '%/property%' OR phpgw_vfs.directory {$this->_like} '%/catch%')";
 
 
 			$filtermethod .= " AND (phpgw_vfs.directory = 'This_one_is_to_block'";
@@ -111,17 +111,17 @@
 
 			if ($start_date)
 			{
-				$date_format = $this->_db->date_format();
-				$start_date = date($date_format, $start_date);
-				$end_date = date($date_format, $end_date);
-				$filtermethod .= " AND phpgw_vfs.created >= '$start_date' AND phpgw_vfs.created <= '$end_date'";
+				$date_format	 = $this->_db->date_format();
+				$start_date		 = date($date_format, $start_date);
+				$end_date		 = date($date_format, $end_date);
+				$filtermethod	 .= " AND phpgw_vfs.created >= '$start_date' AND phpgw_vfs.created <= '$end_date'";
 			}
 
 
 			if ($cat_id)
 			{
-				$cat_id = $this->_db->db_addslashes($cat_id);
-				$filtermethod .= " AND phpgw_vfs.directory {$this->_like} '%{$cat_id}%'";
+				$cat_id			 = $this->_db->db_addslashes($cat_id);
+				$filtermethod	 .= " AND phpgw_vfs.directory {$this->_like} '%{$cat_id}%'";
 			}
 
 			if ($query)
@@ -131,7 +131,7 @@
 				$querymethod = " AND phpgw_vfs.directory {$this->_like} '%/{$query}%'";
 			}
 
-			$sql = "SELECT * FROM  phpgw_vfs"
+			$sql				 = "SELECT * FROM  phpgw_vfs"
 				. " {$filtermethod} {$querymethod}";
 //                echo '<pre>'; print_r($sql); echo '</pre>';
 			//_debug_array($sql . $ordermethod);
@@ -154,20 +154,20 @@
 				{
 					$values[] = array
 						(
-						'id' => $this->_db->f('file_id'),
-						'owner_id' => $this->_db->f('owner_id'),
-						'createdby_id' => $this->_db->f('createdby_id'),
-						'modifiedby_id' => $this->_db->f('modifiedby_id'),
-						'created' => $this->_db->f('created'),
-						'modified' => $this->_db->f('modified'),
-						'size' => $this->_db->f('size'),
-						'mime_type' => $this->_db->f('mime_type', true),
-						'app' => $this->_db->f('app'),
-						'directory' => $this->_db->f('directory', true),
-						'name' => $this->_db->f('name'),
+						'id'			 => $this->_db->f('file_id'),
+						'owner_id'		 => $this->_db->f('owner_id'),
+						'createdby_id'	 => $this->_db->f('createdby_id'),
+						'modifiedby_id'	 => $this->_db->f('modifiedby_id'),
+						'created'		 => $this->_db->f('created'),
+						'modified'		 => $this->_db->f('modified'),
+						'size'			 => $this->_db->f('size'),
+						'mime_type'		 => $this->_db->f('mime_type', true),
+						'app'			 => $this->_db->f('app'),
+						'directory'		 => $this->_db->f('directory', true),
+						'name'			 => $this->_db->f('name'),
 						'link_directory' => $this->_db->f('link_directory', true),
-						'link_name' => $this->_db->f('link_name', true),
-						'version' => $this->_db->f('version')
+						'link_name'		 => $this->_db->f('link_name', true),
+						'version'		 => $this->_db->f('version')
 					);
 				}
 			}

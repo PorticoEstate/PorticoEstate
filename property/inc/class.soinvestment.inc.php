@@ -36,10 +36,10 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
+			$this->like		 = & $this->db->like;
 		}
 
 		function get_type_list()
@@ -49,8 +49,8 @@
 			while ($this->db->next_record())
 			{
 				$type_list[] = Array(
-					'id' => $this->db->f('entity_type'),
-					'name' => lang($this->db->f('entity_type'))
+					'id'	 => $this->db->f('entity_type'),
+					'name'	 => lang($this->db->f('entity_type'))
 				);
 			}
 			return $type_list;
@@ -68,14 +68,14 @@
 				{
 					$start = 0;
 				}
-				$filter = (isset($data['filter']) ? $data['filter'] : '');
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : '');
+				$filter			 = (isset($data['filter']) ? $data['filter'] : '');
+				$query			 = (isset($data['query']) ? $data['query'] : '');
+				$sort			 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order			 = (isset($data['order']) ? $data['order'] : '');
+				$cat_id			 = (isset($data['cat_id']) ? $data['cat_id'] : '');
 				$part_of_town_id = (isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '');
-				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$allrows		 = (isset($data['allrows']) ? $data['allrows'] : '');
+				$results		 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 			if (!$cat_id)
 			{
@@ -143,7 +143,7 @@
 
 				if (!$allrows)
 				{
-					$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+					$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 				}
 				else
 				{
@@ -152,22 +152,22 @@
 			}
 
 
-			$investment = array();
-			$i = 0;
+			$investment	 = array();
+			$i			 = 0;
 			while ($this->db->next_record())
 			{
-				$investment[$i]['counter'] = $i;
+				$investment[$i]['counter']		 = $i;
 				$investment[$i]['location_code'] = $this->db->f('location_code');
-				$investment[$i]['entity_id'] = $this->db->f('entity_id');
+				$investment[$i]['entity_id']	 = $this->db->f('entity_id');
 				$investment[$i]['investment_id'] = $this->db->f('invest_id');
-				$investment[$i]['district_id'] = $this->db->f('district_id');
-				$investment[$i]['part_of_town'] = $this->db->f('part_of_town');
-				$investment[$i]['descr'] = $this->db->f('descr');
+				$investment[$i]['district_id']	 = $this->db->f('district_id');
+				$investment[$i]['part_of_town']	 = $this->db->f('part_of_town');
+				$investment[$i]['descr']		 = $this->db->f('descr');
 				$investment[$i]['initial_value'] = $this->db->f('initial_value');
-				$investment[$i]['value'] = $this->db->f('value');
-				$investment[$i]['this_index'] = $this->db->f('this_index');
-				$investment[$i]['index_count'] = $this->db->f('index_count');
-				$investment[$i]['date'] = $this->db->f('index_date');
+				$investment[$i]['value']		 = $this->db->f('value');
+				$investment[$i]['this_index']	 = $this->db->f('this_index');
+				$investment[$i]['index_count']	 = $this->db->f('index_count');
+				$investment[$i]['date']			 = $this->db->f('index_date');
 				if ($cat_id == 'property')
 				{
 					$investment[$i]['entity_name'] = $this->db->f('name');
@@ -190,42 +190,42 @@
 			//_debug_array($values);
 
 			$receipt = array();
-			
-                        if (is_array($document['location']))
-                        {
-                            foreach($document['location'] as $input_name => $value)
+
+			if (is_array($document['location']))
 			{
-				if ($value)
+				foreach ($document['location'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if ($value)
+					{
+						$cols[]	 = $input_name;
+						$vals[]	 = $value;
+					}
 				}
-			}
 			}
 
-                        if (is_array($document['extra']))
-                        {
-                            foreach($document['extra'] as $input_name => $value)
+			if (is_array($document['extra']))
 			{
-				if ($value)
+				foreach ($document['extra'] as $input_name => $value)
 				{
-					$cols[] = $input_name;
-					$vals[] = $value;
+					if ($value)
+					{
+						$cols[]	 = $input_name;
+						$vals[]	 = $value;
+					}
 				}
-			}
 			}
 
 			if ($cols)
 			{
-				$cols = "," . implode(",", $cols);
-				$vals = ",'" . implode("','", $vals) . "'";
+				$cols	 = "," . implode(",", $cols);
+				$vals	 = ",'" . implode("','", $vals) . "'";
 			}
 
 			if ($values['street_name'])
 			{
-				$address[] = $values['street_name'];
-				$address[] = $values['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address[]	 = $values['street_name'];
+				$address[]	 = $values['street_number'];
+				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (!$address)
@@ -234,14 +234,14 @@
 			}
 
 
-			$period = $values['period'];
-			$type = $values['funding'];
-			$initial_value = $values['initial_value'];
-			$descr = $this->db->db_addslashes($values['descr']);
-			$date = $values['date'];
-			$location_code = $values['location_code'];
-			$entity_id = $values['entity_id'];
-			$entity_type = $values['entity_type'];
+			$period			 = $values['period'];
+			$type			 = $values['funding'];
+			$initial_value	 = $values['initial_value'];
+			$descr			 = $this->db->db_addslashes($values['descr']);
+			$date			 = $values['date'];
+			$location_code	 = $values['location_code'];
+			$entity_id		 = $values['entity_id'];
+			$entity_type	 = $values['entity_type'];
 
 
 			$this->db->query("select max(invest_id) as max_invest_id from fm_investment Where entity_id= '$entity_id'");
@@ -259,9 +259,9 @@
 
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('Investment added !'));
-				$receipt['message'][] = array('msg' => lang('Entity ID') . ' ' . $entity_id);
-				$receipt['message'][] = array('msg' => lang('Investment ID:') . ' ' . $next_invest_id);
+				$receipt['message'][]	 = array('msg' => lang('Investment added !'));
+				$receipt['message'][]	 = array('msg' => lang('Entity ID') . ' ' . $entity_id);
+				$receipt['message'][]	 = array('msg' => lang('Investment ID:') . ' ' . $next_invest_id);
 			}
 			return $receipt;
 		}
@@ -329,18 +329,18 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			$investment = array();
-			$i = 0;
+			$investment	 = array();
+			$i			 = 0;
 			while ($this->db->next_record())
 			{
-				$investment[$i]['descr'] = $this->db->f('descr');
-				$investment[$i]['initial_value'] = $this->db->f('initial_value');
-				$investment[$i]['value'] = $this->db->f('value');
-				$investment[$i]['this_index'] = $this->db->f('this_index');
-				$investment[$i]['current_index'] = $this->db->f('current_index');
-				$investment[$i]['index_count'] = $this->db->f('index_count');
-				$investment[$i]['date'] = $this->db->f('index_date');
-				$investment[$i]['this_write_off'] = round(($this->db->f('this_index') * $this->db->f('initial_value')), 2);
+				$investment[$i]['descr']			 = $this->db->f('descr');
+				$investment[$i]['initial_value']	 = $this->db->f('initial_value');
+				$investment[$i]['value']			 = $this->db->f('value');
+				$investment[$i]['this_index']		 = $this->db->f('this_index');
+				$investment[$i]['current_index']	 = $this->db->f('current_index');
+				$investment[$i]['index_count']		 = $this->db->f('index_count');
+				$investment[$i]['date']				 = $this->db->f('index_date');
+				$investment[$i]['this_write_off']	 = round(($this->db->f('this_index') * $this->db->f('initial_value')), 2);
 				$i++;
 			}
 

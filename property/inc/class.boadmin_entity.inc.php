@@ -80,55 +80,54 @@
 		protected $custom;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
-			'get_category_list' => true,
-			'get_attrib_list' => true
+			'read'				 => true,
+			'read_single'		 => true,
+			'save'				 => true,
+			'delete'			 => true,
+			'get_category_list'	 => true,
+			'get_attrib_list'	 => true
 		);
 		var $type_app;
 
 		function __construct( $session = false )
 		{
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->custom = createObject('property.custom_fields');
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->custom	 = createObject('property.custom_fields');
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$type = phpgw::get_var('type');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$entity_id = phpgw::get_var('entity_id', 'int');
+			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		 = phpgw::get_var('query');
+			$sort		 = phpgw::get_var('sort');
+			$order		 = phpgw::get_var('order');
+			$type		 = phpgw::get_var('type');
+			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
+			$entity_id	 = phpgw::get_var('entity_id', 'int');
 
-			$this->so = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
-			$this->type_app = $this->so->get_type_app();
+			$this->so		 = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
+			$this->type_app	 = $this->so->get_type_app();
 
-			$this->start = $start ? $start : 0;
-			$this->query = isset($query) ? $query : $this->query;
-			$this->sort = isset($sort) && $sort ? $sort : '';
-			$this->order = isset($order) && $order ? $order : '';
-			$this->type = isset($type) && $type && isset($this->type_app[$type]) ? $type : 'entity';
-			$this->cat_id = isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->start	 = $start ? $start : 0;
+			$this->query	 = isset($query) ? $query : $this->query;
+			$this->sort		 = isset($sort) && $sort ? $sort : '';
+			$this->order	 = isset($order) && $order ? $order : '';
+			$this->type		 = isset($type) && $type && isset($this->type_app[$type]) ? $type : 'entity';
+			$this->cat_id	 = isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id = isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->allrows = phpgw::get_var('allrows', 'bool');
-			$this->so->type = $this->type;
-
+			$this->allrows	 = phpgw::get_var('allrows', 'bool');
+			$this->so->type	 = $this->type;
 		}
 
 		function get_location_level_list( $selected = '' )
 		{
 
-			$soadmin_location = CreateObject('property.soadmin_location');
-			$location_types = $soadmin_location->select_location_type();
-			$max_location_type = count($location_types);
+			$soadmin_location	 = CreateObject('property.soadmin_location');
+			$location_types		 = $soadmin_location->select_location_type();
+			$max_location_type	 = count($location_types);
 
 			for ($i = 1; $i <= $max_location_type; $i++)
 			{
-				$location[$i]['id'] = $i;
-				$location[$i]['name'] = $i . '-' . $location_types[($i - 1)]['name'];
+				$location[$i]['id']		 = $i;
+				$location[$i]['name']	 = $i . '-' . $location_types[($i - 1)]['name'];
 			}
 
 			return $this->bocommon->select_list($selected, $location);
@@ -142,26 +141,26 @@
 
 		function get_entity_list_2( $selected = '' )
 		{
-			$list[0]['id'] = 'project';
+			$list[0]['id']	 = 'project';
 			$list[0]['name'] = 'project';
-			$list[1]['id'] = 'ticket';
+			$list[1]['id']	 = 'ticket';
 			$list[1]['name'] = 'ticket';
-			$list[2]['id'] = 'document';
+			$list[2]['id']	 = 'document';
 			$list[2]['name'] = 'document';
-			$list[3]['id'] = 'request';
+			$list[3]['id']	 = 'request';
 			$list[3]['name'] = 'request';
-			$list[4]['id'] = 'investment';
+			$list[4]['id']	 = 'investment';
 			$list[4]['name'] = 'investment';
-			$list[5]['id'] = 's_agreement';
+			$list[5]['id']	 = 's_agreement';
 			$list[5]['name'] = 'service agreement';
 			return $this->bocommon->select_multi_list($selected, $list);
 		}
 
 		function get_entity_list_3( $selected = '' )
 		{
-			$list[0]['id'] = 'ticket';
+			$list[0]['id']	 = 'ticket';
 			$list[0]['name'] = 'ticket';
-			$list[1]['id'] = 'request';
+			$list[1]['id']	 = 'request';
 			$list[1]['name'] = 'request';
 			return $this->bocommon->select_multi_list($selected, $list);
 		}
@@ -176,7 +175,7 @@
 			#                'order'=> $this->order,
 			#                'allrows'=> $this->allrows
 			#            ));
-			$entity = $this->so->read($data);
+			$entity				 = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
 			return $entity;
 		}
@@ -193,7 +192,7 @@
 			  'entity_id' => $entity_id
 			  ));
 			 */
-			$category = $this->so->read_category($data);
+			$category			 = $this->so->read_category($data);
 			$this->total_records = $this->so->total_records;
 
 			return $category;
@@ -210,8 +209,8 @@
 		 */
 		public function get_attrib_list()
 		{
-			$entity_id = phpgw::get_var('entity_id');
-			$cat_id = phpgw::get_var('cat_id');
+			$entity_id	 = phpgw::get_var('entity_id');
+			$cat_id		 = phpgw::get_var('cat_id');
 
 			return $this->custom->find('property', ".entity.{$entity_id}.{$cat_id}", 0, '', '', '', true, true);
 		}
@@ -260,10 +259,10 @@
 				{
 					$values2 = array
 						(
-						'entity_id' => $values['entity_id'],
-						'cat_id' => $receipt['id'],
-						'category_template' => $values['category_template'],
-						'selected' => $values['template_attrib']
+						'entity_id'			 => $values['entity_id'],
+						'cat_id'			 => $receipt['id'],
+						'category_template'	 => $values['category_template'],
+						'selected'			 => $values['template_attrib']
 					);
 
 					$this->_add_attrib_from_template($values2);
@@ -274,28 +273,28 @@
 
 		protected function _add_attrib_from_template( $values )
 		{
-			$template_info = explode('_', $values['category_template']);
-			$template_entity_id = $template_info[0];
-			$template_cat_id = $template_info[1];
+			$template_info		 = explode('_', $values['category_template']);
+			$template_entity_id	 = $template_info[0];
+			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->read_attrib_group(array('entity_id' => $template_entity_id,
-				'cat_id' => $template_cat_id, 'allrows' => true));
+			$attrib_group_list = $this->read_attrib_group(array('entity_id'	 => $template_entity_id,
+				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
 				$group = array
 					(
-					'appname' => $this->type_app[$this->type],
-					'location' => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+					'appname'	 => $this->type_app[$this->type],
+					'location'	 => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
 					'group_name' => $attrib_group['name'],
-					'descr' => $attrib_group['descr'],
-					'remark' => $attrib_group['remark']
+					'descr'		 => $attrib_group['descr'],
+					'remark'	 => $attrib_group['remark']
 				);
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id,
-				'allrows' => true));
+			$attrib_list = $this->read_attrib(array('entity_id'	 => $template_entity_id, 'cat_id'	 => $template_cat_id,
+				'allrows'	 => true));
 
 			$template_attribs = array();
 			foreach ($attrib_list as $attrib)
@@ -308,8 +307,8 @@
 
 			foreach ($template_attribs as $attrib)
 			{
-				$attrib['appname'] = $this->type_app[$this->type];
-				$attrib['location'] = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+				$attrib['appname']	 = $this->type_app[$this->type];
+				$attrib['location']	 = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
 
 				$choices = array();
 				if (isset($attrib['choice']) && $attrib['choice'])
@@ -323,8 +322,8 @@
 				{
 					foreach ($choices as $choice)
 					{
-						$attrib['new_choice'] = $choice['value'];
-						$attrib['id'] = $id;
+						$attrib['new_choice']	 = $choice['value'];
+						$attrib['id']			 = $id;
 						$this->custom->edit($attrib);
 					}
 				}
@@ -360,8 +359,8 @@
 
 		function get_attrib_group_list( $entity_id, $cat_id, $selected )
 		{
-			$group_list = $this->read_attrib_group(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
-				'allrows' => true));
+			$group_list = $this->read_attrib_group(array('entity_id'	 => $entity_id, 'cat_id'	 => $cat_id,
+				'allrows'	 => true));
 
 			foreach ($group_list as &$group)
 			{
@@ -375,8 +374,8 @@
 
 		function read_attrib_group( $data = array() )
 		{
-			$entity_id = $data['entity_id'];
-			$cat_id = $data['cat_id'];
+			$entity_id	 = $data['entity_id'];
+			$cat_id		 = $data['cat_id'];
 			if ($data['allrows'])
 			{
 				$this->allrows = $data['allrows'];
@@ -395,16 +394,16 @@
 			{
 				$this->allrows = $data['allrows'];
 			}
-			$attrib = $this->custom->find(
-					$this->type_app[$this->type],
-					".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
-					$data['start'], $data['query'],
-					$data['sort'],
-					$data['order'],
-					$this->allrows,
-					false,
-					array(),
-					(int)$data['results']
+			$attrib				 = $this->custom->find(
+				$this->type_app[$this->type],
+	".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
+	$data['start'], $data['query'],
+	$data['sort'],
+	$data['order'],
+	$this->allrows,
+	false,
+	array(),
+	(int)$data['results']
 			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
@@ -432,9 +431,9 @@
 
 		public function save_attrib_group( $group, $action = '' )
 		{
-			$receipt = array();
-			$group['appname'] = $this->type_app[$this->type];
-			$group['location'] = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
+			$receipt			 = array();
+			$group['appname']	 = $this->type_app[$this->type];
+			$group['location']	 = ".{$this->type}.{$group['entity_id']}.{$group['cat_id']}";
 			if ($action == 'edit' && $group['id'])
 			{
 				if ($this->custom->edit_group($group))
@@ -456,30 +455,30 @@
 				}
 				else if ($id == -1)
 				{
-					$receipt['id'] = 0;
-					$receipt['error'][] = array('msg' => lang('group already exists, please choose another name'));
-					$receipt['error'][] = array('msg' => lang('Attribute group has NOT been saved'));
+					$receipt['id']		 = 0;
+					$receipt['error'][]	 = array('msg' => lang('group already exists, please choose another name'));
+					$receipt['error'][]	 = array('msg' => lang('Attribute group has NOT been saved'));
 					return $receipt;
 				}
 
-				$receipt['id'] = $id;
-				$receipt['message'][] = array('msg' => lang('group has been created'));
+				$receipt['id']			 = $id;
+				$receipt['message'][]	 = array('msg' => lang('group has been created'));
 				return $receipt;
 			}
 		}
 
 		public function save_attrib( $attrib, $action = '' )
 		{
-			$receipt = array();
-			$attrib['appname'] = $this->type_app[$this->type];
-			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
-			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'], $attrib['location']);
+			$receipt			 = array();
+			$attrib['appname']	 = $this->type_app[$this->type];
+			$attrib['location']	 = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";
+			$attrib_table		 = $GLOBALS['phpgw']->locations->get_attrib_table($attrib['appname'], $attrib['location']);
 			if ($action == 'edit' && $attrib['id'])
 			{
 				if ($this->custom->edit($attrib))
 				{
-					$receipt = $this->custom->receipt;
-					$receipt['message'][] = array('msg' => lang('Field has been updated'));
+					$receipt				 = $this->custom->receipt;
+					$receipt['message'][]	 = array('msg' => lang('Field has been updated'));
 					return $receipt;
 				}
 				$receipt['error'][] = array('msg' => lang('Unable to update field'));
@@ -495,14 +494,14 @@
 				}
 				else if ($id == -1)
 				{
-					$receipt['id'] = 0;
-					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-					$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+					$receipt['id']		 = 0;
+					$receipt['error'][]	 = array('msg' => lang('field already exists, please choose another name'));
+					$receipt['error'][]	 = array('msg' => lang('Attribute has NOT been saved'));
 					return $receipt;
 				}
 
-				$receipt['id'] = $id;
-				$receipt['message'][] = array('msg' => lang('Custom field has been created'));
+				$receipt['id']			 = $id;
+				$receipt['message'][]	 = array('msg' => lang('Custom field has been created'));
 				return $receipt;
 			}
 		}
@@ -538,8 +537,8 @@
 
 		function save_custom_function( $custom_function, $action = '' )
 		{
-			$receipt = array();
-			$custom_function['appname'] = $this->type_app[$this->type];
+			$receipt					 = array();
+			$custom_function['appname']	 = $this->type_app[$this->type];
 			if (!$custom_function['location'] && $custom_function['entity_id'] && $custom_function['cat_id'])
 			{
 				$custom_function['location'] = ".{$this->type}.{$custom_function['entity_id']}.{$custom_function['cat_id']}";

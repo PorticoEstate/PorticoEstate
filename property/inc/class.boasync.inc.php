@@ -43,16 +43,16 @@
 		var $allrows;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.soasync');
-			$this->socommon = CreateObject('property.socommon');
+			$this->so		 = CreateObject('property.soasync');
+			$this->socommon	 = CreateObject('property.socommon');
 
 			if ($session)
 			{
@@ -60,19 +60,19 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	 = phpgw::get_var('query');
+			$sort	 = phpgw::get_var('sort');
+			$order	 = phpgw::get_var('order');
+			$cat_id	 = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 
-			$this->start = $start ? $start : 0;
-			$this->query = isset($query) ? $query : $this->query;
-			$this->sort = isset($sort) && $sort ? $sort : '';
-			$this->order = isset($order) && $order ? $order : '';
-			$this->cat_id = isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
+			$this->start	 = $start ? $start : 0;
+			$this->query	 = isset($query) ? $query : $this->query;
+			$this->sort		 = isset($sort) && $sort ? $sort : '';
+			$this->order	 = isset($order) && $order ? $order : '';
+			$this->cat_id	 = isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->allrows	 = isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata( $data )
@@ -87,12 +87,12 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'async');
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
+			$this->start	 = $data['start'];
+			$this->query	 = $data['query'];
+			$this->filter	 = $data['filter'];
+			$this->sort		 = $data['sort'];
+			$this->order	 = $data['order'];
+			$this->cat_id	 = $data['cat_id'];
 		}
 
 		function read( $data = array() )

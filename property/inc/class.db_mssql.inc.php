@@ -14,22 +14,22 @@
 	class db_mssql
 	{
 
-		var $Host = '';
-		var $Database = '';
-		var $User = '';
-		var $Password = '';
-		var $Link_ID = 0;
-		var $Query_ID = 0;
-		var $Record = array();
-		var $Row = 0;
-		var $VEOF = -1;
-		var $Errno = 0;
-		var $Error = '';
-		var $Auto_Free = 0;  ## set this to 1 to automatically free results
-		var $Debug = false;
-		var $auto_stripslashes = false;
-		protected $Transaction = false;
-		var $fetchmode = 'ASSOC';//'BOTH';
+		var $Host				 = '';
+		var $Database			 = '';
+		var $User				 = '';
+		var $Password			 = '';
+		var $Link_ID				 = 0;
+		var $Query_ID			 = 0;
+		var $Record				 = array();
+		var $Row					 = 0;
+		var $VEOF				 = -1;
+		var $Errno				 = 0;
+		var $Error				 = '';
+		var $Auto_Free			 = 0;  ## set this to 1 to automatically free results
+		var $Debug				 = false;
+		var $auto_stripslashes	 = false;
+		protected $Transaction		 = false;
+		var $fetchmode			 = 'ASSOC';//'BOTH';
 
 		function connect()
 		{
@@ -74,8 +74,8 @@
 			{
 				mssql_free_result($this->Query_ID);
 			}
-			$this->Query_ID = 0;
-			$this->VEOF = -1;
+			$this->Query_ID	 = 0;
+			$this->VEOF		 = -1;
 		}
 
 		function query( $Query_String, $line = '', $file = '' )
@@ -87,8 +87,8 @@
 				$this->connect();
 			}
 
-			$this->Query_ID = mssql_query($Query_String, $this->Link_ID);
-			$this->Row = 0;
+			$this->Query_ID	 = mssql_query($Query_String, $this->Link_ID);
+			$this->Row		 = 0;
 			if (!$this->Query_ID)
 			{
 				$this->halt("Invalid SQL: " . $Query_String, $line, $file);
@@ -115,9 +115,9 @@
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 
-			$Query_String = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
-			$Query_String = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
-			$Query_String = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
+			$Query_String	 = str_replace('SELECT ', 'SELECT TOP ', $Query_String);
+			$Query_String	 = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $Query_String);
+			$Query_String	 = str_replace('TOP ', 'TOP ' . ($offset + $num_rows) . ' ', $Query_String);
 
 			if ($this->Debug)
 			{
@@ -160,8 +160,8 @@
 						{
 							$this->Record[$i] = $rec[$i];
 						}
-						$o = mssql_fetch_field($this->Query_ID, $i);
-						$this->Record[$o->name] = $rec[$i];
+						$o						 = mssql_fetch_field($this->Query_ID, $i);
+						$this->Record[$o->name]	 = $rec[$i];
 					}
 				}
 				else
@@ -219,9 +219,9 @@
 
 		function metadata( $table )
 		{
-			$count = 0;
-			$id = 0;
-			$res = array();
+			$count	 = 0;
+			$id		 = 0;
+			$res	 = array();
 
 			$this->connect();
 			$id = mssql_query("select * from $table", $this->Link_ID);
@@ -234,8 +234,8 @@
 
 			for ($i = 0; $i < $count; $i++)
 			{
-				$info = mssql_fetch_field($id, $i);
-				$res[$info->name] = $info;
+				$info				 = mssql_fetch_field($id, $i);
+				$res[$info->name]	 = $info;
 				/*
 				  $res[$i]['table'] = $table;
 				  $res[$i]['name']  = $info->name;
@@ -383,12 +383,12 @@
 		function table_names()
 		{
 			$this->query("select name from sysobjects where type='u' and name != 'dtproperties'");
-			$i = 0;
-			while ($info = @mssql_fetch_row($this->Query_ID))
+			$i		 = 0;
+			while ($info	 = @mssql_fetch_row($this->Query_ID))
 			{
-				$return[$i]['table_name'] = $info[0];
-				$return[$i]['tablespace_name'] = $this->Database;
-				$return[$i]['database'] = $this->Database;
+				$return[$i]['table_name']		 = $info[0];
+				$return[$i]['tablespace_name']	 = $this->Database;
+				$return[$i]['database']			 = $this->Database;
 				$i++;
 			}
 			return $return;

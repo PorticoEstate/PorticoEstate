@@ -36,36 +36,36 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
+			$this->like		 = & $this->db->like;
 			$this->interlink = CreateObject('property.interlink');
 		}
 
 		function read( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : '0';
-			$status = isset($data['status']) && $data['status'] ? $data['status'] : 'open';
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$project_id = isset($data['project_id']) ? $data['project_id'] : '';
+			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$user_id	 = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : '0';
+			$status		 = isset($data['status']) && $data['status'] ? $data['status'] : 'open';
+			$query		 = isset($data['query']) ? $data['query'] : '';
+			$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order		 = isset($data['order']) ? $data['order'] : '';
+			$cat_id		 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$project_id	 = isset($data['project_id']) ? $data['project_id'] : '';
 			$district_id = isset($data['district_id']) ? (int)$data['district_id'] : 0;
-			$results = isset($data['results']) ? (int)$data['results'] : 0;
+			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if ($order)
 			{
 				switch ($order)
 				{
 					case 'claim_id':
-						$order = 'fm_tenant_claim.id';
+						$order	 = 'fm_tenant_claim.id';
 						break;
 					case 'name':
-						$order = 'last_name';
+						$order	 = 'last_name';
 						break;
 				}
 				$ordermethod = " order by $order $sort";
@@ -79,32 +79,32 @@
 			$where = 'WHERE';
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where fm_tenant_claim.category='$cat_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where fm_tenant_claim.category='$cat_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($project_id > 0)
 			{
-				$filtermethod .= " $where project_id='$project_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where project_id='$project_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($status && $status != 'all')
 			{
-				$filtermethod .= " $where fm_tenant_claim.status='{$status}'";
-				$where = 'AND';
+				$filtermethod	 .= " $where fm_tenant_claim.status='{$status}'";
+				$where			 = 'AND';
 			}
 
 			if ($user_id > 0)
 			{
-				$filtermethod .= " $where fm_tenant_claim.user_id={$user_id} ";
-				$where = 'AND';
+				$filtermethod	 .= " $where fm_tenant_claim.user_id={$user_id} ";
+				$where			 = 'AND';
 			}
 
 			if ($district_id > 0)
 			{
-				$filtermethod .= " $where  district_id=" . (int)$district_id;
-				$where = 'AND';
+				$filtermethod	 .= " $where  district_id=" . (int)$district_id;
+				$where			 = 'AND';
 			}
 
 			$querymethod = '';
@@ -113,12 +113,12 @@
 				$query = $this->db->db_addslashes($query);
 
 				$querymethod = " $where (address {$this->like} '%{$query}%'"
-				. " OR first_name {$this->like} '%{$query}%'"
-				. " OR last_name {$this->like} '%{$query}%'"
-				. " OR fm_project.location_code {$this->like} '{$query}%'"
-				. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
-				. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
-				. " OR project_id=" . (int)$query . ')';
+					. " OR first_name {$this->like} '%{$query}%'"
+					. " OR last_name {$this->like} '%{$query}%'"
+					. " OR fm_project.location_code {$this->like} '{$query}%'"
+					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
+					. " OR project_id=" . (int)$query . ')';
 			}
 
 			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
@@ -147,31 +147,31 @@
 			while ($this->db->next_record())
 			{
 				$claims[] = array
-				(
-					'claim_id' => $this->db->f('id'),
-					'project_id' => $this->db->f('project_id'),
-					'tenant_id' => $this->db->f('tenant_id'),
-					'name' => $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
-					'remark' => $this->db->f('remark', true),
-					'entry_date' => $this->db->f('entry_date'),
-					'category' => $this->db->f('category'),
-					'status' => $this->db->f('status'),
-					'user_id' => $this->db->f('user_id'),
-					'district_id' => $this->db->f('district_id'),
-					'address' => $this->db->f('address', true),
-					'category' => $this->db->f('category'),
-					'location_code' => $this->db->f('location_code'),
+					(
+					'claim_id'		 => $this->db->f('id'),
+					'project_id'	 => $this->db->f('project_id'),
+					'tenant_id'		 => $this->db->f('tenant_id'),
+					'name'			 => $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
+					'remark'		 => $this->db->f('remark', true),
+					'entry_date'	 => $this->db->f('entry_date'),
+					'category'		 => $this->db->f('category'),
+					'status'		 => $this->db->f('status'),
+					'user_id'		 => $this->db->f('user_id'),
+					'district_id'	 => $this->db->f('district_id'),
+					'address'		 => $this->db->f('address', true),
+					'category'		 => $this->db->f('category'),
+					'location_code'	 => $this->db->f('location_code'),
 					'claim_category' => $this->db->f('claim_category', true),
-					'amount' => $this->db->f('amount')
+					'amount'		 => $this->db->f('amount')
 				);
 			}
 
 			$soproject = CreateObject('property.soproject');
 			foreach ($claims as &$claim)
 			{
-				$project_budget = $soproject->get_budget($claim['project_id']);
-				$actual_cost = 0;
-				foreach ($project_budget  as $entry)
+				$project_budget	 = $soproject->get_budget($claim['project_id']);
+				$actual_cost	 = 0;
+				foreach ($project_budget as $entry)
 				{
 					$actual_cost += (float)$entry['actual_cost'];
 				}
@@ -197,11 +197,11 @@
 			{
 				$claims[] = array
 					(
-					'claim_id' => $this->db->f('id'),
+					'claim_id'	 => $this->db->f('id'),
 					'project_id' => $this->db->f('project_id'),
-					'tenant_id' => $this->db->f('tenant_id'),
+					'tenant_id'	 => $this->db->f('tenant_id'),
 					'entry_date' => $this->db->f('entry_date'),
-					'category' => $this->db->f('category')
+					'category'	 => $this->db->f('category')
 				);
 			}
 			return $claims;
@@ -225,22 +225,22 @@
 
 			if ($this->db->next_record())
 			{
-				$claim['id'] = $id;
-				$claim['project_id'] = $this->db->f('project_id');
-				$claim['tenant_id'] = $this->db->f('tenant_id');
-				$claim['remark'] = $this->db->f('remark',true);
-				$claim['entry_date'] = $this->db->f('entry_date');
-				$claim['cat_id'] = (int)$this->db->f('category');
-				$claim['amount'] = $this->db->f('amount');
-				$claim['b_account_id'] = $this->db->f('b_account_id');
-				$claim['cat_id'] = (int)$this->db->f('category');
-				$claim['status'] = $this->db->f('status');
+				$claim['id']			 = $id;
+				$claim['project_id']	 = $this->db->f('project_id');
+				$claim['tenant_id']		 = $this->db->f('tenant_id');
+				$claim['remark']		 = $this->db->f('remark', true);
+				$claim['entry_date']	 = $this->db->f('entry_date');
+				$claim['cat_id']		 = (int)$this->db->f('category');
+				$claim['amount']		 = $this->db->f('amount');
+				$claim['b_account_id']	 = $this->db->f('b_account_id');
+				$claim['cat_id']		 = (int)$this->db->f('category');
+				$claim['status']		 = $this->db->f('status');
 			}
 
 			$targets = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
 
-			$claim['workorders'] = $targets;
-			$claim['claim_issued'] = array();
+			$claim['workorders']	 = $targets;
+			$claim['claim_issued']	 = array();
 
 			foreach ($targets as $workorder_id)
 			{
@@ -258,7 +258,7 @@
 		{
 			$this->db->transaction_begin();
 
-			$claim['name'] = $this->db->db_addslashes($claim['name']);
+			$claim['name']	 = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] = str_replace(",", ".", $claim['amount']);
 
 			$values_insert = array(
@@ -279,18 +279,18 @@
 			$this->db->query("INSERT INTO fm_tenant_claim (project_id,tenant_id,amount,b_account_id,category,remark,user_id,entry_date,status) "
 				. "VALUES ($values_insert)", __LINE__, __FILE__);
 
-			$claim_id = $this->db->get_last_insert_id('fm_tenant_claim', 'id');
+			$claim_id			 = $this->db->get_last_insert_id('fm_tenant_claim', 'id');
 			$receipt['claim_id'] = $claim_id;
 
 			foreach ($claim['workorder'] as $workorder_id)
 			{
 				$interlink_data = array
 					(
-					'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
-					'location1_item_id' => $workorder_id,
-					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
-					'location2_item_id' => $claim_id,
-					'account_id' => $this->account
+					'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+					'location1_item_id'	 => $workorder_id,
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
+					'location2_item_id'	 => $claim_id,
+					'account_id'		 => $this->account
 				);
 
 				$this->interlink->add($interlink_data, $this->db);
@@ -317,16 +317,16 @@
 
 
 
-			$claim['name'] = $this->db->db_addslashes($claim['name']);
+			$claim['name']	 = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] = str_replace(",", ".", $claim['amount']);
 
 			$value_set = array(
-				'tenant_id' => $claim['tenant_id'],
-				'b_account_id' => $claim['b_account_id'],
-				'amount' => $claim['amount'],
-				'category' => $claim['cat_id'],
-				'status' => $claim['status'],
-				'remark' => $this->db->db_addslashes($claim['remark'])
+				'tenant_id'		 => $claim['tenant_id'],
+				'b_account_id'	 => $claim['b_account_id'],
+				'amount'		 => $claim['amount'],
+				'category'		 => $claim['cat_id'],
+				'status'		 => $claim['status'],
+				'remark'		 => $this->db->db_addslashes($claim['remark'])
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -348,11 +348,11 @@
 			{
 				$interlink_data = array
 					(
-					'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
-					'location1_item_id' => $workorder_id,
-					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
-					'location2_item_id' => $claim_id,
-					'account_id' => $this->account
+					'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+					'location1_item_id'	 => $workorder_id,
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
+					'location2_item_id'	 => $claim_id,
+					'account_id'		 => $this->account
 				);
 
 				$this->interlink->add($interlink_data, $this->db);
@@ -362,8 +362,8 @@
 
 			$this->db->transaction_commit();
 
-			$receipt['claim_id'] = $claim['claim_id'];
-			$receipt['message'][] = array('msg' => lang('claim %1 has been edited', $claim['claim_id']));
+			$receipt['claim_id']	 = $claim['claim_id'];
+			$receipt['message'][]	 = array('msg' => lang('claim %1 has been edited', $claim['claim_id']));
 			return $receipt;
 		}
 
@@ -375,10 +375,10 @@
 			$this->db->transaction_commit();
 		}
 
-		public function close($id)
+		public function close( $id )
 		{
-			$claim_id = (int)$id;
-			$historylog = CreateObject('property.historylog', 'tenant_claim');
+			$claim_id	 = (int)$id;
+			$historylog	 = CreateObject('property.historylog', 'tenant_claim');
 
 			$this->db->transaction_begin();
 

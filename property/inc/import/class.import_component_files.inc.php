@@ -21,33 +21,33 @@
 
 		public function __construct()
 		{
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->sogeneric_document = CreateObject('property.sogeneric_document');
+			$this->acl					 = & $GLOBALS['phpgw']->acl;
+			$this->db					 = & $GLOBALS['phpgw']->db;
+			$this->sogeneric_document	 = CreateObject('property.sogeneric_document');
 
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 
-			if(!empty($config['temp_files_components']))
+			if (!empty($config['temp_files_components']))
 			{
-				$temp_files_components = trim($config['temp_files_components'], '/');
-				$this->fakebase = "/{$temp_files_components}";
-				$this->path_upload_dir = "/$temp_files_components/";
+				$temp_files_components	 = trim($config['temp_files_components'], '/');
+				$this->fakebase			 = "/{$temp_files_components}";
+				$this->path_upload_dir	 = "/$temp_files_components/";
 			}
 			else
 			{
-				$this->fakebase = '/temp_files_components';
-				$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
+				$this->fakebase			 = '/temp_files_components';
+				$this->path_upload_dir	 = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
 			}
 
-			$this->location_code = phpgw::get_var('location_code');
-			$this->location_item_id = phpgw::get_var('location_item_id');
-			$this->attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
-			$this->doc_cat_id =  phpgw::get_var('doc_cat_id');
+			$this->location_code			 = phpgw::get_var('location_code');
+			$this->location_item_id			 = phpgw::get_var('location_item_id');
+			$this->attrib_name_componentID	 = phpgw::get_var('attribute_name_component_id');
+			$this->doc_cat_id				 = phpgw::get_var('doc_cat_id');
 
-			$this->last_files_added = array();
+			$this->last_files_added	 = array();
 			$this->list_component_id = array();
-			$this->paths_from_file = array();
-			$this->paths_empty = array();
+			$this->paths_from_file	 = array();
+			$this->paths_empty		 = array();
 		}
 
 		public function get_path_upload_dir()
@@ -79,7 +79,7 @@
 			}
 
 			$old = umask(0);
-			$rs = mkdir($this->path_upload_dir, 0755);
+			$rs	 = mkdir($this->path_upload_dir, 0755);
 			umask($old);
 
 			return $rs;
@@ -136,7 +136,7 @@
 
 		private function _search_in_last_files_added( $file_data )
 		{
-			$md5sum = $file_data['md5sum'];
+			$md5sum	 = $file_data['md5sum'];
 			$file_id = array_search($md5sum, $this->last_files_added);
 
 			return $file_id;
@@ -148,13 +148,13 @@
 
 			$message = array();
 
-			$uploaded_files = phpgwapi_cache::session_get('property', 'import_data');
-			$this->paths_from_file = phpgwapi_cache::session_get('property', 'paths_from_file');
+			$uploaded_files			 = phpgwapi_cache::session_get('property', 'import_data');
+			$this->paths_from_file	 = phpgwapi_cache::session_get('property', 'paths_from_file');
 
-			$count_new_relations = 0;
-			$count_relations_existing = 0;
-			$files_existing = array();
-			$count_new_files = 0;
+			$count_new_relations		 = 0;
+			$count_relations_existing	 = 0;
+			$files_existing				 = array();
+			$count_new_files			 = 0;
 
 			$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $this->location_code))));
 
@@ -289,16 +289,16 @@
 									$pos = stripos($file['path_string'], $file_data['path_string']);
 									if ($pos !== false)
 									{
-										$file_data['path_absolute'] = $file['path_absolute'];
-										$file_data['path_relative'] = $file['path_relative'];
-										$file_data['md5sum'] = $this->_generate_md5sum($file['path_absolute']);
+										$file_data['path_absolute']	 = $file['path_absolute'];
+										$file_data['path_relative']	 = $file['path_relative'];
+										$file_data['md5sum']		 = $this->_generate_md5sum($file['path_absolute']);
 									}
 								}
 								else
 								{
-									$file_data['path_absolute'] = $file['path_absolute'];
-									$file_data['path_relative'] = $file_data['path'];
-									$file_data['md5sum'] = $this->_generate_md5sum($file['path_absolute']);
+									$file_data['path_absolute']	 = $file['path_absolute'];
+									$file_data['path_relative']	 = $file_data['path'];
+									$file_data['md5sum']		 = $this->_generate_md5sum($file['path_absolute']);
 								}
 							}
 						}
@@ -320,9 +320,9 @@
 					$md5sum = $this->_generate_md5sum($file['path_absolute']);
 					if (!empty($md5sum))
 					{
-						$file['md5sum'] = $md5sum;
-						$component_files[$md5sum] = $file;
-						$this->paths_from_file[$md5sum][] = $file['path_relative'];
+						$file['md5sum']						 = $md5sum;
+						$component_files[$md5sum]			 = $file;
+						$this->paths_from_file[$md5sum][]	 = $file['path_relative'];
 					}
 					else
 					{
@@ -336,20 +336,20 @@
 		private function _un_zip( $file, $dir )
 		{
 			@set_time_limit(5 * 60);
-/*
-			$zip = new ZipArchive;
-			if ($zip->open($file) === TRUE)
-			{
-				$zip->extractTo($dir);
-				$zip->close();
-				return true;
-			}
-			else
-			{
-				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
-				return false;
-			}
- */
+			/*
+			  $zip = new ZipArchive;
+			  if ($zip->open($file) === TRUE)
+			  {
+			  $zip->extractTo($dir);
+			  $zip->close();
+			  return true;
+			  }
+			  else
+			  {
+			  $this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
+			  return false;
+			  }
+			 */
 
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
@@ -357,8 +357,8 @@
 				for ($i = 0; $i < $zip->numFiles; $i++)
 				{
 					//					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
-					$file_name = str_replace('..', '.', $zip->getNameIndex($i));
-					$copy_to = $dir . '/' . $file_name;
+					$file_name	 = str_replace('..', '.', $zip->getNameIndex($i));
+					$copy_to	 = $dir . '/' . $file_name;
 					if (!is_dir(dirname($copy_to)))
 					{
 						mkdir(dirname($copy_to), 0777, true);
@@ -390,8 +390,8 @@
 			$entries = $archive->getEntries();
 			foreach ($entries as $entry)
 			{
-				$file_name = str_replace('..', '.', $entry->getName());
-				$copy_to = $dir . '/' . $file_name;
+				$file_name	 = str_replace('..', '.', $entry->getName());
+				$copy_to	 = $dir . '/' . $file_name;
 				if (!is_dir(dirname($copy_to)))
 				{
 					mkdir(dirname($copy_to), 0777, true);
@@ -405,9 +405,9 @@
 
 		private function _uncompresed_file( $path_file )
 		{
-			$info = pathinfo($path_file);
-			$path_dir = $this->path_upload_dir . $info['filename'];
-			$result = true;
+			$info		 = pathinfo($path_file);
+			$path_dir	 = $this->path_upload_dir . $info['filename'];
+			$result		 = true;
 
 			if (!in_array($info['extension'], array('zip', 'rar')))
 			{
@@ -435,8 +435,8 @@
 
 		private function _get_uploaded_files()
 		{
-			$compressed_file = phpgw::get_var('compressed_file_check');
-			$compressed_file_name = phpgw::get_var('compressed_file_name');
+			$compressed_file		 = phpgw::get_var('compressed_file_check');
+			$compressed_file_name	 = phpgw::get_var('compressed_file_name');
 
 			$list_files = array();
 
@@ -455,8 +455,8 @@
 					return false;
 				}
 
-				$info = pathinfo($path_file);
-				$path_dir = $this->path_upload_dir . $info['filename'];
+				$info		 = pathinfo($path_file);
+				$path_dir	 = $this->path_upload_dir . $info['filename'];
 
 				if (!is_dir($path_dir))
 				{
@@ -494,14 +494,14 @@
 						$new_path = str_replace('..', '.', $path);
 						if (rename($path, $new_path))
 						{
-							$value = str_replace('..', '.', $value);
-							$path = $new_path;
+							$value	 = str_replace('..', '.', $value);
+							$path	 = $new_path;
 						}
 					}
 
-					$results[] = array('file' => $value,
-						'path_absolute' => $path,
-						'path_relative' => '/');
+					$results[] = array('file'			 => $value,
+						'path_absolute'	 => $path,
+						'path_relative'	 => '/');
 				}
 			}
 
@@ -510,19 +510,19 @@
 
 		private function _get_dir_contents( $dir, &$results = array() )
 		{
-			$content = scandir($dir);
-			$patrones = array('(\\/)', '(\\\\)', '(")');
-			$sustituciones = array('_', '_', '_');
+			$content		 = scandir($dir);
+			$patrones		 = array('(\\/)', '(\\\\)', '(")');
+			$sustituciones	 = array('_', '_', '_');
 
 			foreach ($content as $key => $value)
 			{
 				$path = realpath($dir . '/' . $value);
 				if (is_file($path))
 				{
-					$results[] = array('file' => $value,
-						'path_string' => preg_replace($patrones, $sustituciones, $path),
-						'path_absolute' => $path,
-						'path_relative' => substr($dir, strlen($this->path_upload_dir)));
+					$results[] = array('file'			 => $value,
+						'path_string'	 => preg_replace($patrones, $sustituciones, $path),
+						'path_absolute'	 => $path,
+						'path_relative'	 => substr($dir, strlen($this->path_upload_dir)));
 				}
 				else if ($value != "." && $value != "..")
 				{
@@ -535,11 +535,11 @@
 
 		public function get_relations()
 		{
-			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
+			$exceldata		 = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
 
-			$patrones = array('(\\/)', '(")');
-			$sustituciones = array('_', '_');
+			$patrones		 = array('(\\/)', '(")');
+			$sustituciones	 = array('_', '_');
 			foreach ($exceldata as $k => $row)
 			{
 				if (!$this->_valid_row($row))
@@ -547,21 +547,21 @@
 					continue;
 				}
 
-				$path_file = str_replace('..', '.', $row[(count($row) - 1)]);
-				$path_file = preg_replace($patrones, $sustituciones, $path_file);
-				$array_path = explode("\\", $path_file);
+				$path_file	 = str_replace('..', '.', $row[(count($row) - 1)]);
+				$path_file	 = preg_replace($patrones, $sustituciones, $path_file);
+				$array_path	 = explode("\\", $path_file);
 
-				$file_name = $array_path[count($array_path) - 1];
-				$path = implode("/", array_slice($array_path, 0, (count($array_path) - 1)));
+				$file_name	 = $array_path[count($array_path) - 1];
+				$path		 = implode("/", array_slice($array_path, 0, (count($array_path) - 1)));
 				$path_string = implode("_", $array_path);
 
 				$component_files[$row[0]][] = array(
-					'name' => $row[1],
-					'desription' => $row[2],
-					'file' => $file_name,
-					'path' => $path,
-					'path_string' => $path_string,
-					'row' => ($k + 1)
+					'name'			 => $row[1],
+					'desription'	 => $row[2],
+					'file'			 => $file_name,
+					'path'			 => $path,
+					'path_string'	 => $path_string,
+					'row'			 => ($k + 1)
 				);
 			}
 
@@ -584,8 +584,8 @@
 
 		private function _search_relations_with_components_location( $relations )
 		{
-			$count_new_relations = 0;
-			$count_relations_existing = 0;
+			$count_new_relations		 = 0;
+			$count_relations_existing	 = 0;
 			foreach ($relations as $k => $files)
 			{
 				if (empty($k))
@@ -639,11 +639,11 @@
 
 		private function _search_relations_with_location( $relations )
 		{
-			$count_new_relations = 0;
-			$count_relations_existing = 0;
+			$count_new_relations		 = 0;
+			$count_relations_existing	 = 0;
 
-			$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $this->location_code))));
-			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
+			$component			 = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $this->location_code))));
+			$files_in_component	 = $this->_get_files_by_component($component['id'], $component['location_id']);
 
 			foreach ($relations as $file_data)
 			{
@@ -738,14 +738,14 @@
 
 			$message = array();
 
-			$component_files = phpgwapi_cache::session_get('property', 'import_data');
-			$this->paths_from_file = phpgwapi_cache::session_get('property', 'paths_from_file');
+			$component_files		 = phpgwapi_cache::session_get('property', 'import_data');
+			$this->paths_from_file	 = phpgwapi_cache::session_get('property', 'paths_from_file');
 
-			$count_new_relations = 0;
-			$count_relations_existing = 0;
-			$count_new_files = 0;
-			$files_existing = array();
-			$files_not_existing = array();
+			$count_new_relations		 = 0;
+			$count_relations_existing	 = 0;
+			$count_new_files			 = 0;
+			$files_existing				 = array();
+			$files_not_existing			 = array();
 
 			foreach ($component_files as $k => $files)
 			{
@@ -789,8 +789,8 @@
 							{
 								if (!is_file($file_data['path_absolute']))
 								{
-									$_file = ($file_data['path_absolute']) ? $file_data['path_absolute'] : $file_data['path'] . '/' . $file_data['file'];
-									$files_not_existing[strtolower($file_data['file'])] = $_file;
+									$_file												 = ($file_data['path_absolute']) ? $file_data['path_absolute'] : $file_data['path'] . '/' . $file_data['file'];
+									$files_not_existing[strtolower($file_data['file'])]	 = $_file;
 									throw new Exception();
 								}
 
@@ -889,8 +889,8 @@
 				return $this->list_component_id[$query];
 			}
 
-			$location_code_values = explode('-', $location_code);
-			$loc1 = $location_code_values[0];
+			$location_code_values	 = explode('-', $location_code);
+			$loc1					 = $location_code_values[0];
 
 			if ($query)
 			{
@@ -905,8 +905,8 @@
 
 			if ($this->db->next_record())
 			{
-				$values['id'] = $this->db->f('id');
-				$values['location_id'] = $this->db->f('location_id');
+				$values['id']			 = $this->db->f('id');
+				$values['location_id']	 = $this->db->f('location_id');
 			}
 
 			if ($values['id'])
@@ -921,8 +921,8 @@
 		{
 			$metadata = array();
 
-			$path_file = $file_data['path_absolute'];
-			$md5sum = $file_data['md5sum'];
+			$path_file	 = $file_data['path_absolute'];
+			$md5sum		 = $file_data['md5sum'];
 
 			$bofiles = CreateObject('property.bofiles');
 
@@ -937,12 +937,12 @@
 			}
 			$bofiles->vfs->override_acl = 1;
 
-			$file_id = $bofiles->vfs->cp3(array(
-				'from' => $path_file,
-				'to' => $to_file,
-				'id' => '',
-				'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
-			$bofiles->vfs->override_acl = 0;
+			$file_id					 = $bofiles->vfs->cp3(array(
+				'from'		 => $path_file,
+				'to'		 => $to_file,
+				'id'		 => '',
+				'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
+			$bofiles->vfs->override_acl	 = 0;
 
 			if (empty($file_id))
 			{
@@ -962,15 +962,15 @@
 			}
 
 			$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
-			$metadata['title'] = $file_data['name'];
-			$metadata['descr'] = $file_data['desription'];
-			$metadata['cat_id'] = $this->doc_cat_id;
-			$metadata['path'] = $paths;
+			$metadata['title']		 = $file_data['name'];
+			$metadata['descr']		 = $file_data['desription'];
+			$metadata['cat_id']		 = $this->doc_cat_id;
+			$metadata['path']		 = $paths;
 
 			$values_insert = array
 				(
-				'file_id' => $file_id,
-				'metadata' => "'" . json_encode($metadata) . "'"
+				'file_id'	 => $file_id,
+				'metadata'	 => "'" . json_encode($metadata) . "'"
 			);
 
 			$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -985,20 +985,20 @@
 
 			$values_insert = array
 				(
-				'file_id' => (int)$file_id,
-				'location_id' => (int)$location_id,
-				'location_item_id' => (int)$id,
-				'is_private' => 0,
-				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => $date,
-				'start_date' => $date,
-				'end_date' => $date
+				'file_id'			 => (int)$file_id,
+				'location_id'		 => (int)$location_id,
+				'location_item_id'	 => (int)$id,
+				'is_private'		 => 0,
+				'account_id'		 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date'		 => $date,
+				'start_date'		 => $date,
+				'end_date'			 => $date
 			);
 
 			$ok = $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 
-			if($ok)
+			if ($ok)
 			{
 				return $this->sogeneric_document->update_relation_path($file_id);
 			}
@@ -1008,18 +1008,18 @@
 		{
 			phpgw::import_class('phpgwapi.phpspreadsheet');
 
-			$inputFileType	= \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
-			$reader			= \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+			$inputFileType	 = \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+			$reader			 = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 			$reader->setReadDataOnly(true);
-			$spreadsheet	= $reader->load($path);
+			$spreadsheet	 = $reader->load($path);
 
 			$spreadsheet->setActiveSheetIndex(0);
 
 			$result = array();
 
-			$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
-			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-			$rows = (int)$spreadsheet->getActiveSheet()->getHighestRow();
+			$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+			$rows				 = (int)$spreadsheet->getActiveSheet()->getHighestRow();
 
 			$start = $get_identificator ? 3 : 1; // Read the first line to get the headers out of the way
 

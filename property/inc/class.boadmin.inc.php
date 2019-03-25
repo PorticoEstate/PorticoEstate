@@ -44,11 +44,11 @@
 		function __construct( $session = '' )
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->so = CreateObject('property.soadmin');
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->right = array(1, 2, 4, 8, 16);
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.soadmin');
+			$this->acl			 = & $GLOBALS['phpgw']->acl;
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->right		 = array(1, 2, 4, 8, 16);
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($session)
 			{
@@ -56,19 +56,19 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'string');
-			$permission = phpgw::get_var('permission');
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			 = phpgw::get_var('query');
+			$sort			 = phpgw::get_var('sort');
+			$order			 = phpgw::get_var('order');
+			$filter			 = phpgw::get_var('filter', 'int');
+			$cat_id			 = phpgw::get_var('cat_id', 'string');
+			$permission		 = phpgw::get_var('permission');
 			//		$location		 = get_var('location',array('POST','GET')); // don't work for some reason...
-			$module = phpgw::get_var('module');
-			$granting_group = phpgw::get_var('granting_group', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$acl_app	= phpgw::get_var('acl_app', 'string', 'REQUEST', 'property');
-			$this->acl_app = $acl_app;
+			$module			 = phpgw::get_var('module');
+			$granting_group	 = phpgw::get_var('granting_group', 'int');
+			$allrows		 = phpgw::get_var('allrows', 'bool');
+			$acl_app		 = phpgw::get_var('acl_app', 'string', 'REQUEST', 'property');
+			$this->acl_app	 = $acl_app;
 
 			if ($start)
 			{
@@ -109,21 +109,20 @@
 			}
 
 			$this->allrows = $allrows ? $allrows : '';
-
 		}
 
 		function read_sessiondata()
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'fm_admin');
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
-			$this->location = $data['location'];
-			$this->granting_group = $data['granting_group'];
+			$this->start			 = $data['start'];
+			$this->query			 = $data['query'];
+			$this->filter			 = $data['filter'];
+			$this->sort				 = $data['sort'];
+			$this->order			 = $data['order'];
+			$this->cat_id			 = $data['cat_id'];
+			$this->location			 = $data['location'];
+			$this->granting_group	 = $data['granting_group'];
 		}
 
 		function save_sessiondata( $data )
@@ -146,10 +145,10 @@
 					break;
 			}
 
-			$categories[0]['id'] = 'groups';
-			$categories[0]['name'] = lang('Groups');
-			$categories[1]['id'] = 'accounts';
-			$categories[1]['name'] = lang('Users');
+			$categories[0]['id']	 = 'groups';
+			$categories[0]['name']	 = lang('Groups');
+			$categories[1]['id']	 = 'accounts';
+			$categories[1]['name']	 = lang('Users');
 
 			return $this->bocommon->select_list($selected, $categories);
 		}
@@ -177,8 +176,8 @@
 			$user_checked = array();
 			foreach ($totalacl as $user_id => $rights)
 			{
-				$user_checked[] = $user_id;
-				$this->acl->set_account_id($user_id, true, $this->acl_app, $this->location, $account_type = 'accounts');
+				$user_checked[]	 = $user_id;
+				$this->acl->set_account_id($user_id, true, $this->acl_app, $this->location, $account_type	 = 'accounts');
 				$this->acl->delete($this->acl_app, $this->location, $grantor, $type);
 				$this->acl->add($this->acl_app, $this->location, $rights, $grantor, $type);
 				$this->acl->save_repository($this->acl_app, $this->location);
@@ -245,9 +244,9 @@
 
 			$this->set_permission2($values['right'], $process, $grantor, 0);
 			$this->set_permission2($values['mask'], $process, $grantor, 1);
-			$cleared = $this->bocommon->reset_fm_cache_userlist();
-			$receipt['message'][] = array('msg' => lang('permissions are updated!'));
-			$receipt['message'][] = array('msg' => lang('%1 userlists cleared from cache', $cleared));
+			$cleared				 = $this->bocommon->reset_fm_cache_userlist();
+			$receipt['message'][]	 = array('msg' => lang('permissions are updated!'));
+			$receipt['message'][]	 = array('msg' => lang('%1 userlists cleared from cache', $cleared));
 			phpgwapi_cache::user_clear('phpgwapi', 'menu', -1);
 			return $receipt;
 		}
@@ -256,16 +255,16 @@
 		{
 			if ($type == 'groups')
 			{
-				$check_account_type = array('accounts');
-				$acl_account_type = 'accounts';
-				$valid_users = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $this->acl_app);
+				$check_account_type	 = array('accounts');
+				$acl_account_type	 = 'accounts';
+				$valid_users		 = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $this->acl_app);
 			}
 			else
 			{
-				$check_account_type = array('groups', 'accounts');
-				$acl_account_type = 'both';
-				$_valid_users = $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $this->acl_app);
-				$valid_users = array();
+				$check_account_type	 = array('groups', 'accounts');
+				$acl_account_type	 = 'both';
+				$_valid_users		 = $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $this->acl_app);
+				$valid_users		 = array();
 				foreach ($_valid_users as $_user)
 				{
 					$valid_users[] = $_user['account_id'];
@@ -309,12 +308,12 @@
 			reset($allusers);
 
 			$this->total_records = count($allusers);
-			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$length				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			if ($this->allrows)
 			{
 				$this->start = 0;
-				$length = $this->total_records;
+				$length		 = $this->total_records;
 			}
 
 			$allusers = array_slice($allusers, $this->start, $length, true);
@@ -325,10 +324,10 @@
 				$j = 0;
 				foreach ($allusers as $account)
 				{
-					$user_list[$j]['account_id'] = $account->id;
-					$user_list[$j]['account_lid'] = $account->lid;
-					$user_list[$j]['account_firstname'] = $account->firstname;
-					$user_list[$j]['account_lastname'] = $account->lastname;
+					$user_list[$j]['account_id']		 = $account->id;
+					$user_list[$j]['account_lid']		 = $account->lid;
+					$user_list[$j]['account_firstname']	 = $account->firstname;
+					$user_list[$j]['account_lastname']	 = $account->lastname;
 
 					if ($this->location == '.invoice')
 					{

@@ -80,10 +80,10 @@
 		{
 			//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
-			$oProc = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
-			$oProc->m_odb = $GLOBALS['phpgw']->db;
-			$oProc->m_odb->Halt_On_Error = 'yes';
-			$GLOBALS['phpgw_setup']->oProc = $oProc;
+			$oProc							 = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
+			$oProc->m_odb					 = $GLOBALS['phpgw']->db;
+			$oProc->m_odb->Halt_On_Error	 = 'yes';
+			$GLOBALS['phpgw_setup']->oProc	 = $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
 
@@ -97,7 +97,7 @@
 				$tableinfo = $setup->sql_to_array($table);
 				//_debug_array($tableinfo);
 
-				$fd_temp = '$fd = array(' . str_replace("\t", '', $tableinfo[0]) . ');';
+				$fd_temp				 = '$fd = array(' . str_replace("\t", '', $tableinfo[0]) . ');';
 				@eval($fd_temp);
 				$table_def[$table]['fd'] = $fd;
 				$table_def[$table]['pk'] = $tableinfo[1];
@@ -112,10 +112,10 @@
 				{
 					foreach ($tableinfo[2] as $ref_set => $ref_fields)
 					{
-						$fk_temp = '$fk = array(' . $ref_fields . ');';
+						$fk_temp				 = '$fk = array(' . $ref_fields . ');';
 						@eval($fk_temp);
-						$fk_table = array_keys($fk);
-						$ForeignKeys[$table][] = $fk_table[0];
+						$fk_table				 = array_keys($fk);
+						$ForeignKeys[$table][]	 = $fk_table[0];
 					}
 				}
 			}
@@ -126,21 +126,21 @@
 				$this->oProc = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_domain'][$domain]['db_type']);
 				if (!$download_script)
 				{
-					$this->oProc->m_odb = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
-					$this->oProc->m_odb->Type = $GLOBALS['phpgw_domain'][$domain]['db_type'];
-					$this->oProc->m_odb->Host = $GLOBALS['phpgw_domain'][$domain]['db_host'];
-					$this->oProc->m_odb->Port = $GLOBALS['phpgw_domain'][$domain]['db_port'];
-					$this->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
-					$this->oProc->m_odb->User = $GLOBALS['phpgw_domain'][$domain]['db_user'];
-					$this->oProc->m_odb->Password = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
-					$this->oProc->m_odb->Halt_On_Error = 'yes';
+					$this->oProc->m_odb					 = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
+					$this->oProc->m_odb->Type			 = $GLOBALS['phpgw_domain'][$domain]['db_type'];
+					$this->oProc->m_odb->Host			 = $GLOBALS['phpgw_domain'][$domain]['db_host'];
+					$this->oProc->m_odb->Port			 = $GLOBALS['phpgw_domain'][$domain]['db_port'];
+					$this->oProc->m_odb->Database		 = $GLOBALS['phpgw_domain'][$domain]['db_name'];
+					$this->oProc->m_odb->User			 = $GLOBALS['phpgw_domain'][$domain]['db_user'];
+					$this->oProc->m_odb->Password		 = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
+					$this->oProc->m_odb->Halt_On_Error	 = 'yes';
 					$this->oProc->m_odb->connect();
 				}
 
 				if ($download_script)
 				{
-					$script = $this->GenerateScripts($table_def, false, true);
-					$filename = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
+					$script		 = $this->GenerateScripts($table_def, false, true);
+					$filename	 = $domain . '_' . $GLOBALS['phpgw_domain'][$domain]['db_name'] . '_' . $GLOBALS['phpgw_domain'][$domain]['db_type'] . '.sql';
 					$this->download_script($script, $filename);
 				}
 				else
@@ -210,8 +210,8 @@
 				$db->query("SELECT * FROM {$table}");
 				foreach ($db->resultSet as $row)
 				{
-					$insert_values = $db->validate_insert(array_values($row));
-					$insert_fields = implode(',', array_keys($row));
+					$insert_values	 = $db->validate_insert(array_values($row));
+					$insert_fields	 = implode(',', array_keys($row));
 					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");
 				}
 			}
@@ -219,12 +219,12 @@
 
 		private function download_script( $script, $filename )
 		{
-			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 
 			$browser = CreateObject('phpgwapi.browser');
-			$size = strlen($script);
+			$size	 = strlen($script);
 			$browser->content_header($filename, '', $size);
 			echo $script;
 		}
@@ -249,8 +249,8 @@
 			$sAllTableSQL = '';
 			foreach ($this->oProc->m_aTables as $sTableName => $aTableDef)
 			{
-				$sSequenceSQL = '';
-				$sTriggerSQL = '';
+				$sSequenceSQL							 = '';
+				$sTriggerSQL							 = '';
 				$this->oProc->m_oTranslator->indexes_sql = array();
 				if ($this->oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 				{
@@ -273,10 +273,10 @@
 					{
 						foreach ($this->oProc->m_oTranslator->indexes_sql as $key => $sIndexSQL)
 						{
-							$ix_name = $key . '_' . $sTableName . '_idx';
-							$IndexSQL = str_replace(array('__index_name__', '__table_name__'), array(
+							$ix_name		 = $key . '_' . $sTableName . '_idx';
+							$IndexSQL		 = str_replace(array('__index_name__', '__table_name__'), array(
 								$ix_name, $sTableName), $sIndexSQL);
-							$sAllTableSQL .= $IndexSQL . "\n\n";
+							$sAllTableSQL	 .= $IndexSQL . "\n\n";
 						}
 					}
 				}

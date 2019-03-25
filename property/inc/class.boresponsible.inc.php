@@ -40,10 +40,10 @@
 		public $start;
 		public $location;
 		public $query;
-		public $total_records = 0;
+		public $total_records	 = 0;
 		public $cat_id;
 		public $allrows;
-		protected $acl_location = '.admin';
+		protected $acl_location	 = '.admin';
 
 		/**
 		 * Constructor
@@ -54,9 +54,9 @@
 		{
 			$this->appname = phpgw::get_var('appname', 'string', 'REQUEST', 'property');
 
-			$this->so = CreateObject('property.soresponsible');
-			$this->so->appname = $this->appname;
-			$this->so->acl_location = $this->acl_location;
+			$this->so				 = CreateObject('property.soresponsible');
+			$this->so->appname		 = $this->appname;
+			$this->so->acl_location	 = $this->acl_location;
 
 			if ($session)
 			{
@@ -96,14 +96,14 @@
 			switch ($this->location)
 			{
 				case '.project.workorder':
-					$location = '.project';
+					$location	 = '.project';
 					break;
 				default:
-					$location = $this->location;
+					$location	 = $this->location;
 			}
 
-			$this->cats = CreateObject('phpgwapi.categories', -1, $this->appname, $location);
-			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->cats			 = CreateObject('phpgwapi.categories', -1, $this->appname, $location);
+			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 		}
 
 		public function get_acl_location()
@@ -135,7 +135,7 @@
 		{
 			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
 			parse_str($referer['query'], $referer_out);
-			$self = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER'));
+			$self	 = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER'));
 			parse_str($self['path'], $self_out);
 
 			if (isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
@@ -143,12 +143,12 @@
 				$data = $GLOBALS['phpgw']->session->appsession('session_data', 'responsible');
 			}
 
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->location = isset($data['location']) ? $data['location'] : '';
+			$this->cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->sort		 = isset($data['sort']) ? $data['sort'] : '';
+			$this->order	 = isset($data['order']) ? $data['order'] : '';
+			$this->start	 = isset($data['start']) ? $data['start'] : '';
+			$this->query	 = isset($data['query']) ? $data['query'] : '';
+			$this->location	 = isset($data['location']) ? $data['location'] : '';
 		}
 
 		/**
@@ -163,8 +163,8 @@
 			#'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
 			#'filter' => $filter);
 
-			$categories = $this->cats->return_array('', 0, false);
-			$filter = array();
+			$categories	 = $this->cats->return_array('', 0, false);
+			$filter		 = array();
 			if ($categories)
 			{
 				foreach ($categories as $cat)
@@ -184,16 +184,16 @@
 			#	'order' => $this->order, 'appname' => $this->appname,'location' => $this->location, 'allrows'=>$this->allrows,
 			#	'filter' => $filter));
 
-			$values = $this->so->read_type($data);
+			$values				 = $this->so->read_type($data);
 			$this->total_records = $this->so->total_records;
 
 			foreach ($values as & $value)
 			{
 				if ($value['cat_id'])
 				{
-					$category = $this->cats->return_single($value['cat_id']);
-					$value['category'] = $category[0]['name'];
-					$value['app_name'] = $category[0]['app_name'];
+					$category			 = $this->cats->return_single($value['cat_id']);
+					$value['category']	 = $category[0]['name'];
+					$value['app_name']	 = $category[0]['app_name'];
 					$value['created_by'] = $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
 					$value['created_on'] = $GLOBALS['phpgw']->common->show_date($value['created_on'], $this->dateformat);
 				}
@@ -209,19 +209,19 @@
 		 */
 		public function get_responsibilities( $data = array() )
 		{
-			$selected = isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
-			$values = $this->so->read_type(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order, 'location' => '', 'allrows' => true,
-				'filter' => $filter, 'appname' => $data['appname']));
-			$responsibilities = array();
+			$selected			 = isset($data['selected']) && $data['selected'] ? $data['selected'] : '';
+			$values				 = $this->so->read_type(array('start'		 => $this->start, 'query'		 => $this->query,
+				'sort'		 => $this->sort,
+				'order'		 => $this->order, 'location'	 => '', 'allrows'	 => true,
+				'filter'	 => $filter, 'appname'	 => $data['appname']));
+			$responsibilities	 = array();
 			foreach ($values as $value)
 			{
 				$responsibilities[] = array
 					(
-					'id' => $value['id'],
-					'name' => $value['name'],
-					'selected' => $value['id'] == $selected ? 1 : 0
+					'id'		 => $value['id'],
+					'name'		 => $value['name'],
+					'selected'	 => $value['id'] == $selected ? 1 : 0
 				);
 			}
 
@@ -237,32 +237,32 @@
 		 */
 		public function read_contact( $type_id = '' )
 		{
-			$values = $this->so->read_contact(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order, 'allrows' => $this->allrows, 'type_id' => $type_id));
+			$values = $this->so->read_contact(array('start'		 => $this->start, 'query'		 => $this->query,
+				'sort'		 => $this->sort,
+				'order'		 => $this->order, 'allrows'	 => $this->allrows, 'type_id'	 => $type_id));
 
 			$this->total_records = $this->so->total_records;
-			$soadmin_entity = CreateObject('property.soadmin_entity');
-			$solocation = CreateObject('property.solocation');
-			$bocontact = CreateObject('addressbook.boaddressbook');
+			$soadmin_entity		 = CreateObject('property.soadmin_entity');
+			$solocation			 = CreateObject('property.solocation');
+			$bocontact			 = CreateObject('addressbook.boaddressbook');
 
 			foreach ($values as & $value)
 			{
-				$contact = $bocontact->get_principal_persons_data($value['contact_id']);
-				$value['contact_name'] = $contact['per_full_name'];
-				$value['created_by'] = $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
-				$value['created_on'] = $GLOBALS['phpgw']->common->show_date($value['created_on'], $this->dateformat);
+				$contact				 = $bocontact->get_principal_persons_data($value['contact_id']);
+				$value['contact_name']	 = $contact['per_full_name'];
+				$value['created_by']	 = $GLOBALS['phpgw']->accounts->id2name($value['created_by']);
+				$value['created_on']	 = $GLOBALS['phpgw']->common->show_date($value['created_on'], $this->dateformat);
 				if (isset($value['expired_on']) && $value['expired_on'])
 				{
 					$value['expired_by'] = $GLOBALS['phpgw']->accounts->id2name($value['expired_by']);
 					$value['expired_on'] = $GLOBALS['phpgw']->common->show_date($value['expired_on'], $this->dateformat);
 				}
-				$value['active_from'] = $GLOBALS['phpgw']->common->show_date($value['active_from'], $this->dateformat);
-				$value['active_to'] = $GLOBALS['phpgw']->common->show_date($value['active_to'], $this->dateformat);
+				$value['active_from']	 = $GLOBALS['phpgw']->common->show_date($value['active_from'], $this->dateformat);
+				$value['active_to']		 = $GLOBALS['phpgw']->common->show_date($value['active_to'], $this->dateformat);
 				if (isset($value['p_cat_id']) && $value['p_cat_id'])
 				{
 					$value['p_cat_name'] = $soadmin_entity->read_category_name($value['p_entity_id'], $value['p_cat_id']);
-					$value['item'] = "{$value['p_cat_name']}::{$value['p_num']}";
+					$value['item']		 = "{$value['p_cat_name']}::{$value['p_num']}";
 				}
 				$value['location_data'] = $solocation->read_single($value['location_code']);
 			}
@@ -323,17 +323,17 @@
 			{
 				$values['assign'] = array();
 			}
-			$to_expire = array();
-			$to_edit = array();
-			$dont_add = array();
+			$to_expire	 = array();
+			$to_edit	 = array();
+			$dont_add	 = array();
 			if (isset($values['assign_orig']) && is_array($values['assign_orig']))
 			{
 				foreach ($values['assign_orig'] as $assign_orig)
 				{
-					$assign_arr = explode('_', $assign_orig);
-					$contact_id = $assign_arr[0];
-					$responsible_item = $assign_arr[1];
-					$location_code = $assign_arr[2];
+					$assign_arr			 = explode('_', $assign_orig);
+					$contact_id			 = $assign_arr[0];
+					$responsible_item	 = $assign_arr[1];
+					$location_code		 = $assign_arr[2];
 
 					$dont_add[] = $location_code;
 
@@ -346,12 +346,12 @@
 					{
 						$to_edit[] = array
 							(
-							'id' => $responsible_item,
-							'active_from' => time(),
-							'contact_id' => $values['contact_id'],
-							'location_code' => $location_code,
+							'id'					 => $responsible_item,
+							'active_from'			 => time(),
+							'contact_id'			 => $values['contact_id'],
+							'location_code'			 => $location_code,
 							'responsibility_role_id' => $values['responsibility_role_id'],
-							'remark' => 'from role assignment'
+							'remark'				 => 'from role assignment'
 						);
 					}
 				}
@@ -381,11 +381,11 @@
 
 				$data = array
 					(
-					'location' => explode('-', $location_code),
-					'active_from' => time(),
+					'location'				 => explode('-', $location_code),
+					'active_from'			 => time(),
 					'responsibility_role_id' => $values['responsibility_role_id'],
-					'contact_id' => $values['contact_id'],
-					'remark' => 'from role assignment'
+					'contact_id'			 => $values['contact_id'],
+					'remark'				 => 'from role assignment'
 				);
 
 				$this->so->add_contact($data);
@@ -443,8 +443,8 @@
 		 */
 		public function read_single_type( $id )
 		{
-			$values = $this->so->read_single_type($id);
-			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
+			$values					 = $this->so->read_single_type($id);
+			$values['entry_date']	 = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
 			return $values;
 		}
 
@@ -470,8 +470,8 @@
 		 */
 		public function read_single( $id )
 		{
-			$values = $this->so->read_single($id);
-			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
+			$values					 = $this->so->read_single($id);
+			$values['entry_date']	 = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
 			return $values;
 		}
 
@@ -484,30 +484,30 @@
 		 */
 		public function read_single_contact( $id )
 		{
-			$values = $this->so->read_single_contact($id);
-			$values['entry_date'] = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
-			$contacts = CreateObject('phpgwapi.contacts');
-			$contact_data = $contacts->read_single_entry($values['contact_id'], array
+			$values					 = $this->so->read_single_contact($id);
+			$values['entry_date']	 = $GLOBALS['phpgw']->common->show_date($values['created_on'], $this->dateformat);
+			$contacts				 = CreateObject('phpgwapi.contacts');
+			$contact_data			 = $contacts->read_single_entry($values['contact_id'], array
 				(
-				'n_given' => 'n_given',
-				'n_family' => 'n_family',
-				'email' => 'email'
+				'n_given'	 => 'n_given',
+				'n_family'	 => 'n_family',
+				'email'		 => 'email'
 			));
-			$values['contact_name'] = "{$contact_data[0]['n_family']}, {$contact_data[0]['n_given']}";
-			$values['active_from'] = $GLOBALS['phpgw']->common->show_date($values['active_from'], $this->dateformat);
-			$values['active_to'] = $GLOBALS['phpgw']->common->show_date($values['active_to'], $this->dateformat);
+			$values['contact_name']	 = "{$contact_data[0]['n_family']}, {$contact_data[0]['n_given']}";
+			$values['active_from']	 = $GLOBALS['phpgw']->common->show_date($values['active_from'], $this->dateformat);
+			$values['active_to']	 = $GLOBALS['phpgw']->common->show_date($values['active_to'], $this->dateformat);
 
-			$solocation = CreateObject('property.solocation');
+			$solocation				 = CreateObject('property.solocation');
 			$values['location_data'] = $solocation->read_single($values['location_code']);
 
 			if ($values['p_num'])
 			{
 				$soadmin_entity = CreateObject('property.soadmin_entity');
 
-				$values['p'][$values['p_entity_id']]['p_num'] = $values['p_num'];
-				$values['p'][$values['p_entity_id']]['p_entity_id'] = $values['p_entity_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_id'] = $values['p_cat_id'];
-				$values['p'][$values['p_entity_id']]['p_cat_name'] = $soadmin_entity->read_category_name($values['p_entity_id'], $values['p_cat_id']);
+				$values['p'][$values['p_entity_id']]['p_num']		 = $values['p_num'];
+				$values['p'][$values['p_entity_id']]['p_entity_id']	 = $values['p_entity_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_id']	 = $values['p_cat_id'];
+				$values['p'][$values['p_entity_id']]['p_cat_name']	 = $soadmin_entity->read_category_name($values['p_entity_id'], $values['p_cat_id']);
 			}
 
 			return $values;

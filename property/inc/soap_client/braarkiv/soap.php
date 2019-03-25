@@ -36,9 +36,9 @@
 	$GLOBALS['phpgw_info']['flags'] = array
 		(
 		'disable_Template_class' => true,
-		'currentapp' => 'login',
-		'noheader' => true,
-		'noapi' => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
+		'currentapp'			 => 'login',
+		'noheader'				 => true,
+		'noapi'					 => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 
 	$GLOBALS['phpgw_info']['flags']['session_name'] = 'soapclientsession';
@@ -50,8 +50,8 @@
 
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
 
-	$GLOBALS['phpgw_info']['message']['errors'] = array();
-	$system_name = $GLOBALS['phpgw_info']['server']['system_name'];
+	$GLOBALS['phpgw_info']['message']['errors']	 = array();
+	$system_name								 = $GLOBALS['phpgw_info']['server']['system_name'];
 
 	if (!isset($_GET['domain']) || !$_GET['domain'])
 	{
@@ -59,25 +59,25 @@
 	}
 	else
 	{
-		$_REQUEST['domain'] = $_GET['domain'];
-		$_domain_info = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
+		$_REQUEST['domain']	 = $_GET['domain'];
+		$_domain_info		 = isset($GLOBALS['phpgw_domain'][$_GET['domain']]) ? $GLOBALS['phpgw_domain'][$_GET['domain']] : '';
 		if (!$_domain_info)
 		{
 			$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::not a valid domain";
 		}
 		else
 		{
-			$GLOBALS['phpgw_domain'] = array();
-			$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
+			$GLOBALS['phpgw_domain']					 = array();
+			$GLOBALS['phpgw_domain'][$_GET['domain']]	 = $_domain_info;
 		}
 	}
 
 	require_once PHPGW_API_INC . '/functions.inc.php';
 
 	$location_id = phpgw::get_var('location_id', 'int');
-	$section = phpgw::get_var('section', 'string');
-	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
-	$fileid = phpgw::get_var('fileid', 'string');
+	$section	 = phpgw::get_var('section', 'string');
+	$bygningsnr	 = (int)phpgw::get_var('bygningsnr', 'int');
+	$fileid		 = phpgw::get_var('fileid', 'string');
 
 	if (!$fileid && !$bygningsnr)
 	{
@@ -86,12 +86,12 @@
 
 	$c = CreateObject('admin.soconfig', $location_id);
 
-	$login = $c->config_data[$section]['anonymous_user'];
-	$passwd = $c->config_data[$section]['anonymous_pass'];
-	$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
-	$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
-	$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
-	$classname = $c->config_data[$section]['arkd'];
+	$login			 = $c->config_data[$section]['anonymous_user'];
+	$passwd			 = $c->config_data[$section]['anonymous_pass'];
+	$location_url	 = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
+	$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
+	$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
+	$classname		 = $c->config_data[$section]['arkd'];
 
 	$_POST['submitit'] = "";
 
@@ -121,12 +121,12 @@
 	 */
 	require_once 'services.php';
 
-	$options = array();
+	$options				 = array();
 	$options['soap_version'] = SOAP_1_2;
-	$options['location'] = $location_url;
-	$options['uri'] = $location_url;
-	$options['trace'] = false;
-	$options['encoding'] = 'UTF-8';
+	$options['location']	 = $location_url;
+	$options['uri']			 = $location_url;
+	$options['trace']		 = false;
+	$options['encoding']	 = 'UTF-8';
 
 	$wdsl = "{$location_url}?WSDL";
 
@@ -143,17 +143,17 @@
 
 	if ($fileid)
 	{
-		$getAvailableFileVariants = new getAvailableFileVariants();
-		$getAvailableFileVariants->secKey = $secKey;
-		$getAvailableFileVariants->documentId = $fileid;
+		$getAvailableFileVariants				 = new getAvailableFileVariants();
+		$getAvailableFileVariants->secKey		 = $secKey;
+		$getAvailableFileVariants->documentId	 = $fileid;
 
 		$getAvailableFileVariantsResponse = $Services->getAvailableFileVariants($getAvailableFileVariants);
 
-		$getFileAsByteArray = new getFileAsByteArray();
-		$getFileAsByteArray->secKey = $secKey;
-		$getFileAsByteArray->documentId = $fileid;
-		$getFileAsByteArray->variant = 'PDFJPG80';
-		$getFileAsByteArray->versjon = 1;
+		$getFileAsByteArray				 = new getFileAsByteArray();
+		$getFileAsByteArray->secKey		 = $secKey;
+		$getFileAsByteArray->documentId	 = $fileid;
+		$getFileAsByteArray->variant	 = 'PDFJPG80';
+		$getFileAsByteArray->versjon	 = 1;
 
 		$getFileAsByteArrayResponse = $Services->getFileAsByteArray($getFileAsByteArray);
 
@@ -174,11 +174,11 @@
 
 	$searchAndGetDocumentsWithVariants = new searchAndGetDocumentsWithVariants();
 
-	$searchAndGetDocumentsWithVariants->secKey = $secKey;
-	$searchAndGetDocumentsWithVariants->baseclassname = 'Eiendomsarkiver';
-	$searchAndGetDocumentsWithVariants->classname = $classname;//'Byggesak';
-	$searchAndGetDocumentsWithVariants->where = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
-	$searchAndGetDocumentsWithVariants->maxhits = '-1';
+	$searchAndGetDocumentsWithVariants->secKey			 = $secKey;
+	$searchAndGetDocumentsWithVariants->baseclassname	 = 'Eiendomsarkiver';
+	$searchAndGetDocumentsWithVariants->classname		 = $classname;//'Byggesak';
+	$searchAndGetDocumentsWithVariants->where			 = "Byggnr = {$bygningsnr}";// AND Regdato > '2006-01-25'";
+	$searchAndGetDocumentsWithVariants->maxhits			 = '-1';
 
 	$searchAndGetDocumentsWithVariantsResponse = $Services->searchAndGetDocumentsWithVariants($searchAndGetDocumentsWithVariants);
 
@@ -198,8 +198,8 @@
 	<table>
 HTML;
 
-	$Logout = new Logout();
-	$Logout->secKey = $secKey;
+	$Logout			 = new Logout();
+	$Logout->secKey	 = $secKey;
 	$Services->Logout($Logout);
 
 	if (!$Result)
@@ -223,17 +223,17 @@ HTML;
 		'Team'
 	);
 
-	$html .='<th>';
-	$html .='Last ned';
+	$html	 .= '<th>';
+	$html	 .= 'Last ned';
 	$html . '</th>';
 
 	$location_id = phpgw::get_var('location_id', 'int');
-	$section = phpgw::get_var('section', 'string');
+	$section	 = phpgw::get_var('section', 'string');
 
 	$base_url = $GLOBALS['phpgw']->link('/property/inc/soap_client/braarkiv/soap.php', array(
-		'domain' => $_GET['domain'],
-		'location_id' => $location_id,
-		'section' => $section
+		'domain'		 => $_GET['domain'],
+		'location_id'	 => $location_id,
+		'section'		 => $section
 		)
 	);
 
@@ -243,8 +243,8 @@ HTML;
 		{
 			continue;
 		}
-		$html .='<th>';
-		$html .=$attribute->Name;
+		$html	 .= '<th>';
+		$html	 .= $attribute->Name;
 		$html . '</th>';
 	}
 
@@ -252,10 +252,10 @@ HTML;
 	$case_array = array();
 	foreach ($_result['ExtendedDocument'] as $entry)
 	{
-		$_html = '<tr>';
-		$_html .='<td>';
-		$_html .="<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
-		$_html .='</td>';
+		$_html	 = '<tr>';
+		$_html	 .= '<td>';
+		$_html	 .= "<a href ='{$base_url}&fileid={$entry->ID}' title = '{$entry->Name}' target = '_blank'>{$entry->ID}</a>";
+		$_html	 .= '</td>';
 
 		foreach ($entry->Attributes->Attribute as $attribute)
 		{
@@ -269,7 +269,7 @@ HTML;
 				$_key = strtotime($attribute->Value->anyType);
 			}
 
-			$_html .='<td>';
+			$_html .= '<td>';
 
 			if (is_array($attribute->Value->anyType))
 			{
@@ -277,29 +277,29 @@ HTML;
 
 				foreach ($attribute->Value->anyType as $value)
 				{
-					$_html .= '<tr>';
-					$_html .= '<td>';
+					$_html	 .= '<tr>';
+					$_html	 .= '<td>';
 
 					if (isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
 					{
-						$_html .= $value->enc_value->GNr;
-						$_html .= '/' . $value->enc_value->BNr;
+						$_html	 .= $value->enc_value->GNr;
+						$_html	 .= '/' . $value->enc_value->BNr;
 					}
 					else
 					{
 						$_html .= $value;
 					}
 
-					$_html .= '</td>';
-					$_html .= '</tr>';
+					$_html	 .= '</td>';
+					$_html	 .= '</tr>';
 				}
 				$_html .= '</table>';
 			}
 			else
 			{
-				$_html .=$attribute->Value->anyType;
+				$_html .= $attribute->Value->anyType;
 			}
-			$_html .='</td>';
+			$_html .= '</td>';
 		}
 
 		$_html .= '</tr>';
@@ -314,7 +314,7 @@ HTML;
 		$html .= implode('', $case);
 	}
 
-	$html .=<<<HTML
+	$html .= <<<HTML
 	</table>
 HTML;
 

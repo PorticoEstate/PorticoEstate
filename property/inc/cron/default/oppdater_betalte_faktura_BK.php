@@ -42,15 +42,15 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('property');
-			$this->function_msg = 'oppdater bestillinger med grunnlag i betalte faktura';
+			$this->sub_location	 = lang('property');
+			$this->function_msg	 = 'oppdater bestillinger med grunnlag i betalte faktura';
 			/**
 			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
 			 */
-			$config					= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url			= $config->config_data['external_register']['url'];
-			$this->soap_username	= $config->config_data['external_register']['username'];
-			$this->soap_password	= $config->config_data['external_register']['password'];
+			$config				 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->soap_url		 = $config->config_data['external_register']['url'];
+			$this->soap_username = $config->config_data['external_register']['username'];
+			$this->soap_password = $config->config_data['external_register']['password'];
 		}
 
 		function execute()
@@ -62,12 +62,12 @@
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
-
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
 
 			if ($this->debug)
 			{
+
 			}
 			set_time_limit(2000);
 
@@ -80,11 +80,10 @@
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
 
-			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
-			$this->receipt['message'][] = array('msg' => $msg);
-
+			$this->receipt['message'][]	 = array('msg' => $msg);
 		}
 
 		function cron_log( $receipt = '' )
@@ -106,25 +105,25 @@
 
 		private function update_order()
 		{
-			$config = CreateObject('phpgwapi.config', 'property')->read();
-			$sql = "SELECT DISTINCT pmwrkord_code, external_voucher_id FROM fm_ecobilag";
+			$config		 = CreateObject('phpgwapi.config', 'property')->read();
+			$sql		 = "SELECT DISTINCT pmwrkord_code, external_voucher_id FROM fm_ecobilag";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$vouchers = array();
+			$vouchers	 = array();
 			while ($this->db->next_record())
 			{
 				$vouchers[] = array
-				(
-					'order_id' => $this->db->f('pmwrkord_code'),
+					(
+					'order_id'	 => $this->db->f('pmwrkord_code'),
 					'voucher_id' => $this->db->f('external_voucher_id')
 				);
 			}
 
-			$socommon = CreateObject('property.socommon');
-			$soworkorder = CreateObject('property.soworkorder');
-			$sotts = CreateObject('property.sotts');
+			$socommon				 = CreateObject('property.socommon');
+			$soworkorder			 = CreateObject('property.soworkorder');
+			$sotts					 = CreateObject('property.sotts');
 			$workorder_closed_status = !empty($config['workorder_closed_status']) ? $config['workorder_closed_status'] : false;
 
-			if(!$workorder_closed_status)
+			if (!$workorder_closed_status)
 			{
 				throw new Exception('Order closed status not defined');
 			}
@@ -132,7 +131,7 @@
 			$vouchers_ok = array();
 			foreach ($vouchers as $voucher)
 			{
-				if(!$this->check_payment($voucher['voucher_id']))
+				if (!$this->check_payment($voucher['voucher_id']))
 				{
 					$this->receipt['error'][] = array('msg' => "{$voucher['voucher_id']} er ikke betalt");
 					continue;
@@ -140,21 +139,22 @@
 
 				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er betalt");
 
-				$ok = false;
-				$order_type = $socommon->get_order_type($voucher['order_id']);
+				$ok			 = false;
+				$order_type	 = $socommon->get_order_type($voucher['order_id']);
 				switch ($order_type)
 				{
 					case 's_agreement':
 						break;
 					case 'workorder':
 						$workorder = $soworkorder->read_single($voucher['order_id']);
-						if($workorder['continuous'])
+						if ($workorder['continuous'])
 						{
 							$ok = true;
 						}
 						else
 						{
-							$ok = $soworkorder->update_status(array('order_id' => $voucher['order_id'],'status' => $workorder_closed_status));
+							$ok = $soworkorder->update_status(array('order_id'	 => $voucher['order_id'],
+								'status'	 => $workorder_closed_status));
 						}
 						break;
 					case 'ticket':
@@ -162,33 +162,32 @@
 						$this->db->next_record();
 						$ticket_id = $this->db->f('id');
 
-						if($this->db->f('continuous'))
+						if ($this->db->f('continuous'))
 						{
 							$ok = true;
 						}
 						else
 						{
-							$ticket = array(
-									'status' => 'C8' //Avsluttet og fakturert (C)
-								);
-							$ok = $sotts->update_status($ticket, $ticket_id);
+							$ticket	 = array(
+								'status' => 'C8' //Avsluttet og fakturert (C)
+							);
+							$ok		 = $sotts->update_status($ticket, $ticket_id);
 						}
 						break;
 					default:
 						throw new Exception('Order type not supported');
 				}
 
-				if($ok)
+				if ($ok)
 				{
 					$vouchers_ok[] = $voucher;
-				//	$i = 60;
+					//	$i = 60;
 				}
-
 			}
 			unset($voucher);
 
-			$metadata = $this->db->metadata('fm_ecobilag');
-			$cols = array_keys($metadata);
+			$metadata	 = $this->db->metadata('fm_ecobilag');
+			$cols		 = array_keys($metadata);
 			foreach ($vouchers_ok as $voucher)
 			{
 				$this->db->transaction_begin();
@@ -199,38 +198,38 @@
 				{
 					$value_set[$col] = $this->db->f($col);
 				}
-				$value_set['filnavn'] = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+				$value_set['filnavn']	 = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 				$value_set['ordrebelop'] = $value_set['belop'];
 				unset($value_set['pre_transfer']);
 
-				$_cols = implode(',', array_keys($value_set));
-				$values = $this->db->validate_insert(array_values($value_set));
+				$_cols						 = implode(',', array_keys($value_set));
+				$values						 = $this->db->validate_insert(array_values($value_set));
 				$this->db->query("INSERT INTO fm_ecobilagoverf ({$_cols}) VALUES ({$values})", __LINE__, __FILE__);
 				$this->db->query("DELETE FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
 				$this->db->transaction_commit();
-				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
+				$this->receipt['message'][]	 = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
 			}
 		}
 
 		function check_payment( $voucher_id )
 		{
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148
-			$url = "{$this->soap_url}/utlignetfaktura?bilagsNr={$voucher_id}";
-			$username	= $this->soap_username; //'portico';
-			$password	= $this->soap_password; //'********';
+			$url		 = "{$this->soap_url}/utlignetfaktura?bilagsNr={$voucher_id}";
+			$username	 = $this->soap_username; //'portico';
+			$password	 = $this->soap_password; //'********';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 			$result = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if(!$httpCode)
+			if (!$httpCode)
 			{
 				throw new Exception("No connection: {$url}");
 			}
@@ -239,7 +238,5 @@
 			$result = json_decode($result, true);
 
 			return $result;
-
 		}
-
 	}

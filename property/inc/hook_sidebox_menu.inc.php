@@ -1,6 +1,6 @@
 <?php
-	$menu_title = $GLOBALS['phpgw_info']['apps'][$appname]['title'] . ' ' . lang('Menu');
-	$menu = $GLOBALS['phpgw']->session->appsession('menu_property', 'sidebox');
+	$menu_title	 = $GLOBALS['phpgw_info']['apps'][$appname]['title'] . ' ' . lang('Menu');
+	$menu		 = $GLOBALS['phpgw']->session->appsession('menu_property', 'sidebox');
 	if (isset($menu) && is_array($menu))
 	{
 		display_sidebox($appname, $menu_title, $menu['module'], $use_lang = false);

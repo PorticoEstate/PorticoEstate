@@ -36,11 +36,11 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->like		 = & $this->db->like;
 		}
 
 		function read( $data )
@@ -48,14 +48,14 @@
 			//echo '<pre>'; print_r($data); echo '</pre>';
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : '';
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$chapter_id = isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id'] : 0;
-				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		 = isset($data['filter']) ? $data['filter'] : '';
+				$query		 = isset($data['query']) ? $data['query'] : '';
+				$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		 = isset($data['order']) ? $data['order'] : '';
+				$chapter_id	 = isset($data['chapter_id']) && $data['chapter_id'] ? $data['chapter_id'] : 0;
+				$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+				$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 			/*
 			  [filter] => 1020
@@ -82,14 +82,14 @@
 
 			if ($chapter_id > 0)
 			{
-				$filtermethod .= " $where chapter_id='$chapter_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where chapter_id='$chapter_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($filter)
 			{
-				$filtermethod .= " $where fm_template.owner='$filter' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where fm_template.owner='$filter' ";
+				$where			 = 'AND';
 			}
 
 			$querymethod = '';
@@ -123,12 +123,12 @@
 			{
 				$template_list[] = array
 					(
-					'template_id' => $this->db->f('id'),
-					'name' => stripslashes($this->db->f('name')),
-					'descr' => stripslashes($this->db->f('descr')),
-					'owner' => $this->db->f('owner'),
-					'entry_date' => $this->db->f('entry_date'),
-					'chapter' => $this->db->f('chapter')
+					'template_id'	 => $this->db->f('id'),
+					'name'			 => stripslashes($this->db->f('name')),
+					'descr'			 => stripslashes($this->db->f('descr')),
+					'owner'			 => $this->db->f('owner'),
+					'entry_date'	 => $this->db->f('entry_date'),
+					'chapter'		 => $this->db->f('chapter')
 				);
 			}
 			return $template_list;
@@ -147,13 +147,13 @@
 				{
 					$start = 0;
 				}
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$chapter_id = (isset($data['chapter_id']) ? $data['chapter_id'] : 0);
-				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
+				$query		 = (isset($data['query']) ? $data['query'] : '');
+				$sort		 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order		 = (isset($data['order']) ? $data['order'] : '');
+				$chapter_id	 = (isset($data['chapter_id']) ? $data['chapter_id'] : 0);
+				$allrows	 = (isset($data['allrows']) ? $data['allrows'] : '');
 				$template_id = (isset($data['template_id']) ? $data['template_id'] : 0);
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -189,7 +189,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -200,23 +200,23 @@
 			{
 				$hour_list[] = array
 					(
-					'hour_id' => $this->db->f('id'),
-					'chapter_id' => $this->db->f('chapter_id'),
-					'activity_num' => $this->db->f('activity_num'),
-					'hours_descr' => stripslashes($this->db->f('hours_descr')),
-					'remark' => stripslashes($this->db->f('remark')),
-					'grouping_id' => $this->db->f('grouping_id'),
+					'hour_id'		 => $this->db->f('id'),
+					'chapter_id'	 => $this->db->f('chapter_id'),
+					'activity_num'	 => $this->db->f('activity_num'),
+					'hours_descr'	 => stripslashes($this->db->f('hours_descr')),
+					'remark'		 => stripslashes($this->db->f('remark')),
+					'grouping_id'	 => $this->db->f('grouping_id'),
 					'grouping_descr' => $this->db->f('grouping_descr'),
-					'ns3420_id' => $this->db->f('ns3420_id'),
-					'tolerance' => $this->db->f('tolerance'),
-					'activity_id' => $this->db->f('activity_id'),
-					'unit' => $this->db->f('unit'),
-					'unit_name' => $this->db->f('unit_name'),
-					'record' => $this->db->f('record'),
-					'cost' => $this->db->f('cost'),
-					'billperae' => $this->db->f('billperae'),
-					'building_part' => $this->db->f('building_part'),
-					'dim_d' => $this->db->f('dim_d')
+					'ns3420_id'		 => $this->db->f('ns3420_id'),
+					'tolerance'		 => $this->db->f('tolerance'),
+					'activity_id'	 => $this->db->f('activity_id'),
+					'unit'			 => $this->db->f('unit'),
+					'unit_name'		 => $this->db->f('unit_name'),
+					'record'		 => $this->db->f('record'),
+					'cost'			 => $this->db->f('cost'),
+					'billperae'		 => $this->db->f('billperae'),
+					'building_part'	 => $this->db->f('building_part'),
+					'dim_d'			 => $this->db->f('dim_d')
 				);
 			}
 			return $hour_list;
@@ -231,9 +231,9 @@
 			if ($this->db->next_record())
 			{
 				$template['template_id'] = $this->db->f('id');
-				$template['name'] = stripslashes($this->db->f('name'));
-				$template['descr'] = stripslashes($this->db->f('descr'));
-				$template['chapter_id'] = (int)$this->db->f('chapter_id');
+				$template['name']		 = stripslashes($this->db->f('name'));
+				$template['descr']		 = stripslashes($this->db->f('descr'));
+				$template['chapter_id']	 = (int)$this->db->f('chapter_id');
 			}
 			return $template;
 		}
@@ -246,21 +246,21 @@
 
 			if ($this->db->next_record())
 			{
-				$hour['hour_id'] = $this->db->f('id');
-				$hour['record'] = $this->db->f('record');
-				$hour['activity_id'] = $this->db->f('activity_id');
-				$hour['activity_num'] = $this->db->f('activity_num');
-				$hour['grouping_id'] = $this->db->f('grouping_id');
-				$hour['hours_descr'] = $this->db->f('hours_descr');
-				$hour['remark'] = $this->db->f('remark');
-				$hour['billperae'] = $this->db->f('billperae');
-				$hour['unit'] = $this->db->f('unit');
-				$hour['ns3420_id'] = $this->db->f('ns3420_id');
-				$hour['tolerance_id'] = (int)$this->db->f('tolerance');
-				$hour['building_part_id'] = (int)$this->db->f('building_part');
-				$hour['quantity'] = $this->db->f('quantity');
-				$hour['cost'] = $this->db->f('cost');
-				$hour['dim_d'] = $this->db->f('dim_d');
+				$hour['hour_id']			 = $this->db->f('id');
+				$hour['record']				 = $this->db->f('record');
+				$hour['activity_id']		 = $this->db->f('activity_id');
+				$hour['activity_num']		 = $this->db->f('activity_num');
+				$hour['grouping_id']		 = $this->db->f('grouping_id');
+				$hour['hours_descr']		 = $this->db->f('hours_descr');
+				$hour['remark']				 = $this->db->f('remark');
+				$hour['billperae']			 = $this->db->f('billperae');
+				$hour['unit']				 = $this->db->f('unit');
+				$hour['ns3420_id']			 = $this->db->f('ns3420_id');
+				$hour['tolerance_id']		 = (int)$this->db->f('tolerance');
+				$hour['building_part_id']	 = (int)$this->db->f('building_part');
+				$hour['quantity']			 = $this->db->f('quantity');
+				$hour['cost']				 = $this->db->f('cost');
+				$hour['dim_d']				 = $this->db->f('dim_d');
 			}
 
 			return $hour;
@@ -349,8 +349,8 @@
 
 			$this->db->transaction_begin();
 
-			$hour['descr'] = $this->db->db_addslashes($hour['descr']);
-			$hour['remark'] = $this->db->db_addslashes($hour['remark']);
+			$hour['descr']	 = $this->db->db_addslashes($hour['descr']);
+			$hour['remark']	 = $this->db->db_addslashes($hour['remark']);
 
 			$this->db->query("UPDATE fm_template set
 				chapter_id	='" . $hour['chapter_id'] . "' WHERE id= '$template_id'", __LINE__, __FILE__);
@@ -403,8 +403,8 @@
 					}
 					else
 					{
-						$hour['grouping_id'] = '';
-						$hour['grouping_descr'] = '';
+						$hour['grouping_id']	 = '';
+						$hour['grouping_descr']	 = '';
 					}
 				}
 			}
@@ -415,17 +415,17 @@
 
 
 			$value_set = array(
-				'hours_descr' => $hour['descr'],
-				'remark' => $hour['remark'],
-				'billperae' => $hour['billperae'],
-				'unit' => $hour['unit'],
-				'quantity' => $hour['quantity'],
-				'cost' => $hour['cost'],
-				'ns3420_id' => $hour['ns3420_id'],
-				'tolerance' => $hour['tolerance_id'],
-				'building_part' => $hour['building_part_id'],
-				'dim_d' => $hour['dim_d'],
-				'grouping_id' => $hour['grouping_id'],
+				'hours_descr'	 => $hour['descr'],
+				'remark'		 => $hour['remark'],
+				'billperae'		 => $hour['billperae'],
+				'unit'			 => $hour['unit'],
+				'quantity'		 => $hour['quantity'],
+				'cost'			 => $hour['cost'],
+				'ns3420_id'		 => $hour['ns3420_id'],
+				'tolerance'		 => $hour['tolerance_id'],
+				'building_part'	 => $hour['building_part_id'],
+				'dim_d'			 => $hour['dim_d'],
+				'grouping_id'	 => $hour['grouping_id'],
 				'grouping_descr' => $hour['grouping_descr']
 			);
 
@@ -449,8 +449,8 @@
 			{
 				$grouping_entries[] = array
 					(
-					'id' => $this->db->f('grouping_id'),
-					'name' => $this->db->f('grouping_descr', true)
+					'id'	 => $this->db->f('grouping_id'),
+					'name'	 => $this->db->f('grouping_descr', true)
 				);
 			}
 			return $grouping_entries;
@@ -478,21 +478,21 @@
 
 			$this->db->transaction_commit();
 
-			$receipt['template_id'] = $template_id;
-			$receipt['message'][] = array('msg' => lang('template %1 is added', $values['name']));
+			$receipt['template_id']	 = $template_id;
+			$receipt['message'][]	 = array('msg' => lang('template %1 is added', $values['name']));
 			return $receipt;
 		}
 
 		function edit_template( $values )
 		{
-			$values['name'] = $this->db->db_addslashes($values['name']);
+			$values['name']	 = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$this->db->transaction_begin();
 
 			$value_set = array(
-				'name' => $values['name'],
-				'descr' => $values['descr'],
+				'name'		 => $values['name'],
+				'descr'		 => $values['descr'],
 				'chapter_id' => $values['chapter_id']
 			);
 

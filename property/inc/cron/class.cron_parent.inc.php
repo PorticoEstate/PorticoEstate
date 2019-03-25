@@ -35,18 +35,18 @@
 	{
 
 		protected $function_name;
-		protected $debug = false;
-		protected $receipt = array();
-		protected $sub_location = 'sub_location';
-		protected $function_msg = 'function_msg';
-		protected $cron = false;
+		protected $debug		 = false;
+		protected $receipt		 = array();
+		protected $sub_location	 = 'sub_location';
+		protected $function_msg	 = 'function_msg';
+		protected $cron			 = false;
 
 		function __construct()
 		{
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->like		 = & $this->db->like;
 		}
 
 		function pre_run( $data = array() )
@@ -54,9 +54,9 @@
 			$this->cron = !empty($data['cron']) ? true : false;
 			if (isset($data['enabled']) && $data['enabled'] == 1)
 			{
-				$confirm = true;
-				$cron = true;
-				$this->cron = true;
+				$confirm	 = true;
+				$cron		 = true;
+				$this->cron	 = true;
 			}
 			else
 			{
@@ -94,8 +94,8 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.custom_functions.index',
-				'function' => $this->function_name,
-				'execute' => $execute
+				'function'	 => $this->function_name,
+				'execute'	 => $execute
 			);
 
 
@@ -112,18 +112,18 @@
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index')),
-				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'message' => $this->receipt['message'],
-				'lang_confirm_msg' => $lang_confirm_msg,
-				'lang_yes' => $lang_yes,
-				'lang_yes_statustext' => $this->function_msg,
-				'lang_no_statustext' => 'tilbake',
-				'lang_no' => lang('no'),
-				'lang_done' => 'Avbryt',
-				'lang_done_statustext' => 'tilbake',
-				'debug' => $this->debug
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiasync.index')),
+				'run_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'message'				 => $this->receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => $this->function_msg,
+				'lang_no_statustext'	 => 'tilbake',
+				'lang_no'				 => lang('no'),
+				'lang_done'				 => 'Avbryt',
+				'lang_done_statustext'	 => 'tilbake',
+				'debug'					 => $this->debug
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $this->sub_location . ': ' . $this->function_msg;

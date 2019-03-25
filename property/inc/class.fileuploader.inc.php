@@ -41,18 +41,18 @@
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			$GLOBALS['phpgw_info']['flags']['no_reset_fonts'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = false;
+			$GLOBALS['phpgw_info']['flags']['noframework']		 = true;
+			$GLOBALS['phpgw_info']['flags']['no_reset_fonts']	 = true;
 		}
 
 		function add()
 		{
-			$upload_target = phpgw::get_var('upload_target');
-			$id = phpgw::get_var('id');
+			$upload_target	 = phpgw::get_var('upload_target');
+			$id				 = phpgw::get_var('id');
 
-			$session_name = session_name();
-			$oArgs = "{'menuaction':'$upload_target',"
+			$session_name	 = session_name();
+			$oArgs			 = "{'menuaction':'$upload_target',"
 				. "'id':'$id',"
 				. "'last_loginid':'" . phpgw::get_var('last_loginid') . "',"
 				. "'last_domain':'" . phpgw::get_var('last_domain') . "',"
@@ -77,13 +77,13 @@
 			  $str_base_url .= $GLOBALS['phpgw']->link('/', array(), true);
 			 */
 
-			$config = CreateObject('phpgwapi.config', 'property');
+			$config					 = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$ntlm_alternative_host = isset($config->config_data['ntlm_alternative_host']) ? $config->config_data['ntlm_alternative_host'] : '';
-			$scriptAccess = $ntlm_alternative_host ? 'always' : 'sameDomain';
+			$ntlm_alternative_host	 = isset($config->config_data['ntlm_alternative_host']) ? $config->config_data['ntlm_alternative_host'] : '';
+			$scriptAccess			 = $ntlm_alternative_host ? 'always' : 'sameDomain';
 
-			$uploader_filetypes = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
-			$uploader_filetypes_arr = explode(',', $uploader_filetypes);
+			$uploader_filetypes		 = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
+			$uploader_filetypes_arr	 = explode(',', $uploader_filetypes);
 
 
 			$filetypes = array();
@@ -92,15 +92,15 @@
 				$filetypes[] = "*.{$filetype}";
 			}
 
-			$fileExt = implode(';', $filetypes);
-			$fileDesc = strtoupper(implode(', ', $filetypes));
+			$fileExt	 = implode(';', $filetypes);
+			$fileDesc	 = strtoupper(implode(', ', $filetypes));
 
-			$title = lang('fileuploader');
+			$title	 = lang('fileuploader');
 			$version = 2;
 			if ($version == 2)
 			{
-				$oArgs .= '}';
-				$html = <<<HTML
+				$oArgs	 .= '}';
+				$html	 = <<<HTML
 					<!DOCTYPE html>
 					<html>
 						<head>
@@ -177,8 +177,8 @@ HTML;
 			}
 			else
 			{
-				$str_base_url = $ntlm_alternative_host . $GLOBALS['phpgw']->link('/', array(), true);
-				$oArgs_check = "{$oArgs},check:1}";
+				$str_base_url	 = $ntlm_alternative_host . $GLOBALS['phpgw']->link('/', array(), true);
+				$oArgs_check	 = "{$oArgs},check:1}";
 
 				$oArgs .= '}';
 
@@ -265,8 +265,8 @@ HTML;
 			//Return true if the file exists
 
 			if ($bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE))))
+					'string'	 => $to_file,
+					'relatives'	 => Array(RELATIVE_NONE))))
 			{
 				echo 1;
 			}
@@ -316,12 +316,12 @@ HTML;
 
 		function upload( $save_path = '', $fakebase = '/property' )
 		{
-			$bofiles = CreateObject('property.bofiles', $fakebase);
-			$use_vfs = true;
+			$bofiles		 = CreateObject('property.bofiles', $fakebase);
+			$use_vfs		 = true;
 			// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
-			$POST_MAX_SIZE = ini_get('post_max_size');
-			$unit = strtoupper(substr($POST_MAX_SIZE, -1));
-			$multiplier = ($unit == 'M' ? 1048576 : ($unit == 'K' ? 1024 : ($unit == 'G' ? 1073741824 : 1)));
+			$POST_MAX_SIZE	 = ini_get('post_max_size');
+			$unit			 = strtoupper(substr($POST_MAX_SIZE, -1));
+			$multiplier		 = ($unit == 'M' ? 1048576 : ($unit == 'K' ? 1024 : ($unit == 'G' ? 1073741824 : 1)));
 
 			if ((int)$_SERVER['CONTENT_LENGTH'] > $multiplier * (int)$POST_MAX_SIZE && $POST_MAX_SIZE)
 			{
@@ -334,32 +334,32 @@ HTML;
 
 			if (!$save_path)
 			{
-				$save_path = "{$GLOBALS['phpgw_info']['server']['temp_dir']}";
-				$use_vfs = false;
+				$save_path	 = "{$GLOBALS['phpgw_info']['server']['temp_dir']}";
+				$use_vfs	 = false;
 			}
-			$upload_name = "Filedata";
-			$max_file_size_in_bytes = 2147483647; // 2GB in bytes
+			$upload_name			 = "Filedata";
+			$max_file_size_in_bytes	 = 2147483647; // 2GB in bytes
 
-			$config = CreateObject('phpgwapi.config', 'property');
+			$config				 = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$uploader_filetypes = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
+			$uploader_filetypes	 = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
 
 			//$extension_whitelist = array("jpg", "gif", "png");	// Allowed file extensions
 			$extension_whitelist = explode(',', $uploader_filetypes);
 
-			$valid_chars_regex = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-'; // Characters allowed in the file name (in a Regular Expression format)
+			$valid_chars_regex	 = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-'; // Characters allowed in the file name (in a Regular Expression format)
 			// Other variables	
 			$MAX_FILENAME_LENGTH = 260;
-			$file_name = "";
-			$file_extension = "";
-			$uploadErrors = array
+			$file_name			 = "";
+			$file_extension		 = "";
+			$uploadErrors		 = array
 				(
-				0 => "There is no error, the file uploaded successfully",
-				1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-				2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-				3 => "The uploaded file was only partially uploaded",
-				4 => "No file was uploaded",
-				6 => "Missing a temporary folder"
+				0	 => "There is no error, the file uploaded successfully",
+				1	 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+				2	 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+				3	 => "The uploaded file was only partially uploaded",
+				4	 => "No file was uploaded",
+				6	 => "Missing a temporary folder"
 			);
 
 
@@ -412,8 +412,8 @@ HTML;
 
 			// Validate that we won't over-write an existing file
 			if ($bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $to_file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$receipt['error'][] = array('msg' => lang('This file already exists !'));
@@ -432,9 +432,9 @@ HTML;
 			  }
 			 */
 			// Validate file extension
-			$path_info = pathinfo($_FILES[$upload_name]['name']);
-			$file_extension = $path_info["extension"];
-			$is_valid_extension = false;
+			$path_info			 = pathinfo($_FILES[$upload_name]['name']);
+			$file_extension		 = $path_info["extension"];
+			$is_valid_extension	 = false;
 			foreach ($extension_whitelist as $extension)
 			{
 				if (strcasecmp($file_extension, $extension) == 0)
@@ -473,9 +473,9 @@ HTML;
 
 			$bofiles->vfs->override_acl = 1;
 			if ($bofiles->vfs->cp(array(
-					'from' => $_FILES[$upload_name]["tmp_name"],
-					'to' => "{$bofiles->fakebase}/{$save_path}/{$file_name}",
-					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					'from'		 => $_FILES[$upload_name]["tmp_name"],
+					'to'		 => "{$bofiles->fakebase}/{$save_path}/{$file_name}",
+					'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 			{
 				echo $file_name;
 			}

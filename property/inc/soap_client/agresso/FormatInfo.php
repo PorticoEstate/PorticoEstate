@@ -1,35 +1,33 @@
 <?php
 
-class FormatInfo
-{
+	class FormatInfo
+	{
 
-    /**
-     * @var ArrayOfFormatProperties $FormatPropertiesList
-     */
-    protected $FormatPropertiesList = null;
+		/**
+		 * @var ArrayOfFormatProperties $FormatPropertiesList
+		 */
+		protected $FormatPropertiesList = null;
 
-    
-    public function __construct()
-    {
-    
-    }
+		public function __construct()
+		{
 
-    /**
-     * @return ArrayOfFormatProperties
-     */
-    public function getFormatPropertiesList()
-    {
-      return $this->FormatPropertiesList;
-    }
+		}
 
-    /**
-     * @param ArrayOfFormatProperties $FormatPropertiesList
-     * @return FormatInfo
-     */
-    public function setFormatPropertiesList($FormatPropertiesList)
-    {
-      $this->FormatPropertiesList = $FormatPropertiesList;
-      return $this;
-    }
+		/**
+		 * @return ArrayOfFormatProperties
+		 */
+		public function getFormatPropertiesList()
+		{
+			return $this->FormatPropertiesList;
+		}
 
-}
+		/**
+		 * @param ArrayOfFormatProperties $FormatPropertiesList
+		 * @return FormatInfo
+		 */
+		public function setFormatPropertiesList( $FormatPropertiesList )
+		{
+			$this->FormatPropertiesList = $FormatPropertiesList;
+			return $this;
+		}
+	}

@@ -31,70 +31,70 @@
 	 */
 	include(PHPGW_SERVER_ROOT . '/' . 'property' . '/setup/setup.inc.php');
 
-	$GLOBALS['phpgw']->help->set_params(array('app_name' => 'property',
-		'title' => lang('property'),
-		'app_version' => $setup_info['property']['version']));
+	$GLOBALS['phpgw']->help->set_params(array('app_name'		 => 'property',
+		'title'			 => lang('property'),
+		'app_version'	 => $setup_info['property']['version']));
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('overview'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('overview.odt'),
-		'lang_link_statustext' => lang('overview')
+		'text'					 => lang('overview'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('overview.odt'),
+		'lang_link_statustext'	 => lang('overview')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('location'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('location.odt'),
-		'lang_link_statustext' => lang('location')
+		'text'					 => lang('location'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('location.odt'),
+		'lang_link_statustext'	 => lang('location')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('entities'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('entities.odt'),
-		'lang_link_statustext' => lang('entities')
+		'text'					 => lang('entities'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('entities.odt'),
+		'lang_link_statustext'	 => lang('entities')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('project'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('project.odt'),
-		'lang_link_statustext' => lang('project')
+		'text'					 => lang('project'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('project.odt'),
+		'lang_link_statustext'	 => lang('project')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('requirement'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('requirement.odt'),
-		'lang_link_statustext' => lang('requirement')
+		'text'					 => lang('requirement'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('requirement.odt'),
+		'lang_link_statustext'	 => lang('requirement')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('agreements'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('agreement.vendor.odt'),
-		'lang_link_statustext' => lang('agreements')
+		'text'					 => lang('agreements'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('agreement.vendor.odt'),
+		'lang_link_statustext'	 => lang('agreements')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('invoice'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('invoice.odt'),
-		'lang_link_statustext' => lang('invoice')
+		'text'					 => lang('invoice'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('invoice.odt'),
+		'lang_link_statustext'	 => lang('invoice')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('helpdesk'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('helpdesk.odt'),
-		'lang_link_statustext' => lang('helpdesk')
+		'text'					 => lang('helpdesk'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('helpdesk.odt'),
+		'lang_link_statustext'	 => lang('helpdesk')
 	);
 
 	$GLOBALS['phpgw']->help->data[] = array
 		(
-		'text' => lang('document'),
-		'url' => $GLOBALS['phpgw']->help->check_help_file('document.odt'),
-		'lang_link_statustext' => lang('document')
+		'text'					 => lang('document'),
+		'url'					 => $GLOBALS['phpgw']->help->check_help_file('document.odt'),
+		'lang_link_statustext'	 => lang('document')
 	);
 
 

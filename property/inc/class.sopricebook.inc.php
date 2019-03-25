@@ -36,12 +36,12 @@
 
 		function __construct()
 		{
-			$this->socommon = CreateObject('property.socommon');
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$this->socommon	 = CreateObject('property.socommon');
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->like		 = & $this->db->like;
 		}
 
 		function add_activity_first_prize( $m_cost, $w_cost, $total_cost, $activity_id, $agreement_id, $date )
@@ -95,8 +95,8 @@
 				{
 					$vendor_list[] = array
 						(
-						'id' => $this->db->f('vendor_id'),
-						'name' => $this->db->f('org_name')
+						'id'	 => $this->db->f('vendor_id'),
+						'name'	 => $this->db->f('org_name')
 					);
 				}
 			}
@@ -110,8 +110,8 @@
 			{
 				$agreement_group_list[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $GLOBALS['phpgw']->strip_html($this->db->f('descr')) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
+					'id'	 => $this->db->f('id'),
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr')) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
 				);
 			}
 			return $agreement_group_list;
@@ -124,8 +124,8 @@
 			{
 				$dim_d_list[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('id')
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('id')
 				);
 			}
 			return $dim_d_list;
@@ -138,8 +138,8 @@
 			{
 				$unit_list[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					'id'	 => $this->db->f('id'),
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
 				);
 			}
 			return $unit_list;
@@ -152,8 +152,8 @@
 			{
 				$branch_list[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					'id'	 => $this->db->f('id'),
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
 				);
 			}
 			return $branch_list;
@@ -195,11 +195,11 @@
 				{
 					$start = 0;
 				}
-				$filter = (isset($data['filter']) ? $data['filter'] : 'none');
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$filter	 = (isset($data['filter']) ? $data['filter'] : 'none');
+				$query	 = (isset($data['query']) ? $data['query'] : '');
+				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order	 = (isset($data['order']) ? $data['order'] : '');
+				$cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : 0);
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
@@ -216,8 +216,8 @@
 
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " AND cat_id='$cat_id' ";
-				$vendor_condition = "= $cat_id";
+				$filtermethod		 .= " AND cat_id='$cat_id' ";
+				$vendor_condition	 = "= $cat_id";
 			}
 			else
 			{
@@ -253,7 +253,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -264,22 +264,22 @@
 			{
 				$pricebook[] = array
 					(
-					'activity_id' => $this->db->f('activity_id'),
-					'num' => $this->db->f('num'),
-					'branch' => $this->db->f('branch'),
-					'vendor_id' => $this->db->f('vendor_id'),
-					'm_cost' => $this->db->f('m_cost'),
-					'w_cost' => $this->db->f('w_cost'),
-					'total_cost' => $this->db->f('total_cost'),
-					'this_index' => $this->db->f('this_index'),
-					'unit' => $this->db->f('unit'),
-					'unit_name' => $this->db->f('unit_name'),
-					'dim_d' => $this->db->f('dim_d'),
-					'ns3420_id' => $this->db->f('ns3420'),
-					'descr' => $this->db->f('descr', true),
-					'base_descr' => $this->db->f('base_descr', true),
-					'index_count' => $this->db->f('index_count'),
-					'agreement_id' => $this->db->f('agreement_id')
+					'activity_id'	 => $this->db->f('activity_id'),
+					'num'			 => $this->db->f('num'),
+					'branch'		 => $this->db->f('branch'),
+					'vendor_id'		 => $this->db->f('vendor_id'),
+					'm_cost'		 => $this->db->f('m_cost'),
+					'w_cost'		 => $this->db->f('w_cost'),
+					'total_cost'	 => $this->db->f('total_cost'),
+					'this_index'	 => $this->db->f('this_index'),
+					'unit'			 => $this->db->f('unit'),
+					'unit_name'		 => $this->db->f('unit_name'),
+					'dim_d'			 => $this->db->f('dim_d'),
+					'ns3420_id'		 => $this->db->f('ns3420'),
+					'descr'			 => $this->db->f('descr', true),
+					'base_descr'	 => $this->db->f('base_descr', true),
+					'index_count'	 => $this->db->f('index_count'),
+					'agreement_id'	 => $this->db->f('agreement_id')
 				);
 			}
 			//		_debug_array($pricebook);
@@ -299,11 +299,11 @@
 				{
 					$start = 0;
 				}
-				$filter = (isset($data['filter']) ? $data['filter'] : 'none');
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$filter	 = (isset($data['filter']) ? $data['filter'] : 'none');
+				$query	 = (isset($data['query']) ? $data['query'] : '');
+				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order	 = (isset($data['order']) ? $data['order'] : '');
+				$cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : 0);
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
@@ -321,8 +321,8 @@
 
 			if ($cat_id)
 			{
-				$filtermethod .= " $where status='$cat_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where status='$cat_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($query)
@@ -339,7 +339,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -351,9 +351,9 @@
 				$agreement_group[] = array
 					(
 					'agreement_group_id' => $this->db->f('id'),
-					'num' => $this->db->f('num'),
-					'status' => $this->db->f('status'),
-					'descr' => stripslashes($this->db->f('descr'))
+					'num'				 => $this->db->f('num'),
+					'status'			 => $this->db->f('status'),
+					'descr'				 => stripslashes($this->db->f('descr'))
 				);
 			}
 			//		_debug_array($agreement_group);
@@ -367,8 +367,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$status_entries[$i]['id'] = $this->db->f('id');
-				$status_entries[$i]['name'] = stripslashes($this->db->f('descr'));
+				$status_entries[$i]['id']	 = $this->db->f('id');
+				$status_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
 				$i++;
 			}
 			return $status_entries;
@@ -378,16 +378,16 @@
 		{
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : 'none';
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$cat_id = isset($data['cat_id']) ? $data['cat_id'] : 0;
-				$activity_id = isset($data['activity_id']) ? $data['activity_id'] : 0;
-				$agreement_id = isset($data['agreement_id']) && $data['agreement_id'] ? $data['agreement_id'] : 0;
-				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			 = isset($data['filter']) ? $data['filter'] : 'none';
+				$query			 = isset($data['query']) ? $data['query'] : '';
+				$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			 = isset($data['order']) ? $data['order'] : '';
+				$cat_id			 = isset($data['cat_id']) ? $data['cat_id'] : 0;
+				$activity_id	 = isset($data['activity_id']) ? $data['activity_id'] : 0;
+				$agreement_id	 = isset($data['agreement_id']) && $data['agreement_id'] ? $data['agreement_id'] : 0;
+				$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
+				$results		 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -420,7 +420,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -431,13 +431,13 @@
 			{
 				$pricebook[] = array
 					(
-					'index_count' => $this->db->f('index_count'),
-					'this_index' => $this->db->f('this_index'),
-					'current_index' => $this->db->f('current_index'),
-					'm_cost' => $this->db->f('m_cost'),
-					'w_cost' => $this->db->f('w_cost'),
-					'total_cost' => $this->db->f('total_cost'),
-					'date' => $this->db->f('index_date')
+					'index_count'	 => $this->db->f('index_count'),
+					'this_index'	 => $this->db->f('this_index'),
+					'current_index'	 => $this->db->f('current_index'),
+					'm_cost'		 => $this->db->f('m_cost'),
+					'w_cost'		 => $this->db->f('w_cost'),
+					'total_cost'	 => $this->db->f('total_cost'),
+					'date'			 => $this->db->f('index_date')
 				);
 			}
 			//		_debug_array($pricebook);
@@ -456,11 +456,11 @@
 				{
 					$start = 0;
 				}
-				$filter = (isset($data['filter']) ? $data['filter'] : 'none');
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$filter	 = (isset($data['filter']) ? $data['filter'] : 'none');
+				$query	 = (isset($data['query']) ? $data['query'] : '');
+				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order	 = (isset($data['order']) ? $data['order'] : '');
+				$cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : 0);
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
@@ -484,7 +484,7 @@
 			}
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " and (fm_activities.descr $this->like '%$query%' or fm_activities.base_descr $this->like '%$query%' or fm_activities.num $this->like '%$query%') ";
 			}
 
@@ -502,7 +502,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -513,15 +513,15 @@
 			{
 				$pricebook[] = array
 					(
-					'activity_id' => $this->db->f('activity_id'),
-					'num' => $this->db->f('num'),
-					'base_descr' => $this->db->f('base_descr', true),
-					'branch' => $this->db->f('branch'),
-					'dim_d' => $this->db->f('dim_d'),
-					'ns3420' => $this->db->f('ns3420'),
-					'unit' => $this->db->f('unit'),
-					'unit_name' => $this->db->f('unit_name'),
-					'descr' => $this->db->f('descr', true)
+					'activity_id'	 => $this->db->f('activity_id'),
+					'num'			 => $this->db->f('num'),
+					'base_descr'	 => $this->db->f('base_descr', true),
+					'branch'		 => $this->db->f('branch'),
+					'dim_d'			 => $this->db->f('dim_d'),
+					'ns3420'		 => $this->db->f('ns3420'),
+					'unit'			 => $this->db->f('unit'),
+					'unit_name'		 => $this->db->f('unit_name'),
+					'descr'			 => $this->db->f('descr', true)
 				);
 			}
 			//		_debug_array($pricebook);
@@ -532,15 +532,15 @@
 		{
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+				$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter		 = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+				$query		 = isset($data['query']) ? $data['query'] : '';
+				$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order		 = isset($data['order']) ? $data['order'] : '';
+				$cat_id		 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+				$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 				$activity_id = isset($data['activity_id']) ? $data['activity_id'] : '';
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -580,7 +580,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -592,12 +592,12 @@
 			{
 				$pricebook[] = array
 					(
-					'activity_id' => $this->db->f('activity_id'),
-					'num' => $this->db->f('num'),
-					'branch' => $this->db->f('branch'),
-					'vendor_name' => $this->db->f('org_name'),
+					'activity_id'	 => $this->db->f('activity_id'),
+					'num'			 => $this->db->f('num'),
+					'branch'		 => $this->db->f('branch'),
+					'vendor_name'	 => $this->db->f('org_name'),
 					//	'vendor_id'		=> $this->db->f('vendor_id'),
-					'agreement_id' => $this->db->f('agreement_id')
+					'agreement_id'	 => $this->db->f('agreement_id')
 				);
 			}
 			return $pricebook;
@@ -612,14 +612,14 @@
 			if ($this->db->next_record())
 			{
 				$activity['activity_id'] = $id;
-				$activity['num'] = $this->db->f('num');
-				$activity['unit'] = $this->db->f('unit');
-				$activity['cat_id'] = $this->db->f('agreement_group_id');
-				$activity['ns3420_id'] = $this->db->f('ns3420');
-				$activity['descr'] = $this->db->f('descr', true);
-				$activity['base_descr'] = $this->db->f('base_descr', true);
-				$activity['dim_d'] = $this->db->f('dim_d');
-				$activity['branch_id'] = $this->db->f('branch_id');
+				$activity['num']		 = $this->db->f('num');
+				$activity['unit']		 = $this->db->f('unit');
+				$activity['cat_id']		 = $this->db->f('agreement_group_id');
+				$activity['ns3420_id']	 = $this->db->f('ns3420');
+				$activity['descr']		 = $this->db->f('descr', true);
+				$activity['base_descr']	 = $this->db->f('base_descr', true);
+				$activity['dim_d']		 = $this->db->f('dim_d');
+				$activity['branch_id']	 = $this->db->f('branch_id');
 
 				return $activity;
 			}
@@ -633,14 +633,14 @@
 
 			if ($this->db->next_record())
 			{
-				$agreement_group['agreement_group_id'] = $id;
-				$agreement_group['num'] = $this->db->f('num', true);
-				$agreement_group['status'] = $this->db->f('status');
-				$agreement_group['descr'] = $this->db->f('descr', true);
-				$agreement_group['entry_date'] = $this->db->f('entry_date');
-				$agreement_group['start_date'] = $this->db->f('start_date');
-				$agreement_group['end_date'] = $this->db->f('end_date');
-				$agreement_group['user_id'] = $this->db->f('user_id');
+				$agreement_group['agreement_group_id']	 = $id;
+				$agreement_group['num']					 = $this->db->f('num', true);
+				$agreement_group['status']				 = $this->db->f('status');
+				$agreement_group['descr']				 = $this->db->f('descr', true);
+				$agreement_group['entry_date']			 = $this->db->f('entry_date');
+				$agreement_group['start_date']			 = $this->db->f('start_date');
+				$agreement_group['end_date']			 = $this->db->f('end_date');
+				$agreement_group['user_id']				 = $this->db->f('user_id');
 
 				return $agreement_group;
 			}
@@ -648,8 +648,8 @@
 
 		function add_activity( $values )
 		{
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-			$values['base_descr'] = $this->db->db_addslashes($values['base_descr']);
+			$values['descr']		 = $this->db->db_addslashes($values['descr']);
+			$values['base_descr']	 = $this->db->db_addslashes($values['base_descr']);
 
 			$vals = array(
 				$values['activity_id'],
@@ -670,25 +670,25 @@
 				. "VALUES ($vals)", __LINE__, __FILE__);
 			$this->db->transaction_commit();
 
-			$receipt['message'][] = array('msg' => lang('Activity has been saved'));
-			$receipt['activity_id'] = $values['activity_id'];
+			$receipt['message'][]	 = array('msg' => lang('Activity has been saved'));
+			$receipt['activity_id']	 = $values['activity_id'];
 			return $receipt;
 		}
 
 		function edit_activity( $values )
 		{
-			$values['descr'] = $this->db->db_addslashes($values['descr']);
-			$values['base_descr'] = $this->db->db_addslashes($values['base_descr']);
+			$values['descr']		 = $this->db->db_addslashes($values['descr']);
+			$values['base_descr']	 = $this->db->db_addslashes($values['base_descr']);
 
 			$value_set = array(
-				'num' => $values['num'],
-				'unit' => $values['unit'],
+				'num'				 => $values['num'],
+				'unit'				 => $values['unit'],
 				'agreement_group_id' => $values['cat_id'],
-				'ns3420' => $values['ns3420_id'],
-				'dim_d' => $values['dim_d'],
-				'branch_id' => $values['branch_id'],
-				'descr' => $values['descr'],
-				'base_descr' => $values['base_descr']
+				'ns3420'			 => $values['ns3420_id'],
+				'dim_d'				 => $values['dim_d'],
+				'branch_id'			 => $values['branch_id'],
+				'descr'				 => $values['descr'],
+				'base_descr'		 => $values['base_descr']
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -696,8 +696,8 @@
 			$this->db->query("UPDATE fm_activities set $value_set WHERE id= '" . $values['activity_id'] . "'", __LINE__, __FILE__);
 			$this->db->transaction_commit();
 
-			$receipt['activity_id'] = $values['activity_id'];
-			$receipt['message'][] = array('msg' => lang('Activity has been edited'));
+			$receipt['activity_id']	 = $values['activity_id'];
+			$receipt['message'][]	 = array('msg' => lang('Activity has been edited'));
 			return $receipt;
 		}
 
@@ -705,8 +705,8 @@
 		{
 
 			$receipt = array();
-			$num = $this->db->db_addslashes($values['num']);
-			$sql = "SELECT id FROM fm_agreement_group WHERE num = '{$num}'";
+			$num	 = $this->db->db_addslashes($values['num']);
+			$sql	 = "SELECT id FROM fm_agreement_group WHERE num = '{$num}'";
 			if ($this->db->next_record())
 			{
 				$receipt['error'][] = array('msg' => lang('num is already taken'));
@@ -743,31 +743,31 @@
 				$activities = array();
 				while ($this->db->next_record())
 				{
-					$activity = array();
-					$activity['num'] = $this->db->f('num');
-					$activity['base_descr'] = $this->db->f('base_descr');
-					$activity['unit'] = $this->db->f('unit');
-					$activity['ns3420'] = $this->db->f('ns3420');
-					$activity['descr'] = $this->db->f('descr');
-					$activity['dim_d'] = $this->db->f('dim_d');
-					$activity['branch_id'] = $this->db->f('branch_id');
-					$activity['agreement_group_id'] = (int)$values['agreement_group_id'];
-					$activities[] =  $activity;
+					$activity						 = array();
+					$activity['num']				 = $this->db->f('num');
+					$activity['base_descr']			 = $this->db->f('base_descr');
+					$activity['unit']				 = $this->db->f('unit');
+					$activity['ns3420']				 = $this->db->f('ns3420');
+					$activity['descr']				 = $this->db->f('descr');
+					$activity['dim_d']				 = $this->db->f('dim_d');
+					$activity['branch_id']			 = $this->db->f('branch_id');
+					$activity['agreement_group_id']	 = (int)$values['agreement_group_id'];
+					$activities[]					 = $activity;
 				}
 
 				foreach ($activities as $value_set)
 				{
 					$value_set['id'] = $this->socommon->next_id('fm_activities');
-					$cols = implode(',', array_keys($value_set));
-					$values_insert = $this->db->validate_insert(array_values($value_set));
+					$cols			 = implode(',', array_keys($value_set));
+					$values_insert	 = $this->db->validate_insert(array_values($value_set));
 					$this->db->query("INSERT INTO fm_activities ({$cols}) VALUES ({$values_insert})", __LINE__, __FILE__);
 				}
 			}
 
 			$this->db->transaction_commit();
 
-			$receipt['message'][] = array('msg' => lang('Agreement group has been saved'));
-			$receipt['agreement_group_id'] = $values['agreement_group_id'];
+			$receipt['message'][]			 = array('msg' => lang('Agreement group has been saved'));
+			$receipt['agreement_group_id']	 = $values['agreement_group_id'];
 			return $receipt;
 		}
 
@@ -776,11 +776,11 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$value_set = array(
-				'num' => $values['num'],
-				'status' => $values['status'],
-				'descr' => $values['descr'],
+				'num'		 => $values['num'],
+				'status'	 => $values['status'],
+				'descr'		 => $values['descr'],
 				'start_date' => $values['start_date'],
-				'end_date' => $values['end_date']
+				'end_date'	 => $values['end_date']
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -790,9 +790,9 @@
 
 			$this->db->transaction_commit();
 
-			$receipt = array();
-			$receipt['message'][] = array('msg' => lang('Agreement group has been edited'));
-			$receipt['agreement_group_id'] = $values['agreement_group_id'];
+			$receipt						 = array();
+			$receipt['message'][]			 = array('msg' => lang('Agreement group has been edited'));
+			$receipt['agreement_group_id']	 = $values['agreement_group_id'];
 			return $receipt;
 		}
 

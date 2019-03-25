@@ -42,16 +42,16 @@
 		var $cat_id;
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.sotemplate');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->so		 = CreateObject('property.sotemplate');
+			$this->bocommon	 = CreateObject('property.bocommon');
 
 			if ($session)
 			{
@@ -59,14 +59,14 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$chapter_id = phpgw::get_var('chapter_id', 'int');
+			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		 = phpgw::get_var('query');
+			$sort		 = phpgw::get_var('sort');
+			$order		 = phpgw::get_var('order');
+			$filter		 = phpgw::get_var('filter', 'int');
+			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
+			$chapter_id	 = phpgw::get_var('chapter_id', 'int');
 
 			if ($start)
 			{
@@ -119,14 +119,14 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'template');
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
-			$this->allrows = $data['allrows'];
-			$this->chapter_id = $data['chapter_id'];
+			$this->start		 = $data['start'];
+			$this->query		 = $data['query'];
+			$this->filter		 = $data['filter'];
+			$this->sort			 = $data['sort'];
+			$this->order		 = $data['order'];
+			$this->cat_id		 = $data['cat_id'];
+			$this->allrows		 = $data['allrows'];
+			$this->chapter_id	 = $data['chapter_id'];
 		}
 
 		function read( $data = array() )
@@ -147,14 +147,14 @@
 
 			  return $template;
 			 */
-			$values = $this->so->read($data);
+			$values				 = $this->so->read($data);
 			$this->total_records = $this->so->total_records;
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$dateformat			 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			for ($i = 0; $i < count($values); $i++)
 			{
-				$values[$i]['owner'] = $GLOBALS['phpgw']->accounts->id2name($values[$i]['owner']);
-				$values[$i]['entry_date'] = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'], $dateformat);
+				$values[$i]['owner']		 = $GLOBALS['phpgw']->accounts->id2name($values[$i]['owner']);
+				$values[$i]['entry_date']	 = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'], $dateformat);
 			}
 			return $values;
 		}
@@ -162,7 +162,7 @@
 		function read_template_hour( $data = array() )
 		{
 
-			$template = $this->so->read_template_hour($data);
+			$template			 = $this->so->read_template_hour($data);
 //			$template = $this->so->read_template_hour(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
 //				'chapter_id' => $this->chapter_id,'allrows'=>$this->allrows, 'template_id'=>$template_id));
 			$this->total_records = $this->so->total_records;
@@ -195,8 +195,8 @@
 			{
 				if ($values['template_id'] != 0)
 				{
-					$receipt = $this->so->edit_template($values);
-					$receipt['template_id'] = $values['template_id'];
+					$receipt				 = $this->so->edit_template($values);
+					$receipt['template_id']	 = $values['template_id'];
 				}
 			}
 			else
@@ -209,8 +209,8 @@
 		function save_hour( $values, $template_id )
 		{
 			$values['billperae'] = str_replace(",", ".", $values['billperae']);
-			$values['quantity'] = str_replace(",", ".", $values['quantity']);
-			$values['cost'] = $values['billperae'] * $values['quantity'];
+			$values['quantity']	 = str_replace(",", ".", $values['quantity']);
+			$values['cost']		 = $values['billperae'] * $values['quantity'];
 			if ($values['ns3420_descr'])
 			{
 				$values['descr'] = $values['ns3420_descr'];

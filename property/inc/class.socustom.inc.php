@@ -36,10 +36,10 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = & $this->db->join;
+			$this->like		 = & $this->db->like;
 		}
 
 		function read( $data )
@@ -47,12 +47,12 @@
 
 			if (is_array($data))
 			{
-				$start = (isset($data['start']) ? $data['start'] : 0);
-				$filter = (isset($data['filter']) ? $data['filter'] : 'none');
-				$query = (isset($data['query']) ? $data['query'] : '');
-				$sort = (isset($data['sort']) ? $data['sort'] : 'DESC');
-				$order = (isset($data['order']) ? $data['order'] : '');
-				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
+				$start	 = (isset($data['start']) ? $data['start'] : 0);
+				$filter	 = (isset($data['filter']) ? $data['filter'] : 'none');
+				$query	 = (isset($data['query']) ? $data['query'] : '');
+				$sort	 = (isset($data['sort']) ? $data['sort'] : 'DESC');
+				$order	 = (isset($data['order']) ? $data['order'] : '');
+				$cat_id	 = (isset($data['cat_id']) ? $data['cat_id'] : 0);
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 				$results = (isset($data['results']) ? $data['results'] : 0);
 			}
@@ -71,13 +71,13 @@
 			$where = 'WHERE';
 			if ($cat_id > 0)
 			{
-				$filtermethod .= " $where category='$cat_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where category='$cat_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " $where name $this->like '%$query%'";
 			}
 
@@ -99,10 +99,10 @@
 			{
 				$customs[] = array
 					(
-					'custom_id' => $this->db->f('id'),
-					'name' => stripslashes($this->db->f('name')),
+					'custom_id'	 => $this->db->f('id'),
+					'name'		 => stripslashes($this->db->f('name')),
 					'entry_date' => $this->db->f('entry_date'),
-					'user' => $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
+					'user'		 => $GLOBALS['phpgw']->accounts->id2name($this->db->f('user_id'))
 				);
 			}
 			return $customs;
@@ -118,11 +118,11 @@
 			{
 				$custom = array
 					(
-					'id' => (int)$this->db->f('id'),
-					'name' => $this->db->f('name', true),
-					'sql_text' => $this->db->f('sql_text', true),
+					'id'		 => (int)$this->db->f('id'),
+					'name'		 => $this->db->f('name', true),
+					'sql_text'	 => $this->db->f('sql_text', true),
 					'entry_date' => $this->db->f('entry_date'),
-					'cols' => $this->read_cols($custom_id)
+					'cols'		 => $this->read_cols($custom_id)
 				);
 			}
 
@@ -131,8 +131,8 @@
 
 		function read_cols( $custom_id )
 		{
-			$custom_id = (int)$custom_id;
-			$sql = "SELECT * FROM fm_custom_cols WHERE custom_id={$custom_id} ORDER by sorting";
+			$custom_id	 = (int)$custom_id;
+			$sql		 = "SELECT * FROM fm_custom_cols WHERE custom_id={$custom_id} ORDER by sorting";
 			$this->db->query($sql);
 
 			$cols = array();
@@ -140,10 +140,10 @@
 			{
 				$cols[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('name'),
-					'descr' => $this->db->f('descr', true),
-					'sorting' => $this->db->f('sorting')
+					'id'		 => $this->db->f('id'),
+					'name'		 => $this->db->f('name'),
+					'descr'		 => $this->db->f('descr', true),
+					'sorting'	 => $this->db->f('sorting')
 				);
 			}
 			return $cols;
@@ -159,8 +159,8 @@
 
 		function add( $custom )
 		{
-			$custom['name'] = $this->db->db_addslashes($custom['name']);
-			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
+			$custom['name']		 = $this->db->db_addslashes($custom['name']);
+			$custom['sql_text']	 = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
 			$this->db->transaction_begin();
 
@@ -180,8 +180,8 @@
 
 		function edit( $custom )
 		{
-			$custom['name'] = $this->db->db_addslashes($custom['name']);
-			$custom['sql_text'] = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
+			$custom['name']		 = $this->db->db_addslashes($custom['name']);
+			$custom['sql_text']	 = $this->db->db_addslashes(htmlspecialchars_decode($custom['sql_text']));
 
 			$this->db->query("UPDATE fm_custom set sql_text='{$custom['sql_text']}', entry_date='" . time() . "', name='{$custom['name']}' WHERE id=" . (int)$custom['custom_id'], __LINE__, __FILE__);
 
@@ -189,7 +189,7 @@
 			{
 				$column_id = $this->db->next_id('fm_custom_cols', array('custom_id' => $custom['custom_id']));
 
-				$sql = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id=" . $custom['custom_id'];
+				$sql	 = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id=" . $custom['custom_id'];
 				$this->db->query($sql);
 				$this->db->next_record();
 				$sorting = $this->db->f('max_sort') + 1;
@@ -214,14 +214,14 @@
 				for ($i = 0; $i < count($custom['delete']); $i++)
 				{
 
-					$sql = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete'][$i];
+					$sql		 = "SELECT sorting FROM fm_custom_cols where custom_id=" . $custom['custom_id'] . " AND id=" . $custom['delete'][$i];
 					$this->db->query($sql);
 					$this->db->next_record();
-					$sorting = $this->db->f('sorting');
-					$sql2 = "SELECT max(sorting) as max_sort FROM fm_custom_cols";
+					$sorting	 = $this->db->f('sorting');
+					$sql2		 = "SELECT max(sorting) as max_sort FROM fm_custom_cols";
 					$this->db->query($sql2);
 					$this->db->next_record();
-					$max_sort = $this->db->f('max_sort');
+					$max_sort	 = $this->db->f('max_sort');
 
 					if ($max_sort > $sorting)
 					{
@@ -234,8 +234,8 @@
 				}
 			}
 
-			$receipt['custom_id'] = $custom['custom_id'];
-			$receipt['message'][] = array('msg' => lang('custom %1 has been edited', $custom['custom_id']));
+			$receipt['custom_id']	 = $custom['custom_id'];
+			$receipt['message'][]	 = array('msg' => lang('custom %1 has been edited', $custom['custom_id']));
 			return $receipt;
 		}
 
@@ -244,19 +244,19 @@
 			//html_print_r($data);
 			if (is_array($data))
 			{
-				$resort = (isset($data['resort']) ? $data['resort'] : 'up');
-				$custom_id = (isset($data['id']) ? $data['custom_id'] : '');
-				$id = (isset($data['id']) ? $data['id'] : '');
+				$resort		 = (isset($data['resort']) ? $data['resort'] : 'up');
+				$custom_id	 = (isset($data['id']) ? $data['custom_id'] : '');
+				$id			 = (isset($data['id']) ? $data['id'] : '');
 			}
 
-			$sql = "SELECT sorting FROM fm_custom_cols WHERE custom_id = $custom_id AND id=$id";
+			$sql		 = "SELECT sorting FROM fm_custom_cols WHERE custom_id = $custom_id AND id=$id";
 			$this->db->query($sql);
 			$this->db->next_record();
-			$sorting = $this->db->f('sorting');
-			$sql = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id = $custom_id";
+			$sorting	 = $this->db->f('sorting');
+			$sql		 = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id = $custom_id";
 			$this->db->query($sql);
 			$this->db->next_record();
-			$max_sort = $this->db->f('max_sort');
+			$max_sort	 = $this->db->f('max_sort');
 			switch ($resort)
 			{
 				case 'up':
@@ -285,21 +285,21 @@
 
 		function read_custom( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$custom_id = isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
-			$results = isset($data['results']) ? (int)$data['results'] : 0;
+			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$filter		 = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
+			$query		 = isset($data['query']) ? $data['query'] : '';
+			$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order		 = isset($data['order']) ? $data['order'] : '';
+			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$custom_id	 = isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
+			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$sql = $this->db->f('sql_text', true);
 
-			$uicols = $this->read_cols($custom_id);
-			$this->uicols = $uicols;
+			$uicols			 = $this->read_cols($custom_id);
+			$this->uicols	 = $uicols;
 
 			//FIXME:
 			$ordermethod = '';
@@ -309,15 +309,15 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$n = count($uicols);
-			$j = 0;
+			$n	 = count($uicols);
+			$j	 = 0;
 			while ($this->db->next_record())
 			{
 				for ($i = 0; $i < $n; $i++)

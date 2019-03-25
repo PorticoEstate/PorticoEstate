@@ -29,14 +29,14 @@
 	// Only Modify the $file variable.....
 	$file = array
 		(
-		'Location' => 'location.php',
-		'Entities' => 'entities.php',
-		'Project management' => 'project.php',
-		'Deviation / requirement' => 'requirement.php',
-		'Electronic invoice handling ' => 'invoice.php',
-		'Vendor agreements' => 'agreements.php',
+		'Location'							 => 'location.php',
+		'Entities'							 => 'entities.php',
+		'Project management'				 => 'project.php',
+		'Deviation / requirement'			 => 'requirement.php',
+		'Electronic invoice handling '		 => 'invoice.php',
+		'Vendor agreements'					 => 'agreements.php',
 		'Document register/Drawing register' => 'document.php',
-		'Helpdesk' => 'helpdesk.php'
+		'Helpdesk'							 => 'helpdesk.php'
 	);
 	//Do not modify below this line
 	display_manual_section($appname, $file);

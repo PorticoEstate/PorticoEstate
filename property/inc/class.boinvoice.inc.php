@@ -35,11 +35,11 @@
 	class property_boinvoice
 	{
 
-		public $total_records = 0;
-		public $sum_amount = 0;
-		public $results = 0;
-		public $allrows = false;
-		public $debug = false;
+		public $total_records	 = 0;
+		public $sum_amount		 = 0;
+		public $results			 = 0;
+		public $allrows			 = false;
+		public $debug			 = false;
 		public $b_account;
 
 		/**
@@ -50,9 +50,9 @@
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.soinvoice', true);
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.soinvoice', true);
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($session)
 			{
@@ -60,17 +60,17 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$user_lid = phpgw::get_var('user_lid');
-			$allrows = phpgw::get_var('allrows', 'bool');
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			 = phpgw::get_var('query');
+			$sort			 = phpgw::get_var('sort');
+			$order			 = phpgw::get_var('order');
+			$filter			 = phpgw::get_var('filter', 'int');
+			$cat_id			 = phpgw::get_var('cat_id', 'int');
+			$user_lid		 = phpgw::get_var('user_lid');
+			$allrows		 = phpgw::get_var('allrows', 'bool');
 			$b_account_class = phpgw::get_var('b_account_class', 'int');
-			$district_id = phpgw::get_var('district_id', 'int');
-			$b_account = phpgw::get_var('b_account');
+			$district_id	 = phpgw::get_var('district_id', 'int');
+			$b_account		 = phpgw::get_var('b_account');
 
 			//		$this->start			= $start ? $start : (int)$this->start;
 
@@ -98,15 +98,15 @@
 			}
 
 
-			$this->b_account = isset($b_account) ? $b_account : $b_account;
-			$this->district_id = isset($district_id) ? $district_id : $district_id;
-			$this->b_account_class = isset($b_account_class) ? $b_account_class : $b_account_class;
-			$this->filter = isset($filter) ? $filter : $filter;
-			$this->sort = isset($sort) ? $sort : $sort;
-			$this->order = isset($order) ? $order : $order;
-			$this->cat_id = isset($cat_id) ? $cat_id : $cat_id;
-			$this->user_lid = $user_lid ? $user_lid : $this->user_lid;
-			$this->allrows = isset($allrows) ? $allrows : $allrows;
+			$this->b_account		 = isset($b_account) ? $b_account : $b_account;
+			$this->district_id		 = isset($district_id) ? $district_id : $district_id;
+			$this->b_account_class	 = isset($b_account_class) ? $b_account_class : $b_account_class;
+			$this->filter			 = isset($filter) ? $filter : $filter;
+			$this->sort				 = isset($sort) ? $sort : $sort;
+			$this->order			 = isset($order) ? $order : $order;
+			$this->cat_id			 = isset($cat_id) ? $cat_id : $cat_id;
+			$this->user_lid			 = $user_lid ? $user_lid : $this->user_lid;
+			$this->allrows			 = isset($allrows) ? $allrows : $allrows;
 		}
 
 		function save_sessiondata( $data )
@@ -123,51 +123,51 @@
 
 //_debug_array($data);
 
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->filter = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->user_lid = $data['user_lid'] ? $data['user_lid'] : '';
-			$this->sub = isset($data['sub']) ? $data['sub'] : '';
-			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$this->b_account_class = isset($data['b_account_class']) ? $data['b_account_class'] : '';
-			$this->district_id = isset($data['district_id']) ? $data['district_id'] : '';
+			$this->start			 = isset($data['start']) ? $data['start'] : '';
+			$this->query			 = isset($data['query']) ? $data['query'] : '';
+			$this->filter			 = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort				 = isset($data['sort']) ? $data['sort'] : '';
+			$this->order			 = isset($data['order']) ? $data['order'] : '';
+			$this->cat_id			 = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->user_lid			 = $data['user_lid'] ? $data['user_lid'] : '';
+			$this->sub				 = isset($data['sub']) ? $data['sub'] : '';
+			$this->allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$this->b_account_class	 = isset($data['b_account_class']) ? $data['b_account_class'] : '';
+			$this->district_id		 = isset($data['district_id']) ? $data['district_id'] : '';
 		}
 
 		function read_invoice( $data )
 		{
-			$start_date = $this->bocommon->date_to_timestamp($data['start_date']);
-			$end_date = $this->bocommon->date_to_timestamp($data['end_date']);
+			$start_date	 = $this->bocommon->date_to_timestamp($data['start_date']);
+			$end_date	 = $this->bocommon->date_to_timestamp($data['end_date']);
 
 			$invoice = $this->so->read_invoice(array(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'user_lid' => $this->user_lid,
-				'cat_id' => $this->cat_id,
-				'paid' => $data['paid'],
-				'start_date' => $start_date,
-				'end_date' => $end_date,
-				'vendor_id' => $data['vendor_id'],
-				'loc1' => $data['loc1'],
-				'workorder_id' => $data['workorder_id'],
-				'allrows' => $data['allrows'],
-				'voucher_id' => $data['voucher_id'],
-				'b_account_class' => $this->b_account_class,
-				'district_id' => $this->district_id,
-				'invoice_id' => $data['invoice_id'],
-				'ecodimb' => $data['ecodimb'],
-				'project_id' => ($data['project_id']) ? $data['project_id'] : 0,
-				'results' => $data['results']
+				'start'				 => $data['start'],
+				'query'				 => $data['query'],
+				'sort'				 => $data['sort'],
+				'order'				 => $data['order'],
+				'user_lid'			 => $this->user_lid,
+				'cat_id'			 => $this->cat_id,
+				'paid'				 => $data['paid'],
+				'start_date'		 => $start_date,
+				'end_date'			 => $end_date,
+				'vendor_id'			 => $data['vendor_id'],
+				'loc1'				 => $data['loc1'],
+				'workorder_id'		 => $data['workorder_id'],
+				'allrows'			 => $data['allrows'],
+				'voucher_id'		 => $data['voucher_id'],
+				'b_account_class'	 => $this->b_account_class,
+				'district_id'		 => $this->district_id,
+				'invoice_id'		 => $data['invoice_id'],
+				'ecodimb'			 => $data['ecodimb'],
+				'project_id'		 => ($data['project_id']) ? $data['project_id'] : 0,
+				'results'			 => $data['results']
 				)
 			);
 
-			$soXport = CreateObject('property.soXport');
-			$soworkorder = CreateObject('property.soworkorder');
-			$sos_agreement = CreateObject('property.sos_agreement');
+			$soXport		 = CreateObject('property.soXport');
+			$soworkorder	 = CreateObject('property.soworkorder');
+			$sos_agreement	 = CreateObject('property.sos_agreement');
 			foreach ($invoice as & $entry)
 			{
 				if ($entry['order_id'])
@@ -198,23 +198,23 @@
 			}
 
 			$this->total_records = $this->so->total_records;
-			$this->sum_amount = $this->so->sum_amount;
+			$this->sum_amount	 = $this->so->sum_amount;
 			return $invoice;
 		}
 
 		function read_invoice_sub( $data )
 		{
 			$invoice = $this->so->read_invoice_sub(array(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'user_lid' => $this->user_lid,
-				'cat_id' => $this->cat_id,
+				'start'		 => $data['start'],
+				'query'		 => $data['query'],
+				'sort'		 => $data['sort'],
+				'order'		 => $data['order'],
+				'user_lid'	 => $this->user_lid,
+				'cat_id'	 => $this->cat_id,
 				'voucher_id' => $data['voucher_id'],
-				'paid' => $data['paid'],
-				'results' => $data['results'],
-				'allrows' => $data['allrows']
+				'paid'		 => $data['paid'],
+				'results'	 => $data['results'],
+				'allrows'	 => $data['allrows']
 			));
 
 			$this->total_records = $this->so->total_records;
@@ -236,9 +236,9 @@
 
 			$invoice = $this->so->read_single_voucher(0, $line_id);
 
-			$soXport = CreateObject('property.soXport');
-			$soworkorder = CreateObject('property.soworkorder');
-			$sos_agreement = CreateObject('property.sos_agreement');
+			$soXport		 = CreateObject('property.soXport');
+			$soworkorder	 = CreateObject('property.soworkorder');
+			$sos_agreement	 = CreateObject('property.sos_agreement');
 			foreach ($invoice as & $entry)
 			{
 				if ($entry['order_id'])
@@ -274,25 +274,25 @@
 
 		function read_consume( $start_date = '', $end_date = '', $vendor_id = '', $loc1 = '', $workorder_id = '', $b_account_class = '', $district_id = '', $ecodimb = '' )
 		{
-			$start_date = $this->bocommon->date_to_timestamp($start_date);
-			$end_date = $this->bocommon->date_to_timestamp($end_date);
+			$start_date	 = $this->bocommon->date_to_timestamp($start_date);
+			$end_date	 = $this->bocommon->date_to_timestamp($end_date);
 
 			$invoice = $this->so->read_consume(array(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'user_lid' => $this->user_lid,
-				'cat_id' => $this->cat_id,
-				'start_date' => $start_date,
-				'end_date' => $end_date,
-				'vendor_id' => $vendor_id,
-				'loc1' => $loc1,
-				'workorder_id' => $workorder_id,
-				'b_account_class' => $b_account_class,
-				'district_id' => $district_id,
-				'b_account' => $this->b_account,
-				'ecodimb' => $ecodimb));
+				'start'				 => $this->start,
+				'query'				 => $this->query,
+				'sort'				 => $this->sort,
+				'order'				 => $this->order,
+				'user_lid'			 => $this->user_lid,
+				'cat_id'			 => $this->cat_id,
+				'start_date'		 => $start_date,
+				'end_date'			 => $end_date,
+				'vendor_id'			 => $vendor_id,
+				'loc1'				 => $loc1,
+				'workorder_id'		 => $workorder_id,
+				'b_account_class'	 => $b_account_class,
+				'district_id'		 => $district_id,
+				'b_account'			 => $this->b_account,
+				'ecodimb'			 => $ecodimb));
 
 			$this->total_records = $this->so->total_records;
 
@@ -324,8 +324,8 @@
 		function period_list( $selected = '' )
 		{
 
-			$sogeneric = CreateObject('property.sogeneric', 'period_transition');
-			$config = $sogeneric->read(array('allrows' => true));
+			$sogeneric	 = CreateObject('property.sogeneric', 'period_transition');
+			$config		 = $sogeneric->read(array('allrows' => true));
 
 			$period_transition = array();
 			foreach ($config as $entry)
@@ -337,27 +337,27 @@
 
 			if (isset($period_transition[$current_month]))
 			{
-				$_lag_day = (int)$period_transition[$current_month]['day'];
-				$_lag_hour = (int)$period_transition[$current_month]['hour'];
-				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+				$_lag_day		 = (int)$period_transition[$current_month]['day'];
+				$_lag_hour		 = (int)$period_transition[$current_month]['hour'];
+				$_lag_seconds	 = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
 			else if (isset($period_transition[13]))
 			{
-				$_lag_day = (int)$period_transition[13]['day'];
-				$_lag_hour = (int)$period_transition[13]['hour'];
-				$_lag_seconds = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
+				$_lag_day		 = (int)$period_transition[13]['day'];
+				$_lag_hour		 = (int)$period_transition[13]['hour'];
+				$_lag_seconds	 = ($_lag_day * 24 * 3600) + ($_lag_hour * 3600);
 			}
 			else
 			{
-				$_lag = date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
-				$_lag_seconds = $_lag * 24 * 3600;
+				$_lag			 = date('n') == 1 ? 11 : 7;//6 days into next month, 10 days into next year
+				$_lag_seconds	 = $_lag * 24 * 3600;
 			}
 
 			$_lag_seconds -= phpgwapi_datetime::user_timezone();
 
 //_debug_array($period_transition);			
-			$time = time();
-			$timestamp_at_start_month = mktime($hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y"));
+			$time						 = time();
+			$timestamp_at_start_month	 = mktime($hour						 = 0, $minute						 = 0, $second						 = 0, $month						 = date("n"), $day						 = 0, $year						 = date("Y"));
 
 
 			if (($time - $timestamp_at_start_month) < $_lag_seconds)
@@ -365,35 +365,35 @@
 				$time = $time - $_lag_seconds;
 			}
 
-			$month = date('n', $time);
-			$year = date('Y', $time);
-			$check_year = true;
+			$month		 = date('n', $time);
+			$year		 = date('Y', $time);
+			$check_year	 = true;
 			$period_list = array();
 			for ($i = $month; $i <= 12; $i++)
 			{
-				$period = sprintf("%s%02d", $year, $i);
-				$period_list[] = array
+				$period			 = sprintf("%s%02d", $year, $i);
+				$period_list[]	 = array
 					(
-					'id' => $period,
-					'name' => $period
+					'id'	 => $period,
+					'name'	 => $period
 				);
 
 				if ($check_year = true && $year != date('Y'))
 				{
-					$i = 0;
+					$i			 = 0;
 					$year++;
-					$check_year = false;
+					$check_year	 = false;
 				}
 			}
 
 			if (count($period_list) == 1) //last month in year
 			{
 				$year++;
-				$period = sprintf("%s%02d", $year, 1);
-				$period_list[] = array
+				$period			 = sprintf("%s%02d", $year, 1);
+				$period_list[]	 = array
 					(
-					'id' => $period,
-					'name' => $period
+					'id'	 => $period,
+					'name'	 => $period
 				);
 			}
 
@@ -541,34 +541,34 @@
 		public function add_manual_invoice( $values )
 		{
 			$receipt = array();
-			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
-			$buffer = array();
-			$soXport = CreateObject('property.soXport');
-			$soXport->supertransaction = $this->supertransaction;
-			$soXport->debug = $this->debug;
-			if ($values['loc1'] = $values['location']['loc1'])
+			$buffer						 = array();
+			$soXport					 = CreateObject('property.soXport');
+			$soXport->supertransaction	 = $this->supertransaction;
+			$soXport->debug				 = $this->debug;
+			if ($values['loc1']				 = $values['location']['loc1'])
 			{
-				$values['dima'] = implode('', $values['location']);
+				$values['dima']			 = implode('', $values['location']);
 				$values['location_code'] = explode('-', $values['location']);
 			}
 			$values['spbudact_code'] = $values['b_account_id'];
-			$values['fakturanr'] = $values['invoice_id'];
-			$values['spvend_code'] = $values['vendor_id'];
-			$values['belop'] = $values['amount'];
+			$values['fakturanr']	 = $values['invoice_id'];
+			$values['spvend_code']	 = $values['vendor_id'];
+			$values['belop']		 = $values['amount'];
 			$values['godkjentbelop'] = $values['amount'];
 
 			$_dateformat = $GLOBALS['phpgw']->db->date_format();
 
-			$invoice_date = $values['invoice_date'] ? phpgwapi_datetime::date_to_timestamp($values['invoice_date']) : time();
-			$payment_date = $values['payment_date'] ? phpgwapi_datetime::date_to_timestamp($values['payment_date']) : time();
-			$paid_date = $values['paid_date'] ? phpgwapi_datetime::date_to_timestamp($values['paid_date']) : time();
+			$invoice_date	 = $values['invoice_date'] ? phpgwapi_datetime::date_to_timestamp($values['invoice_date']) : time();
+			$payment_date	 = $values['payment_date'] ? phpgwapi_datetime::date_to_timestamp($values['payment_date']) : time();
+			$paid_date		 = $values['paid_date'] ? phpgwapi_datetime::date_to_timestamp($values['paid_date']) : time();
 
-			$values['fakturadato'] = date($_dateformat, $invoice_date);
-			$values['forfallsdato'] = date($_dateformat, $payment_date);
-			$values['periode'] = date('Ym', $paid_date);
+			$values['fakturadato']	 = date($_dateformat, $invoice_date);
+			$values['forfallsdato']	 = date($_dateformat, $payment_date);
+			$values['periode']		 = date('Ym', $paid_date);
 
-			$values['kildeid'] = 1;
+			$values['kildeid']		 = 1;
 			$values['pmwrkord_code'] = $values['order_id'];
 
 			if (isset($config->config_data['common']['manual_voucher_id']) && $config->config_data['common']['manual_voucher_id'])
@@ -577,15 +577,15 @@
 				{
 					$receipt['error'][] = array('msg' => lang('voucher id already taken'));
 				}
-				$skip_update_voucher_id = true;
-				$values['bilagsnr'] = $values['voucher_out_id'];
-				$values['bilagsnr_ut'] = '';
+				$skip_update_voucher_id	 = true;
+				$values['bilagsnr']		 = $values['voucher_out_id'];
+				$values['bilagsnr_ut']	 = '';
 			}
 			else
 			{
-				$skip_update_voucher_id = false;
-				$values['bilagsnr'] = execMethod('property.socommon.increment_id', 'Bilagsnummer');
-				$values['bilagsnr_ut'] = $values['voucher_out_id'];
+				$skip_update_voucher_id	 = false;
+				$values['bilagsnr']		 = execMethod('property.socommon.increment_id', 'Bilagsnummer');
+				$values['bilagsnr_ut']	 = $values['voucher_out_id'];
 			}
 
 			if ($soXport->check_invoice_id($values['vendor_id'], $values['invoice_id']))
@@ -598,13 +598,13 @@
 				return $receipt;
 			}
 
-			$values['kostra_id'] = $soXport->get_kostra_id($values['loc1']);
-			$values['mvakode'] = (int)$values['tax_code'];
-			$values['project_id'] = $values['external_project_id'];
+			$values['kostra_id']	 = $soXport->get_kostra_id($values['loc1']);
+			$values['mvakode']		 = (int)$values['tax_code'];
+			$values['project_id']	 = $values['external_project_id'];
 
-			$values['oppsynsmannid'] = $values['janitor'];
-			$values['saksbehandlerid'] = $values['supervisor'];
-			$values['budsjettansvarligid'] = $values['budget_responsible'];
+			$values['oppsynsmannid']		 = $values['janitor'];
+			$values['saksbehandlerid']		 = $values['supervisor'];
+			$values['budsjettansvarligid']	 = $values['budget_responsible'];
 
 			if ($values['order_id'] && $order_type = $soXport->check_order($values['order_id']))
 			{
@@ -615,36 +615,36 @@
 
 				if ($order_type == 's_agreement')
 				{
-					$sos_agreement = CreateObject('property.sos_agreement');
-					$s_agreement = $sos_agreement->read_single($values['order_id']);
+					$sos_agreement		 = CreateObject('property.sos_agreement');
+					$s_agreement		 = $sos_agreement->read_single($values['order_id']);
 					//		$values = $this->set_responsible($values,$s_agreement['user_id'],$s_agreement['b_account_id']);
-					$s_agreement_detail = $sos_agreement->read(array('allrows' => true, 's_agreement_id' => $values['order_id'],
-						'detail' => true));
+					$s_agreement_detail	 = $sos_agreement->read(array('allrows'		 => true, 's_agreement_id' => $values['order_id'],
+						'detail'		 => true));
 
 					$sum_agreement = 0;
 					for ($i = 0; $i < count($s_agreement_detail); $i++)
 					{
-						$s_agreement_detail[$i]['cost'] = abs($s_agreement_detail[$i]['cost']) > 0 ? $s_agreement_detail[$i]['cost'] : 1;
-						$sum_agreement = $sum_agreement + $s_agreement_detail[$i]['cost'];
+						$s_agreement_detail[$i]['cost']	 = abs($s_agreement_detail[$i]['cost']) > 0 ? $s_agreement_detail[$i]['cost'] : 1;
+						$sum_agreement					 = $sum_agreement + $s_agreement_detail[$i]['cost'];
 					}
 
 					for ($i = 0; $i < count($s_agreement_detail); $i++)
 					{
-						$_location = explode('-', $s_agreement_detail[$i]['location_code']);
-						$buffer[$i] = $values;
+						$_location					 = explode('-', $s_agreement_detail[$i]['location_code']);
+						$buffer[$i]					 = $values;
 						$buffer[$i]['location_code'] = $s_agreement_detail[$i]['location_code'];
-						$buffer[$i]['loc1'] = $_location[0];
-						$buffer[$i]['dima'] = str_replace('-', '', $s_agreement_detail[$i]['location_code']);
-						$buffer[$i]['belop'] = round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'], 2);
+						$buffer[$i]['loc1']			 = $_location[0];
+						$buffer[$i]['dima']			 = str_replace('-', '', $s_agreement_detail[$i]['location_code']);
+						$buffer[$i]['belop']		 = round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'], 2);
 						$buffer[$i]['godkjentbelop'] = $buffer[$i]['belop'];
 					}
 				}
 
 				if ($soXport->add_manual_invoice($buffer, $skip_update_voucher_id))
 				{
-					$_msg = $this->debug ? 'DEBUG: ' : '';
-					$receipt['message'][] = array('msg' => $_msg . lang('Invoice %1 is added', $soXport->voucher_id));
-					$receipt['voucher_id'] = $soXport->voucher_id;
+					$_msg					 = $this->debug ? 'DEBUG: ' : '';
+					$receipt['message'][]	 = array('msg' => $_msg . lang('Invoice %1 is added', $soXport->voucher_id));
+					$receipt['voucher_id']	 = $soXport->voucher_id;
 				}
 				else
 				{
@@ -656,16 +656,16 @@
 
 		function add( $values, $debug = '' )
 		{
-			$this->soXport = CreateObject('property.soXport');
-			if ($values['loc1'] = $values['location']['loc1'])
+			$this->soXport	 = CreateObject('property.soXport');
+			if ($values['loc1']	 = $values['location']['loc1'])
 			{
 				$values['dima'] = implode('', $values['location']);
 			}
 
 			$values['spbudact_code'] = $values['b_account_id'];
-			$values['fakturanr'] = $values['invoice_num'];
-			$values['spvend_code'] = $values['vendor_id'];
-			$values['belop'] = $values['amount'];
+			$values['fakturanr']	 = $values['invoice_num'];
+			$values['spvend_code']	 = $values['vendor_id'];
+			$values['belop']		 = $values['amount'];
 			$values['godkjentbelop'] = $values['amount'];
 
 			$values['fakturadato'] = date($GLOBALS['phpgw']->db->date_format(), mktime(2, 0, 0, $values['smonth'], $values['sday'], $values['syear']));
@@ -679,32 +679,32 @@
 				$values['forfallsdato'] = date($GLOBALS['phpgw']->db->date_format(), mktime(2, 0, 0, $values['emonth'], $values['eday'], $values['eyear']));
 			}
 
-			$values['artid'] = $values['art'];
-			$values['periode'] = $values['syear'] . sprintf("%02d", $values['smonth']);
-			$values['dimb'] = $values['dim_b'];
-			$values['oppsynsmannid'] = $values['janitor'];
-			$values['saksbehandlerid'] = $values['supervisor'];
-			$values['budsjettansvarligid'] = $values['budget_responsible'];
-			$values['kildeid'] = 1;
-			$values['kidnr'] = $values['kid_nr'];
-			$values['typeid'] = $values['type'];
+			$values['artid']				 = $values['art'];
+			$values['periode']				 = $values['syear'] . sprintf("%02d", $values['smonth']);
+			$values['dimb']					 = $values['dim_b'];
+			$values['oppsynsmannid']		 = $values['janitor'];
+			$values['saksbehandlerid']		 = $values['supervisor'];
+			$values['budsjettansvarligid']	 = $values['budget_responsible'];
+			$values['kildeid']				 = 1;
+			$values['kidnr']				 = $values['kid_nr'];
+			$values['typeid']				 = $values['type'];
 			//_debug_array($values);die();
-			if ($values['order_id'] && $order_type = $this->soXport->check_order($values['order_id']))
+			if ($values['order_id'] && $order_type						 = $this->soXport->check_order($values['order_id']))
 			{
 				if ($order_type == 'workorder')
 				{
 					$soworkorder = CreateObject('property.soworkorder');
-					$soproject = CreateObject('property.soproject');
-					$workorder = $soworkorder->read_single($values['order_id']);
-					$project = $soproject->read_single($workorder['project_id']);
+					$soproject	 = CreateObject('property.soproject');
+					$workorder	 = $soworkorder->read_single($values['order_id']);
+					$project	 = $soproject->read_single($workorder['project_id']);
 
-					$values['spvend_code'] = $workorder['vendor_id'];
+					$values['spvend_code']	 = $workorder['vendor_id'];
 					$values['spbudact_code'] = $workorder['b_account_id'];
 					$values['location_code'] = $project['location_code'];
-					$values['dima'] = str_replace('-', '', $project['location_code']);
-					$values['vendor_name'] = $this->get_vendor_name($workorder['vendor_id']);
+					$values['dima']			 = str_replace('-', '', $project['location_code']);
+					$values['vendor_name']	 = $this->get_vendor_name($workorder['vendor_id']);
 					$values['pmwrkord_code'] = $values['order_id'];
-					$values['project_id'] = $workorder['project_id'];
+					$values['project_id']	 = $workorder['project_id'];
 					if (!$values['dimb'])
 					{
 						$values['dimb'] = $workorder['ecodimb'];
@@ -714,9 +714,9 @@
 
 					if ($values['auto_tax'])
 					{
-						$values['mvakode'] = $this->soXport->auto_tax($values['dima']);
-						$values['mvakode'] = $this->soXport->tax_b_account_override($values['mvakode'], $values['spbudact_code']);
-						$values['mvakode'] = $this->soXport->tax_vendor_override($values['mvakode'], $values['spvend_code']);
+						$values['mvakode']	 = $this->soXport->auto_tax($values['dima']);
+						$values['mvakode']	 = $this->soXport->tax_b_account_override($values['mvakode'], $values['spbudact_code']);
+						$values['mvakode']	 = $this->soXport->tax_vendor_override($values['mvakode'], $values['spvend_code']);
 						$values['kostra_id'] = $this->soXport->get_kostra_id($values['dima']);
 					}
 
@@ -725,18 +725,18 @@
 
 				if ($order_type == 's_agreement')
 				{
-					$sos_agreement = CreateObject('property.sos_agreement');
-					$s_agreement = $sos_agreement->read_single(array('s_agreement_id' => $values['order_id']));
+					$sos_agreement	 = CreateObject('property.sos_agreement');
+					$s_agreement	 = $sos_agreement->read_single(array('s_agreement_id' => $values['order_id']));
 
-					$values['spvend_code'] = $s_agreement['vendor_id'];
+					$values['spvend_code']	 = $s_agreement['vendor_id'];
 					$values['spbudact_code'] = $s_agreement['b_account_id'];
-					$values['vendor_name'] = $this->get_vendor_name($s_agreement['vendor_id']);
+					$values['vendor_name']	 = $this->get_vendor_name($s_agreement['vendor_id']);
 					$values['pmwrkord_code'] = intval($values['order_id']);
-					$values = $this->set_responsible($values, $s_agreement['user_id'], $s_agreement['b_account_id']);
+					$values					 = $this->set_responsible($values, $s_agreement['user_id'], $s_agreement['b_account_id']);
 
 
-					$s_agreement_detail = $sos_agreement->read(array('allrows' => true, 's_agreement_id' => $values['order_id'],
-						'detail' => true));
+					$s_agreement_detail = $sos_agreement->read(array('allrows'		 => true, 's_agreement_id' => $values['order_id'],
+						'detail'		 => true));
 
 					$sum_agreement = 0;
 					for ($i = 0; $i < count($s_agreement_detail); $i++)
@@ -750,16 +750,16 @@
 						$buffer[$i] = $values;
 
 						$buffer[$i]['location_code'] = $s_agreement_detail[$i]['location_code'];
-						$buffer[$i]['dima'] = str_replace('-', '', $s_agreement_detail[$i]['location_code']);
+						$buffer[$i]['dima']			 = str_replace('-', '', $s_agreement_detail[$i]['location_code']);
 
-						$buffer[$i]['belop'] = round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'], 2);
+						$buffer[$i]['belop']		 = round($values['belop'] / $sum_agreement * $s_agreement_detail[$i]['cost'], 2);
 						$buffer[$i]['godkjentbelop'] = $buffer[$i]['belop'];
 
 						if ($values['auto_tax'])
 						{
-							$buffer[$i]['mvakode'] = $this->soXport->auto_tax($buffer[$i]['dima']);
-							$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $buffer[$i]['spbudact_code']);
-							$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $buffer[$i]['spvend_code']);
+							$buffer[$i]['mvakode']	 = $this->soXport->auto_tax($buffer[$i]['dima']);
+							$buffer[$i]['mvakode']	 = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $buffer[$i]['spbudact_code']);
+							$buffer[$i]['mvakode']	 = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $buffer[$i]['spvend_code']);
 							$buffer[$i]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$i]['dima']);
 						}
 					}
@@ -769,9 +769,9 @@
 			{
 				if ($values['auto_tax'])
 				{
-					$values['mvakode'] = $this->soXport->auto_tax($values['loc1']);
-					$values['mvakode'] = $this->soXport->tax_b_account_override($values['mvakode'], $values['spbudact_code']);
-					$values['mvakode'] = $this->soXport->tax_vendor_override($values['mvakode'], $values['spvend_code']);
+					$values['mvakode']	 = $this->soXport->auto_tax($values['loc1']);
+					$values['mvakode']	 = $this->soXport->tax_b_account_override($values['mvakode'], $values['spbudact_code']);
+					$values['mvakode']	 = $this->soXport->tax_vendor_override($values['mvakode'], $values['spvend_code']);
 					$values['kostra_id'] = $this->soXport->get_kostra_id($values['loc1']);
 				}
 
@@ -785,8 +785,8 @@
 
 			if ($this->soXport->add($buffer) > 0)
 			{
-				$receipt['message'][] = array('msg' => lang('Invoice %1 is added', $this->soXport->voucher_id));
-				$receipt['voucher_id'] = $this->soXport->voucher_id;
+				$receipt['message'][]	 = array('msg' => lang('Invoice %1 is added', $this->soXport->voucher_id));
+				$receipt['voucher_id']	 = $this->soXport->voucher_id;
 			}
 			else
 			{
@@ -827,41 +827,41 @@
 
 		function set_responsible( $values, $user_id = 0, $b_account_id = '' )
 		{
-			$config = CreateObject('phpgwapi.config', 'property');
+			$config					 = CreateObject('phpgwapi.config', 'property');
 			$config->read();
-			$responsible_supervisor = isset($config->config_data['dimb_responsible_1']) && $config->config_data['dimb_responsible_1'] ? $config->config_data['dimb_responsible_1'] : 0;
+			$responsible_supervisor	 = isset($config->config_data['dimb_responsible_1']) && $config->config_data['dimb_responsible_1'] ? $config->config_data['dimb_responsible_1'] : 0;
 			$responsible_responsible = isset($config->config_data['dimb_responsible_2']) && $config->config_data['dimb_responsible_2'] ? $config->config_data['dimb_responsible_2'] : 0;
 
 			$responsible = CreateObject('property.soresponsible');
 			if (!$values['budget_responsible'])
 			{
-				$criteria_budget_responsible = array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_responsible);
-				if ($budget_responsible_contact_id = $responsible->get_responsible($criteria_budget_responsible))
+				$criteria_budget_responsible	 = array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_responsible);
+				if ($budget_responsible_contact_id	 = $responsible->get_responsible($criteria_budget_responsible))
 				{
-					$budget_responsible_user_id = $responsible->get_contact_user_id($budget_responsible_contact_id);
-					$values['budget_responsible'] = $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
-					$values['budsjettansvarligid'] = $values['budget_responsible'];
+					$budget_responsible_user_id		 = $responsible->get_contact_user_id($budget_responsible_contact_id);
+					$values['budget_responsible']	 = $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+					$values['budsjettansvarligid']	 = $values['budget_responsible'];
 				}
 			}
 
 			if (!$values['budget_responsible'])
 			{
-				$values['budget_responsible'] = execMethod('property.soXport.get_responsible', $b_account_id);
-				$values['budsjettansvarligid'] = $values['budget_responsible'];
+				$values['budget_responsible']	 = execMethod('property.soXport.get_responsible', $b_account_id);
+				$values['budsjettansvarligid']	 = $values['budget_responsible'];
 			}
 
 			if (!$values['supervisor'])
 			{
-				$criteria_supervisor = array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_supervisor);
-				if ($supervisor_contact_id = $responsible->get_responsible($criteria_supervisor))
+				$criteria_supervisor	 = array('ecodimb' => $values['dimb'], 'cat_id' => $responsible_supervisor);
+				if ($supervisor_contact_id	 = $responsible->get_responsible($criteria_supervisor))
 				{
-					$supervisor_user_id = $responsible->get_contact_user_id($supervisor_contact_id);
-					$values['supervisor'] = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
-					$values['saksbehandlerid'] = $values['supervisor'];
+					$supervisor_user_id			 = $responsible->get_contact_user_id($supervisor_contact_id);
+					$values['supervisor']		 = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+					$values['saksbehandlerid']	 = $values['supervisor'];
 				}
 			}
 
-			$values['janitor'] = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+			$values['janitor']		 = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
 			$values['oppsynsmannid'] = $values['janitor'];
 
 			if (!$values['supervisor'])
@@ -869,13 +869,13 @@
 				$acl = CreateObject('phpgwapi.acl', $user_id);
 				if ($acl->check('.invoice', 32, 'property') && !$acl->check('.invoice', 64, 'property'))
 				{
-					$values['janitor'] = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+					$values['janitor']		 = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
 					$values['oppsynsmannid'] = $values['janitor'];
 				}
 				else if ($acl->check('.invoice', 64, 'property'))
 				{
-					$values['supervisor'] = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
-					$values['saksbehandlerid'] = $values['supervisor'];
+					$values['supervisor']		 = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+					$values['saksbehandlerid']	 = $values['supervisor'];
 				}
 			}
 			return $values;
@@ -885,9 +885,9 @@
 		{
 			$line = $this->so->get_single_line($id, $paid);
 
-			$soXport = CreateObject('property.soXport');
-			$soworkorder = CreateObject('property.soworkorder');
-			$sos_agreement = CreateObject('property.sos_agreement');
+			$soXport		 = CreateObject('property.soXport');
+			$soworkorder	 = CreateObject('property.soworkorder');
+			$sos_agreement	 = CreateObject('property.sos_agreement');
 			if ($line['order_id'])
 			{
 				if ($order_type = $soXport->check_order($line['order_id']))
@@ -940,7 +940,7 @@
 
 			if ($values)
 			{
-				$names = $descr = array_keys($values[0]);
+				$names	 = $descr	 = array_keys($values[0]);
 				$this->bocommon->download($values, $names, $descr);
 			}
 		}
@@ -951,7 +951,7 @@
 
 			if ($values)
 			{
-				$names = $descr = array_keys($values[0]);
+				$names	 = $descr	 = array_keys($values[0]);
 				$this->bocommon->download($values, $names, $descr);
 			}
 		}
@@ -975,9 +975,9 @@
 		{
 			$role_check = array
 				(
-				'is_janitor' => lang('janitor'),
-				'is_supervisor' => lang('supervisor'),
-				'is_budget_responsible' => lang('b - responsible')
+				'is_janitor'			 => lang('janitor'),
+				'is_supervisor'			 => lang('supervisor'),
+				'is_budget_responsible'	 => lang('b - responsible')
 			);
 
 			$roles = $this->check_role($dimb);
@@ -989,9 +989,9 @@
 				{
 					$approve[] = array
 						(
-						'id' => $role,
-						'name' => $role_check[$role],
-						'selected' => 0
+						'id'		 => $role,
+						'name'		 => $role_check[$role],
+						'selected'	 => 0
 					);
 				}
 			}

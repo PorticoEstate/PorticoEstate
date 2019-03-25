@@ -17,10 +17,10 @@
 
 		function set_classification( $values, $values_attribute, $entity_id, $cat_id, $receipt )
 		{
-			$value_set = array();
-			$value_set['konf_rangering'] = 0;
-			$value_set['integritet_rangering'] = 0;
-			$value_set['tilgjengelighet_rangering'] = 0;
+			$value_set								 = array();
+			$value_set['konf_rangering']			 = 0;
+			$value_set['integritet_rangering']		 = 0;
+			$value_set['tilgjengelighet_rangering']	 = 0;
 
 			foreach ($values_attribute as $entry)
 			{
@@ -113,8 +113,8 @@
 				}
 			}
 
-			$_values = $values;
-			$_values['id'] = (int)$receipt['id'];
+			$_values		 = $values;
+			$_values['id']	 = (int)$receipt['id'];
 			$this->so->edit($_values, $values_attribute, $entity_id, $cat_id);
 		}
 	}
