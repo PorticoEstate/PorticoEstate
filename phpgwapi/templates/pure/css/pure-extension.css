@@ -43,7 +43,7 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 .p0{padding-left: 0px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
 
 .pure-form.pure-form-aligned label h4{margin: 0.66em 0;}
-.pure-g [class*="pure-u"] {padding: 10px 15px;box-sizing: border-box;}
+.pure-g [class*="pure-u"] {padding: 1px 5px;box-sizing: border-box;}
 .pure-g [class*="pure-u"] .pure-g [class*="pure-u"],
 .pure-control-group [class*="pure-u"] {padding: 0px;box-sizing: border-box;}
 
@@ -141,6 +141,7 @@ ul.pathway li:first-child {
 }
 
 /*SCHEDULE COLORS*/
+/*
 #schedule_container .color1 {
     background-color: #ccccff;
 }
@@ -321,7 +322,7 @@ ul.pathway li:first-child {
 #schedule_container .color60 {
     background-color: #aaa;
 }
-
+*/
 .list-left {padding-left: 20px;text-align: left;margin-top: 0px;}
 
 button.pure-button {margin-right: 5px;}

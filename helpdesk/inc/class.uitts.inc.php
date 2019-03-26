@@ -963,8 +963,8 @@ HTML;
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date', 'date', '', array('no_button' => true));
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date', 'date', '', array('no_button' => true));
 
 			$appname = $this->lang_app_name;
 
