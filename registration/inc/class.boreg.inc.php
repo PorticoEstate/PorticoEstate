@@ -412,7 +412,7 @@
 		//
 		function lostpw3()
 		{
-			$r_reg = phpgw::get_var('r_reg');
+			$r_reg = phpgw::get_var('r_reg', 'raw');
 
 			$lid = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 			if (!$lid)
