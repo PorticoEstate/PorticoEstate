@@ -79,6 +79,21 @@
 				$date_range_arr[] = "maxDate:new Date({$config['max_date']})";
 			}
 
+			if(!empty($config['no_button']))
+			{
+				$show_button = "";
+			}
+			else
+			{
+				$show_button  = <<<JS
+					,showOn: "button",
+					buttonImage: "{$this->img_cal}",
+					buttonText: "{$this->lang_select_date}",
+					buttonImageOnly: true
+JS;
+			}
+
+
 			if($date_range_arr)
 			{
 				$date_range = ',' . implode(',', $date_range_arr);
@@ -91,11 +106,12 @@
 					showWeek: true,
 					changeMonth: true,
 					changeYear: true,
-					showOn: "button",
-					showButtonPanel:true,
-					buttonImage: "{$this->img_cal}",
-					buttonText: "{$this->lang_select_date}",
-					buttonImageOnly: true
+					showButtonPanel:true
+					{$show_button}
+		//			showOn: "button",
+		//			buttonImage: "{$this->img_cal}",
+		//			buttonText: "{$this->lang_select_date}",
+		//			buttonImageOnly: true
 					{$date_range}
 					//new Date(2018, 1 -1, 1),//Date(year, month, day, hours, minutes, seconds, milliseconds)
 					//new Date(2018, 12 -1, 31)

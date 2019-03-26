@@ -54,3 +54,27 @@ select {
 	box-shadow: inset 1px 1px 2px #ddd8dc;
 	background: #fff;
 }
+
+html {
+
+    line-height: 1.0;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+}
+
+/* Text inputs */
+input:not([type]),
+input[type=text]:not(.browser-default),
+input[type=password]:not(.browser-default),
+input[type=email]:not(.browser-default),
+input[type=url]:not(.browser-default),
+input[type=time]:not(.browser-default),
+input[type=date]:not(.browser-default),
+input[type=datetime]:not(.browser-default),
+input[type=datetime-local]:not(.browser-default),
+input[type=tel]:not(.browser-default),
+input[type=number]:not(.browser-default),
+input[type=search]:not(.browser-default),
+textarea.materialize-textarea {
+  height: 2rem;
+  margin: 0 0 1px 0;
+ }
