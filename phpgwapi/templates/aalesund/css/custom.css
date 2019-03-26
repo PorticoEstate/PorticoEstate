@@ -506,7 +506,7 @@ input[type="checkbox"], input[type="radio"]{
 input[type="checkbox"] + .label-text:before{
 	content: "\f0c8";
 	font-family: "Font Awesome 5 Free";
-	speak: none;
+	speak-as: none;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -1930,7 +1930,7 @@ footer h3{
 }
 
 .upcomming-event-href{
-	color: #27348b;
+    color: #27348b;
 }
 
 .header_borderline{
