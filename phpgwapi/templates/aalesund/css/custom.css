@@ -1066,6 +1066,10 @@ custom-card-link-href:hover {
     display: block;
 }
 
+#welcomeResult .custom-card .desc a:hover {
+    text-decoration: underline !important;
+}
+
 #welcomeResult .title {
     min-height: 30px;
     overflow: hidden;
