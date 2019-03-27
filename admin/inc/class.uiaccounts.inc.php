@@ -1275,7 +1275,7 @@
 		public function _user_save()
 		{
 			$values									= phpgw::get_var('values', 'string', 'POST');
-			if(isset($values['passwd']))
+			if(!empty($values['passwd']))
 			{
 				// remove entities to stop mangling
 				$values['passwd'] = html_entity_decode($values['passwd']);
