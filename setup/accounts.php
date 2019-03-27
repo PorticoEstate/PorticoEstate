@@ -107,8 +107,8 @@
 
 		foreach ($defaultprefs as $app => $prefs)
 		{
-			$prefs = $GLOBALS['phpgw_setup']->db->db_addslashes(serialize($prefs));
-			$sql = 'INSERT INTO phpgw_preferences(preference_owner, preference_app, preference_value)'
+			$prefs =json_encode($prefs);
+			$sql = 'INSERT INTO phpgw_preferences(preference_owner, preference_app, preference_json)'
 					. " VALUES({$accountid}, '{$app}', '{$prefs}')";
 			$GLOBALS['phpgw_setup']->db->query($sql, __LINE__, __FILE__);
 		}

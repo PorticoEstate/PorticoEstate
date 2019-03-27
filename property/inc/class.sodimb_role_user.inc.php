@@ -34,19 +34,19 @@
 
 		function __construct()
 		{
-			$this->account_id = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
-			$this->join = & $this->db->join;
-			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->account_id	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->db2			 = clone($this->db);
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
+			$this->like			 = & $this->db->like;
 		}
 
 		function read( $data )
 		{
-			$query_start = phpgwapi_datetime::date_to_timestamp($data['query_start']);
-			$query_end = phpgwapi_datetime::date_to_timestamp($data['query_end']);
-			$get_netto_list = isset($data['get_netto_list']) && $data['get_netto_list'] ? true : false;
+			$query_start	 = phpgwapi_datetime::date_to_timestamp($data['query_start']);
+			$query_end		 = phpgwapi_datetime::date_to_timestamp($data['query_end']);
+			$get_netto_list	 = isset($data['get_netto_list']) && $data['get_netto_list'] ? true : false;
 
 
 			$dimb_id = (int)$data['dimb_id'];
@@ -60,26 +60,26 @@
 			}
 
 			$role_id = (int)$data['role_id'];
-			$query = $this->db->db_addslashes($data['query']);
+			$query	 = $this->db->db_addslashes($data['query']);
 
-			$filtermethod = '';
-			$where = 'AND';
+			$filtermethod	 = '';
+			$where			 = 'AND';
 			if ($user_id)
 			{
-				$filtermethod .= "{$where} user_id = $user_id";
-				$where = 'AND';
+				$filtermethod	 .= "{$where} user_id = $user_id";
+				$where			 = 'AND';
 			}
 			if ($role_id)
 			{
-				$filterrole = "WHERE id = $role_id";
-				$filtermethod .= "{$where} role_id = $role_id";
-				$where = 'AND';
+				$filterrole		 = "WHERE id = $role_id";
+				$filtermethod	 .= "{$where} role_id = $role_id";
+				$where			 = 'AND';
 			}
 			if ($dimb_id)
 			{
-				$filterdimb = "WHERE id = $dimb_id";
-				$filtermethod .= "{$where} ecodimb = $dimb_id";
-				$where = 'AND';
+				$filterdimb		 = "WHERE id = $dimb_id";
+				$filtermethod	 .= "{$where} ecodimb = $dimb_id";
+				$where			 = 'AND';
 			}
 
 			if ($query_start)
@@ -107,15 +107,15 @@
 			{
 				$user_data[$this->db->f('ecodimb')][$this->db->f('role_id')][$this->db->f('user_id')] = array
 					(
-					'id' => $this->db->f('id'),
-					'ecodimb' => $this->db->f('ecodimb'),
-					'user_id' => $this->db->f('user_id'),
-					'role_id' => $this->db->f('role_id'),
-					'role' => $this->db->f('role', true),
-					'default_user' => $this->db->f('default_user'),
-					'active_from' => $this->db->f('active_from'),
-					'active_to' => $this->db->f('active_to'),
-					'ecodimb' => $this->db->f('ecodimb'),
+					'id'			 => $this->db->f('id'),
+					'ecodimb'		 => $this->db->f('ecodimb'),
+					'user_id'		 => $this->db->f('user_id'),
+					'role_id'		 => $this->db->f('role_id'),
+					'role'			 => $this->db->f('role', true),
+					'default_user'	 => $this->db->f('default_user'),
+					'active_from'	 => $this->db->f('active_from'),
+					'active_to'		 => $this->db->f('active_to'),
+					'ecodimb'		 => $this->db->f('ecodimb'),
 				);
 			}
 
@@ -124,24 +124,24 @@
 				return $user_data;
 			}
 
-			$sql = "SELECT id, name FROM fm_ecodimb_role {$filterrole} ORDER BY id ASC ";
+			$sql	 = "SELECT id, name FROM fm_ecodimb_role {$filterrole} ORDER BY id ASC ";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$roles = array();
+			$roles	 = array();
 
 			while ($this->db->next_record())
 			{
 				$roles[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('name', true),
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('name', true),
 				);
 			}
 
 
 
-			$sql = "SELECT fm_ecodimb.id FROM fm_ecodimb {$filterdimb} ORDER BY id ASC ";
+			$sql	 = "SELECT fm_ecodimb.id FROM fm_ecodimb {$filterdimb} ORDER BY id ASC ";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$dimbs = array();
+			$dimbs	 = array();
 
 			while ($this->db->next_record())
 			{
@@ -174,11 +174,11 @@
 						{
 							$values[] = array
 								(
-								'ecodimb' => $dimb,
-								'role_id' => $role['id'],
-								'role' => $role['name'],
-								'user_id' => $user['account_id'],
-								'default_user' => ''
+								'ecodimb'		 => $dimb,
+								'role_id'		 => $role['id'],
+								'role'			 => $role['name'],
+								'user_id'		 => $user['account_id'],
+								'default_user'	 => ''
 							);
 						}
 					}
@@ -190,13 +190,13 @@
 
 		public function edit( $data )
 		{
-			$active_from = phpgwapi_datetime::date_to_timestamp($data['active_from']);
-			$active_to = phpgwapi_datetime::date_to_timestamp($data['active_to']);
-			$delete = isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
-			$default_user_orig = isset($data['default_user_orig']) && is_array($data['default_user_orig']) ? $data['default_user_orig'] : array();
-			$default_user = isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
-			$alter_date = isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
-			$add = isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
+			$active_from		 = phpgwapi_datetime::date_to_timestamp($data['active_from']);
+			$active_to			 = phpgwapi_datetime::date_to_timestamp($data['active_to']);
+			$delete				 = isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
+			$default_user_orig	 = isset($data['default_user_orig']) && is_array($data['default_user_orig']) ? $data['default_user_orig'] : array();
+			$default_user		 = isset($data['default_user']) && is_array($data['default_user']) ? $data['default_user'] : array();
+			$alter_date			 = isset($data['alter_date']) && is_array($data['alter_date']) ? $data['alter_date'] : array();
+			$add				 = isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
 
 			$this->db->transaction_begin();
 
@@ -251,17 +251,17 @@
 
 			foreach ($add as $info)
 			{
-				$user_arr = explode('_', $info);
-				$value_set = array
+				$user_arr	 = explode('_', $info);
+				$value_set	 = array
 					(
-					'ecodimb' => $user_arr[0],
-					'role_id' => $user_arr[1],
-					'user_id' => $user_arr[2],
-					'default_user' => false,
-					'active_from' => $active_from ? $active_from : time(),
-					'active_to' => $active_to ? $active_to : 0,
-					'created_on' => time(),
-					'created_by' => $this->account_id
+					'ecodimb'		 => $user_arr[0],
+					'role_id'		 => $user_arr[1],
+					'user_id'		 => $user_arr[2],
+					'default_user'	 => false,
+					'active_from'	 => $active_from ? $active_from : time(),
+					'active_to'		 => $active_to ? $active_to : 0,
+					'created_on'	 => time(),
+					'created_by'	 => $this->account_id
 				);
 
 				$sql = 'INSERT INTO fm_ecodimb_role_user (' . implode(',', array_keys($value_set)) . ') VALUES (' . $this->db->validate_insert(array_values($value_set)) . ')';

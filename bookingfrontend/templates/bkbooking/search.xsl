@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<script type="text/javascript">
+	<script>
 		//		var selected_part_of_towns = "<xsl:value-of select="selected_part_of_towns"/>";
 	</script>
 	<div id="loading">
@@ -141,7 +141,7 @@
 						#treeDiv1 { background: #fff; padding:1em; margin-top:1em; }
 						.no_checkbox>i.jstree-checkbox{ display:none}
 					</style>
-					<script type="text/javascript">
+					<script>
 						filter_tree = <xsl:value-of select="filter_tree"/>;
 					</script>
 					<div id="treecontrol">

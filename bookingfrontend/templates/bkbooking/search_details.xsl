@@ -69,7 +69,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 										<div id="{img_container}"/>
-										<script type="text/javascript">
+										<script>
 											$(document).ready(function () {
 											JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
 											});

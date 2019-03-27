@@ -35,39 +35,39 @@
 	 *
 	 * @author Sigurd Nes
 	 */
-
 	if (!class_exists("lag_agresso_varemottak"))
 	{
+
 		class lag_agresso_varemottak
 		{
 
 			private $acl_location;
 			private $values;
-			private $ordered_amount = 1;
-			var $debug = true;
+			private $ordered_amount	 = 1;
+			var $debug			 = true;
 
 			function __construct( $acl_location, $id )
 			{
 				switch ($acl_location)
 				{
 					case '.ticket':
-						$this->acl_location = $acl_location;
-						$this->values = ExecMethod('property.sotts.read_single', $id);
-						$this->ordered_amount = $this->_get_ordered_ticket_amount($id);
+						$this->acl_location			 = $acl_location;
+						$this->values				 = ExecMethod('property.sotts.read_single', $id);
+						$this->ordered_amount		 = $this->_get_ordered_ticket_amount($id);
 						break;
 					default:
-						$this->acl_location = '.project.workorder';
-						$this->values = ExecMethod('property.soworkorder.read_single', $id);
-						$this->values['order_id'] = $id;
-						$this->ordered_amount = $this->_get_ordered_workorder_amount($id);
+						$this->acl_location			 = '.project.workorder';
+						$this->values				 = ExecMethod('property.soworkorder.read_single', $id);
+						$this->values['order_id']	 = $id;
+						$this->ordered_amount		 = $this->_get_ordered_workorder_amount($id);
 						break;
 				}
 			}
 
-			private function _get_ordered_ticket_amount($id)
+			private function _get_ordered_ticket_amount( $id )
 			{
-				$amount = 0;
-				$budgets = ExecMethod('property.botts.get_budgets',$id);
+				$amount	 = 0;
+				$budgets = ExecMethod('property.botts.get_budgets', $id);
 				foreach ($budgets as $budget)
 				{
 
@@ -76,26 +76,26 @@
 				return $amount ? $amount : 1;
 			}
 
-			private function _get_ordered_workorder_amount($id)
+			private function _get_ordered_workorder_amount( $id )
 			{
-				return ExecMethod('property.boworkorder.get_budget_amount',$id);
+				return ExecMethod('property.boworkorder.get_budget_amount', $id);
 			}
 
 			public function transfer( $id, $received_amount, $external_voucher_id )
 			{
 				$values = $this->values;
-	//		_debug_array($values);die();
+				//		_debug_array($values);die();
 
 				/*
-				P3: EBF Innkjøpsordre Portico : 45000000-45249999
-				V3: EBF Varemotttak Portico   : 45500000-45749999
-				P4: EBE Innkjøpsordre Portico : 45250000-45499999
-				V4: EBE Varemotttak Portico   : 45750000-45999999
-				*/
+				  P3: EBF Innkjøpsordre Portico : 45000000-45249999
+				  V3: EBF Varemotttak Portico   : 45500000-45749999
+				  P4: EBE Innkjøpsordre Portico : 45250000-45499999
+				  V4: EBE Varemotttak Portico   : 45750000-45999999
+				 */
 
 				$voucher_type = 'P4';
 
-				if($values['order_id'] >= 45000000 && $values['order_id'] <= 45249999)
+				if ($values['order_id'] >= 45000000 && $values['order_id'] <= 45249999)
 				{
 					$voucher_type = 'V3';
 				}
@@ -108,13 +108,13 @@
 					throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 				}
 
-				if(empty($this->values['continuous']))
+				if (empty($this->values['continuous']))
 				{
 					$quantity = 1; // closing the order
 				}
-				else if($this->ordered_amount)
+				else if ($this->ordered_amount)
 				{
-					$quantity = $received_amount/$this->ordered_amount;
+					$quantity = $received_amount / $this->ordered_amount;
 				}
 				else //should not happen, but just in case...
 				{
@@ -122,44 +122,44 @@
 				}
 
 				$param = array(
-					'voucher_type'	=> $voucher_type,
-					'order_id' => $values['order_id'],
-					'lines' => array(
+					'voucher_type'	 => $voucher_type,
+					'order_id'		 => $values['order_id'],
+					'lines'			 => array(
 						array(
-							'UnitCode' => 'STK',
-							'Quantity' => $quantity,
+							'UnitCode'	 => 'STK',
+							'Quantity'	 => $quantity,
 						)
 					)
 				);
 
 				$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array(
-					'order_id' => $values['order_id'],
-					'voucher_type' => $voucher_type,
-					'external_voucher_id' => $external_voucher_id
-					));
+					'order_id'				 => $values['order_id'],
+					'voucher_type'			 => $voucher_type,
+					'external_voucher_id'	 => $external_voucher_id
+				));
 				$exporter_varemottak->create_transfer_xml($param);
 
 				$export_ok = $exporter_varemottak->transfer($this->debug);
 				if ($export_ok)
 				{
-					$this->log_transfer( $id, $received_amount );
+					$this->log_transfer($id, $received_amount);
 				}
 				return $export_ok;
 			}
 
 			private function log_transfer( $id, $received_amount )
 			{
-				$id = (int)$id;
+				$id				 = (int)$id;
 				$received_amount = (int)$received_amount;
 				switch ($this->acl_location)
 				{
 					case '.ticket':
-						$historylog = CreateObject('property.historylog', 'tts');
-						$table = 'fm_tts_tickets';
+						$historylog	 = CreateObject('property.historylog', 'tts');
+						$table		 = 'fm_tts_tickets';
 						break;
 					default:
-						$historylog = CreateObject('property.historylog', 'workorder');
-						$table = 'fm_workorder';
+						$historylog	 = CreateObject('property.historylog', 'workorder');
+						$table		 = 'fm_workorder';
 						break;
 				}
 				$historylog->add('RM', $id, "Varemottak: {$received_amount} overført til agresso");
@@ -171,6 +171,7 @@
 
 	if (!class_exists("BkBygg_exporter_varemottak_til_Agresso"))
 	{
+
 		class BkBygg_exporter_varemottak_til_Agresso extends BkBygg_exporter_data_til_Agresso
 		{
 
@@ -188,38 +189,38 @@
 
 			public function create_transfer_xml( $param )
 			{
-				$Orders = array();
-				$Detail = array();
-				$i = 1;
+				$Orders	 = array();
+				$Detail	 = array();
+				$i		 = 1;
 				foreach ($param['lines'] as $line)
 				{
 					$Detail[] = array(
-						'LineNo' => $i,
-						'Status' => 'N',
-						'UnitCode' => $line['UnitCode'],
-						'Quantity' => $line['Quantity'],
+						'LineNo'	 => $i,
+						'Status'	 => 'N',
+						'UnitCode'	 => $line['UnitCode'],
+						'Quantity'	 => $line['Quantity'],
 					);
 					$i++;
 				}
 
 				$Orders['Order'][] = array(
-					'OrderNo' => $param['order_id'],
-					'VoucherType' => $param['voucher_type'],
-					'TransType' => 51,
-					'Details' => array('Detail' => $Detail)
+					'OrderNo'		 => $param['order_id'],
+					'VoucherType'	 => $param['voucher_type'],
+					'TransType'		 => 51,
+					'Details'		 => array('Detail' => $Detail)
 				);
 
-	//			_debug_array($Orders);
-	//			die();
+				//			_debug_array($Orders);
+				//			die();
 
-				$root_attributes = array(
-					'Version' => "542",
-					'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-					'xsi:noNamespaceSchemaLocation' => "http://services.agresso.com/schema/ABWOrder/2004/07/02/ABWOrder.xsd"
+				$root_attributes	 = array(
+					'Version'						 => "542",
+					'xmlns:xsi'						 => "http://www.w3.org/2001/XMLSchema-instance",
+					'xsi:noNamespaceSchemaLocation'	 => "http://services.agresso.com/schema/ABWOrder/2004/07/02/ABWOrder.xsd"
 				);
-				$xml_creator = new xml_creator('ABWOrder', $root_attributes);
+				$xml_creator		 = new xml_creator('ABWOrder', $root_attributes);
 				$xml_creator->fromArray($Orders);
-				$this->transfer_xml = $xml_creator->getDocument();
+				$this->transfer_xml	 = $xml_creator->getDocument();
 				return $this->transfer_xml;
 			}
 
@@ -229,8 +230,8 @@
 				{
 					throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 				}
-				$voucher_type = $this->voucher_type;
-				$order_id = $this->order_id;
+				$voucher_type	 = $this->voucher_type;
+				$order_id		 = $this->order_id;
 
 				$ref = $this->voucher_id ? $this->voucher_id : $this->batchid;
 
@@ -257,5 +258,5 @@
 	if (!empty($id) && !empty($acl_location) && isset($transfer_action) && $transfer_action == 'receive_order')
 	{
 		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
-		$result = $exporter_varemottak->transfer($id, $received_amount, $external_voucher_id);
+		$result				 = $exporter_varemottak->transfer($id, $received_amount, $external_voucher_id);
 	}

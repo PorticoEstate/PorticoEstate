@@ -35,15 +35,15 @@
 	{
 
 		var $grants;
-		var $type = 'entity';
-		var $type_app = array
+		var $type			 = 'entity';
+		var $type_app		 = array
 			(
 			'entity' => 'property',
-			'catch' => 'catch'
+			'catch'	 => 'catch'
 		);
 		var $bocommon;
-		private $move_child = array();
-		public $category_tree = array();
+		private $move_child		 = array();
+		public $category_tree	 = array();
 
 		function __construct( $entity_id = '', $cat_id = '', $bocommon = '' )
 		{
@@ -58,10 +58,10 @@
 				$this->bocommon = $bocommon;
 			}
 
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->db	 = & $GLOBALS['phpgw']->db;
+			$this->db2	 = clone($this->db);
+			$this->join	 = & $this->db->join;
+			$this->like	 = & $this->db->like;
 
 			if ($entity_id && $cat_id)
 			{
@@ -78,11 +78,11 @@
 		{
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$type = isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+				$start	 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$query	 = isset($data['query']) ? $data['query'] : '';
+				$sort	 = isset($data['sort']) ? $data['sort'] : 'DESC';
+				$order	 = isset($data['order']) ? $data['order'] : '';
+				$type	 = isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
@@ -101,7 +101,7 @@
 			$querymethod = '';
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
 			}
 
@@ -125,10 +125,10 @@
 			{
 				$entity[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('name'),
-					'descr' => $this->db->f('descr'),
-					'documentation' => $this->db->f('documentation')
+					'id'			 => $this->db->f('id'),
+					'name'			 => $this->db->f('name'),
+					'descr'			 => $this->db->f('descr'),
+					'documentation'	 => $this->db->f('documentation')
 				);
 			}
 			return $entity;
@@ -136,16 +136,16 @@
 
 		function read_category( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$entity_id = isset($data['entity_id']) ? (int)$data['entity_id'] : 0;
-			$type = isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
-			$required = isset($data['required']) ? $data['required'] : '';
-			$enable_controller = isset($data['enable_controller']) ? $data['enable_controller'] : '';
-			$results = isset($data['results']) ? (int)$data['results'] : 0;
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $data['query'] : '';
+			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_id			 = isset($data['entity_id']) ? (int)$data['entity_id'] : 0;
+			$type				 = isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
+			$required			 = isset($data['required']) ? $data['required'] : '';
+			$enable_controller	 = isset($data['enable_controller']) ? $data['enable_controller'] : '';
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if ($order)
 			{
@@ -161,7 +161,7 @@
 			$querymethod = '';
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " AND (name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 			if ($enable_controller)
@@ -183,8 +183,8 @@
 				$this->db2->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$values = array();
-			$ids = array();
+			$values	 = array();
+			$ids	 = array();
 			while ($this->db2->next_record())
 			{
 				$ids[] = $this->db2->f('id');
@@ -215,20 +215,20 @@
 			{
 				$this->category_tree = array();
 			}
-			$db = clone($this->db);
-			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
+			$db		 = clone($this->db);
+			$table	 = "fm_{$this->type}_category";
+			$sql	 = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
 			$db->query($sql, __LINE__, __FILE__);
 
 			while ($db->next_record())
 			{
-				$id = $db->f('id');
-				$this->category_tree[] = array
+				$id						 = $db->f('id');
+				$this->category_tree[]	 = array
 					(
-					'id' => $id,
-					'name' => str_repeat('..', $level) . $db->f('name'),
-					'parent_id' => $db->f('parent_id'),
-					'location_id' => $db->f('location_id')
+					'id'			 => $id,
+					'name'			 => str_repeat('..', $level) . $db->f('name'),
+					'parent_id'		 => $db->f('parent_id'),
+					'location_id'	 => $db->f('location_id')
 				);
 				$this->get_children2($entity_id, $id, $level + 1);
 			}
@@ -246,13 +246,13 @@
 			$this->category_tree = array();
 			while ($this->db->next_record())
 			{
-				$id = $this->db->f('id');
+				$id				 = $this->db->f('id');
 				$categories[$id] = array
 					(
-					'id' => $id,
-					'name' => $this->db->f('name', true),
-					'parent_id' => 0,
-					'location_id' => $this->db->f('location_id')
+					'id'			 => $id,
+					'name'			 => $this->db->f('name', true),
+					'parent_id'		 => 0,
+					'location_id'	 => $this->db->f('location_id')
 				);
 			}
 
@@ -260,9 +260,9 @@
 			{
 				$this->category_tree[$category['id']] = array
 					(
-					'id' => $category['id'],
-					'name' => $category['name'],
-					'location_id' => $category['location_id']
+					'id'			 => $category['id'],
+					'name'			 => $category['name'],
+					'location_id'	 => $category['location_id']
 				);
 				$this->get_children2($entity_id, $category['id'], 1);
 			}
@@ -279,16 +279,16 @@
 		 */
 		public function get_children( $entity_id, $parent, $level, $menuaction )
 		{
-			$entity_id = (int) $entity_id;
-			$parent = (int) $parent;
+			$entity_id	 = (int)$entity_id;
+			$parent		 = (int)$parent;
 
-			if(!$entity_id)
+			if (!$entity_id)
 			{
 				return array();
 			}
 
-			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
+			$table	 = "fm_{$this->type}_category";
+			$sql	 = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
 			$this->db2->query($sql, __LINE__, __FILE__);
 
 			$children = array();
@@ -298,23 +298,23 @@
 
 				$children[$id] = array
 					(
-					'id' => $id,
-					'name' => $this->db2->f('name'),
-					'prefix' => $this->db2->f('prefix'),
-					'descr' => $this->db2->f('descr'),
-					'level' => (int)$this->db2->f('level'),
-					'parent_id' => (int)$this->db2->f('parent_id'),
-					'owner' => (int)$this->db2->f('owner'),
-					'location_id' => (int)$this->db2->f('location_id')
+					'id'			 => $id,
+					'name'			 => $this->db2->f('name'),
+					'prefix'		 => $this->db2->f('prefix'),
+					'descr'			 => $this->db2->f('descr'),
+					'level'			 => (int)$this->db2->f('level'),
+					'parent_id'		 => (int)$this->db2->f('parent_id'),
+					'owner'			 => (int)$this->db2->f('owner'),
+					'location_id'	 => (int)$this->db2->f('location_id')
 				);
 			}
 
 			foreach ($children as &$child)
 			{
-				$child['url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
-					'entity_id' => $entity_id, 'cat_id' => $child['id'], 'type' => $this->type));
-				$child['text'] = $child['name'];
-				$_children = $this->get_children($entity_id, $child['id'], $level + 1, $menuaction);
+				$child['url']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
+					'entity_id'	 => $entity_id, 'cat_id'	 => $child['id'], 'type'		 => $this->type));
+				$child['text']	 = $child['name'];
+				$_children		 = $this->get_children($entity_id, $child['id'], $level + 1, $menuaction);
 				if ($_children)
 				{
 					$child['children'] = $_children;
@@ -335,30 +335,30 @@
 			$categories = array();
 			while ($this->db2->next_record())
 			{
-				$id = $this->db2->f('id');
-				$location = ".entity.{$entity_id}.{$id}";
+				$id			 = $this->db2->f('id');
+				$location	 = ".entity.{$entity_id}.{$id}";
 
 				if (!$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])))
 				{
 					$categories[$id] = array
 						(
-						'id' => $id,
-						'name' => $this->db2->f('name', true),
-						'prefix' => $this->db2->f('prefix'),
-						'descr' => $this->db2->f('descr', true),
-						'level' => 0,
-						'parent_id' => 0,
-						'location_id' => $this->db2->f('location_id')
+						'id'			 => $id,
+						'name'			 => $this->db2->f('name', true),
+						'prefix'		 => $this->db2->f('prefix'),
+						'descr'			 => $this->db2->f('descr', true),
+						'level'			 => 0,
+						'parent_id'		 => 0,
+						'location_id'	 => $this->db2->f('location_id')
 					);
 				}
 			}
 
 			foreach ($categories as &$category)
 			{
-				$category['url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
-					'entity_id' => $entity_id, 'cat_id' => $category['id'], 'type' => $this->type));
-				$category['text'] = $category['name'];
-				$children = $this->get_children($entity_id, $category['id'], 0, $menuaction);
+				$category['url']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
+					'entity_id'	 => $entity_id, 'cat_id'	 => $category['id'], 'type'		 => $this->type));
+				$category['text']	 = $category['name'];
+				$children			 = $this->get_children($entity_id, $category['id'], 0, $menuaction);
 				if ($children)
 				{
 					$category['children'] = $children;
@@ -376,15 +376,15 @@
 		 */
 		public function get_path( $entity_id, $node )
 		{
-			$table = "fm_{$this->type}_category";
-			$sql = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND id = {$node}";
+			$table	 = "fm_{$this->type}_category";
+			$sql	 = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND id = {$node}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$parent_id = $this->db->f('parent_id');
-			$name = $this->db->f('name', true);
-			$path = array($name);
+			$parent_id	 = $this->db->f('parent_id');
+			$name		 = $this->db->f('name', true);
+			$path		 = array($name);
 			if ($parent_id)
 			{
 				$path = array_merge($this->get_path($entity_id, $parent_id), $path);
@@ -394,15 +394,15 @@
 
 		public function get_path_location_id( $entity_id, $node )
 		{
-			$table = "fm_{$this->type}_category";
-			$sql = "SELECT location_id, parent_id FROM {$table} WHERE entity_id = {$entity_id} AND id = {$node}";
+			$table	 = "fm_{$this->type}_category";
+			$sql	 = "SELECT location_id, parent_id FROM {$table} WHERE entity_id = {$entity_id} AND id = {$node}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$parent_id = $this->db->f('parent_id');
+			$parent_id	 = $this->db->f('parent_id');
 			$location_id = $this->db->f('location_id');
-			$path = array($location_id);
+			$path		 = array($location_id);
 			if ($parent_id)
 			{
 				$path = array_merge($this->get_path_location_id($entity_id, $parent_id), $path);
@@ -413,7 +413,7 @@
 		function read_single( $id )
 		{
 
-			$id = (int)$id;
+			$id	 = (int)$id;
 			$sql = "SELECT * FROM fm_{$this->type} WHERE id={$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -421,9 +421,9 @@
 			$entity = array();
 			if ($this->db->next_record())
 			{
-				$entity['id'] = $this->db->f('id');
-				$entity['name'] = $this->db->f('name', true);
-				$entity['descr'] = $this->db->f('descr', true);
+				$entity['id']			 = $this->db->f('id');
+				$entity['name']			 = $this->db->f('name', true);
+				$entity['descr']		 = $this->db->f('descr', true);
 				$entity['location_form'] = $this->db->f('location_form');
 				$entity['lookup_entity'] = unserialize($this->db->f('lookup_entity'));
 				$entity['documentation'] = $this->db->f('documentation');
@@ -493,28 +493,28 @@
 			{
 				$category = array
 					(
-					'id' => $this->db->f('id'),
-					'entity_id' => $this->db->f('entity_id'),
-					'name' => $this->db->f('name', true),
-					'descr' => $this->db->f('descr', true),
-					'prefix' => $this->db->f('prefix', true),
-					'lookup_tenant' => $this->db->f('lookup_tenant'),
-					'tracking' => $this->db->f('tracking'),
-					'location_level' => $this->db->f('location_level'),
-					'location_link_level' => $this->db->f('location_link_level'),
-					'fileupload' => $this->db->f('fileupload'),
-					'loc_link' => $this->db->f('loc_link'),
-					'start_project' => $this->db->f('start_project'),
-					'start_ticket' => $this->db->f('start_ticket'),
-					'is_eav' => $this->db->f('is_eav'),
-					'enable_bulk' => (int)$this->db->f('enable_bulk'),
-					'enable_controller' => (int)$this->db->f('enable_controller'),
-					'jasperupload' => $this->db->f('jasperupload'),
-					'parent_id' => $this->db->f('parent_id'),
-					'level' => $this->db->f('level'),
-					'org_unit' => $this->db->f('org_unit'),
-					'entity_group_id' => $this->db->f('entity_group_id'),
-					'location_id' => $location_id
+					'id'					 => $this->db->f('id'),
+					'entity_id'				 => $this->db->f('entity_id'),
+					'name'					 => $this->db->f('name', true),
+					'descr'					 => $this->db->f('descr', true),
+					'prefix'				 => $this->db->f('prefix', true),
+					'lookup_tenant'			 => $this->db->f('lookup_tenant'),
+					'tracking'				 => $this->db->f('tracking'),
+					'location_level'		 => $this->db->f('location_level'),
+					'location_link_level'	 => $this->db->f('location_link_level'),
+					'fileupload'			 => $this->db->f('fileupload'),
+					'loc_link'				 => $this->db->f('loc_link'),
+					'start_project'			 => $this->db->f('start_project'),
+					'start_ticket'			 => $this->db->f('start_ticket'),
+					'is_eav'				 => $this->db->f('is_eav'),
+					'enable_bulk'			 => (int)$this->db->f('enable_bulk'),
+					'enable_controller'		 => (int)$this->db->f('enable_controller'),
+					'jasperupload'			 => $this->db->f('jasperupload'),
+					'parent_id'				 => $this->db->f('parent_id'),
+					'level'					 => $this->db->f('level'),
+					'org_unit'				 => $this->db->f('org_unit'),
+					'entity_group_id'		 => $this->db->f('entity_group_id'),
+					'location_id'			 => $location_id
 				);
 			}
 			if (!$bypass) //inherited settings
@@ -530,8 +530,8 @@
 					while ($this->db->next_record())
 					{
 						//values > 2 indicate iherited values
-						$category['enable_bulk'] += 2 * (int)$this->db->f('enable_bulk');
-						$category['enable_controller'] += 2 * (int)$this->db->f('enable_controller');
+						$category['enable_bulk']		 += 2 * (int)$this->db->f('enable_bulk');
+						$category['enable_controller']	 += 2 * (int)$this->db->f('enable_controller');
 					}
 				}
 			}
@@ -551,11 +551,11 @@
 		function add_entity( $entity )
 		{
 
-			$entity['name'] = $this->db->db_addslashes($entity['name']);
+			$entity['name']	 = $this->db->db_addslashes($entity['name']);
 			$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
-			$entity['id'] = $this->bocommon->next_id("fm_{$this->type}");
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
+			$entity['id']	 = $this->bocommon->next_id("fm_{$this->type}");
+			$location_id	 = $GLOBALS['phpgw']->locations->add(".{$this->type}." . $entity['id'], $entity['name'], $this->type_app[$this->type], true);
 
 			$values = array(
 				$location_id,
@@ -580,13 +580,13 @@
 
 		function get_default_column_def()
 		{
-			$fd = array();
-			$fd['id'] = array('type' => 'int', 'precision' => 4, 'nullable' => false);
-			$fd['num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => false);
+			$fd			 = array();
+			$fd['id']	 = array('type' => 'int', 'precision' => 4, 'nullable' => false);
+			$fd['num']	 = array('type' => 'varchar', 'precision' => 16, 'nullable' => false);
 
-			$fd['p_num'] = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
-			$fd['p_entity_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['p_cat_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['p_num']		 = array('type' => 'varchar', 'precision' => 16, 'nullable' => true);
+			$fd['p_entity_id']	 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['p_cat_id']		 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['location_code'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
 
 			$location_type = $this->bocommon->next_id('fm_location_type');
@@ -598,17 +598,17 @@
 			//Correct the first one
 			$fd['loc1'] = array('type' => 'varchar', 'precision' => 6, 'nullable' => true);
 
-			$fd['address'] = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
-			$fd['tenant_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['address']		 = array('type' => 'varchar', 'precision' => 150, 'nullable' => true);
+			$fd['tenant_id']	 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 			$fd['contact_phone'] = array('type' => 'varchar', 'precision' => 30, 'nullable' => true);
 			//		$fd['status'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
 
-			$fd['entry_date'] = array('type' => 'int', 'precision' => 8, 'nullable' => true);
-			$fd['user_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['org_unit_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['entity_group_id'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['modified_by'] = array('type' => 'int', 'precision' => 4, 'nullable' => true);
-			$fd['modified_on'] = array('type' => 'int', 'precision' => 8, 'nullable' => true);
+			$fd['entry_date']		 = array('type' => 'int', 'precision' => 8, 'nullable' => true);
+			$fd['user_id']			 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['org_unit_id']		 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['entity_group_id']	 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['modified_by']		 = array('type' => 'int', 'precision' => 4, 'nullable' => true);
+			$fd['modified_on']		 = array('type' => 'int', 'precision' => 8, 'nullable' => true);
 			return $fd;
 		}
 
@@ -616,15 +616,15 @@
 		{
 			$this->db->transaction_begin();
 
-			$table = "fm_{$this->type}_category";
-			$values['name'] = $this->db->db_addslashes($values['name']);
+			$table			 = "fm_{$this->type}_category";
+			$values['name']	 = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			$values['id'] = $this->bocommon->next_id($table, array('entity_id' => $values['entity_id']));
 
 			$custom_tbl = !$values['is_eav'] ? "fm_{$this->type}_{$values['entity_id']}_{$values['id']}" : null;
 
-			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'], $this->type_app[$this->type], true, $custom_tbl, $c_function = true);
+			$location_id = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$values['entity_id']}.{$values['id']}", $values['name'], $this->type_app[$this->type], true, $custom_tbl, $c_function	 = true);
 
 			if ($values['parent_id'])
 			{
@@ -676,10 +676,10 @@
 			{
 				$values_insert = array
 					(
-					'location_id' => $location_id,
-					'name' => ".{$this->type}.{$values['entity_id']}.{$values['id']}::{$values['name']}",
-					'description' => $values['descr'],
-					'is_ifc' => 0
+					'location_id'	 => $location_id,
+					'name'			 => ".{$this->type}.{$values['entity_id']}.{$values['id']}::{$values['name']}",
+					'description'	 => $values['descr'],
+					'is_ifc'		 => 0
 				);
 
 				$this->db->query('INSERT INTO fm_bim_type (' . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -760,7 +760,7 @@
 			{
 				$table = "fm_{$this->type}";
 
-				$entity['name'] = $this->db->db_addslashes($entity['name']);
+				$entity['name']	 = $this->db->db_addslashes($entity['name']);
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 				if (!$entity['location_form'])
@@ -769,11 +769,11 @@
 				}
 
 				$value_set = array(
-					'descr' => $entity['descr'],
-					'name' => $entity['name'],
-					'location_form' => $entity['location_form'],
-					'lookup_entity' => serialize($entity['lookup_entity']),
-					'documentation' => $entity['documentation']
+					'descr'			 => $entity['descr'],
+					'name'			 => $entity['name'],
+					'location_form'	 => $entity['location_form'],
+					'lookup_entity'	 => serialize($entity['lookup_entity']),
+					'documentation'	 => $entity['documentation']
 				);
 
 				$value_set = $this->db->validate_update($value_set);
@@ -846,9 +846,9 @@
 
 				if ($old_level != $level)
 				{
-					$this->level = $level;
-					$this->parent_gap = 1;
-					$this->category_parent = $entity['id'];
+					$this->level			 = $level;
+					$this->parent_gap		 = 1;
+					$this->category_parent	 = $entity['id'];
 					while ($this->category_parent)
 					{
 						$this->check_move_child($entity['entity_id']);
@@ -863,30 +863,30 @@
 					}
 				}
 
-				$entity['name'] = $this->db->db_addslashes($entity['name']);
+				$entity['name']	 = $this->db->db_addslashes($entity['name']);
 				$entity['descr'] = $this->db->db_addslashes($entity['descr']);
 
 				$value_set = array
 					(
-					'descr' => $entity['descr'],
-					'name' => $entity['name'],
-					'prefix' => $entity['prefix'],
-					'lookup_tenant' => $entity['lookup_tenant'],
-					'tracking' => $entity['tracking'],
-					'location_level' => $entity['location_level'],
-					'location_link_level' => $entity['location_link_level'],
-					'fileupload' => $entity['fileupload'],
-					'loc_link' => $entity['loc_link'],
-					'start_project' => $entity['start_project'],
-					'start_ticket' => $entity['start_ticket'],
-					'is_eav' => $entity['is_eav'],
-					'enable_bulk' => $entity['enable_bulk'],
-					'enable_controller' => $entity['enable_controller'],
-					'jasperupload' => $entity['jasperupload'],
-					'parent_id' => $entity['parent_id'],
-					'level' => $level,
-					'org_unit' => $entity['org_unit'],
-					'entity_group_id' => $entity['entity_group_id'],
+					'descr'					 => $entity['descr'],
+					'name'					 => $entity['name'],
+					'prefix'				 => $entity['prefix'],
+					'lookup_tenant'			 => $entity['lookup_tenant'],
+					'tracking'				 => $entity['tracking'],
+					'location_level'		 => $entity['location_level'],
+					'location_link_level'	 => $entity['location_link_level'],
+					'fileupload'			 => $entity['fileupload'],
+					'loc_link'				 => $entity['loc_link'],
+					'start_project'			 => $entity['start_project'],
+					'start_ticket'			 => $entity['start_ticket'],
+					'is_eav'				 => $entity['is_eav'],
+					'enable_bulk'			 => $entity['enable_bulk'],
+					'enable_controller'		 => $entity['enable_controller'],
+					'jasperupload'			 => $entity['jasperupload'],
+					'parent_id'				 => $entity['parent_id'],
+					'level'					 => $level,
+					'org_unit'				 => $entity['org_unit'],
+					'entity_group_id'		 => $entity['entity_group_id'],
 				);
 
 				$value_set = $this->db->validate_update($value_set);
@@ -922,20 +922,20 @@
 
 			$table = "fm_{$this->type}_category";
 
-			$continue = false;
-			$move_child = array();
+			$continue	 = false;
+			$move_child	 = array();
 			$this->db->query("SELECT id FROM $table WHERE entity_id= {$entity_id} AND parent_id=" . (int)$this->category_parent, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$this->move_child[] = array
 					(
-					'id' => (int)$this->db->f('id'),
-					'category_parent' => (int)$this->category_parent,
-					'new_level' => ($this->level + $this->parent_gap)
+					'id'				 => (int)$this->db->f('id'),
+					'category_parent'	 => (int)$this->category_parent,
+					'new_level'			 => ($this->level + $this->parent_gap)
 				);
 
-				$move_child[] = (int)$this->db->f('id');
-				$continue = true;
+				$move_child[]	 = (int)$this->db->f('id');
+				$continue		 = true;
 			}
 			if ($continue)
 			{
@@ -954,22 +954,22 @@
 
 		protected function check_move_child_delete( $entity_id, $id )
 		{
-			$continue = false;
-			$move_child = array();
-			$table = "fm_{$this->type}_category";
+			$continue	 = false;
+			$move_child	 = array();
+			$table		 = "fm_{$this->type}_category";
 
 			$this->db->query("SELECT id FROM {$table} WHERE entity_id = {$entity_id} AND parent_id=" . (int)$this->category_id, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$this->move_child[] = array
 					(
-					'id' => (int)$this->db->f('id'),
-					'parent' => $this->category_parent,
-					'new_level' => $this->level
+					'id'		 => (int)$this->db->f('id'),
+					'parent'	 => $this->category_parent,
+					'new_level'	 => $this->level
 				);
 
-				$move_child[] = (int)$this->db->f('id');
-				$continue = true;
+				$move_child[]	 = (int)$this->db->f('id');
+				$continue		 = true;
 			}
 			unset($this->category_parent);
 			if ($continue)
@@ -990,11 +990,11 @@
 		function delete_entity( $id )
 		{
 			$this->db->transaction_begin();
-			$id = (int)$id;
-			$category_list = $this->read_category(array('allrows' => true, 'entity_id' => $id));
-			$locations = array();
-			$locations[] = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$id}");
-			$subs = $GLOBALS['phpgw']->locations->get_subs($this->type_app[$this->type], ".{$this->type}.{$id}");
+			$id				 = (int)$id;
+			$category_list	 = $this->read_category(array('allrows' => true, 'entity_id' => $id));
+			$locations		 = array();
+			$locations[]	 = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$id}");
+			$subs			 = $GLOBALS['phpgw']->locations->get_subs($this->type_app[$this->type], ".{$this->type}.{$id}");
 			if (is_array($subs) && count($subs))
 			{
 				$locations = array_merge($locations, array_keys($subs));
@@ -1023,14 +1023,14 @@
 
 			$this->db->transaction_begin();
 
-			$table = "fm_{$this->type}_category";
+			$table					 = "fm_{$this->type}_category";
 			$this->db->query("SELECT parent_id,level FROM $table WHERE entity_id = {$entity_id} AND id={$id}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$this->level = (int)$this->db->f('level');
-			$this->category_parent = (int)$this->db->f('parent_id');
+			$this->level			 = (int)$this->db->f('level');
+			$this->category_parent	 = (int)$this->db->f('parent_id');
 
-			$this->check_parent = true;
-			$this->category_id = $id;
+			$this->check_parent	 = true;
+			$this->category_id	 = $id;
 			while ($this->check_parent)
 			{
 				$this->check_move_child_delete($entity_id, $id);
@@ -1082,8 +1082,8 @@
 		function get_table_def( $entity_id, $cat_id )
 		{
 			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-			$table = "fm_{$this->type}_{$entity_id}_{$cat_id}";
-			$metadata = $this->db->metadata($table);
+			$table		 = "fm_{$this->type}_{$entity_id}_{$cat_id}";
+			$metadata	 = $this->db->metadata($table);
 
 			if (isset($this->db->adodb))
 			{
@@ -1112,11 +1112,11 @@
 					}
 
 					$fd[$metadata[$i]['name']] = array(
-						'type' => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
-						'precision' => $precision,
-						'nullable' => stripslashes($this->db->f('nullable')),
-						'default' => stripslashes($this->db->f('default_value')),
-						'scale' => $this->db->f('scale')
+						'type'		 => $this->bocommon->translate_datatype_insert(stripslashes($this->db->f('datatype'))),
+						'precision'	 => $precision,
+						'nullable'	 => stripslashes($this->db->f('nullable')),
+						'default'	 => stripslashes($this->db->f('default_value')),
+						'scale'		 => $this->db->f('scale')
 					);
 					unset($precision);
 				}
@@ -1143,9 +1143,9 @@
 
 		function init_process()
 		{
-			$this->oProc = CreateObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
-			$this->oProc->m_odb = & $this->db;
-			$this->oProc->m_odb->Halt_On_Error = 'yes';
+			$this->oProc						 = CreateObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
+			$this->oProc->m_odb					 = & $this->db;
+			$this->oProc->m_odb->Halt_On_Error	 = 'yes';
 		}
 
 		/**
@@ -1158,7 +1158,7 @@
 //			die('vent litt med denne');
 
 			phpgw::import_class('phpgwapi.xmlhelper');
-			$this->type = 'entity';
+			$this->type	 = 'entity';
 			$entity_list = $this->read(array('allrows' => true));
 
 			$this->db->transaction_begin();
@@ -1172,13 +1172,13 @@
 					if (!$category['is_eav'])
 					{
 
-						$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$category['entity_id']}.{$category['id']}");
-						$values_insert = array
+						$location_id	 = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$category['entity_id']}.{$category['id']}");
+						$values_insert	 = array
 							(
-							'location_id' => $location_id,
-							'name' => ".{$this->type}.{$category['entity_id']}.{$category['id']}::{$category['name']}",
-							'description' => $category['descr'],
-							'is_ifc' => 0
+							'location_id'	 => $location_id,
+							'name'			 => ".{$this->type}.{$category['entity_id']}.{$category['id']}::{$category['name']}",
+							'description'	 => $category['descr'],
+							'is_ifc'		 => 0
 						);
 
 						$this->db->query('INSERT INTO fm_bim_type (' . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -1198,7 +1198,7 @@
 						{
 							$data = $this->db2->Record;
 
-							if($data)
+							if ($data)
 							{
 								foreach ($data as $key => &$value)
 								{
@@ -1228,19 +1228,19 @@
 
 							$values_insert = array
 								(
-								'id' => $data['id'],
-								'location_id' => $location_id,
-								'type' => $type,
-								'guid' => $guid,
-								'json_representation' => json_encode($data),
-								'model' => 0,
-								'p_location_id' => $p_location_id,
-								'p_id' => isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : '',
-								'location_code' => $data['location_code'],
-								'loc1' => $data['loc1'],
-								'address' => $data['address'],
-								'entry_date' => $data['entry_date'],
-								'user_id' => $data['user_id']
+								'id'					 => $data['id'],
+								'location_id'			 => $location_id,
+								'type'					 => $type,
+								'guid'					 => $guid,
+								'json_representation'	 => json_encode($data),
+								'model'					 => 0,
+								'p_location_id'			 => $p_location_id,
+								'p_id'					 => isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : '',
+								'location_code'			 => $data['location_code'],
+								'loc1'					 => $data['loc1'],
+								'address'				 => $data['address'],
+								'entry_date'			 => $data['entry_date'],
+								'user_id'				 => $data['user_id']
 							);
 
 							$this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('

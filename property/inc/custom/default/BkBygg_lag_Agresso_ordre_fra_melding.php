@@ -31,17 +31,18 @@
 	 * @package property
 	 */
 	//if (false)
-	if (!empty($data['order_id']) && !empty($data['send_order'])  && !empty($data['vendor_email'][0]))
+	if (!empty($data['order_id']) && !empty($data['send_order']) && !empty($data['vendor_email'][0]))
 	{
-		$exporter_ordre = new lag_agresso_ordre_fra_melding();
-		$data['purchase_grant_error'] = $exporter_ordre->transfer($id) == 3 ? true : false;
-		$data['purchase_grant_checked'] = true;
+		$exporter_ordre					 = new lag_agresso_ordre_fra_melding();
+		$data['purchase_grant_error']	 = $exporter_ordre->transfer($id) == 3 ? true : false;
+		$data['purchase_grant_checked']	 = true;
 	}
 
 	class lag_agresso_ordre_fra_melding
 	{
 
 		var $debug = true;
+
 		function __construct()
 		{
 
@@ -55,8 +56,8 @@
 				return 2;
 			}
 
-			$price = 0;
-			$budgets = ExecMethod('property.botts.get_budgets',$id);
+			$price	 = 0;
+			$budgets = ExecMethod('property.botts.get_budgets', $id);
 			foreach ($budgets as $budget)
 			{
 
@@ -65,7 +66,7 @@
 
 			try
 			{
-				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $_ticket['ecodimb'], $price, $_ticket['order_id'] );
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant($_ticket['ecodimb'], $price, $_ticket['order_id']);
 			}
 			catch (Exception $ex)
 			{
@@ -76,13 +77,13 @@
 			{
 				return 3;
 			}
-	//		_debug_array($_ticket);die();
+			//		_debug_array($_ticket);die();
 
 			$contacts = CreateObject('property.sogeneric');
 			$contacts->get_location_info('vendor', false);
 
-			$custom = createObject('property.custom_fields');
-			$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+			$custom						 = createObject('property.custom_fields');
+			$vendor_data['attributes']	 = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$vendor_data = $contacts->read_single(array('id' => $_ticket['vendor_id']), $vendor_data);
 			if (is_array($vendor_data))
@@ -104,14 +105,14 @@
 
 			if (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name']))
 			{
-				$user_name = $_ticket['assignedto_name'];
+				$user_name										 = $_ticket['assignedto_name'];
 				$GLOBALS['phpgw']->preferences->set_account_id($_ticket['assignedto'], true);
-				$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-				$account_lid = $GLOBALS['phpgw']->accounts->id2lid($_ticket['assignedto']);
+				$GLOBALS['phpgw_info']['user']['preferences']	 = $GLOBALS['phpgw']->preferences->data;
+				$account_lid									 = $GLOBALS['phpgw']->accounts->id2lid($_ticket['assignedto']);
 			}
 			else
 			{
-				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				$user_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
 				$account_lid = $GLOBALS['phpgw_info']['user']['account_lid'];
 			}
 			//	$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
@@ -120,17 +121,17 @@
 
 
 			$buyer = array(
-				'Name' => $user_name,
-				'AddressInfo' => array(
+				'Name'				 => $user_name,
+				'AddressInfo'		 => array(
 					array(
 						'Address' => htmlspecialchars_decode($address, ENT_QUOTES)
 					)
 				),
-				'BuyerReferences' => array(
+				'BuyerReferences'	 => array(
 					array(
-						'Responsible' => strtoupper($account_lid),
-						'RequestedBy' => strtoupper($account_lid),
-						'Accountable' => strtoupper($account_lid),
+						'Responsible'	 => strtoupper($account_lid),
+						'RequestedBy'	 => strtoupper($account_lid),
+						'Accountable'	 => strtoupper($account_lid),
 					)
 				)
 			);
@@ -143,7 +144,7 @@
 				$dim3 = 9;
 			}
 
-			if($dim3 == 9999)
+			if ($dim3 == 9999)
 			{
 				$dim3 = 9;
 			}
@@ -155,34 +156,34 @@
 			switch ($tax_code)
 			{
 				case '0':
-					$tax_code = '6A';
+					$tax_code	 = '6A';
 					break;
 				case '75':
-					$tax_code = '60';
+					$tax_code	 = '60';
 					break;
 				default:
-					$tax_code = '6A';
+					$tax_code	 = '6A';
 					break;
 			}
 
 			if ($_ticket['order_dim1'])
 			{
-				$sogeneric = CreateObject('property.sogeneric', 'order_dim1');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $_ticket['order_dim1']));
+				$sogeneric		 = CreateObject('property.sogeneric', 'order_dim1');
+				$sogeneric_data	 = $sogeneric->read_single(array('id' => $_ticket['order_dim1']));
 				if ($sogeneric_data)
 				{
 					$dim6 = "{$_ticket['building_part']}{$sogeneric_data['num']}";
 				}
 			}
 			/*
-			P3: EBF Innkjøpsordre Portico : 45000000-45249999
-			V3: EBF Varemotttak Portico   : 45500000-45749999
-			P4: EBE Innkjøpsordre Portico : 45250000-45499999
-			V4: EBE Varemotttak Portico   : 45750000-45999999
-			*/
+			  P3: EBF Innkjøpsordre Portico : 45000000-45249999
+			  V3: EBF Varemotttak Portico   : 45500000-45749999
+			  P4: EBE Innkjøpsordre Portico : 45250000-45499999
+			  V4: EBE Varemotttak Portico   : 45750000-45999999
+			 */
 
 
-			if($_ticket['order_id'] >= 45000000 && $_ticket['order_id'] <= 45249999)
+			if ($_ticket['order_id'] >= 45000000 && $_ticket['order_id'] <= 45249999)
 			{
 				$voucher_type = 'P3';
 			}
@@ -197,33 +198,33 @@
 
 
 			$param = array(
-				'voucher_type'	=> $voucher_type,
-				'dim0' => $_ticket['b_account_id'],			// Art
-				'dim1' => $_ticket['ecodimb'],				// Ansvar
-				'dim2' => $_ticket['service_id'] ? $_ticket['service_id'] : 9, // Tjeneste liste 30 stk, default 9
-				'dim3' => $dim3,							// Objekt: eiendom + bygg: 6 siffer
-				'dim4' => $_ticket['contract_id'] == '-1' ? '' : $_ticket['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
-				'dim5' => $_ticket['external_project_id'],	// Prosjekt
-				'dim6' => $dim6,							// Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
-				'vendor_id' => $_ticket['vendor_id'],
-				'vendor_name' => $vendor['name'],
+				'voucher_type'	 => $voucher_type,
+				'dim0'			 => $_ticket['b_account_id'], // Art
+				'dim1'			 => $_ticket['ecodimb'], // Ansvar
+				'dim2'			 => $_ticket['service_id'] ? $_ticket['service_id'] : 9, // Tjeneste liste 30 stk, default 9
+				'dim3'			 => $dim3, // Objekt: eiendom + bygg: 6 siffer
+				'dim4'			 => $_ticket['contract_id'] == '-1' ? '' : $_ticket['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
+				'dim5'			 => $_ticket['external_project_id'], // Prosjekt
+				'dim6'			 => $dim6, // Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
+				'vendor_id'		 => $_ticket['vendor_id'],
+				'vendor_name'	 => $vendor['name'],
 				'vendor_address' => mb_substr($vendor['address'], 0, 50),
-				'order_id' => $_ticket['order_id'],
-				'tax_code' => $tax_code,
-				'buyer' => $buyer,
+				'order_id'		 => $_ticket['order_id'],
+				'tax_code'		 => $tax_code,
+				'buyer'			 => $buyer,
 				'invoice_remark' => mb_substr($_ticket['invoice_remark'], 0, 120),
-				'lines' => array(
+				'lines'			 => array(
 					array(
-						'unspsc_code' => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
-						'descr' => '',
-						'price'	=> $price,
+						'unspsc_code'	 => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
+						'descr'			 => '',
+						'price'			 => $price,
 					)
 				)
 			);
 
 			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array(
-				'order_id' => $_ticket['order_id'],
-				'voucher_type' => $voucher_type
+				'order_id'		 => $_ticket['order_id'],
+				'voucher_type'	 => $voucher_type
 				)
 			);
 			$exporter_ordre->create_transfer_xml($param);
@@ -233,15 +234,15 @@
 			if ($export_ok)
 			{
 				phpgwapi_cache::message_set("Ordre #{$_ticket['order_id']} er overført");
-				$this->log_transfer( $id );
+				$this->log_transfer($id);
 			}
 		}
 
 		private function log_transfer( $id )
 		{
-			$historylog = CreateObject('property.historylog', 'tts');
+			$historylog	 = CreateObject('property.historylog', 'tts');
 			$historylog->add('RM', $id, "Ordre overført til agresso");
-			$now = time();
+			$now		 = time();
 			$GLOBALS['phpgw']->db->query("UPDATE fm_tts_tickets SET order_sent = {$now} WHERE id = {$id}");
 		}
 

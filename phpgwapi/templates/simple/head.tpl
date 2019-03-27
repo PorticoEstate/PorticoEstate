@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!-- BEGIN head -->
-<html>
+<html lang="{userlang}">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
@@ -14,7 +14,7 @@
 		<!-- BEGIN theme_stylesheet -->
 		<link href="{theme_style}" type="text/css" rel="StyleSheet">
 		<!-- END theme_stylesheet -->
-		<script type="text/javascript">
+		<script>
 			<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}

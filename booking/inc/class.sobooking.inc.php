@@ -780,7 +780,7 @@
 			}
 			else
 			{
-				$end = $end->format('Y-m-d') . ' 24:00:00';
+				$end = $end->format('Y-m-d') . ' 23:59:59';
 			}
 
 			$building_id = intval($building_id);

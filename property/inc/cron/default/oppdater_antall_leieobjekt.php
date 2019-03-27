@@ -40,14 +40,14 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('location');
-			$this->function_msg = 'Oppdater antall leieobjekter for tv-anlegg';
+			$this->sub_location	 = lang('location');
+			$this->function_msg	 = 'Oppdater antall leieobjekter for tv-anlegg';
 		}
 
 		function execute()
 		{
 			return;
-			
+
 			//konverter til eav-modell.
 
 			$this->db->transaction_begin();
@@ -64,8 +64,8 @@
 				if ($this->db->f('kunde_nr_lev'))
 				{
 					$update[] = array(
-						'kunde_nr_lev' => $this->db->f('kunde_nr_lev'),
-						'antall_leieobjekt' => $this->db->f('antall_leieobjekt'),
+						'kunde_nr_lev'		 => $this->db->f('kunde_nr_lev'),
+						'antall_leieobjekt'	 => $this->db->f('antall_leieobjekt'),
 					);
 				}
 			}

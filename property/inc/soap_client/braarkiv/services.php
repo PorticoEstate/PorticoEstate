@@ -1743,74 +1743,74 @@
 			 * @var array
 			 */
 			private static $classmap = array(
-				"Login" => "Login",
-				"LoginResponse" => "LoginResponse",
-				"Logout" => "Logout",
-				"LogoutResponse" => "LogoutResponse",
-				"getProductionLines" => "getProductionLines",
-				"getProductionLinesResponse" => "getProductionLinesResponse",
-				"ProductionLine" => "ProductionLine",
-				"getDocumentSplitTypes" => "getDocumentSplitTypes",
-				"getDocumentSplitTypesResponse" => "getDocumentSplitTypesResponse",
-				"DocumentSplitType" => "DocumentSplitType",
-				"GetClasses" => "GetClasses",
-				"GetClassesResponse" => "GetClassesResponse",
-				"GetClassesResult" => "GetClassesResult",
-				"getAvailableFileVariants" => "getAvailableFileVariants",
-				"getAvailableFileVariantsResponse" => "getAvailableFileVariantsResponse",
-				"getVariantVaultID" => "getVariantVaultID",
-				"getVariantVaultIDResponse" => "getVariantVaultIDResponse",
-				"getRelativeFileURL" => "getRelativeFileURL",
-				"getRelativeFileURLResponse" => "getRelativeFileURLResponse",
-				"getAvailableAttributes" => "getAvailableAttributes",
-				"getAvailableAttributesResponse" => "getAvailableAttributesResponse",
-				"Attribute" => "Attribute",
-				"braArkivAttributeType" => "braArkivAttributeType",
-				"LookupValue" => "LookupValue",
-				"Pair" => "Pair",
-				"Address" => "Address",
-				"Matrikkel" => "Matrikkel",
-				"getLookupValues" => "getLookupValues",
-				"getLookupValuesResponse" => "getLookupValuesResponse",
-				"searchDocument" => "searchDocument",
-				"searchDocumentResponse" => "searchDocumentResponse",
-				"createDocument" => "createDocument",
-				"Document" => "Document",
-				"createDocumentResponse" => "createDocumentResponse",
-				"getDocument" => "getDocument",
-				"getDocumentResponse" => "getDocumentResponse",
-				"getAttribute" => "getAttribute",
-				"getAttributeResponse" => "getAttributeResponse",
-				"updateDocument" => "updateDocument",
-				"updateDocumentResponse" => "updateDocumentResponse",
-				"updateAttribute" => "updateAttribute",
-				"updateAttributeResponse" => "updateAttributeResponse",
-				"deleteDocument" => "deleteDocument",
-				"deleteDocumentResponse" => "deleteDocumentResponse",
-				"getFileName" => "getFileName",
-				"getFileNameResponse" => "getFileNameResponse",
-				"searchAndGetDocuments" => "searchAndGetDocuments",
-				"searchAndGetDocumentsResponse" => "searchAndGetDocumentsResponse",
-				"searchAndGetDocumentsWithVariants" => "searchAndGetDocumentsWithVariants",
-				"Variant" => "Variant",
-				"ExtendedDocument" => "ExtendedDocument",
-				"searchAndGetDocumentsWithVariantsResponse" => "searchAndGetDocumentsWithVariantsResponse",
-				"putFileAsByteArray" => "putFileAsByteArray",
-				"putFileAsByteArrayResponse" => "putFileAsByteArrayResponse",
-				"getFileAsByteArray" => "getFileAsByteArray",
-				"getFileAsByteArrayResponse" => "getFileAsByteArrayResponse",
-				"fileTransferSendChunk" => "fileTransferSendChunk",
-				"fileTransferSendChunkResponse" => "fileTransferSendChunkResponse",
-				"fileTransferSendChunkedInit" => "fileTransferSendChunkedInit",
-				"fileTransferSendChunkedInitResponse" => "fileTransferSendChunkedInitResponse",
-				"fileTransferSendChunkedEnd" => "fileTransferSendChunkedEnd",
-				"fileTransferSendChunkedEndResponse" => "fileTransferSendChunkedEndResponse",
-				"fileTransferRequestChunkedInit" => "fileTransferRequestChunkedInit",
-				"fileTransferRequestChunkedInitResponse" => "fileTransferRequestChunkedInitResponse",
-				"fileTransferRequestChunk" => "fileTransferRequestChunk",
-				"fileTransferRequestChunkResponse" => "fileTransferRequestChunkResponse",
-				"fileTransferRequestChunkedEnd" => "fileTransferRequestChunkedEnd",
-				"fileTransferRequestChunkedEndResponse" => "fileTransferRequestChunkedEndResponse",
+				"Login"										 => "Login",
+				"LoginResponse"								 => "LoginResponse",
+				"Logout"									 => "Logout",
+				"LogoutResponse"							 => "LogoutResponse",
+				"getProductionLines"						 => "getProductionLines",
+				"getProductionLinesResponse"				 => "getProductionLinesResponse",
+				"ProductionLine"							 => "ProductionLine",
+				"getDocumentSplitTypes"						 => "getDocumentSplitTypes",
+				"getDocumentSplitTypesResponse"				 => "getDocumentSplitTypesResponse",
+				"DocumentSplitType"							 => "DocumentSplitType",
+				"GetClasses"								 => "GetClasses",
+				"GetClassesResponse"						 => "GetClassesResponse",
+				"GetClassesResult"							 => "GetClassesResult",
+				"getAvailableFileVariants"					 => "getAvailableFileVariants",
+				"getAvailableFileVariantsResponse"			 => "getAvailableFileVariantsResponse",
+				"getVariantVaultID"							 => "getVariantVaultID",
+				"getVariantVaultIDResponse"					 => "getVariantVaultIDResponse",
+				"getRelativeFileURL"						 => "getRelativeFileURL",
+				"getRelativeFileURLResponse"				 => "getRelativeFileURLResponse",
+				"getAvailableAttributes"					 => "getAvailableAttributes",
+				"getAvailableAttributesResponse"			 => "getAvailableAttributesResponse",
+				"Attribute"									 => "Attribute",
+				"braArkivAttributeType"						 => "braArkivAttributeType",
+				"LookupValue"								 => "LookupValue",
+				"Pair"										 => "Pair",
+				"Address"									 => "Address",
+				"Matrikkel"									 => "Matrikkel",
+				"getLookupValues"							 => "getLookupValues",
+				"getLookupValuesResponse"					 => "getLookupValuesResponse",
+				"searchDocument"							 => "searchDocument",
+				"searchDocumentResponse"					 => "searchDocumentResponse",
+				"createDocument"							 => "createDocument",
+				"Document"									 => "Document",
+				"createDocumentResponse"					 => "createDocumentResponse",
+				"getDocument"								 => "getDocument",
+				"getDocumentResponse"						 => "getDocumentResponse",
+				"getAttribute"								 => "getAttribute",
+				"getAttributeResponse"						 => "getAttributeResponse",
+				"updateDocument"							 => "updateDocument",
+				"updateDocumentResponse"					 => "updateDocumentResponse",
+				"updateAttribute"							 => "updateAttribute",
+				"updateAttributeResponse"					 => "updateAttributeResponse",
+				"deleteDocument"							 => "deleteDocument",
+				"deleteDocumentResponse"					 => "deleteDocumentResponse",
+				"getFileName"								 => "getFileName",
+				"getFileNameResponse"						 => "getFileNameResponse",
+				"searchAndGetDocuments"						 => "searchAndGetDocuments",
+				"searchAndGetDocumentsResponse"				 => "searchAndGetDocumentsResponse",
+				"searchAndGetDocumentsWithVariants"			 => "searchAndGetDocumentsWithVariants",
+				"Variant"									 => "Variant",
+				"ExtendedDocument"							 => "ExtendedDocument",
+				"searchAndGetDocumentsWithVariantsResponse"	 => "searchAndGetDocumentsWithVariantsResponse",
+				"putFileAsByteArray"						 => "putFileAsByteArray",
+				"putFileAsByteArrayResponse"				 => "putFileAsByteArrayResponse",
+				"getFileAsByteArray"						 => "getFileAsByteArray",
+				"getFileAsByteArrayResponse"				 => "getFileAsByteArrayResponse",
+				"fileTransferSendChunk"						 => "fileTransferSendChunk",
+				"fileTransferSendChunkResponse"				 => "fileTransferSendChunkResponse",
+				"fileTransferSendChunkedInit"				 => "fileTransferSendChunkedInit",
+				"fileTransferSendChunkedInitResponse"		 => "fileTransferSendChunkedInitResponse",
+				"fileTransferSendChunkedEnd"				 => "fileTransferSendChunkedEnd",
+				"fileTransferSendChunkedEndResponse"		 => "fileTransferSendChunkedEndResponse",
+				"fileTransferRequestChunkedInit"			 => "fileTransferRequestChunkedInit",
+				"fileTransferRequestChunkedInitResponse"	 => "fileTransferRequestChunkedInitResponse",
+				"fileTransferRequestChunk"					 => "fileTransferRequestChunk",
+				"fileTransferRequestChunkResponse"			 => "fileTransferRequestChunkResponse",
+				"fileTransferRequestChunkedEnd"				 => "fileTransferRequestChunkedEnd",
+				"fileTransferRequestChunkedEndResponse"		 => "fileTransferRequestChunkedEndResponse",
 			);
 
 			/**
@@ -1871,7 +1871,7 @@
 					"(Login)",
 					"(Login)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("Login", $args);
 			}
@@ -1891,7 +1891,7 @@
 					"(Logout)",
 					"(Logout)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("Logout", $args);
 			}
@@ -1911,7 +1911,7 @@
 					"(getProductionLines)",
 					"(getProductionLines)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getProductionLines", $args);
 			}
@@ -1931,7 +1931,7 @@
 					"(getDocumentSplitTypes)",
 					"(getDocumentSplitTypes)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getDocumentSplitTypes", $args);
 			}
@@ -1951,7 +1951,7 @@
 					"(GetClasses)",
 					"(GetClasses)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("GetClasses", $args);
 			}
@@ -1971,7 +1971,7 @@
 					"(getAvailableFileVariants)",
 					"(getAvailableFileVariants)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getAvailableFileVariants", $args);
 			}
@@ -1991,7 +1991,7 @@
 					"(getVariantVaultID)",
 					"(getVariantVaultID)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getVariantVaultID", $args);
 			}
@@ -2011,7 +2011,7 @@
 					"(getRelativeFileURL)",
 					"(getRelativeFileURL)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getRelativeFileURL", $args);
 			}
@@ -2031,7 +2031,7 @@
 					"(getAvailableAttributes)",
 					"(getAvailableAttributes)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getAvailableAttributes", $args);
 			}
@@ -2051,7 +2051,7 @@
 					"(getLookupValues)",
 					"(getLookupValues)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getLookupValues", $args);
 			}
@@ -2071,7 +2071,7 @@
 					"(searchDocument)",
 					"(searchDocument)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("searchDocument", $args);
 			}
@@ -2091,7 +2091,7 @@
 					"(createDocument)",
 					"(createDocument)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("createDocument", $args);
 			}
@@ -2111,7 +2111,7 @@
 					"(getDocument)",
 					"(getDocument)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getDocument", $args);
 			}
@@ -2131,7 +2131,7 @@
 					"(getAttribute)",
 					"(getAttribute)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getAttribute", $args);
 			}
@@ -2151,7 +2151,7 @@
 					"(updateDocument)",
 					"(updateDocument)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("updateDocument", $args);
 			}
@@ -2171,7 +2171,7 @@
 					"(updateAttribute)",
 					"(updateAttribute)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("updateAttribute", $args);
 			}
@@ -2191,7 +2191,7 @@
 					"(deleteDocument)",
 					"(deleteDocument)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("deleteDocument", $args);
 			}
@@ -2211,7 +2211,7 @@
 					"(getFileName)",
 					"(getFileName)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getFileName", $args);
 			}
@@ -2231,7 +2231,7 @@
 					"(searchAndGetDocuments)",
 					"(searchAndGetDocuments)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("searchAndGetDocuments", $args);
 			}
@@ -2251,7 +2251,7 @@
 					"(searchAndGetDocumentsWithVariants)",
 					"(searchAndGetDocumentsWithVariants)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("searchAndGetDocumentsWithVariants", $args);
 			}
@@ -2271,7 +2271,7 @@
 					"(putFileAsByteArray)",
 					"(putFileAsByteArray)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("putFileAsByteArray", $args);
 			}
@@ -2291,7 +2291,7 @@
 					"(getFileAsByteArray)",
 					"(getFileAsByteArray)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("getFileAsByteArray", $args);
 			}
@@ -2311,7 +2311,7 @@
 					"(fileTransferSendChunk)",
 					"(fileTransferSendChunk)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferSendChunk", $args);
 			}
@@ -2331,7 +2331,7 @@
 					"(fileTransferSendChunkedInit)",
 					"(fileTransferSendChunkedInit)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferSendChunkedInit", $args);
 			}
@@ -2351,7 +2351,7 @@
 					"(fileTransferSendChunkedEnd)",
 					"(fileTransferSendChunkedEnd)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferSendChunkedEnd", $args);
 			}
@@ -2371,7 +2371,7 @@
 					"(fileTransferRequestChunkedInit)",
 					"(fileTransferRequestChunkedInit)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferRequestChunkedInit", $args);
 			}
@@ -2391,7 +2391,7 @@
 					"(fileTransferRequestChunk)",
 					"(fileTransferRequestChunk)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferRequestChunk", $args);
 			}
@@ -2411,7 +2411,7 @@
 					"(fileTransferRequestChunkedEnd)",
 					"(fileTransferRequestChunkedEnd)",
 				);
-				$args = func_get_args();
+				$args			 = func_get_args();
 				$this->_checkArguments($args, $validParameters);
 				return $this->__soapCall("fileTransferRequestChunkedEnd", $args);
 			}

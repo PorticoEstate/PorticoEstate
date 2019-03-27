@@ -240,6 +240,11 @@ HTML;
 				'email' => $comms[$account_info->person_id]['work email']
 			);
 
+			if ($this->config['username_is'] == 'email')
+			{
+				$info['email'] = $account_lid;
+			}
+
 			if (!$info['email'])
 			{
 				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
@@ -270,7 +275,6 @@ HTML;
 				catch (Exception $e)
 				{
 					$error = $e->getMessage();
-					//	 $error = $GLOBALS['phpgw']->template->fp('out','message');
 				}
 			}
 			else

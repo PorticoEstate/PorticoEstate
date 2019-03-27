@@ -49,9 +49,9 @@
 
 		function create_preferences($app='',$user_id='')
 		{
-				$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
+				$this->db->query("SELECT preference_json FROM phpgw_preferences where preference_app = '$app' AND preference_owner=".(int)$user_id );
 				$this->db->next_record();
-				$value= unserialize($this->db->f('preference_value'));
+				$value= json_decode($this->db->f('preference_json'),true);
 				return $value;
 		}
 

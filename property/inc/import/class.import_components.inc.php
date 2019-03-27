@@ -4,23 +4,23 @@
 	{
 
 		protected $db;
-		var $type = 'entity';
+		var $type		 = 'entity';
 		protected $sql;
-		protected $type_app = array
+		protected $type_app	 = array
 			(
 			'entity' => 'property',
-			'catch' => 'catch'
+			'catch'	 => 'catch'
 		);
 
 		public function __construct()
 		{
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = $this->db->join;
-			$this->bo = CreateObject('property.boadmin_entity', true);
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = $this->db->join;
+			$this->bo		 = CreateObject('property.boadmin_entity', true);
 			//$this->bo_entity = CreateObject('property.boentity', true);
-			$this->custom = CreateObject('property.custom_fields');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom	 = CreateObject('property.custom_fields');
+			$this->bocommon	 = CreateObject('property.bocommon');
 		}
 
 		private function _get_attributes( $entity_id, $cat_id )
@@ -31,15 +31,15 @@
 			foreach ($attributes as $attribute)
 			{
 				$values[] = array(
-					'name' => $attribute['name'],
-					'datatype' => $attribute['datatype'],
-					'precision' => $attribute['precision'],
-					'history' => $attribute['history'],
-					'attrib_id' => $attribute['attrib_id'],
-					'nullable' => $attribute['nullable'],
+					'name'		 => $attribute['name'],
+					'datatype'	 => $attribute['datatype'],
+					'precision'	 => $attribute['precision'],
+					'history'	 => $attribute['history'],
+					'attrib_id'	 => $attribute['attrib_id'],
+					'nullable'	 => $attribute['nullable'],
 					'input_text' => $attribute['input_text'],
-					'disabled' => $attribute['disabled'],
-					'value' => $attribute['value']
+					'disabled'	 => $attribute['disabled'],
+					'value'		 => $attribute['value']
 				);
 			}
 
@@ -76,8 +76,8 @@
 
 		private function _get_component( $query, $attrib_name_componentID, $location_code )
 		{
-			$location_code_values = explode('-', $location_code);
-			$loc1 = $location_code_values[0];
+			$location_code_values	 = explode('-', $location_code);
+			$loc1					 = $location_code_values[0];
 
 			if ($query)
 			{
@@ -92,8 +92,8 @@
 
 			if ($this->db->next_record())
 			{
-				$values['id'] = $this->db->f('id');
-				$values['location_id'] = $this->db->f('location_id');
+				$values['id']			 = $this->db->f('id');
+				$values['location_id']	 = $this->db->f('location_id');
 			}
 
 			return $values;
@@ -103,9 +103,9 @@
 		{
 			$message = array();
 
-			$location_code_values = explode('-', $location_code);
-			$i = 0;
-			$location = array();
+			$location_code_values	 = explode('-', $location_code);
+			$i						 = 0;
+			$location				 = array();
 			foreach ($location_code_values as $loc)
 			{
 				$i++;
@@ -116,30 +116,30 @@
 
 			try
 			{
-				$this->db->Exception_On_Error = true;
-				$count_added = 0;
-				$count_updated = 0;
+				$this->db->Exception_On_Error	 = true;
+				$count_added					 = 0;
+				$count_updated					 = 0;
 				foreach ($import_data as $entity)
 				{
 					$attributes = $this->_get_attributes($entity['entity_id'], $entity['cat_id']);
 
 					foreach ($entity['components'] as $values)
 					{
-						$attributes_values = $this->_set_attributes_values($values, $attributes);
-						$values_insert = $this->_populate(array('location_code' => $location_code,
-							'location' => $location), $attributes_values);
+						$attributes_values	 = $this->_set_attributes_values($values, $attributes);
+						$values_insert		 = $this->_populate(array('location_code'	 => $location_code,
+							'location'		 => $location), $attributes_values);
 
 						$component = $this->_get_component($values_insert[$attrib_name_componentID], $attrib_name_componentID, $location_code);
 						if ($component['id'])
 						{
 							$receipt = $this->_edit_eav($values_insert, $entity['entity_id'], $entity['cat_id'], $component['id']);
-							$action = 'updated';
+							$action	 = 'updated';
 							$count_updated++;
 						}
 						else
 						{
 							$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
-							$action = 'added';
+							$action	 = 'added';
 							$count_added++;
 						}
 
@@ -181,8 +181,8 @@
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$type = $this->db->f('type');
-			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
+			$type	 = $this->db->f('type');
+			$id		 = $this->db->next_id('fm_bim_item', array('type' => $type));
 
 			if (function_exists('com_create_guid') === true)
 			{
@@ -195,19 +195,19 @@
 
 			$values_insert = array
 				(
-				'id' => $id,
-				'location_id' => $location_id,
-				'type' => $type,
-				'guid' => $guid,
-				'json_representation' => json_encode($data),
-				'model' => 0,
-				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
-				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code' => $data['location_code'],
-				'loc1' => $data['loc1'],
-				'address' => $data['address'],
-				'entry_date' => time(),
-				'user_id' => $this->account
+				'id'					 => $id,
+				'location_id'			 => $location_id,
+				'type'					 => $type,
+				'guid'					 => $guid,
+				'json_representation'	 => json_encode($data),
+				'model'					 => 0,
+				'p_location_id'			 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code'			 => $data['location_code'],
+				'loc1'					 => $data['loc1'],
+				'address'				 => $data['address'],
+				'entry_date'			 => time(),
+				'user_id'				 => $this->account
 			);
 
 			$result = $this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -219,7 +219,7 @@
 		protected function _edit_eav( $data, $entity_id, $cat_id, $id )
 		{
 			$location_id = (int)$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-			$id = (int)$id;
+			$id			 = (int)$id;
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -229,16 +229,16 @@
 
 			$value_set = array
 				(
-				'json_representation' => json_encode($data),
-				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
-				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code' => $data['location_code'],
-				'loc1' => $data['loc1'],
-				'address' => $data['address'],
-				'org_unit_id' => $data['org_unit_id'],
-				'entity_group_id' => $data['entity_group_id'],
-				'modified_by' => $this->account,
-				'modified_on' => time()
+				'json_representation'	 => json_encode($data),
+				'p_location_id'			 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code'			 => $data['location_code'],
+				'loc1'					 => $data['loc1'],
+				'address'				 => $data['address'],
+				'org_unit_id'			 => $data['org_unit_id'],
+				'entity_group_id'		 => $data['entity_group_id'],
+				'modified_by'			 => $this->account,
+				'modified_on'			 => time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -257,9 +257,9 @@
 
 			if (isset($values['street_name']) && $values['street_name'])
 			{
-				$address[] = $values['street_name'];
-				$address[] = $values['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address[]	 = $values['street_name'];
+				$address[]	 = $values['street_number'];
+				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (!isset($address) || !$address)
@@ -315,8 +315,8 @@
 						{
 							$history_set[$entry['attrib_id']] = array
 								(
-								'value' => $entry['value'],
-								'date' => $this->bocommon->date_to_timestamp($entry['date'])
+								'value'	 => $entry['value'],
+								'date'	 => $this->bocommon->date_to_timestamp($entry['date'])
 							);
 						}
 					}
@@ -327,14 +327,14 @@
 			{
 				//	$p_category		= $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
 				//	$p_id			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
-				$p_id = $values_insert['p_num'];
-				$p_location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+				$p_id			 = $values_insert['p_num'];
+				$p_location_id	 = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
 			}
 
 			if (isset($values_insert['p_num']) && $values_insert['p_num'])
 			{
-				$values_insert['p_id'] = $p_id;
-				$values_insert['p_location_id'] = $p_location_id;
+				$values_insert['p_id']			 = $p_id;
+				$values_insert['p_location_id']	 = $p_location_id;
 			}
 
 			return $values_insert;

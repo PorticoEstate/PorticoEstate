@@ -40,44 +40,47 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $location_info = array();
+		var $location_info	 = array();
 		var $appname;
 		var $allrows;
 		var $public_functions = array
 			(
-			'get_autocomplete'	=> true,
-			'get_single_name'	=> true
+			'get_autocomplete'	 => true,
+			'get_single_name'	 => true
 		);
 
-		function __construct( $session = false )
+		function __construct( $session = false, $call_appname = '' )
 		{
-			$called_class = get_called_class();
-			$called_class_arr = explode('_', $called_class);
-			$call_appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			if (!$call_appname) // call from mobilefrontend
+			{
+				$called_class		 = get_called_class();
+				$called_class_arr	 = explode('_', $called_class);
+				$call_appname		 = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			}
 			$this->so = CreateObject("{$call_appname}.sogeneric");
 
-			$this->custom = & $this->so->custom;
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom	 = & $this->so->custom;
+			$this->bocommon	 = CreateObject('property.bocommon');
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort', 'string', 'REQUEST', 'DESC');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	 = phpgw::get_var('query');
+			$sort	 = phpgw::get_var('sort', 'string', 'REQUEST', 'DESC');
+			$order	 = phpgw::get_var('order');
+			$filter	 = phpgw::get_var('filter', 'int');
+			$cat_id	 = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
 			$appname = phpgw::get_var('appname', 'string');
 
 			if ($appname)
 			{
-				$this->appname = $appname;
-				$this->so->appname = $appname;
+				$this->appname		 = $appname;
+				$this->so->appname	 = $appname;
 			}
 
-			$type = phpgw::get_var('type');
-			$type_id = phpgw::get_var('type_id', 'int', 'REQUEST', 0);
-			$this->type = $type;
-			$this->type_id = $type_id;
+			$type			 = phpgw::get_var('type');
+			$type_id		 = phpgw::get_var('type_id', 'int', 'REQUEST', 0);
+			$this->type		 = $type;
+			$this->type_id	 = $type_id;
 
 			if ($session)
 			{
@@ -85,13 +88,13 @@
 				$this->use_session = true;
 			}
 
-			$this->start = $start ? $start : 0;
-			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
-			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order = isset($_REQUEST['order']) && $_REQUEST['order'] ? $order : $this->order;
-			$this->filter = isset($_REQUEST['filter']) ? $filter : $this->filter;
-			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
-			$this->allrows = isset($allrows) ? $allrows : false;
+			$this->start	 = $start ? $start : 0;
+			$this->query	 = isset($_REQUEST['query']) ? $query : $this->query;
+			$this->sort		 = isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->order	 = isset($_REQUEST['order']) && $_REQUEST['order'] ? $order : $this->order;
+			$this->filter	 = isset($_REQUEST['filter']) ? $filter : $this->filter;
+			$this->cat_id	 = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
+			$this->allrows	 = isset($allrows) ? $allrows : false;
 
 //			$this->location_info = $this->so->get_location_info($type, $type_id);
 		}
@@ -110,19 +113,19 @@
 
 			//		_debug_array($data);
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
-			$this->allrows = $data['allrows'];
+			$this->start	 = $data['start'];
+			$this->query	 = $data['query'];
+			$this->filter	 = $data['filter'];
+			$this->sort		 = $data['sort'];
+			$this->order	 = $data['order'];
+			$this->cat_id	 = $data['cat_id'];
+			$this->allrows	 = $data['allrows'];
 		}
 
 		public function get_location_info( $type = '', $type_id = 0 )
 		{
-			$type = $type ? $type : $this->type;
-			$type_id = $type_id ? $type_id : $this->type_id;
+			$type				 = $type ? $type : $this->type;
+			$type_id			 = $type_id ? $type_id : $this->type_id;
 			return $this->location_info = $this->so->get_location_info($type, $type_id);
 		}
 
@@ -133,10 +136,10 @@
 				$selected = $GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"];
 			}
 
-			$filter = array('list' => ''); // translates to "list IS NULL"
+			$filter			 = array('list' => ''); // translates to "list IS NULL"
 			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
 
-			$columns = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', '', '', true, false, $filter);
+			$columns	 = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', '', '', true, false, $filter);
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
 			return $column_list;
@@ -159,7 +162,7 @@
 				{
 					if (isset($entry[$field['name']]) && $entry[$field['name']])
 					{
-						if($field['type'] == 'date')
+						if ($field['type'] == 'date')
 						{
 							$entry[$field['name']] = $GLOBALS['phpgw']->common->show_date($entry[$field['name']], $dateformat);
 						}
@@ -169,20 +172,21 @@
 						}
 						else if ((isset($field['role']) && $field['role'] == 'parent' || isset($field['values_def']['method_input']['role']) && $field['values_def']['method_input']['role'] == 'parent') && !empty($field['values_def']['method_input']['type']))
 						{
-							$path = $this->so->get_path(array('type' => $field['values_def']['method_input']['type'], 'id' => $entry[$field['name']]));
-							$entry[$field['name']] = implode(' > ', $path);
+							$path					 = $this->so->get_path(array('type'	 => $field['values_def']['method_input']['type'],
+								'id'	 => $entry[$field['name']]));
+							$entry[$field['name']]	 = implode(' > ', $path);
 						}
 						else if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
 						{
-							$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], array_merge(array('id' => $entry[$field['name']]),$field['values_def']['method_input'] ));
+							$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], array_merge(array(
+								'id' => $entry[$field['name']]), $field['values_def']['method_input']));
 						}
 					}
-
 				}
 			}
 
 			$this->total_records = $this->so->total_records;
-			$this->uicols = $this->so->uicols;
+			$this->uicols		 = $this->so->uicols;
 
 			return $values;
 		}
@@ -195,15 +199,15 @@
 				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
 				unset($data['location_info']);
 			}
-			$custom_fields = false;
+			$custom_fields	 = false;
 			$system_location = !empty($this->location_info['system_location']) ? $this->location_info['system_location'] : $this->location_info['acl_location'];
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
-				$custom_fields = true;
-				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
+				$custom_fields			 = true;
+				$values['attributes']	 = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
-			if (isset($data['id']) && $data['id'] || (string)$data['id'] ==='0' )
+			if (isset($data['id']) && $data['id'] || (string)$data['id'] === '0')
 			{
 				$values = $this->so->read_single($data, $values);
 			}
@@ -290,10 +294,10 @@
 
 		public function read_attrib_history( $data )
 		{
-			$system_location = $data['system_location'] ? $data['system_location'] :$data['acl_location'];
-			$attrib_data = $this->custom->get($data['appname'], $system_location, $data['attrib_id'], $inc_choices = true);
-			$historylog = CreateObject('property.historylog', $data['appname'], $data['acl_location']);
-			$history_values = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $data['id'], $data['attrib_id']);
+			$system_location = $data['system_location'] ? $data['system_location'] : $data['acl_location'];
+			$attrib_data	 = $this->custom->get($data['appname'], $system_location, $data['attrib_id'], $inc_choices	 = true);
+			$historylog		 = CreateObject('property.historylog', $data['appname'], $data['acl_location']);
+			$history_values	 = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $data['id'], $data['attrib_id']);
 
 			if ($attrib_data['column_info']['type'] == 'LB')
 			{
@@ -334,10 +338,10 @@
 			switch ($acl_location)
 			{
 				case '.vendor':
-					$history_type = 'vendor';
+					$history_type	 = 'vendor';
 					break;
 				default:
-					$history_type = str_replace('.', '_', substr($acl_location, -strlen($acl_location) + 1));
+					$history_type	 = str_replace('.', '_', substr($acl_location, -strlen($acl_location) + 1));
 			}
 			if (!$history_type)
 			{
@@ -357,8 +361,8 @@
 			$query = phpgw::get_var('query');
 
 			$params = array(
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 10),
-				'query' => $query,
+				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 10),
+				'query'		 => $query,
 			);
 
 			foreach ($this->location_info['fields'] as $field)
@@ -377,7 +381,7 @@
 			$custom_filter = array();
 			foreach ($attributes as $attribute_id => $attribute)
 			{
-				switch(phpgw::get_var($attribute['name']))
+				switch (phpgw::get_var($attribute['name']))
 				{
 					case 'ISNOTNULL':
 						$custom_filter[] = "{$attribute['name']} IS NOT NULL";
@@ -388,12 +392,12 @@
 					default:
 				}
 			}
-			$params['custom_filter'] = $custom_filter;
+			$params['custom_filter']	 = $custom_filter;
 			$params['disable_id_search'] = phpgw::get_var('disable_id_search', 'bool');
-			$values = $this->read($params);
-			$include = phpgw::get_var('include');
+			$values						 = $this->read($params);
+			$include					 = phpgw::get_var('include');
 
-			if($include)
+			if ($include)
 			{
 				foreach ($values as &$entry)
 				{
@@ -407,25 +411,24 @@
 			return array('ResultSet' => array('Result' => $values));
 		}
 
-
 		public function get_single_name( $data = array() )
 		{
-			$include = !empty($data['include']) ? $data['include'] : false;
-			$attributes = array();
-			if($include)
+			$include	 = !empty($data['include']) ? $data['include'] : false;
+			$attributes	 = array();
+			if ($include)
 			{
 				$attributes[] = array('column_name' => $include);
 			}
 
 			$this->get_location_info($data['type']);
 			$values = $this->so->read_single(array('id' => $data['id']), array('attributes' => $attributes));
-			if($include)
+			if ($include)
 			{
 				if (!empty($values['attributes']))
 				{
 					foreach ($values['attributes'] as $entry)
 					{
-						if($entry['column_name'] == $include && $entry['value'])
+						if ($entry['column_name'] == $include && $entry['value'])
 						{
 							$values['name'] = "{$entry['value']} {$values['name']}";
 							break;
@@ -453,17 +456,16 @@
 
 		public function get_single_attrib_value( array $data )
 		{
-			$ret = $id = $data['id'];
-			$type = $data['type'];
+			$ret		 = $id			 = $data['id'];
+			$type		 = $data['type'];
 			$attrib_name = $data['attrib_name'];
-			$ret = $id;
-			if($id = (int)$id)
+			$ret		 = $id;
+			if ($id			 = (int)$id)
 			{
-				$sogeneric = CreateObject('property.sogeneric', $type);
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				$ret =  $sogeneric_data[$attrib_name];
+				$sogeneric		 = CreateObject('property.sogeneric', $type);
+				$sogeneric_data	 = $sogeneric->read_single(array('id' => $id));
+				$ret			 = $sogeneric_data[$attrib_name];
 			}
 			return $ret;
 		}
-
 	}

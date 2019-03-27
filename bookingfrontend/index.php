@@ -133,10 +133,13 @@ HTML;
 	/*	 * ***********************************************************************\
 	 * Verify that the users session is still active otherwise kick them out   *
 	  \************************************************************************ */
+	$invalid_data = false;
+
 	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'home' && $GLOBALS['phpgw_info']['flags']['currentapp'] != 'about')
 	{
 		if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 		{
+			$invalid_data = true;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
 				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp']));
@@ -193,9 +196,24 @@ HTML;
 		$method = 'index';
 	}
 
+	if($app != 'bookingfrontend')
+	{
+		$invalid_data = true;
+		$GLOBALS['phpgw']->common->phpgw_header(true);
+		$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
+			'p1' => $app));
+
+		$lang_denied = lang('Access not permitted');
+		echo <<<HTML
+				<div class="error">$lang_denied</div>
+
+HTML;
+		$GLOBALS['phpgw']->common->phpgw_exit(True);
+
+	}
+
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 
-	$invalid_data = false; //FIXME consider whether this should be computed as in the main index.php
 	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
 		if (phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'

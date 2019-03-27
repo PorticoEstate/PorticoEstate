@@ -14,32 +14,32 @@
 	class db_oci8
 	{
 
-		var $Debug = 0;
-		var $sqoe = 1; // show query on error
-		var $Halt_On_Error = "yes"; ## "yes" (halt with message), "no" (ignore errors quietly), "report" (ignore errror, but spit a warning)
-		var $Host = "";
-		var $Port = "1521";
+		var $Debug					 = 0;
+		var $sqoe					 = 1; // show query on error
+		var $Halt_On_Error			 = "yes"; ## "yes" (halt with message), "no" (ignore errors quietly), "report" (ignore errror, but spit a warning)
+		var $Host					 = "";
+		var $Port					 = "1521";
 		/* traditionally the full TNS name is placed in $Database; if having trouble with TNS resolution (and desiring a more legible configuration), place the host IP address in $Host and the Oracle SID in $Database as a shortcut - connect() will build a valid connection string using $full_connection_string */
-		var $Database = "";
-		var $User = "";
-		var $Password = "";
-		var $full_connection_string = "(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=%s)(PORT=%s)))(CONNECT_DATA=(SID=%s)))";
-		var $Link_ID = 0;
-		var $Query_ID = 0;
-		var $Record = array();
+		var $Database				 = "";
+		var $User					 = "";
+		var $Password				 = "";
+		var $full_connection_string	 = "(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=%s)(PORT=%s)))(CONNECT_DATA=(SID=%s)))";
+		var $Link_ID					 = 0;
+		var $Query_ID				 = 0;
+		var $Record					 = array();
 		var $Row;
 		var $Parse;
-		var $Error = "";
-		var $autoCommit = 1; // Commit on successful query
-		var $autoCount = 1; // Count num_rows on select
-		var $share_connections = false;
-		var $share_connection_name = "";
+		var $Error					 = "";
+		var $autoCommit				 = 1; // Commit on successful query
+		var $autoCount				 = 1; // Count num_rows on select
+		var $share_connections		 = false;
+		var $share_connection_name	 = "";
 		// Defaults to the class name - set to another class name to share connections among different class extensions
 
-		var $last_query_text = "";
+		var $last_query_text		 = "";
 		var $num_rows; // Used to store the total of rows returned by a SELECT statement.
-		var $auto_stripslashes = false;
-		var $persistent = false;
+		var $auto_stripslashes	 = false;
+		var $persistent			 = false;
 
 		/* public: constructor */
 
@@ -281,12 +281,12 @@
 
 
 			oci_free_statement($this->Parse);
-			$fields = implode(',', $cols);
+			$fields	 = implode(',', $cols);
 			if ($nrows <= 0)
-				$nrows = 999999999999;
+				$nrows	 = 999999999999;
 			else
-				$nrows += $offset;
-			$offset += 1; // in Oracle rownum starts at 1
+				$nrows	 += $offset;
+			$offset	 += 1; // in Oracle rownum starts at 1
 
 			$sql = "SELECT /*+ FIRST_ROWS */ $fields FROM" .
 				"(SELECT rownum as adodb_rownum, $fields FROM" .
@@ -326,8 +326,8 @@
 			{
 				if (preg_match("/^(INSERT{1}|^INSERT INTO{1})[[:space:]][\"]?([a-zA-Z0-9\_\-]+)[\"]?/i", $this->last_query_text[$query_id], $tablename))
 				{
-					$query = "SELECT " . $tablename[2] . "_id_seq.CURRVAL FROM DUAL";
-					$temp_q_id = @oci_parse($this->db, $query);
+					$query		 = "SELECT " . $tablename[2] . "_id_seq.CURRVAL FROM DUAL";
+					$temp_q_id	 = @oci_parse($this->db, $query);
 					@oci_execute($temp_q_id, OCI_DEFAULT);
 					$temp_result = oci_fetch_array($temp_q_id, OCI_ASSOC + OCI_RETURN_NULLS);
 					if ($temp_result)
@@ -372,7 +372,7 @@
 				{ # 1043 means no more records found
 					$this->Error = false;
 					$this->disconnect();
-					$stat = 0;
+					$stat		 = 0;
 				}
 				else
 				{
@@ -386,13 +386,13 @@
 			}
 			else
 			{
-				$this->Record = array();
-				$totalReg = oci_num_fields($this->Parse);
+				$this->Record	 = array();
+				$totalReg		 = oci_num_fields($this->Parse);
 				for ($ix = 1; $ix <= $totalReg; $ix++)
 				{
-					$col = strtoupper(oci_field_name($this->Parse, $ix));
-					$colreturn = strtolower($col);
-					$this->Record[$colreturn] = (is_object($result[$col])) ? $result[$col]->load() : $result[$col];
+					$col						 = strtoupper(oci_field_name($this->Parse, $ix));
+					$colreturn					 = strtolower($col);
+					$this->Record[$colreturn]	 = (is_object($result[$col])) ? $result[$col]->load() : $result[$col];
 					if ($this->Debug)
 					{
 						echo "<b>[$col]</b>:" . $result[$col] . "<br>\n";
@@ -411,9 +411,9 @@
 
 		function metadata( $table, $full = false )
 		{
-			$count = 0;
-			$id = 0;
-			$res = array();
+			$count	 = 0;
+			$id		 = 0;
+			$res	 = array();
 
 			/*
 			 * Due to compatibility problems with Table we changed the behavior
@@ -466,27 +466,27 @@
 			$i = 0;
 			while ($this->next_record())
 			{
-				$res[$i]["table"] = $this->Record["table_name"];
-				$res[$i]["name"] = strtolower($this->Record["column_name"]);
-				$res[$i]["type"] = $this->Record["data_type"];
-				$res[$i]["len"] = $this->Record["data_length"];
+				$res[$i]["table"]	 = $this->Record["table_name"];
+				$res[$i]["name"]	 = strtolower($this->Record["column_name"]);
+				$res[$i]["type"]	 = $this->Record["data_type"];
+				$res[$i]["len"]		 = $this->Record["data_length"];
 				if ($this->Record["index_name"])
 				{
 					$res[$i]["flags"] = "INDEX ";
 				}
-				$res[$i]["flags"] .= ( $this->Record["nullable"] == 'N') ? '' : 'NOT NULL';
-				$res[$i]["format"] = (int)$this->Record["data_precision"] . "," .
+				$res[$i]["flags"]	 .= ( $this->Record["nullable"] == 'N') ? '' : 'NOT NULL';
+				$res[$i]["format"]	 = (int)$this->Record["data_precision"] . "," .
 					(int)$this->Record["data_scale"];
 				if ("0,0" == $res[$i]["format"])
 				{
 					$res[$i]["format"] = '';
 				}
-				$res[$i]["index"] = $this->Record["index_name"];
-				$res[$i]["chars"] = $this->Record["char_col_decl_length"];
+				$res[$i]["index"]	 = $this->Record["index_name"];
+				$res[$i]["chars"]	 = $this->Record["char_col_decl_length"];
 				if ($full)
 				{
-					$j = $res[$i]["name"];
-					$res["meta"][$j] = $i;
+					$j							 = $res[$i]["name"];
+					$res["meta"][$j]			 = $i;
 					$res["meta"][strtoupper($j)] = $i;
 				}
 				if ($full)
@@ -643,7 +643,7 @@
 			$i = 0;
 			while ($this->next_record())
 			{
-				$info[$i]["table_name"] = $this->Record["table_name"];
+				$info[$i]["table_name"]		 = $this->Record["table_name"];
 				$info[$i]["tablespace_name"] = $this->Record["tablespace_name"];
 				$i++;
 			}
@@ -833,8 +833,8 @@
 		 */
 		public function next_id( $table = '', $key = '' )
 		{
-			$where = '';
-			$condition = array();
+			$where		 = '';
+			$condition	 = array();
 			if (is_array($key))
 			{
 				foreach ($key as $column => $value)

@@ -12,7 +12,6 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:choose>
 		<xsl:when test="results/total_records_sum &gt; 0">
@@ -69,7 +68,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 										<div id="{img_container}"/>
-										<script type="text/javascript">
+										<script>
 											$(document).ready(function () {
 											JqueryPortico.booking.inlineImages('<xsl:value-of select="img_container"/>', '<xsl:value-of select="img_url"/>');
 											});
@@ -108,7 +107,6 @@
 					</u>
 				</h5>
 			</div>
-
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

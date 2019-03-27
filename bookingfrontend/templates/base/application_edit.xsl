@@ -1,12 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="content">
-
 		<h3>
 			<xsl:value-of select="php:function('lang', 'Application')"/> (<xsl:value-of select="application/id"/>)</h3>
 		<xsl:call-template name="msgbox"/>
-
 		<form action="" method="POST" id='application_form'>
-
 			<div class="pure-g">
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
 					<dl class="form-col">
@@ -34,7 +31,6 @@
 					</dl>
 				</div>
 			</div>
-        
 			<div class="pure-g">
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-2">
 					<dl class="form-col">
@@ -87,7 +83,6 @@
 					</dl>
 				</div>
 			</div>
-        
 			<div class="pure-g">
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
@@ -143,7 +138,6 @@
 						</dd>
 					</dl>
 				</div>
-            
 				<!--div class="date-container">
 					<a href="#" class="close-btn">-</a>
 					<dt><label for="field_{position()}_from"><xsl:value-of select="php:function('lang', 'From')" /></label></dt>
@@ -159,7 +153,6 @@
 						</input>
 					</dd>
 				</div-->
-            
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 					<dl class="form-col">
 						<div class="heading">3. <xsl:value-of select="php:function('lang', 'When?')" /></div>
@@ -188,7 +181,6 @@
 													<xsl:attribute name="readonly">
 														<xsl:text>readonly</xsl:text>
 													</xsl:attribute>
-
 												</input>
 											</dd>
 											<dt>
@@ -204,7 +196,6 @@
 													<xsl:attribute name="readonly">
 														<xsl:text>readonly</xsl:text>
 													</xsl:attribute>
-
 												</input>
 											</dd>
 										</div>
@@ -225,7 +216,6 @@
 													<xsl:attribute name="readonly">
 														<xsl:text>readonly</xsl:text>
 													</xsl:attribute>
-
 												</input>
 											</dd>
 											<dt>
@@ -241,7 +231,6 @@
 													<xsl:attribute name="readonly">
 														<xsl:text>readonly</xsl:text>
 													</xsl:attribute>
-
 												</input>
 											</dd>
 										</div>
@@ -464,7 +453,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = true;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;

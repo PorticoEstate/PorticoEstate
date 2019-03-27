@@ -29,7 +29,7 @@ JS;
 		}
 		catch(err)
 		{
-			alert(err);
+//			alert(err);
 		}
 JS;
 
@@ -196,6 +196,7 @@ JS;
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $webserver_url,
 //		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
+		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'win_on_events'	=> $test,
 		'navbar_config' => $_navbar_config,
 		'metainfo_author' => $author,

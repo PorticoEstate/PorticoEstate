@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * phpGroupWare - property: a part of a Facilities Management System.
 	 *
@@ -26,26 +27,26 @@
 	 * @subpackage logistic
 	 * @version $Id: class.boreport.inc.php 14913 2016-04-27 12:27:37Z sigurdne $
 	 */
-
 	class property_boreport
 	{
+
 		private $so;
 		var $public_functions = array
 			(
-			'read' => true,
-			'get_views' => true
+			'read'		 => true,
+			'get_views'	 => true
 		);
-		
+
 		public function __construct()
 		{
-			$this->so = CreateObject('property.soreport');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->so		 = CreateObject('property.soreport');
+			$this->bocommon	 = CreateObject('property.bocommon');
 			$this->operators = $this->so->operators;
-			
-			$this->operators_equal = $this->so->operators_equal;
-			$this->operators_like = $this->so->operators_like;
-			$this->operators_in = $this->so->operators_in;
-			$this->operators_null = $this->so->operators_null;			
+
+			$this->operators_equal	 = $this->so->operators_equal;
+			$this->operators_like	 = $this->so->operators_like;
+			$this->operators_in		 = $this->so->operators_in;
+			$this->operators_null	 = $this->so->operators_null;
 		}
 
 		function read_single( $id = '' )
@@ -54,65 +55,65 @@
 
 			return $report;
 		}
-		
-		public function read($data = array())
-		{			
-			$values =  $this->so->read($data);
+
+		public function read( $data = array() )
+		{
+			$values						 = $this->so->read($data);
 			$this->total_records_reports = $this->so->total_records_reports;
-			
+
 			return $values;
 		}
 
-		public function read_to_export($id, $data = array())
-		{			
-			$values =  $this->so->read_to_export($id, $data);
-			
+		public function read_to_export( $id, $data = array() )
+		{
+			$values = $this->so->read_to_export($id, $data);
+
 			return $values;
 		}
-		
+
 		function get_views()
 		{
 			$values = $this->so->get_views();
 
 			return $values;
 		}
-		
+
 		function get_datasets()
 		{
 			$values = $this->so->get_datasets();
 
 			return $values;
 		}
-		
-		function get_view_columns($id)
+
+		function get_view_columns( $id )
 		{
 			$values = $this->so->get_view_columns($id);
 
 			return $values;
 		}
 
-		function get_view_content($id)
+		function get_view_content( $id )
 		{
 			$values = $this->so->get_view_content($id);
 
 			return $values;
 		}
-		
+
 		function read_single_dataset( $dataset_id = '' )
 		{
 			$dataset = $this->so->read_single_dataset($dataset_id);
 
 			return $dataset;
 		}
-		
+
 		function read_dataset( $params = array() )
 		{
-			$dataset = $this->so->read_dataset($params);
+			$dataset					 = $this->so->read_dataset($params);
 			$this->total_records_dataset = $this->so->total_records_dataset;
 
 			return $dataset;
 		}
-		
+
 		function save( $values )
 		{
 			if ($values['id'])
@@ -123,16 +124,16 @@
 			{
 				$receipt = $this->so->add($values);
 			}
-			
+
 			return $receipt;
 		}
-		
+
 		function delete( $id )
 		{
 			$receipt = $this->so->delete($id);
 			return $receipt;
 		}
-		
+
 		function save_dataset( $values )
 		{
 			if ($values['id'])
@@ -143,14 +144,13 @@
 			{
 				$receipt = $this->so->add_dataset($values);
 			}
-			
+
 			return $receipt;
 		}
-		
+
 		function delete_dataset( $id )
 		{
 			$receipt = $this->so->delete_dataset($id);
 			return $receipt;
 		}
-		
 	}

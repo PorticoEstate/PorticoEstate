@@ -48,15 +48,15 @@
 		protected $like;
 		var $public_functions = array
 			(
-			'confirm_session' => true,
-			'get_vendor_email' => true
+			'confirm_session'	 => true,
+			'get_vendor_email'	 => true
 		);
 
 		function __construct()
 		{
 			//_debug_array($bt = debug_backtrace());
-			$this->socommon = CreateObject('property.socommon');
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->socommon	 = CreateObject('property.socommon');
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
 			{
@@ -64,9 +64,9 @@
 			}
 			$this->async = &$GLOBALS['phpgw']->asyncservice;
 
-			$this->join = $this->socommon->join;
+			$this->join		 = $this->socommon->join;
 			$this->left_join = $this->socommon->left_join;
-			$this->like = $this->socommon->like;
+			$this->like		 = $this->socommon->like;
 
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 		}
@@ -83,17 +83,17 @@
 		 * @param integer $required
 		 * @return bool
 		 */
-		function check_perms2( $owner_id, $grants,  $required )
+		function check_perms2( $owner_id, $grants, $required )
 		{
-			if(isset($grants['accounts'][$owner_id]) && ($grants['accounts'][$owner_id] & $required))
+			if (isset($grants['accounts'][$owner_id]) && ($grants['accounts'][$owner_id] & $required))
 			{
 				return true;
 			}
 
 			$equalto = $GLOBALS['phpgw']->accounts->membership($owner_id);
-			foreach($grants['groups'] as $group => $_right)
+			foreach ($grants['groups'] as $group => $_right)
 			{
-				if(isset($equalto[$group]) && ($_right & $required))
+				if (isset($equalto[$group]) && ($_right & $required))
 				{
 					return true;
 				}
@@ -119,7 +119,7 @@
 
 		function msgbox_data( $receipt )
 		{
-			$msgbox_data_error = array();
+			$msgbox_data_error	 = array();
 			$msgbox_data_message = array();
 			if (isSet($receipt['error']) AND is_array($receipt['error']))
 			{
@@ -164,7 +164,7 @@
 			{
 				foreach ($input_list as $entry)
 				{
-					$output_list[$j]['id'] = $entry['id'];
+					$output_list[$j]['id']	 = $entry['id'];
 					$output_list[$j]['name'] = $entry['name'];
 
 					if (isset($selected) && is_array($selected))
@@ -226,8 +226,8 @@
 				{
 					$all_users[] = array
 						(
-						'account_id' => $extra_user,
-						'account_firstname' => lang($extra_user)
+						'account_id'		 => $extra_user,
+						'account_firstname'	 => lang($extra_user)
 					);
 				}
 			}
@@ -245,8 +245,8 @@
 					{
 						$all_users[] = array
 							(
-							'user_id' => $user->id,
-							'name' => $user->__toString(),
+							'user_id'	 => $user->id,
+							'name'		 => $user->__toString(),
 						);
 					}
 				}
@@ -261,17 +261,17 @@
 					{
 						$user_list[] = array
 							(
-							'user_id' => $user['user_id'],
-							'name' => $user['name'],
-							'selected' => 'selected'
+							'user_id'	 => $user['user_id'],
+							'name'		 => $user['name'],
+							'selected'	 => 'selected'
 						);
 					}
 					else
 					{
 						$user_list[] = array
 							(
-							'user_id' => $user['user_id'],
-							'name' => $user['name'],
+							'user_id'	 => $user['user_id'],
+							'name'		 => $user['name'],
 						);
 					}
 				}
@@ -308,9 +308,9 @@
 
 					$user_list[] = array
 						(
-						'id' => $user->id,
-						'name' => $user->firstname,
-						'selected' => $sel_user
+						'id'		 => $user->id,
+						'name'		 => $user->firstname,
+						'selected'	 => $sel_user
 					);
 				}
 			}
@@ -346,9 +346,9 @@
 				{
 					$users_extra[] = array
 						(
-						'account_lid' => $extra_user,
-						'account_firstname' => lang($extra_user),
-						'account_lastname' => ''
+						'account_lid'		 => $extra_user,
+						'account_firstname'	 => lang($extra_user),
+						'account_lastname'	 => ''
 					);
 				}
 			}
@@ -372,8 +372,8 @@
 					$users_gross = array_merge($users_gross, $GLOBALS['phpgw']->acl->get_user_list_right($right, $acl_location));
 				}
 
-				$accounts = array();
-				$users = array();
+				$accounts	 = array();
+				$users		 = array();
 
 				foreach ($users_gross as $entry => $user)
 				{
@@ -389,7 +389,7 @@
 
 				foreach ($users as $key => $row)
 				{
-					$account_lastname[$key] = $row['account_lastname'];
+					$account_lastname[$key]	 = $row['account_lastname'];
 					$account_firstname[$key] = $row['account_firstname'];
 				}
 
@@ -408,8 +408,8 @@
 				$users = array_merge($users_extra, $users);
 			}
 
-			$user_list = array();
-			$selected_found = false;
+			$user_list		 = array();
+			$selected_found	 = false;
 
 			foreach ($users as $user)
 			{
@@ -417,19 +417,19 @@
 				{
 					$user_list[] = array
 						(
-						'lid' => $user['account_lid'],
-						'firstname' => $user['account_firstname'],
-						'lastname' => $user['account_lastname'],
-						'selected' => 'selected'
+						'lid'		 => $user['account_lid'],
+						'firstname'	 => $user['account_firstname'],
+						'lastname'	 => $user['account_lastname'],
+						'selected'	 => 'selected'
 					);
 				}
 				else
 				{
 					$user_list[] = array
 						(
-						'lid' => $user['account_lid'],
-						'firstname' => $user['account_firstname'],
-						'lastname' => $user['account_lastname'],
+						'lid'		 => $user['account_lid'],
+						'firstname'	 => $user['account_firstname'],
+						'lastname'	 => $user['account_lastname'],
 					);
 				}
 
@@ -441,8 +441,8 @@
 
 			foreach ($user_list as &$user)
 			{
-				$user['id'] = $user['lid'];
-				$user['name'] = ltrim("{$user['lastname']}, {$user['firstname']}", ', ');
+				$user['id']		 = $user['lid'];
+				$user['name']	 = ltrim("{$user['lastname']}, {$user['firstname']}", ', ');
 			}
 			unset($user);
 
@@ -454,12 +454,12 @@
 
 				$user_list[] = array
 					(
-					'lid' => $_user->lid,
-					'firstname' => $_user->firstname,
-					'lastname' => $_user->lastname,
-					'id' => $selected,
-					'name' => $_user->__toString(),
-					'selected' => 'selected'
+					'lid'		 => $_user->lid,
+					'firstname'	 => $_user->firstname,
+					'lastname'	 => $_user->lastname,
+					'id'		 => $selected,
+					'name'		 => $_user->__toString(),
+					'selected'	 => 'selected'
 				);
 			}
 
@@ -470,13 +470,13 @@
 		{
 			if (is_array($format)) // i.e: called by ExecMethod()
 			{
-				$data = $format;
-				$format = isset($data['format']) ? $data['format'] : '';
-				$right = isset($data['right']) ? $data['right'] : '';
-				$selected = isset($data['selected']) ? $data['selected'] : '';
-				$acl_location = isset($data['acl_location']) ? $data['acl_location'] : '';
-				$extra = isset($data['extra']) ? $data['extra'] : '';
-				$default = isset($data['default']) ? $data['default'] : '';
+				$data			 = $format;
+				$format			 = isset($data['format']) ? $data['format'] : '';
+				$right			 = isset($data['right']) ? $data['right'] : '';
+				$selected		 = isset($data['selected']) ? $data['selected'] : '';
+				$acl_location	 = isset($data['acl_location']) ? $data['acl_location'] : '';
+				$extra			 = isset($data['extra']) ? $data['extra'] : '';
+				$default		 = isset($data['default']) ? $data['default'] : '';
 			}
 
 			switch ($format)
@@ -500,8 +500,8 @@
 				{
 					$users_extra[] = array
 						(
-						'account_id' => $extra_user,
-						'account_firstname' => lang($extra_user)
+						'account_id'		 => $extra_user,
+						'account_firstname'	 => lang($extra_user)
 					);
 				}
 			}
@@ -526,12 +526,12 @@
 			$selected_found = false;
 			foreach ($users as $user)
 			{
-				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$name		 = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
 				$user_list[] = array
 					(
-					'id' => $user['account_id'],
-					'name' => $name,
-					'selected' => $user['account_id'] == $selected ? 1 : 0
+					'id'		 => $user['account_id'],
+					'name'		 => $name,
+					'selected'	 => $user['account_id'] == $selected ? 1 : 0
 				);
 
 				if (!$selected_found)
@@ -544,9 +544,9 @@
 			{
 				$user_list[] = array
 					(
-					'id' => $selected,
-					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
-					'selected' => 1
+					'id'		 => $selected,
+					'name'		 => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected'	 => 1
 				);
 			}
 
@@ -566,7 +566,7 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('vendor_form'), $this->xsl_rootdir);
 			}
 
-			$vendor['value_vendor_id'] = $data['vendor_id'];
+			$vendor['value_vendor_id']	 = $data['vendor_id'];
 			$vendor['value_vendor_name'] = $data['vendor_name'];
 
 			if (isset($data['vendor_id']) && $data['vendor_id'] && !$data['vendor_name'])
@@ -574,8 +574,8 @@
 				$contacts = CreateObject('property.sogeneric');
 				$contacts->get_location_info('vendor', false);
 
-				$custom = createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$custom						 = createObject('property.custom_fields');
+				$vendor_data['attributes']	 = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
 				$vendor_data = $contacts->read_single(array('id' => $data['vendor_id']), $vendor_data);
 				if (is_array($vendor_data))
@@ -592,11 +592,11 @@
 				unset($contacts);
 			}
 
-			$vendor['vendor_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.vendor'));
-			$vendor['lang_vendor'] = lang('Vendor');
-			$vendor['lang_select_vendor_help'] = lang('click this link to select vendor');
-			$vendor['lang_vendor_name'] = lang('Vendor Name');
-			$vendor['required'] = isset($data['required']) && $data['required'] ? true : false;
+			$vendor['vendor_link']				 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.vendor'));
+			$vendor['lang_vendor']				 = lang('Vendor');
+			$vendor['lang_select_vendor_help']	 = lang('click this link to select vendor');
+			$vendor['lang_vendor_name']			 = lang('Vendor Name');
+			$vendor['required']					 = isset($data['required']) && $data['required'] ? true : false;
 			//_debug_array($vendor);
 			return $vendor;
 		}
@@ -626,29 +626,29 @@
 
 			if (isset($data['contact_id']) && $data['contact_id'] && !$data['contact_name'])
 			{
-				$contacts = CreateObject('phpgwapi.contacts');
-				$contact_data = $contacts->read_single_entry($data['contact_id'], array(
+				$contacts						 = CreateObject('phpgwapi.contacts');
+				$contact_data					 = $contacts->read_single_entry($data['contact_id'], array(
 					'fn', 'tel_work', 'email'));
-				$contact['value_contact_name'] = $contact_data[0]['fn'];
-				$contact['value_contact_email'] = $contact_data[0]['email'];
-				$contact['value_contact_tel'] = $contact_data[0]['tel_work'];
+				$contact['value_contact_name']	 = $contact_data[0]['fn'];
+				$contact['value_contact_email']	 = $contact_data[0]['email'];
+				$contact['value_contact_tel']	 = $contact_data[0]['tel_work'];
 
 				unset($contacts);
 
-				if(!$contact['value_contact_email'])
+				if (!$contact['value_contact_email'])
 				{
-					$user_id = createObject('property.soresponsible')->get_contact_user_id( $data['contact_id'] );
-					$prefs					= $this->create_preferences('property', $user_id);
-					$contact['value_contact_email']		= $prefs['email'];
-					$contact['value_contact_tel']	= $prefs['cellphone'];
+					$user_id						 = createObject('property.soresponsible')->get_contact_user_id($data['contact_id']);
+					$prefs							 = $this->create_preferences('property', $user_id);
+					$contact['value_contact_email']	 = $prefs['email'];
+					$contact['value_contact_tel']	 = $prefs['cellphone'];
 				}
 			}
 
-			$contact['field'] = $field;
-			$contact['contact_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.addressbook',
-				'column' => $field,
-				'clear_state' => 1));
-			$contact['lang_contact'] = lang('contact');
+			$contact['field']					 = $field;
+			$contact['contact_link']			 = $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uilookup.addressbook',
+				'column'		 => $field,
+				'clear_state'	 => 1));
+			$contact['lang_contact']			 = lang('contact');
 			$contact['lang_select_contact_help'] = lang('click this link to select');
 			//_debug_array($contact);
 			return $contact;
@@ -665,19 +665,19 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('tenant_form'), $this->xsl_rootdir);
 			}
 
-			$tenant['value_tenant_id'] = $data['tenant_id'];
-			$tenant['value_first_name'] = $data['first_name'];
-			$tenant['value_last_name'] = $data['last_name'];
-			$tenant['tenant_link'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.tenant'));
+			$tenant['value_tenant_id']	 = $data['tenant_id'];
+			$tenant['value_first_name']	 = $data['first_name'];
+			$tenant['value_last_name']	 = $data['last_name'];
+			$tenant['tenant_link']		 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.tenant'));
 			if ($data['role'] == 'customer')
 			{
-				$tenant['lang_select_tenant_help'] = lang('click this link to select customer');
-				$tenant['lang_tenant'] = lang('Customer');
+				$tenant['lang_select_tenant_help']	 = lang('click this link to select customer');
+				$tenant['lang_tenant']				 = lang('Customer');
 			}
 			else
 			{
-				$tenant['lang_select_tenant_help'] = lang('click this link to select tenant');
-				$tenant['lang_tenant'] = lang('Tenant');
+				$tenant['lang_select_tenant_help']	 = lang('click this link to select tenant');
+				$tenant['lang_tenant']				 = lang('Tenant');
 			}
 
 
@@ -686,9 +686,9 @@
 				$tenant_object = CreateObject('property.sogeneric');
 				$tenant_object->get_location_info('tenant', false);
 
-				$custom = createObject('property.custom_fields');
-				$tenant_data['attributes'] = $custom->find('property', '.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
-				$tenant_data = $tenant_object->read_single(array('id' => $data['tenant_id']), $tenant_data);
+				$custom						 = createObject('property.custom_fields');
+				$tenant_data['attributes']	 = $custom->find('property', '.tenant', 0, '', 'ASC', 'attrib_sort', true, true);
+				$tenant_data				 = $tenant_object->read_single(array('id' => $data['tenant_id']), $tenant_data);
 				if (is_array($tenant_data['attributes']))
 				{
 					//_debug_array($tenant_data);
@@ -729,16 +729,16 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_form'), $this->xsl_rootdir);
 			}
 
-			$b_account['value_b_account_id'] = $data['b_account_id'];
-			$b_account['value_b_account_name'] = $data['b_account_name'];
-			$b_account['b_account_link'] = $GLOBALS['phpgw']->link('/index.php', array
+			$b_account['value_b_account_id']		 = $data['b_account_id'];
+			$b_account['value_b_account_name']		 = $data['b_account_name'];
+			$b_account['b_account_link']			 = $GLOBALS['phpgw']->link('/index.php', array
 				(
 				'menuaction' => 'property.uilookup.b_account',
-				'role' => isset($data['role']) && $data['role'] ? $data['role'] : '',
-				'parent' => isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
+				'role'		 => isset($data['role']) && $data['role'] ? $data['role'] : '',
+				'parent'	 => isset($data['parent']) && $data['parent'] ? $data['parent'] : '',
 			));
 			$b_account['lang_select_b_account_help'] = lang('click this link to select budget account');
-			$b_account['lang_b_account'] = isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
+			$b_account['lang_b_account']			 = isset($data['role']) && $data['role'] == 'group' ? lang('budget account group') : lang('Budget account');
 			if ($data['b_account_id'] && !$data['b_account_name'])
 			{
 				$b_account_object = CreateObject('property.sogeneric');
@@ -750,12 +750,12 @@
 				{
 					$b_account_object->get_location_info('budget_account', false);
 				}
-				$b_account_data = $b_account_object->read_single(array('id' => $data['b_account_id']));
-				$b_account['value_b_account_name'] = $b_account_data['descr'];
+				$b_account_data						 = $b_account_object->read_single(array('id' => $data['b_account_id']));
+				$b_account['value_b_account_name']	 = $b_account_data['descr'];
 			}
 
-			$b_account['disabled'] = isset($data['disabled']) && $data['disabled'] ? true : false;
-			$b_account['required'] = isset($data['required']) && $data['required'] ? true : false;
+			$b_account['disabled']	 = isset($data['disabled']) && $data['disabled'] ? true : false;
+			$b_account['required']	 = isset($data['required']) && $data['required'] ? true : false;
 			return $b_account;
 		}
 
@@ -777,19 +777,20 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('external_project_form'), $this->xsl_rootdir);
 			}
 
-			$external_project['value_external_project_id'] = $data['external_project_id'];
-			$external_project['value_external_project_name'] = $data['external_project_name'];
-			$external_project['external_project_url'] = $GLOBALS['phpgw']->link('/index.php', array(
+			$external_project['value_external_project_id']			 = $data['external_project_id'];
+			$external_project['value_external_project_name']		 = $data['external_project_name'];
+			$external_project['external_project_url']				 = $GLOBALS['phpgw']->link('/index.php', array(
 				'menuaction' => 'property.uilookup.external_project'));
-			$external_project['lang_select_external_project_help'] = lang('click to select external project');
-			$external_project['lang_external_project'] = lang('external project');
+			$external_project['lang_select_external_project_help']	 = lang('click to select external project');
+			$external_project['lang_external_project']				 = lang('external project');
 			if ($data['external_project_id'] && (!isset($data['external_project_name']) || !$data['external_project_name']))
 			{
-				$external_project_object = CreateObject('property.sogeneric');
+				$external_project_object							 = CreateObject('property.sogeneric');
 				$external_project_object->get_location_info('external_project', false);
-				$external_project_data = $external_project_object->read_single(array('id' => $data['external_project_id']));
-				$external_project['value_external_project_name'] = $external_project_data['name'];
-				$external_project['value_external_project_budget'] = $external_project_data['budget'];
+				$external_project_data								 = $external_project_object->read_single(array(
+					'id' => $data['external_project_id']));
+				$external_project['value_external_project_name']	 = $external_project_data['name'];
+				$external_project['value_external_project_budget']	 = $external_project_data['budget'];
 			}
 			return $external_project;
 		}
@@ -812,17 +813,17 @@
 				$GLOBALS['phpgw']->xslttpl->add_file(array('ecodimb_form'), $this->xsl_rootdir);
 			}
 
-			$ecodimb['value_ecodimb'] = $data['ecodimb'];
-			$ecodimb['value_ecodimb_descr'] = $data['ecodimb_descr'];
-			$ecodimb['ecodimb_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.ecodimb'));
+			$ecodimb['value_ecodimb']			 = $data['ecodimb'];
+			$ecodimb['value_ecodimb_descr']		 = $data['ecodimb_descr'];
+			$ecodimb['ecodimb_url']				 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.ecodimb'));
 			$ecodimb['lang_select_ecodimb_help'] = lang('click to select dimb');
-			$ecodimb['lang_ecodimb'] = lang('dimb');
+			$ecodimb['lang_ecodimb']			 = lang('dimb');
 			if ($data['ecodimb'] && (!isset($data['ecodimb_descr']) || !$data['ecodimb_descr']))
 			{
-				$ecodimb_object = CreateObject('property.sogeneric');
+				$ecodimb_object					 = CreateObject('property.sogeneric');
 				$ecodimb_object->get_location_info('dimb', false);
-				$ecodimb_data = $ecodimb_object->read_single(array('id' => $data['ecodimb']));
-				$ecodimb['value_ecodimb_descr'] = $ecodimb_data['descr'];
+				$ecodimb_data					 = $ecodimb_object->read_single(array('id' => $data['ecodimb']));
+				$ecodimb['value_ecodimb_descr']	 = $ecodimb_data['descr'];
 			}
 			$ecodimb['disabled'] = isset($data['disabled']) && $data['disabled'] ? true : false;
 			$ecodimb['required'] = isset($data['required']) && $data['required'] ? true : false;
@@ -832,8 +833,8 @@
 
 		function initiate_event_lookup( $data )
 		{
-			$event = array();
-			$event['name'] = $data['name']; // attribute name
+			$event				 = array();
+			$event['name']		 = $data['name']; // attribute name
 			$event['event_name'] = $data['event_name']; // Human readable description
 			if (isset($data['type']) && $data['type'] == 'view')
 			{
@@ -864,30 +865,30 @@
 
 			if (isset($data['event_id']) && $data['event_id'])
 			{
-				$event['value'] = $data['event_id'];
-				$event_info = execMethod('property.soevent.read_single', $data['event_id']);
-				$event['descr'] = $event_info['descr'];
-				$event['enabled'] = $event_info['enabled'] ? lang('yes') : lang('no');
-				$event['lang_enabled'] = lang('enabled');
+				$event['value']			 = $data['event_id'];
+				$event_info				 = execMethod('property.soevent.read_single', $data['event_id']);
+				$event['descr']			 = $event_info['descr'];
+				$event['enabled']		 = $event_info['enabled'] ? lang('yes') : lang('no');
+				$event['lang_enabled']	 = lang('enabled');
 
-				$job_id = "property{$data['location']}::{$data['item_id']}::{$data['name']}";
-				$job = execMethod('phpgwapi.asyncservice.read', $job_id);
+				$job_id	 = "property{$data['location']}::{$data['item_id']}::{$data['name']}";
+				$job	 = execMethod('phpgwapi.asyncservice.read', $job_id);
 
-				$event['next'] = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'], $dateformat);
-				$event['lang_next_run'] = lang('next run');
+				$event['next']			 = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'], $dateformat);
+				$event['lang_next_run']	 = lang('next run');
 
 				$criteria = array
 					(
-					'start_date' => $event_info['start_date'],
-					'end_date' => $event_info['end_date'],
-					'location_id' => $event_info['location_id'],
-					'location_item_id' => $event_info['location_item_id']
+					'start_date'		 => $event_info['start_date'],
+					'end_date'			 => $event_info['end_date'],
+					'location_id'		 => $event_info['location_id'],
+					'location_item_id'	 => $event_info['location_item_id']
 				);
 
-				$event['count'] = 0;
-				$boevent = CreateObject('property.boevent');
+				$event['count']	 = 0;
+				$boevent		 = CreateObject('property.boevent');
 				$boevent->find_scedules($criteria);
-				$schedules = $boevent->cached_events;
+				$schedules		 = $boevent->cached_events;
 //_debug_array($schedules);die();
 				foreach ($schedules as $day => $set)
 				{
@@ -902,16 +903,16 @@
 				}
 				if ($event['responsible_id'])
 				{
-					$c = CreateObject('phpgwapi.contacts');
+					$c		 = CreateObject('phpgwapi.contacts');
 					$qfields = array
 						(
-						'contact_id' => 'contact_id',
-						'per_full_name' => 'per_full_name',
+						'contact_id'	 => 'contact_id',
+						'per_full_name'	 => 'per_full_name',
 					);
 
-					$criteria = array('contact_id' => $event['responsible_id']);
-					$contacts = $c->get_persons($qfields, 15, 0, '', '', $criteria);
-					$event['responsible'] = $contacts[0]['per_full_name'];
+					$criteria				 = array('contact_id' => $event['responsible_id']);
+					$contacts				 = $c->get_persons($qfields, 15, 0, '', '', $criteria);
+					$event['responsible']	 = $contacts[0]['per_full_name'];
 				}
 
 				unset($event_info);
@@ -922,10 +923,10 @@
 			$event['event_link'] = $GLOBALS['phpgw']->link('/index.php', array
 				(
 				'menuaction' => 'property.uievent.edit',
-				'location' => $data['location'],
-				'attrib_id' => $event['name'],
-				'item_id' => isset($event['item_id']) ? $event['item_id'] : '',
-				'id' => isset($event['value']) && $event['value'] ? $event['value'] : '')
+				'location'	 => $data['location'],
+				'attrib_id'	 => $event['name'],
+				'item_id'	 => isset($event['item_id']) ? $event['item_id'] : '',
+				'id'		 => isset($event['value']) && $event['value'] ? $event['value'] : '')
 			);
 
 			$event['event_link'] = "{menuaction:'property.uievent.edit',lookup:1,"
@@ -955,11 +956,11 @@
 
 			$alarm['header'][] = array
 				(
-				'lang_time' => lang('Time'),
-				'lang_text' => lang('Text'),
-				'lang_user' => lang('User'),
-				'lang_enabled' => lang('Enabled'),
-				'lang_select' => lang('Select')
+				'lang_time'		 => lang('Time'),
+				'lang_text'		 => lang('Text'),
+				'lang_user'		 => lang('User'),
+				'lang_enabled'	 => lang('Enabled'),
+				'lang_select'	 => lang('Select')
 			);
 
 			$alarm['values'] = $boalarm->read_alarms($data['alarm_type'], $data['id'], $data['text']);
@@ -972,40 +973,40 @@
 			{
 				$alarm['alter_alarm'][] = array
 					(
-					'lang_enable' => lang('Enable'),
-					'lang_disable' => lang('Disable'),
-					'lang_delete' => lang('Delete')
+					'lang_enable'	 => lang('Enable'),
+					'lang_disable'	 => lang('Disable'),
+					'lang_delete'	 => lang('Delete')
 				);
 
 				for ($i = 1; $i <= 31; $i++)
 				{
 					$alarm['add_alarm']['day_list'][($i - 1)]['id'] = $i;
 				}
-				$alarm['add_alarm']['lang_day'] = lang('Day');
-				$alarm['add_alarm']['lang_day_statustext'] = lang('Day');
+				$alarm['add_alarm']['lang_day']				 = lang('Day');
+				$alarm['add_alarm']['lang_day_statustext']	 = lang('Day');
 
 				for ($i = 1; $i <= 24; $i++)
 				{
 					$alarm['add_alarm']['hour_list'][($i - 1)]['id'] = $i;
 				}
-				$alarm['add_alarm']['lang_hour'] = lang('Hour');
-				$alarm['add_alarm']['lang_hour_statustext'] = lang('Hour');
+				$alarm['add_alarm']['lang_hour']			 = lang('Hour');
+				$alarm['add_alarm']['lang_hour_statustext']	 = lang('Hour');
 
 				for ($i = 1; $i <= 60; $i++)
 				{
 					$alarm['add_alarm']['minute_list'][($i - 1)]['id'] = $i;
 				}
-				$alarm['add_alarm']['lang_minute'] = lang('Minutes before the event');
-				$alarm['add_alarm']['lang_minute_statustext'] = lang('Minutes before the event');
+				$alarm['add_alarm']['lang_minute']				 = lang('Minutes before the event');
+				$alarm['add_alarm']['lang_minute_statustext']	 = lang('Minutes before the event');
 
-				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select', 4, false, $data['acl_location'], false, $default = $this->account);
+				$alarm['add_alarm']['user_list'] = $this->get_user_list_right2('select', 4, false, $data['acl_location'], false, $default						 = $this->account);
 
-				$alarm['add_alarm']['lang_user'] = lang('User');
-				$alarm['add_alarm']['lang_user_statustext'] = lang('Select the user the alarm belongs to.');
-				$alarm['add_alarm']['lang_no_user'] = lang('No user');
-				$alarm['add_alarm']['lang_add'] = lang('Add');
-				$alarm['add_alarm']['lang_add_alarm'] = lang('Add alarm');
-				$alarm['add_alarm']['lang_add_statustext'] = lang('Add alarm for selected user');
+				$alarm['add_alarm']['lang_user']			 = lang('User');
+				$alarm['add_alarm']['lang_user_statustext']	 = lang('Select the user the alarm belongs to.');
+				$alarm['add_alarm']['lang_no_user']			 = lang('No user');
+				$alarm['add_alarm']['lang_add']				 = lang('Add');
+				$alarm['add_alarm']['lang_add_alarm']		 = lang('Add alarm');
+				$alarm['add_alarm']['lang_add_statustext']	 = lang('Add alarm for selected user');
 			}
 
 			//_debug_array($alarm['values']);
@@ -1037,21 +1038,21 @@
 		function translate_datatype( $datatype )
 		{
 			$datatype_text = array(
-				'V' => 'Varchar',
-				'I' => 'Integer',
-				'C' => 'char',
-				'N' => 'Float',
-				'D' => 'Date',
-				'T' => 'Memo',
-				'R' => 'Muliple radio',
-				'CH' => 'Muliple checkbox',
-				'LB' => 'Listbox',
-				'AB' => 'Contact',
+				'V'		 => 'Varchar',
+				'I'		 => 'Integer',
+				'C'		 => 'char',
+				'N'		 => 'Float',
+				'D'		 => 'Date',
+				'T'		 => 'Memo',
+				'R'		 => 'Muliple radio',
+				'CH'	 => 'Muliple checkbox',
+				'LB'	 => 'Listbox',
+				'AB'	 => 'Contact',
 				'VENDOR' => 'Vendor',
-				'email' => 'Email',
-				'link' => 'Link',
-				'pwd' => 'Password',
-				'user' => 'phpgw user'
+				'email'	 => 'Email',
+				'link'	 => 'Link',
+				'pwd'	 => 'Password',
+				'user'	 => 'phpgw user'
 			);
 
 			$datatype = lang($datatype_text[$datatype]);
@@ -1062,21 +1063,21 @@
 		function translate_datatype_insert( $datatype )
 		{
 			$datatype_text = array(
-				'V' => 'varchar',
-				'I' => 'int',
-				'C' => 'char',
-				'N' => 'decimal',
-				'D' => 'timestamp',
-				'T' => 'text',
-				'R' => 'int',
-				'CH' => 'text',
-				'LB' => 'int',
-				'AB' => 'int',
+				'V'		 => 'varchar',
+				'I'		 => 'int',
+				'C'		 => 'char',
+				'N'		 => 'decimal',
+				'D'		 => 'timestamp',
+				'T'		 => 'text',
+				'R'		 => 'int',
+				'CH'	 => 'text',
+				'LB'	 => 'int',
+				'AB'	 => 'int',
 				'VENDOR' => 'int',
-				'email' => 'varchar',
-				'link' => 'varchar',
-				'pwd' => 'varchar',
-				'user' => 'int'
+				'email'	 => 'varchar',
+				'link'	 => 'varchar',
+				'pwd'	 => 'varchar',
+				'user'	 => 'int'
 			);
 
 			return $datatype_text[$datatype];
@@ -1085,15 +1086,15 @@
 		function translate_datatype_precision( $datatype )
 		{
 			$datatype_precision = array(
-				'I' => 4,
-				'R' => 4,
-				'LB' => 4,
-				'AB' => 4,
+				'I'		 => 4,
+				'R'		 => 4,
+				'LB'	 => 4,
+				'AB'	 => 4,
 				'VENDOR' => 4,
-				'email' => 64,
-				'link' => 255,
-				'pwd' => 32,
-				'user' => 4
+				'email'	 => 64,
+				'link'	 => 255,
+				'pwd'	 => 32,
+				'user'	 => 4
 			);
 
 			return (isset($datatype_precision[$datatype]) ? $datatype_precision[$datatype] : '');
@@ -1109,21 +1110,21 @@
 		function translate_datatype_format( $datatype )
 		{
 			$datatype_text = array(
-				'V' => 'varchar',
-				'I' => 'integer',
-				'C' => 'char',
-				'N' => 'float',
-				'D' => 'date',
-				'T' => 'memo',
-				'R' => 'radio',
-				'CH' => 'checkbox',
-				'LB' => 'listbox',
-				'AB' => 'contact',
+				'V'		 => 'varchar',
+				'I'		 => 'integer',
+				'C'		 => 'char',
+				'N'		 => 'float',
+				'D'		 => 'date',
+				'T'		 => 'memo',
+				'R'		 => 'radio',
+				'CH'	 => 'checkbox',
+				'LB'	 => 'listbox',
+				'AB'	 => 'contact',
 				'VENDOR' => 'vendor',
-				'email' => 'email',
-				'link' => 'link',
-				'pwd' => 'password',
-				'user' => 'phpgw_user'
+				'email'	 => 'email',
+				'link'	 => 'link',
+				'pwd'	 => 'password',
+				'user'	 => 'phpgw_user'
 			);
 
 
@@ -1148,15 +1149,15 @@
 			}
 
 			if (strlen($num) == 4)
-				$return = $num;
+				$return	 = $num;
 			if (strlen($num) == 3)
-				$return = "0$num";
+				$return	 = "0$num";
 			if (strlen($num) == 2)
-				$return = "00$num";
+				$return	 = "00$num";
 			if (strlen($num) == 1)
-				$return = "000$num";
+				$return	 = "000$num";
 			if (strlen($num) == 0)
-				$return = "0001";
+				$return	 = "0001";
 
 			return strtoupper($return);
 		}
@@ -1185,19 +1186,19 @@
 		{
 			//_debug_array($data);
 
-			$cols = isset($data['cols']) ? $data['cols'] : '';
-			$entity_table = isset($data['entity_table']) ? $data['entity_table'] : '';
-			$location_table = isset($data['location_table']) ? $data['location_table'] : '';
-			$cols_return = isset($data['cols_return']) && $data['cols_return'] ? $data['cols_return'] : array();
-			$uicols = isset($data['uicols']) && $data['uicols'] ? $data['uicols'] : array();
-			$joinmethod = isset($data['joinmethod']) ? $data['joinmethod'] : '';
-			$paranthesis = isset($data['paranthesis']) ? $data['paranthesis'] : '';
-			$lookup = isset($data['lookup']) ? $data['lookup'] : '';
-			$location_level = isset($data['location_level']) && $data['location_level'] > 0 ? (int)$data['location_level'] : 0;
-			$no_address = isset($data['no_address']) ? $data['no_address'] : '';
-			$force_location = isset($data['force_location']) ? $data['force_location'] : '';
-			$cols_extra = array();
-			$cols_return_lookup = array();
+			$cols				 = isset($data['cols']) ? $data['cols'] : '';
+			$entity_table		 = isset($data['entity_table']) ? $data['entity_table'] : '';
+			$location_table		 = isset($data['location_table']) ? $data['location_table'] : '';
+			$cols_return		 = isset($data['cols_return']) && $data['cols_return'] ? $data['cols_return'] : array();
+			$uicols				 = isset($data['uicols']) && $data['uicols'] ? $data['uicols'] : array();
+			$joinmethod			 = isset($data['joinmethod']) ? $data['joinmethod'] : '';
+			$paranthesis		 = isset($data['paranthesis']) ? $data['paranthesis'] : '';
+			$lookup				 = isset($data['lookup']) ? $data['lookup'] : '';
+			$location_level		 = isset($data['location_level']) && $data['location_level'] > 0 ? (int)$data['location_level'] : 0;
+			$no_address			 = isset($data['no_address']) ? $data['no_address'] : '';
+			$force_location		 = isset($data['force_location']) ? $data['force_location'] : '';
+			$cols_extra			 = array();
+			$cols_return_lookup	 = array();
 
 			$GLOBALS['phpgw']->config->read();
 
@@ -1218,9 +1219,9 @@
 				}
 			}
 
-			$soadmin_location = CreateObject('property.soadmin_location');
-			$location_types = $soadmin_location->select_location_type();
-			$config = $soadmin_location->read_config('');
+			$soadmin_location	 = CreateObject('property.soadmin_location');
+			$location_types		 = $soadmin_location->select_location_type();
+			$config				 = $soadmin_location->read_config('');
 
 			if ($location_level || $force_location)
 			{
@@ -1233,35 +1234,35 @@
 				{
 					$type_id = count($location_types);
 				}
-				$cols.= ",fm_location1.loc1_name";
-				$joinmethod .= " {$this->join}  fm_location1 ON ({$_location_table}.loc1 = fm_location1.loc1))";
-				$paranthesis .='(';
-				$joinmethod .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
-				$paranthesis .='(';
-				$joinmethod .= " {$this->join}  fm_owner ON (fm_location1.owner_id = fm_owner.id))";
-				$paranthesis .='(';
+				$cols		 .= ",fm_location1.loc1_name";
+				$joinmethod	 .= " {$this->join}  fm_location1 ON ({$_location_table}.loc1 = fm_location1.loc1))";
+				$paranthesis .= '(';
+				$joinmethod	 .= " {$this->join}  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
+				$paranthesis .= '(';
+				$joinmethod	 .= " {$this->join}  fm_owner ON (fm_location1.owner_id = fm_owner.id))";
+				$paranthesis .= '(';
 			}
 			else
 			{
-				$type_id = 0;//count($location_types);
-				$no_address = true;
+				$type_id	 = 0;//count($location_types);
+				$no_address	 = true;
 			}
 
 
-			$this->type_id = $type_id;
-			$_level = 1;
+			$this->type_id	 = $type_id;
+			$_level			 = 1;
 			for ($i = 0; $i < $type_id; $i++)
 			{
 				if ($_level > 1) // very expensive
 				//		if($_level == 2 && in_array(2, $list_location_level))
 				{
-					$joinmethod .= " {$this->left_join} fm_location{$_level}";
-					$paranthesis .='(';
-					$on = 'ON';
+					$joinmethod	 .= " {$this->left_join} fm_location{$_level}";
+					$paranthesis .= '(';
+					$on			 = 'ON';
 					for ($k = ($_level - 1); $k > 0; $k--)
 					{
-						$joinmethod .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level - 1) . ".loc{$k} AND  fm_location{$_level}.loc{$_level} = $entity_table.loc{$_level})";
-						$on = 'AND';
+						$joinmethod	 .= " $on (fm_location{$_level}.loc{$k} = fm_location" . ($_level - 1) . ".loc{$k} AND  fm_location{$_level}.loc{$_level} = $entity_table.loc{$_level})";
+						$on			 = 'AND';
 						if ($k == 1)
 						{
 							$joinmethod .= ")";
@@ -1277,17 +1278,17 @@
 			{
 				if ($_level)
 				{
-					$i = $_level - 1;
-					$uicols['input_type'][] = 'text';
-					$uicols['name'][] = 'loc' . $location_types[$i]['id'];
-					$uicols['descr'][] = $location_types[$i]['name'];
-					$uicols['statustext'][] = $location_types[$i]['descr'];
-					$uicols['exchange'][] = false;
-					$uicols['align'][] = '';
-					$uicols['datatype'][] = '';
-					$uicols['formatter'][] = '';
-					$uicols['classname'][] = '';
-					$uicols['sortable'][] = $_level == 1;
+					$i						 = $_level - 1;
+					$uicols['input_type'][]	 = 'text';
+					$uicols['name'][]		 = 'loc' . $location_types[$i]['id'];
+					$uicols['descr'][]		 = $location_types[$i]['name'];
+					$uicols['statustext'][]	 = $location_types[$i]['descr'];
+					$uicols['exchange'][]	 = false;
+					$uicols['align'][]		 = '';
+					$uicols['datatype'][]	 = '';
+					$uicols['formatter'][]	 = '';
+					$uicols['classname'][]	 = '';
+					$uicols['sortable'][]	 = $_level == 1;
 				}
 			}
 
@@ -1301,25 +1302,25 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
-			$lang_name = lang('name');
-			$location_relation_data = array();
-			$custom = createObject('property.custom_fields');
+			$lang_name				 = lang('name');
+			$location_relation_data	 = array();
+			$custom					 = createObject('property.custom_fields');
 			for ($i = 1; $i < ($type_id + 1); $i++)
 			{
-				$cols.= ",loc{$i}_name";
-				$cols_return[] = "loc{$i}_name";
-				$cols_extra[] = "loc{$i}_name";
-				$cols_return_lookup[] = "loc{$i}_name";
-				$uicols['input_type'][] = in_array($i, $list_location_level) ? 'text' : 'hidden';
-				$uicols['name'][] = "loc{$i}_name";
-				$uicols['descr'][] = "{$location_types[($i - 1)]['name']} {$lang_name}";
-				$uicols['statustext'][] = $location_types[$i - 1]['descr'];
-				$uicols['exchange'][] = $lookup;
-				$uicols['align'][] = '';
-				$uicols['datatype'][] = '';
-				$uicols['formatter'][] = '';
-				$uicols['classname'][] = '';
-				$uicols['sortable'][] = $i == 1;
+				$cols					 .= ",loc{$i}_name";
+				$cols_return[]			 = "loc{$i}_name";
+				$cols_extra[]			 = "loc{$i}_name";
+				$cols_return_lookup[]	 = "loc{$i}_name";
+				$uicols['input_type'][]	 = in_array($i, $list_location_level) ? 'text' : 'hidden';
+				$uicols['name'][]		 = "loc{$i}_name";
+				$uicols['descr'][]		 = "{$location_types[($i - 1)]['name']} {$lang_name}";
+				$uicols['statustext'][]	 = $location_types[$i - 1]['descr'];
+				$uicols['exchange'][]	 = $lookup;
+				$uicols['align'][]		 = '';
+				$uicols['datatype'][]	 = '';
+				$uicols['formatter'][]	 = '';
+				$uicols['classname'][]	 = '';
+				$uicols['sortable'][]	 = $i == 1;
 
 				$fm_location_cols_temp = $custom->find('property', '.location.' . $i, 0, '', '', '', true);
 				foreach ($fm_location_cols_temp as $entry)
@@ -1328,11 +1329,11 @@
 					{
 						$location_relation_data[] = array
 							(
-							'level' => $i,
-							'name' => $entry['name'],
-							'descr' => $entry['input_text'],
-							'status_text' => $entry['status_text'],
-							'datatype' => $entry['datatype'],
+							'level'			 => $i,
+							'name'			 => $entry['name'],
+							'descr'			 => $entry['input_text'],
+							'status_text'	 => $entry['status_text'],
+							'datatype'		 => $entry['datatype'],
 						);
 					}
 				}
@@ -1342,18 +1343,18 @@
 
 			if (!$no_address)
 			{
-				$cols.= ",$entity_table.address";
-				$cols_return[] = 'address';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'address';
-				$uicols['descr'][] = lang('address');
-				$uicols['statustext'][] = lang('address');
-				$uicols['exchange'][] = false;
-				$uicols['align'][] = '';
-				$uicols['datatype'][] = '';
-				$uicols['formatter'][] = '';
-				$uicols['classname'][] = '';
-				$uicols['sortable'][] = true;
+				$cols					 .= ",$entity_table.address";
+				$cols_return[]			 = 'address';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'address';
+				$uicols['descr'][]		 = lang('address');
+				$uicols['statustext'][]	 = lang('address');
+				$uicols['exchange'][]	 = false;
+				$uicols['align'][]		 = '';
+				$uicols['datatype'][]	 = '';
+				$uicols['formatter'][]	 = '';
+				$uicols['classname'][]	 = '';
+				$uicols['sortable'][]	 = true;
 			}
 
 			$config_count = count($config);
@@ -1366,62 +1367,62 @@
 					if ($config[$i]['column_name'] == 'street_id')
 					{
 
-						$cols_return[] = 'street_name';
-						$uicols['input_type'][] = 'hidden';
-						$uicols['name'][] = 'street_name';
-						$uicols['descr'][] = lang('street name');
-						$uicols['statustext'][] = lang('street name');
-						$uicols['exchange'][] = false;
-						$uicols['align'][] = '';
-						$uicols['datatype'][] = '';
-						$uicols['formatter'][] = '';
-						$uicols['classname'][] = '';
-						$uicols['sortable'][] = true;
+						$cols_return[]			 = 'street_name';
+						$uicols['input_type'][]	 = 'hidden';
+						$uicols['name'][]		 = 'street_name';
+						$uicols['descr'][]		 = lang('street name');
+						$uicols['statustext'][]	 = lang('street name');
+						$uicols['exchange'][]	 = false;
+						$uicols['align'][]		 = '';
+						$uicols['datatype'][]	 = '';
+						$uicols['formatter'][]	 = '';
+						$uicols['classname'][]	 = '';
+						$uicols['sortable'][]	 = true;
 
-						$cols_return[] = 'street_number';
-						$uicols['input_type'][] = 'hidden';
-						$uicols['name'][] = 'street_number';
-						$uicols['descr'][] = lang('street number');
-						$uicols['statustext'][] = lang('street number');
-						$uicols['exchange'][] = false;
-						$uicols['align'][] = '';
-						$uicols['datatype'][] = '';
-						$uicols['formatter'][] = '';
-						$uicols['classname'][] = '';
-						$uicols['sortable'][] = '';
+						$cols_return[]			 = 'street_number';
+						$uicols['input_type'][]	 = 'hidden';
+						$uicols['name'][]		 = 'street_number';
+						$uicols['descr'][]		 = lang('street number');
+						$uicols['statustext'][]	 = lang('street number');
+						$uicols['exchange'][]	 = false;
+						$uicols['align'][]		 = '';
+						$uicols['datatype'][]	 = '';
+						$uicols['formatter'][]	 = '';
+						$uicols['classname'][]	 = '';
+						$uicols['sortable'][]	 = '';
 
-						$cols_return[] = $config[$i]['column_name'];
-						$uicols['input_type'][] = 'hidden';
-						$uicols['name'][] = $config[$i]['column_name'];
-						$uicols['descr'][] = lang($config[$i]['input_text']);
-						$uicols['statustext'][] = lang($config[$i]['input_text']);
-						$uicols['exchange'][] = false;
-						$uicols['align'][] = '';
-						$uicols['datatype'][] = '';
-						$uicols['formatter'][] = '';
-						$uicols['classname'][] = '';
-						$uicols['sortable'][] = '';
+						$cols_return[]			 = $config[$i]['column_name'];
+						$uicols['input_type'][]	 = 'hidden';
+						$uicols['name'][]		 = $config[$i]['column_name'];
+						$uicols['descr'][]		 = lang($config[$i]['input_text']);
+						$uicols['statustext'][]	 = lang($config[$i]['input_text']);
+						$uicols['exchange'][]	 = false;
+						$uicols['align'][]		 = '';
+						$uicols['datatype'][]	 = '';
+						$uicols['formatter'][]	 = '';
+						$uicols['classname'][]	 = '';
+						$uicols['sortable'][]	 = '';
 
 						if ($lookup)
 						{
-							$cols_extra[] = 'street_name';
-							$cols_extra[] = 'street_number';
-							$cols_extra[] = $config[$i]['column_name'];
+							$cols_extra[]	 = 'street_name';
+							$cols_extra[]	 = 'street_number';
+							$cols_extra[]	 = $config[$i]['column_name'];
 						}
 					}
 					else
 					{
-						$cols_return[] = $config[$i]['column_name'];
-						$uicols['input_type'][] = 'text';
-						$uicols['name'][] = $config[$i]['column_name'];
-						$uicols['descr'][] = $config[$i]['input_text'];
-						$uicols['statustext'][] = $config[$i]['input_text'];
-						$uicols['exchange'][] = false;
-						$uicols['align'][] = '';
-						$uicols['datatype'][] = '';
-						$uicols['formatter'][] = '';
-						$uicols['classname'][] = '';
-						$uicols['sortable'][] = '';
+						$cols_return[]			 = $config[$i]['column_name'];
+						$uicols['input_type'][]	 = 'text';
+						$uicols['name'][]		 = $config[$i]['column_name'];
+						$uicols['descr'][]		 = $config[$i]['input_text'];
+						$uicols['statustext'][]	 = $config[$i]['input_text'];
+						$uicols['exchange'][]	 = false;
+						$uicols['align'][]		 = '';
+						$uicols['datatype'][]	 = '';
+						$uicols['formatter'][]	 = '';
+						$uicols['classname'][]	 = '';
+						$uicols['sortable'][]	 = '';
 
 						if ($lookup)
 						{
@@ -1431,10 +1432,10 @@
 				}
 			}
 
-			$this->uicols = $uicols;
-			$this->cols_return = $cols_return;
-			$this->cols_extra = $cols_extra;
-			$this->cols_return_lookup = $cols_return_lookup;
+			$this->uicols				 = $uicols;
+			$this->cols_return			 = $cols_return;
+			$this->cols_extra			 = $cols_extra;
+			$this->cols_return_lookup	 = $cols_return_lookup;
 
 			$from = " FROM $paranthesis $entity_table ";
 
@@ -1455,8 +1456,8 @@
 					break;
 			}
 
-			$parts = $this->socommon->select_part_of_town($district_id);
-			$part_of_town_list = array();
+			$parts				 = $this->socommon->select_part_of_town($district_id);
+			$part_of_town_list	 = array();
 
 			if (is_array($parts) && (count($parts)))
 			{
@@ -1466,19 +1467,19 @@
 					{
 						$part_of_town_list[] = array
 							(
-							'id' => $entry['id'],
-							'name' => $entry['name'],
-							'district_id' => $entry['district_id'],
-							'selected' => 'selected'
+							'id'			 => $entry['id'],
+							'name'			 => $entry['name'],
+							'district_id'	 => $entry['district_id'],
+							'selected'		 => 'selected'
 						);
 					}
 					else
 					{
 						$part_of_town_list[] = array
 							(
-							'id' => $entry['id'],
-							'name' => $entry['name'],
-							'district_id' => $entry['district_id'],
+							'id'			 => $entry['id'],
+							'name'			 => $entry['name'],
+							'district_id'	 => $entry['district_id'],
 						);
 					}
 				}
@@ -1558,8 +1559,8 @@
 			{
 				$datatypes[] = array
 					(
-					'id' => $key,
-					'name' => $name,
+					'id'	 => $key,
+					'name'	 => $name,
 				);
 			}
 
@@ -1568,9 +1569,9 @@
 
 		function select_nullable( $selected = '' )
 		{
-			$nullable[0]['id'] = 'True';
+			$nullable[0]['id']	 = 'True';
 			$nullable[0]['name'] = lang('true');
-			$nullable[1]['id'] = 'False';
+			$nullable[1]['id']	 = 'False';
 			$nullable[1]['name'] = lang('false');
 
 			return $this->select_list($selected, $nullable);
@@ -1589,12 +1590,12 @@
 		function download( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' )
 		{
 			set_time_limit(500);
-			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 
-			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] : 'csv';
-			$php_version = (float)PHP_VERSION;
+			$export_format	 = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] : 'csv';
+			$php_version	 = (float)PHP_VERSION;
 
 			switch ($export_format)
 			{
@@ -1602,7 +1603,7 @@
 					$this->csv_out($list, $name, $descr, $input_type, $identificator, $filename);
 					break;
 				case 'excel':
-					/*Experimental*/
+					/* Experimental */
 					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
 //					$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
 					break;
@@ -1623,14 +1624,14 @@
 		 * @param string $filename
 		 * @param string $export_format
 		 */
-		function phpspreadsheet_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' , $export_format = 'excel')
+		function phpspreadsheet_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '', $export_format = 'excel' )
 		{
 			phpgw::import_class('phpgwapi.phpspreadsheet');
 
 			if ($filename)
 			{
-				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0];
+				$filename_arr	 = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename		 = $filename_arr[0];
 			}
 			else
 			{
@@ -1641,13 +1642,13 @@
 			switch ($export_format)
 			{
 				case 'excel':
-					$suffix = 'xlsx';
+					$suffix	 = 'xlsx';
 					break;
 				case 'ods':
-					$suffix = 'ods';
+					$suffix	 = 'ods';
 					break;
 				default:
-					$suffix = 'xlsx';
+					$suffix	 = 'xlsx';
 					break;
 			}
 			$filename .= "_{$date_time}.{$suffix}";
@@ -1670,8 +1671,8 @@
 
 			if ($identificator)
 			{
-				$_first_row = 2;
-				$i = 1;
+				$_first_row	 = 2;
+				$i			 = 1;
 				foreach ($identificator as $key => $value)
 				{
 					$spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($i, 1, $value);
@@ -1685,7 +1686,7 @@
 			$count_uicols_name = count($name);
 
 			$text_format = array();
-			$m = 1;
+			$m			 = 1;
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
@@ -1720,9 +1721,9 @@
 
 				foreach ($content as $row)
 				{
-					$col = 'A';
+					$col	 = 'A';
 					$line++;
-					$rows = count($row);
+					$rows	 = count($row);
 					for ($i = 0; $i < $rows; $i++)
 					{
 						$cell = "{$col}{$line}";
@@ -1739,7 +1740,7 @@
 				}
 			}
 
-			if($export_format = 'ods')
+			if ($export_format = 'ods')
 			{
 				$objWriter = new PhpOffice\PhpSpreadsheet\Writer\Ods($spreadsheet);
 			}
@@ -1762,15 +1763,15 @@
 		{
 			if ($filename)
 			{
-				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0];
+				$filename_arr	 = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename		 = $filename_arr[0];
 			}
 			else
 			{
 				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}.xlsx";
+			$date_time	 = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename	 .= "_{$date_time}.xlsx";
 
 			$writer = CreateObject('phpgwapi.xlsxwriter');
 
@@ -1786,7 +1787,7 @@
 
 
 			$loop = 0;
-			if($list)
+			if ($list)
 			{
 				foreach ($list as $entry)
 				{
@@ -1795,18 +1796,18 @@
 						if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 						{
 							$test = $entry[$name[$i]];
-							if(ctype_digit((string)$test))
+							if (ctype_digit((string)$test))
 							{
-								if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+								if (empty($header[$descr[$i]]) || (!empty($header[$descr[$i]]) && $header[$descr[$i]] !== 'string'))
 								{
 									$header[$descr[$i]] = 'integer';
 								}
 							}
-						//	else if(is_float($test))
-						//	else if(preg_match('/([0-9]{1,})\.([0-9]{2,2})/', $test))
-							else if(filter_var($test, FILTER_VALIDATE_FLOAT))
+							//	else if(is_float($test))
+							//	else if(preg_match('/([0-9]{1,})\.([0-9]{2,2})/', $test))
+							else if (filter_var($test, FILTER_VALIDATE_FLOAT))
 							{
-								if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+								if (empty($header[$descr[$i]]) || (!empty($header[$descr[$i]]) && $header[$descr[$i]] !== 'string'))
 								{
 									$header[$descr[$i]] = '0.00';
 								}
@@ -1819,7 +1820,7 @@
 					}
 
 					$loop++;
-					if($loop > 4)
+					if ($loop > 4)
 					{
 						break;
 					}
@@ -1836,7 +1837,7 @@
 				}
 			}
 
-			$m = 0;
+			$m		 = 0;
 			$formats = array();
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
@@ -1844,9 +1845,8 @@
 				{
 					if (preg_match('/^loc/i', $name[$k]))
 					{
-						$header[$descr[$k]] = 'string';
-						$formats[$m] = 'string';
-
+						$header[$descr[$k]]	 = 'string';
+						$formats[$m]		 = 'string';
 					}
 				}
 				$m++;
@@ -1855,11 +1855,11 @@
 			$_header = array();
 			if ($identificator)
 			{
-				$_identificator = array_values($identificator);
-				$i = 0;
+				$_identificator	 = array_values($identificator);
+				$i				 = 0;
 				foreach ($header as $key => $format)
 				{
-					if(!empty($_identificator[$i]))
+					if (!empty($_identificator[$i]))
 					{
 						$_header[$_identificator[$i]] = 'string';
 					}
@@ -1897,6 +1897,7 @@
 			}
 			$writer->writeToStdOut();
 		}
+
 		/**
 		 * downloads data as CSV to the browser
 		 *
@@ -1909,15 +1910,15 @@
 		{
 			if ($filename)
 			{
-				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0];
+				$filename_arr	 = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename		 = $filename_arr[0];
 			}
 			else
 			{
 				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}.csv";
+			$date_time	 = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename	 .= "_{$date_time}.csv";
 
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/csv');
@@ -1993,14 +1994,14 @@
 			}
 			else if (substr($type, 0, 6) == 'entity')
 			{
-				$type = explode("_", $type);
-				$entity_id = $type[1];
-				$cat_id = $type[2];
-				$link = array
+				$type		 = explode("_", $type);
+				$entity_id	 = $type[1];
+				$cat_id		 = $type[2];
+				$link		 = array
 					(
 					'menuaction' => 'property.uientity.view',
-					'entity_id' => $entity_id,
-					'cat_id' => $cat_id
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id
 				);
 			}
 
@@ -2165,20 +2166,20 @@
 						//strip prefix and leading zeros
 						$values['extra']['p_num'] = execMethod('property.soentity.convert_num_to_id', array
 							(
-							'type' => $values['extra']['type'],
-							'entity_id' => $values['extra']['p_entity_id'],
-							'cat_id' => $values['extra']['p_cat_id'],
-							'num' => $values['extra']['p_num']
+							'type'		 => $values['extra']['type'],
+							'entity_id'	 => $values['extra']['p_entity_id'],
+							'cat_id'	 => $values['extra']['p_cat_id'],
+							'num'		 => $values['extra']['p_num']
 							)
 						);
 
-						$p_entity_id = $values['extra']['p_entity_id'];
-						$p_cat_id = $values['extra']['p_cat_id'];
-						$p_num = $values['extra']['p_num'];
-						$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
-						$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
-						$values['p'][$p_entity_id]['p_num'] = $p_num;
-						$values['p'][$p_entity_id]['p_cat_name'] = phpgw::get_var("entity_cat_name_{$p_entity_id}");
+						$p_entity_id								 = $values['extra']['p_entity_id'];
+						$p_cat_id									 = $values['extra']['p_cat_id'];
+						$p_num										 = $values['extra']['p_num'];
+						$values['p'][$p_entity_id]['p_entity_id']	 = $p_entity_id;
+						$values['p'][$p_entity_id]['p_cat_id']		 = $p_cat_id;
+						$values['p'][$p_entity_id]['p_num']			 = $p_num;
+						$values['p'][$p_entity_id]['p_cat_name']	 = phpgw::get_var("entity_cat_name_{$p_entity_id}");
 					}
 				}
 				if (isset($insert_record['additional_info']) && is_array($insert_record['additional_info']))
@@ -2193,8 +2194,8 @@
 				}
 			}
 
-			$values['extra'] = isset($values['extra']) && $values['extra'] ? $values['extra'] : array();
-			$values['street_name'] = phpgw::get_var('street_name');
+			$values['extra']		 = isset($values['extra']) && $values['extra'] ? $values['extra'] : array();
+			$values['street_name']	 = phpgw::get_var('street_name');
 			$values['street_number'] = phpgw::get_var('street_number');
 			if (isset($values['location']) && is_array($values['location']))
 			{
@@ -2203,22 +2204,22 @@
 			}
 			if ($values['location_code'])
 			{
-				$bolocation = CreateObject('property.bolocation');
+				$bolocation				 = CreateObject('property.bolocation');
 				$values['location_data'] = $bolocation->read_single($values['location_code'], array_merge($values['extra'], array(
 					'view' => true)));
 			}
 
-			$origin = isset($values['origin']) && $values['origin'] ? $values['origin'] : false;
-			$origin_id = isset($values['origin_id']) && $values['origin_id'] ? $values['origin_id'] : false;
+			$origin		 = isset($values['origin']) && $values['origin'] ? $values['origin'] : false;
+			$origin_id	 = isset($values['origin_id']) && $values['origin_id'] ? $values['origin_id'] : false;
 
 			if ($origin == '.ticket' && $origin_id && !$values['descr'])
 			{
-				$boticket = CreateObject('property.botts');
-				$ticket = $boticket->read_single($origin_id);
+				$boticket		 = CreateObject('property.botts');
+				$ticket			 = $boticket->read_single($origin_id);
 				$values['descr'] = $ticket['details'];
-				$values['name'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-				$ticket_notes = $boticket->read_additional_notes($origin_id);
-				$i = count($ticket_notes) - 1;
+				$values['name']	 = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+				$ticket_notes	 = $boticket->read_additional_notes($origin_id);
+				$i				 = count($ticket_notes) - 1;
 				if (isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
 				{
 					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
@@ -2228,13 +2229,13 @@
 
 			if (isset($origin) && $origin)
 			{
-				$interlink = CreateObject('property.interlink');
-				$values['origin_data'] = array(
-					'location' => $origin,
-					'descr' => $interlink->get_location_name($origin),
-					'data' => array(
-						'id' => $origin_id,
-						'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id)
+				$interlink				 = CreateObject('property.interlink');
+				$values['origin_data']	 = array(
+					'location'	 => $origin,
+					'descr'		 => $interlink->get_location_name($origin),
+					'data'		 => array(
+						'id'	 => $origin_id,
+						'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id)
 					)
 				);
 			}
@@ -2253,10 +2254,10 @@
 
 			if (!$menu = $GLOBALS['phpgw']->session->appsession($GLOBALS['phpgw_info']['flags']['menu_selection'], "menu_{$app}"))
 			{
-				$menu_gross = execMethod("{$app}.menu.get_menu", 'horisontal');
-				$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
-				$level = 0;
-				$menu['navigation'] = $this->get_sub_menu($menu_gross['navigation'], $selection, $level);
+				$menu_gross			 = execMethod("{$app}.menu.get_menu", 'horisontal');
+				$selection			 = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level				 = 0;
+				$menu['navigation']	 = $this->get_sub_menu($menu_gross['navigation'], $selection, $level);
 				$GLOBALS['phpgw']->session->appsession(isset($GLOBALS['phpgw_info']['flags']['menu_selection']) && $GLOBALS['phpgw_info']['flags']['menu_selection'] ? $GLOBALS['phpgw_info']['flags']['menu_selection'] : 'property_missing_selection', "menu_{$app}", $menu);
 				unset($menu_gross);
 			}
@@ -2301,8 +2302,8 @@
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'menu' => $this->get_menu(),
+				'msgbox_data'	 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'menu'			 => $this->get_menu(),
 			);
 
 			$appname = lang('No access');
@@ -2332,20 +2333,20 @@
 				{
 					if ($key == $id)
 					{
-						$str_array_values .= $value;
-						$str_array_values .= "#";
+						$str_array_values	 .= $value;
+						$str_array_values	 .= "#";
 					}
 					if ($key == $name)
 					{
-						$str_array_values .= $value;
-						$str_array_values .= "@";
+						$str_array_values	 .= $value;
+						$str_array_values	 .= "@";
 					}
 					if ($key == $name2)
 					{
 						// eliminate hte last @ in $str_array_values
-						$str_array_values = substr($str_array_values, 0, strrpos($str_array_values, '@'));
-						$str_array_values .= " " . $value;
-						$str_array_values .= "@";
+						$str_array_values	 = substr($str_array_values, 0, strrpos($str_array_values, '@'));
+						$str_array_values	 .= " " . $value;
+						$str_array_values	 .= "@";
 					}
 				}
 			}
@@ -2358,9 +2359,9 @@
 			$split_values = array();
 			foreach ($array as $value)
 			{
-				array_push($split_values, array('text' => "{$value['id']}", 'value' => $value['id'],
-					'onclick' => array('fn' => 'onDateClick', 'obj' => array('id_button' => $id_buttons,
-							'opt' => $value['id'], 'hidden_name' => $name_hidden))));
+				array_push($split_values, array('text'		 => "{$value['id']}", 'value'		 => $value['id'],
+					'onclick'	 => array('fn'	 => 'onDateClick', 'obj'	 => array('id_button'		 => $id_buttons,
+							'opt'			 => $value['id'], 'hidden_name'	 => $name_hidden))));
 			}
 			return $split_values;
 		}
@@ -2370,9 +2371,9 @@
 			$split_values = array();
 			foreach ($array as $value)
 			{
-				array_push($split_values, array('text' => $value['name'], 'value' => $value['id'],
-					'onclick' => array('fn' => 'onUserClick', 'obj' => array('id_button' => $id_buttons,
-							'id' => $value['id'], 'name' => $value['name'], 'hidden_name' => $name_hidden))));
+				array_push($split_values, array('text'		 => $value['name'], 'value'		 => $value['id'],
+					'onclick'	 => array('fn'	 => 'onUserClick', 'obj'	 => array('id_button'		 => $id_buttons,
+							'id'			 => $value['id'], 'name'			 => $value['name'], 'hidden_name'	 => $name_hidden))));
 			}
 			return $split_values;
 		}
@@ -2411,33 +2412,33 @@
 
 		public function get_categories( $data )
 		{
-			$cats = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
-			$cats->supress_info = true;
-			$values = $cats->formatted_xslt_list(array('selected' => $data['selected'],
-				'globals' => true, 'link_data' => array()));
-			$ret = array();
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
+			$cats->supress_info	 = true;
+			$values				 = $cats->formatted_xslt_list(array('selected'	 => $data['selected'],
+				'globals'	 => true, 'link_data'	 => array()));
+			$ret				 = array();
 			foreach ($values['cat_list'] as $category)
 			{
 				$ret[] = array
 					(
-					'id' => $category['cat_id'],
-					'name' => $category['name'],
-					'selected' => $category['selected'] ? 1 : 0
+					'id'		 => $category['cat_id'],
+					'name'		 => $category['name'],
+					'selected'	 => $category['selected'] ? 1 : 0
 				);
 			}
 			return $ret;
 		}
 
-		public function get_vendor_email( $vendor_id = 0 , $field_name = '')
+		public function get_vendor_email( $vendor_id = 0, $field_name = '' )
 		{
 			if (!$vendor_id)
 			{
-				$vendor_id = phpgw::get_var('vendor_id', 'int', 'GET', 0);
-				$field_name = phpgw::get_var('field_name', 'string', 'GET');
+				$vendor_id	 = phpgw::get_var('vendor_id', 'int', 'GET', 0);
+				$field_name	 = phpgw::get_var('field_name', 'string', 'GET');
 			}
 			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
 
-			if(!$field_name)
+			if (!$field_name)
 			{
 				$field_name = 'values[vendor_email][]';
 			}
@@ -2446,14 +2447,14 @@
 				$field_name .= '[]';
 			}
 
-			$content_email = array();
-			$title = lang('The address to which this order will be sendt');
+			$content_email	 = array();
+			$title			 = lang('The address to which this order will be sendt');
 			foreach ($vendor_email as $_entry)
 			{
 				$content_email[] = array
 					(
-					'value_email' => $_entry['email'],
-					'value_select' => "<input type='checkbox' name='{$field_name}' value='{$_entry['email']}' title='{$title}'>"
+					'value_email'	 => $_entry['email'],
+					'value_select'	 => "<input type='checkbox' name='{$field_name}' value='{$_entry['email']}' title='{$title}'>"
 				);
 			}
 
@@ -2463,26 +2464,25 @@
 
 				return array
 					(
-					'data' => $content_email,
-					'total_records' => $total_records,
-					'draw' => phpgw::get_var('draw', 'int'),
-					'recordsTotal' => $total_records,
-					'recordsFiltered' => $total_records
+					'data'				 => $content_email,
+					'total_records'		 => $total_records,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
 				);
 			}
 			return $content_email;
 		}
 
-
-		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		public function get_vendor_contract( $vendor_id = 0, $selected = '' )
 		{
-			if(!$vendor_id)
+			if (!$vendor_id)
 			{
 				$vendor_id = phpgw::get_var('vendor_id', 'int');
 			}
 
 			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
-			if($selected)
+			if ($selected)
 			{
 				foreach ($contract_list as &$contract)
 				{
@@ -2506,8 +2506,8 @@
 
 			$sogeneric = CreateObject('property.sogeneric', 'eco_service');
 
-			$filter = array('active' => 1);
-			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
+			$filter	 = array('active' => 1);
+			$values	 = $sogeneric->read(array('filter' => $filter, 'query' => $query));
 
 			return array('ResultSet' => array('Result' => $values));
 		}
@@ -2515,11 +2515,11 @@
 		public function get_eco_service_name( $id )
 		{
 			$ret = $id;
-			if($id = (int)$id)
+			if ($id	 = (int)$id)
 			{
-				$sogeneric = CreateObject('property.sogeneric', 'eco_service');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				$ret =  $sogeneric_data['name'];
+				$sogeneric		 = CreateObject('property.sogeneric', 'eco_service');
+				$sogeneric_data	 = $sogeneric->read_single(array('id' => $id));
+				$ret			 = $sogeneric_data['name'];
 			}
 			return $ret;
 		}
@@ -2528,8 +2528,8 @@
 		{
 			$query = phpgw::get_var('query');
 
-			$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
-			$values = $sogeneric->read(array('query' => $query, 'allrows' => true));
+			$sogeneric	 = CreateObject('property.sogeneric', 'unspsc_code');
+			$values		 = $sogeneric->read(array('query' => $query, 'allrows' => true));
 			foreach ($values as &$value)
 			{
 				$value['name'] = "{$value['id']} {$value['name']}";
@@ -2537,16 +2537,17 @@
 
 			return array('ResultSet' => array('Result' => $values));
 		}
+
 		public function get_unspsc_code_name( $id )
 		{
 			$ret = '';
-			if($id)
+			if ($id)
 			{
-				$sogeneric = CreateObject('property.sogeneric', 'unspsc_code');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				if($sogeneric_data)
+				$sogeneric		 = CreateObject('property.sogeneric', 'unspsc_code');
+				$sogeneric_data	 = $sogeneric->read_single(array('id' => $id));
+				if ($sogeneric_data)
 				{
-					$ret =  $sogeneric_data['name'];
+					$ret = $sogeneric_data['name'];
 				}
 			}
 			return $ret;
@@ -2554,19 +2555,19 @@
 
 		public function get_b_account()
 		{
-			$query = phpgw::get_var('query');
-			$role = phpgw::get_var('role');
+			$query	 = phpgw::get_var('query');
+			$role	 = phpgw::get_var('role');
 
 			$type = 'budget_account';
 
-			if($role == 'group')
+			if ($role == 'group')
 			{
 				$type = 'b_account_category';
 			}
 
-			$sogeneric = CreateObject('property.sogeneric', $type);
-			$filter = array('active' => 1);
-			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
+			$sogeneric	 = CreateObject('property.sogeneric', $type);
+			$filter		 = array('active' => 1);
+			$values		 = $sogeneric->read(array('filter' => $filter, 'query' => $query));
 
 			foreach ($values as &$value)
 			{
@@ -2587,9 +2588,9 @@
 		{
 			$query = phpgw::get_var('query');
 
-			$sogeneric = CreateObject('property.sogeneric', 'external_project');
-			$filter = array('active' => 1);
-			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
+			$sogeneric	 = CreateObject('property.sogeneric', 'external_project');
+			$filter		 = array('active' => 1);
+			$values		 = $sogeneric->read(array('filter' => $filter, 'query' => $query));
 
 //			foreach ($values as &$value)
 //			{
@@ -2602,13 +2603,13 @@
 		public function get_external_project_name( $id )
 		{
 			$ret = $id;
-			if($id)
+			if ($id)
 			{
-				$sogeneric = CreateObject('property.sogeneric', 'external_project');
-				$sogeneric_data = $sogeneric->read_single(array('id' => $id));
-				if($sogeneric_data)
+				$sogeneric		 = CreateObject('property.sogeneric', 'external_project');
+				$sogeneric_data	 = $sogeneric->read_single(array('id' => $id));
+				if ($sogeneric_data)
 				{
-					$ret =  $sogeneric_data['name'];
+					$ret = $sogeneric_data['name'];
 				}
 			}
 			return $ret;
@@ -2618,9 +2619,9 @@
 		{
 			$query = phpgw::get_var('query');
 
-			$sogeneric = CreateObject('property.sogeneric', 'dimb');
-			$filter = array('active' => 1);
-			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
+			$sogeneric	 = CreateObject('property.sogeneric', 'dimb');
+			$filter		 = array('active' => 1);
+			$values		 = $sogeneric->read(array('filter' => $filter, 'query' => $query));
 
 			foreach ($values as &$value)
 			{

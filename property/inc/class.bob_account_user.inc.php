@@ -35,14 +35,14 @@
 
 		function __construct()
 		{
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->so = CreateObject('property.sob_account_user');
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.sob_account_user');
 		}
 
 		public function read( $data )
 		{
-			static $users = array();
-			$values = $this->so->read($data);
+			static $users	 = array();
+			$values			 = $this->so->read($data);
 
 			foreach ($values as &$entry)
 			{
@@ -50,8 +50,8 @@
 				{
 					if (!$entry['user'] = $users[$entry['user_id']])
 					{
-						$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
-						$users[$entry['user_id']] = $entry['user'];
+						$entry['user']				 = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+						$users[$entry['user_id']]	 = $entry['user'];
 					}
 				}
 			}

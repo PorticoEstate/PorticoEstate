@@ -45,32 +45,32 @@
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.sojasper');
-			$this->grants = & $this->so->grants;
+			$this->so		 = CreateObject('property.sojasper');
+			$this->grants	 = & $this->so->grants;
 			if ($session)
 			{
 				$this->read_sessiondata();
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
+			$start	 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query	 = phpgw::get_var('query');
+			$sort	 = phpgw::get_var('sort');
+			$order	 = phpgw::get_var('order');
+			$filter	 = phpgw::get_var('filter', 'int');
+			$cat_id	 = phpgw::get_var('cat_id', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
-			$app = phpgw::get_var('app');
+			$app	 = phpgw::get_var('app');
 
-			$this->start = $start ? $start : 0;
-			$this->query = isset($_REQUEST['query']) ? $query : $this->query;
-			$this->sort = isset($_REQUEST['sort']) ? $sort : $this->sort;
-			$this->order = isset($_REQUEST['order']) ? $order : $this->order;
-			$this->cat_id = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
-			$this->user_id = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
+			$this->start	 = $start ? $start : 0;
+			$this->query	 = isset($_REQUEST['query']) ? $query : $this->query;
+			$this->sort		 = isset($_REQUEST['sort']) ? $sort : $this->sort;
+			$this->order	 = isset($_REQUEST['order']) ? $order : $this->order;
+			$this->cat_id	 = isset($_REQUEST['cat_id']) ? $cat_id : $this->cat_id;
+			$this->user_id	 = isset($_REQUEST['user_id']) ? $user_id : $this->user_id;
 			;
-			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
-			$this->app = isset($_REQUEST['app']) ? $app : $this->app;
+			$this->allrows	 = isset($allrows) && $allrows ? $allrows : '';
+			$this->app		 = isset($_REQUEST['app']) ? $app : $this->app;
 		}
 
 		public function save_sessiondata( $data )
@@ -86,14 +86,14 @@
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'jasper');
 
 			//_debug_array($data);
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->user_id = isset($data['user_id']) ? $data['user_id'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$this->app = isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->start	 = isset($data['start']) ? $data['start'] : '';
+			$this->query	 = isset($data['query']) ? $data['query'] : '';
+			$this->user_id	 = isset($data['user_id']) ? $data['user_id'] : '';
+			$this->sort		 = isset($data['sort']) ? $data['sort'] : '';
+			$this->order	 = isset($data['order']) ? $data['order'] : '';
+			$this->cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$this->app		 = isset($data['app']) && $data['app'] ? $data['app'] : $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		public function read( $data = array() )
@@ -102,15 +102,15 @@
 			  'app' => $this->app,'allrows' => $this->allrows)); */
 			$jasper = $this->so->read($data);
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$vfs				 = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl	 = 1;
 
 			foreach ($jasper as &$entry)
 			{
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
-				$location_info = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
-				$entry['location'] = $location_info['descr'];
+				$entry['user']		 = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+				$location_info		 = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+				$entry['location']	 = $location_info['descr'];
 				if ($entry['formats'])
 				{
 					$entry['formats'] = implode(',', $entry['formats']);
@@ -121,14 +121,14 @@
 				}
 
 				if ($files = $vfs->ls(array(
-					'string' => "/property/jasper/{$entry['id']}",
-					'relatives' => array(RELATIVE_NONE))))
+					'string'	 => "/property/jasper/{$entry['id']}",
+					'relatives'	 => array(RELATIVE_NONE))))
 				{
 					$entry['file_name'] = $files[0]['name'];
 				}
 			}
 
-			$vfs->override_acl = 0;
+			$vfs->override_acl	 = 0;
 			$this->total_records = $this->so->total_records;
 
 			return $jasper;
@@ -136,12 +136,12 @@
 
 		public function read_single( $id )
 		{
-			$jasper = $this->so->read_single($id);
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
-			if ($files = $vfs->ls(array(
-				'string' => "/property/jasper/{$jasper['id']}",
-				'relatives' => array(RELATIVE_NONE))))
+			$jasper				 = $this->so->read_single($id);
+			$vfs				 = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl	 = 1;
+			if ($files				 = $vfs->ls(array(
+				'string'	 => "/property/jasper/{$jasper['id']}",
+				'relatives'	 => array(RELATIVE_NONE))))
 			{
 				$jasper['file_name'] = $files[0]['name'];
 			}
@@ -211,9 +211,9 @@
 				{
 					$apps[] = array
 						(
-						'id' => $app,
-						'name' => $app_info['title'],
-						'selected' => $selected == $app
+						'id'		 => $app,
+						'name'		 => $app_info['title'],
+						'selected'	 => $selected == $app
 					);
 				}
 			}

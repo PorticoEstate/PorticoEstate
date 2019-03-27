@@ -80,6 +80,14 @@
 				</table>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_ticket_category}:</td>
+			<td>
+				<select name="newsettings[ticket_category]">
+					{hook_ticket_category}
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

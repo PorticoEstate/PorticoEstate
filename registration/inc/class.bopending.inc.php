@@ -276,16 +276,16 @@
 	Hi {$info['n_given']} {$info['n_family']},
 
 	This is a confirmation email for your new account on {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
-	Click on the following link to log into your account. 
-	
+	Click on the following link to log into your account.
+
 	<a href='$url'>Login.</a>
-	
+
 	User: {$reg_info['reg_lid']}
 	Password:{$info['passwd']}
 
 	If you did not request this account, simply ignore this message.
 	{$support_email_text} {$support_email}
-	
+
 HTML;
 					unset($info['passwd']);
 					unset($info['passwd_confirm']);

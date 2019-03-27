@@ -493,7 +493,7 @@
 			$results['sort'] = 'reg_lid';
 			$results['dir'] = $this->bo->sort ? $this->bo->sort : 'ASC';
 
-//_debug_array($results);						
+//_debug_array($results);
 			return $this->jquery_results($results);
 		}
 	}

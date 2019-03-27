@@ -4,40 +4,40 @@
 	{
 
 		protected $db;
-		var $type = 'entity';
-		var $array_entity_categories = array();
+		var $type					 = 'entity';
+		var $array_entity_categories	 = array();
 		protected $sql;
-		protected $type_app = array
+		protected $type_app				 = array
 			(
 			'entity' => 'property',
-			'catch' => 'catch'
+			'catch'	 => 'catch'
 		);
 
 		public function __construct()
 		{
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = $this->db->join;
-			$this->bo = CreateObject('property.boadmin_entity', true);
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = $this->db->join;
+			$this->bo		 = CreateObject('property.boadmin_entity', true);
 			$this->bo_entity = CreateObject('property.boentity', true);
-			$this->custom = CreateObject('property.custom_fields');
-			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom	 = CreateObject('property.custom_fields');
+			$this->bocommon	 = CreateObject('property.bocommon');
 
 			$this->array_entity_categories = array(
-				'0' => array('name' => '0 - Generelt'),
+				'0'	 => array('name' => '0 - Generelt'),
 				'01' => array('name' => '01 - Informasjon og hjelp'),
 				'02' => array('name' => '02 - Krav til dokumentasjon'),
-				'1' => array('name' => '1 - Brannsikring'),
+				'1'	 => array('name' => '1 - Brannsikring'),
 				'11' => array('name' => '11 - Branntekniske krav'),
 				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer'),
 				'13' => array('name' => '13 - Brannteknisk dokumentasjon')
 			);
 
 			$this->template_cat_id = array(
-				'1' => '309',
-				'2' => '310',
-				'3' => '1',
-				'4' => '1' /*  Id of "211 Klargjøring av tomt" */
+				'1'	 => '309',
+				'2'	 => '310',
+				'3'	 => '1',
+				'4'	 => '1' /*  Id of "211 Klargjøring av tomt" */
 			);
 		}
 
@@ -102,12 +102,12 @@
 
 				$values[$buildingpart] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('name'),
-					'buildingpart' => $buildingpart,
-					'location_id' => $this->db->f('location_id'),
-					'parent_id' => $this->db->f('parent_id'),
-					'entity_id' => $this->db->f('entity_id')
+					'id'			 => $this->db->f('id'),
+					'name'			 => $this->db->f('name'),
+					'buildingpart'	 => $buildingpart,
+					'location_id'	 => $this->db->f('location_id'),
+					'parent_id'		 => $this->db->f('parent_id'),
+					'entity_id'		 => $this->db->f('entity_id')
 				);
 			}
 
@@ -122,15 +122,15 @@
 			foreach ($attributes as $attribute)
 			{
 				$values[] = array(
-					'name' => $attribute['name'],
-					'datatype' => $attribute['datatype'],
-					'precision' => $attribute['precision'],
-					'history' => $attribute['history'],
-					'attrib_id' => $attribute['attrib_id'],
-					'nullable' => $attribute['nullable'],
+					'name'		 => $attribute['name'],
+					'datatype'	 => $attribute['datatype'],
+					'precision'	 => $attribute['precision'],
+					'history'	 => $attribute['history'],
+					'attrib_id'	 => $attribute['attrib_id'],
+					'nullable'	 => $attribute['nullable'],
 					'input_text' => $attribute['input_text'],
-					'disabled' => $attribute['disabled'],
-					'value' => $attribute['value']
+					'disabled'	 => $attribute['disabled'],
+					'value'		 => $attribute['value']
 				);
 			}
 
@@ -149,23 +149,23 @@
 
 		public function save_category( $name, $parent_id, $cat_id )
 		{
-			$entity_id = '3';
-			$values = array();
+			$entity_id	 = '3';
+			$values		 = array();
 
-			$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
-				'allrows' => true));
+			$attrib_list = $this->bo->read_attrib(array('entity_id'	 => $entity_id, 'cat_id'	 => $cat_id,
+				'allrows'	 => true));
 			foreach ($attrib_list as $attrib)
 			{
 				$values['template_attrib'][] = $attrib['id'];
 			}
 			$values['category_template'] = $entity_id . '_' . $cat_id;
-			$values['parent_id'] = $parent_id;
-			$values['name'] = $name;
-			$values['descr'] = $name;
-			$values['entity_id'] = $entity_id;
-			$values['fileupload'] = 1;
-			$values['loc_link'] = 1;
-			$values['is_eav'] = 1;
+			$values['parent_id']		 = $parent_id;
+			$values['name']				 = $name;
+			$values['descr']			 = $name;
+			$values['entity_id']		 = $entity_id;
+			$values['fileupload']		 = 1;
+			$values['loc_link']			 = 1;
+			$values['is_eav']			 = 1;
 
 			$receipt = $this->bo->save_category($values);
 
@@ -176,37 +176,37 @@
 		{
 			$receipt = array();
 
-			$template_info = explode('_', $values['category_template']);
-			$template_entity_id = $template_info[0];
-			$template_cat_id = $template_info[1];
+			$template_info		 = explode('_', $values['category_template']);
+			$template_entity_id	 = $template_info[0];
+			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->bo->read_attrib_group(array('entity_id' => $template_entity_id,
-				'cat_id' => $template_cat_id, 'allrows' => true));
+			$attrib_group_list = $this->bo->read_attrib_group(array('entity_id'	 => $template_entity_id,
+				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
 				$group = array
 					(
-					'appname' => $this->type_app[$this->type],
-					'location' => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+					'appname'	 => $this->type_app[$this->type],
+					'location'	 => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
 					'group_name' => $attrib_group['name'],
-					'descr' => $attrib_group['descr'],
-					'remark' => $attrib_group['remark']
+					'descr'		 => $attrib_group['descr'],
+					'remark'	 => $attrib_group['remark']
 				);
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->bo->read_attrib(array('entity_id' => $values['entity_id'],
-				'cat_id' => $values['cat_id'], 'allrows' => true));
-			$column_names = array();
+			$attrib_list	 = $this->bo->read_attrib(array('entity_id'	 => $values['entity_id'],
+				'cat_id'	 => $values['cat_id'], 'allrows'	 => true));
+			$column_names	 = array();
 			foreach ($attrib_list as $attrib)
 			{
 				$column_names[] = $attrib['column_name'];
 			}
 
-			$attrib_list_template = $this->bo->read_attrib(array('entity_id' => $template_entity_id,
-				'cat_id' => $template_cat_id, 'allrows' => true));
-			$template_attribs = array();
+			$attrib_list_template	 = $this->bo->read_attrib(array('entity_id'	 => $template_entity_id,
+				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
+			$template_attribs		 = array();
 			foreach ($attrib_list_template as $attrib)
 			{
 				if (!in_array($attrib['column_name'], $column_names, true))
@@ -217,8 +217,8 @@
 
 			foreach ($template_attribs as $attrib)
 			{
-				$attrib['appname'] = $this->type_app[$this->type];
-				$attrib['location'] = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+				$attrib['appname']	 = $this->type_app[$this->type];
+				$attrib['location']	 = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
 
 				$choices = array();
 				if (isset($attrib['choice']) && $attrib['choice'])
@@ -232,8 +232,8 @@
 				{
 					foreach ($choices as $choice)
 					{
-						$attrib['new_choice'] = $choice['value'];
-						$attrib['id'] = $id;
+						$attrib['new_choice']	 = $choice['value'];
+						$attrib['id']			 = $id;
 						$this->custom->edit($attrib);
 					}
 				}
@@ -255,10 +255,10 @@
 			{
 				$values2 = array
 					(
-					'entity_id' => $template['entity_id'],
-					'cat_id' => $template['cat_id'],
-					'category_template' => $template_id,
-					'selected' => ''
+					'entity_id'			 => $template['entity_id'],
+					'cat_id'			 => $template['cat_id'],
+					'category_template'	 => $template_id,
+					'selected'			 => ''
 				);
 
 				$result = $this->_add_attrib_from_template($values2);
@@ -311,8 +311,8 @@
 
 				if ($category_id)
 				{
-					$buildingparts['added'][$k] = array('id' => $category_id, 'entity_id' => $entity_id,
-						'name' => $name);
+					$buildingparts['added'][$k] = array('id'		 => $category_id, 'entity_id'	 => $entity_id,
+						'name'		 => $name);
 				}
 				else
 				{
@@ -325,12 +325,12 @@
 
 		public function add_bim_item( $entity_categories, $location_code )
 		{
-			$components_added = array();
-			$message = array();
+			$components_added	 = array();
+			$message			 = array();
 
-			$location_code_values = explode('-', $location_code);
-			$i = 0;
-			$location = array();
+			$location_code_values	 = explode('-', $location_code);
+			$i						 = 0;
+			$location				 = array();
 			foreach ($location_code_values as $loc)
 			{
 				$i++;
@@ -350,8 +350,8 @@
 					{
 						$attributes_values = $this->set_attributes_values($values, $attributes);
 
-						$values_insert = $this->_populate(array('location_code' => $location_code,
-							'location' => $location), $attributes_values);
+						$values_insert = $this->_populate(array('location_code'	 => $location_code,
+							'location'		 => $location), $attributes_values);
 
 						$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
 						if (!$receipt['id'])
@@ -413,8 +413,8 @@
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$type = $this->db->f('type');
-			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
+			$type	 = $this->db->f('type');
+			$id		 = $this->db->next_id('fm_bim_item', array('type' => $type));
 
 			if (function_exists('com_create_guid') === true)
 			{
@@ -427,19 +427,19 @@
 
 			$values_insert = array
 				(
-				'id' => $id,
-				'location_id' => $location_id,
-				'type' => $type,
-				'guid' => $guid,
-				'json_representation' => json_encode($data),
-				'model' => 0,
-				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
-				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
-				'location_code' => $data['location_code'],
-				'loc1' => $data['loc1'],
-				'address' => $data['address'],
-				'entry_date' => time(),
-				'user_id' => $this->account
+				'id'					 => $id,
+				'location_id'			 => $location_id,
+				'type'					 => $type,
+				'guid'					 => $guid,
+				'json_representation'	 => json_encode($data),
+				'model'					 => 0,
+				'p_location_id'			 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id'					 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code'			 => $data['location_code'],
+				'loc1'					 => $data['loc1'],
+				'address'				 => $data['address'],
+				'entry_date'			 => time(),
+				'user_id'				 => $this->account
 			);
 
 			$result = $this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -467,9 +467,9 @@
 
 			if (isset($values['street_name']) && $values['street_name'])
 			{
-				$address[] = $values['street_name'];
-				$address[] = $values['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address[]	 = $values['street_name'];
+				$address[]	 = $values['street_number'];
+				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (!isset($address) || !$address)
@@ -525,8 +525,8 @@
 						{
 							$history_set[$entry['attrib_id']] = array
 								(
-								'value' => $entry['value'],
-								'date' => $this->bocommon->date_to_timestamp($entry['date'])
+								'value'	 => $entry['value'],
+								'date'	 => $this->bocommon->date_to_timestamp($entry['date'])
 							);
 						}
 					}
@@ -537,14 +537,14 @@
 			{
 				//	$p_category		= $admin_entity->read_single_category($values_insert['p_entity_id'], $values_insert['p_cat_id']);
 				//	$p_id			= (int) ltrim($values_insert['p_num'], $p_category['prefix']);
-				$p_id = $values_insert['p_num'];
-				$p_location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
+				$p_id			 = $values_insert['p_num'];
+				$p_location_id	 = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$values_insert['p_entity_id']}.{$values_insert['p_cat_id']}");
 			}
 
 			if (isset($values_insert['p_num']) && $values_insert['p_num'])
 			{
-				$values_insert['p_id'] = $p_id;
-				$values_insert['p_location_id'] = $p_location_id;
+				$values_insert['p_id']			 = $p_id;
+				$values_insert['p_location_id']	 = $p_location_id;
 			}
 
 			return $values_insert;

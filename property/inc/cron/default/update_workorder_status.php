@@ -40,12 +40,12 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('workorder');
-			$this->function_msg = 'Manuell oppdatering av status';
+			$this->sub_location	 = lang('workorder');
+			$this->function_msg	 = 'Manuell oppdatering av status';
 
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->db = clone($GLOBALS['phpgw']->db);
-			$this->date = 1220245200;// unix timestamp 1. Sept 2008
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->db		 = clone($GLOBALS['phpgw']->db);
+			$this->date		 = 1220245200;// unix timestamp 1. Sept 2008
 
 			die('er denne konfigurert?');
 		}
@@ -61,7 +61,7 @@
 			{
 				$workorders[] = array
 					(
-					'id' => $this->db->f('id'),
+					'id'	 => $this->db->f('id'),
 					'status' => $this->db->f('status')
 				);
 			}
@@ -73,7 +73,7 @@
 			{
 				$projects[] = array
 					(
-					'id' => $this->db->f('id'),
+					'id'	 => $this->db->f('id'),
 					'status' => $this->db->f('status')
 				);
 			}

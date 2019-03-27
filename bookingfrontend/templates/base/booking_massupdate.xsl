@@ -1,6 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="content">
-
 		<dl class="form">
 			<dt class="heading">
 				<xsl:value-of select="php:function('lang', 'Mass update')"/>
@@ -207,7 +206,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var initialAudience = <xsl:value-of select="booking/audience_json"/>;
 	</script>
 </xsl:template>

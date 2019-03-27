@@ -37,18 +37,18 @@
 		private $db;
 		private $appname;
 		private $table;
-		private $attrib_id_field = '';
-		private $detail_id_field = '';
-		private $location_id_field = '';
-		private $app_id_field = '';
+		private $attrib_id_field	 = '';
+		private $detail_id_field	 = '';
+		private $location_id_field	 = '';
+		private $app_id_field		 = '';
 		private $app_id;
 		private $location_id;
-		private $types = array(
-			'C' => 'Created',
-			'D' => 'Deleted',
-			'E' => 'Edited'
+		private $types				 = array(
+			'C'	 => 'Created',
+			'D'	 => 'Deleted',
+			'E'	 => 'Edited'
 		);
-		var $alternate_handlers = array();
+		var $alternate_handlers	 = array();
 		var $account;
 
 		function __construct( $appname, $acl_location = '' )
@@ -83,41 +83,41 @@
 			switch ($selector)
 			{
 				case 'request':
-					$this->table = 'fm_request_history';
+					$this->table			 = 'fm_request_history';
 					break;
 				case 'workorder':
-					$this->table = 'fm_workorder_history';
+					$this->table			 = 'fm_workorder_history';
 					break;
 				case 'project':
-					$this->table = 'fm_project_history';
+					$this->table			 = 'fm_project_history';
 					break;
 				case 'tts':
-					$this->table = 'fm_tts_history';
+					$this->table			 = 'fm_tts_history';
 					break;
 				case 'document':
-					$this->table = 'fm_document_history';
+					$this->table			 = 'fm_document_history';
 					break;
 				case 'entity':
 				case 'catch':
-					$this->table = "fm_{$selector}_history";
-					$this->attrib_id_field = 'history_attrib_id';
+					$this->table			 = "fm_{$selector}_history";
+					$this->attrib_id_field	 = 'history_attrib_id';
 					break;
 				case 's_agreement':
-					$this->table = 'fm_s_agreement_history';
-					$this->attrib_id_field = 'history_attrib_id';
-					$this->detail_id_field = 'history_detail_id';
+					$this->table			 = 'fm_s_agreement_history';
+					$this->attrib_id_field	 = 'history_attrib_id';
+					$this->detail_id_field	 = 'history_detail_id';
 					break;
 				case 'tenant_claim':
-					$this->table = 'fm_tenant_claim_history';
+					$this->table			 = 'fm_tenant_claim_history';
 					break;
 				case '.vendor':
-					$appname = 'property';
-					$this->table = "fm_generic_history";
-					$this->attrib_id_field = 'history_attrib_id';
+					$appname				 = 'property';
+					$this->table			 = "fm_generic_history";
+					$this->attrib_id_field	 = 'history_attrib_id';
 					$this->location_id_field = 'location_id';
-					$this->app_id_field = 'app_id';
-					$this->app_id = $GLOBALS['phpgw']->applications->name2id($appname);
-					$this->location_id = $GLOBALS['phpgw']->locations->get_id($appname, '.vendor');
+					$this->app_id_field		 = 'app_id';
+					$this->app_id			 = $GLOBALS['phpgw']->applications->name2id($appname);
+					$this->location_id		 = $GLOBALS['phpgw']->locations->get_id($appname, '.vendor');
 					break;
 				default:
 					throw new Exception(lang('Unknown history register for acl_location: %1', $selector));
@@ -163,12 +163,12 @@
 
 			$value_set = array
 				(
-				'history_record_id' => $record_id,
-				'history_owner' => (int)$this->account,
-				'history_status' => "'{$status}'",
-				'history_new_value' => "'" . $this->db->db_addslashes($new_value) . "'",
-				'history_old_value' => "'" . $this->db->db_addslashes($old_value) . "'",
-				'history_timestamp' => "'" . $timestamp . "'",
+				'history_record_id'	 => $record_id,
+				'history_owner'		 => (int)$this->account,
+				'history_status'	 => "'{$status}'",
+				'history_new_value'	 => "'" . $this->db->db_addslashes($new_value) . "'",
+				'history_old_value'	 => "'" . $this->db->db_addslashes($old_value) . "'",
+				'history_timestamp'	 => "'" . $timestamp . "'",
 			);
 
 			if ($this->attrib_id_field && $attrib_id)
@@ -194,18 +194,18 @@
 				$value_set[$this->location_id_field] = (int)$this->location_id;
 			}
 
-			$cols = implode(',', array_keys($value_set));
-			$values = implode(',', array_values($value_set));
-			$sql = "INSERT INTO {$this->table} ({$cols}) VALUES ({$values})";
+			$cols	 = implode(',', array_keys($value_set));
+			$values	 = implode(',', array_values($value_set));
+			$sql	 = "INSERT INTO {$this->table} ({$cols}) VALUES ({$values})";
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		// array $filter_out
 		function return_array( $filter_out, $only_show, $_orderby = '', $sort = '', $record_id, $attrib_id = 0, $detail_id = 0 )
 		{
-			$record_id = (int)$record_id;
-			$attrib_id = (int)$attrib_id;
-			$detail_id = (int)$detail_id;
+			$record_id	 = (int)$record_id;
+			$attrib_id	 = (int)$attrib_id;
+			$detail_id	 = (int)$detail_id;
 
 			$location_filter = '';
 
@@ -232,13 +232,13 @@
 				$orderby = "ORDER BY $_orderby $sort";
 			}
 
-                        if (is_array($filter_out))
-                        {
-                            foreach($filter_out as $_filter)
+			if (is_array($filter_out))
 			{
-				$filtered[] = "history_status != '{$_filter}'";
+				foreach ($filter_out as $_filter)
+				{
+					$filtered[] = "history_status != '{$_filter}'";
+				}
 			}
-                        }
 
 			$filter = '';
 			if (isset($filtered))
@@ -256,13 +256,13 @@
 				$filter .= " AND history_detail_id = $detail_id";
 			}
 
-                        if (is_array($only_show))
-                        {
-                            foreach($only_show as $_filter)
+			if (is_array($only_show))
 			{
-				$_only_show[] = "history_status='{$_filter}'";
+				foreach ($only_show as $_filter)
+				{
+					$_only_show[] = "history_status='{$_filter}'";
+				}
 			}
-                        }
 
 			$only_show_filter = '';
 			if (isset($_only_show))
@@ -278,14 +278,14 @@
 			{
 				$return_values[] = array
 					(
-					'id' => $this->db->f('history_id'),
-					'record_id' => $this->db->f('history_record_id'),
-					'owner' => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
-					'status' => preg_replace('/ /', '', $this->db->f('history_status')),
-					'new_value' => $this->db->f('history_new_value', true),
-					'old_value' => $this->db->f('history_old_value', true),
-					'datetime' => strtotime($this->db->f('history_timestamp')),
-					'publish' => $this->db->f('publish')
+					'id'		 => $this->db->f('history_id'),
+					'record_id'	 => $this->db->f('history_record_id'),
+					'owner'		 => $GLOBALS['phpgw']->accounts->id2name($this->db->f('history_owner')),
+					'status'	 => preg_replace('/ /', '', $this->db->f('history_status')),
+					'new_value'	 => $this->db->f('history_new_value', true),
+					'old_value'	 => $this->db->f('history_old_value', true),
+					'datetime'	 => strtotime($this->db->f('history_timestamp')),
+					'publish'	 => $this->db->f('publish')
 				);
 			}
 			return $return_values;

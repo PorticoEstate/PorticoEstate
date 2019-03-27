@@ -5,22 +5,22 @@
 
 		protected $bofiles;
 		protected $db;
-		public $messages = array();
-		public $warnings = array();
-		public $errors = array();
-		protected $dir = '/u01/kunst/001';
+		public $messages	 = array();
+		public $warnings	 = array();
+		public $errors		 = array();
+		protected $dir		 = '/u01/kunst/001';
 		protected $entity_id = 4;
-		protected $cat_id = 1;
-		public $debug = true;
+		protected $cat_id	 = 1;
+		public $debug		 = true;
 
 		public function __construct()
 		{
 			set_time_limit(10000); //Set the time limit for this request
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->bofiles = CreateObject('property.bofiles');
-			$this->category_dir = "entity_{$this->entity_id}_{$this->cat_id}";
-			$this->soentity = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
+			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->bofiles		 = CreateObject('property.bofiles');
+			$this->category_dir	 = "entity_{$this->entity_id}_{$this->cat_id}";
+			$this->soentity		 = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
 		}
 
 		public function add( $data )
@@ -32,8 +32,8 @@
 
 			if (isset($values['location_code']))
 			{
-				$filename = sprintf('%05s', $data[1]);
-				$from_file = "{$this->dir}/{$filename}.jpg";
+				$filename	 = sprintf('%05s', $data[1]);
+				$from_file	 = "{$this->dir}/{$filename}.jpg";
 				if (!is_file($from_file))
 				{
 					$this->errors[] = "'Missing file: {$from_file}";
@@ -45,8 +45,8 @@
 
 				if ($this->bofiles->vfs->file_exists(array
 						(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
+						'string'	 => $to_file,
+						'relatives'	 => Array(RELATIVE_NONE)
 					)))
 				{
 					$this->errors[] = "This file already exists: {$to_file}";
@@ -57,9 +57,9 @@
 					$this->bofiles->vfs->override_acl = 1;
 
 					if (!$this->bofiles->vfs->cp(array(
-							'from' => $from_file,
-							'to' => $to_file,
-							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							'from'		 => $from_file,
+							'to'		 => $to_file,
+							'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 					{
 						$this->errors[] = "'Failed to upload file: {$to_file}";
 					}

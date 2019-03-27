@@ -8,16 +8,16 @@
 	{
 
 		protected $db;
-		protected $config = array();
-		protected $status_text = array();
+		protected $config		 = array();
+		protected $status_text	 = array();
 		protected $custom_config;
 		protected $account;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($this->acl_location != '.entity.2.17')
 			{
@@ -27,22 +27,22 @@
 
 		function update_data( $values, $values_attribute = array(), $action )
 		{
-			if(empty($values['location_code']))
+			if (empty($values['location_code']))
 			{
 				return;
 			}
 
 			$location_id_maaler = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.11');
 
-			$sql = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
+			$sql		 = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_maaler}"
 				. " AND location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
-			$maaler_nr = $this->db->f('maaler_nr');
+			$maaler_nr	 = $this->db->f('maaler_nr');
 
 			$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
-			$location_id_bod = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
+			$location_id_bod	 = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
 
 			if ($action != 'edit')
 			{
@@ -54,7 +54,7 @@
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 
-				$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
+				$sql			 = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
 					. " WHERE location_id = {$location_id_bod}"
 					. " AND location_code='{$values['location_code']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -116,14 +116,14 @@
 							{
 								$new_value = $entry['value'];
 
-								$sql = "SELECT json_representation->>'maaler_stand' as maaler_stand, id FROM fm_bim_item"
+								$sql		 = "SELECT json_representation->>'maaler_stand' as maaler_stand, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_maaler}"
 									. " AND location_code='{$values['location_code']}'"
 									. " AND json_representation->>'maaler_nr' = '{$maaler_nr}'";
 								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value = $this->db->f('maaler_stand');
-								$id = $this->db->f('id');
+								$old_value	 = $this->db->f('maaler_stand');
+								$id			 = $this->db->f('id');
 								if ($id)
 								{
 									$attrib_id = 8;
@@ -147,21 +147,21 @@
 								$new_value = $entry['value'];
 
 								//	$location_id_bod
-								$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse, id FROM fm_bim_item"
+								$sql		 = "SELECT json_representation->>'beskrivelse' as beskrivelse, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_bod}"
 									. " AND location_code='{$values['location_code']}'";
 								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value = $this->db->f('beskrivelse');
-								$id = $this->db->f('id');
+								$old_value	 = $this->db->f('beskrivelse');
+								$id			 = $this->db->f('id');
 								if ($id)
 								{
 									$attrib_id = 1;
 									if ($new_value != $old_value)
 									{
-										$historylog = CreateObject('property.historylog', 'entity_1_14');
+										$historylog	 = CreateObject('property.historylog', 'entity_1_14');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{beskrivelse}', '\"{$new_value}\"', true)"
+										$sql		 = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{beskrivelse}', '\"{$new_value}\"', true)"
 											. " WHERE location_id = {$location_id_bod}"
 											. " AND location_code='{$values['location_code']}'";
 										$this->db->query($sql, __LINE__, __FILE__);
@@ -185,23 +185,23 @@
 						case 'br_slokk_app_skiftet':
 							if ($entry['value'])
 							{
-								$location_id_br_slokk_app = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
-								$new_value = $entry['value'];
-								$sql = "SELECT json_representation->>'skiftet' as skiftet, id FROM fm_bim_item"
+								$location_id_br_slokk_app	 = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
+								$new_value					 = $entry['value'];
+								$sql						 = "SELECT json_representation->>'skiftet' as skiftet, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_br_slokk_app}"
 									. " AND location_code='{$values['location_code']}'";
 								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
-								$old_value = $this->db->f('skiftet');
-								$id = $this->db->f('id');
+								$old_value					 = $this->db->f('skiftet');
+								$id							 = $this->db->f('id');
 								if ($id)
 								{
 									$attrib_id = 2;
 									if (strtotime($new_value) != strtotime($old_value))
 									{
-										$historylog = CreateObject('property.historylog', 'entity_1_10');
+										$historylog	 = CreateObject('property.historylog', 'entity_1_10');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{skiftet}', '\"{$new_value}\"', true)"
+										$sql		 = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{skiftet}', '\"{$new_value}\"', true)"
 											. " WHERE location_id = {$location_id_br_slokk_app}"
 											. " AND location_code='{$values['location_code']}'";
 
@@ -232,8 +232,8 @@
 		private function add_bod( $beskrivelse, $location_code, $address )
 		{
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
-			$location = explode('-', $location_code);
-			$value_set = array();
+			$location	 = explode('-', $location_code);
+			$value_set	 = array();
 
 			$i = 1;
 			if (isset($location) AND is_array($location))
@@ -246,24 +246,24 @@
 				}
 			}
 
-			$value_set['address'] = $address;
-			$value_set['beskrivelse'] = $beskrivelse;
-			$value_set['location_code'] = $location_code;
-			$value_set['entry_date'] = time();
-			$value_set['user_id'] = $this->account;
+			$value_set['address']		 = $address;
+			$value_set['beskrivelse']	 = $beskrivelse;
+			$value_set['location_code']	 = $location_code;
+			$value_set['entry_date']	 = time();
+			$value_set['user_id']		 = $this->account;
 
-			$soentity = CreateObject('property.soentity');
-			$id = $soentity->_save_eav( $value_set, $location_id );
+			$soentity	 = CreateObject('property.soentity');
+			$id			 = $soentity->_save_eav($value_set, $location_id);
 
-			$historylog = CreateObject('property.historylog', 'entity_1_14');
-			$historylog->add('SO', $id, $beskrivelse, false, $attrib_id = 1, time());
+			$historylog	 = CreateObject('property.historylog', 'entity_1_14');
+			$historylog->add('SO', $id, $beskrivelse, false, $attrib_id	 = 1, time());
 		}
 
 		private function br_slokk_app( $date, $location_code, $address )
 		{
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
-			$location = explode('-', $location_code);
-			$value_set = array();
+			$location	 = explode('-', $location_code);
+			$value_set	 = array();
 
 			$i = 1;
 			if (isset($location) AND is_array($location))
@@ -276,17 +276,17 @@
 				}
 			}
 
-			$value_set['address'] = $address;
-			$value_set['skiftet'] = $date;
-			$value_set['location_code'] = $location_code;
-			$value_set['entry_date'] = time();
-			$value_set['user_id'] = $this->account;
+			$value_set['address']		 = $address;
+			$value_set['skiftet']		 = $date;
+			$value_set['location_code']	 = $location_code;
+			$value_set['entry_date']	 = time();
+			$value_set['user_id']		 = $this->account;
 
-			$soentity = CreateObject('property.soentity');
-			$id = $soentity->_save_eav( $value_set, $location_id );
+			$soentity	 = CreateObject('property.soentity');
+			$id			 = $soentity->_save_eav($value_set, $location_id);
 
-			$historylog = CreateObject('property.historylog', 'entity_1_10');
-			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
+			$historylog	 = CreateObject('property.historylog', 'entity_1_10');
+			$historylog->add('SO', $id, $date, false, $attrib_id	 = 2, time());
 		}
 	}
 	$data_sync = new entity_data_sync();

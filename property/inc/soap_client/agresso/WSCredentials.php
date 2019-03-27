@@ -1,81 +1,79 @@
 <?php
 
-class WSCredentials
-{
+	class WSCredentials
+	{
 
-    /**
-     * @var string $Username
-     */
-    protected $Username = null;
+		/**
+		 * @var string $Username
+		 */
+		protected $Username = null;
 
-    /**
-     * @var string $Client
-     */
-    protected $Client = null;
+		/**
+		 * @var string $Client
+		 */
+		protected $Client = null;
 
-    /**
-     * @var string $Password
-     */
-    protected $Password = null;
+		/**
+		 * @var string $Password
+		 */
+		protected $Password = null;
 
-    
-    public function __construct()
-    {
-    
-    }
+		public function __construct()
+		{
 
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-      return $this->Username;
-    }
+		}
 
-    /**
-     * @param string $Username
-     * @return WSCredentials
-     */
-    public function setUsername($Username)
-    {
-      $this->Username = $Username;
-      return $this;
-    }
+		/**
+		 * @return string
+		 */
+		public function getUsername()
+		{
+			return $this->Username;
+		}
 
-    /**
-     * @return string
-     */
-    public function getClient()
-    {
-      return $this->Client;
-    }
+		/**
+		 * @param string $Username
+		 * @return WSCredentials
+		 */
+		public function setUsername( $Username )
+		{
+			$this->Username = $Username;
+			return $this;
+		}
 
-    /**
-     * @param string $Client
-     * @return WSCredentials
-     */
-    public function setClient($Client)
-    {
-      $this->Client = $Client;
-      return $this;
-    }
+		/**
+		 * @return string
+		 */
+		public function getClient()
+		{
+			return $this->Client;
+		}
 
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-      return $this->Password;
-    }
+		/**
+		 * @param string $Client
+		 * @return WSCredentials
+		 */
+		public function setClient( $Client )
+		{
+			$this->Client = $Client;
+			return $this;
+		}
 
-    /**
-     * @param string $Password
-     * @return WSCredentials
-     */
-    public function setPassword($Password)
-    {
-      $this->Password = $Password;
-      return $this;
-    }
+		/**
+		 * @return string
+		 */
+		public function getPassword()
+		{
+			return $this->Password;
+		}
 
-}
+		/**
+		 * @param string $Password
+		 * @return WSCredentials
+		 */
+		public function setPassword( $Password )
+		{
+			$this->Password = $Password;
+			return $this;
+		}
+	}

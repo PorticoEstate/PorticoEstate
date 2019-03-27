@@ -11,6 +11,21 @@
 
 		public function __construct()
 		{
+			$is_admin = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+			$local_admin = false;
+			if(!$is_admin)
+			{
+				if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'bookingfrontend'))
+				{
+					$local_admin = true;
+				}
+			}
+
+			if(!$is_admin && !$local_admin)
+			{
+				phpgw::no_access();
+			}
+
 			parent::__construct();
 			self::set_active_menu('admin::bookingfrontend::metasettings');
 			$this->fields = array(
@@ -26,6 +41,11 @@
 		{
 			$appname = phpgw::get_var('appname');
 			$appname = $appname ? $appname : 'booking';
+			if(!$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $appname))
+			{
+				phpgw::no_access();
+			}
+
 			$config = CreateObject('phpgwapi.config', $appname);
 			$config->read();
 

@@ -1,10 +1,10 @@
 
-	var conf_on_changed = {
-			modules: 'date, file',
-			validateOnBlur: true,
-			scrollToTopOnError: false,
-			errorMessagePosition: 'inline'
-		   };
+var conf_on_changed = {
+	modules: 'date, file',
+	validateOnBlur: true,
+	scrollToTopOnError: false,
+	errorMessagePosition: 'inline'
+};
 
 
 $(document).ready(function ()
@@ -14,6 +14,7 @@ $(document).ready(function ()
 	{
 		case 255:  //LRS Lønn
 		case 256:  //LRS Refusjon
+			$("#arbeidssted_name").attr("data-validation", "required");
 			// Leave as is...
 			break;
 		default:
@@ -24,11 +25,11 @@ $(document).ready(function ()
 	}
 
 	$("#id_ressursnr").attr("data-validation-error-msg", "Ressursnummer");
-	show_ressursnr();
+	show_fields();
 
 	$("#global_category_id").change(function ()
 	{
-		show_ressursnr();
+		show_fields();
 	});
 
 	$("#id_ressursnr").change(function ()
@@ -38,13 +39,27 @@ $(document).ready(function ()
 
 });
 
-function show_ressursnr()
+function show_fields()
 {
 	$("#label_ressursnr").hide();
 	$("#id_ressursnr").hide();
 	$("#label_ressursnr_navn").hide();
 	$("#id_ressursnr_navn").hide();
 	$("#id_ressursnr").removeAttr("data-validation");
+
+
+	$("#label_kundenummer").hide();
+	$("#id_kundenummer").hide();
+	$("#label_bilagsnr").hide();
+	$("#id_bilagsnr").hide();
+	$("#label_aarsak").hide();
+	$("#id_aarsak").hide();
+	$("#label_betalingsoppfolging_type").hide();
+	$("#id_betalingsoppfolging_type").hide();
+	$("#id_kundenummer").removeAttr("data-validation");
+	$("#id_bilagsnr").removeAttr("data-validation");
+	$("#id_aarsak").removeAttr("data-validation");
+	$("#id_betalingsoppfolging_type").removeAttr("data-validation");
 
 	var category_id = $("#global_category_id").val();
 
@@ -62,6 +77,39 @@ function show_ressursnr()
 			$("#arbeidssted_name").removeAttr("data-validation");
 			$("#arbeidssted_name").hide();
 			$("#label_arbeidssted").hide();
+			break;
+		case '344': //UF betalingsoppfølgingReversering/Utligning reskontro
+			$("#label_kundenummer").show();
+			$("#id_kundenummer").show();
+			$("#label_bilagsnr").show();
+			$("#id_bilagsnr").show();
+			$("#label_aarsak").show();
+			$("#id_aarsak").show();
+			$("#label_betalingsoppfolging_type").show();
+			$("#id_betalingsoppfolging_type").show();
+			$("#id_kundenummer").attr("data-validation", "length");
+			$("#id_kundenummer").attr("data-validation-length", "4-6");
+			$("#id_kundenummer").attr("data-validation-error-msg", "Kundenummer kan ha 4 eller 6 siffer (max 6 siffer)");
+			$("#id_bilagsnr").attr("data-validation", "length");
+			$("#id_bilagsnr").attr("data-validation-length", "9");
+			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 9 siffer");
+			$("#id_aarsak").attr("data-validation", "length");
+			$("#id_aarsak").attr("data-validation-length", "1-200");
+			$("#id_betalingsoppfolging_type").attr("data-validation", "required");
+//			$("#id_betalingsoppfolging_type_1").attr("data-validation", "checkbox_group");
+//			$("#id_betalingsoppfolging_type_1").attr("data-validation-qty", "min1");
+			break;
+		case '345': //UF betalingsoppfølging/tilbakebetaling
+			$("#label_kundenummer").show();
+			$("#id_kundenummer").show();
+			$("#label_bilagsnr").show();
+			$("#id_bilagsnr").show();
+			$("#id_kundenummer").attr("data-validation", "length");
+			$("#id_kundenummer").attr("data-validation-length", "4-6");
+			$("#id_kundenummer").attr("data-validation-error-msg", "Kundenummer kan ha 4 eller 6 siffer (max 6 siffer)");
+			$("#id_bilagsnr").attr("data-validation", "length");
+			$("#id_bilagsnr").attr("data-validation-length", "9");
+			$("#id_bilagsnr").attr("data-validation-error-msg", "Eksakt 9 siffer");
 			break;
 		default:
 //			$("#arbeidssted_name").removeAttr("data-validation-optional");
@@ -92,9 +140,9 @@ function validate_submit()
 		default:
 	}
 
-	if(!arbeidssted_id)
+	if (!arbeidssted_id)
 	{
-		if($("#arbeidssted_name").attr("data-validation") == "required")  //LRS-EDD telefoni og LRS-Refusjon xAltinn
+		if ($("#arbeidssted_name").attr("data-validation") == "required")  //LRS-EDD telefoni og LRS-Refusjon xAltinn
 		{
 			$("#arbeidssted_name").removeClass('valid');
 			$("#arbeidssted_name").addClass('error');
@@ -116,7 +164,7 @@ function get_ressursname()
 {
 	var ressursnr_id = $("#id_ressursnr").val();
 
-	var oArgs = {menuaction: 'helpdesk.uitts.custom_ajax',method:'get_ressurs_name', acl_location: '.ticket', ressursnr_id: ressursnr_id};
+	var oArgs = {menuaction: 'helpdesk.uitts.custom_ajax', method: 'get_ressurs_name', acl_location: '.ticket', ressursnr_id: ressursnr_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	$.ajax({

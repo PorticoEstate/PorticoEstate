@@ -40,14 +40,14 @@
 
 		function __construct()
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->socommon = CreateObject('property.socommon');
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db2 = clone($this->db);
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->socommon	 = CreateObject('property.socommon');
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->db2		 = clone($this->db);
 
-			$this->join = & $this->db->join;
+			$this->join		 = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->like		 = & $this->db->like;
 		}
 
 		function select_vendor_list()
@@ -58,8 +58,8 @@
 			$i = 0;
 			while ($this->db->next_record())
 			{
-				$vendor[$i]['id'] = $this->db->f('vendor_id');
-				$vendor[$i]['name'] = stripslashes($this->db->f('org_name'));
+				$vendor[$i]['id']	 = $this->db->f('vendor_id');
+				$vendor[$i]['name']	 = stripslashes($this->db->f('org_name'));
 				$i++;
 			}
 			return $vendor;
@@ -69,189 +69,189 @@
 		{
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : 'none';
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-				$vendor_id = isset($data['vendor_id']) ? $data['vendor_id'] : '';
-				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-				$member_id = isset($data['member_id']) && $data['member_id'] ? $data['member_id'] : 0;
-				$s_agreement_id = isset($data['s_agreement_id']) ? $data['s_agreement_id'] : '';
-				$detail = isset($data['detail']) ? $data['detail'] : '';
-				$p_num = isset($data['p_num']) ? $data['p_num'] : '';
-				$status_id = isset($data['status_id']) && $data['status_id'] ? (int)$data['status_id'] : 0;
-				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
-				$results = (isset($data['results']) ? $data['results'] : 0);
+				$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter			 = isset($data['filter']) ? $data['filter'] : 'none';
+				$query			 = isset($data['query']) ? $data['query'] : '';
+				$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order			 = isset($data['order']) ? $data['order'] : '';
+				$cat_id			 = isset($data['cat_id']) ? $data['cat_id'] : '';
+				$vendor_id		 = isset($data['vendor_id']) ? $data['vendor_id'] : '';
+				$allrows		 = isset($data['allrows']) ? $data['allrows'] : '';
+				$member_id		 = isset($data['member_id']) && $data['member_id'] ? $data['member_id'] : 0;
+				$s_agreement_id	 = isset($data['s_agreement_id']) ? $data['s_agreement_id'] : '';
+				$detail			 = isset($data['detail']) ? $data['detail'] : '';
+				$p_num			 = isset($data['p_num']) ? $data['p_num'] : '';
+				$status_id		 = isset($data['status_id']) && $data['status_id'] ? (int)$data['status_id'] : 0;
+				$location_code	 = isset($data['location_code']) ? $data['location_code'] : '';
+				$results		 = (isset($data['results']) ? $data['results'] : 0);
 			}
 
-			$choice_table = 'phpgw_cust_choice';
+			$choice_table	 = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
 
 			if (!$detail)
 			{
-				$entity_table = 'fm_s_agreement';
-				$category_table = 'fm_s_agreement_category';
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement');
-				$attribute_filter = " location_id = {$location_id}";
+				$entity_table		 = 'fm_s_agreement';
+				$category_table		 = 'fm_s_agreement_category';
+				$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement');
+				$attribute_filter	 = " location_id = {$location_id}";
 
 				$paranthesis = '(';
-				$joinmethod = " {$this->join} {$category_table} ON ( $entity_table.category =$category_table.id))";
-				$paranthesis .='(';
-				$joinmethod .= " {$this->left_join} fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id))";
-				$paranthesis .='(';
-				$joinmethod .= " {$this->left_join} fm_s_agreement_detail ON ( fm_s_agreement.id = fm_s_agreement_detail.agreement_id))";
+				$joinmethod	 = " {$this->join} {$category_table} ON ( $entity_table.category =$category_table.id))";
+				$paranthesis .= '(';
+				$joinmethod	 .= " {$this->left_join} fm_vendor ON ( $entity_table.vendor_id =fm_vendor.id))";
+				$paranthesis .= '(';
+				$joinmethod	 .= " {$this->left_join} fm_s_agreement_detail ON ( fm_s_agreement.id = fm_s_agreement_detail.agreement_id))";
 
 				$cols = $entity_table . ".*,$category_table.descr as category, org_name";
 
-				$cols_return[] = 'id';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'id';
-				$uicols['descr'][] = lang('ID');
-				$uicols['statustext'][] = lang('ID');
+				$cols_return[]			 = 'id';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'id';
+				$uicols['descr'][]		 = lang('ID');
+				$uicols['statustext'][]	 = lang('ID');
 
-				$cols_return[] = 'name';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'name';
-				$uicols['descr'][] = lang('name');
-				$uicols['statustext'][] = lang('name');
+				$cols_return[]			 = 'name';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'name';
+				$uicols['descr'][]		 = lang('name');
+				$uicols['statustext'][]	 = lang('name');
 
-				$cols_return[] = 'org_name';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'org_name';
-				$uicols['descr'][] = lang('vendor');
-				$uicols['statustext'][] = lang('vendor');
+				$cols_return[]			 = 'org_name';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'org_name';
+				$uicols['descr'][]		 = lang('vendor');
+				$uicols['statustext'][]	 = lang('vendor');
 
-				$cols_return[] = 'category';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'category';
-				$uicols['descr'][] = lang('category');
-				$uicols['statustext'][] = lang('category');
+				$cols_return[]			 = 'category';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'category';
+				$uicols['descr'][]		 = lang('category');
+				$uicols['statustext'][]	 = lang('category');
 
-				$cols_return[] = 'start_date';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'start_date';
-				$uicols['descr'][] = lang('start');
-				$uicols['statustext'][] = lang('start date');
+				$cols_return[]			 = 'start_date';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'start_date';
+				$uicols['descr'][]		 = lang('start');
+				$uicols['statustext'][]	 = lang('start date');
 
-				$cols_return[] = 'termination_date';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'termination_date';
-				$uicols['descr'][] = lang('termination date');
-				$uicols['statustext'][] = lang('termination date');
+				$cols_return[]			 = 'termination_date';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'termination_date';
+				$uicols['descr'][]		 = lang('termination date');
+				$uicols['statustext'][]	 = lang('termination date');
 				//			$uicols['datatype'][]		= 'D';
 
-				$cols_return[] = 'end_date';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'end_date';
-				$uicols['descr'][] = lang('end');
-				$uicols['statustext'][] = lang('end date');
+				$cols_return[]			 = 'end_date';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'end_date';
+				$uicols['descr'][]		 = lang('end');
+				$uicols['statustext'][]	 = lang('end date');
 			}
 			else
 			{
-				$query = '';
-				$allrows = true;
-				$entity_table = 'fm_s_agreement_detail';
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
-				$attribute_filter = " location_id = {$location_id}";
+				$query				 = '';
+				$allrows			 = true;
+				$entity_table		 = 'fm_s_agreement_detail';
+				$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
+				$attribute_filter	 = " location_id = {$location_id}";
 
-				$paranthesis .='(';
-				$joinmethod .= " {$this->join}  fm_s_agreement_pricing ON ( $entity_table.agreement_id =fm_s_agreement_pricing.agreement_id AND {$entity_table}.id =fm_s_agreement_pricing.item_id))";
+				$paranthesis .= '(';
+				$joinmethod	 .= " {$this->join}  fm_s_agreement_pricing ON ( $entity_table.agreement_id =fm_s_agreement_pricing.agreement_id AND {$entity_table}.id =fm_s_agreement_pricing.item_id))";
 
 				$cols = "$entity_table.*, fm_s_agreement_pricing.cost,fm_s_agreement_pricing.id as index_count,fm_s_agreement_pricing.index_date,fm_s_agreement_pricing.item_id,fm_s_agreement_pricing.this_index";
 
-				$cols_return[] = 'agreement_id';
-				$uicols['input_type'][] = 'hidden';
-				$uicols['name'][] = 'agreement_id';
-				$uicols['descr'][] = lang('agreement_id');
-				$uicols['statustext'][] = lang('agreement_id');
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'agreement_id';
+				$uicols['input_type'][]	 = 'hidden';
+				$uicols['name'][]		 = 'agreement_id';
+				$uicols['descr'][]		 = lang('agreement_id');
+				$uicols['statustext'][]	 = lang('agreement_id');
+				$uicols['import'][]		 = false;
 
-				$cols_return[] = 'item_id';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'item_id';
-				$uicols['descr'][] = lang('ID');
-				$uicols['statustext'][] = lang('ID');
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'item_id';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'item_id';
+				$uicols['descr'][]		 = lang('ID');
+				$uicols['statustext'][]	 = lang('ID');
+				$uicols['import'][]		 = false;
 
-				$cols_return[] = 'id';
-				$uicols['input_type'][] = 'hidden';
-				$uicols['name'][] = 'id';
-				$uicols['descr'][] = false;
-				$uicols['statustext'][] = false;
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'id';
+				$uicols['input_type'][]	 = 'hidden';
+				$uicols['name'][]		 = 'id';
+				$uicols['descr'][]		 = false;
+				$uicols['statustext'][]	 = false;
+				$uicols['import'][]		 = false;
 
-				$cols_return[] = 'location_code';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'location_code';
-				$uicols['descr'][] = lang('location');
-				$uicols['statustext'][] = lang('location');
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'location_code';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'location_code';
+				$uicols['descr'][]		 = lang('location');
+				$uicols['statustext'][]	 = lang('location');
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'address';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'address';
-				$uicols['descr'][] = lang('address');
-				$uicols['statustext'][] = lang('address');
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'address';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'address';
+				$uicols['descr'][]		 = lang('address');
+				$uicols['statustext'][]	 = lang('address');
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'p_entity_id';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'p_entity_id';
-				$uicols['descr'][] = 'entity_id';
-				$uicols['statustext'][] = false;
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'p_entity_id';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'p_entity_id';
+				$uicols['descr'][]		 = 'entity_id';
+				$uicols['statustext'][]	 = false;
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'p_cat_id';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'p_cat_id';
-				$uicols['descr'][] = 'cat_id';
-				$uicols['statustext'][] = false;
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'p_cat_id';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'p_cat_id';
+				$uicols['descr'][]		 = 'cat_id';
+				$uicols['statustext'][]	 = false;
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'p_num';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'p_num';
-				$uicols['descr'][] = lang('entity num');
-				$uicols['statustext'][] = lang('entity num');
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'p_num';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'p_num';
+				$uicols['descr'][]		 = lang('entity num');
+				$uicols['statustext'][]	 = lang('entity num');
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'cost';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'cost';
-				$uicols['descr'][] = lang('cost');
-				$uicols['statustext'][] = lang('cost');
-				$uicols['import'][] = true;
+				$cols_return[]			 = 'cost';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'cost';
+				$uicols['descr'][]		 = lang('cost');
+				$uicols['statustext'][]	 = lang('cost');
+				$uicols['import'][]		 = true;
 
-				$cols_return[] = 'this_index';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'this_index';
-				$uicols['descr'][] = lang('index');
-				$uicols['statustext'][] = lang('index');
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'this_index';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'this_index';
+				$uicols['descr'][]		 = lang('index');
+				$uicols['statustext'][]	 = lang('index');
+				$uicols['import'][]		 = false;
 
-				$cols_return[] = 'index_count';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'index_count';
-				$uicols['descr'][] = lang('index_count');
-				$uicols['statustext'][] = lang('index_count');
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'index_count';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'index_count';
+				$uicols['descr'][]		 = lang('index_count');
+				$uicols['statustext'][]	 = lang('index_count');
+				$uicols['import'][]		 = false;
 
-				$cols_return[] = 'index_date';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'index_date';
-				$uicols['descr'][] = lang('date');
-				$uicols['statustext'][] = lang('date');
-				$uicols['import'][] = false;
+				$cols_return[]			 = 'index_date';
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = 'index_date';
+				$uicols['descr'][]		 = lang('date');
+				$uicols['statustext'][]	 = lang('date');
+				$uicols['import'][]		 = false;
 			}
 
 			$sql = "SELECT DISTINCT $cols FROM $paranthesis $entity_table $joinmethod";
 
 			$i = count($uicols['name']);
 
-			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns' . !!$s_agreement_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns' . !!$s_agreement_id] : '';
-			$user_column_filter = '';
+			$user_columns		 = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns' . !!$s_agreement_id]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['s_agreement_columns' . !!$s_agreement_id] : '';
+			$user_column_filter	 = '';
 			if (is_array($user_columns) && $user_columns[0])
 			{
 				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $user_columns) . '))';
@@ -261,16 +261,16 @@
 
 			while ($this->db->next_record())
 			{
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = $this->db->f('column_name');
-				$uicols['descr'][] = $this->db->f('input_text');
-				$uicols['statustext'][] = $this->db->f('statustext');
-				$uicols['datatype'][$i] = $this->db->f('datatype');
-				$uicols['import'][] = true;
-				$cols_return_extra[] = array(
-					'name' => $this->db->f('column_name'),
-					'datatype' => $this->db->f('datatype'),
-					'attrib_id' => $this->db->f('id')
+				$uicols['input_type'][]	 = 'text';
+				$uicols['name'][]		 = $this->db->f('column_name');
+				$uicols['descr'][]		 = $this->db->f('input_text');
+				$uicols['statustext'][]	 = $this->db->f('statustext');
+				$uicols['datatype'][$i]	 = $this->db->f('datatype');
+				$uicols['import'][]		 = true;
+				$cols_return_extra[]	 = array(
+					'name'		 => $this->db->f('column_name'),
+					'datatype'	 => $this->db->f('datatype'),
+					'attrib_id'	 => $this->db->f('id')
 				);
 
 				$i++;
@@ -316,8 +316,8 @@
 			}
 
 
-			$filtermethod = '';
-			$where = 'WHERE';
+			$filtermethod	 = '';
+			$where			 = 'WHERE';
 
 			/* 			if ($filter=='all')
 			  {
@@ -343,58 +343,58 @@
 
 			if ($s_agreement_id)
 			{
-				$filtermethod .= " $where $entity_table.agreement_id=$s_agreement_id AND current_index = 1";
-				$where = 'AND';
+				$filtermethod	 .= " $where $entity_table.agreement_id=$s_agreement_id AND current_index = 1";
+				$where			 = 'AND';
 			}
 
 			if ($location_code)
 			{
-				$filtermethod .= " $where location_code {$this->like} '{$location_code}%'";
-				$where = 'AND';
+				$filtermethod	 .= " $where location_code {$this->like} '{$location_code}%'";
+				$where			 = 'AND';
 			}
 
 			if ($cat_id && !$detail)
 			{
-				$filtermethod .= " $where $entity_table.category='$cat_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where $entity_table.category='$cat_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($vendor_id && !$detail)
 			{
-				$filtermethod .= " $where $entity_table.vendor_id='$vendor_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where $entity_table.vendor_id='$vendor_id' ";
+				$where			 = 'AND';
 			}
 
 			if ($member_id > 0 && !$detail)
 			{
-				$filtermethod .= " $where fm_vendor.member_of {$this->like} '%,$member_id,%' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where fm_vendor.member_of {$this->like} '%,$member_id,%' ";
+				$where			 = 'AND';
 			}
 
 			if (!$detail && $status_id)
 			{
-				$filtermethod .= " $where $entity_table.status='$status_id' ";
-				$where = 'AND';
+				$filtermethod	 .= " $where $entity_table.status='$status_id' ";
+				$where			 = 'AND';
 			}
 
 
-			$_querymethod = array();
-			$__querymethod = array();
-			$_joinmethod_datatype = array();
+			$_querymethod				 = array();
+			$__querymethod				 = array();
+			$_joinmethod_datatype		 = array();
 			$_joinmethod_datatype_custom = array();
 
 			$querymethod = '';
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
-				$_querymethod[] = "fm_vendor.org_name {$this->like} '%{$query}%'";
-				$__querymethod = array(); // remove block
+				$query			 = $this->db->db_addslashes($query);
+				$_querymethod[]	 = "fm_vendor.org_name {$this->like} '%{$query}%'";
+				$__querymethod	 = array(); // remove block
 
 				if ($p_num)
 				{
-					$query = explode(".", $query);
+					$query		 = explode(".", $query);
 					$querymethod = " {$where} (fm_s_agreement_detail.p_entity_id='" . (int)$query[1] . "' AND fm_s_agreement_detail.p_cat_id='" . (int)$query[2] . "' AND fm_s_agreement_detail.p_num='{$query[3]}')";
-					$where = 'AND';
+					$where		 = 'AND';
 				}
 				else
 				{
@@ -410,18 +410,18 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
-									$__querymethod = array(); // remove block
+									$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%{$query}%'";
+									$__querymethod	 = array(); // remove block
 								}
 								break;
 							case 'CH':
 								if (!$criteria_id)
 								{
 									// from filter
-									$_querymethod[] = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
-									$__querymethod = array(); // remove block
+									$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
+									$__querymethod	 = array(); // remove block
 									// from text-search
-									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
+									$_filter_choise	 = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
 										. " AND phpgw_cust_choice.attrib_id =" . (int)$this->db->f('id')
 										. " AND phpgw_cust_choice.value {$this->like} '%{$query}%')";
 
@@ -458,36 +458,36 @@
 							case 'I':
 								if (ctype_digit($query) && !$criteria_id)
 								{
-									$_querymethod[] = "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
-									$__querymethod = array(); // remove block
+									$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = " . (int)$query;
+									$__querymethod	 = array(); // remove block
 								}
 								break;
 							case 'VENDOR':
 								if ($criteria_id == 'vendor')
 								{
-									$_joinmethod_datatype[] = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
-									$__querymethod = array(); // remove block
+									$_joinmethod_datatype[]	 = "{$this->join} fm_vendor ON ({$entity_table}." . $this->db->f('column_name') . " = fm_vendor.id AND fm_vendor.org_name {$this->like} '%{$query}%') ";
+									$__querymethod			 = array(); // remove block
 								}
 								break;
 							case 'AB':
 								if ($criteria_id == 'ab')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
-									$__querymethod = array(); // remove block
+									$_joinmethod_datatype[]	 = "{$this->join} phpgw_contact_person ON ({$entity_table}." . $this->db->f('column_name') . " = pphpgw_contact_person.person_id AND (phpgw_contact_person.first_name {$this->like} '%{$query}%' OR phpgw_contact_person.last_name {$this->like} '%{$query}%'))";
+									$__querymethod			 = array(); // remove block
 								}
 								break;
 							case 'ABO':
 								if ($criteria_id == 'abo')
 								{
-									$_joinmethod_datatype[] = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
-									$__querymethod = array(); // remove block
+									$_joinmethod_datatype[]	 = "{$this->join} phpgw_contact_org ON ({$entity_table}." . $this->db->f('column_name') . " = phpgw_contact_org.org_id AND phpgw_contact_org.name {$this->like} '%{$query}%')";
+									$__querymethod			 = array(); // remove block
 								}
 								break;
 							default:
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
-									$__querymethod = array(); // remove block
+									$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = '{$query}'";
+									$__querymethod	 = array(); // remove block
 								}
 						}
 					}
@@ -522,8 +522,8 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$j = 0;
-			$n = count($cols_return);
+			$j	 = 0;
+			$n	 = count($cols_return);
 			//_debug_array($cols_return);
 
 			$contacts = CreateObject('phpgwapi.contacts');
@@ -540,25 +540,25 @@
 				{
 					foreach ($cols_return_extra as $return_extra)
 					{
-						$value = '';
-						$value = $this->db->f($return_extra['name']);
+						$value	 = '';
+						$value	 = $this->db->f($return_extra['name']);
 
 						if (($return_extra['datatype'] == 'R' || $return_extra['datatype'] == 'LB') && $value)
 						{
-							$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $return_extra['attrib_id'] . "  AND id=" . $value;
+							$sql										 = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $return_extra['attrib_id'] . "  AND id=" . $value;
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$s_agreement_list[$j][$return_extra['name']] = $this->db2->f('value');
 						}
 						else if ($return_extra['datatype'] == 'AB' && $value)
 						{
-							$contact_data = $contacts->read_single_entry($value, array('n_given' => 'n_given',
-								'n_family' => 'n_family', 'email' => 'email'));
+							$contact_data								 = $contacts->read_single_entry($value, array('n_given'	 => 'n_given',
+								'n_family'	 => 'n_family', 'email'		 => 'email'));
 							$s_agreement_list[$j][$return_extra['name']] = $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
 						}
 						else if ($return_extra['datatype'] == 'VENDOR' && $value)
 						{
-							$sql = "SELECT org_name FROM fm_vendor where id=$value";
+							$sql										 = "SELECT org_name FROM fm_vendor where id=$value";
 							$this->db2->query($sql);
 							$this->db2->next_record();
 							$s_agreement_list[$j][$return_extra['name']] = $this->db2->f('org_name');
@@ -609,51 +609,51 @@
 		{
 			if (is_array($data))
 			{
-				$s_agreement_id = (isset($data['s_agreement_id']) ? $data['s_agreement_id'] : 0);
-				$item_id = (isset($data['item_id']) ? $data['item_id'] : 0);
-				$allrows = isset($data['allrows']) ? !!$data['allrows'] : '';
-				$results = isset($data['results']) ? (int)$data['results'] : 0;
+				$s_agreement_id	 = (isset($data['s_agreement_id']) ? $data['s_agreement_id'] : 0);
+				$item_id		 = (isset($data['item_id']) ? $data['item_id'] : 0);
+				$allrows		 = isset($data['allrows']) ? !!$data['allrows'] : '';
+				$results		 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			$entity_table = 'fm_s_agreement_pricing';
 
 			$cols = "fm_s_agreement_pricing.cost,fm_s_agreement_pricing.id as index_count,fm_s_agreement_pricing.index_date,fm_s_agreement_pricing.item_id,fm_s_agreement_pricing.this_index";
 
-			$cols_return[] = 'item_id';
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = 'item_id';
-			$uicols['descr'][] = lang('ID');
-			$uicols['statustext'][] = lang('ID');
+			$cols_return[]			 = 'item_id';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'item_id';
+			$uicols['descr'][]		 = lang('ID');
+			$uicols['statustext'][]	 = lang('ID');
 
-			$cols_return[] = 'id';
-			$uicols['input_type'][] = 'hidden';
-			$uicols['name'][] = 'id';
-			$uicols['descr'][] = false;
-			$uicols['statustext'][] = false;
+			$cols_return[]			 = 'id';
+			$uicols['input_type'][]	 = 'hidden';
+			$uicols['name'][]		 = 'id';
+			$uicols['descr'][]		 = false;
+			$uicols['statustext'][]	 = false;
 
-			$cols_return[] = 'cost';
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = 'cost';
-			$uicols['descr'][] = lang('cost');
-			$uicols['statustext'][] = lang('cost');
+			$cols_return[]			 = 'cost';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'cost';
+			$uicols['descr'][]		 = lang('cost');
+			$uicols['statustext'][]	 = lang('cost');
 
-			$cols_return[] = 'this_index';
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = 'this_index';
-			$uicols['descr'][] = lang('index');
-			$uicols['statustext'][] = lang('index');
+			$cols_return[]			 = 'this_index';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'this_index';
+			$uicols['descr'][]		 = lang('index');
+			$uicols['statustext'][]	 = lang('index');
 
-			$cols_return[] = 'index_count';
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = 'index_count';
-			$uicols['descr'][] = lang('index_count');
-			$uicols['statustext'][] = lang('index_count');
+			$cols_return[]			 = 'index_count';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'index_count';
+			$uicols['descr'][]		 = lang('index_count');
+			$uicols['statustext'][]	 = lang('index_count');
 
-			$cols_return[] = 'index_date';
-			$uicols['input_type'][] = 'text';
-			$uicols['name'][] = 'index_date';
-			$uicols['descr'][] = lang('date');
-			$uicols['statustext'][] = lang('date');
+			$cols_return[]			 = 'index_date';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'index_date';
+			$uicols['descr'][]		 = lang('date');
+			$uicols['statustext'][]	 = lang('date');
 
 			$sql = "SELECT $cols FROM $entity_table $joinmethod";
 
@@ -666,8 +666,8 @@
 
 			if ($s_agreement_id)
 			{
-				$filtermethod .= " $where $entity_table.agreement_id=$s_agreement_id AND item_id=$item_id";
-				$where = 'AND';
+				$filtermethod	 .= " $where $entity_table.agreement_id=$s_agreement_id AND item_id=$item_id";
+				$where			 = 'AND';
 			}
 
 
@@ -678,22 +678,22 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$j = 0;
-			$n = count($cols_return);
+			$j	 = 0;
+			$n	 = count($cols_return);
 			//_debug_array($cols_return);
 			while ($this->db->next_record())
 			{
 				for ($i = 0; $i < $n; $i++)
 				{
-					$s_agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
-					$s_agreement_list[$j]['agreement_id'] = $s_agreement_id;
+					$s_agreement_list[$j][$cols_return[$i]]	 = $this->db->f($cols_return[$i]);
+					$s_agreement_list[$j]['agreement_id']	 = $s_agreement_id;
 				}
 				$j++;
 			}
@@ -710,19 +710,19 @@
 
 			if ($this->db->next_record())
 			{
-				$values['id'] = $this->db->f('id');
-				$values['entry_date'] = $this->db->f('entry_date');
-				$values['cat_id'] = $this->db->f('category');
-				$values['member_of'] = explode(',', trim($this->db->f('member_of'), ','));
-				$values['cat_id'] = $this->db->f('category');
-				$values['start_date'] = $this->db->f('start_date');
-				$values['end_date'] = $this->db->f('end_date');
-				$values['termination_date'] = $this->db->f('termination_date');
-				$values['vendor_id'] = $this->db->f('vendor_id');
-				$values['b_account_id'] = $this->db->f('account_id');
-				$values['name'] = stripslashes($this->db->f('name'));
-				$values['descr'] = stripslashes($this->db->f('descr'));
-				$values['user_id'] = $this->db->f('user_id');
+				$values['id']				 = $this->db->f('id');
+				$values['entry_date']		 = $this->db->f('entry_date');
+				$values['cat_id']			 = $this->db->f('category');
+				$values['member_of']		 = explode(',', trim($this->db->f('member_of'), ','));
+				$values['cat_id']			 = $this->db->f('category');
+				$values['start_date']		 = $this->db->f('start_date');
+				$values['end_date']			 = $this->db->f('end_date');
+				$values['termination_date']	 = $this->db->f('termination_date');
+				$values['vendor_id']		 = $this->db->f('vendor_id');
+				$values['b_account_id']		 = $this->db->f('account_id');
+				$values['name']				 = stripslashes($this->db->f('name'));
+				$values['descr']			 = stripslashes($this->db->f('descr'));
+				$values['user_id']			 = $this->db->f('user_id');
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
@@ -737,12 +737,12 @@
 				$this->db->query($sql);
 				$this->db->next_record();
 
-				$values['order_category'] = $this->db->f('order_category');
-				$values['year'] = $this->db->f('year');
-				$values['ecodimb'] = $this->db->f('ecodimb');
-				$values['b_account_id'] = $this->db->f('budget_account');
-				$values['budget'] = (int)$this->db->f('budget');
-				$values['year'] = $this->db->f('year');
+				$values['order_category']	 = $this->db->f('order_category');
+				$values['year']				 = $this->db->f('year');
+				$values['ecodimb']			 = $this->db->f('ecodimb');
+				$values['b_account_id']		 = $this->db->f('budget_account');
+				$values['budget']			 = (int)$this->db->f('budget');
+				$values['year']				 = $this->db->f('year');
 			}
 
 			return $values;
@@ -752,21 +752,21 @@
 		{
 			$table = 'fm_s_agreement_detail';
 
-			$s_agreement_id = $data['s_agreement_id'];
-			$id = $data['id'];
+			$s_agreement_id	 = $data['s_agreement_id'];
+			$id				 = $data['id'];
 
 			$this->db->query("SELECT * from $table where agreement_id=$s_agreement_id AND id=" . (int)$id);
 
 			if ($this->db->next_record())
 			{
-				$values['agreement_id'] = $this->db->f('agreement_id');
-				$values['id'] = (int)$this->db->f('id');
-				$values['entry_date'] = $this->db->f('entry_date');
+				$values['agreement_id']	 = $this->db->f('agreement_id');
+				$values['id']			 = (int)$this->db->f('id');
+				$values['entry_date']	 = $this->db->f('entry_date');
 				$values['location_code'] = $this->db->f('location_code');
-				$values['p_num'] = $this->db->f('p_num');
-				$values['p_entity_id'] = $this->db->f('p_entity_id');
-				$values['p_cat_id'] = $this->db->f('p_cat_id');
-				$values['cost'] = $this->db->f('cost');
+				$values['p_num']		 = $this->db->f('p_num');
+				$values['p_entity_id']	 = $this->db->f('p_entity_id');
+				$values['p_cat_id']		 = $this->db->f('p_cat_id');
+				$values['cost']			 = $this->db->f('cost');
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
 					foreach ($values['attributes'] as &$attr)
@@ -781,32 +781,32 @@
 		function add( $values, $values_attribute = '' )
 		{
 			//_debug_array($values);
-			$table = 'fm_s_agreement';
-			$values['name'] = $this->db->db_addslashes($values['name']);
+			$table			 = 'fm_s_agreement';
+			$values['name']	 = $this->db->db_addslashes($values['name']);
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 
 			if ($values['member_of'])
 			{
-				$member_of = ',' . implode(',', $values['member_of']) . ',';
+				$member_of			 = ',' . implode(',', $values['member_of']) . ',';
 				$values['member_of'] = $member_of;
 			}
 
 			$this->db->transaction_begin();
 			$id = $this->socommon->increment_id('workorder');
 
-			$vals = array();
-			$vals[] = $id;
-			$vals[] = $values['name'];
-			$vals[] = $values['descr'];
-			$vals[] = time();
-			$vals[] = $values['cat_id'];
-			$vals[] = $values['member_of'];
-			$vals[] = $values['start_date'];
-			$vals[] = $values['end_date'];
-			$vals[] = $values['termination_date'];
-			$vals[] = $values['vendor_id'];
-			$vals[] = $values['b_account_id'];
-			$vals[] = $this->account;
+			$vals	 = array();
+			$vals[]	 = $id;
+			$vals[]	 = $values['name'];
+			$vals[]	 = $values['descr'];
+			$vals[]	 = time();
+			$vals[]	 = $values['cat_id'];
+			$vals[]	 = $values['member_of'];
+			$vals[]	 = $values['start_date'];
+			$vals[]	 = $values['end_date'];
+			$vals[]	 = $values['termination_date'];
+			$vals[]	 = $values['vendor_id'];
+			$vals[]	 = $values['b_account_id'];
+			$vals[]	 = $this->account;
 
 			if (isset($values['extra']) && is_array($values['extra']))
 			{
@@ -814,8 +814,8 @@
 				{
 					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$cols[]	 = $input_name;
+						$vals[]	 = $value;
 					}
 				}
 			}
@@ -826,8 +826,8 @@
 				{
 					if ($entry['value'])
 					{
-						$cols[] = $entry['name'];
-						$vals[] = $entry['value'];
+						$cols[]	 = $entry['name'];
+						$vals[]	 = $entry['value'];
 					}
 				}
 			}
@@ -843,12 +843,12 @@
 			{
 				$_budget = array
 					(
-					'agreement_id' => $values['s_agreement_id'],
-					'category' => $values['order_category'],
-					'year' => (int)$values['year'],
-					'ecodimb' => (int)$values['ecodimb'],
+					'agreement_id'	 => $values['s_agreement_id'],
+					'category'		 => $values['order_category'],
+					'year'			 => (int)$values['year'],
+					'ecodimb'		 => (int)$values['ecodimb'],
 					'budget_account' => $values['b_account_id'],
-					'budget' => $values['budget'],
+					'budget'		 => $values['budget'],
 				);
 
 				$this->update_budget($_budget);
@@ -877,8 +877,8 @@
 		{
 			$table = 'fm_s_agreement_detail';
 
-			$cols[] = 'location_code';
-			$vals[] = $values['location_code'];
+			$cols[]	 = 'location_code';
+			$vals[]	 = $values['location_code'];
 
 			/* 			while (is_array($values['location']) && list($input_name,$value) = each($values['location']))
 			  {
@@ -896,8 +896,8 @@
 				{
 					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$cols[]	 = $input_name;
+						$vals[]	 = $value;
 					}
 				}
 			}
@@ -913,8 +913,8 @@
 							$entry['value'] = $this->db->db_addslashes($entry['value']);
 						}
 
-						$cols[] = $entry['name'];
-						$vals[] = $entry['value'];
+						$cols[]	 = $entry['name'];
+						$vals[]	 = $entry['value'];
 
 						if ($entry['history'] == 1)
 						{
@@ -926,9 +926,9 @@
 
 			if ($values['street_name'])
 			{
-				$address[] = $values['street_name'];
-				$address[] = $values['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address[]	 = $values['street_name'];
+				$address[]	 = $values['street_number'];
+				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (!$address)
@@ -936,15 +936,15 @@
 				$address = $this->db->db_addslashes($values['location_name']);
 			}
 
-			$cols[] = 'address';
-			$vals[] = $address;
-			$cols[] = 'cost';
-			$vals[] = $this->floatval($values['cost']);
+			$cols[]	 = 'address';
+			$vals[]	 = $address;
+			$cols[]	 = 'cost';
+			$vals[]	 = $this->floatval($values['cost']);
 
 			if ($cols)
 			{
-				$cols = "," . implode(",", $cols);
-				$vals = "," . $this->db->validate_insert($vals);
+				$cols	 = "," . implode(",", $cols);
+				$vals	 = "," . $this->db->validate_insert($vals);
 			}
 
 			$this->db->transaction_begin();
@@ -965,8 +965,8 @@
 				. "VALUES (" . $values['s_agreement_id'] . "," . $id . ",1,1,1," . $this->floatval($values['cost']) . "," . (int)$start_date . "," . time()
 				. "," . $this->account . ")");
 
-			$receipt['s_agreement_id'] = $values['s_agreement_id'];
-			$receipt['id'] = $id;
+			$receipt['s_agreement_id']	 = $values['s_agreement_id'];
+			$receipt['id']				 = $id;
 
 			$receipt['message'][] = array('msg' => lang('s_agreement %1 has been saved', $receipt['s_agreement_id']));
 
@@ -975,7 +975,7 @@
 			if (isset($history_set) AND is_array($history_set))
 			{
 				$historylog = CreateObject('property.historylog', 's_agreement');
-                                foreach($history_set as $attrib_id => $new_value)
+				foreach ($history_set as $attrib_id => $new_value)
 				{
 					$historylog->add('SO', $values['s_agreement_id'], $new_value, false, $attrib_id, false, $id);
 				}
@@ -994,11 +994,11 @@
 
 			if ($this->db->next_record())
 			{
-				$old_category = $this->db->f('category');
-				$old_ecodimb = $this->db->f('ecodimb');
-				$old_budget_account = $this->db->f('budget_account');
-				$old_budget = $this->db->f('budget');
-				$sql = "UPDATE fm_s_agreement_budget SET"
+				$old_category		 = $this->db->f('category');
+				$old_ecodimb		 = $this->db->f('ecodimb');
+				$old_budget_account	 = $this->db->f('budget_account');
+				$old_budget			 = $this->db->f('budget');
+				$sql				 = "UPDATE fm_s_agreement_budget SET"
 					. " category = {$data['category']},"
 					. " ecodimb = {$data['ecodimb']},"
 					. " budget_account = '{$data['budget_account']}',"
@@ -1029,12 +1029,12 @@
 
 			$table = 'fm_s_agreement';
 
-			$values['s_agreement_id'] = $this->db->db_addslashes($values['s_agreement_id']); // bigint
-			$values['name'] = $this->db->db_addslashes($values['name']);
+			$values['s_agreement_id']	 = $this->db->db_addslashes($values['s_agreement_id']); // bigint
+			$values['name']				 = $this->db->db_addslashes($values['name']);
 
 			if ($values['member_of'])
 			{
-				$member_of = ',' . implode(',', $values['member_of']) . ',';
+				$member_of			 = ',' . implode(',', $values['member_of']) . ',';
 				$values['member_of'] = $member_of;
 			}
 
@@ -1064,9 +1064,9 @@
 				}
 			}
 
-			$value_set['name'] = $values['name'];
-			$value_set['descr'] = $values['descr'];
-			$value_set['vendor_id'] = $values['vendor_id'];
+			$value_set['name']		 = $values['name'];
+			$value_set['descr']		 = $values['descr'];
+			$value_set['vendor_id']	 = $values['vendor_id'];
 
 			if ($value_set)
 			{
@@ -1078,12 +1078,12 @@
 			{
 				$_budget = array
 					(
-					'agreement_id' => $values['s_agreement_id'],
-					'category' => $values['order_category'],
-					'year' => (int)$values['year'],
-					'ecodimb' => (int)$values['ecodimb'],
+					'agreement_id'	 => $values['s_agreement_id'],
+					'category'		 => $values['order_category'],
+					'year'			 => (int)$values['year'],
+					'ecodimb'		 => (int)$values['ecodimb'],
 					'budget_account' => $values['b_account_id'],
-					'budget' => $values['budget'],
+					'budget'		 => $values['budget'],
 				);
 
 				$this->update_budget($_budget);
@@ -1104,8 +1104,8 @@
 			}
 
 			$this->db->transaction_commit();
-			$receipt['s_agreement_id'] = $values['s_agreement_id'];
-			$receipt['message'][] = array('msg' => lang('s_agreement %1 has been edited', $values['s_agreement_id']));
+			$receipt['s_agreement_id']	 = $values['s_agreement_id'];
+			$receipt['message'][]		 = array('msg' => lang('s_agreement %1 has been edited', $values['s_agreement_id']));
 			return $receipt;
 		}
 
@@ -1115,13 +1115,13 @@
 			//_debug_array($values_attribute);
 			$table = 'fm_s_agreement_detail';
 
-                        if (is_array($values['extra']))
-                        {
-                            foreach($values['extra'] as $column => $value)
+			if (is_array($values['extra']))
 			{
-				$value_set[$column] = $value;
+				foreach ($values['extra'] as $column => $value)
+				{
+					$value_set[$column] = $value;
+				}
 			}
-                        }
 
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{
@@ -1146,8 +1146,8 @@
 						$old_value = $this->db->f($entry['name']);
 						if ($entry['value'] != $old_value)
 						{
-							$history_set[$entry['attrib_id']] = array('value' => $entry['value'],
-								'date' => phpgwapi_datetime::date_to_timestamp($entry['date']));
+							$history_set[$entry['attrib_id']] = array('value'	 => $entry['value'],
+								'date'	 => phpgwapi_datetime::date_to_timestamp($entry['date']));
 						}
 					}
 				}
@@ -1155,9 +1155,9 @@
 
 			if ($values['street_name'])
 			{
-				$address[] = $values['street_name'];
-				$address[] = $values['street_number'];
-				$address = $this->db->db_addslashes(implode(" ", $address));
+				$address[]	 = $values['street_name'];
+				$address[]	 = $values['street_number'];
+				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (!$address)
@@ -1165,9 +1165,9 @@
 				$address = $this->db->db_addslashes($values['location_name']);
 			}
 
-			$value_set['location_code'] = $values['location_code'];
-			$value_set['cost'] = $values['cost'];
-			$value_set['address'] = $address;
+			$value_set['location_code']	 = $values['location_code'];
+			$value_set['cost']			 = $values['cost'];
+			$value_set['address']		 = $address;
 
 			if ($value_set)
 			{
@@ -1187,9 +1187,9 @@
 				}
 			}
 
-			$receipt['s_agreement_id'] = $values['s_agreement_id'];
-			$receipt['id'] = $values['id'];
-			$receipt['message'][] = array('msg' => lang('s_agreement %1 has been edited', $values['s_agreement_id']));
+			$receipt['s_agreement_id']	 = $values['s_agreement_id'];
+			$receipt['id']				 = $values['id'];
+			$receipt['message'][]		 = array('msg' => lang('s_agreement %1 has been edited', $values['s_agreement_id']));
 
 			return $receipt;
 		}
@@ -1265,10 +1265,10 @@
 
 		function attrib_choise2id( $id, $value = '' )
 		{
-			$value = $this->db->db_addslashes($value);
-			$choice_table = 'phpgw_cust_choice';
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
-			$attribute_filter = " location_id = {$location_id}";
+			$value				 = $this->db->db_addslashes($value);
+			$choice_table		 = 'phpgw_cust_choice';
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', '.s_agreement.detail');
+			$attribute_filter	 = " location_id = {$location_id}";
 
 			$sql = "SELECT id FROM $choice_table WHERE $attribute_filter AND value = '$value' AND attrib_id = $id";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1286,8 +1286,8 @@
 
 		function get_year_filter_list( $agreement_id = 0 )
 		{
-			$table = 'fm_s_agreement_budget';
-			$sql = "SELECT year FROM $table WHERE agreement_id = {$agreement_id} group by year ORDER BY year ASC";
+			$table	 = 'fm_s_agreement_budget';
+			$sql	 = "SELECT year FROM $table WHERE agreement_id = {$agreement_id} group by year ORDER BY year ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
@@ -1311,13 +1311,13 @@
 			{
 				$values[] = array
 					(
-					'agreement_id' => $agreement_id,
-					'year' => $this->db->f('year'),
-					'cat_id' => $this->db->f('category'),
-					'ecodimb' => $this->db->f('ecodimb'),
+					'agreement_id'	 => $agreement_id,
+					'year'			 => $this->db->f('year'),
+					'cat_id'		 => $this->db->f('category'),
+					'ecodimb'		 => $this->db->f('ecodimb'),
 					'budget_account' => $this->db->f('budget_account'),
-					'budget' => $this->db->f('budget'),
-					'actual_cost' => $this->db->f('actual_cost')
+					'budget'		 => $this->db->f('budget'),
+					'actual_cost'	 => $this->db->f('actual_cost')
 				);
 			}
 

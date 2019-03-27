@@ -31,8 +31,8 @@
 	 * Description
 	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default forward_mail_as_sms user=<username> cellphone=<phonenumber>
 	 */
-	$path_to_phpgroupware = dirname(__FILE__) . '/../../..'; // need to be adapted if this script is moved somewhere else
-	$_SERVER['DOCUMENT_ROOT'] = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/usr/local/apache2/htdocs';
+	$path_to_phpgroupware		 = dirname(__FILE__) . '/../../..'; // need to be adapted if this script is moved somewhere else
+	$_SERVER['DOCUMENT_ROOT']	 = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] ? $_SERVER['DOCUMENT_ROOT'] : '/usr/local/apache2/htdocs';
 
 	$_GET['domain'] = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : 'default';
 
@@ -46,7 +46,7 @@
 
 	$GLOBALS['phpgw_info']['flags'] = array(
 		'currentapp' => 'login',
-		'noapi' => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
+		'noapi'		 => true  // this stops header.inc.php to include phpgwapi/inc/function.inc.php
 	);
 	include($path_to_phpgroupware . '/header.inc.php');
 	unset($GLOBALS['phpgw_info']['flags']['noapi']);
@@ -63,8 +63,8 @@
 	}
 	else
 	{
-		$GLOBALS['phpgw_domain'] = array();
-		$GLOBALS['phpgw_domain'][$_GET['domain']] = $_domain_info;
+		$GLOBALS['phpgw_domain']					 = array();
+		$GLOBALS['phpgw_domain'][$_GET['domain']]	 = $_domain_info;
 	}
 
 	include(PHPGW_API_INC . '/functions.inc.php');
@@ -81,14 +81,14 @@
 	$destroy_session = false;
 	if (!isset($GLOBALS['phpgw']->session->sessionid) || !$GLOBALS['phpgw']->session->sessionid)
 	{
-		$GLOBALS['phpgw']->session->sessionid = md5($GLOBALS['phpgw']->common->randomstring(10));
-		$destroy_session = true;
+		$GLOBALS['phpgw']->session->sessionid	 = md5($GLOBALS['phpgw']->common->randomstring(10));
+		$destroy_session						 = true;
 	}
 
-	$GLOBALS['phpgw_info']['user']['apps']['admin'] = true;
-	$GLOBALS['phpgw_info']['user']['domain'] = $_GET['domain'];
-	$GLOBALS['phpgw_info']['user']['account_id'] = -1;
-	$GLOBALS['phpgw_info']['user']['account_lid'] = 'cron_job';
+	$GLOBALS['phpgw_info']['user']['apps']['admin']	 = true;
+	$GLOBALS['phpgw_info']['user']['domain']		 = $_GET['domain'];
+	$GLOBALS['phpgw_info']['user']['account_id']	 = -1;
+	$GLOBALS['phpgw_info']['user']['account_lid']	 = 'cron_job';
 
 	$num = ExecMethod('property.custom_functions.index', $data);
 	// echo date('Y/m/d H:i:s ').$_GET['domain'].': '.($num ? "$num job(s) executed" : 'Nothing to execute')."\n";

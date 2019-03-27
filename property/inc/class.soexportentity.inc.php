@@ -35,26 +35,26 @@
 	class property_soexportentity
 	{
 
-		var $uicols_related = array();
-		var $acl_location = '.entity.1.11';
-		var $entity_id = 1;
-		var $cat_id = 11;
-		public $total_records = 0;
-		public $sum_budget = 0;
-		public $sum_actual_cost = 0;
-		protected $type = 'entity';
-		public $soap_functions = array
+		var $uicols_related	 = array();
+		var $acl_location	 = '.entity.1.11';
+		var $entity_id		 = 1;
+		var $cat_id			 = 11;
+		public $total_records	 = 0;
+		public $sum_budget		 = 0;
+		public $sum_actual_cost	 = 0;
+		protected $type			 = 'entity';
+		public $soap_functions	 = array
 			(
 			'read' => array(
-				'in' => array('array'),
-				'out' => array('array')
+				'in'	 => array('array'),
+				'out'	 => array('array')
 			)
 		);
-		public $xmlrpc_methods = array
+		public $xmlrpc_methods	 = array
 			(
 			array
 				(
-				'name' => 'read',
+				'name'		 => 'read',
 				'decription' => 'Get list of meter'
 			)
 		);
@@ -65,16 +65,16 @@
 
 		function __construct()
 		{
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->historylog = CreateObject('property.historylog', 'tts');
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->like = & $this->db->like;
-			$this->join = & $this->db->join;
-			$this->left_join = & $this->db->left_join;
-			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->historylog	 = CreateObject('property.historylog', 'tts');
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->like			 = & $this->db->like;
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
+			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->type = 'entity';
+			$this->acl	 = & $GLOBALS['phpgw']->acl;
+			$this->type	 = 'entity';
 		}
 
 		function list_methods( $_type = 'xmlrpc' )
@@ -93,9 +93,9 @@
 				case 'xmlrpc':
 					$xml_functions = array(
 						'read' => array(
-							'function' => 'read',
-							'signature' => array(array(xmlrpcArray, xmlrpcArray)),
-							'docstring' => 'Get list of meters'
+							'function'	 => 'read',
+							'signature'	 => array(array(xmlrpcArray, xmlrpcArray)),
+							'docstring'	 => 'Get list of meters'
 						),
 					);
 					return $xml_functions;
@@ -112,16 +112,16 @@
 		function read( $data = array() )
 		{
 			$this->entity_id = isset($data['entity_id']) && $data['entity_id'] ? $data['entity_id'] : $this->entity_id;
-			$this->cat_id = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : $this->cat_id;
-			$acl_location = ".entity.{$this->entity_id}.{$this->cat_id}";
+			$this->cat_id	 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : $this->cat_id;
+			$acl_location	 = ".entity.{$this->entity_id}.{$this->cat_id}";
 
 			if (!$this->acl->check($acl_location, PHPGW_ACL_READ, 'property'))
 			{
 				return array('error' => 'sorry: no access to this function');
 			}
 
-			$soentity = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
-			$soentity->type = $this->type;
+			$soentity		 = CreateObject('property.soentity', $this->entity_id, $this->cat_id);
+			$soentity->type	 = $this->type;
 
 
 			if (isset($this->allrows))
@@ -129,7 +129,7 @@
 				$data['allrows'] = true;
 			}
 
-			$custom = createObject('phpgwapi.custom_fields');
+			$custom		 = createObject('phpgwapi.custom_fields');
 			$attrib_data = $custom->find('property', $this->acl_location, 0, '', '', '', true, true);
 
 			$attrib_filter = array();
@@ -156,33 +156,33 @@
 
 			$criteria = array
 				(
-				'start' => isset($data['start']) && $data['start'] ? (int)$data['start'] : 0,
-				'query' => isset($data['query']) ? $data['query'] : '',
-				'sort' => isset($data['sort']) ? $data['sort'] : '',
-				'order' => isset($data['order']) ? $data['order'] : '',
-				'filter' => isset($data['filter']) ? $data['filter'] : '',
-				'cat_id' => $this->cat_id,
-				'district_id' => isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0,
-				'lookup' => isset($data['lookup']) ? $data['lookup'] : '',
-				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
-				'entity_id' => (int)$this->entity_id,
-				'cat_id' => (int)$this->cat_id,
-				'status' => isset($data['status']) ? $data['status'] : '',
-				'start_date' => phpgwapi_datetime::date_to_timestamp($data['start_date']),
-				'end_date' => phpgwapi_datetime::date_to_timestamp($data['end_date']),
-				'dry_run' => $data['dry_run'],
-				'type' => $data['type'],
-				'location_code' => isset($data['location_code']) ? $data['location_code'] : '',
-				'criteria_id' => $data['criteria_id'],
-				'attrib_filter' => $attrib_filter,
-				'p_num' => $this->p_num,
-				'custom_condition' => $data['custom_condition']
+				'start'				 => isset($data['start']) && $data['start'] ? (int)$data['start'] : 0,
+				'query'				 => isset($data['query']) ? $data['query'] : '',
+				'sort'				 => isset($data['sort']) ? $data['sort'] : '',
+				'order'				 => isset($data['order']) ? $data['order'] : '',
+				'filter'			 => isset($data['filter']) ? $data['filter'] : '',
+				'cat_id'			 => $this->cat_id,
+				'district_id'		 => isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0,
+				'lookup'			 => isset($data['lookup']) ? $data['lookup'] : '',
+				'allrows'			 => isset($data['allrows']) ? $data['allrows'] : '',
+				'entity_id'			 => (int)$this->entity_id,
+				'cat_id'			 => (int)$this->cat_id,
+				'status'			 => isset($data['status']) ? $data['status'] : '',
+				'start_date'		 => phpgwapi_datetime::date_to_timestamp($data['start_date']),
+				'end_date'			 => phpgwapi_datetime::date_to_timestamp($data['end_date']),
+				'dry_run'			 => $data['dry_run'],
+				'type'				 => $data['type'],
+				'location_code'		 => isset($data['location_code']) ? $data['location_code'] : '',
+				'criteria_id'		 => $data['criteria_id'],
+				'attrib_filter'		 => $attrib_filter,
+				'p_num'				 => $this->p_num,
+				'custom_condition'	 => $data['custom_condition']
 			);
 
 			$values = $soentity->read($criteria);
 
-			$solocation = CreateObject('property.solocation');
-			$custom = createObject('property.custom_fields');
+			$solocation	 = CreateObject('property.solocation');
+			$custom		 = createObject('property.custom_fields');
 
 			$_values['attributes'] = $custom->find('property', '.location.1', 0, '', 'ASC', 'attrib_sort', true, true);
 
@@ -192,16 +192,16 @@
 				{
 					//				$entry['address'] = utf8_decode($entry['address']);
 					//				$entry['user'] = utf8_decode($entry['user_id']);
-					$__values = $solocation->read_single($entry['loc1'], $_values);
+					$__values				 = $solocation->read_single($entry['loc1'], $_values);
 					//				$entry['location_data'] = $solocation->read_single($entry['loc1'],$_values);
-					$entry['location_data'] = $custom->prepare($__values, 'property', ".location.1", true);
+					$entry['location_data']	 = $custom->prepare($__values, 'property', ".location.1", true);
 				}
 			}
 
 			$resultset = array
 				(
-				'total_records' => $soentity->total_records,
-				'values' => $values
+				'total_records'	 => $soentity->total_records,
+				'values'		 => $values
 			);
 
 //_debug_array($resultset);

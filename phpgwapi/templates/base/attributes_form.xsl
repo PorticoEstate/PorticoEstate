@@ -121,9 +121,14 @@
 				<input type="hidden" name="values_attribute[{id}][disabled]" value="{disabled}"/>
 				<xsl:choose>
 					<xsl:when test="datatype='R'">
-						<xsl:call-template name="choice">
-							<xsl:with-param name="input_type">radio</xsl:with-param>
-						</xsl:call-template>
+						<div id="id_{name}">
+							<xsl:attribute name="class">
+								<xsl:text>pure-custom</xsl:text>
+							</xsl:attribute>
+							<xsl:call-template name="choice">
+								<xsl:with-param name="input_type">radio</xsl:with-param>
+							</xsl:call-template>
+						</div>
 					</xsl:when>
 					<xsl:when test="datatype='CH'">
 						<xsl:call-template name="choice">

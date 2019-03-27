@@ -365,8 +365,8 @@
 		function _logError( $function, $msg )
 		{
 			list($usec, $sec) = explode(" ", microtime());
-			$time = ((float)$usec + (float)$sec) - $this->_error_start_timer;
-			$this->_error_trace[] = array($function, $msg, $time);
+			$time					 = ((float)$usec + (float)$sec) - $this->_error_start_timer;
+			$this->_error_trace[]	 = array($function, $msg, $time);
 		}
 
 		/**
@@ -378,7 +378,7 @@
 		{
 			if (count($this->_error_trace) == 0)
 				return NULL;
-			$s = '';
+			$s	 = '';
 			$len = count($this->_error_trace) - 1;
 			for ($i = $len; $i > -1; $i--)
 			{
@@ -432,8 +432,8 @@
 		 */
 		function parse( $data )
 		{
-			$data = trim($data);
-			$err = false;
+			$data	 = trim($data);
+			$err	 = false;
 
 			if ($data == '')
 			{
@@ -449,10 +449,10 @@
 				}
 			}
 
-			$parser = xml_parser_create($this->_encoding);
+			$parser	 = xml_parser_create($this->_encoding);
 			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 0);
-			xml_parse_into_struct($parser, $data, $vals, $index) or $err = true;
+			xml_parse_into_struct($parser, $data, $vals, $index) or $err	 = true;
 
 			if ($err)
 			{
@@ -463,17 +463,17 @@
 			}
 			xml_parser_free($parser);
 
-			$tree = array();
-			$i = 0;
+			$tree	 = array();
+			$i		 = 0;
 
 			$tagname = ( $this->_lower_case_tags ) ? strtolower($vals[$i]['tag']) : $vals[$i]['tag'];
 			if (isset($vals[$i]['attributes']))
 			{
 				if ($this->get_attributes)
 				{
-					$tree[$tagname][]['@'] = $vals[$i]['attributes'];
-					$index = count($tree[$tagname]) - 1;
-					$tree[$tagname][$index] = array_merge($tree[$tagname][$index], $this->_getChildren($vals, $i));
+					$tree[$tagname][]['@']	 = $vals[$i]['attributes'];
+					$index					 = count($tree[$tagname]) - 1;
+					$tree[$tagname][$index]	 = array_merge($tree[$tagname][$index], $this->_getChildren($vals, $i));
 				}
 				else
 				{
@@ -487,8 +487,8 @@
 
 			if (!$this->_includesRoot)
 			{
-				$keys = array_keys($tree);
-				$tree = $tree[$keys[0]][0];
+				$keys	 = array_keys($tree);
+				$tree	 = $tree[$keys[0]][0];
 			}
 			return $tree;
 		}
@@ -533,8 +533,8 @@
 							{
 								if ($this->get_attributes)
 								{
-									$children[$tagname][]['@'] = $vals[$i]['attributes'];
-									$index = count($children[$tagname]) - 1;
+									$children[$tagname][]['@']	 = $vals[$i]['attributes'];
+									$index						 = count($children[$tagname]) - 1;
 								}
 
 								if (isset($vals[$i]['value']))
@@ -572,10 +572,10 @@
 							{
 								if ($this->get_attributes)
 								{
-									$children[$tagname][]['@'] = $this->_onAttributes($vals[$i]['attributes']);
+									$children[$tagname][]['@']	 = $this->_onAttributes($vals[$i]['attributes']);
 									//	$index = count($children[$tagname])-1;
-									$index = count($children[$vals[$i]['tag']]) - 1;
-									$children[$tagname][$index] = array_merge($children[$tagname][$index], $this->_getChildren($vals, $i));
+									$index						 = count($children[$vals[$i]['tag']]) - 1;
+									$children[$tagname][$index]	 = array_merge($children[$tagname][$index], $this->_getChildren($vals, $i));
 								}
 								else
 								{
@@ -605,15 +605,15 @@
 				if (ord($Str[$i]) < 0x80)
 					continue;# 0bbbbbbb
 				elseif ((ord($Str[$i]) & 0xE0) == 0xC0)
-					$n = 1;# 110bbbbb
+					$n	 = 1;# 110bbbbb
 				elseif ((ord($Str[$i]) & 0xF0) == 0xE0)
-					$n = 2;# 1110bbbb
+					$n	 = 2;# 1110bbbb
 				elseif ((ord($Str[$i]) & 0xF8) == 0xF0)
-					$n = 3;# 11110bbb
+					$n	 = 3;# 11110bbb
 				elseif ((ord($Str[$i]) & 0xFC) == 0xF8)
-					$n = 4;# 111110bb
+					$n	 = 4;# 111110bb
 				elseif ((ord($Str[$i]) & 0xFE) == 0xFC)
-					$n = 5;# 1111110b
+					$n	 = 5;# 1111110b
 				else
 					return false;# Does not match any model
 				for ($j = 0; $j < $n; $j++) # n bytes matching 10bbbbbb follow ?

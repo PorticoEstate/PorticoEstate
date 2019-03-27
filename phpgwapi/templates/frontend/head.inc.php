@@ -26,7 +26,7 @@ JS;
 		}
 		catch(err)
 		{
-			alert(err);
+//			alert(err);
 		}
 JS;
 
@@ -248,6 +248,7 @@ HTML;
 		'home_text'		=> $home_text,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'site_url'	=> $site_url,
+		'userlang'				 => $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'webserver_url'	=> $webserver_url,
         'win_on_events'	=> $test,
 		'metainfo_author' => $author,

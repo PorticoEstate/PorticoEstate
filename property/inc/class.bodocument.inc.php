@@ -45,25 +45,25 @@
 		var $entity_id;
 		var $status_id;
 		var $allrows;
-		var $acl_location = '.document';
+		var $acl_location	 = '.document';
 		var $public_functions = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.sodocument');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->solocation = CreateObject('property.solocation');
-			$this->historylog = CreateObject('property.historylog', 'document');
-			$this->contacts = CreateObject('property.sogeneric');
+			$this->so			 = CreateObject('property.sodocument');
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->solocation	 = CreateObject('property.solocation');
+			$this->historylog	 = CreateObject('property.historylog', 'document');
+			$this->contacts		 = CreateObject('property.sogeneric');
 			$this->contacts->get_location_info('vendor', false);
-			$this->cats = & $this->so->cats;
-			$this->bofiles = CreateObject('property.bofiles');
+			$this->cats			 = & $this->so->cats;
+			$this->bofiles		 = CreateObject('property.bofiles');
 
 			if ($session)
 			{
@@ -71,31 +71,31 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$p_num = phpgw::get_var('p_num', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$status_id = phpgw::get_var('status_id');
-			$entity_id = phpgw::get_var('entity_id', 'int');
-			$doc_type = phpgw::get_var('doc_type');
-			$query_location = phpgw::get_var('query_location');
-			$allrows = phpgw::get_var('allrows', 'bool');
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query			 = phpgw::get_var('query');
+			$sort			 = phpgw::get_var('sort');
+			$order			 = phpgw::get_var('order');
+			$filter			 = phpgw::get_var('filter', 'int');
+			$p_num			 = phpgw::get_var('p_num', 'int');
+			$cat_id			 = phpgw::get_var('cat_id', 'int');
+			$status_id		 = phpgw::get_var('status_id');
+			$entity_id		 = phpgw::get_var('entity_id', 'int');
+			$doc_type		 = phpgw::get_var('doc_type');
+			$query_location	 = phpgw::get_var('query_location');
+			$allrows		 = phpgw::get_var('allrows', 'bool');
 
-			$this->start = $start ? $start : 0;
-			$this->query = isset($query) ? $query : '';
-			$this->sort = isset($sort) && $sort ? $sort : '';
-			$this->order = isset($order) && $order ? $order : '';
-			$this->filter = isset($filter) && $filter ? $filter : '';
-			$this->p_num = isset($p_num) && $p_num ? $p_num : '';
-			$this->cat_id = isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->status_id = isset($status_id) && $status_id ? $status_id : '';
-			$this->entity_id = isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->doc_type = isset($doc_type) && $doc_type ? $doc_type : '';
-			$this->query_location = isset($query_location) && $query_location ? $query_location : '';
-			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
+			$this->start			 = $start ? $start : 0;
+			$this->query			 = isset($query) ? $query : '';
+			$this->sort				 = isset($sort) && $sort ? $sort : '';
+			$this->order			 = isset($order) && $order ? $order : '';
+			$this->filter			 = isset($filter) && $filter ? $filter : '';
+			$this->p_num			 = isset($p_num) && $p_num ? $p_num : '';
+			$this->cat_id			 = isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->status_id		 = isset($status_id) && $status_id ? $status_id : '';
+			$this->entity_id		 = isset($entity_id) && $entity_id ? $entity_id : '';
+			$this->doc_type			 = isset($doc_type) && $doc_type ? $doc_type : '';
+			$this->query_location	 = isset($query_location) && $query_location ? $query_location : '';
+			$this->allrows			 = isset($allrows) && $allrows ? $allrows : '';
 		}
 
 		function save_sessiondata( $data )
@@ -112,15 +112,15 @@
 
 			//_debug_array($data);
 
-			$this->start = $data['start'];
-			$this->query = $data['query'];
-			$this->filter = $data['filter'];
-			$this->sort = $data['sort'];
-			$this->order = $data['order'];
-			$this->cat_id = $data['cat_id'];
+			$this->start			 = $data['start'];
+			$this->query			 = $data['query'];
+			$this->filter			 = $data['filter'];
+			$this->sort				 = $data['sort'];
+			$this->order			 = $data['order'];
+			$this->cat_id			 = $data['cat_id'];
 //			$this->entity_id	= $data['entity_id'];
-			$this->doc_type = $data['doc_type'];
-			$this->query_location = $data['query_location'];
+			$this->doc_type			 = $data['doc_type'];
+			$this->query_location	 = $data['query_location'];
 		}
 
 		function select_status_list( $format = '', $selected = '' )
@@ -147,23 +147,23 @@
 
 		function read( $data = array() )
 		{
-			$documents = $this->so->read(array(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'allrows' => $data['allrows'],
-				'results' => $data['results'],
-				'status_id' => $this->status_id,
-				'cat_id' => $this->cat_id,
-				'entity_id' => $this->entity_id,
-				'doc_type' => $this->doc_type,
-				'dry_run' => $data['dry_run'])
+			$documents			 = $this->so->read(array(
+				'start'		 => $data['start'],
+				'query'		 => $data['query'],
+				'sort'		 => $data['sort'],
+				'order'		 => $data['order'],
+				'allrows'	 => $data['allrows'],
+				'results'	 => $data['results'],
+				'status_id'	 => $this->status_id,
+				'cat_id'	 => $this->cat_id,
+				'entity_id'	 => $this->entity_id,
+				'doc_type'	 => $this->doc_type,
+				'dry_run'	 => $data['dry_run'])
 			);
 			$this->total_records = $this->so->total_records;
 
-			$this->uicols = $this->so->uicols;
-			$cols_extra = $this->so->cols_extra;
+			$this->uicols	 = $this->so->uicols;
+			$cols_extra		 = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($documents as &$document)
@@ -194,11 +194,11 @@
 
 		function read2( $data )
 		{
-			$documents = $this->so->read2($data);
+			$documents			 = $this->so->read2($data);
 			$this->total_records = $this->so->total_records;
 
-			$this->uicols = $this->so->uicols;
-			$cols_extra = $this->so->cols_extra;
+			$this->uicols	 = $this->so->uicols;
+			$cols_extra		 = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($documents as &$document)
@@ -240,19 +240,19 @@
 				//		$use_svn = true;
 			}
 
-			$document = $this->so->read_at_location(array(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'allrows' => $data['allrows'],
-				'results' => $data['results'],
-				'location_code' => $data['location_code'],
-				'status_id' => $this->status_id,
-				'p_num' => $this->p_num,
-				'cat_id' => $this->cat_id,
-				'entity_id' => $this->entity_id,
-				'doc_type' => $this->doc_type,
+			$document			 = $this->so->read_at_location(array(
+				'start'			 => $data['start'],
+				'query'			 => $data['query'],
+				'sort'			 => $data['sort'],
+				'order'			 => $data['order'],
+				'allrows'		 => $data['allrows'],
+				'results'		 => $data['results'],
+				'location_code'	 => $data['location_code'],
+				'status_id'		 => $this->status_id,
+				'p_num'			 => $this->p_num,
+				'cat_id'		 => $this->cat_id,
+				'entity_id'		 => $this->entity_id,
+				'doc_type'		 => $this->doc_type,
 				)
 			);
 			$this->total_records = $this->so->total_records;
@@ -261,9 +261,9 @@
 
 			foreach ($document as & $entry)
 			{
-				$entry['user'] = $GLOBALS['phpgw']->accounts->id2name($entry['user_id']);
-				$entry['document_date'] = $GLOBALS['phpgw']->common->show_date($entry['document_date'], $dateformat);
-				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
+				$entry['user']			 = $GLOBALS['phpgw']->accounts->id2name($entry['user_id']);
+				$entry['document_date']	 = $GLOBALS['phpgw']->common->show_date($entry['document_date'], $dateformat);
+				$entry['entry_date']	 = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
 				if ($use_svn)
 				{
 					$entry['journal'] = $this->get_file($entry['document_id'], true);
@@ -275,9 +275,9 @@
 
 		function read_single( $document_id )
 		{
-			$document = $this->so->read_single($document_id);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$document['document_date'] = $GLOBALS['phpgw']->common->show_date($document['document_date'], $dateformat);
+			$document					 = $this->so->read_single($document_id);
+			$dateformat					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$document['document_date']	 = $GLOBALS['phpgw']->common->show_date($document['document_date'], $dateformat);
 
 			if (preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
@@ -286,9 +286,9 @@
 
 			if (isset($document['vendor_id']) && $document['vendor_id'])
 			{
-				$custom = createObject('property.custom_fields');
-				$vendor['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-				$vendor = $this->contacts->read_single(array('id' => $document['vendor_id']), $vendor);
+				$custom					 = createObject('property.custom_fields');
+				$vendor['attributes']	 = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+				$vendor					 = $this->contacts->read_single(array('id' => $document['vendor_id']), $vendor);
 				foreach ($vendor['attributes'] as $attribute)
 				{
 					if ($attribute['name'] == 'org_name')
@@ -306,13 +306,13 @@
 
 			if ($document['p_num'])
 			{
-				$soadmin_entity = CreateObject('property.soadmin_entity');
-				$category = $soadmin_entity->read_single_category($document['p_entity_id'], $document['p_cat_id']);
+				$soadmin_entity	 = CreateObject('property.soadmin_entity');
+				$category		 = $soadmin_entity->read_single_category($document['p_entity_id'], $document['p_cat_id']);
 
-				$document['p'][$document['p_entity_id']]['p_num'] = $document['p_num'];
-				$document['p'][$document['p_entity_id']]['p_entity_id'] = $document['p_entity_id'];
-				$document['p'][$document['p_entity_id']]['p_cat_id'] = $document['p_cat_id'];
-				$document['p'][$document['p_entity_id']]['p_cat_name'] = $category['name'];
+				$document['p'][$document['p_entity_id']]['p_num']		 = $document['p_num'];
+				$document['p'][$document['p_entity_id']]['p_entity_id']	 = $document['p_entity_id'];
+				$document['p'][$document['p_entity_id']]['p_cat_id']	 = $document['p_cat_id'];
+				$document['p'][$document['p_entity_id']]['p_cat_name']	 = $category['name'];
 			}
 			return $document;
 		}
@@ -326,8 +326,8 @@
 
 		function select_category_list( $format = '', $selected = '' )
 		{
-			$soadmin_entity = CreateObject('property.soadmin_entity');
-			$categories = $soadmin_entity->read_category(array('allrows' => true, 'entity_id' => $this->entity_id));
+			$soadmin_entity	 = CreateObject('property.soadmin_entity');
+			$categories		 = $soadmin_entity->read_category(array('allrows' => true, 'entity_id' => $this->entity_id));
 
 			$category_list = $this->bocommon->select_list($selected, $categories);
 
@@ -336,45 +336,45 @@
 
 		function read_record_history( $id )
 		{
-			$history_array = $this->historylog->return_array(array('O'), array(), '', '', $id);
-			$i = 0;
+			$history_array	 = $this->historylog->return_array(array('O'), array(), '', '', $id);
+			$i				 = 0;
 			//while (is_array($history_array) && list(, $value) = each($history_array))
-                        foreach($history_array as $value)
+			foreach ($history_array as $value)
 			{
-				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
-				$record_history[$i]['value_user'] = $value['owner'];
+				$record_history[$i]['value_date']	 = $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$record_history[$i]['value_user']	 = $value['owner'];
 
 				switch ($value['status'])
 				{
-					case 'R': $type = lang('Re-opened');
+					case 'R': $type	 = lang('Re-opened');
 						break;
-					case 'X': $type = lang('Closed');
+					case 'X': $type	 = lang('Closed');
 						break;
-					case 'O': $type = lang('Opened');
+					case 'O': $type	 = lang('Opened');
 						break;
-					case 'A': $type = lang('Re-assigned');
+					case 'A': $type	 = lang('Re-assigned');
 						break;
-					case 'P': $type = lang('Priority changed');
+					case 'P': $type	 = lang('Priority changed');
 						break;
-					case 'CO': $type = lang('Initial Coordinator');
+					case 'CO': $type	 = lang('Initial Coordinator');
 						break;
-					case 'C': $type = lang('Coordinator changed');
+					case 'C': $type	 = lang('Coordinator changed');
 						break;
-					case 'TO': $type = lang('Initial Category');
+					case 'TO': $type	 = lang('Initial Category');
 						break;
-					case 'T': $type = lang('Category changed');
+					case 'T': $type	 = lang('Category changed');
 						break;
-					case 'SO': $type = lang('Initial Status');
+					case 'SO': $type	 = lang('Initial Status');
 						break;
-					case 'S': $type = lang('Status changed');
+					case 'S': $type	 = lang('Status changed');
 						break;
-					case 'FO': $type = lang('Initial File');
+					case 'FO': $type	 = lang('Initial File');
 						break;
-					case 'F': $type = lang('File changed');
+					case 'F': $type	 = lang('File changed');
 						break;
-					case 'LO': $type = lang('Initial Link');
+					case 'LO': $type	 = lang('Initial Link');
 						break;
-					case 'L': $type = lang('Link changed');
+					case 'L': $type	 = lang('Link changed');
 						break;
 					default: break;
 				}
@@ -409,12 +409,12 @@
 				}
 				else if ($value['status'] == 'T' || $value['status'] == 'TO')
 				{
-					$category = $this->cats->return_single($value['new_value']);
-					$record_history[$i]['value_new_value'] = $category[0]['name'];
+					$category								 = $this->cats->return_single($value['new_value']);
+					$record_history[$i]['value_new_value']	 = $category[0]['name'];
 					if ($value['old_value'])
 					{
-						$category = $this->cats->return_single($value['old_value']);
-						$record_history[$i]['value_old_value'] = $category[0]['name'];
+						$category								 = $this->cats->return_single($value['old_value']);
+						$record_history[$i]['value_old_value']	 = $category[0]['name'];
 					}
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
@@ -449,16 +449,16 @@
 			}
 
 			if ($this->bofiles->vfs->file_exists(array(
-					'string' => $file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 
 				if ($get_journal)
 				{
 					return $this->bofiles->vfs->get_journal(array(
-							'string' => $file,
-							'relatives' => Array(RELATIVE_NONE)
+							'string'	 => $file,
+							'relatives'	 => Array(RELATIVE_NONE)
 					));
 				}
 				else
@@ -472,7 +472,7 @@
 		function save( $values )
 		{
 
-			$document_date = phpgwapi_datetime::date_array($values['document_date']);
+			$document_date			 = phpgwapi_datetime::date_array($values['document_date']);
 			$values['document_date'] = mktime(2, 0, 0, $document_date['month'], $document_date['day'], $document_date['year']);
 
 			//_debug_array($values);

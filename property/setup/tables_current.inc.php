@@ -1326,6 +1326,7 @@
 				'parent_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'name' => array('type' => 'varchar', 'precision' => '200', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => 1),
+				'persistent' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'created_on' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),

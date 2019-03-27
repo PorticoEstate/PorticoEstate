@@ -38,35 +38,35 @@
 		 *  Data: function=import_from_scanner,dir=C:/path/to/scanned_images
 		 */
 
-		var $dir = '/home/sn5607/test';
-		var $suffix = 'pdf';
-		var $meta_suffix = 'csv';
-		var $delimiter = ',';
-		var $bypass = false; // bypass location check (only for debugging)
-		var $default_user_id = 6;
-		var $default_user_last_name = 'Aspevik';
-		var $mail_receipt = true;
-		var $function_name = 'import_from_scanner';
-		var $header = array('type', 'descr', 'target', 'user');
+		var $dir						 = '/home/sn5607/test';
+		var $suffix					 = 'pdf';
+		var $meta_suffix				 = 'csv';
+		var $delimiter				 = ',';
+		var $bypass					 = false; // bypass location check (only for debugging)
+		var $default_user_id			 = 6;
+		var $default_user_last_name	 = 'Aspevik';
+		var $mail_receipt			 = true;
+		var $function_name			 = 'import_from_scanner';
+		var $header					 = array('type', 'descr', 'target', 'user');
 
 		function import_from_scanner()
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->bofiles = CreateObject('property.bofiles');
-			$this->db = & $GLOBALS['phpgw']->db;
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->bofiles	 = CreateObject('property.bofiles');
+			$this->db		 = & $GLOBALS['phpgw']->db;
 		}
 
 		function pre_run( $data = '' )
 		{
-			$cron = false;
+			$cron	 = false;
 			$dry_run = false;
 
 			if (isset($data['enabled']) && $data['enabled'] == 1)
 			{
 				$confirm = true;
 				$execute = true;
-				$cron = true;
+				$cron	 = true;
 				if ($data['suffix'])
 				{
 					$this->suffix = $data['suffix'];
@@ -110,10 +110,10 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.custom_functions.index',
-				'function' => $this->function_name,
-				'execute' => $execute,
-				'dir' => $this->dir,
-				'suffix' => $this->suffix,
+				'function'	 => $this->function_name,
+				'execute'	 => $execute,
+				'dir'		 => $this->dir,
+				'suffix'	 => $this->suffix,
 			);
 
 			if (!$done)
@@ -135,22 +135,22 @@
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'done_action' => $GLOBALS['phpgw']->link('/admin/index.php'),
-				'run_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'message' => $this->receipt['message'],
-				'lang_confirm_msg' => $lang_confirm_msg,
-				'lang_yes' => $lang_yes,
-				'lang_yes_statustext' => 'Legger til dokumenter fra scanner',
-				'lang_no_statustext' => 'tilbake',
-				'lang_no' => lang('no'),
-				'lang_done' => 'Avbryt',
-				'lang_done_statustext' => 'tilbake'
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/admin/index.php'),
+				'run_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'message'				 => $this->receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => 'Legger til dokumenter fra scanner',
+				'lang_no_statustext'	 => 'tilbake',
+				'lang_no'				 => lang('no'),
+				'lang_done'				 => 'Avbryt',
+				'lang_done_statustext'	 => 'tilbake'
 			);
 
-			$appname = 'import from scanner';
-			$function_msg = 'import files from scanner-drop-catalog';
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname										 = 'import from scanner';
+			$function_msg									 = 'import files from scanner-drop-catalog';
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 			$GLOBALS['phpgw']->xslttpl->pp();
 		}
@@ -168,9 +168,9 @@
 			{
 				if (isset($file_list) && is_array($file_list))
 				{
-					$this->botts = CreateObject('property.botts');
-					$this->bolocation = CreateObject('property.bolocation');
-					$send = CreateObject('phpgwapi.send');
+					$this->botts		 = CreateObject('property.botts');
+					$this->bolocation	 = CreateObject('property.bolocation');
+					$send				 = CreateObject('phpgwapi.send');
 					foreach ($file_list as $file_entry)
 					{
 						$file_entry['user_id'] = $this->get_user_id($file_entry['user']);
@@ -193,16 +193,16 @@
 									}
 								}
 
-								$values['category_id'] = 2;
-								$values['values_date'] = time();
-								$values['version'] = '1';
-								$values['coordinator'] = '';
-								$values['status'] = '1';
-								$values['branch_id'] = '';
-								$values['vendor_id'] = '';
-								$values['user_id'] = $file_entry['user_id'];
-								$values['file_name'] = $file_entry['file_name'];
-								$values['title'] = $file_entry['descr'];
+								$values['category_id']	 = 2;
+								$values['values_date']	 = time();
+								$values['version']		 = '1';
+								$values['coordinator']	 = '';
+								$values['status']		 = '1';
+								$values['branch_id']	 = '';
+								$values['vendor_id']	 = '';
+								$values['user_id']		 = $file_entry['user_id'];
+								$values['file_name']	 = $file_entry['file_name'];
+								$values['title']		 = $file_entry['descr'];
 								$this->bofiles->create_document_dir("document/{$values['loc1']}");
 								$this->copy_files($values);
 							}
@@ -232,12 +232,12 @@
 										}
 									}
 
-									$values['details'] = $file_entry['descr'];
-									$values['subject'] = $file_entry['descr'];
-									$values['assignedto'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'] : '');
-									$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'] : '');
-									$values['cat_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'] : '');
-									$values['priority'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : '');
+									$values['details']		 = $file_entry['descr'];
+									$values['subject']		 = $file_entry['descr'];
+									$values['assignedto']	 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'] : '');
+									$values['group_id']		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'] : '');
+									$values['cat_id']		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'] : '');
+									$values['priority']		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : '');
 
 									$receipt = $this->botts->add($values);
 									$this->add_file_to_ticket($receipt['id'], $file_entry['file_name']);
@@ -254,18 +254,18 @@
 							$prefs = $this->bocommon->create_preferences('property', $file_entry['user_id']);
 							if (strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
 							{
-								$subject = 'Resultat fra scanner';
+								$subject	 = 'Resultat fra scanner';
 								$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-								$body = implode('</br>', array_keys($msgbox_data));
+								$body		 = implode('</br>', array_keys($msgbox_data));
 								//, '', $cc, $bcc,$current_user_address,$current_user_name,
 
-								$to = $prefs['email'];
-								$rc = $send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $current_user_address, $current_user_name, 'html');
+								$to	 = $prefs['email'];
+								$rc	 = $send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $current_user_address, $current_user_name, 'html');
 							}
 							else
 							{
-								$this->receipt['error'][] = array('msg' => lang('Your message could not be sent!'));
-								$this->receipt['error'][] = array('msg' => lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
+								$this->receipt['error'][]	 = array('msg' => lang('Your message could not be sent!'));
+								$this->receipt['error'][]	 = array('msg' => lang('This user has not defined an email address !') . ' : ' . $members[$i]['account_name']);
 							}
 						}
 
@@ -283,7 +283,7 @@
 
 						$insert_values = $this->db->validate_insert($insert_values);
 
-						$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+						$sql	 = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
 							. "VALUES ($insert_values)";
 						$this->db->query($sql, __LINE__, __FILE__);
 						$receipt = array();
@@ -292,7 +292,7 @@
 
 				if (!$cron)
 				{
-					$this->confirm($execute = false, $done = true);
+					$this->confirm($execute = false, $done	 = true);
 				}
 			}
 		}
@@ -302,7 +302,7 @@
 			$dir_handle = @opendir($this->dir);
 
 			$myfilearray = array();
-			while ($file = @readdir($dir_handle))
+			while ($file		 = @readdir($dir_handle))
 			{
 				if ((strtolower(substr($file, -3, 3)) == $this->meta_suffix) && is_file("{$this->dir}/{$file}"))
 				{
@@ -315,13 +315,13 @@
 
 			for ($i = 0; $i < count($myfilearray); $i++)
 			{
-				$fname = $myfilearray[$i];
-				$file_list[$i]['file_name'] = substr($fname, 0, strlen($fname) - strlen($this->meta_suffix));
+				$fname						 = $myfilearray[$i];
+				$file_list[$i]['file_name']	 = substr($fname, 0, strlen($fname) - strlen($this->meta_suffix));
 
 				$fp = fopen("{$this->dir}/{$fname}", 'rb');
 
-				$row = 1;
-				while ($data = fgetcsv($fp, 8000, $this->delimiter))
+				$row	 = 1;
+				while ($data	 = fgetcsv($fp, 8000, $this->delimiter))
 				{
 					if ($row == 2) // Ther first row is headerinfo
 					{
@@ -330,8 +330,8 @@
 						$this->currentrecord = array();
 						for ($c = 0; $c < $num; $c++)
 						{
-							$value = $data[$c];
-							$name = $this->header[$c];
+							$value	 = $data[$c];
+							$name	 = $this->header[$c];
 
 							$file_list[$i][$name] = $value;
 						}
@@ -348,8 +348,8 @@
 			$to_file = "{$this->bofiles->fakebase}/fmticket/{$id}/{$file_name}{$this->suffix}";
 
 			if ($this->bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $to_file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->receipt['error'][] = array('msg' => 'Denne filen finnes allerede for melding # ' . $id);
@@ -360,9 +360,9 @@
 				$this->bofiles->vfs->override_acl = 1;
 
 				if (!$this->bofiles->vfs->cp(array(
-						'from' => $this->dir . '/' . $file_name . $this->suffix,
-						'to' => $to_file,
-						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from'		 => $this->dir . '/' . $file_name . $this->suffix,
+						'to'		 => $to_file,
+						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 				{
 					$this->receipt['error'][] = array('msg' => lang('Failed to upload file !'));
 				}
@@ -394,8 +394,8 @@
 
 		function get_user_id( $account_lastname = '' )
 		{
-			$account_lastname = $account_lastname ? $account_lastname : $this->default_user_last_name;
-			$sql = "SELECT account_id FROM phpgw_accounts WHERE account_lastname='$account_lastname'";
+			$account_lastname	 = $account_lastname ? $account_lastname : $this->default_user_last_name;
+			$sql				 = "SELECT account_id FROM phpgw_accounts WHERE account_lastname='$account_lastname'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
@@ -413,14 +413,14 @@
 		{
 			if (strpos($target, '.'))
 			{
-				$location = explode('.', $target);
-				$sql = "SELECT location_code FROM fm_location4 WHERE loc1= '{$location[0]}' AND loc4= '{$location[1]}'";
+				$location	 = explode('.', $target);
+				$sql		 = "SELECT location_code FROM fm_location4 WHERE loc1= '{$location[0]}' AND loc4= '{$location[1]}'";
 			}
 			else
 			{
-				$location = explode('-', $target);
-				$type = count($location);
-				$sql = "SELECT location_code FROM fm_location{$type} WHERE location_code = '{$target}'";
+				$location	 = explode('-', $target);
+				$type		 = count($location);
+				$sql		 = "SELECT location_code FROM fm_location{$type} WHERE location_code = '{$target}'";
 			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -430,13 +430,13 @@
 
 		function copy_files( $values )
 		{
-			$to_file = "{$bofiles->fakebase}/document/{$values['loc1']}/{$values['file_name']}{$this->suffix}";
-			$from_file = "{$this->dir}/{$values['file_name']}{$this->suffix}";
-			$this->bofiles->vfs->override_acl = 1;
+			$to_file							 = "{$bofiles->fakebase}/document/{$values['loc1']}/{$values['file_name']}{$this->suffix}";
+			$from_file							 = "{$this->dir}/{$values['file_name']}{$this->suffix}";
+			$this->bofiles->vfs->override_acl	 = 1;
 
 			if ($this->bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE)
+					'string'	 => $to_file,
+					'relatives'	 => Array(RELATIVE_NONE)
 				)))
 			{
 				$this->receipt['error'][] = array('msg' => lang('File %1 already exists!', $values['file_name'] . $this->suffix));
@@ -445,9 +445,9 @@
 			{
 
 				if (!$this->bofiles->vfs->cp(array(
-						'from' => $from_file,
-						'to' => $to_file,
-						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						'from'		 => $from_file,
+						'to'		 => $to_file,
+						'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 				{
 					$this->receipt['error'][] = array('msg' => lang('Failed to copy file !') . $values['file_name'] . $this->suffix);
 				}

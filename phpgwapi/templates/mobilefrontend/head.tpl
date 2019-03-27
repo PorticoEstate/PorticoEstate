@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!-- BEGIN head -->
-<html>
+<html lang="{userlang}">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
@@ -18,7 +18,7 @@
 
 		{css}
 
-		<script type="text/javascript">
+		<script>
 		<!--
 			var strBaseURL = '{str_base_url}';
 			{win_on_events}
@@ -26,7 +26,7 @@
 		</script>
 		{javascript}
 		<!-- BEGIN javascript -->
-       		<script type="text/javascript" src="{javascript_uri}"></script>
+		<script src="{javascript_uri}"></script>
     	<!-- END javascript -->
 
 	</head>

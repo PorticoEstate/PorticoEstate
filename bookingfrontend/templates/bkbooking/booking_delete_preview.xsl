@@ -105,7 +105,7 @@
 		</form>
 
 	</div>
-	<script type="text/javascript">
+	<script>
 		var season_id = '<xsl:value-of select="booking/season_id"/>';
 		var group_id = '<xsl:value-of select="booking/group_id"/>';
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;

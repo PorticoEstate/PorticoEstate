@@ -92,32 +92,32 @@
 		 */
 		public $public_functions = array
 			(
-			'index' => true,
-			'no_access' => true
+			'index'		 => true,
+			'no_access'	 => true
 		);
 
 		public function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::migrate_db';
-			$this->bo = CreateObject('property.bomigrate', true);
-			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->acl_location = $this->bo->get_acl_location();
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::migrate_db';
+			$this->bo											 = CreateObject('property.bomigrate', true);
+			$this->nextmatchs									 = CreateObject('phpgwapi.nextmatchs');
+			$this->acl											 = & $GLOBALS['phpgw']->acl;
+			$this->acl_location									 = $this->bo->get_acl_location();
+			$this->acl_read										 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add										 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit										 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete									 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
 		}
 
 		private function save_sessiondata()
 		{
 			$data = array
 				(
-				'start' => $this->start,
+				'start'	 => $this->start,
 				//		'query'		=> $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
+				'sort'	 => $this->sort,
+				'order'	 => $this->order,
 			);
 			$this->bo->save_sessiondata($data);
 		}
@@ -146,8 +146,8 @@
 
 			$domain_info = $this->bo->read();
 
-			$lang_select_migrate_text = '';
-			$text_select = '';
+			$lang_select_migrate_text	 = '';
+			$text_select				 = '';
 
 			foreach ($domain_info as $domain => $entry)
 			{
@@ -158,34 +158,34 @@
 
 				$content[] = array
 					(
-					'domain' => $domain,
-					'db_host' => $entry['db_host'],
-					'db_port' => $entry['db_port'],
-					'db_name' => $entry['db_name'],
-					'db_type' => $entry['db_type'],
-					'lang_select_migrate_text' => $lang_select_migrate_text,
+					'domain'					 => $domain,
+					'db_host'					 => $entry['db_host'],
+					'db_port'					 => $entry['db_port'],
+					'db_name'					 => $entry['db_name'],
+					'db_type'					 => $entry['db_type'],
+					'lang_select_migrate_text'	 => $lang_select_migrate_text,
 				);
 			}
 
 			$table_header[] = array
 				(
-				'sort_domain' => $this->nextmatchs->show_sort_order(array
+				'sort_domain'	 => $this->nextmatchs->show_sort_order(array
 					(
-					'sort' => $this->sort,
-					'var' => 'domain',
-					'order' => $this->order,
-					'extra' => array
+					'sort'	 => $this->sort,
+					'var'	 => 'domain',
+					'order'	 => $this->order,
+					'extra'	 => array
 						(
 						'menuaction' => 'property.uimigrate.index',
-						'allrows' => $this->allrows
+						'allrows'	 => $this->allrows
 					)
 				)),
-				'lang_domain' => lang('domain'),
-				'lang_db_host' => lang('db_host'),
-				'lang_db_port' => lang('db_port'),
-				'lang_db_name' => lang('db_name'),
-				'lang_db_type' => lang('db_type'),
-				'lang_select' => (isset($this->acl_edit) ? lang('select') : ''),
+				'lang_domain'	 => lang('domain'),
+				'lang_db_host'	 => lang('db_host'),
+				'lang_db_port'	 => lang('db_port'),
+				'lang_db_name'	 => lang('db_name'),
+				'lang_db_type'	 => lang('db_type'),
+				'lang_select'	 => (isset($this->acl_edit) ? lang('select') : ''),
 			);
 
 			if (!$this->allrows)
@@ -200,37 +200,37 @@
 			$link_data = array
 				(
 				'menuaction' => 'property.uimigrate.index',
-				'sort' => $this->sort,
-				'order' => $this->order
+				'sort'		 => $this->sort,
+				'order'		 => $this->order
 			);
 
 			$table_migrate[] = array
 				(
-				'lang_migrate' => lang('migrate'),
-				'lang_migrate_statustext' => lang('perform selected migrations'),
+				'lang_migrate'				 => lang('migrate'),
+				'lang_migrate_statustext'	 => lang('perform selected migrations'),
 			);
 
 			$msgbox_data = (isset($receipt) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '');
 
 			$data = array
 				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'allow_allrows' => true,
-				'allrows' => $this->allrows,
-				'start_record' => $this->start,
-				'record_limit' => $record_limit,
-				'num_records' => ($domain_info ? count($domain_info) : 0),
-				'all_records' => ($domain_info ? count($domain_info) : 0),
-				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
-				'lang_searchfield_statustext' => lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
-				'lang_searchbutton_statustext' => lang('Submit the search string'),
+				'msgbox_data'					 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'allow_allrows'					 => true,
+				'allrows'						 => $this->allrows,
+				'start_record'					 => $this->start,
+				'record_limit'					 => $record_limit,
+				'num_records'					 => ($domain_info ? count($domain_info) : 0),
+				'all_records'					 => ($domain_info ? count($domain_info) : 0),
+				'link_url'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'img_path'						 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
+				'lang_searchfield_statustext'	 => lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
+				'lang_searchbutton_statustext'	 => lang('Submit the search string'),
 //				'query'									=> $this->query,
-				'lang_search' => lang('search'),
-				'table_header' => $table_header,
-				'table_migrate' => $table_migrate,
-				'migrate_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index')),
-				'values' => (isset($content) ? $content : '')
+				'lang_search'					 => lang('search'),
+				'table_header'					 => $table_header,
+				'table_migrate'					 => $table_migrate,
+				'migrate_action'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uimigrate.index')),
+				'values'						 => (isset($content) ? $content : '')
 			);
 
 			$function_msg = lang('list available domains');

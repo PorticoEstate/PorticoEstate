@@ -40,32 +40,32 @@
 
 		function __construct()
 		{
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->like = & $this->db->like;
+			$this->db	 = & $GLOBALS['phpgw']->db;
+			$this->join	 = & $this->db->join;
+			$this->like	 = & $this->db->like;
 		}
 
 		function read_b_account( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
+			$start	 = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
+			$query	 = isset($data['query']) ? $data['query'] : '';
+			$sort	 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order	 = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$role = isset($data['role']) ? $data['role'] : '';
-			$parent = isset($data['parent']) && $data['parent'] ? (int)$data['parent'] : 0;
+			$role	 = isset($data['role']) ? $data['role'] : '';
+			$parent	 = isset($data['parent']) && $data['parent'] ? (int)$data['parent'] : 0;
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
-			$join = '';
-			$filter_parent = '';
+			$join			 = '';
+			$filter_parent	 = '';
 			if ($role == 'group')
 			{
 				$table = 'fm_b_account_category';
 			}
 			else
 			{
-				$table = 'fm_b_account';
-				$join = " {$this->join} fm_b_account_category ON (fm_b_account.category = fm_b_account_category.id AND fm_b_account_category.active = 1)";
+				$table	 = 'fm_b_account';
+				$join	 = " {$this->join} fm_b_account_category ON (fm_b_account.category = fm_b_account_category.id AND fm_b_account_category.active = 1)";
 			}
 
 			if ($order)
@@ -77,13 +77,13 @@
 				$ordermethod = " ORDER BY {$table}.id DESC";
 			}
 
-			$filtermethod = " WHERE {$table}.active = 1";
-			$where = 'AND';
+			$filtermethod	 = " WHERE {$table}.active = 1";
+			$where			 = 'AND';
 
 			if ($parent)
 			{
-				$filtermethod .= " {$where} category = {$parent}";
-				$where = 'AND';
+				$filtermethod	 .= " {$where} category = {$parent}";
+				$where			 = 'AND';
 			}
 
 			if ($query)
@@ -107,7 +107,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
@@ -119,8 +119,8 @@
 			{
 				$b_account[] = array
 					(
-					'id' => $this->db->f('id'),
-					'descr' => $this->db->f('descr', true)
+					'id'	 => $this->db->f('id'),
+					'descr'	 => $this->db->f('descr', true)
 				);
 			}
 
@@ -131,12 +131,12 @@
 		{
 			if (is_array($data))
 			{
-				$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-				$filter = isset($data['filter']) ? $data['filter'] : 'none';
-				$query = isset($data['query']) ? $data['query'] : '';
-				$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-				$order = isset($data['order']) ? $data['order'] : '';
-				$cat_id = isset($data['cat_id']) ? $data['cat_id'] : 0;
+				$start	 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter	 = isset($data['filter']) ? $data['filter'] : 'none';
+				$query	 = isset($data['query']) ? $data['query'] : '';
+				$sort	 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order	 = isset($data['order']) ? $data['order'] : '';
+				$cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : 0;
 				$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			}
 
@@ -167,8 +167,8 @@
 			{
 				$phpgw_user[] = array
 					(
-					'id' => $this->db->f('account_id'),
-					'last_name' => $this->db->f('account_lastname', true),
+					'id'		 => $this->db->f('account_id'),
+					'last_name'	 => $this->db->f('account_lastname', true),
 					'first_name' => $this->db->f('account_firstname', true)
 				);
 			}

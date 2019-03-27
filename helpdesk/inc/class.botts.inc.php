@@ -48,9 +48,10 @@
 		var $fields_updated = false;
 		var $status_id;
 		var $user_id;
-		var $part_of_town_id;
-		var $district_id;
+		var $group_id;
 		var $total_records;
+		var $use_session;
+		var $_simple, $_group_candidates, $_show_finnish_date;
 
 		var $public_functions = array
 			(
@@ -59,7 +60,7 @@
 				'save'			=> true,
 			);
 
-		function __construct()
+		function __construct($read_session = false)
 		{
 			$this->so 					= CreateObject('helpdesk.sotts');
 			$this->custom				= & $this->so->custom;
@@ -73,20 +74,117 @@
 
 			$this->config->read();
 
+			if ($read_session)
+			{
+				$this->read_sessiondata();
+				$this->use_session = True;
+			}
 			$this->start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$this->query = phpgw::get_var('query');
 			$this->sort = phpgw::get_var('sort');
 			$this->order = phpgw::get_var('order');
 			$this->status_id = phpgw::get_var('status_id', 'string');
-			$this->user_id = phpgw::get_var('user_id', 'int');
+			$user_id = phpgw::get_var('user_id', 'int');
+			$group_id = phpgw::get_var('group_id', 'int');
+
+			if(isset($_POST))
+			{
+				$this->user_id	= $user_id;
+			}
+			if(isset($_REQUEST['group_id']))
+			{
+				$this->group_id	= $group_id;
+			}
+
 			$this->reported_by = phpgw::get_var('reported_by', 'int');
 			$this->cat_id = phpgw::get_var('cat_id', 'int');
 			$this->parent_cat_id = phpgw::get_var('parent_cat_id', 'int');
 			$this->allrows = phpgw::get_var('allrows', 'bool');
 			$this->start_date = phpgw::get_var('filter_start_date', 'string');
 			$this->end_date = phpgw::get_var('filter_end_date', 'string');
+
+			$default_interface = isset($this->config->config_data['tts_default_interface']) ? $this->config->config_data['tts_default_interface'] : '';
+
+			/*
+			 * Inverted logic
+			 */
+			if($default_interface == 'simplified')
+			{
+				$this->_simple = true;
+			}
+
+			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
+			foreach ($user_groups as $group => $dummy)
+			{
+				if (in_array($group, $simple_group))
+				{
+					if($default_interface == 'simplified')
+					{
+						$this->_simple = false;
+					}
+					else
+					{
+						$this->_simple = true;
+					}
+					break;
+				}
+			}
+			if (isset($this->config->config_data['fmtts_assign_group_candidates']) && is_array($this->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$this->_group_candidates[] = $group_candidate;
+					}
+				}
+			}
+
+			reset($user_groups);
+
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $this->_group_candidates))
+				{
+					$this->_simple = false;
+					break;
+				}
+			}
+
+			reset($user_groups);
+			$group_finnish_date = isset($this->config->config_data['fmtts_group_finnish_date']) ? $this->config->config_data['fmtts_group_finnish_date'] : array();
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $group_finnish_date))
+				{
+					$this->_show_finnish_date = true;
+					break;
+				}
+			}
 		}
 
+
+		function save_sessiondata($data)
+		{
+			if ($this->use_session)
+			{
+				$data = phpgwapi_cache::session_set('helpdesk', 'session_data',$data);
+			}
+		}
+
+		function read_sessiondata()
+		{
+			$data = phpgwapi_cache::session_get('helpdesk', 'session_data');
+
+			if(empty($data) || !is_array($data))
+			{
+				return;
+			}
+
+			$this->user_id	= $data['user_id'];
+			$this->group_id	= $data['group_id'];
+		}
 
 		function column_list( $selected = array() )
 		{
@@ -180,6 +278,11 @@
 				(
 				'id' => 'details',
 				'name' => lang('details')
+			);
+			$columns['external_origin_email'] = array
+				(
+				'id' => 'external_origin_email',
+				'name' => lang('external origin email')
 			);
 
 			return $columns;
@@ -757,6 +860,7 @@
 				'contact_id' => 0,
 				'send_mail'		=> true,
 				'external_ticket_id' => !empty($data['external_ticket_id']) ? $data['external_ticket_id'] : null,
+				'external_origin_email' => !empty($data['external_origin_email']) ? $data['external_origin_email'] : null,
 			);
 
 			$result = $this->add($ticket);
@@ -955,8 +1059,61 @@
 			$link_text = lang('Ticket') . ' #' . $id ;
 
 			$messages_sendt = $this->historylog->return_array(array(),array('M'),'history_timestamp','DESC',$id);
-			$additional_notes = $this->read_additional_notes($id);
-			$num_updates = count($additional_notes) +1;
+			$_additional_notes = $this->read_additional_notes($id);
+
+			$notes = array(
+				array(
+					'value_id' => '', //not from historytable
+					'value_count' => 1,
+					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
+					'value_user' => $ticket['reverse_id']? $ticket['reverse_name'] : $ticket['user_name'],
+					'value_note' => $ticket['details'],
+					'value_publish' => $ticket['publish_note']
+				)
+			);
+
+			$_additional_notes = array_merge($notes, $_additional_notes);
+
+			$additional_notes = array();
+
+			if ($this->_simple)
+			{
+				$i = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$note['value_count'] = $i++;
+						$additional_notes[] = $note;
+					}
+				}
+			}
+			else
+			{
+				$i = 0;
+				$j = 1;
+				foreach ($_additional_notes as $note)
+				{
+					if ($note['value_publish'])
+					{
+						$i++;
+						$j = 1;
+					}
+					else
+					{
+						if($i)
+						{
+							$j++;
+						}
+					}
+					$i = max(array(1, $i));
+					$note['value_count'] = "{$i}.{$j}";
+					$additional_notes[] = $note;
+				}
+			}
+
+
+			$num_updates = count($additional_notes);
 
 			//New message
 			if(!$get_message && !empty($this->config->config_data['new_message']))
@@ -1080,7 +1237,7 @@
 				</thead>
 HTML;
 
-				$table_content .= "<tr><td style='vertical-align:top'>{$i}</td><td style='vertical-align:top'>{$entry_date}</td><td style='vertical-align:top'>{$user_name}</td><td style='white-space: pre-line'>{$ticket['details']}</td></tr>";
+			//	$table_content .= "<tr><td style='vertical-align:top'>{$i}</td><td style='vertical-align:top'>{$entry_date}</td><td style='vertical-align:top'>{$user_name}</td><td style='white-space: pre-line'>{$ticket['details']}</td></tr>";
 
 				foreach ($additional_notes as $value)
 				{
@@ -1430,6 +1587,11 @@ HTML;
 			{
 				return $group_list;
 			}
+		}
+
+		public function get_assigned_groups2($selected)
+		{
+			return $this->so->get_assigned_groups2($selected);
 		}
 
 		function reset_views($id)

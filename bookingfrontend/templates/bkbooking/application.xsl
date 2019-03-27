@@ -226,7 +226,7 @@
 			<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 				<dl class="proplist-col">
 					<dt class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></dt>
-					<script type="text/javascript">
+					<script>
 						var allocationParams = {};
 						var bookingParams = {};
 						var eventParams = {};
@@ -247,13 +247,13 @@
 							</span>
 						</dd>
 						<xsl:if test="../edit_link">
-							<script type="text/javascript">
+							<script>
 								allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 								bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 								eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
-								var allocationaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uiallocation.add'});
-								var bookingaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uibooking.add'});
-								var eventaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uievent.add'});
+								var allocationaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiallocation.add'});
+								var bookingaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibooking.add'});
+								var eventaddURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uievent.add'});
 							</script>
 							<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl(allocationaddURL, allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl(bookingaddURL, eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl(eventaddURL, eventParams[{id}]);">
 								<xsl:if test="not(../case_officer/is_current_user)">
@@ -537,22 +537,24 @@
 		</xsl:if>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		var resourceIds = '<xsl:value-of select="application/resource_ids" />';
-		if (!resourceIds || resourceIds == "") {
-		resourceIds = false;
+		if (!resourceIds || resourceIds == "")
+		{
+			resourceIds = false;
 		}
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resources Type', 'ID', 'Type', 'From', 'To', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
+		var secret = '<xsl:value-of select="application/secret" />';
 
         <![CDATA[
             var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
             var applicationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiapplication.associated', filter_application_id:app_id}, true);
-            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
+            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
-			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id}, true);
+			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, filter_secret: secret}, true);
         ]]>
 
 		if (resourceIds) {

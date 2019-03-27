@@ -506,7 +506,7 @@ input[type="checkbox"], input[type="radio"]{
 input[type="checkbox"] + .label-text:before{
 	content: "\f0c8";
 	font-family: "Font Awesome 5 Free";
-	speak: none;
+	speak-as: none;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -639,7 +639,7 @@ color: white;
 .lightbox-body {
     padding: 0 !important;
     animation-name: zoom;
-    animation-duvaration: 0.6s;
+    animation-duration: 0.6s;
 }
 
 .lightbox-body img {
@@ -1064,6 +1064,10 @@ custom-card-link-href:hover {
 #welcomeResult .custom-card .desc span {
     font-size: 16px;
     display: block;
+}
+
+#welcomeResult .custom-card .desc a:hover {
+    text-decoration: underline !important;
 }
 
 #welcomeResult .title {
@@ -1930,7 +1934,7 @@ footer h3{
 }
 
 .upcomming-event-href{
-	color: #27348b;
+    color: #27348b;
 }
 
 .header_borderline{

@@ -1050,7 +1050,10 @@ HTML;
 				$app_css .= $GLOBALS['phpgw_info']['flags']['css'] . "\n";
 			}
 
-			$all_css .= "\n<!-- NOTE: This will not be supported in the future -->\n\t\t<style type=\"text/css\">\n\t\t{$app_css}\n\t\t</style>\n";
+			if($app_css)
+			{
+				$all_css .= "\n<!-- NOTE: This will not be supported in the future -->\n\t\t<style>\n\t\t{$app_css}\n\t\t</style>\n";
+			}
 			return $all_css;
 		}
 
@@ -1085,7 +1088,7 @@ HTML;
 				if($cal_script = $GLOBALS['phpgw']->yuical->get_script())
 				{
 					$GLOBALS['phpgw_info']['flags']['java_script'] .= "\n"
-						. '<script type="text/javascript">' ."\n"
+						. '<script>' ."\n"
 						. '//<[CDATA[' ."\n"
 						. $cal_script ."\n"
 						. '//]]' ."\n"

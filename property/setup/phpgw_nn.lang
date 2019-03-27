@@ -2391,3 +2391,5 @@ external communication	property	no	Ekstern kommunikasjon
 cadastre	property	nn	Grunneigedom
 representative	property	nn	Representativ
 has been closed	property	nn	er avslutta
+persistent	property	nn	Permanent
+external id	property	nn	Ekstern ID

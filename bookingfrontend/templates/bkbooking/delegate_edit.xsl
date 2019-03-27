@@ -153,7 +153,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var endpoint = '<xsl:value-of select="module" />';
         <![CDATA[
             $(document).ready(function(){

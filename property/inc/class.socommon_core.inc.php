@@ -69,12 +69,12 @@
 
 		public function __construct()
 		{
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->_db = & $GLOBALS['phpgw']->db;
-			$this->_join = & $this->_db->join;
-			$this->_like = & $this->_db->like;
-			$this->_left_join = & $this->_db->left_join;
-			$this->custom = createObject('property.custom_fields');
+			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->_db			 = & $GLOBALS['phpgw']->db;
+			$this->_join		 = & $this->_db->join;
+			$this->_like		 = & $this->_db->like;
+			$this->_left_join	 = & $this->_db->left_join;
+			$this->custom		 = createObject('property.custom_fields');
 		}
 
 		/**
@@ -118,9 +118,9 @@
 
 			try
 			{
-				$this->_db->Exception_On_Error = true;
+				$this->_db->Exception_On_Error	 = true;
 				$this->_db->query($sql, __LINE__, __FILE__);
-				$this->_db->Exception_On_Error = false;
+				$this->_db->Exception_On_Error	 = false;
 			}
 			catch (Exception $e)
 			{
@@ -173,7 +173,7 @@
 
 				if ($data['extra']['p_num'] && $data['extra']['p_entity_id'] && $data['extra']['p_cat_id'])
 				{
-					$entity = CreateObject('property.soadmin_entity');
+					$entity			 = CreateObject('property.soadmin_entity');
 					$entity_category = $entity->read_single_category($data['extra']['p_entity_id'], $data['extra']['p_cat_id']);
 				}
 			}
@@ -240,11 +240,11 @@
 			{
 				$interlink_data = array
 					(
-					'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $data['origin']),
-					'location1_item_id' => $data['origin_id'],
-					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', $location2),
-					'location2_item_id' => $id,
-					'account_id' => $this->account
+					'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', $data['origin']),
+					'location1_item_id'	 => $data['origin_id'],
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', $location2),
+					'location2_item_id'	 => $id,
+					'account_id'		 => $this->account
 				);
 			}
 			else if (isset($data['extra']) && is_array($data['extra']) && isset($data['extra']['p_num']) && $data['extra']['p_num'])
@@ -253,16 +253,16 @@
 
 				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = ' . (int)$data['extra']['p_entity_id'] . ' AND id = ' . (int)$data['extra']['p_cat_id']);
 				$this->db->next_record();
-				$prefix = $this->db->f('prefix');
-				$data['origin_item_id'] = (int)ltrim($data['extra']['p_num'], $prefix);
+				$prefix					 = $this->db->f('prefix');
+				$data['origin_item_id']	 = (int)ltrim($data['extra']['p_num'], $prefix);
 
 				$interlink_data = array
 					(
-					'location1_id' => $data['origin_id'],
-					'location1_item_id' => $data['origin_item_id'],
-					'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
-					'location2_item_id' => $id,
-					'account_id' => $this->account
+					'location1_id'		 => $data['origin_id'],
+					'location1_item_id'	 => $data['origin_item_id'],
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location2_item_id'	 => $id,
+					'account_id'		 => $this->account
 				);
 			}
 			return $interlink_data;

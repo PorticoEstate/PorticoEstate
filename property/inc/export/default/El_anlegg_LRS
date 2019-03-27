@@ -37,16 +37,16 @@
 
 		//var $fil_katalog='c:/temp'; //On windows use "//computername/share/filename" or "\\\\computername\share\filename" to check files on network shares.
 
-		var $debug = false;
-		protected $connection = false;
-		protected $receipt = array();
-		protected $type = '211';
+		var $debug			 = false;
+		protected $connection	 = false;
+		protected $receipt		 = array();
+		protected $type			 = '211';
 
 		function __construct()
 		{
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
+			$GLOBALS['phpgw_info']['flags']['currentapp']	 = 'property';
+			$this->db										 = & $GLOBALS['phpgw']->db;
+			$this->join										 = & $this->db->join;
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
@@ -58,9 +58,9 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$anlegg = array();
 
-			$TreeID = $this->type;
-			$PeriodFrom = date('Ym');
-			$PeriodTo = 209912;
+			$TreeID		 = $this->type;
+			$PeriodFrom	 = date('Ym');
+			$PeriodTo	 = 209912;
 
 			$memory = xmlwriter_open_memory();
 			xmlwriter_set_indent($memory, true);
@@ -170,8 +170,8 @@
 
 			if (!$Filnavn)
 			{
-				$message = 'LagFilnavn: Filnavn er i bruk';
-				$receipt['error'][] = array('msg' => $message);
+				$message			 = 'LagFilnavn: Filnavn er i bruk';
+				$receipt['error'][]	 = array('msg' => $message);
 				$this->log_end();
 				return;
 			}
@@ -183,8 +183,8 @@
 			}
 			else
 			{
-				$message = 'kan ikke lagre til fil: ' . $Filnavn . '<br>';
-				$receipt['error'][] = array('msg' => $message);
+				$message			 = 'kan ikke lagre til fil: ' . $Filnavn . '<br>';
+				$receipt['error'][]	 = array('msg' => $message);
 				if (!$this->debug)
 				{
 					$this->log_end();
@@ -222,7 +222,7 @@
 
 		protected function LagFilnavn()
 		{
-			$timestamp = date('YmdHi', phpgwapi_datetime::user_localtime());
+			$timestamp	 = date('YmdHi', phpgwapi_datetime::user_localtime());
 			$fil_katalog = $this->config->config_data['export']['path'];
 
 			$Filnavn = $fil_katalog . "/konteringstre_{$this->type}_{$timestamp}.xml";
@@ -240,8 +240,8 @@
 		{
 			if ($download == 'on' && !$this->debug)
 			{
-				$file_written = false;
-				$fp = fopen($Filnavn, "wb");
+				$file_written	 = false;
+				$fp				 = fopen($Filnavn, "wb");
 				fwrite($fp, $xmldata);
 
 				if (fclose($fp))
@@ -300,17 +300,17 @@
 				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
-						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
+						$transfer_ok	 = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
 						break;
 					case 'ssh';
-						$sftp = ssh2_sftp($connection);
-						$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
-						$data_to_send = @file_get_contents($Filnavn);
+						$sftp			 = ssh2_sftp($connection);
+						$stream			 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+						$data_to_send	 = @file_get_contents($Filnavn);
 						fwrite($stream, $data_to_send);
-						$transfer_ok = @fclose($stream);
+						$transfer_ok	 = @fclose($stream);
 						break;
 					default:
-						$transfer_ok = false;
+						$transfer_ok	 = false;
 				}
 
 				if (!$transfer_ok)
@@ -323,10 +323,10 @@
 
 		protected function phpftp_connect()
 		{
-			$server = $this->config->config_data['common']['host'];
-			$user = $this->config->config_data['common']['user'];
-			$password = $this->config->config_data['common']['password'];
-			$port = 22;
+			$server		 = $this->config->config_data['common']['host'];
+			$user		 = $this->config->config_data['common']['user'];
+			$password	 = $this->config->config_data['common']['password'];
+			$port		 = 22;
 
 			switch ($this->config->config_data['common']['method'])
 			{

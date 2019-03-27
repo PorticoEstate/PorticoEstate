@@ -4,25 +4,25 @@
 	{
 
 		protected $db;
-		public $messages = array();
-		public $warnings = array();
-		public $errors = array();
-		public $debug = false;
+		public $messages		 = array();
+		public $warnings		 = array();
+		public $errors			 = array();
+		public $debug			 = false;
 		protected $is_eav;
 		protected $location_id;
-		protected $bim_type_id = 0;
+		protected $bim_type_id	 = 0;
 		protected $table;
 		protected $entity_id;
 		protected $cat_id;
-		protected $metadata = array();
+		protected $metadata		 = array();
 
 		public function __construct( $location_id, $debug = false )
 		{
-			$location_id = (int)$location_id;
+			$location_id	 = (int)$location_id;
 			set_time_limit(10000); //Set the time limit for this request
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = $this->db->join;
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$this->join		 = $this->db->join;
 
 			if ($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
 			{
@@ -34,32 +34,32 @@
 				$this->debug = true;
 			}
 
-			$this->is_eav = !!$category['is_eav'];
-			$this->location_id = $location_id;
+			$this->is_eav		 = !!$category['is_eav'];
+			$this->location_id	 = $location_id;
 
 			$this->entity_id = $category['entity_id'];
-			$this->cat_id = $category['id'];
+			$this->cat_id	 = $category['id'];
 
 
 			if ($this->is_eav)
 			{
-				$this->table = 'fm_bim_item';
-				$sql = "SELECT fm_bim_type.id FROM fm_bim_type WHERE location_id = {$location_id}";
+				$this->table					 = 'fm_bim_item';
+				$sql							 = "SELECT fm_bim_type.id FROM fm_bim_type WHERE location_id = {$location_id}";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				$this->bim_type_id = $this->db->f('id');
-				$custom = createObject('property.custom_fields');
-				$attributes = $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
-				$this->metadata['id'] = array('primary_key' => true);
-				$this->metadata['location_id'] = array('primary_key' => true);
-				$this->metadata['model'] = array();
+				$this->bim_type_id				 = $this->db->f('id');
+				$custom							 = createObject('property.custom_fields');
+				$attributes						 = $custom->find2($location_id, 0, '', 'ASC', 'attrib_sort', true, true);
+				$this->metadata['id']			 = array('primary_key' => true);
+				$this->metadata['location_id']	 = array('primary_key' => true);
+				$this->metadata['model']		 = array();
 				$this->metadata['p_location_id'] = array();
-				$this->metadata['p_id'] = array();
+				$this->metadata['p_id']			 = array();
 				$this->metadata['location_code'] = array();
-				$this->metadata['loc1'] = array();
-				$this->metadata['address'] = array();
-				$this->metadata['entry_date'] = array();
-				$this->metadata['user_id'] = array();
+				$this->metadata['loc1']			 = array();
+				$this->metadata['address']		 = array();
+				$this->metadata['entry_date']	 = array();
+				$this->metadata['user_id']		 = array();
 
 				foreach ($attributes as $attribute)
 				{
@@ -68,8 +68,8 @@
 			}
 			else
 			{
-				$this->table = "fm_entity_{$category['entity_id']}_{$category['id']}";
-				$this->metadata = $this->db->metadata($this->table);
+				$this->table	 = "fm_entity_{$category['entity_id']}_{$category['id']}";
+				$this->metadata	 = $this->db->metadata($this->table);
 			}
 		}
 
@@ -101,9 +101,9 @@
 			static $count_records = 0;
 // -------- produce data_set
 
-			$error = false;
-			$table = $this->table;
-			$fields = $this->fields;
+			$error	 = false;
+			$table	 = $this->table;
+			$fields	 = $this->fields;
 
 			if (!$table)
 			{
@@ -164,13 +164,13 @@
 				}
 			}
 
-			$id = (int)$value_set['id'];
-			$filtermethod = "location_id = {$this->location_id} AND id = {$id}";
+			$id				 = (int)$value_set['id'];
+			$filtermethod	 = "location_id = {$this->location_id} AND id = {$id}";
 
 //---------produce data_set
 
 			$location_id = $this->location_id;
-			$sql = "SELECT fm_bim_item.id FROM fm_bim_item WHERE {$filtermethod}";
+			$sql		 = "SELECT fm_bim_item.id FROM fm_bim_item WHERE {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$type = (int)$this->bim_type_id;
@@ -208,12 +208,12 @@
 				$_value_set = array
 					(
 //					'xml_representation' => $this->db->db_addslashes($xml),
-					'json_representation' => json_encode($value_set),
-					'p_location_id' => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
-					'p_id' => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
-					'location_code' => $value_set['location_code'],
-					'loc1' => $value_set['loc1'],
-					'address' => $value_set['address'],
+					'json_representation'	 => json_encode($value_set),
+					'p_location_id'			 => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
+					'p_id'					 => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
+					'location_code'			 => $value_set['location_code'],
+					'loc1'					 => $value_set['loc1'],
+					'address'				 => $value_set['address'],
 				);
 
 				$_value_set = $this->db->validate_update($_value_set);
@@ -253,20 +253,20 @@
 
 				$values_insert = array
 					(
-					'id' => $id,
-					'type' => $type,
-					'location_id' => $location_id,
-					'guid' => $guid,
+					'id'					 => $id,
+					'type'					 => $type,
+					'location_id'			 => $location_id,
+					'guid'					 => $guid,
 //					'xml_representation' => $this->db->db_addslashes($xml),
-					'json_representation' => json_encode($value_set),
-					'model' => 0,
-					'p_location_id' => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
-					'p_id' => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
-					'location_code' => $value_set['location_code'],
-					'loc1' => $value_set['loc1'],
-					'address' => $value_set['address'],
-					'entry_date' => time(),
-					'user_id' => $this->account
+					'json_representation'	 => json_encode($value_set),
+					'model'					 => 0,
+					'p_location_id'			 => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
+					'p_id'					 => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
+					'location_code'			 => $value_set['location_code'],
+					'loc1'					 => $value_set['loc1'],
+					'address'				 => $value_set['address'],
+					'entry_date'			 => time(),
+					'user_id'				 => $this->account
 				);
 
 				$sql = "INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
@@ -296,9 +296,9 @@
 
 		private function _add_sql( $data )
 		{
-			$error = false;
-			$table = $this->table;
-			$fields = $this->fields;
+			$error	 = false;
+			$table	 = $this->table;
+			$fields	 = $this->fields;
 
 			if (!$table)
 			{
@@ -321,8 +321,8 @@
 						throw new Exception("Fant ikke verdi for feltet 'primary key' {$key}");
 					}
 
-					$primary_key[] = "$key='{$_value}'";
-					$remove_keys[] = $key;
+					$primary_key[]	 = "$key='{$_value}'";
+					$remove_keys[]	 = $key;
 				}
 			}
 			unset($key);
@@ -349,18 +349,18 @@
 					unset($value_set[$remove_key]);
 				}
 
-				$this->warnings[] = "ID finnes fra før: {$filtermethod}, oppdaterer";
-				$value_set = $this->db->validate_update($value_set);
-				$sql = "UPDATE {$table} SET {$value_set} WHERE {$filtermethod}";
-				$action = 'updated';
+				$this->warnings[]	 = "ID finnes fra før: {$filtermethod}, oppdaterer";
+				$value_set			 = $this->db->validate_update($value_set);
+				$sql				 = "UPDATE {$table} SET {$value_set} WHERE {$filtermethod}";
+				$action				 = 'updated';
 			}
 			else
 			{
 				$this->warnings[] = "ID fantes ikke fra før: {$filtermethod}";
 
-				$cols = implode(',', array_keys($value_set));
-				$values = $this->db->validate_insert(array_values($value_set));
-				$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+				$cols	 = implode(',', array_keys($value_set));
+				$values	 = $this->db->validate_insert(array_values($value_set));
+				$sql	 = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
 
 				$action = 'inserted';
 			}

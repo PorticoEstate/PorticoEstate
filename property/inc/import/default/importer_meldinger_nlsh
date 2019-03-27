@@ -2,18 +2,20 @@
 
 	class import_conversion
 	{
+
 		protected $botts
-			,$debug;
+			, $debug;
 		public $messages = array();
 		public $warnings = array();
-		public $errors = array();
-		public $fields = array('location_code','cat_id','priority','title','details','Tildelt_gruppe(id)','Tildelt_person(brukernavn)');
+		public $errors	 = array();
+		public $fields	 = array('location_code', 'cat_id', 'priority', 'title', 'details',
+			'Tildelt_gruppe(id)', 'Tildelt_person(brukernavn)');
 		public $filename_template;
 
-		public function __construct( $location_id, $debug = false)
+		public function __construct( $location_id, $debug = false )
 		{
-			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->botts = CreateObject('property.botts');
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->botts	 = CreateObject('property.botts');
 			if ($debug)
 			{
 				$this->debug = true;
@@ -23,42 +25,42 @@
 
 		public function add( $data )
 		{
-			$location_code  = trim($data[0]);
+			$location_code = trim($data[0]);
 
 			/**
 			 * In case there are empty rows at the end.
 			 */
-			if(empty($location_code))
+			if (empty($location_code))
 			{
 				return true;
 			}
-			$message_cat_id  = (int)$data[1];
-			$priority  = (int)$data[2];
-			$message_title  = phpgw::clean_value($data[3]);
-			$message_details  = phpgw::clean_value($data[4]);
-			$group_id  = (int)$data[5];
-			$assignedto = (int)$GLOBALS['phpgw']->accounts->name2id($data[6]);
+			$message_cat_id	 = (int)$data[1];
+			$priority		 = (int)$data[2];
+			$message_title	 = phpgw::clean_value($data[3]);
+			$message_details = phpgw::clean_value($data[4]);
+			$group_id		 = (int)$data[5];
+			$assignedto		 = (int)$GLOBALS['phpgw']->accounts->name2id($data[6]);
 
 			$ticket = array
-			(
-				'location_code' => $location_code,
-				'cat_id' => $message_cat_id,
-				'priority' => $priority, //valgfri (1-3)
-				'title' => $message_title,
-				'details' => $message_details,
-				'group_id'	=> $group_id,
-				'assignedto' => $assignedto,
-				'cancel_attachment'	=> true
+				(
+				'location_code'		 => $location_code,
+				'cat_id'			 => $message_cat_id,
+				'priority'			 => $priority, //valgfri (1-3)
+				'title'				 => $message_title,
+				'details'			 => $message_details,
+				'group_id'			 => $group_id,
+				'assignedto'		 => $assignedto,
+				'cancel_attachment'	 => true
 			);
 
 			$ticket_id = $this->botts->add_ticket($ticket);
-			if($ticket_id)
+			if ($ticket_id)
 			{
 				$this->messages[] = "Melding '{$message_title}' importert som #{$ticket_id}";
 			}
 			else
 			{
-				$this->errors[]= "Import feilet";
+				$this->errors[] = "Import feilet";
 				_debug_array($ticket);
 			}
 

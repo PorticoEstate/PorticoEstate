@@ -35,16 +35,16 @@
 
 		function __construct()
 		{
-			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->so = CreateObject('property.sodimb_role_user');
-			$this->allrows = $this->bo->allrows;
+			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->so			 = CreateObject('property.sodimb_role_user');
+			$this->allrows		 = $this->bo->allrows;
 		}
 
 		public function read( $data )
 		{
-			static $users = array();
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$values = $this->so->read($data);
+			static $users	 = array();
+			$dateformat		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values			 = $this->so->read($data);
 
 			foreach ($values as &$entry)
 			{
@@ -52,13 +52,13 @@
 				{
 					if (!$entry['user'] = $users[$entry['user_id']])
 					{
-						$entry['user'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
-						$users[$entry['user_id']] = $entry['user'];
+						$entry['user']				 = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+						$users[$entry['user_id']]	 = $entry['user'];
 					}
 				}
 
-				$entry['active_from'] = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_from'], $dateformat) : '';
-				$entry['active_to'] = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_to'], $dateformat) : '';
+				$entry['active_from']	 = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_from'], $dateformat) : '';
+				$entry['active_to']		 = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_to'], $dateformat) : '';
 			}
 
 			return $values;

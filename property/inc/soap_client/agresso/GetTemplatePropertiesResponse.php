@@ -1,37 +1,36 @@
 <?php
 
-class GetTemplatePropertiesResponse
-{
+	class GetTemplatePropertiesResponse
+	{
 
-    /**
-     * @var TemplateProperties $GetTemplatePropertiesResult
-     */
-    protected $GetTemplatePropertiesResult = null;
+		/**
+		 * @var TemplateProperties $GetTemplatePropertiesResult
+		 */
+		protected $GetTemplatePropertiesResult = null;
 
-    /**
-     * @param TemplateProperties $GetTemplatePropertiesResult
-     */
-    public function __construct($GetTemplatePropertiesResult)
-    {
-      $this->GetTemplatePropertiesResult = $GetTemplatePropertiesResult;
-    }
+		/**
+		 * @param TemplateProperties $GetTemplatePropertiesResult
+		 */
+		public function __construct( $GetTemplatePropertiesResult )
+		{
+			$this->GetTemplatePropertiesResult = $GetTemplatePropertiesResult;
+		}
 
-    /**
-     * @return TemplateProperties
-     */
-    public function getGetTemplatePropertiesResult()
-    {
-      return $this->GetTemplatePropertiesResult;
-    }
+		/**
+		 * @return TemplateProperties
+		 */
+		public function getGetTemplatePropertiesResult()
+		{
+			return $this->GetTemplatePropertiesResult;
+		}
 
-    /**
-     * @param TemplateProperties $GetTemplatePropertiesResult
-     * @return GetTemplatePropertiesResponse
-     */
-    public function setGetTemplatePropertiesResult($GetTemplatePropertiesResult)
-    {
-      $this->GetTemplatePropertiesResult = $GetTemplatePropertiesResult;
-      return $this;
-    }
-
-}
+		/**
+		 * @param TemplateProperties $GetTemplatePropertiesResult
+		 * @return GetTemplatePropertiesResponse
+		 */
+		public function setGetTemplatePropertiesResult( $GetTemplatePropertiesResult )
+		{
+			$this->GetTemplatePropertiesResult = $GetTemplatePropertiesResult;
+			return $this;
+		}
+	}

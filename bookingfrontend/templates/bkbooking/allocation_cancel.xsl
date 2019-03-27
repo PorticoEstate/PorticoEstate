@@ -204,7 +204,7 @@
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript">
+	<script>
 		var season_id = '<xsl:value-of select="allocation/season_id" />';
 	</script>
 </xsl:template>

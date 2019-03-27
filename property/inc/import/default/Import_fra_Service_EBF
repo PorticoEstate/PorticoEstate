@@ -34,46 +34,46 @@
 	class import_conv
 	{
 
-		var $currentrecord = array(); //used for buffering to allow uid lines to go first
-		var $id = -1;
-		var $kildeid = 1;
-		var $splitt = 0;
-		var $type = 'csv';
-		var $header_count = 18;
+		var $currentrecord	 = array(); //used for buffering to allow uid lines to go first
+		var $id				 = -1;
+		var $kildeid			 = 1;
+		var $splitt			 = 0;
+		var $type			 = 'csv';
+		var $header_count	 = 18;
 		var $soXport;
 		var $invoice;
-		var $import = array(
+		var $import			 = array(
 			'Bestilling' => 'pmwrkord_code',
-			'Fakt. Nr' => 'fakturanr',
-			'Konto' => 'spbudact_code',
-			'Objekt' => 'dima',
-			'DIM 6' => 'dimd', //utgår fra import - kopieres fra kategori
-			'MVA' => 'mvakode',
-			'Tjeneste' => 'kostra_id',
+			'Fakt. Nr'	 => 'fakturanr',
+			'Konto'		 => 'spbudact_code',
+			'Objekt'	 => 'dima',
+			'DIM 6'		 => 'dimd', //utgår fra import - kopieres fra kategori
+			'MVA'		 => 'mvakode',
+			'Tjeneste'	 => 'kostra_id',
 			'Belop [kr]' => 'belop'
 		);
-		var $header = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA',
+		var $header			 = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA',
 			'Belop [kr]');
 
 		function __construct()
 		{
-			$this->db = clone($GLOBALS['phpgw']->db);
-			$this->soXport = CreateObject('property.soXport');
-			$this->invoice = CreateObject('property.boinvoice');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->dateformat = $GLOBALS['phpgw']->db->date_format();
-			$this->datetimeformat = $GLOBALS['phpgw']->db->datetime_format();
-			$this->next_bilagsnr = $this->invoice->next_bilagsnr();
-			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
-			$this->cats->supress_info = true;
+			$this->db					 = clone($GLOBALS['phpgw']->db);
+			$this->soXport				 = CreateObject('property.soXport');
+			$this->invoice				 = CreateObject('property.boinvoice');
+			$this->bocommon				 = CreateObject('property.bocommon');
+			$this->dateformat			 = $GLOBALS['phpgw']->db->date_format();
+			$this->datetimeformat		 = $GLOBALS['phpgw']->db->datetime_format();
+			$this->next_bilagsnr		 = $this->invoice->next_bilagsnr();
+			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$this->cats->supress_info	 = true;
 		}
 
 		function import( $invoice_common, $download )
 		{
 			$tsvfile = $invoice_common['tsvfile'];
 
-			$conv_type = $invoice_common['conv_type'];
-			$buffer = array();
+			$conv_type	 = $invoice_common['conv_type'];
+			$buffer		 = array();
 
 //-----------
 
@@ -99,7 +99,7 @@
 					if ($name = $this->import[$this->header[$j]])
 					{
 
-						$value = str_replace(array('\n', '\r'), array('<BR>', ''), $value);
+						$value				 = str_replace(array('\n', '\r'), array('<BR>', ''), $value);
 						$this->currentrecord += array($name => $value);
 					}
 					$j++;
@@ -132,9 +132,9 @@
 			{
 				if ($name == 'belop')
 				{
-					$value = str_replace('kr', '', $value);
-					$value = str_replace(' ', '', $value);
-					$value = str_replace(',', '.', $value);
+					$value	 = str_replace('kr', '', $value);
+					$value	 = str_replace(' ', '', $value);
+					$value	 = str_replace(',', '.', $value);
 
 					if ($invoice_common['art'] == 2) // kreditnota
 					{
@@ -150,13 +150,13 @@
 					{
 						if ($this->soXport->check_order((int)$value))
 						{
-							$workorder = execMethod('property.soworkorder.read_single', (int)$value);
-							$workorders[(int)$value]['order'] = $workorder;
-							$workorders[(int)$value]['project_id'] = $this->soXport->get_project((int)$value);//Agresso prosjekt
+							$workorder								 = execMethod('property.soworkorder.read_single', (int)$value);
+							$workorders[(int)$value]['order']		 = $workorder;
+							$workorders[(int)$value]['project_id']	 = $this->soXport->get_project((int)$value);//Agresso prosjekt
 						}
 					}
 					$buffer[$this->id]['project_id'] = $workorders[(int)$value]['project_id'];//Agresso prosjekt
-					$buffer[$this->id]['dimb'] = $workorders[(int)$value]['order']['ecodimb']; // Ansvarssted
+					$buffer[$this->id]['dimb']		 = $workorders[(int)$value]['order']['ecodimb']; // Ansvarssted
 				}
 
 				if ($name == 'spbudact_code')
@@ -166,8 +166,8 @@
 
 				if ($name == 'dima')
 				{
-					$value = $this->check_dima($value);
-					$buffer[$this->id]['loc1'] = $loc1 = substr($value, 0, 4);
+					$value						 = $this->check_dima($value);
+					$buffer[$this->id]['loc1']	 = $loc1						 = substr($value, 0, 4);
 				}
 
 				if ($name == 'mvakode')
@@ -185,18 +185,18 @@
 				$buffer[$this->id][$name] = $value;
 			}
 
-			$buffer[$this->id]['bilagsnr'] = $this->next_bilagsnr;
-			$buffer[$this->id]['splitt'] = $this->splitt;
-			$buffer[$this->id]['kildeid'] = $this->kildeid;
-			$buffer[$this->id]['kidnr'] = $invoice_common['kid_nr'];
-			$buffer[$this->id]['typeid'] = $invoice_common['type'];
-			$buffer[$this->id]['periode'] = $invoice_common['syear'] . sprintf("%02d", $invoice_common['smonth']);
-			$buffer[$this->id]['regtid'] = date($this->datetimeformat);
-			$buffer[$this->id]['artid'] = $invoice_common['art'];
-			$buffer[$this->id]['spvend_code'] = $invoice_common['vendor_id'];
-			$buffer[$this->id]['oppsynsmannid'] = $invoice_common['janitor'];
-			$buffer[$this->id]['saksbehandlerid'] = $invoice_common['supervisor'];
-			$buffer[$this->id]['budsjettansvarligid'] = $invoice_common['budget_responsible'];
+			$buffer[$this->id]['bilagsnr']				 = $this->next_bilagsnr;
+			$buffer[$this->id]['splitt']				 = $this->splitt;
+			$buffer[$this->id]['kildeid']				 = $this->kildeid;
+			$buffer[$this->id]['kidnr']					 = $invoice_common['kid_nr'];
+			$buffer[$this->id]['typeid']				 = $invoice_common['type'];
+			$buffer[$this->id]['periode']				 = $invoice_common['syear'] . sprintf("%02d", $invoice_common['smonth']);
+			$buffer[$this->id]['regtid']				 = date($this->datetimeformat);
+			$buffer[$this->id]['artid']					 = $invoice_common['art'];
+			$buffer[$this->id]['spvend_code']			 = $invoice_common['vendor_id'];
+			$buffer[$this->id]['oppsynsmannid']			 = $invoice_common['janitor'];
+			$buffer[$this->id]['saksbehandlerid']		 = $invoice_common['supervisor'];
+			$buffer[$this->id]['budsjettansvarligid']	 = $invoice_common['budget_responsible'];
 
 
 			$invoice_date = date($this->dateformat, mktime(2, 0, 0, $invoice_common['smonth'], $invoice_common['sday'], $invoice_common['syear']));
@@ -210,8 +210,8 @@
 				$payment_date = date($this->dateformat, mktime(2, 0, 0, $invoice_common['emonth'], $invoice_common['eday'], $invoice_common['eyear']));
 			}
 
-			$buffer[$this->id]['fakturadato'] = $invoice_date;
-			$buffer[$this->id]['forfallsdato'] = $payment_date;
+			$buffer[$this->id]['fakturadato']	 = $invoice_date;
+			$buffer[$this->id]['forfallsdato']	 = $payment_date;
 
 			if ($workorder)
 			{
@@ -221,31 +221,31 @@
 					switch ($_accout_class)
 					{
 						case '41':
-							$buffer[$this->id]['spbudact_code'] = '123013';
+							$buffer[$this->id]['spbudact_code']	 = '123013';
 							break;
 						case '42':
-							$buffer[$this->id]['spbudact_code'] = '123014';
+							$buffer[$this->id]['spbudact_code']	 = '123014';
 							break;
 						case '44':
-							$buffer[$this->id]['spbudact_code'] = '123015';
+							$buffer[$this->id]['spbudact_code']	 = '123015';
 							break;
 						case '45':
-							$buffer[$this->id]['spbudact_code'] = '123016';
+							$buffer[$this->id]['spbudact_code']	 = '123016';
 							break;
 						case '46':
-							$buffer[$this->id]['spbudact_code'] = '123016';
+							$buffer[$this->id]['spbudact_code']	 = '123016';
 							break;
 						case '47':
-							$buffer[$this->id]['spbudact_code'] = '123017';
+							$buffer[$this->id]['spbudact_code']	 = '123017';
 							break;
 						case '48':
-							$buffer[$this->id]['spbudact_code'] = '123018';
+							$buffer[$this->id]['spbudact_code']	 = '123018';
 							break;
 						case '49':
-							$buffer[$this->id]['spbudact_code'] = '123019';
+							$buffer[$this->id]['spbudact_code']	 = '123019';
 							break;
 						default:
-							$buffer[$this->id]['spbudact_code'] = '123014';
+							$buffer[$this->id]['spbudact_code']	 = '123014';
 							break;
 					}
 
@@ -273,31 +273,31 @@
 					switch ($_accout_class)
 					{
 						case '41':
-							$buffer[$this->id]['spbudact_code'] = '123013';
+							$buffer[$this->id]['spbudact_code']	 = '123013';
 							break;
 						case '42':
-							$buffer[$this->id]['spbudact_code'] = '123014';
+							$buffer[$this->id]['spbudact_code']	 = '123014';
 							break;
 						case '44':
-							$buffer[$this->id]['spbudact_code'] = '123015';
+							$buffer[$this->id]['spbudact_code']	 = '123015';
 							break;
 						case '45':
-							$buffer[$this->id]['spbudact_code'] = '123016';
+							$buffer[$this->id]['spbudact_code']	 = '123016';
 							break;
 						case '46':
-							$buffer[$this->id]['spbudact_code'] = '123016';
+							$buffer[$this->id]['spbudact_code']	 = '123016';
 							break;
 						case '47':
-							$buffer[$this->id]['spbudact_code'] = '123017';
+							$buffer[$this->id]['spbudact_code']	 = '123017';
 							break;
 						case '48':
-							$buffer[$this->id]['spbudact_code'] = '123018';
+							$buffer[$this->id]['spbudact_code']	 = '123018';
 							break;
 						case '49':
-							$buffer[$this->id]['spbudact_code'] = '123019';
+							$buffer[$this->id]['spbudact_code']	 = '123019';
 							break;
 						default:
-							$buffer[$this->id]['spbudact_code'] = '123014';
+							$buffer[$this->id]['spbudact_code']	 = '123014';
 							break;
 					}
 
@@ -324,8 +324,8 @@
 
 			if ($invoice_common['auto_tax'])
 			{
-				$buffer[$this->id]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spbudact_code']);
-				$buffer[$this->id]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spvend_code']);
+				$buffer[$this->id]['mvakode']	 = $this->soXport->tax_b_account_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spbudact_code']);
+				$buffer[$this->id]['mvakode']	 = $this->soXport->tax_vendor_override($buffer[$this->id]['mvakode'], $buffer[$this->id]['spvend_code']);
 			}
 
 			$buffer[$this->id]['kostra_id'] = $this->soXport->get_kostra_id($buffer[$this->id]['loc1']);
@@ -374,8 +374,8 @@
 
 		function check_dima( $id )
 		{
-			$loc1 = substr($id, 0, 4);
-			$loc2 = substr($id, 4, 2);
+			$loc1	 = substr($id, 0, 4);
+			$loc2	 = substr($id, 4, 2);
 
 			$this->db->query("select loc1 from fm_location1 where loc1='$loc1' AND ((fm_location1.category <> 99) OR (fm_location1.category IS NULL))");
 			$this->db->next_record();
@@ -403,9 +403,9 @@
 
 		function import_end_file( $buffer, $bilagsnr )
 		{
-			$receipt = array();
-			$num = $this->soXport->add($buffer);
-			$receipt['message'][] = array('msg' => lang('Successfully imported %1 records into your invoice register.', $num) . ' ' . lang('ID') . ': ' . $bilagsnr);
+			$receipt				 = array();
+			$num					 = $this->soXport->add($buffer);
+			$receipt['message'][]	 = array('msg' => lang('Successfully imported %1 records into your invoice register.', $num) . ' ' . lang('ID') . ': ' . $bilagsnr);
 			return $receipt;
 		}
 	}	

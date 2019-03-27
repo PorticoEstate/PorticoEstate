@@ -32,40 +32,40 @@
 
 		function __construct()
 		{
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
+			$this->like			 = & $this->db->like;
 			$this->total_records = 0;
 
-			$this->operators_equal = array(
-				'equal' => '=',
-				'not_equal' => '!=',
-				'less' => '<',
-				'less_equal' => '<=',
-				'greater' => '>',
-				'greater_equal' => '>='
+			$this->operators_equal	 = array(
+				'equal'			 => '=',
+				'not_equal'		 => '!=',
+				'less'			 => '<',
+				'less_equal'	 => '<=',
+				'greater'		 => '>',
+				'greater_equal'	 => '>='
 			);
-			$this->operators_like = array(
-				'like' => 'LIKE',
-				'not_like' => 'NOT LIKE',
-				'ilike' => 'ILIKE',
-				'not_ilike' => 'NOT ILIKE'
+			$this->operators_like	 = array(
+				'like'		 => 'LIKE',
+				'not_like'	 => 'NOT LIKE',
+				'ilike'		 => 'ILIKE',
+				'not_ilike'	 => 'NOT ILIKE'
 			);
-			$this->operators_in = array(
-				'in' => 'IN',
+			$this->operators_in		 = array(
+				'in'	 => 'IN',
 				'not_in' => 'NOT IN'
 			);
-			$this->operators_null = array(
-				'is_null' => 'IS NULL',
-				'is_not_null' => 'IS NOT NULL'
+			$this->operators_null	 = array(
+				'is_null'		 => 'IS NULL',
+				'is_not_null'	 => 'IS NOT NULL'
 			);
-			$this->operators = array_merge($this->operators_equal, $this->operators_like, $this->operators_in, $this->operators_null);
+			$this->operators		 = array_merge($this->operators_equal, $this->operators_like, $this->operators_in, $this->operators_null);
 		}
 
 		function read_single( $id, $values = array() )
 		{
-			$id = (int)$id;
+			$id	 = (int)$id;
 			$sql = "SELECT * FROM fm_view_dataset_report WHERE id = {$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -75,10 +75,10 @@
 			{
 				$values = array
 					(
-					'id' => $this->db->f('id'),
-					'dataset_id' => $this->db->f('dataset_id'),
-					'report_name' => $this->db->f('report_name'),
-					'report_definition' => $this->db->f('report_definition')
+					'id'				 => $this->db->f('id'),
+					'dataset_id'		 => $this->db->f('dataset_id'),
+					'report_name'		 => $this->db->f('report_name'),
+					'report_definition'	 => $this->db->f('report_definition')
 				);
 			}
 
@@ -87,13 +87,13 @@
 
 		public function read( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
-			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
-			$dataset_id = isset($data['dataset_id']) ? $data['dataset_id'] : '';
-			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query		 = isset($data['query']) ? $data['query'] : '';
+			$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order		 = isset($data['order']) ? $data['order'] : '';
+			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
+			$dataset_id	 = isset($data['dataset_id']) ? $data['dataset_id'] : '';
+			$results	 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 
 			if ($order)
 			{
@@ -108,13 +108,13 @@
 
 			if ($dataset_id > 0)
 			{
-				$filtermethod .= " $where a.dataset_id={$dataset_id}";
-				$where = 'AND';
+				$filtermethod	 .= " $where a.dataset_id={$dataset_id}";
+				$where			 = 'AND';
 			}
 
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " $where ( b.dataset_name {$this->like} '%$query%' OR a.report_name {$this->like} '%$query%')";
 			}
 
@@ -122,7 +122,7 @@
 				. " FROM fm_view_dataset_report a {$this->join} fm_view_dataset b ON a.dataset_id = b.id"
 				. " {$filtermethod} {$querymethod}";
 
-			$sql_count = 'SELECT count(fm_view_dataset_report.id) AS cnt FROM fm_view_dataset_report';
+			$sql_count					 = 'SELECT count(fm_view_dataset_report.id) AS cnt FROM fm_view_dataset_report';
 			$this->db->query($sql_count, __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records_reports = $this->db->f('cnt');
@@ -141,9 +141,9 @@
 			{
 				$values[] = array
 					(
-					'id' => $this->db->f('id'),
-					'report_name' => $this->db->f('report_name'),
-					'dataset_name' => $this->db->f('dataset_name')
+					'id'			 => $this->db->f('id'),
+					'report_name'	 => $this->db->f('report_name'),
+					'dataset_name'	 => $this->db->f('dataset_name')
 				);
 			}
 
@@ -184,8 +184,8 @@
 			{
 				$values[] = array
 					(
-					'id' => $this->db->f('id'),
-					'name' => $this->db->f('dataset_name')
+					'id'	 => $this->db->f('id'),
+					'name'	 => $this->db->f('dataset_name')
 				);
 			}
 
@@ -209,8 +209,8 @@
 			{
 				$values[] = array
 					(
-					'name' => $this->db->f('column_name'),
-					'type' => $this->db->f('data_type')
+					'name'	 => $this->db->f('column_name'),
+					'type'	 => $this->db->f('data_type')
 				);
 			}
 
@@ -263,9 +263,9 @@
 			{
 				return false;
 			}
-			$month = $dt->format('m');
-			$day = $dt->format('d');
-			$year = $dt->format('Y');
+			$month	 = $dt->format('m');
+			$day	 = $dt->format('d');
+			$year	 = $dt->format('Y');
 			if (checkdate($month, $day, $year))
 			{
 				return true;
@@ -307,15 +307,15 @@
 
 		private function _build_conditions( $criteria, $id )
 		{
-			$columns = $this->get_view_columns($id);
-			$_columns = array();
+			$columns	 = $this->get_view_columns($id);
+			$_columns	 = array();
 			foreach ($columns as $column)
 			{
 				$_columns[$column['name']] = $column['type'];
 			}
 
-			$n = 1;
-			$where = array();
+			$n		 = 1;
+			$where	 = array();
 			foreach ($criteria as $param)
 			{
 				switch (true)
@@ -335,9 +335,9 @@
 					case (array_key_exists($param['operator'], $this->operators_in)):
 						if ($param['value1'] != '')
 						{
-							$values = array_map('trim', explode(',', $param['value1']));
+							$values	 = array_map('trim', explode(',', $param['value1']));
 							$_string = "'" . implode("','", $values) . "'";
-							$result = $param['field'] . "::text " . $this->operators[$param['operator']] . " (" . $_string . ")";
+							$result	 = $param['field'] . "::text " . $this->operators[$param['operator']] . " (" . $_string . ")";
 						}
 						break;
 				}
@@ -359,22 +359,22 @@
 
 			if (count($data))
 			{
-				$dataset = $this->read_single_dataset($id);
-				$jsonB = $data;
-				$dataset_id = $id;
+				$dataset	 = $this->read_single_dataset($id);
+				$jsonB		 = $data;
+				$dataset_id	 = $id;
 			}
 			else
 			{
-				$definition = $this->read_single($id);
-				$dataset = $this->read_single_dataset($definition['dataset_id']);
-				$jsonB = json_decode($definition['report_definition'], true);
-				$dataset_id = (int)$definition['dataset_id'];
+				$definition	 = $this->read_single($id);
+				$dataset	 = $this->read_single_dataset($definition['dataset_id']);
+				$jsonB		 = json_decode($definition['report_definition'], true);
+				$dataset_id	 = (int)$definition['dataset_id'];
 			}
 
 			$string_columns = implode(',', $jsonB['columns']);
 
 			$array_order = array();
-			$group = implode(',', $jsonB['group']);
+			$group		 = implode(',', $jsonB['group']);
 			if ($group)
 			{
 				$array_order[] = $group . ' ASC';
@@ -408,12 +408,12 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			$columns = array_values($jsonB['columns']);
+			$columns	 = array_values($jsonB['columns']);
 			array_unshift($columns, "");
-			$functions = $jsonB['cbo_aggregate'];
+			$functions	 = $jsonB['cbo_aggregate'];
 
-			$values = array();
-			$array_sum = array();
+			$values		 = array();
+			$array_sum	 = array();
 			$array_count = array();
 
 			while ($this->db->next_record())
@@ -423,7 +423,7 @@
 				$value = array();
 				foreach ($columns as $column)
 				{
-					$value[$column] = $this->db->f($column,true);
+					$value[$column] = $this->db->f($column, true);
 				}
 
 				foreach ($functions as $k => $v)
@@ -451,18 +451,18 @@
 
 		private function _generate_total_sum( $values, $array_sum, $array_count )
 		{
-			$result = array();
-			$array_operations = array();
+			$result				 = array();
+			$array_operations	 = array();
 
 			foreach ($values as $k => $group)
 			{
 				$columns = array_keys($group[0]);
 
-				$operations = array();
-				$empty = array();
+				$operations	 = array();
+				$empty		 = array();
 				foreach ($columns as $columm)
 				{
-					$empty[$columm] = $operations[$columm] = '';
+					$empty[$columm]		 = $operations[$columm] = '';
 
 					if (is_array($array_sum[$k][$columm]))
 					{
@@ -489,7 +489,7 @@
 			}
 
 			$grand_total = array();
-			$columns = array_keys($array_operations[0]);
+			$columns	 = array_keys($array_operations[0]);
 			foreach ($array_operations as $value)
 			{
 				foreach ($columns as $columm)
@@ -512,7 +512,7 @@
 
 		function read_single_dataset( $id, $values = array() )
 		{
-			$id = (int)$id;
+			$id	 = (int)$id;
 			$sql = "SELECT * FROM fm_view_dataset WHERE id = {$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -522,9 +522,9 @@
 			{
 				$values = array
 					(
-					'id' => $this->db->f('id'),
-					'view_name' => $this->db->f('view_name',true),
-					'dataset_name' => $this->db->f('dataset_name',true)
+					'id'			 => $this->db->f('id'),
+					'view_name'		 => $this->db->f('view_name', true),
+					'dataset_name'	 => $this->db->f('dataset_name', true)
 				);
 			}
 
@@ -533,10 +533,10 @@
 
 		function read_dataset( $data )
 		{
-			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query = isset($data['query']) ? $data['query'] : '';
-			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : '';
+			$start	 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query	 = isset($data['query']) ? $data['query'] : '';
+			$sort	 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order	 = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 
@@ -559,7 +559,7 @@
 
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query		 = $this->db->db_addslashes($query);
 				$querymethod = " $where ( a.dataset_name {$this->like} '%$query%')";
 			}
 
@@ -568,7 +568,7 @@
 						GROUP BY a.id, a.view_name, a.dataset_name"
 				. " {$querymethod}";
 
-			$sql_count = 'SELECT count(fm_view_dataset.id) AS cnt FROM fm_view_dataset';
+			$sql_count					 = 'SELECT count(fm_view_dataset.id) AS cnt FROM fm_view_dataset';
 			$this->db->query($sql_count, __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records_dataset = $this->db->f('cnt');
@@ -587,10 +587,10 @@
 			{
 				$values[] = array
 					(
-					'id' => $this->db->f('id'),
-					'view_name' => $this->db->f('view_name',true),
-					'dataset_name' => $this->db->f('dataset_name',true),
-					'n_reports' => $this->db->f('n_reports')
+					'id'			 => $this->db->f('id'),
+					'view_name'		 => $this->db->f('view_name', true),
+					'dataset_name'	 => $this->db->f('dataset_name', true),
+					'n_reports'		 => $this->db->f('n_reports')
 				);
 			}
 
@@ -599,14 +599,14 @@
 
 		function add( $data )
 		{
-			$receipt = array();
-			$values_insert = array
+			$receipt		 = array();
+			$values_insert	 = array
 				(
-				'dataset_id' => $data['dataset_id'],
-				'report_name' => $this->db->db_addslashes($data['report_name']),
-				'report_definition' => json_encode($data['report_definition']),
-				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => time()
+				'dataset_id'		 => $data['dataset_id'],
+				'report_name'		 => $this->db->db_addslashes($data['report_name']),
+				'report_definition'	 => json_encode($data['report_definition']),
+				'owner_id'			 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date'		 => time()
 			);
 
 			$this->db->transaction_begin();
@@ -616,8 +616,8 @@
 
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('dataset has been saved'));
-				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset_report', 'id');
+				$receipt['message'][]	 = array('msg' => lang('dataset has been saved'));
+				$receipt['id']			 = $this->db->get_last_insert_id('fm_view_dataset_report', 'id');
 			}
 			else
 			{
@@ -633,11 +633,11 @@
 
 			$value_set = array
 				(
-				'dataset_id' => $data['dataset_id'],
-				'report_name' => $this->db->db_addslashes($data['report_name']),
-				'report_definition' => json_encode($data['report_definition']),
-				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => time()
+				'dataset_id'		 => $data['dataset_id'],
+				'report_name'		 => $this->db->db_addslashes($data['report_name']),
+				'report_definition'	 => json_encode($data['report_definition']),
+				'owner_id'			 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date'		 => time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -661,7 +661,7 @@
 
 		function delete( $id )
 		{
-			$id = (int)$id;
+			$id		 = (int)$id;
 			$receipt = array();
 
 			$this->db->transaction_begin();
@@ -683,13 +683,13 @@
 
 		function add_dataset( $data )
 		{
-			$receipt = array();
-			$values_insert = array
+			$receipt		 = array();
+			$values_insert	 = array
 				(
-				'view_name' => $this->db->db_addslashes($data['view_name']),
-				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
-				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => time()
+				'view_name'		 => $this->db->db_addslashes($data['view_name']),
+				'dataset_name'	 => $this->db->db_addslashes($data['dataset_name']),
+				'owner_id'		 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date'	 => time()
 			);
 
 			$this->db->transaction_begin();
@@ -699,8 +699,8 @@
 
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('dataset has been saved'));
-				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset', 'id');
+				$receipt['message'][]	 = array('msg' => lang('dataset has been saved'));
+				$receipt['id']			 = $this->db->get_last_insert_id('fm_view_dataset', 'id');
 			}
 			else
 			{
@@ -716,10 +716,10 @@
 
 			$value_set = array
 				(
-				'view_name' => $this->db->db_addslashes($data['view_name']),
-				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
-				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => time()
+				'view_name'		 => $this->db->db_addslashes($data['view_name']),
+				'dataset_name'	 => $this->db->db_addslashes($data['dataset_name']),
+				'owner_id'		 => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date'	 => time()
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -743,7 +743,7 @@
 
 		function delete_dataset( $id )
 		{
-			$id = (int)$id;
+			$id		 = (int)$id;
 			$receipt = array();
 
 			$this->db->transaction_begin();

@@ -34,6 +34,7 @@
 
 	class Import_fra_agresso_X205_BK_vedlegg extends property_cron_parent
 	{
+
 		protected $debug = false;
 
 		function __construct()
@@ -41,8 +42,8 @@
 			parent::__construct();
 
 			$this->function_name = get_class($this);
-			$this->sub_location = lang('invoice');
-			$this->function_msg = 'Importer tillegsvedlegg til faktura fra Agresso';
+			$this->sub_location	 = lang('invoice');
+			$this->function_msg	 = 'Importer tillegsvedlegg til faktura fra Agresso';
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
@@ -50,8 +51,8 @@
 		public function execute()
 		{
 			$this->get_files();
-			$dirname = $this->config->config_data['import']['local_path'];
-			$re_check = $this->config->config_data['import']['re_check'];
+			$dirname	 = $this->config->config_data['import']['local_path'];
+			$re_check	 = $this->config->config_data['import']['re_check'];
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
@@ -59,7 +60,7 @@
 			}
 
 			$file_list = array();
-			if($re_check)
+			if ($re_check)
 			{
 				$dir = new DirectoryIterator("{$dirname}/arkiv");
 			}
@@ -76,9 +77,9 @@
 						continue;
 					}
 
-					if(preg_match('/^Portico/i', (string)$file ))
+					if (preg_match('/^Portico/i', (string)$file))
 					{
-						if($re_check)
+						if ($re_check)
 						{
 							$file_list[] = (string)"{$dirname}/arkiv/{$file}";
 						}
@@ -100,7 +101,7 @@
 						_debug_array("Behandler fil: {$file}");
 					}
 
-					if($re_check)
+					if ($re_check)
 					{
 						$this->receipt['message'][] = array('msg' => "Pakket ut vedlegg på nytt for {$bilagsnr}");
 					}
@@ -109,9 +110,9 @@
 						if ($bilagsnr)
 						{
 							// move file
-							$_file = basename($file);
-							$movefrom = "{$dirname}/{$_file}";
-							$moveto = "{$dirname}/arkiv/{$_file}";
+							$_file		 = basename($file);
+							$movefrom	 = "{$dirname}/{$_file}";
+							$moveto		 = "{$dirname}/arkiv/{$_file}";
 
 							if (is_file($moveto))
 							{
@@ -135,22 +136,21 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/arkiv/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
-
 		}
 
 		protected function get_files()
 		{
 			$method = $this->config->config_data['common']['method'];
-			if($method == 'local')
+			if ($method == 'local')
 			{
 				return;
 			}
 
-			$server = $this->config->config_data['common']['host'];
-			$user = $this->config->config_data['common']['user'];
-			$password = $this->config->config_data['common']['password'];
-			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir'], '/');
-			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
+			$server				 = $this->config->config_data['common']['host'];
+			$user				 = $this->config->config_data['common']['user'];
+			$password			 = $this->config->config_data['common']['password'];
+			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir'], '/');
+			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
 
 
 			try
@@ -196,14 +196,14 @@
 						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
 					}
 
-					if(preg_match('/^Portico/i', (string)$file_name ))
+					if (preg_match('/^Portico/i', (string)$file_name))
 					{
 						$file_remote = $file_name;
-						$file_local = "{$directory_local}/{$file_name}";
+						$file_local	 = "{$directory_local}/{$file_name}";
 
 						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
 						{
-							ftp_delete( $connection , "arkiv/{$file_remote}");
+							ftp_delete($connection, "arkiv/{$file_remote}");
 							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
 							{
 								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
@@ -230,17 +230,17 @@
 		protected function get_files_old()
 		{
 			$method = $this->config->config_data['common']['method'];
-			if($method == 'local')
+			if ($method == 'local')
 			{
 				return;
 			}
 
-			$server = $this->config->config_data['common']['host'];
-			$user = $this->config->config_data['common']['user'];
-			$password = $this->config->config_data['common']['password'];
-			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir'], '/');
-			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
-			$port = 22;
+			$server				 = $this->config->config_data['common']['host'];
+			$user				 = $this->config->config_data['common']['user'];
+			$password			 = $this->config->config_data['common']['password'];
+			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir'], '/');
+			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
+			$port				 = 22;
 
 			if (!function_exists("ssh2_connect"))
 			{
@@ -266,11 +266,11 @@
 					$sftp = @ssh2_sftp($connection);
 
 					// Scan directory
-					$files = array();
+					$files	 = array();
 					echo "Scanning {$directory_remote}<br/>";
-					$dir = "ssh2.sftp://$sftp$directory_remote";
-					$handle = opendir($dir);
-					while (false !== ($file = readdir($handle)))
+					$dir	 = "ssh2.sftp://$sftp$directory_remote";
+					$handle	 = opendir($dir);
+					while (false !== ($file	 = readdir($handle)))
 					{
 						if (is_dir($file))
 						{
@@ -300,14 +300,14 @@
 					{
 						foreach ($files as $file_name)
 						{
-							if(preg_match('/^Portico/i', (string)$file_name ))
+							if (preg_match('/^Portico/i', (string)$file_name))
 							{
-						//		_debug_array($file_name);
+								//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";
-								$file_local = "{$directory_local}/{$file_name}";
+								$file_local	 = "{$directory_local}/{$file_name}";
 
-								$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
-								$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
+								$stream		 = fopen("ssh2.sftp://$sftp$file_remote", 'r');
+								$contents	 = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
 								fclose($stream);
 
 								$fp = fopen($file_local, "wb");
@@ -340,15 +340,15 @@
 			}
 		}
 
-		protected function check_storage_dir($files_path)
+		protected function check_storage_dir( $files_path )
 		{
-			if (is_dir($files_path) && is_writable($files_path) && is_readable($files_path)	)
+			if (is_dir($files_path) && is_writable($files_path) && is_readable($files_path))
 			{
 				return true;
 			}
 		}
 
-		protected function create_storage_dir($files_path)
+		protected function create_storage_dir( $files_path )
 		{
 			$dirMode = 0777;
 			if (!mkdir($files_path, $dirMode, true))
@@ -365,31 +365,31 @@
 		{
 			$bilagsnr = false;
 
-			$xml = new SimpleXMLElement(file_get_contents( $file ));
+			$xml = new SimpleXMLElement(file_get_contents($file));
 
 			$_data = array(
-				'KEY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/KEY'),
-				'ATTACHMENT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/ATTACHMENT'),
-				'AMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/AMOUNT'),
-				'CLIENT.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CLIENT.CODE'),
-				'CURRENCY.CURRENCYID' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CURRENCY.CURRENCYID'),
-				'EXCHANGERATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/EXCHANGERATE'),
-				'INVOICEDATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/INVOICEDATE'),
-				'LOCALAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALAMOUNT'),
-				'LOCALVATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALVATAMOUNT'),
-				'MATURITY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/MATURITY'),
-				'PAYAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PAYAMOUNT'),
-				'POSTATUSUPDATED' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/POSTATUSUPDATED'),
-				'PURCHASEORDERNO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PURCHASEORDERNO'),
-				'SUPPLIERBANKGIRO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERBANKGIRO'),
-				'SUPPLIER.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIER.CODE'),
-				'SUPPLIERREF' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERREF'),
-				'VATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/VATAMOUNT')
+				'KEY'					 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/KEY'),
+				'ATTACHMENT'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/ATTACHMENT'),
+				'AMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/AMOUNT'),
+				'CLIENT.CODE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CLIENT.CODE'),
+				'CURRENCY.CURRENCYID'	 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CURRENCY.CURRENCYID'),
+				'EXCHANGERATE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/EXCHANGERATE'),
+				'INVOICEDATE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/INVOICEDATE'),
+				'LOCALAMOUNT'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALAMOUNT'),
+				'LOCALVATAMOUNT'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALVATAMOUNT'),
+				'MATURITY'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/MATURITY'),
+				'PAYAMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PAYAMOUNT'),
+				'POSTATUSUPDATED'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/POSTATUSUPDATED'),
+				'PURCHASEORDERNO'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PURCHASEORDERNO'),
+				'SUPPLIERBANKGIRO'		 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERBANKGIRO'),
+				'SUPPLIER.CODE'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIER.CODE'),
+				'SUPPLIERREF'			 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERREF'),
+				'VATAMOUNT'				 => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/VATAMOUNT')
 			);
 
 			foreach ($_data as $key => & $__data)
 			{
-				$__data = (string) $__data[0];
+				$__data = (string)$__data[0];
 			}
 
 			set_time_limit(300);
@@ -397,13 +397,13 @@
 			if (!empty($_data['KEY']))
 			{
 
-				if(!empty($_data['ATTACHMENT']))
+				if (!empty($_data['ATTACHMENT']))
 				{
-					$attachment = base64_decode($_data['ATTACHMENT']);
+					$attachment				 = base64_decode($_data['ATTACHMENT']);
 //	_debug_array($_data);
-					$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
-					$directory_attachment = "{$directory_local}/attachment/{$_data['KEY']}";
-					if(!$this->check_storage_dir($directory_attachment))
+					$directory_local		 = rtrim($this->config->config_data['import']['local_path'], '/');
+					$directory_attachment	 = "{$directory_local}/attachment/{$_data['KEY']}";
+					if (!$this->check_storage_dir($directory_attachment))
 					{
 						$this->create_storage_dir($directory_attachment);
 					}
@@ -411,39 +411,38 @@
 					$tmpfname = tempnam('', 'attachment');
 //	_debug_array($tmpfname);
 
-					$handle = fopen($tmpfname, "w");
+					$handle	 = fopen($tmpfname, "w");
 					fwrite($handle, $attachment);
 					fclose($handle);
-					$zip = new ZipArchive;
+					$zip	 = new ZipArchive;
 					if ($zip->open($tmpfname) === true)
 					{
-						for($j = 0; $j < $zip->numFiles; $j++)
+						for ($j = 0; $j < $zip->numFiles; $j++)
 						{
-							$filename = $zip->getNameIndex($j);
-							$path_parts = explode('.', $filename);
-							$new_filename = $filename;
-							if(count($path_parts) == 2)
+							$filename		 = $zip->getNameIndex($j);
+							$path_parts		 = explode('.', $filename);
+							$new_filename	 = $filename;
+							if (count($path_parts) == 2)
 							{
-								$suffix_parts = explode(' ', $path_parts[1]);
-								$suffix = $suffix_parts[0];
-								$new_filename = "{$path_parts[0]}.{$suffix}";
-
+								$suffix_parts	 = explode(' ', $path_parts[1]);
+								$suffix			 = $suffix_parts[0];
+								$new_filename	 = "{$path_parts[0]}.{$suffix}";
 							}
-							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$new_filename}");
+							copy("zip://" . $tmpfname . "#" . $filename, "{$directory_attachment}/{$new_filename}");
 						}
 						$zip->close();
 					}
 					unlink($tmpfname);
 				}
 
-				$update_voucher = false;
-				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
+				$update_voucher	 = false;
+				$sql			 = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$update_voucher = true;
-					$bilagsnr = $this->db->f('bilagsnr');
-					$this->receipt['message'][] = array('msg' => "Oppdatert med nye filer, key: {$_data['KEY']}, bestilling: {$_data['PURCHASEORDERNO']}");
+					$update_voucher				 = true;
+					$bilagsnr					 = $this->db->f('bilagsnr');
+					$this->receipt['message'][]	 = array('msg' => "Oppdatert med nye filer, key: {$_data['KEY']}, bestilling: {$_data['PURCHASEORDERNO']}");
 				}
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";

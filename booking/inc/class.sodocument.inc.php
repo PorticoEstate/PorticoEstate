@@ -56,6 +56,20 @@
 					)
 				);
 			}
+			else if($this->get_owner_type() == 'application' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$fields['secret'] = array(
+					'type' => 'string',
+					'query' => true,
+					'join' => array(
+						'table' => sprintf('bb_%s', $this->get_owner_type()),
+						'fkey' => 'owner_id',
+						'key' => 'id',
+						'column' => 'secret'
+					)
+				);
+			}
+
 			parent::__construct(sprintf('bb_document_%s', $this->get_owner_type()), $fields);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -157,6 +171,11 @@
 			{
 				$errors['category'] = lang('Invalid category');
 			}
+
+			if (!preg_match('/(jpg|png|gif|xls|xlsx|doc|docx|txt|pdf|odt|ods)$/i', $this->newFile->getOriginalName()))
+			{
+				$errors['name'] = lang('Not a valid filetype');
+			}
 		}
 
 		function add( $document )
@@ -178,6 +197,13 @@
 			// automatically resize pictures that are too big
 			if (preg_match('/(jpg|jpeg|gif|bmp|png)$/i', $this->newFile->getOriginalName()))
 			{
+				$imagetype = exif_imagetype($filePath);
+
+				if(!in_array($imagetype, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP)))
+				{
+					throw new LogicException('File is not a valid image');
+				}
+
 				$config = CreateObject('phpgwapi.config', 'booking');
 				$config->read();
 				$image_maxwidth = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;

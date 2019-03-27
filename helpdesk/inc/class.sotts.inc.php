@@ -110,6 +110,7 @@
 			$start			= isset($data['start']) && $data['start'] ? $data['start']:0;
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
 			$user_id		= isset($data['user_id']) && $data['user_id'] ? $data['user_id']: 0;
+			$group_id		= !empty($data['group_id']) ? (int)$data['group_id'] : 0;
 			$reported_by	= isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
 			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
 			$query			= isset($data['query'])?$data['query']:'';
@@ -358,6 +359,12 @@
 
 			}
 
+			if($group_id)
+			{
+				$filtermethod .= " $where phpgw_helpdesk_tickets.group_id=" . (int)$group_id;
+				$where = 'AND';
+			}
+
 			if ($reported_by > 0)
 			{
 				$filtermethod .= " $where phpgw_helpdesk_tickets.user_id=" . (int)$reported_by;
@@ -384,8 +391,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where ( phpgw_helpdesk_tickets.id = " . (int) $query;
-
-				$query = $this->db->db_addslashes($query);
+				$querymethod .= " OR external_origin_email $this->like '%$query%'";
 				$querymethod .= " OR subject $this->like '%$query%')";
 			}
 
@@ -430,25 +436,26 @@
 				{
 					$tickets[]= array
 					(
-						'id'				=> (int) $this->db2->f('id'),
-						'subject'			=> $this->db2->f('subject',true),
-						'user_id'			=> $this->db2->f('user_id'),
-						'assignedto'		=> $this->db2->f('assignedto'),
-						'status'			=> $this->db2->f('status'),
-						'priority'			=> $this->db2->f('priority'),
-						'cat_id'			=> $this->db2->f('cat_id'),
-						'group_id'			=> $this->db2->f('group_id'),
-						'entry_date'		=> $this->db2->f('entry_date'),
-						'modified_date'		=> $this->db2->f('modified_date'),
-						'finnish_date'		=> $this->db2->f('finnish_date'),
-						'finnish_date2'		=> $this->db2->f('finnish_date2'),
-						'order_id'			=> $this->db2->f('order_id'),
-						'vendor_id'			=> $this->db2->f('vendor_id'),
-						'actual_cost'		=> $this->db2->f('actual_cost'),
-						'estimate'			=> $this->db2->f('budget'),
-						'new_ticket'		=> $this->db2->f('view') ? false : true,
-						'billable_hours'	=> $this->db2->f('billable_hours'),
-						'details' =>		$this->db2->f('details', true),
+						'id'					=> (int) $this->db2->f('id'),
+						'subject'				=> $this->db2->f('subject',true),
+						'user_id'				=> $this->db2->f('user_id'),
+						'assignedto'			=> $this->db2->f('assignedto'),
+						'status'				=> $this->db2->f('status'),
+						'priority'				=> $this->db2->f('priority'),
+						'cat_id'				=> $this->db2->f('cat_id'),
+						'group_id'				=> $this->db2->f('group_id'),
+						'entry_date'			=> $this->db2->f('entry_date'),
+						'modified_date'			=> $this->db2->f('modified_date'),
+						'finnish_date'			=> $this->db2->f('finnish_date'),
+						'finnish_date2'			=> $this->db2->f('finnish_date2'),
+						'order_id'				=> $this->db2->f('order_id'),
+						'vendor_id'				=> $this->db2->f('vendor_id'),
+						'actual_cost'			=> $this->db2->f('actual_cost'),
+						'estimate'				=> $this->db2->f('budget'),
+						'new_ticket'			=> $this->db2->f('view') ? false : true,
+						'billable_hours'		=> $this->db2->f('billable_hours'),
+						'details'				=> $this->db2->f('details', true),
+						'external_origin_email'	=> $this->db2->f('external_origin_email', true),
 
 					);
 					foreach ($custom_cols as $custom_col)
@@ -634,7 +641,9 @@
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
-				$ticket['modified_date'] = $this->db->f('modified_date');
+				$ticket['modified_date']	= $this->db->f('modified_date');
+				$ticket['external_ticket_id'] = $this->db->f('external_ticket_id');
+				$ticket['external_origin_email'] =  $this->db->f('external_origin_email', true);
 
 				if($ticket['reverse_id'])
 				{
@@ -713,7 +722,8 @@
 			$value_set['finnish_date'] = $ticket['finnish_date'];
 			$value_set['contact_id'] = $ticket['contact_id'];
 			$value_set['publish_note'] = 1;
-
+			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? (int)$ticket['external_ticket_id'] : null;
+			$value_set['external_origin_email'] = $this->db->db_addslashes($ticket['external_origin_email']);
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
@@ -846,7 +856,7 @@
 				$this->historylog->add('A', $id, $this->account, $oldassigned);
 
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : '0';
+				$new_status = !empty($config['take_over_status']) ? $config['take_over_status'] : 'O';
 				if ($old_status != $new_status)
 				{
 					$this->historylog->add('C1', $id, $new_status, $old_status);
@@ -1069,7 +1079,7 @@
 				if ($old_status == 'X' || $old_closed)
 				{
 					$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-					$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+					$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 					$this->fields_updated[] = 'status';
 					$this->historylog->add('R', $id, $new_status, $old_status);
 					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
@@ -1373,7 +1383,7 @@
 			if($status == 'X' || $this->db->f('closed'))
 			{
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 				$this->fields_updated[] = 'status';
 				$this->historylog->add('R', $id, $new_status, $old_status);
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
@@ -1384,4 +1394,31 @@
 
 			return $this->db->transaction_commit();
 		}
+
+		public function get_assigned_groups2( $selected = 0)
+		{
+
+			$values = array();
+			$sql = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM phpgw_helpdesk_tickets"
+				. " $this->join phpgw_accounts ON phpgw_helpdesk_tickets.group_id = phpgw_accounts.account_id"
+				. " {$filtermethod}"
+				. " ORDER BY account_lastname ASC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$id = $this->db->f('id');
+				$values[] = array
+				(
+					'id' => $id,
+					'name' => $this->db->f('account_firstname', true),
+					'selected' => $id = $selected ? 1 : 0
+				);
+			}
+
+			return $values;
+
+		}
+
 	}

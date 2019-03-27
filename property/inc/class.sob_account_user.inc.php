@@ -34,10 +34,10 @@
 
 		function __construct()
 		{
-			$this->account_id = (int)$GLOBALS['phpgw_info']['user']['account_id'];
-			$this->db = & $GLOBALS['phpgw']->db;
-			$this->join = & $this->db->join;
-			$this->left_join = & $this->db->left_join;
+			$this->account_id	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
 		}
 
 		function read( $data )
@@ -52,17 +52,17 @@
 				$check_user_id = $this->account_id;
 			}
 
-			$filtermethod = ' WHERE active = 1';
-			$where = 'AND';
+			$filtermethod	 = ' WHERE active = 1';
+			$where			 = 'AND';
 			if ($check_user_id)
 			{
-				$filtermethod .= "{$where} ( fm_b_account_user.user_id = {$check_user_id} OR fm_b_account_user.user_id IS NULL )";
-				$where = 'AND';
+				$filtermethod	 .= "{$where} ( fm_b_account_user.user_id = {$check_user_id} OR fm_b_account_user.user_id IS NULL )";
+				$where			 = 'AND';
 			}
 			if ($b_account_id)
 			{
-				$filtermethod .= "{$where} fm_b_account.id = '{$b_account_id}'";
-				$where = 'AND';
+				$filtermethod	 .= "{$where} fm_b_account.id = '{$b_account_id}'";
+				$where			 = 'AND';
 			}
 
 			$sql = "SELECT fm_b_account.id AS b_account_id, descr, fm_b_account_user.user_id"
@@ -80,11 +80,11 @@
 				$user_id = $this->db->f('user_id');
 
 				$values[] = array
-				(
-					'b_account_id' => $this->db->f('b_account_id'),
-					'descr' => $this->db->f('descr', true),
-					'user_id' => $check_user_id,
-					'active' => !!$user_id,
+					(
+					'b_account_id'	 => $this->db->f('b_account_id'),
+					'descr'			 => $this->db->f('descr', true),
+					'user_id'		 => $check_user_id,
+					'active'		 => !!$user_id,
 				);
 			}
 
@@ -109,9 +109,9 @@
 				$user_id = $this->db->f('user_id');
 
 				$values[] = array
-				(
-					'id' => $this->db->f('b_account_id'),
-					'name' => $this->db->f('descr', true),
+					(
+					'id'	 => $this->db->f('b_account_id'),
+					'name'	 => $this->db->f('descr', true),
 				);
 			}
 
@@ -120,20 +120,20 @@
 
 		public function edit( $data )
 		{
-			$delete = isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
-			$add = isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
+			$delete	 = isset($data['delete']) && is_array($data['delete']) ? $data['delete'] : array();
+			$add	 = isset($data['add']) && is_array($data['add']) ? $data['add'] : array();
 
 			$this->db->transaction_begin();
 
 			foreach ($add as $info)
 			{
-				$user_arr = explode('_', $info);
-				$value_set = array
+				$user_arr	 = explode('_', $info);
+				$value_set	 = array
 					(
-					'b_account_id' => $user_arr[0],
-					'user_id' => $user_arr[1],
-					'modified_on' => time(),
-					'modified_by' => $this->account_id
+					'b_account_id'	 => $user_arr[0],
+					'user_id'		 => $user_arr[1],
+					'modified_on'	 => time(),
+					'modified_by'	 => $this->account_id
 				);
 
 				$sql = 'INSERT INTO fm_b_account_user (' . implode(',', array_keys($value_set)) . ') VALUES (' . $this->db->validate_insert(array_values($value_set)) . ')';
@@ -144,9 +144,9 @@
 
 			foreach ($delete as $info)
 			{
-				$user_arr = explode('_', $info);
-				$b_account_id = $user_arr[0];
-				$user_id = (int)$user_arr[1];
+				$user_arr		 = explode('_', $info);
+				$b_account_id	 = $user_arr[0];
+				$user_id		 = (int)$user_arr[1];
 
 				$sql = "DELETE FROM fm_b_account_user WHERE b_account_id = '{$b_account_id}' AND user_id = {$user_id}";
 				$this->db->query($sql, __LINE__, __FILE__);

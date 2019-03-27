@@ -46,25 +46,25 @@
 		var $revision;
 		var $allrows;
 		var $details;
-		var $sum_budget_cost = 0;
-		var $sum_obligation_cost = 0;
-		var $sum_actual_cost = 0;
-		var $sum_actual_cost_period = 0;
-		var $sum_hits = 0;
-		var $total_records = 0;
-		var $public_functions = array
+		var $sum_budget_cost			 = 0;
+		var $sum_obligation_cost		 = 0;
+		var $sum_actual_cost			 = 0;
+		var $sum_actual_cost_period	 = 0;
+		var $sum_hits				 = 0;
+		var $total_records			 = 0;
+		var $public_functions		 = array
 			(
-			'read' => true,
-			'read_single' => true,
-			'save' => true,
-			'delete' => true,
+			'read'			 => true,
+			'read_single'	 => true,
+			'save'			 => true,
+			'delete'		 => true,
 		);
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.sobudget');
-			$this->bocommon = CreateObject('property.bocommon');
-			$this->cats = & $this->so->cats;
+			$this->so		 = CreateObject('property.sobudget');
+			$this->bocommon	 = CreateObject('property.bocommon');
+			$this->cats		 = & $this->so->cats;
 
 			if ($session)
 			{
@@ -72,52 +72,52 @@
 				$this->use_session = true;
 			}
 
-			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$query = phpgw::get_var('query');
-			$sort = phpgw::get_var('sort');
-			$order = phpgw::get_var('order');
-			$filter = phpgw::get_var('filter', 'int');
-			$cat_id = phpgw::get_var('cat_id', 'int');
-			$dimb_id = phpgw::get_var('dimb_id', 'int');
+			$start		 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$query		 = phpgw::get_var('query');
+			$sort		 = phpgw::get_var('sort');
+			$order		 = phpgw::get_var('order');
+			$filter		 = phpgw::get_var('filter', 'int');
+			$cat_id		 = phpgw::get_var('cat_id', 'int');
+			$dimb_id	 = phpgw::get_var('dimb_id', 'int');
 			$org_unit_id = phpgw::get_var('org_unit_id', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
 			$district_id = phpgw::get_var('district_id', 'int');
-			$year = phpgw::get_var('year', 'int');
-			$month = phpgw::get_var('month', 'int');
-			$grouping = phpgw::get_var('grouping', 'int');
-			$revision = phpgw::get_var('revision', 'int');
-			$allrows = phpgw::get_var('allrows', 'bool');
-			$details = phpgw::get_var('details', 'bool');
-			$direction = phpgw::get_var('direction');
+			$year		 = phpgw::get_var('year', 'int');
+			$month		 = phpgw::get_var('month', 'int');
+			$grouping	 = phpgw::get_var('grouping', 'int');
+			$revision	 = phpgw::get_var('revision', 'int');
+			$allrows	 = phpgw::get_var('allrows', 'bool');
+			$details	 = phpgw::get_var('details', 'bool');
+			$direction	 = phpgw::get_var('direction');
 
-			$this->start = $start;
-			$this->query = $query ? $query : $this->query;
+			$this->start	 = $start;
+			$this->query	 = $query ? $query : $this->query;
 			$this->direction = $direction ? $direction : $this->direction;
 			if (!$this->direction)
 			{
 				$this->direction = 'expenses';
 			}
 
-			$this->filter = isset($filter) && $filter ? $filter : '';
-			$this->sort = isset($sort) && $sort ? $sort : '';
-			$this->order = isset($order) && $order ? $order : '';
-			$this->cat_id = isset($cat_id) && $cat_id ? $cat_id : '';
-			$this->dimb_id = isset($dimb_id) && $dimb_id ? $dimb_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
-			$this->org_unit_id = isset($org_unit_id) && $org_unit_id ? $org_unit_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['org_unit_id'];
+			$this->filter		 = isset($filter) && $filter ? $filter : '';
+			$this->sort			 = isset($sort) && $sort ? $sort : '';
+			$this->order		 = isset($order) && $order ? $order : '';
+			$this->cat_id		 = isset($cat_id) && $cat_id ? $cat_id : '';
+			$this->dimb_id		 = isset($dimb_id) && $dimb_id ? $dimb_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'];
+			$this->org_unit_id	 = isset($org_unit_id) && $org_unit_id ? $org_unit_id : '';//$GLOBALS['phpgw_info']['user']['preferences']['property']['org_unit_id'];
 
-			$this->part_of_town_id = isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
-			$this->district_id = isset($district_id) && $district_id ? $district_id : '';
-			$this->grouping = isset($grouping) && $grouping ? $grouping : '';
-			$this->revision = isset($revision) && $revision ? $revision : 1;
-			$this->allrows = isset($allrows) && $allrows ? $allrows : '';
-			$this->year = isset($year) && $year ? $year : date('Y');
-			$this->month = isset($month) && $month ? $month : 0;
-			$this->details = $details;
+			$this->part_of_town_id	 = isset($part_of_town_id) && $part_of_town_id ? $part_of_town_id : '';
+			$this->district_id		 = isset($district_id) && $district_id ? $district_id : '';
+			$this->grouping			 = isset($grouping) && $grouping ? $grouping : '';
+			$this->revision			 = isset($revision) && $revision ? $revision : 1;
+			$this->allrows			 = isset($allrows) && $allrows ? $allrows : '';
+			$this->year				 = isset($year) && $year ? $year : date('Y');
+			$this->month			 = isset($month) && $month ? $month : 0;
+			$this->details			 = $details;
 
 			if (isset($year) && $this->year != $year && $GLOBALS['phpgw_info']['menuaction'] != 'property.uibudget.obligations')
 			{
-				$this->grouping = '';
-				$this->revision = '';
+				$this->grouping	 = '';
+				$this->revision	 = '';
 			}
 		}
 
@@ -133,14 +133,14 @@
 		{
 			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'budget');
 
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->filter = isset($data['filter']) ? $data['filter'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
+			$this->start	 = isset($data['start']) ? $data['start'] : '';
+			$this->filter	 = isset($data['filter']) ? $data['filter'] : '';
+			$this->sort		 = isset($data['sort']) ? $data['sort'] : '';
+			$this->order	 = isset($data['order']) ? $data['order'] : '';
 			;
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->dimb_id = isset($data['dimb_id']) ? $data['dimb_id'] : '';
-			$this->details = isset($data['details']) ? $data['details'] : '';
+			$this->cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : '';
+			$this->dimb_id	 = isset($data['dimb_id']) ? $data['dimb_id'] : '';
+			$this->details	 = isset($data['details']) ? $data['details'] : '';
 			$this->direction = isset($data['direction']) ? $data['direction'] : '';
 		}
 
@@ -153,31 +153,31 @@
 
 			$budget = $this->so->read(array
 				(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'results' => $data['results'],
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
-				'district_id' => $this->district_id,
-				'year' => $this->year,
-				'grouping' => $this->grouping,
-				'revision' => $this->revision,
-				'cat_id' => $this->cat_id,
-				'dimb_id' => $this->dimb_id,
-				'org_unit_id' => $this->org_unit_id
+				'start'			 => $data['start'],
+				'query'			 => $data['query'],
+				'sort'			 => $data['sort'],
+				'order'			 => $data['order'],
+				'results'		 => $data['results'],
+				'filter'		 => $this->filter,
+				'cat_id'		 => $this->cat_id,
+				'allrows'		 => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id'	 => $this->district_id,
+				'year'			 => $this->year,
+				'grouping'		 => $this->grouping,
+				'revision'		 => $this->revision,
+				'cat_id'		 => $this->cat_id,
+				'dimb_id'		 => $this->dimb_id,
+				'org_unit_id'	 => $this->org_unit_id
 				)
 			);
 
-			$this->total_records = $this->so->total_records;
-			$this->sum_budget_cost = $this->so->sum_budget_cost;
+			$this->total_records	 = $this->so->total_records;
+			$this->sum_budget_cost	 = $this->so->sum_budget_cost;
 			foreach ($budget as & $entry)
 			{
 //				$entry['entry_date']	= $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-				$category = $this->cats->return_single($entry['cat_id']);
-				$entry['category'] = $category[0]['name'];
+				$category			 = $this->cats->return_single($entry['cat_id']);
+				$entry['category']	 = $category[0]['name'];
 			}
 
 			return $budget;
@@ -191,18 +191,18 @@
 
 			$budget = $this->so->read_basis(array
 				(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'results' => $data['results'],
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
-				'district_id' => $this->district_id,
-				'year' => $this->year,
-				'grouping' => $this->grouping,
-				'revision' => $this->revision
+				'start'			 => $data['start'],
+				'query'			 => $data['query'],
+				'sort'			 => $data['sort'],
+				'order'			 => $data['order'],
+				'results'		 => $data['results'],
+				'filter'		 => $this->filter,
+				'cat_id'		 => $this->cat_id,
+				'allrows'		 => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id'	 => $this->district_id,
+				'year'			 => $this->year,
+				'grouping'		 => $this->grouping,
+				'revision'		 => $this->revision
 				)
 			);
 
@@ -220,32 +220,32 @@
 
 			$obligations = $this->so->read_obligations(array
 				(
-				'start' => $data['start'],
-				'query' => $data['query'],
-				'sort' => $data['sort'],
-				'order' => $data['order'],
-				'results' => $data['results'],
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'allrows' => isset($data['allrows']) ? $data['allrows'] : '',
-				'district_id' => $this->district_id,
-				'year' => $this->year,
-				'month' => $this->month,
-				'grouping' => $this->grouping,
-				'revision' => $this->revision,
-				'details' => $this->details,
-				'dimb_id' => $this->dimb_id,
-				'org_unit_id' => $this->org_unit_id,
-				'direction' => $this->direction
+				'start'			 => $data['start'],
+				'query'			 => $data['query'],
+				'sort'			 => $data['sort'],
+				'order'			 => $data['order'],
+				'results'		 => $data['results'],
+				'filter'		 => $this->filter,
+				'cat_id'		 => $this->cat_id,
+				'allrows'		 => isset($data['allrows']) ? $data['allrows'] : '',
+				'district_id'	 => $this->district_id,
+				'year'			 => $this->year,
+				'month'			 => $this->month,
+				'grouping'		 => $this->grouping,
+				'revision'		 => $this->revision,
+				'details'		 => $this->details,
+				'dimb_id'		 => $this->dimb_id,
+				'org_unit_id'	 => $this->org_unit_id,
+				'direction'		 => $this->direction
 				)
 			);
 
-			$this->total_records = $this->so->total_records;
-			$this->sum_budget_cost = $this->so->sum_budget_cost;
-			$this->sum_obligation_cost = $this->so->sum_obligation_cost;
-			$this->sum_actual_cost = $this->so->sum_actual_cost;
-			$this->sum_actual_cost_period = $this->so->sum_actual_cost_period;
-			$this->sum_hits = $this->so->sum_hits;
+			$this->total_records			 = $this->so->total_records;
+			$this->sum_budget_cost			 = $this->so->sum_budget_cost;
+			$this->sum_obligation_cost		 = $this->so->sum_obligation_cost;
+			$this->sum_actual_cost			 = $this->so->sum_actual_cost;
+			$this->sum_actual_cost_period	 = $this->so->sum_actual_cost_period;
+			$this->sum_hits					 = $this->so->sum_hits;
 
 			return $obligations;
 		}
@@ -272,8 +272,8 @@
 			{
 				if ($budget['budget_id'] != 0)
 				{
-					$budget_id = $budget['budget_id'];
-					$receipt = $this->so->edit($budget);
+					$budget_id	 = $budget['budget_id'];
+					$receipt	 = $this->so->edit($budget);
 				}
 			}
 			else
@@ -289,8 +289,8 @@
 			{
 				if ($values['budget_id'] != 0)
 				{
-					$budget_id = $values['budget_id'];
-					$receipt = $this->so->edit_basis($values);
+					$budget_id	 = $values['budget_id'];
+					$receipt	 = $this->so->edit_basis($values);
 				}
 			}
 			else
@@ -370,15 +370,15 @@
 			{
 				$year_list = array(array('id' => date('Y'), 'name' => date('Y')));
 			}
-			$k = date('Y') - $year_list[0]['id'] + 5;
-			$j = count($year_list);
+			$k	 = date('Y') - $year_list[0]['id'] + 5;
+			$j	 = count($year_list);
 			for ($i = 0; $i < $k; $i++)
 			{
 				// FIXME
 				//	if($year_list[$j-1]['id'] < date('Y') + 3)
 				{
-					$year_list[$j + $i]['id'] = $year_list[$j + $i - 1]['id'] + 1;
-					$year_list[$j + $i]['name'] = $year_list[$j + $i - 1]['id'] + 1;
+					$year_list[$j + $i]['id']	 = $year_list[$j + $i - 1]['id'] + 1;
+					$year_list[$j + $i]['name']	 = $year_list[$j + $i - 1]['id'] + 1;
 				}
 			}
 			return $year_list;
@@ -388,10 +388,10 @@
 		{
 			if (!isset($_GET['year']))
 			{
-				$year = date('Y');
-				$this->year = $year;
-				$selected = $this->so->get_max_revision($year, $basis);
-				$this->revision = $selected;
+				$year			 = date('Y');
+				$this->year		 = $year;
+				$selected		 = $this->so->get_max_revision($year, $basis);
+				$this->revision	 = $selected;
 			}
 			else
 			{

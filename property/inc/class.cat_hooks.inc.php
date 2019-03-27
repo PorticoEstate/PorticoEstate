@@ -47,8 +47,8 @@
 			$location = '';
 			if ($data['location_id'])
 			{
-				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
-				$location = $location_info['location'];
+				$location_info	 = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location		 = $location_info['location'];
 			}
 			$GLOBALS['phpgw']->locations->add("{$location}.category.{$data['cat_id']}", $data['cat_name'], 'property');
 		}
@@ -64,8 +64,8 @@
 			}
 			if ($data['location_id'])
 			{
-				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
-				$location = "{$location_info['location']}.category.{$data['cat_id']}";
+				$location_info	 = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location		 = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->delete('property', $location, false);
 			}
 		}
@@ -82,8 +82,8 @@
 
 			if ($data['location_id'])
 			{
-				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
-				$location = "{$location_info['location']}.category.{$data['cat_id']}";
+				$location_info	 = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location		 = "{$location_info['location']}.category.{$data['cat_id']}";
 				$GLOBALS['phpgw']->locations->update_description($location, $data['cat_name'], 'property');
 			}
 		}

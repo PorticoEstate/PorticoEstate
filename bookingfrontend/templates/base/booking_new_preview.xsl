@@ -2,21 +2,23 @@
 	<div id="booking-new-preview-page-content" class="margin-top-content">
 		<div class="container wrapper">
 			<div class="location">
-				<span><a>
-					<xsl:attribute name="href">
-						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-					</xsl:attribute>
-					<xsl:value-of select="php:function('lang', 'Home')" />
-				</a></span>
-				<span><xsl:value-of select="php:function('lang', 'New Booking')"/></span>										
+				<span>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
+					</a>
+				</span>
+				<span>
+					<xsl:value-of select="php:function('lang', 'New Booking')"/>
+				</span>
 			</div>
-
 			<div class="row">
 				<form action="" method="POST" class="col-md-8">
 					<div class="col mb-4">
 						<xsl:call-template name="msgbox"/>
 					</div>
-
 					<input type="hidden" name="season_id" value="{booking/season_id}"/>
 					<input type="hidden" name="field_building_id" value="{booking/building_id}"/>
 					<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
@@ -52,25 +54,26 @@
 							</xsl:attribute>
 						</input>
 					</xsl:for-each>
-
 					<div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Bookings that can be created')" /></label>
+						<label class="text-uppercase">
+							<xsl:value-of select="php:function('lang', 'Bookings that can be created')" />
+						</label>
 						<xsl:for-each select="valid_dates">
 							<li>
 								<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>
 							</li>
 						</xsl:for-each>
 					</div>
-
 					<div class="form-group">
-						<label class="text-uppercase"><xsl:value-of select="php:function('lang', 'Allocations colliding with existing bookings or allocations (%1)', count(result/invalid[from_]))" /></label>
+						<label class="text-uppercase">
+							<xsl:value-of select="php:function('lang', 'Allocations colliding with existing bookings or allocations (%1)', count(result/invalid[from_]))" />
+						</label>
 						<xsl:for-each select="invalid_dates">
 							<li>
 								<xsl:value-of select="from_"/> - <xsl:value-of select="to_"/>
 							</li>
 						</xsl:for-each>
 					</div>
-
 					<div class="col mt-5">
 						<input type="submit" name="create" class="btn btn-light mr-4">
 							<xsl:attribute name="value">
@@ -84,16 +87,12 @@
 							<xsl:value-of select="php:function('lang', 'Cancel')" />
 						</a>
 					</div>
-
-				
 				</form>
 			</div>
-
 		</div>
 	</div>
 	<div class="push"></div>
-
-	<script type="text/javascript">
+	<script>
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;
 	</script>
 </xsl:template>

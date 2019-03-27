@@ -61,16 +61,16 @@
 				return false;
 			}
 
-			$value_set = array();
-			$value_set['location_code'] = $data['location_code'];
-			$value_set['contact_id'] = $data['contact_id'];
-			$value_set['user_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
-			$value_set['entry_date'] = time();
-			$value_set['modified_date'] = time();
+			$value_set					 = array();
+			$value_set['location_code']	 = $data['location_code'];
+			$value_set['contact_id']	 = $data['contact_id'];
+			$value_set['user_id']		 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['entry_date']	 = time();
+			$value_set['modified_date']	 = time();
 
-			$cols = implode(',', array_keys($value_set));
-			$values = $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
-			$sql = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
+			$cols	 = implode(',', array_keys($value_set));
+			$values	 = $GLOBALS['phpgw']->db->validate_insert(array_values($value_set));
+			$sql	 = "INSERT INTO fm_location_contact ({$cols}) VALUES ({$values})";
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
 			if ($data['email'])
@@ -119,8 +119,8 @@
 			}
 			$var = array
 				(
-				'up' => array('url' => '/set_box.php', 'app' => $app_id),
-				'down' => array('url' => '/set_box.php', 'app' => $app_id),
+				'up'	 => array('url' => '/set_box.php', 'app' => $app_id),
+				'down'	 => array('url' => '/set_box.php', 'app' => $app_id),
 //				'close'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
 //				'question'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id),
 //				'edit'	=> array('url'	=> '/set_box.php', 'app'	=> $app_id)
@@ -135,10 +135,10 @@
 		 */
 		public function home_workorder_overdue_tender()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
@@ -148,20 +148,20 @@
 				$soworkorder = CreateObject('property.soworkorder');
 
 				$values = $soworkorder->read(array(
-					'filter' => $accound_id,
-					'tender_deadline' => time()
+					'filter'			 => $accound_id,
+					'tender_deadline'	 => time()
 				));
 
-				$total_records = $soworkorder->total_records;
-				$portalbox = CreateObject('phpgwapi.listbox', array
+				$total_records	 = $soworkorder->total_records;
+				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => lang('tender delay') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => lang('tender delay') . " ({$total_records})",
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -178,12 +178,12 @@
 				}
 				foreach ($values as $entry)
 				{
-					$entry['tender_delay'] = ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
-					$portalbox->data[] = array
+					$entry['tender_delay']	 = ceil(phpgwapi_datetime::get_working_days($entry['tender_deadline'], time()));
+					$portalbox->data[]		 = array
 						(
-						'text' => "Forsinkelse: {$entry['tender_delay']} dager :: bestilling nr:{$entry['workorder_id']} :: {$entry['location_code']} :: {$entry['address']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
-							'id' => $entry['workorder_id'], 'tab' => 'budget'))
+						'text'	 => "Forsinkelse: {$entry['tender_delay']} dager :: bestilling nr:{$entry['workorder_id']} :: {$entry['location_code']} :: {$entry['address']}",
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
+							'id'		 => $entry['workorder_id'], 'tab'		 => 'budget'))
 					);
 				}
 				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
@@ -194,7 +194,7 @@
 				unset($default_status);
 			}
 
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
@@ -205,10 +205,10 @@
 		 */
 		public function home_project_overdue_end_date()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
@@ -229,13 +229,13 @@
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => lang('end date delay'),
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => lang('end date delay'),
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -248,7 +248,7 @@
 
 				foreach ($var as $key => $value)
 				{
-	//				$portalbox->set_controls($key,$value);
+					//				$portalbox->set_controls($key,$value);
 				}
 //				foreach ($values as $entry)
 //				{
@@ -264,8 +264,8 @@
 
 				echo '<div id="project_overdue_info_container"></div>';
 
-				$lang = js_lang( 'Name', 'address', 'status', 'id', 'delay', 'location');
-				$now = time();
+				$lang	 = js_lang('Name', 'address', 'status', 'id', 'delay', 'location');
+				$now	 = time();
 
 				$js = <<<JS
 					<script type="text/javascript">
@@ -307,7 +307,7 @@ JS;
 				unset($default_status);
 			}
 
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
@@ -318,34 +318,34 @@ JS;
 		 */
 		public function home_tenant_claims()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
 
 			if (isset($prefs['property']['mainscreen_show_open_tenant_claim']) && $prefs['property']['mainscreen_show_open_tenant_claim'] == 'yes')
 			{
-				$sotenant_claim = CreateObject('property.sotenant_claim');
-				$claims = $sotenant_claim->read(array
+				$sotenant_claim	 = CreateObject('property.sotenant_claim');
+				$claims			 = $sotenant_claim->read(array
 					(
-					'start' => 0,
-					'user_id' => $accound_id
+					'start'		 => 0,
+					'user_id'	 => $accound_id
 					)
 				);
 
-				$total_records = $sotenant_claim->total_records;
-				$portalbox = CreateObject('phpgwapi.listbox', array
+				$total_records	 = $sotenant_claim->total_records;
+				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => lang('tenant claim') . " ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => lang('tenant claim') . " ({$total_records})",
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -362,16 +362,16 @@ JS;
 				}
 				foreach ($claims as &$entry)
 				{
-					$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-					$location_info = execMethod('property.solocation.read_single', $entry['location_code']);
-					$entry['loc1_name'] = $location_info['loc1_name'];
-					$entry['loc_category'] = $location_info['category_name'];
+					$entry['entry_date']	 = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$location_info			 = execMethod('property.solocation.read_single', $entry['location_code']);
+					$entry['loc1_name']		 = $location_info['loc1_name'];
+					$entry['loc_category']	 = $location_info['category_name'];
 
 					$portalbox->data[] = array
 						(
-						'text' => "{$entry['claim_id']} :: {$entry['location_code']} :: {$location_info['loc1_name']} :: {$location_info['category_name']} :: {$entry['name']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.edit',
-							'claim_id' => $entry['claim_id']))
+						'text'	 => "{$entry['claim_id']} :: {$entry['location_code']} :: {$location_info['loc1_name']} :: {$location_info['category_name']} :: {$entry['name']}",
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.edit',
+							'claim_id'	 => $entry['claim_id']))
 					);
 				}
 				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
@@ -381,7 +381,7 @@ JS;
 				unset($category_name);
 				unset($default_status);
 			}
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
@@ -392,10 +392,10 @@ JS;
 		 */
 		public function home_ticket()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
@@ -406,13 +406,13 @@ JS;
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']}" : lang('Helpdesk'),
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']}" : lang('Helpdesk'),
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -435,31 +435,31 @@ JS;
 
 				echo '<div id="ticket_info_container"></div>';
 
-				$lang = js_lang( 'Name', 'address', 'status','subject', 'id', 'assigned to', 'modified date');
+				$lang = js_lang('Name', 'address', 'status', 'subject', 'id', 'assigned to', 'modified date');
 
 
 				$default_status = array();
 
-				if(!empty($prefs['property']['tts_status']))
+				if (!empty($prefs['property']['tts_status']))
 				{
 					$default_status[] = $prefs['property']['tts_status'];
 				}
-				if(!empty($prefs['property']['tts_status_2']))
+				if (!empty($prefs['property']['tts_status_2']))
 				{
 					$default_status[] = $prefs['property']['tts_status_2'];
 				}
-				if(!empty($prefs['property']['tts_status_3']))
+				if (!empty($prefs['property']['tts_status_3']))
 				{
 					$default_status[] = $prefs['property']['tts_status_3'];
 				}
-				if(!empty($prefs['property']['tts_status_4']))
+				if (!empty($prefs['property']['tts_status_4']))
 				{
 					$default_status[] = $prefs['property']['tts_status_4'];
 				}
 
 				$status_filter = '';
 
-				if(!$default_status)
+				if (!$default_status)
 				{
 					$status_filter .= "&status_id=O"; //all variants of Open
 				}
@@ -516,7 +516,7 @@ JS;
 				unset($_default_status);
 			}
 
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
@@ -527,10 +527,10 @@ JS;
 		 */
 		public function home_project()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
@@ -538,20 +538,20 @@ JS;
 			if (isset($prefs['property']['mainscreen_project_1']) && $prefs['property']['mainscreen_project_1'] == 'yes')
 			{
 
-				$default_status = isset($prefs['property']['project_status_mainscreen_1']) ? $prefs['property']['project_status_mainscreen_1'] : '';
-				$obj = CreateObject('property.soproject');
-				$projects = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
-				$total_records = $obj->total_records;
+				$default_status	 = isset($prefs['property']['project_status_mainscreen_1']) ? $prefs['property']['project_status_mainscreen_1'] : '';
+				$obj			 = CreateObject('property.soproject');
+				$projects		 = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+				$total_records	 = $obj->total_records;
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => isset($prefs['property']['mainscreen_projects_1_title']) && $prefs['property']['mainscreen_projects_1_title'] ? "{$prefs['property']['mainscreen_projects_1_title']} ({$total_records})" : lang('project') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => isset($prefs['property']['mainscreen_projects_1_title']) && $prefs['property']['mainscreen_projects_1_title'] ? "{$prefs['property']['mainscreen_projects_1_title']} ({$total_records})" : lang('project') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -572,9 +572,9 @@ JS;
 				{
 					$portalbox->data[] = array
 						(
-						'text' => "{$project['address']} :: {$project['name']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
-							'id' => $project['project_id']))
+						'text'	 => "{$project['address']} :: {$project['name']}",
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
+							'id'		 => $project['project_id']))
 					);
 				}
 
@@ -585,7 +585,7 @@ JS;
 				unset($default_status);
 			}
 
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
@@ -596,10 +596,10 @@ JS;
 		 */
 		public function home_workorder()
 		{
-			$accound_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$save_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';
-			$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
+			$maxmatches															 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = 5;
 
 			$prefs = $GLOBALS['phpgw_info']['user']['preferences'];
@@ -607,20 +607,20 @@ JS;
 			if (isset($prefs['property']['mainscreen_workorder_1']) && $prefs['property']['mainscreen_workorder_1'] == 'yes')
 			{
 
-				$default_status = isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
-				$obj = CreateObject('property.soworkorder');
-				$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
-				$total_records = $obj->total_records;
+				$default_status	 = isset($prefs['property']['workorder_status_mainscreen_1']) ? $prefs['property']['workorder_status_mainscreen_1'] : '';
+				$obj			 = CreateObject('property.soworkorder');
+				$workorders		 = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+				$total_records	 = $obj->total_records;
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title'] ? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title'] ? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -641,9 +641,9 @@ JS;
 				{
 					$portalbox->data[] = array
 						(
-						'text' => "{$workorder['address']} :: {$workorder['title']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
-							'id' => $workorder['workorder_id']))
+						'text'	 => "{$workorder['address']} :: {$workorder['title']}",
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
+							'id'		 => $workorder['workorder_id']))
 					);
 				}
 
@@ -656,20 +656,20 @@ JS;
 			if (isset($prefs['property']['mainscreen_workorder_2']) && $prefs['property']['mainscreen_workorder_2'] == 'yes')
 			{
 
-				$default_status = isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
-				$obj = CreateObject('property.soworkorder');
-				$workorders = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
-				$total_records = $obj->total_records;
+				$default_status	 = isset($prefs['property']['workorder_status_mainscreen_2']) ? $prefs['property']['workorder_status_mainscreen_2'] : '';
+				$obj			 = CreateObject('property.soworkorder');
+				$workorders		 = $obj->read(array('filter' => $accound_id, 'status_id' => $default_status));
+				$total_records	 = $obj->total_records;
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title'] ? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title'] ? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -690,9 +690,9 @@ JS;
 				{
 					$portalbox->data[] = array
 						(
-						'text' => "{$workorder['address']} :: {$workorder['title']}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
-							'id' => $workorder['workorder_id']))
+						'text'	 => "{$workorder['address']} :: {$workorder['title']}",
+						'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
+							'id'		 => $workorder['workorder_id']))
 					);
 				}
 
@@ -705,19 +705,19 @@ JS;
 
 			if (isset($prefs['property']['mainscreen_showapprovals_request']) && $prefs['property']['mainscreen_showapprovals_request'] == 'yes')
 			{
-				$total_records = 0;
-				$title = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title'] ? "{$prefs['property']['mainscreen_showapprovals_request_title']}" : lang('approvals request');
+				$total_records	 = 0;
+				$title			 = isset($prefs['property']['mainscreen_showapprovals_request_title']) && $prefs['property']['mainscreen_showapprovals_request_title'] ? "{$prefs['property']['mainscreen_showapprovals_request_title']}" : lang('approvals request');
 
 				//TODO Make listbox css compliant
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => $title,
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => $title,
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -740,9 +740,9 @@ JS;
 
 				echo '<div id="approval_info_container"></div>';
 
-					$lang = js_lang( 'responsible', 'id', 'date');
+				$lang = js_lang('responsible', 'id', 'date');
 
-					$js = <<<JS
+				$js = <<<JS
 						<script type="text/javascript">
 						var building_id = 1;
 						var lang = $lang;
@@ -782,23 +782,22 @@ JS;
 JS;
 
 				echo $js;
-
 			}
 
 			if (isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
 			{
-				$total_records = 0;
-				$title = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title'] ? "{$prefs['property']['mainscreen_showapprovals_title']}" : lang('approvals');
+				$total_records	 = 0;
+				$title			 = isset($prefs['property']['mainscreen_showapprovals_title']) && $prefs['property']['mainscreen_showapprovals_title'] ? "{$prefs['property']['mainscreen_showapprovals_title']}" : lang('approvals');
 				//TODO Make listbox css compliant
-				$portalbox = CreateObject('phpgwapi.listbox', array
+				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => $title,
-					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'width' => '100%',
-					'outerborderwidth' => '0',
-					'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
+					'title'						 => $title,
+					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'width'						 => '100%',
+					'outerborderwidth'			 => '0',
+					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
 				));
 
 				$app_id = $GLOBALS['phpgw']->applications->name2id('property');
@@ -812,7 +811,7 @@ JS;
 
 				foreach ($var as $key => $value)
 				{
-		//			$portalbox->set_controls($key,$value);
+					//			$portalbox->set_controls($key,$value);
 				}
 
 
@@ -824,8 +823,8 @@ JS;
 
 				unset($portalbox);
 
-				$users_for_substitute = CreateObject('property.sosubstitute')->get_users_for_substitute( $accound_id);
-				$users_for_substitute[] = $accound_id;
+				$users_for_substitute	 = CreateObject('property.sosubstitute')->get_users_for_substitute($accound_id);
+				$users_for_substitute[]	 = $accound_id;
 
 				$responsible_filter = '';
 
@@ -838,7 +837,7 @@ JS;
 
 				echo '<div id="my_responsibility_approval_info_container"></div>';
 
-				$lang = js_lang( 'responsible', 'id', 'date');
+				$lang = js_lang('responsible', 'id', 'date');
 
 				$js = <<<JS
 					<script type="text/javascript">
@@ -881,48 +880,48 @@ JS;
 				echo $js;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
+			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
 		}
 
-		function after_navbar( )
+		function after_navbar()
 		{
-			$sosubstitute = CreateObject('property.sosubstitute');
-			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$substitute_user_id = $sosubstitute->get_substitute( $user_id);
-			$lang_substitute = $GLOBALS['phpgw']->translation->translate('substitute', array(), false, 'property');
-			if($substitute_user_id)
+			$sosubstitute		 = CreateObject('property.sosubstitute');
+			$user_id			 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$substitute_user_id	 = $sosubstitute->get_substitute($user_id);
+			$lang_substitute	 = $GLOBALS['phpgw']->translation->translate('substitute', array(), false, 'property');
+			if ($substitute_user_id)
 			{
 				echo '<div class="msg_good">';
-				echo $lang_substitute .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString();
+				echo $lang_substitute . ': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString();
 				echo '</div>';
 			}
 
-			$users_for_substitute = $sosubstitute->get_users_for_substitute( $user_id);
-			$names = array();
+			$users_for_substitute	 = $sosubstitute->get_users_for_substitute($user_id);
+			$names					 = array();
 			foreach ($users_for_substitute as $user_for_substitute)
 			{
 				$names[] = $GLOBALS['phpgw']->accounts->get($user_for_substitute)->__toString();
 			}
-			if($names)
+			if ($names)
 			{
 				echo '<div class="msg_good">';
-				echo $lang_substitute .' for : ' . implode(', ', $names);
+				echo $lang_substitute . ' for : ' . implode(', ', $names);
 				echo '</div>';
 			}
 
-			if(in_array($substitute_user_id, $users_for_substitute))
+			if (in_array($substitute_user_id, $users_for_substitute))
 			{
 				echo '<div class="error">';
-				echo $lang_substitute .': ' . lang('circle reference');
+				echo $lang_substitute . ': ' . lang('circle reference');
 				echo '</div>';
 			}
 		}
 
 		function delete_addressbook( $data )
 		{
-			$contact_id = (int) $data['contact_id'];
-			$sql = "DELETE FROM fm_responsibility_contact WHERE contact_id = {$contact_id}";
+			$contact_id	 = (int)$data['contact_id'];
+			$sql		 = "DELETE FROM fm_responsibility_contact WHERE contact_id = {$contact_id}";
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 		}
 	}

@@ -401,7 +401,7 @@
 					</div>
 				</div>
 			</xsl:if>
-			<script type="text/javascript">
+			<script>
 				var endpoint = '<xsl:value-of select="module" />';
 			</script>
 			<div class="form-buttons">
