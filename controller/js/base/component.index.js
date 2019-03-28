@@ -85,8 +85,8 @@ update_table = function (location_code)
 
 	if (custom_frontend == 1)
 	{
-		$("#user_id").parent().hide();
-		$("[for='user_id']").parent().hide();
+//		$("#user_id").parent().hide();
+//		$("[for='user_id']").parent().hide();
 	}
 //console.log(user_id);
 	if (user_id < 0 || custom_frontend == 1)
