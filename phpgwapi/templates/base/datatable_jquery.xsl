@@ -623,6 +623,11 @@
 							<xsl:otherwise>
 							button_def.push({
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+								<xsl:choose>
+									<xsl:when test="bigmenubutton">
+										className: 'bigmenubutton',
+									</xsl:when>
+								</xsl:choose>
 								sUrl: '<xsl:value-of select="new_item"/>',
 
 								action: function (e, dt, node, config) {
