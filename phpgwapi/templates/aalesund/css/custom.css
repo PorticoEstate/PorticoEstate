@@ -991,24 +991,7 @@ input:focus{
 	text-decoration: none !important;
 }
 
-.custom-card:hover   span{
-    color:white;
-}
-.custom-card:hover   h4{
-    color:white;
-}
-
-#welcomeResult .custom-card:hover span{
-	color:black;
-}
-
-#welcomeResult .custom-card:hover h4{
-	color:black;
-}
-
 custom-card-link-href:hover {
- 
-    
     color:white;
 }
 
@@ -1061,11 +1044,6 @@ custom-card-link-href:hover {
 	
 }
 
-#welcomeResult .custom-card .desc span {
-    font-size: 16px;
-    display: block;
-}
-
 #welcomeResult .custom-card .desc a:hover {
     text-decoration: underline !important;
 }
@@ -1090,6 +1068,11 @@ custom-card-link-href:hover {
 
 #welcomeResult h5.title {
     margin-bottom: .15rem;
+}
+
+#welcomeResult .card-text {
+    display: grid;
+    font-size: 1rem;
 }
 
 .card-positioncorrect {
