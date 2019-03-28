@@ -435,6 +435,19 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/(@BKP|@SPK|@bergenkp.no)/i", $sender))
+			{
+
+				$message_cat_id	 = 244; // til Lønn -Pensjon
+				$group_id		 = 3159; //LRS-DRIFT_Lønn
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 			else if (preg_match("/Manglende informasjon på mottatt/i", $subject))
 			{
 
