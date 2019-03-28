@@ -308,7 +308,7 @@
 			$sql .= "LEFT JOIN controller_control_item_option cio ON ci.id = cio.control_item_id ";
 			$sql .= "WHERE c.id=$control_id ";
 			$sql .= "AND ci.control_group_id=$control_group_id ";
-			$sql .= "ORDER BY cl.order_nr";
+			$sql .= "ORDER BY cl.order_nr, cio.id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
