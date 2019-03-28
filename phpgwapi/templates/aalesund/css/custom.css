@@ -1073,7 +1073,6 @@ custom-card-link-href:hover {
 #welcomeResult .title {
     min-height: 30px;
     overflow: hidden;
-    max-height: 30px;
 }
 
 #welcomeResult .custom-card {
@@ -1083,6 +1082,14 @@ custom-card-link-href:hover {
 
 #welcomeResult .custom-card:hover {
     background-color: #fff;
+}
+
+#welcomeResult .mb-2 {
+    margin-bottom: 0 !important;
+}
+
+#welcomeResult h5.title {
+    margin-bottom: .15rem;
 }
 
 .card-positioncorrect {
