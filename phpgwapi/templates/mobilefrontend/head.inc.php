@@ -36,11 +36,7 @@
 //	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
-    $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
-
 	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/base.css";
-
 	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
 
 	foreach ( $stylesheets as $stylesheet )
