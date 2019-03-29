@@ -31,6 +31,14 @@
 	 */
 	require_once '../header.inc.php';
 
+	if(phpgw::get_var('keep_alive', 'bool', 'GET')	&& phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
+	{
+		$ret = array('status' => 200);
+		header('Content-Type: application/json');
+		echo json_encode($ret);
+		$GLOBALS['phpgw']->common->phpgw_exit();
+	}
+
 	if (isset($GLOBALS['phpgw_info']['server']['force_default_app']) && $GLOBALS['phpgw_info']['server']['force_default_app'] != 'user_choice')
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] = $GLOBALS['phpgw_info']['server']['force_default_app'];
