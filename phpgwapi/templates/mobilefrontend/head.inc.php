@@ -23,6 +23,7 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
 	$javascripts = array();
+	$javascripts[] = "/phpgwapi/templates/mobilefrontend/js/keep_alive.js";
 
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
