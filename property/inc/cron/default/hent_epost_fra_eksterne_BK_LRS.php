@@ -435,7 +435,7 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/(@BKP|@SPK|@bergenkp.no)/i", $sender))
+			else if (preg_match("/(@SPK.no|@bergenkp.no)/i", $sender))
 			{
 
 				$message_cat_id	 = 244; // til Lønn -Pensjon
