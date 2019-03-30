@@ -53,7 +53,7 @@
 				$_REQUEST['skip_remote']				 = true;
 			}
 
-			if ( $_POST['mode'] == 'api' )
+			if ( isset($_POST['mode']) && $_POST['mode'] == 'api' )
 			{
 				$_POST['submitit'] = true;
 				$GLOBALS['phpgw_remote_user_fallback']	 = 'sql';
