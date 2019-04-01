@@ -8,6 +8,16 @@ and open the template in the editor.
     Created on : Feb 20, 2018, 11:08:19 AM
     Author     : niruban
 */
+/* Root Variables */
+:root  {
+    /* FOR REGULAR LINK TAGS var(--link-color) */
+    link-color: #26348B;
+    /* FOR LINK TAGS HOVER STATE var(--link-color-hover)
+    MAYBE BRIGHTER COLOR? SEE #27348B
+    */ 
+    link-color-hover: #0056b3; 
+    
+}
 
 html {
     font-size: 1rem;
@@ -60,21 +70,21 @@ a:active {
 }
 
 .body a {
-    color: #26348B;
+    color: var(--link-color);
     text-decoration: none;
     display:inline-block !important;
 }
 
 
 header-text a:hover {
-    color: #27348B;
+    color: var(--link-color-hover);
     text-decoration: underline;
   
 }
 
 .showMe header-text a {
   text-decoration: underline;
-  color: #26348B;
+  color: var(--link-color);
 }
 
 .termAccept a:hover{
@@ -84,10 +94,11 @@ header-text a:hover {
 
 a:hover {
     text-decoration: underline;
+    color: var(--link-color-hover);
 }
 
 a {
-	color: #27348B;
+	color: var(--link-color);
 }
 
 @media (max-width: 567px) { 
@@ -250,7 +261,7 @@ a {
     transform: translateX(-50%);
     left: 50%;
     position: absolute;
-    color:#26348B;    
+    color: var(--link-color);    
     text-decoration: none !important;
     margin-top: 24px  !important;
 }
@@ -289,7 +300,7 @@ a {
   
     text-decoration: none   !important;
     
-    color: #26348B  !important;
+    color: var(--link-color)  !important;
 }
 
 .custom-card  a:hover {
@@ -557,9 +568,7 @@ F
 .bookable-resource-link-href span,
 .termAcceptDocsUrl {
     line-height: 1.4em;
-    display: inline-block;  
-    
-    color: black;
+    display: inline-block;
 }
 
 .bookable-resource-link-href span:hover,
@@ -1921,10 +1930,6 @@ footer h3{
 	background-color: #e6e6e6;
 	cursor: not-allowed !important;
 	font-style: italic; 
-}
-
-.upcomming-event-href{
-    color: #27348b;
 }
 
 .header_borderline{

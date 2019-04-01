@@ -110,7 +110,7 @@
 									<span  data-bind="text: datetime_time"></span>
 									<span  data-bind="text: 'STED: ' +building_name"></span>
 									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-									<span class="font-weight-normal upcomming-event-href" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
+									<span class="font-weight-normal " data-bind="visible: homepage != ''"><a href="" target="_blank" data-bind="">
 									Les mer</a></span>
 								</div>
 							</div>
