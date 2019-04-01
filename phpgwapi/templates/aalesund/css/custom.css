@@ -8,6 +8,11 @@ and open the template in the editor.
     Created on : Feb 20, 2018, 11:08:19 AM
     Author     : niruban
 */
+/* Root Variables */
+:root  {
+    link-color: #26348B;
+    link-color-hover: #0056b3;
+}
 
 html {
     font-size: 1rem;
@@ -557,9 +562,7 @@ F
 .bookable-resource-link-href span,
 .termAcceptDocsUrl {
     line-height: 1.4em;
-    display: inline-block;  
-    
-    color: black;
+    display: inline-block;
 }
 
 .bookable-resource-link-href span:hover,
