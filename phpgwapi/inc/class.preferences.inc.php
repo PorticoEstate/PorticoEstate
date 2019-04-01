@@ -791,7 +791,7 @@
 			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 			{
-				$this->add('common','template_set','verdilak');
+				$this->add('common','template_set','portico');
 				$preferences_update = True;
 			}
 			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) ||
