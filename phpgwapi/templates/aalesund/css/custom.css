@@ -970,6 +970,7 @@ input:focus{
     border: 1px black solid;
     text-decoration: none !important;
     transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #000000;
     
 }
 #searchResult .row .custom-card:hover {
