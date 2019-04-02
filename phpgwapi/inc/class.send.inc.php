@@ -171,28 +171,19 @@
 				$mail->addCustomHeader("Disposition-Notification-To: {$mail->From}");
 			}
 
+			$mail->Body    = $body;
+
 			if($content_type =='html')
 			{
 				$mail->IsHTML(true);
+				$html2text		= createObject('phpgwapi.html2text', $body);
+				$mail->AltBody	= $html2text->getText();
 			}
 			else
 			{
 				$mail->IsHTML(false);
 				$mail->WordWrap = 76;
-//				$text_message  = array('text' => $body);
-//				$newArray = array_map(function($v)
-//				{
-//					return trim(strip_tags($v));
-//				 }, $text_message);
-//
-//				$body = $newArray['text'];
 			}
-
-			$mail->Body    = $body;
-			/**
-			 * Implement me...
-			 */
-//			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
 			switch($msgtype)
 			{
