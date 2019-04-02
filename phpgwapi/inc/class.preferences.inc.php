@@ -276,7 +276,7 @@
 					// The following ereg is required for PostgreSQL to work
 					$app = str_replace(' ','',$this->db->f('preference_app'));
 
-					if(empty($metadata['preference_json']))
+					if(!isset($metadata['preference_json']))
 					{
 						$value = unserialize($this->db->f('preference_value'));
 					}
@@ -637,12 +637,14 @@
 
 				foreach($prefs as $app => $value)
 				{
-					if (!is_array($value)) continue;
+					if (!is_array($value))
+					{
+						continue;
+					}
 					$this->quote($value);
 
-					if(empty($metadata['preference_json']))
+					if(!isset($metadata['preference_json']))
 					{
-
 						$value = $this->db->db_addslashes(serialize($value));	// this addslashes is for the database
 						$app = $this->db->db_addslashes($app);
 
