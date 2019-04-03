@@ -1629,6 +1629,14 @@ NEW APPLICATION PAGE STYLE
     font-size: 1.3rem;
 }
 
+.new-application-page .form-check .fa-external-link-alt{
+    font-size: .5rem;
+    margin-left: .3rem;
+    text-align: center;
+    color: #26348B
+}
+
+
 .new-application-page .sm-input {
     width: 90px !important;
 }

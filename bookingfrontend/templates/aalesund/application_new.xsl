@@ -282,9 +282,10 @@
 							<div>
 								<label class="check-box-label d-inline">
 									<input class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
-									<span class="label-text" data-bind=""></span>
+									<span class="label-text" data-bind=""></span>		
 								</label>
-								<a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""> </a>
+								<a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
+								<i class="fas fa-external-link-alt"></i>
 							</div>
 						</div>
 
