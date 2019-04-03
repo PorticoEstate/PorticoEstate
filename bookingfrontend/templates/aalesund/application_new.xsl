@@ -271,6 +271,7 @@
 							</xsl:attribute>
 						</input>
 					</div>
+					<!-- Terms and Conditions -->
 					<div class="form-group termAccept mt-5 mb-5">
 						<label>
 							<xsl:value-of select="php:function('lang', 'legal condition')" />*</label>
