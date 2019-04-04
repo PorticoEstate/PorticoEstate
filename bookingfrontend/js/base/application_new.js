@@ -373,3 +373,13 @@ $(".bookingEndTime").on( "click", function() {
         
     },200);    
 });
+
+// Remove Attachment 
+const addedAttachment = document.getElementById("field-name-input");
+const removeAttachment = document.getElementById("field-name-input-remove");
+
+// Shows "Remove attachment" when attachment is added
+$(document).ready(function(){
+  document.getElementById("field_name_input").addEventListener("click", console.log("clicked"));
+});
+  

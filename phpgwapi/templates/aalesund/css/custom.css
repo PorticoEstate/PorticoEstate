@@ -1716,6 +1716,17 @@ NEW APPLICATION PAGE STYLE
     background-color: #fff;
 }
 
+
+.new-application-page .form-group #attachments {
+    display: flex;
+}
+
+.new-application-page .form-group #attachments #field-name-input-remove {
+    visibility: hidden;
+    font-size: 0.8em;
+    color: #26348B;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575px) {  
     

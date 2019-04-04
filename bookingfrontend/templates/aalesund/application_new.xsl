@@ -244,7 +244,7 @@
 
 						</div>
 					</div>
-
+					<!-- Upload Attachment -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Attachment')" />
@@ -252,7 +252,10 @@
 						<label for="field_name" class="upload-button">
 							<xsl:value-of select="php:function('lang', 'Upload')" />
 						</label>
-						<label id="field_name_input"></label>
+						<div id="attachments">
+							<label id="field_name_input"></label>
+							<a id="field-name-input-remove">Fjern Vedlegg</a>
+						</div>
 						<input name="name" id='field_name' type='file' style="display: none">
 							<xsl:attribute name='title'>
 								<xsl:value-of select="document/name"/>test
