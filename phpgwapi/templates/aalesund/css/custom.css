@@ -496,7 +496,7 @@ outline:none;
 }
 
 .msgbox_text {
-    margin-top: 20px;
+    margin-top: 2rem;
 }
 
 .check-box-label {
@@ -547,7 +547,7 @@ input[type="checkbox"]:disabled + .label-text:before{
 
 
 .container-top-fix {
-    margin-top: 99px;
+    margin-top: 7rem;
 }
 
 .margin-top-content {
