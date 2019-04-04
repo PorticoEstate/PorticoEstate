@@ -305,12 +305,6 @@
 			$subject = $item3->Subject;
 			$rool	 = $item3->Body->_;
 
-//			$text_message  = array('text' => $rool);
-//			$newArray = array_map(function($v)
-//			{
-//				return trim(strip_tags($v));
-//			 }, $text_message);
-
 			$html2text	 = createObject('phpgwapi.html2text', $rool);
 			$body		 = $html2text->getText();
 

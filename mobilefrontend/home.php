@@ -31,9 +31,35 @@
 	 */
 	require_once '../header.inc.php';
 
+	/**
+	 * In case there is an extra session border to cross from outside a firewall
+	 */
 	if(phpgw::get_var('keep_alive', 'bool', 'GET')	&& phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
 	{
-		$ret = array('status' => 200);
+		$now = time();
+		$keep_alive_timestamp = phpgwapi_cache::session_get('mobilefrontend', 'keep_alive_timestamp');
+		
+		// first check
+		if(!$keep_alive_timestamp)
+		{
+			$keep_alive_timestamp = $now;
+			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $keep_alive_timestamp);
+		}
+
+		$sessions_timeout = 10;$GLOBALS['phpgw_info']['server']['sessions_timeout'];
+		if(($now - $keep_alive_timestamp) > $sessions_timeout)
+		{
+			$ret = array('status' => 440); //Login Time-out
+			http_response_code (440);
+			$sessionid = $GLOBALS['phpgw']->session->get_session_id();
+			$GLOBALS['phpgw']->hooks->process('logout');
+			$GLOBALS['phpgw']->session->destroy($sessionid);
+		}
+		else
+		{
+			$ret = array('status' => 200);
+		}
+
 		header('Content-Type: application/json');
 		echo json_encode($ret);
 		$GLOBALS['phpgw']->common->phpgw_exit();
