@@ -104,6 +104,11 @@
 
 	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
+		/**
+		 * Reset timer
+		 */
+		phpgwapi_cache::session_clear('mobilefrontend', 'keep_alive_timestamp');
+
 		if (phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
 			// deprecated
 			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')

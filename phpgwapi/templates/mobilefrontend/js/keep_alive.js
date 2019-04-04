@@ -22,15 +22,10 @@ function keepAlive()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
-			if (XMLHttpRequest.status === 401)
-			{
-				alert('expired');
-			}
+			clearInterval(refreshIntervalId);
+			alert('expired');
 		}
 	});
-
 }
 
-setInterval(keepAlive, 600000);  //My session expires at 10 minutes
-
-
+var refreshIntervalId = setInterval(keepAlive, 600000);  //My session expires at 10 minutes
