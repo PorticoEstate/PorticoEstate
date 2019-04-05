@@ -887,7 +887,7 @@ HTML;
 				foreach ($attrib_data as $attrib)
 				{
 					$_filter_data = array();
-					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'] && $attrib['table_filter'])
 					{
 
 						$_filter_data[] = array

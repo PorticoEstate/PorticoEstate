@@ -1934,6 +1934,7 @@
 				'entity_name'						 => $entity['name'],
 				'category_name'						 => $category['name'],
 				'multiple_choice'					 => $multiple_choice,
+				'value_table_filter'				 => $values['table_filter'],
 				'value_choice'						 => (isset($values['choice']) ? $values['choice'] : ''),
 				'custom_get_list'					 => $custom_get_list,
 				'custom_get_single'					 => $custom_get_single,
