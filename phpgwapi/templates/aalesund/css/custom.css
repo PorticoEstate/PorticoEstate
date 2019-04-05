@@ -314,19 +314,20 @@ a {
 }
 
 .bookable-resource-link-href   a:hover {
-  
     text-decoration: underline;
     color: #26348B;
 }
 
 .bookable-resource-link-href:hover {
-  
     text-decoration: underline;
     color: #26348B;
 }
 
 #mainSearchInput  {
-    border: 2px solid #26348B  !important;
+    border-left: 2px solid #26348B  !important;
+    border-top: 2px solid #26348B  !important;
+    border-bottom: 2px solid #26348B  !important;
+    border-right: 0 !important;
  }
  
  
