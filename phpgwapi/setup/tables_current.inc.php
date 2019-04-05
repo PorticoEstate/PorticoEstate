@@ -612,6 +612,7 @@
 				'search' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'history' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'list' => array('type' => 'int','precision' => 4,'nullable' => true),
+				'table_filter' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'attrib_sort' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'size' => array('type' => 'int','precision' => 4,'nullable' => true),
 				'precision_' => array('type' => 'int','precision' => 4,'nullable' => true),
