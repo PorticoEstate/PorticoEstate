@@ -1124,7 +1124,11 @@
 			}
 			//		$this->table = $table;
 
-			if (isset($this->location_info['mapping']) && $this->location_info['mapping'])
+			if(!empty($data['path_by_id']))
+			{
+				$mapping = array('name' => 'id');				
+			}
+			else if (isset($this->location_info['mapping']) && $this->location_info['mapping'])
 			{
 				$mapping = $this->location_info['mapping'];
 			}
@@ -1133,7 +1137,7 @@
 				$mapping = array('name' => 'name');
 			}
 
-			$sql = "SELECT {$mapping['name']}, parent_id FROM {$table} WHERE id = '{$data['id']}'";
+			$sql = "SELECT {$mapping['name']} AS name, parent_id FROM {$table} WHERE id = '{$data['id']}'";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
@@ -1146,7 +1150,8 @@
 
 			if ($parent_id)
 			{
-				$path = array_merge($this->get_path(array('type' => $data['type'], 'id' => $parent_id)), $path);
+				$data['id'] = $parent_id;
+				$path = array_merge($this->get_path($data), $path);
 			}
 			return $path;
 		}

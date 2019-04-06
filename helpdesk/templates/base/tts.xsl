@@ -19,7 +19,8 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !')"/>;
+		var account_lid =  '<xsl:value-of select="account_lid"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
 
 		function response_lookup()
 		{
@@ -98,33 +99,30 @@
 								</div>
 							</xsl:if>
 							<div class="pure-control-group">
+								<xsl:variable name="lang_on_behalf_of">
+									<xsl:value-of select="php:function('lang', 'on behalf of')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_on_behalf_of"/>
+								</label>
+								<input type="hidden" id="set_on_behalf_of_lid" name="values[set_on_behalf_of_lid]"  value="{value_set_on_behalf_of_lid}"/>
+								<input type="text" id="set_on_behalf_of_name" name="values[set_on_behalf_of_name]" value="{value_set_on_behalf_of_name}" class="pure-input-1-2">
+								</input>
+								<div id="set_on_behalf_of_container"/>
+							</div>
+							<div class="pure-control-group">
 								<xsl:variable name="lang_reverse">
 									<xsl:value-of select="php:function('lang', 'reverse')"/>
 								</xsl:variable>
 								<label>
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
-								<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
+<!--								<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
 								<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
-								</input>
-								<div id="set_user_container"/>
+								</input>-->
+								<div class="pure-custom"  id="set_user_container"/>
 							</div>
-							<!--xsl:call-template name="contact_form"/-->
-							<!--div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
-								</label>
-								<input type="checkbox" name="values[send_mail]" value="1">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')"/>
-									</xsl:attribute>
-									<xsl:if test="pref_send_mail = '1'">
-										<xsl:attribute name="checked">
-											<xsl:text>checked</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</input>
-							</div-->
+
 							<xsl:if test="disable_priority !='1'">
 								<div class="pure-control-group">
 									<label>
