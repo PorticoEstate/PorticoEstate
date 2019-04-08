@@ -29,8 +29,16 @@ $(document).ready(function ()
 				}
 			}
 		});
-	}, 100);
 
+		$('#navbar').on(
+			'tree.click',
+			function(event) {
+				// The clicked node is 'event.node'
+				var node = event.node;
+				tree.tree('openNode', node, false);
+			}
+		);
+	}, 200);
 });
 //$(document).ready(function () {
 //    var tree = $('#navbar'),
