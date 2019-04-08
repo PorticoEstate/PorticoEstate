@@ -53,7 +53,7 @@
 				'update_data'		=> true,
 				'upload_clip'		=> true,
 				'view_image'		=> true,
-				'get_reverse_assignee'=>true,
+				'get_on_behalf_of'	=> true,
 				'handle_multi_upload_file' => true,
 				'build_multi_upload_file' => true,
 				'custom_ajax'			=> true,
@@ -170,8 +170,18 @@
 		 *
 		 * @return array
 		 */
-		public function get_reverse_assignee()
+		public function get_on_behalf_of()
 		{
+			$custom_method = phpgw::get_var('custom_method', 'bool');
+			if($custom_method)
+			{
+				$result = $this->custom_ajax();
+				if($result)
+				{
+					return $result;
+				}
+			}
+
 			$query = phpgw::get_var('query');
 
 			$filter = array('active' => 1);
@@ -183,8 +193,8 @@
 			foreach ($account_list as $account)
 			{
 				$values[] = array(
-					'id' => $account->id,
-					'name' => $account->__toString()
+					'id' => $account->lid,
+					'name' => $account->lid . ' [' . $account->__toString() . ']'
 				);
 			}
 			return array('ResultSet' => array('Result' => $values));
@@ -1672,7 +1682,8 @@ JS;
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
 				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'parent_cat_id'	=> $this->parent_cat_id
+				'parent_cat_id'	=> $this->parent_cat_id,
+				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid']
 			);
 
 			//_debug_array($data);

@@ -1227,6 +1227,25 @@ function createObject(object)
 			{
 				objs.push('&nbsp;');
 			}
+
+			if(element.getAttribute('type') == 'radio')
+			{
+				element.onclick = function (e)
+				{
+					var previousValue = $(this).attr('previousValue');
+					if (previousValue == 'true')
+					{
+						this.checked = false;
+						$(this).attr('previousValue', this.checked);
+					}
+					else
+					{
+						this.checked = true;
+						$(this).attr('previousValue', this.checked);
+					}
+				};
+			}
+
 			objs.push(element);
 		});
 	}
