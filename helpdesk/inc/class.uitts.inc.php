@@ -2661,9 +2661,64 @@ JS;
 				}
 			}
 
-			return $ajax_result;
+			if(!empty($ajax_result))
+			{
+				return $ajax_result;
+			}
+			else
+			{
+				try
+				{
+					$method = phpgw::get_var('method');
+
+					switch ($method)
+					{
+						case 'get_reverse_assignee':
+							return $this->get_reverse_assignee();
+							break;
+						default:
+							break;
+					}
+				}
+				catch (Exception $exc)
+				{
+					echo $exc->getTraceAsString();
+				}
+			}
+
 		}
+
 		/**
+		 * Fallback function
+		 * @return array
+		 */
+		private function get_reverse_assignee()
+		{
+			$query = phpgw::get_var('on_behalf_of_lid');
+
+			$filter = array('active' => 1);
+
+			$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,'ASC', 'account_lastname',  $query, false, $filter);
+
+			$values = array();
+
+			foreach ($account_list as $account)
+			{
+				$values[] = array(
+					'id' => $account->lid,
+					'name' => $account->lid . ' [' . $account->__toString() . ']',
+					'stilling'	 => '',
+					'office'	 => ''
+				);
+			}
+
+			return array(
+				'total_records'	 => count($values),
+				'results'		 => $values
+			);
+		}
+
+				/**
 		 *
 		 */
 		private function _insert_custom_js()

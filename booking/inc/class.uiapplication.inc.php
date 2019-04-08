@@ -612,6 +612,7 @@
 				$application['created'] = 'now';
 				$application['modified'] = 'now';
 				$application['secret'] = $this->generate_secret();
+//				$application['secret_timestamp'] = time();
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 				$application['building_name'] = $building['results'][0]['name'];
 
