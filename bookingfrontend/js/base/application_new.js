@@ -374,12 +374,40 @@ $(".bookingEndTime").on( "click", function() {
     },200);    
 });
 
-// Remove Attachment 
-const addedAttachment = document.getElementById("field-name-input");
-const removeAttachment = document.getElementById("field-name-input-remove");
 
-// Shows "Remove attachment" when attachment is added
-$(document).ready(function(){
-  document.getElementById("field_name_input").addEventListener("click", console.log("clicked"));
-});
-  
+// Grab elements
+const attInput = document.querySelector("#field_name_input")
+const attRemove = document.getElementById("field_name_input_remove")
+const attContainer = document.querySelector("#attachments");
+
+// Show Alert Function
+function showAlert(message, className) {
+  // Create Div
+  const attatchmentError = document.createElement("div");
+  // Alert
+  attatchmentError.className = `alert ${className}`;
+  //Add Text
+  attatchmentError.appendChild(document.createTextNode(message));
+  // Insert Alert
+  attContainer.insertBefore(attatchmentError, attInput);
+  // Disable "Fjern Vedlegg" button
+  attRemove.className = 'isDisabled';
+  // Timeout and remove error
+  setTimeout(function() {
+    document.querySelector(".alert").remove();
+    attRemove.classList.remove("isDisabled");
+  }, 1500);
+}
+
+// Removes attachment when clicked
+window.onload = function() {
+  attRemove.addEventListener("click", function() {
+    if(attInput.textContent === ''){
+      showAlert('Ingen vedlegg å fjerne!', 'alert-danger');
+    } else {
+      showAlert('Vedlegg fjernet!', "alert-success")
+      attInput.textContent = '';
+    }
+  })
+}
+

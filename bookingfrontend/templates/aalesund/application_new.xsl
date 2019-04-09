@@ -254,7 +254,8 @@
 						</label>
 						<div id="attachments">
 							<label id="field_name_input"></label>
-							<a id="field-name-input-remove">Fjern Vedlegg</a>
+							<label><a id="field_name_input_remove">Fjern Vedlegg</a></label>
+							
 						</div>
 						<input name="name" id='field_name' type='file' style="display: none">
 							<xsl:attribute name='title'>
