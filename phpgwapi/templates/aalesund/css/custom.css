@@ -1732,6 +1732,15 @@ NEW APPLICATION PAGE STYLE
     text-decoration: underline;
 }
 
+.success {
+    background: 
+}
+
+.isDisabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575px) {  
     
