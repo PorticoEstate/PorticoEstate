@@ -772,10 +772,11 @@
 		{
 			$preferences_update = False;
 			if ( !is_array($GLOBALS['phpgw_info']['user']['preferences']) 
-				|| isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info']) )
+//				|| isset($GLOBALS['phpgw_info']['server']['cache_phpgw_info'])
+				)
 			{
 				$GLOBALS['phpgw_info']['user']['preferences'] = $this->read_repository();
-				$preferences_update = True;
+//				$preferences_update = True;
 			}
 			/* This takes care of new users who dont have proper default prefs setup */
 			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ||
@@ -818,7 +819,7 @@
 			{
 			//	$this->update_data($user_prefs); // doing nothing?
 				$this->save_repository();
-				$GLOBALS['phpgw_info']['preferences'] = $this->read_repository();
+				$GLOBALS['phpgw_info']['user']['preferences'] = $this->read_repository();
 			}
 		}
 
