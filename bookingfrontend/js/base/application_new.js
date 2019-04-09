@@ -374,12 +374,18 @@ $(".bookingEndTime").on( "click", function() {
     },200);    
 });
 
-// Remove Attachment 
-const addedAttachment = document.getElementById("field-name-input");
-const removeAttachment = document.getElementById("field-name-input-remove");
+// Removes attachment when clicked
+window.onload = function() {
+  document.getElementById("field_name_input_remove").addEventListener("click", function() {
+    let value = document.getElementById("field_name_input");
 
-// Shows "Remove attachment" when attachment is added
-$(document).ready(function(){
-  document.getElementById("field_name_input").addEventListener("click", console.log("clicked"));
-});
-  
+    if(value.textContent === ''){
+      alert('There is no attachment to remove');
+    } else {
+      value.textContent = '';
+    }
+
+    // Clears textcontent when clicked
+    
+  })
+}
