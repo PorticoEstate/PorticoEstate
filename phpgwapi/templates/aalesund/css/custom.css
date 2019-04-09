@@ -1732,10 +1732,6 @@ NEW APPLICATION PAGE STYLE
     text-decoration: underline;
 }
 
-.success {
-    background: 
-}
-
 .isDisabled {
     cursor: not-allowed;
     pointer-events: none;
