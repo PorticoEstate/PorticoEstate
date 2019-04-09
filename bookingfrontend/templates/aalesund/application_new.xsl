@@ -50,11 +50,9 @@
 									<label class="check-box-label">
 										<input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
 										<span class="label-text" data-bind="html: name"></span>
-
 									</label>
 								</div>
 							</li>
-
 						</ul>
 					</div>
 
