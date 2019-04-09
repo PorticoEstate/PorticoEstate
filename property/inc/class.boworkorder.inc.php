@@ -121,6 +121,12 @@
 		function get_column_list()
 		{
 			$columns				 = array();
+			$columns['location_code']	 = array
+				(
+				'id'		 => 'location_code',
+				'name'		 => lang('location code'),
+				'sortable'	 => true
+			);
 			$columns['org_name']	 = array
 				(
 				'id'		 => 'org_name',
