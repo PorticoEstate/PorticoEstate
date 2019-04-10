@@ -107,6 +107,9 @@
 								</label>
 								<input type="hidden" id="set_on_behalf_of_lid" name="values[set_on_behalf_of_lid]"  value="{value_set_on_behalf_of_lid}"/>
 								<input type="text" id="set_on_behalf_of_name" name="values[set_on_behalf_of_name]" value="{value_set_on_behalf_of_name}" class="pure-input-1-2">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Enter username or ssn')"/>
+									</xsl:attribute>
 								</input>
 								<div id="set_on_behalf_of_container"/>
 							</div>
@@ -117,7 +120,7 @@
 								<label>
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
-<!--								<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
+							<!--<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
 								<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
 								</input>-->
 								<div class="pure-custom"  id="set_user_container"/>
