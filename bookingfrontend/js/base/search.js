@@ -270,7 +270,7 @@ function doSearch(searchterm_value) {
     searchViewModel.selectedFilterbox(false);
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
     searchViewModel.selectedTags.removeAll();
-    var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query"}, true);
+    var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query", length:-1}, true);
     var searchTerm;
     if(searchterm_value != "" && typeof searchterm_value !== "undefined") {
         searchTerm = searchterm_value;
