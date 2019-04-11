@@ -375,39 +375,57 @@ $(".bookingEndTime").on( "click", function() {
 });
 
 
-// Grab elements
-const attInput = document.querySelector("#field_name_input")
-const attRemove = document.getElementById("field_name_input_remove")
-const attContainer = document.querySelector("#attachments");
+// Grab attachment elements
+const attFileInput = document.getElementById("field_name_input");
+const attInput = document.getElementById("field_name");
+const attRemove = document.getElementById("attachment-remove");
+const attContainer = document.getElementById("attachment");
+const attUpload = document.getElementById("attachment-upload");
 
 // Show Alert Function
 function showAlert(message, className) {
   // Create Div
-  const attatchmentError = document.createElement("div");
+  const attError = document.createElement("div");
   // Alert
-  attatchmentError.className = `alert ${className}`;
+  attError.className = `alert ${className}`;
   //Add Text
-  attatchmentError.appendChild(document.createTextNode(message));
+  attError.appendChild(document.createTextNode(message));
   // Insert Alert
-  attContainer.insertBefore(attatchmentError, attInput);
+  attContainer.insertBefore(attError, attUpload);
   // Disable "Fjern Vedlegg" button
   attRemove.className = 'isDisabled';
   // Timeout and remove error
   setTimeout(function() {
     document.querySelector(".alert").remove();
     attRemove.classList.remove("isDisabled");
-  }, 1500);
+  }, 2500);
 }
 
 // Removes attachment when clicked
 window.onload = function() {
   attRemove.addEventListener("click", function() {
-    if(attInput.textContent === ''){
+    if(attFileInput.textContent === '' && attInput.value ===''){
       showAlert('Ingen vedlegg å fjerne!', 'alert-danger');
     } else {
       showAlert('Vedlegg fjernet!', "alert-success")
-      attInput.textContent = '';
+      attFileInput.textContent = '';
+      attInput.value = '';
     }
   })
 }
 
+// Pushes filename to field_name_input and validates file size
+document.getElementById('field_name').onchange = function () {
+  var filePath = this.value;
+  if (filePath)
+  {
+    var fileName = filePath.split(/(\\|\/)/g).pop();
+    $("#field_name_input").empty().append(fileName);
+  }
+
+  if(attInput.files[0].size > 2000000){
+    showAlert('Filen er for stor!', 'alert-danger')
+    attFileInput.textContent = '';
+    attInput.value = '';
+  };
+};

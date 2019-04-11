@@ -1718,16 +1718,27 @@ NEW APPLICATION PAGE STYLE
 }
 
 
-.new-application-page .form-group #attachments {
+.new-application-page .form-group #attachment-upload {
     display: flex;
     flex-direction: column;
 }
-.new-application-page .form-group #attachments #field_name_input_remove {
+
+.new-application-page .form-group .upload-button {
+    margin-bottom: 0;
+}
+
+.new-application-page .form-group #field_name_input {
+    margin: auto;
+    display: table;
+    margin: 1rem 0;
+}
+
+.new-application-page .form-group #attachment-remove {
     cursor: pointer;
     color: #26348B;
 }
 
-.new-application-page .form-group #attachments #field_name_input_remove:hover {
+.new-application-page .form-group #attachment-remove:hover {
     color: #0056b3;
     text-decoration: underline;
 }
