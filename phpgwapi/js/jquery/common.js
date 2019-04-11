@@ -1242,6 +1242,15 @@ function createObject(object)
 					{
 						this.checked = true;
 						$(this).attr('previousValue', this.checked);
+
+						try
+						{
+							local_custom_radio_action(this);
+						}
+						catch (err)
+						{
+console.log(err);
+						}
 					}
 				};
 			}
