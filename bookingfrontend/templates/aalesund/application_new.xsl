@@ -243,36 +243,26 @@
 						</div>
 					</div>
 					<!-- Upload Attachment -->
-					<div class="form-group">
+					<div id="attachment" class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Attachment')" />
 						</label>
-						<label for="field_name" class="upload-button">
-							<xsl:value-of select="php:function('lang', 'Upload')" />
+							<div id="attachment-upload">
+								<label for="field_name" class="upload-button">
+									<xsl:value-of select="php:function('lang', 'Upload')" />
+								</label>
+								<span id="field_name_input"></span>
+							</div>
+						<!-- Remove Attachment -->
+						<label>
+							<a id="attachment-remove">Fjern Vedlegg</a>
 						</label>
-						<div id="attachments">
-							<label id="field_name_input"></label>
-							<label><a id="field_name_input_remove">Fjern Vedlegg</a></label>
-							
-						</div>
-						<input name="name" id='field_name' type='file' style="display: none">
-							<xsl:attribute name='title'>
-								<xsl:value-of select="document/name"/>test
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>mime size</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-allowing">
-								<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-max-size">
-								<xsl:text>2M</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-							</xsl:attribute>
+						<!-- Input -->
+						<input name="name" id='field_name' type='file' style="visibility: hidden" accept=".jpg,,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
 						</input>
 					</div>
+
+
 					<!-- Terms and Conditions -->
 					<div class="form-group termAccept mt-5 mb-5">
 						<label>
@@ -321,13 +311,6 @@
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
 		document.head.appendChild(script);
 
-		document.getElementById('field_name').onchange = function () {
-			var filePath = this.value;
-			if (filePath)
-			{
-				var fileName = filePath.split(/(\\|\/)/g).pop();
-				$("#field_name_input").append(fileName);
-			}
-		};
+		
 	</script>
 </xsl:template>
