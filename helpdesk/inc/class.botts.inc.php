@@ -901,7 +901,6 @@
 
 		function add( $data, $values_attribute = array() )
 		{
-
 			$data['finnish_date'] = $this->bocommon->date_to_timestamp($data['finnish_date']);
 
 			if ($values_attribute && is_array($values_attribute))
@@ -931,6 +930,11 @@
 				{
 					require $file;
 				}
+			}
+
+			if( !empty($data['set_user_alternative_lid']))
+			{
+				$data['set_user_id'] = $GLOBALS['phpgw']->accounts->name2id($data['set_user_alternative_lid']);
 			}
 
 			$receipt = $this->so->add($data, $values_attribute);

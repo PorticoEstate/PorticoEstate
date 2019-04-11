@@ -120,10 +120,19 @@
 								<label>
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
-							<!--<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
-								<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
-								</input>-->
 								<div class="pure-custom"  id="set_user_container"/>
+							</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_reverse_alternative">
+									<xsl:value-of select="php:function('lang', 'reverse alternative')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_reverse_alternative"/>
+								</label>
+								<input type="hidden" id="set_user_alternative_lid" name="values[set_user_alternative_lid]" />
+								<input type="text" id="set_user_alternative_name" name="values[set_user_alternative_name]" class="pure-input-1-2">
+								</input>
+								<div class="pure-custom"  id="set_user_container_alternative"/>
 							</div>
 
 							<xsl:if test="disable_priority !='1'">
