@@ -398,7 +398,7 @@ function showAlert(message, className) {
   setTimeout(function() {
     document.querySelector(".alert").remove();
     attRemove.classList.remove("isDisabled");
-  }, 1500);
+  }, 2500);
 }
 
 // Removes attachment when clicked
@@ -414,7 +414,7 @@ window.onload = function() {
   })
 }
 
-// Pushes filename to field_name_input
+// Pushes filename to field_name_input and validates file size
 document.getElementById('field_name').onchange = function () {
   var filePath = this.value;
   if (filePath)
@@ -422,12 +422,10 @@ document.getElementById('field_name').onchange = function () {
     var fileName = filePath.split(/(\\|\/)/g).pop();
     $("#field_name_input").empty().append(fileName);
   }
-};
 
-// ATTACHMENT UPLOAD VALIDATION
-attFileInput.onchange = function() {
-  if(this.files[0].size > 200000){
+  if(attInput.files[0].size > 2000000){
     showAlert('Filen er for stor!', 'alert-danger')
-    this.value = "";
+    attFileInput.textContent = '';
+    attInput.value = '';
   };
 };
