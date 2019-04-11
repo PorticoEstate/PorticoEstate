@@ -254,9 +254,9 @@
 								<span id="field_name_input"></span>
 							</div>
 						<!-- Remove Attachment -->
-						<span class="span-label">
+						<label>
 							<a id="attachment-remove">Fjern Vedlegg</a>
-						</span>
+						</label>
 						<!-- Input -->
 						<input name="name" id='field_name' type='file' style="visibility: hidden" accept=".jpg,,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
 						</input>

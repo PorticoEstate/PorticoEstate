@@ -1723,10 +1723,19 @@ NEW APPLICATION PAGE STYLE
     flex-direction: column;
 }
 
+.new-application-page .form-group .upload-button {
+    margin-bottom: 0;
+}
+
+.new-application-page .form-group #field_name_input {
+    margin: auto;
+    display: table;
+    margin: 1rem 0;
+}
+
 .new-application-page .form-group #attachment-remove {
     cursor: pointer;
     color: #26348B;
-    margin-top: .5rem;
 }
 
 .new-application-page .form-group #attachment-remove:hover {
