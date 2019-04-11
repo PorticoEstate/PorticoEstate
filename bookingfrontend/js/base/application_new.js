@@ -398,7 +398,7 @@ function showAlert(message, className) {
   setTimeout(function() {
     document.querySelector(".alert").remove();
     attRemove.classList.remove("isDisabled");
-  }, 1500);
+  }, 2500);
 }
 
 // Removes attachment when clicked
@@ -425,9 +425,8 @@ document.getElementById('field_name').onchange = function () {
 };
 
 // ATTACHMENT UPLOAD VALIDATION
-attFileInput.onchange = function() {
-  if(this.files[0].size > 200000){
+attInput.onchange = function() {
+  if(this.files[0].size > 2000){
     showAlert('Filen er for stor!', 'alert-danger')
-    this.value = "";
   };
 };
