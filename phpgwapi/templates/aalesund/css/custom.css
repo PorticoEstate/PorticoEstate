@@ -1584,6 +1584,17 @@ NEW APPLICATION PAGE STYLE
 
 *********************************************/
 
+/* Form input styling */
+.form-input {
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: #fff;
+    border-radius: .25rem;
+    border: 1px solid #ced4da;
+    transition: .15s ease-in-out;
+}
 .new-application-page {
     margin-bottom: 100px;
 }
