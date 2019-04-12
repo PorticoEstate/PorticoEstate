@@ -174,20 +174,20 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" />*</label>
-						<input type="text" class="form-control" name="name" value="{application/name}"/>
+						<input required="true" type="text" class="form-input" name="name" value="{application/name}"/>
 					</div>
 
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" />*</label>
-						<input type="text" class="form-control" name="organizer" value="{application/organizer}"/>
+						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}"/>
 					</div>
 
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 						</label>
-						<input type="text" class="form-control" name="homepage" value="{application/homepage}"/>
+						<input  type="text" class="form-input" name="homepage" value="{application/homepage}"/>
 					</div>
 
 					<div class="form-group">
@@ -195,7 +195,7 @@
 							<xsl:value-of select="php:function('lang', 'description')" />
 						</label>
 
-						<textarea id="field_description" class="form-control" rows="3" name="description">
+						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
 							<xsl:value-of select="application/description"/>
 						</textarea>
 					</div>
@@ -204,7 +204,7 @@
 						<label>
 							<xsl:value-of select="config/application_equipment"/>
 						</label>
-						<textarea class="form-control" name="equipment">
+						<textarea style="resize: none;" class="form-input" name="equipment">
 							<xsl:value-of select="application/equipment"/>
 						</textarea>
 					</div>
