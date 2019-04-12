@@ -916,29 +916,6 @@
 					'msg' => lang('Please select a valid project !'));
 			}
 
-			if (empty($values['ecodimb']))
-			{
-				$values['ecodimb'] = $project['ecodimb'];
-				if (!$values['ecodimb'])
-				{
-					$this->receipt['error'][]	 = array('msg' => lang('Please select dimb!'));
-					$error_id					 = true;
-				}
-				else
-				{
-					$_ecodimb = execMethod('property.bogeneric.read_single', array(
-						'id'			 => $values['ecodimb'],
-						'location_info'	 => array(
-							'type' => 'dimb')));
-					if (!$_ecodimb || !$_ecodimb['active'])
-					{
-						$values['ecodimb']			 = '';
-						$values['ecodimb_name']		 = '';
-						$this->receipt['error'][]	 = array(
-							'msg' => lang('Please select a valid dimb!'));
-					}
-				}
-			}
 
 			if (!$values['status'])
 			{
@@ -963,12 +940,42 @@
 					'id'			 => $values['b_account_id'],
 					'location_info'	 => array(
 						'type' => 'budget_account')));
+
+				if(!empty($_b_account['ecodimb']))
+				{
+					$values['ecodimb'] = $_b_account['ecodimb'];
+				}
+
 				if (!$_b_account || !$_b_account['active'])
 				{
 					$values['b_account_id']		 = '';
 					$values['b_account_name']	 = '';
 					$this->receipt['error'][]	 = array(
 						'msg' => lang('Please select a valid budget account !'));
+				}
+			}
+
+			if (empty($values['ecodimb']))
+			{
+				$values['ecodimb'] = $project['ecodimb'];
+				if (!$values['ecodimb'])
+				{
+					$this->receipt['error'][]	 = array('msg' => lang('Please select dimb!'));
+					$error_id					 = true;
+				}
+				else
+				{
+					$_ecodimb = execMethod('property.bogeneric.read_single', array(
+						'id'			 => $values['ecodimb'],
+						'location_info'	 => array(
+							'type' => 'dimb')));
+					if (!$_ecodimb || !$_ecodimb['active'])
+					{
+						$values['ecodimb']			 = '';
+						$values['ecodimb_name']		 = '';
+						$this->receipt['error'][]	 = array(
+							'msg' => lang('Please select a valid dimb!'));
+					}
 				}
 			}
 
@@ -1918,7 +1925,7 @@
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
-				'ecodimb'		 => $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
+				'ecodimb'		 => $values['ecodimb'] ? $values['ecodimb'] : $project['ecodimb'],
 				'ecodimb_descr'	 => $values['ecodimb_descr'],
 				'disabled'		 => $project['ecodimb'] || $mode == 'view'
 				)

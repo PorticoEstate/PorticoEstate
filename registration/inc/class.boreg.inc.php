@@ -412,7 +412,10 @@
 		//
 		function lostpw3()
 		{
-			$r_reg = phpgw::get_var('r_reg');
+			$r_reg = phpgw::get_var('r_reg', 'string', 'POST');
+
+			$passwd		 = html_entity_decode($r_reg['passwd']);
+			$passwd_2	 = html_entity_decode($r_reg['passwd_2']);
 
 			$lid = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 			if (!$lid)
@@ -420,12 +423,12 @@
 				$error[] = lang('Wrong session');
 			}
 
-			if ($r_reg['passwd'] != $r_reg['passwd_2'])
+			if ($passwd != $passwd_2)
 			{
 				$errors[] = lang('The two passwords are not the same');
 			}
 
-			if (!$r_reg['passwd'])
+			if (!$passwd)
 			{
 				$errors[] = lang('You must enter a password');
 			}
@@ -434,7 +437,7 @@
 				$account = new phpgwapi_user();
 				try
 				{
-					$account->validate_password($r_reg['passwd']);
+					$account->validate_password($passwd);
 				}
 				catch (Exception $e)
 				{
@@ -445,14 +448,14 @@
 			if (!is_array($errors))
 			{
 				$so = createobject('registration.soreg');
-				$so->lostpw3($lid, $r_reg['passwd']);
+				$so->lostpw3($lid, $passwd);
 			}
 
 			$ui = createobject('registration.uireg');
 
 			if (is_array($errors))
 			{
-				$ui->lostpw3($errors, $r_reg, $lid);
+				$ui->lostpw3($errors, '', $lid);
 			}
 			else
 			{

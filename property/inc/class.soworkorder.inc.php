@@ -1241,6 +1241,7 @@
 						$vals[]	 = $value;
 					}
 				}
+				unset($value);
 			}
 
 			if ($workorder['location_code'])
@@ -1248,17 +1249,30 @@
 				$cols[]	 = 'location_code';
 				$vals[]	 = $workorder['location_code'];
 
+				$_address = array();
 				if ($workorder['street_name'])
 				{
-					$address[]	 = $workorder['street_name'];
-					$address[]	 = $workorder['street_number'];
-					$address	 = $this->db->db_addslashes(implode(" ", $address));
+					$_address[]	 = $workorder['street_name'];
+					$_address[]	 = $workorder['street_number'];
 				}
 
-				if (!$address)
+				if (!$_address)
 				{
-					$address = $this->db->db_addslashes($workorder['location_name']);
+					$_address[] = $workorder['location_name'];
 				}
+
+				if (!empty($workorder['additional_info']))
+				{
+					foreach ($workorder['additional_info'] as $key => $value)
+					{
+						if ($value)
+						{
+							$_address[] = "{$key}|{$value}";
+						}
+					}
+				}
+				$address	 = $this->db->db_addslashes(implode(" ", $_address));
+
 				$cols[]	 = 'address';
 				$vals[]	 = $address;
 			}
@@ -1536,21 +1550,36 @@
 				}
 			}
 
+
+
 			if ($workorder['location_code'])
 			{
 				$value_set['location_code'] = $workorder['location_code'];
 
+				$_address = array();
 				if ($workorder['street_name'])
 				{
-					$address[]	 = $workorder['street_name'];
-					$address[]	 = $workorder['street_number'];
-					$address	 = $this->db->db_addslashes(implode(" ", $address));
+					$_address[]	 = $workorder['street_name'];
+					$_address[]	 = $workorder['street_number'];
 				}
 
-				if (!isset($address) || !$address)
+				if (empty($_address))
 				{
-					$address = $this->db->db_addslashes($workorder['location_name']);
+					$_address[] =$workorder['location_name'];
 				}
+
+				if (!empty($workorder['additional_info']))
+				{
+					foreach ($workorder['additional_info'] as $key => $value)
+					{
+						if ($value)
+						{
+							$_address[] = "{$key}|{$value}";
+						}
+					}
+				}
+
+				$address	 = $this->db->db_addslashes(implode(" ", $_address));
 
 				$value_set['address'] = $address;
 			}

@@ -1037,6 +1037,29 @@ JS;
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 			}
 
+			if (!empty($values['b_account_id']))
+			{
+
+				$_b_account					 = execMethod('property.bogeneric.read_single', array(
+					'id'			 => $values['b_account_id'],
+					'location_info'	 => array(
+						'type' => 'budget_account')));
+				$values['b_account_group']	 = $_b_account['category'];
+
+				if(!empty($_b_account['ecodimb']))
+				{
+					$values['ecodimb'] = $_b_account['ecodimb'];
+				}
+
+				if (!$_b_account || !$_b_account['active'])
+				{
+					$values['b_account_id']		 = '';
+					$values['b_account_name']	 = '';
+					$values['b_account_group']	 = '';
+					$this->receipt['error'][]	 = array(
+						'msg' => lang('Please select a valid budget account !'));
+				}
+			}
 			if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
 			{
 				if (!$this->acl_manage)
@@ -1075,30 +1098,6 @@ JS;
 			{
 				$this->receipt['error'][]	 = array('msg' => lang('Please select a location !'));
 				$error_id					 = true;
-			}
-
-			if (!empty($values['b_account_id']))
-			{
-//				$sogeneric = CreateObject('property.sogeneric');
-//				$sogeneric->get_location_info('budget_account', false);
-//				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
-//				$values['b_account_group'] = $status_data['category'];
-
-
-				$_b_account					 = execMethod('property.bogeneric.read_single', array(
-					'id'			 => $values['b_account_id'],
-					'location_info'	 => array(
-						'type' => 'budget_account')));
-				$values['b_account_group']	 = $_b_account['category'];
-
-				if (!$_b_account || !$_b_account['active'])
-				{
-					$values['b_account_id']		 = '';
-					$values['b_account_name']	 = '';
-					$values['b_account_group']	 = '';
-					$this->receipt['error'][]	 = array(
-						'msg' => lang('Please select a valid budget account !'));
-				}
 			}
 
 			if (isset($values['b_account_group']) && $values['b_account_group'])

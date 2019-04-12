@@ -178,7 +178,7 @@
 
 		function read_sessiondata()
 		{
-			$data = phpgwapi_cache::session_get('property.request', 'session_data', $data);
+			$data = phpgwapi_cache::session_get('property.request', 'session_data');
 
 			$this->start			 = $data['start'];
 			$this->query			 = $data['query'];

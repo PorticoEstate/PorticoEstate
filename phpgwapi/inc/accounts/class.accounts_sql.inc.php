@@ -348,6 +348,9 @@
 				$account = phpgwapi_cache::system_get('phpgwapi', "account_{$id}");
 				if ( is_object($account) )
 				{
+					$account->firstname = $this->db->stripslashes($account->firstname);
+					$account->lastname = $this->db->stripslashes($account->lastname);
+					$cache[$id] = $account;
 					return $account;
 				}
 			}

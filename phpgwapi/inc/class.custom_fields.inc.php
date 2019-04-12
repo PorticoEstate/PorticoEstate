@@ -311,6 +311,11 @@
 				$values['list'] = !!$attrib['list'];
 			}
 
+			if ( isset($attrib['table_filter']) )
+			{
+				$values['table_filter'] = !!$attrib['table_filter'];
+			}
+
 			if ( isset($attrib['history']) )
 			{
 				$values['history'] = !!$attrib['history'];
@@ -701,6 +706,7 @@
 			$attrib['list'] = isset($attrib['list']) ? !!$attrib['list'] : false;
 			$attrib['history'] = isset($attrib['history']) ? !!$attrib['history'] : false;
 			$attrib['lookup_form'] = isset($attrib['lookup_form']) ? !!$attrib['lookup_form'] : false;
+			$attrib['table_filter'] = isset($attrib['table_filter']) ? !!$attrib['table_filter'] : false;
 			$attrib['group_id']		= (int) $attrib['group_id'];
 
 			if(!$attrib_table)
@@ -761,6 +767,7 @@
 					'statustext'			=> $attrib['statustext'],
 					'search'				=> isset($attrib['search']) ? $attrib['search'] : '',
 					'list'					=> isset($attrib['list']) ? $attrib['list'] : '',
+					'table_filter'			=> isset($attrib['table_filter']) ? $attrib['table_filter'] : '',
 					'history'				=> isset($attrib['history']) ? $attrib['history'] : '',
 					'nullable'				=> $attrib['column_info']['nullable'] == 'False' ? 'False' : 'True',
 					'disabled'				=> isset($attrib['disabled']) ? $attrib['disabled'] : '',
@@ -1158,6 +1165,7 @@
 					'group_id'				=> (int) $this->_db->f('group_id'),					
 					'attrib_sort'			=> (int) $this->_db->f('attrib_sort'),
 					'list'					=> $this->_db->f('list'),
+					'table_filter'			=> $this->_db->f('table_filter'),
 					'lookup_form'			=> $this->_db->f('lookup_form'),
 					'entity_form'			=> $this->_db->f('entity_form'),
 					'column_name'			=> $this->_db->f('column_name'),
@@ -1181,7 +1189,8 @@
 					'get_single_function_input' => $this->_db->f('get_single_function_input') ? unserialize($this->_db->f('get_single_function_input', true)) : '',
 					'short_description'			=> $this->_db->f('short_description'),
 					'javascript_action'			=> $this->_db->f('javascript_action',true),
-					'default_value'				=> $this->_db->f('default_value',true)
+					'default_value'				=> $this->_db->f('default_value',true),
+					'value'						=> $this->_db->f('default_value',true)
 				);
 			}
 
@@ -1418,6 +1427,7 @@
 				'type_name'				=> $this->_db->f('type_name'),
 				'lookup_form'			=> $this->_db->f('lookup_form'),
 				'list'					=> !!$this->_db->f('list'),
+				'table_filter'			=> !!$this->_db->f('table_filter'),
 				'search'				=> !!$this->_db->f('search'),
 				'history'				=> !!$this->_db->f('history'),
 				'location_id'			=> $this->_db->f('location_id'),

@@ -566,7 +566,7 @@
 				$count = count($values_combo_box);
 				foreach ($attrib_data as $attrib)
 				{
-					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'] && $attrib['table_filter'])
 					{
 						$values_combo_box[$count][] = array
 							(

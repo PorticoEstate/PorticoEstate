@@ -221,6 +221,7 @@ $(document).ready(function ()
 			filter_search_type: search_type_string,
 			filter_part_of_town: part_of_town_string,
 			filter_top_level: top_level_string,
+			length: -1
 		};
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs);
 

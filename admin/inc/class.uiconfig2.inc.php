@@ -564,6 +564,7 @@
 				'lang_new_value'					=> lang('New value'),
 				'lang_new_value_statustext'			=> lang('New value for multiple choice'),
 				'multiple_choice'					=> $multiple_choice,
+//				'value_table_filter'				=> $values['table_filter'],
 				'value_choice'						=> $values['choice'],
 				'lang_delete_value'					=> lang('Delete value'),
 				'lang_value'						=> lang('value'),

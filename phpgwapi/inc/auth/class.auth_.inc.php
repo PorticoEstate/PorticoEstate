@@ -98,32 +98,7 @@
 			static $retry = 0;
 			switch ($GLOBALS['phpgw_info']['server']['encryption_type'])
 			{
-				case 'CRYPT':
-					$size =  mcrypt_get_iv_size(MCRYPT_CAST_256, MCRYPT_MODE_CFB);
-					$salt = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
-					$hash = crypt($passwd, '$5$' . $salt);//CRYPT_SHA256
-					$ret =  '{CRYPT}' . base64_encode($hash . $salt);
-					$lenght_hash = strlen($hash);
-
-					/*
-					 * It happens (about one out of 15 - 20 times) that the lenght is not as expexted
-					 */
-
-					if($lenght_hash != 63 && $retry < 3)
-					{
-						if($retry < 3)
-						{
-							$retry++;
-							$ret = self::create_hash($passwd);
-						}
-						else
-						{
-							throw new Exception('Invalid lenght of password hash: ' . $lenght_hash);
-
-						}
-					}
-					return $ret;
-
+				case 'CRYPT'://deprecated
 				case 'BCRYPT':
 					$hash = password_hash($passwd, PASSWORD_BCRYPT);
 					$ret =  '{BCRYPT}' . base64_encode($hash);

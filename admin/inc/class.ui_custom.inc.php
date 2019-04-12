@@ -410,6 +410,7 @@
 				'lang_new_value'					=> lang('New value'),
 				'lang_new_value_statustext'			=> lang('New value for multiple choice'),
 				'multiple_choice'					=> $multiple_choice,
+				'value_table_filter'				=> $values['table_filter'],
 				'value_choice'					 => (isset($values['choice']) ? $values['choice'] : ''),
 				'custom_get_list' => $custom_get_list,
 				'custom_get_single' => $custom_get_single,

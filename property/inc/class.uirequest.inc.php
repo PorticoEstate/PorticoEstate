@@ -906,7 +906,7 @@
 			{
 				foreach ($attrib_data as $attrib)
 				{
-					if ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R')
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'] && $attrib['table_filter'])
 					{
 
 						$_values	 = array();
