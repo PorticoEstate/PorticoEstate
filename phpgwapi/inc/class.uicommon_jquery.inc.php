@@ -434,7 +434,7 @@
 
 			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
 			{
-				echo json_encode($data);
+//				echo json_encode($data);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
