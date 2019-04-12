@@ -107,7 +107,8 @@
 				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
 					. " WHERE BRUKERNAVN = '{$query}'"
 					. " OR FODSELSNR  = '{$query}'"
-					. " OR RESSURSNR  = '{$query}'";
+					. " OR RESSURSNR  = '{$query}'"
+					. " OR lower(ETTERNAVN)  = '" . strtolower($query) ."'";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
@@ -215,17 +216,22 @@
 					$org_units[] = (int)$GLOBALS['phpgw']->db->f('id');
 				}
 
-				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST FROM V_SOA_ANSATT WHERE ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
+				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST, V_ORG_ENHET.ORG_NAVN FROM V_SOA_ANSATT"
+					. " JOIN V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_SOA_ANSATT.ORG_ENHET_ID"
+					. " WHERE V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
 
 				$db->query($sql, __LINE__, __FILE__);
 
 				$candidates = array();
 				while ($db->next_record())
 				{
-					$candidates[$db->f('BRUKERNAVN')] = $db->f('STILLINGSTEKST');
+					$candidates[$db->f('BRUKERNAVN')] = array(
+						'office' =>  $db->f('ORG_NAVN',true),
+						'stilling' =>  $db->f('STILLINGSTEKST',true)
+						);
 				}
 
-				$sql = "SELECT DISTINCT alias, name, office FROM phpgw_helpdesk_email_out_recipient_list WHERE alias IN ('" . implode("','", array_keys($candidates)) . "')";
+				$sql = "SELECT DISTINCT alias, name  FROM phpgw_helpdesk_email_out_recipient_list WHERE alias IN ('" . implode("','", array_keys($candidates)) . "')";
 
 				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
@@ -238,8 +244,8 @@
 						(
 						'lid'		 => $lid,
 						'name'		 => $GLOBALS['phpgw']->db->f('name', true),
-						'stilling'	 => $candidates[$lid],
-						'office'	 => $GLOBALS['phpgw']->db->f('office', true)
+						'stilling'	 => $candidates[$lid]['stilling'],
+						'office'	 => $candidates[$lid]['office'],
 					);
 				}
 
