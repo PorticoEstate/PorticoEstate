@@ -306,22 +306,11 @@ a {
     color: #26348B !important;
 }
 
-
-.bookable-resource-link-href {
-  
-    text-decoration: none;
-    color: red;
+.building-bookable .custom-card:hover {
+    background: #89266a;
+    color: #fff;
 }
 
-.bookable-resource-link-href   a:hover {
-    text-decoration: underline;
-    color: #26348B;
-}
-
-.bookable-resource-link-href:hover {
-    text-decoration: underline;
-    color: #26348B;
-}
 
 #mainSearchInput  {
     border-left: 2px solid #26348B  !important;
@@ -568,13 +557,6 @@ F
 .termAcceptDocsUrl {
     line-height: 1.4em;
     display: inline-block;
-}
-
-.bookable-resource-link-href span:hover,
-.termAcceptDocsUrl:hover {
-    border-bottom: 2px solid transparent;
-border:none;
-color: white;
 }
 
 .margin-top-and-bottom {
@@ -1705,6 +1687,10 @@ NEW APPLICATION PAGE STYLE
     width: 27%;
     min-width: 480px;
     background-color: #fff;
+}
+
+.booking-card:hover {
+    cursor: pointer;
 }
 
 .booking-cart-title {
