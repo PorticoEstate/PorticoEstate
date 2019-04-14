@@ -422,7 +422,7 @@ document.getElementById('field_name').onchange = function () {
     var fileName = filePath.split(/(\\|\/)/g).pop();
     $("#field_name_input").empty().append(fileName);
   }
-
+  // Checks if file size is greater than 2MB
   if(attInput.files[0].size > 2000000){
     showAlert('Filen er for stor!', 'alert-danger')
     attFileInput.textContent = '';

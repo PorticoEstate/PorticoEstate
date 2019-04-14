@@ -1603,6 +1603,11 @@ NEW APPLICATION PAGE STYLE
     border-color: #595959;
 }
 
+.new-application-page #bookable-resource {
+    display: flex;
+    flex-direction: column;
+}
+
 .btn-light {
     border: 1px #9e9e9e solid;
     border-radius: 0;

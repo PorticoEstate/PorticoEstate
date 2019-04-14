@@ -60,19 +60,20 @@
 						<span class="font-weight-bold d-block mt-2 span-label">
 							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
 						</span>
-						<div data-bind="foreach: bookableresource">
+						<div id="bookable-resource" data-bind="foreach: bookableresource">
 							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 						</div>
 						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
 						</span>
 					</div>
-
+					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Date and time')" />*</label>
 						<div class="form-group">
 							<div class="row">
+								<!-- Date Pick -->
 								<div class="form-group col-lg-5 col-sm-12 col-12">
 									<div class="input-group">
 										<div class="input-group-prepend">
@@ -87,7 +88,7 @@
 										</input>
 									</div>
 								</div>
-
+								<!-- From Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
 									<div class="input-group">
 										<div class="input-group-prepend">
@@ -102,7 +103,7 @@
 										</input>
 									</div>
 								</div>
-
+								<!-- To Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
 									<div class="input-group">
 										<div class="input-group-prepend">
@@ -117,17 +118,10 @@
 										</input>
 									</div>
 								</div>
-
 							</div>
-
 						</div>
-
-						<!--<button class="btn btn-outline-light btn-sm mt-2 border-0" type="button" data-bind="click: addDate">
-							<i class="fas fa-plus"></i>&#160;
-							<xsl:value-of select="php:function('lang', 'Add date and time')" />
-						</button>-->
 					</div>
-
+					<!-- Display Time Chosen -->
 					<div class="form-group">
 						<span class="font-weight-bold d-block mt-2 span-label">
 							<xsl:value-of select="php:function('lang', 'Selected date and time')" />
@@ -141,24 +135,20 @@
 									<i class="fas fa-minus-circle"></i>
 								</button>
 							</div>
-
 						</div>
-
 						<span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">
 							<xsl:value-of select="php:function('lang', 'Select a date and time')" />
 						</span>
 					</div>
-
+					<!-- Information About Event -->
 					<hr class="mt-5 mb-5"></hr>
-
 					<h2 class="font-weight-bold mb-4">
 						<xsl:value-of select="php:function('lang', 'Information about the event')" />
 					</h2>
-
+					<!-- Target Audience Section -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Target audience')" />*</label>
-
 						<div class="dropdown d-inline-block">
 							<button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<xsl:value-of select="php:function('lang', 'choose')" />
@@ -168,28 +158,29 @@
 							</div>
 							<input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
 						</div>
-
 					</div>
-
+					<!-- Event Name -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" />*</label>
-						<input required="true" type="text" class="form-input" name="name" value="{application/name}"/>
+						<input required="true" type="text" class="form-input" name="name" value="{application/name}" oninvalid="this.setCustomValidity('Skrv inn navn på arrangement!')"
+ 						oninput="setCustomValidity('')"/>
 					</div>
-
+					<!-- Organizer -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" />*</label>
-						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}"/>
+						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}" oninvalid="this.setCustomValidity('Skriv inn navn på arrangør!')"
+ 						oninput="setCustomValidity('')"></input>
 					</div>
-
+					<!-- Homepage -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 						</label>
 						<input  type="text" class="form-input" name="homepage" value="{application/homepage}"/>
 					</div>
-
+					<!-- Description -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'description')" />
@@ -208,7 +199,7 @@
 							<xsl:value-of select="application/equipment"/>
 						</textarea>
 					</div>
-
+					<!-- Estimated Number of Participants -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />*</label>
@@ -233,10 +224,10 @@
 									<span class="mt-2" data-bind="text: agegroupLabel"></span>
 								</div>
 								<div class="col-4">
-									<input class="form-control sm-input maleInput" data-bind=""/>
+									<input class="form-input sm-input maleInput" data-bind=""/>
 								</div>
 								<div class="col-4">
-									<input class="form-control sm-input femaleInput" data-bind=""/>
+									<input class="form-input sm-input femaleInput" data-bind=""/>
 								</div>
 							</div>
 
@@ -264,7 +255,7 @@
 
 
 					<!-- Terms and Conditions -->
-					<div class="form-group termAccept mt-5 mb-5">
+					<div class="form-group termAccept mb-5">
 						<label>
 							<xsl:value-of select="php:function('lang', 'legal condition')" />*</label>
 						<span data-bind="ifnot: termAccept" class="validationMessage">
