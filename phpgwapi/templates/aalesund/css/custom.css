@@ -19,6 +19,14 @@ and open the template in the editor.
     
 }
 
+.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
 html {
     font-size: 1rem;
     height: 100%;
