@@ -1707,6 +1707,10 @@ NEW APPLICATION PAGE STYLE
     background-color: #fff;
 }
 
+.booking-card:hover {
+    cursor: pointer;
+}
+
 .booking-cart-title {
     padding: 0.5em;
     background-color: #4B4B4B;
