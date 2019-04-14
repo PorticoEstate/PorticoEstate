@@ -255,7 +255,7 @@
 
 
 					<!-- Terms and Conditions -->
-					<div class="form-group termAccept mt-5 mb-5">
+					<div class="form-group termAccept mb-5">
 						<label>
 							<xsl:value-of select="php:function('lang', 'legal condition')" />*</label>
 						<span data-bind="ifnot: termAccept" class="validationMessage">
