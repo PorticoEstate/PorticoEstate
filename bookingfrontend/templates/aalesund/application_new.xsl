@@ -158,28 +158,29 @@
 							</div>
 							<input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
 						</div>
-
 					</div>
-
+					<!-- Event Name -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" />*</label>
-						<input required="true" type="text" class="form-input" name="name" value="{application/name}"/>
+						<input required="true" type="text" class="form-input" name="name" value="{application/name}" oninvalid="this.setCustomValidity('Skrv inn navn på arrangement!')"
+ 						oninput="setCustomValidity('')"/>
 					</div>
-
+					<!-- Organizer -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" />*</label>
-						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}"/>
+						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}" oninvalid="this.setCustomValidity('Skriv inn navn på arrangør!')"
+ 						oninput="setCustomValidity('')"></input>
 					</div>
-
+					<!-- Homepage -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 						</label>
 						<input  type="text" class="form-input" name="homepage" value="{application/homepage}"/>
 					</div>
-
+					<!-- Description -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'description')" />
@@ -198,7 +199,7 @@
 							<xsl:value-of select="application/equipment"/>
 						</textarea>
 					</div>
-
+					<!-- Estimated Number of Participants -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />*</label>
