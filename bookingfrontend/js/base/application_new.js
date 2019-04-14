@@ -429,6 +429,3 @@ document.getElementById('field_name').onchange = function () {
     attInput.value = '';
   };
 };
-
-// Input Field Validation
-
