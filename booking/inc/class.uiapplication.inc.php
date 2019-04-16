@@ -871,6 +871,22 @@
 				$date['to_'] = pretty_timestamp($date['to_']);
 			}
 
+
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				echo json_encode(array(
+						'application' => $application,
+						'activities' => $activities,
+						'agegroups' => $agegroups,
+						'audience' => $audience,
+			//			'config' => $application_text
+					)
+				);
+
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+
 //			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 //			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0);
