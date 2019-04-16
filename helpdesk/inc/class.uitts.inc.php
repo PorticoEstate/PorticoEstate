@@ -867,7 +867,7 @@ HTML;
 								  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 							}
 						});
-						$("#user_id").material_select();
+						$("#user_id").formSelect();
 					}, data, "GET", "json"
 				);
 				';
@@ -1053,7 +1053,7 @@ JS;
 					$js .=<<<JS
 
 					$("#{$filter['name']}").hide();
-					$("#{$filter['name']}").material_select();
+					$("#{$filter['name']}").formSelect();
 JS;
 
 				}
