@@ -1125,7 +1125,7 @@
 
 											try
 											{
-												oControl.material_select();
+												oControl.formSelect();
 											}
 											catch(err)
 											{
@@ -1140,7 +1140,7 @@
 
 												if($(oControl).find("option").length > 0)
 												{
-													$(oControl).material_select();
+													$(oControl).formSelect();
 												}
 											}
 											catch(err)

@@ -98,11 +98,13 @@ JS;
 			{
 				$date_range = ',' . implode(',', $date_range_arr);
 			}
-
+			$dateformat_materializecss		 = str_ireplace(array('yy'), array('yyyy'), $this->dateformat);
 			$js = <<<JS
 			$(function() {
 				$( "#{$id}" ).{$type}picker({ 
 					dateFormat: '{$this->dateformat}',
+					format: '{$dateformat_materializecss}', // materializecss
+					showClearBtn : true,// materializecss
 					showWeek: true,
 					changeMonth: true,
 					changeYear: true,
