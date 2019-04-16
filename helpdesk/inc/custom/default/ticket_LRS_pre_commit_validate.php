@@ -48,6 +48,16 @@
 					return true;
 				}
 
+				if(!empty($data['set_user_alternative_lid']))
+				{
+					$helpdesk_account = new helpdesk_account();
+					$helpdesk_account->register_accounts(array
+						(
+							$data['set_user_alternative_lid'] => true
+						)
+					);
+				}
+
 				$org_unit = 0;
 				foreach ($values_attribute as $key => $valueset)
 				{
@@ -137,5 +147,47 @@
 			}
 		}
 	}
+
+	if (!class_exists("helpdesk_account"))
+	{
+		phpgw::import_class('helpdesk.hook_helper');
+
+		class helpdesk_account extends helpdesk_hook_helper
+		{
+
+			public function __construct()
+			{
+				$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+			}
+
+			public function register_accounts( $values )
+			{
+				foreach ($values as $account_lid => $entry)
+				{
+					if (!$GLOBALS['phpgw']->accounts->exists($account_lid))
+					{
+
+						$autocreate_user = isset($this->config['autocreate_user']) && $this->config['autocreate_user'] ? $this->config['autocreate_user'] : 0;
+
+						if ($autocreate_user)
+						{
+							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($account_lid);
+							if ($fellesdata_user && $fellesdata_user['firstname'])
+							{
+								// Read default assign-to-group from config
+								$default_group_id	 = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
+								$group_lid			 = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
+								$group_lid			 = $group_lid ? $group_lid : 'frontend_delegates';
+
+								$password	 = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
+								$account_id	 = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	$ticket_LRS_pre_commit_validate = new ticket_LRS_pre_commit_validate();
 	$ticket_LRS_pre_commit_validate->validate($id, $data, $values_attribute);

@@ -605,8 +605,16 @@
 		 */
 		function read( $params )
 		{
+			$maxmatchs	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
 			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
+			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : $maxmatchs;
+
+			if($results == -1 || $results ==='all')
+			{
+				$results = null;
+			}
+
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;

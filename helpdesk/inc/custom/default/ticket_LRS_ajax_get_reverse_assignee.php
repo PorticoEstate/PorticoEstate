@@ -71,7 +71,14 @@
 					return;
 				}
 
-				$account_lid = $db->db_addslashes(phpgw::get_var('account_lid'));
+				$account_lid = phpgw::get_var('account_lid');
+
+				if((int)$account_lid)
+				{
+					$account_lid = $GLOBALS['phpgw']->accounts->id2lid((int)$account_lid);
+				}
+
+				$account_lid = $db->db_addslashes($account_lid);
 
 				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM V_SOA_ANSATT WHERE BRUKERNAVN = '{$account_lid}'";
 
@@ -97,10 +104,11 @@
 					return;
 				}
 
-				$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
+				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
 					. " WHERE BRUKERNAVN = '{$query}'"
 					. " OR FODSELSNR  = '{$query}'"
-					. " OR RESSURSNR  = '{$query}'";
+					. " OR RESSURSNR  = '{$query}'"
+					. " OR lower(ETTERNAVN)  = '" . strtolower($query) ."'";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
@@ -108,9 +116,41 @@
 				while ($db->next_record())
 				{
 					$values[] = array(
-						'id'	 => $db->f('BRUKERNAVN'),
-						'name'	 => $db->f('BRUKERNAVN') . ' [' . $db->f('ETTERNAVN', true) . ', ' . $db->f('FORNAVN', true) . ', ' . $db->f('STILLINGSTEKST', true) . '] ' . $db->f('RESSURSNR')
+						'id'		 => $db->f('BRUKERNAVN'),
+						'name'		 => $db->f('BRUKERNAVN') . ' [' . $db->f('RESSURSNR') .': ' . $db->f('ETTERNAVN', true) . ', ' . $db->f('FORNAVN', true) . ', ' . $db->f('STILLINGSTEKST', true) . '] ' ,
+						'org_unit'	 => $db->f('ORG_ENHET_ID'),
+						'level'		 => $db->f('ORG_NIVAA'),
 					);
+				}
+
+				foreach ($values as &$value)
+				{
+					$path = CreateObject('property.sogeneric')->get_path(array(
+						'type'			 => 'org_unit',
+						'id'			 => $value['org_unit'],
+						'path_by_id'	 => true
+					));
+
+					$levels = count($path);
+
+					if ($levels > 1)
+					{
+						$parent_id = (int)$path[($levels - 2)];
+					}
+					else
+					{
+						$parent_id = (int)$path[0];
+					}
+					$sql = "SELECT name FROM fm_org_unit WHERE id  = {$parent_id}";
+
+					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+
+					$GLOBALS['phpgw']->db->next_record();
+					{
+						$org_unit_name = $GLOBALS['phpgw']->db->f('name', true);
+					}
+
+					$value['name'] .= " {$org_unit_name}";
 				}
 
 				return array('ResultSet' => array('Result' => $values));
@@ -146,8 +186,11 @@
 					return;
 				}
 
-				$path = CreateObject('property.sogeneric')->get_path(array('type'		 => 'org_unit',
-					'id'		 => $org_unit, 'path_by_id' => true));
+				$path = CreateObject('property.sogeneric')->get_path(array(
+					'type' => 'org_unit',
+					'id' => $org_unit,
+					'path_by_id' => true
+					));
 
 				$levels = count($path);
 
@@ -173,17 +216,22 @@
 					$org_units[] = (int)$GLOBALS['phpgw']->db->f('id');
 				}
 
-				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST FROM V_SOA_ANSATT WHERE ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
+				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST, V_ORG_ENHET.ORG_NAVN FROM V_SOA_ANSATT"
+					. " JOIN V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_SOA_ANSATT.ORG_ENHET_ID"
+					. " WHERE V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
 
 				$db->query($sql, __LINE__, __FILE__);
 
 				$candidates = array();
 				while ($db->next_record())
 				{
-					$candidates[$db->f('BRUKERNAVN')] = $db->f('STILLINGSTEKST');
+					$candidates[$db->f('BRUKERNAVN')] = array(
+						'office' =>  $db->f('ORG_NAVN',true),
+						'stilling' =>  $db->f('STILLINGSTEKST',true)
+						);
 				}
 
-				$sql = "SELECT DISTINCT alias, name, office FROM phpgw_helpdesk_email_out_recipient_list WHERE alias IN ('" . implode("','", array_keys($candidates)) . "')";
+				$sql = "SELECT DISTINCT alias, name  FROM phpgw_helpdesk_email_out_recipient_list WHERE alias IN ('" . implode("','", array_keys($candidates)) . "')";
 
 				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 
@@ -196,8 +244,8 @@
 						(
 						'lid'		 => $lid,
 						'name'		 => $GLOBALS['phpgw']->db->f('name', true),
-						'stilling'	 => $candidates[$lid],
-						'office'	 => $GLOBALS['phpgw']->db->f('office', true)
+						'stilling'	 => $candidates[$lid]['stilling'],
+						'office'	 => $candidates[$lid]['office'],
 					);
 				}
 

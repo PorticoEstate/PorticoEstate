@@ -213,3 +213,7 @@ function get_user_info(account_lid)
 }
 
 
+function local_custom_radio_action(radio)
+{
+	get_user_info($(radio).val());
+}

@@ -284,19 +284,28 @@ $(document).ready(function ()
 });
 
 
-JqueryPortico.autocompleteHelper(phpGWLink('index.php', {
+JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+{
 	menuaction: 'helpdesk.uitts.get_on_behalf_of',
 	custom_method: true, method: 'get_on_behalf_of',
 	acl_location: '.ticket'
 }, true),
 	'set_on_behalf_of_name', 'set_on_behalf_of_lid', 'set_behalf_of_container');
 
+JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+{
+	menuaction: 'helpdesk.uitts.get_on_behalf_of',
+	custom_method: true, method: 'get_on_behalf_of',
+	acl_location: '.ticket'
+}, true),
+	'set_user_alternative_name', 'set_user_alternative_lid', 'set_user_alternative_container');
+
 
 $(window).on('load', function ()
 {
 	$("#set_on_behalf_of_name").on("autocompleteselect", function (event, ui)
 	{
-	//	console.log(ui);
+		//	console.log(ui);
 		var on_behalf_of_lid = ui.item.value;
 		try
 		{
@@ -315,7 +324,29 @@ $(window).on('load', function ()
 		if (on_behalf_of_lid)
 		{
 			populateTableChkAssignee(on_behalf_of_lid, selection);
-			get_user_info(on_behalf_of_lid);
+			try
+			{
+				get_user_info(on_behalf_of_lid);
+			}
+			catch (err)
+			{
+			}
+		}
+	});
+
+	$("#set_user_alternative_name").on("autocompleteselect", function (event, ui)
+	{
+		var set_user_alternative_lid = ui.item.value;
+
+		if (set_user_alternative_lid)
+		{
+			try
+			{
+				get_user_info(set_user_alternative_lid);
+			}
+			catch (err)
+			{
+			}
 		}
 	});
 });
