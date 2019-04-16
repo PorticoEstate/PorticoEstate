@@ -878,8 +878,7 @@
 						'application' => $application,
 						'activities' => $activities,
 						'agegroups' => $agegroups,
-						'audience' => $audience,
-			//			'config' => $application_text
+						'audience' => $audience
 					)
 				);
 
@@ -1127,6 +1126,20 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+
+
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				echo json_encode(array(
+						'application' => $application,
+						'activities' => $activities,
+						'agegroups' => $agegroups,
+						'audience' => $audience
+					)
+				);
+
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
