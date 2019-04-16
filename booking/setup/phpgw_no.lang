@@ -37,10 +37,8 @@ allocations colliding with existing bookings or allocations (%1)	booking	no	Dobb
 allocations that can be created (%1)	booking	no	Tildelinger som kan lages
 application	booking	no	Søknad
 applications	booking	no	Søknader
-apr	booking	no	april
 archived	booking	no	Arkivert
 audience	booking	no	Målgruppe
-aug	booking	no	august
 bookable resources	booking	no	Bookbare ressurser
 booking	booking	no	Booking
 booking district	booking	no	Område
@@ -70,7 +68,6 @@ create	booking	no	Lagre
 created	booking	no	Opprettet
 dashboard	booking	no	Skrivebord
 day of the week	booking	no	Ukedag
-dec	booking	no	desember
 description	booking	no	Beskrivelse
 Extra information	booking	no	Ekstra informasjon om arrangement
 district	booking	no	Område/bydel
@@ -91,7 +88,6 @@ equipment	booking	no	Utstyr
 equipment name	booking	no	Navn på utstyr
 event	booking	no	Arrangement
 events	booking	no	Arrangementer
-feb	booking	no	februar
 female	booking	no	Kvinne
 filnavn	booking	no	Dokument
 found %1 results	booking	no	%1 treff
@@ -112,15 +108,10 @@ inactivate	booking	no	Inaktivert
 inactive	booking	no	Inaktiv
 invoice information	booking	no	Fakturainformasjon
 responsible applicant	booking	no	Ansvarlig søker
-jan	booking	no	januar
-jul	booking	no	juli
-jun	booking	no	juni
 last modified	booking	no	Sist endret
 joading...	booking	no	Laster...
 location	booking	no	Lokale
 male	booking	no	Mann
-mar	booking	no	mars
-may	booking	no	mai
 mo	booking	no	ma.
 modified	booking	no	Endret
 more info	booking	no	Mer informasjon
@@ -151,10 +142,8 @@ no description yet	booking	no	Beskrivelse manglar
 no parents	booking	no	Ingen overordnet
 no records found.	booking	no	Ingen treff
 no records found.	booking	no	Ingen funnet!
-nov	booking	no	november
 number of participants	booking	no	Antall deltakere
 estimated number of participants	booking	no	Estimert antall deltakere
-oct	booking	no	oktober
 of	booking	no	av
 officer	booking	no	Saksbehandler
 organization	booking	no	Organisasjon
@@ -191,7 +180,6 @@ secondary admin	booking	no	Kontaktperson 2
 select a building first	booking	no	Velg bygg/anlegg først
 select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
-sep	booking	no	september
 settings	booking	no	Innstillinger
 show only active	booking	no	Skjul
 showing items	booking	no	Viser

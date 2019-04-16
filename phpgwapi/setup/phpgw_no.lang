@@ -318,3 +318,15 @@ account status	common	no	Brukerstatus
 last login	common	no	Sist innlogget
 last password change	common	no	Siste passordskifte
 back	common	no	Tilbake
+jan	common	no	januar
+feb	common	no	februar
+mar	common	no	mars
+apr	common	no	april
+may	common	no	mai
+jun	common	no	juni
+jul	common	no	juli
+aug	common	no	august
+sep	common	no	september
+oct	common	no	oktober
+nov	common	no	november
+dec	common	no	desember
