@@ -66,6 +66,25 @@
 		*/
 		function _input_modern($id, $type, $config = array())
 		{
+			$_i18n = new stdClass();
+			$_i18n->monthsShort 	=
+				[
+				  lang('Jan'),
+				  lang('Feb'),
+				  lang('Mar'),
+				  lang('April'),
+				  lang('May'),
+				  lang('Jun'),
+				  lang('Jul'),
+				  lang('Aug'),
+				  lang('Sep'),
+				  lang('Oct'),
+				  lang('Nov'),
+				  lang('Dec')
+				];
+
+			$i18n = json_encode($_i18n);
+
 			$date_range_arr = array();
 			$date_range = '';
 
@@ -108,6 +127,7 @@ JS;
 					showWeek: true,
 					changeMonth: true,
 					changeYear: true,
+					i18n: {$i18n},
 					showButtonPanel:true
 					{$show_button}
 		//			showOn: "button",
