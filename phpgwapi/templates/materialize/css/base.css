@@ -1,0 +1,6 @@
+
+ [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+	opacity: 1;
+	position: relative;
+	pointer-events: auto;
+}
