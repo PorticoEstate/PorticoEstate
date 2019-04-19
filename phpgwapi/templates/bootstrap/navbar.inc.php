@@ -45,8 +45,8 @@
 		$var['topmenu'] = <<<HTML
 			<ul class="nav navbar-nav ml-auto">
 				<li class="nav-item">
-					<a data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" href="#">{$user_fullname}</a>
-					<ul class="collapse list-unstyled">
+					<a data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle" href="#_preferencse">{$user_fullname}</a>
+					<ul class="collapse list-unstyled" id = "_preferencse">
 						<li class="nav-item">
 							<a href="{$preferences_url}" class="nav-link">{$preferences_text}</a>
 						</li>
@@ -206,9 +206,9 @@ HTML;
 			{
 				$var['topmenu'] .= <<<HTML
 
-				<li class="nav-item">
-					<a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{$lang_bookmarks}</a>
-					<ul class="collapse list-unstyled">
+				<li class="nav-item ">
+					<a href="#_bookmark" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">{$lang_bookmarks}</a>
+					<ul class="collapse list-unstyled" id="_bookmark">
 HTML;
 
 					foreach($collected_bm as $entry)
