@@ -36,11 +36,10 @@
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
-		phpgwapi_jquery::load_widget('jqtree');
-
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
+			phpgwapi_jquery::load_widget('contextMenu');
 			$javascripts[] = "/phpgwapi/templates/bootstrap/js/sidenav.js";
 		}
 

@@ -55,15 +55,15 @@
 						</li>
 					</ul>
 				</li>
-				<li class="nav-item">
+				<!--li class="nav-item">
 					<a href="{$print_url}"  target="_blank" class="nav-link">{$print_text}</a>
-				</li>
+				</li-->
 				<li class="nav-item">
 					<a href="{$home_url}" class="nav-link">{$home_text}</a>
 				</li>
-				<li class="nav-item">
+				<!--li class="nav-item">
 					<a href="{$about_url}" class="nav-link">{$about_text}</a>
-				</li>
+				</li-->
 HTML;
 
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
@@ -179,7 +179,8 @@ HTML;
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
 					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
-					$treemenu .= render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
+					$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
+					$treemenu .= $node['node'];
 				}
 			}
 			$var['treemenu'] = <<<HTML
@@ -301,6 +302,7 @@ HTML;
 
 	function render_item($item, $id='', $children='', $bookmarks = array())
 	{
+		$selected_node = false;
 		static $checkbox_id = 1;
 		$current_class = '';
 
@@ -320,16 +322,17 @@ HTML;
 				set_get_bookmarks($item);
 			}
 
-			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
+//			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
 			$checkbox_id ++;
 		}
 
 		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"))
 		{
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
+			$selected_node = true;
 		}
 
-		$link_class = $current_class ? "class=\"{$current_class}\"" : 'nav-item';
+		$link_class = $current_class ? "class=\"{$current_class}\"" : "class=\"nav-item\"";
 
 		$out = <<<HTML
 				<li {$link_class}>
@@ -346,7 +349,7 @@ HTML;
 
 		if($children)
 		{
-		return <<<HTML
+		$ret = <<<HTML
 $out
 {$children}
 			</li>
@@ -355,31 +358,54 @@ HTML;
 		}
 		else
 		{
-		return <<<HTML
+			$ret = <<<HTML
 $out
-			<a href="{$item['url']}" class="nav-link" id="{$id}" {$target}>{$bookmark} {$item['text']}</a>
+			<a href="{$item['url']}" class="nav-link context-menu-nav" id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
 			</li>
 HTML;
 		}
+
+		return array('selected' =>  $selected_node, 'node' => $ret);
 	}
 
-	function render_submenu($parent, $menu, $bookmarks = array(), $parent_name = '')
+	function render_submenu($parent, $menu, $bookmarks = array(), $parent_name = '', $parent_array = array())
 	{
 		static $id = 0;
 		$out = '';
+
+		$_menu = array_values($menu);
+		if($parent_array && $parent_array['url'] && $parent_array['url'] != $_menu[0]['url'])
+		{
+			unset( $parent_array['children']);
+			$menu = array("_{$parent}" => $parent_array) + $menu;
+		}
+
+
 		foreach ( $menu as $key => $item )
 		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks, $item['text']) : '';
-			$out .= render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks, $item['text'], $item) : '';
+			$node = render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
+			$out .= $node['node'];
 			//$debug .= "{$parent}::{$key}<br>";
+		}
+
+		if(!preg_match("/(nav-item active)/", $out))
+		{
+			$ul_class = '';
+			$aria_expanded = 'false';
+		}
+		else
+		{
+			$ul_class = 'show ';
+			$aria_expanded = 'true';
 		}
 
 		if($out)
 		{
 			$id ++;
 			$out = <<<HTML
-	          <a href="#_$id" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{$parent_name}</a>
-				<ul class="collapse list-unstyled" id = "_$id">
+	          <a href="#_$id" data-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
+				<ul class="{$ul_class}list-unstyled collapse" id = "_$id">
 {$out}
 				</ul>
 

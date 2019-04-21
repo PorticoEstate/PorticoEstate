@@ -1,21 +1,23 @@
-body { padding-top: 70px; }
+body {
+
+	padding-top: 70px;
+	padding-bottom: 70px;
+}
 
 /*
     DEMO STYLE
 */
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
-    font-family: 'Poppins', sans-serif;
     background: #fafafa;
 }
 
 p {
-    font-family: 'Poppins', sans-serif;
+    /*font-family: 'Poppins', sans-serif;*/
     font-size: 1.1em;
-    font-weight: 300;
+    /*font-weight: 300;*/
     line-height: 1.7em;
-    color: #999;
+    /*color: #999;*/
 }
 
 a,
@@ -99,14 +101,14 @@ a:focus {
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    /*background: #6d7fcc;*/
 }
 
-a[data-toggle="collapse"] {
+#sidebar a[data-toggle="collapse"] {
     position: relative;
 }
 
-.dropdown-toggle::after {
+#sidebar .dropdown-toggle::after {
     display: block;
     position: absolute;
     top: 50%;
@@ -117,7 +119,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #6d7fcc;
+    /*background: #6d7fcc;*/
 }
 
 ul.CTAs {
@@ -143,6 +145,7 @@ a.article:hover {
     color: #fff !important;
 }
 
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -157,6 +160,10 @@ a.article:hover {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+
+ #sidebarCollapse {
+      margin-right: 10px;
+    }
 
 @media (max-width: 768px) {
     #sidebar {

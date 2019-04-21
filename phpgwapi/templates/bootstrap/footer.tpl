@@ -1,4 +1,4 @@
-<footer class="page-footer font-small text-center">
+<footer class="page-footer font-small text-center fixed-bottom bg-light">
 		<p>{powered_by}</p>
 </footer>
 </div>
