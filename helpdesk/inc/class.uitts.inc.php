@@ -872,6 +872,7 @@ HTML;
 							buttonWidth: 250,
 							includeSelectAllOption: true,
 							enableFiltering: true,
+							enableCaseInsensitiveFiltering: true,
 							onChange: function ($option)
 							{
 								// Check if the filter was used.

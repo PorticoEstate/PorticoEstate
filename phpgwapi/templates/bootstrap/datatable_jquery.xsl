@@ -1124,6 +1124,7 @@
 											{
 												oControl.multiselect({
 												enableFiltering: true,
+												enableCaseInsensitiveFiltering: true,
 												onChange: function($option) {
 												alert('hei');
 													// Check if the filter was used.
