@@ -867,7 +867,21 @@ HTML;
 								  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 							}
 						});
-						$("#user_id").formSelect();
+						$("#user_id").multiselect("destroy");
+						$("#user_id").multiselect({
+							buttonWidth: 250,
+							includeSelectAllOption: true,
+							enableFiltering: true,
+							onChange: function ($option)
+							{
+								// Check if the filter was used.
+								var query = $("#user_id").find("li.multiselect-filter input").val();
+								if (query)
+								{
+									$("#user_id").find("li.multiselect-filter input").val("").trigger("keydown");
+								}
+							}
+						});
 					}, data, "GET", "json"
 				);
 				';
@@ -1061,7 +1075,7 @@ JS;
 					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
 					{
 							$js .=<<<JS
-							$("#{$filter['name']}").multiselect();
+//							$("#{$filter['name']}").multiselect();
 JS;
 					}
 					else

@@ -16,7 +16,6 @@
 </func:function>
 
 <xsl:template match="data">
-	<div id="content" class="content">
 	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>
@@ -25,7 +24,6 @@
 		</xsl:when>
 	</xsl:choose>
 	<xsl:call-template name="datatable" />
-	</div>
 </xsl:template>
 
 
@@ -1124,20 +1122,18 @@
 
 											try
 											{
-											//	oControl.formSelect();
 												oControl.multiselect({
-                buttonContainer: '',
-                enableFiltering: true,
-                onChange: function($option) {
-				alert('hei');
-                    // Check if the filter was used.
-                    var query = $(oControl).find('li.multiselect-filter input').val();
+												enableFiltering: true,
+												onChange: function($option) {
+												alert('hei');
+													// Check if the filter was used.
+													var query = $(oControl).find('li.multiselect-filter input').val();
 
-                    if (query) {
-                        $(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
-                    }
-                }
-            });
+													if (query) {
+														$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
+													}
+												}
+											});
 
 											}
 											catch(err)
