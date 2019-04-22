@@ -1122,11 +1122,11 @@
 
 											try
 											{
+												oControl.multiselect("destroy");
 												oControl.multiselect({
 												enableFiltering: true,
 												enableCaseInsensitiveFiltering: true,
 												onChange: function($option) {
-												alert('hei');
 													// Check if the filter was used.
 													var query = $(oControl).find('li.multiselect-filter input').val();
 

@@ -1076,6 +1076,23 @@ JS;
 					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
 					{
 							$js .=<<<JS
+
+						$("#{$filter['name']}").multiselect({
+							buttonWidth: 250,
+							includeSelectAllOption: true,
+							enableFiltering: true,
+							enableCaseInsensitiveFiltering: true,
+							onChange: function (\$option)
+							{
+								// Check if the filter was used.
+								var query = $("#user_id").find("li.multiselect-filter input").val();
+								if (query)
+								{
+									$("#user_id").find("li.multiselect-filter input").val("").trigger("keydown");
+								}
+							}
+						});
+
 //							$("#{$filter['name']}").multiselect();
 JS;
 					}

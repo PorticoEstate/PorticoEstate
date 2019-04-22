@@ -28,6 +28,12 @@ a:focus {
     transition: all 0.3s;
 }
 
+td a,
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
 .navbar {
     padding: 15px 10px;
     background: #fff;
@@ -121,6 +127,15 @@ ul ul a {
     padding-left: 30px !important;
     /*background: #6d7fcc;*/
 }
+ul ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 40px !important;
+}
+
+ul ul ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 50px !important;
+}
 
 ul.CTAs {
     padding: 20px;
@@ -165,14 +180,18 @@ a.article:hover {
 	margin-right: 10px;
 }
 
-@media (max-width: 768px) {
-    #sidebar {
+@media (max-width: 768px)
+{
+    #sidebar
+	{
         margin-left: -250px;
     }
-    #sidebar.active {
+    #sidebar.active
+	{
         margin-left: 0;
     }
-    #sidebarCollapse span {
+    #sidebarCollapse span
+	{
         display: none;
     }
 }

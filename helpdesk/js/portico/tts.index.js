@@ -37,30 +37,3 @@ JqueryPortico.searchLinkTts = function (key, oData)
 	return '<a id="' + name + '" onclick="searchData(this.id);">' + name + '</a>';
 };
 
-
-$(document).ready(function ()
-{
-	try
-	{
-		$('#user_id').multiselect({
-            buttonWidth: 250,
-			includeSelectAllOption: true,
-			enableFiltering: true,
-			enableCaseInsensitiveFiltering: true,
-			onChange: function ($option)
-			{
-				// Check if the filter was used.
-				var query = $("#user_id").find('li.multiselect-filter input').val();
-				if (query)
-				{
-					$("#user_id").find('li.multiselect-filter input').val('').trigger('keydown');
-				}
-			}
-		});
-
-	}
-	catch (err)
-	{
-		console.log(err);
-	}
-});
