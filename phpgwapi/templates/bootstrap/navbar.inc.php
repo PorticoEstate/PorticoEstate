@@ -147,7 +147,7 @@ HTML;
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}
-		if(count($breadcrumbs) >= 5)
+		if(count($breadcrumbs) >= 6)
 		{
 			array_pop($breadcrumbs);
 		}
