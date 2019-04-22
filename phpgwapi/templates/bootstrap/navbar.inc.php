@@ -250,6 +250,34 @@ HTML;
 
 
 		}
+		$breadcrumb_html = "";
+
+		if(phpgw::get_var('phpgw_return_as') != 'json' && $breadcrumbs && is_array($breadcrumbs))// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
+		{
+			$breadcrumb_html = <<<HTML
+				<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb">
+HTML;
+			$history_url = array();
+			for($i=0;$i< (count($breadcrumbs) -1); $i++)
+			{
+				$breadcrumb_html .= <<<HTML
+					<li class="breadcrumb-item"><a href="{$breadcrumbs[$i]['url']}">{$breadcrumbs[$i]['name']}</a></li>
+HTML;
+			}
+				$breadcrumb_html .= <<<HTML
+				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
+HTML;
+
+			$breadcrumb_html .= <<<HTML
+				</ol>
+			  </nav>
+
+HTML;
+
+		}
+
+		$var['breadcrumb'] = $breadcrumb_html;
 
 
 		$GLOBALS['phpgw']->template->set_var($var);
@@ -260,16 +288,6 @@ HTML;
 			echo "<div class='msg_good'>";
 			echo nl2br($global_message);
 			echo '</div>';
-		}
-		if(phpgw::get_var('phpgw_return_as') != 'json' && $breadcrumbs)// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
-		{
-			$history_url = array();
-			foreach($breadcrumbs as $breadcrumb)
-			{
-				$history_url[] ="<a href='{$breadcrumb['url']}'>{$breadcrumb['name']}</a>";
-			}
-			$breadcrumbs = '<div class="breadcrumbs"><h4>' . implode(' >> ', $history_url) . '</h4></div>';
-//			echo $breadcrumbs;
 		}
 
 
