@@ -54,9 +54,6 @@
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 
-	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
-	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
-	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 //	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
 	$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
 

@@ -80,7 +80,8 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+/*    background: #6d7fcc;*/
+    background: #3968c6;
 }
 
 #sidebar ul.components {
