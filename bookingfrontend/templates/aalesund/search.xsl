@@ -1,19 +1,18 @@
-<xsl:template match="data" 
-	xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="search-page-content">
 		<div class="frontpageimage noSelect" id="main-page">
-			<div class="header-text" style="color:#26348B;">
-				<a href="{site_url}">
+			<div class="header-text"    style="color:#26348B;"  >
+				<a href="{site_url}"    >
 					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
 				</a>
 			</div>
 		</div>
 		<div class="jumbotron jumbotron-fluid noSelect">
-			<div class="container searchContainer">
-				<div id="frontpagetitle">
+			<div class="container searchContainer"     >
+				<div    id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-				<div id="ssd">
+				<div   id="ssd" >
 				</div>
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
@@ -79,7 +78,7 @@
 					<div data-bind="foreach: selectedTags">
 						<div class="d-inline-block mb-2">
 							<div class="tags mr-2">
-								<span data-bind="html: value, click: $root.clearTag"></span>
+								<span data-bind="html: value, click: $root.clearTag" ></span>
 								<a href="" data-bind="click: $root.clearTag">
 									<i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i>
 								</a>
@@ -108,13 +107,11 @@
 							<div class="col-md-9 col-sm-8 col-8 desc">
 								<h5 class="font-weight-bold title" data-bind="text: name"></h5>
 								<div class="card-text">
-									<span data-bind="text: datetime_time"></span>
-									<span data-bind="text: 'STED: ' +building_name"></span>
+									<span  data-bind="text: datetime_time"></span>
+									<span  data-bind="text: 'STED: ' +building_name"></span>
 									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-									<span class="font-weight-normal" data-bind="visible: homepage != ''">
-										<a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									Les mer</a>
-									</span>
+									<span class="font-weight-normal" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
+									Les mer</a></span>
 								</div>
 							</div>
 						</div>
@@ -124,9 +121,7 @@
 			<!-- SEARCH RESULT -->
 			<div id="searchResult" data-bind="if: notFilterSearch">
 				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/>
- (					<span data-bind="text: items().length"></span>)
-				</h1>
+					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
 				<div class="row" id="result-items" data-bind="foreach: items">
 					<div class="col-lg-6 card-positioncorrect">
 						<a class="custom-card-link-href" data-bind="">
@@ -146,7 +141,7 @@
 										<span class="d-block" data-bind="html: postcode"></span>
 									</div>
 									<div data-bind="foreach: tagItems">
-										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag"></span>
+										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
 									</div>
 								</div>
 							</div>
@@ -158,9 +153,7 @@
 			<!-- FILTER SEARCH RESULT -->
 			<div id="filterSearchResult" data-bind="if: selectedFilterbox">
 				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/>
- (					<span data-bind="text: filterSearchItems().length"></span>)
-				</h1>
+					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>
 				<div data-bind="if: filterSearchItems().length > 0">
 					<div class="row" data-bind="foreach: filterSearchItems">
 						<div class="col-lg-6 card-positioncorrect">
@@ -195,27 +188,25 @@
 									</div>
 									<div data-bind="foreach: activities">
 										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
-:
+											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
 										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name"></span>
+										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
 									</div>
 									<div data-bind="foreach: facilities">
 										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Facilities')"/>
-:
+											<xsl:value-of select="php:function('lang', 'Facilities')"/>:
 										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name"></span>
+										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
 									</div>
 								</div>
 							</div>
 							<div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2">
 								<i class="fas fa-angle-down"></i>
-								<xsl:text></xsl:text>
+								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'See')"/>
-								<xsl:text></xsl:text>
+								<xsl:text> </xsl:text>
 								<span data-bind="text: (filterSearchItemsResources().length - 2) "></span>
-								<xsl:text></xsl:text>
+								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'more')"/>
 							</div>
 						</div>
