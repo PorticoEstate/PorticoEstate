@@ -265,7 +265,8 @@ HTML;
 					<li class="breadcrumb-item"><a href="{$breadcrumbs[$i]['url']}">{$breadcrumbs[$i]['name']}</a></li>
 HTML;
 			}
-				$breadcrumb_html .= <<<HTML
+
+			$breadcrumb_html .= <<<HTML
 				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
 HTML;
 
