@@ -1,19 +1,4 @@
 <body>
-
-	<script>
-		function logout()
-		{
-			if (typeof (Storage) !== "undefined")
-			{
-				sessionStorage.cached_menu_tree_data = '';
-				localStorage.clear();
-			}
-			var sUrl = phpGWLink('logout.php');
-			window.open(sUrl, '_self');
-		}
-
-	</script>
-
 	<div class="wrapper">
 		<!-- Sidebar  -->
 		<nav id="sidebar">

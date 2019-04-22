@@ -123,7 +123,7 @@ HTML;
 
 		$var['topmenu'] .= <<<HTML
 			<li class="nav-item">
-				<a href="javascript:logout();" class="nav-link">{$logout_text}</a>
+				<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
 			</li>
 HTML;
 
