@@ -64,7 +64,8 @@
 			{
 		//		$_jquery_core = 'jquery-2.1.4';
 		//		$_jquery_core = 'jquery-3.2.1';
-				$_jquery_core = 'jquery-3.3.1';
+		//		$_jquery_core = 'jquery-3.3.1';
+				$_jquery_core = 'jquery-3.4.0';
 	//			$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
