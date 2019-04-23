@@ -28,7 +28,7 @@
 
 		function fetch_activities( $parent_id = 0 )
 		{
-			$activities = $this->so->read(array());
+			$activities = $this->so->read(array('resuls' => -1));
 			$activities = $activities['results'];
 
 			$children = array();
