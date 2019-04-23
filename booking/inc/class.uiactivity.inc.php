@@ -67,7 +67,7 @@
 			}
 
 			$show_all = phpgw::get_var('show_all') || false;
-			$activities = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC'));
+			$activities = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC', 'results' => -1));
 			$children = array();
 			foreach ($activities['results'] as $activity)
 			{
