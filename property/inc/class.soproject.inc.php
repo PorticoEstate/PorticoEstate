@@ -1217,6 +1217,7 @@
 						$vals[]	 = $value;
 					}
 				}
+				unset($value);
 			}
 
 			if (is_array($project['extra']))
@@ -1229,6 +1230,7 @@
 						$vals[]	 = $value;
 					}
 				}
+				unset($value);
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute);
@@ -1242,6 +1244,7 @@
 						$vals[]	 = $value;
 					}
 				}
+				unset($value);
 			}
 
 			if ($cols)
@@ -1250,18 +1253,29 @@
 				$vals	 = ",'" . implode("','", $vals) . "'";
 			}
 
+			$_address = array();
 			if ($project['street_name'])
 			{
-				$address[]	 = $project['street_name'];
-				$address[]	 = $project['street_number'];
-				$address	 = $this->db->db_addslashes(implode(" ", $address));
+				$_address[]	 = $project['street_name'];
+				$_address[]	 = $project['street_number'];
 			}
 
-			if (!$address)
+			if (!$_address)
 			{
-				$address = $this->db->db_addslashes($project['location_name']);
+				$_address = $project['location_name'];
+			}
+			if (!empty($project['additional_info']))
+			{
+				foreach ($project['additional_info'] as $key => $value)
+				{
+					if ($value)
+					{
+						$_address[] = "{$key}|{$value}";
+					}
+				}
 			}
 
+			$address	 = $this->db->db_addslashes(implode(" ", $_address));
 			$project['descr']	 = $this->db->db_addslashes($project['descr']);
 			$project['name']	 = $this->db->db_addslashes($project['name']);
 
@@ -1459,17 +1473,29 @@
 			$historylog	 = CreateObject('property.historylog', 'project');
 			$receipt	 = array();
 
+			$_address = array();
 			if ($project['street_name'])
 			{
-				$address[]	 = $project['street_name'];
-				$address[]	 = $project['street_number'];
-				$address	 = $this->db->db_addslashes(implode(" ", $address));
+				$_address[]	 = $project['street_name'];
+				$_address[]	 = $project['street_number'];
 			}
 
-			if (!$address)
+			if (!$_address)
 			{
-				$address = $this->db->db_addslashes($project['location_name']);
+				$_address[] = $project['location_name'];
 			}
+
+			if (!empty($project['additional_info']))
+			{
+				foreach ($project['additional_info'] as $key => $value)
+				{
+					if ($value)
+					{
+						$_address[] = "{$key}|{$value}";
+					}
+				}
+			}
+				$address	 = $this->db->db_addslashes(implode(" ", $_address));
 
 			$project['descr']	 = $this->db->db_addslashes($project['descr']);
 			$project['name']	 = $this->db->db_addslashes($project['name']);

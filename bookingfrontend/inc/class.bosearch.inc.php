@@ -17,7 +17,7 @@
 			$this->bofacility = CreateObject('booking.bofacility');
 		}
 
-		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() )
+		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() , $length)
 		{
 			$building_filter = array(-1);
 			$filter_top_level = $filter_top_level ? $filter_top_level : array(-1);
@@ -76,7 +76,7 @@
 			{
 
 				$bui_result = $this->sobuilding->read(array("query" => $searchterm, "sort" => "name",
-					"dir" => "asc", "filters" => $_filter_building));
+					"dir" => "asc", "filters" => $_filter_building, 'results' => $length));
 				foreach ($bui_result['results'] as &$bui)
 				{
 					$building_filter[] = $bui['id'];
@@ -98,7 +98,7 @@
 			if ($searchterm && in_array('organization', $types))
 			{
 				$org_result = $this->soorganization->read(array("query" => $searchterm, "sort" => "name",
-					"dir" => "asc", "filters" => array("active" => "1")));
+					"dir" => "asc", "filters" => array("active" => "1"), 'results' => $length));
 				foreach ($org_result['results'] as &$org)
 				{
 					$org['type'] = "organization";
@@ -132,7 +132,7 @@
 				}
 				if (isset($filter_part_of_town) && $filter_part_of_town)// && !$bui_result)
 				{
-					$_bui_result = $this->sobuilding->read(array("filters" => $_filter_building));
+					$_bui_result = $this->sobuilding->read(array("filters" => $_filter_building, 'results' => $length));
 					foreach ($_bui_result['results'] as $_bui)
 					{
 						$_filter_resource['building_id'][] = $_bui['id'];
@@ -147,7 +147,7 @@
 				}
 
 				$_res_result = $this->soresource->read(array("query" => $searchterm, "sort" => "name",
-					"dir" => "asc", "filters" => $_filter_resource));
+					"dir" => "asc", "filters" => $_filter_resource, 'results' => $length));
 
 				$_check_duplicate = array();
 				$res_result = array(
@@ -234,7 +234,7 @@
 				$now = date('Y-m-d');
 				$expired_conditions = "(bb_event.active != 0 AND bb_event.completed = 0 AND bb_event.from_ > '{$now}' AND bb_event.description != '')";
 				$event_result = $this->soevent->read(array("query" => $searchterm, "sort" => "name",
-					"dir" => "asc", "filters" => array('where' => $expired_conditions)));
+					"dir" => "asc", "filters" => array('where' => $expired_conditions), 'results' => $length));
 				foreach ($event_result['results'] as &$event)
 				{
 					$event['name'] = $event['building_name'] . ' / ' . $event['description'];
@@ -476,8 +476,15 @@
 			$fields_events = array('building_name','from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
 			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.name != '')";
+			
+			
+			/**
+			 * All ( Alter to enable pagination )
+			 */
+			$length = -1;
+
 			$event_result = $this->soevent->read(array("sort" => "from_", "dir" => "asc",
-				"filters" => array('where' => $conditions)));
+				"filters" => array('where' => $conditions),'results' => $length));
 			foreach ($event_result['results'] as &$event)
 			{
 				foreach ($event as $k => $v)

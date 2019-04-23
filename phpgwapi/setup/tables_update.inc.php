@@ -3672,3 +3672,25 @@
 		}
 	}
 
+	/**
+	 * Configurable filter at table listing
+	 */
+	$test[] = '0.9.17.560';
+	function phpgwapi_upgrade0_9_17_560()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_attribute','table_filter', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_cust_attribute SET table_filter = 1 WHERE datatype IN ('LB','CH','R' )", __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.561';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

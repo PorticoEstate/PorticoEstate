@@ -64,7 +64,8 @@
 			{
 		//		$_jquery_core = 'jquery-2.1.4';
 		//		$_jquery_core = 'jquery-3.2.1';
-				$_jquery_core = 'jquery-3.3.1';
+		//		$_jquery_core = 'jquery-3.3.1';
+				$_jquery_core = 'jquery-3.4.0';
 	//			$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
@@ -233,9 +234,18 @@
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
-						
+
 					break;
-				
+
+				case 'bootstrap-multiselect':
+					$load = array(
+						"js/{$_jquery_core}{$_type}",
+						'bootstrap-multiselect' => array("js/bootstrap-multiselect")
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.css");
+
+					break;
+
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);

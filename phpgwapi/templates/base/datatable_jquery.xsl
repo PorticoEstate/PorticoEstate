@@ -101,23 +101,8 @@
 			<xsl:value-of select="php:function('lang', 'filter')"/>
 		</label>
 		<div id="toolbar" class='dtable_custom_controls'>
-			<!--table id="toolbar_table" class="pure-table pure-table-horizontal"-->
 			<form class="pure-form pure-form-stacked">
 				 <fieldset>
-
-				<!--thead>
-					<tr>
-						<th>
-							<xsl:value-of select="php:function('lang', 'name')"/>
-						</th>
-						<th>
-							<xsl:value-of select="php:function('lang', 'item')"/>
-						</th>
-					</tr>
-				</thead-->
-				<!--tbody>
-					<tr>
-						<td-->
 				<div class="pure-g">
 					<xsl:for-each select="item">
 						<script type="text/javascript">
@@ -343,11 +328,7 @@
 							</xsl:choose>
 						 </div>
 					</xsl:for-each>
-						<!--/td>
-					</tr>
-				</tbody-->
-			<!--/table-->
-						</div>
+				</div>
 			 </fieldset>
 			</form>
 		</div>
@@ -642,6 +623,11 @@
 							<xsl:otherwise>
 							button_def.push({
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+								<xsl:choose>
+									<xsl:when test="bigmenubutton">
+										className: 'bigmenubutton',
+									</xsl:when>
+								</xsl:choose>
 								sUrl: '<xsl:value-of select="new_item"/>',
 
 								action: function (e, dt, node, config) {
@@ -1139,7 +1125,7 @@
 
 											try
 											{
-												oControl.material_select();
+												oControl.formSelect();
 											}
 											catch(err)
 											{
@@ -1154,7 +1140,7 @@
 
 												if($(oControl).find("option").length > 0)
 												{
-													$(oControl).material_select();
+													$(oControl).formSelect();
 												}
 											}
 											catch(err)

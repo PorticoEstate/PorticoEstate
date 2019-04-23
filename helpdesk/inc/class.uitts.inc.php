@@ -53,7 +53,7 @@
 				'update_data'		=> true,
 				'upload_clip'		=> true,
 				'view_image'		=> true,
-				'get_reverse_assignee'=>true,
+				'get_on_behalf_of'	=> true,
 				'handle_multi_upload_file' => true,
 				'build_multi_upload_file' => true,
 				'custom_ajax'			=> true,
@@ -170,8 +170,18 @@
 		 *
 		 * @return array
 		 */
-		public function get_reverse_assignee()
+		public function get_on_behalf_of()
 		{
+			$custom_method = phpgw::get_var('custom_method', 'bool');
+			if($custom_method)
+			{
+				$result = $this->custom_ajax();
+				if($result)
+				{
+					return $result;
+				}
+			}
+
 			$query = phpgw::get_var('query');
 
 			$filter = array('active' => 1);
@@ -183,8 +193,8 @@
 			foreach ($account_list as $account)
 			{
 				$values[] = array(
-					'id' => $account->id,
-					'name' => $account->__toString()
+					'id' => $account->lid,
+					'name' => $account->lid . ' [' . $account->__toString() . ']'
 				);
 			}
 			return array('ResultSet' => array('Result' => $values));
@@ -857,7 +867,22 @@ HTML;
 								  $el.append($("<option></option>").attr("value", value.id).text(value.name));
 							}
 						});
-						$("#user_id").material_select();
+						$("#user_id").multiselect("destroy");
+						$("#user_id").multiselect({
+							buttonWidth: 250,
+							includeSelectAllOption: true,
+							enableFiltering: true,
+							enableCaseInsensitiveFiltering: true,
+							onChange: function ($option)
+							{
+								// Check if the filter was used.
+								var query = $("#user_id").find("li.multiselect-filter input").val();
+								if (query)
+								{
+									$("#user_id").find("li.multiselect-filter input").val("").trigger("keydown");
+								}
+							}
+						});
 					}, data, "GET", "json"
 				);
 				';
@@ -887,7 +912,7 @@ HTML;
 				foreach ($attrib_data as $attrib)
 				{
 					$_filter_data = array();
-					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'] && $attrib['table_filter'])
 					{
 
 						$_filter_data[] = array
@@ -956,15 +981,23 @@ HTML;
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
-			self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
+
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
+			{
+				phpgwapi_jquery::load_widget('bootstrap-multiselect');
+			}
+			else
+			{
+				self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
+			}
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date', 'date', '', array('no_button' => true));
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date', 'date', '', array('no_button' => true));
 
 			$appname = $this->lang_app_name;
 
@@ -1007,6 +1040,7 @@ HTML;
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
+					'bigmenubutton' => true,
 					'editor_action' => self::link(array('menuaction' => 'helpdesk.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),
 					'query' => phpgw::get_var('query'),
@@ -1037,13 +1071,39 @@ JS;
 
 			foreach ($filters as $filter)
 			{
-				if($filter['type'] == 'filter')
+				if($filter['type'] == 'filter' && $filter['multiple'] == true)
 				{
-					$js .=<<<JS
+					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
+					{
+							$js .=<<<JS
 
-					$("#{$filter['name']}").hide();
-					$("#{$filter['name']}").material_select();
+						$("#{$filter['name']}").multiselect({
+							buttonWidth: 250,
+							includeSelectAllOption: true,
+							enableFiltering: true,
+							enableCaseInsensitiveFiltering: true,
+							onChange: function (\$option)
+							{
+								// Check if the filter was used.
+								var query = $("#user_id").find("li.multiselect-filter input").val();
+								if (query)
+								{
+									$("#user_id").find("li.multiselect-filter input").val("").trigger("keydown");
+								}
+							}
+						});
+
+//							$("#{$filter['name']}").multiselect();
 JS;
+					}
+					else
+					{
+							$js .=<<<JS
+							$("#{$filter['name']}").hide();
+							$("#{$filter['name']}").formSelect();
+JS;
+					}
+
 
 				}
 			}
@@ -1671,7 +1731,8 @@ JS;
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
 				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'parent_cat_id'	=> $this->parent_cat_id
+				'parent_cat_id'	=> $this->parent_cat_id,
+				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid']
 			);
 
 			//_debug_array($data);
@@ -2649,9 +2710,64 @@ JS;
 				}
 			}
 
-			return $ajax_result;
+			if(!empty($ajax_result))
+			{
+				return $ajax_result;
+			}
+			else
+			{
+				try
+				{
+					$method = phpgw::get_var('method');
+
+					switch ($method)
+					{
+						case 'get_reverse_assignee':
+							return $this->get_reverse_assignee();
+							break;
+						default:
+							break;
+					}
+				}
+				catch (Exception $exc)
+				{
+					echo $exc->getTraceAsString();
+				}
+			}
+
 		}
+
 		/**
+		 * Fallback function
+		 * @return array
+		 */
+		private function get_reverse_assignee()
+		{
+			$query = phpgw::get_var('on_behalf_of_lid');
+
+			$filter = array('active' => 1);
+
+			$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,'ASC', 'account_lastname',  $query, false, $filter);
+
+			$values = array();
+
+			foreach ($account_list as $account)
+			{
+				$values[] = array(
+					'id' => $account->lid,
+					'name' => $account->lid . ' [' . $account->__toString() . ']',
+					'stilling'	 => '',
+					'office'	 => ''
+				);
+			}
+
+			return array(
+				'total_records'	 => count($values),
+				'results'		 => $values
+			);
+		}
+
+				/**
 		 *
 		 */
 		private function _insert_custom_js()

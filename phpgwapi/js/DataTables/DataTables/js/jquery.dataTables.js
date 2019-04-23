@@ -1,11 +1,11 @@
-/*! DataTables 1.10.18
+/*! DataTables 1.10.19
  * ©2008-2018 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     DataTables
  * @description Paginate, search and order HTML tables
- * @version     1.10.18
+ * @version     1.10.19
  * @file        jquery.dataTables.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net
@@ -970,7 +970,7 @@
 			
 			// Backwards compatibility, before we apply all the defaults
 			_fnCompatOpts( oInit );
-				_fnLanguageCompat( oInit.oLanguage );
+			_fnLanguageCompat( oInit.oLanguage );
 			
 			// If the length menu is given, but the init display length is not, use the length menu
 			if ( oInit.aLengthMenu && ! oInit.iDisplayLength )
@@ -1742,33 +1742,33 @@
 		}
 	
 		if ( lang ) {
-		var zeroRecords = lang.sZeroRecords;
+			var zeroRecords = lang.sZeroRecords;
 	
 			// Backwards compatibility - if there is no sEmptyTable given, then use the same as
 			// sZeroRecords - assuming that is given.
-		if ( ! lang.sEmptyTable && zeroRecords &&
-			defaults.sEmptyTable === "No data available in table" )
-		{
-			_fnMap( lang, lang, 'sZeroRecords', 'sEmptyTable' );
-		}
+			if ( ! lang.sEmptyTable && zeroRecords &&
+				defaults.sEmptyTable === "No data available in table" )
+			{
+				_fnMap( lang, lang, 'sZeroRecords', 'sEmptyTable' );
+			}
 	
 			// Likewise with loading records
-		if ( ! lang.sLoadingRecords && zeroRecords &&
-			defaults.sLoadingRecords === "Loading..." )
-		{
-			_fnMap( lang, lang, 'sZeroRecords', 'sLoadingRecords' );
-		}
+			if ( ! lang.sLoadingRecords && zeroRecords &&
+				defaults.sLoadingRecords === "Loading..." )
+			{
+				_fnMap( lang, lang, 'sZeroRecords', 'sLoadingRecords' );
+			}
 	
-		// Old parameter name of the thousands separator mapped onto the new
-		if ( lang.sInfoThousands ) {
-			lang.sThousands = lang.sInfoThousands;
-		}
+			// Old parameter name of the thousands separator mapped onto the new
+			if ( lang.sInfoThousands ) {
+				lang.sThousands = lang.sInfoThousands;
+			}
 	
-		var decimal = lang.sDecimal;
+			var decimal = lang.sDecimal;
 			if ( decimal && defaultDecimal !== decimal ) {
-			_addNumericSort( decimal );
+				_addNumericSort( decimal );
+			}
 		}
-	}
 	}
 	
 	
@@ -7834,8 +7834,8 @@
 					return ! displayFilteredMap.hasOwnProperty(el) ?
 						el :
 						null;
-					} );
-		}
+				} );
+			}
 		}
 		else if ( order == 'index' || order == 'original' ) {
 			for ( i=0, ien=settings.aoData.length ; i<ien ; i++ ) {
@@ -7947,7 +7947,7 @@
 				// need to fall through to jQuery in case there is DOM id that
 				// matches
 			}
-	
+			
 			// Get nodes in the order from the `rows` array with null values removed
 			var nodes = _removeEmpty(
 				_pluck_order( settings.aoData, rows, 'nTr' )
@@ -9455,7 +9455,6 @@
 	
 		return resolved.replace( '%d', plural ); // nb: plural might be undefined,
 	} );
-
 	/**
 	 * Version string for plug-ins to check compatibility. Allowed format is
 	 * `a.b.c-d` where: a:int, b:int, c:int, d:string(dev|beta|alpha). `d` is used
@@ -9464,7 +9463,7 @@
 	 *  @type string
 	 *  @default Version number
 	 */
-	DataTable.version = "1.10.18";
+	DataTable.version = "1.10.19";
 
 	/**
 	 * Private data store, containing all of the settings objects that are
@@ -14975,7 +14974,8 @@
 	
 		text: function () {
 			return {
-				display: __htmlEscapeEntities
+				display: __htmlEscapeEntities,
+				filter: __htmlEscapeEntities
 			};
 		}
 	};

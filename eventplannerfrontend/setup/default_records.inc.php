@@ -38,7 +38,7 @@
 		$preferences = createObject('phpgwapi.preferences');
 		$preferences->set_account_id($eventplannerguest);
 		$preferences->add('common', 'template_set', 'frontend');
-		$preferences->save_repository(true, $GLOBALS['type']);
+		$preferences->save_repository(true, 'user');
 		$config = CreateObject('phpgwapi.config', 'eventplannerfrontend');
 		$config->read();
 		$config->value('anonymous_user', 'eventplannerguest');

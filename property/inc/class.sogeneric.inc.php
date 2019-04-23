@@ -1389,6 +1389,22 @@
 							),
 							array
 								(
+								'name'		 => 'ecodimb',
+								'descr'		 => lang('dimb'),
+								'type'		 => 'select',
+								'nullable'	 => true,
+								'filter'	 => true,
+								'sortable'	 => true,
+								'values_def' => array
+									(
+									'valueset'			 => false,
+									'method'			 => 'property.bogeneric.get_list',
+									'get_single_value'	 => 'property.sogeneric.get_name',
+									'method_input'		 => array('type' => 'dimb', 'selected' => '##ecodimb##')
+								)
+							),
+							array
+								(
 								'name'		 => 'mva',
 								'descr'		 => lang('tax code'),
 								'type'		 => 'int',

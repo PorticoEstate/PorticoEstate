@@ -37,6 +37,10 @@ $(document).ready(function ()
 		get_ressursname();
 	});
 
+	if(typeof(account_lid) !== 'undefined' && !$("#arbeidssted_id").val())
+	{
+		get_user_info(account_lid);
+	}
 });
 
 function show_fields()
@@ -182,4 +186,34 @@ function get_ressursname()
 			}
 		}
 	});
+}
+
+function get_user_info(account_lid)
+{
+	var oArgs = {menuaction: 'helpdesk.uitts.custom_ajax', method: 'get_user_info', acl_location: '.ticket', account_lid: account_lid};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			$("#arbeidssted_id").val();
+			$("#arbeidssted_name").val('');
+
+			if (data != null)
+			{
+				$("#arbeidssted_id").val(data.org_unit_id);
+				$("#arbeidssted_name").val(data.org_unit);
+				$('form').isValid(validateLanguage, conf_on_changed, true);
+			}
+		}
+	});
+}
+
+
+function local_custom_radio_action(radio)
+{
+	get_user_info($(radio).val());
 }
