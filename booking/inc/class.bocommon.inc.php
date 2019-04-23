@@ -162,7 +162,7 @@
 			return $this->so->create_error_stack($errors);
 		}
 
-		function validate( $entity )
+		function validate( &$entity )
 		{
 			$error_stack = $this->create_error_stack($this->so->validate($entity));
 			$this->doValidate($entity, $error_stack);

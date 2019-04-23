@@ -1130,7 +1130,7 @@
 			}
 		}
 
-		function validate( $entity )
+		function validate( &$entity )
 		{
 			$errors = $this->create_error_stack();
 			$this->preValidate($entity);

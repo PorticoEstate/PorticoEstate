@@ -60,6 +60,7 @@
 			if($currentapp == 'booking')
 			{
 				$fields['customer_ssn'] = array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),	'required' => false);
+				$fields['contacts']['manytomany']['column']['ssn'] = array('sf_validator' => createObject('booking.sfValidatorNorwegianSSN'));
 			}
 			
 
@@ -220,4 +221,17 @@
 			}
 			return $this->read($params);
 		}
+
+		protected function preValidate( &$entity )
+		{
+			if (!empty($entity['customer_organization_number']))
+			{
+				$entity['customer_organization_number'] = str_replace(" ", "", $entity['customer_organization_number']);
+			}
+			if (!empty($entity['customer_organization_number']))
+			{
+				$entity['organization_number'] = str_replace(" ", "", $entity['organization_number']);
+			}
+		}
+
 	}
