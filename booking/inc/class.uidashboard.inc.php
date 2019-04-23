@@ -175,6 +175,7 @@
 					)
 				)
 			);
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

@@ -19,14 +19,6 @@ and open the template in the editor.
     
 }
 
-.noSelect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
 html {
     font-size: 1rem;
     height: 100%;
@@ -1575,7 +1567,7 @@ NEW APPLICATION PAGE STYLE
 *********************************************/
 
 /* Form input styling */
-.form-input {
+.new-application-page .form-input {
     width: 100%;
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -1585,6 +1577,22 @@ NEW APPLICATION PAGE STYLE
     border: 1px solid #ced4da;
     transition: .15s ease-in-out;
 }
+
+.new-application-page .form-input::placeholder {
+    font-size: .8rem;
+}
+
+.new-application-page .form-group .form-control.notValid {
+    border-color: #dc3545;
+}
+.new-application-page .form-group .form-control.isValid {
+    border-color: #28a745;
+}
+
+.form-group .dropdown .form-control:hover {
+    cursor: pointer;
+}
+
 .new-application-page {
     margin-bottom: 100px;
 }

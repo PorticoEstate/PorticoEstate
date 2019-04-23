@@ -119,6 +119,8 @@
 		<div class="push"></div>
 	</div>
 	<script>
+		var initialAcceptAllTerms = true;
+		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var script = document.createElement("script");

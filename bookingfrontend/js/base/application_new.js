@@ -428,4 +428,36 @@ document.getElementById('field_name').onchange = function () {
     attFileInput.textContent = '';
     attInput.value = '';
   };
-};
+}; 
+
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+
+window.onload = function() {
+  const input = document.getElementById("audienceSel");
+  const inputDiv = document.getElementById("audienceDropdownBtn");
+
+  form.addEventListener('change', function() {
+    if(input && input.value) {
+      inputDiv.classList.add("isValid");
+    } else {
+      inputDiv.classList.add("was-validated");
+    }
+  })
+}

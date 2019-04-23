@@ -36,3 +36,4 @@ JqueryPortico.searchLinkTts = function (key, oData)
 	var name = oData[key];
 	return '<a id="' + name + '" onclick="searchData(this.id);">' + name + '</a>';
 };
+

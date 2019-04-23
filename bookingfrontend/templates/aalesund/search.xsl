@@ -1,13 +1,13 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="search-page-content">
-		<div class="frontpageimage noSelect" id="main-page">
+		<div class="frontpageimage" id="main-page">
 			<div class="header-text"    style="color:#26348B;"  >
 				<a href="{site_url}"    >
 					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
 				</a>
 			</div>
 		</div>
-		<div class="jumbotron jumbotron-fluid noSelect">
+		<div class="jumbotron jumbotron-fluid">
 			<div class="container searchContainer"     >
 				<div    id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
@@ -90,7 +90,7 @@
 		</div>
 		<div class="container pageResults">
 			<!-- UPCOMMING ARRAGEMENTS -->
-			<div id="welcomeResult" class="noSelect">
+			<div id="welcomeResult">
 				<h1 class="text-center upcomingevents-header"></h1>
 				<div class="row" data-bind="foreach: upcommingevents">
 					<div class="col-lg-6 card-positioncorrect">
