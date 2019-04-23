@@ -1124,6 +1124,8 @@
 											{
 												oControl.multiselect("destroy");
 												oControl.multiselect({
+												buttonWidth: 250,
+												includeSelectAllOption: true,
 												enableFiltering: true,
 												enableCaseInsensitiveFiltering: true,
 												onChange: function($option) {
