@@ -19,7 +19,13 @@ and open the template in the editor.
     
 }
 
-
+.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
 
 html {
     font-size: 1rem;
@@ -1579,23 +1585,6 @@ NEW APPLICATION PAGE STYLE
     border: 1px solid #ced4da;
     transition: .15s ease-in-out;
 }
-
-/* Placebolder Styling */
-::-webkit-input-placeholder {
-    font-size: .8rem;
-  }
-  ::-moz-placeholder {
-
-    font-size: .8rem;
-  }
-  :-ms-input-placeholder {
-    font-size: .8rem;
-  }
-  ::placeholder {
-    font-size: .8rem;
-  }
-
-
 .new-application-page {
     margin-bottom: 100px;
 }
