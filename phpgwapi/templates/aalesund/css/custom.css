@@ -1567,7 +1567,7 @@ NEW APPLICATION PAGE STYLE
 *********************************************/
 
 /* Form input styling */
-.form-input {
+.new-application-page .form-input {
     width: 100%;
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -1578,8 +1578,19 @@ NEW APPLICATION PAGE STYLE
     transition: .15s ease-in-out;
 }
 
-.form-input::placeholder {
+.new-application-page .form-input::placeholder {
     font-size: .8rem;
+}
+
+.new-application-page .form-group .form-control.notValid {
+    border-color: #dc3545;
+}
+.new-application-page .form-group .form-control.isValid {
+    border-color: #28a745;
+}
+
+.form-group .dropdown .form-control:hover {
+    cursor: pointer;
 }
 
 .new-application-page {
