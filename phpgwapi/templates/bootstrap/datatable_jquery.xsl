@@ -16,13 +16,13 @@
 </func:function>
 
 <xsl:template match="data">
-	<xsl:choose>
+<!--	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>
 				<xsl:value-of select="datatable_name"/>
 			</h3>
 		</xsl:when>
-	</xsl:choose>
+	</xsl:choose>-->
 	<xsl:call-template name="datatable" />
 </xsl:template>
 

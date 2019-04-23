@@ -278,7 +278,7 @@
 						$_delegate = $this->bo->read_single($id);
 						$delegate['ssn'] = $_delegate['ssn'];
 					}
-					else
+					else if ( !preg_match('/^{(.*)}(.*)$/', $delegate['ssn'], $m) || count($m) != 3  ) //full string, algorhythm, hash
 					{
 						$hash = sha1($delegate['ssn']);
 						$delegate['ssn'] =  '{SHA1}' . base64_encode($hash);
