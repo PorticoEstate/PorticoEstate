@@ -1004,7 +1004,7 @@ function createTable(d, u, c, r, cl, l)
 		l.col = c;
 		l.r = r;
 		l.class = cl;
-		u += "&results=" + l.limit + "&startIndex=" + l.start;
+		u += "&results=" + l.limit + "&length=" + l.limit + "&startIndex=" + l.start;
 	}
 
 	container.appendChild(xTable);
@@ -1227,6 +1227,34 @@ function createObject(object)
 			{
 				objs.push('&nbsp;');
 			}
+
+			if(element.getAttribute('type') == 'radio')
+			{
+				element.onclick = function (e)
+				{
+					var previousValue = $(this).attr('previousValue');
+					if (previousValue == 'true')
+					{
+						this.checked = false;
+						$(this).attr('previousValue', this.checked);
+					}
+					else
+					{
+						this.checked = true;
+						$(this).attr('previousValue', this.checked);
+
+						try
+						{
+							local_custom_radio_action(this);
+						}
+						catch (err)
+						{
+console.log(err);
+						}
+					}
+				};
+			}
+
 			objs.push(element);
 		});
 	}

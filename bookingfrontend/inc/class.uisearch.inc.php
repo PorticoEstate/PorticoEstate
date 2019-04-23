@@ -159,6 +159,7 @@
 
 		function query()
 		{
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
 			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
@@ -226,7 +227,7 @@
 			if ($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_top_level', 'string') || (phpgw::get_var('filter_search_type') && $searchterm))
 			{
 				$data = array(
-					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria)
+					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria, $length)
 				);
 			}
 			self::render_template_xsl('search_details', $data);

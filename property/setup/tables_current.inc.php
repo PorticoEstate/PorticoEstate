@@ -527,6 +527,7 @@
 				'id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
 				'category' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '100', 'nullable' => False),
+				'ecodimb' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'mva' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'responsible' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),

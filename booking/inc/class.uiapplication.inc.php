@@ -367,6 +367,7 @@
 				),
 			);
 
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
 			$data['datatable']['actions'][] = array();
 
@@ -612,6 +613,7 @@
 				$application['created'] = 'now';
 				$application['modified'] = 'now';
 				$application['secret'] = $this->generate_secret();
+//				$application['secret_timestamp'] = time();
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
 				$application['building_name'] = $building['results'][0]['name'];
 
@@ -870,6 +872,21 @@
 				$date['to_'] = pretty_timestamp($date['to_']);
 			}
 
+
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				echo json_encode(array(
+						'application' => $application,
+						'activities' => $activities,
+						'agegroups' => $agegroups,
+						'audience' => $audience
+					)
+				);
+
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+
 //			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 //			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0);
@@ -1110,6 +1127,20 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
+
+
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				echo json_encode(array(
+						'application' => $application,
+						'activities' => $activities,
+						'agegroups' => $agegroups,
+						'audience' => $audience
+					)
+				);
+
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{

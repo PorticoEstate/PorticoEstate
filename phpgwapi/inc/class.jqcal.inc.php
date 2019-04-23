@@ -66,6 +66,25 @@
 		*/
 		function _input_modern($id, $type, $config = array())
 		{
+			$_i18n = new stdClass();
+			$_i18n->monthsShort 	=
+				[
+				  lang('Jan'),
+				  lang('Feb'),
+				  lang('Mar'),
+				  lang('April'),
+				  lang('May'),
+				  lang('Jun'),
+				  lang('Jul'),
+				  lang('Aug'),
+				  lang('Sep'),
+				  lang('Oct'),
+				  lang('Nov'),
+				  lang('Dec')
+				];
+
+			$i18n = json_encode($_i18n);
+
 			$date_range_arr = array();
 			$date_range = '';
 
@@ -79,23 +98,42 @@
 				$date_range_arr[] = "maxDate:new Date({$config['max_date']})";
 			}
 
+			if(!empty($config['no_button']))
+			{
+				$show_button = "";
+			}
+			else
+			{
+				$show_button  = <<<JS
+					,showOn: "button",
+					buttonImage: "{$this->img_cal}",
+					buttonText: "{$this->lang_select_date}",
+					buttonImageOnly: true
+JS;
+			}
+
+
 			if($date_range_arr)
 			{
 				$date_range = ',' . implode(',', $date_range_arr);
 			}
-
+			$dateformat_materializecss		 = str_ireplace(array('yy'), array('yyyy'), $this->dateformat);
 			$js = <<<JS
 			$(function() {
 				$( "#{$id}" ).{$type}picker({ 
 					dateFormat: '{$this->dateformat}',
+					format: '{$dateformat_materializecss}', // materializecss
+					showClearBtn : true,// materializecss
 					showWeek: true,
 					changeMonth: true,
 					changeYear: true,
-					showOn: "button",
-					showButtonPanel:true,
-					buttonImage: "{$this->img_cal}",
-					buttonText: "{$this->lang_select_date}",
-					buttonImageOnly: true
+					i18n: {$i18n},
+					showButtonPanel:true
+					{$show_button}
+		//			showOn: "button",
+		//			buttonImage: "{$this->img_cal}",
+		//			buttonText: "{$this->lang_select_date}",
+		//			buttonImageOnly: true
 					{$date_range}
 					//new Date(2018, 1 -1, 1),//Date(year, month, day, hours, minutes, seconds, milliseconds)
 					//new Date(2018, 12 -1, 31)

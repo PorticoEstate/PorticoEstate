@@ -206,6 +206,12 @@
 			  'classname'	=> 'rightClasss'
 			  );
 			 */
+			$columns['location_code']			 = array
+				(
+				'id'		 => 'location_code',
+				'name'		 => lang('location code'),
+				'sortable'	 => true
+			);
 			$columns['ecodimb']			 = array
 				(
 				'id'		 => 'ecodimb',

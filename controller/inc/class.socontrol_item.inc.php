@@ -175,7 +175,8 @@
 			$sql .= "FROM controller_control_item ci ";
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
 			$sql .= "LEFT JOIN controller_control_group as cg ON ci.control_group_id = cg.id ";
-			$sql .= "WHERE ci.id = $id";
+			$sql .= "WHERE ci.id = $id"
+				. " ORDER BY cio.id";
 
 			$this->db->query($sql);
 			$counter = 0;

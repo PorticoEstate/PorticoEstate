@@ -1627,6 +1627,21 @@
 							<xsl:when test="multiple_choice = 1">
 								<div class="pure-control-group">
 									<label>
+										<xsl:value-of select="php:function('lang', 'include as filter')"/>
+									</label>
+									<input type="checkbox" name="values[table_filter]" value="1">
+										<xsl:if test="value_table_filter = 1">
+											<xsl:attribute name="checked">
+												<xsl:text>checked</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'check to act as filter in list')"/>
+										</xsl:attribute>
+									</input>
+								</div>
+								<div class="pure-control-group">
+									<label>
 										<xsl:value-of select="php:function('lang', 'choice')"/>
 									</label>
 									<xsl:call-template name="choice"/>
