@@ -171,6 +171,7 @@
 			{
 				$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}

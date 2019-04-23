@@ -179,6 +179,8 @@
 			$data['datatable']['actions'][] = array();
 			$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uigroup.edit'));
 
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

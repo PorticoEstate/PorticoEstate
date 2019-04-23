@@ -367,6 +367,7 @@
 				),
 			);
 
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
 			$data['datatable']['actions'][] = array();
 
