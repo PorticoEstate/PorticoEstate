@@ -148,7 +148,7 @@
 					<!-- Target Audience Section -->
 					<div class="form-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Target audience')" />*</label>
+							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
 						<div class="dropdown d-inline-block">
 							<button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<xsl:value-of select="php:function('lang', 'choose')" />
@@ -162,16 +162,16 @@
 					<!-- Event Name -->
 					<div class="form-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Event name')" />*</label>
-						<input required="true" type="text" class="form-input" name="name" value="{application/name}" oninvalid="this.setCustomValidity('Skrv inn navn på arrangement!')"
- 						oninput="setCustomValidity('')"/>
+							<xsl:value-of select="php:function('lang', 'Event name')" /> *</label>
+						<input type="text" class="form-input" id="nameInput" name="name" value="{application/name}" oninvalid="this.setCustomValidity('Skrv inn navn på arrangement!')"
+ 						oninput="setCustomValidity('')" placeholder="Navn på arrangement"/>
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Organizer')" />*</label>
+							<xsl:value-of select="php:function('lang', 'Organizer')" /> *</label>
 						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}" oninvalid="this.setCustomValidity('Skriv inn navn på arrangør!')"
- 						oninput="setCustomValidity('')"></input>
+ 						oninput="setCustomValidity('')" placeholder="Navn på arrangør"></input>
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
@@ -301,7 +301,5 @@
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
 		document.head.appendChild(script);
-
-		
 	</script>
 </xsl:template>
