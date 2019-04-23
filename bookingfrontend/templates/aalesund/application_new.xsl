@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="container new-application-page pt-5" id="new-application-page">
-		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form">
+		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form" novalidate="true" class="needs-validation">
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
@@ -128,9 +128,10 @@
 						</span>
 						<div data-bind="foreach: date">
 							<div class="d-block">
-								<input name="from_[]" hidden="hidden" data-bind="value: from_"/>
-								<input name="to_[]" hidden="hidden" data-bind="value: to_"/>
+								<input required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
+								<input required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
 								<span data-bind='text: formatedPeriode'></span>
+								
 								<button class="ml-2" data-bind="click: $parent.removeDate">
 									<i class="fas fa-minus-circle"></i>
 								</button>
@@ -146,7 +147,7 @@
 						<xsl:value-of select="php:function('lang', 'Information about the event')" />
 					</h2>
 					<!-- Target Audience Section -->
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
 						<div class="dropdown d-inline-block">
@@ -156,22 +157,48 @@
 							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
 								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
 							</div>
-							<input type="text" name="audience[]" hidden="hidden" data-bind="value: audienceSelectedValue" />
+							<input class="form-control" required="true" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+							<div class="invalid-feedback">
+								Velg målgruppe!
+							</div>
+						</div>
+					</div> -->
+					<!-- Target Audience Section DEMO-->
+					<div class="form-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
+						<div class="dropdown">
+							<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<xsl:value-of select="php:function('lang', 'choose')" />
+							</div>
+							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
+								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
+							</div>
+							<input id="audienceSel" style="display: none" class="form-control" required="true" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+							<div class="invalid-feedback">
+								Velg målgruppe!
+							</div>
 						</div>
 					</div>
+
+					
 					<!-- Event Name -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" /> *</label>
-						<input type="text" class="form-input" id="nameInput" name="name" value="{application/name}" oninvalid="this.setCustomValidity('Skrv inn navn på arrangement!')"
- 						oninput="setCustomValidity('')" placeholder="Navn på arrangement"/>
+						<input required="true" type="text" class="form-control" name="name" value="{application/name}" placeholder="Navn på arrangement"/>
+						<div class="invalid-feedback">
+							Skriv inn navn på arrangementet!
+						</div>
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" /> *</label>
-						<input required="true" type="text" class="form-input" name="organizer" value="{application/organizer}" oninvalid="this.setCustomValidity('Skriv inn navn på arrangør!')"
- 						oninput="setCustomValidity('')" placeholder="Navn på arrangør"></input>
+						<input required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør"></input>
+						<div class="invalid-feedback">
+							Skriv inn navn på arrangør!
+						</div>
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
@@ -275,7 +302,7 @@
 					</div>
 
 					<hr class="mt-5 mb-5"></hr>
-
+					<!-- Submit -->
 					<div class="form-group float-right">
 						<button class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Add application')" />
