@@ -628,14 +628,15 @@
 				'multi_upload_parans' => "{menuaction:'controller.uicheck_list.build_multi_upload_file', id:'{$check_list_id}'}",
 
 			);
-
+//			_debug_array($check_list); die();
 			$GLOBALS['phpgw']->jqcal2->add_listener('planned_date');
 			$number_of_days_in_month = cal_days_in_month(CAL_GREGORIAN, date('m', $check_list->get_deadline()), date('Y', $check_list->get_deadline())) -1;
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('completed_date', 'date', 0, array(
-					'min_date' => date('Y/m/d', $check_list->get_deadline() - 3600 * 24 * $number_of_days_in_month), //start of month
+			$GLOBALS['phpgw']->jqcal2->add_listener('completed_date'
+//				, 'date', 0, array(
+//					'min_date' => date('Y/m/d', $check_list->get_deadline() - 3600 * 24 * $number_of_days_in_month), //start of month
 //					'max_date' => date('Y/m/d', $check_list->get_planned_date())
-				)
+//				)
 			);
 			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
