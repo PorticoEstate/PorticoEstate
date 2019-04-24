@@ -447,17 +447,3 @@ document.getElementById('field_name').onchange = function () {
     });
   }, false);
 })();
-
-
-window.onload = function() {
-  const input = document.getElementById("audienceSel");
-  const inputDiv = document.getElementById("audienceDropdownBtn");
-
-  form.addEventListener('change', function() {
-    if(input && input.value) {
-      inputDiv.classList.add("isValid");
-    } else {
-      inputDiv.classList.add("was-validated");
-    }
-  })
-}
