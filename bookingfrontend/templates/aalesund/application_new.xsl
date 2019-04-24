@@ -39,10 +39,10 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
+						<div type="input"  class="form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
-						</button>
+						</div>
 
 						<ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
 							<li>
@@ -174,38 +174,50 @@
 							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
 								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
 							</div>
-							<input id="audienceSel" style="display: none" class="form-control" required="true" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+							<input class="form-control" id="audienceSel" required="true" style="display: none" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
 							<div class="invalid-feedback">
-								Velg målgruppe!
+								<xsl:value-of select="php:function('lang', 'please enter target audience')"/>
 							</div>
 						</div>
 					</div>
 
-					
+				
 					<!-- Event Name -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" /> *</label>
-						<input required="true" type="text" class="form-control" name="name" value="{application/name}" placeholder="Navn på arrangement"/>
-						<div class="invalid-feedback">
+						<input required="true" type="text" class="form-control" name="name" value="{application/name}">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Event name')"/>
+							</xsl:attribute>
+						</input>
+						<!-- <div class="invalid-feedback">
 							Skriv inn navn på arrangementet!
-						</div>
+						</div> -->
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" /> *</label>
-						<input required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør"></input>
-						<div class="invalid-feedback">
+						<input required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="php:function('lang', 'Organizer')"/>
+						</xsl:attribute>
+						</input>
+						<!-- <div class="invalid-feedback">
 							Skriv inn navn på arrangør!
-						</div>
+						</div> -->
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 						</label>
-						<input  type="text" class="form-input" name="homepage" value="{application/homepage}"/>
+						<input placeholder="Hjemmeside for aktiviteten/arrangementet" type="text" class="form-input" name="homepage" value="{application/homepage}">
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="php:function('lang', 'Homepage for the event')"/>
+						</xsl:attribute>
+						</input>
 					</div>
 					<!-- Description -->
 					<div class="form-group">
@@ -214,18 +226,20 @@
 						</label>
 
 						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
-							<xsl:value-of select="application/description"/>
+							<xsl:attribute name="placeholder">
+							<xsl:value-of select="php:function('lang', 'description')"/>
+						</xsl:attribute>
 						</textarea>
 					</div>
 
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label>
 							<xsl:value-of select="config/application_equipment"/>
 						</label>
 						<textarea style="resize: none;" class="form-input" name="equipment">
 							<xsl:value-of select="application/equipment"/>
 						</textarea>
-					</div>
+					</div> -->
 					<!-- Estimated Number of Participants -->
 					<div class="form-group">
 						<label>

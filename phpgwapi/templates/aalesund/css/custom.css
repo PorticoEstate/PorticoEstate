@@ -1578,6 +1578,7 @@ NEW APPLICATION PAGE STYLE
     transition: .15s ease-in-out;
 }
 
+.new-application-page .form-control::placeholder,
 .new-application-page .form-input::placeholder {
     font-size: .8rem;
 }
