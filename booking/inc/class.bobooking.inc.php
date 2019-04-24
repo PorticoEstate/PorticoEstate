@@ -458,7 +458,7 @@
 			$to = clone $from;
 			$to->modify('+7 days');
 			$allocation_ids = $this->so->allocation_ids_for_building($building_id, $from, $to);
-			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
+			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids), 'results' => -1));
 			$allocations = $allocations['results'];
 			foreach ($allocations as &$allocation)
 			{
@@ -486,7 +486,7 @@
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids)));
+			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids), 'results' => -1));
 			$bookings = $bookings['results'];
 			foreach ($bookings as &$booking)
 			{
@@ -516,7 +516,7 @@
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters' => array('id' => $event_ids)));
+			$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
 			$events = $events['results'];
 			foreach ($events as &$event)
 			{
@@ -554,7 +554,7 @@
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids,
-					'active' => 1)));
+					'active' => 1), 'results' => -1));
 			$resources = $resources['results'];
 
 			foreach ($resources as $key => $row)
@@ -827,7 +827,7 @@
 			$orgids = explode(",", $config->config_data['extra_schedule_ids']);
 
 			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids,
-					'organization_id' => $orgids), 'sort' => 'from_'));
+					'organization_id' => $orgids), 'sort' => 'from_', 'results' => -1));
 			$allocations = $allocations['results'];
 			foreach ($allocations as &$allocation)
 			{
@@ -855,7 +855,7 @@
 			}
 
 			$booking_ids = $this->so->booking_ids_for_building($building_id, $from, $to);
-			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids), 'sort' => 'from_'));
+			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids), 'sort' => 'from_', 'results' => -1));
 			$bookings = $bookings['results'];
 			foreach ($bookings as &$booking)
 			{
@@ -886,7 +886,7 @@
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
 			$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
-				'sort' => 'from_'));
+				'sort' => 'from_', 'results' => -1));
 			$events = $events['results'];
 			foreach ($events as &$event)
 			{
@@ -920,7 +920,7 @@
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_allocations($allocation_ids));
 			$resource_ids = array_merge($resource_ids, $this->so->resource_ids_for_events($event_ids));
 			$resources = $this->resource_so->read(array('filters' => array('id' => $resource_ids,
-					'active' => 1)));
+					'active' => 1, 'results' => -1)));
 			$resources = $resources['results'];
 
 			foreach ($resources as $key => $row)
@@ -958,7 +958,7 @@
 			$to->modify('+7 days');
 			$resource = $this->resource_so->read_single($resource_id);
 			$allocation_ids = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
-			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids)));
+			$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids), 'results' => -1));
 			$allocations = $allocations['results'];
 			foreach ($allocations as &$allocation)
 			{
@@ -985,7 +985,7 @@
 				unset($allocation['audience']);
 			}
 			$booking_ids = $this->so->booking_ids_for_resource($resource_id, $from, $to);
-			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids)));
+			$bookings = $this->so->read(array('filters' => array('id' => $booking_ids), 'results' => -1));
 			$bookings = $bookings['results'];
 			foreach ($bookings as &$booking)
 			{
@@ -1015,7 +1015,7 @@
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
-			$events = $this->event_so->read(array('filters' => array('id' => $event_ids)));
+			$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
 			$events = $events['results'];
 			foreach ($events as &$event)
 			{
