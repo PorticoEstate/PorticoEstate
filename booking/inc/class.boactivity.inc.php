@@ -28,7 +28,7 @@
 
 		function fetch_activities( $parent_id = 0 )
 		{
-			$activities = $this->so->read(array());
+			$activities = $this->so->read(array('results' => -1));
 			$activities = $activities['results'];
 
 			$children = array();
@@ -121,11 +121,12 @@
 			{
 				$parent_id = phpgw::get_var('parent_id', 'int', 'REQUEST', 0);
 			}
-			$activities = $this->read();
+			$activities = $this->read_all();
 
 			$results = array();
 			$total_records = 0;
-			foreach ($activities['results'] as $activity) {
+			foreach ($activities['results'] as $activity)
+			{
 				if ($filter_top_level && $activity['parent_id'] != null)
 				{
 					continue;

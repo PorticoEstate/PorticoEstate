@@ -9,7 +9,7 @@
 		<meta name="description" content="Portico Estate">
 		<meta name="keywords" content="Portico Estate">
 		<meta name="robots" content="none">
-		<title>{site_title}: test av css</title>
+		<title>{site_title}</title>
 		<link rel="icon" href="{img_icon}" type="image/x-ico">
 		<link rel="shortcut icon" href="{img_icon}">
 		<!-- BEGIN stylesheet -->

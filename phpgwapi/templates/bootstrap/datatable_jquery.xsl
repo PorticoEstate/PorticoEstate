@@ -16,13 +16,13 @@
 </func:function>
 
 <xsl:template match="data">
-	<xsl:choose>
+<!--	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>
 				<xsl:value-of select="datatable_name"/>
 			</h3>
 		</xsl:when>
-	</xsl:choose>
+	</xsl:choose>-->
 	<xsl:call-template name="datatable" />
 </xsl:template>
 
@@ -1124,6 +1124,8 @@
 											{
 												oControl.multiselect("destroy");
 												oControl.multiselect({
+												buttonWidth: 250,
+												includeSelectAllOption: true,
 												enableFiltering: true,
 												enableCaseInsensitiveFiltering: true,
 												onChange: function($option) {
