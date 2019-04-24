@@ -134,7 +134,7 @@
 				foreach ($orgs as $org)
 				{
 					$this->db->query("SELECT organization_number"
-						. " FROM bb_organization "
+						. " FROM bb_organization"
 						. " WHERE active = 1 AND organization_number = '{$org['orgnr']}'", __LINE__, __FILE__);
 
 					if (!$this->db->next_record())
