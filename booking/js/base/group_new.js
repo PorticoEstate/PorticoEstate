@@ -1,5 +1,5 @@
 $(document).ready(function ()
 {
-	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&',
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uiorganization.index'}, true),
 		'field_organization_name', 'field_organization_id', 'organization_container');
 });

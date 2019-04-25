@@ -19,10 +19,10 @@ $(document).ready(function ()
 		}
 	});
 
-	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&',
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
 
-	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uiorganization.index&phpgw_return_as=json&',
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uiorganization.index'}, true),
 		'field_org_name', 'field_org_id', 'org_container');
 
 	$("#field_activity").change(function ()
@@ -212,7 +212,7 @@ if ($.formUtils)
 
 function populateTableChkResources(building_id, selection)
 {
-	var url = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}

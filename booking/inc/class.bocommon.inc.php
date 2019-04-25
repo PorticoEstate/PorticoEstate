@@ -75,6 +75,12 @@
 			$query = phpgw::get_var('query');
 			$sort = phpgw::get_var('sort');
 			$dir = phpgw::get_var('dir');
+			$length = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+			if($length)
+			{
+				$results = $length;
+			}
 
 			$filters = array();
 			foreach ($this->so->get_field_defs() as $field => $params)
