@@ -28,6 +28,7 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 
 			self::set_active_menu('booking::settings::agegroup');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('agegroup');
 		}
 
 		public function active()

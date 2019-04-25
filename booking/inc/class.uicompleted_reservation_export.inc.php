@@ -28,6 +28,9 @@
 			$this->generated_files_bo = CreateObject('booking.bocompleted_reservation_export_file');
 			self::set_active_menu('booking::invoice_center::exported_files');
 			$this->url_prefix = 'booking.uicompleted_reservation_export';
+			$this->display_name = lang('Exported Files');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
+
 		}
 
 		public function link_to( $action, $params = array() )
@@ -105,7 +108,7 @@
 			self::add_javascript('booking', 'base', 'completed_reservation_export.js');
 
 			$data = array(
-				'datatable_name' => lang('booking') . ': ' . lang('Exported Files'),
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

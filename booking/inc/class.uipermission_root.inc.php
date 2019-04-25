@@ -30,6 +30,8 @@
 			$this->fields = array('subject_id', 'subject_name', 'role');
 
 			self::set_active_menu('booking::settings::permissions');
+			$this->display_name = lang('Root Permissions');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		protected function set_business_object( booking_bopermission_root $bo = null )
@@ -61,6 +63,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 					),

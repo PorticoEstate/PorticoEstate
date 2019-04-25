@@ -50,6 +50,12 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.index')),
 					'image' => array('property', 'project_request'),
 					'children' => array(
+						'applications' => array
+							(
+							'text' => lang('Applications'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.index')),
+							'image' => array('property', 'project_request'),
+						),
 						'allocations' => array
 							(
 							'text' => lang('Allocations'),
@@ -83,6 +89,12 @@
 					'image' => array('property', 'location_1'),
 					'children' => array
 						(
+						'buildings' => array
+							(
+							'text' => lang('Buildings'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uibuilding.index')),
+							'image' => array('property', 'location_1'),
+						),
 						'documents' => array
 							(
 							'text' => lang('Documents'),
@@ -102,6 +114,12 @@
 							'image' => array('property', 'location'),
 							'children' => array
 								(
+								'resources' => array
+									(
+									'text' => lang('Resources'),
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiresource.index')),
+									'image' => array('property', 'location'),
+								),
 								'documents' => array
 									(
 									'text' => lang('Documents'),
@@ -123,6 +141,12 @@
 							'image' => array('property', 'location_gabnr'),
 							'children' => array
 								(
+								'seasons' => array
+									(
+									'text' => lang('Seasons'),
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiseason.index')),
+									'image' => array('property', 'location_gabnr'),
+								),
 								'permissions' => array
 									(
 									'text' => lang('Permissions'),
@@ -146,6 +170,12 @@
 					'image' => array('property', 'location_tenant'),
 					'children' => array
 						(
+						'organizations' => array
+							(
+							'text' => lang('Organizations'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiorganization.index')),
+							'image' => array('property', 'location_tenant'),
+						),
 						'documents' => array
 							(
 							'text' => lang('Documents'),
@@ -212,6 +242,12 @@
 					'image' => array('property', 'report'),
 					'children' => array
 						(
+						'reports' => array
+							(
+							'text' => lang('Reports'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uireports.index')),
+							'image' => array('property', 'report'),
+						),
 						'participants' => array
 							(
 							'text' => lang('Participants'),
@@ -345,6 +381,12 @@
 								'type' => 'bb_office')),
 							'children' => array
 								(
+								'office' => array
+									(
+									'text' => lang('office'),
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+										'type' => 'bb_office')),
+								),
 								'office_user' => array
 									(
 									'text' => lang('office user'),

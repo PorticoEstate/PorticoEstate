@@ -14,6 +14,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('booking::settings::mail_settings');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('Mail Settings');
 		}
 
 		public function query()

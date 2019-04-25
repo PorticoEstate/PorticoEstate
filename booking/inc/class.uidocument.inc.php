@@ -34,6 +34,11 @@
 			$this->fields = array('category', 'description', 'owner_id', 'owner_name');
 
 			$this->module = 'booking';
+
+			$obj_info = explode('_',get_class ($this ));
+
+			$this->display_name = lang($obj_info[2]) . '::' . lang(ltrim($obj_info[1], 'ui'));
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		protected function set_business_object( booking_bodocument $bo = null )
@@ -146,6 +151,7 @@
 			$this->redirect_to_parent_if_inline();
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 					),

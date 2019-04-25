@@ -326,7 +326,7 @@ function DoFilterSearch() {
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
     results.removeAll();
-    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity()  }, true);
+    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1 }, true);
     
     searchViewModel.facilities.removeAll();
     searchViewModel.activities.removeAll();

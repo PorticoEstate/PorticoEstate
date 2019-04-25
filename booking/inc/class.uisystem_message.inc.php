@@ -27,6 +27,8 @@
 			self::set_active_menu('booking::messages');
 			$this->url_prefix = 'booking.uisystem_message';
 			$this->module = 'booking';
+			$this->display_name = lang('messages');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function index()
@@ -41,6 +43,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

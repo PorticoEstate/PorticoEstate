@@ -236,6 +236,7 @@
 
 		function resquery()
 		{
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
 			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', null);
 			$fields_multiids = array('facility_id', 'part_of_town_id');
@@ -254,7 +255,7 @@
 				$multiids[$field] = array_unique($ids);
 			}
 			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $activity_id,
-				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id']));
+				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
 		}
 
 
