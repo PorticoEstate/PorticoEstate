@@ -150,6 +150,8 @@ $(document).ready(function () {
         }
       }
     }
+
+    console.log(result.audience)
     for (var i = 0; i < result.audience.length; i++) {
       if ($.inArray(result.audience[i].id, initialAudience) > -1) {
         $("#audienceDropdownBtn").text(result.audience[i].name);
@@ -375,20 +377,6 @@ $(".bookingEndTime").on("click", function () {
   }, 200);
 });
 
-// Pushes filename to field_name_input and validates file size
-document.getElementById('field_name').onchange = function () {
-  var filePath = this.value;
-  if (filePath) {
-    var fileName = filePath.split(/(\\|\/)/g).pop();
-    $("#field_name_input").empty().append(fileName);
-  }
-  // Checks if file size is greater than 2MB
-  if (attInput.files[0].size > 2000000) {
-    showAlert('Filen er for stor!', 'alert-danger')
-    attFileInput.textContent = '';
-    attInput.value = '';
-  };
-};
 
 // Grab attachment elements
 const attFileInput = document.getElementById("field_name_input");
@@ -396,11 +384,6 @@ const attInput = document.getElementById("field_name");
 const attRemove = document.getElementById("attachment-remove");
 const attContainer = document.getElementById("attachment");
 const attUpload = document.getElementById("attachment-upload");
-
-window.onload = function () {
-  attRemove.addEventListener("click", console.log("hello"))
-
-}
 
 // Show Alert Function
 function showAlert(message, className) {
@@ -423,62 +406,83 @@ function showAlert(message, className) {
 
 // Removes attachment when clicked
 window.onload = function () {
-  function removeAttachment() {
-    attRemove.addEventListener("click", function () {
-      if (attFileInput.textContent === '' && attInput.value === '') {
-        showAlert('Ingen vedlegg å fjerne!', 'alert-danger');
-      } else {
-        showAlert('Vedlegg fjernet!', "alert-success")
-        attFileInput.textContent = '';
-        attInput.value = '';
-      }
-    })
-  }
-  // Call Function
-  removeAttachment()
-
-  // Function validateInputName
-  function validateInputName() {
-    // Grab inputName element
-    const eventName = document.getElementById("eventName");
-    //Validates Event Name Input
-
-    eventName.addEventListener("blur", function () {
-      const re = /^[a-åA-Å]{2,25}$/;
-
-      // Check input and adds classes
-      if (!re.test(eventName.value)) {
-        eventName.classList.add("is-invalid");
-        eventName.classList.remove("is-valid");
-      } else {
-        eventName.classList.remove("is-invalid");
-        eventName.classList.add("is-valid");
-      }
-    })
-  }
-  // Call Function
-  validateInputName()
-
-  // Validates Organizer Input
-  function validateOrganizerInput() {
-    // Grab 
-  }
+  attRemove.addEventListener("click", function () {
+    if (attFileInput.textContent === '' && attInput.value === '') {
+      showAlert('Ingen vedlegg å fjerne!', 'alert-danger');
+    } else {
+      showAlert('Vedlegg fjernet!', "alert-success")
+      attFileInput.textContent = '';
+      attInput.value = '';
+    }
+  })
 }
 
+// Pushes filename to field_name_input and validates file size
+document.getElementById('field_name').onchange = function () {
+  var filePath = this.value;
+  if (filePath) {
+    var fileName = filePath.split(/(\\|\/)/g).pop();
+    $("#field_name_input").empty().append(fileName);
+  }
+  // Checks if file size is greater than 2MB
+  if (attInput.files[0].size > 2000000) {
+    showAlert('Filen er for stor!', 'alert-danger')
+    attFileInput.textContent = '';
+    attInput.value = '';
+  };
+};
 
-//   // Validates Organizer Input
-//   document.getElementById('organizerName').addEventListener("blur", function () {
-//     const organizerName = document.getElementById("organizerName");
-//     // Only chars a-å/A-Å allowed + min 2 letters and max 25 letters
-//     const re = /^[a-åA-Å]{2,25}$/;
+// (function() {
+//   'use strict';
+//   window.addEventListener('load', function() {
+//     // Fetch all the forms we want to apply custom Bootstrap validation styles to
+//     var forms = document.getElementsByClassName('needs-validation');
+//     // Loop over them and prevent submission
+//     var validation = Array.prototype.filter.call(forms, function(form) {
+//       form.addEventListener('submit', function(event) {
+//         if (form.checkValidity() === false) {
+//           event.preventDefault();
+//           event.stopPropagation();
+//         }
+//         form.classList.add('was-validated');
+//       }, false);
+//     });
+//   }, false);
+// })()
 
-//     // Checks input and adds classes
-//     if (!re.test(organizerName.value)) {
-//       organizerName.classList.add("is-invalid");
-//       organizerName.classList.remove("is-valid");
-//     } else {
-//       organizerName.classList.remove("is-invalid")
-//       organizerName.classList.add("is-valid")
-//     }
-//   });
-// }
+
+
+// Form Validation
+window.onload = function () {
+  // Validates Event Name Input
+  document.getElementById('eventName').addEventListener("blur", function () {
+    const eventName = document.getElementById("eventName");
+    // Only chars a-å/A-Å allowed + min 2 letters and max 25 letters
+    const re = /^[a-åA-Å]{2,25}$/;
+
+    // Checks input and adds classes
+    if (!re.test(eventName.value)) {
+      eventName.classList.add("is-invalid");
+      eventName.classList.remove("is-valid");
+    } else {
+      eventName.classList.remove("is-invalid")
+      eventName.classList.add("is-valid")
+    }
+  });
+
+  // Validates Organizer Input
+  document.getElementById('organizerName').addEventListener("blur", function () {
+    const organizerName = document.getElementById("organizerName");
+    // Only chars a-å/A-Å allowed + min 2 letters and max 25 letters
+    const re = /^[a-åA-Å]{2,25}$/;
+
+    // Checks input and adds classes
+    if (!re.test(organizerName.value)) {
+      organizerName.classList.add("is-invalid");
+      organizerName.classList.remove("is-valid");
+    } else {
+      organizerName.classList.remove("is-invalid")
+      organizerName.classList.add("is-valid")
+    }
+  });
+}
