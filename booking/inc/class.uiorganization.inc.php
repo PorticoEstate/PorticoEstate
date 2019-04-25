@@ -27,7 +27,7 @@
 			$this->bo = CreateObject('booking.boorganization');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 
-			self::set_active_menu('booking::organizations');
+			self::set_active_menu('booking::organizations::organizations');
 			$this->module = "booking";
 			$this->fields = array(
 				'name' => 'string',
@@ -48,6 +48,8 @@
 				'customer_internal' => 'int',
 				'show_in_portal' => 'int',
 			);
+			$this->display_name = lang('organizations');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function building_users()
@@ -75,6 +77,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

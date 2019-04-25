@@ -41,6 +41,10 @@
 				'contact_name', 'contact_email', 'contact_phone',
 				'from_', 'to_', 'active', 'audience', 'reminder',
 				'is_public', 'sms_total', 'customer_internal', 'include_in_list');
+
+			$this->display_name = lang('events');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
+
 		}
 
 		public function index()
@@ -51,6 +55,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

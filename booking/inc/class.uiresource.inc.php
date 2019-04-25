@@ -54,7 +54,9 @@
 				'activities' => 'int',
 				'facilities' => 'int',
 			);
-			self::set_active_menu('booking::buildings::resources');
+			self::set_active_menu('booking::buildings::resources::resources');
+			$this->display_name = lang('resources');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function index()
@@ -65,6 +67,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

@@ -14,6 +14,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('booking::settings::account_code_dimensions');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('Account Code Dimension');
 		}
 
 		public function index()

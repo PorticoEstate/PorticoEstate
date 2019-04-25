@@ -34,6 +34,10 @@
 
 			$this->fields = array('subject_id', 'subject_name', 'object_id', 'object_name',
 				'role');
+
+			$obj_info = explode('_',get_class ($this ));
+			$this->display_name = lang($obj_info[2]) . '::' . lang(ltrim($obj_info[1], 'ui') . 's');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		protected function set_business_object( booking_bopermission $bo = null )
@@ -135,6 +139,7 @@
 			$this->redirect_to_parent_if_inline();
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -188,7 +193,6 @@
 				$data['datatable']['new_item'] = $this->get_object_typed_link('add');
 			}
 
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

@@ -17,8 +17,10 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.bofacility');
-			self::set_active_menu('booking::applications::facility');
+			self::set_active_menu('booking::settings::facility');
 			$this->fields = array('name', 'active');
+			$this->display_name = lang('facilities');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 
@@ -30,6 +32,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uifacility.index', 'phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 0),

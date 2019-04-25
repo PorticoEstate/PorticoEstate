@@ -37,6 +37,9 @@
 			self::set_active_menu('booking::invoice_center::completed_reservations');
 			$this->url_prefix = 'booking.uicompleted_reservation';
 			$this->restore_export_filters();
+
+			$this->display_name = lang('Completed');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function link_to( $action, $params = array() )
@@ -130,7 +133,7 @@
 			self::add_javascript('booking', 'base', 'completed_reservation.js');
 
 			$data = array(
-				'datatable_name' => lang('booking') . ': ' . lang('Completed'),
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -253,7 +256,6 @@
 			);
 
 			$data['filters'] = $this->export_filters;
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

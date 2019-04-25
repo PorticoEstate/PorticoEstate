@@ -22,6 +22,7 @@
 			$this->bo = CreateObject('booking.boasync_settings');
 
 			self::set_active_menu('booking::settings::async_settings');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('Asynchronous Tasks');
 		}
 
 		public function index()
