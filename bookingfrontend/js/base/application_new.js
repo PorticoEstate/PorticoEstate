@@ -450,4 +450,30 @@ document.getElementById('field_name').onchange = function () {
 //   }, false);
 // })();
 
+// Form Validation
+// const form = document.getElementsByTagName("form")[0];
+// const inputEventName = document.getElementById("inputEventName");
 
+// var checkValidity = {
+//   valueMissing: (field.hasAttribute('required') && (((type === 'checkbox' || type === 'radio') && !field.checked) || (type === 'select' && field.options[field.selectedIndex].value < 1) || (type !== 'checkbox' && type !== 'radio' && type !== 'select' && length < 1))) // required field without a value
+// }
+
+// inputEventName.addEventListener("input", function (e) {
+//   const re = /^[a-åA-Å]{2,25}$/;
+
+//   if (!re.test(inputEventName.value)) {
+//     inputEventName.classList.add("is-invalid");
+//     inputEventName.classList.remove("is-valid");
+//     checkValidity(valueMissing);
+//   } else {
+//     inputEventName.classList.remove("is-invalid");
+//   }
+// })
+
+
+
+// form.addEventListener("submit", function (e) {
+//   if (!inputEventName.validity.valid) {
+//     event.preventDefault();
+//   }
+// }, false);

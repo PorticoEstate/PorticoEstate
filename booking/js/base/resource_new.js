@@ -1,6 +1,6 @@
 $(document).ready(function ()
 {
-	JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.index&phpgw_return_as=json&',
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
 
 	$("#field_schema_activity_id").val($("#field_activity_id").val());
