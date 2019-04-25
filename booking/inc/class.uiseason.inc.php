@@ -34,12 +34,14 @@
 
 			$this->bo = CreateObject('booking.boseason');
 			$this->resource_bo = CreateObject('booking.boresource');
-			self::set_active_menu('booking::buildings::seasons');
+			self::set_active_menu('booking::buildings::seasons::seasons');
 			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_',
 				'to_', 'resources', 'active', 'officer_id', 'officer_name');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
 			$this->wtemplate_alloc_fields = array('id', 'organization_id', 'wday', 'cost',
 				'from_', 'to_', 'resources');
+			$this->display_name = lang('seasons');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function index()
@@ -50,6 +52,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

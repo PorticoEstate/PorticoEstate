@@ -17,6 +17,7 @@
 			parent::__construct();
 
 			self::set_active_menu('booking::mailing');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('Send e-mail');
 		}
 
 		public function query()

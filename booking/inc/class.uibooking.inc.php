@@ -45,6 +45,10 @@
 				'season_id', 'season_name',
 				'group_id', 'group_name', 'group_shortname', 'organization_id', 'organization_name',
 				'from_', 'to_', 'audience', 'active', 'cost', 'reminder', 'sms_total');
+
+			$this->display_name = lang('bookings');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
+
 		}
 
 		public function index()
@@ -57,6 +61,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(

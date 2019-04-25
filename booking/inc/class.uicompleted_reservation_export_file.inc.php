@@ -29,6 +29,9 @@
 			$this->export_agresso = CreateObject('booking.export_agresso');
 			self::set_active_menu('booking::invoice_center::generated_files');
 			$this->url_prefix = 'booking.uicompleted_reservation_export_file';
+			$this->display_name = lang('Generated Files');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
+
 		}
 
 		public function link_to( $action, $params = array() )
@@ -73,7 +76,7 @@
 			}
 
 			$data = array(
-				'datatable_name' => lang('booking') . ': ' . lang('Generated Files'),
+				'datatable_name' => $this->display_name,
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 0, 'dir' => 'desc'),
@@ -129,7 +132,6 @@
 				)
 			);
 
-//			$this->render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

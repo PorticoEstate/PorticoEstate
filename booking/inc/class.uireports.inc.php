@@ -21,14 +21,13 @@
 			parent::__construct();
 
 			$this->building_bo = CreateObject('booking.bobuilding');
-			self::set_active_menu('booking::reportcenter');
-
 			$this->activity_bo = CreateObject('booking.boactivity');
 			$this->agegroup_bo = CreateObject('booking.boagegroup');
 			$this->audience_bo = CreateObject('booking.boaudience');
 			//remove
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->resource_bo = CreateObject('booking.boresource');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('reports');
 		}
 
 		public function query()
@@ -38,6 +37,7 @@
 
 		public function index()
 		{
+			self::set_active_menu('booking::reportcenter::reports');
 			$reports[] = array('name' => lang('Participants Per Age Group Per Month'), 'url' => self::link(array(
 					'menuaction' => 'booking.uireports.participants')));
 			$reports[] = array('name' => lang('Free time'), 'url' => self::link(array('menuaction' => 'booking.uireports.freetime')));
