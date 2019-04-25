@@ -203,7 +203,7 @@ a.article:hover {
 }
 
 .dropdown-menu {
-max-height: 500px;
+max-height: 300px;
 overflow-y: auto;
 overflow-x: hidden;
 }

@@ -29,6 +29,7 @@
 			$this->activity_bo = CreateObject('booking.boactivity');
 
 			self::set_active_menu('booking::settings::audience');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('audience');
 		}
 
 		public function active()

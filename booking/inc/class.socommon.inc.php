@@ -608,11 +608,15 @@
 			$maxmatchs	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : $maxmatchs;
+			$results = isset($params['results']) && $params['results'] ? $params['results'] : $maxmatchs;
 
 			if($results == -1 || $results ==='all')
 			{
 				$results = null;
+			}
+			else
+			{
+				$results = (int)$results;
 			}
 
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
@@ -1130,7 +1134,7 @@
 			}
 		}
 
-		function validate( $entity )
+		function validate( &$entity )
 		{
 			$errors = $this->create_error_stack();
 			$this->preValidate($entity);

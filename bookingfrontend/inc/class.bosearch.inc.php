@@ -328,7 +328,7 @@
 			// Get resources
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
 			$resource_filters['rescategory_id'] = $params['rescategory_id'];
-			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
+			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => $params['length']));
 			$this->boresource->add_activity_facility_data($resources['results']);
 
 			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
@@ -403,7 +403,7 @@
 			// Get building data
 			$all_partoftown = array();
 			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
-			$buildingsres = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
+			$buildingsres = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name', 'results' => $params['length']));
 			$buildings = array();
 			foreach ($buildingsres['results'] as &$building)
 			{

@@ -80,7 +80,7 @@
 						'acl_app' => 'booking',
 						'acl_location' => '.office',
 						'system_location' => '.office',
-						'menu_selection' => 'booking::settings::office',
+						'menu_selection' => 'booking::settings::office::office',
 						'default' => array
 							(
 							'user_id' => array('add' => '$this->account'),

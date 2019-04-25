@@ -50,11 +50,14 @@
 			$this->document_building = CreateObject('booking.bodocument_building');
 			$this->document_resource = CreateObject('booking.bodocument_resource');
 
-			self::set_active_menu('booking::applications');
+			self::set_active_menu('booking::applications::applications');
 			$this->fields = array('formstage', 'name', 'organizer', 'homepage', 'description', 'equipment', 'resources',
 				'activity_id', 'building_id', 'building_name', 'contact_name',
 				'contact_email', 'contact_phone', 'audience',
 				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
+
+			$this->display_name = lang('application');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 		// --- SIGURD::START EXAMPLE -- //
 
@@ -257,7 +260,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$data = array(
-				'datatable_name' => lang('application'),
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -367,7 +370,7 @@
 				),
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
+
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
 			$data['datatable']['actions'][] = array();
 

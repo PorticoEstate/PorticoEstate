@@ -120,7 +120,7 @@
 
 		public function populate_grid_data( $menuaction )
 		{
-			$resources = $this->read();
+			$resources = $this->read_all();
 			$this->add_activity_facility_data($resources['results']);
 
 			$building_ids = array();

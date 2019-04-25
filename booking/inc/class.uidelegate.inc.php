@@ -27,6 +27,8 @@
 			self::set_active_menu('booking::organizations::delegates');
 
 			$this->module = "booking";
+			$this->display_name = lang('delegate');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function link_to_parent_params( $action = 'show', $params = array() )
@@ -121,11 +123,8 @@
 				return $this->query();
 			}
 
-			$lang_delegate = lang('delegate');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$lang_delegate}";
-
 			$data = array(
-				'datatable_name'	=> $lang_delegate,
+				'datatable_name'	=> $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -278,7 +277,7 @@
 						$_delegate = $this->bo->read_single($id);
 						$delegate['ssn'] = $_delegate['ssn'];
 					}
-					else
+					else if ( !preg_match('/^{(.*)}(.*)$/', $delegate['ssn'], $m) || count($m) != 3  ) //full string, algorhythm, hash
 					{
 						$hash = sha1($delegate['ssn']);
 						$delegate['ssn'] =  '{SHA1}' . base64_encode($hash);

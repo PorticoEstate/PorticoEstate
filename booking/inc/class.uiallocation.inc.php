@@ -36,6 +36,9 @@
 				'season_id', 'season_name',
 				'organization_id', 'organization_name',
 				'organization_shortname', 'from_', 'to_', 'active');
+
+			$this->display_name = lang('allocations');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function index()
@@ -50,6 +53,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			$build_id = phpgw::get_var('buildings', 'int', 'REQUEST', null);
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -134,7 +138,6 @@
 
 			$data['filters'] = $this->export_filters;
 			self::render_template_xsl('datatable_jquery', $data);
-//			self::render_template('datatable', $data);
 		}
 
 		public function query()

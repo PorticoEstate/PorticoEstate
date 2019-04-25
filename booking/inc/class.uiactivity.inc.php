@@ -22,6 +22,7 @@
 			$this->bo = CreateObject('booking.boactivity');
 
 			self::set_active_menu('booking::settings::activity');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('activities');
 		}
 
 		function treeitem( $children, $parent_id, $show_all )
@@ -67,7 +68,7 @@
 			}
 
 			$show_all = phpgw::get_var('show_all') || false;
-			$activities = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC'));
+			$activities = $this->bo->so->read(array('sort' => 'name', 'dir' => 'ASC', 'results' => -1));
 			$children = array();
 			foreach ($activities['results'] as $activity)
 			{

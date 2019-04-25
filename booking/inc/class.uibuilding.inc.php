@@ -32,7 +32,7 @@
 			$this->bo = CreateObject('booking.bobuilding');
 			$this->bo_booking = CreateObject('booking.bobooking');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			self::set_active_menu('booking::buildings');
+			self::set_active_menu('booking::buildings::buildings');
 			$this->fields = array
 				(
 				'name' => 'string',
@@ -61,6 +61,9 @@
 				'activity_id' => 'int',
 			);
 			$this->module = "booking";
+			$this->display_name = lang('building');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
+
 		}
 
 		public function properties()
@@ -108,7 +111,7 @@
 			}
 
 			$data = array(
-				'datatable_name' => lang('building'),
+				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
@@ -171,7 +174,6 @@
 			{
 				$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$data['datatable_name']}";
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}

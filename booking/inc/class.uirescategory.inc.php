@@ -17,8 +17,10 @@
 		{
 			parent::__construct();
 			$this->bo = CreateObject('booking.borescategory');
-			self::set_active_menu('booking::applications::rescategory');
+			self::set_active_menu('booking::settings::rescategory');
 			$this->fields = array('name', 'active', 'activities');
+			$this->display_name = lang('Resource categories');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
 
@@ -30,6 +32,7 @@
 			}
 
 			$data = array(
+				'datatable_name' => $this->display_name,
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uirescategory.index', 'phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 0),
@@ -74,7 +77,7 @@
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', -1),
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $columns[$order[0]['column']]['data'],
