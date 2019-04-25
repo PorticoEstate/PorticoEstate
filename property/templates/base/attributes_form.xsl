@@ -431,7 +431,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='D'">
-						<input data-validation="date" data-validation-format="dd/mm/yyyy" type="text" id="values_attribute_{id}" name="values_attribute[{id}][value]" value="{value}" size="12" maxlength="12">
+						<input type="text" id="values_attribute_{id}" name="values_attribute[{id}][value]" value="{value}" size="12" maxlength="12">
 							<xsl:attribute name="readonly">
 								<xsl:text> readonly</xsl:text>
 							</xsl:attribute>
@@ -441,9 +441,9 @@
 										<xsl:text> disabled</xsl:text>
 									</xsl:attribute>
 								</xsl:when>
-								<xsl:when test="nullable='1'">
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
+								<xsl:when test="nullable!='1'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 								</xsl:when>
 							</xsl:choose>
