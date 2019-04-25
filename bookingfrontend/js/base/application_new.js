@@ -149,8 +149,6 @@ $(".navbar-search").removeClass("d-none");
                 }                
             }
           } 
-
-          console.log(result.audience)
           for(var i=0; i<result.audience.length; i++) {
             if($.inArray(result.audience[i].id, initialAudience) > -1) {
                 $("#audienceDropdownBtn").text(result.audience[i].name);
@@ -448,41 +446,6 @@ document.getElementById('field_name').onchange = function () {
 //       }, false);
 //     });
 //   }, false);
-// })()
+// })();
 
 
-
-// Form Validation
-window.onload = function() {
-  // Validates Event Name Input
-  document.getElementById('eventName').addEventListener("blur", function(){
-    const eventName = document.getElementById("eventName");
-    // Only chars a-å/A-Å allowed + min 2 letters and max 25 letters
-    const re = /^[a-åA-Å]{2,25}$/;
-    
-    // Checks input and adds classes
-    if(!re.test(eventName.value)) {
-      eventName.classList.add("is-invalid");
-      eventName.classList.remove("is-valid");
-    } else {
-      eventName.classList.remove("is-invalid")
-      eventName.classList.add("is-valid")
-    }
-  });
-
-  // Validates Organizer Input
-  document.getElementById('organizerName').addEventListener("blur", function(){
-    const organizerName = document.getElementById("organizerName");
-    // Only chars a-å/A-Å allowed + min 2 letters and max 25 letters
-    const re = /^[a-åA-Å]{2,25}$/;
-    
-    // Checks input and adds classes
-    if(!re.test(organizerName.value)) {
-      organizerName.classList.add("is-invalid");
-      organizerName.classList.remove("is-valid");
-    } else {
-      organizerName.classList.remove("is-invalid")
-      organizerName.classList.add("is-valid")
-    }
-  });
-}

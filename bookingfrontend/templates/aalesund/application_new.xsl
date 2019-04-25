@@ -186,28 +186,27 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" /> *</label>
-						<input id="eventName" required="true" type="text" class="form-control" name="name" value="{application/name}">
+						<input required="true" type="text" class="form-control" name="name" value="{application/name}">
 							<xsl:attribute name="placeholder">
 								<xsl:value-of select="php:function('lang', 'Event name')"/>
 							</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
+						<!-- <div class="invalid-feedback">
 							Skriv inn navn på arrangementet!
-						</div>
-						
+						</div> -->
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" /> *</label>
-						<input id="organizerName" required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
+						<input required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
 						<xsl:attribute name="placeholder">
 							<xsl:value-of select="php:function('lang', 'Organizer')"/>
 						</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
+						<!-- <div class="invalid-feedback">
 							Skriv inn navn på arrangør!
-						</div>
+						</div> -->
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
