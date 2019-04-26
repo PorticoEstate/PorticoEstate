@@ -1966,13 +1966,13 @@
 				$values['status'] = $workorder_status;
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date', 'date', '', $config = array(
+			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date', 'date', '', array(
 					'min_date' => date('Y, m, d', phpgwapi_datetime::date_to_timestamp($project['start_date'])),
 					'max_date' => date('Y, m, d', phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date', 'date', '', $config = array(
+			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date', 'date', '', array(
 					'min_date' => date('Y, m, d', phpgwapi_datetime::date_to_timestamp($project['start_date'])),
 					'max_date' => date('Y, m, d', phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
