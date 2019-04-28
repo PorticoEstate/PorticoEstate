@@ -66,7 +66,7 @@
 			$this->fields = eventplanner_metasettings::get_fields();
 			$this->permissions = eventplanner_metasettings::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			self::set_active_menu("{$this->currentapp}::metasettings");
+			self::set_active_menu("admin::{$this->currentapp}::metasettings");
 		}
 
 		public function index()
