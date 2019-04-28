@@ -108,6 +108,7 @@ a:focus {
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
+	font-weight: bold;
 /*    color: #fff;*/
     /*background: #6d7fcc;*/
 }

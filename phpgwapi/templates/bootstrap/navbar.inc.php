@@ -328,12 +328,11 @@ HTML;
 		{
 			$current_class .= ' active';
 			$item['selected'] = true;
-			$item['text'] = "<b>[ {$item['text']} ]</b>";
 			$selected_node = true;
 		}
 
 		$bookmark = '';
-		if(preg_match("/(^navbar::)/i", $id)) // bookmarks
+		if(!$children && preg_match("/(^navbar::)/i", $id)) // bookmarks
 		{
 			if(is_array($bookmarks) && isset($bookmarks[$id]))
 			{
