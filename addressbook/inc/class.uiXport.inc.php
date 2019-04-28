@@ -43,6 +43,7 @@
 			$fcat_id = phpgw::get_var('fcat_id');
 			$private = phpgw::get_var('private');
 			$conv_type = phpgw::get_var('conv_type');
+			self::set_active_menu("{$this->currentapp}::xport_import");
 				
 			if ($convert)
 			{
@@ -142,6 +143,7 @@
 			$conv_type = phpgw::get_var('conv_type');
 			$both_types = phpgw::get_var('both_types');
 			$sub_cats = phpgw::get_var('sub_cats');
+			self::set_active_menu("{$this->currentapp}::xport_export");
 			
 			if ($convert)
 			{

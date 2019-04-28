@@ -422,6 +422,10 @@ HTML;
 
 		foreach ( $menu as $key => $item )
 		{
+//if(preg_match("/addressbook.uifields.index/", $item['url']))
+//{
+//	_debug_array($item);
+//}
 			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks, $item['text']) : '';
 			$node = render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
 			$out .= $node['node'];

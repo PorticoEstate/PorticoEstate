@@ -56,7 +56,7 @@ class addressbook_uiaddressbook_organizations extends phpgwapi_uicommon
 		$this->bo = createObject('addressbook.boaddressbook');
 		$this->cats = CreateObject('phpgwapi.categories');
 		$this->fields = $this->get_fields();
-		self::set_active_menu("{$this->currentapp}::addressbook_organizations");
+		self::set_active_menu("{$this->currentapp}::organizations");
 		$this->owner = $GLOBALS['phpgw_info']['user']['account_id'];
 		$this->tab_main_persons		= $this->bo->tab_main_persons;
 		$this->tab_main_organizations = $this->bo->tab_main_organizations;

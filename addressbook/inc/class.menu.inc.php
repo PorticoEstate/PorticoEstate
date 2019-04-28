@@ -57,52 +57,53 @@
 			{
 				$menus['admin'] = array
 				(
-					array
+					'index' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Site Configuration', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'addressbook') )
 					),
 
-					array
+					'custom_fields' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Edit custom fields', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uifields.index') )
 					),
 
-					array
+					'categories' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Global Categories', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'addressbook') )
 					),
 
-					array
+					'contact_comm_type' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Types Manager', array(), true),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_comm_type.view') )
 					),
 
-					array
+					'contact_comm_descr' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Communication Descriptions Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_comm_descr.view') )
 					),
 
-					array
+					'contact_addr_type' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Location Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_addr_type.view') )
 					),
 
-					array
+					'contact_note_type' => array
 					(
 						'text'	=> $GLOBALS['phpgw']->translation->translate('Notes Types Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_note_type.view') )
 					),
 
-					array
+					'custom_attribute' => array
 					(
 						'text'	=> lang('Custom fields on org-person'),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'addressbook', 'location' =>'org_person', 'menu_selection' => '') )
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute', 'appname' => 'addressbook', 'location' =>'org_person',
+							'menu_selection' => 'admin::addressbook::custom_attribute') )
 					)
 				);
 			}
@@ -124,43 +125,37 @@
 
 			$menus['navigation'] = array
 			(
-				array
+				'persons' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Person', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index'))
-				),
-				
-				array
+				),			
+				'organizations' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Organisation', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_organizations.index'))
 				),
-
-				array
+				'vcard' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Import VCard', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uivcard.in'))
 				),
-
-				array
+				'categorize_contacts' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Categorise Persons', array(), true),
 					'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index'))
 				),
-				
-				array
+				'xport_import' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - Contacts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.import'))
 				),
-				
-				array
+				'import' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Bulk Import - CSV', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/addressbook/csv_import.php')
 				),
-
-				array
+				'xport_export' => array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Export Contacts', array(), true),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiXport.export'))
