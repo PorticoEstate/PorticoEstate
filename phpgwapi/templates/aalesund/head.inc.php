@@ -230,7 +230,7 @@ JS;
 	}
 	if (!empty($description))
 	{
-		$description = '<meta name="description" content="' . $description . '">';
+		$description = '<meta name="description" content="' . htmlspecialchars($description) . '">';
 	}
 	else
 	{

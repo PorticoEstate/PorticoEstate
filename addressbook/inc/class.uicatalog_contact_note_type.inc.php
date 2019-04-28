@@ -39,6 +39,7 @@
 
 			$this->bo = CreateObject('addressbook.bocatalog_contact_note_type');
 			$this->template	= &$GLOBALS['phpgw']->template;
+			self::set_active_menu("admin::{$this->currentapp}::contact_note_type");
 		}
 
 		function view()

@@ -33,6 +33,7 @@
 			
 			$this->template	= &$GLOBALS['phpgw']->template;
 			$this->config = createObject('phpgwapi.config','addressbook');
+			self::set_active_menu("admin::{$this->currentapp}::custom_fields");
 		}
 
 		function index()

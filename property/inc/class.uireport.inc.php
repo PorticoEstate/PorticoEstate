@@ -66,6 +66,9 @@
 			$this->operators_like	 = $this->bo->operators_like;
 			$this->operators_in		 = $this->bo->operators_in;
 			$this->operators_null	 = $this->bo->operators_null;
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::report';
+
 		}
 
 		public function download()
