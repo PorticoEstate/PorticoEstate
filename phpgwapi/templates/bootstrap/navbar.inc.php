@@ -170,6 +170,7 @@ HTML;
 		if (!$nonavbar)
 		{
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+//			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
 
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
@@ -214,17 +215,16 @@ HTML;
 
 					foreach($collected_bm as $entry)
 					{
-						$seleced_bm = 'class="nav-item"';
+						$seleced_bm = 'nav-item';
 						if( isset($entry['selected']) && $entry['selected'])
 						{
-							$seleced_bm = 'class="nav-item active"' ;
-							$entry['text'] = "<b>[ {$entry['text']} ]</b>";
+							$seleced_bm .= ' active';
 						}
 
 						$var['topmenu'] .= <<<HTML
 
-						<li {$seleced_bm}>
-							<a href="{$entry['url']}" class="nav-link">{$entry['text']}</a>
+						<li class="{$seleced_bm}">
+							<a href="{$entry['url']}" class="nav-link context-menu-nav" bookmark_id="{$entry['bookmark_id']}">{$entry['text']}</a>
 						</li>
 
 HTML;
@@ -322,39 +322,29 @@ HTML;
 	function render_item($item, $id='', $children='', $bookmarks = array())
 	{
 		$selected_node = false;
-		static $checkbox_id = 1;
-		$current_class = '';
+		$current_class = 'nav-item';
 
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
 		{
-			$current_class = 'nav-item active';
+			$current_class .= ' active';
 			$item['selected'] = true;
+			$item['text'] = "<b>[ {$item['text']} ]</b>";
+			$selected_node = true;
 		}
 
 		$bookmark = '';
 		if(preg_match("/(^navbar::)/i", $id)) // bookmarks
 		{
-			$_bookmark_checked = '';
 			if(is_array($bookmarks) && isset($bookmarks[$id]))
 			{
-				$_bookmark_checked = "checked = 'checked'";
+				$current_class .= ' bookmark_checked';
+				$item['bookmark_id'] =$id;
 				set_get_bookmarks($item);
 			}
-
-//			$bookmark = "<input type='checkbox' name='update_bookmark_menu' id='{$checkbox_id}' value='{$id}' {$_bookmark_checked}/>";
-			$checkbox_id ++;
 		}
-
-		if(preg_match("/(^{$id})/i", "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"))
-		{
-			$item['text'] = "<b>[ {$item['text']} ]</b>";
-			$selected_node = true;
-		}
-
-		$link_class = $current_class ? "class=\"{$current_class}\"" : "class=\"nav-item\"";
 
 		$out = <<<HTML
-				<li {$link_class}>
+				<li class="{$current_class}">
 HTML;
 		$target = '';
 		if(isset($item['target']))
@@ -379,7 +369,7 @@ HTML;
 		{
 			$ret = <<<HTML
 $out
-			<a href="{$item['url']}" class="nav-link context-menu-nav" id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
+			<a href="{$item['url']}" class="nav-link context-menu-nav" bookmark_id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
 			</li>
 HTML;
 		}
@@ -387,25 +377,54 @@ HTML;
 		return array('selected' =>  $selected_node, 'node' => $ret);
 	}
 
-	function render_submenu($parent, $menu, $bookmarks = array(), $parent_name = '', $parent_array = array())
+	function render_submenu($parent, $menu, $bookmarks = array(), $parent_name = '')
 	{
 		static $id = 0;
 		$out = '';
 
-		$_menu = array_values($menu);
-		if($parent_array && $parent_array['url'] && $parent_array['url'] != $_menu[0]['url'])
+		foreach ( $menu as $key => &$item )
 		{
-			unset( $parent_array['children']);
-			$menu = array("_{$parent}" => $parent_array) + $menu;
+			if(!empty($item['children']))
+			{
+				$found = false;
+				foreach ($item['children'] as $child_key => $child)
+				{
+					if($child['url'] == $item['url'])
+					{
+						$found = true;
+						break;
+					}
+
+					if("navbar::{$parent}::{$key}" == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}")
+					{
+						$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$key}";
+					}
+				}
+
+				if(!$found)
+				{
+					$item['children'] = array
+						(
+						$key => array
+							(
+								'text'	=> $item['text'],
+								'url'	=> $item['url'],
+								'image'	=> $item['image']
+							)
+						)	+ $item['children'];
+				}
+
+			}
 		}
 
+		unset($item);
+		unset($key);
 
 		foreach ( $menu as $key => $item )
 		{
-			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks, $item['text'], $item) : '';
+			$children = isset($item['children']) ? render_submenu(	"{$parent}::{$key}", $item['children'], $bookmarks, $item['text']) : '';
 			$node = render_item($item, "navbar::{$parent}::{$key}", $children, $bookmarks);
 			$out .= $node['node'];
-			//$debug .= "{$parent}::{$key}<br>";
 		}
 
 		if(!preg_match("/(nav-item active)/", $out))
