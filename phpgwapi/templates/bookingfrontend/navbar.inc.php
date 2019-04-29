@@ -41,6 +41,13 @@
 		{
 			$footer_privacy_link = $config_frontend['footer_privacy_link'];
 		}
+
+		$cache_refresh_token = '';
+		if (!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+		{
+			$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+		}
+
 		$var = array
 		(
 			'cart_complete_application'	 => lang('Complete applications'),
@@ -51,7 +58,7 @@
 			'footer_privacy_link'		 => $footer_privacy_link,
 			'footer_privacy_title'		 => lang('Privacy statement'),
 			'powered_by'				 => lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
-			'javascript_end'			 => $GLOBALS['phpgw']->common->get_javascript_end()
+			'javascript_end'			 => $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token)
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);

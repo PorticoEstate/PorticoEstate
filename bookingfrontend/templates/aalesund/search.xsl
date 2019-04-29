@@ -215,10 +215,4 @@
 			</div>
 		</div>
 	</div>
-
-	<script>
-		var script = document.createElement("script");
-		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
-		document.head.appendChild(script);
-	</script>
 </xsl:template>
