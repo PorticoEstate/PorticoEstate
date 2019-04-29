@@ -63,6 +63,11 @@
 		*/
 		protected $files = array();
 
+		/**
+		* @var array list of validated files to be included in the end of a page
+		*/
+		protected $end_files = array();
+
 
 		/**
 		 *
@@ -129,8 +134,18 @@
 		*
 		* @returns string the html needed for importing the js into a page
 		*/
-		public function get_script_links($cache_refresh_token = '')
+		public function get_script_links($cache_refresh_token = '', $end_files = false)
 		{
+			if($end_files)
+			{
+				$files = $this->end_files;
+			}
+			else
+			{
+				$files = $this->files;
+			}
+
+
 			$combine = true;
 			$combine = false; // Temporary
 			
@@ -150,9 +165,9 @@
 			}
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
 			$jsfiles = array();
-			if (is_array($this->files) && count($this->files))
+			if (is_array($files) && count($files))
 			{
-				foreach ($this->files as $app => $packages)
+				foreach ($files as $app => $packages)
 				{
 					if (is_array($packages) && count($packages))
 					{
@@ -293,25 +308,46 @@ HTML;
 		* @param string $app application directory to search - default = phpgwapi
 		* @returns bool was the file found?
 		*/
-		public function validate_file($package, $file, $app='phpgwapi', $type ='text/javascript')
+		public function validate_file($package, $file, $app='phpgwapi', $type ='text/javascript', $end_of_page = false)
 		{
 			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
 
 			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$template_set/$file.js"))
 			{
-				$this->files[$app][$template_set][$file] = $type;
+				if($end_of_page)
+				{
+					$this->end_files[$app][$template_set][$file] = $type;
+				}
+				else
+				{
+					$this->files[$app][$template_set][$file] = $type;
+				}
 				return True;
 			}
 			else if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$package/$file.js"))
 			{
-				$this->files[$app][$package][$file] = $type;
+				if($end_of_page)
+				{
+					$this->end_files[$app][$package][$file] = $type;
+				}
+				else
+				{
+					$this->files[$app][$package][$file] = $type;
+				}
 				return True;
 			}
 			elseif($app != 'phpgwapi')
 			{
 				if(is_readable(PHPGW_INCLUDE_ROOT . "/phpgwapi/js/$package/$file.js"))
 				{
-					$this->files['phpgwapi'][$package][$file] = $type;
+					if($end_of_page)
+					{
+						$this->end_files['phpgwapi'][$package][$file] = $type;
+					}
+					else
+					{
+						$this->files['phpgwapi'][$package][$file] = $type;
+					}
 					return True;
 				}
 				return False;
