@@ -897,9 +897,10 @@ HTML;
 				$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
 				array_unshift($values_combo_box[5], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my submitted tickets')));
-				array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('reported by')));
+//				array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('reported by')));
 				$combos[] = array('type' => 'filter',
 					'name' => 'reported_by',
+					'multiple'	=> true,
 					'extra' => '',
 					'text' => lang('reported by'),
 					'list' => $values_combo_box[5]
@@ -971,7 +972,7 @@ HTML;
 
 			if($subs && (int)$this->parent_cat_id <= 0)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_{$_cat['main']}"; // to expand the menu
+//				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_{$_cat['main']}"; // to expand the menu
 				$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . lang('choose a section from the menu');
 				self::render_template_xsl('datatable_jquery', array());
 				return;

@@ -219,18 +219,21 @@
 				}
 			}
 
-//			_debug_array($building_id);
-//			_debug_array($filter_part_of_town);
-//			_debug_array($activity_criteria);
-//			_debug_array($criteria);
-//			die();
 			if ($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_top_level', 'string') || (phpgw::get_var('filter_search_type') && $searchterm))
 			{
 				$data = array(
 					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria, $length)
 				);
 			}
-			self::render_template_xsl('search_details', $data);
+
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				return $data;
+			}
+			else
+			{
+				self::render_template_xsl('search_details', $data);
+			}
 		}
 
 

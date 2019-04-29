@@ -1252,6 +1252,8 @@ HTML;
 				return;
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::report";
+
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('chart');

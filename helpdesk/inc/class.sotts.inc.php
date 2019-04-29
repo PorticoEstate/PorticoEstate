@@ -111,7 +111,7 @@
 			$status_id		= isset($data['status_id']) && $data['status_id'] ? $data['status_id']:'O'; //O='Open'
 			$user_id		= isset($data['user_id']) && $data['user_id'] ? $data['user_id']: 0;
 			$group_id		= !empty($data['group_id']) ? (int)$data['group_id'] : 0;
-			$reported_by	= isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
+			$reported_by	= isset($data['reported_by']) && $data['reported_by'] ? $data['reported_by'] : 0;
 			$owner_id		= isset($data['owner_id'])?$data['owner_id']:'';
 			$query			= isset($data['query'])?$data['query']:'';
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
@@ -365,9 +365,16 @@
 				$where = 'AND';
 			}
 
-			if ($reported_by > 0)
+			if ($reported_by)
 			{
-				$filtermethod .= " $where phpgw_helpdesk_tickets.user_id=" . (int)$reported_by;
+				if(is_array($reported_by))
+				{
+					$filtermethod .= " $where phpgw_helpdesk_tickets.user_id IN(" . implode(',', $reported_by) . ')';
+				}
+				else
+				{
+					$filtermethod .= " $where phpgw_helpdesk_tickets.user_id=" . (int)$reported_by;
+				}
 				$where = 'AND';
 			}
 
