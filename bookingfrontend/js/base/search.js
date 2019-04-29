@@ -6,7 +6,7 @@ $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
 $(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
 
 var urlParams = [];
-//CreateUrlParams(window.location.search);
+CreateUrlParams(window.location.search);
 var results = ko.observableArray();
 var tags = ko.observableArray();
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
