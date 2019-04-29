@@ -29,7 +29,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('treeview');
 
-			self::add_javascript('bookingfrontend', 'base', 'search.js');
+			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
