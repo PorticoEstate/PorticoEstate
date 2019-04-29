@@ -1125,9 +1125,13 @@ HTML;
 		* @author Sigurd Nes
 		* @return string The JavaScript code to include
 		*/
-		public function get_javascript_end()
+		public function get_javascript_end($cache_refresh_token = '')
 		{
 			$js = '';
+			if( isset($GLOBALS['phpgw']->js) && is_object($GLOBALS['phpgw']->js))
+			{
+				$js .= $GLOBALS['phpgw']->js->get_script_links($cache_refresh_token, true);
+			}
 
 			if (isset($GLOBALS['phpgw_info']['flags']['java_script_end']))
 			{

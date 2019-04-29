@@ -275,9 +275,9 @@
 		 * @return type
 		 */
 
-		public function add_javascript( $app, $pkg, $name, $type = 'text/javascript')
+		public function add_javascript( $app, $pkg, $name, $type = 'text/javascript', $end_of_page = false)
 		{
-			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app, $type);
+			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app, $type, $end_of_page);
 		}
 
 		public function set_active_menu( $item )
