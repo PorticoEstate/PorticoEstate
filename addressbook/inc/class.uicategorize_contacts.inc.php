@@ -38,6 +38,7 @@
 			$this->cat = CreateObject('phpgwapi.categories');
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::categorize_contacts");
 		}
 		
 		private function _populate( $data = array() )

@@ -41,7 +41,7 @@
 			$this->browser  = CreateObject('phpgwapi.browser');
 			$this->vcard    = CreateObject('phpgwapi.vcard');
 			$this->bo = CreateObject('addressbook.boaddressbook',True);
-			self::set_active_menu("{$this->currentapp}::uivcard");
+			self::set_active_menu("{$this->currentapp}::vcard");
 		}
 
 		function in()

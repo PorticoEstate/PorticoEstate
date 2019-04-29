@@ -38,6 +38,7 @@
 			
 			$this->bo = CreateObject('addressbook.bocatalog_contact_addr_type');
 			$this->template	= &$GLOBALS['phpgw']->template;
+			self::set_active_menu("admin::{$this->currentapp}::contact_addr_type");
 		}
 
 		function view()
