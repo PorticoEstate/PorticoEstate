@@ -1474,7 +1474,10 @@ border: 1px red solid !important;
     text-align: center;
 }
 
-
+.yui3-calendar-header {
+    justify-content: center;
+    align-items: center;
+}
 
 .yui3-calendar-day:hover,
 .yui3-aclist-item:hover {
