@@ -1071,8 +1071,9 @@ input {
     
 }
 
-input:focus {
-   outline: none  !important;
+input:focus,
+textarea:focus{
+    outline: none  !important;
     border-color: black !important;
 }
 
