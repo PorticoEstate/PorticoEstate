@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="container new-application-page pt-5" id="new-application-page">
-		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form" novalidate="true" class="needs-validation">
+		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form" novalidate="true" class="needs-validationm">
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
@@ -39,7 +39,7 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<div type="input"  class="chosenResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+						<div id="inputResource2" type="input"  class="chosenResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</div>
@@ -55,7 +55,7 @@
 							</li>
 						</ul>
 					</div>
-
+					<!-- Chosen Resources -->
 					<div class="form-group">
 						<span class="font-weight-bold d-block mt-2 span-label">
 							<xsl:value-of select="php:function('lang', 'Chosen resources (2018)')" />
@@ -63,7 +63,7 @@
 						<div id="bookable-resource" data-bind="foreach: bookableresource">
 							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 						</div>
-						<span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
+						<span id="inputResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
 						</span>
 					</div>
@@ -137,7 +137,7 @@
 								</button>
 							</div>
 						</div>
-						<span data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">
+						<span id="inputTime" data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">
 							<xsl:value-of select="php:function('lang', 'Select a date and time')" />
 						</span>
 					</div>
@@ -174,7 +174,7 @@
 							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
 								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
 							</div>
-							<input class="form-control" id="audienceSel" required="true" style="display: none" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+							<input class="form-control" id="inputTargetAudience" required="true" style="display: none" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
 							<div class="invalid-feedback">
 								<xsl:value-of select="php:function('lang', 'please enter target audience')"/>
 							</div>
@@ -186,7 +186,7 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Event name')" /> *</label>
-						<input id="inputEventName" type="text" class="form-control" name="name" value="{application/name}">
+						<input required="true" id="inputEventName" type="text" class="form-control" name="name" value="{application/name}">
 							<xsl:attribute name="placeholder">
 								<xsl:value-of select="php:function('lang', 'Event name')"/>
 							</xsl:attribute>
@@ -199,14 +199,14 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organizer')" /> *</label>
-						<input required="true" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
+						<input required="true" id="inputOrganizerName" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
 						<xsl:attribute name="placeholder">
 							<xsl:value-of select="php:function('lang', 'Organizer')"/>
 						</xsl:attribute>
 						</input>
-						<!-- <div class="invalid-feedback">
+						<div class="invalid-feedback">
 							Skriv inn navn på arrangør!
-						</div> -->
+						</div>
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
@@ -318,10 +318,29 @@
 					<hr class="mt-5 mb-5"></hr>
 					<!-- Submit -->
 					<div class="form-group float-right">
-						<button class="btn btn-light" type="submit">
+						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Add application')" />
 						</button>
 					</div>
+					
+					<!-- Submit error modal -->
+					<!-- <div id="errorModal" class="modal fade">
+						<div class="modal-dialog modal-confirm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="icon-box">
+										<i class="material-icons"></i>
+									</div>
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+								</div>
+								<div class="modal-body text-center">
+									<h4>Ooops!</h4>	
+									<p>Something went wrong. File was not uploaded.</p>
+									<button class="btn btn-success" data-dismiss="modal">Try Again</button>
+								</div>
+							</div>
+						</div>
+					</div>      -->
 				</div>
 			</div>
 		</form>
