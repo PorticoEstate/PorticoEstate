@@ -1583,6 +1583,13 @@ NEW APPLICATION PAGE STYLE
     font-size: .8rem;
 }
 
+.new-application-page .form-group .input-group .bookingDate,
+.new-application-page .form-group .input-group .bookingStartTime,
+.new-application-page .form-group .input-group .bookingEndTime,
+.new-application-page .form-group .chosenResource  {
+    cursor: pointer;
+} 
+
 .new-application-page .form-group .form-control.notValid {
     border-color: #dc3545;
 }

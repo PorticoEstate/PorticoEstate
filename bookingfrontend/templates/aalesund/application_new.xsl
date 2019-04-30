@@ -39,7 +39,7 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<div type="input"  class="form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+						<div type="input"  class="chosenResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</div>
@@ -81,7 +81,7 @@
 												<i class="far fa-calendar-alt"></i>
 											</span>
 										</div>
-										<input type="text" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate">
+										<input type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn" data-bind="textInput: bookingDate">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'Date')"/>
 											</xsl:attribute>
