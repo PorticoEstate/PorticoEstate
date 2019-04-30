@@ -1469,6 +1469,25 @@ border: 1px red solid !important;
     visibility: hidden;
 }
 
+.yui3-calendar-weekdayrow,
+.yui3-calendar-row {
+    text-align: center;
+}
+
+
+
+.yui3-calendar-day:hover,
+.yui3-aclist-item:hover {
+    background: rgba(38, 51, 139, 0.4);
+}
+
+.yui3-calendar-day-selected {
+    background: rgba(38, 51, 139, 0.4);
+}
+
+.yui3-calendar-selection-disabled:hover {
+    background-color: #e6e6e6;
+}
 .org-name {
     font-size: 19px;
 }
