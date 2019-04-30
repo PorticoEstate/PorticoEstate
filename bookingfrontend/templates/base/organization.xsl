@@ -163,9 +163,6 @@
 	<script>
 		JqueryPortico.booking = {};
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
-		var script = document.createElement("script");
-		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/organization.js?n=" + cache_refresh_token;
-		document.head.appendChild(script);
 		var organization_id = <xsl:value-of select="organization/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 

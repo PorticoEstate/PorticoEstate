@@ -148,6 +148,8 @@
 
 			phpgwapi_jquery::load_widget("core");
 
+			self::add_javascript('bookingfrontend', 'base', 'organization.js', 'text/javascript', true);
+
 			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
 		public function index()
