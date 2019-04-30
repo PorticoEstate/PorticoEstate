@@ -432,48 +432,76 @@ document.getElementById('field_name').onchange = function () {
   };
 };
 
-// (function() {
-//   'use strict';
-//   window.addEventListener('load', function() {
-//     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//     var forms = document.getElementsByClassName('needs-validation');
-//     // Loop over them and prevent submission
-//     var validation = Array.prototype.filter.call(forms, function(form) {
-//       form.addEventListener('submit', function(event) {
-//         if (form.checkValidity() === false) {
-//           event.preventDefault();
-//           event.stopPropagation();
-//         }
-//         form.classList.add('was-validated');
-//       }, false);
-//     });
-//   }, false);
-// })();
+window.onload = function() {
+// Grab elements
+// const form = document.getElementById("application_form")
+const inputResource = document.getElementById("inputResource");
+const inputResource2 = document.getElementById("inputResource2");
+const inputTime = document.getElementById("inputTime");
+const inputTargetAudience = document.getElementById("inputTargetAudience");
+const inputEventName = document.getElementById("inputEventName");
+const inputOrganizerName = document.getElementById("inputOrganizerName");
+const inputAttendants = document.getElementById("");
 
-// Form Validation
-// const form = document.getElementsByTagName("form")[0];
-// const inputEventName = document.getElementById("inputEventName");
-
-// var checkValidity = {
-//   valueMissing: (field.hasAttribute('required') && (((type === 'checkbox' || type === 'radio') && !field.checked) || (type === 'select' && field.options[field.selectedIndex].value < 1) || (type !== 'checkbox' && type !== 'radio' && type !== 'select' && length < 1))) // required field without a value
+// Validate Resource Chosen
+// function validateResource(){
+//   const reResource = /ingen/i;
+//   if(!reResource.exec(inputResource.value)) {
+//     inputResource2.classList.add("is-invalid");
+//     inputResource2.classList.remove("is-valid");
+//   } else {
+//     inputResource2.classList.remove("is-invalid")
+//     inputResource2.classList.add("is-valid")
+//   }
 // }
 
-// inputEventName.addEventListener("input", function (e) {
-//   const re = /^[a-åA-Å]{2,25}$/;
+// Validate Event Name
+function validateEventName(){
+  const reEventName = /^[a-åA-Å0-9]{2,25}$/;
+  if(!reEventName.test(inputEventName.value)) {
+    inputEventName.classList.add("is-invalid");
+    inputEventName.classList.remove("is-valid");
+  } else {
+    inputEventName.classList.remove("is-invalid")
+    inputEventName.classList.add("is-valid")
+  }
+}
+// Validate Organizer Name
+function validateOrganizerName(){
+  const reOrgName = /^[a-åA-Å]{2,25}$/
+  if(!reOrgName.test(inputOrganizerName.value)) {
+    inputOrganizerName.classList.add("is-invalid");
+    inputOrganizerName.classList.remove("is-valid");
+  } else {
+    inputOrganizerName.classList.remove("is-invalid")
+    inputOrganizerName.classList.add("is-valid")
+  }
+}
 
-//   if (!re.test(inputEventName.value)) {
-//     inputEventName.classList.add("is-invalid");
-//     inputEventName.classList.remove("is-valid");
-//     checkValidity(valueMissing);
-//   } else {
-//     inputEventName.classList.remove("is-invalid");
-//   }
-// })
 
 
+// Dynamic validation
+inputEventName.addEventListener("input", function() {
+  validateEventName();
+})
 
-// form.addEventListener("submit", function (e) {
-//   if (!inputEventName.validity.valid) {
-//     event.preventDefault();
-//   }
-// }, false);
+inputOrganizerName.addEventListener("input",function() {
+  validateOrganizerName();
+})
+inputResource.addEventListener("input",function() {
+  validateResource();
+})
+
+// Form Validation
+form.addEventListener("submit", function(e) {
+  if(inputEventName.value === "" || inputOrganizerName.value === "" ) {
+     e.preventDefault();
+     e.stopPropagation();
+     validateEventName();
+     validateOrganizerName();
+     //validateResource()
+   } else {
+     return
+   }
+ })
+}
