@@ -416,6 +416,8 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
+			self::add_javascript('bookingfrontend', 'base', 'building.js', 'text/javascript', true);
+
 			self::render_template_xsl('building', array('building' => $building, 'config_data' => $config->config_data));
 		}
 	}
