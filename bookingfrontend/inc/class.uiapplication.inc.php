@@ -23,10 +23,39 @@
 
 		function show()
 		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+			$id = phpgw::get_var('id', 'int');
+			$secret =  phpgw::get_var('secret', 'string');
+
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				if(phpgw::get_var('second_redirect', 'bool'))
+				{
+					phpgw::no_access(lang('not a valid ssn'));
+				}
+
+				$after = array
+				(
+					'menuaction' => 'bookingfrontend.uiapplication.show',
+					'id'		=> $id,
+					'secret'	=> $secret
+				);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($after),$cookietime= time()+60);
+
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/login.php');
+			}
+
 			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 
-			if ($application['secret'] != phpgw::get_var('secret', 'string'))
+			if ($application['secret'] != $secret)
 			{
 				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
