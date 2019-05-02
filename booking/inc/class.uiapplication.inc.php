@@ -914,6 +914,11 @@
 
 			self::adddatetimepicker();
 
+			/**
+			 * This one is for bookingfrontend
+			 */
+			self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
+
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
 				'config' => $application_text));
@@ -1039,6 +1044,11 @@
 			$this->flash_form_errors($errors);
 			$partial2['cancel_link'] = self::link(array());
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
+
+			/**
+			 * This one is for bookingfrontend
+			 */
+			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
 			self::render_template_xsl('application_contact', array('application' => $partial2, 'config' => $application_text));
 		}
