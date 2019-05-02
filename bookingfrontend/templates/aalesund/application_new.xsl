@@ -361,6 +361,5 @@
 		var script = document.createElement("script");
 		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
 		document.head.appendChild(script);
-
 	</script>
 </xsl:template>

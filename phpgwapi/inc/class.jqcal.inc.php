@@ -90,12 +90,12 @@
 
 			if(!empty($config['min_date']))
 			{
-				$date_range_arr[] = "minDate:new Date('{$config['min_date']}')";
+				$date_range_arr[] = "minDate:new Date({$config['min_date']})";
 			}
 
 			if(!empty($config['max_date']))
 			{
-				$date_range_arr[] = "maxDate:new Date('{$config['max_date']}')";
+				$date_range_arr[] = "maxDate:new Date({$config['max_date']})";
 			}
 
 			if(!empty($config['no_button']))
