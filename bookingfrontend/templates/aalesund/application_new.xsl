@@ -17,7 +17,7 @@
 					<div class="mb-4">
 						<xsl:call-template name="msgbox"/>
 					</div>
-
+<!-- test -->
 					<input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId" />
 					<input name="formstage" value="partial1" hidden="hidden"/>
 					<h2 class="font-weight-bold mb-4">
