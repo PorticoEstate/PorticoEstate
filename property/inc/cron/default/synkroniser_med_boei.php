@@ -1219,7 +1219,8 @@ SQL;
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
 
-			$sql = "SELECT DISTINCT substring(location_code from 0 for 8) AS location_code, obskode"
+//			$sql = "SELECT DISTINCT substring(location_code from 0 for 8) AS location_code, obskode"
+			$sql = "SELECT DISTINCT location_code, obskode"
 				. " FROM fm_location4 WHERE obskode IS NOT NULL AND LENGTH(obskode) > 0";
 
 			$this->db->query($sql, __LINE__, __FILE__);
