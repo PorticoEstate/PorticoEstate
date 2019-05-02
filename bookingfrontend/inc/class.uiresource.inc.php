@@ -121,8 +121,6 @@
 				'config_data' => $config->config_data
 			);
 
-			self::add_javascript('bookingfrontend', 'base', 'resource.js', 'text/javascript', true);
-
 			self::render_template_xsl('resource', $data);
 		}
 

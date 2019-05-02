@@ -313,13 +313,10 @@
 		var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 
-		document.getElementById('field_name').onchange = function () {
-			var filePath = this.value;
-			if (filePath)
-			{
-				var fileName = filePath.split(/(\\|\/)/g).pop();
-				$("#field_name_input").append(fileName);
-			}
-		};
+		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
+		var script = document.createElement("script");
+		script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/application_new.js?n=" + cache_refresh_token;
+		document.head.appendChild(script);
+
 	</script>
 </xsl:template>
