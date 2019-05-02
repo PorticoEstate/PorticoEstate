@@ -23,10 +23,64 @@
 
 		function show()
 		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
 			$id = phpgw::get_var('id', 'int');
+			$secret =  phpgw::get_var('secret', 'string');
+
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				if(phpgw::get_var('second_redirect', 'bool'))
+				{
+					phpgw::no_access();
+				}
+
+				$redirect = array
+				(
+					'menuaction' => 'bookingfrontend.uiapplication.show',
+					'id'		=> $id,
+					'secret'	=> $secret
+				);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
+
+				$config	= CreateObject('phpgwapi.config','bookingfrontend');
+				$config->read();
+				$login_parameter = isset($config->config_data['login_parameter']) && $config->config_data['login_parameter'] ? $config->config_data['login_parameter'] : '';
+				$custom_login_url = isset($config->config_data['custom_login_url']) && $config->config_data['custom_login_url'] ? $config->config_data['custom_login_url'] : '';
+				if($custom_login_url && $login_parameter)
+				{
+					if(strpos($custom_login_url, '?'))
+					{
+						$sep = '&';
+					}
+					else
+					{
+						$sep = '?';
+					}
+					$login_parameter = ltrim($login_parameter, '&');
+					$custom_login_url .= "{$sep}{$login_parameter}";
+				}
+			
+				if($custom_login_url)
+				{
+					header('Location: ' . $custom_login_url);
+					exit;
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/bookingfrontend/login.php');
+				}
+			}
+
 			$application = $this->bo->read_single($id);
 
-			if ($application['secret'] != phpgw::get_var('secret', 'string'))
+			if ($application['secret'] != $secret)
 			{
 				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}

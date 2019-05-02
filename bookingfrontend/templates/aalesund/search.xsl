@@ -106,13 +106,12 @@
 							</div>
 							<div class="col-md-9 col-sm-8 col-8 desc">
 								<h5 class="font-weight-bold title" data-bind="text: name"></h5>
-								<div class="card-text">
-									<span  data-bind="text: datetime_time"></span>
-									<span  data-bind="text: 'STED: ' +building_name"></span>
-									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-									<span class="font-weight-normal" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									Les mer</a></span>
-								</div>
+								<span  data-bind="text: datetime_time"></span>
+								<span  data-bind="text: 'STED: ' +building_name"></span>
+								<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+								<a class="upcomming-event-href" href="" target="_blank" data-bind="">
+									<span class="font-weight-normal upcomming-event-href" data-bind="visible: homepage != ''">Les mer</span>
+								</a>
 							</div>
 						</div>
 					</div>

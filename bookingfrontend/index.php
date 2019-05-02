@@ -68,6 +68,33 @@ HTML;
 			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
 	}
+
+	$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
+
+	if (is_array($redirect) && count($redirect))
+	{
+		$redirect_data = array();
+		foreach ($redirect as $key => $value)
+		{
+			$redirect_data[$key] = phpgw::clean_value($value);
+		}
+
+		$redirect_data['second_redirect'] = true;
+
+		$sessid = phpgw::get_var('sessionid', 'string', 'GET');
+		if ($sessid)
+		{
+			$redirect_data['sessionid'] = $sessid;
+			$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
+		}
+
+		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
+		unset($redirect);
+		unset($redirect_data);
+		unset($sessid);
+	}
+
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'bookingfrontend';
 
 /////////////////////////////////////////////////////////////////////////////
