@@ -348,7 +348,7 @@ JS;
 	{
 		$tpl_vars['login_text_org']	 = '';
 		$tpl_vars['org_url']		 = '#';
-		$tpl_vars['login_text']		 = lang('Organization');
+		$tpl_vars['login_text']		 = lang('User');
 		$tpl_vars['login_url']		 = 'login.php?after=' . urlencode($_SERVER['QUERY_STRING']);
 		$login_parameter			 = !empty($config_frontend['login_parameter']) ? $config_frontend['login_parameter'] : '';
 		$custom_login_url			 = !empty($config_frontend['custom_login_url']) ? $config_frontend['custom_login_url'] : '';

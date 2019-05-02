@@ -8,16 +8,6 @@ and open the template in the editor.
     Created on : Feb 20, 2018, 11:08:19 AM
     Author     : niruban
 */
-/* Root Variables */
-:root  {
-    /* FOR REGULAR LINK TAGS var(--link-color) */
-    link-color: #26348B !important;
-    /* FOR LINK TAGS HOVER STATE var(--link-color-hover)
-    MAYBE BRIGHTER COLOR? SEE #27348B
-    */ 
-    link-color-hover: #0056b3 !important; 
-    
-}
 
 html {
     font-size: 1rem;
@@ -77,7 +67,7 @@ a:active {
 
 
 header-text a:hover {
-    color: var(--link-color-hover);
+    color: #27348B;
     text-decoration: underline;
   
 }
@@ -89,16 +79,15 @@ header-text a:hover {
 
 .termAccept a:hover{
 	text-decoration: underline;
-	color: #0056b3;
+	color: black;
 }
 
 a:hover {
     text-decoration: underline;
-    color: var(--link-color-hover);
 }
 
 a {
-	color: #26348B;
+	color: #27348B;
 }
 
 @media (max-width: 567px) { 
@@ -261,7 +250,7 @@ a {
     transform: translateX(-50%);
     left: 50%;
     position: absolute;
-    color: #26348B;    
+    color:#26348B;    
     text-decoration: none !important;
     margin-top: 24px  !important;
 }
@@ -286,7 +275,7 @@ a {
 
 .brand-site-img {
     -webkit-transition: ease 0.2s; /* Safari */
-    transition: ease 0.2s;
+          transition: ease 0.2s;
 }
 
 .navbar-brand span {
@@ -297,26 +286,38 @@ a {
 
 
 .custom-card  a {
-    text-decoration: none;
-    color: #26348B;
+  
+    text-decoration: none   !important;
+    
+    color: #26348B  !important;
 }
 
 .custom-card  a:hover {
+    text-decoration: underline   !important;
+    color: #26348B  !important;
+}
+
+
+.bookable-resource-link-href {
+  
+    text-decoration: none;
+    color: red;
+}
+
+.bookable-resource-link-href   a:hover {
+  
     text-decoration: underline;
-    color: #26348B !important;
+    color: #26348B;
 }
 
-.building-bookable .custom-card:hover {
-    background: #89266a;
-    color: #fff;
+.bookable-resource-link-href:hover {
+  
+    text-decoration: underline;
+    color: #26348B;
 }
-
 
 #mainSearchInput  {
-    border-left: 2px solid #26348B  !important;
-    border-top: 2px solid #26348B  !important;
-    border-bottom: 2px solid #26348B  !important;
-    border-right: 0 !important;
+    border: 2px solid #26348B  !important;
  }
  
  
@@ -486,7 +487,7 @@ outline:none;
 }
 
 .msgbox_text {
-    margin-top: 2rem;
+    margin-top: 20px;
 }
 
 .check-box-label {
@@ -505,7 +506,7 @@ input[type="checkbox"], input[type="radio"]{
 input[type="checkbox"] + .label-text:before{
 	content: "\f0c8";
 	font-family: "Font Awesome 5 Free";
-	speak-as: none;
+	speak: none;
 	font-style: normal;
 	font-weight: normal;
 	font-variant: normal;
@@ -537,7 +538,7 @@ input[type="checkbox"]:disabled + .label-text:before{
 
 
 .container-top-fix {
-    margin-top: 7rem;
+    margin-top: 99px;
 }
 
 .margin-top-content {
@@ -556,7 +557,16 @@ F
 .bookable-resource-link-href span,
 .termAcceptDocsUrl {
     line-height: 1.4em;
-    display: inline-block;
+    display: inline-block;  
+    
+    color: black;
+}
+
+.bookable-resource-link-href span:hover,
+.termAcceptDocsUrl:hover {
+    border-bottom: 2px solid transparent;
+border:none;
+color: white;
 }
 
 .margin-top-and-bottom {
@@ -629,7 +639,7 @@ F
 .lightbox-body {
     padding: 0 !important;
     animation-name: zoom;
-    animation-duration: 0.6s;
+    animation-duvaration: 0.6s;
 }
 
 .lightbox-body img {
@@ -953,21 +963,67 @@ input:focus{
     border: 1px black solid;
     text-decoration: none !important;
     transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    color: #000000;
     
 }
-#searchResult .row .custom-card:hover {
-    color: #ffffff;
-    background: #89266a ;
+
+.custom-card:hover   {
+     background-color: rgb(137, 38, 106);
+     text-decoration: none !important;
 }
 
-#welcomeResult .card-text a[class="upcomming-event-href"] {
-    color: #26348B !important;
+.custom-card a{
+	text-decoration: none !important;
 }
 
-#welcomeResult .card-text a[class="upcomming-event-href"]:hover {
-    color: #0056b3 !important;
-    text-decoration: underline;
+.desc a:hover{
+	text-decoration: none !important;
+}
+
+.desc span:hover{
+	text-decoration: none !important;
+}
+
+.desc a{
+	text-decoration: none !important;
+}
+
+.desc span{
+	text-decoration: none !important;
+}
+
+.custom-card:hover   span{
+    color:white;
+}
+.custom-card:hover   h4{
+    color:white;
+}
+
+#welcomeResult .custom-card:hover span{
+	color:black;
+}
+
+#welcomeResult .custom-card:hover h4{
+	color:black;
+}
+
+custom-card-link-href:hover {
+ 
+    
+    color:white;
+}
+
+.desc h4 {
+    overflow: hidden;
+}
+
+.desc h4 {
+	color: black;
+	text-decoration: none;
+}
+
+.desc span{
+	color: black;
+	text-decoration: none;
 }
 
 .custom-card p {
@@ -1005,9 +1061,15 @@ input:focus{
 	
 }
 
+#welcomeResult .custom-card .desc span {
+    font-size: 16px;
+    display: block;
+}
+
 #welcomeResult .title {
     min-height: 30px;
     overflow: hidden;
+    max-height: 30px;
 }
 
 #welcomeResult .custom-card {
@@ -1017,22 +1079,6 @@ input:focus{
 
 #welcomeResult .custom-card:hover {
     background-color: #fff;
-}
-
-#welcomeResult .mb-2 {
-    margin-bottom: 0 !important;
-}
-
-#welcomeResult h5.title {
-    margin-bottom: .15rem;
-}
-
-#welcomeResult .card-text {
-    display: grid;
-    font-size: 1rem;
-    text-decoration: none;
-    border: none;
-    color: #000000;
 }
 
 .card-positioncorrect {
@@ -1071,9 +1117,8 @@ input {
     
 }
 
-input:focus,
-textarea:focus{
-    outline: none  !important;
+input:focus {
+   outline: none  !important;
     border-color: black !important;
 }
 
@@ -1469,28 +1514,6 @@ border: 1px red solid !important;
     visibility: hidden;
 }
 
-.yui3-calendar-weekdayrow,
-.yui3-calendar-row {
-    text-align: center;
-}
-
-.yui3-calendar-header {
-    justify-content: center;
-    align-items: center;
-}
-
-.yui3-calendar-day:hover,
-.yui3-aclist-item:hover {
-   background-color: #f8f9fa;
-}
-
-.yui3-calendar-day-selected {
-    background-color: #f8f9fa;
-}
-
-.yui3-calendar-selection-disabled:hover {
-    background-color: #e6e6e6;
-}
 .org-name {
     font-size: 19px;
 }
@@ -1589,52 +1612,12 @@ NEW APPLICATION PAGE STYLE
 
 *********************************************/
 
-/* Form input styling */
-.new-application-page .form-input {
-    width: 100%;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    background: #fff;
-    border-radius: .25rem;
-    border: 1px solid #ced4da;
-    transition: .15s ease-in-out;
-}
-
-.new-application-page .form-control::placeholder,
-.new-application-page .form-input::placeholder {
-    font-size: .8rem;
-}
-
-.new-application-page .form-group .input-group .bookingDate,
-.new-application-page .form-group .input-group .bookingStartTime,
-.new-application-page .form-group .input-group .bookingEndTime,
-.new-application-page .form-group .chosenResource  {
-    cursor: pointer;
-} 
-
-.new-application-page .form-group .form-input.notValid {
-    border-color: #dc3545;
-}
-.new-application-page .form-group .form-input.isValid {
-    border-color: #28a745;
-}
-
-.form-group .dropdown .form-control:hover {
-    cursor: pointer;
-}
-
 .new-application-page {
     margin-bottom: 100px;
 }
 
 .new-application-page hr {
     border-color: #595959;
-}
-
-.new-application-page #bookable-resource {
-    display: flex;
-    flex-direction: column;
 }
 
 .btn-light {
@@ -1672,16 +1655,8 @@ NEW APPLICATION PAGE STYLE
 }
 
 .new-application-page .check-box-label {
-    font-size: 1.3rem;
+    font-size: 1em;
 }
-
-.new-application-page .form-check .fa-external-link-alt{
-    font-size: .5rem;
-    margin-left: .3rem;
-    text-align: center;
-    color: #26348B
-}
-
 
 .new-application-page .sm-input {
     width: 90px !important;
@@ -1723,87 +1698,6 @@ NEW APPLICATION PAGE STYLE
     cursor: pointer;
 }
 
-/* Error Modal TEST */
-.modal-confirm {		
-    color: #434e65;
-    width: 525px;
-}
-.modal-confirm .modal-content {
-    padding: 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-}
-.modal-confirm .modal-header {
-    background: #e85e6c;
-    border-bottom: none;   
-    position: relative;
-    text-align: center;
-    margin: -20px -20px 0;
-    border-radius: 5px 5px 0 0;
-    padding: 35px;
-}
-.modal-confirm h4 {
-    text-align: center;
-    font-size: 36px;
-    margin: 10px 0;
-}
-.modal-confirm .form-control, .modal-confirm .btn {
-    min-height: 40px;
-    border-radius: 3px; 
-}
-.modal-confirm .close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: #fff;
-    text-shadow: none;
-    opacity: 0.5;
-}
-.modal-confirm .close:hover {
-    opacity: 0.8;
-}
-.modal-confirm .icon-box {
-    color: #fff;		
-    width: 95px;
-    height: 95px;
-    display: inline-block;
-    border-radius: 50%;
-    z-index: 9;
-    border: 5px solid #fff;
-    padding: 15px;
-    text-align: center;
-}
-.modal-confirm .icon-box i {
-    font-size: 58px;
-    margin: -2px 0 0 -2px;
-}
-.modal-confirm.modal-dialog {
-    margin-top: 80px;
-}
-.modal-confirm .btn {
-    color: #fff;
-    border-radius: 4px;
-    background: #eeb711;
-    text-decoration: none;
-    transition: all 0.4s;
-    line-height: normal;
-    border-radius: 30px;
-    margin-top: 10px;
-    padding: 6px 20px;
-    min-width: 150px;
-    border: none;
-}
-.modal-confirm .btn:hover, .modal-confirm .btn:focus {
-    background: #eda645;
-    outline: none;
-}
-.trigger-btn {
-    display: inline-block;
-    margin: 100px auto;
-}
-/*  */
-
 .booking-cart {
     max-height: 100%;
     overflow-y: scroll;
@@ -1815,10 +1709,6 @@ NEW APPLICATION PAGE STYLE
     width: 27%;
     min-width: 480px;
     background-color: #fff;
-}
-
-.booking-card:hover {
-    cursor: pointer;
 }
 
 .booking-cart-title {
@@ -1845,37 +1735,6 @@ NEW APPLICATION PAGE STYLE
 
 #new-application-partialtwo .applications {
     background-color: #fff;
-}
-
-
-.new-application-page .form-group #attachment-upload {
-    display: flex;
-    flex-direction: column;
-}
-
-.new-application-page .form-group .upload-button {
-    margin-bottom: 0;
-}
-
-.new-application-page .form-group #field_name_input {
-    margin: auto;
-    display: table;
-    margin: 1rem 0;
-}
-
-.new-application-page .form-group #attachment-remove {
-    cursor: pointer;
-    color: #26348B;
-}
-
-.new-application-page .form-group #attachment-remove:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.isDisabled {
-    cursor: not-allowed;
-    pointer-events: none;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
@@ -2068,6 +1927,10 @@ footer h3{
 	background-color: #e6e6e6;
 	cursor: not-allowed !important;
 	font-style: italic; 
+}
+
+.upcomming-event-href{
+	color: #27348b;
 }
 
 .header_borderline{
