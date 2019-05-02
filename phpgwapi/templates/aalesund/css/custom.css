@@ -1481,11 +1481,11 @@ border: 1px red solid !important;
 
 .yui3-calendar-day:hover,
 .yui3-aclist-item:hover {
-    background: rgba(38, 51, 139, 0.4);
+   background-color: #f8f9fa;
 }
 
 .yui3-calendar-day-selected {
-    background: rgba(38, 51, 139, 0.4);
+    background-color: #f8f9fa;
 }
 
 .yui3-calendar-selection-disabled:hover {
