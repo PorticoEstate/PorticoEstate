@@ -1205,17 +1205,66 @@ SQL;
 			while ($this->db->next_record())
 			{
 				$obskoder[] = array
-					(
+				(
 					'tenant_id'	 => (int)$this->db->f('tenant_id'),
 					'obskode'	 => $this->db->f('obskode')
 				);
 			}
+
 			foreach ($obskoder as $entry)
 			{
 				$sql2 = "UPDATE fm_location4 SET obskode = '{$entry['obskode']}'"
 					. " WHERE tenant_id = {$entry['tenant_id']}";
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
+			}
+
+			$sql = "SELECT DISTINCT substring(location_code from 0 for 8) AS location_code, obskode"
+				. " FROM fm_location4 WHERE obskode IS NOT NULL AND LENGTH(obskode) > 0";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$locations = array();
+
+			while ($this->db->next_record())
+			{
+				$locations[] = $this->db->f('location_code');
+			}
+
+			if($locations)
+			{
+				$now = time();
+				$sql = "UPDATE fm_location_exception SET end_date = $now WHERE category_text_id = 4"
+					. " AND location_code NOT IN('" . implode("','", $locations) . "')";
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				$sql = "SELECT DISTINCT location_code FROM fm_location_exception WHERE (end_date IS NULL OR end_date = 0) AND category_text_id = 4";
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				$old_locations = array();
+
+				while ($this->db->next_record())
+				{
+					$old_locations[] = $this->db->f('location_code');
+				}
+
+				$sql = "SELECT max(id) as id FROM fm_location_exception";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$id = (int)$this->db->f('id');
+
+				foreach ($locations as $location_code)
+				{
+					if(!in_array($location_code, $old_locations))
+					{
+						$id ++;
+
+						$sql = "INSERT INTO fm_location_exception ("
+							. "id, location_code, severity_id, category_id, start_date, user_id, entry_date, modified_date, alert_vendor, category_text_id )"
+							. " values ({$id}, '{$location_code}', 3, 5, {$now}, 6, {$now} , {$now}, 1, 4)";
+						$this->db->query($sql, __LINE__, __FILE__);
+					}
+				}
 			}
 
 			$msg						 = count($obskoder) . ' OBSKoder er oppdatert';
