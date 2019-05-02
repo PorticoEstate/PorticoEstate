@@ -44,7 +44,7 @@
 							</div>
 						</div>
 						<hr class="mt-5 mb-5"></hr>
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
 						<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
 						<div class="form-check form-check-inline">
@@ -63,49 +63,72 @@
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>
+							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"><xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'organization number')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'Ssn')" />*</label>
-							<input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>
+							<input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Ssn')"/>
+							</xsl:attribute>
+							</input>
+								
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_name')" />*</label>
-							<input type="text" class="form-control" name="contact_name" value="{application/contact_name}"/>
+							<input type="text" class="form-control" name="contact_name" value="{application/contact_name}"><xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'contact_name')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_street')" />*</label>
-							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"/>
+							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'responsible_street')"/>
+							</xsl:attribute>
+							</input> 
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
-							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"/>
+							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'responsible_zip_code')"/>
+							</xsl:attribute>
+							</input> 
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_city')" />*</label>
-							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"/>
+							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'responsible_city')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_email')" />*</label>
-							<input type="text" class="form-control" name="contact_email" value="{application/contact_email}"/>
+							<input type="text" class="form-control" name="contact_email" value="{application/contact_email}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'contact_email')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'Confirm e-mail address')" />*</label>
-							<input type="text" class="form-control" name="contact_email2" value="{application/contact_email2}"/>
+							<input type="text" class="form-control" name="contact_email2" value="{application/contact_email2}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'Confirm e-mail address')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group">
-							<label class="text-uppercase">
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_phone')" />*</label>
-							<input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"/>
+							<input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"><xsl:attribute name="placeholder"><xsl:value-of select="php:function('lang', 'contact_phone')"/>
+							</xsl:attribute>
+							</input>
 						</div>
 						<hr class="mt-5"></hr>
 						<button class="btn btn-light mb-5" type="submit">
