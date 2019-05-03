@@ -180,9 +180,9 @@
 			return $this->session_get(get_class($this) . '_' . $key);
 		}
 
-		protected function generate_secret( $length = 10 )
+		protected function generate_secret( $length = 16 )
 		{
-			return substr(base64_encode(sprintf("%010d", mt_rand())), 0, $length);
+			return bin2hex(random_bytes($length));
 		}
 
 		public function add_js_event( $event, $js )
