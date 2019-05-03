@@ -228,6 +228,11 @@
 			return $this->validation_warnings;
 		}
 
+		protected function generate_secret( $length = 16 )
+		{
+			return bin2hex(random_bytes($length));
+		}
+
 		/**
 		 * Gets the value of the class attribute with the given name.  As such this function translates from
 		 * string to variable.
