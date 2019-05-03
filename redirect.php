@@ -28,6 +28,26 @@
 	*/
 	include_once('header.inc.php');
 
+	/**
+	 * Restrict to valid session
+	 */
+	if (! $GLOBALS['phpgw']->session->verify())
+	{
+		echo '<H1>No Access</H1>';
+		$GLOBALS['phpgw']->common->phpgw_exit();
+	}
+
+	/**
+	 * Restrict to normal user
+	 */
+//	$account = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['account_id'] );
+//	if(!$account || $_SESSION['phpgw_session']['session_flags'] !== 'N')
+//	{
+//		echo '<H1>No Access</H1>';
+//		$GLOBALS['phpgw']->common->phpgw_exit();
+//	}
+//
+
 	//Get the session variables set for non cookie based sessions
 	if ( !isset($_COOKIES[session_name()]) || isset($_COOKIES['sessionid']) )
 	{

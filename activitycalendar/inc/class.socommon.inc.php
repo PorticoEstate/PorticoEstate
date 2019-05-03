@@ -9,8 +9,8 @@
 			parent::__construct();
 		}
 	
-		protected function generate_secret( $length = 10 )
+		protected function generate_secret( $length = 16 )
 		{
-			return substr(base64_encode(rand(1000000000, 9999999999)), 0, $length);
+			return bin2hex(random_bytes($length));
 		}
 	}
