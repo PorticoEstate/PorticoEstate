@@ -307,9 +307,7 @@
 					return;
 				}
 			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
+			throw new Exception("Template $tmpl not found in search path:". print_r($this->tmpl_search_path, true));
 		}
 
 		public function render_template( $output )
