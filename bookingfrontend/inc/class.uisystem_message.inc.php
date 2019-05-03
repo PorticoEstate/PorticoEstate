@@ -22,8 +22,9 @@
 
 		public function show()
 		{
-			parent::show();
-			self::rich_text_editor('field-message');
+			phpgw::no_access();
+//			parent::show();
+//			self::rich_text_editor('field-message');
 		}
 
 		public function edit()
