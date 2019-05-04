@@ -432,6 +432,8 @@ document.getElementById('field_name').onchange = function () {
   };
 };
 
+
+// CUSTOM VALIDATOR
 window.onload = function() {
 // Grab elements
 // const form = document.getElementById("application_form")
