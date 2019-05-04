@@ -6,7 +6,7 @@
 			</xsl:attribute>
 			<xsl:value-of select="php:function('lang', 'Go back')" />
 		</a>
-		<form action="" method="POST" id='application_form' name="form">
+		<form action="" method="POST" id='application_form' name="form" class="needs-validation" novalidate="true">
 			<div class="row mb-5">
 				<div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 					<h1 class="font-weight-bold">
@@ -44,7 +44,7 @@
 							</div>
 						</div>
 						<hr class="mt-5 mb-5"></hr>
-						<label >
+						<label>
 							<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
 						<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
 						<div class="form-check form-check-inline">
@@ -62,50 +62,87 @@
 						<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
+						<!-- Organization Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control"/>
+							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig organisasjonsnummer.
+							</div>
 						</div>
+						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'Ssn')" />*</label>
-							<input type="text" class="form-control" name="customer_ssn" value="{application/customer_ssn}"/>
+							<input min="11" max="11" type="number" class="form-control" name="customer_ssn" value="{application/customer_ssn}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig personnummer.
+							</div>
 						</div>
+						<!-- Contact Name -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_name')" />*</label>
-							<input type="text" class="form-control" name="contact_name" value="{application/contact_name}"/>
+							<input id="contactName" type="text" class="form-control" name="contact_name" value="{application/contact_name}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi navn.
+							</div>
 						</div>
+						
+						<!-- Street Name -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_street')" />*</label>
-							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}"/>
+							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi gatenavn.
+							</div>
 						</div>
+						<!-- Zip Code -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
-							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}"/>
+							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi postnummer.
+							</div>
 						</div>
+						<!-- City -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_city')" />*</label>
-							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}"/>
+							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi poststed.
+							</div>
 						</div>
+						<!-- Email -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_email')" />*</label>
-							<input type="text" class="form-control" name="contact_email" value="{application/contact_email}"/>
+							<input type="email" class="form-control" name="contact_email" value="{application/contact_email}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig e-post.
+							</div>
 						</div>
+						<!-- Confirm Email -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'Confirm e-mail address')" />*</label>
-							<input type="text" class="form-control" name="contact_email2" value="{application/contact_email2}"/>
+							<input type="email" class="form-control" name="contact_email2" value="{application/contact_email2}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst bekreft e-posten din.
+							</div>
 						</div>
+						<!-- Phone -->
 						<div class="form-group">
-							<label >
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact_phone')" />*</label>
-							<input type="text" class="form-control" name="contact_phone" value="{application/contact_phone}"/>
+							<input type="number" class="form-control" name="contact_phone" value="{application/contact_phone}" required="true"/>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig telefonnummer.
+							</div>
 						</div>
 						<hr class="mt-5"></hr>
 						<button class="btn btn-light mb-5" type="submit">
