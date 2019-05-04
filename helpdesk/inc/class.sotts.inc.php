@@ -308,15 +308,30 @@
 				$filtermethod .= ')';
 			}
 
-			if ($cat_id > 0)
+			if ($cat_id)
 			{
-				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $cat_id);
-				$_filter_cat = array($cat_id);
-				foreach ($_cats as $_cat)
+				if(!is_array($cat_id))
 				{
-					$_filter_cat[] = $_cat['id'];
-
+					$cat_ids = array($cat_id);
 				}
+				else
+				{
+					$cat_ids = $cat_id;
+				}
+
+				$_filter_cat = array();
+				foreach ($cat_ids as $_cat_id)
+				{
+					$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $_cat_id);
+					$_filter_cat[] = $_cat_id;
+					foreach ($_cats as $_cat)
+					{
+						$_filter_cat[] = $_cat['id'];
+
+					}
+				}
+
+				$_filter_cat = array_unique($_filter_cat);
 
 				$filtermethod .= " $where cat_id IN (" . implode(',', $_filter_cat) . ')';
 				$where= 'AND';
@@ -364,6 +379,7 @@
 				$filtermethod .= " $where phpgw_helpdesk_tickets.group_id=" . (int)$group_id;
 				$where = 'AND';
 			}
+
 
 			if ($reported_by)
 			{

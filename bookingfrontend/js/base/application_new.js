@@ -404,18 +404,27 @@ function showAlert(message, className) {
   }, 2500);
 }
 
+// Shows remove attachment button when input has text:
+attInput.addEventListener("change", function() {
+
+  if(attInput.value === '' && attInput.textContent === '') {
+    return
+  } else {
+    attRemove.style.display = "block";
+  }
+})
+
 // Removes attachment when clicked
-window.onload = function () {
-  attRemove.addEventListener("click", function () {
-    if (attFileInput.textContent === '' && attInput.value === '') {
-      showAlert('Ingen vedlegg å fjerne!', 'alert-danger');
-    } else {
-      showAlert('Vedlegg fjernet!', "alert-success")
-      attFileInput.textContent = '';
-      attInput.value = '';
-    }
-  })
-}
+attRemove.addEventListener("click", function () {
+  if (attFileInput.textContent === '' && attInput.value === '') {
+    return;
+  } else {
+    showAlert('Vedlegg fjernet!', "alert-success")
+    attFileInput.textContent = '';
+    attInput.value = '';
+    attRemove.style.display = "none";
+  }
+})
 
 // Pushes filename to field_name_input and validates file size
 document.getElementById('field_name').onchange = function () {

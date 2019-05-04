@@ -287,7 +287,7 @@
 							</div>
 						<!-- Remove Attachment -->
 						<label>
-							<a id="attachment-remove">Fjern Vedlegg</a>
+							<a style="display: none" id="attachment-remove">Fjern Vedlegg</a>
 						</label>
 						<!-- Input -->
 						<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
