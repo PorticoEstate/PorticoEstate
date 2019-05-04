@@ -1,3 +1,21 @@
+table.dataTable tbody tr.priority1:not(.selected),
+table.dataTable tbody tr.odd.priority1:not(.selected)
+{
+	background-color: #dababa
+}
+
+table.dataTable tbody tr.priority2:not(.selected),
+table.dataTable tbody tr.odd.priority2:not(.selected)
+{
+	background-color: #dadada;
+}
+
+table.dataTable tbody tr.priority3:not(.selected),
+table.dataTable tbody tr.odd.priority3:not(.selected)
+{
+
+}
+
 body {
 
 	padding-top: 70px;
@@ -80,7 +98,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-/*    background: #6d7fcc;*/
+	/*    background: #6d7fcc;*/
     background: #3968c6;
 }
 
@@ -109,7 +127,7 @@ a:focus {
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
 	font-weight: bold;
-/*    color: #fff;*/
+	/*    color: #fff;*/
     /*background: #6d7fcc;*/
 }
 
@@ -210,9 +228,9 @@ a.article:hover {
 }
 
 .dropdown-menu {
-max-height: 300px;
-overflow-y: auto;
-overflow-x: hidden;
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .bigmenubutton
