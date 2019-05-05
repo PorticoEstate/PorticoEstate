@@ -180,9 +180,9 @@
 			return $this->session_get(get_class($this) . '_' . $key);
 		}
 
-		protected function generate_secret( $length = 10 )
+		protected function generate_secret( $length = 16 )
 		{
-			return substr(base64_encode(sprintf("%010d", mt_rand())), 0, $length);
+			return bin2hex(random_bytes($length));
 		}
 
 		public function add_js_event( $event, $js )
@@ -307,9 +307,7 @@
 					return;
 				}
 			}
-			echo "Template $tmpl not found in search path: ";
-			print_r($this->tmpl_search_path);
-			die;
+			throw new Exception("Template $tmpl not found in search path:". print_r($this->tmpl_search_path, true));
 		}
 
 		public function render_template( $output )
