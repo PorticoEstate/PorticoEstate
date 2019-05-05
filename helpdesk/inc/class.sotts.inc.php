@@ -419,6 +419,7 @@
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " $where ( phpgw_helpdesk_tickets.id = " . (int) $query;
 				$querymethod .= " OR external_origin_email $this->like '%$query%'";
+				$querymethod .= " OR details $this->like '%$query%'";
 				$querymethod .= " OR subject $this->like '%$query%')";
 			}
 
