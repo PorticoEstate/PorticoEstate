@@ -1352,6 +1352,8 @@ JS;
 				phpgw::no_access();
 			}
 
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::add";
+
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			if ((isset($values['cancel']) && $values['cancel']))
@@ -1897,6 +1899,9 @@ JS;
 			}
 
 			$id = phpgw::get_var('id', 'int', 'GET');
+
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::view::{$id}";
+
 			$add_external_communication = phpgw::get_var('external_communication', 'int');
 
 			if ($add_external_communication)
@@ -2634,7 +2639,7 @@ JS;
 			//_debug_array($data);die();
 
 			$function_msg = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg . "#{$id}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 
