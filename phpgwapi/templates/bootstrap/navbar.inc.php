@@ -134,16 +134,20 @@ HTML;
 		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		$breadcrumb_selection = !empty($flags['breadcrumb_selection']) ? $flags['breadcrumb_selection'] : $flags['menu_selection'];
 		// breadcrumbs
 		$current_url = array
 		(
-			'id'	=> $flags['menu_selection'],
+			'id'	=> $breadcrumb_selection,
 			'url'	=> 	"{$_SERVER['PHP_SELF']}?" . http_build_query($extra_vars),
 			'name'	=> $var['current_app_title']
 		);
 		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');
 		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
-		if($breadcrumbs[0]['id'] != $flags['menu_selection'])
+
+
+
+		if($breadcrumbs[0]['id'] != $breadcrumb_selection)
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}
