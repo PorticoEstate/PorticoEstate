@@ -1369,6 +1369,8 @@ HTML;
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.add2'));
 			}
 
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::add";
+
 			$bolocation = CreateObject('property.bolocation');
 
 			$values					 = phpgw::get_var('values');
@@ -1847,9 +1849,10 @@ HTML;
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
-					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
+				phpgw::no_access();
 			}
+
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::view::{$id}";
 
 			$id = phpgw::get_var('id', 'int');
 
@@ -3241,7 +3244,7 @@ HTML;
 
 			$appname										 = lang('helpdesk');
 			$function_msg									 = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg . "#{$id}";
 			self::render_template_xsl(array('tts', 'files', 'attributes_form',
 				'datatable_inline'), $data, $xsl_rootdir									 = '', 'view');
 		}

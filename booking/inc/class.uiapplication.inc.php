@@ -583,10 +583,7 @@
 
 		public function add()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
-			$application_text = $config->config_data;
 
 			$errors = array();
 
@@ -921,16 +918,77 @@
 
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => $application_text));
+				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
 		}
 
 
+		/**
+		 * Validate external safe login - and return to me
+		 * @param array $redirect
+		 */
+		function validate_ssn_login( $redirect = array())
+		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				if(phpgw::get_var('second_redirect', 'bool'))
+				{
+					phpgw::no_access($this->current_app(), 'Du må logge inn via ID-porten');
+				}
+
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
+
+				$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+				$login_parameter = isset($configfrontend['login_parameter']) && $configfrontend['login_parameter'] ? $configfrontend['login_parameter'] : '';
+				$custom_login_url = isset($configfrontend['custom_login_url']) && $configfrontend['custom_login_url'] ? $configfrontend['custom_login_url'] : '';
+				if($custom_login_url && $login_parameter)
+				{
+					if(strpos($custom_login_url, '?'))
+					{
+						$sep = '&';
+					}
+					else
+					{
+						$sep = '?';
+					}
+					$login_parameter = ltrim($login_parameter, '&');
+					$custom_login_url .= "{$sep}{$login_parameter}";
+				}
+
+				if($custom_login_url)
+				{
+					header('Location: ' . $custom_login_url);
+					exit;
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/bookingfrontend/login.php');
+				}
+			}
+
+			return array(
+				'ssn'	=> $ssn,
+				'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
+				'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
+				);
+		}
+
 		function add_contact()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$external_login_info = $this->validate_ssn_login( array
+			(
+				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
+			));
+
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
-			$application_text = $config->config_data;
 			$errors = array();
 
 			$partial2 = array();
@@ -1020,7 +1078,7 @@
 			}
 
 			$this->install_customer_identifier_ui($partial2);
-			if ($orgnr)
+			if ($orgnr && $orgnr != '000000000')
 			{
 				$partial2['customer_identifier_type'] = 'organization_number';
 				$partial2['customer_organization_number'] = $orgnr;
@@ -1041,6 +1099,21 @@
 					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
 				}
 			}
+
+			if(!empty($external_login_info['ssn']))
+			{
+				$partial2['customer_ssn'] = $external_login_info['ssn'];
+			}
+			if(!empty($external_login_info['email']))
+			{
+				$partial2['contact_email'] = $external_login_info['email'];
+				$partial2['contact_email2'] = $external_login_info['email'];
+			}
+			if(!empty($external_login_info['phone']))
+			{
+				$partial2['contact_phone'] = $external_login_info['phone'];
+			}
+
 			$this->flash_form_errors($errors);
 			$partial2['cancel_link'] = self::link(array());
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
@@ -1050,7 +1123,11 @@
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
-			self::render_template_xsl('application_contact', array('application' => $partial2, 'config' => $application_text));
+			self::render_template_xsl('application_contact', array(
+				'application' => $partial2,
+				'config' => CreateObject('phpgwapi.config', 'booking')->read()
+				)
+			);
 		}
 
 
@@ -1060,9 +1137,6 @@
 
 		public function edit()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			$application_text = $config->config_data;
 			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);
@@ -1170,10 +1244,10 @@
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
-			//_debug_array($application_text);die();
+
 			self::render_template_xsl('application_edit', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => $application_text));
+				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
 		}
 
 		private function check_date_availability( &$allocation )
@@ -1242,9 +1316,6 @@
 
 		public function show()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			$application_text = $config->config_data;
 			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
 
@@ -1463,7 +1534,7 @@
 			self::render_template_xsl('application', array('application' => $application,
 				'audience' => $audience, 'agegroups' => $agegroups,
 				'num_associations' => $num_associations, 'assoc' => $from, 'collision' => $collision_dates,
-				'comments' => $comments, 'config' => $application_text));
+				'comments' => $comments, 'config' => CreateObject('phpgwapi.config', 'booking')->read()));
 		}
 
 		function get_activity_data()
