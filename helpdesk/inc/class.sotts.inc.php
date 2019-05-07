@@ -771,7 +771,7 @@
 				}
 			}
 
-			$receipt['message'][]=array('msg'=>lang('Ticket %1 has been saved',$id));
+			$receipt['message'][]=array('msg'=>lang('Ticket %1 has been sent',$id));
 			$receipt['id']	= $id;
 			return $receipt;
 		}

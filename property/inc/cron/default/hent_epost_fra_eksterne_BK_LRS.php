@@ -135,11 +135,8 @@
 
 			$client = new Client($host, $username, $password, $version);
 
-			//read messages from this folder
-			$root_folder = $this->find_root_folder($client);
-
 			//move messages to this folder.
-			$folder_info = $this->find_folder($client);
+			$movet_to_folder_info = $this->find_folder($client, 'Importert til database');
 
 			$IsEqualTo_isread										 = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI								 = new PathToUnindexedFieldType();
@@ -148,187 +145,162 @@
 			$IsEqualTo_isread->FieldURIOrConstant->Constant			 = new ConstantValueType();
 			$IsEqualTo_isread->FieldURIOrConstant->Constant->Value	 = "false";
 
-			$request					 = new FindItemType();
-			$request->ParentFolderIds	 = new NonEmptyArrayOfBaseFolderIdsType();
 
-			// Build the restriction.
-			if ($filter_ulest)
+			/**
+			 * Regelsett 1
+			 */
+			$folder_list = array
+			(
+//				'Innboks'				=> array(),
+				'Avvist papirfaktura'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Avvist papirfaktura'
+				),
+				'Spørsmål fra leverandører'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Spørsmål fra leverandører'
+				),
+				'Purring/Inkassovarsel'	=> array
+				(
+					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Purring/Inkassovarsel'
+				),
+				'Innkassokrav'	=> array
+				(
+					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Innkassokrav',
+					'priority'			=> 1
+				),
+			);
+
+			foreach ($folder_list as $folder_name => $folder_rules)
 			{
-				$request->Restriction			 = new RestrictionType();
-				$request->Restriction->IsEqualTo = $IsEqualTo_isread;
-			}
+				//read messages from this folder
+				$root_folder = $this->find_folder($client, $folder_name);
 
-			// Return all message properties.
-			$request->ItemShape				 = new ItemResponseShapeType();
-			$request->ItemShape->BaseShape	 = DefaultShapeNamesType::ALL_PROPERTIES;
+				$request					 = new FindItemType();
+				$request->ParentFolderIds	 = new NonEmptyArrayOfBaseFolderIdsType();
 
-			// Search in another user's inbox.
-			$folder_id				 = new jamesiarmes\PhpEws\Type\FolderIdType();
-			$folder_id->ChangeKey	 = $root_folder['changekey'];
-			$folder_id->Id			 = $root_folder['id'];
-
-			$request->ParentFolderIds->FolderId[] = $folder_id;
-
-			$response = $client->FindItem($request);
-
-			// Iterate over the results, printing any error messages or message subjects.
-			$response_messages = $response->ResponseMessages->FindItemResponseMessage;
-			foreach ($response_messages as $response_message)
-			{
-				// Make sure the request succeeded.
-				if ($response_message->ResponseClass != ResponseClassType::SUCCESS)
+				// Build the restriction.
+				if ($filter_ulest)
 				{
-					$code	 = $response_message->ResponseCode;
-					$message = $response_message->MessageText;
-					fwrite(
-						STDERR,
-	  "Failed to search for messages with \"$code: $message\"\n"
-					);
-					continue;
+					$request->Restriction			 = new RestrictionType();
+					$request->Restriction->IsEqualTo = $IsEqualTo_isread;
 				}
 
-				// Iterate over the messages that were found, printing the subject for each.
-				$items = $response_message->RootFolder->Items->Message;
-				foreach ($items as $item)
+				// Return all message properties.
+				$request->ItemShape				 = new ItemResponseShapeType();
+				$request->ItemShape->BaseShape	 = DefaultShapeNamesType::ALL_PROPERTIES;
+
+				// Search in another user's inbox.
+				$folder_id				 = new jamesiarmes\PhpEws\Type\FolderIdType();
+				$folder_id->ChangeKey	 = $root_folder['changekey'];
+				$folder_id->Id			 = $root_folder['id'];
+
+				$request->ParentFolderIds->FolderId[] = $folder_id;
+
+				$response = $client->FindItem($request);
+			
+				// Iterate over the results, printing any error messages or message subjects.
+				$response_messages = $response->ResponseMessages->FindItemResponseMessage;
+				foreach ($response_messages as $response_message)
 				{
-					$message_id						 = $item->ItemId->Id;
-					$request2						 = new GetItemType();
-					$request2->ItemShape			 = new ItemResponseShapeType();
-					$request2->ItemShape->BaseShape	 = DefaultShapeNamesType::ALL_PROPERTIES;
-					$request2->ItemIds				 = new NonEmptyArrayOfBaseItemIdsType();
-
-					// Add the message id to the request.
-					$item2						 = new ItemIdType();
-					$item2->Id					 = $message_id;
-					$request2->ItemIds->ItemId[] = $item2;
-
-					$response2 = $client->GetItem($request2);
-
-					// Iterate over the results, printing any error messages or receiving
-					// attachments.
-					$response_messages2 = $response2->ResponseMessages->GetItemResponseMessage;
-
-
-					foreach ($response_messages2 as $response_message2)
+					// Make sure the request succeeded.
+					if ($response_message->ResponseClass != ResponseClassType::SUCCESS)
 					{
-						// Make sure the request succeeded.
-						if ($response_message2->ResponseClass != ResponseClassType::SUCCESS)
-						{
-							$code	 = $response_message2->ResponseCode;
-							$message = $response_message2->MessageText;
-							fwrite(STDERR, "Failed to get message with \"$code: $message\"\n");
-							continue;
-						}
+						$code	 = $response_message->ResponseCode;
+						$message = $response_message->MessageText;
+						fwrite(
+							STDERR,
+		  "Failed to search for messages with \"$code: $message\"\n"
+						);
+						continue;
+					}
 
-						// Iterate over the messages, getting the attachments for each.
-						$attachments = array();
-						foreach ($response_message2->Items->Message as $item3)
-						{
-							$target = $this->handle_message($item3);
+					// Iterate over the messages that were found, printing the subject for each.
+					$items = $response_message->RootFolder->Items->Message;
+					foreach ($items as $item)
+					{
+						$message_id						 = $item->ItemId->Id;
+						$request2						 = new GetItemType();
+						$request2->ItemShape			 = new ItemResponseShapeType();
+						$request2->ItemShape->BaseShape	 = DefaultShapeNamesType::ALL_PROPERTIES;
+						$request2->ItemIds				 = new NonEmptyArrayOfBaseItemIdsType();
 
-							// If there are no attachments for the item, move on to the next
-							// message.
-							if (empty($item3->Attachments))
+						// Add the message id to the request.
+						$item2						 = new ItemIdType();
+						$item2->Id					 = $message_id;
+						$request2->ItemIds->ItemId[] = $item2;
+
+						$response2 = $client->GetItem($request2);
+
+						// Iterate over the results, printing any error messages or receiving
+						// attachments.
+						$response_messages2 = $response2->ResponseMessages->GetItemResponseMessage;
+
+
+						foreach ($response_messages2 as $response_message2)
+						{
+							// Make sure the request succeeded.
+							if ($response_message2->ResponseClass != ResponseClassType::SUCCESS)
 							{
+								$code	 = $response_message2->ResponseCode;
+								$message = $response_message2->MessageText;
+								fwrite(STDERR, "Failed to get message with \"$code: $message\"\n");
 								continue;
 							}
 
-							// Iterate over the attachments for the message.
-							foreach ($item3->Attachments->FileAttachment as $attachment)
+							// Iterate over the messages, getting the attachments for each.
+							$attachments = array();
+							foreach ($response_message2->Items->Message as $item3)
 							{
-								$attachments[] = $attachment->AttachmentId->Id;
+								$target = $this->handle_message($item3, $folder_rules);
+
+								// If there are no attachments for the item, move on to the next
+								// message.
+								if (empty($item3->Attachments))
+								{
+									continue;
+								}
+
+								// Iterate over the attachments for the message.
+								foreach ($item3->Attachments->FileAttachment as $attachment)
+								{
+									$attachments[] = $attachment->AttachmentId->Id;
+								}
 							}
-						}
 
-						$saved_attachments = array();
-						if ($attachments)
-						{
-							$saved_attachments = $this->handle_attachments($client, $attachments, $response_message2);
-						}
+							$saved_attachments = array();
+							if ($attachments)
+							{
+								$saved_attachments = $this->handle_attachments($client, $attachments, $response_message2);
+							}
 
-						if (!empty($target['id']) && $saved_attachments)
-						{
-							$this->add_attacthment_to_target($target, $saved_attachments);
-						}
+							if (!empty($target['id']) && $saved_attachments)
+							{
+								$this->add_attacthment_to_target($target, $saved_attachments);
+							}
 
-						foreach ($this->items_to_move as $item4)
-						{
-							$this->update_message($client, $item4);
-							$this->move_message($client, $item4, $folder_info);
-						}
+							foreach ($this->items_to_move as $item4)
+							{
+								$this->update_message($client, $item4);
+								$this->move_message($client, $item4, $movet_to_folder_info);
+							}
 
-						$this->items_to_move = array();
+							$this->items_to_move = array();
+						}
 					}
 				}
 			}
 		}
 
-		function find_root_folder( $client )
-		{
-
-			// Build the request.
-			$request						 = new FindFolderType();
-			$request->FolderShape			 = new FolderResponseShapeType();
-			$request->FolderShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
-			$request->ParentFolderIds		 = new NonEmptyArrayOfBaseFolderIdsType();
-			$request->Restriction			 = new RestrictionType();
-
-			// Search recursively.
-			$request->Traversal = FolderQueryTraversalType::DEEP;
-
-			// Search within the root folder. Combined with the traversal set above, this
-			// should search through all folders in the user's mailbox.
-			$parent		 = new DistinguishedFolderIdType();
-			$parent->Id	 = DistinguishedFolderIdNameType::ROOT;
-
-			// New Properties:
-			$_mailbox						 = !empty($this->config->config_data['xPortico']['mailbox']) ? $this->config->config_data['xPortico']['mailbox'] : 'lrs@bergen.kommune.no';
-			$parent->Mailbox				 = new StdClass;
-			$parent->Mailbox->EmailAddress	 = $_mailbox;
-			// End of new Props.
-
-			$request->ParentFolderIds->DistinguishedFolderId[] = $parent;
-
-			// Build the restriction that will search for folders containing "Cal".
-			$contains						 = new \jamesiarmes\PhpEws\Type\ContainsExpressionType();
-			$contains->FieldURI				 = new PathToUnindexedFieldType();
-			$contains->FieldURI->FieldURI	 = UnindexedFieldURIType::FOLDER_DISPLAY_NAME;
-			$contains->Constant				 = new ConstantValueType();
-			$contains->Constant->Value		 = 'Innboks';
-			$contains->ContainmentComparison = ContainmentComparisonType::EXACT;
-			$contains->ContainmentMode		 = ContainmentModeType::EXACT_PHRASE;
-			$request->Restriction->Contains	 = $contains;
-
-			$response = $client->FindFolder($request);
-
-			// Iterate over the results, printing any error messages or folder names and
-			// ids.
-			$response_messages = $response->ResponseMessages->FindFolderResponseMessage;
-
-			foreach ($response_messages as $response_message)
-			{
-				// Make sure the request succeeded.
-				if ($response_message->ResponseClass != ResponseClassType::SUCCESS)
-				{
-					$code	 = $response_message->ResponseCode;
-					$message = $response_message->MessageText;
-					fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
-					continue;
-				}
-
-				$folders = $response_message->RootFolder->Folders->Folder;
-
-				$folder_info = array(
-					'name'		 => $folders[0]->DisplayName,
-					'id'		 => $folders[0]->FolderId->Id,
-					'changekey'	 => $folders[0]->FolderId->ChangeKey
-				);
-			}
-
-			return $folder_info;
-		}
-
-		function find_folder( $client )
+		function find_folder( $client , $folder_name = 'Importert til database')
 		{
 			// Build the request.
 			$request						 = new FindFolderType();
@@ -358,7 +330,7 @@
 			$contains->FieldURI				 = new PathToUnindexedFieldType();
 			$contains->FieldURI->FieldURI	 = UnindexedFieldURIType::FOLDER_DISPLAY_NAME;
 			$contains->Constant				 = new ConstantValueType();
-			$contains->Constant->Value		 = 'Importert til database';
+			$contains->Constant->Value		 = $folder_name;
 			$contains->ContainmentComparison = ContainmentComparisonType::EXACT;
 			$contains->ContainmentMode		 = ContainmentModeType::EXACT_PHRASE;
 			$request->Restriction->Contains	 = $contains;
@@ -391,24 +363,43 @@
 			return $folder_info;
 		}
 
-		function handle_message( $item3 )
+		function handle_message( $item3 , $folder_rules = array())
 		{
 			$sender	 = $item3->Sender->Mailbox->EmailAddress;
 			$target	 = array();
 			$subject = $item3->Subject;
 			$rool	 = $item3->Body->_;
-//			$text_message  = array('text' => $rool);
-//			$newArray = array_map(function($v)
-//			{
-//				return trim(strip_tags($v));
-//			 }, $text_message);
-//
-//			$body = $newArray['text'];
 
 			$html2text	 = createObject('phpgwapi.html2text', $rool);
 			$body		 = $html2text->getText();
 
-			if (preg_match("/\[PorticoTicket/", $subject))
+			/**
+			 * Regelsett 1
+			 */
+			if($folder_rules)
+			{
+				$message_cat_id	 = $folder_rules['message_cat_id'];
+				$group_id		 = $folder_rules['group_id'];
+				$priority		 = !empty($folder_rules['priority']) ? (int) $folder_rules['priority'] : 3;
+
+				if(!empty($folder_rules['subject']))
+				{
+					$subject = "{$folder_rules['subject']}::{$subject}";
+				}
+
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+				
+			}
+			/**
+			 * Regelsett 2
+			 */
+			else if (preg_match("/\[PorticoTicket/", $subject))
 			{
 				preg_match_all("/\[[^\]]*\]/", $subject, $matches);
 				$identificator_str	 = trim($matches[0][0], "[]");
@@ -585,7 +576,7 @@
 			return $ticket_id;
 		}
 
-		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender )
+		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $priority = 3 )
 		{
 
 			if (!$message_cat_id)
@@ -631,9 +622,8 @@
 			}
 			else
 			{
-				$priority	 = 3;
 				$ticket		 = array
-					(
+				(
 					'assignedto'			 => false,
 					'group_id'				 => $group_id,
 					'cat_id'				 => $message_cat_id,
