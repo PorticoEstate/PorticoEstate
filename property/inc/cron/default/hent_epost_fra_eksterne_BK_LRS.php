@@ -157,7 +157,26 @@
 					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
 					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
 					'subject'			=> 'Avvist papirfaktura'
-				)
+				),
+				'Spørsmål fra leverandører'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Spørsmål fra leverandører'
+				),
+				'Purring/Inkassovarsel'	=> array
+				(
+					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Purring/Inkassovarsel'
+				),
+				'Innkassokrav'	=> array
+				(
+					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Innkassokrav',
+					'priority'			=> 1
+				),
 			);
 
 			foreach ($folder_list as $folder_name => $folder_rules)
@@ -360,13 +379,15 @@
 			if($folder_rules)
 			{
 				$message_cat_id	 = $folder_rules['message_cat_id'];
-				$group_id		 = $folder_rules['$group_id'];
+				$group_id		 = $folder_rules['group_id'];
+				$priority		 = !empty($folder_rules['priority']) ? (int) $folder_rules['priority'] : 3;
+
 				if(!empty($folder_rules['subject']))
 				{
 					$subject = "{$folder_rules['subject']}::{$subject}";
 				}
 
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -555,7 +576,7 @@
 			return $ticket_id;
 		}
 
-		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender )
+		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $priority = 3 )
 		{
 
 			if (!$message_cat_id)
@@ -601,9 +622,8 @@
 			}
 			else
 			{
-				$priority	 = 3;
 				$ticket		 = array
-					(
+				(
 					'assignedto'			 => false,
 					'group_id'				 => $group_id,
 					'cat_id'				 => $message_cat_id,
