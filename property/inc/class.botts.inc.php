@@ -299,7 +299,7 @@
 				$columns['mail_recipients'] = array
 					(
 					'id'	 => 'mail_recipients',
-					'name'	 => lang('email')
+					'name'	 => lang('mail recipients')
 				);
 			}
 
