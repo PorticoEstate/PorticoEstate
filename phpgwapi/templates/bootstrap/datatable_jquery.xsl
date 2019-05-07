@@ -1124,19 +1124,19 @@
 											{
 												oControl.multiselect("destroy");
 												oControl.multiselect({
-												buttonWidth: 250,
-												includeSelectAllOption: true,
-												enableFiltering: true,
-												enableCaseInsensitiveFiltering: true,
-												onChange: function($option) {
-													// Check if the filter was used.
-													var query = $(oControl).find('li.multiselect-filter input').val();
+													buttonWidth: 250,
+													includeSelectAllOption: true,
+													enableFiltering: true,
+													enableCaseInsensitiveFiltering: true,
+													onChange: function($option) {
+														// Check if the filter was used.
+														var query = $(oControl).find('li.multiselect-filter input').val();
 
-													if (query) {
-														$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
+														if (query) {
+															$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
+														}
 													}
-												}
-											});
+												});
 
 											}
 											catch(err)
@@ -1277,6 +1277,11 @@
 				},//alternative
 				fnInitComplete: function (oSettings, json)
 				{
+					$(".btn-group").addClass('w-100');
+					$(".multiselect ").addClass('form-control');
+					$(".multiselect").removeClass('btn');
+					$(".multiselect").removeClass('btn-default');
+
 					if(typeof(initCompleteDatatable) == 'function')
 					{
 						initCompleteDatatable(oSettings, json, oTable);
