@@ -296,6 +296,11 @@
 					'id'	 => 'continuous',
 					'name'	 => lang('continuous')
 				);
+				$columns['mail_recipients'] = array
+					(
+					'id'	 => 'mail_recipients',
+					'name'	 => lang('email')
+				);
 			}
 
 			$columns['ecodimb']			 = array
