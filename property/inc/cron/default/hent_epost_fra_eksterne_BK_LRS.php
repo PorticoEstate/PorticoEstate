@@ -151,7 +151,7 @@
 			 */
 			$folder_list = array
 			(
-//				'Innboks'				=> array(),
+				'Innboks'				=> array(),
 				'Avvist papirfaktura'	=> array
 				(
 					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
