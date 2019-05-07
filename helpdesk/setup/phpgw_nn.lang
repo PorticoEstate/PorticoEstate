@@ -88,6 +88,7 @@ location	helpdesk	nn	Lokasjon
 member	helpdesk	nn	Medlem
 ticket %1 has been saved	helpdesk	nn	Melding %1 er lagret
 ticket %1 has been deleted	helpdesk	nn	Melding %1 er slettet
+ticket %1 has been sent	helpdesk	nn	Melding %1 er sendt
 my submitted tickets	helpdesk	nn	Meldinger startet av meg
 check to attach file	helpdesk	nn	Merk for å legge ved fil
 check to delete file	helpdesk	nn	Merk for å slette fil

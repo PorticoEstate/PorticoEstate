@@ -884,6 +884,12 @@ HTML;
 								}
 							}
 						});
+
+						$(".btn-group").addClass(\'w-100\');
+						$(".multiselect ").addClass(\'form-control\');
+						$(".multiselect").removeClass(\'btn\');
+						$(".multiselect").removeClass(\'btn-default\');
+
 					}, data, "GET", "json"
 				);
 				';
@@ -1094,8 +1100,6 @@ JS;
 								}
 							}
 						});
-
-//							$("#{$filter['name']}").multiselect();
 JS;
 					}
 					else
