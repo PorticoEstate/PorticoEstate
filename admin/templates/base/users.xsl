@@ -149,94 +149,93 @@
 			<xsl:if test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
 			</xsl:if>
-			<form method="post" action="{edit_url}">
-				<div class="yui-navset" id="account_edit_tabview">
+			<form method="post" action="{edit_url}" class="pure-form pure-form-aligned">
+				<div id="account_edit_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
-					<div class="yui-content">
 						<div id="user">
 							<input type="hidden" name="values[id]" value="{account_id}" />
-							<ul id="admin_account_form">
-								<li>
+							<fieldset id="admin_account_form">
+								<div class="pure-control-group">
+									<label for="account_active"><xsl:value-of select="lang_account_active" class="check" /></label>
 									<input type="checkbox" name="values[enabled]" value="1" class="check">
 										<xsl:if test="account_enabled = 1">
 											<xsl:attribute name="checked" value="checked" />
 										</xsl:if>
 									</input>
-									<label for="account_active"><xsl:value-of select="lang_account_active" class="check" /></label><br />
-								</li>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_lid"><xsl:value-of select="lang_lid"/></label>
-									<input type="text" id="account_lid" name="values[lid]" value="{account_lid}" /><br />
-								</li>
+									<input type="text" id="account_lid" name="values[lid]" value="{account_lid}" />
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_firstname"><xsl:value-of select="lang_firstname"/></label>
-									<input type="text" id="account_firstname" name="values[firstname]" value="{account_firstname}"/><br />
-								</li>
+									<input type="text" id="account_firstname" name="values[firstname]" value="{account_firstname}"/>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_lastname"><xsl:value-of select="lang_lastname"/></label>
-									<input type="text" id="account_lastname" name="values[lastname]" value="{account_lastname}"/><br />
-								</li>
+									<input type="text" id="account_lastname" name="values[lastname]" value="{account_lastname}"/>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_password"><xsl:value-of select="lang_password"/></label>
-									<input type="password" id="account_password" name="values[passwd]" value="{account_passwd}"/><br />
-								</li>
+									<input type="password" id="account_password" name="values[passwd]" value="{account_passwd}"/>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_password2"><xsl:value-of select="lang_reenter_password"/></label>
-									<input type="password" id="account_password2" name="values[passwd_2]" value="{account_passwd_2}"/><br />
-								</li>
+									<input type="password" id="account_password2" name="values[passwd_2]" value="{account_passwd_2}"/>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<span class="label"><xsl:value-of select="lang_contact" /></span>
-									<span class="value"><a href="{url_contacts}"><xsl:value-of select="url_contacts_text" /></a></span><br />
-								</li>
+									<span class="value"><a href="{url_contacts}"><xsl:value-of select="url_contacts_text" /></a></span>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
+									<label for="changepassword"><xsl:value-of select="lang_changepassword" class="check" /></label>
 									<input type="checkbox" name="values[changepassword]" value="1" class="check">
 										<xsl:if test="changepassword = 1">
 											<xsl:attribute name="checked" value="checked" />
 										</xsl:if>
 									</input>
-									<label for="changepassword"><xsl:value-of select="lang_changepassword" class="check" /></label><br />
-								</li>
-								<li>
+								</div>
+								<div class="pure-control-group">
+									<label for="anonymous"><xsl:value-of select="lang_anonymous" class="check" /></label>
 									<input type="checkbox" name="values[anonymous]" value="1" class="check">
 										<xsl:if test="anonymous = 1">
 											<xsl:attribute name="checked" value="checked" />
 										</xsl:if>
 									</input>
-									<label for="anonymous"><xsl:value-of select="lang_anonymous" class="check" /></label><br />
-								</li>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_expires"><xsl:value-of select="lang_expires"/></label>
 									<span class="dates" id="account_expires">
 										<xsl:value-of disable-output-escaping="yes" select="select_expires" />
 									</span><br />
 
+									<label for="expires_never"><xsl:value-of select="lang_never" class="check" /></label>
 									<input type="checkbox" name="values[expires_never]" value="1" class="check">
 										<xsl:if test="expires_never = 1">
 											<xsl:attribute name="checked" value="checked" />
 										</xsl:if>
 									</input>
-									<label for="expires_never"><xsl:value-of select="lang_never" class="check" /></label><br />
-								</li>
+								</div>
 
-								<li>
+								<div class="pure-control-group">
 									<label for="account_quota"><xsl:value-of select="lang_quota"/></label>
-									<input type="text" name="values[quota]" id="values_quota" value="{account_quota}" />Mb<br />
-								</li>
-							</ul>
+									<input type="text" name="values[quota]" id="values_quota" value="{account_quota}" />Mb
+								</div>
+							</fieldset>
 						</div>
 						<div id="groups">
 							<h2><xsl:value-of select="lang_groups" /></h2>
-							<ul class="group_list">
+							<fieldset class="group_list">
 								<xsl:apply-templates select="group_list" />
-							</ul>
+							</fieldset>
 						</div>
 						<div id="apps">
 							<h2><xsl:value-of select="lang_applications" /></h2>
@@ -259,7 +258,6 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
 					<div class="button_group">
 						<input type="submit" name="save" value="{lang_save}"/>
 						<input type="submit" name="cancel" value="{lang_cancel}"/>
@@ -271,7 +269,7 @@
 
 <!-- BEGIN group_list -->
 	<xsl:template match="group_list">
-		<li>
+		<div class="pure-control-group">
 			<xsl:attribute name="class">
 				<xsl:choose>
 					<xsl:when test="position() mod 2 = 0">
@@ -309,9 +307,12 @@
 					</input>
 				</xsl:otherwise>
 			</xsl:choose>
-
+			<label for="account_groups{account_id}" >
 			<xsl:value-of select="account_lid"/>
-		</li>
+
+			</label>
+
+		</div>
 	</xsl:template>
 
 <!-- BEGIN app_list -->

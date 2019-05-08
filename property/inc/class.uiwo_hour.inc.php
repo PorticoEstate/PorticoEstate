@@ -65,6 +65,7 @@
 		function __construct()
 		{
 			parent::__construct();
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::project::workorder';
 
 			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = true;
 			//	$this->currentapp			= $GLOBALS['phpgw_info']['flags']['currentapp'];

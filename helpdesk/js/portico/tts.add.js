@@ -337,6 +337,18 @@ $(window).on('load', function ()
 	$("#set_user_alternative_name").on("autocompleteselect", function (event, ui)
 	{
 		var set_user_alternative_lid = ui.item.value;
+		try
+		{
+			var temp = document.getElementById("new_note").value;
+			if (temp)
+			{
+				temp = temp + "\n";
+			}
+			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+		}
+		catch (err)
+		{
+		}
 
 		if (set_user_alternative_lid)
 		{
