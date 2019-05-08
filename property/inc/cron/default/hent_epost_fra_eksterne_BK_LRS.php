@@ -152,23 +152,17 @@
 			$folder_list = array
 			(
 				'Innboks'				=> array(),
+				'Arbeidsflyt og ehandel'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Arbeidsflyt og ehandel'
+				),
 				'Avvist papirfaktura'	=> array
 				(
 					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
 					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
 					'subject'			=> 'Avvist papirfaktura'
-				),
-				'Spørsmål fra leverandører'	=> array
-				(
-					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Spørsmål fra leverandører'
-				),
-				'Purring/Inkassovarsel'	=> array
-				(
-					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Purring/Inkassovarsel'
 				),
 				'Innkassokrav'	=> array
 				(
@@ -177,6 +171,25 @@
 					'subject'			=> 'Innkassokrav',
 					'priority'			=> 1
 				),
+				'Purring/Inkassovarsel'	=> array
+				(
+					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Purring/Inkassovarsel'
+				),
+				'Spørsmål fra leverandører'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Spørsmål fra leverandører'
+				),
+				'Spørsmål ifbm bankkvitteringer'	=> array
+				(
+					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
+					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
+					'subject'			=> 'Spørsmål ifbm bankkvitteringer',
+					'priority'			=> 1
+				)
 			);
 
 			foreach ($folder_list as $folder_name => $folder_rules)
@@ -206,9 +219,16 @@
 				$request->ParentFolderIds->FolderId[] = $folder_id;
 
 				$response = $client->FindItem($request);
-			
+
 				// Iterate over the results, printing any error messages or message subjects.
 				$response_messages = $response->ResponseMessages->FindItemResponseMessage;
+
+				if($this->debug)
+				{
+					_debug_array($folder_name);
+					_debug_array(count($response_messages[0]->RootFolder->Items->Message));
+				}
+
 				foreach ($response_messages as $response_message)
 				{
 					// Make sure the request succeeded.
@@ -394,7 +414,7 @@
 					$target['type']				 = 'helpdesk';
 					$target['id']				 = $ticket_id;
 				}
-				
+
 			}
 			/**
 			 * Regelsett 2
@@ -504,19 +524,19 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/FakturaFirewall: Ukjent leverandør/i", $subject))
-			{
-
-				$message_cat_id	 = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
-				$group_id		 = 4169; // LRS-SERVICE_Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if ($ticket_id)
-				{
-					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type']				 = 'helpdesk';
-					$target['id']				 = $ticket_id;
-				}
-			}
+//			else if (preg_match("/FakturaFirewall: Ukjent leverandør/i", $subject))
+//			{
+//
+//				$message_cat_id	 = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
+//				$group_id		 = 4169; // LRS-SERVICE_Økonomi
+//				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+//				if ($ticket_id)
+//				{
+//					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+//					$target['type']				 = 'helpdesk';
+//					$target['id']				 = $ticket_id;
+//				}
+//			}
 
 			/**
 			 * Ticket created / updated
