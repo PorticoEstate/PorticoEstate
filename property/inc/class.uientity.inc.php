@@ -148,7 +148,10 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "{$this->type_app[$this->type]}::entity_{$this->entity_id}";
 			if ($this->cat_id > 0)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
+//				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::{$this->cat_id}";
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "navbar#{$location_id}";
+
 			}
 			if (phpgw::get_var('noframework', 'bool'))
 			{

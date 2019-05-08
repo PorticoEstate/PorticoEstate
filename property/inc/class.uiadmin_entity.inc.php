@@ -92,7 +92,8 @@
 			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
 			$this->acl_manage	 = $this->acl->check($this->acl_location, 16, $this->type_app[$this->type]);
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->type_app[$this->type]}::entity";
+			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.$this->entity_id.{$this->cat_id}");
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin#{$location_id}";
 		}
 
 		function index()
@@ -1412,7 +1413,7 @@
 			$entity		 = $this->bo->read_single($entity_id);
 			$category	 = $this->bo->read_single_category($entity_id, $cat_id);
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			$id		 = phpgw::get_var('id');
 			$resort	 = phpgw::get_var('resort');
