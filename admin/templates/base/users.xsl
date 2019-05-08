@@ -152,7 +152,6 @@
 			<form method="post" action="{edit_url}" class="pure-form pure-form-aligned">
 				<div id="account_edit_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
-					<div class="yui-content">
 						<div id="user">
 							<input type="hidden" name="values[id]" value="{account_id}" />
 							<fieldset id="admin_account_form">
@@ -259,7 +258,6 @@
 								</tbody>
 							</table>
 						</div>
-					</div>
 					<div class="button_group">
 						<input type="submit" name="save" value="{lang_save}"/>
 						<input type="submit" name="cancel" value="{lang_cancel}"/>
