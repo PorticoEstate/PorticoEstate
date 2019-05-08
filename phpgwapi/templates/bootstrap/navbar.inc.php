@@ -328,7 +328,8 @@ HTML;
 		$selected_node = false;
 		$current_class = 'nav-item';
 
-		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" )
+		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" 
+		|| ( !empty($item['location_id']) && $item['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 		{
 			$current_class .= ' active';
 			$item['selected'] = true;
