@@ -112,7 +112,7 @@
 			<xsl:call-template name="msgbox"/>
 		</xsl:if>
 
-		<form name='body_form' action="{edit_url}" method="post"  onsubmit="process_list('all_users[]',	'account_user[]')">
+		<form name='body_form' action="{edit_url}" method="post"  onsubmit="process_list('all_users[]',	'account_user[]')" class="pure-form pure-form-aligned">
 			<div class="yui-navset" id="group_edit_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
 
@@ -123,15 +123,15 @@
 							<xsl:value-of select="php:function('lang', 'group')" />
 						</h2>
 						<input type="hidden" name="values[account_id]" value="{account_id}"/>
-						<ul id="admin_account_form">
-							<li>
+						<fieldset id="admin_account_form">
+							<div class="pure-control-group">
 								<label for="account_name">
 									<xsl:value-of select="php:function('lang', 'group name')" />
 								</label>
 								<input name="values[account_name]" value="{value_account_name}" id="account_name" />
 								<br class="eol" />
-							</li>
-						</ul>
+							</div>
+						</fieldset>
 
 						<!--table border="0" align="center" width="100%">
 							<tbody align="center">
@@ -208,9 +208,9 @@
 						<h2>
 							<xsl:value-of select="php:function('lang', 'applications')" />
 						</h2>
-						<ul class="app_list">
+						<fieldset class="app_list">
 							<xsl:apply-templates select="app_list" />
-						</ul>
+						</fieldset>
 					</div>
 				</div>
 			</div>
@@ -235,40 +235,10 @@
 </xsl:template>
 
 <xsl:template match="app_list">
-	<li>
-		<xsl:attribute name="class">
-			<xsl:choose>
-				<xsl:when test="position() mod 2 = 0">
-					<xsl:text>row_off</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>row_on</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:attribute>
-
-		<xsl:choose>
-			<xsl:when test="acl_url != ''">
-				<a href="{acl_url}">
-					<img src="{acl_img}" title="{acl_img_name}" alt="{acl_img_name}" />
-				</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<img src="{acl_img}" title="{acl_img_name}" alt="{acl_img_name}" />
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:text> </xsl:text>
-		<xsl:choose>
-			<xsl:when test="grant_url != ''">
-				<a href="{grant_url}">
-					<img src="{grant_img}" title="{grant_img_name}" alt="{grant_img_name}" />
-				</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<img src="{grant_img}" title="{grant_img_name}" alt="{grant_img_name}" />
-			</xsl:otherwise>
-		</xsl:choose>
-
+	<div class="pure-control-group">
+		<label for="{elmid}">
+			<xsl:value-of select="app_title" />
+		</label>
 		<xsl:choose>
 			<xsl:when test="i_am_admin = '1'">
 				<input type="checkbox" id="{elmid}" name="{checkbox_name}" value="1">
@@ -296,8 +266,26 @@
 				</input>
 			</xsl:otherwise>
 		</xsl:choose>
-		<label for="{elmid}">
-			<xsl:value-of select="app_title" />
-		</label>
-	</li>
+		<xsl:choose>
+			<xsl:when test="acl_url != ''">
+				<a href="{acl_url}">
+					<img src="{acl_img}" title="{acl_img_name}" alt="{acl_img_name}" />
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="{acl_img}" title="{acl_img_name}" alt="{acl_img_name}" />
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:text> </xsl:text>
+		<xsl:choose>
+			<xsl:when test="grant_url != ''">
+				<a href="{grant_url}">
+					<img src="{grant_img}" title="{grant_img_name}" alt="{grant_img_name}" />
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="{grant_img}" title="{grant_img_name}" alt="{grant_img_name}" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</div>
 </xsl:template>
