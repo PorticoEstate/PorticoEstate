@@ -307,8 +307,10 @@
 															. ': ' . lang('list groups');
 			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 
+			$is_admin = true;
 			if(!$this->_acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
+				$is_admin = false;
 				$available_apps = $GLOBALS['phpgw_info']['apps'];
 				$valid_users = array();
 				foreach($available_apps as $_app => $dummy)
@@ -336,26 +338,12 @@
 					}
 				}
 				unset($user);
-
-				$total = count($allusers);
-				$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-
-				if ($this->allrows)
-				{
-					$start = 0;
-					$length = $total;
-				}
-
-				$account_info = array_slice($allusers, $start , $length, true);
-				unset($allusers);
-			}
-			else
-			{
-				$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
-																	$order, $query, $total);
 			}
 
+			$account_info = $GLOBALS['phpgw']->accounts->get_list('groups', $start, $sort,
+																$order, $query, $total);
 			$total = $GLOBALS['phpgw']->accounts->total;
+
 
 			$link_data = array
 			(
@@ -416,14 +404,24 @@
 				{
 					$delete_url = preg_replace('/%23ID/', $account->id, $url_delete);
 				}
+				$_lang_edit = $lang_edit;
+				$_lang_delete = $lang_delete;
+
+				if(!$is_admin && empty($allusers[$account->id]))
+				{
+					$edit_url = '';
+					$delete_url = '';
+					$_lang_edit = '';
+					$_lang_delete = '';
+				}
 
 				$group_data[] = Array
 				(
 					'edit_url'					=> $edit_url,
-					'lang_edit'					=> $lang_edit,
+					'lang_edit'					=> $_lang_edit,
 					'group_name'				=> $account->lid ? $account->lid : '',
 					'delete_url'				=> $delete_url,
-					'lang_delete'				=> $lang_delete
+					'lang_delete'				=> $_lang_delete
 				);
 			}
 

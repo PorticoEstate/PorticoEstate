@@ -191,7 +191,7 @@
 HTML;
 			}
 
-			if ($orgs)
+			if (count($orgs) > 1)
 			{
 				$action = $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
 				$message = 'Velg organisasjon';
@@ -205,11 +205,17 @@ HTML;
 							</p>
 HTML;
 			}
+			else if (count($orgs) == 1)
+			{
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/login.php', array('stage' => 2, 'org_id' => $orgs[0]['id']));
+			}
 			else
 			{
-				$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
-				$message = 'Ikke representant for noen organisasjon';
-				$org_select = '';
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php');
+//				$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
+//				$message = 'Ikke representant for noen organisasjon';
+//				$org_select = '';
+
 			}
 
 			$html = <<<HTML

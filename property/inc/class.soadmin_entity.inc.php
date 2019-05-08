@@ -277,7 +277,7 @@
 		 * @param integer $level is increased when we go deeper into the tree,
 		 * @return array $child Children
 		 */
-		public function get_children( $entity_id, $parent, $level, $menuaction )
+		public function get_children( $entity_id, $parent, $level, $menuaction, $prefix = '' )
 		{
 			$entity_id	 = (int)$entity_id;
 			$parent		 = (int)$parent;
@@ -305,7 +305,7 @@
 					'level'			 => (int)$this->db2->f('level'),
 					'parent_id'		 => (int)$this->db2->f('parent_id'),
 					'owner'			 => (int)$this->db2->f('owner'),
-					'location_id'	 => (int)$this->db2->f('location_id')
+					'location_id'	 => $prefix . (int)$this->db2->f('location_id')
 				);
 			}
 
@@ -314,7 +314,7 @@
 				$child['url']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
 					'entity_id'	 => $entity_id, 'cat_id'	 => $child['id'], 'type'		 => $this->type));
 				$child['text']	 = $child['name'];
-				$_children		 = $this->get_children($entity_id, $child['id'], $level + 1, $menuaction);
+				$_children		 = $this->get_children($entity_id, $child['id'], $level + 1, $menuaction, $prefix);
 				if ($_children)
 				{
 					$child['children'] = $_children;
@@ -323,7 +323,7 @@
 			return $children;
 		}
 
-		public function read_category_tree( $entity_id, $menuaction, $required = '' )
+		public function read_category_tree( $entity_id, $menuaction, $required = '' , $prefix ='')
 		{
 			$table = "fm_{$this->type}_category";
 
@@ -331,6 +331,7 @@
 
 			$this->db2->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db2->num_rows();
+
 
 			$categories = array();
 			while ($this->db2->next_record())
@@ -348,7 +349,7 @@
 						'descr'			 => $this->db2->f('descr', true),
 						'level'			 => 0,
 						'parent_id'		 => 0,
-						'location_id'	 => $this->db2->f('location_id')
+						'location_id'	 => $prefix . $this->db2->f('location_id')
 					);
 				}
 			}
@@ -358,7 +359,7 @@
 				$category['url']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $menuaction,
 					'entity_id'	 => $entity_id, 'cat_id'	 => $category['id'], 'type'		 => $this->type));
 				$category['text']	 = $category['name'];
-				$children			 = $this->get_children($entity_id, $category['id'], 0, $menuaction);
+				$children			 = $this->get_children($entity_id, $category['id'], 0, $menuaction, $prefix);
 				if ($children)
 				{
 					$category['children'] = $children;

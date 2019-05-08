@@ -639,6 +639,7 @@
 				'order_deadline'		 => 'fm_tts_tickets.order_deadline',
 				'order_deadline2'		 => 'fm_tts_tickets.order_deadline2',
 				'details'				 => 'fm_tts_tickets.details',
+				'mail_recipients'		 => 'fm_tts_tickets.mail_recipients',
 			);
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
@@ -837,6 +838,7 @@
 						'order_deadline'		 => $this->db->f('order_deadline'),
 						'order_deadline2'		 => $this->db->f('order_deadline2'),
 						'details'				 => $this->db->f('details', true),
+						'mail_recipients'		 => $this->db->f('mail_recipients', true),
 					);
 
 					foreach ($custom_cols as $custom_col)
