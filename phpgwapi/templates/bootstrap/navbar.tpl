@@ -1,7 +1,7 @@
 <body>
 	<div class="wrapper">
 		<!-- Sidebar  -->
-		<nav id="sidebar">
+		<nav id="sidebar" class="{menu_state}">
 			<div class="sidebar-header">
                 <h5>{user_fullname}</h5>
             </div>

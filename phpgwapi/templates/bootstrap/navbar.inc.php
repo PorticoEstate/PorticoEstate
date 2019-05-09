@@ -173,6 +173,11 @@ HTML;
 
 		if (!$nonavbar)
 		{
+
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
+
+			$var['menu_state'] = $navbar_state['menu_state'];
+
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 //			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
