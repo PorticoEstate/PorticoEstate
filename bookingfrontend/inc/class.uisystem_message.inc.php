@@ -37,6 +37,13 @@
 			$system_message['cancel_link'] = self::link(array('menuaction' => $this->module . '.uisearch.index'));
 			$system_message['created'] = $date->format('Y-m-d  H:m');
 
+			$building = CreateObject('booking.sobuilding')->read_single($system_message['building_id']);
+
+			if($building['deactivate_sendmessage'] == 1)
+			{
+				phpgw::no_access();
+			}
+
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
