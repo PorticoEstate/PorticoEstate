@@ -472,6 +472,31 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/Innkassokrav/i", $subject))
+			{
+				$message_cat_id	 = 321; // 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$priority		= 1;
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Purring\/Inkassovarsel/i", $subject))
+			{
+				$message_cat_id	 = 321; // 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 			else if (preg_match("/Mottatt faktura blir ikke behandlet/i", $subject))
 			{
 
