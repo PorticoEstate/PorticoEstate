@@ -267,7 +267,7 @@
 			}
 			else
 			{
-				$metadata = $this->db->metadata('phpgw_preferences');
+//				$metadata = $this->db->metadata('phpgw_preferences');
 				$this->db->query('SELECT * FROM phpgw_preferences WHERE preference_owner IN (-1,-2,'.intval($this->account_id).')',__LINE__,__FILE__);
 
 				$this->forced = $this->default = $this->user = array();
@@ -276,11 +276,11 @@
 					// The following ereg is required for PostgreSQL to work
 					$app = str_replace(' ','',$this->db->f('preference_app'));
 
-					if(!isset($metadata['preference_json']))
-					{
-						$value = unserialize($this->db->f('preference_value'));
-					}
-					else
+//					if(!isset($metadata['preference_json']))
+//					{
+//						$value = unserialize($this->db->f('preference_value'));
+//					}
+//					else
 					{
 						$value = json_decode($this->db->f('preference_json'), true);
 					}
@@ -633,7 +633,7 @@
 				/**
 				 * Temporary
 				 */
-				$metadata = $this->db->metadata('phpgw_preferences');
+//				$metadata = $this->db->metadata('phpgw_preferences');
 
 				foreach($prefs as $app => $value)
 				{
@@ -643,16 +643,16 @@
 					}
 					$this->quote($value);
 
-					if(!isset($metadata['preference_json']))
-					{
-						$value = $this->db->db_addslashes(serialize($value));	// this addslashes is for the database
-						$app = $this->db->db_addslashes($app);
-
-						$this->db->query("INSERT INTO phpgw_preferences".
-								" (preference_owner,preference_app,preference_value)".
-								" VALUES ($account_id,'$app','$value')",__LINE__,__FILE__);
-					}
-					else
+//					if(!isset($metadata['preference_json']))
+//					{
+//						$value = $this->db->db_addslashes(serialize($value));	// this addslashes is for the database
+//						$app = $this->db->db_addslashes($app);
+//
+//						$this->db->query("INSERT INTO phpgw_preferences".
+//								" (preference_owner,preference_app,preference_value)".
+//								" VALUES ($account_id,'$app','$value')",__LINE__,__FILE__);
+//					}
+//					else
 					{
 						$value_set = array
 						(

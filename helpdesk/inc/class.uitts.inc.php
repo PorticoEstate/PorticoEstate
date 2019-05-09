@@ -68,6 +68,7 @@
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
 		protected $lang_app_name;
+		protected $parent_category_name;
 		var $part_of_town_id;
 		var $status;
 		var $filter;
@@ -143,7 +144,9 @@
 
 				if(!empty($parent_category[0]['name']))
 				{
-					$this->lang_app_name .= ": {$parent_category[0]['name']}";
+					$this->parent_category_name = $parent_category[0]['name'];
+					$this->lang_app_name .= ": {$this->parent_category_name}";
+
 				}
 			}
 		}
@@ -1300,7 +1303,8 @@ JS;
 				$data['datatable']['group_buttons'] = false;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->parent_category_name ? $this->parent_category_name : $this->lang_app_name;
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ": {$function_msg}";
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1750,7 +1754,7 @@ JS;
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			$this->_insert_custom_js();
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
 		}
@@ -2643,7 +2647,7 @@ JS;
 			//_debug_array($data);die();
 
 			$function_msg = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg . "#{$id}";
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg . "#{$id}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 

@@ -29,15 +29,13 @@
 			</xsl:when>
 		</xsl:choose>
 	</dl>
+	<div id="message" class='message'/>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
 	</xsl:variable>
 	<form class="pure-form pure-form-aligned"  ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-
-			<div id="message" class='message'/>
-
 			<div id="add">
 				<fieldset>
 					<xsl:for-each select="value_origin">
@@ -308,13 +306,13 @@
 			</xsl:when>
 		</xsl:choose>
 	</dl>
+	<div id="message" class='message'/>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
 	</xsl:variable>
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div id="message" class='message'/>
 			<div id="floating-box">
 				<div id="submitbox">
 					<table width="200px">

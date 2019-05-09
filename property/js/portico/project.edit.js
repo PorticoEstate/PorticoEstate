@@ -459,7 +459,14 @@ window.get_location_exception = function (location_code)
 				var exceptions = data.location_exception;
 				$.each(exceptions, function (k, v)
 				{
-					htmlString += "<div class=\"error\">";
+					if(v.alert_vendor == 1)
+					{
+						htmlString += "<div class=\"error\">";
+					}
+					else
+					{
+						htmlString += "<div class=\"msg_good\">";
+					}
 					htmlString += v.severity + ": " + v.category_text;
 					if(v.location_descr)
 					{
