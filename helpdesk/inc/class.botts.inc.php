@@ -493,11 +493,16 @@
 			{
 				if(in_array('details', $selected_columns))
 				{
-					$ticket['details'] = "#1: {$ticket['details']}";
+					$i = 1;
+					$ticket['details'] = "#{$i}: {$ticket['details']}";
 					$additional_notes = $this->read_additional_notes((int)$ticket['id'] );
 					foreach ($additional_notes as $additional_note)
 					{
-						$ticket['details'] .= "<br/>#{$additional_note['value_count']}: {$additional_note['value_note']}";
+						if($additional_note['value_publish'])
+						{
+							$i++;
+							$ticket['details'] .= "<br/><br/>#$i: {$additional_note['value_note']}";
+						}
 					}
 				}
 
