@@ -472,7 +472,7 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/Innkassokrav/i", $subject))
+			else if (preg_match("/(Innkassokrav|Inkassokrav)/i", $subject))
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-DRIFT_Økonomi
