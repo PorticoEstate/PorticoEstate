@@ -57,7 +57,8 @@
 				return 'Invalid JSON data parameter';
 			}
 
-			$GLOBALS['phpgw']->session->appsession("template_portico_$location", 'phpgwapi', $json);
+			phpgwapi_cache::session_set('phpgwapi', "template_portico_$location", $json);
+//			phpgwapi_cache::user_set('phpgwapi', "template_portico_$location", $json, (int)$GLOBALS['phpgw_info']['user']['account_id']);
 			return $json;
 		}
 
@@ -104,7 +105,8 @@
 		 */
 		public static function retrieve_local($location)
 		{
-			return (array) $GLOBALS['phpgw']->session->appsession("template_portico_{$location}", 'phpgwapi');
+			return (array) phpgwapi_cache::session_get('phpgwapi', "template_portico_$location");
+//			return (array) phpgwapi_cache::user_get('phpgwapi', "template_portico_$location", (int)$GLOBALS['phpgw_info']['user']['account_id']);
 		}
 
 		/******************************************************************************
@@ -121,6 +123,7 @@
 		 */
 		public static function store_local($location, $data)
 		{
-			$GLOBALS['phpgw']->session->appsession("template_portico_$location", 'phpgwapi', $data);
+			phpgwapi_cache::session_set('phpgwapi', "template_portico_$location", $data);
+//			phpgwapi_cache::user_set('phpgwapi', "template_portico_$location", $data, (int)$GLOBALS['phpgw_info']['user']['account_id']);
 		}
 	}
