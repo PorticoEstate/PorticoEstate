@@ -2105,6 +2105,7 @@ JS;
 				if(count($cat_path) > 1)
 				{
 					$this->parent_cat_id = $cat_path[0]['id'];
+					$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_$this->parent_cat_id";
 				}
 			}
 			if(!$ticket)
