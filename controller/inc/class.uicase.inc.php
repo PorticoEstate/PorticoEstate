@@ -270,10 +270,6 @@
 					$location_children = $property_soadmin_entity->get_children( $p_entity_id, $p_cat_id, 0, '' );
 
 					$component_children = array();
-					if($location_children)
-					{
-						$component_children[] = array('id' => '', 'short_description' => lang('select'));
-					}
 					foreach ($location_children as $key => &$location_children_info)
 					{
 						$location_children_info['parent_location_id'] = $parent_location_id;
@@ -288,6 +284,19 @@
 						));
 
 						$component_children = array_merge($component_children, $_component_children);
+					}
+
+					if($component_children)
+					{
+						$short_description = array();
+						foreach ($component_children as $_value)
+						{
+							$short_description[] = $_value['short_description'];
+						}
+
+						array_multisort($short_description, SORT_ASC, $component_children);
+
+						array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 					}
 
 					return array(
@@ -698,7 +707,6 @@
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 				$buildings_on_property = array();
 
-///
 				$system_location_arr = explode('.', $location_info['location']);
 
 				$property_soadmin_entity = createObject('property.soadmin_entity');
@@ -706,10 +714,6 @@
 				$property_soentity = createObject('property.soentity');
 
 				$component_children = array();
-				if($location_children)
-				{
-					$component_children[] = array('id' => '', 'short_description' => lang('select'));
-				}
 				foreach ($location_children as $key => &$location_children_info)
 				{
 					$location_children_info['parent_location_id'] = $location_id;
@@ -725,7 +729,22 @@
 
 					$component_children = array_merge($component_children, $_component_children);
 				}
-//
+
+				if($location_children)
+				{
+					$short_description = array();
+					foreach ($component_children as $_value)
+					{
+						$short_description[] = $_value['short_description'];
+					}
+
+					array_multisort($short_description, SORT_ASC, $component_children);
+
+					array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
+				}
+
+//				_debug_array($component_children);
+
 			}
 			else
 			{

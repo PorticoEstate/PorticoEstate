@@ -279,19 +279,21 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Attachment')" />
 						</label>
-							<div id="attachment-upload">
-								<label for="field_name" class="upload-button">
-									<xsl:value-of select="php:function('lang', 'Upload')" />
-								</label>
-								<span id="field_name_input"></span>
-							</div>
-						<!-- Remove Attachment -->
-						<label>
+						<div id="attachment-upload">
+							<label for="field_name" class="upload-button">
+								<xsl:value-of select="php:function('lang', 'Upload')" />
+							</label>
+							
+						</div>
+						<div id="show-attachment">
+							<span id="field_name_input"></span>
 							<a style="display: none" id="attachment-remove">Fjern Vedlegg</a>
-						</label>
-						<!-- Input -->
-						<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
-						</input>
+							<!-- Input -->
+							<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
+							</input>
+						</div>
+						<!-- Remove Attachment -->
+						
 					</div>
 
 
