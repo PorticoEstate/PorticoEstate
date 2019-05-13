@@ -730,7 +730,7 @@
 					$component_children = array_merge($component_children, $_component_children);
 				}
 
-				if($component_children)
+				if($location_children)
 				{
 					$short_description = array();
 					foreach ($component_children as $_value)
