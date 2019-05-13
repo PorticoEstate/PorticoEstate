@@ -1605,6 +1605,17 @@ NEW APPLICATION PAGE STYLE
     margin-bottom: 100px;
 }
 
+#show-attachment {
+    display: flex;
+    margin: 1rem 0;
+    align-items: center;
+}
+
+#show-attachment a {
+    padding-left: 1rem;
+    font-size: 0.8rem;
+}
+
 .new-application-page hr {
     border-color: #595959;
 }
@@ -1832,12 +1843,6 @@ NEW APPLICATION PAGE STYLE
 
 .new-application-page .form-group .upload-button {
     margin-bottom: 0;
-}
-
-.new-application-page .form-group #field_name_input {
-    margin: auto;
-    display: table;
-    margin: 1rem 0;
 }
 
 .new-application-page .form-group #attachment-remove {
