@@ -545,7 +545,14 @@ HTML;
 					$upload_handler->add_file();
 					break;
 				case 'DELETE':
-					$upload_handler->delete_file();
+					if($this->simple)
+					{
+						$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+					}
+					else
+					{
+						$upload_handler->delete_file();
+					}
 					break;
 				default:
 					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
