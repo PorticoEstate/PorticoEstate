@@ -115,6 +115,25 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_user' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
+				'homepage' => array('type' => 'text', 'nullable' => True),
+				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'customer_number' => array('type' => 'text', 'nullable' => True),
+				'customer_ssn' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_rescategory' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),

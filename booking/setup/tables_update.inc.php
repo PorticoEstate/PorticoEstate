@@ -4003,3 +4003,41 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.43 to 0.2.44
+	 *
+	 */
+	$test[] = '0.2.43';
+	function booking_upgrade0_2_43()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+			$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'bb_user',  array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => false),
+						'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+						'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
+						'homepage' => array('type' => 'text', 'nullable' => True),
+						'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+						'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+						'street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+						'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+						'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+						'customer_number' => array('type' => 'text', 'nullable' => True),
+						'customer_ssn' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True)
+					),
+					'pk' => array('id'),
+					'fk' => array(),
+					'ix' => array(),
+					'uc' => array()
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.44';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
