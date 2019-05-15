@@ -35,7 +35,7 @@
 					'menuaction' => 'bookingfrontend.uiuser.edit'
 				));
 
-				if(!empty($external_login_info['ssn']))
+				if(!empty($external_login_info['ssn']) && $external_login_info['ssn'] == $for_object['customer_ssn'])
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}

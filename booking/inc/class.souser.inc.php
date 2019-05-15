@@ -69,6 +69,19 @@
 
 			$ssn = $this->db->f('customer_ssn');
 
+			$substitute_ssn = '0000' . substr($ssn, 4, 2) . '0000' .( substr($ssn, -1) & 1 );
+
+			/**
+			 * Bit operation
+			 * $num = 9;                // 9 == 8 + 1 == 2^3 + 2^0 == 1001b
+			 * echo (string)($num & 1); // 1001b & 0001b = 0001b - prints '1'
+			 *
+			 * $num = 10;               // 10 == 8 + 2 == 2^3 + 2^1 == 1010b
+			 * echo (string)($num & 1); // 1010b & 0001b = 0000b - prints '0'
+			 *
+			 */
+
+
 			$this->db->transaction_begin();
 
 			$table				 = 'bb_user';
@@ -80,7 +93,7 @@
 				'email'				 => '',
 				'street'			 => '',
 				'customer_number'	 => '',
-				'customer_ssn'		 => '00000000000'
+				'customer_ssn'		 => $substitute_ssn
 			);
 			$value_set_update	 = $this->db->validate_update($dataset);
 			$this->db->query("UPDATE {$table} SET {$value_set_update} WHERE id = " . (int)$id, __LINE__, __FILE__);
@@ -92,7 +105,7 @@
 				'contact_email'		 => 'Anonymisert: ' . date('Ymd'),
 				'contact_phone'		 => '00000000',
 				'secret'			 => $GLOBALS['phpgw']->common->randomstring(32),
-				'customer_ssn'		 => '00000000000',
+				'customer_ssn'		 => $substitute_ssn,
 				'responsible_street' => '',
 			);
 			$value_set_update	 = $this->db->validate_update($dataset);
@@ -104,7 +117,7 @@
 				'contact_name'	 => 'Anonymisert: ' . date('Ymd'),
 				'contact_email'	 => 'Anonymisert: ' . date('Ymd'),
 				'contact_phone'	 => '00000000',
-				'customer_ssn'	 => '00000000000',
+				'customer_ssn'	 => $substitute_ssn,
 				'secret'		 => $GLOBALS['phpgw']->common->randomstring(32),
 			);
 			$value_set_update	 = $this->db->validate_update($dataset);
@@ -112,14 +125,14 @@
 
 			$table				 = 'bb_completed_reservation';
 			$dataset			 = array(
-				'customer_ssn' => '00000000000'
+				'customer_ssn' => $substitute_ssn
 			);
 			$value_set_update	 = $this->db->validate_update($dataset);
 			$this->db->query("UPDATE {$table} SET {$value_set_update} WHERE customer_ssn = '{$ssn}'", __LINE__, __FILE__);
 
 			$table				 = 'bb_contact_person';
 			$dataset			 = array(
-				'ssn'			 => '00000000000',
+				'ssn'			 => $substitute_ssn,
 				'name'			 => 'Anonymisert: ' . date('Ymd'),
 				'homepage'		 => '',
 				'phone'			 => '00000000',
