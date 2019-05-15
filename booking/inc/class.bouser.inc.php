@@ -25,10 +25,7 @@
 			if ($this->current_app() == 'bookingfrontend')
 			{
 
-				/**
-				 * To be moved
-				 */
-				$bouser = CreateObject('booking.uiapplication');
+				$bouser = CreateObject('bookingfrontend.bouser');
 
 				$external_login_info = $bouser->validate_ssn_login( array
 				(

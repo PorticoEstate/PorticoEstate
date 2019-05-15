@@ -30,7 +30,9 @@
 			/**
 			 * check external login - and return here
 			 */
-			$this->validate_ssn_login(
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$bouser->validate_ssn_login(
 				array
 				(
 					'menuaction' => 'bookingfrontend.uiapplication.show',
