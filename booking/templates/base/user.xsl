@@ -87,7 +87,10 @@
 		<button class="pure-button pure-button-primary" onclick="window.location.href='{user/edit_link}'">
 			<xsl:value-of select="php:function('lang', 'Edit')" />
 		</button>
-		<xsl:if test="user/customer_ssn != '00000000000'">
+		<xsl:variable name="ssn_test">
+			<xsl:value-of select="user/customer_ssn"/>
+		</xsl:variable>
+		<xsl:if test="substring ($ssn_test, 1, 4) != '0000'">
 			<button class="pure-button pure-button-primary" onclick="window.location.href='{user/delete_link}'">
 				<xsl:value-of select="php:function('lang', 'Delete')" />
 			</button>

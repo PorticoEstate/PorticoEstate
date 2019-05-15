@@ -69,7 +69,20 @@
 
 			$ssn = $this->db->f('customer_ssn');
 
-			$substitute_ssn = '0000' . substr($ssn, 4, 2) . '0000' .( substr($ssn, -1) & 1 );
+			if(false)
+			{
+				/**
+				 * Include age and gender
+				 */
+				$substitute_ssn = '0000' . substr($ssn, 4, 2) . '0000' .( substr($ssn, -1) & 1 );
+			}
+			else
+			{
+				/**
+				 * Or just gender
+				 */
+				$substitute_ssn = '0000' . '00' . '0000' .( substr($ssn, -1) & 1 );
+			}
 
 			/**
 			 * Bit operation
