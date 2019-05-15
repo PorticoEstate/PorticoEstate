@@ -285,7 +285,6 @@
 				}
 				if (!$errors)
 				{
-					$organization['shortname'] = $_POST['shortname'];
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend")
 					{

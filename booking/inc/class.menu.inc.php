@@ -196,6 +196,12 @@
 						)
 					)
 				),
+				'users' => array
+					(
+					'text' => lang('users'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.index')),
+					'image' => array('property', 'location_tenant'),
+				),
 				// 'costs' => array
 				// (
 				// 	'text'	=> lang('Costs'),
