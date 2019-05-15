@@ -235,4 +235,65 @@
 				return null;
 			}
 		}
+
+
+		/**
+		 * Validate external safe login - and return to me
+		 * @param array $redirect
+		 */
+		public function validate_ssn_login( $redirect = array())
+		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				if(phpgw::get_var('second_redirect', 'bool'))
+				{
+					phpgw::no_access($this->current_app(), 'Du må logge inn via ID-porten');
+				}
+
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
+
+				$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+				$login_parameter = isset($configfrontend['login_parameter']) && $configfrontend['login_parameter'] ? $configfrontend['login_parameter'] : '';
+				$custom_login_url = isset($configfrontend['custom_login_url']) && $configfrontend['custom_login_url'] ? $configfrontend['custom_login_url'] : '';
+				if($custom_login_url && $login_parameter)
+				{
+					if(strpos($custom_login_url, '?'))
+					{
+						$sep = '&';
+					}
+					else
+					{
+						$sep = '?';
+					}
+					$login_parameter = ltrim($login_parameter, '&');
+					$custom_login_url .= "{$sep}{$login_parameter}";
+				}
+
+				if($custom_login_url)
+				{
+					header('Location: ' . $custom_login_url);
+					exit;
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/bookingfrontend/login.php');
+				}
+			}
+
+			return array(
+				'ssn'	=> $ssn,
+				'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
+				'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
+				);
+		}
+
 	}
