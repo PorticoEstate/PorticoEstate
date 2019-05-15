@@ -287,14 +287,14 @@
 								<xsl:value-of select="application/customer_organization_number"/>
 							</dd>
 						</xsl:if>
-						<xsl:if test="application/customer_identifier_type = 'ssn'">
+<!--						<xsl:if test="application/customer_identifier_type = 'ssn'">
 							<dt>
 								<xsl:value-of select="php:function('lang', 'SSN')" />
 							</dt>
 							<dd>
 								<xsl:value-of select="application/customer_ssn"/>
 							</dd>
-						</xsl:if>
+						</xsl:if>-->
 					</dl>
 				</div>
 				<div class="col-12 mt-4">

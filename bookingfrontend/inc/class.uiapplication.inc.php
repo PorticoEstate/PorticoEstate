@@ -30,7 +30,9 @@
 			/**
 			 * check external login - and return here
 			 */
-			$this->validate_ssn_login(
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$bouser->validate_ssn_login(
 				array
 				(
 					'menuaction' => 'bookingfrontend.uiapplication.show',
@@ -161,16 +163,12 @@
 
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			$application_text = $config->config_data;
-
 			self::render_template_xsl('application', array(
 				'application' => $application,
 				'audience' => $audience,
 				'agegroups' => $agegroups,
 				'frontend' => 'true',
-				'config' => $application_text
+				'config' => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
 		}
