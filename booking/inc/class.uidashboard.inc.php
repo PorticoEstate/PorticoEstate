@@ -192,7 +192,7 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('filters' => array(
+				$application['resources'] = $this->resource_bo->so->read(array('results' => -1, 'filters' => array(
 						'id' => $application['resources'])));
 				$application['resources'] = $application['resources']['results'];
 				if ($application['resources'])

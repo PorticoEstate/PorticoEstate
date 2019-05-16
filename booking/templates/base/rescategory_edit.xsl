@@ -80,7 +80,8 @@
 		initialSelection = <xsl:value-of select="rescategory/activities_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
 	    <![CDATA[
-            var activitiesURL    = 'index.php?menuaction=booking.uiactivity.index&filter_top_level=1&sort=name&phpgw_return_as=json';
+//			var activitiesURL    = 'index.php?menuaction=booking.uiactivity.index&filter_top_level=1&sort=name&phpgw_return_as=json';
+			var activitiesURL = phpGWLink('index.php', {menuaction:'booking.uiactivity.index', sort:'name',filter_top_level: 1,  length:-1}, true);
 	        ]]>
 		var colDefsRespurces = [
 			{label: '', object: [

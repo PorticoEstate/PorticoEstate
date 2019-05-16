@@ -610,7 +610,7 @@
 			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
 			$results = isset($params['results']) && $params['results'] ? $params['results'] : $maxmatchs;
 
-			if($results == -1 || $results ==='all')
+			if($results == -1 || $results ==='all' || (!empty($params['length']) && $params['length'] == -1))
 			{
 				$results = null;
 			}

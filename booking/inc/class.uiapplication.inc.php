@@ -462,7 +462,7 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('filters' => array(
+				$application['resources'] = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
 						'id' => $application['resources'])));
 				$application['resources'] = $application['resources']['results'];
 				if ($application['resources'])
@@ -1314,7 +1314,7 @@
 
 					if ($application['status'] == 'REJECTED')
 					{
-						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
+						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']), 'results' =>'all'));
 						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_inactive($app['id'], $app['type']);
@@ -1323,7 +1323,7 @@
 
 					if ($application['status'] == 'ACCEPTED')
 					{
-						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
+						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']), 'results' =>'all'));
 						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_active($app['id'], $app['type']);
@@ -1338,7 +1338,7 @@
 					/** Start attachment * */
 					$document_application = createObject('booking.uidocument_application');
 
-					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id'])));
+					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id']), 'results' =>'all'));
 					$files = $this->get_files();
 					$file_exist = false;
 
@@ -1435,7 +1435,8 @@
 			$audience = $audience['results'];
 			// Check if any bookings, allocations or events are associated with this application
 			$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
-				'sort' => 'from_', 'dir' => 'asc'));
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
 			$from = array();
 			foreach ($associations['results'] as $assoc)
 			{
@@ -1513,7 +1514,8 @@
 					$item['dates']         = $partial['dates'];
 					$resources = $this->resource_bo->so->read(array(
 							'sort'    => 'sort',
-							'filters' => array('id' => $partial['resources'])
+							'results' =>'all',
+							'filters' => array('id' => $partial['resources']), 'results' =>'all'
 						));
 					foreach ($resources['results'] as $resource)
 					{

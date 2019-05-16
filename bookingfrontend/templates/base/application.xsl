@@ -325,10 +325,10 @@
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
         <![CDATA[
-            var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name'}, true) +'&' + resourceIds;
-            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_view.regulations', sort:'name'}, true) + '&owner[]=building::' + building_id;
+            var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json', sort:'name', length:-1}, true) +'&' + resourceIds;
+            var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_view.regulations', sort:'name', length:-1}, true) + '&owner[]=building::' + building_id;
                 documentURL += '&owner[]=resource::'+ resources;
-			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, filter_secret: secret}, true);
+			var attachmentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, filter_secret: secret, length:-1}, true);
         ]]>
 		if (resourceIds)
 		{

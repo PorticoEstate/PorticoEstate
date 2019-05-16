@@ -282,7 +282,8 @@ function populateTableChkResources(building_id, selection)
 		menuaction: 'bookingfrontend.uiresource.index_json',
 		sort: 'name',
 //		sub_activity_id: $("#field_activity").val(),
-		filter_building_id: building_id
+		filter_building_id: building_id,
+		length:-1
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 	var container = 'resources_container';
@@ -296,7 +297,7 @@ function populateTableChkResources(building_id, selection)
 
 function populateTableChkRegulations(building_id, selection, resources)
 {
-    var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uidocument_view.regulations', sort: 'name'}, true) + '&owner[]=building::' + building_id;
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uidocument_view.regulations', sort: 'name', length:-1}, true) + '&owner[]=building::' + building_id;
 	for (var r in resources)
 	{
 		url += '&owner[]=resource::' + resources[r];

@@ -196,9 +196,16 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
 	
     <![CDATA[
-        var resourcesURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
-        var documentsURL     = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
-        var permissionsURL   = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
+    //    var resourcesURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+    //    var documentsURL     = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
+    //    var permissionsURL   = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
+
+		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name',filter_building_id:building_id, length:-1}, true);
+		var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_building.index', sort:'name',filter_owner_id: building_id,  length:-1}, true);
+		var permissionsURL = phpGWLink('index.php', {menuaction:'booking.uipermission_building.index', sort:'name',filter_object_i: building_id, length:-1}, true);
+
+
+
         ]]>
 		var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];

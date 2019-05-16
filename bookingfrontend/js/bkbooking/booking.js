@@ -148,7 +148,7 @@ function populateTableChk(url, container, colDefs)
 
 function populateTableChkResources(building_id, selection)
 {
-	var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: building_id}, true);
+	var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: building_id, length:-1}, true);
 	var container = "resources_container";
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}

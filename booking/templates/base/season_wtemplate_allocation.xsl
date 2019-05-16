@@ -148,7 +148,9 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Account', 'Role', 'Actions', 'Edit', 'Delete', 'Resource Type')"/>;
                 
     <![CDATA[
-        var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+ //       var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) + '&' + resourceIds;
+
     ]]>
 		var selection = <xsl:value-of select="season/resource_selected"/>;
 		var colDefsRespurces = [

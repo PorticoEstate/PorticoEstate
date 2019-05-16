@@ -90,9 +90,13 @@
 		var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Account', 'Role', 'Actions', 'Edit', 'Delete', 'Resource Type')"/>;
 	    <![CDATA[
-            var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-            var permissionsURL   = 'index.php?menuaction=booking.uipermission_season.index&sort=name&filter_object_id=' + season_id + '&phpgw_return_as=json&';
-	        ]]>
+ //           var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+ //           var permissionsURL   = 'index.php?menuaction=booking.uipermission_season.index&sort=name&filter_object_id=' + season_id + '&phpgw_return_as=json&';
+
+			var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) + '&' + resourceIds;
+			var permissionsURL = phpGWLink('index.php', {menuaction:'booking.uipermission_season.index', sort:'name', filter_object_id: season_id, length:-1}, true);
+
+	    ]]>
 		var colDefsRespurces = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},
 		{key: 'type', label: lang['Resource Type']}
