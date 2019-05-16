@@ -99,7 +99,7 @@
 			{
 				$groups = new booking_sogroup();
 			}
-			$results = $groups->read(array("filters" => array("organization_id" => $organization_id)));
+			$results = $groups->read(array('results' => -1, "filters" => array("organization_id" => $organization_id)));
 			return $results;
 		}
 
@@ -188,6 +188,10 @@
 			if (!isset($params['filters']))
 			{
 				$params['filters'] = array();
+			}
+			if (!isset($params['results']))
+			{
+				$params['results'] = -1;
 			}
 			if (!isset($params['filters']['where']))
 			{

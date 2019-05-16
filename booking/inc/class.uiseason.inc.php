@@ -129,6 +129,7 @@
 				$resources = $this->resource_bo->read_single($season['id']);
 				if (isset($season['resources']))
 				{
+					$filters['results'] = -1;
 					$filters['filters']['id'] = $season['resources'];
 					$resources = $this->resource_bo->so->read($filters);
 					$temparray = array();

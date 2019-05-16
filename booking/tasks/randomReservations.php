@@ -35,6 +35,7 @@
 		$resource_so = CreateObject('booking.soresource');
 
 		$resources = $resource_so->read(array(
+			'results' =>'all',
 			'filters' => array(
 				'building_id' => $options['building_id'],
 				'active' => 1,
@@ -56,12 +57,14 @@
 
 		$groups_so = CreateObject('booking.sogroup');
 		$groups = $groups_so->read(array(
+			'results' =>'all',
 			'filters' => array('active' => '1')
 		));
 		$options['groups'] = $groups['results'];
 
 		$org_so = CreateObject('booking.soorganization');
 		$organizations = $org_so->read(array(
+			'results' =>'all',
 			'filters' => array('active' => '1')
 		));
 		$options['organizations'] = $organizations['results'];
