@@ -239,6 +239,8 @@ $(document).ready(function ()
 		var content = $("#organsation_select select").html();
 		$("#organsation_select").remove();
 		$(".navbar-organization-select").append('<select id="session_org_id" name="session_org_id">' + content + '</select>');
+		$(".navbar-organization-select").addClass("dropdown");
+		$("#session_org_id").attr("class", "btn btn-secondary dropdown-toggle d-inline");
 	}
 });
 
