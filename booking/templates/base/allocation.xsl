@@ -68,7 +68,9 @@
 		var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
     <![CDATA[
-        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+//        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
+		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;
+
     ]]>
 		var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink()}, {key: 'type', label: lang['Resource Type']}];
 		createTable('resources_container',resourcesURL,colDefs, 'data', 'pure-table pure-table-bordered');

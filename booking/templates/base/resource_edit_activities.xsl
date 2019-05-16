@@ -51,7 +51,9 @@
 		var parent_id = <xsl:value-of select="resource/activity_id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
 	    <![CDATA[
-            var activitiesURL    = 'index.php?menuaction=booking.uiactivity.index&parent_id=' + parent_id + '&sort=name&phpgw_return_as=json';
+ //           var activitiesURL    = 'index.php?menuaction=booking.uiactivity.index&parent_id=' + parent_id + '&sort=name&phpgw_return_as=json';
+			var activitiesURL = phpGWLink('index.php', {menuaction:'booking.uiactivity.index', sort:'name',parent_id: parent_id, length:-1}, true);
+
 	        ]]>
 		var colDefsRespurces = [
 			{label: '', object: [

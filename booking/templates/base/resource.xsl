@@ -181,8 +181,8 @@
 		var resource_id = <xsl:value-of select="resource/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Edit', 'Delete', 'Account', 'Role', 'No records found')"/>;
 
-        var documentsURL = phpGWLink('/index.php', {menuaction:'booking.uidocument_resource.index', sort:'name', filter_owner_id:resource_id}, true);
-        var permissionsURL = phpGWLink('/index.php', {menuaction: 'booking.uipermission_resource.index', sort:'name', filter_object_id :resource_id }, true);
+        var documentsURL = phpGWLink('/index.php', {menuaction:'booking.uidocument_resource.index', sort:'name', filter_owner_id:resource_id, length:-1}, true);
+        var permissionsURL = phpGWLink('/index.php', {menuaction: 'booking.uipermission_resource.index', sort:'name', filter_object_id :resource_id, length:-1}, true);
 
 		var colDefsDocuments = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},

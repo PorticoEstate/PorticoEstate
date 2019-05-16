@@ -169,7 +169,9 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
 
     <![CDATA[
-        var documentsURL     = 'index.php?menuaction=booking.uidocument_organization.index&sort=name&filter_owner_id=' + organization_id + '&phpgw_return_as=json&';
+//        var documentsURL     = 'index.php?menuaction=booking.uidocument_organization.index&sort=name&filter_owner_id=' + organization_id + '&phpgw_return_as=json&';
+		var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_organization.index', sort:'name',filter_owner_id: organization_id,  length:-1}, true);
+
         ]]>
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
 
