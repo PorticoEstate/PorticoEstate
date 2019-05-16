@@ -175,13 +175,16 @@
 
 			}
 
-			$test_organization = $this->config->config_data['test_organization'];
-			if ($this->debug && $test_organization)
+			$test_organizations = (array)explode(',', $this->config->config_data['test_organization']);
+			if ($this->debug && $test_organizations)
 			{
-				$results[] = array
-				(
-					'orgnr' => $test_organization
-				);
+				foreach ($test_organizations as $test_organization)
+				{
+					$results[] = array
+					(
+						'orgnr' => $test_organization
+					);					
+				}
 			}
 
 			return $results;
