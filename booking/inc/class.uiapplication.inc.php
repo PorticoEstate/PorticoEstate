@@ -1435,7 +1435,8 @@
 			$audience = $audience['results'];
 			// Check if any bookings, allocations or events are associated with this application
 			$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
-				'sort' => 'from_', 'dir' => 'asc'));
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
 			$from = array();
 			foreach ($associations['results'] as $assoc)
 			{
