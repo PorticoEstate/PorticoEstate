@@ -904,17 +904,13 @@
 			else
 			{
 				self::add_javascript('bookingfrontend', 'base', 'application.js');
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
 
 			self::adddatetimepicker();
-
-			/**
-			 * This one is for bookingfrontend
-			 */
-			self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
