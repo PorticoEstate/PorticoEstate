@@ -1131,6 +1131,9 @@
 				}
 			}
 
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($application['dates'][0]['from_']) ? strtotime($application['dates'][0]['from_']) : 0);
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', !empty($application['dates'][0]['to_']) ? strtotime($application['dates'][0]['to_']) : 0);
+
 			foreach ($application['dates'] as &$date)
 			{
 				$date['from_'] = pretty_timestamp($date['from_']);
@@ -1157,8 +1160,6 @@
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 			//test
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 
 

@@ -5,7 +5,10 @@ $(document).ready(function ()
 {
 	$("#start_date").change(function ()
 	{
-		$("#end_date").val($("#start_date").val());
+		if(!$("#end_date").val())
+		{
+			$("#end_date").val($("#start_date").val());
+		}
 	});
 
 
