@@ -477,7 +477,7 @@
 
 			$_filter_building['id'] = array_merge(array(-1), $resource['buildings']);
 
-			$bui_result = $this->sobuilding->read(array("sort" => "name", "dir" => "asc",
+			$bui_result = $this->sobuilding->read(array('results' => -1, "sort" => "name", "dir" => "asc",
 				"filters" => $_filter_building));
 
 			return $this->jquery_results($bui_result);
@@ -549,7 +549,7 @@
 
 			$_filter_building['id'] = array_merge(array(-1), $resource['buildings']);
 
-			$bui_result = $this->sobuilding->read(array("sort" => "name", "dir" => "asc",
+			$bui_result = $this->sobuilding->read(array('results' => -1, "sort" => "name", "dir" => "asc",
 				"filters" => $_filter_building));
 
 			// Create text strings for the activity and facility lists

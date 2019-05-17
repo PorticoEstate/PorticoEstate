@@ -462,7 +462,7 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('filters' => array(
+				$application['resources'] = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
 						'id' => $application['resources'])));
 				$application['resources'] = $application['resources']['results'];
 				if ($application['resources'])
@@ -904,17 +904,13 @@
 			else
 			{
 				self::add_javascript('bookingfrontend', 'base', 'application.js');
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
 
 			self::adddatetimepicker();
-
-			/**
-			 * This one is for bookingfrontend
-			 */
-			self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 
 			self::render_template_xsl('application_new', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
@@ -1131,6 +1127,9 @@
 				}
 			}
 
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($application['dates'][0]['from_']) ? strtotime($application['dates'][0]['from_']) : 0);
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', !empty($application['dates'][0]['to_']) ? strtotime($application['dates'][0]['to_']) : 0);
+
 			foreach ($application['dates'] as &$date)
 			{
 				$date['from_'] = pretty_timestamp($date['from_']);
@@ -1157,8 +1156,6 @@
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 			//test
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 
 
@@ -1314,7 +1311,7 @@
 
 					if ($application['status'] == 'REJECTED')
 					{
-						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
+						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']), 'results' =>'all'));
 						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_inactive($app['id'], $app['type']);
@@ -1323,7 +1320,7 @@
 
 					if ($application['status'] == 'ACCEPTED')
 					{
-						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id'])));
+						$test = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']), 'results' =>'all'));
 						foreach ($test['results'] as $app)
 						{
 							$this->bo->so->set_active($app['id'], $app['type']);
@@ -1338,7 +1335,7 @@
 					/** Start attachment * */
 					$document_application = createObject('booking.uidocument_application');
 
-					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id'])));
+					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id']), 'results' =>'all'));
 					$files = $this->get_files();
 					$file_exist = false;
 
@@ -1435,7 +1432,8 @@
 			$audience = $audience['results'];
 			// Check if any bookings, allocations or events are associated with this application
 			$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
-				'sort' => 'from_', 'dir' => 'asc'));
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
 			$from = array();
 			foreach ($associations['results'] as $assoc)
 			{
@@ -1513,7 +1511,8 @@
 					$item['dates']         = $partial['dates'];
 					$resources = $this->resource_bo->so->read(array(
 							'sort'    => 'sort',
-							'filters' => array('id' => $partial['resources'])
+							'results' =>'all',
+							'filters' => array('id' => $partial['resources']), 'results' =>'all'
 						));
 					foreach ($resources['results'] as $resource)
 					{

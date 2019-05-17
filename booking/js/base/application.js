@@ -5,7 +5,16 @@ $(document).ready(function ()
 {
 	$("#start_date").change(function ()
 	{
-		$("#end_date").val($("#start_date").val());
+//		if(!$("#end_date").val())
+		{
+			var temp_start_date =   $( "#start_date" ).datetimepicker('getValue');
+//			console.log(temp_start_date);
+			$("#end_date").val($("#start_date").val());
+
+			$('#end_date').datetimepicker('setOptions', {
+				startDate: new Date(temp_start_date)
+			});
+		}
 	});
 
 
@@ -284,7 +293,8 @@ function populateTableChkResources(building_id, selection)
 		menuaction: 'bookingfrontend.uiresource.index_json',
 		sort: 'name',
 //		sub_activity_id: $("#field_activity").val(),
-		filter_building_id: building_id
+		filter_building_id: building_id,
+		length: -1
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 	var container = 'resources_container';

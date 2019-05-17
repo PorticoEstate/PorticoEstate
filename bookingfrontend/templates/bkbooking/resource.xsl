@@ -87,8 +87,8 @@
 		var address = '<xsl:value-of select="resource/building/street"/>, <xsl:value-of select="resource/building/zip_code"/>, <xsl:value-of select="resource/building/city"/>';
 
         <![CDATA[
-        var documentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_resource.index', sort:'name', no_images:1, filter_owner_id:resource_id}, true);
-        var documentsResourceImagesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_resource.index_images', sort:'name', filter_owner_id:resource_id}, true);
+        var documentsResourceURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_resource.index', sort:'name', no_images:1, filter_owner_id:resource_id, length:-1}, true);
+        var documentsResourceImagesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_resource.index_images', sort:'name', filter_owner_id:resource_id, length:-1}, true);
         var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
         var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
          ]]>

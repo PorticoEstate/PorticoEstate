@@ -113,7 +113,7 @@
 			{
 				$wday = $date->format('N');
 				$tallocations = $this->so_wtemplate_alloc->read(array('filters' => array('season_id' => $season_id,
-						'wday' => $wday), 'sort' => 'from_'));
+						'wday' => $wday), 'sort' => 'from_', 'results' =>'all'));
 				foreach ($tallocations['results'] as $talloc)
 				{
 
@@ -193,7 +193,7 @@
 		function get_boundaries( $season_id )
 		{
 			return $this->so_boundary->read(array('filters' => array('season_id' => $season_id),
-					'sort' => 'wday,from_', 'dir' => 'asc'));
+					'sort' => 'wday,from_', 'dir' => 'asc', 'results' =>'all'));
 		}
 
 		function add_wtemplate_alloc( $alloc )
@@ -231,7 +231,7 @@
 		{
 			$season = $this->read_single($season_id);
 			$allocations = $this->so_wtemplate_alloc->read(array('filters' => array('season_id' => $season_id),
-				'sort' => 'wday,from_'));
+				'sort' => 'wday,from_', 'length' => -1));
 			$allocations = $allocations['results'];
 			foreach ($allocations as &$alloc)
 			{
@@ -239,7 +239,7 @@
 				$alloc['from_'] = substr($alloc['from_'], 0, 5);
 				$alloc['to_'] = substr($alloc['to_'], 0, 5);
 			}
-			$resources = $this->so_resource->read(array('filters' => array('id' => $season['resources'])));
+			$resources = $this->so_resource->read(array('filters' => array('id' => $season['resources']), 'length' => -1));
 			$resources = $resources['results'];
 			//$bookings = $this->_split_multi_day_bookings($bookings, $from, $to);
 			$results = build_schedule_table($allocations, $resources);

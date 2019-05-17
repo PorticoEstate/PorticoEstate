@@ -92,7 +92,8 @@
 		var resource_ids = <xsl:value-of select="season/resources_json"/>;
 		var r = [{n: 'ResultSet'},{n: 'Result'}];
         <![CDATA[
-	var weekUrl = 'index.php?menuaction=booking.uiseason.wtemplate_json&id=' + season_id + '&phpgw_return_as=json&';
+//			var weekUrl = 'index.php?menuaction=booking.uiseason.wtemplate_json&id=' + season_id + '&phpgw_return_as=json&';
+			var weekUrl = phpGWLink('index.php', {menuaction:'booking.uiseason.wtemplate_json', id:season_id}, true);
         ]]>
 		var colDefs = [];
 		$(window).on('load', function() {

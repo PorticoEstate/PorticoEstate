@@ -101,7 +101,7 @@
 			{
 				if (!$this->collection_roles)
 				{
-					$roles = $this->sopermission->read(array('filters' => array('subject_id' => $this->current_account_id())));
+					$roles = $this->sopermission->read(array('results' =>'all', 'filters' => array('subject_id' => $this->current_account_id())));
 					$roles = $initial_roles + ($roles['total_records'] > 0 ? $roles['results'] : array());
 					$roles[] = $default_role;
 					$this->collection_roles = $roles;
@@ -138,7 +138,7 @@
 					if (isset($for_object['id']))
 					{
 						//An id = Edit or read existing object, a candidate for subject object roles.
-						$roles = $this->sopermission->read(array('filters' => array('object_id' => $for_object['id'],
+						$roles = $this->sopermission->read(array('results' =>'all', 'filters' => array('object_id' => $for_object['id'],
 								'subject_id' => $this->current_account_id())));
 						$roles = $initial_roles + ($roles['total_records'] > 0 ? $roles['results'] : array());
 					}
@@ -188,7 +188,7 @@
 		{
 			if (is_null($this->subject_global_roles))
 			{
-				$result = CreateObject('booking.sopermission_root')->read(array('filters' => array(
+				$result = CreateObject('booking.sopermission_root')->read(array('results' =>'all', 'filters' => array(
 						'subject_id' => $this->current_account_id())));
 				$this->subject_global_roles = $result['total_records'] > 0 ? $result['results'] : array();
 			}
