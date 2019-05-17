@@ -28,6 +28,6 @@
 				$filters['activity_id'] = $top_level_activity;
 			}
 
-			return $this->so->read(array('filters' => $filters, 'sort' => 'sort'));
+			return $this->so->read(array('filters' => $filters, 'sort' => 'sort', 'length'=> -1));
 		}
 	}

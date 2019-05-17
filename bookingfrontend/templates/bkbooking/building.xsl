@@ -141,10 +141,10 @@
 				var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
 				var address = '<xsl:value-of select="street"/>, <xsl:value-of select="zip_code"/>, <xsl:value-of select="city"/>';
 				<![CDATA[
-                var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json',sort:'name', filter_building_id:building_id}, true);
-                var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index', sort:'name', no_images:1, filter_owner_id:building_id}, true);
-                var building_usersURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiorganization.building_users', sort:'name', building_id:building_id}, true);
-                var document_buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index_images', sort:'name', filter_owner_id:building_id}, true);
+                var resourcesURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiresource.index_json',sort:'name', filter_building_id:building_id, length:-1}, true);
+                var documentURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index', sort:'name', no_images:1, filter_owner_id:building_id, length:-1}, true);
+                var building_usersURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uiorganization.building_users', sort:'name', building_id:building_id}, true, length:-1);
+                var document_buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_building.index_images', sort:'name', filter_owner_id:building_id, length:-1}, true);
 				var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
 				var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
                 ]]>

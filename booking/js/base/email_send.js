@@ -51,7 +51,8 @@ if ($.formUtils)
 
 function populateTableChkSeasons(building_id, selection)
 {
-	var url = 'index.php?menuaction=booking.uiseason.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
+	var url = phpGWLink('index.php', {menuaction: 'booking.uiseason.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
+
 	var container = 'season_container';
 	var colDefsSeasons = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'seasons[]'}

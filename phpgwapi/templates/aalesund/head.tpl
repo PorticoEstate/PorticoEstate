@@ -45,6 +45,7 @@
 					</ul>
 				</div>
 			</div>
+            <div class="navbar-organization-select"/>
 		</nav>
 		<div class="overlay">
             <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>

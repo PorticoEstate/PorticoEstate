@@ -301,7 +301,7 @@
 						$application = createObject('booking.boapplication')->read_single($application_id);
 						if($organization_number = $application['customer_organization_number'])
 						{
-							$organizations = createObject('booking.soorganization')->read(array('filters' => array('organization_number' => $organization_number,
+							$organizations = createObject('booking.soorganization')->read(array('results' => -1, 'filters' => array('organization_number' => $organization_number,
 								'active' => 1)));
 
 							$_POST['organization_id'] = $organizations['results'][0]['id'];
@@ -310,7 +310,6 @@
 					}
 
 				}
-
 
 				$allocation = extract_values($_POST, $this->fields);
 				if ($_POST['cost'])
@@ -808,7 +807,7 @@
 		{
 			$allocation = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $allocation['resources']),
-				'sort' => 'name'));
+				'sort' => 'name','results' => -1));
 			$allocation['resources'] = $resources['results'];
 			$res_names = array();
 			foreach ($allocation['resources'] as $res)

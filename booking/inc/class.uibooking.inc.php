@@ -403,7 +403,7 @@
 					$application = createObject('booking.boapplication')->read_single($application_id);
 					if($organization_number = $application['customer_organization_number'])
 					{
-						$organizations = createObject('booking.soorganization')->read(array('filters' => array('organization_number' => $organization_number,
+						$organizations = createObject('booking.soorganization')->read(array('results' => -1, 'filters' => array('organization_number' => $organization_number,
 							'active' => 1)));
 
 						$_POST['organization_id'] = $organizations['results'][0]['id'];
@@ -628,11 +628,11 @@
 			$audience = $audience['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
 
-			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $allocation['organization_id'],
+			$groups = $this->group_bo->so->read(array('results' => -1, 'filters' => array('organization_id' => $allocation['organization_id'],
 					'active' => 1)));
 			$groups = $groups['results'];
 
-			$resouces_full = $this->resource_bo->so->read(array('filters' => array('id' => $booking['resources']),
+			$resouces_full = $this->resource_bo->so->read(array('results' => -1, 'filters' => array('id' => $booking['resources']),
 				'sort' => 'name'));
 
 			$tabs = array();
@@ -1014,7 +1014,7 @@
 		{
 			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
-			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $booking['resources']),
+			$resources = $this->resource_bo->so->read(array('results' => -1, 'filters' => array('id' => $booking['resources']),
 				'sort' => 'name'));
 			$booking['resources'] = $resources['results'];
 			$res_names = array();

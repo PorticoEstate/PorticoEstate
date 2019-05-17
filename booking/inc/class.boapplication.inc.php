@@ -60,7 +60,7 @@
 				// Check if any bookings, allocations or events are associated with this application
 				$assoc_bo = new booking_boapplication_association();
 				$associations = $assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
-					'sort' => 'from_', 'dir' => 'asc'));
+					'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
 				$_adates = array();
 
 				foreach ($associations['results'] as $assoc)
@@ -342,7 +342,7 @@ HTML;
 			if (!empty($session_id))
 			{
 				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
-				$params = array('filters' => $filters);
+				$params = array('filters' => $filters, 'results' =>'all');
 				$applications = $this->so->read($params);
 				$list = $applications;
 			}

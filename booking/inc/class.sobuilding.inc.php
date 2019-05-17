@@ -106,6 +106,7 @@
 				'JOIN bb_allocation a ON a.id = ar.allocation_id AND (a.from_ - \'now\'::timestamp < \'300 days\') AND a.organization_id = ' . $this->_marshal($organization_id, 'int') . ' ' .
 				')';
 
+			$params['length'] = -1;
 			return $this->read($params);
 		}
 

@@ -184,10 +184,10 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 
             <![CDATA[
-            var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id}, true);
-            var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1'},true);
-            var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id}, true);
-            var document_organizationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index_images', sort:'name', filter_owner_id:organization_id}, true);
+            var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id, length:-1}, true);
+            var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1', length:-1},true);
+            var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id, length:-1}, true);
+            var document_organizationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index_images', sort:'name', filter_owner_id:organization_id, length:-1}, true);
             ]]>
 
 		var rBuilding = [{n: 'ResultSet'},{n: 'Result'}];
