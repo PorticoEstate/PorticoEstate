@@ -245,3 +245,6 @@ category assignment	helpdesk	nn	Tildeling pr kategori
 category assignment has been saved	helpdesk	nn	Tildeling pr kategori er lagra
 external origin email	helpdesk	nn	Ekstern avsendar
 on behalf of	helpdesk	nn	På vegne av
+category respond messages	helpdesk	nn	Tilbakemeldinger pr kategori
+category respond messages has been saved	helpdesk	nn	Tilbakemeldinger pr kategori er lagra
+include content	helpdesk	nn	Inkluder innhold frå saka

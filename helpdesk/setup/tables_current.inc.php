@@ -273,5 +273,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'phpgw_helpdesk_cat_respond_messages' => array(
+			'fd' => array(
+				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'include_content' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'new_message' => array('type' => 'text', 'nullable' => true),
+				'set_user_message' => array('type' => 'text', 'nullable' => true),
+				'update_message' => array('type' => 'text', 'nullable' => true),
+				'close_message' => array('type' => 'text', 'nullable' => true),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('cat_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 	);
