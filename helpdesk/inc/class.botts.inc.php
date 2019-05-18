@@ -422,6 +422,18 @@
 			return $category[0]['name'];
 		}
 
+		function get_category_path($cat_id)
+		{
+			$path_array = $this->cats->get_path($cat_id);
+
+			$path = array();
+			foreach ($path_array as $entry)
+			{
+				$path[] = $entry['name'];
+			}
+
+			return implode('::', $path);
+		}
 
 		function get_origin_entity_type()
 		{
@@ -710,6 +722,7 @@
 
 			foreach ($history_array as $value)
 			{
+				$record_history[$i]['value_id']	= $i+1;
 				$record_history[$i]['value_date']	= $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user']	= $value['owner'];
 
@@ -774,8 +787,8 @@
 				}
 				else if ($value['status'] == 'T')
 				{
-					$record_history[$i]['value_new_value']	= $this->get_category_name($value['new_value']);
-					$record_history[$i]['value_old_value']	= $this->get_category_name($value['old_value']);
+					$record_history[$i]['value_new_value']	= $this->get_category_path($value['new_value']);
+					$record_history[$i]['value_old_value']	= $this->get_category_path($value['old_value']);
 				}
 				else if ($value['status'] == 'FW')
 				{
