@@ -2261,7 +2261,10 @@ JS;
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
 				'requestUrl' => "''",
-				'ColumnDefs' => array(array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true,
+				'ColumnDefs' => array(
+					array('key' => 'value_id', 'label' => '#', 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 					array('key' => 'value_action', 'label' => lang('Action'), 'sortable' => true,
@@ -2273,7 +2276,8 @@ JS;
 				'data' => json_encode($record_history),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0,'asc')))
 				)
 			);
 
