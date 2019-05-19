@@ -1245,7 +1245,7 @@
 			$body .= '</table>';
 
 
-			if($get_message || $cat_respond_messages[$category_parent]['include_content'])
+			if($get_message || !empty($cat_respond_messages[$category_parent]['include_content']))
 			{
 				$i = 1;
 				$lang_date = lang('date');
