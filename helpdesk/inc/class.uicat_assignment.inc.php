@@ -47,7 +47,7 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu("helpdesk::admin::cat_assignment");
+			self::set_active_menu("admin::helpdesk::cat_assignment");
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('category assignment');
 

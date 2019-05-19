@@ -47,7 +47,7 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu("helpdesk::admin::cat_respond_messages");
+			self::set_active_menu("admin::helpdesk::cat_respond_messages");
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('category respond messages');
 
