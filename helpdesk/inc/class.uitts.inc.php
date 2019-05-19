@@ -2085,6 +2085,22 @@ JS;
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
 
+				if(!empty($receipt['error']))
+				{
+					foreach ($receipt['error'] as $error)
+					{
+						phpgwapi_cache::message_set($error['msg'], 'error');
+					}
+				}
+
+				if(!empty($receipt['message']))
+				{
+					foreach ($receipt['message'] as $message)
+					{
+						phpgwapi_cache::message_set($message['msg']);
+					}
+				}
+
 				self::redirect(array('menuaction' => 'helpdesk.uitts.view','id' => $id,
 					'parent_cat_id' => $this->parent_cat_id ));
 

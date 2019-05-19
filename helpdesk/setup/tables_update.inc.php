@@ -439,3 +439,34 @@
 		}
 	}
 
+	$test[] = '0.9.18.010';
+	function helpdesk_upgrade0_9_18_010()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_cat_respond_messages', array(
+				'fd' => array(
+					'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'include_content' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+					'new_message' => array('type' => 'text', 'nullable' => true),
+					'set_user_message' => array('type' => 'text', 'nullable' => true),
+					'update_message' => array('type' => 'text', 'nullable' => true),
+					'close_message' => array('type' => 'text', 'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('cat_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.011';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
+
