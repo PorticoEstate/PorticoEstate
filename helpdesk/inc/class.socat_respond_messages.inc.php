@@ -31,7 +31,7 @@
 	 * @package property
 	 */
 
-	class helpdesk_socat_assignment
+	class helpdesk_socat_respond_messages
 	{
 
 		private $db, $like, $join, $left_join, $account;
@@ -50,16 +50,18 @@
 		{
 			$this->db->transaction_begin();
 
-			$this->db->query('DELETE FROM phpgw_helpdesk_cat_assignment',__LINE__,__FILE__);
+			$this->db->query('DELETE FROM phpgw_helpdesk_cat_respond_messages',__LINE__,__FILE__);
 
-			$sql = 'INSERT INTO phpgw_helpdesk_cat_assignment (cat_id, group_id, created_on, created_by)'
-				. ' VALUES(?, ?, ?, ?)';
+			$sql = 'INSERT INTO phpgw_helpdesk_cat_respond_messages (cat_id, include_content, new_message, set_user_message, update_message, close_message, created_on, created_by)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
 
 			$valueset = array();
 
-			foreach ($data as $cat_id => $group_id)
+			foreach ($data as $cat_id => $entry)
 			{
-				if($group_id)
+				$test = (array_unique(array_values($entry)));
+
+				if(!empty($test[0]))
 				{
 					$valueset[] = array
 						(
@@ -70,15 +72,35 @@
 						),
 						2 => array
 							(
-							'value' => $group_id,
+							'value' => (int)$entry['include_content'],
 							'type' => PDO::PARAM_INT
 						),
 						3 => array
 							(
+							'value' => $this->db->db_addslashes($entry['new_message']),
+							'type' => PDO::PARAM_STR
+						),
+						4 => array
+							(
+							'value' => $this->db->db_addslashes($entry['set_user_message']),
+							'type' => PDO::PARAM_STR
+						),
+						5 => array
+							(
+							'value' => $this->db->db_addslashes($entry['update_message']),
+							'type' => PDO::PARAM_STR
+						),
+						6 => array
+							(
+							'value' => $this->db->db_addslashes($entry['close_message']),
+							'type' => PDO::PARAM_STR
+						),
+						7 => array
+							(
 							'value' => $this->account,
 							'type' => PDO::PARAM_INT
 						),
-						4 => array
+						8 => array
 							(
 							'value' => time(),
 							'type' => PDO::PARAM_INT
@@ -92,7 +114,6 @@
 			{
 				$ret = $GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
-
 			$this->db->transaction_commit();
 
 			return $ret;
@@ -100,7 +121,7 @@
 
 		public function read()
 		{
-			$this->db->query('SELECT * FROM phpgw_helpdesk_cat_assignment',__LINE__,__FILE__);
+			$this->db->query('SELECT * FROM phpgw_helpdesk_cat_respond_messages',__LINE__,__FILE__);
 
 			$values = array();
 			while ($this->db->next_record())
@@ -108,7 +129,11 @@
 				$cat_id = $this->db->f('cat_id');
 
 				$values[$cat_id] = array(
-					'group_id' => $this->db->f('group_id'),
+					'include_content' => $this->db->f('include_content'),
+					'new_message' => $this->db->f('new_message', true),
+					'set_user_message' => $this->db->f('set_user_message', true),
+					'update_message' => $this->db->f('update_message', true),
+					'close_message' => $this->db->f('close_message', true),
 					'created_on' => $this->db->f('created_on'),
 					'created_by' => $this->db->f('created_by'),
 				);
@@ -118,8 +143,16 @@
 
 		public function read_single($cat_id)
 		{
-			$this->db->query('SELECT group_id FROM phpgw_helpdesk_cat_assignment WHERE cat_id = ' . (int) $cat_id,__LINE__,__FILE__);
+			$this->db->query('SELECT * FROM phpgw_helpdesk_cat_respond_messages WHERE cat_id = ' . (int) $cat_id,__LINE__,__FILE__);
 			$this->db->next_record();
-			return (int) $this->db->f('group_id');
+			return  array(
+					'include_content' => $this->db->f('include_content'),
+					'new_message' => $this->db->f('new_message', true),
+					'set_user_message' => $this->db->f('set_user_message', true),
+					'update_message' => $this->db->f('update_message', true),
+					'close_message' => $this->db->f('close_message', true),
+					'created_on' => $this->db->f('created_on'),
+					'created_by' => $this->db->f('created_by'),
+				);
 		}
 	}

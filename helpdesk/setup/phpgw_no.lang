@@ -247,3 +247,6 @@ external origin email	helpdesk	no	Ekstern avsender
 on behalf of	helpdesk	no	Hvem saken gjelder
 Enter username or ssn	helpdesk	no	Legg inn alias, ressursnr eller fødselsnr
 reverse alternative	helpdesk	no	Utvidet revers tildeling
+category respond messages	helpdesk	no	Tilbakemeldinger pr kategori
+category respond messages has been saved	helpdesk	no	Tilbakemeldinger pr kategori er lagret
+include content	helpdesk	no	Inkluder innhold fra saken

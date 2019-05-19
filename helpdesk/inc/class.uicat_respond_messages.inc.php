@@ -32,7 +32,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 
-	class helpdesk_uicat_assignment extends phpgwapi_uicommon
+	class helpdesk_uicat_respond_messages extends phpgwapi_uicommon
 	{
 
 		var $public_functions = array
@@ -47,11 +47,11 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu("admin::helpdesk::cat_assignment");
+			self::set_active_menu("admin::helpdesk::cat_respond_messages");
 			
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('category assignment');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('category respond messages');
 
-			$this->bo			= CreateObject('helpdesk.bocat_assignment');
+			$this->bo			= CreateObject('helpdesk.bocat_respond_messages');
 			$this->cats			= $this->bo->cats;
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.ticket';
@@ -103,11 +103,10 @@
 				$this->save();
 			}
 
-			$group_list = createObject('helpdesk.botts')->get_group_list();
 
 			$categories = $this->cats->return_sorted_array(0, false);
-			$cat_assignment = $this->bo->read();
-//			_debug_array($cat_assignment);die();
+			$cat_respond_messages = $this->bo->read();
+//			_debug_array($cat_respond_messages);die();
 
 			$cat_header[] = array
 			(
@@ -125,33 +124,29 @@
 				$main = 'yes';
 				if ($level > 0)
 				{
+					continue;
 					$space = ' . ';
 					$spaceset = str_repeat($space,$level);
 					$cat_name = $spaceset . $cat_name;
 					$main = 'no';
 				}
 
-				$selected_group = !empty($cat_assignment[$cat['id']]['group_id']) ? $cat_assignment[$cat['id']]['group_id'] : 0;
-
-				$_group_list = $group_list;
-
-				foreach ($_group_list as &$group)
-				{
-					$group['selected'] = $selected_group == $group['id'] ? 1 : 0;
-				}
-
 				$content[] = array
 				(
 					'cat_id'					=> $cat['id'],
 					'name'						=> $cat_name,
-					'group_list'				=> array('options' => $_group_list),
+					'include_content'			=> $cat_respond_messages[$cat['id']]['include_content'],
+					'new_message'				=> $cat_respond_messages[$cat['id']]['new_message'],
+					'set_user_message'			=> $cat_respond_messages[$cat['id']]['set_user_message'],
+					'update_message'			=> $cat_respond_messages[$cat['id']]['update_message'],
+					'close_message'				=> $cat_respond_messages[$cat['id']]['close_message'],
 					'main'						=> $main,
 					'status'					=> $cat['active'],
 					'status_text'				=> $cat['active'] == 1 ? 'active' : 'disabled',
 				);
 			}
 
-			$link_data['menuaction'] = 'helpdesk.uicat_assignment.edit';
+			$link_data['menuaction'] = 'helpdesk.uicat_respond_messages.edit';
 
 			$cat_add[] = array
 			(
@@ -163,8 +158,8 @@
 			);
 			$data = array
 			(
-				'form_action'	=> self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
-				'edit_action' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
+				'form_action'	=> self::link(array('menuaction' => "{$this->currentapp}.uicat_respond_messages.edit")),
+				'edit_action' => self::link(array('menuaction' => "{$this->currentapp}.uicat_respond_messages.edit")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'cat_header'	=> $cat_header,
 				'cat_data'		=> $content,
@@ -173,18 +168,12 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
-			self::render_template_xsl(array('cat_assignment'), array('edit' => $data));
+			self::render_template_xsl(array('cat_respond_messages'), array('edit' => $data));
 
 		}
 
-
 		public function save($init_preview = null )
 		{
-			$id = phpgw::get_var('id', 'int');
-
-			/*
-			 * Overrides with incoming data from POST
-			 */
 			$values = phpgw::get_var('values');
 			
 			try
@@ -202,45 +191,9 @@
 				}
 			}
 
-			$this->receipt['message'][] = array('msg' => lang('category assignment has been saved'));
+			$this->receipt['message'][] = array('msg' => lang('category respond messages has been saved'));
 
 			self::message_set($this->receipt);
-			if( phpgw::get_var('send', 'bool'))
-			{
-				$this->_send($id);
-			}
-			else
-			{
-				self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"));
-			}
+			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_respond_messages.edit"));
 		}
-
-
-		private function _populate($id = false)
-		{
-			$fields = $this->bo->get_fields();
-
-			$values = array();
-
-			foreach ($fields as $field	=> $field_info)
-			{
-				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
-				{
-					$value = phpgw::get_var($field, $field_info['type']);
-
-					if ($field_info['required'] && (($value !== '0' && empty($value)) || empty($value)))
-					{
-						$this->receipt['error'][] = array('msg' => lang("Field %1 is required", lang($field_info['label'])));
-					}
-
-					$values[$field] = $value;
-				}
-			}
-
-			$values['id'] = $id;
-
-			return $values;
-		}
-
-
 	}

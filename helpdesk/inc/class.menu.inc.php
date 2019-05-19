@@ -112,6 +112,11 @@
 							'text'	=> lang('category assignment'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uicat_assignment.edit') )
 						),
+						'cat_respond_messages'	=> array
+						(
+							'text'	=> lang('category respond messages'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uicat_respond_messages.edit') )
+						),
 						'ticket_status'	=> array
 						(
 							'text'	=> lang('Ticket status'),

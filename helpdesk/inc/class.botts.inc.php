@@ -1137,25 +1137,36 @@
 
 			$num_updates = count($additional_notes);
 
+			$category_path = $this->cats->get_path($ticket['cat_id']);
+			$category_parent = $category_path[0]['id'];
+
+			$cat_respond_messages = createObject('helpdesk.socat_respond_messages')->read();
+
+			$config_new_message = $cat_respond_messages[$category_parent]['new_message'] ? $cat_respond_messages[$category_parent]['new_message'] : $this->config->config_data['new_message'];
+			$config_set_user_message = $cat_respond_messages[$category_parent]['set_user_message'] ? $cat_respond_messages[$category_parent]['set_user_message'] : $this->config->config_data['set_user_message'];
+			$config_update_message = $cat_respond_messages[$category_parent]['update_message'] ? $cat_respond_messages[$category_parent]['update_message'] : $this->config->config_data['update_message'];
+			$config_close_message = $cat_respond_messages[$category_parent]['close_message'] ? $cat_respond_messages[$category_parent]['close_message'] : $this->config->config_data['close_message'];
+
+
 			//New message
-			if(!$get_message && !empty($this->config->config_data['new_message']))
+			if(!$get_message && !empty($config_new_message))
 			{
-				$link_text = "<H2>{$this->config->config_data['new_message']}</H2>";
+				$link_text = "<H2>{$config_new_message}</H2>";
 				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
 			}
 
 			$set_user_id = false;
-			if(!$get_message && !empty($this->config->config_data['set_user_message']) && $_POST['values']['set_user_id'])
+			if(!$get_message && !empty($config_set_user_message) && $_POST['values']['set_user_id'])
 			{
 				$set_user_id = (int) $_POST['values']['set_user_id'];
-				$link_text = "<H2>{$this->config->config_data['set_user_message']}</H2>";
+				$link_text = "<H2>{$config_set_user_message}</H2>";
 				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
 			}
 
 			// Normal update message
-			if(!$get_message && !empty($this->config->config_data['update_message']) && $messages_sendt && !$set_user_id)
+			if(!$get_message && !empty($config_update_message) && $messages_sendt && !$set_user_id)
 			{
-				$link_text = "<H2>{$this->config->config_data['update_message']}</H2>";
+				$link_text = "<H2>{$config_update_message}</H2>";
 				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
 			}
 
@@ -1168,9 +1179,9 @@
 
 
 			//Message when ticket is closed
-			if(!$get_message && !empty($this->config->config_data['close_message']) && $status_closed[$ticket['status']])
+			if(!$get_message && !empty($config_close_message) && $status_closed[$ticket['status']])
 			{
-				$link_text = "<H4>{$this->config->config_data['close_message']}</H4>";
+				$link_text = "<H4>{$config_close_message}</H4>";
 				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
 			}
 
@@ -1234,7 +1245,7 @@
 			$body .= '</table>';
 
 
-			if($get_message)
+			if($get_message || !empty($cat_respond_messages[$category_parent]['include_content']))
 			{
 				$i = 1;
 				$lang_date = lang('date');
