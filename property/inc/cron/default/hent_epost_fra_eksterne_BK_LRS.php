@@ -330,7 +330,7 @@
 			$request->Restriction			 = new RestrictionType();
 
 			// Search recursively.
-			$request->Traversal = FolderQueryTraversalType::DEEP;
+			$request->Traversal = FolderQueryTraversalType::Shallow;
 
 			// Search within the root folder. Combined with the traversal set above, this
 			// should search through all folders in the user's mailbox.
