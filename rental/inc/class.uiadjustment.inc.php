@@ -422,6 +422,7 @@ JS;
 			$current_interval = $adjustment->get_interval();
 			$interval_options[] = array('id' => '1', 'name' => '1 ' . lang('year'), 'selected' => (($current_interval == '1') ? 1 : 0));
 			$interval_options[] = array('id' => '2', 'name' => '2 ' . lang('year'), 'selected' => (($current_interval == '2') ? 1 : 0));
+			$interval_options[] = array('id' => '3', 'name' => '3 ' . lang('year'), 'selected' => (($current_interval == '3') ? 1 : 0));
 			$interval_options[] = array('id' => '10', 'name' => '10 ' . lang('year'), 'selected' => (($current_interval == '10') ? 1 : 0));
 
 			$adjustment_year = $adjustment->get_year();
