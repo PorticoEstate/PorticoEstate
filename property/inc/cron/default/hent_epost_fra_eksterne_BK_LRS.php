@@ -225,7 +225,7 @@
 
 				if($this->debug)
 				{
-					_debug_array($folder_name);
+					_debug_array(array($folder_name, $folder_id->ChangeKey, $folder_id->Id));
 					_debug_array(count($response_messages[0]->RootFolder->Items->Message));
 				}
 
