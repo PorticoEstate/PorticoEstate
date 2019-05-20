@@ -225,7 +225,7 @@
 
 				if($this->debug)
 				{
-					_debug_array($folder_name);
+					_debug_array(array($folder_name, $folder_id->ChangeKey, $folder_id->Id));
 					_debug_array(count($response_messages[0]->RootFolder->Items->Message));
 				}
 
@@ -330,7 +330,7 @@
 			$request->Restriction			 = new RestrictionType();
 
 			// Search recursively.
-			$request->Traversal = FolderQueryTraversalType::SHALLOW;
+			$request->Traversal = FolderQueryTraversalType::DEEP;
 
 			// Search within the root folder. Combined with the traversal set above, this
 			// should search through all folders in the user's mailbox.
