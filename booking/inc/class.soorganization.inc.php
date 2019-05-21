@@ -137,7 +137,7 @@
 			$pools = $config->config_data['split_pool_ids'];
 			$halls = $config->config_data['split_pool2_ids'];
 			$meeting = $config->config_data['split_pool3_ids'];
-			$excluded = $config->config_data['split_pool4_ids'];
+			$excluded = !empty($config->config_data['split_pool4_ids']) ? $config->config_data['split_pool4_ids'] : '-1';
 
 			if ($split)
 			{

@@ -164,7 +164,7 @@ $(document).ready(function ()
 
 	$("#publish_text").change(function ()
 	{
-		if($(this).prop("checked") == true)
+		if ($(this).prop("checked") == true)
 		{
 			$("#send_email").prop("checked", true);
 		}
@@ -175,11 +175,11 @@ $(document).ready(function ()
 	});
 
 	var conf_on_load = {
-			modules: 'date, file',
-			validateOnBlur: true,
-			scrollToTopOnError: false,
-			errorMessagePosition: 'inline'
-		   };
+		modules: 'date, file',
+		validateOnBlur: true,
+		scrollToTopOnError: false,
+		errorMessagePosition: 'inline'
+	};
 
 	setTimeout(function ()
 	{
@@ -285,7 +285,7 @@ $(document).ready(function ()
 							this.paste_createImage(source);
 						}
 					}
-	//				e.preventDefault();
+					//				e.preventDefault();
 				}
 				else
 				{
@@ -363,6 +363,11 @@ $(document).ready(function ()
 
 });
 
-var oArgs = {menuaction: 'helpdesk.uitts.get_reverse_assignee'};
+var oArgs = {
+	menuaction: 'helpdesk.uitts.get_on_behalf_of',
+	custom_method: true,
+	method: 'get_on_behalf_of',
+	acl_location: '.ticket'
+};
 var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'set_user_name', 'set_user_id', 'set_user_container');
+JqueryPortico.autocompleteHelper(strURL, 'set_user_name', 'set_user_lid', 'set_user_container');
