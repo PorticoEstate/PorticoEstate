@@ -446,9 +446,21 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/(@SPK.no|@bergenkp.no)/i", $sender))
+			else if (preg_match("/(penger@prest.no|trekkliste@forskerforbundet.no|post@akademikerforbundet.no|trekklister@nito.no|post@ergoterapeutene.org|trekklister@parat.com|skolenes@skolenes.no|post@dnmf.no|trekklister@bibforb.no|trekklister@lederne.no|rune.nielsen11@gmail.com|medlemsservice@musikerorg.no|post@skolelederforbundet.no|anne@matomsorg.no|sekretariatet@samfunnsokonomene.no|firmapost@elogitbergen.com|hege.tollefsen@lederne.no|fana.fagforbundet@gmail.com|Solfrid.Alfredsen@fo.no)/i", $sender))
 			{
-
+				//Send til Lønn- Trekk - Emnefelt=Fagforening
+				$message_cat_id	 = 254; // Trekk (IKKE ferie)
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/(@SPK.no|@klp.no|@bergenkp.no)/i", $sender))
+			{
 				$message_cat_id	 = 244; // til Lønn -Pensjon
 				$group_id		 = 3159; //LRS-DRIFT_Lønn
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
