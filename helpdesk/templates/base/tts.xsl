@@ -76,7 +76,9 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'category')"/>
 						</label>
-						<xsl:call-template name="categories"/>
+						<xsl:call-template name="categories">
+							<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+						</xsl:call-template>
 					</div>
 					<xsl:choose>
 						<xsl:when test="simple !='1'">
@@ -85,8 +87,10 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'Group')"/>
 									</label>
+									<xsl:call-template name="group_select">
+										<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+									</xsl:call-template>
 
-									<xsl:call-template name="group_select"/>
 								</div>
 							</xsl:if>
 							<xsl:if test="disable_userassign_on_add !='1'">
@@ -94,8 +98,9 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'Assign to')"/>
 									</label>
-
-									<xsl:call-template name="user_id_select"/>
+									<xsl:call-template name="user_id_select">
+										<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+									</xsl:call-template>
 								</div>
 							</xsl:if>
 							<div class="pure-control-group">
@@ -180,7 +185,9 @@
 							</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:apply-templates select="custom_attributes/attributes"/>
+					<xsl:apply-templates select="custom_attributes/attributes">
+						<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+					</xsl:apply-templates>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'subject')"/>
@@ -444,13 +451,17 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'group')"/>
 								</label>
-								<xsl:call-template name="group_select"/>
+								<xsl:call-template name="group_select">
+									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+								</xsl:call-template>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'assigned to')"/>
 								</label>
-								<xsl:call-template name="user_id_select"/>
+								<xsl:call-template name="user_id_select">
+									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+								</xsl:call-template>
 							</div>
 							<xsl:choose>
 								<xsl:when test="lang_takeover != ''">
@@ -512,7 +523,9 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'category')"/>
 								</label>
-								<xsl:call-template name="categories"/>
+								<xsl:call-template name="categories">
+									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+								</xsl:call-template>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -581,7 +594,9 @@
 							<input type="hidden" name="values[billable_hour]" value="{value_billable_hours}"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:apply-templates select="custom_attributes/attributes"/>
+					<xsl:apply-templates select="custom_attributes/attributes">
+						<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+					</xsl:apply-templates>
 
 					<xsl:if  test="simple !='1'">
 						<div class="pure-control-group">
