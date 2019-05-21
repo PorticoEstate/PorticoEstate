@@ -104,11 +104,28 @@
 					return;
 				}
 
+				$query_arr	 = explode(" ", str_replace("  ", " ", $query));
+				$query_arr2	 = explode(",", str_replace(" ", "", $query));
+
 				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
 					. " WHERE BRUKERNAVN = '{$query}'"
 					. " OR FODSELSNR  = '{$query}'"
-					. " OR RESSURSNR  = '{$query}'"
-					. " OR lower(ETTERNAVN)  = '" . strtolower($query) ."'";
+					. " OR RESSURSNR  = '{$query}'";
+
+				if(!empty($query_arr[1]) && empty($query_arr2[1]))
+				{
+					$sql .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
+					 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
+				}
+				else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
+				{
+					$sql .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
+				}
+				else if(isset($query_arr2[1]))
+				{
+					$sql .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
+					 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
+				}
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
