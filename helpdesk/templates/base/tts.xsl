@@ -366,7 +366,7 @@
 							<label>
 								<xsl:value-of select="$lang_forward"/>
 							</label>
-							<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
+							<input type="hidden" id="set_user_lid" name="values[set_user_lid]"  value="{value_set_user}"/>
 							<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
 							</input>
 							<div id="set_user_container"/>

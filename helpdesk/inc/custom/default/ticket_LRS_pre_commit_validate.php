@@ -38,8 +38,21 @@
 			 */
 			function validate( $id = 0, &$data, $values_attribute = array() )
 			{
-				if($id) // only on add
+				if($id) // on edit
 				{
+					/**
+					 * Forward to new owner
+					 */
+					if(!empty($data['set_user_lid']))
+					{
+						$helpdesk_account = new helpdesk_account();
+						$helpdesk_account->register_accounts(array
+							(
+								$data['set_user_lid'] => true
+							)
+						);
+					}
+					
 					return;
 				}
 
