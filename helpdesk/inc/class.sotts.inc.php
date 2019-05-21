@@ -983,6 +983,15 @@
 
 			// Figure out and last note
 
+
+			/*
+			 * On forward to new owner
+			 */
+			if(!empty($ticket['set_user_lid']) && empty($ticket['set_user_id']))
+			{
+				$ticket['set_user_id'] = $GLOBALS['phpgw']->accounts->name2id($ticket['set_user_lid']);
+			}
+
 			$history_values = $this->historylog->return_array(array(), array('C'), 'history_timestamp', 'DESC', $id);
 			$old_note = $history_values[0]['new_value'];
 
