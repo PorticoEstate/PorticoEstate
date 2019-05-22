@@ -202,7 +202,7 @@
 
 		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name',filter_building_id:building_id, length:-1}, true);
 		var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_building.index', sort:'name',filter_owner_id: building_id,  length:-1}, true);
-		var permissionsURL = phpGWLink('index.php', {menuaction:'booking.uipermission_building.index', sort:'name',filter_object_i: building_id, length:-1}, true);
+		var permissionsURL = phpGWLink('index.php', {menuaction:'booking.uipermission_building.index', sort:'name',filter_object_id: building_id, length:-1}, true);
 
 
 
