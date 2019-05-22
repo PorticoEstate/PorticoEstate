@@ -1350,13 +1350,18 @@ HTML;
 				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1 || $ticket['reverse_id'])
 				{
+					$account_lid = $GLOBALS['phpgw']->accounts->get($account_id)->lid;
+					if ($validator->check_email_address($account_lid))
+					{
+						$prefs['email'] = $account_lid;
+					}
+
 					/**
 					 * Calculate email from username
 					 */
 					if(!$prefs['email'])
 					{
 						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
-						$account_lid = $GLOBALS['phpgw']->accounts->get($account_id)->lid;
 						$prefs['email'] = "{$account_lid}@{$email_domain}";
 					}
 					if ($validator->check_email_address($prefs['email']))
