@@ -770,7 +770,19 @@
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="datatype='I'">
-						<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" class="pure-input-1-2" >
+						<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}">
+							<xsl:choose>
+								<xsl:when test="$class != ''">
+									<xsl:attribute name="class">
+										<xsl:value-of select="$class"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="class">
+										<xsl:text>pure-input-1-2</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -786,7 +798,19 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='N'">
-						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" class="pure-input-1-2" >
+						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}">
+							<xsl:choose>
+								<xsl:when test="$class != ''">
+									<xsl:attribute name="class">
+										<xsl:value-of select="$class"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="class">
+										<xsl:text>pure-input-1-2</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -802,7 +826,19 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='email'">
-						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2" >
+						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" >
+							<xsl:choose>
+								<xsl:when test="$class != ''">
+									<xsl:attribute name="class">
+										<xsl:value-of select="$class"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="class">
+										<xsl:text>pure-input-1-2</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -818,7 +854,20 @@
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2" >
+						<input id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" >
+							<xsl:choose>
+								<xsl:when test="$class != ''">
+									<xsl:attribute name="class">
+										<xsl:value-of select="$class"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="class">
+										<xsl:text>pure-input-1-2</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
