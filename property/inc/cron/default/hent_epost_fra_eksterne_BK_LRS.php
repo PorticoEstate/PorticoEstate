@@ -189,6 +189,18 @@
 					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
 					'subject'			=> 'Spørsmål ifbm bankkvitteringer',
 					'priority'			=> 1
+				),
+				'Lønn'	=> array
+				(
+					'message_cat_id'	=> 249, // LRS-Lønn::Lønn
+					'group_id'			=> 3159, //LRS-DRIFT_Lønn
+					'subject'			=> '',
+				),
+				'Refusjon'	=> array
+				(
+					'message_cat_id'	=> 265, // LRS-Refusjon::Annet
+					'group_id'			=> 3233, //LRS-DRIFT_Refusjon
+					'subject'			=> '',
 				)
 			);
 
