@@ -772,7 +772,9 @@
 					</xsl:variable>
 					<div class="pure-control-group">
 						<label>
-							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
+							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}" class="pure-button pure-button-primary">
+								<i class="fas fa-user-plus"></i>
+								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'add')"/>
 							</a>
 						</label>
