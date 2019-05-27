@@ -258,7 +258,7 @@
 									<label>
 										<xsl:value-of select="value"/>
 									</label>
-										<input type="button" class="btn btn-primary">
+										<input type="button" class="form-control btn btn-primary">
 											<xsl:choose>
 												<xsl:when test="onclick">
 													<xsl:attribute name="onclick">
@@ -398,7 +398,7 @@
 						<xsl:for-each select="//top-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="btn btn-primary">
+									<button id="{id}" type="{type}" class="form-control btn btn-primary">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
@@ -427,7 +427,7 @@
 									</td>
 								</xsl:when>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="btn btn-primary" onclick="{action}">
+									<button id="{id}" type="{type}" class="form-control btn btn-primary" onclick="{action}">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
