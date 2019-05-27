@@ -59,6 +59,129 @@
 			}
 		}
 
+		function collect_users()
+		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+			$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+			$sf_validator->setOption('required', true);
+
+
+			$sql = "SELECT DISTINCT customer_ssn,  contact_name ,contact_email, contact_phone, responsible_street, responsible_zip_code, responsible_city FROM
+				(
+					SELECT  organizer, contact_name, contact_email, contact_phone, customer_ssn, responsible_street, responsible_zip_code, responsible_city FROM bb_application WHERE length(customer_ssn) = 11 AND substring(customer_ssn, 1, 4) != '0000'
+					UNION
+					SELECT  organizer, contact_name, contact_email, contact_phone, customer_ssn, null as responsible_street,  null as responsible_zip_code, null as responsible_city FROM bb_event WHERE length(customer_ssn) = 11 AND substring(customer_ssn, 1, 4) != '0000'
+				)
+				AS t ORDER BY customer_ssn, responsible_street";
+
+
+			$sql = "SELECT DISTINCT customer_ssn,  contact_name ,contact_email, contact_phone, responsible_street, responsible_zip_code, responsible_city FROM
+				(
+					SELECT  organizer, contact_name, contact_email, contact_phone, bb_application.customer_ssn, responsible_street, responsible_zip_code, responsible_city FROM bb_application
+					LEFT JOIN bb_user ON bb_user.customer_ssn = bb_application.customer_ssn
+					WHERE length(bb_application.customer_ssn) = 11 AND substring(bb_application.customer_ssn, 1, 4) != '0000' AND bb_user.customer_ssn IS NULL
+					UNION
+					SELECT  organizer, contact_name, contact_email, contact_phone, bb_event.customer_ssn, null as responsible_street,  null as responsible_zip_code, null as responsible_city FROM bb_event
+					LEFT JOIN bb_user ON bb_user.customer_ssn = bb_event.customer_ssn
+					WHERE length(bb_event.customer_ssn) = 11 AND substring(bb_event.customer_ssn, 1, 4) != '0000'  AND bb_user.customer_ssn IS NULL
+				)
+				AS t ORDER BY customer_ssn, responsible_street";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$users = array();
+
+			while ($this->db->next_record())
+			{
+				$customer_ssn = $this->db->f('customer_ssn');
+				try
+				{
+					$sf_validator->clean($customer_ssn);
+				}
+				catch (sfValidatorError $e)
+				{
+					continue;
+				}
+
+				$contact_info =  array(
+					'contact_name' => !empty($users[$customer_ssn]['contact_name']) ? $users[$customer_ssn]['contact_name'] : $this->db->f('contact_name'),
+					'contact_phone' => !empty($users[$customer_ssn]['contact_phone']) ? $users[$customer_ssn]['contact_phone'] : $this->db->f('contact_phone'),
+					'contact_email' => !empty($users[$customer_ssn]['contact_email']) ? $users[$customer_ssn]['contact_email'] : $this->db->f('contact_email'),
+					'responsible_street' => !empty($users[$customer_ssn]['responsible_street']) ? $users[$customer_ssn]['responsible_street'] : $this->db->f('responsible_street'),
+					'responsible_zip_code' => !empty($users[$customer_ssn]['responsible_zip_code']) ? $users[$customer_ssn]['responsible_zip_code'] : $this->db->f('responsible_zip_code'),
+					'responsible_city' => !empty($users[$customer_ssn]['responsible_city']) ? $users[$customer_ssn]['responsible_city'] : $this->db->f('responsible_city'),
+				);
+
+				$users[$customer_ssn] = $contact_info;
+			}
+
+			$valueset = array();
+			foreach ($users as $ssn => $entry)
+			{
+				$valueset[] = array
+					(
+					1	 => array
+					(
+						'value'	 => $ssn,
+						'type'	 => PDO::PARAM_STR
+					),
+					2	 => array
+						(
+						'value'	 => 1,
+						'type'	 => PDO::PARAM_INT
+					),
+					3	 => array
+						(
+						'value'	 => $entry['contact_name'],
+						'type'	 => PDO::PARAM_STR
+					),
+					4	 => array
+						(
+						'value'	 => $entry['contact_phone'],
+						'type'	 => PDO::PARAM_STR
+					),
+					5	 => array
+						(
+						'value'	 => $entry['contact_email'],
+						'type'	 => PDO::PARAM_STR
+					),
+					6	 => array
+						(
+						'value'	 => $entry['responsible_street'],
+						'type'	 => PDO::PARAM_STR
+					),
+					7	 => array
+						(
+						'value'	 => $entry['responsible_zip_code'],
+						'type'	 => PDO::PARAM_STR
+					),
+					8	 => array
+						(
+						'value'	 => $entry['responsible_city'],
+						'type'	 => PDO::PARAM_STR
+					)
+				);
+
+			}
+
+			$sql = 'INSERT INTO bb_user (customer_ssn, active, name, phone, email,street, zip_code, city )'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+
+			$receipt = array();
+			if($valueset)
+			{
+				$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('added %1 users', count($valueset)));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang("Found none"));
+
+			}
+			return $receipt;
+		}
+
 		public function delete( $id )
 		{
 			$this->db->query("SELECT customer_ssn FROM bb_user WHERE customer_ssn != '00000000000' AND id = " . (int)$id, __LINE__, __FILE__);
