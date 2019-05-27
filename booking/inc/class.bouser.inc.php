@@ -113,10 +113,16 @@
 		}
 
 		/**
+		 * Used?????
 		 * @see souser
 		 */
 		function find_building_users( $building_id, $split = false, $activities = array() )
 		{
 			return $this->so->find_building_users($building_id, $this->build_default_read_params(), $split, $activities);
+		}
+
+		function collect_users()
+		{
+			return $this->so->collect_users();
 		}
 	}
