@@ -463,3 +463,11 @@ Book resource	bookingfrontend	nn	Søknad
 executiveofficer	bookingfrontend	nn	Saksbehandler
 Privacy	bookingfrontend	nn	Personvern
 manual	bookingfrontend	nn	Manual
+collect users	booking	nn	Legg til brukarar
+do you really want to collect users again	booking	nn	Vil du legge til brukarar på nytt
+again	booking	nn	Igjen
+Do you really want to collect users	booking	nn	Vil du legge til brukarar
+Back to user list	booking	nn	Attende til brukarlista
+Collects users from all applications and events	booking	nn	Haustar brukarar frå alle søknader og arrangement
+added %1 users	booking	nn	Lagt til %1 brukarar
+found none	booking	nn	Fann ingen
