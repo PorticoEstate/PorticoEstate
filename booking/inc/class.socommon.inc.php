@@ -1173,7 +1173,7 @@
 
 		function delete( $id )
 		{
-			$this->db->query("DELETE FROM {$this->table_name} WHERE id=" . intval($id), __LINE__, __FILE__);
+			return $this->db->query("DELETE FROM {$this->table_name} WHERE id=" . intval($id), __LINE__, __FILE__);
 		}
 
 		function set_active( $id, $active )
