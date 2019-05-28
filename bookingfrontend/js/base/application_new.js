@@ -445,26 +445,9 @@ document.getElementById('field_name').onchange = function () {
 // CUSTOM VALIDATOR
 window.onload = function() {
 // Grab elements
-// const form = document.getElementById("application_form")
-const inputResource = document.getElementById("inputResource");
-const inputResource2 = document.getElementById("inputResource2");
-const inputTime = document.getElementById("inputTime");
-const inputTargetAudience = document.getElementById("inputTargetAudience");
 const inputEventName = document.getElementById("inputEventName");
 const inputOrganizerName = document.getElementById("inputOrganizerName");
-const inputAttendants = document.getElementById("");
 
-// Validate Resource Chosen
-// function validateResource(){
-//   const reResource = /ingen/i;
-//   if(!reResource.exec(inputResource.value)) {
-//     inputResource2.classList.add("is-invalid");
-//     inputResource2.classList.remove("is-valid");
-//   } else {
-//     inputResource2.classList.remove("is-invalid")
-//     inputResource2.classList.add("is-valid")
-//   }
-// }
 
 // Validate Event Name
 function validateEventName(){
@@ -489,8 +472,6 @@ function validateOrganizerName(){
   }
 }
 
-
-
 // Dynamic validation
 inputEventName.addEventListener("input", function() {
   validateEventName();
@@ -498,9 +479,6 @@ inputEventName.addEventListener("input", function() {
 
 inputOrganizerName.addEventListener("input",function() {
   validateOrganizerName();
-})
-inputResource.addEventListener("input",function() {
-  validateResource();
 })
 
 // Form Validation
@@ -510,9 +488,8 @@ form.addEventListener("submit", function(e) {
      e.stopPropagation();
      validateEventName();
      validateOrganizerName();
-     //validateResource()
    } else {
-     return
+     return;
    }
  })
 }
