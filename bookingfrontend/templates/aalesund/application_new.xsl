@@ -39,7 +39,7 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<div id="inputResource2" type="input"  class="chosenResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+						<div id="choseResource" type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</div>
@@ -63,10 +63,11 @@
 						<div id="bookable-resource" data-bind="foreach: bookableresource">
 							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 						</div>
-						<span id="inputResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
+						<span id="chosenResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
 						</span>
 					</div>
+					
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<label>
@@ -307,7 +308,7 @@
 						<div class="form-check checkbox" data-bind="foreach: termAcceptDocs">
 							<div>
 								<label class="check-box-label d-inline">
-									<input class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
+									<input id="termsInput" class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
 									<span class="label-text" data-bind=""></span>		
 								</label>
 								<a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
