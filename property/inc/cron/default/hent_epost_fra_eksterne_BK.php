@@ -718,6 +718,7 @@
 						{
 							$this->receipt['error'][] = array('msg' => lang('Failed to upload file !'));
 						}
+						unlink($saved_attachment['tmp_name']);
 						$bofiles->vfs->override_acl = 0;
 					}
 				}
