@@ -1222,3 +1222,21 @@ YUI({lang: 'nb-no'}).use(
 		);
 	}
 );
+
+// Init Google map
+window.onload = function() {
+	// Fetch address info
+	const buildingStreet = document.getElementById("buildingStreet").textContent
+	const buildingZipCode = document.getElementById("buildingZipCode").textContent
+	const buildingCity = document.getElementById("buildingCity").textContent
+
+	// Address 
+	const address = `${buildingStreet},${buildingZipCode},${buildingCity}`
+		
+
+	// Construct google maps url
+	let iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
+	
+	// Apply gooogle mpas url to iframe 
+	document.getElementById("iframeMap").setAttribute("src", iurl)
+}

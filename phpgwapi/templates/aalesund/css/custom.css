@@ -1299,6 +1299,10 @@ BUILDING PAGE STYLE
     font-size: 14px;
 }
 
+.building-place-adr p {
+    margin-bottom: 0;
+}
+
 .building-bookable h1 {
     margin-bottom: 2em !important;
 }
@@ -1586,7 +1590,7 @@ NEW APPLICATION PAGE STYLE
 .new-application-page .form-group .input-group .bookingDate,
 .new-application-page .form-group .input-group .bookingStartTime,
 .new-application-page .form-group .input-group .bookingEndTime,
-.new-application-page .form-group .chosenResource  {
+.new-application-page .form-group .choseResource  {
     cursor: pointer;
 } 
 
@@ -1630,12 +1634,22 @@ NEW APPLICATION PAGE STYLE
     border-radius: 0;
 }
 
+.mapBtn {
+    background-color: transparent;
+    color: #212529;
+    border: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    padding: .375rem .75rem;
+    text-align: left;
+}
 
-.btn-light:hover {
-    
+
+.btn-light:hover,
+.mapBtn:hover {
     border-radius: 0;
     background-color: rgb(137, 38, 106);
     color: white;
+    cursor: pointer;
 }
 
 .new-application-page .btn-outline-light {
