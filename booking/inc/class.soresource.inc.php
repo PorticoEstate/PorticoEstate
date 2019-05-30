@@ -1,4 +1,5 @@
 <?php
+	phpgw::import_class('phpgwapi.datetime');
 	phpgw::import_class('booking.socommon');
 
 	class booking_soresource extends booking_socommon
@@ -23,6 +24,7 @@
 				'organizations_ids' => array('type' => 'string'),
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
+				'direct_booking' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
@@ -132,6 +134,14 @@
 		public static function allowed_types()
 		{
 			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT);
+		}
+
+		protected function preValidate( &$entity )
+		{
+			if (!empty($entity['direct_booking']))
+			{
+				$entity['direct_booking'] = phpgwapi_datetime::date_to_timestamp($entity['direct_booking']);
+			}
 		}
 
 		function doValidate( $entity, booking_errorstack $errors )
