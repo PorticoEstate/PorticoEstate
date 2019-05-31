@@ -231,7 +231,7 @@
 
 		/**
 		 * Filters application comments based on their types.
-		 * 
+		 *
 		 *
 		 */
 		protected function filter_application_comments( array &$application, array $types )
@@ -917,7 +917,7 @@
 				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
 		}
 
-	
+
 		function add_contact()
 		{
 			/**
@@ -997,17 +997,138 @@
 							$application['created'] = 'now';
 							$application['modified'] = 'now';
 							$application['session_id'] = null;
+
+							$GLOBALS['phpgw']->db->transaction_begin();
+
 							$receipt = $this->bo->update($application);
-							$this->bo->send_notification($application, true);
+
+
+							/**
+							 * Start direct booking
+							 */
+
+							$resources = $this->resource_bo->so->read(array(
+									'sort'    => 'sort',
+									'results' =>'all',
+									'filters' => array('id' => $application['resources']), 'results' =>'all'
+								));
+
+							$direct_booking = false;
+							$check_direct_booking = 0;
+
+							$from_dates = array();
+							foreach ($application['dates'] as $date)
+							{
+								$from_dates[] = strtotime( $date['from_']);
+							}
+							unset($date);
+
+							foreach ($resources['results'] as $resource)
+							{
+								$max_date = max($from_dates);
+
+								if($resource['direct_booking'] < $max_date)
+								{
+									$check_direct_booking ++;
+								}
+							}
+
+							if($resources['results'] && count($resources['results']) == $check_direct_booking)
+							{
+								$collision_dates = array();
+								foreach ($application['dates'] as &$date)
+								{
+									$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
+									if ($collision)
+									{
+										$collision_dates[] = $date['from_'];
+									}
+								}
+
+								if(!$collision_dates)
+								{
+									$direct_booking = true;
+								}
+							}
+
+
+							if($direct_booking)
+							{
+								$application['status'] = 'ACCEPTED';
+								$receipt = $this->bo->update($application);
+
+								$event = $application;
+								unset($event['id']);
+								unset($event['id_string']);
+								$event['application_id'] = $application['id'];
+								$event['completed'] = '0';
+								$event['is_public'] = 1;
+								$event['include_in_list'] = 0;
+								$event['reminder'] = 0;
+								$event['customer_internal'] = 0;
+								$event['cost'] = 0;
+
+								$building_info = $this->bo->so->get_building_info($application['id']);
+								$event['building_id'] = $building_info['id'];
+								foreach ($application['dates'] as $checkdate)
+								{
+									$event['from_'] = $checkdate['from_'];
+									$event['to_'] = $checkdate['to_'];
+								}
+
+								$booking_boevent = createObject('booking.boevent');
+
+								$errors = $booking_boevent->validate($event);
+
+								if (!$errors)
+								{
+									$receipt = $booking_boevent->so->add($event);
+									$booking_boevent->so->update_id_string();
+
+									$GLOBALS['phpgw']->db->transaction_commit();
+								}
+								else
+								{
+									$this->flash_form_errors($errors);
+									$GLOBALS['phpgw']->db->transaction_abort();
+								}
+
+								$this->bo->send_notification($application);
+							}
+							/**
+							 * End Direct booking
+							 */
+							else
+							{
+								$this->bo->send_notification($application, true);
+							}
+
 						}
-						$messages = array(
-							'one' => array(
-								'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
-								'review' => "A Case officer will review your application as soon as possible."),
-							'multiple' => array(
-								'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
-								'review' => "A Case officer will review your applications as soon as possible.")
-							);
+
+						if($direct_booking)
+						{
+							$messages = array(
+								'one' => array(
+									'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
+									'review' => "A Case officer will review your application as soon as possible."),
+								'multiple' => array(
+									'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
+									'review' => "A Case officer will review your applications as soon as possible.")
+								);
+						}
+						else
+						{
+							$messages = array(
+								'one' => array(
+									'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
+									'review' => "A Case officer will review your application as soon as possible."),
+								'multiple' => array(
+									'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
+									'review' => "A Case officer will review your applications as soon as possible.")
+								);
+
+						}
+
 						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
 						phpgwapi_cache::message_set(lang($messages[$msgset]['registered']) . "<br />" .
 							lang($messages[$msgset]['review']) . "<br />" .

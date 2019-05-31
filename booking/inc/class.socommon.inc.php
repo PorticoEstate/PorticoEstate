@@ -722,7 +722,7 @@
 										$_modifier = $modifier;
 									}
 
-									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type, $_modifier);
+									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type, $_modifier);
 								}
 								$row[$field][] = $data;
 								$results[$id_map[$id]][$field][] = $data;
@@ -739,7 +739,7 @@
 								{
 									$results[$id_map[$id]][$field] = array();
 								}
-								$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, false), $params['type'], $modifier);
+								$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type'], $modifier);
 							}
 						}
 					}

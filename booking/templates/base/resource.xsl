@@ -127,6 +127,18 @@
 						</span>
 					</div>
 				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
+					</label>
+					<xsl:variable name="date_format">
+						<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+					</xsl:variable>
+					<xsl:if test="not(resource/direct_booking = '')">
+						<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
+					</xsl:if>
+				</div>
+
 				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>
