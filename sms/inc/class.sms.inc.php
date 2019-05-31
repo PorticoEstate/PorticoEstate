@@ -937,6 +937,15 @@
 			}
 			if (!$ok)
 			{
+				$receipt_message = "Hei\n\n";
+				$receipt_message .= "Dette er en tjeneste som benyttes for utkvittering av status på f.eks bestillinger\n";
+				$receipt_message .= "Din melding har feil kodeord - og blir ikke registert eller lest\n";
+				$receipt_message .= "Korrekt kodeord er å finne på bestillingen\n";
+				$receipt_message .= "Mvh\n";
+				$receipt_message .= "EBF\n";
+
+				$this->websend2pv('Admin', $sms_sender, $receipt_message, 'text', '0');
+
 				$message = "{$target_code} {$message}";
 				if ($this->insertsmstoinbox($sms_datetime, $sms_sender, "Admins", $message))
 				{
