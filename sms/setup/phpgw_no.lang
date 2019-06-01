@@ -6,3 +6,4 @@ inbox	sms	no	Innbox
 log	sms	no	Logg
 outbox	sms	no	Utbox
 polls	sms	no	Avstemninger
+receipt on code miss	sms	no	Tilbakemelding ved bom på kodeord
