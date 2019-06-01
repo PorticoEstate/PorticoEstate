@@ -63,6 +63,7 @@
 	{
 
 		var $apps_path;
+		var $generic_config;
 
 		function __construct()
 		{
@@ -115,6 +116,7 @@
 			}
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->generic_config = CreateObject('phpgwapi.config', 'sms')->read();
 		}
 
 		function datetime_now()
@@ -937,14 +939,18 @@
 			}
 			if (!$ok)
 			{
-				$receipt_message = "Hei\n\n";
-				$receipt_message .= "Dette er en tjeneste som benyttes for utkvittering av status på f.eks bestillinger\n";
-				$receipt_message .= "Din melding har feil kodeord - og blir ikke registert eller lest\n";
-				$receipt_message .= "Korrekt kodeord er å finne på bestillingen\n";
-				$receipt_message .= "Mvh\n";
-				$receipt_message .= "EBF\n";
+//				$receipt_message = "Hei\n\n";
+//				$receipt_message .= "Dette er en tjeneste som benyttes for utkvittering av status på f.eks bestillinger\n";
+//				$receipt_message .= "Din melding har feil kodeord - og blir ikke registert eller lest\n";
+//				$receipt_message .= "Korrekt kodeord er å finne på bestillingen\n";
+//				$receipt_message .= "Mvh\n";
+//				$receipt_message .= "EBF\n";
 
-				$this->websend2pv('Admin', $sms_sender, $receipt_message, 'text', '0');
+
+				if(!empty($this->generic_config['receipt_on_code_miss']))
+				{
+					$this->websend2pv('Admin', $sms_sender, $this->generic_config['receipt_on_code_miss'], 'text');
+				}
 
 				$message = "{$target_code} {$message}";
 				if ($this->insertsmstoinbox($sms_datetime, $sms_sender, "Admins", $message))
