@@ -231,6 +231,11 @@
 							$this->add_attacthment_to_target($target, $saved_attachments);
 						}
 
+						if($saved_attachments)
+						{
+							$this->clean_attacthment_from_temp($saved_attachments);
+						}
+
 						foreach ($this->items_to_move as $item4)
 						{
 							$this->update_message($client, $item4);
@@ -685,6 +690,14 @@
 			return $ticket_id;
 		}
 
+		function clean_attacthment_from_temp( $saved_attachments )
+		{
+			foreach ($saved_attachments as $saved_attachment)
+			{
+				unlink($saved_attachment['tmp_name']);
+			}
+		}
+
 		function add_attacthment_to_target( $target, $saved_attachments )
 		{
 			$target['type'];
@@ -718,7 +731,6 @@
 						{
 							$this->receipt['error'][] = array('msg' => lang('Failed to upload file !'));
 						}
-						unlink($saved_attachment['tmp_name']);
 						$bofiles->vfs->override_acl = 0;
 					}
 				}
