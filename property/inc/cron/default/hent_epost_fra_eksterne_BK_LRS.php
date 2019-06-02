@@ -302,9 +302,12 @@
 								}
 
 								// Iterate over the attachments for the message.
-								foreach ($item3->Attachments->FileAttachment as $attachment)
+								if (!empty($target['id']))
 								{
-									$attachments[] = $attachment->AttachmentId->Id;
+									foreach ($item3->Attachments->FileAttachment as $attachment)
+									{
+										$attachments[] = $attachment->AttachmentId->Id;
+									}								
 								}
 							}
 
