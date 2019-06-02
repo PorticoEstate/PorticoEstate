@@ -208,7 +208,7 @@
 
 							// If there are no attachments for the item, move on to the next
 							// message.
-							if (empty($item3->Attachments))
+							if (empty($item3->Attachments) || empty($target['id']))
 							{
 								continue;
 							}
