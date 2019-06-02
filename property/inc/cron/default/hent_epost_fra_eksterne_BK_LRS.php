@@ -296,18 +296,15 @@
 
 								// If there are no attachments for the item, move on to the next
 								// message.
-								if (empty($item3->Attachments))
+								if (empty($item3->Attachments) || empty($target['id']))
 								{
 									continue;
 								}
 
 								// Iterate over the attachments for the message.
-								if (!empty($target['id']))
+								foreach ($item3->Attachments->FileAttachment as $attachment)
 								{
-									foreach ($item3->Attachments->FileAttachment as $attachment)
-									{
-										$attachments[] = $attachment->AttachmentId->Id;
-									}								
+									$attachments[] = $attachment->AttachmentId->Id;
 								}
 							}
 
