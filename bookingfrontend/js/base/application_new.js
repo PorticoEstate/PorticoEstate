@@ -170,8 +170,16 @@ $(document).ready(function () {
               tempSelected = true;
             }
           }
+            var resource_name = result.results[i].name;
 
-          bookableresource.push({ id: result.results[i].id, name: result.results[i].name, selected: ko.observable(tempSelected) });
+					  var now = Math.floor(Date.now() / 1000);
+
+					  if(result.results[i].direct_booking && result.results[i].direct_booking < now)
+					  {
+						  resource_name += ' *';
+					  }
+
+					  bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
         }
       }
     });
