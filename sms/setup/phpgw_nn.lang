@@ -6,3 +6,4 @@ inbox	sms	nn	Innbox
 log	sms	nn	Logg
 outbox	sms	nn	Utbox
 polls	sms	nn	Avstemninger
+receipt on code miss	sms	nn	Tilbakemelding ved bom på kodeord

@@ -208,7 +208,7 @@
 
 							// If there are no attachments for the item, move on to the next
 							// message.
-							if (empty($item3->Attachments))
+							if (empty($item3->Attachments) || empty($target['id']))
 							{
 								continue;
 							}
@@ -229,6 +229,11 @@
 						if (!empty($target['id']) && $saved_attachments)
 						{
 							$this->add_attacthment_to_target($target, $saved_attachments);
+						}
+
+						if($saved_attachments)
+						{
+							$this->clean_attacthment_from_temp($saved_attachments);
 						}
 
 						foreach ($this->items_to_move as $item4)
@@ -683,6 +688,14 @@
 				$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
 			}
 			return $ticket_id;
+		}
+
+		function clean_attacthment_from_temp( $saved_attachments )
+		{
+			foreach ($saved_attachments as $saved_attachment)
+			{
+				unlink($saved_attachment['tmp_name']);
+			}
 		}
 
 		function add_attacthment_to_target( $target, $saved_attachments )

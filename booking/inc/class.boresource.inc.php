@@ -120,6 +120,7 @@
 
 		public function populate_grid_data( $menuaction )
 		{
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$resources = $this->read_all();
 			$this->add_activity_facility_data($resources['results']);
 
@@ -128,6 +129,7 @@
 			{
 				$resource['link'] = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
 				$resource['type'] = lang($resource['type']);
+				$resource['direct_booking_date'] = $resource['direct_booking'] ? $GLOBALS['phpgw']->common->show_date($resource['direct_booking'], $dateformat) : null;
 //				$resource['full_name']	 = $resource['building_name'] . ' / ' . $resource['name'];
 				if (isset($resource['buildings']))
 				{

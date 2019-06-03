@@ -77,7 +77,7 @@
 							<xsl:value-of select="php:function('lang', 'category')"/>
 						</label>
 						<xsl:call-template name="categories">
-							<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 						</xsl:call-template>
 					</div>
 					<xsl:choose>
@@ -88,7 +88,7 @@
 										<xsl:value-of select="php:function('lang', 'Group')"/>
 									</label>
 									<xsl:call-template name="group_select">
-										<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+										<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 									</xsl:call-template>
 
 								</div>
@@ -99,7 +99,7 @@
 										<xsl:value-of select="php:function('lang', 'Assign to')"/>
 									</label>
 									<xsl:call-template name="user_id_select">
-										<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+										<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 									</xsl:call-template>
 								</div>
 							</xsl:if>
@@ -111,7 +111,7 @@
 									<xsl:value-of select="$lang_on_behalf_of"/>
 								</label>
 								<input type="hidden" id="set_on_behalf_of_lid" name="values[set_on_behalf_of_lid]"  value="{value_set_on_behalf_of_lid}"/>
-								<input type="text" id="set_on_behalf_of_name" name="values[set_on_behalf_of_name]" value="{value_set_on_behalf_of_name}" class="pure-input-1-2">
+								<input type="text" id="set_on_behalf_of_name" name="values[set_on_behalf_of_name]" value="{value_set_on_behalf_of_name}" class="pure-input-3-4">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Enter username or ssn')"/>
 									</xsl:attribute>
@@ -135,7 +135,7 @@
 									<xsl:value-of select="$lang_reverse_alternative"/>
 								</label>
 								<input type="hidden" id="set_user_alternative_lid" name="values[set_user_alternative_lid]" />
-								<input type="text" id="set_user_alternative_name" name="values[set_user_alternative_name]" class="pure-input-1-2">
+								<input type="text" id="set_user_alternative_name" name="values[set_user_alternative_name]" class="pure-input-3-4">
 								</input>
 								<div class="pure-custom"  id="set_user_container_alternative"/>
 							</div>
@@ -152,7 +152,7 @@
 									<xsl:variable name="select_priority_name">
 										<xsl:value-of select="select_priority_name"/>
 									</xsl:variable>
-									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-1-2" >
+									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-3-4" >
 										<xsl:apply-templates select="priority_list/options"/>
 									</select>
 								</div>
@@ -162,7 +162,7 @@
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
 
-								<select id="status_id" name="values[status]" class="pure-input-1-2" >
+								<select id="status_id" name="values[status]" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -186,14 +186,14 @@
 						</xsl:when>
 					</xsl:choose>
 					<xsl:apply-templates select="custom_attributes/attributes">
-						<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 					</xsl:apply-templates>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'subject')"/>
 						</label>
 
-						<input type="text" name="values[subject]" value="{value_subject}" size="60"  class="pure-input-1-2" >
+						<input type="text" name="values[subject]" value="{value_subject}" size="60"  class="pure-input-3-4" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
@@ -227,7 +227,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-1-2" >
+						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-3-4" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 							</xsl:attribute>
@@ -247,7 +247,7 @@
 									<xsl:value-of select="lang_upload_file"/>
 								</label>
 
-								<input type="file" name="file" size="40">
+								<input type="file" name="file" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_file_statustext"/>
 									</xsl:attribute>
@@ -262,7 +262,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1-2" >
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
@@ -351,7 +351,7 @@
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="value_id"/>
 						</label>
-						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
+						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-3-4" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
@@ -374,7 +374,7 @@
 								<xsl:value-of select="$lang_forward"/>
 							</label>
 							<input type="hidden" id="set_user_lid" name="values[set_user_lid]"  value="{value_set_user}"/>
-							<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
+							<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-3-4">
 							</input>
 							<div id="set_user_container"/>
 						</div>
@@ -429,7 +429,7 @@
 								<xsl:value-of select="php:function('lang', 'no additional notes')"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<div class = 'pure-u-md-1-2'>
+								<div class = 'pure-u-1 pure-u-md-3-4'>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_0'">
 											<xsl:call-template name="table_setup">
@@ -452,7 +452,7 @@
 									<xsl:value-of select="php:function('lang', 'group')"/>
 								</label>
 								<xsl:call-template name="group_select">
-									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+									<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 								</xsl:call-template>
 							</div>
 							<div class="pure-control-group">
@@ -460,7 +460,7 @@
 									<xsl:value-of select="php:function('lang', 'assigned to')"/>
 								</label>
 								<xsl:call-template name="user_id_select">
-									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+									<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 								</xsl:call-template>
 							</div>
 							<xsl:choose>
@@ -503,7 +503,7 @@
 									<xsl:variable name="select_priority_name">
 										<xsl:value-of select="select_priority_name"/>
 									</xsl:variable>
-									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-1-2" >
+									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-3-4" >
 										<xsl:apply-templates select="priority_list/options"/>
 									</select>
 								</div>
@@ -512,7 +512,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<select id="status_id" name="values[status]" class="pure-input-1-2" >
+								<select id="status_id" name="values[status]" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -524,14 +524,14 @@
 									<xsl:value-of select="php:function('lang', 'category')"/>
 								</label>
 								<xsl:call-template name="categories">
-									<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+									<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 								</xsl:call-template>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'change category')"/>
 								</label>
-								<select id="change category_id" name="change_category" class="pure-input-1-2" >
+								<select id="change category_id" name="change_category" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'change category')"/>
 									</xsl:attribute>
@@ -595,7 +595,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:apply-templates select="custom_attributes/attributes">
-						<xsl:with-param name="class">pure-input-1-2</xsl:with-param>
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 					</xsl:apply-templates>
 
 					<xsl:if  test="simple !='1'">
@@ -632,7 +632,7 @@
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-1-2" >
+						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-3-4" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>
@@ -644,7 +644,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">
@@ -666,7 +666,9 @@
 							<script type="text/javascript">
 								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 							</script>
-							<xsl:call-template name="file_upload"/>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
 						</xsl:when>
 					</xsl:choose>
 
@@ -677,7 +679,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1-2" >
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 					</div>
@@ -743,7 +745,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'messages')"/>
 							</label>
-							<div class="pure-u-md-1-2" >
+							<div class="pure-u-md-3-4" >
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_7'">
 										<xsl:call-template name="table_setup">
@@ -770,14 +772,16 @@
 					</xsl:variable>
 					<div class="pure-control-group">
 						<label>
-							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
+							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}" class="pure-button pure-button-primary">
+								<i class="fas fa-user-plus"></i>
+								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'add')"/>
 							</a>
 						</label>
 						<input type="hidden" id="notify_contact" name="notify_contact" value="">
 						</input>
 						<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly"/>
-						<div class="pure-u-md-1-2" >
+						<div class="pure-u-md-3-4" >
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_6'">
 									<xsl:call-template name="table_setup">

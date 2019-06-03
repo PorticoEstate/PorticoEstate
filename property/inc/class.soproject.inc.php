@@ -1324,7 +1324,7 @@
 			 */
 			if ($project['project_type_id'] == 3)//buffer
 			{
-				$this->_update_buffer_budget($id, $project['budget_year'], $project['budget'], null, null);
+				$this->_update_buffer_budget($id, $project['budget_year'], $project['budget'], null, null, null);
 			}
 			else
 			{
@@ -1596,7 +1596,7 @@
 			{
 				if ($project['budget'])
 				{
-					$this->_update_buffer_budget($project['id'], $project['budget_year'], $project['budget'], null, null);
+					$this->_update_buffer_budget($project['id'], $project['budget_year'], $project['budget'], null, null, null);
 				}
 
 				if (isset($project['transfer_amount']) && $project['transfer_amount'] && isset($project['transfer_target']) && $project['transfer_target'])

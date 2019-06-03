@@ -15,6 +15,7 @@
 			'query' => true,
 			'show' => true,
 			'edit' => true,
+			'delete' => true,
 			'toggle_show_inactive' => true,
 		);
 		protected $module;
@@ -141,6 +142,10 @@
 						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('id')
+						),
+						array(
 							'key' => 'organization_name',
 							'label' => lang('Organization')
 						),
@@ -168,8 +173,28 @@
 					)
 				)
 			);
-			$data['datatable']['actions'][] = array();
+			$data['datatable']['actions'] = array();
 			$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit'));
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+			$data['datatable']['actions'][] = array
+			(
+				'my_name' => 'delete',
+				'statustext' => lang('delete'),
+				'text' => lang('delete'),
+				'confirm_msg' => lang('do you really want to delete this delegate'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'booking.uidelegate.delete'
+				)),
+				'parameters' => json_encode($parameters)
+			);
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -348,5 +373,19 @@
 
 			self::render_template_xsl('delegate', array('delegate' => $delegate, 'loggedin' => $loggedin,
 				'edit_self_link' => $edit_self_link));
+		}
+
+		public function delete()
+		{
+			$id = phpgw::get_var('id', 'int');
+			if( $this->bo->delete($id) )
+			{
+				return lang('delegate %1 has been deleted', $id);
+			}
+			else
+			{
+				return lang('delete failed');
+			}
+
 		}
 	}

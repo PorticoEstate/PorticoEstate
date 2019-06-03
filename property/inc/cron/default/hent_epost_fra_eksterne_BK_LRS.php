@@ -189,6 +189,18 @@
 					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
 					'subject'			=> 'Spørsmål ifbm bankkvitteringer',
 					'priority'			=> 1
+				),
+				'Lønn'	=> array
+				(
+					'message_cat_id'	=> 249, // LRS-Lønn::Lønn
+					'group_id'			=> 3159, //LRS-DRIFT_Lønn
+					'subject'			=> '',
+				),
+				'Refusjon'	=> array
+				(
+					'message_cat_id'	=> 265, // LRS-Refusjon::Annet
+					'group_id'			=> 3233, //LRS-DRIFT_Refusjon
+					'subject'			=> '',
 				)
 			);
 
@@ -284,7 +296,7 @@
 
 								// If there are no attachments for the item, move on to the next
 								// message.
-								if (empty($item3->Attachments))
+								if (empty($item3->Attachments) || empty($target['id']))
 								{
 									continue;
 								}
@@ -305,6 +317,11 @@
 							if (!empty($target['id']) && $saved_attachments)
 							{
 								$this->add_attacthment_to_target($target, $saved_attachments);
+							}
+
+							if($saved_attachments)
+							{
+								$this->clean_attacthment_from_temp($saved_attachments);
 							}
 
 							foreach ($this->items_to_move as $item4)
@@ -446,9 +463,21 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/(@SPK.no|@bergenkp.no)/i", $sender))
+			else if (preg_match("/(penger@prest.no|trekkliste@forskerforbundet.no|post@akademikerforbundet.no|trekklister@nito.no|post@ergoterapeutene.org|trekklister@parat.com|skolenes@skolenes.no|post@dnmf.no|trekklister@bibforb.no|trekklister@lederne.no|rune.nielsen11@gmail.com|medlemsservice@musikerorg.no|post@skolelederforbundet.no|anne@matomsorg.no|sekretariatet@samfunnsokonomene.no|firmapost@elogitbergen.com|hege.tollefsen@lederne.no|fana.fagforbundet@gmail.com|Solfrid.Alfredsen@fo.no)/i", $sender))
 			{
-
+				//Send til Lønn- Trekk - Emnefelt=Fagforening
+				$message_cat_id	 = 254; // Trekk (IKKE ferie)
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/(@SPK.no|@klp.no|@bergenkp.no)/i", $sender))
+			{
 				$message_cat_id	 = 244; // til Lønn -Pensjon
 				$group_id		 = 3159; //LRS-DRIFT_Lønn
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
@@ -683,6 +712,15 @@
 			}
 			return $ticket_id;
 		}
+
+		function clean_attacthment_from_temp( $saved_attachments )
+		{
+			foreach ($saved_attachments as $saved_attachment)
+			{
+				unlink($saved_attachment['tmp_name']);
+			}
+		}
+
 
 		function add_attacthment_to_target( $target, $saved_attachments )
 		{
