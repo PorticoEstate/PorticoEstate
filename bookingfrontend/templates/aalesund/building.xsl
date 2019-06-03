@@ -22,17 +22,44 @@
 								<h2 id="building_name">
 									<xsl:value-of select="building/name"/>
 								</h2>
-								<i class="fas fa-map-marker d-inline"> </i>
+								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
+								<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
 								<div class="building-place-adr">
-									<span>
-										<xsl:value-of select="building/street"/>
+									<span id="buildingStreet">
+										<xsl:value-of select="building/street" />
 									</span>
-									<span class="d-block">
+									<br></br>
+									<span id="buildingZipCode">
 										<xsl:value-of select="building/zip_code"/>
-										<xsl:text> </xsl:text>
-										<xsl:value-of select="building/city"/>
 									</span>
+									<span>, </span>
+									<span id="buildingCity">
+										<xsl:value-of select="building/city" />
+									</span>
+									<p>Trykk for å se kart</p>
 								</div>
+								</button>
+
+								
+								<!-- Map Modal -->
+								<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-lg" role="document">
+										<div class="modal-content">
+											<div class="modal-header text-center">
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true"><i class="fas fa-times"></i></span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div style="width: 100%"><iframe width="500" height="450" id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div><br />
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Lukk vindu</button>
+											</div>
+										</div>
+									</div>
+								</div>
+
 							</div>
 							<xsl:if test="building/deactivate_calendar=0">
 								<div class="col-auto">
