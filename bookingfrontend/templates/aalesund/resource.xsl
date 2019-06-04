@@ -26,12 +26,12 @@
 							<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 						</div>
 						<div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
-							<h2 id="resource_name">
+							<h1 id="resource_name" class="resource_title">
 								<xsl:value-of select="resource/name"/>
-							</h2>
-							<h3>
+							</h1>
+							<!-- <h2>
 								<xsl:value-of select="building/name"/>
-							</h3>
+							</h2> -->
 							<!-- <i class="fas fa-map-marker d-inline">&#160;</i>
 							<div class="building-place-adr">
 								<span>
@@ -64,12 +64,12 @@
 						<xsl:if test="count(resource/activities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">
-									<h5 class="mb-0">
+									<h2 class="mb-0">
 										<button class="btn btn-link" data-toggle="collapse" data-target="#collapseActivities" aria-expanded="false">
 											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
 										</button>
 										<button data-toggle="collapse" data-target="#collapseActivities" class="btn fas fa-plus float-right"></button>
-									</h5>
+									</h2>
 								</div>
 								<div id="collapseActivities" class="collapse">
 									<div class="card-body">

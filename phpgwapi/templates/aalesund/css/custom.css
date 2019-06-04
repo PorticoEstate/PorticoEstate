@@ -2121,7 +2121,8 @@ footer h3{
 }
 
 #building_name,
-.building-card-title{
+.building-card-title,
+.resource_title{
     font-size: 1.5rem;
 }
 
