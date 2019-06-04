@@ -80,7 +80,15 @@
 
 				$account_lid = $db->db_addslashes($account_lid);
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM V_SOA_ANSATT WHERE BRUKERNAVN = '{$account_lid}'";
+				$filtermethod = "BRUKERNAVN = '{$account_lid}'";
+
+				if (preg_match("/^dummy\:\:/i", $account_lid))
+				{
+					$identificator_arr	 = explode("::", $account_lid);
+					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
+				}
+
+				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM V_SOA_ANSATT WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
@@ -132,8 +140,9 @@
 
 				while ($db->next_record())
 				{
+					$user_lid = $db->f('BRUKERNAVN');
 					$values[] = array(
-						'id'		 => $db->f('BRUKERNAVN'),
+						'id'		 => $user_lid ? $user_lid : 'dummy::' . $db->f('RESSURSNR'),
 						'name'		 => $db->f('BRUKERNAVN') . ' [' . $db->f('RESSURSNR') .': ' . $db->f('ETTERNAVN', true) . ', ' . $db->f('FORNAVN', true) . ', ' . $db->f('STILLINGSTEKST', true) . '] ' ,
 						'org_unit'	 => $db->f('ORG_ENHET_ID'),
 						'level'		 => $db->f('ORG_NIVAA'),
@@ -188,7 +197,15 @@
 					return;
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM V_SOA_ANSATT WHERE BRUKERNAVN = '{$on_behalf_of_lid}'";
+				$filtermethod = "BRUKERNAVN = '{$on_behalf_of_lid}'";
+
+				if (preg_match("/^dummy\:\:/i", $on_behalf_of_lid))
+				{
+					$identificator_arr	 = explode("::", $on_behalf_of_lid);
+					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
+				}
+
+				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM V_SOA_ANSATT WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 
