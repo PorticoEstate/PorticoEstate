@@ -1643,9 +1643,56 @@ NEW APPLICATION PAGE STYLE
     text-align: left;
 }
 
+.mapBtn:hover {
+    cursor: pointer;
+}
+
+/* MODAL STYLING */
+.modal-header .close {
+    color: #000;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.modal-body {
+    height: 500px;
+    width: 700px;
+}
+
+.modal-body iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.modal-header .close:hover {
+    color:  rgb(137, 38, 106);
+}
+
+.modal-footer .btn {
+    background-color: transparent;
+    color: #212529;
+    border: 1px #4d4c4c solid;
+    border-radius: 0;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.building-place-info p {
+    margin-bottom: 0;
+    margin-top: .5rem;
+    color: #27348B;
+    font-size: .8rem;
+}
+.building-place-info p:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
 
 .btn-light:hover,
-.mapBtn:hover {
+.modal-footer .btn:hover{
     border-radius: 0;
     background-color: rgb(137, 38, 106);
     color: white;
@@ -1973,8 +2020,31 @@ NEW APPLICATION PAGE STYLE
   
   margin-top: -10% !important;
 }
+
+.modal-body {
+    height: 400px;
+    width: 500px;
 }
 
+
+}
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 576px) {
+/* MODAL BODY */
+.modal-dialog {
+    max-width: 700px;
+}
+
+.modal-body {
+    height: 500px;
+    width: 300px;
+}
+}
 
 .header-text a{
     color: white;
@@ -2046,10 +2116,10 @@ footer h3{
 }
 
 .upload-button:hover   {
-     background-color: rgb(137, 38, 106);
-     text-decoration: none !important;
-	 color: white;
-	 cursor: pointer;
+    background-color: rgb(137, 38, 106);
+    text-decoration: none !important;
+    color: white;
+    cursor: pointer;
 }
 
 .login-logo{
@@ -2069,3 +2139,4 @@ footer h3{
 .header_borderline{
 	border-bottom: 1.5px solid rgb(137, 38, 106);
 }
+
