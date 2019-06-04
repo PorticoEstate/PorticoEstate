@@ -1002,7 +1002,8 @@ input:focus{
     margin-bottom: 0 !important;
 }
 
-#welcomeResult h2.title {
+#welcomeResult h2.title,
+#searchResult h2 {
     margin-bottom: .15rem;
     font-size: 1.25rem;
 }

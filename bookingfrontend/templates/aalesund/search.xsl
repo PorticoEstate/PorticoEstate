@@ -136,7 +136,7 @@
 								</div>
 								<div class="col-9 desc">
 									<div class="desc">
-										<h4 class="font-weight-bold" data-bind="html: name"></h4>
+										<h2 class="font-weight-bold" data-bind="html: name"></h2>
 										<span data-bind="html: street"></span>
 										<span class="d-block" data-bind="html: postcode"></span>
 									</div>
