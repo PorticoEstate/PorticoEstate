@@ -1233,7 +1233,7 @@ window.onload = function() {
 	}
 
 	// Address 
-	const fullAddress = address.street + address.zip + address.city;
+	const fullAddress = `${address.street}${address.zip}${address.city}`;
 
 	// Construct google maps url
 	let iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + fullAddress;
