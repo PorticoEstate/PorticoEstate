@@ -64,16 +64,8 @@ a:active {
     display:inline-block !important;
 }
 
-
-header-text a:hover {
-    color: var(--link-color-hover);
-    text-decoration: underline;
-  
-}
-
-.showMe header-text a {
-  text-decoration: underline;
-  color: #26348B;
+.header-text span {
+    font-size: 1.5rem;
 }
 
 .termAccept a:hover{
@@ -1010,8 +1002,10 @@ input:focus{
     margin-bottom: 0 !important;
 }
 
-#welcomeResult h5.title {
+#welcomeResult h2.title,
+#searchResult h2 {
     margin-bottom: .15rem;
+    font-size: 1.25rem;
 }
 
 #welcomeResult .card-text {
