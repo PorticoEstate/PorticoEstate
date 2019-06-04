@@ -32,7 +32,7 @@
 							<h3>
 								<xsl:value-of select="building/name"/>
 							</h3>
-							<i class="fas fa-map-marker d-inline">&#160;</i>
+							<!-- <i class="fas fa-map-marker d-inline">&#160;</i>
 							<div class="building-place-adr">
 								<span>
 									<xsl:value-of select="building/street"/>
@@ -42,7 +42,7 @@
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="building/city"/>
 								</span>
-							</div>
+							</div> -->
 						</div>
 						<div class="col-12 mt-4" id="item-description">
 							<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
