@@ -2120,8 +2120,9 @@ footer h3{
 	padding-right: 5px;
 }
 
-.building_name{
-	float: right;
+#building_name,
+.building-card-title{
+    font-size: 1.5rem;
 }
 
 .yui3-calendar-selection-disabled{
