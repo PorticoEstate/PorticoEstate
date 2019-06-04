@@ -16,7 +16,16 @@
 							<xsl:value-of select="php:function('lang', 'ssn')" />
 						</label>
 						<span>
-							<xsl:value-of select="user/customer_ssn" />
+
+							<xsl:choose>
+								<xsl:when test="substring (user/customer_ssn, 1, 4) != '0000'">
+									<xsl:value-of select="substring (user/customer_ssn, 1, 6)" />
+									<xsl:text>*****</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="user/customer_ssn" />
+								</xsl:otherwise>
+							</xsl:choose>
 						</span>
 					</div>
 					<div class="pure-control-group">

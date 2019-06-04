@@ -22,9 +22,9 @@
 								<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 							</div>
 							<div class="col-xl-6 col-lg-7 col-md-8 col-sm-8 col-xs-12 mb-4">
-								<h3 id="main-item-header">
+								<h1 id="main-item-header">
 									<xsl:value-of select="organization/name"/>
-								</h3>
+								</h1>
 								<xsl:if test="organization/street and normalize-space(organization/street)">
 									<i class="fas fa-map-marker d-inline"> </i>
 									<div class="building-place-adr">
@@ -79,13 +79,13 @@
 
 								<div class="building-card">
 									<div class="building-card-header">
-										<h5 class="mb-0">
+										<h2 class="mb-0">
 											<button class="btn btn-link" data-toggle="collapse" data-target="#collapseBuildingsUsedBy" aria-expanded="false">
 												<xsl:value-of select="php:function('lang', 'Used buildings (2018)')" />
 											</button>
 											<button data-toggle="collapse" data-target="#collapseBuildingsUsedBy" class="btn fas fa-plus float-right"></button>
 
-										</h5>
+										</h2>
 
 									</div>
 
@@ -114,12 +114,12 @@
 								<div class="building-card">
 									<xsl:if test="organization/contact_info and normalize-space(organization/contact_info)">
 										<div class="building-card-header">
-											<h5 class="mb-0">
+											<h2 class="mb-0">
 												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseContacts" aria-expanded="false">
 													<xsl:value-of select="php:function('lang', 'Contact information')" />
 												</button>
 												<button data-toggle="collapse" data-target="#collapseContacts" class="btn fas fa-plus float-right"></button>
-											</h5>
+											</h2>
 										</div>
 										<div id="collapseContacts" class="collapse">
 											<div class="card-body" >
@@ -133,9 +133,9 @@
 					</div>
 
 					<div class="col-lg-6 building-bookable">
-						<h5 class="font-weight-bold mb-4">
+						<h2 class="font-weight-bold mb-4">
 							<xsl:value-of select="php:function('lang', 'Groups (2018)')" />
-						</h5>
+						</h2>
 						<div class="custom-card-org p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
 							<div data-bind="foreach: groups">
 								<div class="custom-subcard mb-0">

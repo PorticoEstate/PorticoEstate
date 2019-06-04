@@ -19,9 +19,9 @@
 								<img class="img-fluid image-circle" id="item-main-picture" src="#" alt="Bygning" />
 							</div>
 							<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
-								<h2 id="building_name">
+								<h1 id="building_name">
 									<xsl:value-of select="building/name"/>
-								</h2>
+								</h1>
 								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
 								<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
 								<div class="building-place-adr">
@@ -46,8 +46,8 @@
 									<div class="modal-dialog modal-lg" role="document">
 										<div class="modal-content">
 											<div class="modal-header text-center">
-												<h5 class="modal-title w-100">
-												<xsl:value-of select="building/name"/></h5>
+												<h2 class="modal-title w-100">
+												<xsl:value-of select="building/name"/></h2>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true"><i class="fas fa-times"></i></span>
 												</button>
@@ -77,12 +77,12 @@
 								<xsl:if test="building/description and normalize-space(building/description)">
 									<div class="building-card">
 										<div class="building-card-header">
-											<h5 class="mb-0">
+											<h3 class="building-card-title mb-0">
 												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
 													<xsl:value-of select="php:function('lang', 'Building information')" />
 												</button>
 												<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
-											</h5>
+											</h3>
 										</div>
 										<div id="collapseOne" class="collapse">
 											<div class="card-body">
@@ -93,12 +93,12 @@
 								</xsl:if>
 								<div class="building-card card-img-thumbs">
 									<div class="building-card-header">
-										<h5 class="mb-0">
+										<h3 class="building-card-title mb-0">
 											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
 												<xsl:value-of select="php:function('lang', 'Pictures')" />
 											</button>
 											<button data-toggle="collapse" data-target="#collapseTwo" class="btn fas fa-plus float-right"></button>
-										</h5>
+										</h3>
 									</div>
 									<div id="collapseTwo" class="collapse">
 										<div class="card-body building-images" id="list-img-thumbs">

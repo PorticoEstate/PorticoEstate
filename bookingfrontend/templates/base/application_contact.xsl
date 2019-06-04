@@ -19,9 +19,9 @@
 					<div class="mb-4">
 						<xsl:call-template name="msgbox"/>
 					</div>
-					<h5 class="font-weight-bold mb-4">
+					<h2 class="font-weight-bold mb-4">
 						<xsl:value-of select="php:function('lang', 'applications')" />
-					</h5>
+					</h2>
 					<p class="validationMessage" data-bind="visible: applicationCartItems().length == 0">
 						<xsl:value-of select="php:function('lang', 'applicationcart empty')" />
 					</p>
