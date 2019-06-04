@@ -474,6 +474,10 @@
 
 		function delete()
 		{
+			if ($this->acl_delete)
+			{
+				phpgw::no_access();
+			}
 			$custom_id	 = phpgw::get_var('custom_id', 'int');
 			$confirm	 = phpgw::get_var('confirm', 'bool', 'POST');
 
@@ -511,6 +515,11 @@
 
 		function view()
 		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
 			$custom_id = phpgw::get_var('custom_id', 'int', 'GET');
 
 //			$datatable = array();
@@ -587,6 +596,10 @@
 		public function query_view( $custom_id )
 		{
 
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
 			$draw	 = phpgw::get_var('draw', 'int');
@@ -620,6 +633,11 @@
 
 		function download()
 		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
 			$custom_id	 = phpgw::get_var('custom_id', 'int');
 			$params		 = array(
 				'custom_id'	 => $custom_id,
