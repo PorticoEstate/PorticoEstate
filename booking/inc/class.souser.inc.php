@@ -13,8 +13,8 @@
 				'active'			 => array('type' => 'int', 'required' => true),
 				'name'				 => array('type' => 'string', 'required' => True, 'query' => True),
 				'homepage'			 => array('type' => 'string', 'required' => False, 'query' => True),
-				'phone'				 => array('type' => 'string'),
-				'email'				 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
+				'phone'				 => array('type' => 'string', 'query' => True),
+				'email'				 => array('type' => 'string', 'query' => True, 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
 				'street'			 => array('type' => 'string'),
 				'zip_code'			 => array('type' => 'string'),
@@ -50,10 +50,10 @@
 
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
-			$this->db->query("SELECT count(id) AS cnt FROM bb_user WHERE customer_ssn = '{$entity['customer_ssn']}'", __LINE__, __FILE__);
+			$this->db->query("SELECT id FROM bb_user WHERE customer_ssn = '{$entity['customer_ssn']}'", __LINE__, __FILE__);
 			$this->db->next_record();
-			$cnt = (int)$this->db->f('cnt');
-			if ($cnt > 0)
+			$id = (int)$this->db->f('id');
+			if ($id && $entity['id'] != $id)
 			{
 				$errors['ssn'] = lang('duplicate');
 			}

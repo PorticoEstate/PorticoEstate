@@ -580,8 +580,15 @@
 
 		public function authorize_read( $object = null )
 		{
-			$this->authorize('read', $object);
-			return $object;
+			try
+			{
+				$this->authorize('read', $object);
+				return $object;
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				throw $e;
+			}
 		}
 
 		public function allow_read( $object = null )
@@ -593,7 +600,7 @@
 			}
 			catch (booking_unauthorized_exception $e)
 			{
-				
+				throw $e;
 			}
 
 			return false;
@@ -737,7 +744,7 @@
 			}
 			catch (booking_unauthorized_exception $e)
 			{
-				
+				throw $e;
 			}
 
 			return false;
@@ -745,19 +752,43 @@
 
 		function add( $entity )
 		{
-			$allowed_entity = $this->authorize_create($entity);
+			try
+			{
+				$allowed_entity = $this->authorize_create($entity);
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				phpgw::no_access($this->current_app(), $e->getMessage());
+			}
+
 			return parent::add($allowed_entity);
 		}
 
 		function update( $entity )
 		{
-			$allowed_entity = $this->authorize_write($entity);
+			try
+			{
+				$allowed_entity = $this->authorize_write($entity);
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				phpgw::no_access($this->current_app(), $e->getMessage());
+			}
+
 			return parent::update($allowed_entity);
 		}
 
 		function delete( $id )
 		{
-			$this->authorize_delete($id);
+			try
+			{
+				$this->authorize_delete($id);
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				phpgw::no_access($this->current_app(), $e->getMessage());
+			}
+
 			return parent::delete($id);
 		}
 
@@ -778,8 +809,16 @@
 			$entity = parent::read_single($id);
 			if($entity)
 			{
-				$this->authorize_read($entity);
-				return $this->add_permission_data($entity);
+				try
+				{
+					$this->authorize_read($entity);
+					return $this->add_permission_data($entity);
+
+				}
+				catch (booking_unauthorized_exception $e)
+				{
+					phpgw::no_access($this->current_app(), $e->getMessage());
+				}
 			}
 			else
 			{
