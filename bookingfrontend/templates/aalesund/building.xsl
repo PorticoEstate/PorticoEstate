@@ -36,8 +36,8 @@
 									<span id="buildingCity">
 										<xsl:value-of select="building/city" />
 									</span>
-									<p>Trykk for å se kart</p>
 								</div>
+								<p>Trykk for å se kart</p>
 								</button>
 
 								
