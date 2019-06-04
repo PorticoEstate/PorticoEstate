@@ -46,12 +46,14 @@
 									<div class="modal-dialog modal-lg" role="document">
 										<div class="modal-content">
 											<div class="modal-header text-center">
+												<h5>
+												<xsl:value-of select="building/name"/></h5>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true"><i class="fas fa-times"></i></span>
 												</button>
 											</div>
 											<div class="modal-body">
-												<div style="width: 100%"><iframe width="500" height="450" id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div><br />
+												<div style="width: 100%"><iframe id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div><br />
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Lukk vindu</button>
