@@ -2038,6 +2038,9 @@ NEW APPLICATION PAGE STYLE
     height: 500px;
     width: 300px;
 }
+#welcomeResult .custom-card {
+    max-height: none;
+}
 }
 
 .header-text a{
