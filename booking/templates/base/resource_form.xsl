@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 	<xsl:call-template name="msgbox"/>
 	<script type="text/javascript">
 		var resource_id = "<xsl:value-of select="resource/id"/>";
@@ -179,6 +180,21 @@
 						</select>
 					</div>
 				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
+					</label>
+					<input type="text" id="direct_booking" name="direct_booking" size="10" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Direct booking')"/>
+						</xsl:attribute>
+						<xsl:if test="resource/direct_booking != ''">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />

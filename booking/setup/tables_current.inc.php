@@ -183,6 +183,7 @@
 				'rescategory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 				'contact_info' => array('type' => 'text', 'nullable' => True),
+				'direct_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
 			),
 			'pk' => array('id'),
 			'fk' => array(

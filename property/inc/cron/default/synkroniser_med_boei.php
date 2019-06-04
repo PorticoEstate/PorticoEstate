@@ -863,7 +863,7 @@ SQL;
 		function legg_til_gateadresse_phpgw()
 		{
 			//legg til
-			$sql = "SELECT boei_gateadresse.gateadresse_id, boei_gateadresse.gatenavn FROM fm_streetaddress RIGHT OUTER JOIN "
+			$sql = "SELECT boei_gateadresse.gateadresse_id, boei_gateadresse.gatenavn, boei_gateadresse.nasjonalid FROM fm_streetaddress RIGHT OUTER JOIN "
 				. " boei_gateadresse ON fm_streetaddress.id = boei_gateadresse.gateadresse_id"
 				. " WHERE (fm_streetaddress.id IS NULL)";
 
@@ -872,17 +872,18 @@ SQL;
 			while ($this->db->next_record())
 			{
 				$gater[] = array
-					(
+				(
 					'id'	 => (int)$this->db->f('gateadresse_id'),
-					'descr'	 => $this->db->f('gatenavn')
+					'descr'	 => $this->db->f('gatenavn'),
+					'nasjonalid' => (int)$this->db->f('nasjonalid'),
 				);
 			}
 			$this->db->transaction_begin();
 
 			foreach ($gater as $gate)
 			{
-				$sql2 = "INSERT INTO fm_streetaddress (id,descr)"
-					. " VALUES ({$gate['id']}, '{$gate['descr']}')";
+				$sql2 = "INSERT INTO fm_streetaddress (id,descr, nasjonalid)"
+					. " VALUES ({$gate['id']}, '{$gate['descr']}', {$gate['nasjonalid']})";
 
 				$this->db->query($sql2, __LINE__, __FILE__);
 				$gate_msg[] = $gate['descr'];

@@ -53,6 +53,7 @@
 				'rescategory_id' => 'int',
 				'activities' => 'int',
 				'facilities' => 'int',
+				'direct_booking' => 'string'
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
@@ -269,6 +270,7 @@
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
+			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_building_datatable_def($id),
 				'resource' => $resource, 'activitydata' => $activity_data, 'rescategorydata' => $rescategory_data));

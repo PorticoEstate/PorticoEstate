@@ -33,6 +33,15 @@
 			</td>
 		</tr>
 		<tr class="pure-table-odd">
+			<td>{lang_bypass_external_login}:</td>
+			<td>
+				<select name="newsettings[bypass_external_login]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_bypass_external_login_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="pure-table-odd">
 			<td>{lang_Use_cookies_to_pass_sessionid}:</td>
 			<td>
 				<select name="newsettings[usecookies]">

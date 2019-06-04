@@ -4041,3 +4041,22 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.44 to 0.2.45
+	 *
+	 */
+	$test[] = '0.2.44';
+	function booking_upgrade0_2_44()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'direct_booking',
+				array('type' => 'int', 'nullable' => true, 'precision' => 8));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.45';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

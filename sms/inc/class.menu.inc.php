@@ -66,12 +66,17 @@
 			$menus['toolbar'] = array();
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
-
 				$menus['admin'] = array
+				(
+					'index'	 => array
 					(
-					'config' => array
+						'text'		 => lang('Configuration'),
+						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname'	 => 'sms')),
+					),
+					'customconfig' => array
 						(
-						'text' => lang('config'),
+						'text' => lang('custom config'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 							'location_id' => $GLOBALS['phpgw']->locations->get_id('sms', 'run')))
 					),

@@ -243,6 +243,16 @@
 		 */
 		public function validate_ssn_login( $redirect = array())
 		{
+
+			if( isset($this->config->config_data['bypass_external_login']) && $this->config->config_data['bypass_external_login'] )
+			{
+				return array(
+					'ssn'	=> $ssn,
+					'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
+					'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
+					);
+			}
+
 			$ssn = (string)$_SERVER['HTTP_UID'];
 
 			try
