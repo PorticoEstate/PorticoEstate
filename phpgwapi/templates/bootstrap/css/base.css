@@ -212,6 +212,33 @@ a.article:hover {
 }
 
 
+.breadcrumb-item.active
+{
+    background: #e9ecef;
+    color: #626c75;
+}
+
+button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
+{
+   background: #f9f9f9;
+   color: #909090;
+
+}
+
+.btn-info {
+
+    color: #ffffff;
+    background-color: #008295;
+    border-color: #008295;
+}
+
+
+.btn-info:hover{
+
+    background-color: #5971ca;
+    border-color: #5971ca;
+
+}
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
