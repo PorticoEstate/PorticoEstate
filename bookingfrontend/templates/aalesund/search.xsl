@@ -9,7 +9,7 @@
 		</div>
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container searchContainer"     >
-				<div    id="frontpagetitle">
+				<div id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
 				<div   id="ssd" >
@@ -105,7 +105,7 @@
 								</svg>
 							</div>
 							<div class="col-md-9 col-sm-8 col-8 desc">
-								<h5 class="font-weight-bold title" data-bind="text: name"></h5>
+								<h2 class="font-weight-bold title" data-bind="text: name"></h2>
 								<div class="card-text">
 									<span  data-bind="text: datetime_time"></span>
 									<span  data-bind="text: 'STED: ' +building_name"></span>
