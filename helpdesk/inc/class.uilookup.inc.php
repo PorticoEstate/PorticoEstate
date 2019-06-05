@@ -87,10 +87,10 @@
 					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query' => $search['value'],
 					'order' => $columns[$order[0]['column']]['data'],
+					'filter' => array('category' => phpgw::get_var('category', 'int')),
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
-					'filter' => ''
 				);
 
 				$values = array();
@@ -134,6 +134,20 @@
 					'field' => array()
 				)
 			);
+
+			$cat_list = array(
+				array('id' => '', 'name' => lang('no category')),
+				array('id' => 1, 'name' => lang('internal')),
+				array('id' => 2, 'name' => lang('external communication'))
+			);
+
+			$filter = array('type'	 => 'filter',
+				'name'	 => 'category',
+				'text'	 => lang('Category'),
+				'list'	 => $cat_list
+			);
+
+			array_unshift($data['form']['toolbar']['item'], $filter);
 
 			$uicols = array(
 				'input_type' => array('text', 'text', 'text'),
