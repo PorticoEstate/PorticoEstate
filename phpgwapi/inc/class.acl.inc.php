@@ -2057,8 +2057,16 @@
 				}
 			}
 
+			/*
+			 * Store for later
+			 */
+			$__account_id = $this->_account_id;
 			foreach ($active_accounts as $entry)
 			{
+				/*
+				 * Temporary
+				 */
+
 				$this->_account_id = $entry['account_id'];
 
 				if($this->check($location, $required, $appname))
@@ -2110,6 +2118,12 @@
 					}
 				}
 			}
+
+			/**
+			 * Restore temporary from cache
+			 */
+
+			$this->_account_id = $__account_id;
 
 			$accounts = array_keys($accounts);
 

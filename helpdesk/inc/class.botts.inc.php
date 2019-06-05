@@ -1156,7 +1156,7 @@
 			}
 
 			$set_user_id = false;
-			if(!$get_message && !empty($config_set_user_message) && $_POST['values']['set_user_lid'])
+			if(!$get_message && !empty($config_set_user_message) && $_POST['values']['set_user_alternative_lid'])
 			{
 				$set_user_id =  true;
 				$link_text = "<H2>{$config_set_user_message}</H2>";

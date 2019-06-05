@@ -149,6 +149,13 @@
 
 				}
 			}
+			if((int)$this->parent_cat_id > 0)
+			{
+				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+				{
+					phpgw::no_access();
+				}
+			}
 		}
 
 

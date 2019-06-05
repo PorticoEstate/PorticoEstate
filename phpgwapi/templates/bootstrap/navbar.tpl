@@ -3,7 +3,7 @@
 		<!-- Sidebar  -->
 		<nav id="sidebar" class="{menu_state}">
 			<div class="sidebar-header">
-                <h5>{user_fullname}</h5>
+                <h1>{user_fullname}</h1>
             </div>
 			<div class="sidebar-sticky">
 				{treemenu}
