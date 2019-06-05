@@ -24,6 +24,9 @@ body {
     font-size: 14px;
 }
 
+.pure-form select {
+    height: 2.8em;
+}
 /*
     DEMO STYLE
 */
