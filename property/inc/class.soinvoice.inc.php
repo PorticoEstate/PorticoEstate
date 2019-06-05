@@ -466,9 +466,13 @@
 			while ($this->db->next_record())
 			{
 				$status_line = 0;
-				if ($this->db->f('budsjettsigndato'))
+				if ($this->db->f('budsjettsigndato') && $this->db->f('saksigndato'))
 				{
 					$status_line = 3;
+				}
+				else if ($this->db->f('budsjettsigndato'))
+				{
+					$status = 4;
 				}
 				else if ($this->db->f('saksigndato'))
 				{
@@ -2755,9 +2759,13 @@
 				}
 
 				$status = 0;
-				if ($this->db->f('budsjettsigndato'))
+				if ($this->db->f('budsjettsigndato') && $this->db->f('saksigndato'))
 				{
 					$status = 3;
+				}
+				else if ($this->db->f('budsjettsigndato'))
+				{
+					$status = 4;
 				}
 				else if ($this->db->f('saksigndato'))
 				{
