@@ -709,6 +709,24 @@
 				);
 
 				$ticket_id = CreateObject('helpdesk.botts')->add_ticket($ticket);
+
+				try
+				{
+					$external_message = array(
+						'type_id'	=> 1,
+						'ticket_id' => $ticket_id,
+						'subject'	=> $subject,
+						'message'	=> $message_details,
+						'sender'	=> $sender
+					);
+
+					CreateObject('helpdesk.soexternal_communication')->add($external_message);
+				}
+				catch (Exception $exc)
+				{
+					echo $exc->getTraceAsString();
+				}
+
 			}
 			return $ticket_id;
 		}

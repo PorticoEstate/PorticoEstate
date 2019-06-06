@@ -103,7 +103,9 @@
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($table, 'id');
 
-			$this->add_msg($id, $new_message);
+			$sender = !empty($data['sender']) ? $data['sender'] : '';
+
+			$this->add_msg($id, $new_message, $sender);
 
 			$this->db->transaction_commit();
 

@@ -75,6 +75,7 @@
 
 		function response_template()
 		{
+			$category = phpgw::get_var('category', 'int');
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				$search = phpgw::get_var('search');
@@ -87,7 +88,7 @@
 					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query' => $search['value'],
 					'order' => $columns[$order[0]['column']]['data'],
-					'filter' => array('category' => phpgw::get_var('category', 'int')),
+					'filter' => array('category' => $category),
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
@@ -124,8 +125,7 @@
 					'source' => self::link(array(
 						'menuaction' => 'helpdesk.uilookup.response_template',
 						'query' => $this->query,
-						'filter' => $this->filter,
-						'cat_id' => $this->cat_id,
+						'category' => $category,
 						'type' => 'response_template',
 						'phpgw_return_as' => 'json'
 					)),
@@ -140,6 +140,12 @@
 				array('id' => 1, 'name' => lang('internal')),
 				array('id' => 2, 'name' => lang('external communication'))
 			);
+
+
+			foreach ($cat_list as &$cat_item)
+			{
+				$cat_item['selected'] = $cat_item['id'] == $category ? 1 : 0;
+			}
 
 			$filter = array('type'	 => 'filter',
 				'name'	 => 'category',
