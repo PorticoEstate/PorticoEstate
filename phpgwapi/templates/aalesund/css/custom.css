@@ -1201,6 +1201,10 @@ textarea:focus{
         border: none;
     }
 
+    #navSearchForm {
+        display: none;
+    }
+
 }
 
 /* Small devices (landscape phones, 576px and up)*/
@@ -1208,6 +1212,10 @@ textarea:focus{
     
     .filter-link {
         display: block !important;
+    }
+
+    #navSearchForm {
+        display: none;
     }
 }
 
@@ -1218,6 +1226,10 @@ textarea:focus{
         display: block !important;
     }
     
+    .search-container #searchInput:hover,
+    .search-container #searchInput:focus {
+        width: 200px;
+    }
 }
 
 /* Large devices (desktops, 992px and up)*/
