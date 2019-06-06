@@ -17,6 +17,12 @@
 		var order_id = '<xsl:value-of select="value_order_id"/>';
 
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
+		function response_lookup()
+		{
+			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:2};
+			var strURL = phpGWLink('index.php', oArgs);
+			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		}
 
 
 	</script>
@@ -68,7 +74,7 @@
 										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<div class = 'pure-u-md-1-2'>
+										<div class = 'pure-u-md-3-4'>
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_0'">
 													<xsl:call-template name="table_setup">
@@ -110,7 +116,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'type')"/>
 										</label>
-										<select id="type_id" name="type_id" class="pure-input-1-2">
+										<select id="type_id" name="type_id" class="pure-input-3-4">
 											<xsl:attribute name="data-validation">
 												<xsl:text>required</xsl:text>
 											</xsl:attribute>
@@ -125,7 +131,7 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="mode = 'edit'">
-										<input type="text" name="subject" value="{value_subject}" class="pure-input-1-2" >
+										<input type="text" name="subject" value="{value_subject}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'subject')"/>
 											</xsl:attribute>
@@ -146,7 +152,7 @@
 										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<div class = 'pure-u-md-1-2'>
+										<div class = 'pure-u-md-3-4'>
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_3'">
 													<xsl:call-template name="table_setup">
@@ -166,10 +172,18 @@
 							<xsl:choose>
 								<xsl:when test="mode = 'edit'">
 									<div class="pure-control-group">
-										<label>
+										<label for="new_note">
 											<xsl:value-of select="php:function('lang', 'descr')"/>
+											<br/>
+											<a href="javascript:response_lookup()">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'standard text')"/>
+												</xsl:attribute>
+												<xsl:value-of select="php:function('lang', 'standard text')"/>
+											</a>
 										</label>
-										<textarea id ="communication_message" class="pure-input-1-2" rows="10" name="message">
+
+										<textarea id ="new_note" class="pure-input-3-4" rows="10" name="message">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'message')"/>
 											</xsl:attribute>
@@ -188,7 +202,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'email')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">
 											<xsl:call-template name="table_setup">
@@ -210,7 +224,7 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="mode = 'edit'">
-										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-1-2" >
+										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'comma separated list')"/>
 											</xsl:attribute>
@@ -225,7 +239,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">

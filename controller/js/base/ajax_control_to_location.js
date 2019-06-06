@@ -13,7 +13,6 @@ $(document).ready(function ()
 		//  	$("#hidden_control_area_id").val( control_area_id );
 		//     var control_id_init = $("#hidden_control_id").val();
 		var htmlString = "";
-		var width = 35;
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -27,22 +26,12 @@ $(document).ready(function ()
 
 					$.each(obj, function (i)
 					{
-
 						var selected = '';
 						var title = obj[i].title;
-
-						if (title.length > width)
-						{
-							width = title.length;
-						}
-
 						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].title + "</option>";
 					});
 
 					$("#control_id").html(htmlString);
-					//$('#control_id').css('width', width + 'em');
-					width = width / 2;
-					$('#control_id').width(width + 'em');
 				}
 				else
 				{

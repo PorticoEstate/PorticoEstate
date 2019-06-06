@@ -470,3 +470,23 @@
 		}
 	}
 
+	$test[] = '0.9.18.011';
+	function helpdesk_upgrade0_9_18_011()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_response_template', 'category',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE phpgw_helpdesk_response_template SET category = 1', __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.012';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
