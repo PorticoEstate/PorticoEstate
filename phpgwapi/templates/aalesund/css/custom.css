@@ -327,9 +327,8 @@ margin-top: auto;
 }
 
 .search-container #searchInput {
-    border-left: 1px solid #26348B;
-    border-top: 1px solid #26348B;
-    border-bottom: 1px solid #26348B;
+    border: 1px solid #26348B;
+    border-right:none;
     padding: .5rem;
     width: 150px;
     font-size: 1.25rem;
