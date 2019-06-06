@@ -6,8 +6,16 @@ $(document).ready(function ()
 	var api = oTable1.api();
 	api.on('draw', sum_columns);
 
-	var image_iframe = '<iframe id="image_content" width="100%" height="1000"><p>Your browser does not support iframes.</p></iframe>';
-	$("#layoutcontent_east").html(image_iframe);
+	// not for bootstrap-variant
+	try
+	{
+		var image_iframe = '<iframe id="image_content" width="100%" height="1000"><p>Your browser does not support iframes.</p></iframe>';
+		$("#layoutcontent_east").html(image_iframe);
+	}
+	catch(e)
+	{
+
+	}
 
 });
 
