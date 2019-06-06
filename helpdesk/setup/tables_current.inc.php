@@ -96,6 +96,7 @@
 				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
 				'content' => array('type' => 'text', 'nullable' => True),
 				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'category' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),

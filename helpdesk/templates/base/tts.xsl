@@ -24,7 +24,7 @@
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
@@ -303,7 +303,7 @@
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
