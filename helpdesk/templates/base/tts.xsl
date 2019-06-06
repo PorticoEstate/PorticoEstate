@@ -24,7 +24,7 @@
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
@@ -107,7 +107,7 @@
 								<xsl:variable name="lang_on_behalf_of">
 									<xsl:value-of select="php:function('lang', 'on behalf of')"/>
 								</xsl:variable>
-								<label>
+								<label for="set_on_behalf_of_name">
 									<xsl:value-of select="$lang_on_behalf_of"/>
 								</label>
 								<input type="hidden" id="set_on_behalf_of_lid" name="values[set_on_behalf_of_lid]"  value="{value_set_on_behalf_of_lid}"/>
@@ -131,7 +131,7 @@
 								<xsl:variable name="lang_reverse_alternative">
 									<xsl:value-of select="php:function('lang', 'reverse alternative')"/>
 								</xsl:variable>
-								<label>
+								<label for="set_user_alternative_name">
 									<xsl:value-of select="$lang_reverse_alternative"/>
 								</label>
 								<input type="hidden" id="set_user_alternative_lid" name="values[set_user_alternative_lid]" />
@@ -303,7 +303,7 @@
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}

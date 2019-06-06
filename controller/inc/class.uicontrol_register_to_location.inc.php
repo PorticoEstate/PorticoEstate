@@ -88,6 +88,7 @@
 
 			self::set_active_menu('controller::control::location_for_check_list');
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$GLOBALS['phpgw_info']['flags']['app_header'] =  lang('location_connections');
 		}
 
 		function index()

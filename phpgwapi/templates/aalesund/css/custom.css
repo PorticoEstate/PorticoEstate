@@ -368,16 +368,61 @@ a {
        border: 2px solid black  !important;
 }
 
+/* NAVBAR SEARCHBAR STYLING */
+.search-container {
+justify-content: baseline;
+margin-top: auto;
+}
+
+.search-container form {
+    display:flex;
+}
+
+.search-container #searchInput {
+    border-left: 1px solid #26348B;
+    border-top: 1px solid #26348B;
+    border-bottom: 1px solid #26348B;
+    padding: .5rem;
+    width: 150px;
+    font-size: 1.25rem;
+    transition: width .55s ease-in-out;
+}
+
+.search-container #searchInput:hover,
+.search-container #searchInput:focus {
+    width: 300px;
+}
+
+.search-container .searchButton {
+    border: 1px solid #26348B;
+    padding: 0.375rem 0.75rem;
+    height: 45px;
+    background: none;
+    transition: all .15s ease-in-out;
+}
+
+.search-container .searchButton:hover {
+    background: #89266a;
+    cursor: pointer;
+}
+.search-container .searchButton:hover i {
+    color: #fff;
+}
+
+.search-container .searchButton i {
+    color: #6c757d;
+    transition: all .15s ease-in-out;
+}
 
 .info-content {
     padding-top: 2em;
 }
 
   .parentdiv  {   
-      position: relative !important;
-      margin-right: 27px !important;
-      margin-top: -30px !important;
-      display: inline-block !important;
+    position: relative !important;
+    margin-right: 27px !important;
+    margin-top: -30px !important;
+    display: inline-block !important;
     padding-right: 15px;
     padding-left: 15px;
     width: 100%;
@@ -1156,6 +1201,10 @@ textarea:focus{
         border: none;
     }
 
+    #navSearchForm {
+        display: none;
+    }
+
 }
 
 /* Small devices (landscape phones, 576px and up)*/
@@ -1163,6 +1212,10 @@ textarea:focus{
     
     .filter-link {
         display: block !important;
+    }
+
+    #navSearchForm {
+        display: none;
     }
 }
 
@@ -1173,6 +1226,10 @@ textarea:focus{
         display: block !important;
     }
     
+    .search-container #searchInput:hover,
+    .search-container #searchInput:focus {
+        width: 200px;
+    }
 }
 
 /* Large devices (desktops, 992px and up)*/
@@ -2037,6 +2094,9 @@ NEW APPLICATION PAGE STYLE
 .modal-body {
     height: 500px;
     width: 300px;
+}
+#welcomeResult .custom-card {
+    max-height: none;
 }
 }
 

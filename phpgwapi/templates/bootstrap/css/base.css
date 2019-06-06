@@ -24,6 +24,9 @@ body {
     font-size: 14px;
 }
 
+.pure-form select {
+    height: 2.8em;
+}
 /*
     DEMO STYLE
 */
@@ -76,6 +79,19 @@ a:focus {
     margin: 40px 0;
 }
 
+.navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover
+{
+
+    color: rgba(255,255,255,1);
+	font-weight: bolder;
+
+}
+.navbar-dark .navbar-nav .nav-link
+{
+
+    color: rgba(255,255,255,1);
+
+}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -89,13 +105,18 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #7386D5;
+    background: #5971ca;
+
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar.active {
     margin-left: -250px;
+}
+
+#sidebar h1 {
+    font-size: 1.25rem;
 }
 
 #sidebar .sidebar-header {
@@ -121,7 +142,7 @@ a:focus {
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: #5971ca;
     background: #fff;
 	text-decoration: none;
 }
@@ -184,7 +205,7 @@ ul.CTAs a {
 
 a.download {
     background: #fff;
-    color: #7386D5;
+    color: #5971ca;
 }
 
 a.article,
@@ -194,6 +215,33 @@ a.article:hover {
 }
 
 
+.breadcrumb-item.active
+{
+    background: #e9ecef;
+    color: #626c75;
+}
+
+button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
+{
+   background: #f9f9f9;
+   color: #909090;
+
+}
+
+.btn-info {
+
+    color: #ffffff;
+    background-color: #008295;
+    border-color: #008295;
+}
+
+
+.btn-info:hover{
+
+    background-color: #5971ca;
+    border-color: #5971ca;
+
+}
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
