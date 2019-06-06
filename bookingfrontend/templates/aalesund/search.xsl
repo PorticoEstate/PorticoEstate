@@ -8,12 +8,12 @@
 			</div>
 		</div>
 		<div class="jumbotron jumbotron-fluid">
-			<div class="container searchContainer"     >
-				<div id="frontpagetitle">
+			<div id="frontPageTitleContainer" class="container text-center">
+				<div class="col" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-				<div   id="ssd" >
-				</div>
+			</div>
+			<div class="container searchContainer"     >
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
