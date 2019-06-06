@@ -1360,6 +1360,7 @@
 			$old_building_part		 = $this->db->f('building_part', true);
 			$old_order_dim1			 = (int)$this->db->f('order_dim1');
 			$order_sent				 = $this->db->f('order_sent');
+			$old_order_id			 = $this->db->f('order_id');
 
 			if ($oldcat_id == 0)
 			{
@@ -1695,8 +1696,7 @@
 				unset($interlink);
 			}
 
-
-			if (isset($ticket['make_order']) && $ticket['make_order'])
+			if (!$old_order_id && isset($ticket['make_order']) && $ticket['make_order'])
 			{
 				$order_id = execMethod('property.socommon.increment_id', 'order');
 				if ($order_id)
