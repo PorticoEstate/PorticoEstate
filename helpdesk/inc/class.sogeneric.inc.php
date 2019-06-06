@@ -138,6 +138,21 @@
 								'name' => 'public',
 								'descr' => lang('public'),
 								'type' => 'checkbox'
+							),
+							array(
+								'name' => 'category',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'default' => '1',
+								'nullable'	 => false,
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(
+										array('id' => 1, 'name' => lang('internal')),
+										array('id' => 2, 'name' => lang('external communication'))
+										),
+								)
 							)
 						),
 						'edit_msg' => lang('edit'),
