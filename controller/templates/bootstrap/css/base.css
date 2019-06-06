@@ -2064,6 +2064,7 @@ div.controller_checklist {
 
 #comp-filters .filter {
   float: left;
+  margin-right: 5px;
 }
 
 #choose-location #datatable-container{
