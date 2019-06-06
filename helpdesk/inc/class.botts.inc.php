@@ -1190,7 +1190,7 @@
 			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
 					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
 
-			$body .= "<table>";
+			$body .= "<table class='overview'>";
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
 			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;<b>'.$status_text[$ticket['status']]."</b></td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
@@ -1276,7 +1276,7 @@ HTML;
 				{
 					$table_content .= "<tr><td style='vertical-align:top'>{$value['value_count']}</td><td style='vertical-align:top'>{$value['value_date']}</td><td style='vertical-align:top'>{$value['value_user']}</td><td style='white-space: pre-line'>{$value['value_note']}</td></tr>";
 				}
-				$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
+				$body.= "<br/><table class='details'>{$table_content}</table>";
 				$subject .= "::{$i}";
 			}
 
@@ -1284,19 +1284,134 @@ HTML;
 			{
 				return array('subject' => $subject, 'body' => $body);
 			}
-			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
 
 			$html = <<<HTML
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<style TYPE="text/css">
-			<!--{$css}-->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>{$subject}</title>
+		<style>
+
+			html {
+				font-family: arial;
+				}
+
+			.overview {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.overview th {
+			  background: darkblue;
+			  color: white;
+			}
+			.overview td,
+			.overview th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+
+			.details {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.details th {
+			  background: darkblue;
+			  color: white;
+			}
+			.details td,
+			.details th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+			.details tr:nth-child(even) {
+			  background: lightblue;
+			}
+
+
+			@page {
+			size: A4;
+			}
+
+			#order_deadline{
+				width: 800px;
+				border:0px solid transparent;
+			}
+
+			#order_deadline td{
+				border:0px solid transparent;
+			}
+			@media print {
+			li {page-break-inside: avoid;}
+			h1, h2, h3, h4, h5 {
+			page-break-after: avoid;
+			}
+
+			table, figure {
+			page-break-inside: avoid;
+			}
+			}
+
+
+			@page:left{
+			@bottom-left {
+			content: "Page " counter(page) " of " counter(pages);
+			}
+			}
+			@media print
+			{
+				.btn
+				{
+					display: none !important;
+				}
+			}
+
+			.btn{
+			background: none repeat scroll 0 0 #2647A0;
+			color: #FFFFFF;
+			display: inline-block;
+			margin-right: 5px;
+			padding: 5px 10px;
+			text-decoration: none;
+			border: 1px solid #173073;
+			cursor: pointer;
+			}
+
+			ul{
+			list-style: none outside none;
+			}
+
+			li{
+			list-style: none outside none;
+			}
+
+			li.list_item ol li{
+			list-style: decimal;
+			}
+
+			ul.groups li {
+			padding: 3px 0;
+			}
+
+			ul.groups li.odd{
+			background: none repeat scroll 0 0 #DBE7F5;
+			}
+
+			ul.groups h3 {
+			font-size: 18px;
+			margin: 0 0 5px;
+			}
+
 		</style>
 	</head>
 	<body>
-		{$body}
+		<div style='width: 800px;'>
+			{$body}
+		</div>
 	</body>
 </html>
 HTML;
