@@ -52,6 +52,7 @@
 
 		function add( $values )
 		{
+			$sender = !empty($values['sender']) ? $values['sender'] : '';
 			$fields = $this->get_fields();
 
 			$value_set = array();
@@ -84,7 +85,7 @@
 			unset($value_set['message']);
 
 			$cols	 = implode(',', array_keys($value_set));
-			$values	 = $this->db->validate_insert(array_values($value_set));
+			$values_insert	 = $this->db->validate_insert(array_values($value_set));
 
 			$this->db->transaction_begin();
 
@@ -100,10 +101,8 @@
 					throw new Exception("External communication for {$this->currentapp} is not supported");
 			}
 
-			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values_insert})", __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($table, 'id');
-
-			$sender = !empty($data['sender']) ? $data['sender'] : '';
 
 			$this->add_msg($id, $new_message, $sender);
 
@@ -162,8 +161,6 @@
 					}
 				}
 			}
-
-
 
 			$value_set['mail_recipients'] = $this->organize_mail_recipients($values);
 
