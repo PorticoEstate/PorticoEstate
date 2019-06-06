@@ -8,7 +8,7 @@
 			</div>
 		</div>
 		<div class="jumbotron jumbotron-fluid">
-			<div id="frontPageTitleContainer" class="container text-center">
+			<div class="container text-center">
 				<div class="col" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>

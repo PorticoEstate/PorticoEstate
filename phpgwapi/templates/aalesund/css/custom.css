@@ -892,8 +892,7 @@ input:focus{
 
 .pageResults {
     margin-bottom: 5em;
-    min-height: 800px;
-/*     background-color: red  !important;*/
+    min-height: 400px;
 }
 
 .result-title {
