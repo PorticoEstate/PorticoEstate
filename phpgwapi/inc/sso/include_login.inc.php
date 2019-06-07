@@ -359,6 +359,18 @@
 			}
 
 			$last_loginid = isset($_COOKIE['last_loginid']) ? $_COOKIE['last_loginid'] : '';
+
+			if($last_loginid)
+			{
+				$accounts->name2id($_COOKIE['last_loginid']);
+
+				$acl = createObject('phpgwapi.acl',$accounts->name2id($_COOKIE['last_loginid']));
+				if ( $acl->check('anonymous', 1, 'phpgwapi') )
+				{
+					$last_loginid = '';
+				}
+			}
+
 			if($GLOBALS['phpgw_info']['server']['show_domain_selectbox'] && $last_loginid !== '')
 			{
 				reset($GLOBALS['phpgw_domain']);
