@@ -395,6 +395,7 @@ Edit Group	booking	nn	Rediger gruppe
 Select Type	booking	nn	Velg type
 Customer number	booking	nn	Ressursnummer
 Send	booking	nn	Send
+your application has now been processed and a confirmation email has been sent to you.	booking	nn	Søknaden er handsama, og ein kvittering er sendt til deg på e-post.
 Your application has now been registered and a confirmation email has been sent to you.	booking	nn	Søknaden er sendt inn, og ein kvittering er sendt til deg på e-post.
 Your applications have now been registered and confirmation emails have been sent to you.	booking	nn	Søknadene har nå blitt sendt inn, og bekreftelser har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	nn	Ein saksbehandler vil behandle søknaden så fort som mogeleg.
