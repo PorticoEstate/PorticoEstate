@@ -385,6 +385,7 @@ Edit Group	booking	no	Rediger gruppe
 Select Type	booking	no	Velg type
 Customer number	booking	no	Ressursnummer
 Send	booking	no	Send
+your application has now been processed and a confirmation email has been sent to you.	booking	nn	Søknaden er behandlet, og en bekreftelse er sendt til deg på e-post.
 Your application has now been registered and a confirmation email has been sent to you.	booking	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
 Your applications have now been registered and confirmation emails have been sent to you.	booking	no	Søknadene har nå blitt sendt inn, og bekreftelser har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	booking	no	En saksbehandler vil behandle søknaden så fort som mulig.

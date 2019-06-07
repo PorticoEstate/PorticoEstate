@@ -331,7 +331,7 @@
 				$files = <<<HTML
 
 				<br/>
-				<table class='pure-table pure-table-bordered pure-table-striped'>
+				<table class='details'>
 					<thead>
 							<tr>
 								<th>
@@ -374,21 +374,142 @@ HTML;
 
 			$html = <<<HTML
 
-			<!DOCTYPE html>
-			<html>
-				<head>
-					<title>{$ticket_html['subject']}</title>
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
-				</head>
-					<script type="text/javascript">
-					document.onload = window.print();
-					</script>
-				<body>
-					<H2>{$ticket_html['subject']}</H2>
-					{$ticket_html['body']}
-					{$files}
-				</body>
-			</html>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>{$ticket_html['subject']}</title>
+		<style>
+
+			html {
+				font-family: arial;
+				}
+
+			.overview {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.overview th {
+			  background: darkblue;
+			  color: white;
+			}
+			.overview td,
+			.overview th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+
+			.details {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.details th {
+			  background: darkblue;
+			  color: white;
+			}
+			.details td,
+			.details th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+			.details tr:nth-child(even) {
+			  background: lightblue;
+			}
+
+
+			@page {
+			size: A4;
+			}
+
+			#order_deadline{
+				width: 800px;
+				border:0px solid transparent;
+			}
+
+			#order_deadline td{
+				border:0px solid transparent;
+			}
+			@media print {
+			li {page-break-inside: avoid;}
+			h1, h2, h3, h4, h5 {
+			page-break-after: avoid;
+			}
+
+			table, figure {
+			page-break-inside: avoid;
+			}
+			}
+
+
+			@page:left{
+			@bottom-left {
+			content: "Page " counter(page) " of " counter(pages);
+			}
+			}
+			@media print
+			{
+				.btn
+				{
+					display: none !important;
+				}
+			}
+
+			.btn{
+			background: none repeat scroll 0 0 #2647A0;
+			color: #FFFFFF;
+			display: inline-block;
+			margin-right: 5px;
+			padding: 5px 10px;
+			text-decoration: none;
+			border: 1px solid #173073;
+			cursor: pointer;
+			}
+
+			ul{
+			list-style: none outside none;
+			}
+
+			li{
+			list-style: none outside none;
+			}
+
+			li.list_item ol li{
+			list-style: decimal;
+			}
+
+			ul.groups li {
+			padding: 3px 0;
+			}
+
+			ul.groups li.odd{
+			background: none repeat scroll 0 0 #DBE7F5;
+			}
+
+			ul.groups h3 {
+			font-size: 18px;
+			margin: 0 0 5px;
+			}
+
+		</style>
+
+		<script type="text/javascript">
+			document.onload = window.print();
+		</script>
+
+   </head>
+
+	<body>
+		<div style='width: 800px;'>
+			<H2>{$ticket_html['subject']}</H2>
+			{$ticket_html['body']}
+			{$files}
+		</div>
+	</body>
+</html>
 HTML;
 
 			echo $html;
@@ -1415,6 +1536,11 @@ JS;
 			//_debug_array($insert_record);
 			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
 			{
+				if ($GLOBALS['phpgw']->session->is_repost())
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
+				}
+
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'helpdesk');
 
 				$insert_record_entity = $GLOBALS['phpgw']->session->appsession('insert_record_values' . $this->acl_location, 'helpdesk');
