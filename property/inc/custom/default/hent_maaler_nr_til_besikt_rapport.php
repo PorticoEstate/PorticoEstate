@@ -223,6 +223,73 @@
 								}
 							}
 							break;
+
+						case 'roykvarsler':
+							if ($entry['value'] && ($entry['value'] == 2 || $entry['value'] == 3))
+							{
+								$db_dateformat 		= phpgwapi_db::date_format();
+
+								//2 = "Skiftet batteri"
+								//3 = "Skiftet røykvarsler"
+
+								$location_id_roykvarsler	 = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.23');
+								$new_value					 = date($db_dateformat, time());
+								$sql						 = "SELECT json_representation->>'skiftet' as skiftet, json_representation->>'batteriskift' as batteriskift, id FROM fm_bim_item"
+									. " WHERE location_id = {$location_id_roykvarsler}"
+									. " AND location_code='{$values['location_code']}'";
+								$this->db->query($sql, __LINE__, __FILE__);
+								$this->db->next_record();
+								$old_skiftet				 = $this->db->f('skiftet');
+								$old_batteriskift			 = $this->db->f('batteriskift');
+								$id							 = $this->db->f('id');
+								if ($id)
+								{
+									if($entry['value'] == 3) //Skiftet røykvarsler"
+									{
+										$attrib_id = 2;
+										if ( date('Y-m-d', strtotime($new_value)) != date('Y-m-d', strtotime($old_skiftet)) )
+										{
+											$historylog	 = CreateObject('property.historylog', 'entity_1_23');
+											$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
+											$sql		 = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{skiftet}', '\"{$new_value}\"', true)"
+												. " WHERE location_id = {$location_id_roykvarsler}"
+												. " AND location_code='{$values['location_code']}'";
+
+											$this->db->query($sql, __LINE__, __FILE__);
+										}
+									}
+									else // Skiftet batteri
+									{
+										$attrib_id = 3;
+										if ( date('Y-m-d', strtotime($new_value)) != date('Y-m-d', strtotime($old_batteriskift)) )
+										{
+											$historylog	 = CreateObject('property.historylog', 'entity_1_23');
+											$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
+											$sql		 = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{batteriskift}', '\"{$new_value}\"', true)"
+												. " WHERE location_id = {$location_id_roykvarsler}"
+												. " AND location_code='{$values['location_code']}'";
+
+											$this->db->query($sql, __LINE__, __FILE__);
+										}
+									}
+								}
+								else
+								{
+									if ($values['street_name'])
+									{
+										$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
+									}
+									else
+									{
+										$address = $this->db->db_addslashes($values['location_name']);
+									}
+
+									$this->add_roykvarsler($new_value, $values['location_code'], $address);
+								}
+							}
+							break;
+ 
+ 
 						default:
 					}
 				}
@@ -287,6 +354,36 @@
 
 			$historylog	 = CreateObject('property.historylog', 'entity_1_10');
 			$historylog->add('SO', $id, $date, false, $attrib_id	 = 2, time());
+		}
+		private function add_roykvarsler( $date, $location_code, $address )
+		{
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.23');
+			$location	 = explode('-', $location_code);
+			$value_set	 = array();
+
+			$i = 1;
+			if (isset($location) AND is_array($location))
+			{
+				foreach ($location as $location_entry)
+				{
+					$value_set["loc{$i}"] = $location_entry;
+
+					$i++;
+				}
+			}
+
+			$value_set['status']		 = 1;
+			$value_set['address']		 = $address;
+			$value_set['skiftet']		 = $date;
+			$value_set['location_code']	 = $location_code;
+			$value_set['entry_date']	 = time();
+			$value_set['user_id']		 = $this->account;
+
+			$soentity	 = CreateObject('property.soentity');
+			$id			 = $soentity->_save_eav($value_set, $location_id);
+
+			$historylog	 = CreateObject('property.historylog', 'entity_1_23');
+			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
 		}
 	}
 	$data_sync = new entity_data_sync();
