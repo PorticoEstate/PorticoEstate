@@ -6,8 +6,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<style type="text/css">
 		#box { width: 200px; height: 5px; background: blue; }
-		//select { width: 200px; }
-		#voucher_id_filter { width: 800px; }
+		/*select { width: 200px; }*/
+	/*	#voucher_id_filter { width: 800px; }*/
 		#dim_b { width: 200px; }
 		#dim_e { width: 200px; }
 		#period { width: 80px; }
@@ -56,12 +56,12 @@
 		</xsl:when>
 	</xsl:choose>
 	<div id="voucher_details">
-		<table align = "center" width="95%" border="0">
+		<table class="pure-table">
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="filter_invoice" />
 		</table>
 		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
-			<table align = "center" width="95%">
+			<table class="pure-table">
 				<tr>
 					<td colspan = '6'>
 						<xsl:for-each select="datatable_def">
@@ -108,7 +108,7 @@
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td>
-			<table border="0">
+			<table class="pure-table">
 				<tr>
 					<td>
 						<label>
@@ -139,22 +139,22 @@
 				<!--<tr id="filters">-->
 				<tr>
 					<td>
-						<select id="janitor_lid" name="janitor_lid">
+						<select id="janitor_lid" name="janitor_lid" class="pure-u-md-1">
 							<xsl:apply-templates select="janitor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="supervisor_lid" name="supervisor_lid">
+						<select id="supervisor_lid" name="supervisor_lid" class="pure-u-md-1">
 							<xsl:apply-templates select="supervisor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="budget_responsible_lid" name="budget_responsible_lid">
+						<select id="budget_responsible_lid" name="budget_responsible_lid" class="pure-u-md-1">
 							<xsl:apply-templates select="budget_responsible_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="criteria" name="criteria">
+						<select id="criteria" name="criteria" class="pure-u-md-1">
 							<xsl:apply-templates select="criteria_list/options"/>
 						</select>
 					</td>		
@@ -186,7 +186,7 @@
 				</xsl:attribute>
 				<!-- When janitor area is chosen, an ajax request is executed. The operation fetches vouchers from db and populates the voucher list.
 				The ajax opearation is handled in ajax_invoice.js -->
-				<select id="voucher_id_filter" name="voucher_id_filter">
+				<select id="voucher_id_filter" name="voucher_id_filter" class="pure-u-md-1">
 					<xsl:apply-templates select="voucher_list/options"/>
 				</select>
 			</form>
@@ -305,7 +305,7 @@
 	</tr>
 	<tr class ='row_on'>
 		<td colspan = "2">
-			<table>
+			<table class="pure-table">
 				<tr class ='row_on'>
 					<td>
 						<xsl:value-of select="php:function('lang', 'period')" />
@@ -319,17 +319,17 @@
 				</tr>
 				<tr class ='row_on'>
 					<td>
-						<select id="period" name="values[period]">
+						<select id="period" name="values[period]" class="pure-u-md-1">
 							<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
 						</select>
 					</td>
 					<td>
-						<select id="periodization" name="values[periodization]">
+						<select id="periodization" name="values[periodization]" class="pure-u-md-1">
 							<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
 						</select>
 					</td>
 					<td>
-						<select id="periodization_start" name="values[periodization_start]">
+						<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
 							<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
 						</select>
 					</td>
@@ -363,7 +363,7 @@
 			<xsl:value-of select="php:function('lang', 'dime')" />
 		</td>
 		<td>
-			<select id="dim_e" name="values[dim_e]">
+			<select id="dim_e" name="values[dim_e]" class="pure-u-md-1">
 				<xsl:apply-templates select="voucher_info/generic/dime_list/options"/>
 			</select>
 		</td>
@@ -381,7 +381,7 @@
 			<xsl:value-of select="php:function('lang', 'dim b')" />
 		</td>
 		<td>
-			<select id="dim_b" name="values[dim_b]">
+			<select id="dim_b" name="values[dim_b]" class="pure-u-md-1">
 				<xsl:apply-templates select="voucher_info/generic/dimb_list/options"/>
 			</select>
 		</td>
@@ -430,7 +430,7 @@
 			<xsl:value-of select="php:function('lang', 'tax code')" />
 		</td>
 		<td>
-			<select id="tax_code" name="values[tax_code]">
+			<select id="tax_code" name="values[tax_code]" class="pure-u-md-1">
 				<xsl:apply-templates select="voucher_info/generic/tax_code_list/options"/>
 			</select>
 		</td>
@@ -508,7 +508,7 @@
 						<xsl:value-of select="date"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<select id ="_{role_sign}" name="values[forward][{role_sign}]">
+						<select id ="_{role_sign}" name="values[forward][{role_sign}]" class="pure-u-md-1">
 							<xsl:attribute name="title">
 								<xsl:value-of select="role"/>
 							</xsl:attribute>

@@ -607,7 +607,7 @@ function update_form_values(line_id, voucher_id_orig)
 						}
 						else
 						{
-							var htmlString = "<select id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
+							var htmlString = "<select  class=\"pure-u-md-1\" id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
 							var obj = data['generic']['approved_list'][i]['user_list'].options;
 							$.each(obj, function (i)
 							{
