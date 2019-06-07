@@ -1027,7 +1027,7 @@
 							{
 								$max_date = max($from_dates);
 
-								if($resource['direct_booking'] < $max_date)
+								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
 								{
 									$check_direct_booking ++;
 								}
