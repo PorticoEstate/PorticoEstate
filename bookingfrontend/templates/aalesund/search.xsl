@@ -7,12 +7,15 @@
 				</a>
 			</div>
 		</div>
+		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
+			<!-- Title -->
 			<div class="container text-center">
 				<div class="col" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
 			</div>
+			<!-- Search Container -->
 			<div class="container searchContainer"     >
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
@@ -27,7 +30,7 @@
 					</div>
 				</div>
 				<div id="search-autocomplete"></div>
-				<!-- FILTER BOXES> -->
+				<!-- Filter Boxes -->
 				<h2 class="mt-5 font-weight-bold">
 					<xsl:value-of select="php:function('lang', 'Choose categories')"/>
 				</h2>
@@ -88,9 +91,10 @@
 				</div>
 			</div>
 		</div>
+		<!-- Arrangement Container -->
 		<div class="container pageResults">
-			<!-- UPCOMMING ARRAGEMENTS -->
-			<div id="welcomeResult">
+			<!-- Upcomming Arrangements -->
+			<div id="welcomeResult" class=" container">
 				<h1 class="text-center upcomingevents-header"></h1>
 				<div class="row" data-bind="foreach: upcommingevents">
 					<div class="col-lg-6 card-positioncorrect">
@@ -118,7 +122,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- SEARCH RESULT -->
+			<!-- Search Results -->
 			<div id="searchResult" data-bind="if: notFilterSearch">
 				<h1 class="text-center result-title">
 					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
@@ -150,7 +154,7 @@
 				</div>
 			</div>
 
-			<!-- FILTER SEARCH RESULT -->
+			<!-- Filter Search Result -->
 			<div id="filterSearchResult" data-bind="if: selectedFilterbox">
 				<h1 class="text-center result-title">
 					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>

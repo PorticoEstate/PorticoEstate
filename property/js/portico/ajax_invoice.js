@@ -386,15 +386,24 @@ function update_form_values(line_id, voucher_id_orig)
 
 				if (update_image)
 				{
-					if (voucher[0].external_ref)
+					try
 					{
-						$("#invoice_id_text").html(voucher[0].external_ref);
-						document.getElementById('image_content').src = voucher[0].image_url;
+						if (voucher[0].external_ref)
+						{
+							$("#invoice_id_text").html(voucher[0].external_ref);
+							document.getElementById('image_content').src = voucher[0].image_url;
+							$("#show_image").show();
+						}
+						else
+						{
+							$("#invoice_id_text").html('FakturaNr');
+							document.getElementById('image_content').src = '';
+							$("#show_image").hide();
+						}
 					}
-					else
+					catch (e)
 					{
-						$("#invoice_id_text").html('FakturaNr');
-						document.getElementById('image_content').src = '';
+						
 					}
 				}
 
@@ -598,7 +607,7 @@ function update_form_values(line_id, voucher_id_orig)
 						}
 						else
 						{
-							var htmlString = "<select id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
+							var htmlString = "<select  class=\"pure-u-md-1\" id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
 							var obj = data['generic']['approved_list'][i]['user_list'].options;
 							$.each(obj, function (i)
 							{
@@ -646,8 +655,8 @@ function update_form_values(line_id, voucher_id_orig)
 				}
 				var Url_email = email_base_url + '&voucher_id=' + voucher[0].voucher_id;
 
-				var email_buttons = "<input type=\"button\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('" + Url_email + "');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
-				email_buttons += "<input type=\"button\" value=\"Åpne epost\" onClick=\"javascript:location.href = 'mailto:?subject=Link til faktura&body=Lim inn linken her...';\" />";
+				var email_buttons = "<input type=\"button\" class=\"pure-button pure-button-primary\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('" + Url_email + "');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
+				email_buttons += "<input type=\"button\" class=\"pure-button pure-button-primary\" value=\"Åpne epost\" onClick=\"javascript:location.href = 'mailto:?subject=Link til faktura&body=Lim inn linken her...';\" />";
 				$("#email_link").html(email_buttons);
 			}
 			else
