@@ -65,7 +65,7 @@
 		</div>
 
 
-		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
+		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" class="pure-form">
 				<xsl:variable name="label_submit">
 					<xsl:value-of select="php:function('lang', 'save')" />
 				</xsl:variable>
@@ -169,35 +169,36 @@
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td>
-			<table class="pure-table">
-				<tr>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'janitor')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'supervisor')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'budget responsible')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'search criteria')" />
-						</label>
-					</td>
-					<td >
-						<label>
-							<xsl:value-of select="php:function('lang', 'search')" />
-						</label>
-					</td>
-				</tr>
-				<!--<tr id="filters">-->
+			<table class="pure-table pure-form">
+				 <thead>
+					<tr>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'janitor')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'supervisor')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'budget responsible')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'search criteria')" />
+							</label>
+						</th>
+						<th >
+							<label>
+								<xsl:value-of select="php:function('lang', 'search')" />
+							</label>
+						</th>
+					</tr>
+				 </thead>
 				<tr>
 					<td>
 						<select id="janitor_lid" name="janitor_lid" class="pure-u-md-1">
@@ -226,7 +227,15 @@
 						<xsl:variable name="lang_search">
 							<xsl:value-of select="php:function('lang', 'Search')" />
 						</xsl:variable>
-						<input type="button" class="pure-button pure-button-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" />
+						<button class="pure-button pure-button-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" >
+							<p>
+								<i class="fas fa-search"></i>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="$lang_search" />
+							</p>
+
+
+						</button>
 					</td>	  		
 				</tr>
 			</table>
@@ -237,7 +246,7 @@
 <xsl:template match="filter_invoice" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td >
-			<form id="invoice_queryForm" name="invoice_queryForm">
+			<form id="invoice_queryForm" name="invoice_queryForm" class="pure-form">
 				<xsl:attribute name="method">
 					<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 				</xsl:attribute>
