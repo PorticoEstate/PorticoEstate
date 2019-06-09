@@ -264,6 +264,11 @@ $(document).ready(function ()
 					update_form_values(line_id, voucher_id_orig);
 					update_voucher_filter();
 					$("#receipt").html(htmlString);
+
+					$("html, body").animate({
+						scrollTop: 150
+					}, 600);
+
 				}
 			}
 		});

@@ -28,6 +28,17 @@
 		.sticky-top
 		{
 			top: 200px;
+			position: fixed;
+			position: sticky
+		}
+
+		.sticky_bottom
+		{
+			position: fixed;
+		    bottom: 50px;
+			right: 10px;
+			display: none;
+			z-index:1000;
 		}
 	</style>
 
@@ -40,6 +51,17 @@
 
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 		var email_base_url = <xsl:value-of select="//email_base_url"/>;
+
+
+	$(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.sticky_bottom').fadeIn();
+        } else {
+            $('.sticky_bottom').fadeOut();
+        }
+    });
+
+
 	</script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -69,6 +91,18 @@
 				<xsl:variable name="label_submit">
 					<xsl:value-of select="php:function('lang', 'save')" />
 				</xsl:variable>
+					<div class='sticky_bottom'>
+						<div>
+							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+									<p>
+										<i class="fas fa-save"></i>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="$label_submit"/>
+									</p>
+							</button>
+						</div>
+					</div>
+
 				<div class='row'>
 						<div class='col-sm-12'>
 					<div class=" col pure-table">
@@ -87,10 +121,11 @@
 						</div>
 				</div>
 				<div class='row'>
-					<div class='col-sm-9'>
+					<div class='col'>
 						<div id="receipt"></div>
 					</div>
-			</div>
+				</div>
+
 				<div class='row'>
 					<div class='col-sm-9'>
 			
@@ -118,7 +153,8 @@
 							<xsl:call-template name="approve"/>
 						</table>
 					</div>
-					<div class='col-sm-3 align-self-start float-left sticky-top'>
+<!--					<div class='col-sm-3 align-self-start float-left sticky_bottom'>-->
+<!--					<div class='col-sm-3  sticky_bottom'>
 						<div>
 							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
 									<p>
@@ -128,8 +164,8 @@
 									</p>
 							</button>
 						</div>
-
-					</div>
+						<div id="receipt"></div>
+					</div>-->
 
 				</div>
 		</form>
