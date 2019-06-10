@@ -365,7 +365,8 @@ function update_form_values(line_id, voucher_id_orig)
 				}
 				$("#voucher_id_text").html(voucher_id_text);
 
-				var htmlString_split = " <a href=\"javascript:load_split(" + voucher[0].voucher_id + ");\" title=\"" + voucher_id_text + "\" > Splitt " + voucher_id_text + "</a>";
+				var htmlString_split = " <a class=\"pure-button pure-button-primary\" style=\"color: white\" href=\"javascript:load_split(" + voucher[0].voucher_id + ");\" title=\"" + voucher_id_text + "\" >"
+					htmlString_split += "<i class=\"fas fa-share-alt\"></i> Splitt " + voucher_id_text + "</a>";
 
 				$("#split_text").html(htmlString_split);
 
@@ -397,13 +398,11 @@ function update_form_values(line_id, voucher_id_orig)
 						{
 							$("#invoice_id_text").html(voucher[0].external_ref);
 							document.getElementById('image_content').src = voucher[0].image_url;
-							$("#show_image").show();
 						}
 						else
 						{
 							$("#invoice_id_text").html('FakturaNr');
 							document.getElementById('image_content').src = '';
-							$("#show_image").hide();
 						}
 					}
 					catch (e)
@@ -633,14 +632,14 @@ function update_form_values(line_id, voucher_id_orig)
 				if (typeof (data['generic']['approve_list']['options']) != 'undefined')
 				{
 					var htmlString = "";
-					var htmlString2 = "<table><tr>";
+					var htmlString2 = "<table class='pure-table'><thead><tr>";
 
 					var obj = data['generic']['approve_list']['options'];
 					$.each(obj, function (i)
 					{
-						htmlString2 += "<td align=\"center\">" + obj[i].name + "</td>";
+						htmlString2 += "<th align=\"center\">" + obj[i].name + "</th>";
 					});
-					htmlString2 += "</tr><tr>";
+					htmlString2 += "</tr><thead><tbody><tr>";
 					$.each(obj, function (i)
 					{
 						var checked = '';
@@ -654,7 +653,7 @@ function update_form_values(line_id, voucher_id_orig)
 						htmlString2 += "<td align=\"center\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
 					});
 
-					htmlString2 += "</tr></table>";
+					htmlString2 += "</tr><tbody></table>";
 					$("#approve_as2").html(htmlString2);
 					//		$("#approve_as").html( htmlString );
 				}

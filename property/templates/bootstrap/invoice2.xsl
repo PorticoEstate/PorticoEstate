@@ -75,16 +75,16 @@
 			<xsl:apply-templates select="filter_invoice" />
 		</table>
 
-		<div class='row'>
+<!--		<div class='row'>
 			<div class='col-sm-9'>
 
 			</div>
 				<div class='col-sm-3'>
-				<button id="show_image" class="pure-button pure-button-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
+				<a href="#" id="show_image" class="pure-button pure-button-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
 					<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
-				</button>
+				</a>
 			</div>
-		</div>
+		</div>-->
 
 
 		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" class="pure-form">
@@ -413,34 +413,38 @@
 		</td>
 		<td>
 			<table class="pure-table">
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'period')" />
-					</td>
-					<td>
-						<xsl:value-of select="php:function('lang', 'periodization')" />
-					</td>
-					<td>
-						<xsl:value-of select="php:function('lang', 'periodization start')" />
-					</td>
-				</tr>
-				<tr class ='row_on'>
-					<td>
-						<select id="period" name="values[period]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
-						</select>
-					</td>
-					<td>
-						<select id="periodization" name="values[periodization]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
-						</select>
-					</td>
-					<td>
-						<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
-						</select>
-					</td>
-				</tr>
+				<thead>
+					<tr>
+						<th>
+							<xsl:value-of select="php:function('lang', 'period')" />
+						</th>
+						<th>
+							<xsl:value-of select="php:function('lang', 'periodization')" />
+						</th>
+						<th>
+							<xsl:value-of select="php:function('lang', 'periodization start')" />
+						</th>
+					</tr>
+				</thead>
+				 <tbody>
+					<tr class ='row_on'>
+						<td>
+							<select id="period" name="values[period]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
+							</select>
+						</td>
+						<td>
+							<select id="periodization" name="values[periodization]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
+							</select>
+						</td>
+						<td>
+							<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
+							</select>
+						</td>
+					</tr>
+				 </tbody>
 			</table>
 		</td>
 	</tr>
