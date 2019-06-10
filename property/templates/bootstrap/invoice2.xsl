@@ -5,49 +5,41 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<style type="text/css">
-		#box { width: 200px; height: 5px; background: blue; }
-		//select { width: 200px; }
-	//	#voucher_id_filter { width: 800px; }
-		#dim_b { width: 200px; }
-		#dim_e { width: 200px; }
-		#period { width: 80px; }
-		#periodization { width: 200px; }
-		#periodization_start { width: 80px; }
-		#process_code { width: 200px; }
-		#tax_code { width: 200px; }
-		#approve_as { width: 200px; }
-		#_oppsynsmannid { width: 200px; }
-		#_saksbehandlerid { width: 200px; }
-		#_budsjettansvarligid { width: 200px; }
 		.row_on,.th_bright
 		{
-		background-color: #CCEEFF;
+			background-color: #CCEEFF;
 		}
 
 		.row_off
 		{
-		background-color: #DDF0FF;
+			background-color: #DDF0FF;
 		}
 
+		.modal-dialog
+		{
+			height:600px !important;
+		}
 
-		.modal-dialog {
+		.modal-content
+		{
+			height: 100%;
+		}
 
-         /* width: 360px;*/
+		.sticky-top
+		{
+			top: 200px;
+			position: fixed;
+			position: sticky
+		}
 
-          height:600px !important;
-
-        }
-
-		.modal-content {
-
-    /* 80% of window height */
-
-    height: 90%;
-
-   
-
-}
-
+		.sticky_bottom
+		{
+			position: fixed;
+		    bottom: 50px;
+			right: 10px;
+			display: none;
+			z-index:1000;
+		}
 	</style>
 
 	<xsl:call-template name="invoice" />
@@ -59,6 +51,17 @@
 
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 		var email_base_url = <xsl:value-of select="//email_base_url"/>;
+
+
+	$(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.sticky_bottom').fadeIn();
+        } else {
+            $('.sticky_bottom').fadeOut();
+        }
+    });
+
+
 	</script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -66,19 +69,43 @@
 		</xsl:when>
 	</xsl:choose>
 
-	<button id="show_image" class="pure-button pure-button-primary" data-toggle="modal" data-target="#mapModal" style="display:none">
-		<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
-	</button>
-
 	<div id="voucher_details">
 		<table class="pure-table">
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="filter_invoice" />
 		</table>
-		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post">
-			<table class="pure-table">
-				<tr>
-					<td colspan = '6'>
+
+<!--		<div class='row'>
+			<div class='col-sm-9'>
+
+			</div>
+				<div class='col-sm-3'>
+				<a href="#" id="show_image" class="pure-button pure-button-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
+					<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
+				</a>
+			</div>
+		</div>-->
+
+
+		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" class="pure-form">
+				<xsl:variable name="label_submit">
+					<xsl:value-of select="php:function('lang', 'save')" />
+				</xsl:variable>
+					<div class='sticky_bottom'>
+						<div>
+							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+									<p>
+										<i class="fas fa-save"></i>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="$label_submit"/>
+									</p>
+							</button>
+						</div>
+					</div>
+
+				<div class='row'>
+						<div class='col-sm-12'>
+					<div class=" col pure-table">
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_1'">
 								<xsl:call-template name="table_setup">
@@ -90,40 +117,71 @@
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>
+					</div>
+						</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
 						<div id="receipt"></div>
-					</td>
-				</tr>
-				<tr>
-					<td valign="top" height="30">
-						<div id = 'split_text'>
+					</div>
+				</div>
+
+				<div class='row'>
+					<div class='col-sm-9'>
+			
+						<table class="pure-table">
+							<tr>
+								<td valign="top" height="30">
+									<div id = 'split_text'>
+									</div>
+								</td>
+							</tr>
+							<tr class ='row_on'>
+								<td colspan = '6'>
+									<div class="row_on">
+										<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+											<p>
+												<i class="fas fa-save"></i>
+												<xsl:text> </xsl:text>
+												<xsl:value-of select="$label_submit"/>
+											</p>
+										</button>
+									</div>
+								</td>
+							</tr>
+							<xsl:call-template name="voucher_fields" />
+							<xsl:call-template name="approve"/>
+						</table>
+					</div>
+<!--					<div class='col-sm-3 align-self-start float-left sticky_bottom'>-->
+<!--					<div class='col-sm-3  sticky_bottom'>
+						<div>
+							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+									<p>
+										<i class="fas fa-save"></i>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="$label_submit"/>
+									</p>
+							</button>
 						</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan = '6'>
-						<xsl:variable name="label_submit">
-							<xsl:value-of select="php:function('lang', 'save')" />
-						</xsl:variable>
-						<div class="row_on">
-							<input type="submit" class="pure-button pure-button-primary" name="values[update_voucher]" id="frm_update_voucher" value="{$label_submit}"/>
-						</div>
-					</td>
-				</tr>
-				<xsl:call-template name="voucher_fields" />
-				<xsl:call-template name="approve"/>
-			</table>
+						<div id="receipt"></div>
+					</div>-->
+
+				</div>
 		</form>
 	</div>
-<!-- invoice Modal -->
+	<!-- invoice Modal -->
 	<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header text-center">
 					<h2 class="modal-title w-100">
-					Fakturaimage
+						Fakturaimage
 					</h2>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true"><i class="fas fa-times"></i></span>
+						<span aria-hidden="true">
+							<i class="fas fa-times"></i>
+						</span>
 					</button>
 				</div>
 				<div class="modal-body">
@@ -147,35 +205,36 @@
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td>
-			<table class="pure-table">
-				<tr>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'janitor')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'supervisor')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'budget responsible')" />
-						</label>
-					</td>
-					<td>
-						<label>
-							<xsl:value-of select="php:function('lang', 'search criteria')" />
-						</label>
-					</td>
-					<td >
-						<label>
-							<xsl:value-of select="php:function('lang', 'search')" />
-						</label>
-					</td>
-				</tr>
-				<!--<tr id="filters">-->
+			<table class="pure-table pure-form">
+				 <thead>
+					<tr>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'janitor')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'supervisor')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'budget responsible')" />
+							</label>
+						</th>
+						<th>
+							<label>
+								<xsl:value-of select="php:function('lang', 'search criteria')" />
+							</label>
+						</th>
+						<th >
+							<label>
+								<xsl:value-of select="php:function('lang', 'search')" />
+							</label>
+						</th>
+					</tr>
+				 </thead>
 				<tr>
 					<td>
 						<select id="janitor_lid" name="janitor_lid" class="pure-u-md-1">
@@ -204,7 +263,15 @@
 						<xsl:variable name="lang_search">
 							<xsl:value-of select="php:function('lang', 'Search')" />
 						</xsl:variable>
-						<input type="button" class="pure-button pure-button-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" />
+						<button class="pure-button pure-button-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" >
+							<p>
+								<i class="fas fa-search"></i>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="$lang_search" />
+							</p>
+
+
+						</button>
 					</td>	  		
 				</tr>
 			</table>
@@ -215,7 +282,7 @@
 <xsl:template match="filter_invoice" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td >
-			<form id="invoice_queryForm" name="invoice_queryForm">
+			<form id="invoice_queryForm" name="invoice_queryForm" class="pure-form">
 				<xsl:attribute name="method">
 					<xsl:value-of select="phpgw:conditional(not(method), 'GET', method)"/>
 				</xsl:attribute>
@@ -341,39 +408,43 @@
 			</div>
 		</td>
 	</tr>
-	<tr>
+	<tr class ='row_on'>
 		<td>
 		</td>
 		<td>
 			<table class="pure-table">
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'period')" />
-					</td>
-					<td>
-						<xsl:value-of select="php:function('lang', 'periodization')" />
-					</td>
-					<td>
-						<xsl:value-of select="php:function('lang', 'periodization start')" />
-					</td>
-				</tr>
-				<tr class ='row_on'>
-					<td>
-						<select id="period" name="values[period]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
-						</select>
-					</td>
-					<td>
-						<select id="periodization" name="values[periodization]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
-						</select>
-					</td>
-					<td>
-						<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
-							<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
-						</select>
-					</td>
-				</tr>
+				<thead>
+					<tr>
+						<th>
+							<xsl:value-of select="php:function('lang', 'period')" />
+						</th>
+						<th>
+							<xsl:value-of select="php:function('lang', 'periodization')" />
+						</th>
+						<th>
+							<xsl:value-of select="php:function('lang', 'periodization start')" />
+						</th>
+					</tr>
+				</thead>
+				 <tbody>
+					<tr class ='row_on'>
+						<td>
+							<select id="period" name="values[period]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
+							</select>
+						</td>
+						<td>
+							<select id="periodization" name="values[periodization]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
+							</select>
+						</td>
+						<td>
+							<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
+								<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
+							</select>
+						</td>
+					</tr>
+				 </tbody>
 			</table>
 		</td>
 	</tr>
@@ -394,7 +465,7 @@
 			</div>
 		</td>
 		<td>
-			<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}"/>
+			<input type="text" name="values[order_id]" id="order_id" value="{voucher_info/voucher/order_id}" class="pure-u-md-1"/>
 			<input type="hidden" name="values[order_id_orig]" id="order_id_orig" value="{voucher_info/voucher/order_id}"/>
 		</td>
 	</tr>
@@ -413,7 +484,7 @@
 			<xsl:value-of select="php:function('lang', 'budget account')" />
 		</td>
 		<td>
-			<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}"/>
+			<input type="text" name="values[b_account_id]" id="b_account_id" value="{voucher_info/voucher/b_account_id}" class="pure-u-md-1"/>
 		</td>
 	</tr>
 	<tr class ='row_off'>
@@ -431,7 +502,7 @@
 			<xsl:value-of select="php:function('lang', 'invoice line text')" />
 		</td>
 		<td>
-			<input type="text" name="values[line_text]" id="line_text" value="{voucher_info/voucher/line_text}"/>
+			<input type="text" name="values[line_text]" id="line_text" value="{voucher_info/voucher/line_text}" class="pure-u-md-1"/>
 		</td>
 	</tr>
 	<tr class ='row_off'>
@@ -462,7 +533,7 @@
 			<xsl:value-of select="php:function('lang', 'dim a')" />
 		</td>
 		<td>
-			<input type="text" name="values[dim_a]" id="dim_a" value="{voucher_info/voucher/dim_a}"/>
+			<input type="text" name="values[dim_a]" id="dim_a" value="{voucher_info/voucher/dim_a}" class="pure-u-md-1"/>
 		</td>
 	</tr>
 	<tr class ='row_off'>
@@ -480,7 +551,7 @@
 			<xsl:value-of select="php:function('lang', 'project group')" />
 		</td>
 		<td>
-			<input type="text" name="values[external_project_id]" id="external_project_id" value="{voucher_info/voucher/external_project_id}"/>
+			<input type="text" name="values[external_project_id]" id="external_project_id" value="{voucher_info/voucher/external_project_id}" class="pure-u-md-1"/>
 		</td>
 	</tr>
 </xsl:template>
@@ -521,7 +592,7 @@
 			<xsl:value-of select="php:function('lang', 'voucher process log')"/>
 		</td>
 		<td align="left">
-			<textarea id="process_log" cols="60" rows="10" name="values[process_log]" wrap="virtual">
+			<textarea id="process_log" cols="60" rows="10" name="values[process_log]" wrap="virtual" class="pure-u-md-1">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'voucher process log')"/>
 				</xsl:attribute>

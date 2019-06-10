@@ -150,58 +150,109 @@
 			 * Regelsett 1
 			 */
 			$folder_list = array
-			(
-				'Innboks'				=> array(),
-				'Arbeidsflyt og ehandel'	=> array
 				(
-					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Arbeidsflyt og ehandel'
+				'Innboks'							 => array(),
+				'Arbeidsflyt og ehandel'			 => array
+					(
+					'message_cat_id' => 280, // 24 Faktura fra leverandør
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Arbeidsflyt og ehandel'
 				),
-				'Avvist papirfaktura'	=> array
-				(
-					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Avvist papirfaktura'
+				'Avvist papirfaktura'				 => array
+					(
+					'message_cat_id' => 280, // 24 Faktura fra leverandør
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Avvist papirfaktura'
 				),
-				'Innkassokrav'	=> array
-				(
-					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Innkassokrav',
-					'priority'			=> 1
+				'Innkassokrav'						 => array
+					(
+					'message_cat_id' => 321, // 24 Purringer/Inkasso
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Innkassokrav',
+					'priority'		 => 1
 				),
-				'Purring/Inkassovarsel'	=> array
-				(
-					'message_cat_id'	=> 321, // 24 Purringer/Inkasso
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Purring/Inkassovarsel'
+				'Purring/Inkassovarsel'				 => array
+					(
+					'message_cat_id' => 321, // 24 Purringer/Inkasso
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Purring/Inkassovarsel'
 				),
-				'Spørsmål fra leverandører'	=> array
-				(
-					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Spørsmål fra leverandører'
+				'Spørsmål fra leverandører'			 => array
+					(
+					'message_cat_id' => 280, // 24 Faktura fra leverandør
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Spørsmål fra leverandører'
 				),
-				'Spørsmål ifbm bankkvitteringer'	=> array
-				(
-					'message_cat_id'	=> 280, // 24 Faktura fra leverandør
-					'group_id'			=> 4253, //LRS-DRIFT_Økonomi
-					'subject'			=> 'Spørsmål ifbm bankkvitteringer',
-					'priority'			=> 1
+				'Spørsmål ifbm bankkvitteringer'	 => array
+					(
+					'message_cat_id' => 280, // 24 Faktura fra leverandør
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'subject'		 => 'Spørsmål ifbm bankkvitteringer',
+					'priority'		 => 1
 				),
-				'Lønn'	=> array
-				(
-					'message_cat_id'	=> 249, // LRS-Lønn::Lønn
-					'group_id'			=> 3159, //LRS-DRIFT_Lønn
-					'subject'			=> '',
+				'Lønn'								 => array
+					(
+					'message_cat_id' => 249, // LRS-Lønn::Lønn
+					'group_id'		 => 3159, //LRS-DRIFT_Lønn
+					'subject'		 => '',
 				),
-				'Refusjon'	=> array
-				(
-					'message_cat_id'	=> 265, // LRS-Refusjon::Annet
-					'group_id'			=> 3233, //LRS-DRIFT_Refusjon
-					'subject'			=> '',
-				)
+				'Refusjon'							 => array
+					(
+					'message_cat_id' => 265, // LRS-Refusjon::Annet
+					'group_id'		 => 3233, //LRS-DRIFT_Refusjon
+					'subject'		 => '',
+				),
+				/**
+				 * Lagt til 7. juni 2019
+				 */
+				'Hjelp til annet'					 => array
+					(
+					'message_cat_id' => 357, // 16 Hjelp til annet
+					'group_id'		 => 4169, //LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til annet'
+				),
+				'Hjelp til eHandel'					 => array
+					(
+					'message_cat_id' => 269, // 10 Hjelp til eHandel
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til eHandel'
+				),
+				'Hjelp til inngående faktura'		 => array
+					(
+					'message_cat_id' => 343, // 11 Hjelp til inngående faktura
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til inngående faktura'
+				),
+				'Hjelp til internordre'			 => array
+					(
+					'message_cat_id' => 340, // 14 Hjelp til internordre
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til internordre'
+				),
+				'Hjelp til omkontering'			 => array
+					(
+					'message_cat_id' => 323, // 12 Hjelp til omkontering
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til omkontering'
+				),
+				'Hjelp til rapportering'			 => array
+					(
+					'message_cat_id' => 342, // 15 Hjelp til rapportering
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til rapportering'
+				),
+				'Hjelp til salgsordre/utg faktura'	 => array
+					(
+					'message_cat_id' => 282, // 13 Hjelp til salgsordre/utg faktura
+					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
+					'subject'		 => 'Hjelp til salgsordre/utg faktura'
+				),
+				'Digilev'							 => array
+					(
+					'message_cat_id' => 319, // 24 Firewall-Fakturaavvik
+					'group_id'		 => 4253, // LRS-DRIFT_Regnskap
+					'subject'		 => 'Digilev'
+				),
 			);
 
 			foreach ($folder_list as $folder_name => $folder_rules)
@@ -235,7 +286,7 @@
 				// Iterate over the results, printing any error messages or message subjects.
 				$response_messages = $response->ResponseMessages->FindItemResponseMessage;
 
-				if($this->debug)
+				if ($this->debug)
 				{
 					_debug_array(array($folder_name, $folder_id->ChangeKey, $folder_id->Id));
 					_debug_array(count($response_messages[0]->RootFolder->Items->Message));
@@ -250,7 +301,7 @@
 						$message = $response_message->MessageText;
 						fwrite(
 							STDERR,
-		  "Failed to search for messages with \"$code: $message\"\n"
+	   "Failed to search for messages with \"$code: $message\"\n"
 						);
 						continue;
 					}
@@ -319,7 +370,7 @@
 								$this->add_attacthment_to_target($target, $saved_attachments);
 							}
 
-							if($saved_attachments)
+							if ($saved_attachments)
 							{
 								$this->clean_attacthment_from_temp($saved_attachments);
 							}
@@ -337,7 +388,7 @@
 			}
 		}
 
-		function find_folder( $client , $folder_name = 'Importert til database')
+		function find_folder( $client, $folder_name = 'Importert til database' )
 		{
 			// Build the request.
 			$request						 = new FindFolderType();
@@ -400,7 +451,7 @@
 			return $folder_info;
 		}
 
-		function handle_message( $item3 , $folder_rules = array())
+		function handle_message( $item3, $folder_rules = array() )
 		{
 			$sender	 = $item3->Sender->Mailbox->EmailAddress;
 			$target	 = array();
@@ -413,25 +464,24 @@
 			/**
 			 * Regelsett 1
 			 */
-			if($folder_rules)
+			if ($folder_rules)
 			{
 				$message_cat_id	 = $folder_rules['message_cat_id'];
 				$group_id		 = $folder_rules['group_id'];
-				$priority		 = !empty($folder_rules['priority']) ? (int) $folder_rules['priority'] : 3;
+				$priority		 = !empty($folder_rules['priority']) ? (int)$folder_rules['priority'] : 3;
 
-				if(!empty($folder_rules['subject']))
+				if (!empty($folder_rules['subject']))
 				{
 					$subject = "{$folder_rules['subject']}::{$subject}";
 				}
 
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
 					$target['type']				 = 'helpdesk';
 					$target['id']				 = $ticket_id;
 				}
-
 			}
 			/**
 			 * Regelsett 2
@@ -505,7 +555,7 @@
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-DRIFT_Økonomi
-				$priority		= 1;
+				$priority		 = 1;
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
 				if ($ticket_id)
 				{
@@ -696,8 +746,8 @@
 			}
 			else
 			{
-				$ticket		 = array
-				(
+				$ticket = array
+					(
 					'assignedto'			 => false,
 					'group_id'				 => $group_id,
 					'cat_id'				 => $message_cat_id,
@@ -713,11 +763,11 @@
 				try
 				{
 					$external_message = array(
-						'type_id'	=> 1,
-						'ticket_id' => $ticket_id,
-						'subject'	=> $subject,
-						'message'	=> $message_details,
-						'sender'	=> $sender
+						'type_id'	 => 1,
+						'ticket_id'	 => $ticket_id,
+						'subject'	 => $subject,
+						'message'	 => $message_details,
+						'sender'	 => $sender
 					);
 
 					CreateObject('helpdesk.soexternal_communication')->add($external_message);
@@ -726,7 +776,6 @@
 				{
 					echo $exc->getTraceAsString();
 				}
-
 			}
 			return $ticket_id;
 		}
@@ -738,7 +787,6 @@
 				unlink($saved_attachment['tmp_name']);
 			}
 		}
-
 
 		function add_attacthment_to_target( $target, $saved_attachments )
 		{

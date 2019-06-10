@@ -910,7 +910,14 @@
 				if ($voucher[0]['external_ref'])
 				{
 					$_image_url					 = "{$baseurl_invoice}{$voucher[0]['external_ref']}";
-					$voucher[0]['external_ref']	 = " <a href=\"javascript:openwindow('{$_image_url}','640','800')\" >" . lang('invoice number') . '</a>';
+					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+					{
+						$voucher[0]['external_ref']	 = '<a href="#" class="pure-button pure-button-secondary" style="background: rgb(223, 117, 20); color: white" data-toggle="modal" data-target="#mapModal" ><p><i class="fas fa-image"></i>  ' . lang('invoice') . '</p></a>';
+					}
+					else
+					{
+						$voucher[0]['external_ref']	 = " <a href=\"javascript:openwindow('{$_image_url}','640','800')\" >" . lang('invoice number') . '</a>';
+					}
 					$voucher[0]['image_url']	 = $_image_url;
 				}
 				$voucher_info['generic']['process_log'] = $voucher[0]['process_log'];
