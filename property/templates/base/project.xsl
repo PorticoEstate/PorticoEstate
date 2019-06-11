@@ -659,10 +659,12 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="value_project_id > 0 ">
-							<div class="pure-custom">
+							<div class="pure-control-group">
+
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'budget')"/>
 								</label>
+								<div class="pure-custom">
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_0'">
 										<xsl:call-template name="table_setup">
@@ -675,6 +677,7 @@
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>
+								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>

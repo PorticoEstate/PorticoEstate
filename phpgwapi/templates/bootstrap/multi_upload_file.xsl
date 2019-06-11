@@ -13,27 +13,39 @@
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="fas fa-plus"></i>
-					<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
-					<input type="file" id="files" name="files[]" multiple="">
-						<xsl:attribute name="accept">image/*</xsl:attribute>
-						<xsl:attribute name="capture">camera</xsl:attribute>
-					</input>
-               </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="fas fa-arrow-circle-up"></i>
-                    <span><xsl:value-of select="php:function('lang', 'Start upload')"/></span>
-                </button>
+				<div class="btn-group">
+					<span class="btn btn-success fileinput-button">
+						<i class="fas fa-plus"></i>
+						<xsl:text> </xsl:text>
+						<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
+						<input type="file" id="files" name="files[]" multiple="">
+							<xsl:attribute name="accept">image/*</xsl:attribute>
+							<xsl:attribute name="capture">camera</xsl:attribute>
+						</input>
+				   </span>
+				</div>
+                <div class="btn-group">
+					<button type="submit" class="btn btn-primary start">
+						<i class="fas fa-arrow-circle-up"></i>
+						<xsl:text> </xsl:text>
+					   <span><xsl:value-of select="php:function('lang', 'Start upload')"/></span>
+					</button>
+				</div>
+                <div class="btn-group">
                 <button type="reset" class="btn btn-warning cancel">
                     <i class="fas fa-ban"></i>
-                    <span><xsl:value-of select="php:function('lang', 'Cancel upload')"/></span>
+ 					<xsl:text> </xsl:text>
+                   <span><xsl:value-of select="php:function('lang', 'Cancel upload')"/></span>
                 </button>
+				</div>
+                <div class="btn-group">
                 <button type="button" class="btn btn-danger delete">
                     <i class="fas fa-trash-alt"></i>
+					<xsl:text> </xsl:text>
                     <span><xsl:value-of select="php:function('lang', 'Delete')"/></span>
                 </button>
-                <input type="checkbox" class="toggle"></input>
+ 				</div>
+               <input type="checkbox" class="toggle"></input>
                 <!-- The global file processing state -->
                 <span class="fileupload-process"></span>
             </div>
