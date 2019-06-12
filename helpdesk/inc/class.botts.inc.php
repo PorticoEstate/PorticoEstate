@@ -1499,12 +1499,19 @@ HTML;
 				}
 			}
 
-			$notify_list = execMethod('property.notify.read', array
-				(
-				'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location),
-				'location_item_id' => $id
-				)
-			);
+			if($send_mail)
+			{
+				$notify_list = execMethod('property.notify.read', array
+					(
+					'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location),
+					'location_item_id' => $id
+					)
+				);
+			}
+			else
+			{
+				$notify_list = array();
+			}
 
 			if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 			{
