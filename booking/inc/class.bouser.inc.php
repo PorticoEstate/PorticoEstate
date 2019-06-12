@@ -125,4 +125,9 @@
 		{
 			return $this->so->collect_users();
 		}
+
+		public function get_customer_list( )
+		{
+			return $this->so->get_customer_list();
+		}
 	}

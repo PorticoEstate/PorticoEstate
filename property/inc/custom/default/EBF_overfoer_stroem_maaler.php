@@ -167,7 +167,7 @@
 
 			$subject = "Måleroverføring: {$address}";
 
-			$toarray = array('kundepost@bkk.no');
+			$toarray = array('support.norway@entelios.com');
 //			$toarray = array('hc483@bergen.kommune.no' );
 			$to		 = implode(';', $toarray);
 
@@ -255,7 +255,7 @@ HTML;
 			if ($rc)
 			{
 
-				phpgwapi_cache::message_set("Epost er sendt til BKK om overføring av måler", 'message');
+				phpgwapi_cache::message_set("Epost er sendt til support.norway@entelios.com	 om overføring av måler", 'message');
 
 				$now = date(phpgwapi_db::date_format());
 
