@@ -31,4 +31,56 @@
 			// also accept 5 digits even if its not a valid organization number
 			$this->setOption('pattern', '/(^\d{9}$)|(^\d{6}$)|(^\d{5}$)/');
 		}
+
+
+		/**
+		 * @see sfValidatorString
+		 */
+		protected function doClean( $value )
+		{
+			$clean = parent::doClean($value);
+
+			if ($clean && strlen($clean) == 9 && !$this->mod11OfNumberWithControlDigit($clean))
+			{
+				throw new sfValidatorError($this, 'invalid', array('value' => $value));
+			}
+
+			return $clean;
+		}
+
+
+		private function mod11OfNumberWithControlDigit( $input )
+		{
+
+			if($input == '000000000')
+			{
+				return false;
+			}
+
+			/**
+			 * https://web.archive.org/web/20171204223816/https://www.brreg.no/om-oss-nn/oppgavene-vare/registera-vare/om-einingsregisteret/organisasjonsnummeret/
+			 */
+
+			$controlNumber = 2;
+			$sumForMod = 0;
+
+			$arr = str_split($input);
+
+			$length = strlen($input);
+
+			for ($i = $length - 2; $i >= 0; --$i)
+			{
+				$sumForMod += $arr[$i] * $controlNumber;
+				if (++$controlNumber > 7)
+				{
+					$controlNumber = 2;
+				}
+			}
+			$_result = (11 - ($sumForMod % 11));
+			$result = $_result === 11 ? 0 : $_result;
+			$control_digit = end($arr);
+			$ret = $result == $control_digit ? true : false;
+			return $ret;
+		}
+
 	}

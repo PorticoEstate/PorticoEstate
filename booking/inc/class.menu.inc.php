@@ -208,7 +208,13 @@
 							'text' => lang('collect users'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.collect_users')),
 							'image' => array('property', 'location_tenant'),
-						)
+						),
+						'export_customer' => array
+							(
+							'text' => lang('export customer'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.export_customer')),
+							'image' => array('property', 'location_tenant'),
+						),
 					)
 				),
 				// 'costs' => array

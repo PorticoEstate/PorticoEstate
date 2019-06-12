@@ -246,7 +246,9 @@
 					foreach ($export_infos[$export_type] as $key => &$export_info_collection)
 					{
 						if (!is_array($export_info_collection))
+						{
 							continue;
+						}
 						foreach ($export_info_collection as $item_key => &$export_item_info)
 						{
 							$this->associate_reservation_with_export_file($export_item_info['id'], $entity_export_file['id'], $export_item_info['invoice_file_order_id']);

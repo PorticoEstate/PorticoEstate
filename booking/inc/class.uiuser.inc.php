@@ -13,6 +13,7 @@
 			'add' => true,
 			'edit' => true,
 			'collect_users' => true,
+			'export_customer' => true,
 			'show' => true,
 			'delete' => true,
 			'datatable' => true,
@@ -63,6 +64,58 @@
 			return $this->yui_results(null);
 		}
 
+
+
+		public function export_customer()
+		{
+			self::set_active_menu('booking::users::export_customer');
+
+			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
+				phpgw::no_access();
+			}
+
+			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
+
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+				$file_ending = 'cs15';
+				$type = 'kundefil_aktiv_kommune';
+				$date = date('Ymd', time());
+				header('Content-type: text/plain');
+				header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
+				print $this->bo->get_customer_list();
+				return;
+			}
+			else
+			{
+				$lang_confirm_msg	 = lang('export customer');
+				$lang_yes			 = lang('yes');
+			}
+			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm'));
+
+			$msgbox_data = createObject('property.bocommon')->msgbox_data($receipt);
+
+			$data = array
+				(
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.index')),
+				'update_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.export_customer')),
+				'message'				 => $receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => lang('export customer'),
+				'lang_no_statustext'	 => lang('Back to user list'),
+				'lang_no'				 => lang('no')
+			);
+
+			$function_msg									 = lang('export customer');
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('booking') . ':: ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
+
+		}
 		public function collect_users()
 		{
 			self::set_active_menu('booking::users::collect_users');
