@@ -387,10 +387,10 @@
 								</label>
 								<input id="field_contact_name" class="pure-input-1" name="contact_name" type="text">
 									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
+										<xsl:text>first_and_last_name</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Enter a name')"/>
+										<xsl:value-of select="php:function('lang', 'Enter both first and last name')"/>
 									</xsl:attribute>
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/contact_name"/>
