@@ -86,16 +86,13 @@
 				'page'		=> 1,
 				'lat'		=> 0,
 				'lng'		=> 0,
-				'limit'		=> 25,
+				'limit'		=> 2,
 				'client'	=> 'true'
 			);
 
 			$post_string = http_build_query($post_data);
 
 			$url = "{$webservicehost}?{$post_string}";
-
-			$this->log('webservicehost', print_r($url, true));
-			$this->log('POST data', print_r($post_data, true));
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -122,9 +119,14 @@
 				$data['city'] = "{$ret['items'][0]['address'][0]['postArea']}";
 			}
 
-			$this->log('webservice httpCode', print_r($httpCode, true));
-			$this->log('webservice returdata as json', $result);
-			$this->log('webservice returdata as array', print_r($ret, true));
+			if($this->debug)
+			{
+				$this->log('webservicehost', print_r($url, true));
+				$this->log('POST data', print_r($post_data, true));
+				$this->log('webservice httpCode', print_r($httpCode, true));
+				$this->log('webservice returdata as json', $result);
+				$this->log('webservice returdata as array', print_r($ret, true));
+			}
 
 		}
 
