@@ -243,6 +243,7 @@
 		 */
 		public function validate_ssn_login( $redirect = array())
 		{
+			$ssn = '20056432559';(string)$_SERVER['HTTP_UID'];
 
 			if( isset($this->config->config_data['bypass_external_login']) && $this->config->config_data['bypass_external_login'] )
 			{
@@ -253,7 +254,7 @@
 					);
 			}
 
-			$ssn = (string)$_SERVER['HTTP_UID'];
+			$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
 
 			try
 			{
@@ -271,7 +272,6 @@
 
 				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
 
-				$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
 				$login_parameter = isset($configfrontend['login_parameter']) && $configfrontend['login_parameter'] ? $configfrontend['login_parameter'] : '';
 				$custom_login_url = isset($configfrontend['custom_login_url']) && $configfrontend['custom_login_url'] ? $configfrontend['custom_login_url'] : '';
 				if($custom_login_url && $login_parameter)
@@ -299,11 +299,30 @@
 				}
 			}
 
-			return array(
+			$ret = array(
 				'ssn'	=> $ssn,
 				'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
 				'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
 				);
+
+			$get_name_from_external = isset($configfrontend['get_name_from_external']) && $configfrontend['get_name_from_external'] ? $configfrontend['get_name_from_external'] : '';
+
+			$file = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default/{$get_name_from_external}";
+
+			if (is_file($file))
+			{
+				require_once $file;
+				$external_user = new bookingfrontend_external_user_name();
+				try
+				{
+					$external_user->get_name_from_external_service( $ret );
+				}
+				catch (Exception $exc)
+				{
+				}
+			}
+
+			return $ret;
 		}
 
 	}
