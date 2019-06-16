@@ -1030,6 +1030,12 @@
 
 				$menus['navigation']['helpdesk']['children'] = array
 					(
+					'deviation' => array
+						(
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.add_deviation')),
+						'text'	 => lang('deviation'),
+						'image'	 => array('property', 'helpdesk')
+					),
 					'report' => array
 						(
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.report')),

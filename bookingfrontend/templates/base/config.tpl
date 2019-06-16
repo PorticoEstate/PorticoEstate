@@ -32,6 +32,16 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_get_name_from_external_source}:</td>
+			<td>
+				<select name="newsettings[get_name_from_external]">
+					{hook_get_name_from_external}
+				</select>
+			</td>
+		</tr>
+
+
 		<tr class="pure-table-odd">
 			<td>{lang_bypass_external_login}:</td>
 			<td>
