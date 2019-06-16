@@ -76,6 +76,7 @@
 			'build_multi_upload_file'	 => true,
 			'get_files'					 => true,
 			'view_image'				 => true,
+			'get_other_orders'			 => true
 		);
 
 		function __construct()
@@ -3566,6 +3567,50 @@
 			return $this->bo->receive_order($id, $received_amount);
 		}
 
+		function get_other_orders( $vendor_id = 0, $location_code = '' )
+		{
+			if (!$this->acl_read)
+			{
+				return array();
+			}
+
+			if (!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			if (!$location_code)
+			{
+				$location_code = phpgw::get_var('location_code', 'string');
+			}
+
+			$values = $this->bo->get_other_orders($vendor_id, $location_code);
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values as &$entry)
+			{
+				$link				 = self::link(array('menuaction' => 'property.uiworkorder.view', 'id' => $entry['id']));
+				$entry['url']		 = "<a href='{$link}'>{$entry['id']}</a>";
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+				$entry['select']	 = "<input type='radio' name='order_id' value='{$entry['id']}' class='mychecks'/>";
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($values);
+
+				return array
+					(
+					'data'				 => $values,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+
+			return $values;
+		}
 		private function _get_eco_service_name( $id )
 		{
 			return $this->bocommon->get_eco_service_name($id);

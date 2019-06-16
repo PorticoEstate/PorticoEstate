@@ -382,7 +382,7 @@
 
 				$recipients = array
 					(
-					'dag.boye.tellnes@no.issworld.com',
+			//		'dag.boye.tellnes@no.issworld.com',
 					'servicedesk@iss.no'
 				);
 

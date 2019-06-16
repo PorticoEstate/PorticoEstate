@@ -785,3 +785,5 @@ Collects users from all applications and events	booking	no	Høster brukere fra a
 added %1 users	booking	no	Lagt til %1 brukere
 found none	booking	no	Fant ingen
 direct booking	booking	no	Direkte booking
+export customer	booking	no	Eksporter kundeliste
+Enter both first and last name	booking	no	Oppgi både fornavn og etternavn

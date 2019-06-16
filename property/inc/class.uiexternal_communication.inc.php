@@ -45,6 +45,7 @@
 			'edit'	 => true,
 			'save'	 => true,
 			'delete' => true,
+			'add_deviation'	=> true
 		);
 		var $acl, $historylog;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -83,6 +84,156 @@
 			$this->preview_html	 = $this->bo->preview_html;
 		}
 
+		public function add_deviation()
+		{
+			if (!$this->acl_add)
+			{
+				phpgw::no_access();
+			}
+
+			self::set_active_menu("property::helpdesk::deviation");
+
+
+			/**
+			 * Save first, then preview - first pass
+			 */
+			$init_preview = phpgw::get_var('init_preview', 'bool');
+
+			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
+			{
+	//			$this->save($init_preview);
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			if ($this->preview_html)
+			{
+	//			$this->_send($id);
+			}
+
+			/**
+			 * Save first, then preview - second pass
+			 */
+			if (phpgw::get_var('init_preview2', 'bool'))
+			{
+				$do_preview = $id;
+			}
+			else
+			{
+				$do_preview = null;
+			}
+
+	
+
+			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
+				'vendor_id'		 => $ticket['vendor_id'],
+				'vendor_name'	 => $ticket['vendor_name'],
+				'type'			 => 'form'
+			));
+
+			$contact_data = $this->bo->get_contact_data($ticket);
+
+			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id']) ? $ticket['vendor_id'] : 0, 'mail_recipients');
+
+			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+				$_recipients_found = array();
+				foreach ($content_email as &$vendor_email)
+				{
+					if (in_array($vendor_email['value_email'], $values['mail_recipients']))
+					{
+						$vendor_email['value_select']	 = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
+						$_recipients_found[]			 = $vendor_email['value_email'];
+					}
+				}
+				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
+			}
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_1',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(array('key'		 => 'value_email', 'label'		 => lang('email'),
+						'sortable'	 => true, 'resizeable' => true),
+					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
+						'resizeable' => true)),
+				'data'		 => json_encode($content_email),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$other_orders_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'formatter'	 => 'JqueryPortico.FormatterCenter'),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_2',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_orders_def,
+				'config'	 => array(
+					//array('disableFilter' => true),
+					//array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'desc')))
+				)
+			);
+
+			$tabs			 = array();
+			$tabs['main']	 = array(
+				'label'	 => lang('deviation'),
+				'link'	 => '#main'
+			);
+
+			$type_list	 = array();
+			$type_list	 = execMethod("{$this->currentapp}.bogeneric.get_list", array('type'		 => 'external_com_type',
+				'selected'	 => (int)$values['type_id']));
+
+			if (count($type_list) > 1)
+			{
+				array_unshift($type_list, array('id' => '', 'name' => lang('select')));
+			}
+
+
+			$data											 = array(
+				'type_list'					 => array('options' => $type_list),
+				'datatable_def'				 => $datatable_def,
+				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation",
+					'id'		 => $id)),
+				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit",
+					'id'		 => $id)),
+				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.view",
+					'id'		 => $ticket_id)),
+				'value_subject'				 => !empty($values['subject']) ? $values['subject'] :'',
+				'value_extra_mail_address'	 => $value_extra_mail_address,
+				'value_id'					 => $id,
+				'value_do_preview'			 => $do_preview,
+				'vendor_data'				 => $vendor_data,
+				'contact_data'				 => $contact_data,
+				'mode'						 => $mode,
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab'			 => 0,
+				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}",
+				'value_initial_message'		 => $initial_message
+			);
+			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('deviation');
+
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript($this->currentapp, 'portico', 'external_communication.add_deviation.js');
+			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
+				'add_deviation' => $data));
+			
+		}
 		public function add()
 		{
 			if (!$this->acl_add)

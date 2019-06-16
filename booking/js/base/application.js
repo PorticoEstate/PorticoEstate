@@ -231,6 +231,22 @@ if ($.formUtils)
 	});
 
 	$.formUtils.addValidator({
+		name: 'first_and_last_name',
+		validatorFunction: function (value, $el, config, language, $form)
+		{
+			var v = false;
+			var contact_name = $('#field_contact_name').val();
+			if ( contact_name.split(" ").length > 1)
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: 'Enter both first and last name',
+		errorMessageKey: 'first_and_last_name'
+	});
+
+	$.formUtils.addValidator({
 		name: 'application_dates',
 		validatorFunction: function (value, $el, config, language, $form)
 		{

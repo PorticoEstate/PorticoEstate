@@ -643,7 +643,7 @@
 					$application['contact_email2'] = 'dummy@example.com';
 					$application['responsible_zip_code'] = '0000';
 					$application['customer_identifier_type'] = 'organization_number';
-					$application['customer_organization_number'] = '000000000';
+					$application['customer_organization_number'] = '';
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
@@ -1167,14 +1167,32 @@
 			{
 				$partial2['customer_ssn'] = $external_login_info['ssn'];
 			}
-			if(!empty($external_login_info['email']))
+			if(empty($partial2['contact_email']) && !empty($external_login_info['email']))
 			{
 				$partial2['contact_email'] = $external_login_info['email'];
 				$partial2['contact_email2'] = $external_login_info['email'];
 			}
-			if(!empty($external_login_info['phone']))
+			if(empty($partial2['contact_phone']) && !empty($external_login_info['phone']))
 			{
 				$partial2['contact_phone'] = $external_login_info['phone'];
+			}
+
+
+			if(empty($partial2['contact_name']) && !empty($external_login_info['name']))
+			{
+				$partial2['contact_name'] = $external_login_info['name'];
+			}
+			if(empty($partial2['responsible_street']) && !empty($external_login_info['street']))
+			{
+				$partial2['responsible_street'] = $external_login_info['street'];
+			}
+			if(empty($partial2['responsible_zip_code']) && !empty($external_login_info['zip_code']))
+			{
+				$partial2['responsible_zip_code'] = $external_login_info['zip_code'];
+			}
+			if(empty($partial2['responsible_city']) && !empty($external_login_info['city']))
+			{
+				$partial2['responsible_city'] = $external_login_info['city'];
 			}
 
 			$this->flash_form_errors($errors);

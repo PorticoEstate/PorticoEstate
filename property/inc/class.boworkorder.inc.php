@@ -1133,4 +1133,9 @@ HTML;
 			}
 			return $files;
 		}
+
+		public function get_other_orders( $vendor_id, $location_code)
+		{
+			return $this->so->get_other_orders($vendor_id, $location_code);
+		}
 	}
