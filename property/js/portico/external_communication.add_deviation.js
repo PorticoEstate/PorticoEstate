@@ -124,7 +124,7 @@ $(window).on('load', function()
 
 this.get_other_orders = function (location_code, vendor_id)
 {
-	var oArgs = {menuaction:'property.uiworkorder.get_other_orders',location_code:location_code,id:0};
+	var oArgs = {menuaction:'property.uiworkorder.get_other_orders',location_code:location_code,vendor_id:vendor_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_2', strURL);
 };

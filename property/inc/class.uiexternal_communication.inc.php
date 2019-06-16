@@ -171,7 +171,7 @@
 				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
 				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
-				array('key' => 'select', 'label' => lang('select'), 'sortable' => false),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'formatter'	 => 'JqueryPortico.FormatterCenter'),
 			);
 
 			$datatable_def[] = array

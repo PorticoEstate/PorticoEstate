@@ -3589,9 +3589,10 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as &$entry)
 			{
-				$link				 = self::link(array('menuaction' => 'property.uiproject.view', 'id' => $entry['id']));
+				$link				 = self::link(array('menuaction' => 'property.uiworkorder.view', 'id' => $entry['id']));
 				$entry['url']		 = "<a href='{$link}'>{$entry['id']}</a>";
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+				$entry['select']	 = "<input type='radio' name='order_id' value='{$entry['id']}' class='mychecks'/>";
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
