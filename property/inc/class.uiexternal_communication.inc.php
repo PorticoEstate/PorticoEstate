@@ -101,13 +101,13 @@
 
 			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
 			{
-				$this->save($init_preview);
+	//			$this->save($init_preview);
 			}
 
 			$id = phpgw::get_var('id', 'int');
 			if ($this->preview_html)
 			{
-				$this->_send($id);
+	//			$this->_send($id);
 			}
 
 			/**
@@ -206,7 +206,7 @@
 			$data											 = array(
 				'type_list'					 => array('options' => $type_list),
 				'datatable_def'				 => $datatable_def,
-				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.deviation",
+				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation",
 					'id'		 => $id)),
 				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit",
 					'id'		 => $id)),
