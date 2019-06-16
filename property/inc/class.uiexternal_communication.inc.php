@@ -163,6 +163,29 @@
 				)
 			);
 
+			$other_orders_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_2',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_orders_def,
+				'config'	 => array(
+					//array('disableFilter' => true),
+					//array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'desc')))
+				)
+			);
 
 			$tabs			 = array();
 			$tabs['main']	 = array(
@@ -203,8 +226,10 @@
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('deviation');
 
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
+			self::add_javascript($this->currentapp, 'portico', 'external_communication.add_deviation.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
 				'add_deviation' => $data));
 			

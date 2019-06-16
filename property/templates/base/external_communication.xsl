@@ -60,7 +60,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'type')"/>
 										</label>
-										<select id="type_id" name="type_id" class="pure-input-1-2">
+										<select id="type_id" name="type_id" class="pure-input-3-4">
 											<xsl:attribute name="data-validation">
 												<xsl:text>required</xsl:text>
 											</xsl:attribute>
@@ -73,7 +73,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'subject')"/>
 								</label>
-								<input type="text" name="subject" value="{value_subject}" class="pure-input-1-2" >
+								<input type="text" name="subject" value="{value_subject}" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'subject')"/>
 									</xsl:attribute>
@@ -85,7 +85,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'message')"/>
 								</label>
-								<textarea id ="communication_message" class="pure-input-1-2" rows="10" name="message">
+								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'message')"/>
 									</xsl:attribute>
@@ -96,12 +96,21 @@
 									</xsl:if>
 								</textarea>
 							</div>
+							<div class="pure-control-group">
+								<label for='location_name'>
+									<xsl:value-of select="php:function('lang', 'location')"/>
+								</label>
+								<input type="hidden" id="location_code" name="location_code" />
+								<input type="text" id="location_name" name="location_name" class="pure-input-3-4"/>
+								<div id="location_container"/>
+							</div>
+
 							<xsl:call-template name="vendor_form"/>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'email')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">
 											<xsl:call-template name="table_setup">
@@ -116,13 +125,48 @@
 									</xsl:for-each>
 								</div>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'contract')"/>
+								</label>
+								<select id="vendor_contract_id" name="values[contract_id]" class="pure-input-3-4">
+									<xsl:if test="count(contract_list/options) &gt; 0">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="contract_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'order')"/>
+								</label>
+								<div class="pure-custom pure-u-md-3-4">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
 
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'extra mail address')"/>
 								</label>
 
-								<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-1-2" >
+								<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'comma separated list')"/>
 									</xsl:attribute>
@@ -238,7 +282,7 @@
 										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<div class = 'pure-u-md-1-2'>
+										<div class = 'pure-u-md-3-4'>
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_0'">
 													<xsl:call-template name="table_setup">
@@ -280,7 +324,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'type')"/>
 										</label>
-										<select id="type_id" name="type_id" class="pure-input-1-2">
+										<select id="type_id" name="type_id" class="pure-input-3-4">
 											<xsl:attribute name="data-validation">
 												<xsl:text>required</xsl:text>
 											</xsl:attribute>
@@ -295,7 +339,7 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="mode = 'edit'">
-										<input type="text" name="subject" value="{value_subject}" class="pure-input-1-2" >
+										<input type="text" name="subject" value="{value_subject}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'subject')"/>
 											</xsl:attribute>
@@ -316,7 +360,7 @@
 										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<div class = 'pure-u-md-1-2'>
+										<div class = 'pure-u-md-3-4'>
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_3'">
 													<xsl:call-template name="table_setup">
@@ -339,7 +383,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'descr')"/>
 										</label>
-										<textarea id ="communication_message" class="pure-input-1-2" rows="10" name="message">
+										<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'message')"/>
 											</xsl:attribute>
@@ -357,7 +401,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'email')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">
 											<xsl:call-template name="table_setup">
@@ -379,7 +423,7 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="mode = 'edit'">
-										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-1-2" >
+										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'comma separated list')"/>
 											</xsl:attribute>
@@ -394,7 +438,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-u-md-1-2" >
+								<div class="pure-u-md-3-4" >
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">
