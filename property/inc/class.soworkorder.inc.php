@@ -3256,16 +3256,16 @@
 
 		public function get_other_orders( $vendor_id, $location_code)
 		{
-			if (!$location_code)
+
+			$vendor_id = (int)$vendor_id;
+
+			if (!$location_code || !$vendor_id)
 			{
 				return array();
 			}
 
-			$vendor_id = (int)$vendor_id;
-
 			$location_arr	 = explode('-', $location_code);
 			$values			 = array();
-			$now			 = time();
 			$_location_arr	 = array();
 			foreach ($location_arr as $loc)
 			{
@@ -3273,15 +3273,16 @@
 
 				$_location_code = implode('-', $_location_arr);
 
-				$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
-					. " fm_project.start_date, fm_project.name,"
-					. " account_lid as coordinator, fm_project_status.descr as status "
-					. " FROM fm_project"
+				$sql = "SELECT DISTINCT fm_workorder.id, fm_project.location_code,"
+					. " fm_workorder.start_date, fm_workorder.title,"
+					. " account_lid as coordinator, fm_workorder_status.descr as status "
+					. " FROM fm_workorder"
+					. " {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
 					. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
-					. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
-					. " WHERE location_code = '{$_location_code}'"
-					. " AND fm_project.id !={$vendor_id}"
-					. " ORDER BY fm_project.id DESC";
+					. " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id)"
+					. " WHERE (fm_project.location_code = '{$_location_code}' OR fm_workorder.location_code = '{$_location_code}')"
+					. " AND fm_workorder.vendor_id ={$vendor_id}"
+					. " ORDER BY fm_workorder.id DESC";
 
 
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -3292,7 +3293,7 @@
 						'id'			 => $this->db->f('id', true),
 						'location_code'	 => $this->db->f('location_code', true),
 						'start_date'	 => $this->db->f('start_date'),
-						'name'			 => $this->db->f('name', true),
+						'name'			 => $this->db->f('title', true),
 						'coordinator'	 => $this->db->f('coordinator', true),
 						'status'		 => $this->db->f('status', true),
 					);

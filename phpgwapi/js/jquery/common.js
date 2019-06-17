@@ -510,7 +510,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		api.buttons('.record').enable(selectedRows > 0);
 
 		var row = $(this);
-		var checkbox = row.find('input[type="checkbox"]');
+		var checkbox = row.find('input[type="checkbox"], input[type="radio"]');
 
 		if (checkbox && checkbox.hasClass('mychecks'))
 		{

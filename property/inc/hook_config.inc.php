@@ -736,3 +736,36 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	 * Get HTML options with roles for responsibilities that should be listed in a listbox
+	 *
+	 * @param $config
+	 * @return string HTML options to be placed in a select
+	 */
+	function tts_deviation_category( $config )
+	{
+		$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+		$cats->supress_info	 = true;
+		$values				 = $cats->return_sorted_array(0, false, '', '', '', $globals			 = true, '', $use_acl			 = false);
+
+		$assigned	 = isset($config['tts_deviation_category']) ? $config['tts_deviation_category'] : 0;
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($values as $key => $entry)
+		{
+			if ($entry['id'] == $assigned)
+			{
+				$selected = ' selected = "selected"';
+			}
+			else
+			{
+				$selected = '';
+			}
+
+			$out .= <<<HTML
+			<option value='{$entry['id']}'{$selected}>{$entry['name']}</option>
+HTML;
+		}
+		return $out;
+	}
