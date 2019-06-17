@@ -206,15 +206,44 @@
 				#$permission['active'] = $permission['active'] ? lang('Active') : lang('Inactive');
 
 				$permission_actions = array();
-				if ($this->bo->allow_write($permission))
+
+
+				try
 				{
-					$permission['option_edit'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+					if ($this->bo->allow_write($permission))
+					{
+						$permission['option_edit'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+					}
+
 				}
-				if ($this->bo->allow_delete($permission))
+				catch (booking_unauthorized_exception $ex)
 				{
-					$permission['option_delete'] = $this->get_object_typed_link('delete', array(
-						'id' => $permission['id']));
+					//nothing
 				}
+
+				try
+				{
+					if ($this->bo->allow_delete($permission))
+					{
+						$permission['option_delete'] = $this->get_object_typed_link('delete', array(
+							'id' => $permission['id']));
+					}
+
+				}
+				catch (booking_unauthorized_exception $ex)
+				{
+					//nothing
+				}
+
+//				if ($this->bo->allow_write($permission))
+//				{
+//					$permission['option_edit'] = $this->get_object_typed_link('edit', array('id' => $permission['id']));
+//				}
+//				if ($this->bo->allow_delete($permission))
+//				{
+//					$permission['option_delete'] = $this->get_object_typed_link('delete', array(
+//						'id' => $permission['id']));
+//				}
 
 				$account_id = $GLOBALS['phpgw']->accounts->name2id($permission['subject_name']);
 				if($account_id)

@@ -44,10 +44,23 @@
 						'text' => $activity['name'],
 						'children' => $this->treeitem($children, $activity['id'], $show_all)
 					);
-					if (!$this->bo->allow_write($activity))
+
+					try
+					{
+						if (!$this->bo->allow_write($activity))
+						{
+							unset($node['href']);
+						}
+					}
+					catch (booking_unauthorized_exception $exc)
 					{
 						unset($node['href']);
 					}
+
+//					if (!$this->bo->allow_write($activity))
+//					{
+//						unset($node['href']);
+//					}
 
 					$nodes[] = $node;
 				}

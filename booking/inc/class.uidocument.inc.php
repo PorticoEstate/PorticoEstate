@@ -219,15 +219,32 @@
 //				
 //				$document['actions'] = $document_actions;
 
-				if ($this->bo->allow_write($document))
+				try
 				{
-					$document['option_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+					if ($this->bo->allow_write($document))
+					{
+						$document['option_edit'] = $this->get_owner_typed_link('edit', array('id' => $document['id']));
+					}
+					
 				}
-				if ($this->bo->allow_delete($document))
+				catch (booking_unauthorized_exception $ex)
 				{
-					$document['option_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+					//nothing
+				}
+
+				try
+				{
+					if ($this->bo->allow_delete($document))
+					{
+						$document['option_delete'] = $this->get_owner_typed_link('delete', array('id' => $document['id']));
+					}
+				}
+				catch (booking_unauthorized_exception $ex)
+				{
+					//nothing
 				}
 			}
+
 			if (phpgw::get_var('no_images'))
 			{
 				$documents['results'] = array_filter($documents['results'], array($this, 'is_image'));

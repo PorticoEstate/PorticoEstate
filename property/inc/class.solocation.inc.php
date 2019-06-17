@@ -2374,6 +2374,8 @@
 
 			$filtermethod1	 = '';
 			$filtermethod2	 = '';
+			$text_search	 = false;
+			$limit_search	 = 10;
 			if (ctype_digit($location_arr[0]))
 			{
 				$filtermethod1	 = "WHERE location_code {$this->like} '{$location_code}%'";
@@ -2381,8 +2383,11 @@
 			}
 			else
 			{
+				$limit_search	 = 50;
+				$text_search	 = true;
 				$current_level	 = 1;
 				$next_level		 = 2;
+				$last_level		 = 4;
 				$query			 = $this->db->db_addslashes($location_arr[0]);
 				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%'";
 				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%'";
@@ -2402,11 +2407,24 @@
 
 			$metadata2 = $this->db->metadata("fm_location{$next_level}");
 
-			if ($metadata2)
+			if ($metadata2 && !$text_search)
 			{
 				$sql .= " UNION"
 					. " SELECT location_code, loc{$next_level}_name AS name"
 					. " FROM fm_location{$next_level} {$filtermethod2}";
+			}
+			else if ($text_search)
+			{
+				$sql .= " UNION"
+					. " SELECT location_code, loc2_name AS name"
+					. " FROM fm_location2 WHERE loc2_name {$this->like} '%{$query}%'"
+					. " UNION"
+						. " SELECT location_code, loc3_name AS name"
+					. " FROM fm_location3 WHERE loc3_name {$this->like} '%{$query}%'"
+					. " UNION"
+						. " SELECT location_code, fm_streetaddress.descr || ' ' || fm_location4.street_number || ' ' || fm_location4. etasje AS name"
+					. " FROM fm_location4 {$this->join} fm_streetaddress ON (fm_location4.street_id = fm_streetaddress.id)"
+						. "WHERE fm_streetaddress.descr || ' ' || fm_location4.street_number {$this->like} '%{$query}%'";
 			}
 
 			$sql .= " ORDER BY location_code";
@@ -2414,7 +2432,7 @@
 			$values = array();
 			if ($location_code)
 			{
-				$this->db->limit_query($sql, 0, __LINE__, __FILE__);
+				$this->db->limit_query($sql, 0, __LINE__, __FILE__, $limit_search);
 				while ($this->db->next_record())
 				{
 					$_location_code = $this->db->f('location_code');

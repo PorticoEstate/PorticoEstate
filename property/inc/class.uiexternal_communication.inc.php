@@ -49,7 +49,7 @@
 		);
 		var $acl, $historylog;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$bo, $botts, $bocommon, $config, $dateformat, $preview_html;
+			$bo, $botts, $bocommon, $config, $dateformat, $preview_html, $account;
 
 		public function __construct()
 		{
@@ -69,6 +69,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('external communication');
 
+			$this->account								 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
 			$this->acl_location	 = '.ticket';
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->currentapp);
@@ -101,13 +102,12 @@
 
 			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
 			{
-				$this->save($init_preview);
+				$this->save_ticket($init_preview);
 			}
 
-			$id = phpgw::get_var('id', 'int');
 			if ($this->preview_html)
 			{
-				$this->_send($id);
+	//			$this->_send();
 			}
 
 			/**
@@ -171,7 +171,7 @@
 				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
 				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
-				array('key' => 'select', 'label' => lang('select'), 'sortable' => false),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'formatter'	 => 'JqueryPortico.FormatterCenter'),
 			);
 
 			$datatable_def[] = array
@@ -206,23 +206,17 @@
 			$data											 = array(
 				'type_list'					 => array('options' => $type_list),
 				'datatable_def'				 => $datatable_def,
-				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.deviation",
-					'id'		 => $id)),
-				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit",
-					'id'		 => $id)),
-				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.view",
-					'id'		 => $ticket_id)),
+				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation")),
+				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit")),
+				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'value_subject'				 => !empty($values['subject']) ? $values['subject'] :'',
 				'value_extra_mail_address'	 => $value_extra_mail_address,
-				'value_id'					 => $id,
 				'value_do_preview'			 => $do_preview,
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
-				'mode'						 => $mode,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab'			 => 0,
-				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}",
-				'value_initial_message'		 => $initial_message
+				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}"
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('deviation');
 
@@ -592,6 +586,72 @@ JS;
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
 				'edit' => $data));
 		}
+
+
+		public function save_ticket( $init_preview = null )
+		{
+			$order_id = phpgw::get_var('order_id');
+			$vendor_id = phpgw::get_var('vendor_id', 'int');
+			$location_code = phpgw::get_var('location_code');
+			$contract_id = phpgw::get_var('contract_id');
+			$subject =  phpgw::get_var('subject');
+			$message =  phpgw::get_var('message');
+
+			$ticket = array
+			(
+				'assignedto'			 => $this->account,
+				'group_id'				 => false,//$group_id,
+				'location_code'			 => $location_code,
+				'cat_id'				 => $this->config['tts_deviation_category'],//10102, //"avvik" $message_cat_id,
+				'priority'				 => 3, //$priority, //valgfri (1-3)
+				'title'					 => $subject,
+				'details'				 => $message,
+	//			'external_ticket_id'	 => $external_ticket_id,
+	//			'external_origin_email'	 => $sender
+			);
+
+			$GLOBALS['phpgw']->db->transaction_begin();
+
+			$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
+
+			try
+			{
+				$external_message = array(
+					'type_id'	 => 1,
+					'ticket_id'	 => $ticket_id,
+					'subject'	 => $subject,
+					'message'	 => $message,
+	//				'sender'	 => $sender
+				);
+
+				CreateObject('property.soexternal_communication')->add($external_message);
+
+				$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+				if($order_id)
+				{
+					$interlink_data = array
+					(
+						'location1_id' => $location_id_ticket,
+						'location1_item_id' => $ticket_id,
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+						'location2_item_id' => $order_id,
+						'account_id' => $this->account
+					);
+				}
+
+				execMethod('property.interlink.add', $interlink_data);
+
+			}
+			catch (Exception $exc)
+			{
+				echo $exc->getTraceAsString();
+			}
+
+			$GLOBALS['phpgw']->db->transaction_commit();
+
+		}
+
 
 		public function save( $init_preview = null )
 		{
