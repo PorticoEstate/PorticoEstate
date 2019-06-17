@@ -108,12 +108,22 @@
 
 			$data['datatable']['actions'][] = array();
 
-			if (!$this->bo->allow_write())
+			try
+			{
+				if (!$this->bo->allow_write())
+				{
+					//Remove link to edit
+					unset($data['datatable']['field'][0]['formatter']);
+					unset($data['datatable']['field'][2]);
+				}
+			}
+			catch (booking_unauthorized_exception $exc)
 			{
 				//Remove link to edit
 				unset($data['datatable']['field'][0]['formatter']);
 				unset($data['datatable']['field'][2]);
 			}
+
 
 //			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);

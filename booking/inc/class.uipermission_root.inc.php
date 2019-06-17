@@ -91,14 +91,28 @@
 				)
 			);
 
-			if (!$this->bo->allow_delete())
+
+			try
+			{
+				if (!$this->bo->allow_delete())
+				{
+					unset($data['datatable']['field'][2]); //Delete action
+				}
+			}
+			catch (booking_unauthorized_exception $ex)
 			{
 				unset($data['datatable']['field'][2]); //Delete action
 			}
 
-			if ($this->bo->allow_create())
+			try
 			{
-				$data['datatable']['new_item'] = $this->generate_link('add');
+				if ($this->bo->allow_create())
+				{
+					$data['datatable']['new_item'] = $this->generate_link('add');
+				}
+			}
+			catch (booking_unauthorized_exception $ex)
+			{
 			}
 
 			$data['datatable']['actions'][] = array();
