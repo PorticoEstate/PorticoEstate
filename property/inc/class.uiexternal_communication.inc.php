@@ -601,6 +601,7 @@ JS;
 			(
 				'assignedto'			 => $this->account,
 				'group_id'				 => false,//$group_id,
+				'location_code'			 => $location_code,
 				'cat_id'				 => $this->config['tts_deviation_category'],//10102, //"avvik" $message_cat_id,
 				'priority'				 => 3, //$priority, //valgfri (1-3)
 				'title'					 => $subject,
@@ -609,7 +610,9 @@ JS;
 	//			'external_origin_email'	 => $sender
 			);
 
-			$ticket_id = CreateObject('helpdesk.botts')->add_ticket($ticket);
+			$GLOBALS['phpgw']->db->transaction_begin();
+
+			$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
 
 			try
 			{
@@ -621,7 +624,7 @@ JS;
 	//				'sender'	 => $sender
 				);
 
-				CreateObject('helpdesk.soexternal_communication')->add($external_message);
+				CreateObject('property.soexternal_communication')->add($external_message);
 
 				$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
@@ -644,6 +647,9 @@ JS;
 			{
 				echo $exc->getTraceAsString();
 			}
+
+			$GLOBALS['phpgw']->db->transaction_commit();
+
 		}
 
 

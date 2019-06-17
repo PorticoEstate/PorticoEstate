@@ -37,6 +37,7 @@
 		var $fields_updated = array();
 		var $historylog;
 		private $db, $like, $join, $left_join, $account, $currentapp;
+		protected $global_lock	 = false;
 
 		public function __construct( $currentapp = 'property' )
 		{
@@ -87,7 +88,14 @@
 			$cols	 = implode(',', array_keys($value_set));
 			$values_insert	 = $this->db->validate_insert(array_values($value_set));
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			switch ($this->currentapp)
 			{
@@ -106,7 +114,10 @@
 
 			$this->add_msg($id, $new_message, $sender);
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['id'] = $id;
 
