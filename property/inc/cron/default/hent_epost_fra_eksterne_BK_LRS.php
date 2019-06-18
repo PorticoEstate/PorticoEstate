@@ -763,11 +763,12 @@
 				try
 				{
 					$external_message = array(
-						'type_id'	 => 1,
-						'ticket_id'	 => $ticket_id,
-						'subject'	 => $subject,
-						'message'	 => $message_details,
-						'sender'	 => $sender
+						'type_id'			 => 1,
+						'ticket_id'			 => $ticket_id,
+						'subject'			 => $subject,
+						'message'			 => $message_details,
+						'sender'			 => $sender,
+						'mail_recipients'	 =>  array($sender)
 					);
 
 					CreateObject('helpdesk.soexternal_communication')->add($external_message);

@@ -2368,6 +2368,14 @@
 		 */
 		public function get_locations( $location_code )
 		{
+
+			$config = $this->soadmin_location->read_config('');
+			$location_types = $this->soadmin_location->select_location_type();
+			_debug_array($config);
+			$m = count($location_types);
+			//if ($config[$i]['column_name'] == 'street_id')
+
+
 			$location_arr	 = explode('-', $location_code);
 			$current_level	 = count($location_arr);
 			$next_level		 = $current_level + 1;
@@ -2378,7 +2386,7 @@
 			$limit_search	 = 10;
 			if (ctype_digit($location_arr[0]))
 			{
-				$filtermethod1	 = "WHERE location_code {$this->like} '{$location_code}%'";
+				$filtermethod1	 = "WHERE location_code {$this->like} '{$location_code}%' AND category !=99";
 				$filtermethod2	 = $filtermethod1;
 			}
 			else
@@ -2389,8 +2397,8 @@
 				$next_level		 = 2;
 				$last_level		 = 4;
 				$query			 = $this->db->db_addslashes($location_arr[0]);
-				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%'";
-				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%'";
+				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%' AND category !=99";
+				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%' AND category !=99";
 			}
 
 			$metadata1 = $this->db->metadata("fm_location{$current_level}");
@@ -2417,14 +2425,14 @@
 			{
 				$sql .= " UNION"
 					. " SELECT location_code, loc2_name AS name"
-					. " FROM fm_location2 WHERE loc2_name {$this->like} '%{$query}%'"
+					. " FROM fm_location2 WHERE loc2_name {$this->like} '%{$query}%' AND category !=99"
 					. " UNION"
 						. " SELECT location_code, loc3_name AS name"
-					. " FROM fm_location3 WHERE loc3_name {$this->like} '%{$query}%'"
+					. " FROM fm_location3 WHERE loc3_name {$this->like} '%{$query}%' AND category !=99"
 					. " UNION"
 						. " SELECT location_code, fm_streetaddress.descr || ' ' || fm_location4.street_number || ' ' || fm_location4. etasje AS name"
 					. " FROM fm_location4 {$this->join} fm_streetaddress ON (fm_location4.street_id = fm_streetaddress.id)"
-						. "WHERE fm_streetaddress.descr || ' ' || fm_location4.street_number {$this->like} '%{$query}%'";
+						. "WHERE fm_streetaddress.descr || ' ' || fm_location4.street_number {$this->like} '%{$query}%' AND category !=99";
 			}
 
 			$sql .= " ORDER BY location_code";

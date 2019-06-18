@@ -94,7 +94,6 @@
 
 			self::set_active_menu("property::helpdesk::deviation");
 
-
 			/**
 			 * Save first, then preview - first pass
 			 */
@@ -102,27 +101,23 @@
 
 			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
 			{
-				$this->save_ticket($init_preview);
-			}
+				$receipt = $this->save_ticket();
+				if($init_preview)
+				{
+					self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.edit",
+						'id'			 => $receipt['id'],
+						'ticket_id'		 => $receipt['ticket_id'],
+						'type_id'		 => $receipt['type_id'],
+						'init_preview2'	 => $init_preview)
+					);
+				}
+				else if (phpgw::get_var('send', 'bool'))
+				{
+					$this->_send($id);
+				}
 
-			if ($this->preview_html)
-			{
-	//			$this->_send();
+				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.add_deviation"));
 			}
-
-			/**
-			 * Save first, then preview - second pass
-			 */
-			if (phpgw::get_var('init_preview2', 'bool'))
-			{
-				$do_preview = $id;
-			}
-			else
-			{
-				$do_preview = null;
-			}
-
-	
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		 => $ticket['vendor_id'],
@@ -182,7 +177,8 @@
 				'ColumnDefs' => $other_orders_def,
 				'config'	 => array(
 					//array('disableFilter' => true),
-					//array('disablePagination' => true),
+					array('disablePagination' => true),
+					array('singleSelect' => true),
 					array('order' => json_encode(array(1, 'desc')))
 				)
 			);
@@ -203,15 +199,11 @@
 			}
 
 
-			$data											 = array(
+			$data = array(
 				'type_list'					 => array('options' => $type_list),
 				'datatable_def'				 => $datatable_def,
 				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation")),
-				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.edit")),
 				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
-				'value_subject'				 => !empty($values['subject']) ? $values['subject'] :'',
-				'value_extra_mail_address'	 => $value_extra_mail_address,
-				'value_do_preview'			 => $do_preview,
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
@@ -588,7 +580,7 @@ JS;
 		}
 
 
-		public function save_ticket( $init_preview = null )
+		public function save_ticket()
 		{
 			$order_id = phpgw::get_var('order_id');
 			$vendor_id = phpgw::get_var('vendor_id', 'int');
@@ -596,12 +588,13 @@ JS;
 			$contract_id = phpgw::get_var('contract_id');
 			$subject =  phpgw::get_var('subject');
 			$message =  phpgw::get_var('message');
+			$mail_recipients =  phpgw::get_var('mail_recipients');
 
 			$ticket = array
 			(
 				'assignedto'			 => $this->account,
 				'group_id'				 => false,//$group_id,
-				'location_code'			 => $location_code,
+				'location_code'			 => $location_code ? $location_code : '9999',
 				'cat_id'				 => $this->config['tts_deviation_category'],//10102, //"avvik" $message_cat_id,
 				'priority'				 => 3, //$priority, //valgfri (1-3)
 				'title'					 => $subject,
@@ -614,17 +607,21 @@ JS;
 
 			$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
 
+			$external_message_id = 0;
+			$type_id = 1;
+
 			try
 			{
 				$external_message = array(
-					'type_id'	 => 1,
-					'ticket_id'	 => $ticket_id,
-					'subject'	 => $subject,
-					'message'	 => $message,
-	//				'sender'	 => $sender
+					'type_id'			 => $type_id,
+					'ticket_id'			 => $ticket_id,
+					'subject'			 => $subject,
+					'message'			 => $message,
+					'mail_recipients'	 =>  $mail_recipients
+	//				'sender'			 => $sender
 				);
 
-				CreateObject('property.soexternal_communication')->add($external_message);
+				$external_message_receipt =  CreateObject('property.soexternal_communication')->add($external_message);
 
 				$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
@@ -648,10 +645,17 @@ JS;
 				echo $exc->getTraceAsString();
 			}
 
-			$GLOBALS['phpgw']->db->transaction_commit();
+			if ($GLOBALS['phpgw']->db->transaction_commit())
+			{
+				phpgwapi_cache::message_set(lang('Saved'), 'message');
+			}
 
+			return array(
+				'id'			 => $external_message_receipt['id'],
+				'ticket_id'		 => $ticket_id,
+				'type_id'		 => $type_id
+			);
 		}
-
 
 		public function save( $init_preview = null )
 		{
