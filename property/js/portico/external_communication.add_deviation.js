@@ -11,6 +11,7 @@ this.fetch_vendor_email = function ()
 	{
 		base_java_url['action'] = 'get_vendor';
 		base_java_url['field_name'] = 'mail_recipients';
+		base_java_url['preselect'] = true;
 		var oArgs = base_java_url;
 		var strURL = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper(oTable1, strURL);
@@ -111,10 +112,9 @@ $(window).on('load', function()
 	$("#location_name").on("autocompleteselect", function (event, ui)
 	{
 		var location_code = ui.item.value;
-		var vendor_id = $("#vendor_id").val();
-		if (vendor_id && location_code !== location_code_selection)
+
+		if (location_code !== location_code_selection)
 		{
-			get_other_orders(location_code, vendor_id);
 			location_code_selection = location_code;
 
 			var temp = document.getElementById("communication_message").value;
@@ -123,6 +123,13 @@ $(window).on('load', function()
 				temp = temp + "\n";
 			}
 			document.getElementById("communication_message").value = temp + "Lokalisering: " + ui.item.label;
+		}
+
+		var vendor_id = $("#vendor_id").val();
+		if (vendor_id && location_code)
+		{
+			get_other_orders(location_code, vendor_id);
+
 		}
 	});
 

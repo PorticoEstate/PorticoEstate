@@ -2436,6 +2436,9 @@
 				$vendor_id	 = phpgw::get_var('vendor_id', 'int', 'GET', 0);
 				$field_name	 = phpgw::get_var('field_name', 'string', 'GET');
 			}
+
+			$preselect = phpgw::get_var('preselect', 'bool');
+
 			$vendor_email = execMethod('property.sowo_hour.get_email', $vendor_id);
 
 			if (!$field_name)
@@ -2449,12 +2452,15 @@
 
 			$content_email	 = array();
 			$title			 = lang('The address to which this order will be sendt');
+
+			$checked = $preselect ? 'checked="checked"' : '';
+
 			foreach ($vendor_email as $_entry)
 			{
 				$content_email[] = array
 					(
 					'value_email'	 => $_entry['email'],
-					'value_select'	 => "<input type='checkbox' name='{$field_name}' value='{$_entry['email']}' title='{$title}'>"
+					'value_select'	 => "<input type='checkbox' name='{$field_name}' value='{$_entry['email']}' title='{$title}' {$checked}>"
 				);
 			}
 
