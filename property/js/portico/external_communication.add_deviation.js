@@ -116,10 +116,47 @@ $(window).on('load', function()
 		{
 			get_other_orders(location_code, vendor_id);
 			location_code_selection = location_code;
+
+			var temp = document.getElementById("communication_message").value;
+			if (temp)
+			{
+				temp = temp + "\n";
+			}
+			document.getElementById("communication_message").value = temp + "Lokalisering: " + ui.item.label;
 		}
 	});
+
+
 });
 
+$(document).ready(function ()
+{
+
+	//$("#datatable-container_2 tr").on("click", function (e)
+	$("#datatable-container_2 tbody").on('click', 'tr', function ()
+	{
+		var order_id = $('td', this).eq(0).text();
+		var temp = document.getElementById("communication_message").value;
+		if (temp)
+		{
+			temp = temp + "\n";
+		}
+		document.getElementById("communication_message").value = temp + "Bestilling: " + order_id;
+
+	});
+
+	$("#vendor_contract_id").change(function ()
+	{
+		var temp = document.getElementById("communication_message").value;
+		if (temp)
+		{
+			temp = temp + "\n";
+		}
+		document.getElementById("communication_message").value = temp + "Kontrakt: " + $("#vendor_contract_id").val();
+	});
+
+
+});
 
 
 this.get_other_orders = function (location_code, vendor_id)

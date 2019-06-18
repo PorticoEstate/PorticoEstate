@@ -361,6 +361,15 @@
 				<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
 			</tr>
 			<tr>
+				<td>{lang_tts_deviation_category}:</td>
+				<td>
+					<select name="newsettings[tts_deviation_category]">
+						{hook_tts_deviation_category}
+					</select>
+				</td>
+			</tr>
+
+			<tr>
 				<td valign = 'top'>{lang_TTS_assign_group_candidates}:</td>
 				<td>
 					<!--to be able to blank the setting - need an empty value-->

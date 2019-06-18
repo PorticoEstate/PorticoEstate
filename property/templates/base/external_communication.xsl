@@ -17,7 +17,6 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
-		var order_id = '<xsl:value-of select="value_order_id"/>';
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 	</script>
 
@@ -32,7 +31,6 @@
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
-					<input type="hidden" id="id" name="id" value="{value_id}"/>
 					<input type="hidden" id="do_preview" name="do_preview" value="{value_do_preview}"/>
 
 					<div id="main">
@@ -77,24 +75,11 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'subject')"/>
 									</xsl:attribute>
-								</input>
-							</div>
-
-							
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'message')"/>
-								</label>
-								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'message')"/>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
 									</xsl:attribute>
-									<xsl:if test="value_id = ''">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</textarea>
+
+								</input>
 							</div>
 							<div class="pure-control-group">
 								<label for='location_name'>
@@ -129,7 +114,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'contract')"/>
 								</label>
-								<select id="vendor_contract_id" name="values[contract_id]" class="pure-input-3-4">
+								<select id="vendor_contract_id" name="contract_id" class="pure-input-3-4">
 									<xsl:if test="count(contract_list/options) &gt; 0">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
@@ -172,6 +157,31 @@
 									</xsl:attribute>
 								</input>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload file')"/>
+								</label>
+
+								<input  class="pure-input-3-4" type="file" name="file">
+									<xsl:attribute name="title">
+										<xsl:value-of select="lang_file_statustext"/>
+									</xsl:attribute>
+								</input>
+							</div>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'message')"/>
+								</label>
+								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'message')"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</textarea>
+							</div>
 
 						</fieldset>
 					</div>
@@ -195,7 +205,6 @@
 						<xsl:value-of select="php:function('lang', 'preview html')"/>
 					</xsl:variable>
 					<input type="hidden" id="preview_html" name="preview_html" value=""/>
-					<!--input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});"-->
 					<input type="submit" class="pure-button pure-button-primary" name="init_preview">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$lang_preview_html"/>
