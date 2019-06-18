@@ -2395,7 +2395,7 @@
 			}
 			else
 			{
-				$limit_search	 = 50;
+				$limit_search	 = 100;
 				$text_search	 = true;
 				$current_level	 = 1;
 				$next_level		 = 2;
@@ -2413,17 +2413,43 @@
 			}
 
 
-			$sql = "SELECT location_code, loc{$current_level}_name AS name"
-				. " FROM fm_location{$current_level} {$filtermethod1}";
+			if($__config['street_id'] == $current_level)
+			{
+				$name_field = "fm_streetaddress.descr || ' ' || fm_location{$current_level}.street_number";
+				$sql = "SELECT location_code, {$name_field} AS name"
+					. " FROM fm_location{$current_level}"
+					. " {$this->join} fm_streetaddress ON (fm_location{$current_level}.street_id = fm_streetaddress.id)"
+					. " {$filtermethod1}";
+			}
+			else
+			{
+				$name_field = "loc{$current_level}_name";
+				$sql = "SELECT location_code, {$name_field} AS name"
+					. " FROM fm_location{$current_level} {$filtermethod1}";
+			}
 
 
 			$metadata2 = $this->db->metadata("fm_location{$next_level}");
 
 			if ($metadata2 && !$text_search)
 			{
-				$sql .= " UNION"
-					. " SELECT location_code, loc{$next_level}_name AS name"
-					. " FROM fm_location{$next_level} {$filtermethod2}";
+				if($__config['street_id'] == $next_level)
+				{
+					$name_field = "fm_streetaddress.descr || ' ' || fm_location{$next_level}.street_number";
+					$sql .= " UNION"
+						. " SELECT location_code, $name_field AS name"
+						. " FROM fm_location{$next_level}"
+						. " {$this->join} fm_streetaddress ON (fm_location{$next_level}.street_id = fm_streetaddress.id)"
+						. " {$filtermethod2}";
+				}
+				else
+				{
+					$name_field = "loc{$next_level}_name";
+					$sql .= " UNION"
+						. " SELECT location_code, $name_field AS name"
+						. " FROM fm_location{$next_level} {$filtermethod2}";
+				}
+
 			}
 			else if ($text_search)
 			{
