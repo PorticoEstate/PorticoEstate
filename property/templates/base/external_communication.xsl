@@ -81,21 +81,6 @@
 
 								</input>
 							</div>
-
-							
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'message')"/>
-								</label>
-								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'message')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</textarea>
-							</div>
 							<div class="pure-control-group">
 								<label for='location_name'>
 									<xsl:value-of select="php:function('lang', 'location')"/>
@@ -184,6 +169,20 @@
 								</input>
 							</div>
 
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'message')"/>
+								</label>
+								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'message')"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</textarea>
+							</div>
+
 						</fieldset>
 					</div>
 				</div>
@@ -206,7 +205,6 @@
 						<xsl:value-of select="php:function('lang', 'preview html')"/>
 					</xsl:variable>
 					<input type="hidden" id="preview_html" name="preview_html" value=""/>
-					<!--input type="button" class="pure-button pure-button-primary" name="preview_html" onClick="preview({value_id});"-->
 					<input type="submit" class="pure-button pure-button-primary" name="init_preview">
 						<xsl:attribute name="value">
 							<xsl:value-of select="$lang_preview_html"/>

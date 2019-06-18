@@ -11,6 +11,7 @@ this.fetch_vendor_email = function ()
 	{
 		base_java_url['action'] = 'get_vendor';
 		base_java_url['field_name'] = 'mail_recipients';
+		base_java_url['preselect'] = true;
 		var oArgs = base_java_url;
 		var strURL = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper(oTable1, strURL);
@@ -111,15 +112,58 @@ $(window).on('load', function()
 	$("#location_name").on("autocompleteselect", function (event, ui)
 	{
 		var location_code = ui.item.value;
+
+		if (location_code !== location_code_selection)
+		{
+			location_code_selection = location_code;
+
+			var temp = document.getElementById("communication_message").value;
+			if (temp)
+			{
+				temp = temp + "\n";
+			}
+			document.getElementById("communication_message").value = temp + "Lokalisering: " + ui.item.label;
+		}
+
 		var vendor_id = $("#vendor_id").val();
-		if (vendor_id && location_code !== location_code_selection)
+		if (vendor_id && location_code)
 		{
 			get_other_orders(location_code, vendor_id);
-			location_code_selection = location_code;
+
 		}
 	});
+
+
 });
 
+$(document).ready(function ()
+{
+
+	//$("#datatable-container_2 tr").on("click", function (e)
+	$("#datatable-container_2 tbody").on('click', 'tr', function ()
+	{
+		var order_id = $('td', this).eq(0).text();
+		var temp = document.getElementById("communication_message").value;
+		if (temp)
+		{
+			temp = temp + "\n";
+		}
+		document.getElementById("communication_message").value = temp + "Bestilling: " + order_id;
+
+	});
+
+	$("#vendor_contract_id").change(function ()
+	{
+		var temp = document.getElementById("communication_message").value;
+		if (temp)
+		{
+			temp = temp + "\n";
+		}
+		document.getElementById("communication_message").value = temp + "Kontrakt: " + $("#vendor_contract_id").val();
+	});
+
+
+});
 
 
 this.get_other_orders = function (location_code, vendor_id)

@@ -705,7 +705,7 @@ JS;
 							var block = '';
 							var filter = '';
 							var filter_level = {$filter_level};
-							if (filter_level) 
+							if (filter_level)
 							{
 								for(i=1;i<=filter_level;i++)
 								{
@@ -720,7 +720,7 @@ JS;
 											}
 											else
 											{
-												filter = filter  + '-' + eval('document.form.loc'+i+'.value');									
+												filter = filter  + '-' + eval('document.form.loc'+i+'.value');
 											}
 										}
 									}
