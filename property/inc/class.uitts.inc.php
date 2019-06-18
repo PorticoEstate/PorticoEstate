@@ -1781,7 +1781,7 @@ HTML;
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::render_template_xsl(array('tts', 'files', 'attributes_form'), $data, $xsl_rootdir									 = '', 'add');
+			self::render_template_xsl(array('tts', 'files', 'attributes_form'), $data, $xsl_rootdir	 = '', 'add');
 		}
 
 		function update_data()
