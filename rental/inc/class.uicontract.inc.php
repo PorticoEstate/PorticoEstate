@@ -45,7 +45,8 @@
 			'add_notification' => true,
 			'download' => true,
 			'get_total_price' => true,
-			'notify_on_expire'	=> true
+			'notify_on_expire'	=> true,
+			'get_contract_type_options'	=> true
 		);
 
 		public function __construct()
@@ -1815,6 +1816,30 @@ JS;
 			self::render_template_xsl(array('contract', 'datatable_inline'), array('view' => $data));
 		}
 
+
+		public function get_contract_type_options()
+		{
+			$location_id = (int)phpgw::get_var('location_id');
+			$contract_types = rental_socontract::get_instance()->get_contract_types($location_id);
+			$contract_type_options[] = array(
+				'id' => '',
+				'name' => lang('select')
+			);
+			foreach ($contract_types as $contract_type_id => $contract_type_label)
+			{
+				if ($contract_type_id)
+				{
+					$contract_type_options[] = array(
+						'id' => $contract_type_id,
+						'name' => lang($contract_type_label),
+					);
+				}
+			}
+
+			return $contract_type_options;
+		}
+
+
 		/**
 		 * Edit a contract
 		 */
@@ -2274,8 +2299,44 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 			$override_adjustment_start = $contract->get_override_adjustment_start();
 
+			/**
+			 * Fixme...
+			 */
+			$valid_contract_types = array();
+			if (isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
+			{
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
+				{
+					if ($_value)
+					{
+						$valid_contract_types[] = $_value;
+					}
+				}
+			}
+			$new_contract_options = array();
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			foreach ($types as $id => $label)
+			{
+				if ($valid_contract_types && !in_array($id, $valid_contract_types))
+				{
+					continue;
+				}
+				$names = $this->locations->get_name($id);
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					{
+						$new_contract_options[] = array(
+							'id' => $id,
+							'name' => lang($label),
+							'selected' => $id == $contract->get_location_id() ? 1 : 0
+							);
+					}
+				}
+			}
 			$data = array
-				(
+			(
+				'valid_contract_types' => array('options' => $new_contract_options),
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_save),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_cancel),

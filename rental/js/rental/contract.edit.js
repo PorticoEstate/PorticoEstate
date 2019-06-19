@@ -179,6 +179,39 @@ function formatterIs_one_time(key, oData)
 
 $(document).ready(function ()
 {
+
+	$("#location_id").change(function ()
+	{
+		var oArgs = {menuaction: 'rental.uicontract.get_contract_type_options', location_id: $(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					if (data.sessionExpired)
+					{
+						alert('Sesjonen er utløpt - du må logge inn på nytt');
+						return;
+					}
+					var obj = data;
+
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+					});
+
+					$("#contract_type").html(htmlString);
+				}
+			}
+		});
+	});
+
 	$("#date_start").change(function ()
 	{
 
