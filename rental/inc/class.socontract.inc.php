@@ -609,6 +609,7 @@
 
 			// Set all fields in form
 			// FORM COLUMN 1
+			$values[] = "location_id = " . $this->marshal($contract->get_location_id(), 'int');
 			$values[] = "contract_type_id = " . $this->marshal($contract->get_contract_type_id(), 'int');
 			$values[] = "executive_officer = " . $this->marshal($contract->get_executive_officer_id(), 'int');
 
