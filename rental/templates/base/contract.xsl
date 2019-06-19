@@ -83,15 +83,26 @@
 					<div class="pure-u-1 pure-u-lg-1-2">
 						<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
 						<div class="pure-control-group">
-							<label>
+							<label for="location_id">
 								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>
-							<xsl:choose>
+
+							<select id="location_id" name="location_id">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="valid_contract_types/options"/>
+							</select>
+
+							<!--							<xsl:choose>
 								<xsl:when test="contract_id = 0 or contract_id = ''">
 									<input type="hidden" name="location_id" id="location_id" value="{location_id}"/>
 								</xsl:when>
 							</xsl:choose>
-							<xsl:value-of select="value_field_of_responsibility"/>
+							<xsl:value-of select="value_field_of_responsibility"/>-->
 						</div>
 						<xsl:if test="count(list_contract_type/*) &gt; 1">
 							<div class="pure-control-group">
