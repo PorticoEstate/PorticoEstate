@@ -2892,7 +2892,7 @@ JS;
 					switch ($method)
 					{
 						case 'get_reverse_assignee':
-							return $this->get_reverse_assignee();
+							return $this->get_reverse_assignee('id');
 							break;
 						default:
 							break;
@@ -2910,7 +2910,7 @@ JS;
 		 * Fallback function
 		 * @return array
 		 */
-		private function get_reverse_assignee()
+		private function get_reverse_assignee($type = 'lid')
 		{
 			$query = phpgw::get_var('on_behalf_of_lid');
 
@@ -2922,8 +2922,19 @@ JS;
 
 			foreach ($account_list as $account)
 			{
+				switch ($type)
+				{
+					case 'lid':
+						 $account_id = $account->lid;
+						break;
+					default:
+						 $account_id = $account->id;
+
+						break;
+				}
+
 				$values[] = array(
-					'id' => $account->lid,
+					'id' => $account_id,
 					'name' => $account->lid . ' [' . $account->__toString() . ']',
 					'stilling'	 => '',
 					'office'	 => ''
