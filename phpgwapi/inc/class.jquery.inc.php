@@ -89,6 +89,19 @@
 					);
 					break;
 
+				case 'datepicker_tui':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+						'tui' => array
+							(
+								"tui-code-snippet/dist/tui-code-snippet",
+								"tui-date-picker/dist/tui-date-picker"
+							),
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/tui/tui-date-picker/dist/tui-date-picker.css");
+					break;
+
 				case 'datepicker':
 					$load = array
 						(
