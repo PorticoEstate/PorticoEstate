@@ -635,9 +635,8 @@ JS;
 						'location2_item_id' => $order_id,
 						'account_id' => $this->account
 					);
+					execMethod('property.interlink.add', $interlink_data);
 				}
-
-				execMethod('property.interlink.add', $interlink_data);
 
 			}
 			catch (Exception $exc)
