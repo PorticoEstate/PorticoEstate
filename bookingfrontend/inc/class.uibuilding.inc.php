@@ -416,6 +416,7 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
+			$GLOBALS['phpgw']->jqcal3->add_listener('choose-date');
 			self::add_javascript('bookingfrontend', 'base', 'building.js', 'text/javascript', true);
 
 			self::render_template_xsl('building', array('building' => $building, 'config_data' => $config->config_data));

@@ -207,6 +207,12 @@
 									</div>
 								</li>
 							</ul>
+
+							<div class="btn btn-default mr-1 mt-1 mb-1">
+								<input type="text" id="choose-date"/>
+							</div>
+							<div id="choose-date-container"></div>
+
 							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
 								<i class="far fa-calendar-alt"></i>&#160;
 								<xsl:value-of select="php:function('lang', 'choose a date')"/>
