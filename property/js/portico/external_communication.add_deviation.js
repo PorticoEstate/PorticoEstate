@@ -152,6 +152,16 @@ $(document).ready(function ()
 
 	});
 
+	$("#type_id").change(function ()
+	{
+		var temp = document.getElementById("communication_message").value;
+		if (temp)
+		{
+			temp = temp + "\n";
+		}
+		document.getElementById("communication_message").value = temp + "Type: " + $( "#type_id option:selected" ).text();;
+	});
+
 	$("#vendor_contract_id").change(function ()
 	{
 		var temp = document.getElementById("communication_message").value;

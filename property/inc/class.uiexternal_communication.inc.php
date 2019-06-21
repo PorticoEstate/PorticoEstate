@@ -111,9 +111,9 @@
 						'init_preview2'	 => $init_preview)
 					);
 				}
-				else if (phpgw::get_var('send', 'bool'))
+				else if (phpgw::get_var('send', 'bool') && !empty($receipt['id']))
 				{
-					$this->_send($id);
+					$this->_send($receipt['id']);
 				}
 
 				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.add_deviation"));
@@ -589,6 +589,7 @@ JS;
 			$subject =  phpgw::get_var('subject');
 			$message =  phpgw::get_var('message');
 			$mail_recipients =  phpgw::get_var('mail_recipients');
+			$type_id =  phpgw::get_var('type_id', 'int');
 
 			$ticket = array
 			(
@@ -608,12 +609,11 @@ JS;
 			$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
 
 			$external_message_id = 0;
-			$type_id = 1;
 
 			try
 			{
 				$external_message = array(
-					'type_id'			 => $type_id,
+					'type_id'			 => $type_id ? $type_id : 1,
 					'ticket_id'			 => $ticket_id,
 					'subject'			 => $subject,
 					'message'			 => $message,
@@ -635,9 +635,8 @@ JS;
 						'location2_item_id' => $order_id,
 						'account_id' => $this->account
 					);
+					execMethod('property.interlink.add', $interlink_data);
 				}
-
-				execMethod('property.interlink.add', $interlink_data);
 
 			}
 			catch (Exception $exc)
