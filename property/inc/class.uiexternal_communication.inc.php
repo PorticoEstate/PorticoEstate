@@ -111,9 +111,9 @@
 						'init_preview2'	 => $init_preview)
 					);
 				}
-				else if (phpgw::get_var('send', 'bool'))
+				else if (phpgw::get_var('send', 'bool') && !empty($receipt['id']))
 				{
-					$this->_send($id);
+					$this->_send($receipt['id']);
 				}
 
 				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.add_deviation"));
