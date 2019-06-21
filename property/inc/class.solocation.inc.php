@@ -2469,7 +2469,7 @@
 							$name_field .= " || fm_location{$j}.etasje";
 						}
 
-						$_sql[]= " SELECT location_code, fm_streetaddress.descr || ' ' || fm_location{$j}.street_number || ' ' || fm_location{$j}.etasje AS name"
+						$_sql[]= " SELECT location_code, {$name_field} AS name"
 								. " FROM fm_location{$j} {$this->join} fm_streetaddress ON (fm_location{$j}.street_id = fm_streetaddress.id)"
 								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !=99";
 					}
