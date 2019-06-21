@@ -589,6 +589,7 @@ JS;
 			$subject =  phpgw::get_var('subject');
 			$message =  phpgw::get_var('message');
 			$mail_recipients =  phpgw::get_var('mail_recipients');
+			$type_id =  phpgw::get_var('type_id', 'int');
 
 			$ticket = array
 			(
@@ -608,12 +609,11 @@ JS;
 			$ticket_id = CreateObject('property.botts')->add_ticket($ticket);
 
 			$external_message_id = 0;
-			$type_id = 1;
 
 			try
 			{
 				$external_message = array(
-					'type_id'			 => $type_id,
+					'type_id'			 => $type_id ? $type_id : 1,
 					'ticket_id'			 => $ticket_id,
 					'subject'			 => $subject,
 					'message'			 => $message,
