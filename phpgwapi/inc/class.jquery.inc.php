@@ -111,6 +111,10 @@
 								"tui-date-picker/dist/tui-date-picker"
 							),
 					);
+					/**
+					 * Seems to need css for both calendar and datepicker
+					 */
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/tui/tui-calendar/dist/tui-calendar.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/tui/tui-date-picker/dist/tui-date-picker.css");
 					break;
 
