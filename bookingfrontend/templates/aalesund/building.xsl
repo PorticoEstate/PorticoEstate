@@ -257,6 +257,24 @@
 
 			</div>
 			<div class="push"></div>
+
+
+			<!-- Sigurd: start eksempel fra https://nhn.github.io/tui.calendar/latest/tutorial-example02-weekly -->
+			<div id="menu">
+			  <span id="menu-navi">
+				<button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
+				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
+				  <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>Prev
+				</button>
+				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+				  <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>Next
+				</button>
+			  </span>
+			  <span id="renderRange" class="render-range"></span>
+			</div>
+			<div id="calendar"></div>
+			<!-- slutt eksempel-->
+
 		</div>
 		<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
@@ -271,5 +289,14 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+
+		/**
+		* Sigurd: kun for å demonstrere at kalendere blir initialisert
+		*/
+			var cal = new tui.Calendar('#calendar', {
+			defaultView: 'week', // weekly view option
+			taskView: [false]  // e.g. true, false, or ['task', 'milestone']
+		  });
+
 	</script>
 </xsl:template>
