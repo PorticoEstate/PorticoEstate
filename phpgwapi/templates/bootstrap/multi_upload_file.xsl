@@ -114,8 +114,10 @@
 				<div class="size">{%=o.formatFileSize(file.size)%}</div>
 			</div>
 			<div class="table-cell">
-				<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="fas fa-trash-alt"></i>Delete</button>
-				<input type="checkbox" name="delete" value="1" class="toggle"/>
+				{% if (file.deleteUrl && Allowed_Methods.includes("DELETE")) { %}
+					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="fas fa-trash-alt"></i>Delete</button>
+					<input type="checkbox" name="delete" value="1" class="toggle"/>
+				{% } %}
 			</div>
 		</div>
 	{% } %}
@@ -123,9 +125,9 @@
 	</script>
 
 	<script>
+		var Allowed_Methods = [];
 		$(function () {
 			'use strict';
-					
 			// Initialize the jQuery File Upload widget:
 			$('#multi_upload_file').fileupload({
 				// Uncomment the following to send cross-domain cookies:
@@ -171,7 +173,11 @@
 				context: $('#multi_upload_file')[0]
 			}).always(function () {
 				$(this).removeClass('fileupload-processing');
-			}).done(function (result) {
+			}).done(function (result, dummy, xhr) {
+				Allowed_Methods = xhr.getResponseHeader("Access-Control-Allow-Methods").split(",").map(function(item)
+					{
+						return item.trim();
+					});
 				$(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
 			});
 		});

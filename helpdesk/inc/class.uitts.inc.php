@@ -686,6 +686,21 @@ HTML;
 			$options['base_dir'] = $id;
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/helpdesk/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id)));
+
+			$options['access_control_allow_methods'] = array(
+				'OPTIONS',
+				'HEAD',
+				'GET',
+				'POST',
+				'PUT',
+				'PATCH'
+            );
+
+			if(!$this->_simple)
+			{
+				$options['access_control_allow_methods'][] = 'DELETE';
+			}
+
 			$upload_handler = new property_multiuploader($options, false);
 
 			switch ($_SERVER['REQUEST_METHOD']) {
@@ -702,7 +717,14 @@ HTML;
 					$upload_handler->add_file();
 					break;
 				case 'DELETE':
-					$upload_handler->delete_file();
+					if($this->_simple)
+					{
+						$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+					}
+					else
+					{
+						$upload_handler->delete_file();
+					}
 					break;
 				default:
 					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
