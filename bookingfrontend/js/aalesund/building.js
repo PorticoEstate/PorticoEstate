@@ -1312,6 +1312,7 @@ const templates = {
 	useDetailPopup: true,
 	taskView: false,
 	week: {
-		narrowWeekend: true // weekend column narrows to 1/2 width
-	  }
-  });
+		narrowWeekend: true, // weekend column narrows to 1/2 width
+		startDayOfWeek: 1,
+	}
+});

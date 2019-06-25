@@ -296,9 +296,7 @@
 .tui-full-calendar-dayname.tui-full-calendar-today {
   font-weight: bold;
 }
-.tui-full-calendar-dayname-container {
-  overflow-y: scroll;
-}
+
 .tui-full-calendar-dayname-leftmargin {
   position: relative;
   height: 100%;

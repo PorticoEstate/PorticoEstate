@@ -110,7 +110,7 @@
 						'tui' => array
 							(
 								"tui-code-snippet/dist/tui-code-snippet",
-
+								"tui-date-picker/dist/tui-date-picker",
 							),
 					);
 					/**

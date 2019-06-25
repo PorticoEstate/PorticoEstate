@@ -261,6 +261,7 @@
 
 			<!-- Sigurd: start eksempel fra https://nhn.github.io/tui.calendar/latest/tutorial-example02-weekly -->
 			<div id="menu">
+			<h1></h1>
 			  <span id="menu-navi">
 				<button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
 				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
@@ -269,6 +270,11 @@
 				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
 				  <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>Next
 				</button>
+			  </span>
+			  <span>
+			  	<button type="button" class="btn btn-default btn-sm">Week</button>
+			  	<button type="button" class="btn btn-default btn-sm">Month</button>
+			  	<button type="button" class="btn btn-default btn-sm">Day</button>
 			  </span>
 			  <span id="renderRange" class="render-range"></span>
 			</div>
