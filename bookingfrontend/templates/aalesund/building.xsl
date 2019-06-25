@@ -272,7 +272,7 @@
 			  </span>
 			  <span id="renderRange" class="render-range"></span>
 			</div>
-			<div id="calendar"></div>
+			<div id="calendar" style="height: 800px"></div>
 			<!-- slutt eksempel-->
 
 		</div>
@@ -290,13 +290,7 @@
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 
-		/**
-		* Sigurd: kun for å demonstrere at kalendere blir initialisert
-		*/
-			var cal = new tui.Calendar('#calendar', {
-			defaultView: 'week', // weekly view option
-			taskView: [false]  // e.g. true, false, or ['task', 'milestone']
-		  });
+		
 
 	</script>
 </xsl:template>

@@ -96,7 +96,9 @@
 						'tui' => array
 							(
 								"tui-code-snippet/dist/tui-code-snippet",
-								"tui-calendar/dist/tui-calendar"
+								"tui-time-picker/dist/tui-time-picker",
+								"tui-date-picker/dist/tui-date-picker",
+								"tui-calendar/dist/tui-calendar"						
 							),
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/tui/tui-calendar/dist/tui-calendar.css");
@@ -108,7 +110,7 @@
 						'tui' => array
 							(
 								"tui-code-snippet/dist/tui-code-snippet",
-								"tui-date-picker/dist/tui-date-picker"
+
 							),
 					);
 					/**

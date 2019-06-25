@@ -87,13 +87,16 @@
 				$( '<div id="{$id}-container" style="margin-top: -1px;"></div>' ).insertAfter( "#{$id}" );
 				$( "<span class=\"tui-ico-date\"></span>" ).insertAfter( "#{$id}" );
 
+				
+
 				var datepicker = new tui.DatePicker('#{$id}-container', {
 						  date: new Date(),
 						  input: {
 							  element: '#{$id}',
 							  format: '{$format}'
 						  },
-						  showAlways: false
+						  showAlways: false,
+						  
 					  });
 			});
 JS;
