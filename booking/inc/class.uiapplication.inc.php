@@ -1100,6 +1100,7 @@
 							 */
 							else
 							{
+								$GLOBALS['phpgw']->db->transaction_commit();
 								$this->bo->send_notification($application, true);
 							}
 
