@@ -1039,7 +1039,7 @@ HTML;
 						});
 
 						$(".btn-group").addClass(\'w-100\');
-						$(".multiselect ").addClass(\'form-control\');
+						$(".multiselect").addClass(\'form-control\');
 						$(".multiselect").removeClass(\'btn\');
 						$(".multiselect").removeClass(\'btn-default\');
 
@@ -1122,19 +1122,36 @@ HTML;
 			$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, false);
 
 			$subs = false;
+			$_categories = array();
 			foreach ($_cats as $_cat)
 			{
 				if ($_cat['level'] > 0 && $_cat['active'] != 2)
 				{
 					$subs = true;
 				}
+				else if ($_cat['level'] == 0 && $_cat['active'] != 2 && $this->acl->check(".ticket.category.{$_cat['id']}",PHPGW_ACL_READ, 'helpdesk') )
+				{
+					$_categories[] = $_cat;
+				}
+
 			}
 
 			if($subs && (int)$this->parent_cat_id <= 0)
 			{
-//				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_{$_cat['main']}"; // to expand the menu
 				$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . lang('choose a section from the menu');
-				self::render_template_xsl('datatable_jquery', array());
+				$sub_menu = array();
+				foreach ($_categories as $_category)
+				{
+					$sub_menu[] = array
+					(
+						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => $_category['id'])),
+						'text'	=> $_category['name'],
+					);
+				}
+
+				$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
+				$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('navigate' => array('sub_menu' => $sub_menu)));
+	//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 				return;
 			}
 
@@ -1143,16 +1160,17 @@ HTML;
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
 
-			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
-			{
-				phpgwapi_jquery::load_widget('bootstrap-multiselect');
-			}
-			else
-			{
-				self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
-			}
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+//			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
+//			{
+//				phpgwapi_jquery::load_widget('bootstrap-multiselect');
+//			}
+//			else
+//			{
+//				self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
+//				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
+//				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
+//			}
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);

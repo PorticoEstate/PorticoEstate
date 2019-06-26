@@ -22,10 +22,19 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
+	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+
 	$javascripts = array();
+	$stylesheets = array();
+
+	phpgw::import_class('phpgwapi.jquery');
+	phpgwapi_jquery::load_widget('core');
+
+	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
+	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+
 	$javascripts[] = "/phpgwapi/templates/mobilefrontend/js/keep_alive.js";
 
-	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
@@ -34,11 +43,15 @@
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 
-//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+
+	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";
-	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+//	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/base.css";
-	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
+//	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -58,10 +71,35 @@
 		}
 	}
 
+	// Construct navbar_config by taking into account the current selected menu
+	// The only problem with this loop is that leafnodes will be included
+	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
+
+	if( isset($GLOBALS['phpgw_info']['flags']['menu_selection']) )
+	{
+		if(!isset($navbar_config))
+		{
+			$navbar_config = array();
+		}
+
+		$current_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+
+		while($current_selection)
+		{
+			$navbar_config["navbar::$current_selection"] = true;
+			$current_selection = implode("::", explode("::", $current_selection, -1));
+		}
+
+		phpgwapi_template_portico::store_local('navbar_config', $navbar_config);
+	}
+
+	$_navbar_config			= json_encode($navbar_config);
 
 	$app = lang($app);
 	$tpl_vars = array
 	(
+		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
+		'nofooter'		=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
 		'css'			=> $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
@@ -71,39 +109,8 @@
 		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
 		'webserver_url'	=> $webserver_url,
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'current_app_header' => isset($GLOBALS['phpgw_info']['flags']['app_header']) && $GLOBALS['phpgw_info']['flags']['app_header'] ? $GLOBALS['phpgw_info']['flags']['app_header'] : '',
-		'current_user'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString()
+		'navbar_config' => $_navbar_config,
 	);
-
-	$tpl_vars['manual_text'] = lang('manual');
-	$tpl_vars['manual_url'] = $GLOBALS['phpgw']->link('/index.php', array( 'menuaction' => 'manual.uidocuments.view' ));
-	$tpl_vars['home_text'] = lang('home');
-	$tpl_vars['home_url'] = $GLOBALS['phpgw']->link('/home.php');
-	$tpl_vars['logout_text'] = lang('logout');
-	$tpl_vars['logout_url'] = $GLOBALS['phpgw']->link('/logout.php');
-
-	$menu ='';
-	if(empty($GLOBALS['phpgw_info']['flags']['noframework']))
-	{
-		$menu = <<<HTML
-		<div class="home-menu custom-menu-wrapper">
-			<div class="pure-menu custom-menu custom-menu-top">
-				<a href="{$tpl_vars['site_url']}" class="pure-menu-heading custom-menu-brand">{$tpl_vars['site_title']}</a>
-				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
-			</div>
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
-				<div class="custom-menu-screen"></div>
-				<ul class="pure-menu-list">
-					<li class="pure-menu-item"><a href="{$tpl_vars['manual_url']}" class="pure-menu-link">{$tpl_vars['manual_text']}</a></li>
-					<li class="pure-menu-item"><a href="{$tpl_vars['home_url']}" class="pure-menu-link">{$tpl_vars['home_text']}</a></li>
-					<li class="pure-menu-item"><a href="{$tpl_vars['logout_url']}" class="pure-menu-link">{$tpl_vars['logout_text']}</a></li>
-				</ul>
-			</div>
-		</div>
-HTML;
-
-	}
-	$tpl_vars['menu'] = $menu;
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
