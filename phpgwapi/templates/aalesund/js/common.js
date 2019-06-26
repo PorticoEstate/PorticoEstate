@@ -129,12 +129,12 @@ $(document).ready(function ()
 	{
 		$('.showMe').css("display", "");
 	}, 800);
-	$("#navbar-search-form").submit(function (event)
+	$("#navSearchForm").submit(function (event)
 	{
 		event.preventDefault();
-		if ($(".navbar-search input").val().length > 0)
+		if ($("#navSearchForm input").val().length > 0)
 		{
-			window.location.href = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.index", searchterm: $(".navbar-search input").val()}, false);
+			window.location.href = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.index", searchterm: $("#navSearchForm input").val()}, false);
 		}
 	});
 

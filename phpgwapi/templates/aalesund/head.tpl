@@ -26,28 +26,20 @@
 		<!-- END javascript -->
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 	</head>
-    <body>
-		<nav class="navbar navbar-expand-md bg-light navbar-light fixed-top header_borderline"   id="headcon">
-			<div class="container   header-container   my_class"    >
-
+    
+		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
+			<div class="container header-container my_class">
 				<a class="navbar-brand brand-site-title" href="{site_url}">{site_title} </a>
 				<a href="{site_url}"><img class="navbar-brand brand-site-img" src="{headlogoimg}" alt="{logo_title}"/></a>
-				<div class="parentdiv   collapse navbar-collapse  "    id="collapsibleNavbar"     >
-					<ul class="   navbar-nav       navbar-search   d-none   "   >
-						<li class="nav-item">
-							<form id="navbar-search-form"   class="expanding-search-form">
-								<div class="childdiv input-group mb-3  globalsearchbuttoncl"   id="globalsearchbuttong">
-									<input class="  form-control  search-input"   type="text" placeholder="{placeholder_search}"    id="searchmotor"  />
-									<button class="btn btn-outline-secondary searchBtn" type="submit"   id="searchbuttons"><i class="fas fa-search"></i></button>
-								</div>
-							</form>
-						</li>
-					</ul>
+				<!-- Search Box -->
+				<div class="search-container">
+					<form id="navSearchForm" class="search-form">
+						<input type="text" class="search-input" placeholder="{placeholder_search}"    id="searchInput"  />
+						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
+					</form>
 				</div>
 			</div>
-            <div class="navbar-organization-select"/>
 		</nav>
 		<div class="overlay">
             <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
         </div>
-        <div class="container-top-fix"></div><div class="showMe" style="display: none">
