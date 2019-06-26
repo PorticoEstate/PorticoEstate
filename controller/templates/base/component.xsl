@@ -24,10 +24,10 @@
 		<div id="receipt"></div>
 
 		<div class="pure-g">
-			<div class="pure-u-1 pure-u-md-1-2">
+			<div class="pure-u-1 pure-u-md-2-3">
 				<xsl:apply-templates select="form" />
 			</div>
-			<div class="pure-u-1 pure-u-md-1-2">
+			<div class="pure-u-1 pure-u-md-1-3">
 				<xsl:call-template name="icon_color_map" />
 			</div>
 		</div>
@@ -115,7 +115,7 @@
 	<div id="toolbar">
 		<form class="pure-form pure-form-stacked">
 				<xsl:for-each select="item">
-					<div class="pure-u-1 pure-u-md-1-3">
+					<div class="pure-u-1">
 						<label>
 							<xsl:attribute name="for">
 								<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
@@ -208,6 +208,14 @@
 
 <xsl:template match="datatable">
 	<style>
+
+		/*
+		*  Generated from https://tablestyler.com/
+		*/
+
+		.datagrid table { border-collapse: collapse; text-align: left; width: 100%; } .datagrid {font: normal 12px/150% Arial, Helvetica, sans-serif; background: #fff; overflow: hidden; border: 2px solid #006699; }.datagrid table td, .datagrid table th { padding: 3px 4px; }.datagrid table thead th {background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; color:#FFFFFF; font-size: 15px; font-weight: bold; } .datagrid table thead th:first-child { border: none; }.datagrid table tbody td { color: #001F2E; border-left: 1px solid #E1EEF4;font-size: 12px;font-weight: bold; }.datagrid table tbody .alt td { background: #E1EEF4; color: #00557F; }.datagrid table tbody td:first-child { border-left: none; }.datagrid table tbody tr:last-child td { border-bottom: none; }.datagrid table tfoot td div { border-top: 1px solid #006699;background: #E1EEF4;} .datagrid table tfoot td { padding: 0; font-size: 12px } .datagrid table tfoot td div{ padding: 0px; }.datagrid table tfoot td ul { margin: 0; padding:0; list-style: none; text-align: right; }.datagrid table tfoot  li { display: inline; }.datagrid table tfoot li a { text-decoration: none; display: inline-block;  padding: 2px 8px; margin: 1px;color: #FFFFFF;border: 1px solid #006699;-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; }.datagrid table tfoot ul.active, .datagrid table tfoot ul a:hover { text-decoration: none;border-color: #00557F; color: #FFFFFF; background: none; background-color:#006699;}div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
+
+/*
 		#components {
 		font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 		width: 100%;
@@ -225,14 +233,15 @@
 		text-align: left;
 		padding-top: 5px;
 		padding-bottom: 4px;
-		background-color: green;
+		background-color: #343a40;
 		color: #ffffff;
 		}
 
 		#components tr.alt td {
 		color: #000000;
-		background-color: #EAF2D3;
+		background-color: #e6ffed;
 		}
+
 		#summary {
 		font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 		width: 100%;
@@ -250,14 +259,15 @@
 		text-align: left;
 		padding-top: 5px;
 		padding-bottom: 4px;
-		background-color: green;
+		background-color: #343a40
 		color: #ffffff;
 		}
 
 		#summary tr.alt td {
 		color: #000000;
-		background-color: #EAF2D3;
+		background-color: #e6ffed;
 		}
+*/
 	</style>
 
 	<xsl:call-template name="datasource-definition" />
@@ -265,56 +275,58 @@
 
 
 <xsl:template name="datasource-definition">
-	<table id="components">
-		<thead>
-			<tr>
-				<td id='checkall'>
-				</td>
-				<td id='total_records'>
-				</td>
-				<td id='control_text'>
-				</td>
-				<td id='sum_text'>
-				</td>
-				<td id='monthsum'>
-				</td>
-				<td id='month1'>
-				</td>
-				<td id='month2'>
-				</td>
-				<td id='month3'>
-				</td>
-				<td id='month4'>
-				</td>
-				<td id='month5'>
-				</td>
-				<td id='month6'>
-				</td>
-				<td id='month7'>
-				</td>
-				<td id='month8'>
-				</td>
-				<td id='month9'>
-				</td>
-				<td id='month10'>
-				</td>
-				<td id='month11'>
-				</td>
-				<td id='month12'>
-				</td>
-			</tr>
-		</thead>
-		<thead>
-			<tr>
-				<xsl:for-each select="//datatable/field">
-					<th id = "head{id}">
-						<xsl:value-of select="label"/>
-					</th>
-				</xsl:for-each>
-			</tr>
-		</thead>
-		<tbody id="tbody"></tbody>
-	</table>
+	<div class="datagrid table-responsive">
+		<table id="components">
+			<thead>
+				<tr>
+					<td id='checkall'>
+					</td>
+					<td id='total_records'>
+					</td>
+					<td id='control_text'>
+					</td>
+					<td id='sum_text'>
+					</td>
+					<td id='monthsum'>
+					</td>
+					<td id='month1'>
+					</td>
+					<td id='month2'>
+					</td>
+					<td id='month3'>
+					</td>
+					<td id='month4'>
+					</td>
+					<td id='month5'>
+					</td>
+					<td id='month6'>
+					</td>
+					<td id='month7'>
+					</td>
+					<td id='month8'>
+					</td>
+					<td id='month9'>
+					</td>
+					<td id='month10'>
+					</td>
+					<td id='month11'>
+					</td>
+					<td id='month12'>
+					</td>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+					<xsl:for-each select="//datatable/field">
+						<th id = "head{id}">
+							<xsl:value-of select="label"/>
+						</th>
+					</xsl:for-each>
+				</tr>
+			</thead>
+			<tbody id="tbody"></tbody>
+		</table>
+	</div>
 	<div id="status_summary">
 		
 	</div>

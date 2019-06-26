@@ -9,10 +9,28 @@
 		<xsl:when test="view">
 			<xsl:apply-templates select="view"/>
 		</xsl:when>
+		<xsl:when test="navigate">
+			<xsl:apply-templates select="navigate"/>
+		</xsl:when>
 	</xsl:choose>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
+<!-- navigate -->
+<xsl:template xmlns:php="http://php.net/xsl" match="navigate">
+	<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+		<ul class="pure-menu-list">
+			<xsl:for-each select="sub_menu">
+				<li class="pure-menu-item">
+					<a href="{url}" class="pure-menu-link">
+						<xsl:value-of select="text"/>
+					</a>
+				</li>
+			</xsl:for-each>
+		</ul>
+	</div>
+
+</xsl:template>
 <!-- add -->
 <xsl:template xmlns:php="http://php.net/xsl" match="add">
 	<script type="text/javascript">

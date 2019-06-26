@@ -76,7 +76,6 @@
 			if ($this->home_alternative)
 			{
 				$this->skip_portalbox_controls = true;
-				$this->status_componants();
 			}
 			else
 			{
@@ -84,52 +83,6 @@
 			}
 		}
 
-		private function status_componants()
-		{
-
-			$portalbox = CreateObject('phpgwapi.listbox', array
-				(
-				'title' => lang('controller'),
-				'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-				'width' => '100%',
-				'outerborderwidth' => '0',
-				'header_background_image' => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
-			));
-
-			$app_id = $GLOBALS['phpgw']->applications->name2id('controller');
-			if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
-			{
-				$GLOBALS['portal_order'][] = $app_id;
-			}
-
-			$var = $this->get_controls($app_id);
-
-			foreach ($var as $key => $value)
-			{
-				$portalbox->set_controls($key, $value);
-			}
-			/*
-			  $url_component	= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'controller.uicomponent.index', 'noframework' => true));
-
-			  $extra_data = <<<HTML
-			  <iframe src="{$url_component}" width="100%" height="400" style="border:none"></iframe>
-			  HTML;
-			 */
-			$lang_status_components = $GLOBALS['phpgw']->translation->translate('status components', array(), false, 'controller');
-			$url_component = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index'));
-
-			$extra_data = <<<HTML
-				 <a href="{$url_component}">{$lang_status_components}</a>
-HTML;
-
-			$portalbox->data = array();
-
-			echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw($extra_data) . "</div>\n" . '<!-- END ticket info -->' . "\n";
-
-			unset($portalbox);
-		}
 
 		private function get_controls( $app_id )
 		{

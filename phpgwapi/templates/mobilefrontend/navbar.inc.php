@@ -2,6 +2,17 @@
 
 	function parse_navbar($force = False)
 	{
+		$nonavbar = false;
+		if(isset($GLOBALS['phpgw_info']['flags']['nonavbar']) && $GLOBALS['phpgw_info']['flags']['nonavbar'])
+		{
+			$nonavbar	= true;
+		}
+
+		if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home')
+		{
+			$nonavbar	= true;
+		}
+
 		$config_controller = CreateObject('phpgwapi.config', 'controller')->read();
 		if( isset($config_controller['home_alternative']) && $config_controller['home_alternative'] == 1 )
 		{
@@ -14,6 +25,8 @@
 		}
 
 		$site_url	= $GLOBALS['phpgw']->link('/home.php', array());
+		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+		$user_fullname	= $user->__toString();
 
 		$controller_text = lang('controller');
 		$tts_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index'));
@@ -24,62 +37,128 @@
 		$movein_text = $GLOBALS['phpgw']->translation->translate('movein', array(), false, 'rental');
 		$moveout_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index'));
 		$moveout_text = $GLOBALS['phpgw']->translation->translate('moveout', array(), false, 'rental');
+		$logout_url	= $GLOBALS['phpgw']->link('/logout.php');
+		$logout_text	= lang('logout');
+		$var['user_fullname'] = $user_fullname;
 
 
 		$acl = & $GLOBALS['phpgw']->acl;
 
+
+$landing = <<<HTML
+	<div class="mt-5 row">
+	<div class="container">
+		<div class="row">
+HTML;
+
+
+
 		$app_menu = '';
 
 		$topmenu = <<<HTML
-		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
-			<ul class="pure-menu-list">
-				<li class="pure-menu-heading pure-menu-link pure-menu-selected">
-					<a href="{$site_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$GLOBALS['phpgw_info']['user']['fullname']}</a>
+			<ul class="nav navbar-nav ml-auto">
+				<li class="nav-item">
+					<a href="{$site_url}" class="nav-link"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$user_fullname}</a>
 				</li>
 HTML;
 
 		if($acl->check('run', PHPGW_ACL_READ, 'controller'))
 		{
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$controller_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;{$controller_text}</a>
+				<li class="nav-item">
+					<a href="{$controller_url}" class="nav-link"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;{$controller_text}</a>
 				</li>
+HTML;
+			$landing .= <<<HTML
+				<!-- CARD #1 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$controller_text}</h5>
+							<a href="{$controller_url}" class="btn btn-primary">Gå til {$controller_text}</a>
+						  </div>
+						</div>
+					 </div>
 HTML;
 
 		}
 		if($acl->check('.ticket', PHPGW_ACL_READ, 'property'))
 		{
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$tts_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$tts_text}</a>
+				<li class="nav-item">
+					<a href="{$tts_url}" class="nav-link"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$tts_text}</a>
 				</li>
+HTML;
+			$landing .= <<<HTML
+				<!-- CARD #2 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$tts_text}</h5>
+							<a href="{$tts_url}" class="btn btn-primary">Gå til {$tts_text}</a>
+						  </div>
+						</div>
+					 </div>
 HTML;
 
 		}
 		if($acl->check('.project.condition_survey', PHPGW_ACL_READ, 'property'))
 		{
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$condition_survey_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>&nbsp;{$condition_survey_text}</a>
+				<li class="nav-item">
+					<a href="{$condition_survey_url}" class="nav-link"><i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>&nbsp;{$condition_survey_text}</a>
 				</li>
+HTML;
+			$landing .= <<<HTML
+				<!-- CARD #3 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$condition_survey_text}</h5>
+							<a href="{$condition_survey_url}" class="btn btn-primary">Gå til {$condition_survey_text}</a>
+						  </div>
+						</div>
+					 </div>
 HTML;
 
 		}
 		if($acl->check('.movein', PHPGW_ACL_READ, 'rental'))
 		{
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$movein_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$movein_text}</a>
+				<li class="nav-item">
+					<a href="{$movein_url}" class="nav-link"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$movein_text}</a>
 				</li>
+HTML;
+			$landing .= <<<HTML
+				<!-- CARD #3 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$movein_text}</h5>
+							<a href="{$movein_url}" class="btn btn-primary">Gå til {$movein_text}</a>
+						  </div>
+						</div>
+					 </div>
 HTML;
 
 		}
 		if($acl->check('.moveout', PHPGW_ACL_READ, 'rental'))
 		{
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$moveout_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$moveout_text}</a>
+				<li class="nav-item">
+					<a href="{$moveout_url}" class="nav-link"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$moveout_text}</a>
 				</li>
+HTML;
+			$landing .= <<<HTML
+				<!-- CARD #4 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$moveout_text}</h5>
+							<a href="{$moveout_url}" class="btn btn-primary">Gå til {$moveout_text}</a>
+						  </div>
+						</div>
+					 </div>
 HTML;
 
 		}
@@ -90,34 +169,61 @@ HTML;
 			$rental_frontend_text = $GLOBALS['phpgw']->translation->translate('rental', array(), false, 'rental frontend');
 
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item">
-					<a href="{$rental_frontend_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp;{$rental_frontend_text}</a>
+				<li class="nav-item">
+					<a href="{$rental_frontend_url}" class="nav-link"><i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp;{$rental_frontend_text}</a>
 				</li>
 HTML;
 
+			$landing .= <<<HTML
+				<!-- CARD #5 -->
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$rental_frontend_text}</h5>
+							<a href="{$rental_frontend_url}" class="btn btn-primary">Gå til {$rental_frontend_text}</a>
+						  </div>
+						</div>
+					 </div>
+HTML;
 		}
 
 		if($acl->check('run', PHPGW_ACL_READ, 'helpdesk'))
 		{
 			$helpdesk_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
-			$helpdesk_text = $GLOBALS['phpgw']->translation->translate('helpdesk', array(), false, 'helpdesk');
+
+			$config_helpdesk = CreateObject('phpgwapi.config','helpdesk')->read();
+			if (!empty($config_helpdesk['app_name']))
+			{
+				$helpdesk_text = $config_helpdesk['app_name'];
+			}
+			else
+			{
+				$helpdesk_text = $GLOBALS['phpgw']->translation->translate('helpdesk', array(), false, 'helpdesk');
+			}
 
 			$topmenu .= <<<HTML
-				<li class="pure-menu-item pure-menu-allow-hover">
-					<a href="{$helpdesk_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$helpdesk_text}</a>
+				<li class="nav-item">
+					<a href="{$helpdesk_url}" class="nav-link"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$helpdesk_text}</a>
 				</li>
 HTML;
+			$landing .= <<<HTML
+				<!-- CARD #5 -->
+					 <div class="col">
+						<div class="card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">{$helpdesk_text}</h5>
+							<a href="{$helpdesk_url}" class="btn btn-primary">Gå til {$helpdesk_text}</a>
+						  </div>
+						</div>
+					 </div>
+HTML;
+
 				if ('helpdesk' == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
 					$menu_gross = execMethod("helpdesk.menu.get_menu");
 					$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
 					$level = 0;
 					$navigation = get_sub_menu($menu_gross['navigation'], $selection, $level);
-
-					$app_menu = <<<HTML
-					<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
-						<ul class="pure-menu-list">
-HTML;
 				}
 				else
 				{
@@ -126,26 +232,29 @@ HTML;
 
 				foreach ($navigation as $menu_item)
 				{
-					$app_menu .= <<<HTML
-							<li class="pure-menu-item">
-								<a href="{$menu_item['url']}" class="pure-menu-link bigmenubutton"><i class="fa fa-folder-open-o" aria-hidden="true"></i>&nbsp;{$menu_item['text']}</a>
-							</li>
-HTML;
+					$app_menu .= render_item($menu_item);
+
+//					$app_menu .= <<<HTML
+//							<li class="nav-item">
+//								<a href="{$menu_item['url']}" class="nav-link">{$menu_item['text']}</a>
+//							</li>
+//HTML;
 				}
-
-				$app_menu .= <<<HTML
-					</ul>
-				</div>
-HTML;
-
 
 		}
 
 		$topmenu .= <<<HTML
-			</ul>
-		</div>
+			<li class="nav-item">
+				<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
+			</li>
+		</ul>
 HTML;
 
+$landing .= <<<HTML
+
+	</div>
+</div>
+HTML;
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
 
@@ -154,7 +263,54 @@ HTML;
 //		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
 
 		$var['topmenu'] = $topmenu;
-		$var['app_menu'] = $app_menu;
+
+			$sidebar_content = <<<HTML
+
+			<ul id="menutree" class="list-unstyled components">
+HTML;
+			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
+			{
+				$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
+				$preferences_text = lang('preferences');
+				$sidebar_content .= <<<HTML
+
+				<li class="nav-item">
+					<a href="{$preferences_url}">{$preferences_text}</a>
+				</li>
+HTML;
+			}
+			$sidebar_content .= <<<HTML
+			{$app_menu}
+			</ul>
+HTML;
+
+		if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'home')
+		{
+			$var['landing'] = $landing;
+			$nonavbar	= true;
+		}
+
+		if(!$nonavbar)
+		{
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
+
+			$var['sidebar'] = <<<HTML
+			<nav id="sidebar" class="{$navbar_state['menu_state']}">
+				<div class="sidebar-header">
+			        <h1>{$user_fullname}</h1>
+			    </div>
+				<div class="sidebar-sticky">
+					{$sidebar_content}
+				</div>
+			</nav>
+HTML;
+			$var['sidebar_button'] = <<<HTML
+				<button type="button" id="sidebarCollapse" class="btn btn-info">
+				<i class="fas fa-align-left"></i>
+				<span>Sidemeny</span>
+			</button>
+HTML;
+		}
 
 		$GLOBALS['phpgw']->template->set_var($var);
 
@@ -176,32 +332,75 @@ HTML;
 		register_shutdown_function('parse_footer_end');
 	}
 
-		function get_sub_menu( $children = array(), $selection = array(), $level = '' )
+	function get_sub_menu( $children = array(), $selection = array(), $level = '' )
+	{
+		$level++;
+		$i = 0;
+		foreach ($children as $key => $vals)
 		{
-			$level++;
-			$i = 0;
-			foreach ($children as $key => $vals)
+			$menu[] = $vals;
+			if ($key == $selection[$level])
 			{
-				$menu[] = $vals;
-				if ($key == $selection[$level])
+				$menu[$i]['this'] = true;
+				if (isset($menu[$i]['children']))
 				{
-					$menu[$i]['this'] = true;
-					if (isset($menu[$i]['children']))
-					{
-						$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'], $selection, $level);
-					}
+					$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'], $selection, $level);
 				}
-				else
-				{
-					if (isset($menu[$i]['children']))
-					{
-						unset($menu[$i]['children']);
-					}
-				}
-				$i++;
 			}
-			return $menu;
+			else
+			{
+				if (isset($menu[$i]['children']))
+				{
+					unset($menu[$i]['children']);
+				}
+			}
+			$i++;
 		}
+		return $menu;
+	}
+
+	function render_item($item, $id='')
+	{
+		$selected_node = false;
+		$current_class = 'nav-item';
+
+		if ( !empty($item['this']))
+		{
+			$current_class .= ' active';
+			$item['selected'] = true;
+			$selected_node = true;
+		}
+
+		$target = '';
+
+		if(isset($item['target']))
+		{
+			$target = "target = '{$item['target']}'";
+		}
+		if(isset($item['local_files']) && $item['local_files'])
+		{
+			$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+		}
+
+		$ret = <<<HTML
+			<li class="{$current_class}">
+			<a href="{$item['url']}" class="nav-link context-menu-nav" bookmark_id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
+			</li>
+HTML;
+
+		return  $ret;
+
+	}
+
+	function item_expanded($id)
+	{
+		static $navbar_state;
+		if( !isset( $navbar_state ) )
+		{
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
+		}
+		return isset( $navbar_state[ $id ]);
+	}
 
 	function parse_footer_end()
 	{

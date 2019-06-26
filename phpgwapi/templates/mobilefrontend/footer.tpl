@@ -1,20 +1,11 @@
-		</div>
-		<div id="footer">
+<!--footer class="page-footer font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
 
-		</div>
-		<div class="footer l-box is-center">
-			{site_title}
-		</div>
-		{javascript_end}
-		<script>
-			(function (window, document)
-			{
-				document.getElementById('toggle').addEventListener('click', function (e)
-				{
-					document.getElementById('tuckedMenu').classList.toggle('custom-menu-tucked');
-					document.getElementById('toggle').classList.toggle('x');
-				});
-			})(this, this.document);
-		</script>
-	</body>
+		<p>{site_title}</p>
+</footer-->
+</div>
+
+<div id="popupBox"></div>
+<div id="curtain"></div>
+{javascript_end}
+</body>
 </html>
