@@ -24,6 +24,12 @@
 			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list'));
 		}
 
+		$extra_vars = array();
+		foreach($_GET as $name => $value)
+		{
+			$extra_vars[$name] = phpgw::clean_value($value);
+		}
+
 		$site_url	= $GLOBALS['phpgw']->link('/home.php', array());
 		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 		$user_fullname	= $user->__toString();
@@ -260,7 +266,30 @@ HTML;
 
 		$flags = &$GLOBALS['phpgw_info']['flags'];
 		$var['current_app_title'] = isset($flags['app_header']) ? $flags['app_header'] : lang($GLOBALS['phpgw_info']['flags']['currentapp']);
-//		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		$flags['menu_selection'] = isset($flags['menu_selection']) ? $flags['menu_selection'] : '';
+		$breadcrumb_selection = !empty($flags['breadcrumb_selection']) ? $flags['breadcrumb_selection'] : $flags['menu_selection'];
+		// breadcrumbs
+		$current_url = array
+		(
+			'id'	=> $breadcrumb_selection,
+			'url'	=> 	"{$_SERVER['PHP_SELF']}?" . http_build_query($extra_vars),
+			'name'	=> $var['current_app_title']
+		);
+		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');
+		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
+
+
+
+		if($breadcrumbs[0]['id'] != $breadcrumb_selection)
+		{
+			array_unshift($breadcrumbs, $current_url);
+		}
+		if(count($breadcrumbs) >= 6)
+		{
+			array_pop($breadcrumbs);
+		}
+		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
+		$breadcrumbs = array_reverse($breadcrumbs);
 
 		$var['topmenu'] = $topmenu;
 
@@ -311,6 +340,36 @@ HTML;
 			</button>
 HTML;
 		}
+
+		$breadcrumb_html = "";
+
+		if(phpgw::get_var('phpgw_return_as') != 'json' && $breadcrumbs && is_array($breadcrumbs))// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
+		{
+			$breadcrumb_html = <<<HTML
+				<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb">
+HTML;
+			$history_url = array();
+			for($i=0;$i< (count($breadcrumbs) -1); $i++)
+			{
+				$breadcrumb_html .= <<<HTML
+					<li class="breadcrumb-item"><a href="{$breadcrumbs[$i]['url']}">{$breadcrumbs[$i]['name']}</a></li>
+HTML;
+			}
+
+			$breadcrumb_html .= <<<HTML
+				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
+HTML;
+
+			$breadcrumb_html .= <<<HTML
+				</ol>
+			  </nav>
+
+HTML;
+
+		}
+
+		$var['breadcrumb'] = $breadcrumb_html;
 
 		$GLOBALS['phpgw']->template->set_var($var);
 
