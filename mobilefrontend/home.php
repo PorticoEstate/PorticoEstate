@@ -46,7 +46,8 @@
 			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $keep_alive_timestamp);
 		}
 
-		$sessions_timeout = 10;$GLOBALS['phpgw_info']['server']['sessions_timeout'];
+		$sessions_timeout = 660; // 11 minutes
+//		$sessions_timeout = $GLOBALS['phpgw_info']['server']['sessions_timeout'];
 		if(($now - $keep_alive_timestamp) > $sessions_timeout)
 		{
 			$ret = array('status' => 440); //Login Time-out
