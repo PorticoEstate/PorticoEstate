@@ -55,7 +55,7 @@
 
 		$template_selector = <<<HTML
 
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="-webkit-appearance: none;-moz-appearance: none;">
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
 		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
 		<option value="portico"{$selecte_portico}>Portico</option>
 	   </select>
@@ -63,9 +63,6 @@
 
 		$var['topmenu'] = <<<HTML
 			<ul class="nav navbar-nav ml-auto">
-				<li class="nav-item">
-					{$template_selector}
-				</li>
 				<li class="nav-item">
 					<a data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle" href="#_preferencse">{$user_fullname}</a>
 					<ul class="collapse list-unstyled" id = "_preferencse">
@@ -76,6 +73,9 @@
 							<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
 						</li>
 					</ul>
+				</li>
+				<li class="nav-item">
+					{$template_selector}
 				</li>
 				<!--li class="nav-item">
 					<a href="{$print_url}"  target="_blank" class="nav-link">{$print_text}</a>
