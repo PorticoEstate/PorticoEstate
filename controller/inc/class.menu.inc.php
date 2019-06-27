@@ -31,8 +31,59 @@
 	class controller_menu
 	{
 
+		protected $mobilefrontend;
+
+		function __construct()
+		{
+			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
+
+			if(preg_match('/mobilefrontend/', $script_path))
+			{
+				$this->mobilefrontend = true;
+			}
+
+		}
+
+
+		function get_frontend_menu( )
+		{
+			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'controller';
+			$menus = array();
+
+			$menus['navbar'] = array
+				(
+				'calendar_planner' => array
+					(
+					'text' => lang('calendar planner'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
+					'image' => array('property', 'location'),
+					'order' => 10,
+					'group' => 'office'
+				)
+			);
+
+			$menus['navigation'] = array();
+
+			$menus['navigation'] = array(
+				'calendar_planner' =>  array(
+						'text' => lang('calendar planner'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
+						'image' => array('property', 'location_1')
+					)
+				);
+
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
+			return $menus;
+
+		}
+
 		function get_menu()
 		{
+			if($this->mobilefrontend)
+			{
+				return $this->get_frontend_menu();
+			}
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'controller';
 			$menus = array();

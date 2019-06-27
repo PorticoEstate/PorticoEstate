@@ -46,7 +46,7 @@
 
 	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";
 //	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/base.css";

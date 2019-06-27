@@ -16,7 +16,7 @@
 		$config_controller = CreateObject('phpgwapi.config', 'controller')->read();
 		if( isset($config_controller['home_alternative']) && $config_controller['home_alternative'] == 1 )
 		{
-			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index'));
+			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index'));
 
 		}
 		else
@@ -51,13 +51,11 @@
 		$acl = & $GLOBALS['phpgw']->acl;
 
 
-$landing = <<<HTML
-	<div class="mt-5 row">
-	<div class="container">
-		<div class="row">
+		$landing = <<<HTML
+		<div class="mt-5 row">
+			<div class="container">
+				<div class="row">
 HTML;
-
-
 
 		$app_menu = '';
 
@@ -86,6 +84,23 @@ HTML;
 						</div>
 					 </div>
 HTML;
+
+			if ('controller' == $GLOBALS['phpgw_info']['flags']['currentapp'])
+			{
+				$menu_gross = execMethod("controller.menu.get_menu");
+				$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level = 0;
+				$navigation = get_sub_menu($menu_gross['navigation'], $selection, $level);
+			}
+			else
+			{
+				$navigation = array();
+			}
+
+			foreach ($navigation as $menu_item)
+			{
+				$app_menu .= render_item($menu_item);
+			}
 
 		}
 		if($acl->check('.ticket', PHPGW_ACL_READ, 'property'))
@@ -224,28 +239,22 @@ HTML;
 					 </div>
 HTML;
 
-				if ('helpdesk' == $GLOBALS['phpgw_info']['flags']['currentapp'])
-				{
-					$menu_gross = execMethod("helpdesk.menu.get_menu");
-					$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
-					$level = 0;
-					$navigation = get_sub_menu($menu_gross['navigation'], $selection, $level);
-				}
-				else
-				{
-					$navigation = array();
-				}
+			if ('helpdesk' == $GLOBALS['phpgw_info']['flags']['currentapp'])
+			{
+				$menu_gross = execMethod("helpdesk.menu.get_menu");
+				$selection = explode('::', $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				$level = 0;
+				$navigation = get_sub_menu($menu_gross['navigation'], $selection, $level);
+			}
+			else
+			{
+				$navigation = array();
+			}
 
-				foreach ($navigation as $menu_item)
-				{
-					$app_menu .= render_item($menu_item);
-
-//					$app_menu .= <<<HTML
-//							<li class="nav-item">
-//								<a href="{$menu_item['url']}" class="nav-link">{$menu_item['text']}</a>
-//							</li>
-//HTML;
-				}
+			foreach ($navigation as $menu_item)
+			{
+				$app_menu .= render_item($menu_item);
+			}
 
 		}
 

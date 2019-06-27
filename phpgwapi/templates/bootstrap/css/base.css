@@ -43,7 +43,7 @@ p {
     /*color: #999;*/
 }
 
-a,
+#sidebar a,
 a:hover,
 a:focus {
     color: inherit;
