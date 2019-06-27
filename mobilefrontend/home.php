@@ -124,4 +124,12 @@
 		}
 		$GLOBALS['phpgw']->preferences->save_repository();
 	}
+	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
+	{
+		echo "<div class='container'><div class='jumbotron'><h1>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
+		echo "</h1>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));
+		echo '</div></div>';
+	}
 	$GLOBALS['phpgw']->common->phpgw_footer();

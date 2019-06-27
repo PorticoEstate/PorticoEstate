@@ -41,6 +41,25 @@
 		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
 		$preferences_text = lang('preferences');
 
+		switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+		{
+			case 'portico':
+				$selecte_portico = ' selected = "selected"';
+				$selecte_pure = '';
+				break;
+			case 'bootstrap':
+				$selecte_portico = '';
+				$selecte_bootstrap = ' selected = "selected"';
+				break;
+		}
+
+		$template_selector = <<<HTML
+
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
+		<option value="portico"{$selecte_portico}>Portico</option>
+	   </select>
+	HTML;
 
 		$var['topmenu'] = <<<HTML
 			<ul class="nav navbar-nav ml-auto">
@@ -54,6 +73,9 @@
 							<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
 						</li>
 					</ul>
+				</li>
+				<li class="nav-item">
+					{$template_selector}
 				</li>
 				<!--li class="nav-item">
 					<a href="{$print_url}"  target="_blank" class="nav-link">{$print_text}</a>
