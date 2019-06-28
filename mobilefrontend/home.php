@@ -58,6 +58,7 @@
 		}
 		else
 		{
+			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $now);
 			$ret = array('status' => 200);
 		}
 
