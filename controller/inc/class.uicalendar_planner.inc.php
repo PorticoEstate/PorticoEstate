@@ -63,22 +63,77 @@
 
 		public function index()
 		{
+			$control_id = phpgw::get_var('control_id', 'int');
+			$current_year = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
+			
+			if(phpgw::get_var('prev_year', 'bool'))
+			{
+				$current_year --;
+			}
+			if(phpgw::get_var('next_year', 'bool'))
+			{
+				$current_year ++;
+			}
+
+			$control_types		 = createObject('controller.socontrol')->get(0, 0, 'title', true, '', '', array());
+			$control_type_list	 = array(array('id' => '', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$control_type_list[] = array(
+					'id'		 => $control_type->get_id(),
+					'name'		 => $control_type->get_title(),
+					'selected'	 => $control_id == $control_type->get_id() ? 1 : 0
+				);
+			}
+
+
+			$first_half_year = array();
+			for ($i = 1; $i <= 6; $i++)
+			{
+				$first_half_year[] = array(
+					'id'	 => $i,
+					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1))),
+					'url'	 => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
+						'year' => $current_year,
+						'month' => $i))
+				);
+			}
+
+			$second_half_year = array();
+			for ($i = 7; $i <= 12; $i++)
+			{
+				$second_half_year[] = array(
+					'id'	 => $i,
+					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1))),
+					'url'	 => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
+							'year' => $current_year,
+							'month' => $i))
+				);
+			}
+
+			$part_of_towns = createObject('property.sogeneric')->get_list(array('type'		 => 'part_of_town',
+				'selected'	 => 0, 'order'		 => 'name', 'sort'		 => 'asc'));
+
+			$part_of_town_list = array();
+			foreach ($part_of_towns as &$part_of_town)
+			{
+				if ($part_of_town['id'] > 0)
+				{
+					$part_of_town['name']	 = ucfirst(strtolower($part_of_town['name']));
+					$part_of_town_list[]	 = $part_of_town;
+				}
+			}
+
 			$data = array
 				(
-				'buildings_on_property'		 => $buildings_on_property,
-				'my_locations'				 => $my_locations,
-				'property_array'			 => $property_array,
-				'current_location'			 => $location_array,
-				'heading_array'				 => $heading_array,
-				'controls_calendar_array'	 => $controls_calendar_array,
-				'components_calendar_array'	 => $components_calendar_array,
-				'location_level'			 => $level,
-				'roles_array'				 => $roles_array,
-				'repeat_type_array'			 => $repeat_type_array,
-				'current_year'				 => $year,
-				'current_month_nr'			 => $month,
-				'current_role'				 => $role,
-				'current_repeat_type'		 => $repeat_type
+				'prev_year'			 => $current_year -1,
+				'current_year'		 => $current_year,
+				'next_year'			 => $current_year +1,
+				'first_half_year'	 => $first_half_year,
+				'second_half_year'	 => $second_half_year,
+				'part_of_town_list'	 => $part_of_town_list,
+				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.index')),
+				'control_type_list'	 => array('options' => $control_type_list),
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -88,22 +143,11 @@
 
 		public function monthly()
 		{
+			$month = phpgw::get_var('month', 'int');
 			$data = array
-				(
-				'buildings_on_property'		 => $buildings_on_property,
-				'my_locations'				 => $my_locations,
-				'property_array'			 => $property_array,
-				'current_location'			 => $location_array,
-				'heading_array'				 => $heading_array,
-				'controls_calendar_array'	 => $controls_calendar_array,
-				'components_calendar_array'	 => $components_calendar_array,
-				'location_level'			 => $level,
-				'roles_array'				 => $roles_array,
-				'repeat_type_array'			 => $repeat_type_array,
-				'current_year'				 => $year,
-				'current_month_nr'			 => $month,
-				'current_role'				 => $role,
-				'current_repeat_type'		 => $repeat_type
+			(
+				'current_month' => lang(date('F', mktime(0, 0, 0, $month, 1))),
+				'current_year'	=> phpgw::get_var('year', 'int')
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -113,22 +157,11 @@
 
 		public function send_notification()
 		{
+
+
 			$data = array
 				(
-				'buildings_on_property'		 => $buildings_on_property,
-				'my_locations'				 => $my_locations,
-				'property_array'			 => $property_array,
-				'current_location'			 => $location_array,
-				'heading_array'				 => $heading_array,
-				'controls_calendar_array'	 => $controls_calendar_array,
-				'components_calendar_array'	 => $components_calendar_array,
-				'location_level'			 => $level,
-				'roles_array'				 => $roles_array,
-				'repeat_type_array'			 => $repeat_type_array,
-				'current_year'				 => $year,
-				'current_month_nr'			 => $month,
-				'current_role'				 => $role,
-				'current_repeat_type'		 => $repeat_type
+				'first_half_year' => $first_half_year,
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');

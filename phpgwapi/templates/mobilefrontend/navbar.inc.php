@@ -16,13 +16,14 @@
 		$config_controller = CreateObject('phpgwapi.config', 'controller')->read();
 		if( isset($config_controller['home_alternative']) && $config_controller['home_alternative'] == 1 )
 		{
-			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index'));
-
+			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index'));
 		}
 		else
 		{
 			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list'));
 		}
+
+		$controller_test_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index'));
 
 		$extra_vars = array();
 		foreach($_GET as $name => $value)
@@ -80,6 +81,14 @@ HTML;
 						  <div class="text-center card-body">
 							<h5 class="mx-auto card-title">{$controller_text}</h5>
 							<a href="{$controller_url}" class="btn btn-primary">Gå til {$controller_text}</a>
+						  </div>
+						</div>
+					 </div>
+					 <div class="col">
+						<div class="mb-5 card" style="width: 18rem;">
+						  <div class="text-center card-body">
+							<h5 class="mx-auto card-title">Denne er kun for test/utvikling</h5>
+							<a href="{$controller_test_url}" class="btn btn-outline-secondary">Gå til test</a>
 						  </div>
 						</div>
 					 </div>
