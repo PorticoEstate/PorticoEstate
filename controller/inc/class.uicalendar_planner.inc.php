@@ -64,6 +64,7 @@
 		public function index()
 		{
 			$control_id = phpgw::get_var('control_id', 'int');
+			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
 			$current_year = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
 			
 			if(phpgw::get_var('prev_year', 'bool'))
@@ -120,10 +121,11 @@
 				if ($part_of_town['id'] > 0)
 				{
 					$part_of_town['name']	 = ucfirst(strtolower($part_of_town['name']));
+					$part_of_town['selected'] == in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
 					$part_of_town_list[]	 = $part_of_town;
 				}
 			}
-
+//			_debug_array($part_of_town_list);
 			$data = array
 				(
 				'prev_year'			 => $current_year -1,
@@ -132,12 +134,13 @@
 				'first_half_year'	 => $first_half_year,
 				'second_half_year'	 => $second_half_year,
 				'part_of_town_list'	 => $part_of_town_list,
+				'part_of_town_list2' => array('options' => $part_of_town_list),
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.index')),
 				'control_type_list'	 => array('options' => $control_type_list),
 			);
 
-			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('controller', 'base', 'ajax.js');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+//			self::add_javascript('controller', 'base', 'ajax.js');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
 

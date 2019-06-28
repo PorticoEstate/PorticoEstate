@@ -28,7 +28,27 @@
 		//			window.document.location = $(this).data("data-target");
 
 		});
+			$("#part_of_town_id").multiselect({
+				buttonWidth: 250,
+				includeSelectAllOption: true,
+				enableFiltering: true,
+				enableCaseInsensitiveFiltering: true,
+				onChange: function($option) {
+					// Check if the filter was used.
+					var query = $("#part_of_town_id").find('li.multiselect-filter input').val();
+
+					if (query) {
+						$("#part_of_town_id").find('li.multiselect-filter input').val('').trigger('keydown');
+					}
+				}
+			});
+					$(".btn-group").addClass('w-100');
+					$(".multiselect ").addClass('form-control');
+					$(".multiselect").removeClass('btn');
+					$(".multiselect").removeClass('btn-default');
+
 		});
+
 
 	</script>
 
@@ -45,6 +65,20 @@
 							<xsl:value-of select="php:function('lang', 'select control type')"/>
 						</xsl:attribute>
 						<xsl:apply-templates select="control_type_list/options"/>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="part_of_town_id">
+						<xsl:value-of select="php:function('lang', 'part of town')"/>
+					</label>
+					<select id="part_of_town_id" name="part_of_town_id" class="form-control">
+						<xsl:attribute name="multiple">
+							<xsl:text>true</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'select part of town')"/>
+						</xsl:attribute>
+						<xsl:apply-templates select="part_of_town_list2/options"/>
 					</select>
 				</div>
 			</div>
