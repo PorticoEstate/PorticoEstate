@@ -59,7 +59,7 @@
 		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
 		<option value="portico"{$selecte_portico}>Portico</option>
 	   </select>
-	HTML;
+HTML;
 
 		$var['topmenu'] = <<<HTML
 			<ul class="nav navbar-nav ml-auto">
@@ -390,8 +390,8 @@ HTML;
 		if($children)
 		{
 		$ret = <<<HTML
-$out
-{$children}
+		$out
+		{$children}
 			</li>
 HTML;
 
@@ -399,7 +399,7 @@ HTML;
 		else
 		{
 			$ret = <<<HTML
-$out
+			$out
 			<a href="{$item['url']}" class="nav-link context-menu-nav" bookmark_id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
 			</li>
 HTML;
@@ -479,7 +479,7 @@ HTML;
 			$out = <<<HTML
 	          <a href="#_$id" data-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
 				<ul class="{$ul_class}list-unstyled collapse" id = "_$id">
-{$out}
+					{$out}
 				</ul>
 
 HTML;
