@@ -19,66 +19,44 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
-	<script>
-
-		$(document).ready(function($) {
-		$(".table-data-link").click(function() {
-
-		console.log($(this));
-		//			window.document.location = $(this).data("data-target");
-
-		});
-			$("#part_of_town_id").multiselect({
-				buttonWidth: 250,
-				includeSelectAllOption: true,
-				enableFiltering: true,
-				enableCaseInsensitiveFiltering: true,
-				onChange: function($option) {
-					// Check if the filter was used.
-					var query = $("#part_of_town_id").find('li.multiselect-filter input').val();
-
-					if (query) {
-						$("#part_of_town_id").find('li.multiselect-filter input').val('').trigger('keydown');
-					}
-				}
-			});
-					$(".btn-group").addClass('w-100');
-					$(".multiselect ").addClass('form-control');
-					$(".multiselect").removeClass('btn');
-					$(".multiselect").removeClass('btn-default');
-
-		});
-
-
-	</script>
-
-	<form method="post" action="{form_action}">
+	<form method="post" id="form" action="{form_action}">
 
 		<div class="row">
 			<div class="mt-5 container">
 				<div class="form-group">
-					<label for="control_id">
-						<xsl:value-of select="php:function('lang', 'control type')"/>
-					</label>
-					<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'select control type')"/>
-						</xsl:attribute>
-						<xsl:apply-templates select="control_type_list/options"/>
-					</select>
+					<fieldset>
+						<legend>Velg kontroll</legend>
+						<label for="control_area_id">
+							<xsl:value-of select="php:function('lang', 'control type')"/>
+						</label>
+						<select id="control_area_id" name="control_area_id" class="form-control">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>
+						<label for="control_id">
+							<xsl:value-of select="php:function('lang', 'control')"/>
+						</label>
+
+						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select control type')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="control_type_list/options"/>
+						</select>
+					</fieldset>
+
 				</div>
 				<div class="form-group">
 					<label for="part_of_town_id">
 						<xsl:value-of select="php:function('lang', 'part of town')"/>
 					</label>
-					<select id="part_of_town_id" name="part_of_town_id" class="form-control">
+					<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
 						<xsl:attribute name="multiple">
 							<xsl:text>true</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'select part of town')"/>
 						</xsl:attribute>
-						<xsl:apply-templates select="part_of_town_list2/options"/>
+						<xsl:apply-templates select="part_of_town_list/options"/>
 					</select>
 				</div>
 			</div>
@@ -109,7 +87,7 @@
 						</h4>
 					</span>
 				</div>
-				<div class="mt-3 row">
+				<div class="mt-3 row datagrid table-responsive">
 					<table class="table table-bordered table-hover-cells">
 						<thead>
 							<tr>
@@ -169,7 +147,7 @@
 								<td></td>
 								<td></td>
 							</tr>
-							<xsl:for-each select="part_of_town_list">
+							<xsl:for-each select="part_of_town_list2">
 								<tr>
 									<th scope="row">
 										<xsl:value-of select="name"/>
@@ -201,7 +179,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<xsl:for-each select="part_of_town_list">
+							<xsl:for-each select="part_of_town_list2">
 								<tr>
 									<th scope="row">
 										<xsl:value-of select="name"/>
@@ -266,7 +244,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
 					<tr>
@@ -575,7 +553,7 @@
 				</p>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover">
 				<thead>
 					<tr>
