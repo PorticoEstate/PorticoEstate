@@ -63,27 +63,30 @@
 
 		public function index()
 		{
-			$control_id = phpgw::get_var('control_id', 'int');
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+
+			$control_id		 = phpgw::get_var('control_id', 'int');
 			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
-			$current_year = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
-			
-			if(phpgw::get_var('prev_year', 'bool'))
+			$current_year	 = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
+
+			if (phpgw::get_var('prev_year', 'bool'))
 			{
 				$current_year --;
 			}
-			if(phpgw::get_var('next_year', 'bool'))
+			if (phpgw::get_var('next_year', 'bool'))
 			{
 				$current_year ++;
 			}
 
-			$control_types		 = createObject('controller.socontrol')->get(0, 0, 'title', true, '', '', array());
-			$control_type_list	 = array(array('id' => '', 'name' => lang('select')));
+			$control_types = createObject('controller.socontrol')->get_controls_by_control_area($control_area_id);
+
+			$control_type_list = array(array('id' => '', 'name' => lang('select')));
 			foreach ($control_types as $control_type)
 			{
 				$control_type_list[] = array(
-					'id'		 => $control_type->get_id(),
-					'name'		 => $control_type->get_title(),
-					'selected'	 => $control_id == $control_type->get_id() ? 1 : 0
+					'id'		 => $control_type['id'],
+					'name'		 => $control_type['title'],
+					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
 				);
 			}
 
@@ -95,8 +98,8 @@
 					'id'	 => $i,
 					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1))),
 					'url'	 => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
-						'year' => $current_year,
-						'month' => $i))
+						'year'		 => $current_year,
+						'month'		 => $i))
 				);
 			}
 
@@ -107,8 +110,8 @@
 					'id'	 => $i,
 					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1))),
 					'url'	 => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
-							'year' => $current_year,
-							'month' => $i))
+						'year'		 => $current_year,
+						'month'		 => $i))
 				);
 			}
 
@@ -116,41 +119,70 @@
 				'selected'	 => 0, 'order'		 => 'name', 'sort'		 => 'asc'));
 
 			$part_of_town_list = array();
+			$part_of_town_list2 = array();
 			foreach ($part_of_towns as &$part_of_town)
 			{
 				if ($part_of_town['id'] > 0)
 				{
-					$part_of_town['name']	 = ucfirst(strtolower($part_of_town['name']));
-					$part_of_town['selected'] == in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
-					$part_of_town_list[]	 = $part_of_town;
+					$selected = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
+					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
+					$part_of_town['selected']	 = $selected;
+					$part_of_town_list[]		 = $part_of_town;
+
+					if($selected)
+					{
+						$part_of_town_list2[] = $part_of_town;
+					}
 				}
 			}
-//			_debug_array($part_of_town_list);
+
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	 = true;
+
+			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
+
+
+			$control_area_list = array();
+			foreach ($control_area['cat_list'] as $cat_list)
+			{
+				$control_area_list[] = array
+					(
+					'id'		 => $cat_list['cat_id'],
+					'name'		 => $cat_list['name'],
+					'selected'	 => $control_area_id == $cat_list['cat_id'] ? 1 : 0
+				);
+			}
+
+			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
+
 			$data = array
 				(
-				'prev_year'			 => $current_year -1,
+				'control_area_list'	 => array('options' => $control_area_list),
+				'prev_year'			 => $current_year - 1,
 				'current_year'		 => $current_year,
-				'next_year'			 => $current_year +1,
+				'next_year'			 => $current_year + 1,
 				'first_half_year'	 => $first_half_year,
 				'second_half_year'	 => $second_half_year,
-				'part_of_town_list'	 => $part_of_town_list,
-				'part_of_town_list2' => array('options' => $part_of_town_list),
+				'part_of_town_list2' => $part_of_town_list2,
+				'part_of_town_list'	 => array('options' => $part_of_town_list),
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.index')),
 				'control_type_list'	 => array('options' => $control_type_list),
 			);
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
-//			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'calendar_planner.start.js');
+
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
 
 		public function monthly()
 		{
-			$month = phpgw::get_var('month', 'int');
-			$data = array
-			(
-				'current_month' => lang(date('F', mktime(0, 0, 0, $month, 1))),
-				'current_year'	=> phpgw::get_var('year', 'int')
+			$month	 = phpgw::get_var('month', 'int');
+			$data	 = array
+				(
+				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
+				'current_year'	 => phpgw::get_var('year', 'int')
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
