@@ -213,6 +213,7 @@
 
 
 <xsl:template match="monthly" xmlns:php="http://php.net/xsl">
+
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -228,7 +229,7 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<p style="font-size: 14px">I januar er det satt opp befaring i følgende bydeler:
+				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i følgende bydeler:
 					<ul>
 						<li style="font-size: 14px">Åsane - funksjonsettersyn</li>
 						<li style="font-size: 14px">Laksevåg - funksjonsettersyn</li>
@@ -244,6 +245,38 @@
 				</div>
 			</div>
 		</div>
+
+
+		<div class="text-center clearfix">
+			<span class="float-left">
+				<a href="{prev_month_url}">
+					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
+						<xsl:value-of select="prev_month"/>
+					</button>
+				</a>
+			</span>
+
+			<span class="float-right">
+				<a href="{next_month_url}">
+					<button type="button" name="next_year" value="1" class="btn btn-secondary">
+						<xsl:value-of select="next_month"/> &gt;
+					</button>
+				</a>
+			</span>
+			<span class="float-none">
+				<h4>
+					<xsl:value-of select="current_month"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="current_year"/>
+				</h4>
+			</span>
+		</div>
+
+		<div class="container datagrid table-responsive">
+			<xsl:value-of disable-output-escaping="yes" select="calendar"/>
+		</div>
+
+
 		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
