@@ -15,6 +15,47 @@
 
 
 <xsl:template match="start" xmlns:php="http://php.net/xsl">
+	<style>
+.table-hover-cells > tbody > tr > th:hover,
+.table-hover-cells > tbody > tr > td:hover {
+  background-color: #f5f5f5;
+}
+
+.table-hover-cells > tbody > tr > th.active:hover,
+.table-hover-cells > tbody > tr > td.active:hover,
+.table-hover-cells > tbody > tr.active > th:hover,
+.table-hover-cells > tbody > tr.active > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+  background-color: #d8d8d8;
+}
+
+h1 > .divider:before,
+h2 > .divider:before,
+h3 > .divider:before,
+h4 > .divider:before,
+h5 > .divider:before,
+h6 > .divider:before,
+.h1 > .divider:before,
+.h2 > .divider:before,
+.h3 > .divider:before,
+.h4 > .divider:before,
+.h5 > .divider:before,
+.h6 > .divider:before {
+  color: #777;
+  content: "\0223E\0020";
+}
+
+
+</style>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -122,18 +163,18 @@
 									<div class="modal-dialog modal-dialog-centered">
 										<div class="modal-content">
 
-											Modal Header
+											<!--Modal Header-->
 											<div class="mx-auto modal-header">
 												<h4 class="modal-title">Velg kontrolltype</h4>
 											</div>
 
-											Modal body
+											<!--Modal body-->
 											<div class="mx-auto modal-body">
 												<div class="row">
 													<button type="button" class="btn btn-primary" data-dismiss="modal">Funksjonsettersyn</button>
 												</div>
 												<div class="mt-3 row">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Kontrollettersyn</button>
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Hovedettersyn</button>
 												</div>
 											</div>
 
@@ -213,6 +254,47 @@
 
 
 <xsl:template match="monthly" xmlns:php="http://php.net/xsl">
+	<style>
+.table-hover-cells > tbody > tr > th:hover,
+.table-hover-cells > tbody > tr > td:hover {
+  background-color: #f5f5f5;
+}
+
+.table-hover-cells > tbody > tr > th.active:hover,
+.table-hover-cells > tbody > tr > td.active:hover,
+.table-hover-cells > tbody > tr.active > th:hover,
+.table-hover-cells > tbody > tr.active > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+  background-color: #d8d8d8;
+}
+
+h1 > .divider:before,
+h2 > .divider:before,
+h3 > .divider:before,
+h4 > .divider:before,
+h5 > .divider:before,
+h6 > .divider:before,
+.h1 > .divider:before,
+.h2 > .divider:before,
+.h3 > .divider:before,
+.h4 > .divider:before,
+.h5 > .divider:before,
+.h6 > .divider:before {
+  color: #777;
+  content: "\0223E\0020";
+}
+
+
+</style>
 
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
