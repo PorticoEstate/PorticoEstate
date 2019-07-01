@@ -174,7 +174,12 @@
 			$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
 			$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 
-			$ccarray = array('Muhammed.Ibrahim@bergen.kommune.no', $from_email);
+			$ccarray = array(
+				'Muhammed.Ibrahim@bergen.kommune.no',
+				'Kenneth.Tertnaes@bergen.kommune.no',
+				$from_email
+			);
+
 			$cc		 = implode(';', $ccarray);
 
 			$bcc = 'hc483@bergen.kommune.no';
