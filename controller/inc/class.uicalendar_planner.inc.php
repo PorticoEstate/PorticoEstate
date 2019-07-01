@@ -36,6 +36,12 @@
 
 	class controller_uicalendar_planner extends phpgwapi_uicommon_jquery
 	{
+		private $dayLabels		 = array("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+		private $currentYear	 = 0;
+		private $currentMonth	 = 0;
+		private $currentDay		 = 0;
+		private $currentDate	 = null;
+		private $daysInMonth	 = 0;
 
 		public $public_functions = array
 			(
@@ -118,18 +124,18 @@
 			$part_of_towns = createObject('property.sogeneric')->get_list(array('type'		 => 'part_of_town',
 				'selected'	 => 0, 'order'		 => 'name', 'sort'		 => 'asc'));
 
-			$part_of_town_list = array();
-			$part_of_town_list2 = array();
+			$part_of_town_list	 = array();
+			$part_of_town_list2	 = array();
 			foreach ($part_of_towns as &$part_of_town)
 			{
 				if ($part_of_town['id'] > 0)
 				{
-					$selected = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
+					$selected					 = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
 					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
 					$part_of_town['selected']	 = $selected;
 					$part_of_town_list[]		 = $part_of_town;
 
-					if($selected)
+					if ($selected)
 					{
 						$part_of_town_list2[] = $part_of_town;
 					}
@@ -178,11 +184,32 @@
 
 		public function monthly()
 		{
-			$month	 = phpgw::get_var('month', 'int');
-			$data	 = array
+			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
+			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+
+			if (13 == $month)
+			{
+				$month	 = 1;
+				$year	 += 1;
+			}
+
+			if ((string)$_REQUEST['month'] === '0')
+			{
+				$month	 = 12;
+				$year	 -= 1;
+			}
+
+			$data = array
 				(
 				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
-				'current_year'	 => phpgw::get_var('year', 'int')
+				'current_year'	 => $year,
+				'next_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
+					'year' => $year, 'month' => ($month + 1))),
+				'prev_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
+					'year' => $year, 'month' => ($month - 1))),
+				'next_month'	 => lang(date('F', mktime(0, 0, 0, $month + 1, 1))),
+				'prev_month'	 => lang(date('F', mktime(0, 0, 0, $month - 1, 1))),
+				'calendar' => $this->show($year, $month)
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -207,5 +234,146 @@
 		public function query()
 		{
 
+		}
+
+		/**
+		 * print out the calendar
+		 */
+		public function show( $year, $month )
+		{
+			if (null == $year)
+			{
+				$year = date("Y", time());
+			}
+
+			if (null == $month)
+			{
+				$month = date("m", time());
+			}
+
+			$this->currentYear	 = $year;
+			$this->currentMonth	 = $month;
+			$this->daysInMonth	 = $this->_daysInMonth($month, $year);
+
+			$content = '<table class="mt-2 table table-hover-cells">' .
+				'<thead>' .
+				'<tr">' . $this->_createLabels() . '</tr>' .
+				'</thead>' .
+				'<tbody>';
+
+			$weeksInMonth	 = $this->_weeksInMonth($month, $year);
+			$week			 = (int)date('W', mktime(0, 0, 0, $month, 1, $year));
+			// Create weeks in a month
+			for ($i = 0; $i < $weeksInMonth; $i++)
+			{
+
+				$content .= '<tr>';
+				$content .= '<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">' . lang('week') . ' ' . ($week) . '</th>';
+				$week++;
+				//Create days in a week
+				for ($j = 1; $j <= 7; $j++)
+				{
+					$content .= $this->_showDay($i * 7 + $j);
+				}
+				$content .= '</tr>';
+			}
+
+			$content .= '</tbody>';
+			$content .= '</table>';
+			return $content;
+		}
+		/*		 * ******************* PRIVATE ********************* */
+
+		/**
+		 * create the li element for ul
+		 */
+		private function _showDay( $cellNumber )
+		{
+
+			if ($this->currentDay == 0)
+			{
+				$firstDayOfTheWeek = date('N', strtotime($this->currentYear . '-' . $this->currentMonth . '-01'));
+
+				if (intval($cellNumber) == intval($firstDayOfTheWeek))
+				{
+					$this->currentDay = 1;
+				}
+			}
+
+			if (($this->currentDay != 0) && ($this->currentDay <= $this->daysInMonth))
+			{
+				$this->currentDate	 = date('Y-m-d', strtotime($this->currentYear . '-' . $this->currentMonth . '-' . ($this->currentDay)));
+				$cellContent		 = $this->currentDay;
+				$this->currentDay++;
+			}
+			else
+			{
+				$this->currentDate	 = null;
+				$cellContent		 = null;
+			}
+
+			return '<td id="li-' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
+				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . '</span></div></td>';
+		}
+
+		/**
+		 * create calendar week labels
+		 */
+		private function _createLabels()
+		{
+
+			$content = '';
+
+			$content .= '<th>#</th>';
+			foreach ($this->dayLabels as $index => $label)
+			{
+				$content .= '<th>' . $label . '</th>';
+			}
+
+			return $content;
+		}
+
+		/**
+		 * calculate number of weeks in a particular month
+		 */
+		private function _weeksInMonth( $month = null, $year = null )
+		{
+
+			if (null == ($year))
+			{
+				$year = date("Y", time());
+			}
+
+			if (null == ($month))
+			{
+				$month = date("m", time());
+			}
+
+			// find number of days in this month
+			$daysInMonths	 = $this->_daysInMonth($month, $year);
+			$numOfweeks		 = ($daysInMonths % 7 == 0 ? 0 : 1) + intval($daysInMonths / 7);
+			$monthEndingDay	 = date('N', strtotime($year . '-' . $month . '-' . $daysInMonths));
+			$monthStartDay	 = date('N', strtotime($year . '-' . $month . '-01'));
+			if ($monthEndingDay < $monthStartDay)
+			{
+				$numOfweeks++;
+			}
+
+			return $numOfweeks;
+		}
+
+		/**
+		 * calculate number of days in a particular month
+		 */
+		private function _daysInMonth( $month = null, $year = null )
+		{
+
+			if (null == ($year))
+				$year = date("Y", time());
+
+			if (null == ($month))
+				$month = date("m", time());
+
+			return date('t', strtotime($year . '-' . $month . '-01'));
 		}
 	}

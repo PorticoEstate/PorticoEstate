@@ -15,6 +15,47 @@
 
 
 <xsl:template match="start" xmlns:php="http://php.net/xsl">
+	<style>
+.table-hover-cells > tbody > tr > th:hover,
+.table-hover-cells > tbody > tr > td:hover {
+  background-color: #f5f5f5;
+}
+
+.table-hover-cells > tbody > tr > th.active:hover,
+.table-hover-cells > tbody > tr > td.active:hover,
+.table-hover-cells > tbody > tr.active > th:hover,
+.table-hover-cells > tbody > tr.active > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+  background-color: #d8d8d8;
+}
+
+h1 > .divider:before,
+h2 > .divider:before,
+h3 > .divider:before,
+h4 > .divider:before,
+h5 > .divider:before,
+h6 > .divider:before,
+.h1 > .divider:before,
+.h2 > .divider:before,
+.h3 > .divider:before,
+.h4 > .divider:before,
+.h5 > .divider:before,
+.h6 > .divider:before {
+  color: #777;
+  content: "\0223E\0020";
+}
+
+
+</style>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -122,18 +163,18 @@
 									<div class="modal-dialog modal-dialog-centered">
 										<div class="modal-content">
 
-											Modal Header
+											<!--Modal Header-->
 											<div class="mx-auto modal-header">
 												<h4 class="modal-title">Velg kontrolltype</h4>
 											</div>
 
-											Modal body
+											<!--Modal body-->
 											<div class="mx-auto modal-body">
 												<div class="row">
 													<button type="button" class="btn btn-primary" data-dismiss="modal">Funksjonsettersyn</button>
 												</div>
 												<div class="mt-3 row">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Kontrollettersyn</button>
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Hovedettersyn</button>
 												</div>
 											</div>
 
@@ -213,6 +254,48 @@
 
 
 <xsl:template match="monthly" xmlns:php="http://php.net/xsl">
+	<style>
+.table-hover-cells > tbody > tr > th:hover,
+.table-hover-cells > tbody > tr > td:hover {
+  background-color: #f5f5f5;
+}
+
+.table-hover-cells > tbody > tr > th.active:hover,
+.table-hover-cells > tbody > tr > td.active:hover,
+.table-hover-cells > tbody > tr.active > th:hover,
+.table-hover-cells > tbody > tr.active > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+  background-color: #e8e8e8;
+}
+
+.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+  background-color: #d8d8d8;
+}
+
+h1 > .divider:before,
+h2 > .divider:before,
+h3 > .divider:before,
+h4 > .divider:before,
+h5 > .divider:before,
+h6 > .divider:before,
+.h1 > .divider:before,
+.h2 > .divider:before,
+.h3 > .divider:before,
+.h4 > .divider:before,
+.h5 > .divider:before,
+.h6 > .divider:before {
+  color: #777;
+  content: "\0223E\0020";
+}
+
+
+</style>
+
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -228,7 +311,7 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<p style="font-size: 14px">I januar er det satt opp befaring i følgende bydeler:
+				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i følgende bydeler:
 					<ul>
 						<li style="font-size: 14px">Åsane - funksjonsettersyn</li>
 						<li style="font-size: 14px">Laksevåg - funksjonsettersyn</li>
@@ -244,6 +327,38 @@
 				</div>
 			</div>
 		</div>
+
+
+		<div class="text-center clearfix">
+			<span class="float-left">
+				<a href="{prev_month_url}">
+					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
+						<xsl:value-of select="prev_month"/>
+					</button>
+				</a>
+			</span>
+
+			<span class="float-right">
+				<a href="{next_month_url}">
+					<button type="button" name="next_year" value="1" class="btn btn-secondary">
+						<xsl:value-of select="next_month"/> &gt;
+					</button>
+				</a>
+			</span>
+			<span class="float-none">
+				<h4>
+					<xsl:value-of select="current_month"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="current_year"/>
+				</h4>
+			</span>
+		</div>
+
+		<div class="container datagrid table-responsive">
+			<xsl:value-of disable-output-escaping="yes" select="calendar"/>
+		</div>
+
+
 		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
