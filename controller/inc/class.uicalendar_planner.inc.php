@@ -267,7 +267,7 @@
 			for ($i = 0; $i < $weeksInMonth; $i++)
 			{
 
-				$content .= '<tr>';
+				$content .= '<tr class="target_row">';
 				$content .= '<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">' . lang('week') . ' ' . ($week) . '</th>';
 				$week++;
 				//Create days in a week

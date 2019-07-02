@@ -293,79 +293,14 @@
 		content: "\0223E\0020";
 		}
 
-
-		#gallery {
-		float: left; width: 65%; min-height: 12em;
-		}
-		.gallery.custom-state-active {
-		background: #eee;
-		}
-		.gallery li {
-		float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center;
-		}
-		.gallery li h5 {
-		margin: 0 0 0.4em; cursor: move;
-		}
-		.gallery li a {
-		float: right;
-		}
-		.gallery li a.ui-icon-zoomin {
-		float: left;
-		}
-		.gallery li img {
-		width: 100%; cursor: move;
-		}
-
-		#gallery {
-		float: right; width: 32%; min-height: 18em; padding: 1%;
-		}
-		#trash h4 {
-		line-height: 16px; margin: 0 0 0.4em;
-		}
-		#trash h4 .ui-icon {
-		float: left;
-		}
-		#trash .gallery h5 {
-		display: none;
-		}
+table th, table td {
+    width: 200px;
+}
+table span {
+     height: 30px;
+    width: 100%;
+}
 	</style>
-
-
-	<div class="ui-widget ui-helper-clearfix">
-
-		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
-			<li class="ui-widget-content ui-corner-tr">
-				<h5 class="ui-widget-header">High Tatras</h5>
-				<img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72"/>
-				<a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-			</li>
-			<li class="ui-widget-content ui-corner-tr">
-				<h5 class="ui-widget-header">High Tatras 2</h5>
-				<img src="images/high_tatras2_min.jpg" alt="The chalet at the Green mountain lake" width="96" height="72"/>
-				<a href="images/high_tatras2.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-			</li>
-			<li class="ui-widget-content ui-corner-tr">
-				<h5 class="ui-widget-header">High Tatras 3</h5>
-				<img src="images/high_tatras3_min.jpg" alt="Planning the ascent" width="96" height="72"/>
-				<a href="images/high_tatras3.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-			</li>
-			<li class="ui-widget-content ui-corner-tr">
-				<h5 class="ui-widget-header">High Tatras 4</h5>
-				<img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72"/>
-				<a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
-				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
-			</li>
-		</ul>
-
-		<div id="trash" class="ui-widget-content ui-state-default">
-			<h4 class="ui-widget-header">
-				<span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>
-		</div>
-
-	</div>
 
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
@@ -429,7 +364,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="calendar"/>
 		</div>
 
-
+<!--https://jsfiddle.net/d1wnk1bg/8/-->
 		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
@@ -455,225 +390,225 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
+					<tr class="target_row">
 						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 1</th>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">1</span>
 							</div>
-							<span class="badge badge-primary">Flaktveit barnehage</span>
+							<span class="badge event badge-primary" draggable="true" id="item1">Flaktveit barnehage</span>
 							<br />
-							<span class="badge badge-primary">Flaktveit skole</span>
+							<span class="badge event badge-primary" draggable="true" id="item2">Flaktveit skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">2</span>
 							</div>
-							<span class="badge badge-primary">Morvikbotn barnehage </span>
+							<span class="badge event badge-primary" draggable="true" id="item3" >Morvikbotn barnehage </span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true" id="item4" >Salhus skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">3</span>
 							</div>
-							<span class="badge badge-primary">Eidsvåg skole</span>
+							<span class="badge event badge-primary" draggable="true">Eidsvåg skole</span>
 							<br />
-							<span class="badge badge-primary">Haukedalen skole</span>
+							<span class="badge event badge-primary" draggable="true">Haukedalen skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">4</span>
 							</div>
-							<span class="badge badge-primary">Hordvik skole</span>
+							<span class="badge event badge-primary" draggable="true">Hordvik skole</span>
 							<br />
-							<span class="badge badge-primary">Kalvatræet skole</span>
+							<span class="badge event badge-primary" draggable="true">Kalvatræet skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">5</span>
 							</div>
-							<span class="badge badge-primary">Li skole</span>
+							<span class="badge event badge-primary" draggable="true">Li skole</span>
 							<br />
-							<span class="badge badge-primary">Rolland skole</span>
+							<span class="badge event badge-primary" draggable="true">Rolland skole</span>
 							<br />
 						</td>
 					</tr>
-					<tr>
+					<tr class="target_row">
 						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 2</th>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">8</span>
 							</div>
-							<span class="badge badge-primary">Kyrkjekrinsen skole</span>
+							<span class="badge event badge-primary" draggable="true">Kyrkjekrinsen skole</span>
 							<br />
-							<span class="badge badge-primary">Mjølkeråen skole</span>
+							<span class="badge event badge-primary" draggable="true">Mjølkeråen skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">9</span>
 							</div>
-							<span class="badge badge-primary">Moviksbotn skole</span>
+							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">10</span>
 							</div>
-							<span class="badge badge-primary">Moviksbotn skole</span>
+							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">11</span>
 							</div>
-							<span class="badge badge-primary">Li skole</span>
+							<span class="badge event badge-primary" draggable="true">Li skole</span>
 							<br />
-							<span class="badge badge-primary">Rolland skole</span>
+							<span class="badge event badge-primary" draggable="true">Rolland skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">12</span>
 							</div>
-							<span class="badge badge-primary">Langerinden barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Langerinden barnehage</span>
 							<br />
-							<span class="badge badge-primary">Liakroken barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Liakroken barnehage</span>
 							<br />
 						</td>
 					</tr>
-					<tr>
+					<tr class="target_row">
 						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 3</th>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">15</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">16</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">17</span>
 							</div>
-							<span class="badge badge-primary">Moviksbotn skole</span>
+							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">18</span>
 							</div>
-							<span class="badge badge-primary">Alvøen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Alvøen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Damsgård barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Damsgård barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">19</span>
 							</div>
-							<span class="badge badge-primary">Loddefjord barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Loddefjord barnehage</span>
 							<br />
-							<span class="badge badge-primary">Mathopen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Mathopen barnehage</span>
 							<br />
 						</td>
 					</tr>
-					<tr>
+					<tr class="target_row">
 						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 4</th>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">22</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">23</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">24</span>
 							</div>
-							<span class="badge badge-primary">Moviksbotn skole</span>
+							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">25</span>
 							</div>
-							<span class="badge badge-primary">Alvøen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Alvøen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Damsgård barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Damsgård barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">26</span>
 							</div>
-							<span class="badge badge-primary">Loddefjord barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Loddefjord barnehage</span>
 							<br />
-							<span class="badge badge-primary">Mathopen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Mathopen barnehage</span>
 							<br />
 						</td>
 					</tr>
-					<tr>
+					<tr class="target_row">
 						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 5</th>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">29</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">30</span>
 							</div>
-							<span class="badge badge-primary">Blokkhaugen barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
 							<br />
-							<span class="badge badge-primary">Ervik barnehage</span>
+							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
 							<br />
 						</td>
 						<td>
 							<div class="clearfix">
 								<span class="float-left">31</span>
 							</div>
-							<span class="badge badge-primary">Moviksbotn skole</span>
+							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
 							<br />
-							<span class="badge badge-primary">Salhus skole</span>
+							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
 							<br />
 						</td>
 						<td class="bg-secondary text-light">
