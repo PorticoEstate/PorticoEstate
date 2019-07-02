@@ -16,46 +16,46 @@
 
 <xsl:template match="start" xmlns:php="http://php.net/xsl">
 	<style>
-.table-hover-cells > tbody > tr > th:hover,
-.table-hover-cells > tbody > tr > td:hover {
-  background-color: #f5f5f5;
-}
+		.table-hover-cells > tbody > tr > th:hover,
+		.table-hover-cells > tbody > tr > td:hover {
+		background-color: #f5f5f5;
+		}
 
-.table-hover-cells > tbody > tr > th.active:hover,
-.table-hover-cells > tbody > tr > td.active:hover,
-.table-hover-cells > tbody > tr.active > th:hover,
-.table-hover-cells > tbody > tr.active > td:hover {
-  background-color: #e8e8e8;
-}
+		.table-hover-cells > tbody > tr > th.active:hover,
+		.table-hover-cells > tbody > tr > td.active:hover,
+		.table-hover-cells > tbody > tr.active > th:hover,
+		.table-hover-cells > tbody > tr.active > td:hover {
+		background-color: #e8e8e8;
+		}
 
-.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
-.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
-  background-color: #e8e8e8;
-}
+		.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+		background-color: #e8e8e8;
+		}
 
-.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
-.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
-  background-color: #d8d8d8;
-}
+		.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+		background-color: #d8d8d8;
+		}
 
-h1 > .divider:before,
-h2 > .divider:before,
-h3 > .divider:before,
-h4 > .divider:before,
-h5 > .divider:before,
-h6 > .divider:before,
-.h1 > .divider:before,
-.h2 > .divider:before,
-.h3 > .divider:before,
-.h4 > .divider:before,
-.h5 > .divider:before,
-.h6 > .divider:before {
-  color: #777;
-  content: "\0223E\0020";
-}
+		h1 > .divider:before,
+		h2 > .divider:before,
+		h3 > .divider:before,
+		h4 > .divider:before,
+		h5 > .divider:before,
+		h6 > .divider:before,
+		.h1 > .divider:before,
+		.h2 > .divider:before,
+		.h3 > .divider:before,
+		.h4 > .divider:before,
+		.h5 > .divider:before,
+		.h6 > .divider:before {
+		color: #777;
+		content: "\0223E\0020";
+		}
 
 
-</style>
+	</style>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -255,46 +255,117 @@ h6 > .divider:before,
 
 <xsl:template match="monthly" xmlns:php="http://php.net/xsl">
 	<style>
-.table-hover-cells > tbody > tr > th:hover,
-.table-hover-cells > tbody > tr > td:hover {
-  background-color: #f5f5f5;
-}
+		.table-hover-cells > tbody > tr > th:hover,
+		.table-hover-cells > tbody > tr > td:hover {
+		background-color: #f5f5f5;
+		}
 
-.table-hover-cells > tbody > tr > th.active:hover,
-.table-hover-cells > tbody > tr > td.active:hover,
-.table-hover-cells > tbody > tr.active > th:hover,
-.table-hover-cells > tbody > tr.active > td:hover {
-  background-color: #e8e8e8;
-}
+		.table-hover-cells > tbody > tr > th.active:hover,
+		.table-hover-cells > tbody > tr > td.active:hover,
+		.table-hover-cells > tbody > tr.active > th:hover,
+		.table-hover-cells > tbody > tr.active > td:hover {
+		background-color: #e8e8e8;
+		}
 
-.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
-.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
-  background-color: #e8e8e8;
-}
+		.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+		background-color: #e8e8e8;
+		}
 
-.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
-.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
-  background-color: #d8d8d8;
-}
+		.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+		background-color: #d8d8d8;
+		}
 
-h1 > .divider:before,
-h2 > .divider:before,
-h3 > .divider:before,
-h4 > .divider:before,
-h5 > .divider:before,
-h6 > .divider:before,
-.h1 > .divider:before,
-.h2 > .divider:before,
-.h3 > .divider:before,
-.h4 > .divider:before,
-.h5 > .divider:before,
-.h6 > .divider:before {
-  color: #777;
-  content: "\0223E\0020";
-}
+		h1 > .divider:before,
+		h2 > .divider:before,
+		h3 > .divider:before,
+		h4 > .divider:before,
+		h5 > .divider:before,
+		h6 > .divider:before,
+		.h1 > .divider:before,
+		.h2 > .divider:before,
+		.h3 > .divider:before,
+		.h4 > .divider:before,
+		.h5 > .divider:before,
+		.h6 > .divider:before {
+		color: #777;
+		content: "\0223E\0020";
+		}
 
 
-</style>
+		#gallery {
+		float: left; width: 65%; min-height: 12em;
+		}
+		.gallery.custom-state-active {
+		background: #eee;
+		}
+		.gallery li {
+		float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center;
+		}
+		.gallery li h5 {
+		margin: 0 0 0.4em; cursor: move;
+		}
+		.gallery li a {
+		float: right;
+		}
+		.gallery li a.ui-icon-zoomin {
+		float: left;
+		}
+		.gallery li img {
+		width: 100%; cursor: move;
+		}
+
+		#gallery {
+		float: right; width: 32%; min-height: 18em; padding: 1%;
+		}
+		#trash h4 {
+		line-height: 16px; margin: 0 0 0.4em;
+		}
+		#trash h4 .ui-icon {
+		float: left;
+		}
+		#trash .gallery h5 {
+		display: none;
+		}
+	</style>
+
+
+	<div class="ui-widget ui-helper-clearfix">
+
+		<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
+			<li class="ui-widget-content ui-corner-tr">
+				<h5 class="ui-widget-header">High Tatras</h5>
+				<img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72"/>
+				<a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+			</li>
+			<li class="ui-widget-content ui-corner-tr">
+				<h5 class="ui-widget-header">High Tatras 2</h5>
+				<img src="images/high_tatras2_min.jpg" alt="The chalet at the Green mountain lake" width="96" height="72"/>
+				<a href="images/high_tatras2.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+			</li>
+			<li class="ui-widget-content ui-corner-tr">
+				<h5 class="ui-widget-header">High Tatras 3</h5>
+				<img src="images/high_tatras3_min.jpg" alt="Planning the ascent" width="96" height="72"/>
+				<a href="images/high_tatras3.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+			</li>
+			<li class="ui-widget-content ui-corner-tr">
+				<h5 class="ui-widget-header">High Tatras 4</h5>
+				<img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72"/>
+				<a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>
+				<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>
+			</li>
+		</ul>
+
+		<div id="trash" class="ui-widget-content ui-state-default">
+			<h4 class="ui-widget-header">
+				<span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>
+		</div>
+
+	</div>
 
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />

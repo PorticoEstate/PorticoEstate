@@ -213,7 +213,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('controller', 'base', 'ajax.js');
+			self::add_javascript('controller', 'base', 'calendar_planner.monthly.js');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
 		}
 
@@ -259,7 +259,7 @@
 				'<thead>' .
 				'<tr">' . $this->_createLabels() . '</tr>' .
 				'</thead>' .
-				'<tbody>';
+				'<tbody id="calendar">';
 
 			$weeksInMonth	 = $this->_weeksInMonth($month, $year);
 			$week			 = (int)date('W', mktime(0, 0, 0, $month, 1, $year));
