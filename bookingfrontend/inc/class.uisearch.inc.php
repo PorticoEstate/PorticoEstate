@@ -67,7 +67,7 @@
 			}
 			else
 			{
-				$frontimagetext = '<h2>Din portal til</h2><h1><b>AKTIVITETER OG LOKALER</b></h1><h2>Nært deg.</h2>';
+				$frontimagetext = '<span>Din portal til</span><h1><b>AKTIVITETER OG LOKALER</b></h1><span>Nært deg.</span>';
 			}
 
 			if ($config->config_data['frontpage_filterboxtitle'] != '')

@@ -1869,6 +1869,7 @@ HTML;
 			$fields = $this->get_fields();
 			$html = <<<HTML
 
+			<div class="datagrid table-responsive">
 			<table id="summary">
 				<thead>
 				<tr>
@@ -1967,6 +1968,7 @@ HTML;
   </tfoot>
 
 		</table>
+		</div>
 HTML;
 
 			return $html;

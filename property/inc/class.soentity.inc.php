@@ -2298,21 +2298,32 @@
 		{
 			$values_insert = array();
 
+			$address = array();
 			if (isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]	 = $values['street_name'];
 				$address[]	 = $values['street_number'];
-				$address	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if (!isset($address) || !$address)
+			if (!$address && !empty($values['location_name']))
 			{
-				$address = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
+				$address[] = $values['location_name'];
 			}
 
-			if (isset($address) && $address)
+			if (!empty($values['additional_info']))
 			{
-				$values_insert['address'] = $address;
+				foreach ($values['additional_info'] as $key => $value)
+				{
+					if ($value)
+					{
+						$address[] = "{$key}|{$value}";
+					}
+				}
+			}
+
+			if ($address)
+			{
+				$values_insert['address']	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (isset($values['location_code']) && $values['location_code'])
@@ -2528,20 +2539,32 @@
 			$value_set	 = array();
 			$table		 = "fm_{$this->type}_{$entity_id}_{$cat_id}";
 
+			$address = array();
 			if (isset($values['street_name']) && $values['street_name'])
 			{
 				$address[]				 = $values['street_name'];
 				$address[]				 = $values['street_number'];
-				$value_set['address']	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
-			if (!isset($address) || !$address)
+			if (!$address)
 			{
-				$address = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
-				if ($address)
+				$address[] = isset($values['location_name']) ? $this->db->db_addslashes($values['location_name']) : '';
+			}
+
+			if (!empty($values['additional_info']))
+			{
+				foreach ($values['additional_info'] as $key => $value)
 				{
-					$value_set['address'] = $address;
+					if ($value)
+					{
+						$address[] = "{$key}|{$value}";
+					}
 				}
+			}
+
+			if ($address)
+			{
+				$value_set['address']	 = $this->db->db_addslashes(implode(" ", $address));
 			}
 
 			if (isset($values['location_code']) && $values['location_code'])

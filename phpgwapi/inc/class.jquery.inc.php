@@ -239,6 +239,17 @@
 						"js/{$_jquery_core}{$_type}",
 						'bootstrap-multiselect' => array("js/bootstrap-multiselect")
 					);
+
+					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] != 'bootstrap' )
+					{
+						unset($load['bootstrap-multiselect']);//to be inserted last
+						$load['popper'] = array("popper{$_type}");
+						$load['bootstrap'] = array("js/bootstrap{$_type}");
+						$load['bootstrap-multiselect'] = array("js/bootstrap-multiselect");
+
+						$GLOBALS['phpgw']->css->add_external_file("/phpgwapi/js/bootstrap/css/bootstrap.min.css");
+					}
+
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.css");
 
 					break;

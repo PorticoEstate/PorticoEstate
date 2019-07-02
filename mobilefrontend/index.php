@@ -91,7 +91,11 @@
 		$app = 'phpgwapi';
 	}
 
-	if (is_file(PHPGW_SERVER_ROOT . "/mobilefrontend/inc/class.{$class}.inc.php"))
+	if($app == 'phpgwapi')
+	{
+		$GLOBALS[$class] = CreateObject("{$app}.{$class}");
+	}
+	else if (is_file(PHPGW_SERVER_ROOT . "/mobilefrontend/inc/class.{$class}.inc.php"))
 	{
 		$GLOBALS[$class] = CreateObject("{$app}.{$class}");
 	}
