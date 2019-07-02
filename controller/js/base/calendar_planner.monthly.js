@@ -31,7 +31,7 @@ $(document).ready(function ()
 		var dragObjId = event.originalEvent.dataTransfer.getData("text/plain");
 		var data = $("#" + dragObjId);
 		var dropTarget = $(event.target).closest("td");
-		$(dropTarget).prepend(data);
+		$(dropTarget).append(data);
 		console.log(this);
 		console.log(this.id);
 		console.log(dragObjId);
