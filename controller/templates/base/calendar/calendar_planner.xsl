@@ -59,6 +59,9 @@
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
+	<xsl:variable name="current_year">
+		<xsl:value-of select="current_year"/>
+	</xsl:variable>
 
 	<form method="post" id="form" action="{form_action}">
 
@@ -82,6 +85,16 @@
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="control_type_list/options"/>
+						</select>
+						<label for="entity_group_id">
+							<xsl:value-of select="php:function('lang', 'entity group')"/>
+						</label>
+
+						<select id="entity_group_id" name="entity_group_id" class="form-control" onchange="this.form.submit()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="entity_group_list/options"/>
 						</select>
 					</fieldset>
 
@@ -123,8 +136,8 @@
 					</span>
 					<span class="float-none">
 						<h4>
-							<xsl:value-of select="current_year"/>
-							<input type="hidden" name="current_year" value="{current_year}"/>
+							<xsl:value-of select="$current_year"/>
+							<input type="hidden" name="current_year" value="{$current_year}"/>
 						</h4>
 					</span>
 				</div>
@@ -138,9 +151,7 @@
 								<xsl:for-each select="first_half_year">
 									<th>
 										<h5>
-											<a href="{url}">
-												<xsl:value-of select="name"/>
-											</a>
+											<xsl:value-of select="name"/>
 										</h5>
 									</th>
 								</xsl:for-each>
@@ -189,16 +200,18 @@
 								<td></td>
 							</tr>
 							<xsl:for-each select="part_of_town_list2">
+								<xsl:variable name="part_of_town_id">
+									<xsl:value-of select="id"/>
+								</xsl:variable>
 								<tr>
 									<th scope="row">
 										<xsl:value-of select="name"/>
 									</th>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
+									<xsl:for-each select="//first_half_year">
+										<td onClick="open_monthly('{$part_of_town_id}', '{$current_year}', '{id}');">
+											<xsl:value-of select="id"/>
+										</td>
+									</xsl:for-each>
 								</tr>
 							</xsl:for-each>
 	
@@ -211,9 +224,7 @@
 								<xsl:for-each select="second_half_year">
 									<th>
 										<h5>
-											<a href="{url}">
-												<xsl:value-of select="name"/>
-											</a>
+											<xsl:value-of select="name"/>
 										</h5>
 									</th>
 								</xsl:for-each>
@@ -221,16 +232,18 @@
 						</thead>
 						<tbody>
 							<xsl:for-each select="part_of_town_list2">
+								<xsl:variable name="part_of_town_id">
+									<xsl:value-of select="id"/>
+								</xsl:variable>
 								<tr>
 									<th scope="row">
 										<xsl:value-of select="name"/>
 									</th>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
+									<xsl:for-each select="//second_half_year">
+										<td onClick="open_monthly('{$part_of_town_id}', '{$current_year}', '{id}');">
+											<xsl:value-of select="id"/>
+										</td>
+									</xsl:for-each>
 								</tr>
 							</xsl:for-each>
 						</tbody>
@@ -293,13 +306,13 @@
 		content: "\0223E\0020";
 		}
 
-table th, table td {
-    width: 200px;
-}
-table span {
-     height: 30px;
-    width: 100%;
-}
+		table th, table td {
+		width: 200px;
+		}
+		table span {
+		height: 30px;
+		width: 100%;
+		}
 	</style>
 
 	<xsl:variable name="date_format">
@@ -317,11 +330,7 @@ table span {
 		</div>
 		<div class="row">
 			<div class="col">
-				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i følgende bydeler:
-					<ul>
-						<li style="font-size: 14px">Åsane - funksjonsettersyn</li>
-						<li style="font-size: 14px">Laksevåg - funksjonsettersyn</li>
-					</ul>
+				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i <xsl:value-of select="part_of_town"/>:
 				</p>
 			</div>
 			<div class="col">
@@ -364,7 +373,7 @@ table span {
 			<xsl:value-of disable-output-escaping="yes" select="calendar"/>
 		</div>
 
-<!--https://jsfiddle.net/d1wnk1bg/8/-->
+		<!--https://jsfiddle.net/d1wnk1bg/8/-->
 		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
@@ -628,10 +637,7 @@ table span {
 		<div class="container">
 			<div class="clearfix">
 				<span class="float-left">
-					<xsl:variable name="start_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar_planner.index')" />
-					</xsl:variable>
-					<a href="{$start_url}">
+					<a href="{start_url}">
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
@@ -641,10 +647,7 @@ table span {
 					</a>
 				</span>
 				<span class="float-right">
-					<xsl:variable name="send_notification_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar_planner.send_notification')" />
-					</xsl:variable>
-					<a href="{$send_notification_url}">
+					<a href="{send_notification_url}">
 						<button type="button" class="btn btn-success">Lagre og gå til utsending</button>
 					</a>
 				</span>
@@ -724,10 +727,7 @@ table span {
 		<div class="container">
 			<div class="clearfix">
 				<span class="float-left">
-					<xsl:variable name="monthly_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar_planner.monthly')" />
-					</xsl:variable>
-					<a href="{$monthly_url}">
+					<a href="{monthly_url}">
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
