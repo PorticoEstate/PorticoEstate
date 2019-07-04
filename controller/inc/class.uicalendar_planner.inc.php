@@ -36,7 +36,7 @@
 
 	class controller_uicalendar_planner extends phpgwapi_uicommon_jquery
 	{
-		private $dayLabels		 = array("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
+		private $dayLabels		 = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 		private $currentYear	 = 0;
 		private $currentMonth	 = 0;
 		private $currentDay		 = 0;
@@ -73,6 +73,7 @@
 
 			$control_id		 = phpgw::get_var('control_id', 'int');
 			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$current_year	 = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
 
 			if (phpgw::get_var('prev_year', 'bool'))
@@ -114,15 +115,16 @@
 			{
 				$second_half_year[] = array(
 					'id'	 => $i,
-					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1))),
-					'url'	 => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
-						'year'		 => $current_year,
-						'month'		 => $i))
+					'name'	 => lang(date('F', mktime(0, 0, 0, $i, 1)))
 				);
 			}
 
-			$part_of_towns = createObject('property.sogeneric')->get_list(array('type'		 => 'part_of_town',
-				'selected'	 => 0, 'order'		 => 'name', 'sort'		 => 'asc'));
+
+			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
+				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
+
+			$part_of_towns = createObject('property.bogeneric')->get_list(array('type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id, 'order'		 => 'name', 'sort'		 => 'asc'));
 
 			$part_of_town_list	 = array();
 			$part_of_town_list2	 = array();
@@ -130,12 +132,12 @@
 			{
 				if ($part_of_town['id'] > 0)
 				{
-					$selected					 = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
+//					$selected					 = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
 					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
-					$part_of_town['selected']	 = $selected;
+//					$part_of_town['selected']	 = $selected;
 					$part_of_town_list[]		 = $part_of_town;
 
-					if ($selected)
+					if ($part_of_town['selected'])
 					{
 						$part_of_town_list2[] = $part_of_town;
 					}
@@ -170,6 +172,7 @@
 				'next_year'			 => $current_year + 1,
 				'first_half_year'	 => $first_half_year,
 				'second_half_year'	 => $second_half_year,
+				'entity_group_list'	 => array('options' => $entity_groups),
 				'part_of_town_list2' => $part_of_town_list2,
 				'part_of_town_list'	 => array('options' => $part_of_town_list),
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.index')),
@@ -186,6 +189,12 @@
 		{
 			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+
+			$part_of_town = createObject('property.bogeneric')->get_single_name(array('type' => 'part_of_town',	'id' => $part_of_town_id));
 
 			if (13 == $month)
 			{
@@ -200,16 +209,43 @@
 			}
 
 			$data = array
-				(
+			(
+				'part_of_town_id' => $part_of_town_id,
+				'part_of_town' => $part_of_town,
 				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
 				'current_year'	 => $year,
 				'next_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
-					'year' => $year, 'month' => ($month + 1))),
+					'year' => $year,
+					'month' => ($month + 1),
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id)),
 				'prev_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
-					'year' => $year, 'month' => ($month - 1))),
+					'year' => $year,
+					'month' => ($month - 1),
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id)),
 				'next_month'	 => lang(date('F', mktime(0, 0, 0, $month + 1, 1))),
 				'prev_month'	 => lang(date('F', mktime(0, 0, 0, $month - 1, 1))),
-				'calendar' => $this->show($year, $month)
+				'calendar' => $this->show($year, $month),
+
+				'start_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.index',
+					'current_year' => $year,
+			//		'month' => $month,
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id)),
+				'send_notification_url'  => self::link(array('menuaction' => 'controller.uicalendar_planner.send_notification',
+					'current_year' => $year,
+					'month' => $month,
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id)),
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -219,11 +255,23 @@
 
 		public function send_notification()
 		{
+			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
+			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 
 
 			$data = array
 				(
-				'first_half_year' => $first_half_year,
+				'monthly_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
+					'year' => $year,
+					'month' => $month,
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id)),
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -267,10 +315,11 @@
 			for ($i = 0; $i < $weeksInMonth; $i++)
 			{
 
-				$content .= '<tr>';
+				$content .= '<tr class="target_row">';
 				$content .= '<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">' . lang('week') . ' ' . ($week) . '</th>';
 				$week++;
 				//Create days in a week
+				//$work_days = count($this->dayLabels);
 				for ($j = 1; $j <= 7; $j++)
 				{
 					$content .= $this->_showDay($i * 7 + $j);
@@ -312,7 +361,7 @@
 				$cellContent		 = null;
 			}
 
-			return '<td id="li-' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
+			return '<td id="' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
 				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . '</span></div></td>';
 		}
 
@@ -327,7 +376,7 @@
 			$content .= '<th>#</th>';
 			foreach ($this->dayLabels as $index => $label)
 			{
-				$content .= '<th>' . $label . '</th>';
+				$content .= '<th>' . lang($label) . '</th>';
 			}
 
 			return $content;
