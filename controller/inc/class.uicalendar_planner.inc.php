@@ -208,6 +208,10 @@
 				$year	 -= 1;
 			}
 
+
+			$items = $this->get_items($year, $month, $control_id, $entity_group_id, $part_of_town_id);
+
+
 			$data = array
 			(
 				'part_of_town_id' => $part_of_town_id,
@@ -251,6 +255,20 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('controller', 'base', 'calendar_planner.monthly.js');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
+		}
+
+		public function get_items( $year, $month, $control_id,  $entity_group_id, $part_of_town_id )
+		{
+			// Validates year. If year is not set, current year is chosen
+			$year = (int)$year ? $year : date('Y');
+
+			// Gets timestamp of first day in month
+			$from_date_ts = strtotime("01/{$month}/$year");
+
+			$daysInMonths	 = $this->_daysInMonth($month, $year);
+
+			// Gets timestamp of last day in month
+			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
 		}
 
 		public function send_notification()
