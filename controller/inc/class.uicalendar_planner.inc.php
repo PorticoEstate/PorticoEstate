@@ -33,6 +33,15 @@
 	 */
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.uicommon_jquery');
+	include_class('controller', 'check_list', 'inc/model/');
+	include_class('controller', 'check_item', 'inc/model/');
+	include_class('controller', 'component', 'inc/model/');
+	include_class('controller', 'check_list_status_info', 'inc/component/');
+	include_class('controller', 'status_agg_month_info', 'inc/component/');
+	include_class('controller', 'location_finder', 'inc/helper/');
+	include_class('controller', 'year_calendar', 'inc/component/');
+	include_class('controller', 'year_calendar_agg', 'inc/component/');
+	include_class('controller', 'month_calendar', 'inc/component/');
 
 	class controller_uicalendar_planner extends phpgwapi_uicommon_jquery
 	{
@@ -234,7 +243,7 @@
 					'entity_group_id'=> $entity_group_id)),
 				'next_month'	 => lang(date('F', mktime(0, 0, 0, $month + 1, 1))),
 				'prev_month'	 => lang(date('F', mktime(0, 0, 0, $month - 1, 1))),
-				'calendar' => $this->show($year, $month),
+				'calendar' => $this->show($year, $month, $items),
 
 				'start_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.index',
 					'current_year' => $year,
@@ -269,6 +278,168 @@
 
 			// Gets timestamp of last day in month
 			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
+
+			$items = execMethod('property.soentity.read_entity_group', array(
+				'entity_group_id' => (int)$entity_group_id,
+//				'exclude_locations' => $exclude_locations_for_stray_items,
+//				'location_id' => $_location_id,
+				'control_id' => $control_id,
+				'district_id' => $district_id,
+				'part_of_town_id' => $part_of_town_id,
+//				'location_code'	=> $location_code,
+//				'org_units' => $this->org_units,
+				'allrows' => true,
+				'control_registered' => true,
+				'check_for_control' => true
+				)
+			);
+
+//			_debug_array($items);
+			$so_control = CreateObject('controller.socontrol');
+			$this->so = CreateObject('controller.socheck_list');
+
+			$controls = array();
+
+			$all_components = array();
+			$control_names = array();
+
+			$item_calendar = array();
+
+//			_debug_array($items);
+			foreach ($items as $_item)
+			{
+				$location_id = $_item['location_id'];
+				$item_id = $_item['id'];
+				$all_components["{$location_id}_{$item_id}"] = $_item;
+
+				if(empty($get_locations))
+				{
+					$short_description = $_item['short_description'];
+					$short_description .= ' [' . $_item['location_name'] . ']';
+				}
+				else
+				{
+					$short_description = $_item['location_code'];
+					$short_description .= ' [' . $_item['loc1_name'] . ']';
+
+				}
+
+				if (empty($get_locations) && ($all_items && !$_item['has_control']))
+				{
+		//			continue;
+				}
+
+				if (!$_item['id'])
+				{
+					continue;
+				}
+				$controls_at_component = $so_control->get_controls_at_component2($_item, $filter_control_id);
+
+				foreach ($controls_at_component as $component)
+				{
+					$control_relation = $component->get_control_relation();
+
+					if (!$control_relation['serie_enabled'])
+					{
+						//					continue;
+					}
+					$control_id = $control_relation['control_id'];
+
+					if(isset($controls[$control_id]))
+					{
+						$control = $controls[$control_id];
+					}
+					else
+					{
+						$control = $so_control->get_single($control_id);
+						$controls[$control_id] = $control;
+					}
+
+					$control_names[$control_id] = $control->get_title();
+
+//					$repeat_type = $control->get_repeat_type();
+					$repeat_type = (int)$control_relation['repeat_type'];
+
+					//FIXME: Not currently supported
+					if ($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
+					{
+						$repeat_type = controller_control::REPEAT_TYPE_MONTH;
+					}
+					// LOCATIONS: Process aggregated values for controls with repeat type day or week
+					if ($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
+					{
+						//FIXME: Not currently supported
+
+						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+
+						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+
+						$cl_criteria = new controller_check_list();
+						$cl_criteria->set_control_id($control->get_id());
+						$cl_criteria->set_component_id($component->get_id());
+						$cl_criteria->set_location_id($component->get_location_id());
+
+						$from_month = $this->get_start_month_for_control($control);
+						$to_month = $this->get_end_month_for_control($control);
+
+						// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
+						$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
+
+						$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
+						$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
+					}
+					// Process values for controls with repeat type month or year
+					else if ($repeat_type > controller_control::REPEAT_TYPE_WEEK)
+					{
+						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+
+						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
+
+						$check_lists_array = $component_with_check_lists["check_lists_array"];
+
+						/*
+						 * start override control with data from serie
+						 */
+					//	$control_relation = $component->get_control_relation();
+						if (isset($control_relation['start_date']) && $control_relation['start_date'])
+						{
+							$control->set_start_date($control_relation['start_date']);
+						}
+
+						if (isset($control_relation['end_date']) && $control_relation['end_date'])
+						{
+							$control->set_end_date($control_relation['end_date']);
+						}
+						if (isset($control_relation['repeat_type']) && $control_relation['repeat_type'])
+						{
+							$control->set_repeat_type($control_relation['repeat_type']);
+						}
+						if (isset($control_relation['repeat_interval']) && $control_relation['repeat_interval'])
+						{
+							$control->set_repeat_interval($control_relation['repeat_interval']);
+						}
+
+						$year_calendar = new year_calendar($control, $year, $component, null, "component", $control_relation);
+						$calendar_array = $year_calendar->build_calendar($check_lists_array);
+
+						foreach ($calendar_array as $_month => $_month_info)
+						{
+							if($_month_info)
+							{
+								$deadline_date = date('Y-m-d', $_month_info['info']['deadline_date_ts']);
+
+								$item_calendar["{$deadline_date}"][] = array(
+									'component' => $component->toArray(),
+									'schedule' => $_month_info
+									);
+							}
+						}
+					}
+				}
+			}
+
+			return $item_calendar;
+
 		}
 
 		public function send_notification()
@@ -305,8 +476,9 @@
 		/**
 		 * print out the calendar
 		 */
-		public function show( $year, $month )
+		public function show( $year, $month, $items )
 		{
+//			_debug_array($items);
 			if (null == $year)
 			{
 				$year = date("Y", time());
@@ -317,6 +489,7 @@
 				$month = date("m", time());
 			}
 
+			$this->items		 = $items;
 			$this->currentYear	 = $year;
 			$this->currentMonth	 = $month;
 			$this->daysInMonth	 = $this->_daysInMonth($month, $year);
@@ -378,9 +551,33 @@
 				$this->currentDate	 = null;
 				$cellContent		 = null;
 			}
+	//		_debug_array($this->currentDate);
+
+			
+			$item_content = "";
+
+			if(!empty($this->items[$this->currentDate]))
+			{
+				foreach ($this->items[$this->currentDate] as $item)
+				{
+					$item_content .= <<<HTML
+
+					<div class="mb-5 card badge event badge-primary" style="width: 18rem;" draggable="true" id="{$item['component']['location_id']}_{$item['component']['id']}">
+						  <div class="text-center card-body">
+							<p>{$item['component']['xml_short_desc']}</p>
+						  </div>
+					</div>
+HTML;
+//					$item_content .= <<<HTML
+//					<br/>
+//					<span class="badge event badge-primary" draggable="true" id="{$item['component']['location_id']}_{$item['component']['id']}" >{$item['component']['xml_short_desc']}</span>
+//HTML;
+
+				}
+			}
 
 			return '<td id="' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
-				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . '</span></div></td>';
+				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . "</span>{$item_content}</div></td>";
 		}
 
 		/**
