@@ -52,22 +52,28 @@
 		private $currentDate	 = null;
 		private $daysInMonth	 = 0;
 
+		protected $read, $add, $edit, $delete, $so, $so_control;
+
 		public $public_functions = array
 			(
 			'index'				 => true,
 			'monthly'			 => true,
 			'send_notification'	 => true,
-			'query'				 => true
+			'query'				 => true,
+			'update_schedule'	 => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$read	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller'); //1
-			$add	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller'); //2
-			$edit	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller'); //4
-			$delete	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller'); //8
+			$this->read	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller'); //1
+			$this->add	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller'); //2
+			$this->edit	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller'); //4
+			$this->delete	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller'); //8
+
+			$this->so = CreateObject('controller.socheck_list');
+			$this->so_control = CreateObject('controller.socontrol');
 
 			$manage = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller'); //16
 			//		$this->bo = CreateObject('property.bolocation', true);
@@ -82,6 +88,36 @@
 
 			$control_id		 = phpgw::get_var('control_id', 'int');
 			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
+
+		
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if($control_area_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_control_area_id", $control_area_id, $user_id);
+			}
+			else
+			{
+				$control_area_id = (int)phpgwapi_cache::user_get('controller', "calendar_control_area_id", $user_id);
+			}
+			if($control_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
+			}
+			else
+			{
+				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
+			}
+
+			if($part_of_town_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_part_of_town", $part_of_town_id, $user_id);
+			}
+			else
+			{
+				$part_of_town_id = (array)phpgwapi_cache::user_get('controller', "calendar_planner_part_of_town", $user_id);
+			}
+
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$current_year	 = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
 
@@ -248,7 +284,7 @@
 				'start_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.index',
 					'current_year' => $year,
 			//		'month' => $month,
-					'part_of_town_id' => $part_of_town_id,
+			//		'part_of_town_id' => $part_of_town_id,
 					'control_id' => $control_id,
 					'control_area_id' => $control_area_id,
 					'entity_group_id'=> $entity_group_id)),
@@ -279,24 +315,28 @@
 			// Gets timestamp of last day in month
 			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
 
-			$items = execMethod('property.soentity.read_entity_group', array(
-				'entity_group_id' => (int)$entity_group_id,
-//				'exclude_locations' => $exclude_locations_for_stray_items,
-//				'location_id' => $_location_id,
-				'control_id' => $control_id,
-				'district_id' => $district_id,
-				'part_of_town_id' => $part_of_town_id,
-//				'location_code'	=> $location_code,
-//				'org_units' => $this->org_units,
-				'allrows' => true,
-				'control_registered' => true,
-				'check_for_control' => true
-				)
-			);
-
-//			_debug_array($items);
 			$so_control = CreateObject('controller.socontrol');
-			$this->so = CreateObject('controller.socheck_list');
+
+			$locations = $so_control->get_system_locations_related_to_control($control_id);
+
+			$items = array();
+			foreach ($locations as $location_id)
+			{
+				$_items		 =  execMethod('property.soentity.read',array(
+		//				'entity_group_id' => (int)$entity_group_id,
+						'location_id' => $location_id,
+						'control_id' => $control_id,
+						'district_id' => $district_id,
+						'part_of_town_id' => $part_of_town_id,
+		//				'location_code'	=> $location_code,
+		//				'org_units' => $this->org_units,
+						'allrows' => true,
+						'control_registered' => true,
+						'check_for_control' => true
+						)
+					);
+				$items			 = array_merge($items, $_items);
+			}
 
 			$controls = array();
 
@@ -315,7 +355,7 @@
 				if(empty($get_locations))
 				{
 					$short_description = $_item['short_description'];
-					$short_description .= ' [' . $_item['location_name'] . ']';
+//					$short_description .= ' [' . $_item['location_name'] . ']';
 				}
 				else
 				{
@@ -426,9 +466,20 @@
 						{
 							if($_month_info)
 							{
-								$deadline_date = date('Y-m-d', $_month_info['info']['deadline_date_ts']);
+								if(!empty($_month_info['info']['completed_date_ts']))
+								{
+									$shedule_date = date('Y-m-d', $_month_info['info']['completed_date_ts']);
+								}
+								else if(!empty($_month_info['info']['planned_date_ts']))
+								{
+									$shedule_date = date('Y-m-d', $_month_info['info']['planned_date_ts']);
+								}
+								else
+								{
+									$shedule_date = date('Y-m-d', $_month_info['info']['deadline_date_ts']);
+								}
 
-								$item_calendar["{$deadline_date}"][] = array(
+								$item_calendar["{$shedule_date}"][] = array(
 									'component' => $component->toArray(),
 									'schedule' => $_month_info
 									);
@@ -470,6 +521,142 @@
 
 		public function query()
 		{
+
+		}
+
+		public function update_schedule()
+		{
+			if (!$this->add && !$this->edit)
+			{
+				phpgwapi_cache::message_set('No access', 'error');
+			}
+
+			$location_id = phpgw::get_var('location_id', 'int');
+			$component_id = phpgw::get_var('component_id', 'int');
+			$target_date = phpgw::get_var('target_date');
+			$deadline_date_ts = phpgw::get_var('deadline_date_ts');
+			$serie_id = phpgw::get_var('serie_id', 'int');
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+
+
+			$submit_ok = true;
+
+			$control_id = phpgw::get_var('control_id', 'int');
+			$status = 0;
+			$original_deadline_date_ts = phpgw::get_var('original_deadline_date', 'int');
+			$comment = phpgw::get_var('comment', 'string');
+			$assigned_to = phpgw::get_var('assigned_to', 'int');
+
+			$planned_date_ts = strtotime($target_date);
+
+			$error = false;
+
+			$completed_date_ts = 0;
+
+			if($submit_ok)
+			{
+	//			$status = controller_check_list::STATUS_NOT_DONE;
+			}
+
+			if ($check_list_id > 0)
+			{
+				$check_list = $this->so->get_single($check_list_id);
+
+				$serie_id = $check_list->get_serie_id();
+
+				if(!$planned_date_ts)
+				{
+					$planned_date_ts = $check_list->get_planned_date();
+				}
+				if(!$original_deadline_date_ts)
+				{
+					$original_deadline_date_ts = $check_list->get_original_deadline();
+				}
+				if(!$deadline_date_ts)
+				{
+					$deadline_date_ts = $check_list->get_deadline();
+				}
+				if(!$comment)
+				{
+					$comment = $check_list->get_comment();
+				}
+
+			}
+			else
+			{
+				if(!$original_deadline_date_ts)
+				{
+					$original_deadline_date_ts = $deadline_date_ts;
+				}
+
+				$completed_date_ts = 0;
+
+				$check_list = new controller_check_list();
+				$check_list->set_control_id($control_id);
+				$location_code = phpgw::get_var('location_code');
+				$check_list->set_location_code($location_code);
+				$check_list->set_serie_id($serie_id);
+
+				$check_list->set_location_id($location_id);
+				$check_list->set_component_id($component_id);
+			}
+
+			$serie = $this->so_control->get_serie($serie_id);
+
+			if($serie && $serie['repeat_type'] == 3) // Year
+			{
+				/**
+				 * Move deadline to end of year
+				 */
+				$_deadline_year = date('Y', $deadline_date_ts);
+				$deadline_date_ts = strtotime("{$_deadline_year}-12-31");
+			}
+
+			$check_list->set_comment($comment);
+			$check_list->set_deadline($deadline_date_ts);
+			$check_list->set_original_deadline($original_deadline_date_ts);
+			$check_list->set_planned_date($planned_date_ts);
+			$check_list->set_completed_date($completed_date_ts);
+
+			$orig_assigned_to = $check_list->get_assigned_to();
+
+			$check_list->set_assigned_to($assigned_to);
+
+			if ($status == controller_check_list::STATUS_CANCELED && !$error)
+			{
+				$check_list->set_status($status);
+			}
+			else if ($status == controller_check_list::STATUS_NOT_DONE && !$error)
+			{
+				$check_list->set_status($status);
+			}
+
+			if (!$error && $check_list->validate())
+			{
+				$check_list_id = $this->so->store($check_list);
+				$serie = $this->so_control->get_serie($check_list->get_serie_id());
+
+				if ($check_list_id > 0)
+				{
+					if($submit_ok)
+					{
+						$check_list->set_id($check_list_id);
+					}
+
+					return array("status" => 'ok', 'message' => lang('Ok'));
+				}
+				else
+				{
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array('status' => 'error', 'message' => $error_message ? $error_message : lang('Error'));
+					}
+				}
+			}
+			else
+			{
+				return array('status' => 'error', 'message' => $error_message ? $error_message : lang('Error'));
+			}
 
 		}
 
@@ -553,26 +740,34 @@
 			}
 	//		_debug_array($this->currentDate);
 
-			
+
 			$item_content = "";
 
 			if(!empty($this->items[$this->currentDate]))
 			{
+				$i=1;
 				foreach ($this->items[$this->currentDate] as $item)
 				{
+//					_debug_array($item);
+					$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+
 					$item_content .= <<<HTML
 
-					<div class="mb-5 card badge event badge-primary" style="width: 18rem;" draggable="true" id="{$item['component']['location_id']}_{$item['component']['id']}">
-						  <div class="text-center card-body">
-							<p>{$item['component']['xml_short_desc']}</p>
-						  </div>
+					<div class="mb-1 card badge event badge-primary" style="width: 8rem;" draggable="true"
+						id="{$item['component']['location_id']}_{$item['component']['id']}"
+						control_id="{$item['schedule']['info']['control_id']}"
+						serie_id="{$item['schedule']['info']['serie_id']}"
+						check_list_id="{$item['schedule']['info']['check_list_id']}"
+						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
+						assigned_to="{$item['schedule']['info']['assigned_to']}">
+							{$desc}
 					</div>
 HTML;
 //					$item_content .= <<<HTML
 //					<br/>
 //					<span class="badge event badge-primary" draggable="true" id="{$item['component']['location_id']}_{$item['component']['id']}" >{$item['component']['xml_short_desc']}</span>
 //HTML;
-
+				$i++;
 				}
 			}
 

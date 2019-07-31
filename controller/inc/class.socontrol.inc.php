@@ -1193,6 +1193,30 @@
 			return $controls;
 		}
 
+
+		function get_system_locations_related_to_control($control_id = 0)
+		{
+			$locations = array();
+			if(!$control_id)
+			{
+				return $locations;
+			}
+			$sql = "SELECT DISTINCT location_id"
+				. " FROM controller_control_component_list"
+				. " WHERE  control_id = {$control_id} ";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$locations[] = $this->db->f('location_id');
+			}
+
+			return $locations;
+
+		}
+
+
 		/**
 		 * Get all controls assosiated with a component
 		 *

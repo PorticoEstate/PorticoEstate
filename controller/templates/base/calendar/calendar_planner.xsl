@@ -70,48 +70,48 @@
 				<div class="form-group">
 					<fieldset>
 						<legend>Velg kontroll</legend>
+
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control type')"/>
 						</label>
 						<select id="control_area_id" name="control_area_id" class="form-control">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
+
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
 						</label>
-
 						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="control_type_list/options"/>
 						</select>
-						<label for="entity_group_id">
+
+<!--						<label for="entity_group_id">
 							<xsl:value-of select="php:function('lang', 'entity group')"/>
 						</label>
-
 						<select id="entity_group_id" name="entity_group_id" class="form-control" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="entity_group_list/options"/>
-						</select>
-					</fieldset>
+						</select>-->
 
-				</div>
-				<div class="form-group">
-					<label for="part_of_town_id">
-						<xsl:value-of select="php:function('lang', 'part of town')"/>
-					</label>
-					<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
-						<xsl:attribute name="multiple">
-							<xsl:text>true</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'select part of town')"/>
-						</xsl:attribute>
-						<xsl:apply-templates select="part_of_town_list/options"/>
-					</select>
+						<label for="part_of_town_id">
+							<xsl:value-of select="php:function('lang', 'part of town')"/>
+						</label>
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+							<xsl:attribute name="multiple">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select part of town')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="part_of_town_list/options"/>
+						</select>
+
+					</fieldset>
 				</div>
 			</div>
 		</div>
@@ -374,7 +374,8 @@
 		</div>
 
 		<!--https://jsfiddle.net/d1wnk1bg/8/-->
-		<div class="container datagrid table-responsive">
+
+<!--		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover-cells">
 				<thead>
 					<tr>
@@ -633,7 +634,7 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
+		</div>-->
 		<div class="container">
 			<div class="clearfix">
 				<span class="float-left">
@@ -641,21 +642,21 @@
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
-				<span class="ml-2 float-left">
+<!--				<span class="ml-2 float-left">
 					<a href="#">
 						<button type="button" class="btn btn-warning">Nullstill kalender</button>
 					</a>
-				</span>
+				</span>-->
 				<span class="float-right">
 					<a href="{send_notification_url}">
-						<button type="button" class="btn btn-success">Lagre og gå til utsending</button>
+						<button type="button" class="btn btn-success">Gå til utsending</button>
 					</a>
 				</span>
-				<span class="mr-2 float-right">
+<!--				<span class="mr-2 float-right">
 					<a href="#">
 						<button type="button" class="btn btn-success">Lagre</button>
 					</a>
-				</span>
+				</span>-->
 			</div>
 		</div>
 	</div>
