@@ -89,7 +89,7 @@
 			$control_id		 = phpgw::get_var('control_id', 'int');
 			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
 
-		
+
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if($control_area_id)
@@ -112,6 +112,10 @@
 			if($part_of_town_id)
 			{
 				phpgwapi_cache::user_set('controller', "calendar_planner_part_of_town", $part_of_town_id, $user_id);
+			}
+			else if ($_POST)
+			{
+				phpgwapi_cache::user_clear('controller', "calendar_planner_part_of_town", $user_id);
 			}
 			else
 			{
