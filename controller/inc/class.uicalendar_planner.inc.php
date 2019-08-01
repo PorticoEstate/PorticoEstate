@@ -269,6 +269,16 @@
 				$planned_status[$i] = $this->so_control->get_checklist_status_at_time_and_place($part_of_town_id, $control_id, $timestamp_start, $timestamp_end);
 				$planned_status[$i]['part_of_town_id'] = $part_of_town_id;
 				$planned_status[$i]['month'] = $i;
+
+				$items = $this->get_items($year, $i, $control_id, 0, $part_of_town_id);
+
+				$registered = 0;
+				foreach ($items as $_date => $valueset)
+				{
+					$registered += count($valueset);
+				}
+				$planned_status[$i]['registered'] = $registered;
+
 			}
 			$part_of_town['planned_status'] = $planned_status;
 
@@ -360,26 +370,30 @@
 			// Gets timestamp of last day in month
 			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
 
-			$locations = $this->so_control->get_system_locations_related_to_control($control_id);
+			static $items = array();
 
-			$items = array();
-			foreach ($locations as $location_id)
+			if(!$items)
 			{
-				$_items		 =  execMethod('property.soentity.read',array(
-		//				'entity_group_id' => (int)$entity_group_id,
-						'location_id' => $location_id,
-						'control_id' => $control_id,
-						'district_id' => $district_id,
-						'part_of_town_id' => $part_of_town_id,
-		//				'location_code'	=> $location_code,
-		//				'org_units' => $this->org_units,
-						'allrows' => true,
-						'control_registered' => true,
-						'check_for_control' => true
-						)
-					);
-				$items			 = array_merge($items, $_items);
+				$locations = $this->so_control->get_system_locations_related_to_control($control_id);
+				foreach ($locations as $location_id)
+				{
+					$_items		 =  execMethod('property.soentity.read',array(
+			//				'entity_group_id' => (int)$entity_group_id,
+							'location_id' => $location_id,
+							'control_id' => $control_id,
+							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
+			//				'location_code'	=> $location_code,
+			//				'org_units' => $this->org_units,
+							'allrows' => true,
+							'control_registered' => true,
+							'check_for_control' => true
+							)
+						);
+					$items			 = array_merge($items, $_items);
+				}
 			}
+
 
 			$controls = array();
 
@@ -424,7 +438,7 @@
 
 					if (!$control_relation['serie_enabled'])
 					{
-						//					continue;
+							continue;
 					}
 					$control_id = $control_relation['control_id'];
 
@@ -483,7 +497,7 @@
 						/*
 						 * start override control with data from serie
 						 */
-					//	$control_relation = $component->get_control_relation();
+						$control_relation = $component->get_control_relation();
 						if (isset($control_relation['start_date']) && $control_relation['start_date'])
 						{
 							$control->set_start_date($control_relation['start_date']);
@@ -507,6 +521,11 @@
 
 						foreach ($calendar_array as $_month => $_month_info)
 						{
+							if($month !== $_month)
+							{
+								continue;
+							}
+
 							if($_month_info)
 							{
 								if(!empty($_month_info['info']['completed_date_ts']))
@@ -796,16 +815,18 @@
 
 					switch ($item['schedule']['status'])
 					{
-						case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
-							$class = 'badge-secondary';
-							$draggable =  '';
-							break;
-
+						case 'CONTROL_REGISTERED':
 						case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
 						case 'CONTROL_NOT_DONE':
 							$class = 'badge-primary';
 							$draggable =  'draggable="true"';
 							break;
+
+						case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
+							$class = 'badge-secondary';
+							$draggable =  '';
+							break;
+
 						default:
 							$class = 'badge-secondary';
 							$draggable =  '';

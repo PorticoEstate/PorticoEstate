@@ -436,8 +436,10 @@
 		</th>
 		<xsl:for-each select="cell_data">
 			<td onClick="open_monthly('{part_of_town_id}', '{$current_year}', '{month}');">
-				<xsl:if test="planned &gt; 0">
+				<xsl:if test="registered &gt; 0">
 					<span class="ml-3 float-left">
+						<xsl:value-of select="registered"/>
+						<xsl:text>/</xsl:text>
 						<xsl:value-of select="planned"/>
 						<xsl:text>/</xsl:text>
 						<xsl:value-of select="completed"/>
