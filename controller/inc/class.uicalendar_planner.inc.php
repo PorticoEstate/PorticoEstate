@@ -134,7 +134,7 @@
 				$current_year ++;
 			}
 
-			$control_types = createObject('controller.socontrol')->get_controls_by_control_area($control_area_id);
+			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
 
 			$control_type_list = array(array('id' => '', 'name' => lang('select')));
 			foreach ($control_types as $control_type)
@@ -181,16 +181,37 @@
 			{
 				if ($part_of_town['id'] > 0)
 				{
-//					$selected					 = in_array($part_of_town['id'], $part_of_town_id) ? 1 : 0;
 					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
-//					$part_of_town['selected']	 = $selected;
 					$part_of_town_list[]		 = $part_of_town;
 
 					if ($part_of_town['selected'])
 					{
+						/**
+						 * By reference
+						 */
+						$this->get_planned_status($part_of_town, $current_year, $control_id);
 						$part_of_town_list2[] = $part_of_town;
 					}
 				}
+			}
+
+			unset($part_of_town);
+
+
+			$calendar_content1 = array();
+			$calendar_content2 = array();
+
+
+			foreach ($part_of_town_list2 as $key => $part_of_town)
+			{
+				$calendar_content1[] = array(
+					'header' => $part_of_town['name'],
+					'cell_data' => array_slice($part_of_town['planned_status'], 0, 6)
+					);
+				$calendar_content2[] = array(
+					'header' => $part_of_town['name'],
+					'cell_data' => array_slice($part_of_town['planned_status'], -6)
+					);
 			}
 
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -214,7 +235,7 @@
 			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
 			$data = array
-				(
+			(
 				'control_area_list'	 => array('options' => $control_area_list),
 				'prev_year'			 => $current_year - 1,
 				'current_year'		 => $current_year,
@@ -222,10 +243,11 @@
 				'first_half_year'	 => $first_half_year,
 				'second_half_year'	 => $second_half_year,
 				'entity_group_list'	 => array('options' => $entity_groups),
-				'part_of_town_list2' => $part_of_town_list2,
 				'part_of_town_list'	 => array('options' => $part_of_town_list),
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.index')),
 				'control_type_list'	 => array('options' => $control_type_list),
+				'calendar_content1'	 => array('rows' => $calendar_content1),
+				'calendar_content2'	 => array('rows' => $calendar_content2)
 			);
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
@@ -233,6 +255,25 @@
 
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
+
+		private function get_planned_status( &$part_of_town, $year, $control_id )
+		{
+			$part_of_town_id = (int)$part_of_town['id'];
+
+			$planned_status = array();
+			for ($i = 1; $i <= 12; $i++)
+			{
+				$timestamp_start = mktime(0, 0, 0, $i, 1, $year);
+				$daysInMonth	 = $this->_daysInMonth($i, $year);
+				$timestamp_end = mktime(23, 59, 59, $i, $daysInMonth, $year);
+				$planned_status[$i] = $this->so_control->get_checklist_status_at_time_and_place($part_of_town_id, $control_id, $timestamp_start, $timestamp_end);
+				$planned_status[$i]['part_of_town_id'] = $part_of_town_id;
+				$planned_status[$i]['month'] = $i;
+			}
+			$part_of_town['planned_status'] = $planned_status;
+
+		}
+
 
 		public function monthly()
 		{
@@ -319,9 +360,7 @@
 			// Gets timestamp of last day in month
 			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
 
-			$so_control = CreateObject('controller.socontrol');
-
-			$locations = $so_control->get_system_locations_related_to_control($control_id);
+			$locations = $this->so_control->get_system_locations_related_to_control($control_id);
 
 			$items = array();
 			foreach ($locations as $location_id)
@@ -377,7 +416,7 @@
 				{
 					continue;
 				}
-				$controls_at_component = $so_control->get_controls_at_component2($_item, $filter_control_id);
+				$controls_at_component = $this->so_control->get_controls_at_component2($_item, $filter_control_id);
 
 				foreach ($controls_at_component as $component)
 				{
@@ -395,7 +434,7 @@
 					}
 					else
 					{
-						$control = $so_control->get_single($control_id);
+						$control = $this->so_control->get_single($control_id);
 						$controls[$control_id] = $control;
 					}
 
@@ -752,12 +791,30 @@
 				$i=1;
 				foreach ($this->items[$this->currentDate] as $item)
 				{
-//					_debug_array($item);
+//				_debug_array($item);
 					$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+
+					switch ($item['schedule']['status'])
+					{
+						case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
+							$class = 'badge-secondary';
+							$draggable =  '';
+							break;
+
+						case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
+						case 'CONTROL_NOT_DONE':
+							$class = 'badge-primary';
+							$draggable =  'draggable="true"';
+							break;
+						default:
+							$class = 'badge-secondary';
+							$draggable =  '';
+							break;
+					}
 
 					$item_content .= <<<HTML
 
-					<div class="mb-1 card badge event badge-primary" style="width: 8rem;" draggable="true"
+					<div class="mb-1 card badge event {$class}" style="width: 8rem;" {$draggable}
 						id="{$item['component']['location_id']}_{$item['component']['id']}"
 						control_id="{$item['schedule']['info']['control_id']}"
 						serie_id="{$item['schedule']['info']['serie_id']}"

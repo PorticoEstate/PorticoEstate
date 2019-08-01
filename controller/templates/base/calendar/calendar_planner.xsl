@@ -88,7 +88,7 @@
 							<xsl:apply-templates select="control_type_list/options"/>
 						</select>
 
-<!--						<label for="entity_group_id">
+						<!--						<label for="entity_group_id">
 							<xsl:value-of select="php:function('lang', 'entity group')"/>
 						</label>
 						<select id="entity_group_id" name="entity_group_id" class="form-control" onchange="this.form.submit()">
@@ -158,63 +158,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<th scope="row">Åsane</th>
-								<td class="table-data-link" data-toggle="modal" data-target="#myModal" style="cursor: pointer;">
+							<xsl:apply-templates select="calendar_content1/rows">
+								<xsl:with-param name="current_year" select ='$current_year'/>
+							</xsl:apply-templates>
 
-									<span class="float-left">
-										<kbd>F</kbd>
-									</span>
-									<span class="ml-3 float-left">24</span>
-									<span class="float-right">
-										<i class="fas fa-check float-right"></i>
-									</span>
-								</td>
-								<div class="modal fade" id="myModal">
-									<div class="modal-dialog modal-dialog-centered">
-										<div class="modal-content">
-
-											<!--Modal Header-->
-											<div class="mx-auto modal-header">
-												<h4 class="modal-title">Velg kontrolltype</h4>
-											</div>
-
-											<!--Modal body-->
-											<div class="mx-auto modal-body">
-												<div class="row">
-													<button type="button" class="btn btn-primary" data-dismiss="modal">Funksjonsettersyn</button>
-												</div>
-												<div class="mt-3 row">
-													<button type="button" class="btn btn-secondary" data-dismiss="modal">Hovedettersyn</button>
-												</div>
-											</div>
-
-										</div>
-									</div>
-								</div>
-
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<xsl:for-each select="part_of_town_list2">
-								<xsl:variable name="part_of_town_id">
-									<xsl:value-of select="id"/>
-								</xsl:variable>
-								<tr>
-									<th scope="row">
-										<xsl:value-of select="name"/>
-									</th>
-									<xsl:for-each select="//first_half_year">
-										<td onClick="open_monthly('{$part_of_town_id}', '{$current_year}', '{id}');">
-											<xsl:value-of select="id"/>
-										</td>
-									</xsl:for-each>
-								</tr>
-							</xsl:for-each>
-	
 						</tbody>
 						<thead>
 							<tr>
@@ -231,21 +178,9 @@
 							</tr>
 						</thead>
 						<tbody>
-							<xsl:for-each select="part_of_town_list2">
-								<xsl:variable name="part_of_town_id">
-									<xsl:value-of select="id"/>
-								</xsl:variable>
-								<tr>
-									<th scope="row">
-										<xsl:value-of select="name"/>
-									</th>
-									<xsl:for-each select="//second_half_year">
-										<td onClick="open_monthly('{$part_of_town_id}', '{$current_year}', '{id}');">
-											<xsl:value-of select="id"/>
-										</td>
-									</xsl:for-each>
-								</tr>
-							</xsl:for-each>
+							<xsl:apply-templates select="calendar_content2/rows">
+								<xsl:with-param name="current_year" select ='$current_year'/>
+							</xsl:apply-templates>
 						</tbody>
 					</table>
 				</div>
@@ -375,266 +310,7 @@
 
 		<!--https://jsfiddle.net/d1wnk1bg/8/-->
 
-<!--		<div class="container datagrid table-responsive">
-			<table class="mt-2 table table-hover-cells">
-				<thead>
-					<tr>
-						<th>
-							<h5>#</h5>
-						</th>
-						<th>
-							<h5>Mandag</h5>
-						</th>
-						<th>
-							<h5>Tirsdag</h5>
-						</th>
-						<th>
-							<h5>Onsdag</h5>
-						</th>
-						<th>
-							<h5>Torsdag</h5>
-						</th>
-						<th>
-							<h5>Fredag</h5>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="target_row">
-						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 1</th>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">1</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true" id="item1">Flaktveit barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true" id="item2">Flaktveit skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">2</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true" id="item3" >Morvikbotn barnehage </span>
-							<br />
-							<span class="badge event badge-primary" draggable="true" id="item4" >Salhus skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">3</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Eidsvåg skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Haukedalen skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">4</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Hordvik skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Kalvatræet skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">5</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Li skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Rolland skole</span>
-							<br />
-						</td>
-					</tr>
-					<tr class="target_row">
-						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 2</th>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">8</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Kyrkjekrinsen skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Mjølkeråen skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">9</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">10</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">11</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Li skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Rolland skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">12</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Langerinden barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Liakroken barnehage</span>
-							<br />
-						</td>
-					</tr>
-					<tr class="target_row">
-						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 3</th>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">15</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">16</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">17</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">18</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Alvøen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Damsgård barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">19</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Loddefjord barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Mathopen barnehage</span>
-							<br />
-						</td>
-					</tr>
-					<tr class="target_row">
-						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 4</th>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">22</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">23</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">24</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">25</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Alvøen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Damsgård barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">26</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Loddefjord barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Mathopen barnehage</span>
-							<br />
-						</td>
-					</tr>
-					<tr class="target_row">
-						<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">Uke 5</th>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">29</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">30</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Blokkhaugen barnehage</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Ervik barnehage</span>
-							<br />
-						</td>
-						<td>
-							<div class="clearfix">
-								<span class="float-left">31</span>
-							</div>
-							<span class="badge event badge-primary" draggable="true">Moviksbotn skole</span>
-							<br />
-							<span class="badge event badge-primary" draggable="true">Salhus skole</span>
-							<br />
-						</td>
-						<td class="bg-secondary text-light">
-							<div class="clearfix">
-								<span class="float-left">1</span>
-							</div>
-						</td>
-						<td class="bg-secondary text-light">
-							<div class="clearfix">
-								<span class="float-left">2</span>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>-->
+
 		<div class="container">
 			<div class="clearfix">
 				<span class="float-left">
@@ -642,7 +318,7 @@
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
-<!--				<span class="ml-2 float-left">
+				<!--				<span class="ml-2 float-left">
 					<a href="#">
 						<button type="button" class="btn btn-warning">Nullstill kalender</button>
 					</a>
@@ -652,7 +328,7 @@
 						<button type="button" class="btn btn-success">Gå til utsending</button>
 					</a>
 				</span>
-<!--				<span class="mr-2 float-right">
+				<!--				<span class="mr-2 float-right">
 					<a href="#">
 						<button type="button" class="btn btn-success">Lagre</button>
 					</a>
@@ -750,3 +426,31 @@
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
+
+
+<xsl:template match="rows">
+	<xsl:param name="current_year"/>
+	<tr>
+		<th scope="row">
+			<xsl:value-of select="header"/>
+		</th>
+		<xsl:for-each select="cell_data">
+			<td onClick="open_monthly('{part_of_town_id}', '{$current_year}', '{month}');">
+				<xsl:if test="planned &gt; 0">
+					<span class="ml-3 float-left">
+						<xsl:value-of select="planned"/>
+						<xsl:text>/</xsl:text>
+						<xsl:value-of select="completed"/>
+					</span>
+					<xsl:if test="planned = completed">
+						<span class="float-right">
+							<i class="fas fa-check float-right"></i>
+						</span>
+					</xsl:if>
+				</xsl:if>
+
+			</td>
+		</xsl:for-each>
+	</tr>
+</xsl:template>
+
