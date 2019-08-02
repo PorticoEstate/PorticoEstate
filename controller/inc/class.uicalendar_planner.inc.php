@@ -256,7 +256,7 @@
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
 
-		private function get_planned_status( &$part_of_town, $year, $control_id )
+		private function get_planned_status_old( &$part_of_town, $year, $control_id )
 		{
 			$part_of_town_id = (int)$part_of_town['id'];
 
@@ -282,6 +282,43 @@
 			}
 			$part_of_town['planned_status'] = $planned_status;
 
+		}
+
+		private function get_planned_status( &$part_of_town, $year, $control_id )
+		{
+			$part_of_town_id = (int)$part_of_town['id'];
+
+			$items = $this->get_items($year, $i, $control_id, 0, $part_of_town_id);
+
+			$planned_status = array();
+			for ($i = 1; $i <= 12; $i++)
+			{
+				$planned_status[$i]['part_of_town_id'] = $part_of_town_id;
+				$planned_status[$i]['month'] = $i;
+				$planned_status[$i]['registered'] = 0;
+				$planned_status[$i]['planned'] = 0;
+				$planned_status[$i]['completed'] = 0;
+			}
+
+			foreach ($items as $date => $components)
+			{
+				$_month = date('n', strtotime($date));
+				$planned_status[$_month]['registered'] += count($components);
+
+				foreach ($components as $component)
+				{
+					if($component['schedule']['info']['planned_date_ts'])
+					{
+						$planned_status[$_month]['planned'] += 1;
+					}
+					if($component['schedule']['info']['completed_date_ts'])
+					{
+						$planned_status[$_month]['completed'] += 1;
+					}
+				}
+			}
+
+			$part_of_town['planned_status'] = $planned_status;
 		}
 
 
@@ -363,37 +400,35 @@
 			$year = (int)$year ? $year : date('Y');
 
 			// Gets timestamp of first day in month
-			$from_date_ts = strtotime("01/{$month}/$year");
+//			$from_date_ts = strtotime("01/{$month}/$year");
+			$from_date_ts = strtotime("01/01/$year");
 
 			$daysInMonths	 = $this->_daysInMonth($month, $year);
 
 			// Gets timestamp of last day in month
-			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
+//			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
+			$to_date_ts = mktime(23, 59, 59, 12, 31, $year);
 
-			static $items = array();
+			$items = array();
 
-			if(!$items)
+			$locations = $this->so_control->get_system_locations_related_to_control($control_id);
+			foreach ($locations as $location_id)
 			{
-				$locations = $this->so_control->get_system_locations_related_to_control($control_id);
-				foreach ($locations as $location_id)
-				{
-					$_items		 =  execMethod('property.soentity.read',array(
-			//				'entity_group_id' => (int)$entity_group_id,
-							'location_id' => $location_id,
-							'control_id' => $control_id,
-							'district_id' => $district_id,
-							'part_of_town_id' => $part_of_town_id,
-			//				'location_code'	=> $location_code,
-			//				'org_units' => $this->org_units,
-							'allrows' => true,
-							'control_registered' => true,
-							'check_for_control' => true
-							)
-						);
-					$items			 = array_merge($items, $_items);
-				}
+				$_items		 =  execMethod('property.soentity.read',array(
+		//				'entity_group_id' => (int)$entity_group_id,
+						'location_id' => $location_id,
+						'control_id' => $control_id,
+						'district_id' => $district_id,
+						'part_of_town_id' => $part_of_town_id,
+		//				'location_code'	=> $location_code,
+		//				'org_units' => $this->org_units,
+						'allrows' => true,
+						'control_registered' => true,
+						'check_for_control' => true
+						)
+					);
+				$items			 = array_merge($items, $_items);
 			}
-
 
 			$controls = array();
 
@@ -523,7 +558,7 @@
 						{
 							if($month !== $_month)
 							{
-								continue;
+//								continue;
 							}
 
 							if($_month_info)
@@ -845,10 +880,7 @@
 							{$desc}
 					</div>
 HTML;
-//					$item_content .= <<<HTML
-//					<br/>
-//					<span class="badge event badge-primary" draggable="true" id="{$item['component']['location_id']}_{$item['component']['id']}" >{$item['component']['xml_short_desc']}</span>
-//HTML;
+
 				$i++;
 				}
 			}

@@ -328,11 +328,9 @@
 						<button type="button" class="btn btn-success">Gå til utsending</button>
 					</a>
 				</span>
-				<!--				<span class="mr-2 float-right">
-					<a href="#">
-						<button type="button" class="btn btn-success">Lagre</button>
-					</a>
-				</span>-->
+				<span class="mr-2 float-right">
+					<button type="button" class="btn btn-success" onclick="save_schedule();">Lagre</button>
+				</span>
 			</div>
 		</div>
 	</div>
@@ -444,7 +442,7 @@
 						<xsl:text>/</xsl:text>
 						<xsl:value-of select="completed"/>
 					</span>
-					<xsl:if test="planned = completed">
+					<xsl:if test="registered = completed">
 						<span class="float-right">
 							<i class="fas fa-check float-right"></i>
 						</span>
