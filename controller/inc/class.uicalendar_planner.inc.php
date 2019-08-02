@@ -848,6 +848,21 @@
 //				_debug_array($item);
 					$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
 
+					if($item['schedule']['info']['check_list_id'])
+					{
+						$control_link_data = array
+							(
+							'menuaction' => 'controller.uicheck_list.edit_check_list',
+							'check_list_id' => $item['schedule']['info']['check_list_id'],
+						);					
+						$url_target = '_self';
+						$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
+					}
+					else
+					{
+						$link_to_checklist = '';
+					}
+
 					switch ($item['schedule']['status'])
 					{
 						case 'CONTROL_REGISTERED':
@@ -877,7 +892,13 @@
 						check_list_id="{$item['schedule']['info']['check_list_id']}"
 						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
 						assigned_to="{$item['schedule']['info']['assigned_to']}">
+						<span class="float-left">
+							{$link_to_checklist}
+						</span>
+						<span class="float-right">
 							{$desc}
+						</span>
+
 					</div>
 HTML;
 
