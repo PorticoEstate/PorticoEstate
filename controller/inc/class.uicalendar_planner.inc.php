@@ -79,7 +79,6 @@
 			//		$this->bo = CreateObject('property.bolocation', true);
 
 			self::set_active_menu('controller::calendar_planner');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner');
 		}
 
 		public function index()
@@ -253,35 +252,8 @@
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.start.js');
 
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
-		}
-
-		private function get_planned_status_old( &$part_of_town, $year, $control_id )
-		{
-			$part_of_town_id = (int)$part_of_town['id'];
-
-			$planned_status = array();
-			for ($i = 1; $i <= 12; $i++)
-			{
-				$timestamp_start = mktime(0, 0, 0, $i, 1, $year);
-				$daysInMonth	 = $this->_daysInMonth($i, $year);
-				$timestamp_end = mktime(23, 59, 59, $i, $daysInMonth, $year);
-				$planned_status[$i] = $this->so_control->get_checklist_status_at_time_and_place($part_of_town_id, $control_id, $timestamp_start, $timestamp_end);
-				$planned_status[$i]['part_of_town_id'] = $part_of_town_id;
-				$planned_status[$i]['month'] = $i;
-
-				$items = $this->get_items($year, $i, $control_id, 0, $part_of_town_id);
-
-				$registered = 0;
-				foreach ($items as $_date => $valueset)
-				{
-					$registered += count($valueset);
-				}
-				$planned_status[$i]['registered'] = $registered;
-
-			}
-			$part_of_town['planned_status'] = $planned_status;
-
 		}
 
 		private function get_planned_status( &$part_of_town, $year, $control_id )
@@ -391,6 +363,10 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('controller', 'base', 'calendar_planner.monthly.js');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('monthly');
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::monthly';
+
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
 		}
 
@@ -613,6 +589,9 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('controller', 'base', 'ajax.js');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('send notification');
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::send_notification';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('notification' => $data));
 		}
 
@@ -690,7 +669,39 @@
 
 				$check_list = new controller_check_list();
 				$check_list->set_control_id($control_id);
-				$location_code = phpgw::get_var('location_code');
+				$serie = $this->so_control->get_serie($serie_id);
+
+
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+
+					$type_info = explode('.', $location_info['location']);
+					$level = $type_info[2];
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+
+					$location_code = $component_arr['location_code'];
+					$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
+					$level = count(explode('-',$location_code));
+
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+
+				}
+
 				$check_list->set_location_code($location_code);
 				$check_list->set_serie_id($serie_id);
 
