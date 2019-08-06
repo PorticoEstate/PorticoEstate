@@ -471,6 +471,7 @@
 			$location_id		 = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$entity_group_id	 = isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
 			$filter_entity_group = isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
+			$stray_entity_group = isset($data['stray_entity_group']) && $data['stray_entity_group'] ? (int)$data['stray_entity_group'] : false;
 			$filter_item		 = isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
 
 
@@ -641,7 +642,7 @@
 				$filtermethod	 .= " $where $entity_table.p_id='$p_num'";
 				$where			 = 'AND';
 			}
-			if ($entity_group_id)
+			if ($entity_group_id && $stray_entity_group)
 			{
 				$filtermethod	 .= " {$where} {$entity_table}.entity_group_id = {$entity_group_id}";
 				$where			 = 'AND';
@@ -1513,7 +1514,7 @@
 				0);
 			$exclude_filter		 = implode(', ', $exclude_locations);
 			$location_filter	 = array();
-			$sql				 = "SELECT DISTINCT location_id FROM fm_bim_item WHERE entity_group_id = {$entity_group_id} AND location_id NOT IN ({$exclude_filter})";
+			$sql				 = "SELECT DISTINCT location_id FROM fm_entity_category WHERE entity_group_id = {$entity_group_id} AND location_id NOT IN ({$exclude_filter})";
 			$this->db->query($sql);
 			while ($this->db->next_record())
 			{
@@ -1559,6 +1560,7 @@
 			$location_id		 = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$entity_group_id	 = isset($data['entity_group_id']) && $data['entity_group_id'] ? (int)$data['entity_group_id'] : 0;
 			$filter_entity_group = isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
+			$stray_entity_group = isset($data['stray_entity_group']) && $data['stray_entity_group'] ? (int)$data['stray_entity_group'] : false;
 			$filter_item		 = isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
 
 			if ($location_id)
@@ -1755,7 +1757,7 @@
 				$where			 = 'AND';
 			}
 
-			if ($entity_group_id)
+			if ($entity_group_id && $stray_entity_group)
 			{
 				$filtermethod	 .= " {$where} {$entity_table}.entity_group_id = {$entity_group_id}";
 				$where			 = 'AND';

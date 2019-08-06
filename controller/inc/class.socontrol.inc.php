@@ -1193,8 +1193,38 @@
 			return $controls;
 		}
 
+
 		/**
-		 * Get all controls assosiated with a component
+		 * Get all register types associated with a control
+		 *
+		 * @param type $control_id
+		 * @return array
+		 */
+		function get_system_locations_related_to_control($control_id = 0)
+		{
+			$locations = array();
+			if(!$control_id)
+			{
+				return $locations;
+			}
+			$sql = "SELECT DISTINCT location_id"
+				. " FROM controller_control_component_list"
+				. " WHERE  control_id = {$control_id} ";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$locations[] = $this->db->f('location_id');
+			}
+
+			return $locations;
+
+		}
+
+
+		/**
+		 * Get all controls associated with a component
 		 *
 		 * @param array $data location_id and component_id
 		 * @return array controls assosiated with a component
@@ -1283,6 +1313,47 @@
 
 
 			return $components_array;
+		}
+
+
+		function get_checklist_status_at_time_and_place( $part_of_town_id , $control_id = 0, $timestamp_start, $timestamp_end)
+		{
+
+			$checklist_status = array();
+
+			$control_id = (int) $control_id;
+
+			if(!$control_id)
+			{
+				return $checklist_status;
+			}
+
+			$sql = "SELECT count(check_list_id) AS planned, count(completed_date) AS completed FROM ("
+				. " SELECT DISTINCT controller_check_list.id AS check_list_id, end_date, deadline,planned_date, completed_date, controller_check_list.location_id,title,controller_check_list.component_id"
+				. " FROM controller_check_list"
+				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
+				. " {$this->join} controller_control_component_list "
+				. " ON (controller_control_component_list.control_id = controller_check_list.control_id"
+				. " AND controller_control_component_list.location_id = controller_check_list.location_id"
+				. " AND controller_control_component_list.component_id = controller_check_list.component_id)"
+				. " {$this->join} fm_bim_item  ON (controller_control_component_list.location_id = fm_bim_item.location_id"
+				. " AND controller_control_component_list.component_id = fm_bim_item.id)"
+				. " {$this->join} fm_location1  ON (fm_bim_item.loc1 = fm_location1.loc1)"
+				. " WHERE part_of_town_id = {$part_of_town_id}"
+				. " AND controller_control.id = {$control_id}"
+				. " AND (deadline > $timestamp_start AND deadline <= $timestamp_end)"
+				. ") as t";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$this->db->next_record();
+
+			$checklist_status = array
+			(
+				'planned' => (int)$this->db->f('planned'),
+				'completed' => (int)$this->db->f('completed')
+			);
+			return $checklist_status;
 		}
 
 		function get_id_field_name( $extended_info = false )

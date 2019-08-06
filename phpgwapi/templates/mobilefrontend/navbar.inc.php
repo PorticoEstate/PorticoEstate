@@ -277,6 +277,7 @@ HTML;
 $landing .= <<<HTML
 
 	</div>
+	</div>
 </div>
 HTML;
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
