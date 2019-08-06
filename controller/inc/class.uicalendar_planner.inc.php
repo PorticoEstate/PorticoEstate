@@ -576,6 +576,46 @@
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 
 
+			$items = $this->get_items($year, $month, $control_id, $entity_group_id, $part_of_town_id);
+
+			$components = array();
+
+			foreach ($items as $date => $_components)
+			{
+				$_month = date('n', strtotime($date));
+
+				if($_month != $month)
+				{
+					continue;
+				}
+
+				$components = array_merge($components,$_components );
+			}
+
+//			_debug_array($components);
+
+
+			$control_info =array();
+			foreach ($components as $component)
+			{
+				$timestamp = $component['schedule']['info']['planned_date_ts'] ? $component['schedule']['info']['planned_date_ts'] : $component['schedule']['info']['deadline_date_ts'];
+				
+				$date = $GLOBALS['phpgw']->common->show_date($timestamp, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);;
+
+				$control_info[] = array(
+					'id' => $component['component']['id'],
+					'location_id' => $component['component']['location_id'],
+					'location_code' => $component['component']['location_code'],
+					'address' => $component['component']['address'],
+					'deadline_date_ts' => $component['schedule']['info']['deadline_date_ts'],
+					'planned_date_ts' => $component['schedule']['info']['planned_date_ts'],
+					'date' => $date,
+					'selected' => 1
+					);
+			}
+
+//			_debug_array($control_info);
+
 			$data = array
 				(
 				'monthly_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
@@ -585,6 +625,7 @@
 					'control_id' => $control_id,
 					'control_area_id' => $control_area_id,
 					'entity_group_id'=> $entity_group_id)),
+				'control_info' => $control_info
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');

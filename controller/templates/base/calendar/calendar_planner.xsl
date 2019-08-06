@@ -352,6 +352,8 @@
 				</p>
 			</div>
 		</div>
+
+		
 		<div class="container datagrid table-responsive">
 			<table class="mt-2 table table-hover">
 				<thead>
@@ -365,40 +367,41 @@
 						<th>
 							<h5>Epostadresse</h5>
 						</th>
+						<th>
+							<h5>Dato</h5>
+						</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
 
-						</td>
-						<td>Alvøen skole
-						</td>
-						<td>postmottak.alvoenskole@bergen.kommune.no
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
-						</td>
-						<td>Damsgård barnehage
-						</td>
-						<td>postmottak.damsgardbarnehage@bergen.kommune.no
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
-						</td>
-						<td>Hordvik skole
-						</td>
-						<td>postmottak.hordvikskole@bergen.kommune.no
-						</td>
-					</tr>
+					<xsl:for-each select="control_info">
+						<tr>
+							<td>
+								<input name="send_email_{location_id}_{id}" type="checkbox" value="1">
+									<xsl:if test="selected = 1">
+										<xsl:attribute name="checked">
+											<xsl:text>true</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+									
+								</input>
+							</td>
+							<td>
+								<xsl:value-of select="address"/>
+							</td>
+							<td>
+								<input type="text" name="email_{location_id}_{id}" value="postmottak.....skole@bergen.kommune.no"/>
+							</td>
+							<td>
+								<xsl:value-of select="date"/>
+							</td>
+						</tr>
+
+					</xsl:for-each>
 				</tbody>
 			</table>
 		</div>
+
 		<div class="container">
 			<div class="clearfix">
 				<span class="float-left">
