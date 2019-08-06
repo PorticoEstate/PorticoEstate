@@ -73,8 +73,10 @@
 				'fm_eco_periodization'			 => array('name'		 => 'fm_eco_periodization (' . lang('periodization') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_ecodimd'					 => array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'phpgw_categories'				 => array('name'		 => 'phpgw_categories (' . lang('categories') . ')',
-					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'phpgw_categories'				 => array('name'		 => 'phpgw_categories (' . lang('categories') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_building'				 => array('name'		 => 'bb_building (' . Ressursgruppe . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_resource'				 => array('name'		 => 'bb_resource (' . Ressurser . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . Ressurskobling . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
