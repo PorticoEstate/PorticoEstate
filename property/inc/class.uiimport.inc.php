@@ -698,6 +698,10 @@ HTML;
 				}
 				else
 				{
+					if($this->table)
+					{
+						$this->import_conversion->update_sequence();
+					}
 					$this->db->transaction_commit();
 				}
 				return true;

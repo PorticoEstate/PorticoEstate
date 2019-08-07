@@ -340,80 +340,90 @@
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
-	<div class="mt-5 container">
-		<div class="row">
-			<div class="col">
-				<h3>Send varsel</h3>
+	<form method="post" id="send_notification" action="{form_action}" onsubmit="return submitSendNotificationForm(event, this);">
+		<div class="mt-5 container">
+			<div class="row">
+				<div class="col">
+					<h3>Send varsel</h3>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<p style="font-size: 14px">Det vil sendes varsel til følgende skoler og barnehager
-				</p>
+			<div class="row">
+				<div class="col">
+					<p style="font-size: 14px">Det vil sendes varsel til følgende skoler og barnehager
+					</p>
+				</div>
 			</div>
-		</div>
-		<div class="container datagrid table-responsive">
-			<table class="mt-2 table table-hover">
-				<thead>
-					<tr>
-						<th>
-							<h5>#</h5>
-						</th>
-						<th>
-							<h5>Enhet</h5>
-						</th>
-						<th>
-							<h5>Epostadresse</h5>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
 
-						</td>
-						<td>Alvøen skole
-						</td>
-						<td>postmottak.alvoenskole@bergen.kommune.no
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
-						</td>
-						<td>Damsgård barnehage
-						</td>
-						<td>postmottak.damsgardbarnehage@bergen.kommune.no
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<i class="far fa-trash-alt"></i>
-						</td>
-						<td>Hordvik skole
-						</td>
-						<td>postmottak.hordvikskole@bergen.kommune.no
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="container">
-			<div class="clearfix">
-				<span class="float-left">
-					<a href="{monthly_url}">
-						<button type="button" class="btn btn-warning">Gå tilbake</button>
-					</a>
-				</span>
-				<span class="float-right">
-					<a href="">
-						<button type="button" class="btn btn-success">Send varsel</button>
-					</a>
-				</span>
+			<div class="container datagrid table-responsive form-group">
+				<table class="mt-2 table table-hover">
+					<thead>
+						<tr>
+							<th>
+								<h5>#</h5>
+							</th>
+							<th>
+								<h5>Enhet</h5>
+							</th>
+							<th>
+								<h5><i class="far fa-envelope"></i></h5>
+							</th>
+							<th>
+								<h5>Dato</h5>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<xsl:for-each select="control_info">
+							<tr>
+								<td>
+									<div class="input-group">
+										<input id="send_email_{location_id}_{id}" name="send_email[{location_id}_{id}]" type="checkbox" value="1">
+											<xsl:if test="selected = 1">
+												<xsl:attribute name="checked">
+													<xsl:text>true</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+									
+										</input>
+									</div>
+								</td>
+								<td>
+									<xsl:value-of disable-output-escaping="yes" select="address"/>
+								</td>
+								<td>
+									<div class="input-group">
+<!--										<div class="input-group-addon">
+											<i class="far fa-envelope"></i>
+										</div>-->
+										<input type="text" class="form-control" name="email[{location_id}_{id}]" value="postmottak.....skole@bergen.kommune.no"/>
+									</div>
+								</td>
+								<td>
+									<xsl:value-of select="date"/>
+								</td>
+							</tr>
+
+						</xsl:for-each>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="container">
+				<div class="clearfix">
+					<span class="float-left">
+						<a href="{monthly_url}">
+							<button type="button" class="btn btn-warning">Gå tilbake</button>
+						</a>
+					</span>
+					<span class="float-right">
+						<a href="">
+							<button type="submit" class="btn btn-success">Send varsel</button>
+						</a>
+					</span>
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 </xsl:template>
 
 <xsl:template match="options">
