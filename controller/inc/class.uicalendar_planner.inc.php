@@ -59,6 +59,7 @@
 			'index'				 => true,
 			'monthly'			 => true,
 			'send_notification'	 => true,
+			'save_send_notification' => true,
 			'query'				 => true,
 			'update_schedule'	 => true
 		);
@@ -606,7 +607,7 @@
 					'id' => $component['component']['id'],
 					'location_id' => $component['component']['location_id'],
 					'location_code' => $component['component']['location_code'],
-					'address' => $component['component']['address'],
+					'address' => "{$component['component']['address']}:{$component['component']['xml_short_desc']}",
 					'deadline_date_ts' => $component['schedule']['info']['deadline_date_ts'],
 					'planned_date_ts' => $component['schedule']['info']['planned_date_ts'],
 					'date' => $date,
@@ -616,8 +617,7 @@
 
 //			_debug_array($control_info);
 
-			$data = array
-				(
+			$data = array(
 				'monthly_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.monthly',
 					'year' => $year,
 					'month' => $month,
@@ -625,15 +625,44 @@
 					'control_id' => $control_id,
 					'control_area_id' => $control_area_id,
 					'entity_group_id'=> $entity_group_id)),
+				'form_action'  => self::link(array('menuaction' => 'controller.uicalendar_planner.save_send_notification',
+					'current_year' => $year,
+					'month' => $month,
+					'part_of_town_id' => $part_of_town_id,
+					'control_id' => $control_id,
+					'control_area_id' => $control_area_id,
+					'entity_group_id'=> $entity_group_id,
+					'phpgw_return_as' => 'json')),
 				'control_info' => $control_info
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('controller', 'base', 'ajax.js');
+
+			self::add_javascript('controller', 'base', 'calendar_planner.send_notification.js');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('send notification');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::send_notification';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('notification' => $data));
+		}
+
+
+		public function save_send_notification()
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			$email = phpgw::get_var('email');
+			$send_email = (array)phpgw::get_var('send_email');
+
+			$receipt = array();
+			foreach ($send_email as $item => $value)
+			{
+				$receipt['ok'][] = $item;
+			}
+
+			return $receipt;
 		}
 
 		public function query()
@@ -645,7 +674,8 @@
 		{
 			if (!$this->add && !$this->edit)
 			{
-				phpgwapi_cache::message_set('No access', 'error');
+//				phpgwapi_cache::message_set('No access', 'error');
+				phpgw::no_access();
 			}
 
 			$location_id = phpgw::get_var('location_id', 'int');
