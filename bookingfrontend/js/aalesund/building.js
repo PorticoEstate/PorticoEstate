@@ -1230,14 +1230,15 @@ window.onload = function() {
 		street: document.getElementById("buildingStreet").textContent,
 		zip: document.getElementById("buildingZipCode").textContent,
 		city: document.getElementById("buildingCity").textContent
-	}
+	};
 
 	// Address 
-	const fullAddress = `${address.street}${address.zip}${address.city}`;
+//	const fullAddress = `${address.street}${address.zip}${address.city}`;
+	const fullAddress = address.street + ' ' + address.zip + ' ' + address.city;
 
 	// Construct google maps url
 	let iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + fullAddress;
-	
+
 	// Inserts google map url
-	document.getElementById("iframeMap").setAttribute("src", iurl)	
-}
+	document.getElementById("iframeMap").setAttribute("src", iurl);
+};
