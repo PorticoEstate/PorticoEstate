@@ -32,12 +32,12 @@
 				<a class="navbar-brand brand-site-title" href="{site_url}">{site_title} </a>
 				<a href="{site_url}"><img class="navbar-brand brand-site-img" src="{headlogoimg}" alt="{logo_title}"/></a>
 				<!-- Search Box -->
-				<div class="search-container">
+				<!--div class="search-container">
 					<form id="navSearchForm" class="search-form">
 						<input type="text" class="search-input" placeholder="{placeholder_search}"    id="searchInput"  />
 						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
 					</form>
-				</div>
+				</div-->
 			</div>
 		</nav>
 		<div class="overlay">
