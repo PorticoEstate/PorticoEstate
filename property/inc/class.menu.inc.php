@@ -99,18 +99,6 @@
 						);
 
 						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute', false, 'admin#');
-						/*
-						  $cat_list = $entity->read_category(array('allrows'=>true,'entity_id'=>$entry['id']));
-
-						  foreach($cat_list as $category)
-						  {
-						  $admin_children_entity["entity_{$entry['id']}"]['children']["entity_{$entry['id']}_{$category['id']}"]	= array
-						  (
-						  'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_entity.list_attribute', 'entity_id'=> $entry['id'] , 'cat_id'=> $category['id'])),
-						  'text'	=> $category['name']
-						  );
-						  }
-						 */
 					}
 				}
 				$admin_children_entity['convert_to_eav'] = array
@@ -1450,19 +1438,45 @@
 				{
 					if ($acl->check(".entity.{$entry['id']}", PHPGW_ACL_READ, 'property'))
 					{
+
+						if ($type != 'horisontal')
+						{
+							//bypass_acl_at_entity
+							$_required		 = !empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($entry['id'], $config['bypass_acl_at_entity']) ? '' : PHPGW_ACL_READ;
+							$entity_children	 = $entity->read_category_tree($entry['id'], 'property.uientity.index', $_required, 'navbar#');
+
+							if(!$entity_children)
+							{
+								continue;
+							}
+						}
+						else
+						{
+							$entity_children = array();
+						}
+
 						$menus['navigation']["entity_{$entry['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uientity.index',
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uientity.summary',
 								'entity_id'	 => $entry['id'])),
 							'text'	 => $entry['name'],
 							'image'	 => array('property', 'entity_' . $entry['id'])
 						);
 
+//						array_unshift($entity_children, array(
+//								'url'	 => $GLOBALS['phpgw']->link('/index.php', array(
+//									'menuaction' => 'property.uientity.summary',
+//									'entity_id'	 => $entry['id'])),
+//								'text'	 => $entry['name'] . ' summary',
+//								'image'	 => array('property', 'entity_' . $entry['id'])
+//							)
+//						);
+
+
+
 						if ($type != 'horisontal')
 						{
-							//bypass_acl_at_entity
-							$_required													 = !empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($entry['id'], $config['bypass_acl_at_entity']) ? '' : PHPGW_ACL_READ;
-							$menus['navigation']["entity_{$entry['id']}"]['children']	 = $entity->read_category_tree($entry['id'], 'property.uientity.index', $_required, 'navbar#');
+							$menus['navigation']["entity_{$entry['id']}"]['children']	 = $entity_children;
 						}
 
 						$custom_menu_items = $custom_menus->read_tree(array('type'	 => 'custom_menu_items',
@@ -1476,27 +1490,15 @@
 								{
 									$item['url'] .= '&' . get_phpgw_session_url();
 								}
+								else if($item['local_files'])
+								{
+									$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+								}
 
 								$menus['navigation']["entity_{$entry['id']}"]['children'][] = $item;
 							}
 							unset($item);
 						}
-
-						/*
-						  foreach($custom_menu_items as $item)
-						  {
-						  if($item['local_files'])
-						  {
-						  $item['url'] = 'file:///' . str_replace(':','|',$item['url']);
-						  }
-						  $menus['navigation']["entity_{$entry['id']}"]['children'][] = array
-						  (
-						  'url'	=> $item['url'],
-						  'text'	=> $item['name'],
-						  'target'=> '_blank'
-						  );
-						  }
-						 */
 					}
 				}
 			}
