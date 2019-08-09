@@ -3137,4 +3137,31 @@
 			$location_code = $this->db->f('location_code');
 			return $location_code;
 		}
+
+		function update_json_attribute( $location_id, $item_id , $attribute, $value )
+		{
+			$location_id = (int) $location_id;
+			$item_id = (int) $item_id;
+			$attribute = $this->db->db_addslashes($attribute);
+			$value = $this->db->db_addslashes($value);
+
+			$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$attribute}}', '\"{$value}\"', true)"
+				. " WHERE location_id = {$location_id}"
+				. " AND id={$item_id}";
+				$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		function get_json_attribute( $location_id, $item_id, $attribute )
+		{
+			$location_id = (int) $location_id;
+			$item_id = (int) $item_id;
+			$attribute = $this->db->db_addslashes($attribute);
+
+			$sql = "SELECT json_representation->>'{$attribute}' AS value FROM fm_bim_item"
+				. " WHERE location_id = {$location_id}"
+				. " AND id={$item_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('value');
+		}
 	}

@@ -395,7 +395,8 @@
 <!--										<div class="input-group-addon">
 											<i class="far fa-envelope"></i>
 										</div>-->
-										<input type="text" class="form-control" name="email[{location_id}_{id}]" value="postmottak.....skole@bergen.kommune.no"/>
+										<input type="hidden" name="timestamp[{location_id}_{id}]" value="{timestamp}"/>
+										<input type="text" class="form-control" name="email[{location_id}_{id}]" value="{email}"/>
 									</div>
 								</td>
 								<td>
