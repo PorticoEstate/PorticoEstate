@@ -22,17 +22,13 @@
 </xsl:template>
 
 <xsl:template xmlns:php="http://php.net/xsl" match="summary">
-	<script type="text/javascript">
-		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
-	</script>
-
 	<div class="content">
 		<div>
 			<xsl:variable name="form_action">
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
 
-			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned" enctype="multipart/form-data">
+			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
