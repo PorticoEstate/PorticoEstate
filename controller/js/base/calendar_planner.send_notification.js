@@ -18,7 +18,7 @@ submitSendNotificationForm = function (e, form)
 					$("#send_email_" + obj).closest('tr').addClass('badge-success');
 					$("#send_email_" + obj).hide();
 
-				//	console.log(obj);
+					//	console.log(obj);
 
 				});
 
@@ -31,4 +31,27 @@ submitSendNotificationForm = function (e, form)
 			}
 		}
 	});
+};
+
+checkall = function ()
+{
+	var checkall_flag = $("#checkall_flag").attr('checkall_flag');
+	if (checkall_flag == 1)
+	{
+		$(".mychecks").each(function ()
+		{
+			$(this).prop("checked", false);
+		});
+
+		document.getElementById("checkall_flag").setAttribute('checkall_flag', 0);
+	}
+	else
+	{
+		$(".mychecks").each(function ()
+		{
+			$(this).prop("checked", true);
+		});
+
+		document.getElementById("checkall_flag").setAttribute('checkall_flag', 1);
+	}
 };
