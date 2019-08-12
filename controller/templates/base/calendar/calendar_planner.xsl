@@ -359,7 +359,7 @@
 					<thead>
 						<tr>
 							<th>
-								<h5>#</h5>
+								<h5 id="checkall_flag" onclick="checkall();" checkall_flag="1">#</h5>
 							</th>
 							<th>
 								<h5>Enhet</h5>
@@ -377,7 +377,7 @@
 							<tr>
 								<td>
 									<div class="input-group">
-										<input id="send_email_{location_id}_{id}" name="send_email[{location_id}_{id}]" type="checkbox" value="1">
+										<input id="send_email_{location_id}_{id}" name="send_email[{location_id}_{id}]" type="checkbox" value="1" class="mychecks">
 											<xsl:if test="selected = 1">
 												<xsl:attribute name="checked">
 													<xsl:text>true</xsl:text>
@@ -395,7 +395,8 @@
 <!--										<div class="input-group-addon">
 											<i class="far fa-envelope"></i>
 										</div>-->
-										<input type="text" class="form-control" name="email[{location_id}_{id}]" value="postmottak.....skole@bergen.kommune.no"/>
+										<input type="hidden" name="timestamp[{location_id}_{id}]" value="{timestamp}"/>
+										<input type="text" class="form-control" name="email[{location_id}_{id}]" value="{email}"/>
 									</div>
 								</td>
 								<td>

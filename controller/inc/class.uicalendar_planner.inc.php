@@ -450,7 +450,7 @@
 
 					if (!$control_relation['serie_enabled'])
 					{
-							continue;
+						continue;
 					}
 					$control_id = $control_relation['control_id'];
 
@@ -578,7 +578,7 @@
 
 
 			$items = $this->get_items($year, $month, $control_id, $entity_group_id, $part_of_town_id);
-
+//			_debug_array($items);
 			$components = array();
 
 			foreach ($items as $date => $_components)
@@ -595,13 +595,14 @@
 
 //			_debug_array($components);
 
+			$soentity = createObject('property.soentity');
 
 			$control_info =array();
 			foreach ($components as $component)
 			{
 				$timestamp = $component['schedule']['info']['planned_date_ts'] ? $component['schedule']['info']['planned_date_ts'] : $component['schedule']['info']['deadline_date_ts'];
 				
-				$date = $GLOBALS['phpgw']->common->show_date($timestamp, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);;
+				$date = $GLOBALS['phpgw']->common->show_date($timestamp, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
 				$control_info[] = array(
 					'id' => $component['component']['id'],
@@ -611,6 +612,8 @@
 					'deadline_date_ts' => $component['schedule']['info']['deadline_date_ts'],
 					'planned_date_ts' => $component['schedule']['info']['planned_date_ts'],
 					'date' => $date,
+					'timestamp' => $timestamp,
+					'email'	=> $soentity->get_json_attribute($component['component']['location_id'], $component['component']['id'], 'notification_email'),
 					'selected' => 1
 					);
 			}
@@ -653,13 +656,69 @@
 				phpgw::no_access();
 			}
 
-			$email = phpgw::get_var('email');
+			$email = (array)phpgw::get_var('email');
 			$send_email = (array)phpgw::get_var('send_email');
+			$timestamp = (array)phpgw::get_var('timestamp');
+
+			$soentity = createObject('property.soentity');
+
+			$send = CreateObject('phpgwapi.send');
+
+
+			$subject = "Varsel om planlagt kontroll";
+			$html = <<<HTML
+			<!DOCTYPE html>
+			<html>
+				<head>
+				</head>
+				<body>
+				<h1>
+					Kontroll med lekeplass/utstyr
+				</h1>
+				Det er planlagt en kontroll den __control_date__.
+
+				</body>
+			<html>
+HTML;
 
 			$receipt = array();
 			foreach ($send_email as $item => $value)
 			{
-				$receipt['ok'][] = $item;
+				$item_arr = explode('_', $item);
+				$component_arr = $soentity->read_single_eav( array(
+					'location_id' => $item_arr[0],
+					'id' => $item_arr[1]));
+
+				$notification_email = $soentity->get_json_attribute($item_arr[0], $item_arr[1], 'notification_email');
+
+				if($notification_email != $email[$item])
+				{
+					$soentity->update_json_attribute($item_arr[0], $item_arr[1], 'notification_email', $email[$item]);
+				}
+
+				if($email[$item])
+				{
+					$date = $GLOBALS['phpgw']->common->show_date($timestamp[$item], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+					$html = str_replace('__control_date__', $date, $html);
+
+					$toarray = array($email[$item]);
+					$to		 = implode(';', $toarray);
+					try
+					{
+						$rc	 = $send->msg('email', $to, $subject, $html, '', $cc = '', $bcc = '', 'IkkeSvar@bergen.kommune.no', 'Ikke svar', 'html');
+						$receipt['ok'][] = $item;
+					}
+					catch (Exception $e)
+					{
+						$receipt['error'][] = $item;
+					}
+				}
+				else
+				{
+					$receipt['error'][] = $item;
+				}
+
 			}
 
 			return $receipt;
@@ -674,7 +733,6 @@
 		{
 			if (!$this->add && !$this->edit)
 			{
-//				phpgwapi_cache::message_set('No access', 'error');
 				phpgw::no_access();
 			}
 
