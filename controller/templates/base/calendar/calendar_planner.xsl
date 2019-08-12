@@ -10,6 +10,9 @@
 		<xsl:when test="notification">
 			<xsl:apply-templates select="notification"/>
 		</xsl:when>
+		<xsl:when test="start_inspection">
+			<xsl:apply-templates select="start_inspection"/>
+		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
@@ -365,7 +368,9 @@
 								<h5>Enhet</h5>
 							</th>
 							<th>
-								<h5><i class="far fa-envelope"></i></h5>
+								<h5>
+									<i class="far fa-envelope"></i>
+								</h5>
 							</th>
 							<th>
 								<h5>Dato</h5>
@@ -392,7 +397,7 @@
 								</td>
 								<td>
 									<div class="input-group">
-<!--										<div class="input-group-addon">
+										<!--										<div class="input-group-addon">
 											<i class="far fa-envelope"></i>
 										</div>-->
 										<input type="hidden" name="timestamp[{location_id}_{id}]" value="{timestamp}"/>
@@ -422,6 +427,167 @@
 						</a>
 					</span>
 				</div>
+			</div>
+		</div>
+	</form>
+</xsl:template>
+
+
+<xsl:template match="start_inspection" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
+
+	<xsl:variable name="current_day_str">
+		<xsl:value-of select="current_day_str"/>
+	</xsl:variable>
+
+	<form method="post" id="form" action="{form_action}">
+
+		<div class="row">
+			<div class="mt-5 container">
+				<div class="form-group">
+					<fieldset>
+						<legend>Velg kontroll</legend>
+
+						<label for="control_area_id">
+							<xsl:value-of select="php:function('lang', 'control type')"/>
+						</label>
+						<select id="control_area_id" name="control_area_id" class="form-control">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>
+
+						<label for="control_id">
+							<xsl:value-of select="php:function('lang', 'control')"/>
+						</label>
+						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select control type')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="control_type_list/options"/>
+						</select>
+
+
+						<label for="part_of_town_id">
+							<xsl:value-of select="php:function('lang', 'part of town')"/>
+						</label>
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+							<xsl:attribute name="multiple">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select part of town')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="part_of_town_list/options"/>
+						</select>
+
+					</fieldset>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-2">
+			<div class="container">
+				<h4>Velg blant dagens oppførte kontroller</h4>
+			</div>
+		</div>
+		<div class="row mt-2">
+
+			<div class="container">
+				<div class="text-center clearfix">
+					<span class="float-left">
+						<a href="#">
+							<button type="submit" name="prev_day" value="1" class="btn btn-secondary">&lt;
+								<xsl:value-of select="prev_day"/>
+							</button>
+						</a>
+					</span>
+
+					<span class="float-right">
+						<a href="#">
+							<button type="submit" name="next_day" value="1" class="btn btn-secondary">
+								<xsl:value-of select="next_day"/> &gt;
+							</button>
+						</a>
+					</span>
+					<span class="float-none">
+						<h4>
+							<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
+							<input type="hidden" name="current_day_str" value="{$current_day_str}"/>
+						</h4>
+					</span>
+				</div>
+
+				<div class="mt-2">
+					<select name="unitDaily" class="custom-select">
+						<option value="1">Christi Krybbe skoler
+						</option>
+						<option value="2">Haukeland skole
+						</option>
+						<option value="3">Hellen skole
+						</option>
+						<option value="4">Krohnegen skole
+						</option>
+						<option value="5">Møhlenpris oppveksttun skole
+						</option>
+						<option value="5">Nordnes
+						</option>
+
+					</select>
+					<div class="float-right mt-2">
+						<a href="inspect-playground.html">
+							<button type="button" class="btn btn-success">Neste</button>
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="row mt-2">
+			<div class="container">
+				<h5>Fullførte kontroller</h5>
+				<ul>
+					<li style="display: block;">
+						<img src="{img_green_check}" width="16"/> Nygård skole</li>
+					<li style="display: block;">
+						<img src="{img_green_check}" width="16"/> Rothaugen skole</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="row mt-5">
+			<div class="container">
+				<h4>Velg blant alle enheter</h4>
+			</div>
+		</div>
+
+		<div class="row mt-2">
+
+			<div class="container">
+
+
+				<!-- Søkefelt som viser valg etterhvert som man skriver inn -->
+				<select name="unitSelected" class="custom-select">
+					<option value="1">Christi Krybbe skoler
+					</option>
+					<option value="2">Haukeland skole
+					</option>
+					<option value="3">Hellen skole
+					</option>
+					<option value="4">Krohnegen skole
+					</option>
+					<option value="5">Møhlenpris oppveksttun skole
+					</option>
+					<option value="5">Nordnes
+					</option>
+
+				</select>
+				<div class="float-right mt-2">
+					<a href="inspect-playground.html">
+						<button type="button" class="btn btn-success">Neste</button>
+					</a>
+				</div>
+
 			</div>
 		</div>
 	</form>
