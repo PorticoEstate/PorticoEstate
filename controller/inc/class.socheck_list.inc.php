@@ -694,7 +694,8 @@
 //			$sql .= " AND assigned_to = {$user_id} ";
 //		}
 
-			$sql .= "AND deadline BETWEEN $from_date_ts AND $to_date_ts ";
+			$sql .= "AND (deadline BETWEEN $from_date_ts AND $to_date_ts ";
+			$sql .= "OR planned_date BETWEEN $from_date_ts AND $to_date_ts) ";
 //		_debug_array($sql);
 			$this->db->query($sql);
 

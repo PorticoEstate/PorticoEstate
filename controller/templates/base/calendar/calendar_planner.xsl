@@ -519,7 +519,14 @@
 				</div>
 
 				<div class="mt-2">
-					<select name="unitDaily" class="custom-select">
+
+
+						<select id="check_list_id" name="check_list_id" class="form-control custom-select">
+							<xsl:apply-templates select="todo_list/options"/>
+						</select>
+
+
+<!--					<select name="unitDaily" class="custom-select">
 						<option value="1">Christi Krybbe skoler
 						</option>
 						<option value="2">Haukeland skole
@@ -533,7 +540,7 @@
 						<option value="5">Nordnes
 						</option>
 
-					</select>
+					</select>-->
 					<div class="float-right mt-2">
 						<a href="inspect-playground.html">
 							<button type="button" class="btn btn-success">Neste</button>
