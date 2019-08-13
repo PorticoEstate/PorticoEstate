@@ -272,6 +272,8 @@ JS;
 	$test	 = str_replace('window.onload = function()', '$(document).ready(function()', $test);
 	$test	 = str_replace("\n}\n", "\n})\n", $test);
 
+	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
+
 	$tpl_vars = array
 		(
 		'css'					 => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
@@ -280,7 +282,7 @@ JS;
 		'site_title'			 => $site_title,
 		'str_base_url'			 => $GLOBALS['phpgw']->link('/', array(), true),
 		'dateformat_backend'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
-		'site_url'				 => $GLOBALS['phpgw']->link("/{$app}/", array()),
+		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
@@ -300,7 +302,13 @@ JS;
 //	_debug_array($user);
 
 	$bouser	 = CreateObject('bookingfrontend.bouser');
+
+	/**
+	 * Might be set wrong in the ui-class
+	 */
+	$xslt_app = !empty($GLOBALS['phpgw_info']['flags']['xslt_app']) ? true : false;
 	$org	 = CreateObject('bookingfrontend.uiorganization');
+	$GLOBALS['phpgw_info']['flags']['xslt_app'] = $xslt_app;
 
 	if ($bouser->is_logged_in())
 	{
