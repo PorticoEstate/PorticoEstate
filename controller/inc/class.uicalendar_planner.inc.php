@@ -1197,12 +1197,13 @@ HTML;
 			if (phpgw::get_var('prev_day', 'bool'))
 			{
 				$current_day->modify('-1 day');
+				$current_day_str = $current_day->format('Y-m-d');
 			}
 
 			if (phpgw::get_var('next_day', 'bool'))
 			{
 				$current_day->modify('+1 day');
-
+				$current_day_str = $current_day->format('Y-m-d');
 			}
 
 			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
@@ -1281,11 +1282,19 @@ HTML;
 			{
 				foreach ($item_schedule[$current_day_str] as $check_list)
 				{
-					$todo_list[] = array(
-						'id' => $check_list['schedule']['info']['check_list_id'],
-						'name' => $check_list['component']['xml_short_desc']
-					);
+//					_debug_array($check_list);
 
+					if(!empty($check_list['schedule']['info']['completed_date_ts']))
+					{
+						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
+					}
+					else
+					{
+						$todo_list[] = array(
+							'id' => $check_list['schedule']['info']['check_list_id'],
+							'name' => $check_list['component']['xml_short_desc']
+						);			
+					}
 				}
 			}
 

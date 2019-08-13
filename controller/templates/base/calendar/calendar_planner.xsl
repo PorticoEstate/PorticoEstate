@@ -521,12 +521,12 @@
 				<div class="mt-2">
 
 
-						<select id="check_list_id" name="check_list_id" class="form-control custom-select">
-							<xsl:apply-templates select="todo_list/options"/>
-						</select>
+					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
+						<xsl:apply-templates select="todo_list/options"/>
+					</select>
 
 
-<!--					<select name="unitDaily" class="custom-select">
+					<!--					<select name="unitDaily" class="custom-select">
 						<option value="1">Christi Krybbe skoler
 						</option>
 						<option value="2">Haukeland skole
@@ -554,10 +554,12 @@
 			<div class="container">
 				<h5>Fullførte kontroller</h5>
 				<ul>
-					<li style="display: block;">
-						<img src="{img_green_check}" width="16"/> Nygård skole</li>
-					<li style="display: block;">
-						<img src="{img_green_check}" width="16"/> Rothaugen skole</li>
+					<xsl:for-each select="completed_list">
+						<li style="display: block;">
+							<img src="{img_green_check}" width="16"/>
+							<xsl:value-of disable-output-escaping="yes" select="node()"/>
+						</li>
+					</xsl:for-each>
 				</ul>
 			</div>
 		</div>
