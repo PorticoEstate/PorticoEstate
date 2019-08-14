@@ -656,6 +656,8 @@ F
 .popover-content,
 .popover-title {
     padding: 1em;
+	width: 23em;
+    text-align: center;
 }
 
 .popover-title {
@@ -1417,6 +1419,9 @@ BUILDING PAGE STYLE
 border: 1px red solid !important;
 }*/
 
+.yui3-calendar td {
+    padding: 0.4em;
+}
 
 .yui3-calendar-header {
     padding: 0.5em;
@@ -1424,8 +1429,8 @@ border: 1px red solid !important;
 }
 
 .yui3-calendar-header-label {
-    margin-top: 0.38em;
-    width: 9em;
+    display: inline-block !important;
+    min-width: 200px !important;
 }
 
 .yui3-calendar-header a:before {
