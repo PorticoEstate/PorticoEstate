@@ -99,7 +99,7 @@ JS;
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/aui-min.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/common.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
