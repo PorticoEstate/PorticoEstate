@@ -86,7 +86,7 @@
 
 			if(empty($config['min_date']))
 			{
-				$min_date = 0;
+				$min_date = 'false';
 			}
 			else
 			{

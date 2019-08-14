@@ -1,6 +1,13 @@
 
 $(document).ready(function ()
 {
+
+	$("#current_day_str").change(function ()
+	{
+		document.getElementById("form").submit(); 
+	});
+
+
 	$("#control_area_id").change(function ()
 	{
 		var control_area_id = $(this).val();
@@ -42,7 +49,6 @@ $(document).ready(function ()
 	});
 
 
-
 	$("#part_of_town_id").multiselect({
 		//	buttonWidth: 250,
 		includeSelectAllOption: true,
@@ -68,5 +74,18 @@ $(document).ready(function ()
 //	$(".multiselect ").addClass('form-control');
 //	$(".multiselect").removeClass('btn');
 //	$(".multiselect").removeClass('btn-default');
+
+
+	start_inspection = function ()
+	{
+		var oArgs = {menuaction: 'controller.uicase.add_case', check_list_id: $("#check_list_id").val()};
+		var requestUrl = phpGWLink('index.php', oArgs);
+
+		window.location.href = requestUrl;
+
+	};
+
+
+
 });
 

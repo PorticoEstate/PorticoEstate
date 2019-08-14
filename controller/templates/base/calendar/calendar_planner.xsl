@@ -438,10 +438,6 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
-	<xsl:variable name="current_day_str">
-		<xsl:value-of select="current_day_str"/>
-	</xsl:variable>
-
 	<form method="post" id="form" action="{form_action}">
 
 		<div class="row">
@@ -512,58 +508,46 @@
 					</span>
 					<span class="float-none">
 						<h4>
-							<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
-							<input type="hidden" name="current_day_str" value="{$current_day_str}"/>
+							<input type="text" id="current_day_str" name="current_day_str" class="form-check form-check-inline" readonly= "true" style="border:none;text-align: center">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
+								</xsl:attribute>
+							</input>
+
 						</h4>
 					</span>
 				</div>
-
 				<div class="mt-2">
-
-
 					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
 						<xsl:apply-templates select="todo_list/options"/>
 					</select>
-
-
-					<!--					<select name="unitDaily" class="custom-select">
-						<option value="1">Christi Krybbe skoler
-						</option>
-						<option value="2">Haukeland skole
-						</option>
-						<option value="3">Hellen skole
-						</option>
-						<option value="4">Krohnegen skole
-						</option>
-						<option value="5">Møhlenpris oppveksttun skole
-						</option>
-						<option value="5">Nordnes
-						</option>
-
-					</select>-->
 					<div class="float-right mt-2">
-						<a href="inspect-playground.html">
-							<button type="button" class="btn btn-success">Neste</button>
-						</a>
+						<button type="button" class="btn btn-success" onClick="start_inspection();">
+							<xsl:value-of select="php:function('lang', 'next')"/>
+						</button>
 					</div>
 				</div>
 
 			</div>
 		</div>
-		<div class="row mt-2">
-			<div class="container">
-				<h5>Fullførte kontroller</h5>
-				<ul>
-					<xsl:for-each select="completed_list">
-						<li style="display: block;">
-							<img src="{img_green_check}" width="16"/>
-							<xsl:value-of disable-output-escaping="yes" select="node()"/>
-						</li>
-					</xsl:for-each>
-				</ul>
-			</div>
-		</div>
 
+		<xsl:if test="count(completed_list) != 0">
+			<div class="row mt-2">
+				<div class="container">
+					<h5>Fullførte kontroller</h5>
+					<ul>
+						<xsl:for-each select="completed_list">
+							<li style="display: block;">
+								<img src="{//img_green_check}" width="16"/>
+								<xsl:value-of disable-output-escaping="yes" select="node()"/>
+							</li>
+						</xsl:for-each>
+					</ul>
+				</div>
+			</div>
+		</xsl:if>
+
+		<!--
 		<div class="row mt-5">
 			<div class="container">
 				<h4>Velg blant alle enheter</h4>
@@ -574,8 +558,7 @@
 
 			<div class="container">
 
-
-				<!-- Søkefelt som viser valg etterhvert som man skriver inn -->
+				 Søkefelt som viser valg etterhvert som man skriver inn
 				<select name="unitSelected" class="custom-select">
 					<option value="1">Christi Krybbe skoler
 					</option>
@@ -599,6 +582,7 @@
 
 			</div>
 		</div>
+		-->
 	</form>
 </xsl:template>
 

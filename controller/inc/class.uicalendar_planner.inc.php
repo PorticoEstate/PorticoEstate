@@ -1189,8 +1189,10 @@ HTML;
 			}
 
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
-			$current_day_str	 = phpgw::get_var('current_day_str', 'string', 'REQUEST', date('Y-m-d'));
-			$current_day = new DateTime($current_day_str);
+			$current_day_timestamp	 = phpgw::get_var('current_day_str', 'date', 'REQUEST', time());
+			$current_day = new DateTime(date('Y-m-d', $current_day_timestamp));
+
+			$current_day_str = date('Y-m-d', $current_day_timestamp);
 //_debug_array($current_day_str);
 
 
@@ -1295,6 +1297,7 @@ HTML;
 							'name' => $check_list['component']['xml_short_desc']
 						);			
 					}
+						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
 				}
 			}
 
@@ -1321,6 +1324,7 @@ HTML;
 
 			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
+			$GLOBALS['phpgw']->jqcal2->add_listener('current_day_str', 'date', $current_day->getTimestamp()	);
 			$data = array
 			(
 				'current_day_str' => $current_day->format('Y-m-d'),
