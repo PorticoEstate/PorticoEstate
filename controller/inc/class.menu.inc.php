@@ -70,6 +70,11 @@
 						'text' => lang('calendar planner'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
 						'image' => array('property', 'location_1')
+					),
+				'start_inspection' =>  array(
+						'text' => lang('start inspection'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
+						'image' => array('property', 'location_1')
 					)
 				);
 

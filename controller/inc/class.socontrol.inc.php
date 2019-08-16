@@ -1316,20 +1316,20 @@
 		}
 
 
-		function get_checklist_status_at_time_and_place( $part_of_town_id , $control_id = 0, $timestamp_start, $timestamp_end)
+		function get_checklist_at_time_and_place( $part_of_town_id , $control_id = 0, $timestamp_start, $timestamp_end)
 		{
 
-			$checklist_status = array();
+			$checklist_item = array();
 
 			$control_id = (int) $control_id;
 
 			if(!$control_id)
 			{
-				return $checklist_status;
+				return $checklist_item;
 			}
 
-			$sql = "SELECT count(check_list_id) AS planned, count(completed_date) AS completed FROM ("
-				. " SELECT DISTINCT controller_check_list.id AS check_list_id, end_date, deadline,planned_date, completed_date, controller_check_list.location_id,title,controller_check_list.component_id"
+//			$sql = " SELECT DISTINCT controller_check_list.id AS check_list_id, end_date, deadline,planned_date, completed_date, controller_check_list.location_id,title,controller_check_list.component_id"
+			$sql = " SELECT DISTINCT controller_check_list.location_id,controller_check_list.component_id"
 				. " FROM controller_check_list"
 				. " {$this->join} controller_control ON controller_check_list.control_id = controller_control.id"
 				. " {$this->join} controller_control_component_list "
@@ -1341,19 +1341,20 @@
 				. " {$this->join} fm_location1  ON (fm_bim_item.loc1 = fm_location1.loc1)"
 				. " WHERE part_of_town_id = {$part_of_town_id}"
 				. " AND controller_control.id = {$control_id}"
-				. " AND (deadline > $timestamp_start AND deadline <= $timestamp_end)"
-				. ") as t";
+				. " AND (planned_date >= $timestamp_start AND planned_date <= $timestamp_end)";
 
+//			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$this->db->next_record();
+			while($this->db->next_record())
+			{
+				$location_id = (int)$this->db->f('location_id');
 
-			$checklist_status = array
-			(
-				'planned' => (int)$this->db->f('planned'),
-				'completed' => (int)$this->db->f('completed')
-			);
-			return $checklist_status;
+				$checklist_item[$location_id][] = (int)$this->db->f('component_id');
+
+			}
+
+			return $checklist_item;
 		}
 
 		function get_id_field_name( $extended_info = false )

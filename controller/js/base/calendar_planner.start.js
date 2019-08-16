@@ -54,99 +54,6 @@ $(document).ready(function ()
 	});
 
 
-	$("#location_type").change(function ()
-	{
-
-		get_table_def();
-
-		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_location_type_category', location_type: $(this).val()};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		var htmlString = "<option value=''>Velg</option>";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function (data)
-			{
-				if (data != null)
-				{
-					var obj = data;
-
-					$.each(obj, function (i)
-					{
-						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-					});
-
-					$("#location_type_category").html(htmlString);
-					$("#loc1").html("<option value=''>Velg</option>");
-					$("#loc2").html("<option value=''>Velg</option>");
-				}
-				else
-				{
-					htmlString += "<option value=''>Velg</option>";
-					$("#part_of_town_id").html(htmlString);
-					$("#loc1").html(htmlString);
-					$("#loc2").html(htmlString);
-				}
-			}
-		});
-	});
-
-	$("#location_type_category").change(function ()
-	{
-		var level = $("#location_type").val();
-		update_location_table();
-		update_loc(level);
-	});
-
-	var oArgs = {menuaction: 'property.bolocation.get_locations_by_name'};
-	var baseUrl = phpGWLink('index.php', oArgs, true);
-	var location_type = 1;
-
-	//update part of town category based on district
-	$("#district_id").change(function ()
-	{
-		var district_id = $(this).val();
-		var oArgs = {menuaction: 'controller.uicontrol_register_to_location.get_district_part_of_town'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		var htmlString = "";
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl + "&district_id=" + district_id,
-			success: function (data)
-			{
-				if (data != null)
-				{
-					var obj = JSON.parse(data);
-
-					$.each(obj, function (i)
-					{
-						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
-					});
-
-					$("#part_of_town_id").html(htmlString);
-					$("#loc1").html("<option value=''>Velg</option>");
-					$("#loc2").html("<option value=''>Velg</option>");
-				}
-				else
-				{
-					htmlString += "<option value=''>Velg</option>";
-					$("#part_of_town_id").html(htmlString);
-					$("#loc1").html(htmlString);
-					$("#loc2").html(htmlString);
-				}
-			}
-		});
-
-		$("#search-location_code").val('');
-		update_location_table();
-	});
-
 	$("#part_of_town_id").multiselect({
 		//	buttonWidth: 250,
 		includeSelectAllOption: true,
@@ -172,8 +79,6 @@ $(document).ready(function ()
 //	$(".multiselect ").addClass('form-control');
 //	$(".multiselect").removeClass('btn');
 //	$(".multiselect").removeClass('btn-default');
-
-
 
 });
 

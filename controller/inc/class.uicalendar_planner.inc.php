@@ -52,7 +52,7 @@
 		private $currentDate	 = null;
 		private $daysInMonth	 = 0;
 
-		protected $read, $add, $edit, $delete, $so, $so_control;
+		protected $read, $add, $edit, $delete, $so, $so_control, $dateformat;
 
 		public $public_functions = array
 			(
@@ -61,7 +61,8 @@
 			'send_notification'	 => true,
 			'save_send_notification' => true,
 			'query'				 => true,
-			'update_schedule'	 => true
+			'update_schedule'	 => true,
+			'start_inspection'	 => true
 		);
 
 		public function __construct()
@@ -75,15 +76,21 @@
 
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$manage = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller'); //16
-			//		$this->bo = CreateObject('property.bolocation', true);
 
 			self::set_active_menu('controller::calendar_planner');
 		}
 
 		public function index()
 		{
+
+			if(!$this->read)
+			{
+				phpgw::no_access();
+			}
+
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
 
 			$control_id		 = phpgw::get_var('control_id', 'int');
@@ -123,7 +130,7 @@
 			}
 
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
-			$current_year	 = phpgw::get_var('current_year', 'int', 'REQUEST', date(Y));
+			$current_year	 = phpgw::get_var('current_year', 'int', 'REQUEST', date('Y'));
 
 			if (phpgw::get_var('prev_year', 'bool'))
 			{
@@ -172,8 +179,13 @@
 			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
 				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
 
-			$part_of_towns = createObject('property.bogeneric')->get_list(array('type'		 => 'part_of_town',
-				'selected'	 => $part_of_town_id, 'order'		 => 'name', 'sort'		 => 'asc'));
+			$part_of_towns = createObject('property.bogeneric')->get_list(array(
+				'type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id,
+				'order'		 => 'name',
+				'sort'		 => 'asc'
+				)
+			);
 
 			$part_of_town_list	 = array();
 			$part_of_town_list2	 = array();
@@ -297,6 +309,11 @@
 
 		public function monthly()
 		{
+			if(!$this->read)
+			{
+				phpgw::no_access();
+			}
+
 			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
 			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
@@ -371,40 +388,46 @@
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
 		}
 
-		public function get_items( $year, $month, $control_id,  $entity_group_id, $part_of_town_id )
+		private function get_items( $year, $month, $control_id,  $entity_group_id, $part_of_town_id , $items = array(),$from_date_ts = 0, $to_date_ts = 0)
 		{
+
 			// Validates year. If year is not set, current year is chosen
 			$year = (int)$year ? $year : date('Y');
 
 			// Gets timestamp of first day in month
 //			$from_date_ts = strtotime("01/{$month}/$year");
-			$from_date_ts = strtotime("01/01/$year");
-
-			$daysInMonths	 = $this->_daysInMonth($month, $year);
-
-			// Gets timestamp of last day in month
-//			$to_date_ts = mktime(23, 59, 59, $month, $daysInMonths, $year);
-			$to_date_ts = mktime(23, 59, 59, 12, 31, $year);
-
-			$items = array();
-
-			$locations = $this->so_control->get_system_locations_related_to_control($control_id);
-			foreach ($locations as $location_id)
+			if(!$from_date_ts)
 			{
-				$_items		 =  execMethod('property.soentity.read',array(
-		//				'entity_group_id' => (int)$entity_group_id,
-						'location_id' => $location_id,
-						'control_id' => $control_id,
-						'district_id' => $district_id,
-						'part_of_town_id' => $part_of_town_id,
-		//				'location_code'	=> $location_code,
-		//				'org_units' => $this->org_units,
-						'allrows' => true,
-						'control_registered' => true,
-						'check_for_control' => true
-						)
-					);
-				$items			 = array_merge($items, $_items);
+				$from_date_ts = strtotime("01/01/$year");
+			}
+
+			if(!$to_date_ts)
+			{
+				$daysInMonths	 = $this->_daysInMonth($month, $year);
+				// Gets timestamp of last day in month
+				$to_date_ts = mktime(23, 59, 59, 12, 31, $year);
+			}
+
+			if(!$items)
+			{
+				$locations = $this->so_control->get_system_locations_related_to_control($control_id);
+				foreach ($locations as $location_id)
+				{
+					$_items		 =  execMethod('property.soentity.read',array(
+			//				'entity_group_id' => (int)$entity_group_id,
+							'location_id' => $location_id,
+							'control_id' => $control_id,
+							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
+			//				'location_code'	=> $location_code,
+			//				'org_units' => $this->org_units,
+							'allrows' => true,
+							'control_registered' => true,
+							'check_for_control' => true
+							)
+						);
+					$items			 = array_merge($items, $_items);
+				}
 			}
 
 			$controls = array();
@@ -569,6 +592,11 @@
 
 		public function send_notification()
 		{
+			if(!$this->read)
+			{
+				phpgw::no_access();
+			}
+
 			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
 			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
@@ -900,7 +928,7 @@ HTML;
 		/**
 		 * print out the calendar
 		 */
-		public function show( $year, $month, $items )
+		private function show( $year, $month, $items )
 		{
 //			_debug_array($items);
 			if (null == $year)
@@ -1008,6 +1036,7 @@ HTML;
 						case 'CONTROL_REGISTERED':
 						case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
 						case 'CONTROL_NOT_DONE':
+						case 'CONTROL_PLANNED':
 							$class = 'badge-primary';
 							$draggable =  'draggable="true"';
 							break;
@@ -1110,4 +1139,215 @@ HTML;
 
 			return date('t', strtotime($year . '-' . $month . '-01'));
 		}
+
+		public function start_inspection()
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			self::set_active_menu('controller::start_inspection');
+			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
+			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
+
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if($control_area_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_control_area_id", $control_area_id, $user_id);
+			}
+			else
+			{
+				$control_area_id = (int)phpgwapi_cache::user_get('controller', "calendar_control_area_id", $user_id);
+			}
+			if($control_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
+			}
+			else
+			{
+				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
+			}
+
+			if($part_of_town_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_part_of_town", $part_of_town_id, $user_id);
+			}
+			else if ($_POST)
+			{
+				phpgwapi_cache::user_clear('controller', "calendar_planner_part_of_town", $user_id);
+			}
+			else
+			{
+				$part_of_town_id = (array)phpgwapi_cache::user_get('controller', "calendar_planner_part_of_town", $user_id);
+			}
+
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+			$current_day_timestamp	 = phpgw::get_var('current_day_str', 'date', 'REQUEST', time());
+			$current_day = new DateTime(date('Y-m-d', $current_day_timestamp));
+
+			$current_day_str = date('Y-m-d', $current_day_timestamp);
+//_debug_array($current_day_str);
+
+
+			if (phpgw::get_var('prev_day', 'bool'))
+			{
+				$current_day->modify('-1 day');
+				$current_day_str = $current_day->format('Y-m-d');
+			}
+
+			if (phpgw::get_var('next_day', 'bool'))
+			{
+				$current_day->modify('+1 day');
+				$current_day_str = $current_day->format('Y-m-d');
+			}
+
+			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
+
+			$control_type_list = array(array('id' => '', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$control_type_list[] = array(
+					'id'		 => $control_type['id'],
+					'name'		 => $control_type['title'],
+					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
+				);
+			}
+
+
+	
+			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
+				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
+
+			$part_of_towns = createObject('property.bogeneric')->get_list(array(
+				'type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id,
+				'order'		 => 'name',
+				'sort'		 => 'asc'
+				)
+			);
+
+
+			$from_date_ts = strtotime("{$current_day_str} 0:00:00");
+			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
+
+
+			$part_of_town_list	 = array();
+			$part_of_town_list2	 = array();
+			$_items = array();
+			foreach ($part_of_towns as &$part_of_town)
+			{
+				if ($part_of_town['id'] > 0)
+				{
+					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
+					$part_of_town_list[]		 = $part_of_town;
+
+					if ($part_of_town['selected'])
+					{
+						$checklist_items = $this->so_control->get_checklist_at_time_and_place($part_of_town['id'] , $control_id, $from_date_ts, $to_date_ts);
+						$_items = $_items + $checklist_items;
+					}
+				}
+			}
+			unset($part_of_town);
+
+
+			$items = array();
+			foreach ($_items as $location_id => $entry)
+			{
+
+				$__items =  execMethod('property.soentity.read',array(
+						'location_id' => $location_id,
+						'custom_condition'	=> 'fm_bim_item.id IN(' . implode(',' , $entry) . ')',
+						'control_id' => $control_id,
+						'allrows' => true,
+						)
+					);
+				$items			 = array_merge($items, $__items);
+			}
+
+			if($items)
+			{
+				$item_schedule = $this->get_items(0, 0, $control_id,  $entity_group_id, $part_of_town_id , $items, $from_date_ts, $to_date_ts);
+			}
+
+			$todo_list = array();
+			$completed_list = array();
+
+			if(!empty($item_schedule[$current_day_str]))
+			{
+				foreach ($item_schedule[$current_day_str] as $check_list)
+				{
+//					_debug_array($check_list);
+
+					if(!empty($check_list['schedule']['info']['completed_date_ts']))
+					{
+						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
+					}
+					else
+					{
+						$todo_list[] = array(
+							'id' => $check_list['schedule']['info']['check_list_id'],
+							'name' => $check_list['component']['xml_short_desc']
+						);			
+					}
+						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
+				}
+			}
+
+//	_debug_array($todo_list);
+
+
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	 = true;
+
+			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
+
+
+			$control_area_list = array();
+			foreach ($control_area['cat_list'] as $cat_list)
+			{
+				$control_area_list[] = array
+					(
+					'id'		 => $cat_list['cat_id'],
+					'name'		 => $cat_list['name'],
+					'selected'	 => $control_area_id == $cat_list['cat_id'] ? 1 : 0
+				);
+			}
+
+			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('current_day_str', 'date', $current_day->getTimestamp()	);
+			$data = array
+			(
+				'current_day_str' => $current_day->format('Y-m-d'),
+				'current_day' => $current_day->getTimestamp(),
+				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
+				'control_area_list'	 => array('options' => $control_area_list),
+				'entity_group_list'	 => array('options' => $entity_groups),
+				'part_of_town_list'	 => array('options' => $part_of_town_list),
+				'todo_list'			=> array('options' => $todo_list),
+				'completed_list'	=> $completed_list,
+				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
+				'control_type_list'	 => array('options' => $control_type_list),
+			);
+
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+
+			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('start inspection');
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::start_inspection';
+			self::render_template_xsl(array('calendar/calendar_planner'), array('start_inspection' => $data));
+
+		}
+
 	}
