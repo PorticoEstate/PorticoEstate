@@ -155,38 +155,38 @@
 				'Arbeidsflyt og ehandel'			 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Arbeidsflyt og ehandel'
 				),
 				'Avvist papirfaktura'				 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Avvist papirfaktura'
 				),
 				'Innkassokrav'						 => array
 					(
 					'message_cat_id' => 321, // 24 Purringer/Inkasso
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Innkassokrav',
 					'priority'		 => 1
 				),
 				'Purring/Inkassovarsel'				 => array
 					(
 					'message_cat_id' => 321, // 24 Purringer/Inkasso
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Purring/Inkassovarsel'
 				),
 				'Spørsmål fra leverandører'			 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Spørsmål fra leverandører'
 				),
 				'Spørsmål ifbm bankkvitteringer'	 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Spørsmål ifbm bankkvitteringer',
 					'priority'		 => 1
 				),
@@ -514,7 +514,7 @@
 			{
 				//Send til Lønn- Trekk - Emnefelt=Fagforening
 				$message_cat_id	 = 254; // Trekk (IKKE ferie)
-				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender);
 				if ($ticket_id)
 				{
@@ -551,7 +551,7 @@
 			else if (preg_match("/(Innkassokrav|Inkassokrav)/i", $subject))
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
-				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$priority		 = 1;
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
 				if ($ticket_id)
@@ -564,7 +564,7 @@
 			else if (preg_match("/Purring\/Inkassovarsel/i", $subject))
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
-				$group_id		 = 4253; //LRS-DRIFT_Økonomi
+				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if ($ticket_id)
 				{
@@ -625,19 +625,42 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-//			else if (preg_match("/FakturaFirewall: Ukjent leverandør/i", $subject))
-//			{
-//
-//				$message_cat_id	 = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
-//				$group_id		 = 4169; // LRS-SERVICE_Økonomi
-//				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-//				if ($ticket_id)
-//				{
-//					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
-//					$target['type']				 = 'helpdesk';
-//					$target['id']				 = $ticket_id;
-//				}
-//			}
+			else if(preg_match("/ny leverandør/i" , $subject ))
+			{
+				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id = 4253; //LRS-Drift_Regnskap
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/endring av leverandør/i" , $subject ))
+			{
+				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id = 4253; //LRS-Drift_Regnskap
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
+			else if(preg_match("/nye leverandører /i" , $subject ))
+			{
+				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id = 4253; //LRS-Drift_Regnskap
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'helpdesk';
+					$target['id'] = $ticket_id;
+				}
+			}
 
 			/**
 			 * Ticket created / updated
