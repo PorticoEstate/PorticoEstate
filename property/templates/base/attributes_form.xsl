@@ -126,6 +126,7 @@
 						<xsl:call-template name="choice"/>
 					</xsl:when>
 					<xsl:when test="datatype='LB'">
+						<div  class="pure-input-1-2 pure-custom">
 						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
@@ -160,6 +161,16 @@
 								</xsl:choose>
 							</xsl:for-each>
 						</select>
+						<br/>
+						<a href="#" onClick="add_new_value_to_custom_attibute('id_{name}', {location_id}, {id}, '{lang_new_value}');">
+							<img src="{add_img}" width="23"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'add')"/>
+							<xsl:text> (</xsl:text>
+							<xsl:value-of select="input_text"/>
+							<xsl:text>)</xsl:text>
+						</a>
+						</div>
 					</xsl:when>
 					<xsl:when test="datatype='AB'">
 						<xsl:variable name="contact_name">

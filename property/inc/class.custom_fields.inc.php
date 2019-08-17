@@ -89,6 +89,7 @@
 			$i	 = 0;
 			foreach ($values['attributes'] as &$attributes)
 			{
+				$attributes['location_id'] = $location_id;
 				$attributes['datatype_text'] = $this->translate_datatype($attributes['datatype']);
 				$attributes['help_url']		 = $attributes['helpmsg'] ? $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction' => 'manual.uimanual.attrib_help', 'appname'	 => $appname, 'location'	 => $location,
@@ -365,6 +366,9 @@ JS;
 				else if ($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
 				{
 					$input_type = $input_type_array[$attributes['datatype']];
+
+					$attributes['add_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'add2');
+					$attributes['lang_new_value'] = lang('new value');
 
 					if ($attributes['datatype'] == 'CH')
 					{

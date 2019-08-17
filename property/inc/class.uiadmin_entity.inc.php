@@ -62,7 +62,8 @@
 			'get_template_attributes'	 => true,
 			'convert_to_eav'			 => true,
 			'save'						 => true,
-			'save_category'				 => true
+			'save_category'				 => true,
+			'add_choice_value'			 => true
 		);
 
 		function __construct()
@@ -1979,6 +1980,20 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_attrib' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
+		}
+
+		function add_choice_value()
+		{
+			$location_id	 = phpgw::get_var('location_id', 'int');
+			$attribute_id	 = phpgw::get_var('attribute_id', 'int');
+
+			$receipt = array(
+				'status' => 'ok',
+				'choice_id' => 100
+			);
+
+			return $receipt;
+
 		}
 
 		function list_custom_function()
