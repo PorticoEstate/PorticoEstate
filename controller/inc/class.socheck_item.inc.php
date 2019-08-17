@@ -417,6 +417,56 @@
 			return $check_items_array;
 		}
 
+		public function get_last_completed_checklist($check_list_id)
+		{
+			$ret = array();
+			$check_list_id = (int) $check_list_id;
+			$now = time();
+			$sql = "SELECT component_id, location_id, location_code FROM controller_check_list"
+				. " WHERE id != $check_list_id";
+
+			$this->db->query($sql);
+			$this->db->next_record();
+			$location_id = (int)$this->db->f('location_id');
+			$component_id = (int)$this->db->f('component_id');
+			$location_code = $this->db->f('location_code');
+
+
+			$filtermethod = "";
+			
+			if($location_id && $component_id)
+			{
+				$filtermethod .= "location_id = {$location_id} AND component_id = {$component_id}";
+			}
+			else if($location_code)
+			{
+				$filtermethod .= "location_code = '{$location_code}'";
+			}
+			else
+			{
+				return $ret;
+			}
+
+
+			$sql = "SELECT id, completed_date FROM controller_check_list"
+				. " WHERE id != $check_list_id"
+				. " AND {$filtermethod}"
+				. " AND (completed_date IS NOt NULL OR completed_date > 0)"
+				. " AND completed_date < $now"
+				. " ORDER BY  completed_date DESC";
+
+			$this->db->query($sql);
+
+			if($this->db->next_record())
+			{
+				$ret = array(
+					'id' => $this->db->f('id'),
+					'completed_date' => $this->db->f('completed_date')
+				);
+			}
+			return $ret;
+		}
+
 		/**
 		 * Get check item objects from database including related control item and cases
 		 *

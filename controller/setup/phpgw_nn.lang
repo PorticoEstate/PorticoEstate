@@ -446,3 +446,4 @@ add picture	controller	nn	Legg til bilete
 other controll	controller	nn	Annen kontroll
 calendar planner	controller	nn	Planleggar
 start inspection	controller	nn	Start kontroll
+last inspection	controller	nn	Sist kontrollert

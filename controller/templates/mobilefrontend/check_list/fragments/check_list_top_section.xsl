@@ -9,6 +9,13 @@
 	<div id="check-list-heading">
 		<div class="box-1">
 			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+
+			<xsl:if test="last_completed_checklist_date != ''">
+				<xsl:value-of select="php:function('lang', 'last inspection')" />
+				<xsl:text>: </xsl:text>
+				 <xsl:value-of select="last_completed_checklist_date"/>
+			</xsl:if>
+
 			<xsl:choose>
 				<xsl:when test="type = 'component'">
 					<h2>
