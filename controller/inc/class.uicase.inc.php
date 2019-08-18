@@ -957,6 +957,10 @@
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
 
+			self::add_javascript('phpgwapi', 'alertify', 'alertify.min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . $check_list->get_id();
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::add_case' . '::' . $check_list->get_id();
 			self::set_active_menu('controller::add_case');

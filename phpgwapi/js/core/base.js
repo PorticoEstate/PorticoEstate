@@ -246,7 +246,19 @@ function openwindow(url, h, w)
 	}
 }
 
-function add_new_value_to_custom_attibute(id, location_id, attribute_id, input_text)
+var alertify;
+
+/**
+ * Open a prompt for input
+ * @param {type} id
+ * @param {type} location_id
+ * @param {type} attribute_id
+ * @param {type} input_text
+ * @param {type} lang_new_value
+ * @returns {undefined}
+ */
+
+function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text, lang_new_value)
 {
 
 	var oArgs = {
@@ -256,29 +268,52 @@ function add_new_value_to_custom_attibute(id, location_id, attribute_id, input_t
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	var new_value = prompt(input_text, "");
-	if (new_value !== null && new_value !== "")
-	{
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function ()
-		{
-			if (this.readyState == 4 && this.status == 200)
-			{
-				var data = JSON.parse(this.responseText);
+	//	var new_value = prompt(input_text, "");
 
-				if (data.status == 'ok' && data.choice_id)
-				{
-					var select = document.getElementById(id);
-					var option = document.createElement("option");
-					option.text = new_value;
-					option.id = data.choice_id;
-					select.add(option, select[1]);
-					select.selectedIndex = "1";
+	/*
+	 * @title {String or DOMElement} The dialog title.
+	 * @message {String or DOMElement} The dialog contents.
+	 * @value {String} The default input value.
+	 * @onok {Function} Invoked when the user clicks OK button.
+	 * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+	 *
+	 * alertify.prompt(title, message, value, onok, oncancel);
+	 *
+	 */
+	alertify.prompt( input_text, lang_new_value, ''
+               , function(evt, value)
+			   {
+					var new_value = value;
+					if (new_value !== null && new_value !== "")
+					{
+						alertify.success('You entered: ' + value);
+						var xmlhttp = new XMLHttpRequest();
+						xmlhttp.onreadystatechange = function ()
+						{
+							if (this.readyState == 4 && this.status == 200)
+							{
+								var data = JSON.parse(this.responseText);
+
+								if (data.status == 'ok' && data.choice_id)
+								{
+									var select = document.getElementById(id);
+									var option = document.createElement("option");
+									option.text = new_value;
+									option.id = data.choice_id;
+									select.add(option, select[1]);
+									select.selectedIndex = "1";
+								}
+							}
+						};
+						xmlhttp.open("POST", requestUrl, true);
+						var params = 'new_value=' + new_value;
+						xmlhttp.send(params);
+					}
+					else
+					{
+						alertify.error('Cancel');
+					}
 				}
-			}
-		};
-		xmlhttp.open("POST", requestUrl, true);
-		var params = 'new_value=' + new_value;
-		xmlhttp.send(params);
-	}
+               , function() { alertify.error('Cancel') });
+
 }

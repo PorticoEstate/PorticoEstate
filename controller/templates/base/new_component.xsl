@@ -18,31 +18,34 @@
 			<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
 			<input type="hidden" name="location_id" value="{location_id}" />
 			<input type="hidden" name="component_id" value="{component_id}" />
-			<xsl:if test="get_form =1 or get_edit_form = 1">
-				<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
-					<xsl:value-of select="php:function('lang', 'save')" />
+
+			<div class="pure-button-group" role="group" aria-label="">
+				<xsl:if test="get_form =1 or get_edit_form = 1">
+					<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
+						<xsl:value-of select="php:function('lang', 'save')" />
+					</button>
+				</xsl:if>
+				<xsl:if test="get_info =1">
+					<button id = "submit_component_form" type="button" class="pure-button pure-button-primary" onclick="get_edit_form();">
+						<xsl:choose>
+							<xsl:when test="edit_parent !=1">
+								<xsl:attribute name="onclick">
+									<xsl:text>get_edit_form();</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="onclick">
+									<xsl:text>get_parent_component_edit_form();</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:value-of select="php:function('lang', 'edit')" />
+					</button>
+				</xsl:if>
+				<button id = "cancel_new_component" type="button" class="pure-button pure-button-primary" onclick="remove_component_form(form);">
+					<xsl:value-of select="php:function('lang', 'cancel')" />
 				</button>
-			</xsl:if>
-			<xsl:if test="get_info =1">
-				<button id = "submit_component_form" type="button" class="pure-button pure-button-primary" onclick="get_edit_form();">
-					<xsl:choose>
-						<xsl:when test="edit_parent !=1">
-							<xsl:attribute name="onclick">
-								<xsl:text>get_edit_form();</xsl:text>
-							</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="onclick">
-								<xsl:text>get_parent_component_edit_form();</xsl:text>
-							</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:value-of select="php:function('lang', 'edit')" />
-				</button>
-			</xsl:if>
-			<button id = "cancel_new_component" type="button" class="pure-button pure-button-primary" onclick="remove_component_form(form);">
-				<xsl:value-of select="php:function('lang', 'cancel')" />
-			</button>
+			</div>
 
 		</fieldset>
 	</form>

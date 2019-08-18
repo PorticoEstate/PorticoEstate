@@ -127,49 +127,49 @@
 					</xsl:when>
 					<xsl:when test="datatype='LB'">
 						<div  class="pure-input-1-2 pure-custom">
-						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1-2" >
-							<xsl:choose>
-								<xsl:when test="disabled!=''">
-									<xsl:attribute name="disabled">
-										<xsl:text> disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:when>
-								<xsl:when test="nullable!='1'">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</xsl:when>
-							</xsl:choose>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</option>
-							<xsl:for-each select="choice">
-								<xsl:variable name="id">
-									<xsl:value-of select="id"/>
-								</xsl:variable>
+							<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1-2" >
 								<xsl:choose>
-									<xsl:when test="checked='checked'">
-										<option value="{$id}" selected="selected">
-											<xsl:value-of disable-output-escaping="yes" select="value"/>
-										</option>
+									<xsl:when test="disabled!=''">
+										<xsl:attribute name="disabled">
+											<xsl:text> disabled</xsl:text>
+										</xsl:attribute>
 									</xsl:when>
-									<xsl:otherwise>
-										<option value="{$id}">
-											<xsl:value-of disable-output-escaping="yes" select="value"/>
-										</option>
-									</xsl:otherwise>
+									<xsl:when test="nullable!='1'">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
 								</xsl:choose>
-							</xsl:for-each>
-						</select>
-						<br/>
-						<a href="#" onClick="add_new_value_to_custom_attibute('id_{name}', {location_id}, {id}, '{lang_new_value}');">
-							<img src="{add_img}" width="23"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="php:function('lang', 'add')"/>
-							<xsl:text> (</xsl:text>
-							<xsl:value-of select="input_text"/>
-							<xsl:text>)</xsl:text>
-						</a>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:for-each select="choice">
+									<xsl:variable name="id">
+										<xsl:value-of select="id"/>
+									</xsl:variable>
+									<xsl:choose>
+										<xsl:when test="checked='checked'">
+											<option value="{$id}" selected="selected">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
+										</xsl:when>
+										<xsl:otherwise>
+											<option value="{$id}">
+												<xsl:value-of disable-output-escaping="yes" select="value"/>
+											</option>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:for-each>
+							</select>
+							<br/>
+							<a href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
+								<img src="{add_img}" width="23"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'add')"/>
+								<xsl:text> (</xsl:text>
+								<xsl:value-of select="input_text"/>
+								<xsl:text>)</xsl:text>
+							</a>
 						</div>
 					</xsl:when>
 					<xsl:when test="datatype='AB'">
