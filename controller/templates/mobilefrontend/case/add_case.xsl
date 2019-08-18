@@ -11,6 +11,7 @@
 		</a>
 
 		<xsl:call-template name="check_list_top_section">
+			<xsl:with-param name="active_tab">add_case</xsl:with-param>
 		</xsl:call-template>
 
 		<xsl:choose>

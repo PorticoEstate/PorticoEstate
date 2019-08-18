@@ -59,7 +59,10 @@
 
 			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 				<ul class="pure-menu-list">
-					<xsl:call-template name="check_list_menu" />
+					<xsl:call-template name="check_list_menu" >
+						<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
+					</xsl:call-template>
+
 					<xsl:choose>
 						<xsl:when test="type = 'component'">
 							<li class="pure-menu-item">

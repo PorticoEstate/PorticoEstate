@@ -1984,8 +1984,20 @@
 
 		function add_choice_value()
 		{
+			$add_controller = $this->acl->check('.checklist', PHPGW_ACL_ADD, 'controller');
+			$add_location = $this->acl->check('.location', PHPGW_ACL_ADD, 'property');
+
+			if(!$add_controller && !$add_location)
+			{
+				phpgw::no_access();
+			}
+
 			$location_id	 = phpgw::get_var('location_id', 'int');
 			$attribute_id	 = phpgw::get_var('attribute_id', 'int');
+			$new_value		 = phpgw::get_var('new_value');
+
+			$id = $this->bo->add_choice_value($location_id, $attribute_id, $new_value);
+
 
 			$receipt = array(
 				'status' => 'ok',

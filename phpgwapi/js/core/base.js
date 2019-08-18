@@ -286,7 +286,6 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 					var new_value = value;
 					if (new_value !== null && new_value !== "")
 					{
-						alertify.success('You entered: ' + value);
 						var xmlhttp = new XMLHttpRequest();
 						xmlhttp.onreadystatechange = function ()
 						{
@@ -296,6 +295,7 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 
 								if (data.status == 'ok' && data.choice_id)
 								{
+									alertify.success('You entered: ' + value);
 									var select = document.getElementById(id);
 									var option = document.createElement("option");
 									option.text = new_value;
@@ -303,9 +303,14 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 									select.add(option, select[1]);
 									select.selectedIndex = "1";
 								}
+								else
+								{
+									alertify.error('Error');
+								}
 							}
 						};
 						xmlhttp.open("POST", requestUrl, true);
+						xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						var params = 'new_value=' + new_value;
 						xmlhttp.send(params);
 					}

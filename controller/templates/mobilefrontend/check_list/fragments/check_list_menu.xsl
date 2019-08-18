@@ -60,6 +60,9 @@
 	</li>
 	<!-- ==================  REGISTER NEW CASE  ===================== -->
 	<li class="pure-menu-item">
+		<xsl:if test="$active_tab = 'add_case'">
+			<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+		</xsl:if>
 		<a class="btn btn-primary btn-lg">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.add_case</xsl:text>
@@ -74,6 +77,9 @@
 	</li>
 	<!-- ==================  REGISTER NEW MESSAGE  ===================== -->
 	<li class="pure-menu-item">
+		<xsl:if test="$active_tab = 'create_case_message'">
+			<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+		</xsl:if>
 		<a class="btn btn-primary btn-lg">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>

@@ -66,6 +66,10 @@
 		 */
 		public function prepare( $values, $appname, $location, $view_only = false )
 		{
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			$cache_custom_lookup = array();
 
 			$vendor = CreateObject('property.sogeneric');
