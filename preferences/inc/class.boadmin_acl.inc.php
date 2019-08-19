@@ -31,7 +31,7 @@
 		*/
 		var $total_records = 0;
 
-		function boadmin_acl($session='')
+		function __construct($session='')
 		{
 			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 

@@ -396,7 +396,8 @@ function showAlert(message, className) {
   // Create Div
   const attError = document.createElement("div");
   // Alert
-  attError.className = `alert ${className}`;
+//  attError.className = `alert ${className}`;
+  attError.className = 'alert ' + className;
   //Add Text
   attError.appendChild(document.createTextNode(message));
   // Insert Alert

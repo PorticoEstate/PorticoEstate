@@ -215,7 +215,13 @@ JS;
 #		$tpl_vars['help_url'] = => '#';
 	}
 	$bouser = CreateObject('bookingfrontend.bouser');
-	$org = CreateObject('bookingfrontend.uiorganization');
+	/**
+	 * Might be set wrong in the ui-class
+	 */
+	$xslt_app = !empty($GLOBALS['phpgw_info']['flags']['xslt_app']) ? true : false;
+	$org	 = CreateObject('bookingfrontend.uiorganization');
+
+	$GLOBALS['phpgw_info']['flags']['xslt_app'] = $xslt_app;
 	$orgid = $org->get_orgid($bouser->orgnr);
 	if($bouser->is_logged_in())
 	{

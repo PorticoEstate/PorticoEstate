@@ -59,12 +59,15 @@
 
 			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 				<ul class="pure-menu-list">
-					<xsl:call-template name="check_list_menu" />
+					<xsl:call-template name="check_list_menu" >
+						<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
+					</xsl:call-template>
+
 					<xsl:choose>
 						<xsl:when test="type = 'component'">
 							<li class="pure-menu-item">
 
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
 										<xsl:text>&amp;year=</xsl:text>
@@ -86,7 +89,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<li class="pure-menu-item">
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 										<xsl:text>&amp;year=</xsl:text>
@@ -101,7 +104,7 @@
 							</li>
 							<li class="pure-menu-item">
 
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 										<xsl:text>&amp;year=</xsl:text>
