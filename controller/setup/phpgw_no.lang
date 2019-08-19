@@ -447,3 +447,4 @@ add picture	controller	no	Legg til bilde
 other controll	controller	no	Annen kontroll
 calendar planner	controller	no	Planlegger
 start inspection	controller	no	Start kontroll
+last inspection	controller	no	Sist kontrollert

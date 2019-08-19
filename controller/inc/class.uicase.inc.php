@@ -660,6 +660,7 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$case_location_code = phpgw::get_var('location_code');
 			$check_list = $this->so_check_list->get_single($check_list_id);
+			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
@@ -880,9 +881,10 @@
 			}
 
 			$data = array
-				(
+			(
 				'control' => $control,
 				'check_list' => $check_list,
+				'last_completed_checklist'	=> $last_completed_checklist,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
 				'location_children'	=> $location_children,
@@ -912,6 +914,9 @@
 			}
 			$case_data = $this->_get_case_data();
 			$check_list = $case_data['check_list'];
+			$last_completed_checklist = $case_data['last_completed_checklist'];
+
+			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';
 
 			$level = $this->location_finder->get_location_level($case_data['location_code']);
 			$year = date("Y", $check_list->get_deadline());
@@ -923,6 +928,7 @@
 				(
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
+				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $case_data['buildings_on_property'],
 				'location_array' => $case_data['location_array'],
 				'component_array' => $case_data['component_array'],
@@ -950,6 +956,15 @@
 			self::add_javascript('controller', 'base', 'check_list.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
+
+			self::add_javascript('phpgwapi', 'alertify', 'alertify.min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . $check_list->get_id();
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::add_case' . '::' . $check_list->get_id();
+			self::set_active_menu('controller::add_case');
+
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
 				'check_list/fragments/select_buildings_on_property',
