@@ -161,6 +161,9 @@
 
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 
+
+				$lookup_functions = $values['lookup_functions'];
+
 				$menuaction = $edit_parent ? 'controller.uicase.edit_parent_component' : 'controller.uicase.edit_component_child';
 
 				$data = array(
@@ -210,7 +213,10 @@
 				$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
 				$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
-				return $html;
+				return array(
+					'html'				 => $html,
+					'lookup_functions'	 => $lookup_functions
+					);
 			}
 
 			if($_POST && !$parent_location_id && !$parent_component_id && $component_id)
@@ -252,7 +258,22 @@
 
 				$values = array_merge($values, $location_data);
 
-				$values_attribute = $custom->convert_attribute_save((array)phpgw::get_var('values_attribute'));
+				$_values_attribute = (array)phpgw::get_var('values_attribute');
+
+				foreach ($_values_attribute as $attribute_id => &$attribute)
+				{
+					$_value = phpgw::get_var($attribute['name']);
+
+					if($_value)
+					{
+						$attribute['value'] = $_value;
+
+						$values['extra'][$attribute['name']] = $_value;
+					}
+				}
+				unset($_value);
+
+				$values_attribute = $custom->convert_attribute_save($_values_attribute);
 
 				if($component_id)
 				{

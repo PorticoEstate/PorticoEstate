@@ -216,7 +216,10 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					$("#form_new_component_2").html(data);
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
 				}
 			}
 		});
@@ -253,7 +256,10 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					$("#form_new_component_2").html(data);
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
 				}
 			}
 		});
@@ -275,7 +281,10 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					$("#form_new_component_2").html(data);
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
 				}
 			}
 		});
