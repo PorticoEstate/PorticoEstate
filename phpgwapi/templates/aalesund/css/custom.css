@@ -1645,8 +1645,20 @@ NEW APPLICATION PAGE STYLE
     text-align: left;
 }
 
+.mapBtn i {
+    color: #82368c;
+}
+
+.modal h2 {
+    text-transform: capitalize;
+}
+
 .mapBtn:hover {
     cursor: pointer;
+}
+
+.mapBtn:focus {
+    outline: none;
 }
 
 /* MODAL STYLING */
