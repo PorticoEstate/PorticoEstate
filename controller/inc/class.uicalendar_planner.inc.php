@@ -1284,7 +1284,6 @@ HTML;
 			{
 				foreach ($item_schedule[$current_day_str] as $check_list)
 				{
-//					_debug_array($check_list);
 
 					if(!empty($check_list['schedule']['info']['completed_date_ts']))
 					{
@@ -1297,12 +1296,8 @@ HTML;
 							'name' => $check_list['component']['xml_short_desc']
 						);			
 					}
-						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
 				}
 			}
-
-//	_debug_array($todo_list);
-
 
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
