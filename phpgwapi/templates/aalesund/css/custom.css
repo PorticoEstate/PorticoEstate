@@ -768,8 +768,16 @@ SEARCH PAGE STYLE
     padding-top: 5%  !important;
 }
 
+.flex-container {
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 3rem;
+    padding: 0 1rem;
+}
 
-.searchContainer  .frontpagetext {
+/* .searchContainer  .frontpagetext {
     cursor: pointer;
     list-style-type:none  !important;
     width:600px !important;
@@ -801,7 +809,7 @@ SEARCH PAGE STYLE
 #search-page-content  .frontpagetext > p {
     font-size: 15px;
     margin-left: 1.5em;
-}*
+}* */
 
 
 .searchInput {
