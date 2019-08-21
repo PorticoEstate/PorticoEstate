@@ -689,6 +689,12 @@
 			$message_arr = explode('========', $text);
 
 			$message = phpgw::clean_value($message_arr[0]);
+
+			if (!$message)
+			{
+				return false;
+			}
+
 			$sender	 = phpgw::clean_value($sender);
 
 			if ($soexternal->add_msg($msg_id, $message, $sender))
@@ -747,7 +753,8 @@
 			}
 			else
 			{
-				$text				 = trim($body);
+				$html2text			 = createObject('phpgwapi.html2text', $body);
+				$text				 = trim($html2text->getText());
 				$textAr				 = explode(PHP_EOL, $text);
 				$textAr				 = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
 				$message_details_arr = array($subject);
