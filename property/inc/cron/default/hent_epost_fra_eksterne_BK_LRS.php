@@ -689,6 +689,12 @@
 			$message_arr = explode('========', $text);
 
 			$message = phpgw::clean_value($message_arr[0]);
+
+			if (!$message)
+			{
+				return false;
+			}
+
 			$sender	 = phpgw::clean_value($sender);
 
 			if ($soexternal->add_msg($msg_id, $message, $sender))
@@ -735,19 +741,25 @@
 				$is_html = false;				
 			}
 
+			/**
+			 * FIXME
+			 */
+			$is_html = false;
+
 			$pattern = "/{$sender}/i";
 
 			if($is_html)
 			{
-				$text	= phpgw::clean_html($body);
-				if (!preg_match($pattern, $text))
+				$message_details	= phpgw::clean_html(htmlentities($body));
+				if (!preg_match($pattern, $message_details))
 				{
-					$text .= "\n<br/>Avsender: {$sender}";
+					$message_details .= "\n<br/>Avsender: {$sender}";
 				}
 			}
 			else
 			{
-				$text				 = trim($body);
+				$html2text			 = createObject('phpgwapi.html2text', $body);
+				$text				 = trim($html2text->getText());
 				$textAr				 = explode(PHP_EOL, $text);
 				$textAr				 = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
 				$message_details_arr = array($subject);
@@ -767,6 +779,7 @@
 					$message_details .= "\n\nAvsender: {$sender}";
 				}
 
+				$message_details = phpgw::clean_value($message_details);
 			}
 
 			if (!$message_cat_id)
@@ -780,9 +793,14 @@
 			$id_arr				 = explode(':', $subject_arr[1]);
 			$external_ticket_id	 = trim($id_arr[1]);
 
-			$message_details = phpgw::clean_value($message_details);
 			$subject		 = phpgw::clean_value($subject);
 			$sender			 = phpgw::clean_value($sender);
+
+			if(!$message_details)
+			{
+				_debug_array($body);
+				return false;
+			}
 
 			if ($ticket_id)
 			{
