@@ -127,7 +127,7 @@
 									<h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
 								</legend>
 							</div>
-							<table class="historyTable">
+							<table class="pure-table pure-table-striped">
 								<tr>
 									<th>
 										<xsl:value-of select="php:function('lang', 'Time')" />
