@@ -745,10 +745,10 @@
 
 			if($is_html)
 			{
-				$text	= phpgw::clean_html($body);
-				if (!preg_match($pattern, $text))
+				$message_details	= phpgw::clean_html(htmlentities($body));
+				if (!preg_match($pattern, $message_details))
 				{
-					$text .= "\n<br/>Avsender: {$sender}";
+					$message_details .= "\n<br/>Avsender: {$sender}";
 				}
 			}
 			else
@@ -774,6 +774,7 @@
 					$message_details .= "\n\nAvsender: {$sender}";
 				}
 
+				$message_details = phpgw::clean_value($message_details);
 			}
 
 			if (!$message_cat_id)
@@ -787,7 +788,6 @@
 			$id_arr				 = explode(':', $subject_arr[1]);
 			$external_ticket_id	 = trim($id_arr[1]);
 
-			$message_details = phpgw::clean_value($message_details);
 			$subject		 = phpgw::clean_value($subject);
 			$sender			 = phpgw::clean_value($sender);
 
