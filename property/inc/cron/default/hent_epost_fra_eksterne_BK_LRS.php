@@ -741,6 +741,11 @@
 				$is_html = false;				
 			}
 
+			/**
+			 * FIXME
+			 */
+			$is_html = false;
+
 			$pattern = "/{$sender}/i";
 
 			if($is_html)
