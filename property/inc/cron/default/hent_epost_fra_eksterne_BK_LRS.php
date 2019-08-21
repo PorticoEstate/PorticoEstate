@@ -791,6 +791,12 @@
 			$subject		 = phpgw::clean_value($subject);
 			$sender			 = phpgw::clean_value($sender);
 
+			if(!$message_details)
+			{
+				_debug_array($body);
+				return false;
+			}
+
 			if ($ticket_id)
 			{
 				$historylog = CreateObject('phpgwapi.historylog', 'helpdesk');
