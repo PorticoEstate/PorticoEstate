@@ -901,7 +901,8 @@
 									continue;
 								}
 
-								$data[] = $this->_marshal($v[$col], $type);
+								$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : '';
+								$data[] = $this->_marshal($v[$col], $type, $_modifier);
 							}
 							$v = join(',', $data);
 							$this->db->query("INSERT INTO $table ($key, $colnames) VALUES($id, $v)", __LINE__, __FILE__);
@@ -1012,7 +1013,7 @@
 									continue;
 								}
 
-								$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : $modifier;
+								$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : '';
 								$data[] = $this->_marshal($v[$col], $type, $_modifier);
 							}
 							$v = join(',', $data);
