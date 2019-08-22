@@ -15,7 +15,6 @@
 		protected $entity_id;
 		protected $cat_id;
 		protected $metadata		 = array();
-		private $sequence, $primary_key;
 
 		public function __construct( $location_id, $debug = false )
 		{
@@ -297,7 +296,6 @@
 
 		private function _add_sql( $data )
 		{
-//			_debug_array($this->metadata);
 			$error	 = false;
 			$table	 = $this->table;
 			$fields	 = $this->fields;
@@ -318,16 +316,6 @@
 			{
 				if (isset($info->primary_key) && $info->primary_key)
 				{
-					if (preg_match('/^nextval\(\'public.seq_/i', $info->default_value))
-					{
-						preg_match("/(?<=\').*?(?=\')/", $info->default_value, $match);
-
-						$this->sequence = ltrim($match[0], "public.");
-						$this->primary_key = $key;
-						
-//						_debug_array($this->sequence);
-					}
-
 					if (!$_value = $data[array_search($key, $fields)])
 					{
 						throw new Exception("Fant ikke verdi for feltet 'primary key' {$key}");
@@ -429,28 +417,5 @@
 			}
 
 			return $ret;
-		}
-
-		/**
-		 * Update sequense to next value to enable normal user-input throug web-interface
-		 */
-		public function update_sequence()
-		{
-			if($this->table && $this->sequence && $this->primary_key)
-			{
-				$this->db->query("SELECT COALESCE((SELECT MAX({$this->primary_key})+1 FROM {$this->table}), 1) AS next_value", __LINE__, __FILE__);
-				$this->db->next_record();
-				$next_value	 = $this->db->f('next_value');
-
-				$ok = $this->db->query("SELECT setval('{$this->sequence}', {$next_value}, false)", __LINE__, __FILE__);
-				if($ok)
-				{
-					$this->messages[] = "Sequence '{$this->sequence}' updated to {$next_value}";
-				}
-				else
-				{
-					$this->errors[] = "Updating Sequence '{$this->sequence}' failed";
-				}
-			}
 		}
 	}

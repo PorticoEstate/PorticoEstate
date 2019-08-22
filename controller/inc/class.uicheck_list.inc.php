@@ -603,15 +603,12 @@
 					array('disablePagination' => true)
 				)
 			);
-			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
-			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';
 
 			$data = array
 				(
 				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
-				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
 				'get_locations' => $get_locations,

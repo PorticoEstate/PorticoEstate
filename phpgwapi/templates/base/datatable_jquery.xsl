@@ -1125,22 +1125,7 @@
 
 											try
 											{
-												oControl.multiselect("destroy");
-												oControl.multiselect({
-													buttonWidth: 250,
-													includeSelectAllOption: true,
-													enableFiltering: true,
-													enableCaseInsensitiveFiltering: true,
-													onChange: function($option) {
-														// Check if the filter was used.
-														var query = $(oControl).find('li.multiselect-filter input').val();
-
-														if (query) {
-															$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
-														}
-													}
-												});
-
+												oControl.formSelect();
 											}
 											catch(err)
 											{
@@ -1155,7 +1140,7 @@
 
 												if($(oControl).find("option").length > 0)
 												{
-											//		$(oControl).formSelect();
+													$(oControl).formSelect();
 												}
 											}
 											catch(err)
@@ -1280,11 +1265,6 @@
 				},//alternative
 				fnInitComplete: function (oSettings, json)
 				{
-					$(".btn-group").addClass('w-100');
-					$(".multiselect ").addClass('form-control');
-					$(".multiselect").removeClass('btn');
-					$(".multiselect").removeClass('btn-default');
-
 					if(typeof(initCompleteDatatable) == 'function')
 					{
 						initCompleteDatatable(oSettings, json, oTable);

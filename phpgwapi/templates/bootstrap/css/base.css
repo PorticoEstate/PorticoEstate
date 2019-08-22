@@ -43,7 +43,7 @@ p {
     /*color: #999;*/
 }
 
-#sidebar a,
+a,
 a:hover,
 a:focus {
     color: inherit;
@@ -259,33 +259,6 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 
 #sidebarCollapse {
 	margin-right: 10px;
-}
-
-@media screen and (max-width: 640px) {
-  div.dt-buttons {
-    float: left !important;
-    text-align: left;
-  }
-
-  div.dataTables_filter{
-    float: right !important;
-    text-align: left !important;
-  }
-  div.dataTables_length {
-    float: left !important;
-    text-align: left !important;
-  }
-
-  div.dataTables_info {
-    float: left !important;
-    text-align: left !important;
-  }
-
-   div.dataTables_paginate {
-    float: left !important;
-    /*text-align: left;*/
-  }
-
 }
 
 @media (max-width: 768px)

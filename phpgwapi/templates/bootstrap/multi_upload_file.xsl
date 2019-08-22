@@ -14,24 +14,34 @@
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
 				<div class="btn-group">
-					<span class="ml-3 btn btn-success fileinput-button">
-						<i class="mr-3 fas fa-plus"></i>
+					<span class="btn btn-success fileinput-button">
+						<i class="fas fa-plus"></i>
+						<xsl:text> </xsl:text>
 						<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 						<input type="file" id="files" name="files[]" multiple="">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
 						</input>
 				   </span>
-					<button type="submit" class="ml-3 btn btn-primary start">
-						<i class="mr-3 fas fa-arrow-circle-up"></i>
+				</div>
+                <div class="btn-group">
+					<button type="submit" class="btn btn-primary start">
+						<i class="fas fa-arrow-circle-up"></i>
+						<xsl:text> </xsl:text>
 					   <span><xsl:value-of select="php:function('lang', 'Start upload')"/></span>
 					</button>
-                <button type="reset" class="ml-3 btn btn-warning cancel">
-                    <i class="mr-3 fas fa-ban"></i>
+				</div>
+                <div class="btn-group">
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="fas fa-ban"></i>
+ 					<xsl:text> </xsl:text>
                    <span><xsl:value-of select="php:function('lang', 'Cancel upload')"/></span>
                 </button>
-                <button type="button" class="ml-3 btn btn-danger delete">
-                    <i class="mr-3 fas fa-trash-alt"></i>
+				</div>
+                <div class="btn-group">
+                <button type="button" class="btn btn-danger delete">
+                    <i class="fas fa-trash-alt"></i>
+					<xsl:text> </xsl:text>
                     <span><xsl:value-of select="php:function('lang', 'Delete')"/></span>
                 </button>
  				</div>
@@ -60,7 +70,7 @@
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 		<div class="template-upload">
 			<div class="table-cell">
-				<div class="ml-3 name">{%=file.name%}</div>
+				<div class="name">{%=file.name%}</div>
 				<div class="error"></div>
 			</div>
 			<div class="table-cell">
@@ -73,13 +83,13 @@
 				{% if (!i && !o.options.autoUpload) { %}
 
                <button class="btn btn-primary start" disabled>
-                    <i class="mr-3 fas fa-arrow-circle-up"></i>
+                    <i class="fas fa-arrow-circle-up"></i>
                     <span>Start</span>
                 </button>
 				{% } %}
 				{% if (!i) { %}
                <button class="btn btn-warning cancel">
-                   <i class="mr-3 fas fa-ban"></i>
+                   <i class="fas fa-ban"></i>
                     <span>Cancel</span>
                 </button>
 				{% } %}
@@ -93,8 +103,8 @@
 <![CDATA[
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 		<div class="template-download">
-			<div class="table-cell">
-				<div class="ml-3 name">
+			<div class="table-cell">						
+				<div class="name">
 					<!--<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>-->
 					{%=file.name%}							
 				</div>
@@ -104,10 +114,8 @@
 				<div class="size">{%=o.formatFileSize(file.size)%}</div>
 			</div>
 			<div class="table-cell">
-				{% if (file.deleteUrl && Allowed_Methods.includes("DELETE")) { %}
-					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="mr-3 fas fa-trash-alt"></i>Delete</button>
-					<input type="checkbox" name="delete" value="1" class="toggle"/>
-				{% } %}
+				<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="fas fa-trash-alt"></i>Delete</button>
+				<input type="checkbox" name="delete" value="1" class="toggle"/>
 			</div>
 		</div>
 	{% } %}
@@ -115,9 +123,9 @@
 	</script>
 
 	<script>
-		var Allowed_Methods = [];
 		$(function () {
 			'use strict';
+					
 			// Initialize the jQuery File Upload widget:
 			$('#multi_upload_file').fileupload({
 				// Uncomment the following to send cross-domain cookies:
@@ -163,11 +171,7 @@
 				context: $('#multi_upload_file')[0]
 			}).always(function () {
 				$(this).removeClass('fileupload-processing');
-			}).done(function (result, dummy, xhr) {
-				Allowed_Methods = xhr.getResponseHeader("Access-Control-Allow-Methods").split(",").map(function(item)
-					{
-						return item.trim();
-					});
+			}).done(function (result) {
 				$(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
 			});
 		});

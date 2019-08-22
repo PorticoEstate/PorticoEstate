@@ -208,14 +208,9 @@
 		public function marshal_field_value( $field, $value )
 		{
 			if (!is_array($field_def = $this->fields[$field]))
-			{
 				throw new InvalidArgumentException(sprintf('Field "%s" does not exists in "%s"', $field, get_class($this)));
-			}
-
 			if (!isset($field_def['type']))
-			{
 				throw new InvalidArgumentException(sprintf('Field "%s" in "%s" is missing a type definition', $field, get_class($this)));
-			}
 
 			return $this->_marshal($value, $field_def['type']);
 		}
@@ -236,15 +231,9 @@
 			return isset($this->valid_field_types[$type]);
 		}
 
-		function _marshal( $value, $type, $modifier ='')
+		function _marshal( $value, $type )
 		{
 			$type = strtolower($type);
-
-			if($modifier && method_exists($this,$modifier))
-			{
-				call_user_func_array(array($this, "$modifier"), array(&$value, true));
-			}
-
 			if ($value === null)
 			{
 				return $this->db_null;
@@ -769,23 +758,14 @@
 		 * Convert from utc to user's timezone
 		 * @param string $value
 		 */
-		protected function modify_by_timezone( &$value, $reverse = false )
+		protected function modify_by_timezone( &$value )
 		{
 			$timezone = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
-			if($value && !empty($timezone))
+			if(!empty($timezone))
 			{
-				if($reverse)
-				{
-					$datetime = new DateTime($value, new DateTimeZone($timezone));
-					$datetime->setTimeZone(new DateTimeZone('UTC'));
-					$value = $datetime->format('Y-m-d H:i:s');
-				}
-				else
-				{
-					$datetime = new DateTime($value, new DateTimeZone('UTC'));
-					$datetime->setTimeZone(new DateTimeZone($timezone));
-					$value = $datetime->format('Y-m-d H:i:s');
-				}
+				$datetime = new DateTime($value, new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($timezone));
+				$value = $datetime->format('Y-m-d H:i:s');
 			}
 		}
 
@@ -1012,8 +992,7 @@
 									continue;
 								}
 
-								$_modifier = !empty($paramsOrCol['read_callback']) ? $paramsOrCol['read_callback']  : $modifier;
-								$data[] = $this->_marshal($v[$col], $type, $_modifier);
+								$data[] = $this->_marshal($v[$col], $type);
 							}
 							$v = join(',', $data);
 							$update_queries[] = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";

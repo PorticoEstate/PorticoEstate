@@ -190,8 +190,6 @@
 			$status_list = execMethod('property.bogeneric.get_list', array(
 				'type'		 => 'condition_survey_status', 'selected'	 => 0, 'add_empty'	 => true));
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('condition survey');
-
 			$data = array(
 				'datatable_name' => lang('condition survey'),
 				'form'			 => array(

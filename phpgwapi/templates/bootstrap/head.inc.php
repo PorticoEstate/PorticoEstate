@@ -31,8 +31,8 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
-	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
@@ -51,8 +51,7 @@
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 
-	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
-
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";

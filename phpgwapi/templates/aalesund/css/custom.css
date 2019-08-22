@@ -656,8 +656,6 @@ F
 .popover-content,
 .popover-title {
     padding: 1em;
-	width: 23em;
-    text-align: center;
 }
 
 .popover-title {
@@ -768,16 +766,8 @@ SEARCH PAGE STYLE
     padding-top: 5%  !important;
 }
 
-.flex-container {
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 3rem;
-    padding: 0 1rem;
-}
 
-/* .searchContainer  .frontpagetext {
+.searchContainer  .frontpagetext {
     cursor: pointer;
     list-style-type:none  !important;
     width:600px !important;
@@ -809,7 +799,7 @@ SEARCH PAGE STYLE
 #search-page-content  .frontpagetext > p {
     font-size: 15px;
     margin-left: 1.5em;
-}* */
+}*
 
 
 .searchInput {
@@ -1427,9 +1417,6 @@ BUILDING PAGE STYLE
 border: 1px red solid !important;
 }*/
 
-.yui3-calendar td {
-    padding: 0.4em;
-}
 
 .yui3-calendar-header {
     padding: 0.5em;
@@ -1437,8 +1424,8 @@ border: 1px red solid !important;
 }
 
 .yui3-calendar-header-label {
-    display: inline-block !important;
-    min-width: 200px !important;
+    margin-top: 0.38em;
+    width: 9em;
 }
 
 .yui3-calendar-header a:before {
@@ -1653,20 +1640,8 @@ NEW APPLICATION PAGE STYLE
     text-align: left;
 }
 
-.mapBtn i {
-    color: #82368c;
-}
-
-.modal h2 {
-    text-transform: capitalize;
-}
-
 .mapBtn:hover {
     cursor: pointer;
-}
-
-.mapBtn:focus {
-    outline: none;
 }
 
 /* MODAL STYLING */

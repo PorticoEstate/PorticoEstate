@@ -608,10 +608,4 @@
 		{
 			return $this->so->convert_to_eav();
 		}
-		
-		function add_choice_value($location_id, $attribute_id, $new_value)
-		{
-			return $this->custom->add_choice($location_id, $attribute_id, $new_value);
-		}
-
 	}

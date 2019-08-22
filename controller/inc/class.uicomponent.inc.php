@@ -998,7 +998,6 @@
 					$_items = execMethod('property.soentity.read_entity_group', array(
 						'entity_group_id' => $entity_group_id,
 						'exclude_locations' => $exclude_locations_for_stray_items,
-						'stray_entity_group'	=> true,
 						'location_id' => $_location_id,
 						'control_id' => $filter_control_id,
 						'district_id' => $district_id,
@@ -1012,8 +1011,6 @@
 					$items = array_merge($items, $_items);
 				}
 			}
-
-			$controls = array();
 
 			$all_components = array();
 			$control_names = array();
@@ -1058,17 +1055,7 @@
 						//					continue;
 					}
 					$control_id = $control_relation['control_id'];
-
-					if(isset($controls[$control_id]))
-					{
-						$control = $controls[$control_id];
-					}
-					else
-					{
-						$control = $so_control->get_single($control_id);
-						$controls[$control_id] = $control;
-					}
-
+					$control = $so_control->get_single($control_id);
 					$control_names[$control_id] = $control->get_title();
 
 //					$repeat_type = $control->get_repeat_type();
@@ -1882,7 +1869,6 @@ HTML;
 			$fields = $this->get_fields();
 			$html = <<<HTML
 
-			<div class="datagrid table-responsive">
 			<table id="summary">
 				<thead>
 				<tr>
@@ -1981,7 +1967,6 @@ HTML;
   </tfoot>
 
 		</table>
-		</div>
 HTML;
 
 			return $html;

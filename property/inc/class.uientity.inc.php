@@ -37,7 +37,6 @@
 	{
 
 		private $receipt			 = array();
-		private $acl_read, $acl_add, $acl_edit, $acl_delete, $entity_id;
 		var $grants;
 		var $cat_id;
 		var $start;
@@ -50,8 +49,8 @@
 		var $currentapp;
 		var $check_lst_time_span	 = array();
 		var $controller_helper;
-		var $public_functions	 = array(
-			'summary'					 => true,
+		var $public_functions	 = array
+			(
 			'columns'					 => true,
 			'query'						 => true,
 			'download'					 => true,
@@ -3498,146 +3497,6 @@ JS;
 			echo "Planlagt: Visning av kalenderoppføringer for ressursen";
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
-
-
-		public function summary()
-		{
-			if (!$this->acl_read)
-			{
-				phpgw::no_access();
-			}
-
-			self::set_active_menu("property::entity_{$this->entity_id}");
-			$entity	 = $this->soadmin_entity->read_single($this->entity_id);
-
-			if ($GLOBALS['phpgw']->session->is_repost())
-			{
-				$this->receipt['error'][] = array('msg' => lang('Hmm... looks like a repost!'));
-			}
-
-
-			$location_code	 = phpgw::get_var('location_code', 'string', 'POST');
-
-			if($location_code)
-			{
-				$this->writetospreadsheet($location_code);
-				return;
-			}
-
-			$tabs			 = array();
-			$tabs['main']	 = array(
-				'label'	 => $entity['name'],
-				'link'	 => '#main'
-			);
-
-
-			$data = array(
-				'form_action'				 => self::link(array('menuaction' => "{$this->type_app[$this->type]}.uientity.summary", 'entity_id' => $this->entity_id)),
-				'cancel_url'				 => $GLOBALS['phpgw']->link('/home.php'),
-				'vendor_data'				 => $vendor_data,
-				'contact_data'				 => $contact_data,
-				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
-				'value_active_tab'			 => 0,
-			);
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $entity['name'] . ' - ' . lang('summary');
-
-
-			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->type_app[$this->type], 'portico', 'entity.summary.js');
-			self::render_template_xsl(array('entity'), array('summary' => $data));
-		}
-
-		private function writetospreadsheet( $location_code )
-		{
-			set_time_limit(500);
-			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
-
-
-//			_debug_array($location_code);
-			$items = array();
-
-			$entity	 = $this->soadmin_entity->read_single($this->entity_id);
-			$filename = str_replace(' ', '_', $entity['name']);
-
-			$date_time	 = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename	 .= "_{$date_time}.xlsx";
-
-			$writer = CreateObject('phpgwapi.xlsxwriter');
-
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($writer::sanitize_filename($filename), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-			$writer->setauthor($GLOBALS['phpgw_info']['user']['fullname']);
-			$writer->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}");
-
-			$soentity = createObject('property.soentity');
-			$categories = $this->soadmin_entity->read_category(array('entity_id' => $this->entity_id));
-//			_debug_array($categories);
-			foreach ($categories as $category)
-			{
-				$items	 =  $soentity->read(array(
-		//				'entity_group_id' => (int)$entity_group_id,
-						'location_id' => $category['location_id'],
-		//				'control_id' => $control_id,
-						'district_id' => $district_id,
-						'part_of_town_id' => $part_of_town_id,
-						'location_code'	=> $location_code,
-		//				'org_units' => $this->org_units,
-						'allrows' => true,
-		//				'control_registered' => true,
-		//				'check_for_control' => true
-						)
-					);
-
-				if(!$items)
-				{
-					continue;
-				}
-
-//				_debug_array($items);	die();
-
-				$count_uicols_name = count($name);
-
-				$header = array();
-
-				foreach ($items[0] as $key => $entry)
-				{
-					if(is_array($entry))
-					{
-						continue;
-					}
-
-					$header[$key] = 'string';
-				}
-
-				unset($entry);
-
-				$sheet_name = str_replace(' ', '_', $category['name']);
-				$writer->writeSheetHeader($sheet_name, $header);
-
-				foreach ($items as $item)
-				{
-					$row = array();
-					foreach ($header as $key => $entry)
-					{
-						$row[] = preg_replace("/\r\n/", ' ', $item[$key]);
-					}
-					$writer->writeSheetRow($sheet_name, $row);
-				}
-			}
-
-			if(!$row)
-			{
-				$writer->writeSheetHeader('Sheet1', array('' => 'string'));
-			}
-
-			$writer->writeToStdOut();
-		}
-
 //		public function get_controls_at_component( $location_id = 0, $id = 0, $skip_json = false )
 //		{
 //			if (!$location_id)

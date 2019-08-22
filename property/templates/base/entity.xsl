@@ -9,9 +9,6 @@
 		<xsl:when test="empty">
 			<xsl:apply-templates select="empty"/>
 		</xsl:when>
-		<xsl:when test="summary">
-			<xsl:apply-templates select="summary"/>
-		</xsl:when>
 		<xsl:when test="edit_inventory">
 			<xsl:apply-templates select="edit_inventory"/>
 		</xsl:when>
@@ -21,66 +18,6 @@
 	</xsl:choose>
 </xsl:template>
 
-<xsl:template xmlns:php="http://php.net/xsl" match="summary">
-	<div class="content">
-		<div>
-			<xsl:variable name="form_action">
-				<xsl:value-of select="form_action"/>
-			</xsl:variable>
-
-			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
-				<div id="tab-content">
-					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-
-					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
-
-					<div id="main">
-
-						<fieldset>
-							<legend>
-								<xsl:value-of select="php:function('lang', 'summary')"/>
-							</legend>
-
-							<div class="pure-control-group">
-								<label for='location_name'>
-									<xsl:value-of select="php:function('lang', 'location')"/>
-								</label>
-								<input type="hidden" id="location_code" name="location_code" />
-								<input type="text" id="location_name" name="location_name" class="pure-input-3-4">
-									<xsl:attribute name="required">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-								</input>
-								<div id="location_container"/>
-							</div>
-						</fieldset>
-					</div>
-				</div>
-				<div id="submit_group_bottom" class="proplist-col">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'create summary')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="save">
-						<xsl:attribute name="value">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="cancel_url">
-						<xsl:value-of select="cancel_url"/>
-					</xsl:variable>
-					<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
-						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'cancel')"/>
-						</xsl:attribute>
-					</input>
-				</div>
-			</form>
-		</div>
-	</div>
-</xsl:template>
 
 <!-- edit inventory -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit_inventory">

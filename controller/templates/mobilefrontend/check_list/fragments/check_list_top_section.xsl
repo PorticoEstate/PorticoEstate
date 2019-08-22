@@ -9,19 +9,12 @@
 	<div id="check-list-heading">
 		<div class="box-1">
 			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
-
-			<xsl:if test="last_completed_checklist_date != ''">
-				<xsl:value-of select="php:function('lang', 'last inspection')" />
-				<xsl:text>: </xsl:text>
-				 <xsl:value-of select="last_completed_checklist_date"/>
-			</xsl:if>
-
 			<xsl:choose>
 				<xsl:when test="type = 'component'">
 					<h2>
 						<xsl:value-of select="component_array/xml_short_desc"/>
 					</h2>
-					<button id = "submit_parent_component" type="button" class="mb-3 btn btn-info btn-block" onclick="show_parent_component_information({component_array/location_id}, {component_array/id});">
+					<button id = "submit_parent_component" type="button" class="pure-button pure-button-primary" onclick="show_parent_component_information({component_array/location_id}, {component_array/id});">
 						<xsl:value-of select="php:function('lang', 'details')" />
 					</button>
 					<div id = "form_parent_component_2"></div>
@@ -38,6 +31,38 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+
+		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+		<xsl:choose>
+			<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
+				<div class="box-2 select-box">
+					<xsl:variable name="action_url">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
+					</xsl:variable>
+					<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
+						<input type="hidden" name="check_list_id" value="{check_list/id}" />
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
+								<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'set status: done')" />
+									</xsl:attribute>
+								</input>
+							</xsl:when>
+							<xsl:otherwise>
+								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
+								<input type="submit" class="pure-button pure-button-primary bigmenubutton">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'is_executed')" />
+									</xsl:attribute>
+								</input>
+							</xsl:otherwise>
+						</xsl:choose>
+					</form>
+				</div>
+			</xsl:when>
+		</xsl:choose>
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 			<ul class="pure-menu-list">
@@ -57,38 +82,6 @@
 				</xsl:choose>
 			</ul>
 		</div>
-
-		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-		<xsl:choose>
-			<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
-				<div class="box-2 select-box">
-					<xsl:variable name="action_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
-					</xsl:variable>
-					<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
-						<input type="hidden" name="check_list_id" value="{check_list/id}" />
-						<xsl:choose>
-							<xsl:when test="check_list/status = 0">
-								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-								<input id="status_submit" type="submit" class="mt-3 btn btn-success btn-block">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'set status: done')" />
-									</xsl:attribute>
-								</input>
-							</xsl:when>
-							<xsl:otherwise>
-								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-								<input type="submit" class="mt-3 btn btn-success btn-block">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'is_executed')" />
-									</xsl:attribute>
-								</input>
-							</xsl:otherwise>
-						</xsl:choose>
-					</form>
-				</div>
-			</xsl:when>
-		</xsl:choose>
 	</div>
 
 </xsl:template>

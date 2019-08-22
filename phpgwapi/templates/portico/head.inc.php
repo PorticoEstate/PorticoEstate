@@ -105,17 +105,17 @@
 			$selecte_portico = ' selected = "selected"';
 			$selecte_pure = '';
 			break;
-		case 'bootstrap':
+		case 'pure':
 			$selecte_portico = '';
-			$selecte_bootstrap = ' selected = "selected"';
+			$selecte_pure = ' selected = "selected"';
 			break;
 	}
 
 	$template_selector = <<<HTML
 
    <select id = "template_selector">
-	<option value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
-	<option value="portico"{$selecte_portico}>Portico</option>
+	<option value="pure"{$selecte_pure}>Mobil</option>
+	<option value="portico"{$selecte_portico}>Desktop</option>
    </select>
 HTML;
 	// Construct navbar_config by taking into account the current selected menu

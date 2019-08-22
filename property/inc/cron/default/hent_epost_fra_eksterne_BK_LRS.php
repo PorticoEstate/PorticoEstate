@@ -155,38 +155,38 @@
 				'Arbeidsflyt og ehandel'			 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Arbeidsflyt og ehandel'
 				),
 				'Avvist papirfaktura'				 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Avvist papirfaktura'
 				),
 				'Innkassokrav'						 => array
 					(
 					'message_cat_id' => 321, // 24 Purringer/Inkasso
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Innkassokrav',
 					'priority'		 => 1
 				),
 				'Purring/Inkassovarsel'				 => array
 					(
 					'message_cat_id' => 321, // 24 Purringer/Inkasso
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Purring/Inkassovarsel'
 				),
 				'Spørsmål fra leverandører'			 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Spørsmål fra leverandører'
 				),
 				'Spørsmål ifbm bankkvitteringer'	 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'group_id'		 => 4253, //LRS-DRIFT_Økonomi
 					'subject'		 => 'Spørsmål ifbm bankkvitteringer',
 					'priority'		 => 1
 				),
@@ -456,7 +456,10 @@
 			$sender	 = $item3->Sender->Mailbox->EmailAddress;
 			$target	 = array();
 			$subject = $item3->Subject;
-			$body	 = $item3->Body->_;
+			$rool	 = $item3->Body->_;
+
+			$html2text	 = createObject('phpgwapi.html2text', $rool);
+			$body		 = $html2text->getText();
 
 			/**
 			 * Regelsett 1
@@ -514,7 +517,7 @@
 			{
 				//Send til Lønn- Trekk - Emnefelt=Fagforening
 				$message_cat_id	 = 254; // Trekk (IKKE ferie)
-				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
 				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender);
 				if ($ticket_id)
 				{
@@ -551,7 +554,7 @@
 			else if (preg_match("/(Innkassokrav|Inkassokrav)/i", $subject))
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
-				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
 				$priority		 = 1;
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
 				if ($ticket_id)
@@ -564,7 +567,7 @@
 			else if (preg_match("/Purring\/Inkassovarsel/i", $subject))
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
-				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$group_id		 = 4253; //LRS-DRIFT_Økonomi
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
 				if ($ticket_id)
 				{
@@ -625,42 +628,19 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if(preg_match("/ny leverandør/i" , $subject ))
-			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
-				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				}
-			}
-			else if(preg_match("/endring av leverandør/i" , $subject ))
-			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
-				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				}
-			}
-			else if(preg_match("/nye leverandører /i" , $subject ))
-			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
-				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				}
-			}
+//			else if (preg_match("/FakturaFirewall: Ukjent leverandør/i", $subject))
+//			{
+//
+//				$message_cat_id	 = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
+//				$group_id		 = 4169; // LRS-SERVICE_Økonomi
+//				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+//				if ($ticket_id)
+//				{
+//					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+//					$target['type']				 = 'helpdesk';
+//					$target['id']				 = $ticket_id;
+//				}
+//			}
 
 			/**
 			 * Ticket created / updated
@@ -677,24 +657,15 @@
 			$ticket_id	 = (int)$identificator_arr[1];
 			$msg_id		 = (int)$identificator_arr[2];
 
-			$html2text	 = createObject('phpgwapi.html2text', $body);
-			$text		 = $html2text->getText();
-
 			if (!$msg_id)
 			{
 				return false;
 			}
 			$soexternal = createObject('helpdesk.soexternal_communication');
 
-			$message_arr = explode('========', $text);
+			$message_arr = explode('========', $body);
 
 			$message = phpgw::clean_value($message_arr[0]);
-
-			if (!$message)
-			{
-				return false;
-			}
-
 			$sender	 = phpgw::clean_value($sender);
 
 			if ($soexternal->add_msg($msg_id, $message, $sender))
@@ -732,75 +703,41 @@
 		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $priority = 3 )
 		{
 
-			if($body != strip_tags($body))
-			{
-				$is_html = true;
-			}
-			else
-			{
-				$is_html = false;				
-			}
-
-			/**
-			 * FIXME
-			 */
-			$is_html = false;
-
-			$pattern = "/{$sender}/i";
-
-			if($is_html)
-			{
-				$message_details	= phpgw::clean_html(htmlentities($body));
-				if (!preg_match($pattern, $message_details))
-				{
-					$message_details .= "\n<br/>Avsender: {$sender}";
-				}
-			}
-			else
-			{
-				$html2text			 = createObject('phpgwapi.html2text', $body);
-				$text				 = trim($html2text->getText());
-				$textAr				 = explode(PHP_EOL, $text);
-				$textAr				 = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
-				$message_details_arr = array($subject);
-				foreach ($textAr as $line)
-				{
-					if (preg_match("/Untitled document/", $line))
-					{
-						continue;
-					}
-
-					$message_details_arr[] = trim($line);
-				}
-				$message_details = implode(PHP_EOL, $message_details_arr);
-
-				if (!preg_match($pattern, $message_details))
-				{
-					$message_details .= "\n\nAvsender: {$sender}";
-				}
-
-				$message_details = phpgw::clean_value($message_details);
-			}
-
 			if (!$message_cat_id)
 			{
 				return false;
 			}
 
+//			$ticket_id = $this->get_ticket($subject);
 			$ticket_id = false;
 
 			$subject_arr		 = explode('#', $subject);
 			$id_arr				 = explode(':', $subject_arr[1]);
 			$external_ticket_id	 = trim($id_arr[1]);
+			$text				 = trim($body);
+			$textAr				 = explode(PHP_EOL, $text);
+			$textAr				 = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
+			$message_details_arr = array($subject);
+			foreach ($textAr as $line)
+			{
+				if (preg_match("/Untitled document/", $line))
+				{
+					continue;
+				}
 
+				$message_details_arr[] = trim($line);
+			}
+			$message_details = implode(PHP_EOL, $message_details_arr);
+
+			$pattern = "/{$sender}/i";
+			if (!preg_match($pattern, $message_details))
+			{
+				$message_details .= "\n\nAvsender: {$sender}";
+			}
+
+			$message_details = phpgw::clean_value($message_details);
 			$subject		 = phpgw::clean_value($subject);
 			$sender			 = phpgw::clean_value($sender);
-
-			if(!$message_details)
-			{
-				_debug_array($body);
-				return false;
-			}
 
 			if ($ticket_id)
 			{

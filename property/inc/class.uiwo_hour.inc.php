@@ -1104,14 +1104,6 @@
 			$send_as_pdf	 = phpgw::get_var('send_as_pdf', 'bool');
 			$email_receipt	 = phpgw::get_var('email_receipt', 'bool');
 
-			if ($GLOBALS['phpgw']->session->is_repost())
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array(
-					'menuaction'	 => 'property.uiwo_hour.view',
-					'workorder_id'	 => $workorder_id,
-					'from'			 => phpgw::get_var('from')));
-			}
-
 			/*
 			  if($update_email)
 			  {

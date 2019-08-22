@@ -10,8 +10,8 @@
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
 			<!-- Title -->
-			<div class="container">
-				<div class="flex-container" id="frontpagetitle">
+			<div class="container text-center">
+				<div class="col" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
 			</div>

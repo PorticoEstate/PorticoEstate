@@ -19,10 +19,7 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					$("#form_parent_component_2").html(data.html);
-					var script = document.createElement("script");
-					script.textContent = data.lookup_functions;
-					document.head.appendChild(script);
+					$("#form_parent_component_2").html(data);
 				}
 			}
 		});
@@ -48,10 +45,7 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					$("#form_parent_component_2").html(data.html);
-					var script = document.createElement("script");
-					script.textContent = data.lookup_functions;
-					document.head.appendChild(script);
+					$("#form_parent_component_2").html(data);
 				}
 			}
 		});

@@ -1794,7 +1794,7 @@
 
 					$this->db->query("UPDATE fm_location" . ($type_id - 1) . " SET"
 						. " status= 2,"
-						. " category = '99'"
+						. " category = 99"
 						. " WHERE location_code= '{$update[$i]['location_code']}'", __LINE__, __FILE__);
 				}
 
@@ -2390,7 +2390,7 @@
 			$limit_search	 = 10;
 			if (ctype_digit($location_arr[0]))
 			{
-				$filtermethod1	 = "WHERE location_code {$this->like} '{$location_code}%' AND category !='99'";
+				$filtermethod1	 = "WHERE location_code {$this->like} '{$location_code}%' AND category !=99";
 				$filtermethod2	 = $filtermethod1;
 			}
 			else
@@ -2401,8 +2401,8 @@
 				$next_level		 = 2;
 				$last_level		 = 4;
 				$query			 = $this->db->db_addslashes($location_arr[0]);
-				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%' AND category !='99'";
-				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%' AND category !='99'";
+				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%' AND category !=99";
+				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%' AND category !=99";
 			}
 
 			$metadata1 = $this->db->metadata("fm_location{$current_level}");
@@ -2471,13 +2471,13 @@
 
 						$_sql[]= " SELECT location_code, {$name_field} AS name"
 								. " FROM fm_location{$j} {$this->join} fm_streetaddress ON (fm_location{$j}.street_id = fm_streetaddress.id)"
-								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !='99'";
+								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !=99";
 					}
 					else
 					{
 						$_sql[]= " SELECT location_code, {$name_field} AS name"
 								. " FROM fm_location{$j}"
-								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !='99'";
+								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !=99";
 					}
 	
 					$j++;

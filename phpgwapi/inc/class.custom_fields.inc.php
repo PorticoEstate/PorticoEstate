@@ -1008,30 +1008,11 @@
 		 * @param integer $choice_id
 
 		 */
-		public function add_choice($location_id, $attrib_id, $value, $choice_id = 0, $title = '')
+		public function add_choice($location_id,$attrib_id,$value, $choice_id = 0, $title = '')
 		{
-			$location_id = (int) $location_id;
-			$attrib_id = (int) $attrib_id;
 			if(!$choice_id)
 			{
-				/**
-				 * Find first candidate below 90.
-				 */
-				$sql = "SELECT s.i AS choice_id FROM generate_series(1,89) s(i)"
-					. " LEFT OUTER JOIN phpgw_cust_choice ON (phpgw_cust_choice.id = s.i AND location_id = {$location_id} AND attrib_id = {$attrib_id})"
-					. " WHERE phpgw_cust_choice.id IS NULL";
-
-				$this->_db->query($sql,__LINE__,__FILE__);
-				$this->_db->next_record();
-				$choice_id = (int)$this->_db->f('choice_id');
-
-				/**
-				 * Fallback if not found below 90
-				 */
-				if(!$choice_id)
-				{
-					$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
-				}
+				$choice_id = $this->_next_id('phpgw_cust_choice' ,array('location_id'=> $location_id, 'attrib_id'=>$attrib_id));
 			}
 
 			$this->_db->query("SELECT count(id) as cnt FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id = {$attrib_id}",__LINE__,__FILE__);
@@ -1049,13 +1030,8 @@
 
 			$values	= $this->_db->validate_insert($values);
 
-			$ok = $this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value, title) "
+			$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value, title) "
 			. "VALUES ({$values})",__LINE__,__FILE__);
-
-			if($ok)
-			{
-				return $choice_id;
-			}
 		}
 
 		/**

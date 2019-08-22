@@ -76,6 +76,7 @@
 			if ($this->home_alternative)
 			{
 				$this->skip_portalbox_controls = true;
+				$this->status_componants();
 			}
 			else
 			{
@@ -129,7 +130,6 @@ HTML;
 
 			unset($portalbox);
 		}
-
 
 		private function get_controls( $app_id )
 		{
