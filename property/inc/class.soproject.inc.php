@@ -1262,7 +1262,7 @@
 
 			if (!$_address)
 			{
-				$_address = $project['location_name'];
+				$_address[] = $project['location_name'];
 			}
 			if (!empty($project['additional_info']))
 			{

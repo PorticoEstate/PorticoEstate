@@ -46,7 +46,8 @@
 			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $keep_alive_timestamp);
 		}
 
-		$sessions_timeout = 10;$GLOBALS['phpgw_info']['server']['sessions_timeout'];
+		$sessions_timeout = 660; // 11 minutes
+//		$sessions_timeout = $GLOBALS['phpgw_info']['server']['sessions_timeout'];
 		if(($now - $keep_alive_timestamp) > $sessions_timeout)
 		{
 			$ret = array('status' => 440); //Login Time-out
@@ -57,6 +58,7 @@
 		}
 		else
 		{
+			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $now);
 			$ret = array('status' => 200);
 		}
 
@@ -122,5 +124,13 @@
 			$GLOBALS['phpgw']->preferences->add('portal_order', $app_order, $app_id);
 		}
 		$GLOBALS['phpgw']->preferences->save_repository();
+	}
+	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
+	{
+		echo "<div class='container'><div class='jumbotron'><h1>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
+		echo "</h1>";
+		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));
+		echo '</div></div>';
 	}
 	$GLOBALS['phpgw']->common->phpgw_footer();

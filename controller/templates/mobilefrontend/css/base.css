@@ -121,6 +121,7 @@ html, body {
 	box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
 }
 
+/*
 td, th {
   border: solid rgb(200, 200, 200) 1px;
   padding: .5rem;
@@ -129,7 +130,6 @@ td, th {
 th {
   text-align: left;
   background-color: rgb(190, 220, 250);
- /* text-transform: uppercase;*/
   padding-top: 1rem;
   padding-bottom: 1rem;
   border-bottom: rgb(50, 50, 100) solid 2px;
@@ -148,7 +148,7 @@ td:first-of-type, th:first-of-type {
 
 td:last-of-type, th:last-of-type {
   border-right: none;
-}
+}*/
 
 /* ===================================== VIEW CASES ================================ */
 

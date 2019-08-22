@@ -11,11 +11,12 @@
 		</a>
 
 		<xsl:call-template name="check_list_top_section">
+			<xsl:with-param name="active_tab">add_case</xsl:with-param>
 		</xsl:call-template>
 
 		<xsl:choose>
 			<xsl:when test="buildings_on_property/child::node()">
-				<div id="choose-building-wrp">
+				<div id="choose-building-wrp" class="mt-3">
 					<xsl:call-template name="select_buildings_on_property" />
 				</div>
 			</xsl:when>
@@ -23,7 +24,7 @@
 
 		<xsl:choose>
 			<xsl:when test="component_children/child::node()">
-				<div id="choose-building-wrp">
+				<div id="choose-building-wrp" class="mt-3">
 					<xsl:call-template name="select_component_children" />
 				</div>
 			</xsl:when>

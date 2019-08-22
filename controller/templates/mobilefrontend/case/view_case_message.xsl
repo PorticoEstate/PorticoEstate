@@ -62,7 +62,7 @@
 						<xsl:when test="type = 'component'">
 							<li class="pure-menu-item">
 
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
 										<xsl:text>&amp;year=</xsl:text>
@@ -84,7 +84,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<li class="pure-menu-item">
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 										<xsl:text>&amp;year=</xsl:text>
@@ -99,7 +99,7 @@
 							</li>
 							<li class="pure-menu-item">
 
-								<a class="pure-menu-link bigmenubutton">
+								<a class="btn btn-primary btn-lg">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 										<xsl:text>&amp;year=</xsl:text>

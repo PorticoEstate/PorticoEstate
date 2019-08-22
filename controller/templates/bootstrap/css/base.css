@@ -868,6 +868,7 @@ ul.row li{
   color: #FFFFFF;
 }
 
+/*
 .btn, .btn_m, .btn-sm {
   background: none repeat scroll 0 0 #4F9AEA;
   border: 1px solid #428AD7;
@@ -878,7 +879,8 @@ ul.row li{
   padding: 5px 10px;
   text-decoration: none;
 }
-
+*/
+/*
 .btn_m{
   padding: 2px 6px;
   font-size: 12px;
@@ -903,7 +905,7 @@ ul.row li{
   color: #FFFFFF;
   margin-top: 1px;
 }
-
+*/
 /* =======================================  MAIN CONTENT  ========================================= */
 
 #main_content {
