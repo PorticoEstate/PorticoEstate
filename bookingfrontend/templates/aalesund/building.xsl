@@ -207,10 +207,6 @@
 									</div>
 								</li>
 							</ul>
-
-							<div class="btn btn-default mr-1 mt-1 mb-1">
-								<input type="text" id="choose-date"/>
-							</div>
 							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
 								<i class="far fa-calendar-alt"></i>&#160;
 								<xsl:value-of select="php:function('lang', 'choose a date')"/>
@@ -257,30 +253,6 @@
 
 			</div>
 			<div class="push"></div>
-
-
-			<!-- Sigurd: start eksempel fra https://nhn.github.io/tui.calendar/latest/tutorial-example02-weekly -->
-			<div id="menu">
-			<h1></h1>
-			  <span id="menu-navi">
-				<button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">Today</button>
-				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-prev">
-				  <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>Prev
-				</button>
-				<button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
-				  <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>Next
-				</button>
-			  </span>
-			  <span>
-			  	<button type="button" class="btn btn-default btn-sm">Week</button>
-			  	<button type="button" class="btn btn-default btn-sm">Month</button>
-			  	<button type="button" class="btn btn-default btn-sm">Day</button>
-			  </span>
-			  <span id="renderRange" class="render-range"></span>
-			</div>
-			<div id="calendar" style="height: 800px"></div>
-			<!-- slutt eksempel-->
-
 		</div>
 		<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
@@ -295,8 +267,5 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
-
-		
-
 	</script>
 </xsl:template>
