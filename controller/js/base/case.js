@@ -15,6 +15,21 @@ $(document).ready(function ()
         return false;
     });
 
+
+//	var test_for_child = $("#choose-child-on-component");
+//
+//	if(test_for_child)
+//	{
+//		if(test_for_child.val())
+//		{
+//			$("#view_cases").show();
+//		}
+//		else
+//		{
+//			$("#view_cases").hide();
+//		}
+//	}
+
 	$("#choose-child-on-component").change(function ()
 	{
 		$("#submit_update_component").hide();
@@ -25,12 +40,15 @@ $(document).ready(function ()
 			show_component_information($(this).val());
 			show_component_picture();
 			$("#new_picture").show();
+			$("#view_cases").show();
+			$("#inspection_title").html($("#choose-child-on-component option:selected").text());
 		}
 		else
 		{
 			$('#equipment_picture_container').html('');
 			$("#new_picture").hide();
 			$("#form_new_component_2").html('');
+			$("#view_cases").hide();
 
 		}
 	});

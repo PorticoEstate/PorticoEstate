@@ -946,7 +946,8 @@
 			$user_role = true;
 
 			$data = array
-				(
+			(
+				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
