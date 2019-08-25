@@ -75,7 +75,8 @@
 			'handle_multi_upload_file'	=> true,
 			'get_files3' => true,
 			'view_file'	=> true,
-			'get_report' => true
+			'get_report' => true,
+			'set_completed_item'	=> true
 		);
 
 		function __construct()
@@ -435,6 +436,27 @@
 			self::render_template_xsl(array('check_list/add_check_list', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/fragments/add_check_list_menu',
 				'check_list/fragments/select_buildings_on_property'), $data);
+		}
+
+
+
+		function set_completed_item()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$item_string = phpgw::get_var('item_string');
+
+			$item_arr = explode('_', $item_string);
+			$location_id = $item_arr[0];
+			$item_id = $item_arr[1];
+
+			if($this->edit)
+			{
+				$this->so->set_completed_item($check_list_id, $location_id, $item_id);
+			}
+
+			$this->redirect(array('menuaction' => 'controller.uicase.add_case',
+					'check_list_id' => $check_list_id));
+
 		}
 
 		/**

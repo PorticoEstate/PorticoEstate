@@ -42,6 +42,7 @@ $(document).ready(function ()
 			$("#new_picture").show();
 			$("#view_cases").show();
 			$("#inspection_title").html($("#choose-child-on-component option:selected").text());
+			$("#item_string").val($(this).val());
 		}
 		else
 		{
