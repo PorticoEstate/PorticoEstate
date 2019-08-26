@@ -11,7 +11,7 @@
 			</xsl:attribute>
 		</input>
 
-		<div class="pure-control-group">
+		<div class="pure-control-group row mt-3">
 			<label>
 				<xsl:value-of select="php:function('lang', 'equipment')" />
 			</label>
@@ -34,13 +34,13 @@
 			</select>
 		</div>
 
-		<div class="pure-control-group">
+		<div class="pure-control-group row">
 			<label>
 				<xsl:value-of select="php:function('lang', 'picture')" />
 			</label>
 			<div class="pure-custom" id="equipment_picture_container"/>
 		</div>
-		<div id="new_picture" class="pure-control-group" style="display:none">
+		<div id="new_picture" class="pure-control-group row" style="display:none">
 			<label>
 				<xsl:value-of select="php:function('lang', 'new picture')" />
 			</label>
@@ -56,22 +56,28 @@
 	</form>
 
 	<xsl:for-each select="location_children">
-		<form class="pure-form pure-form-aligned form_new_component" method="post">
+		<form class="pure-form pure-form-aligned form_new_component row" method="post">
 			<xsl:attribute name="action">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.edit_component_child, phpgw_return_as:json')" />
 			</xsl:attribute>
-			<input type="hidden" name="get_form" value="1" />
-			<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
-			<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
-			<input type="hidden" name="location_id" value="{location_id}" />
-			<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
-				<xsl:value-of select="php:function('lang', 'new')" />
-				<xsl:text>: </xsl:text>
-				<xsl:value-of select="name" />
-			</button>
+			<fieldset>
+				<input type="hidden" name="get_form" value="1" />
+				<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
+				<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
+				<input type="hidden" name="location_id" value="{location_id}" />
+
+				<div class="pure-controls">
+					<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
+						<xsl:value-of select="php:function('lang', 'new')" />
+						<xsl:text>: </xsl:text>
+						<xsl:value-of select="name" />
+					</button>
+				</div>
+
+			</fieldset>
 		</form>
 	</xsl:for-each>
-	<div id = "form_new_component_2">
+	<div id = "form_new_component_2" class="row">
 
 	</div>
 

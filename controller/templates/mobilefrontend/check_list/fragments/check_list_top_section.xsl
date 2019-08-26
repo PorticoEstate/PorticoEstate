@@ -13,7 +13,7 @@
 			<xsl:if test="last_completed_checklist_date != ''">
 				<xsl:value-of select="php:function('lang', 'last inspection')" />
 				<xsl:text>: </xsl:text>
-				 <xsl:value-of select="last_completed_checklist_date"/>
+				<xsl:value-of select="last_completed_checklist_date"/>
 			</xsl:if>
 
 			<xsl:choose>
@@ -39,24 +39,36 @@
 			</xsl:choose>
 		</div>
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
-			<ul class="pure-menu-list">
-				<xsl:choose>
-					<xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
-						<xsl:call-template name="check_list_menu">
-							<xsl:with-param name="active_tab">
-								<xsl:value-of select="$active_tab" />
-							</xsl:with-param>
-						</xsl:call-template>
-						<xsl:call-template name="nav_control_plan" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="add_check_list_menu" />
-						<xsl:call-template name="nav_control_plan" />
-					</xsl:otherwise>
-				</xsl:choose>
-			</ul>
-		</div>
+		<nav class="navbar bg-light navbar-light">
+
+			<!-- LOGO -->
+			<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<xsl:value-of select="php:function('lang', $active_tab)"/>
+			</a>
+			<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
+
+				<ul class="navbar-nav">
+					<xsl:choose>
+						<xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
+							<xsl:call-template name="check_list_menu">
+								<xsl:with-param name="active_tab">
+									<xsl:value-of select="$active_tab" />
+								</xsl:with-param>
+							</xsl:call-template>
+							<xsl:call-template name="nav_control_plan" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="add_check_list_menu" />
+							<xsl:call-template name="nav_control_plan" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</ul>
+			</div>
+		</nav>
+
 
 		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
 		<xsl:choose>
