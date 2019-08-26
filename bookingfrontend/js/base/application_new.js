@@ -459,26 +459,38 @@ const inputOrganizerName = document.getElementById("inputOrganizerName");
 
 
 // Validate Event Name
-function validateEventName(){
-  const reEventName = /^[a-åA-Å0-9]{2,25}$/;
-  if(!reEventName.test(inputEventName.value)) {
-    inputEventName.classList.add("is-invalid");
-    inputEventName.classList.remove("is-valid");
-  } else {
-    inputEventName.classList.remove("is-invalid")
-    inputEventName.classList.add("is-valid")
-  }
+function validateEventName()
+{
+//  const reEventName = /^[a-åA-Å0-9]{2,25}$/;
+//  if(!reEventName.test(inputEventName.value))
+	var test = inputEventName.value;
+	if(test === null || test === '' || !test.trim())
+	{
+		inputEventName.classList.add("is-invalid");
+		inputEventName.classList.remove("is-valid");
+	}
+	else
+	{
+		inputEventName.classList.remove("is-invalid")
+		inputEventName.classList.add("is-valid")
+	}
 }
 // Validate Organizer Name
-function validateOrganizerName(){
-  const reOrgName = /^[a-åA-Å]{2,25}$/
-  if(!reOrgName.test(inputOrganizerName.value)) {
-    inputOrganizerName.classList.add("is-invalid");
-    inputOrganizerName.classList.remove("is-valid");
-  } else {
-    inputOrganizerName.classList.remove("is-invalid")
-    inputOrganizerName.classList.add("is-valid")
-  }
+function validateOrganizerName()
+{
+//	const reOrgName = /^[a-åA-Å]{2,25}$/
+//	if(!reOrgName.test(inputOrganizerName.value))
+	var test = inputOrganizerName.value;
+	if(test === null || test === '' || !test.trim())
+	{
+		inputOrganizerName.classList.add("is-invalid");
+		inputOrganizerName.classList.remove("is-valid");
+	}
+	else
+	{
+		inputOrganizerName.classList.remove("is-invalid")
+		inputOrganizerName.classList.add("is-valid")
+	}
 }
 
 // Dynamic validation
