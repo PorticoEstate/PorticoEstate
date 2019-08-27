@@ -451,12 +451,14 @@ document.getElementById('field_name').onchange = function () {
 };
 
 
-window.onload = function(e) {
+window.onload = function() {
   const submitParent = document.getElementById("submitContainer");
   const eventName = document.getElementById("inputEventName");
   const organizerName = document.getElementById("inputOrganizerName");
 
+
   let inputElements = [eventName, organizerName]
+
 
   for(let i = 0; i < inputElements.length; i++){
     inputElements[i].addEventListener("input", function(e){
@@ -464,10 +466,11 @@ window.onload = function(e) {
         e.target.classList.add("is-invalid") + e.target.classList.remove("is-valid");
       } else {
         e.target.classList.remove("is-invalid") + e.target.classList.add("is-valid");
-        
       }
     })
+    
     form.addEventListener("submit", function(e) {
+      validateTargetAudience();
       if(!inputElements[i].value){
         e.preventDefault()
         e.stopPropagation();
@@ -479,7 +482,5 @@ window.onload = function(e) {
         return
       }
     })
-  }
-
-  
+  }  
 }
