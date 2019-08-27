@@ -628,7 +628,20 @@ HTML;
 			$new_status = phpgw::get_var('new_status', 'string', 'GET');
 			$id 		= phpgw::get_var('id', 'int');
 			$receipt 	= $this->bo->update_status(array('status'=>$new_status),$id);
-			if (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'])
+
+			$custom_status = $this->bo->get_custom_status();
+
+			$_closed = $new_status == 'X' ? true : false;
+			foreach ($custom_status as $entry)
+			{
+				if("C{$entry['id']}" == $new_status && $entry['closed'] == 1)
+				{
+					$_closed = true;
+					break;
+				}
+			}
+
+			if ($_closed || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']))
 			{
 				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
 			}
