@@ -452,7 +452,7 @@ document.getElementById('field_name').onchange = function () {
 
 
 window.onload = function() {
-  const submitParent = document.getElementById("submitContainer");
+  const error = document.getElementById("submit-error");
   const eventName = document.getElementById("inputEventName");
   const organizerName = document.getElementById("inputOrganizerName");
 
@@ -470,16 +470,15 @@ window.onload = function() {
     })
     
     form.addEventListener("submit", function(e) {
-      validateTargetAudience();
       if(!inputElements[i].value){
-        e.preventDefault()
+        e.preventDefault();
         e.stopPropagation();
-        submitParent.innerHTML += `<div id="submit-error">Vennligst fyll inn alle feltene!</div>`
+        error.style.display = "block";
         setTimeout(function () {
-          submitParent.querySelector("#submit-error").remove();
+          error.style.display = "none";
         }, 5000)
       } else {
-        return
+        return;
       }
     })
   }  

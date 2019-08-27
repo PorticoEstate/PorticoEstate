@@ -298,6 +298,7 @@
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Add application')" />
 						</button>
+						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
 					</div>
 					
 					<!-- Submit error modal -->
