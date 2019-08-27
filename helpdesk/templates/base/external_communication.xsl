@@ -91,6 +91,21 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</div>
+
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'status')"/>
+								</label>
+
+								<select id="status_id" name="ticket_status" class="pure-input-3-4" >
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="status_list/options"/>
+								</select>
+							</div>
+
 						</fieldset>
 
 						<fieldset>

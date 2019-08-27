@@ -643,7 +643,7 @@ HTML;
 
 			if ($_closed || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']))
 			{
-				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, true);
 			}
 			//	$GLOBALS['phpgw']->session->appsession('receipt','helpdesk',$receipt);
 			return "id ".$id." ".lang('Status has been changed');
@@ -2053,7 +2053,8 @@ JS;
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
+					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2525,7 +2526,8 @@ JS;
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
+					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2542,6 +2544,8 @@ JS;
 			}
 
 			$attach_file_def = array(
+				array('key' => 'created', 'label' => lang('created'), 'sortable' => true,
+					'resizeable' => true),
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
 				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
