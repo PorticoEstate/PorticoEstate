@@ -461,13 +461,10 @@ window.onload = function(e) {
   for(let i = 0; i < inputElements.length; i++){
     inputElements[i].addEventListener("input", function(e){
       if(!e.target.value){
-        e.target.classList.add("is-invalid");
-        e.target.classList.remove("is-valid");
+        e.target.classList.add("is-invalid") + e.target.classList.remove("is-valid");
       } else {
-        e.target.classList.remove("is-invalid");
-        e.target.classList.add("is-valid");
-        validForm = true;
-        console.log(validForm);
+        e.target.classList.remove("is-invalid") + e.target.classList.add("is-valid");
+        
       }
     })
     form.addEventListener("submit", function(e) {

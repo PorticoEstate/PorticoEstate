@@ -192,9 +192,6 @@
 								<xsl:value-of select="php:function('lang', 'Event name')"/>
 							</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
-							Skriv inn navn på arrangementet!
-						</div>
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
