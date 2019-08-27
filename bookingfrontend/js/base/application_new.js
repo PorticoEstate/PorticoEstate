@@ -451,54 +451,35 @@ document.getElementById('field_name').onchange = function () {
 };
 
 
-// CUSTOM VALIDATOR
 window.onload = function() {
-// Grab elements
-const inputEventName = document.getElementById("inputEventName");
-const inputOrganizerName = document.getElementById("inputOrganizerName");
+  const error = document.getElementById("submit-error");
+  const eventName = document.getElementById("inputEventName");
+  const organizerName = document.getElementById("inputOrganizerName");
 
 
-// Validate Event Name
-function validateEventName(){
-  const reEventName = /^[a-åA-Å0-9]{2,25}$/;
-  if(!reEventName.test(inputEventName.value)) {
-    inputEventName.classList.add("is-invalid");
-    inputEventName.classList.remove("is-valid");
-  } else {
-    inputEventName.classList.remove("is-invalid")
-    inputEventName.classList.add("is-valid")
-  }
-}
-// Validate Organizer Name
-function validateOrganizerName(){
-  const reOrgName = /^[a-åA-Å]{2,25}$/
-  if(!reOrgName.test(inputOrganizerName.value)) {
-    inputOrganizerName.classList.add("is-invalid");
-    inputOrganizerName.classList.remove("is-valid");
-  } else {
-    inputOrganizerName.classList.remove("is-invalid")
-    inputOrganizerName.classList.add("is-valid")
-  }
-}
+  let inputElements = [eventName, organizerName]
 
-// Dynamic validation
-inputEventName.addEventListener("input", function() {
-  validateEventName();
-})
 
-inputOrganizerName.addEventListener("input",function() {
-  validateOrganizerName();
-})
-
-// Form Validation
-form.addEventListener("submit", function(e) {
-  if(inputEventName.value === "" || inputOrganizerName.value === "" ) {
-     e.preventDefault();
-     e.stopPropagation();
-     validateEventName();
-     validateOrganizerName();
-   } else {
-     return;
-   }
- })
+  for(let i = 0; i < inputElements.length; i++){
+    inputElements[i].addEventListener("input", function(e){
+      if(!e.target.value){
+        e.target.classList.add("is-invalid") + e.target.classList.remove("is-valid");
+      } else {
+        e.target.classList.remove("is-invalid") + e.target.classList.add("is-valid");
+      }
+    })
+    
+    form.addEventListener("submit", function(e) {
+      if(!inputElements[i].value){
+        e.preventDefault();
+        e.stopPropagation();
+        error.style.display = "block";
+        setTimeout(function () {
+          error.style.display = "none";
+        }, 5000)
+      } else {
+        return;
+      }
+    })
+  }  
 }
