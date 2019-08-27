@@ -76,7 +76,8 @@
 			'get_files3' => true,
 			'view_file'	=> true,
 			'get_report' => true,
-			'set_completed_item'	=> true
+			'set_completed_item'	=> true,
+			'undo_completed_item'	=> true
 		);
 
 		function __construct()
@@ -457,6 +458,19 @@
 			$this->redirect(array('menuaction' => 'controller.uicase.add_case',
 					'check_list_id' => $check_list_id));
 
+		}
+
+		function undo_completed_item()
+		{
+			$completed_id = phpgw::get_var('completed_id', 'int');
+			if($this->edit)
+			{
+				$ok = $this->so->undo_completed_item($completed_id);
+			}
+
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
 		}
 
 		/**

@@ -947,6 +947,7 @@
 			{
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
+					$component_child['completed_id'] = $completed_items[$component_child['location_id']][$component_child['id']]['completed_id'];
 					$completed_list[]= $component_child;
 				}
 				else
@@ -970,10 +971,12 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$user_role = true;
-
+//https://www.iconsdb.com/black-icons/undo-4-icon.html
 			$data = array
 			(
 				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
+				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
+				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
@@ -982,7 +985,6 @@
 				'component_array' => $case_data['component_array'],
 				'component_children' => $component_children,
 				'completed_list'	=> $completed_list,
-				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'location_children' => $case_data['location_children'],
 				'control_groups_with_items_array' => $case_data['control_groups_with_items_array'],
 				'type' => $case_data['type'],

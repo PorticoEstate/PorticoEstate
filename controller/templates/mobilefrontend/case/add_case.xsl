@@ -30,13 +30,13 @@
 					<div class="row mt-2">
 						<div class="container">
 							<h5 class="ml-5">Kontrollert utstyr</h5>
-							<ul class="ml-4">
+							<ul class="ml-2">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
-										<!--										<a href="#">
-											<img src="images/trash.png" width="16" class="mr-4"/>
-										</a>-->
-										<img src="{//img_green_check}" width="16"/>
+										<a href="#">
+											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+										</a>
+										<img src="{//img_green_check}" width="16" class="mr-2"/>
 										<xsl:value-of select="short_description" />
 									</li>
 								</xsl:for-each>
@@ -157,7 +157,7 @@
 														</xsl:choose>
 														<xsl:if test="include_condition_degree = 1">
 
-															<div class="form-group row">
+															<div class="form-group">
 																<label>
 																	<xsl:attribute name="title">
 																		<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
@@ -171,7 +171,7 @@
 																	<xsl:apply-templates select="//degree_list/options"/>
 																</select>
 															</div>
-															<div class="form-group row">
+															<div class="form-group">
 																<label>
 																	<xsl:attribute name="title">
 																		<xsl:value-of select="php:function('lang', 'consequence')"/>
@@ -199,7 +199,7 @@
 																		<option value="2" >Venter på tilbakemelding</option>
 																	</select>
 																</div>
-																<div>
+																<div class="form-group">
 																	<label>Beskrivelse av sak</label>
 																	<textarea name="case_descr" class="form-control">
 																		<xsl:if test="required = 1">
@@ -212,7 +212,7 @@
 																	</textarea>
 																</div>
 																<xsl:if test="include_counter_measure = 1">
-																	<div>
+																	<div class="form-group">
 																		<label>
 																			<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																		</label>
@@ -363,7 +363,7 @@
 																	</textarea>
 																</div>
 																<xsl:if test="include_counter_measure = 1">
-																	<div>
+																	<div class="form-group">
 																		<label>
 																			<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																		</label>
@@ -409,7 +409,7 @@
 																	</textarea>
 																</div>
 																<xsl:if test="include_counter_measure = 1">
-																	<div>
+																	<div class="form-group">
 																		<label>
 																			<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																		</label>
@@ -479,8 +479,8 @@
 							<xsl:attribute name="action">
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
 							</xsl:attribute>
-							<input type="text" name ="check_list_id" value="{check_list/id}"></input>
-							<input type="text" name ="item_string" id="item_string" value=""></input>
+							<input type="hidden" name ="check_list_id" value="{check_list/id}"></input>
+							<input type="hidden" name ="item_string" id="item_string" value=""></input>
 							<div class="modal-footer">
 								<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig</button>
 							</div>
