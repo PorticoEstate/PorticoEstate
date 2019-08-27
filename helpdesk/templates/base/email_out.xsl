@@ -85,12 +85,14 @@
 									<xsl:value-of select="php:function('lang', 'standard text')"/>
 								</a>
 							</label>
-							<textarea cols="47" rows="7" id="content" name="content">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="email_out/content"/>
-							</textarea>
+							<div class="pure-custom">
+								<textarea cols="47" rows="7" id="content" name="content">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:value-of select="email_out/content"/>
+								</textarea>
+							</div>
 						</div>
 						<!--div class="pure-control-group">
 							<label>

@@ -2132,6 +2132,8 @@ JS;
 					}
 				}
 
+				unset($entry);
+
 				if(in_array($this->account, $additional_users));
 				{
 					$this->acl_edit = true;
@@ -2274,9 +2276,31 @@ JS;
 					}
 				}
 
-				self::redirect(array('menuaction' => 'helpdesk.uitts.view','id' => $id,
-					'parent_cat_id' => $this->parent_cat_id ));
 
+				$custom_status = $this->bo->get_custom_status();
+
+				$_closed = $values['status'] == 'X' ? true : false;
+				foreach ($custom_status as $entry)
+				{
+					if("C{$entry['id']}" == $values['status'] && $entry['closed'] == 1)
+					{
+						$_closed = true;
+						break;
+					}
+				}
+
+				unset($entry);
+
+				if($_closed)
+				{
+					self::redirect(array('menuaction' => 'helpdesk.uitts.index',
+						'parent_cat_id' => $this->parent_cat_id ));
+				}
+				else
+				{
+					self::redirect(array('menuaction' => 'helpdesk.uitts.view','id' => $id,
+						'parent_cat_id' => $this->parent_cat_id ));
+				}
 			}
 
 			/* Preserve attribute values from post */

@@ -804,7 +804,7 @@
 						'id'	=> $this->db->f('id'),
 						'name'	=> $this->db->f('name', true),
 						'color'	=> $this->db->f('color'),
-						'closed'=> $this->db->f('color'),
+						'closed'=> (int)$this->db->f('closed'),
 					);
 			}
 			return $status;

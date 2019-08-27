@@ -548,7 +548,7 @@ JS;
 			}
 
 
-			$data											 = array(
+			$data	 = array(
 				'type_list'					 => array('options' => $type_list),
 				'datatable_def'				 => $datatable_def,
 				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.{$mode}",
@@ -573,6 +573,8 @@ JS;
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
 
+			phpgwapi_jquery::load_widget('autocomplete');
+			self::rich_text_editor('communication_message');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
@@ -587,7 +589,7 @@ JS;
 			$location_code = phpgw::get_var('location_code');
 			$contract_id = phpgw::get_var('contract_id');
 			$subject =  phpgw::get_var('subject');
-			$message =  phpgw::get_var('message');
+			$message =  phpgw::get_var('message', 'html');
 			$mail_recipients =  phpgw::get_var('mail_recipients');
 			$type_id =  phpgw::get_var('type_id', 'int');
 
