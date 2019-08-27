@@ -1943,6 +1943,11 @@ NEW APPLICATION PAGE STYLE
     pointer-events: none;
 }
 
+#submit-error {
+    margin-top: 1rem;
+    color: red;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575px) {  
     

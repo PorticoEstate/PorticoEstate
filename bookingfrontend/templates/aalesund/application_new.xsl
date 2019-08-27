@@ -205,9 +205,6 @@
 							<xsl:value-of select="php:function('lang', 'Organizer')"/>
 						</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
-							Skriv inn navn på arrangør!
-						</div>
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
@@ -320,7 +317,7 @@
 
 					<hr class="mt-5 mb-5"></hr>
 					<!-- Submit -->
-					<div class="form-group float-right">
+					<div id="submitContainer" class="form-group float-right text-center">
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Add application')" />
 						</button>
