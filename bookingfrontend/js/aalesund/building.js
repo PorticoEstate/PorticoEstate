@@ -5,6 +5,10 @@ var resourceIds = [];
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
+// Forces cache reload
+(function() {
+	location.load(true)
+})
 $(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
 function BuildingModel()
 {
