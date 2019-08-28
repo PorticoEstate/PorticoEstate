@@ -392,16 +392,18 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'descr')"/>
 										</label>
-										<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'message')"/>
-											</xsl:attribute>
-											<xsl:if test="value_id = ''">
-												<xsl:attribute name="data-validation">
-													<xsl:text>required</xsl:text>
+										<div class="pure-custom">
+											<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'message')"/>
 												</xsl:attribute>
-											</xsl:if>
-										</textarea>
+												<xsl:if test="value_id = ''">
+													<xsl:attribute name="data-validation">
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
+											</textarea>
+										</div>
 									</div>
 									<xsl:call-template name="vendor_form"/>
 								</xsl:when>

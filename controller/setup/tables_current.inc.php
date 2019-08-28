@@ -86,6 +86,20 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'controller_check_list_completed_item' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => false),
+				'check_list_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'completed_ts' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
+				'modified_by' 	=> array('type' => 'int', 'precision' => 4,'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'controller_procedure' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),

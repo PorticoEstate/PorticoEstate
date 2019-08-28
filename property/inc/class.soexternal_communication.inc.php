@@ -478,7 +478,7 @@
 					'required'	 => true,
 				),
 				'message'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD,
-					'type'		 => 'string',
+					'type'		 => 'html',
 					'label'		 => 'descr',
 					'sortable'	 => false,
 					'query'		 => true,

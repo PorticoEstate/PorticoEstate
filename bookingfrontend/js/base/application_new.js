@@ -455,10 +455,8 @@ window.onload = function() {
   const error = document.getElementById("submit-error");
   const eventName = document.getElementById("inputEventName");
   const organizerName = document.getElementById("inputOrganizerName");
-
-
+  
   let inputElements = [eventName, organizerName]
-
 
   for(let i = 0; i < inputElements.length; i++){
     inputElements[i].addEventListener("input", function(e){

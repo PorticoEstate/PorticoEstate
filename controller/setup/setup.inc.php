@@ -1,6 +1,6 @@
 <?php
 	$setup_info['controller']['name'] = 'controller';
-	$setup_info['controller']['version'] = '0.1.58';
+	$setup_info['controller']['version'] = '0.1.59';
 	$setup_info['controller']['app_order'] = 100;
 	$setup_info['controller']['enable'] = 1;
 	$setup_info['controller']['app_group']	= 'office';
@@ -45,6 +45,7 @@
 		'controller_control_group',
 		'controller_check_item',
 		'controller_check_list',
+		'controller_check_list_completed_item',
 		'controller_procedure',
 		'controller_control_group_list',
 		'controller_control_location_list',

@@ -19,7 +19,7 @@
 			<input type="hidden" name="location_id" value="{location_id}" />
 			<input type="hidden" name="component_id" value="{component_id}" />
 
-			<div class="pure-button-group" role="group" aria-label="">
+			<div class="pure-controls pure-button-group" role="group" aria-label="">
 				<xsl:if test="get_form =1 or get_edit_form = 1">
 					<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
 						<xsl:value-of select="php:function('lang', 'save')" />

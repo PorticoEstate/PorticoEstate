@@ -459,6 +459,13 @@ JS;
 			$lang_view_file		 = lang('click to view file');
 			$lang_attach_file	 = lang('Check to attach file');
 
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$z = 0;
 			foreach ($ticket['files'] as $_entry)
 			{
 				$_checked = '';
@@ -468,15 +475,32 @@ JS;
 				}
 
 				$content_files[] = array(
+					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat),
 					'file_name'		 => "<a href=\"{$link_view_file}&amp;file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_entry['name']}</a>",
 					'attach_file'	 => "<input type=\"checkbox\" {$_checked} class=\"mychecks\" name=\"file_attachments[]\" value=\"{$_entry['file_id']}\" title=\"$lang_attach_file\">"
 				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'helpdesk.uitts.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
 			}
 
 			$attach_file_def = array
 				(
+				array('key' => 'created', 'label' => lang('created'), 'sortable' => true,
+					'resizeable' => true),
 				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
 					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
 				array('key'		 => 'attach_file', 'label'		 => lang('attach file'),
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'JqueryPortico.FormatterCenter')
 			);
@@ -548,8 +572,9 @@ JS;
 			}
 
 
-			$data											 = array(
+			$data	 = array(
 				'type_list'					 => array('options' => $type_list),
+				'status_list'				 => array('options' => $this->botts->get_status_list($ticket['status'])),
 				'datatable_def'				 => $datatable_def,
 				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.{$mode}",
 					'id'		 => $id)),
@@ -573,6 +598,8 @@ JS;
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
 
+			phpgwapi_jquery::load_widget('autocomplete');
+			self::rich_text_editor('communication_message');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
@@ -587,7 +614,7 @@ JS;
 			$location_code = phpgw::get_var('location_code');
 			$contract_id = phpgw::get_var('contract_id');
 			$subject =  phpgw::get_var('subject');
-			$message =  phpgw::get_var('message');
+			$message =  phpgw::get_var('message', 'html');
 			$mail_recipients =  phpgw::get_var('mail_recipients');
 			$type_id =  phpgw::get_var('type_id', 'int');
 
@@ -665,6 +692,7 @@ JS;
 			 */
 			$values = $this->_populate($id);
 
+			$_closed = false;
 
 			if ($this->receipt['error'])
 			{
@@ -677,6 +705,33 @@ JS;
 				{
 					$receipt = $this->bo->save($values);
 					$id		 = $receipt['id'];
+
+					if(!$init_preview && $values['ticket_status'])
+					{
+						$new_status = $values['ticket_status'];
+						$ticket_id 	= $values['ticket_id'];
+						$receipt 	= $this->botts->update_status(array('status'=>$new_status),$ticket_id);						
+						self::message_set($receipt);
+
+						$custom_status = $this->botts->get_custom_status();
+
+						$_closed = $new_status == 'X' ? true : false;
+						foreach ($custom_status as $entry)
+						{
+							if("C{$entry['id']}" == $new_status && $entry['closed'] == 1)
+							{
+								$_closed = true;
+								break;
+							}
+						}
+
+						if ($this->botts->fields_updated && $_closed)
+						{
+							$receipt = $this->botts->mail_ticket($id, $this->botts->fields_updated, $receipt, false, true);
+							self::message_set($receipt);
+						}
+
+					}
 				}
 				catch (Exception $e)
 				{
@@ -694,6 +749,22 @@ JS;
 				if (phpgw::get_var('send', 'bool'))
 				{
 					$this->_send($id);
+				}
+				else if($_closed)
+				{
+					$ticket = $this->botts->read_single($values['ticket_id']);
+
+					if($ticket)
+					{
+						$cat_path = $this->botts->cats->get_path($ticket['cat_id']);
+
+						if(count($cat_path) > 1)
+						{
+							$parent_cat_id = $cat_path[0]['id'];
+						}
+					}
+
+					self::redirect(array('menuaction'	 => "{$this->currentapp}.uitts.index", 'parent_cat_id' => $parent_cat_id));
 				}
 				else
 				{
@@ -863,6 +934,8 @@ JS;
 			}
 
 			$values['id'] = $id;
+
+			$values['ticket_status'] = phpgw::get_var('ticket_status');
 
 			return $values;
 		}

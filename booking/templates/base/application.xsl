@@ -253,11 +253,11 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<h4>
-										<xsl:value-of select="php:function('lang', 'Extra info')" />
-									</h4>
+									<xsl:value-of select="php:function('lang', 'Extra info')" />
 								</label>
-								<xsl:value-of select="application/equipment" disable-output-escaping="yes"/>
+								<span>
+									<xsl:value-of select="application/equipment" disable-output-escaping="yes"/>
+								</span>
 							</div>
 						</div>
 
