@@ -321,7 +321,7 @@
 
 			if (!$id)
 			{
-				$initial_message = $ticket['details'];
+				$initial_message = nl2br($ticket['details']);
 			}
 
 			$additional_notes = array_merge($notes, $additional_notes);
@@ -369,10 +369,16 @@
 					{
 						space = '';
 					}
-					message = $("#communication_message").val() + space + aData['value_note'];
-					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-					message = message.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-					$("#communication_message").val(message);
+					var encodedStr = aData["value_note"];
+					var parser = new DOMParser;
+					var dom = parser.parseFromString(encodedStr,'text/html');
+					var decodedString = dom.body.textContent;
+					$.fn.insertAtCaret(decodedString);
+
+//					message = $("#communication_message").val() + space + aData['value_note'];
+//					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+//					message = message.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+//					$("#communication_message").val(message);
 
 				}
 JS;
@@ -475,7 +481,7 @@ JS;
 				}
 
 				$content_files[] = array(
-					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat),
+					'id'	=> $_entry['file_id'],
 					'file_name'		 => "<a href=\"{$link_view_file}&amp;file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_entry['name']}</a>",
 					'attach_file'	 => "<input type=\"checkbox\" {$_checked} class=\"mychecks\" name=\"file_attachments[]\" value=\"{$_entry['file_id']}\" title=\"$lang_attach_file\">"
 				);
@@ -495,7 +501,7 @@ JS;
 
 			$attach_file_def = array
 				(
-				array('key' => 'created', 'label' => lang('created'), 'sortable' => true,
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true,
 					'resizeable' => true),
 				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
 					'resizeable' => true),
@@ -594,7 +600,10 @@ JS;
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab'			 => 0,
 				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
-				'value_initial_message'		 => $initial_message
+				'value_initial_message'		 => $initial_message,
+				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uitts.build_multi_upload_file', id:'{$ticket_id}'}",
+				'multiple_uploader' => true,
+
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
 
@@ -602,7 +611,7 @@ JS;
 			self::rich_text_editor('communication_message');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
+			self::render_template_xsl(array('external_communication', 'datatable_inline', 'files'), array(
 				'edit' => $data));
 		}
 

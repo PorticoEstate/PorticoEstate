@@ -2054,7 +2054,7 @@ JS;
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
+					'id'	=> $_entry['file_id'],
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2131,6 +2131,13 @@ JS;
 				{
 					$this->parent_cat_id = $change_category[0];
 					$values['cat_id'] = (int)$change_category[1];
+					$group_assignment = createObject('helpdesk.socat_assignment')->read_single($values['cat_id']);
+
+					if($group_assignment)
+					{
+						$values['group_id'] = $group_assignment;
+						$values['assignedto'] = '';
+					}
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
@@ -2527,7 +2534,7 @@ JS;
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
+					'id'	=> $_entry['file_id'],
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2544,7 +2551,7 @@ JS;
 			}
 
 			$attach_file_def = array(
-				array('key' => 'created', 'label' => lang('created'), 'sortable' => true,
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true,
 					'resizeable' => true),
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),

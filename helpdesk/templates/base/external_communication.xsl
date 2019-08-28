@@ -272,6 +272,25 @@
 								</div>
 							</div>
 
+							<script type="text/javascript">
+								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+							</script>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
+
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+							<br/>
+							<xsl:text>Ctrl + V</xsl:text>
+						</label>
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
+						</canvas>
+						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+					</div>
+
 						</fieldset>
 					</div>
 					<div id="history">
