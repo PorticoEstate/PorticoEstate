@@ -303,7 +303,14 @@
 			foreach ($additional_message_notes as &$message_note)
 			{
 				$message_note['value_note']	 = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $message_note['value_note']);
-				$message_note['value_note']	 = nl2br($message_note['value_note']);
+
+				/**
+				 * html
+				 */
+				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $message_note['value_note']))
+				{
+					$message_note['value_note']	 = nl2br($message_note['value_note']);
+				}
 			}
 
 			$ticket				 = $this->botts->read_single($ticket_id);
