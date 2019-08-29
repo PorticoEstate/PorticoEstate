@@ -492,7 +492,12 @@
 
 
 		</div>
+		<xsl:call-template name="check_list_change_status">
+			<xsl:with-param name="active_tab">add_case</xsl:with-param>
+		</xsl:call-template>
 	</div>
+
+
 </xsl:template>
 
 <xsl:template match="component_options">

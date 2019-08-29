@@ -117,6 +117,10 @@
 			$this->vfs = CreateObject('phpgwapi.vfs');
 
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 		}
 
 
@@ -1020,6 +1024,7 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
 				'check_list/fragments/select_buildings_on_property',
+				'check_list/fragments/check_list_change_status',
 				'check_list/fragments/select_component_children'), $data);
 		}
 
@@ -1358,7 +1363,10 @@
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
+			self::render_template_xsl(array(
+				'check_list/fragments/check_list_menu',
+				'check_list/fragments/check_list_change_status',
+				'case/create_case_message'), $data);
 		}
 
 		function send_case_message()
