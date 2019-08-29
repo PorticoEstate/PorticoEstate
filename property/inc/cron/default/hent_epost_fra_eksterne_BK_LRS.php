@@ -459,6 +459,10 @@
 			$body		 = $item3->Body->_;
 			$body_type	 = $item3->Body->BodyType; //'HTML' or 'Text'
 
+//			_debug_array($body_type);
+//			echo $this->clean_html( $body );
+//			return;
+
 			/**
 			 * Regelsett 1
 			 */
@@ -685,15 +689,14 @@
 			{
 				return false;
 			}
-			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			$message_arr = explode('========', $text);
 
-			if ($body_type == 'HTML')
-			{
-				$message = $this->clean_html($message_arr[0]);
-			}
-			else
+//			if ($body_type == 'HTML')
+//			{
+//				$message = $this->clean_html($message_arr[0]);
+//			}
+//			else
 			{
 				$message = phpgw::clean_value($message_arr[0]);
 			}
@@ -704,6 +707,8 @@
 			}
 
 			$sender = phpgw::clean_value($sender);
+
+			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			if ($soexternal->add_msg($msg_id, $message, $sender))
 			{
@@ -784,23 +789,9 @@
 		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority = 3 )
 		{
 
-			if ($body_type == 'HTML')
-			{
-				$is_html = true;
-			}
-			else
-			{
-				$is_html = false;
-			}
-
-			/**
-			 * FIXME
-			 */
-			$is_html = false;
-
 			$pattern = "/{$sender}/i";
 
-			if ($is_html)
+			if ($body_type == 'HTML')
 			{
 				$message_details = $this->clean_html($body);
 				if (!preg_match($pattern, $message_details))
