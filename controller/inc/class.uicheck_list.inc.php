@@ -77,7 +77,8 @@
 			'view_file'	=> true,
 			'get_report' => true,
 			'set_completed_item'	=> true,
-			'undo_completed_item'	=> true
+			'undo_completed_item'	=> true,
+			'add_billable_hours'	=> true
 		);
 
 		function __construct()
@@ -1737,6 +1738,34 @@
 			return json_encode($check_items_with_cases);
 		}
 
+
+		function add_billable_hours()
+		{
+			$error = '';
+
+			if (!$this->add && !$this->edit)
+			{
+				return json_encode(array(
+					"status" => 'not_saved',
+					'message' => '',
+					'error'	=> 'no_access'
+					));
+			}
+			$check_list_id = phpgw::get_var('check_list_id');
+			$billable_hours = phpgw::get_var('billable_hours', 'float');
+			$check_list = $this->so->get_single($check_list_id);
+			$check_list->set_delta_billable_hours($billable_hours);
+			
+			if ($this->so->store($check_list))
+			{
+				return array('status' => 'ok');
+			}
+			else
+			{
+				return array("status" => 'not_saved', 'message' => '', 'error'=> '');
+			}
+		}
+
 		/**
 		 * Public function for updateing status for a check list
 		 *
@@ -1744,9 +1773,15 @@
 		 */
 		public function update_status()
 		{
+			$error = '';
+
 			if (!$this->add && !$this->edit)
 			{
-				return json_encode(array("status" => 'not_saved', 'message' => ''));
+				return json_encode(array(
+					"status" => 'not_saved',
+					'message' => '',
+					'error'	=> 'no_access'
+					));
 			}
 
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -1763,6 +1798,7 @@
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$ok = false;
+				$error = 'missing_billable_hours';
 			}
 //
 			if (!$this->_check_for_required($check_list) || !$ok)
@@ -1781,12 +1817,18 @@
 						}
 					}
 				}
-				return json_encode(array("status" => 'not_saved', 'message' => $message));
+				return array("status" => 'not_saved', 'message' => $message, 'error'=> $error ? $error : 'missing_required');
 			}
 
 			if ($check_list_status == controller_check_list::STATUS_DONE)
 			{
 				$check_list->set_completed_date(time());
+
+
+				/**
+				 * create message....
+				 */
+
 			}
 			else
 			{
@@ -1798,11 +1840,11 @@
 
 			if ($this->so->store($check_list))
 			{
-				return json_encode(array('status' => $check_list_status));
+				return array('status' => $check_list_status);
 			}
 			else
 			{
-				return json_encode(array("status" => 'not_saved', 'message' => ''));
+				return array("status" => 'not_saved', 'message' => '', 'error'=> 'missing_required');
 			}
 		}
 

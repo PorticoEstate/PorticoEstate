@@ -21,21 +21,24 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					var jsonObj = JSON.parse(data);
-
-					if (jsonObj.status == 'not_saved')
+					if (data.status == 'not_saved')
 					{
 						$(submitBnt).val("feil ved lagring");
-						if (jsonObj.message)
+						if (data.message)
 						{
-							alert(jsonObj.message);
-
-							var check_list_id = $(thisForm).find("input[name='check_list_id']").val();
-							add_billable_hours(check_list_id);
+							if (data.error === 'missing_billable_hours')
+							{
+								var check_list_id = $(thisForm).find("input[name='check_list_id']").val();
+								add_billable_hours(check_list_id);
+							}
+							else
+							{
+								alert(data.message);
+							}
 						}
 
 					}
-					else if (jsonObj.status == '1')
+					else if (data.status == '1')
 					{
 						$(submitBnt).val("Utført");
 						$("#update-check-list-status-value").val(0);
@@ -69,13 +72,11 @@ var alertify;
 
 function add_billable_hours(check_list_id)
 {
-
 	var oArgs = {
-		menuaction: 'controller..uicheck_list.add_billable_hours',
+		menuaction: 'controller.uicheck_list.add_billable_hours',
 		check_list_id: check_list_id
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
-alert(requestUrl);
 	//	var new_value = prompt(input_text, "");
 
 	/*
@@ -88,45 +89,43 @@ alert(requestUrl);
 	 * alertify.prompt(title, message, value, onok, oncancel);
 	 *
 	 */
-	alertify.prompt( 'input_text', 'lang_new_value', ''
-               , function(evt, value)
-			   {
-					var new_value = value;
-					if (new_value !== null && new_value !== "")
+	alertify.prompt('input_text', 'lang_new_value', ''
+		, function (evt, value)
+		{
+			var new_value = value;
+			if (new_value !== null && new_value !== "")
+			{
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function ()
+				{
+					if (this.readyState == 4 && this.status == 200)
 					{
-						var xmlhttp = new XMLHttpRequest();
-						xmlhttp.onreadystatechange = function ()
-						{
-							if (this.readyState == 4 && this.status == 200)
-							{
-								var data = JSON.parse(this.responseText);
+						var data = JSON.parse(this.responseText);
 
-								if (data.status == 'ok' && data.choice_id)
-								{
-									alertify.success('You entered: ' + value);
-									var select = document.getElementById(id);
-									var option = document.createElement("option");
-									option.text = new_value;
-									option.id = data.choice_id;
-									select.add(option, select[1]);
-									select.selectedIndex = "1";
-								}
-								else
-								{
-									alertify.error('Error');
-								}
-							}
-						};
-						xmlhttp.open("POST", requestUrl, true);
-						xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						var params = 'new_value=' + new_value;
-						xmlhttp.send(params);
+						if (data.status == 'ok')
+						{
+							alertify.success('You entered: ' + value);
+							
+						}
+						else
+						{
+							alertify.error('Error');
+						}
 					}
-					else
-					{
-						alertify.error('Cancel');
-					}
-				}
-               , function() { alertify.error('Cancel') });
+				};
+				xmlhttp.open("POST", requestUrl, true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				var params = 'billable_hours=' + new_value;
+				xmlhttp.send(params);
+			}
+			else
+			{
+				alertify.error('Cancel');
+			}
+		}
+	, function ()
+	{
+		alertify.error('Cancel')
+	});
 
 }
