@@ -7,8 +7,8 @@
 
 	<xsl:choose>
 		<xsl:when test="type = 'component'">
-			<li class="pure-menu-item">
-				<a class="btn btn-primary btn-lg">
+			<li class="nav-item">
+				<a class="nav-link">
 					<xsl:attribute name="href">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
 						<xsl:text>&amp;year=</xsl:text>
@@ -29,8 +29,8 @@
 			</li>
 		</xsl:when>
 		<xsl:otherwise>
-			<li class="pure-menu-item">
-				<a class="btn btn-primary btn-lg">
+			<li class="nav-item">
+				<a class="nav-link">
 					<xsl:attribute name="href">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
 						<xsl:text>&amp;year=</xsl:text>
@@ -42,8 +42,8 @@
 					Kontrollplan for bygg/eiendom (år)
 				</a>
 			</li>
-			<li class="pure-menu-item">
-				<a class="btn btn-primary btn-lg">
+			<li class="nav-item">
+				<a class="nav-link">
 					<xsl:attribute name="href">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
 						<xsl:text>&amp;year=</xsl:text>

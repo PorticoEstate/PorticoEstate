@@ -30,6 +30,16 @@ this.preview = function (id)
 	Window1 = window.open(strURL, 'Search', "left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
 };
 
+$(window).on('load', function ()
+{
+	$.fn.insertAtCaret = function (myValue)
+	{
+		myValue = myValue.trim();
+		CKEDITOR.instances['communication_message'].insertText(myValue);
+	};
+
+});
+
 $(document).ready(function ()
 {
 	var do_preview = $("#do_preview").val();

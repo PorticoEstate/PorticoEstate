@@ -4,6 +4,16 @@ $(document).ready(function ()
 	// EDIT COMPONENT
 	show_parent_component_information = function (location_id,  component_id)
 	{
+		var x = document.getElementById("form_parent_component_2");
+		if (x.style.display === "block")
+		{
+			x.style.display = "none";
+		}
+		else
+		{
+			x.style.display = "block";
+		}
+
 		var oArgs = {
 			menuaction: 'controller.uicase.edit_parent_component',
 			location_id: location_id,
@@ -64,6 +74,7 @@ $(document).ready(function ()
 		if(edit_parent == 1)
 		{
 			$("#form_parent_component_2").html('');
+			$("#form_parent_component_2").hide();
 		}
 		else
 		{
@@ -129,12 +140,14 @@ $(document).ready(function ()
 				if(edit_parent == 1)
 				{
 					$("#form_parent_component_2").html(data.message);
+					$("#form_parent_component_2").hide(2000);
 				}
 				else
 				{
 					$("#form_new_component_2").html(data.message);
 					$('#equipment_picture_container').html('');
 					$("#new_picture").hide();
+					$("#view_cases").hide();
 				}
 			}
 		});

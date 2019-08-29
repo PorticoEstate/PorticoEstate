@@ -5,13 +5,14 @@
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
 
-	<li class="pure-menu-item">
+
+	<li class="nav-item">
 		<xsl:choose>
 			<xsl:when test="$active_tab = 'view_details'">
-				<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+				<xsl:attribute name="class">nav-item active</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="btn btn-primary btn-lg">
+		<a class="nav-link">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -23,11 +24,11 @@
 		</a>
 	</li>
 	<!-- ==================  LOADS CASES FOR CHECKLIST  ===================== -->
-	<li class="pure-menu-item">
+	<li class="nav-item">
 		<xsl:if test="$active_tab = 'view_cases'">
-			<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+			<xsl:attribute name="class">nav-item active</xsl:attribute>
 		</xsl:if>
-		<a class="btn btn-primary btn-lg">
+		<a class="nav-link">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -40,13 +41,13 @@
 		</a>
 	</li>
 	<!-- ==================  LOADS INFO ABOUT CONTROL  ===================== -->
-	<li class="pure-menu-item">
+	<li class="nav-item">
 		<xsl:choose>
 			<xsl:when test="$active_tab = 'view_control_info'">
-				<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+				<xsl:attribute name="class">nav-item active</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="btn btn-primary btn-lg">
+		<a class="nav-link">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_info</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -59,11 +60,11 @@
 		</a>
 	</li>
 	<!-- ==================  REGISTER NEW CASE  ===================== -->
-	<li class="pure-menu-item">
+	<li class="nav-item">
 		<xsl:if test="$active_tab = 'add_case'">
-			<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+			<xsl:attribute name="class">nav-item active</xsl:attribute>
 		</xsl:if>
-		<a class="btn btn-primary btn-lg">
+		<a class="nav-link">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.add_case</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -76,11 +77,11 @@
 		</a>
 	</li>
 	<!-- ==================  REGISTER NEW MESSAGE  ===================== -->
-	<li class="pure-menu-item">
+	<li class="nav-item">
 		<xsl:if test="$active_tab = 'create_case_message'">
-			<xsl:attribute name="class">pure-menu-item pure-menu-selected badge badge-danger</xsl:attribute>
+			<xsl:attribute name="class">nav-item active</xsl:attribute>
 		</xsl:if>
-		<a class="btn btn-primary btn-lg">
+		<a class="nav-link">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -92,4 +93,5 @@
 			<xsl:value-of select="php:function('lang', 'add ticket')"/>
 		</a>
 	</li>
+
 </xsl:template>

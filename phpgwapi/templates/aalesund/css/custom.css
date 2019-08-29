@@ -1600,7 +1600,8 @@ NEW APPLICATION PAGE STYLE
 .new-application-page .form-group .input-group .bookingDate,
 .new-application-page .form-group .input-group .bookingStartTime,
 .new-application-page .form-group .input-group .bookingEndTime,
-.new-application-page .form-group .choseResource  {
+.new-application-page .form-group .choseResource,
+.new-application-page .form-group #audienceDropdownBtn {
     cursor: pointer;
 } 
 

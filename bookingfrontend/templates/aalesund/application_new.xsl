@@ -39,12 +39,12 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<div id="choseResource" type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+						<div type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</div>
 
-						<ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
+						<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
 							<li>
 								<div class="form-check checkbox checkbox-primary">
 									<label class="check-box-label">
@@ -151,18 +151,18 @@
 					<!-- Target Audience Section-->
 					<div class="form-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
-						<div class="dropdown">
-							<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<xsl:value-of select="php:function('lang', 'choose')" />
-							</div>
-							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
-								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
-							</div>
-							<input class="form-control" id="inputTargetAudience" required="true" type="text" style="display: none" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+						<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
+						<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown">
+							<xsl:value-of select="php:function('lang', 'choose')" />
+							<span class="caret"></span>
 						</div>
-					</div>
-				
+
+						<ul class="dropdown-menu px-2" data-bind="foreach: audiences" aria-label="Large">
+							<li class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected"></li>
+							<!-- <a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a> -->
+						</ul>
+						<input class="form-control" id="inputTargetAudience" required="true" type="text" style="display: none" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+					</div>		
 					<!-- Event Name -->
 					<div class="form-group">
 						<label>

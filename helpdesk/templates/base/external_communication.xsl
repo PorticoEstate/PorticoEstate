@@ -19,9 +19,9 @@
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 		function response_lookup()
 		{
-			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:2};
-			var strURL = phpGWLink('index.php', oArgs);
-			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:2};
+		var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 
@@ -91,6 +91,21 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</div>
+
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'status')"/>
+								</label>
+
+								<select id="status_id" name="ticket_status" class="pure-input-3-4" >
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="status_list/options"/>
+								</select>
+							</div>
+
 						</fieldset>
 
 						<fieldset>
@@ -172,7 +187,7 @@
 							<xsl:choose>
 								<xsl:when test="mode = 'edit'">
 									<div class="pure-control-group">
-										<label for="new_note">
+										<label for="communication_message">
 											<xsl:value-of select="php:function('lang', 'descr')"/>
 											<br/>
 											<a href="javascript:response_lookup()">
@@ -183,17 +198,19 @@
 											</a>
 										</label>
 
-										<textarea id ="new_note" class="pure-input-3-4" rows="10" name="message">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'message')"/>
-											</xsl:attribute>
-											<xsl:if test="value_id = ''">
-												<xsl:attribute name="data-validation">
-													<xsl:text>required</xsl:text>
+										<div class="pure-custom">
+											<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'message')"/>
 												</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="value_initial_message"/>
-										</textarea>
+												<xsl:if test="value_id = ''">
+													<xsl:attribute name="data-validation">
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="value_initial_message"/>
+											</textarea>
+										</div>
 									</div>
 									<xsl:call-template name="vendor_form"/>
 								</xsl:when>

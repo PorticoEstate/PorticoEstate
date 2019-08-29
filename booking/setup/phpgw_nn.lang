@@ -729,6 +729,7 @@ Application for	booking	nn	Søknaden gjelder
 applicationcart empty	booking	nn	Ingen søknader finnes
 At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
 Bookable resources (2018)	booking	nn	Lokaler til leie
+For rent	booking	no	Til leie
 Booking (2018)	booking	nn	Interntildeling
 Building (2018)	booking	nn	Anlegg
 Calendar	booking	nn	Kalender

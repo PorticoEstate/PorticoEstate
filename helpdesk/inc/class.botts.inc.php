@@ -1120,17 +1120,20 @@
 					{
 						$i++;
 						$j = 1;
+						$additional_notes[] = $note;
 					}
-					else
+					else//verify this...
 					{
 						if($i)
 						{
 							$j++;
 						}
+						$note['value_count'] = "{$i}.{$j}";
+						$note['value_note'] = "";
+						$note['value_user'] = "";
+						$additional_notes[] = $note;
 					}
 					$i = max(array(1, $i));
-					$note['value_count'] = "{$i}.{$j}";
-					$additional_notes[] = $note;
 				}
 			}
 

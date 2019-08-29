@@ -238,7 +238,7 @@
 				$p_cat_id		= 	$parent_system_location_arr[3];
 
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
-				
+
 				if($parent_location_id)
 				{
 					$parent_item = $soentity->read_single(array('location_id' => $parent_location_id, 'id' => $parent_component_id));
@@ -934,6 +934,33 @@
 				$mandatory_location = false;
 			}
 			$case_data = $this->_get_case_data();
+
+//			_debug_array($case_data['check_list']->get_id());
+//			_debug_array($case_data['component_children']);
+
+			$_component_children = (array)$case_data['component_children'];
+			$completed_items = $this->so_check_list->get_completed_item($case_data['check_list']->get_id());
+
+			$component_children = array();
+			$completed_list = array();
+			foreach ($_component_children as &$component_child)
+			{
+				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
+				{
+					$component_child['completed_id'] = $completed_items[$component_child['location_id']][$component_child['id']]['completed_id'];
+					$completed_list[]= $component_child;
+				}
+				else
+				{
+					$component_children[]= $component_child;
+				}
+
+			}
+
+//			_debug_array($completed_items);
+//			_debug_array($completed_list);
+
+
 			$check_list = $case_data['check_list'];
 			$last_completed_checklist = $case_data['last_completed_checklist'];
 
@@ -944,16 +971,20 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$user_role = true;
-
+//https://www.iconsdb.com/black-icons/undo-4-icon.html
 			$data = array
-				(
+			(
+				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
+				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
+				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $case_data['buildings_on_property'],
 				'location_array' => $case_data['location_array'],
 				'component_array' => $case_data['component_array'],
-				'component_children' => $case_data['component_children'],
+				'component_children' => $component_children,
+				'completed_list'	=> $completed_list,
 				'location_children' => $case_data['location_children'],
 				'control_groups_with_items_array' => $case_data['control_groups_with_items_array'],
 				'type' => $case_data['type'],
