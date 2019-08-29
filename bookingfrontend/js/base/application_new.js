@@ -459,7 +459,6 @@ window.onload = function() {
 
   let inputElements = [eventName, organizerName]
 
-
   for(let i = 0; i < inputElements.length; i++){
     inputElements[i].addEventListener("input", function(e){
       if(!e.target.value){
@@ -468,18 +467,24 @@ window.onload = function() {
         e.target.classList.remove("is-invalid") + e.target.classList.add("is-valid");
       }
     })
-    
-    form.addEventListener("submit", function(e) {
-      if(!inputElements[i].value){
-        e.preventDefault();
-        e.stopPropagation();
-        error.style.display = "block";
-        setTimeout(function () {
-          error.style.display = "none";
-        }, 5000)
-      } else {
-        return;
-      }
-    })
-  }  
+  }
+
+
+  form.addEventListener("submit", function(e) {
+    if(eventName.value === "" || organizerName === ""){
+      eventName.classList.add("is-invalid") + e.target.classList.remove("is-valid");
+      organizerName.classList.add("is-invalid") + e.target.classList.remove("is-valid");
+      
+      error.style.display = "block";
+      setTimeout(function () {
+        error.style.display = "none";
+      }, 5000)
+
+      e.preventDefault();
+      e.stopPropagation();
+    } else {
+      return;
+    }
+  })
+
 }
