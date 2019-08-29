@@ -771,12 +771,14 @@
 			}
 
 			$test = $dom->saveHTML();
+			if( class_exists('tidy'))
+			{
+				$tidy = new tidy;
+				$tidy->parseString($test, $tidy_options, 'utf8');
+				$test = $tidy->body();
+			}
 
-			$tidy	 = new tidy;
-			$tidy->parseString($test, $tidy_options, 'utf8');
-			$body	 = $tidy->body();
-
-			return phpgw::clean_html($body);
+			return phpgw::clean_html($test);
 		}
 
 		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority = 3 )
