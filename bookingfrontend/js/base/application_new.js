@@ -455,6 +455,7 @@ window.onload = function() {
   const error = document.getElementById("submit-error");
   const eventName = document.getElementById("inputEventName");
   const organizerName = document.getElementById("inputOrganizerName");
+  const targetAudience = document.getElementById("inputTargetAudience")
 
 
   let inputElements = [eventName, organizerName]
@@ -469,22 +470,40 @@ window.onload = function() {
     })
   }
 
+  const validateTargetAudience = function() {
+    const targetAudienceBtn = document.getElementById("audienceDropdownBtn")
+
+    !targetAudience.value ? targetAudienceBtn.classList.add("is-invalid") : targetAudienceBtn.classList.replace("is-invalid", "is-valid") || targetAudienceBtn.classList.add("is-valid")
+  }
+
+  const validateInputs = function() {
+    !eventName.value ? eventName.classList.add("is-invalid") : eventName.classList.replace("is-invalid", "is-valid") || eventName.classList.add("is-valid");
+    
+    !organizerName.value ? organizerName.classList.add("is-invalid") : organizerName.classList.replace("is-invalid", "is-valid") || organizerName.classList.add("is-valid")
+  }
 
   form.addEventListener("submit", function(e) {
-    if(eventName.value === "" || organizerName === ""){
-      eventName.classList.add("is-invalid") + e.target.classList.remove("is-valid");
-      organizerName.classList.add("is-invalid") + e.target.classList.remove("is-valid");
-      
+    if(!eventName.value || !organizerName.value || !targetAudience.value){
+      e.preventDefault();
+      e.stopPropagation();
+      validateInputs();
+      validateTargetAudience();
       error.style.display = "block";
       setTimeout(function () {
         error.style.display = "none";
       }, 5000)
-
-      e.preventDefault();
-      e.stopPropagation();
     } else {
       return;
-    }
+    } 
   })
-
 }
+
+const test = document.getElementById("inputEventName")
+
+test.addEventListener("input", function(){
+  if(!test.value){
+    console.log("there is no value")
+  } else {
+    console.log("there is a value")
+  }
+})
