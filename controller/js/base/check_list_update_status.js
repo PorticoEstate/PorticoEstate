@@ -23,13 +23,18 @@ $(document).ready(function ()
 				{
 					if (data.status == 'not_saved')
 					{
-						$(submitBnt).val("feil ved lagring");
+						//$(submitBnt).val("feil ved lagring");
+						
+						$(submitBnt).removeClass('btn-warning');
+						$(submitBnt).removeClass('btn-success');
+						$(submitBnt).addClass('btn-danger');
+
 						if (data.message)
 						{
 							if (data.error === 'missing_billable_hours')
 							{
 								var check_list_id = $(thisForm).find("input[name='check_list_id']").val();
-								add_billable_hours(check_list_id);
+								add_billable_hours(check_list_id, data.input_text, data.lang_new_value);
 							}
 							else
 							{
@@ -42,15 +47,17 @@ $(document).ready(function ()
 					{
 						$(submitBnt).val("Utført");
 						$("#update-check-list-status-value").val(0);
-						//          $("#update-check-list-status-icon.not_done").hide();
-						//        	$("#update-check-list-status-icon-done.done").show();
+						$(submitBnt).removeClass('btn-danger');
+						$(submitBnt).removeClass('btn-warning');
+						$(submitBnt).addClass('btn-success');
 					}
 					else
 					{
 						$(submitBnt).val("Sett status: Utført");
 						$("#update-check-list-status-value").val(1);
-						//         $("#update-check-list-status-icon.not_done").show();
-						//         $("#update-check-list-status-icon-done.done").hide();
+						$(submitBnt).removeClass('btn-danger');
+						$(submitBnt).removeClass('btn-success');
+						$(submitBnt).addClass('btn-warning');
 					}
 				}
 			}
@@ -70,7 +77,7 @@ var alertify;
  * @returns {undefined}
  */
 
-function add_billable_hours(check_list_id)
+function add_billable_hours(check_list_id, input_text, lang_new_value)
 {
 	var oArgs = {
 		menuaction: 'controller.uicheck_list.add_billable_hours',
@@ -89,7 +96,7 @@ function add_billable_hours(check_list_id)
 	 * alertify.prompt(title, message, value, onok, oncancel);
 	 *
 	 */
-	alertify.prompt('input_text', 'lang_new_value', ''
+	alertify.prompt(input_text, lang_new_value, ''
 		, function (evt, value)
 		{
 			var new_value = value;

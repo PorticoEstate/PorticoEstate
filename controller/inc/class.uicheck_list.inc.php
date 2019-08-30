@@ -1817,7 +1817,13 @@
 						}
 					}
 				}
-				return array("status" => 'not_saved', 'message' => $message, 'error'=> $error ? $error : 'missing_required');
+				return array(
+					"status" => 'not_saved',
+					'message' => $message,
+					'error'=> $error ? $error : 'missing_required',
+					'input_text' => lang("Please enter billable hours"),
+					'lang_new_value' => lang('new value')
+					);
 			}
 
 			if ($check_list_status == controller_check_list::STATUS_DONE)
