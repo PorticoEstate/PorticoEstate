@@ -14,6 +14,11 @@ $(document).ready(function ()
 
 		var submitBnt = $(thisForm).find("input[type='submit']");
 
+		// disable button
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore( $(submitBnt) );
+
 		$.ajax({
 			type: 'POST',
 			url: requestUrl + "&" + $(thisForm).serialize(),
@@ -64,6 +69,8 @@ $(document).ready(function ()
 						$(submitBnt).removeClass('btn-success');
 						$(submitBnt).addClass('btn-warning');
 					}
+					$( "#spinner").remove();
+					$(submitBnt).prop("disabled", false);
 				}
 			}
 		});
