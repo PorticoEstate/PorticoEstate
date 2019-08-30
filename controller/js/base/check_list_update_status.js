@@ -50,6 +50,11 @@ $(document).ready(function ()
 						$(submitBnt).removeClass('btn-danger');
 						$(submitBnt).removeClass('btn-warning');
 						$(submitBnt).addClass('btn-success');
+						
+						if(data.message)
+						{
+							alert(data.message);
+						}
 					}
 					else
 					{

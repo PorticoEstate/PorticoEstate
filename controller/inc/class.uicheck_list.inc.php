@@ -1829,12 +1829,6 @@
 			if ($check_list_status == controller_check_list::STATUS_DONE)
 			{
 				$check_list->set_completed_date(time());
-
-
-				/**
-				 * create message....
-				 */
-
 			}
 			else
 			{
@@ -1846,12 +1840,63 @@
 
 			if ($this->so->store($check_list))
 			{
-				return array('status' => $check_list_status);
+				/**
+				 * create message....
+				 */
+				
+				$message = '';
+				if($check_list_status == controller_check_list::STATUS_DONE)
+				{
+					$message_ret = $this->create_messages($check_list->get_control_id(),$check_list_id,$check_list->get_location_code());
+					if($message_ret['message_ticket_id'])
+					{
+						$message = lang('%1 case(s) sent as message %2', $message_ret['num_cases'], $message_ret['message_ticket_id']);
+					}
+				}
+
+				return array(
+					'status' => $check_list_status,
+					'message' => $message
+					);
 			}
 			else
 			{
 				return array("status" => 'not_saved', 'message' => '', 'error'=> 'missing_required');
 			}
+		}
+
+
+		private function create_messages($control_id, $check_list_id, $location_code)
+		{
+
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
+
+			$case_ids = array();
+			foreach ($check_items_and_cases as $check_item)
+			{
+				foreach ($check_item->get_cases_array() as $case)
+				{
+					$case_ids[] = $case->get_id();
+				}
+			}
+
+			$config = CreateObject('phpgwapi.config', 'controller')->read();
+
+			$ticket_category = $config['ticket_category'];
+
+			$control = $this->so_control->get_single($control_id);
+
+			$message_title = $control->get_title();
+//			$ticket_category = $control->get_ticket_category();
+
+			$uicase = createObject('controller.uicase');
+			$message_ticket_id = $uicase->send_case_message_step_2($check_list_id,$location_code, $message_title, $ticket_category, $case_ids );
+
+			return array(
+				'message_ticket_id'	 => $message_ticket_id,
+				'num_cases'			 => count($case_ids)
+			);
+
 		}
 
 		public function query()
