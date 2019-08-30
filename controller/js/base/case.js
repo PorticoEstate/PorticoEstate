@@ -1,19 +1,24 @@
 $(document).ready(function ()
 {
-	$(window).scroll(function () {
-        if ($(this).scrollTop() > 100) {
-            $('.scrollup').fadeIn();
-        } else {
-            $('.scrollup').fadeOut();
-        }
-    });
+	$(window).scroll(function ()
+	{
+		if ($(this).scrollTop() > 100)
+		{
+			$('.scrollup').fadeIn();
+		}
+		else
+		{
+			$('.scrollup').fadeOut();
+		}
+	});
 
-    $('.scrollup').click(function () {
-        $("html, body").animate({
-            scrollTop: 0
-        }, 600);
-        return false;
-    });
+	$('.scrollup').click(function ()
+	{
+		$("html, body").animate({
+			scrollTop: 0
+		}, 600);
+		return false;
+	});
 
 
 //	var test_for_child = $("#choose-child-on-component");
@@ -817,4 +822,29 @@ function update_order_nr_for_row(element, sign)
 
 	// Updating order number in front of row
 	$(span_order_nr).text(updated_order_nr);
+}
+
+function undo_completed(completed_id)
+{
+	var oArgs = {
+		menuaction: 'controller.uicheck_list.undo_completed_item',
+		completed_id: completed_id
+	};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data)
+			{
+				var status = data.status;
+				if (status === 'ok')
+				{
+					location.reload();
+				}
+			}
+		}
+	});
 }

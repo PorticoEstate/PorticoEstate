@@ -223,13 +223,13 @@
 					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
 					'subject'		 => 'Hjelp til inngående faktura'
 				),
-				'Hjelp til internordre'			 => array
+				'Hjelp til internordre'				 => array
 					(
 					'message_cat_id' => 340, // 14 Hjelp til internordre
 					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
 					'subject'		 => 'Hjelp til internordre'
 				),
-				'Hjelp til omkontering'			 => array
+				'Hjelp til omkontering'				 => array
 					(
 					'message_cat_id' => 323, // 12 Hjelp til omkontering
 					'group_id'		 => 4169, // LRS-SERVICE_Regnskap
@@ -453,10 +453,15 @@
 
 		function handle_message( $item3, $folder_rules = array() )
 		{
-			$sender	 = $item3->Sender->Mailbox->EmailAddress;
-			$target	 = array();
-			$subject = $item3->Subject;
-			$body	 = $item3->Body->_;
+			$sender		 = $item3->Sender->Mailbox->EmailAddress;
+			$target		 = array();
+			$subject	 = $item3->Subject;
+			$body		 = $item3->Body->_;
+			$body_type	 = $item3->Body->BodyType; //'HTML' or 'Text'
+
+//			_debug_array($body_type);
+//			echo $this->clean_html( $body );
+//			return;
 
 			/**
 			 * Regelsett 1
@@ -472,7 +477,7 @@
 					$subject = "{$folder_rules['subject']}::{$subject}";
 				}
 
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -489,7 +494,7 @@
 				$identificator_str	 = trim($matches[0][0], "[]");
 				$identificator_arr	 = explode("::", $identificator_str);
 
-				$ticket_id = $this->update_external_communication($identificator_arr, $body, $sender);
+				$ticket_id = $this->update_external_communication($identificator_arr, $body, $sender, $body_type);
 
 				if ($ticket_id)
 				{
@@ -502,7 +507,7 @@
 
 				$message_cat_id	 = 302; // Fra postmottak LRS
 				$group_id		 = 4174; //LRS-EDD telefoni
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -515,7 +520,7 @@
 				//Send til Lønn- Trekk - Emnefelt=Fagforening
 				$message_cat_id	 = 254; // Trekk (IKKE ferie)
 				$group_id		 = 4253; //LRS-Drift_Regnskap
-				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket("Fagforening::{$subject}", $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -527,7 +532,7 @@
 			{
 				$message_cat_id	 = 244; // til Lønn -Pensjon
 				$group_id		 = 3159; //LRS-DRIFT_Lønn
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -540,7 +545,7 @@
 
 				$message_cat_id	 = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
 				$group_id		 = 4169; //LRS-Saksbehandler-Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -553,7 +558,7 @@
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$priority		 = 1;
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -565,7 +570,7 @@
 			{
 				$message_cat_id	 = 321; // 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-Drift_Regnskap
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -578,7 +583,7 @@
 
 				$message_cat_id	 = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
 				$group_id		 = 4169; //LRS-Saksbehandler-Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -591,7 +596,7 @@
 
 				$message_cat_id	 = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
 				$group_id		 = 4169; //LRS-Saksbehandler-Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -604,7 +609,7 @@
 
 				$message_cat_id	 = 319; // Faktura til Bg. Kommune- underkategori: Firewall (aut opprettede meldinger).
 				$group_id		 = 4169; //LRS-Saksbehandler-Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -617,7 +622,7 @@
 
 				$message_cat_id	 = 319; // Faktura til Bergen kommune- underkategori: Firewall-Fakturaavvik (Automatisk generert fra Firewall).
 				$group_id		 = 4169; // LRS-SERVICE_Økonomi
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -625,40 +630,40 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if(preg_match("/ny leverandør/i" , $subject ))
+			else if (preg_match("/ny leverandør/i", $subject))
 			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
+				$message_cat_id	 = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
 				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
 				}
 			}
-			else if(preg_match("/endring av leverandør/i" , $subject ))
+			else if (preg_match("/endring av leverandør/i", $subject))
 			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
+				$message_cat_id	 = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
 				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
 				}
 			}
-			else if(preg_match("/nye leverandører /i" , $subject ))
+			else if (preg_match("/nye leverandører /i", $subject))
 			{
-				$message_cat_id = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
-				$group_id = 4253; //LRS-Drift_Regnskap
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
-				if($ticket_id)
+				$message_cat_id	 = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
 				{
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
 				}
 			}
 
@@ -672,7 +677,7 @@
 			return $target;
 		}
 
-		function update_external_communication( $identificator_arr, $body, $sender )
+		function update_external_communication( $identificator_arr, $body, $sender, $body_type )
 		{
 			$ticket_id	 = (int)$identificator_arr[1];
 			$msg_id		 = (int)$identificator_arr[2];
@@ -684,18 +689,26 @@
 			{
 				return false;
 			}
-			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			$message_arr = explode('========', $text);
 
-			$message = phpgw::clean_value($message_arr[0]);
+//			if ($body_type == 'HTML')
+//			{
+//				$message = $this->clean_html($message_arr[0]);
+//			}
+//			else
+			{
+				$message = phpgw::clean_value($message_arr[0]);
+			}
 
 			if (!$message)
 			{
 				return false;
 			}
 
-			$sender	 = phpgw::clean_value($sender);
+			$sender = phpgw::clean_value($sender);
+
+			$soexternal = createObject('helpdesk.soexternal_communication');
 
 			if ($soexternal->add_msg($msg_id, $message, $sender))
 			{
@@ -729,28 +742,58 @@
 			return $ticket_id;
 		}
 
-		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $priority = 3 )
+		function clean_html( $test )
 		{
+			$tidy_options = array(
+				'indent'						 => 2,
+				'output-xhtml'					 => true,
+				'drop-font-tags'				 => true,
+				'clean'							 => true,
+				'merge-spans'					 => true,
+				'drop-proprietary-attributes'	 => true,
+				'char-encoding'					 => 'utf8'
+			);
 
-			if($body != strip_tags($body))
+			$test = str_replace('>&nbsp;<', '', $test);
+
+			$dom	 = new DOMDocument();
+			$dom->loadHTML($test);//, LIBXML_NOBLANKS | LIBXML_XINCLUDE  );
+			$xpath	 = new DOMXPath($dom);
+			$nodes	 = $xpath->query('//*[@style]');  // Find elements with a style attribute
+			foreach ($nodes as $node)
 			{
-				$is_html = true;
+				$node->removeAttribute('style');	// Remove style attribute
 			}
-			else
+			$nodes = $xpath->query('//*[@class]');  // Find elements with a style attribute
+			foreach ($nodes as $node)
 			{
-				$is_html = false;				
+				$node->removeAttribute('class');	// Remove style attribute
+			}
+			$nodes = $xpath->query('//*[@lang]');  // Find elements with a style attribute
+			foreach ($nodes as $node)
+			{
+				$node->removeAttribute('lang');	// Remove style attribute
 			}
 
-			/**
-			 * FIXME
-			 */
-			$is_html = false;
+			$test = $dom->saveHTML();
+			if( class_exists('tidy'))
+			{
+				$tidy = new tidy;
+				$tidy->parseString($test, $tidy_options, 'utf8');
+				$test = $tidy->body();
+			}
+
+			return phpgw::clean_html($test);
+		}
+
+		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority = 3 )
+		{
 
 			$pattern = "/{$sender}/i";
 
-			if($is_html)
+			if ($body_type == 'HTML')
 			{
-				$message_details	= phpgw::clean_html(htmlentities($body));
+				$message_details = $this->clean_html($body);
 				if (!preg_match($pattern, $message_details))
 				{
 					$message_details .= "\n<br/>Avsender: {$sender}";
@@ -793,10 +836,10 @@
 			$id_arr				 = explode(':', $subject_arr[1]);
 			$external_ticket_id	 = trim($id_arr[1]);
 
-			$subject		 = phpgw::clean_value($subject);
-			$sender			 = phpgw::clean_value($sender);
+			$subject = phpgw::clean_value($subject);
+			$sender	 = phpgw::clean_value($sender);
 
-			if(!$message_details)
+			if (!$message_details)
 			{
 				_debug_array($body);
 				return false;
@@ -831,7 +874,7 @@
 						'subject'			 => $subject,
 						'message'			 => $message_details,
 						'sender'			 => $sender,
-						'mail_recipients'	 =>  array($sender)
+						'mail_recipients'	 => array($sender)
 					);
 
 					CreateObject('helpdesk.soexternal_communication')->add($external_message);

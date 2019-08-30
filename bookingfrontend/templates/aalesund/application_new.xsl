@@ -39,12 +39,12 @@
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />*</label>
-						<div id="choseResource" type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+						<div type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
 							<xsl:value-of select="php:function('lang', 'choose')" />
 							<span class="caret"></span>
 						</div>
 
-						<ul class="dropdown-menu px-2 resourceDropdown" data-bind="foreach: bookableresource">
+						<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
 							<li>
 								<div class="form-check checkbox checkbox-primary">
 									<label class="check-box-label">
@@ -147,42 +147,22 @@
 					<h2 class="font-weight-bold mb-4">
 						<xsl:value-of select="php:function('lang', 'Information about the event')" />
 					</h2>
-					<!-- Target Audience Section -->
-					<!-- <div class="form-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
-						<div class="dropdown d-inline-block">
-							<button class="btn btn-secondary dropdown-toggle d-inline mr-2 btn-sm" id="audienceDropdownBtn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<xsl:value-of select="php:function('lang', 'choose')" />
-							</button>
-							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
-								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
-							</div>
-							<input class="form-control" required="true" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
-							<div class="invalid-feedback">
-								Velg målgruppe!
-							</div>
-						</div>
-					</div> -->
-					<!-- Target Audience Section DEMO-->
+
+					<!-- Target Audience Section-->
 					<div class="form-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
-						<div class="dropdown">
-							<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<xsl:value-of select="php:function('lang', 'choose')" />
-							</div>
-							<div class="dropdown-menu" data-bind="foreach: audiences" aria-label="Large">
-								<a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a>
-							</div>
-							<input class="form-control" id="inputTargetAudience" required="true" style="display: none" type="text" name="audience[]"  data-bind="value: audienceSelectedValue"/>
-							<div class="invalid-feedback">
-								<xsl:value-of select="php:function('lang', 'please enter target audience')"/>
-							</div>
+						<xsl:value-of select="php:function('lang', 'Target audience')" /> *</label>
+						<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown">
+							<xsl:value-of select="php:function('lang', 'choose')" />
+							<span class="caret"></span>
 						</div>
-					</div>
 
-				
+						<ul class="dropdown-menu px-2" data-bind="foreach: audiences" aria-label="Large">
+							<li class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected"></li>
+							<!-- <a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a> -->
+						</ul>
+						<input class="form-control" id="inputTargetAudience" required="true" type="text" style="display: none" name="audience[]"  data-bind="value: audienceSelectedValue"/>
+					</div>		
 					<!-- Event Name -->
 					<div class="form-group">
 						<label>
@@ -192,9 +172,6 @@
 								<xsl:value-of select="php:function('lang', 'Event name')"/>
 							</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
-							Skriv inn navn på arrangementet!
-						</div>
 					</div>
 					<!-- Organizer -->
 					<div class="form-group">
@@ -205,9 +182,6 @@
 							<xsl:value-of select="php:function('lang', 'Organizer')"/>
 						</xsl:attribute>
 						</input>
-						<div class="invalid-feedback">
-							Skriv inn navn på arrangør!
-						</div>
 					</div>
 					<!-- Homepage -->
 					<div class="form-group">
@@ -320,10 +294,11 @@
 
 					<hr class="mt-5 mb-5"></hr>
 					<!-- Submit -->
-					<div class="form-group float-right">
+					<div id="submitContainer" class="form-group float-right text-center">
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Add application')" />
 						</button>
+						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
 					</div>
 					
 					<!-- Submit error modal -->

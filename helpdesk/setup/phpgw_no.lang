@@ -176,7 +176,7 @@ change to	helpdesk	no	Endre til
 do you really want to change the status to %1	helpdesk	no	Vil du virkelig endre status til %1
 do you really want to change the priority to %1	helpdesk	no	Vil du virkelig endre prioritet til %1
 please enter a title!	helpdesk	no	Angi et emne
-ticket has been updated	helpdesk	no	Melding er oppdatert
+Ticket %1 has been updated	helpdesk	no	Melding %1 er oppdatert
 picture	helpdesk	no	Bilde
 response template	helpdesk	no	Standardtekster
 inbox	helpdesk	no	Innboks
@@ -250,3 +250,4 @@ reverse alternative	helpdesk	no	Utvidet revers tildeling
 category respond messages	helpdesk	no	Tilbakemeldinger pr kategori
 category respond messages has been saved	helpdesk	no	Tilbakemeldinger pr kategori er lagret
 include content	helpdesk	no	Inkluder innhold fra saken
+attach file	helpdesk	no	Legg ved fil

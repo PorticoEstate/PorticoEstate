@@ -1600,7 +1600,8 @@ NEW APPLICATION PAGE STYLE
 .new-application-page .form-group .input-group .bookingDate,
 .new-application-page .form-group .input-group .bookingStartTime,
 .new-application-page .form-group .input-group .bookingEndTime,
-.new-application-page .form-group .choseResource  {
+.new-application-page .form-group .choseResource,
+.new-application-page .form-group #audienceDropdownBtn {
     cursor: pointer;
 } 
 
@@ -1653,8 +1654,20 @@ NEW APPLICATION PAGE STYLE
     text-align: left;
 }
 
+.mapBtn i {
+    color: #82368c;
+}
+
+.modal h2 {
+    text-transform: capitalize;
+}
+
 .mapBtn:hover {
     cursor: pointer;
+}
+
+.mapBtn:focus {
+    outline: none;
 }
 
 /* MODAL STYLING */
@@ -1929,6 +1942,11 @@ NEW APPLICATION PAGE STYLE
 .isDisabled {
     cursor: not-allowed;
     pointer-events: none;
+}
+
+#submit-error {
+    margin-top: 1rem;
+    color: red;
 }
 
 /* Extra small devices (portrait phones, less than 576px) */

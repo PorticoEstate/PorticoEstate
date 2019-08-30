@@ -117,6 +117,10 @@
 			$this->vfs = CreateObject('phpgwapi.vfs');
 
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 		}
 
 
@@ -947,6 +951,7 @@
 			{
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
+					$component_child['completed_id'] = $completed_items[$component_child['location_id']][$component_child['id']]['completed_id'];
 					$completed_list[]= $component_child;
 				}
 				else
@@ -970,10 +975,12 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$user_role = true;
-
+//https://www.iconsdb.com/black-icons/undo-4-icon.html
 			$data = array
 			(
 				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
+				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
+				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
@@ -982,7 +989,6 @@
 				'component_array' => $case_data['component_array'],
 				'component_children' => $component_children,
 				'completed_list'	=> $completed_list,
-				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'location_children' => $case_data['location_children'],
 				'control_groups_with_items_array' => $case_data['control_groups_with_items_array'],
 				'type' => $case_data['type'],
@@ -1018,6 +1024,7 @@
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'case/add_case',
 				'check_list/fragments/select_buildings_on_property',
+				'check_list/fragments/check_list_change_status',
 				'check_list/fragments/select_component_children'), $data);
 		}
 
@@ -1356,7 +1363,10 @@
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
+			self::render_template_xsl(array(
+				'check_list/fragments/check_list_menu',
+				'check_list/fragments/check_list_change_status',
+				'case/create_case_message'), $data);
 		}
 
 		function send_case_message()

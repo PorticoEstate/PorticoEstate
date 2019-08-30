@@ -804,7 +804,7 @@
 						'id'	=> $this->db->f('id'),
 						'name'	=> $this->db->f('name', true),
 						'color'	=> $this->db->f('color'),
-						'closed'=> $this->db->f('color'),
+						'closed'=> (int)$this->db->f('closed'),
 					);
 			}
 			return $status;
@@ -839,12 +839,14 @@
 			 ** M - Mail sent to vendor
 			 */
 
+			$this->fields_updated = array();
+
 			if ($old_status != $ticket['status'])
 			{
 				$check_old_custom = (int) trim($old_status,'C');
 				$this->db->query("SELECT * from phpgw_helpdesk_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
 				$this->db->next_record();
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'status';
 				if($old_status=='X' || $this->db->f('closed'))
 				{
 					$new_status = $ticket['status'];
@@ -1161,7 +1163,7 @@
 			if (isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
 				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
 				$this->db->transaction_commit();
 				return $receipt;
 			}
@@ -1291,7 +1293,7 @@
 			if (isset($this->fields_updated) && $this->fields_updated)
 			{
 				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
 			}
 
 			$this->db->transaction_commit();

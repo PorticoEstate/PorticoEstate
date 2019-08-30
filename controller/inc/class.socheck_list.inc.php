@@ -1005,6 +1005,7 @@
 				$location_id = $this->db->f('location_id');
 				$item_id = $this->db->f('item_id');
 				$values[$location_id][$item_id] = array(
+					'completed_id' => $this->db->f('id'),
 					'completed_ts' => $this->db->f('completed_ts'),
 					'modified_by' => $this->db->f('modified_by'),
 				);
@@ -1013,6 +1014,7 @@
 			return $values;
 
 		}
+
 		function set_completed_item($check_list_id, $location_id, $item_id)
 		{
 			$check_list_id = (int) $check_list_id;
@@ -1027,13 +1029,13 @@
 
 			if($check_list_id && $location_id && $item_id)
 			{
-//				$sql = "SELECT id FROM {$table} WHERE check_list_id  = {$check_list_id} AND location_id = {$location_id} AND item_id = {$item_id}";
-//				$this->db->query($sql, __LINE__, __FILE__);
-//				if ($this->db->next_record())
-//				{
-//					$sql = "UPDATE {$table} SET completed_ts = {$now}, modified_by = {$account_id}";
-//				}
-//				else
+				$sql = "SELECT id FROM {$table} WHERE check_list_id  = {$check_list_id} AND location_id = {$location_id} AND item_id = {$item_id}";
+				$this->db->query($sql, __LINE__, __FILE__);
+				if ($this->db->next_record())
+				{
+					$sql = "UPDATE {$table} SET completed_ts = {$now}, modified_by = {$account_id}";
+				}
+				else
 				{
 					$sql = "INSERT INTO {$table} (check_list_id, location_id, item_id, completed_ts, modified_by) VALUES ( {$check_list_id}, {$location_id}, {$item_id}, {$now} , {$account_id})";
 				}
@@ -1041,5 +1043,14 @@
 			}
 
 			return $ret;
+		}
+
+
+		function undo_completed_item($completed_id)
+		{
+			$completed_id = (int) $completed_id;
+			$table = 'controller_check_list_completed_item';
+			$sql = "DELETE FROM {$table} WHERE id  = {$completed_id}";
+			return $this->db->query($sql, __LINE__, __FILE__);
 		}
 	}
