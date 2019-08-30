@@ -674,6 +674,21 @@
 			}
 			else
 			{
+
+				if(!$location_code)
+				{
+					$GLOBALS['phpgw']->log->debug(array(
+						'text' => "mangler lokasjonskode for : %1",// fra: %2 ",
+						'p1' => phpgw::clean_value($subject),
+//						'p2' => $value ? $value : ' ',
+						'line' => __LINE__,
+						'file' => __FILE__
+					));
+
+					return false;
+				}
+
+
 				$priority	 = 3;
 				$ticket		 = array
 					(
