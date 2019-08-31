@@ -143,12 +143,12 @@
 																		<xsl:for-each select="case_files">
 
 																			<!-- Full-width images with number and caption text -->
-																			<div class="mySlides fade">
+																			<div class="col-md-4">
 																				<div class="numbertext">
 																					<xsl:number />	/ <xsl:value-of select="$file_count"/>
 																				</div>
-																				<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
-																				<div class="text">
+																				<img src="{$get_image_url}&amp;file_id={file_id}" class="img-responsive"/>
+																				<div class="caption">
 																					<xsl:value-of select="name"/>
 																				</div>
 																			</div>

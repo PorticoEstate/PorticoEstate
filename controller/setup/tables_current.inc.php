@@ -14,7 +14,8 @@
 				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 	 			'repeat_type' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'repeat_interval' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
-				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True)
+				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'ticket_cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

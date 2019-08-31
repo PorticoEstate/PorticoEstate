@@ -99,7 +99,8 @@
 				'repeat_type = ' . $this->marshal($control->get_repeat_type(), 'string'),
 				'repeat_interval = ' . $this->marshal($control->get_repeat_interval(), 'string'),
 				'procedure_id = ' . $this->marshal($control->get_procedure_id(), 'int'),
-				'responsibility_id = ' . $this->marshal($control->get_responsibility_id(), 'int')
+				'responsibility_id = ' . $this->marshal($control->get_responsibility_id(), 'int'),
+				'ticket_cat_id = ' . $this->marshal($control->get_ticket_cat_id(), 'int'),
 			);
 
 			$result = $this->db->query('UPDATE controller_control SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
@@ -1516,6 +1517,7 @@
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$control->set_ticket_cat_id($this->unmarshal($this->db->f('ticket_cat_id'), 'int'));
 
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control->set_control_area_name($category[0]['name']);
@@ -1559,6 +1561,7 @@
 			$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 			$control->set_repeat_type_label($control->get_repeat_type());
 			$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+			$control->set_ticket_cat_id($this->unmarshal($this->db->f('ticket_cat_id'), 'int'));
 
 			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 			$control->set_control_area_name($category[0]['name']);
@@ -1645,14 +1648,16 @@
 		public function getBimItemAttributeValue( $bimItemGuid, $attribute )
 		{
 			$columnAlias = "attribute_values";
-			$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
+//			$sql = "select array_to_string(xpath('descendant-or-self::*[{$attribute}]/{$attribute}/text()', (select xml_representation from fm_bim_item where guid='{$bimItemGuid}')), ',') as $columnAlias";
+			$sql = "SELECT json_representation->>'{$attribute}' AS $columnAlias FROM fm_bim_item"
+				. " WHERE guid='{$bimItemGuid}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($this->db->num_rows() > 0)
 			{
 				$this->db->next_record();
 				$result = $this->db->f($columnAlias, true);
-				return preg_split('/,/', $result);
+				return $result;
 			}
 		}
 

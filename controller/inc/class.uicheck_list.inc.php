@@ -1880,17 +1880,15 @@
 				}
 			}
 
-			$config = CreateObject('phpgwapi.config', 'controller')->read();
-
-			$ticket_category = $config['ticket_category'];
+//			$config = CreateObject('phpgwapi.config', 'controller')->read();
+//			$ticket_cat_id = $config['ticket_category'];
 
 			$control = $this->so_control->get_single($control_id);
-
+			$ticket_cat_id = $control->get_ticket_cat_id();
 			$message_title = $control->get_title();
-//			$ticket_category = $control->get_ticket_category();
 
 			$uicase = createObject('controller.uicase');
-			$message_ticket_id = $uicase->send_case_message_step_2($check_list_id,$location_code, $message_title, $ticket_category, $case_ids );
+			$message_ticket_id = $uicase->send_case_message_step_2($check_list_id,$location_code, $message_title, $ticket_cat_id, $case_ids );
 
 			return array(
 				'message_ticket_id'	 => $message_ticket_id,
