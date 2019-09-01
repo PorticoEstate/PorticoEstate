@@ -168,7 +168,7 @@
 													<div class="numbertext">
 														<xsl:number />	/ <xsl:value-of select="$file_count"/>
 													</div>
-													<img src="{$get_image_url}&amp;file_id={file_id}" class="img-responsive"/>
+													<img src="{$get_image_url}&amp;file_id={file_id}" class="img-fluid"/>
 													<div class="caption">
 														<xsl:value-of select="name"/>
 													</div>
@@ -181,10 +181,10 @@
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
-										<a class="quick_edit_case first pure-button pure-button-primary bigmenubutton" href="#">
+										<a class="quick_edit_case first btn btn-primary btn-lg mr-3" href="#">
 											endre
 										</a>
-										<a class="close_case pure-button pure-button-primary bigmenubutton">
+										<a class="close_case btn btn-primary btn-lg mr-3">
 											<xsl:attribute name="href">
 												<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
 												<xsl:text>&amp;case_id=</xsl:text>
@@ -198,7 +198,7 @@
 										</a>
 										<!--										<xsl:choose>
 											<xsl:when test="location_item_id = 0">
-												<a class="delete_case pure-button pure-button-primary bigmenubutton">
+												<a class="delete_case btn btn-primary btn-lg mr-3">
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>
@@ -371,8 +371,8 @@
 										</textarea>
 									</div>
 									<div>
-										<input class='btn_m first pure-button pure-button-primary bigmenubutton' type='submit' value='Oppdater' />
-										<input class='btn_m cancel first pure-button pure-button-primary bigmenubutton' type='button' value='Avbryt' />
+										<input class='btn_m first btn btn-primary btn-lg mr-3' type='submit' value='Oppdater' />
+										<input class='btn_m cancel first btn btn-primary btn-lg mr-3' type='button' value='Avbryt' />
 									</div>
 								</form>
 							</div>

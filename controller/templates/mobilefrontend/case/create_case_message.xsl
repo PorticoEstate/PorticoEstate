@@ -284,7 +284,7 @@
 																			<div class="numbertext">
 																				<xsl:number />	/ <xsl:value-of select="$file_count"/>
 																			</div>
-																			<img src="{$get_image_url}&amp;file_id={file_id}" class="img-responsive"/>
+																			<img src="{$get_image_url}&amp;file_id={file_id}" class="img-fluid"/>
 																			<div class="caption">
 																				<xsl:value-of select="name"/>
 																			</div>
@@ -309,7 +309,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="pure-button pure-button-primary bigmenubutton" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="btn btn-primary btn-lg mr-3" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>

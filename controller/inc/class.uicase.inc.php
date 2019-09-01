@@ -1257,9 +1257,9 @@
 						}
 
 						$case->set_component_descr($short_desc);
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 			}
 
@@ -2067,15 +2067,14 @@
 
 						}
 						$case->set_component_descr($short_desc);
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 				//		$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
 				//		$closed_check_items_and_cases[$key] = $check_item;
 			}
 //-------
-
 
 
 			$data = array
