@@ -31,7 +31,7 @@
 
 						<input type="hidden" name="component" value="{component_array/location_id}_{component_array/id}" />
 
-						<div id="new_picture_parent" class="container">
+						<div id="new_picture_parent" class="container" style="display:none"> 
 
 							<div class="form-group">
 <!--								<label>
