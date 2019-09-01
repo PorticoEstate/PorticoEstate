@@ -59,6 +59,34 @@ $(document).ready(function ()
 		}
 	});
 
+	show_component_parent_picture = function (component)
+	{
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "200")
+					{
+						$('#equipment_parent_picture_container').html('<img alt="Bilde" id="equipment_parent_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"  class="img-fluid"/>');
+						$('#equipment_parent_picture_container').show();
+					}
+					else
+					{
+						$('#equipment_parent_picture_container').html(data.message);
+					}
+				}
+			}
+		});
+	};
 	show_component_picture = function ()
 	{
 		var component = $("#choose-child-on-component").val();
@@ -123,7 +151,55 @@ $(document).ready(function ()
 		$("#submit_update_component").show();
 
 	};
+	show_picture_parent_submit = function ()
+	{
+		$("#submit_update_component_parent").show();
 
+	};
+
+	// REGISTER PICTURE TO PARENT COMPONENT
+	$("#frm_add_picture_parent").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		var component = $(thisForm).find("input[name='component']").val();
+
+		requestUrl += '&component=' + component;
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component_parent").hide();
+						$("#component_parent_picture_file").val('');
+						show_component_parent_picture(component);
+
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
 
 	// REGISTER PICTURE TO CHILD COMPONENT
 	$("#frm_add_picture").on("submit", function (e)

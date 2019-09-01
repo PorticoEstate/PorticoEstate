@@ -5,13 +5,17 @@ $(document).ready(function ()
 	show_parent_component_information = function (location_id,  component_id)
 	{
 		var x = document.getElementById("form_parent_component_2");
+
+		var y = document.getElementById("new_picture_parent");
 		if (x.style.display === "block")
 		{
 			x.style.display = "none";
+			y.style.display = "none";
 		}
 		else
 		{
 			x.style.display = "block";
+			y.style.display = "block";
 		}
 
 		var oArgs = {
@@ -33,6 +37,7 @@ $(document).ready(function ()
 					var script = document.createElement("script");
 					script.textContent = data.lookup_functions;
 					document.head.appendChild(script);
+					show_component_parent_picture(location_id + '_' + component_id);
 				}
 			}
 		});
