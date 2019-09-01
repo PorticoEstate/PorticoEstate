@@ -7,12 +7,13 @@ $(document).ready(function ()
 		e.preventDefault();
 
 		var thisForm = $(this);
-
-		var statusClass = $(thisForm).attr("class");
-
 		var requestUrl = $(thisForm).attr("action");
-
 		var submitBnt = $(thisForm).find("input[type='submit']");
+
+		// disable button
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 
 		$.ajax({
 			type: 'POST',
@@ -24,7 +25,7 @@ $(document).ready(function ()
 					if (data.status == 'not_saved')
 					{
 						//$(submitBnt).val("feil ved lagring");
-						
+
 						$(submitBnt).removeClass('btn-warning');
 						$(submitBnt).removeClass('btn-success');
 						$(submitBnt).addClass('btn-danger');
@@ -50,6 +51,11 @@ $(document).ready(function ()
 						$(submitBnt).removeClass('btn-danger');
 						$(submitBnt).removeClass('btn-warning');
 						$(submitBnt).addClass('btn-success');
+
+						if (data.message)
+						{
+							alert(data.message);
+						}
 					}
 					else
 					{
@@ -59,11 +65,75 @@ $(document).ready(function ()
 						$(submitBnt).removeClass('btn-success');
 						$(submitBnt).addClass('btn-warning');
 					}
+					$("#spinner").remove();
+					$(submitBnt).prop("disabled", false);
 				}
 			}
 		});
 	});
 });
+
+
+function fallback_status_update()
+{
+
+	var thisForm = $("#update-check-list-status");
+	var requestUrl = thisForm.attr("action");
+	var submitBnt = thisForm.find("input[type='submit']");
+
+	// disable button
+	$(submitBnt).prop("disabled", true);
+	var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+	$(spinner).insertBefore($(submitBnt));
+
+	$.ajax({
+		type: 'POST',
+		url: requestUrl + "&" + thisForm.serialize(),
+		success: function (data)
+		{
+			if (data)
+			{
+				if (data.status == 'not_saved')
+				{
+					//$(submitBnt).val("feil ved lagring");
+
+					$(submitBnt).removeClass('btn-warning');
+					$(submitBnt).removeClass('btn-success');
+					$(submitBnt).addClass('btn-danger');
+
+					if (data.message)
+					{
+						alert(data.message);
+					}
+				}
+				else if (data.status == '1')
+				{
+					$(submitBnt).val("Utført");
+					$("#update-check-list-status-value").val(0);
+					$(submitBnt).removeClass('btn-danger');
+					$(submitBnt).removeClass('btn-warning');
+					$(submitBnt).addClass('btn-success');
+
+					if (data.message)
+					{
+						alert(data.message);
+					}
+				}
+				else
+				{
+					$(submitBnt).val("Sett status: Utført");
+					$("#update-check-list-status-value").val(1);
+					$(submitBnt).removeClass('btn-danger');
+					$(submitBnt).removeClass('btn-success');
+					$(submitBnt).addClass('btn-warning');
+				}
+				$("#spinner").remove();
+				$(submitBnt).prop("disabled", false);
+			}
+		}
+	});
+}
+
 
 var alertify;
 
@@ -112,7 +182,7 @@ function add_billable_hours(check_list_id, input_text, lang_new_value)
 						if (data.status == 'ok')
 						{
 							alertify.success('You entered: ' + value);
-							
+							fallback_status_update();
 						}
 						else
 						{

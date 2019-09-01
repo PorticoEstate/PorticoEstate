@@ -1257,9 +1257,9 @@
 						}
 
 						$case->set_component_descr($short_desc);
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 			}
 
@@ -1384,6 +1384,20 @@
 					'check_list_id' => $check_list_id));
 			}
 
+			$message_ticket_id = $this->send_case_message_step_2($check_list_id,$location_code, $message_title, $message_cat_id, $case_ids );
+
+			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
+				'message_ticket_id' => $message_ticket_id));
+
+		}
+
+		function send_case_message_step_2( $check_list_id,$location_code, $message_title, $message_cat_id, $case_ids )
+		{
+
+			if(!$case_ids)
+			{
+				return false;
+			}
 			$check_list = $this->so_check_list->get_single($check_list_id);
 
 			$control_id = $check_list->get_control_id();
@@ -1571,8 +1585,7 @@
 				}
 			}
 
-			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
-				'message_ticket_id' => $message_ticket_id));
+			return $message_ticket_id;
 		}
 
 		function view_case_message()
@@ -2054,15 +2067,14 @@
 
 						}
 						$case->set_component_descr($short_desc);
-						$case_files = $this->get_case_images($case->get_id());
-						$case->set_case_files($case_files);
 					}
+					$case_files = $this->get_case_images($case->get_id());
+					$case->set_case_files($case_files);
 				}
 				//		$check_item->get_control_item()->set_options_array( $control_item_with_options->get_options_array() );
 				//		$closed_check_items_and_cases[$key] = $check_item;
 			}
 //-------
-
 
 
 			$data = array

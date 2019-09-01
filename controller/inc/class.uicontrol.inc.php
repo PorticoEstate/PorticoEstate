@@ -323,6 +323,11 @@
 
 			$tabs = $this->make_tab_menu($control_id);
 
+			$catsObj = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+			$catsObj->supress_info = true;
+			$ticket_cat_list = $catsObj->formatted_xslt_list(array('select_name' => 'ticket_cat_id',
+				'use_acl' => false));
+
 			$data = array
 				(
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'details', 'control_tabview'),
@@ -332,7 +337,8 @@
 				'control_areas_array' => $control_areas_array,
 				'procedures_array' => $procedures_array,
 				'role_array' => $role_array,
-				'repeat_type_array' => $repeat_type_array
+				'repeat_type_array' => $repeat_type_array,
+				'ticket_cat_list' => $ticket_cat_list['cat_list']
 			);
 
 			self::add_javascript('controller', 'base', 'ajax.js');

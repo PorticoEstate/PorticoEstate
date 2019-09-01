@@ -16,6 +16,9 @@
 	<xsl:variable name="control_role">
 		<xsl:value-of select="control/responsibility_id"/>
 	</xsl:variable>
+	<xsl:variable name="ticket_cat_id">
+		<xsl:value-of select="control/ticket_cat_id"/>
+	</xsl:variable>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -222,6 +225,37 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</dd>
+
+			<dt>
+				<label>Standard meldingskategori</label>
+			</dt>
+			<dd>
+				<xsl:if test="control/error_msg_array/ticket_cat_id != ''">
+					<xsl:variable name="error_msg">
+						<xsl:value-of select="control/error_msg_array/ticket_cat_id" />
+					</xsl:variable>
+					<div class='input_error_msg'>
+						<xsl:value-of select="php:function('lang', $error_msg)" />
+					</div>
+				</xsl:if>
+				<select class="required" id="ticket_cat_id" name="ticket_cat_id">
+					<xsl:if test="editable !=1">
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</xsl:if>
+					<option value="">
+						<xsl:value-of select="php:function('lang', 'select')" />
+					</option>
+					<xsl:for-each select="ticket_cat_list">
+						<option value="{cat_id}">
+							<xsl:if test="cat_id = $ticket_cat_id">
+								<xsl:attribute name="selected">selected=</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of disable-output-escaping="yes" select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+				<span class="help_text line">Angi standard meldingskategori for rapportering av avvik</span>
+			</dd>
 			<dt>
 				<label>Tildelt rolle</label>
 			</dt>
@@ -249,7 +283,7 @@
 											<xsl:value-of disable-output-escaping="yes" select="name"/>
 										</option>
 									</xsl:otherwise>
-								</xsl:choose>								
+								</xsl:choose>
 							</xsl:for-each>
 						</select>
 						<span class="help_text line">Angi hvilken rolle som skal ha ansvar for å gjennomføre kontrollen på de ulike byggene</span>
