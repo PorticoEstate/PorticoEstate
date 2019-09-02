@@ -357,7 +357,8 @@
 		'addressmaster'			=> -3,
 		'log_levels'			=> serialize(array('global_level' => 'E', 'module' => array(), 'user' => array())),
 		'freshinstall'			=> 1,
-		'usecookies'			=> 'True'
+		'usecookies'			=> 'True',
+		'cache_refresh_token'	=> 1
 	);
 
 	foreach ( $values as $name => $val )
