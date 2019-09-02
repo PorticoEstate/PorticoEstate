@@ -407,9 +407,9 @@ HTML;
 			$i = 0;
 			foreach ($additional_notes as $value)
 			{
-				$value['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $value['value_note']);
 				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $value['value_note']))
 				{
+					$value['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $value['value_note']);
 					$value['value_note'] = nl2br($value['value_note']);
 				}
 
