@@ -34,9 +34,13 @@
 		<!-- BEGIN javascript -->
 		<script src="{javascript_uri}"></script>
     	<!-- END javascript -->
-		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
-		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+
+
+		<!--disabled consent script...for now...-->
+		<!--link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script-->
 		<script>
+/*
 			window.addEventListener("load", function ()
 			{
 				window.cookieconsent.initialise({
@@ -65,7 +69,8 @@
 					cookie: {
 						name: 'cookieconsent_backend'
 					},
-					revokable:true,
+					revokable:false,
+					regionalLaw:false,
 					onStatusChange: function(status) {
 						if(!this.hasConsented())
 						{
@@ -75,6 +80,7 @@
 					 }
 				})
 			});
+*/
 		</script>
 	</head>
 <!-- END head -->
