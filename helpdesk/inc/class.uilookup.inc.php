@@ -108,17 +108,26 @@
 				return $this->jquery_results($result_data);
 			}
 
-//			$action = 'var temp = parent.document.getElementById("communication_message").value;' . "\r\n";
-//			$action .= 'if(temp){temp = temp + "\n";}' . "\r\n";
-//			$action .= 'parent.document.getElementById("communication_message").value = temp + aData["content"];' . "\r\n";
-//			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
 			$action = <<<JS
 
 				var encodedStr = aData["content"];
 				var parser = new DOMParser;
 				var dom = parser.parseFromString(encodedStr,'text/html');
 				var decodedString = dom.body.textContent;
-				parent.$.fn.insertAtCaret(decodedString);
+				try
+				{
+					parent.$.fn.insertAtCaret(decodedString);
+				}
+				catch(e)
+				{
+					var temp = parent.document.getElementById("new_note").value;
+					if(temp)
+					{
+						temp = temp + "\\n";
+					}
+					parent.document.getElementById("new_note").value = temp + aData["content"];
+				}
+
 				parent.JqueryPortico.onPopupClose("close");
 JS;
 
