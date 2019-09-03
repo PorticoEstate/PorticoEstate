@@ -240,8 +240,6 @@
 							$todate				 = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
 							$allocation['from_'] = $fromdate;
 							$allocation['to_']	 = $todate;
-							$fromdate			 = pretty_timestamp($fromdate);
-							$todate				 = pretty_timestamp($todate);
 
 							$id = $this->bo->so->get_allocation_id($allocation);
 							if ($id)
