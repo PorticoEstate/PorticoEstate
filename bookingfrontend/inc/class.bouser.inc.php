@@ -32,7 +32,11 @@
 
 		protected function get_orgname_from_db( $orgnr )
 		{
-			$this->db->limit_query("select name from bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
+			if(!$orgnr)
+			{
+				return null;
+			}
+			$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return $orgnr;

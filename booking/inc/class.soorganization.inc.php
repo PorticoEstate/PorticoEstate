@@ -84,6 +84,11 @@
 
 		function get_orgid( $orgnr )
 		{
+			if(!$orgnr)
+			{
+				return False;
+			}
+
 			$this->db->limit_query("SELECT id FROM bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
