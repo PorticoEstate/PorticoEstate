@@ -133,8 +133,27 @@
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 			}
-			$config	= CreateObject('phpgwapi.config','helpdesk')->read();;
 
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$class_info = explode('_', get_class($email_out), 2);
+
+			$files = (array)$vfs->ls (array(
+				'string' => "/{$class_info[0]}/{$class_info[1]}/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$attachments	 = CreateObject('property.bofiles')->get_attachments(array_column($files, 'file_id'));
+			$_attachment_log = array();
+			foreach ($attachments as $_attachment)
+			{
+				$_attachment_log[] = $_attachment['name'];
+			}
+			$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+
+			$config	= CreateObject('phpgwapi.config','helpdesk')->read();
 			$cc ='';
 			$bcc = '';
 			$from_email = $config['from_email'];
@@ -152,7 +171,7 @@
 
 				try
 				{
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments);
 					helpdesk_soemail_out::get_instance()->set_status($id, $recipient_id, helpdesk_email_out::STATUS_SENT);
 				}
 				catch (Exception $exc)

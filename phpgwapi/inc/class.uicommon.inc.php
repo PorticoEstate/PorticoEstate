@@ -373,6 +373,7 @@
 			foreach ($values as $_entry)
 			{
 				$content_files[] = array(
+					'id'	=> $_entry['file_id'],
 					'file_name' => "<a href=\"{$link_view_file}&file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view}\">{$_entry['name']}</a>",
 					'delete_file' => "<input type=\"checkbox\" name=\"delete_file[]\" value=\"{$_entry['file_id']}\" title=\"{$lang_delete}\">",
 				);
