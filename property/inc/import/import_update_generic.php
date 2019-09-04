@@ -318,11 +318,13 @@
 			{
 				if (isset($info->primary_key) && $info->primary_key)
 				{
-					if (preg_match('/^nextval\(\'public.seq_/i', $info->default_value))
+					$pattern = "/^(?=.*nextval)(?=.*seq_{$this->table})/i";
+
+					if (preg_match($pattern, $info->default_value))
 					{
 						preg_match("/(?<=\').*?(?=\')/", $info->default_value, $match);
 
-						$this->sequence = ltrim($match[0], "public.");
+						$this->sequence = !empty($match[0]) ? trim($match[0]) : null;
 						$this->primary_key = $key;
 						
 //						_debug_array($this->sequence);
