@@ -1562,7 +1562,10 @@ HTML;
 					try
 					{
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
-						phpgwapi_cache::message_set("Noe gikk feil, eposten ble ikke sendt. Prøv igjen", 'error');
+						if(!$rcpt)
+						{
+							phpgwapi_cache::message_set("Noe gikk feil, eposten ble ikke sendt. Prøv igjen", 'error');
+						}
 					}
 					catch (Exception $e)
 					{
