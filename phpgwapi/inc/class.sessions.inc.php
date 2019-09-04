@@ -1676,6 +1676,12 @@
 				$webserver_url = '/';
 			}
 
+			/**
+			 * 20190904: to be changed, for now
+			 */
+
+			$webserver_url = '/';
+
 			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;
 		}
