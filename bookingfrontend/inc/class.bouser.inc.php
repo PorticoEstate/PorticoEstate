@@ -237,6 +237,10 @@
 		}
 
 
+		protected function current_app()
+		{
+			return $GLOBALS['phpgw_info']['flags']['currentapp'];
+		}
 		/**
 		 * Validate external safe login - and return to me
 		 * @param array $redirect
