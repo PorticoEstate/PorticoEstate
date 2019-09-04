@@ -46,7 +46,8 @@
 			'delete_recipients'	=> true,
 			'get_recipients'=> true,
 			'set_email'		=> true,
-			'send_email'	=> true
+			'send_email'	=> true,
+			'view_file'		=> true
 		);
 
 		protected
@@ -146,6 +147,8 @@
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
 				$email_out = $this->bo->read_single($id);
+				$class_info = explode('_', get_class($email_out), 2);
+				$content_files = $this->get_files($class_info[0], $class_info[1], 'helpdesk.uiemail_out.view_file', $email_out->get_id());
 			}
 
 			$tabs = array();
@@ -309,6 +312,30 @@
 					array('disableFilter' => true),
 					array('disablePagination' => true),
 					array('editor_action' => self::link(array('menuaction' => 'helpdesk.uiemail_out.set_email')))
+				)
+			);
+
+
+			$attach_file_def = array(
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true,
+					'resizeable' => true),
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
+				 array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter')
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_3',
+				'requestUrl' => "''",
+				'ColumnDefs' => $attach_file_def,
+				'data' => json_encode($content_files),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
 				)
 			);
 
