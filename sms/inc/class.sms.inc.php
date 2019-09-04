@@ -950,7 +950,7 @@
 //				$receipt_message .= "EBF\n";
 
 
-				if($sms_sender && !empty($this->generic_config['receipt_on_code_miss']))
+				if($sms_sender && ctype_digit($sms_sender) && !empty($this->generic_config['receipt_on_code_miss']))
 				{
 					$this->websend2pv('Admin', $sms_sender, $this->generic_config['receipt_on_code_miss'], 'text');
 				}
