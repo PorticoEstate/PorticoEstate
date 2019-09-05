@@ -857,8 +857,8 @@
 					$system_message['building_id'] = intval($booking['building_id']);
 					$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 					$system_message['created'] = $date->format('Y-m-d  H:m');
-					$system_message = array_merge($system_message, extract_values($_POST, array(
-						'message')));
+//					$system_message = array_merge($system_message, extract_values($_POST, array('message')));
+					$system_message['message']		 = phpgw::get_var('message', 'html');
 					$system_message['type'] = 'cancelation';
 					$system_message['status'] = 'NEW';
 					$system_message['name'] = $booking['group_name'];
@@ -980,8 +980,8 @@
 						$system_message['building_id'] = intval($booking['building_id']);
 						$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 						$system_message['created'] = $date->format('Y-m-d  H:m');
-						$system_message = array_merge($system_message, extract_values($_POST, array(
-							'message')));
+//						$system_message = array_merge($system_message, extract_values($_POST, array('message')));
+						$system_message['message']		 = phpgw::get_var('message', 'html');
 						$system_message['type'] = 'cancelation';
 						$system_message['status'] = 'NEW';
 						$system_message['name'] = $booking['group_name'];
@@ -1089,8 +1089,8 @@
 							$system_message['building_id'] = intval($booking['building_id']);
 							$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 							$system_message['created'] = $date->format('Y-m-d  H:m');
-							$system_message = array_merge($system_message, extract_values($_POST, array(
-								'message')));
+//							$system_message = array_merge($system_message, extract_values($_POST, array('message')));
+							$system_message['message']		 = phpgw::get_var('message', 'html');
 							$system_message['type'] = 'cancelation';
 							$system_message['status'] = 'NEW';
 							$system_message['name'] = $booking['group_name'];
