@@ -48,13 +48,15 @@
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$bouser->log_in();
 
-	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
+//	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
+	$redirect =	json_decode(phpgwapi_cache::session_get('bookingfrontend', 'redirect'), true);
+
 
 	if(!empty($config['debug_local_login']))
 	{
-		echo "<p>Cookie:</p>";
+		echo "<p>redirect:</p>";
 
-		_debug_array($_COOKIE);
+		_debug_array($redirect);
 		die();
 	}
 
@@ -75,7 +77,8 @@
 			$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 		}
 
-		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+//		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+		phpgwapi_cache::session_clear('bookingfrontend', 'redirect');
 		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
 	}
 
