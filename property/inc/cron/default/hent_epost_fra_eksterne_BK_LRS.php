@@ -477,7 +477,7 @@
 					$subject = "{$folder_rules['subject']}::{$subject}";
 				}
 
-				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $priority, $body_type);
+				$ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
 				if ($ticket_id)
 				{
 					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
