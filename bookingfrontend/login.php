@@ -17,13 +17,24 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 
+	$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
+
+	if(!empty($config['debug_local_login']))
+	{
+		echo "<H1>Testing pågår - prøv igjen litt senere</H1>";
+
+	}
+
 	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-		$c = createobject('phpgwapi.config', 'bookingfrontend');
-		$c->read();
-		$config = $c->config_data;
-		$login = $c->config_data['anonymous_user'];
-		$passwd = $c->config_data['anonymous_passwd'];
+
+		if(!empty($config['debug_local_login']))
+		{
+			echo "<p>Sesjonen finnes ikke - logger på</p>";
+		}
+
+		$login = $config['anonymous_user'];
+		$passwd = $config['anonymous_passwd'];
 		$_POST['submitit'] = "";
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
@@ -38,6 +49,14 @@
 	$bouser->log_in();
 
 	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
+
+	if(!empty($config['debug_local_login']))
+	{
+		echo "<p>Cookie:</p>";
+
+		_debug_array($_COOKIE);
+		die();
+	}
 
 	if (is_array($redirect) && count($redirect))
 	{

@@ -129,11 +129,20 @@
 			<td><input name="newsettings[soap_wsdl]" value="{value_soap_wsdl}"></td>
 		</tr>
 		<tr class="row_off">
-			<td>{lang_Debug}:</td>
+			<td>{lang_Debug_external_logn}:</td>
 			<td>
 				<select name="newsettings[debug]">
 					<option value="" {selected_debug_}>NO</option>
 					<option value="1" {selected_debug_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_Debug_local_login}:</td>
+			<td>
+				<select name="newsettings[debug_local_login]">
+					<option value="" {selected_debug_local_login_}>NO</option>
+					<option value="1" {selected_debug_local_login_1}>YES</option>
 				</select>
 			</td>
 		</tr>
