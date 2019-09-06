@@ -72,7 +72,7 @@
 						<xsl:text>: </xsl:text>
 						<xsl:value-of select="name" />
 					</button>
-					<button id = "download_components" type="button" class="pure-button pure-button-primary" onclick="downloadComponents({parent_location_id}, {location_id});">
+					<button id = "download_components" type="button" class="pure-button pure-button-primary" onclick="downloadComponents({parent_location_id}, {parent_component_id}, {location_id});">
 						<xsl:value-of select="php:function('lang', 'download')" />
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="name" />
