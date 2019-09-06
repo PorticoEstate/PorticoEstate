@@ -278,7 +278,8 @@
 					phpgw::no_access($this->current_app(), 'Du må logge inn via ID-porten');
 				}
 
-				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
+//				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($redirect), time() + 300);
+				phpgwapi_cache::session_set('bookingfrontend', 'redirect', json_encode($redirect));
 
 				$login_parameter = isset($configfrontend['login_parameter']) && $configfrontend['login_parameter'] ? $configfrontend['login_parameter'] : '';
 				$custom_login_url = isset($configfrontend['custom_login_url']) && $configfrontend['custom_login_url'] ? $configfrontend['custom_login_url'] : '';
