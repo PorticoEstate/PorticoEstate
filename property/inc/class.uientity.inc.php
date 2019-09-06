@@ -693,7 +693,9 @@
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
 				'start_date' => $start_date,
-				'end_date'	 => $end_date
+				'end_date'	 => $end_date,
+				'parent_location_id' => phpgw::get_var('parent_location_id', 'int'),
+				'parent_id' => phpgw::get_var('parent_id', 'int')
 			);
 
 			$values = $this->bo->read($params);

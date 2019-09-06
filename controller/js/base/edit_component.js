@@ -1,3 +1,18 @@
+
+downloadComponents = function (parent_location_id, parent_id, location_id)
+{
+	var oArgs = {
+		menuaction: 'property.uientity.download',
+		parent_location_id: parent_location_id,
+		parent_id : parent_id,
+		location_id: location_id,
+		export: 1
+	};
+	var requestUrl = phpGWLink('index.php', oArgs);
+	window.location.href = requestUrl;
+};
+
+
 $(document).ready(function ()
 {
 

@@ -471,6 +471,8 @@ JS;
 				'query'				 => $data['query'],
 				'sort'				 => $data['sort'],
 				'order'				 => $data['order'],
+				'parent_location_id' => $data['parent_location_id'],
+				'parent_id'			 => $data['parent_id'],
 				'filter'			 => $this->filter,
 				'cat_id'			 => $this->cat_id,
 				'district_id'		 => $this->district_id,
