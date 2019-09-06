@@ -17,17 +17,23 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 
-//	$login = "bookingguest";
-	$c = createobject('phpgwapi.config', 'bookingfrontend');
-	$c->read();
-	$config = $c->config_data;
-	$login = $c->config_data['anonymous_user'];
-	$passwd = $c->config_data['anonymous_passwd'];
-	$_POST['submitit'] = "";
-	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	{
+		$c = createobject('phpgwapi.config', 'bookingfrontend');
+		$c->read();
+		$config = $c->config_data;
+		$login = $c->config_data['anonymous_user'];
+		$passwd = $c->config_data['anonymous_passwd'];
+		$_POST['submitit'] = "";
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
-	$GLOBALS['phpgw']->hooks->process('login');
+		$GLOBALS['phpgw']->hooks->process('login');
+	}
 
+
+	/**
+	 * Pick up the external login-info
+	 */
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$bouser->log_in();
 
@@ -52,9 +58,6 @@
 
 		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
 		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
-		unset($redirect);
-		unset($redirect_data);
-		unset($sessid);
 	}
 
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
