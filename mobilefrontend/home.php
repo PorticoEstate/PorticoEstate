@@ -23,7 +23,8 @@
 		'enable_contacts_class' => true,
 		'enable_nextmatchs_class' => true,
 		'template_set' => 'mobilefrontend',
-		'custom_frontend' => 'mobilefrontend'
+		'custom_frontend' => 'mobilefrontend',
+		'session_name' => 'mobilefrontendsession'
 	);
 
 	/**

@@ -11,6 +11,13 @@
 	 */
 	require_once '../phpgwapi/inc/class.login.inc.php';
 
+	$GLOBALS['phpgw_info']['flags'] = array(
+		'custom_frontend' => 'mobilefrontend',
+		'session_name' => 'mobilefrontendsession'
+	);
+
+	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+
 	$phpgwlogin = new phpgwapi_login;
 	$phpgwlogin->login('mobilefrontend');
 

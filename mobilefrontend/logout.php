@@ -16,7 +16,8 @@
 		'currentapp' => 'logout',
 		'noheader' => True,
 		'nofooter' => True,
-		'nonavbar' => True
+		'nonavbar' => True,
+		'session_name' => 'mobilefrontendsession'
 	);
 
 	/**
