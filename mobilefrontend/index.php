@@ -71,7 +71,9 @@
 		'noheader' => true,
 		'currentapp' => $app,
 		'template_set' => 'mobilefrontend',
-		'custom_frontend' => 'mobilefrontend'
+		'custom_frontend' => 'mobilefrontend',
+		'session_name' => 'mobilefrontendsession'
+
 	);
 
 	/**
