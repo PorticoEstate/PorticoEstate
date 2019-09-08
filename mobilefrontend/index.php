@@ -85,7 +85,7 @@
 
 	if ($app == 'home' && !$api_requested)
 	{
-		$GLOBALS['phpgw']->redirect_link('/mobilefrontend/home.php');
+		$GLOBALS['phpgw']->redirect_link('/home.php');
 	}
 
 	if ($api_requested)
