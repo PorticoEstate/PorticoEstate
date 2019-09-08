@@ -139,7 +139,7 @@
 		}
 	}
 
-	$uilogin = new phpgw_uilogin($tmpl, false);
+	$uilogin = new phpgw_uilogin(false);
 
 	$variables = array();
 	if($GLOBALS['phpgw_info']['server']['mapping'] == 'id')// using REMOTE_USER for account_lid

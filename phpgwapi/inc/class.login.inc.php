@@ -36,6 +36,63 @@
 	{
 		public function __construct()
 		{
+			/*
+			 * Generic include for login.php like pages
+			 */
+			if(!empty( $GLOBALS['phpgw_info']['flags']['session_name'] ))
+			{
+				$session_name = $GLOBALS['phpgw_info']['flags']['session_name'];
+			}
+
+			if(!empty( $GLOBALS['phpgw_info']['flags']['custom_frontend'] ))
+			{
+				$custom_frontend = $GLOBALS['phpgw_info']['flags']['custom_frontend'];
+			}
+
+			$GLOBALS['phpgw_info'] = array();
+
+			$GLOBALS['phpgw_info']['flags'] = array
+			(
+				'disable_template_class' => true,
+				'login'                  => true,
+				'currentapp'             => 'login',
+				'noheader'               => true
+			);
+			if($session_name)
+			{
+				$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
+			}
+			if($custom_frontend)
+			{
+				$GLOBALS['phpgw_info']['flags']['custom_frontend'] = $custom_frontend;
+			}
+
+			$header = dirname(realpath(__FILE__)) . '/../../header.inc.php';
+			if ( !file_exists($header) )
+			{
+				Header('Location: ../setup/index.php');
+				exit;
+			}
+
+
+			/**
+			* check for emailaddress as username
+			*/
+			require_once dirname(realpath(__FILE__)) . '/class.EmailAddressValidator.inc.php';
+
+			$validator = new phpgwapi_EmailAddressValidator();
+			if ( isset($_POST['login']) && $_POST['login'] != '')
+			{
+				if(!$validator->check_email_address($_POST['login']))
+				{
+					$_POST['login'] = str_replace('@', '#', $_POST['login']);
+				}
+			}
+
+			/**
+			* Include phpgroupware header
+			*/
+			require_once $header;
 
 		}
 
@@ -74,10 +131,9 @@
 				}
 			}
 
-			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
-
 			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
-			$partial_url		 = ltrim("{$frontend}/login.php", '/');
+//			$partial_url		 = ltrim("{$frontend}/login.php", '/');
+			$partial_url		 = 'login.php';
 			$phpgw_url_for_sso	 = 'phpgwapi/inc/sso/login_server.php';
 
 			if (isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
@@ -108,13 +164,6 @@
 			}
 
 			/* Program starts here */
-			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
-
-			if(phpgw::get_var('hide_lightbox', 'bool'))
-			{
-				$uilogin->phpgw_display_login(array());
-				exit;
-			}
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
 			{
@@ -534,15 +583,21 @@
 
 			//Build vars :
 			$variables = array();
-			$variables['lang_login']	= lang('login');
-			$variables['partial_url']	= $partial_url;
-			$variables['lang_frontend']	= $frontend ? lang($frontend) : '';
-			if (isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')
+
+			if(!phpgw::get_var('hide_lightbox', 'bool'))
 			{
-				$variables['lang_additional_url']	 = lang('use sso login');
-				$variables['additional_url']		 = $GLOBALS['phpgw']->link('/' . $phpgw_url_for_sso);
+				$variables['lang_login']	= lang('login');
+				$variables['partial_url']	= $partial_url;
+				$variables['lang_frontend']	= $frontend ? lang($frontend) : '';
+				if (isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')
+				{
+					$variables['lang_additional_url']	 = lang('use sso login');
+					$variables['additional_url']		 = $GLOBALS['phpgw']->link('/' . $phpgw_url_for_sso);
+				}
 			}
 
+			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
+			$uilogin = new phpgw_uilogin($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 			$uilogin->phpgw_display_login($variables);
 		}
 
