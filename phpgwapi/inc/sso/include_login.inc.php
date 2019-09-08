@@ -130,7 +130,7 @@
 		*/
 		function check_logoutcode($code)
 		{
-			$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
+			$GLOBALS['phpgw']->session->phpgw_setcookie(session_name());
 			switch($code)
 			{
 				case 1:
