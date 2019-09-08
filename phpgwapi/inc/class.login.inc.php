@@ -225,17 +225,17 @@
 				$GLOBALS['phpgw']->hooks->process('login');
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			//----------------- End login ntlm
@@ -337,18 +337,18 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
@@ -415,18 +415,18 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
@@ -516,18 +516,18 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
@@ -546,7 +546,7 @@
 			$uilogin->phpgw_display_login($variables);
 		}
 
-		function redirect_after($frontend = '')
+		function redirect_after()
 		{
 			$redirect = phpgw::get_var('after','string', 'COOKIE');
 		//	_debug_array($_COOKIE);
@@ -568,19 +568,19 @@
 					$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 				}
 
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", $redirect_data);
+				$GLOBALS['phpgw']->redirect_link("/index.php", $redirect_data);
 			}
 
 			$redirect_arr = explode('.',$redirect);
 
 			if (count($redirect_arr) == 3 && isset($GLOBALS['phpgw_info']['user']['apps'][$redirect_arr[0]]))
 			{
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", array('menuaction' => $redirect));
+				$GLOBALS['phpgw']->redirect_link("/index.php", array('menuaction' => $redirect));
 			}
 			else
 			{
 				//failsafe
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php");
+				$GLOBALS['phpgw']->redirect_link("/home.php");
 			}
 		}
 	}

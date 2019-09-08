@@ -19,6 +19,11 @@
 		$session_name = $GLOBALS['phpgw_info']['flags']['session_name'];
 	}
 
+	if(!empty( $GLOBALS['phpgw_info']['flags']['custom_frontend'] ))
+	{
+		$custom_frontend = $GLOBALS['phpgw_info']['flags']['custom_frontend'];
+	}
+
 	$GLOBALS['phpgw_info'] = array();
 
 	$GLOBALS['phpgw_info']['flags'] = array
@@ -31,6 +36,10 @@
 	if($session_name)
 	{
 		$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
+	}
+	if($custom_frontend)
+	{
+		$GLOBALS['phpgw_info']['flags']['custom_frontend'] = $custom_frontend;
 	}
 
 	$header = dirname(realpath(__FILE__)) . '/../../../header.inc.php';
