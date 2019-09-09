@@ -346,7 +346,7 @@
 					/**
 					 * Testing
 					 */
-					$GLOBALS['phpgw']->session->phpgw_setcookie($GLOBALS['phpgw_info']['flags']['session_name'],$GLOBALS['sessionid'], 0);
+					$GLOBALS['phpgw']->sessions->phpgw_setcookie($GLOBALS['phpgw_info']['flags']['session_name'], $GLOBALS['sessionid'], time() + 60 * 60 * 3);
 
 				}
 
