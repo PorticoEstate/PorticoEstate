@@ -90,7 +90,6 @@
 			* Include phpgroupware header
 			*/
 			require_once $header;
-			$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 
 		}
 
