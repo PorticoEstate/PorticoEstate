@@ -146,6 +146,7 @@
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
 
+			$GLOBALS['phpgw']->session->phpgw_setcookie('testavcookie','testverdi', 0);
 			if(!phpgw::get_var('after','string', 'COOKIE'))
 			{
 				$after = phpgw::get_var('after', 'bool');
@@ -346,7 +347,7 @@
 					/**
 					 * Testing
 					 */
-					createObject('phpgwapi.sessions')->phpgw_setcookie(session_name(), $GLOBALS['sessionid']);
+//					createObject('phpgwapi.sessions')->phpgw_setcookie(session_name(), $GLOBALS['sessionid']);
 
 				}
 
