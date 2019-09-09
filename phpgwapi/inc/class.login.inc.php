@@ -342,6 +342,12 @@
 					}
 
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
+
+					/**
+					 * Testing
+					 */
+					$GLOBALS['phpgw']->session->phpgw_setcookie($GLOBALS['phpgw_info']['flags']['session_name'],$GLOBALS['sessionid'], 0);
+
 				}
 
 				if (!$login || empty($GLOBALS['sessionid']))
