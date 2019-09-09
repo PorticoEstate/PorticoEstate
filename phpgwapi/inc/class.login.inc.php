@@ -58,11 +58,11 @@
 				'currentapp'             => 'login',
 				'noheader'               => true
 			);
-			if($session_name)
+			if(!empty($session_name))
 			{
 				$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
 			}
-			if($custom_frontend)
+			if(!empty($custom_frontend))
 			{
 				$GLOBALS['phpgw_info']['flags']['custom_frontend'] = $custom_frontend;
 			}
@@ -78,12 +78,9 @@
 			/**
 			* check for emailaddress as username
 			*/
-			require_once dirname(realpath(__FILE__)) . '/class.EmailAddressValidator.inc.php';
-
-			$validator = new phpgwapi_EmailAddressValidator();
 			if ( isset($_POST['login']) && $_POST['login'] != '')
 			{
-				if(!$validator->check_email_address($_POST['login']))
+				if (!filter_var($_POST['login'], FILTER_VALIDATE_EMAIL))
 				{
 					$_POST['login'] = str_replace('@', '#', $_POST['login']);
 				}
@@ -93,6 +90,7 @@
 			* Include phpgroupware header
 			*/
 			require_once $header;
+			$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 
 		}
 
@@ -151,7 +149,7 @@
 			if(!phpgw::get_var('after','string', 'COOKIE'))
 			{
 				$after = phpgw::get_var('after', 'bool');
-				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'),$cookietime=0);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'), 0);
 			}
 			else
 			{
