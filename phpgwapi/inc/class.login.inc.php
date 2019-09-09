@@ -146,16 +146,15 @@
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
 
-			$GLOBALS['phpgw']->session->phpgw_setcookie('testavcookie','testverdi', 0);
-			if(!phpgw::get_var('after','string', 'COOKIE'))
-			{
-				$after = phpgw::get_var('after', 'bool');
-				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'), 0);
-			}
-			else
-			{
-				$after = true;
-			}
+//			if(!phpgw::get_var('after','string', 'COOKIE'))
+//			{
+//				$after = phpgw::get_var('after', 'bool');
+//				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'), 0);
+//			}
+//			else
+//			{
+//				$after = true;
+//			}
 
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try
 			{
@@ -343,12 +342,6 @@
 					}
 
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
-
-					/**
-					 * Testing
-					 */
-//					createObject('phpgwapi.sessions')->phpgw_setcookie(session_name(), $GLOBALS['sessionid']);
-
 				}
 
 				if (!$login || empty($GLOBALS['sessionid']))
