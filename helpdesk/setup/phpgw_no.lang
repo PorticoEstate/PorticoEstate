@@ -251,3 +251,4 @@ category respond messages	helpdesk	no	Tilbakemeldinger pr kategori
 category respond messages has been saved	helpdesk	no	Tilbakemeldinger pr kategori er lagret
 include content	helpdesk	no	Inkluder innhold fra saken
 attach file	helpdesk	no	Legg ved fil
+modified time	helpdesk	no	Endret tid
