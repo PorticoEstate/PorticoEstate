@@ -489,8 +489,11 @@ JS;
 					$_checked = 'checked="checked"';
 				}
 
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
 				$content_files[] = array(
-					'id'	=> $_entry['file_id'],
+					'created'	=> $created,
 					'file_name'		 => "<a href=\"{$link_view_file}&amp;file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_entry['name']}</a>",
 					'attach_file'	 => "<input type=\"checkbox\" {$_checked} class=\"mychecks\" name=\"file_attachments[]\" value=\"{$_entry['file_id']}\" title=\"$lang_attach_file\">"
 				);
@@ -510,7 +513,7 @@ JS;
 
 			$attach_file_def = array
 				(
-				array('key' => 'id', 'label' => lang('id'), 'sortable' => true,
+				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
 					'resizeable' => true),
 				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
 					'resizeable' => true),
