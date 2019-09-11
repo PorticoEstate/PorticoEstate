@@ -2050,11 +2050,14 @@ JS;
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'id'	=> $_entry['file_id'],
+					'created'	=> $created,
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2536,12 +2539,18 @@ JS;
 			$z = 0;
 			foreach ($ticket['files'] as $_entry)
 			{
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
+
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'id'	=> $_entry['file_id'],
+					'created'	=> $created
 				);
+
+
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
 					$content_files[$z]['file_name'] = $_entry['name'];
@@ -2557,7 +2566,7 @@ JS;
 			}
 
 			$attach_file_def = array(
-				array('key' => 'id', 'label' => lang('id'), 'sortable' => true,
+				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
 					'resizeable' => true),
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
