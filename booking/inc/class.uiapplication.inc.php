@@ -1111,10 +1111,10 @@
 							$messages = array(
 								'one' => array(
 									'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
-									'review' => "A Case officer will review your application as soon as possible."),
+									'review' => ""),
 								'multiple' => array(
 									'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
-									'review' => "A Case officer will review your applications as soon as possible.")
+									'review' => "")
 								);
 						}
 						else
