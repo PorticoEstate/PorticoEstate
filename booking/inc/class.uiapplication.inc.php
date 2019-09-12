@@ -1131,11 +1131,17 @@
 						}
 
 						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
-						phpgwapi_cache::message_set(lang($messages[$msgset]['registered']) . "<br />" .
-							$messages[$msgset]['review'] ? lang($messages[$msgset]['review']) . "<br />" : '' .
-//							lang($messages[$msgset]['review']) . "<br />" .
-							lang("Please check your Spam Filter if you are missing mail."
-						));
+
+						$message_arr = array();
+
+						$message_arr[] = lang($messages[$msgset]['registered']);
+						if($messages[$msgset]['review'])
+						{
+							$message_arr[] = lang($messages[$msgset]['review']);
+						}
+						$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
+
+						phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						// Redirect to the front page
 						$this->redirect(array());
 					}
