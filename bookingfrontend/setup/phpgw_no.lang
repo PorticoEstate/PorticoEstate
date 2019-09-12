@@ -275,6 +275,8 @@ The user has accepted the following documents	bookingfrontend	no	Brukeren har ak
 Send	bookingfrontend	no	Send
 Go back	bookingfrontend	no	Tilbake
 Your application has now been registered and a confirmation email has been sent to you.	bookingfrontend	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
+Your application has now been processed and a confirmation email has been sent to you.	bookingfrontend	no	Søknaden er godkjent, og en bekreftelse har blitt sendt til deg på e-post.
+Your applications have now been processed and confirmation emails have been sent to you.	bookingfrontend	no	Søknadene er godkjent, og en bekreftelse har blitt sendt til deg på e-post.
 A Case officer will review your application as soon as possible.	bookingfrontend	no	En saksbehandler vil behandle søknaden så fort som mulig.
 Please check your Spam Filter if you are missing mail.	bookingfrontend	no	Vi gjør oppmerksom på at e-postsvar blir automatisk generert og derfor noen ganger vil ende i spamfilter/nettsøppel.
 Loading...	bookingfrontend	no	Laster inn….
