@@ -1132,7 +1132,8 @@
 
 						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
 						phpgwapi_cache::message_set(lang($messages[$msgset]['registered']) . "<br />" .
-							lang($messages[$msgset]['review']) . "<br />" .
+							$messages[$msgset]['review'] ? lang($messages[$msgset]['review']) . "<br />" : '' .
+//							lang($messages[$msgset]['review']) . "<br />" .
 							lang("Please check your Spam Filter if you are missing mail."
 						));
 						// Redirect to the front page
