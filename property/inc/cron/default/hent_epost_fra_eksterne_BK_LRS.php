@@ -692,11 +692,11 @@
 
 			$message_arr = explode('========', $text);
 
-//			if ($body_type == 'HTML')
-//			{
-//				$message = $this->clean_html($message_arr[0]);
-//			}
-//			else
+			if ($body_type == 'HTML')
+			{
+				$message = $this->clean_html($message_arr[0]);
+			}
+			else
 			{
 				$message = phpgw::clean_value($message_arr[0]);
 			}
@@ -757,6 +757,7 @@
 			$test = str_replace('>&nbsp;<', '', $test);
 
 			$dom	 = new DOMDocument();
+			$dom->recover = true;
 			$dom->loadHTML($test);//, LIBXML_NOBLANKS | LIBXML_XINCLUDE  );
 			$xpath	 = new DOMXPath($dom);
 			$nodes	 = $xpath->query('//*[@style]');  // Find elements with a style attribute
