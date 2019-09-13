@@ -682,22 +682,22 @@
 			$ticket_id	 = (int)$identificator_arr[1];
 			$msg_id		 = (int)$identificator_arr[2];
 
-			$html2text	 = createObject('phpgwapi.html2text', $body);
-			$text		 = $html2text->getText();
 
 			if (!$msg_id)
 			{
 				return false;
 			}
 
-			$message_arr = explode('========', $text);
-
 			if ($body_type == 'HTML')
 			{
+				$message_arr = explode('========', $body);
 				$message = $this->clean_html($message_arr[0]);
 			}
 			else
 			{
+				$html2text	 = createObject('phpgwapi.html2text', $body);
+				$text		 = $html2text->getText();
+				$message_arr = explode('========', $text);
 				$message = phpgw::clean_value($message_arr[0]);
 			}
 
