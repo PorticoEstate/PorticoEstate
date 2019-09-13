@@ -908,7 +908,11 @@ HTML;
 						$check_list->set_id($check_list_id);
 					}
 
-					return array("status" => 'ok', 'message' => lang('Ok'));
+					return array(
+						"status" => 'ok',
+						'message' => lang('Ok'),
+						'check_list_id' => $check_list_id
+						);
 				}
 				else
 				{
@@ -1020,7 +1024,7 @@ HTML;
 					{
 						$control_link_data = array
 							(
-							'menuaction' => 'controller.uicheck_list.edit_check_list',
+							'menuaction' => 'controller.uicase.add_case',
 							'check_list_id' => $item['schedule']['info']['check_list_id'],
 						);					
 						$url_target = '_self';
@@ -1061,7 +1065,7 @@ HTML;
 						check_list_id="{$item['schedule']['info']['check_list_id']}"
 						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
 						assigned_to="{$item['schedule']['info']['assigned_to']}">
-						<span class="float-left">
+						<span class="float-left link_to_checklist">
 							{$link_to_checklist}
 						</span>
 						<span class="float-right">

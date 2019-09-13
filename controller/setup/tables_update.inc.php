@@ -1321,3 +1321,30 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.60';
+	function controller_upgrade0_1_60()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_cat_assignment', array(
+				'fd' => array(
+					'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('cat_id', 'control_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			),
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.61';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
