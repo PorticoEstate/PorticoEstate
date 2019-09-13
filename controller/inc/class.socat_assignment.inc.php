@@ -108,7 +108,7 @@
 				$control_id = $this->db->f('control_id');
 
 				$values[$control_id] = array(
-					'control_id' => $this->db->f('control_id'),
+					'cat_id'	 => $this->db->f('cat_id'),
 					'created_on' => $this->db->f('created_on'),
 					'created_by' => $this->db->f('created_by'),
 				);
