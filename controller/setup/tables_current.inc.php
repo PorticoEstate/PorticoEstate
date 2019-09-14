@@ -296,17 +296,4 @@
 			'ix' => array(),
 			'uc' => array()
 			),
-		'controller_cat_assignment' => array(
-			'fd' => array(
-				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
-				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-			),
-			'pk' => array('cat_id', 'control_id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-
 	);

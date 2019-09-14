@@ -50,10 +50,9 @@
 		{
 			$this->db->transaction_begin();
 
-			$this->db->query('DELETE FROM controller_cat_assignment',__LINE__,__FILE__);
+			$this->db->query('UPDATE controller_control SET ticket_cat_id = NULL',__LINE__,__FILE__);
 
-			$sql = 'INSERT INTO controller_cat_assignment (cat_id, control_id, created_on, created_by)'
-				. ' VALUES(?, ?, ?, ?)';
+			$sql = "UPDATE controller_control SET ticket_cat_id =? WHERE id = ?";
 
 			$valueset = array();
 
@@ -72,45 +71,31 @@
 							(
 							'value' => $control_id,
 							'type' => PDO::PARAM_INT
-						),
-						3 => array
-							(
-							'value' => $this->account,
-							'type' => PDO::PARAM_INT
-						),
-						4 => array
-							(
-							'value' => time(),
-							'type' => PDO::PARAM_INT
 						)
 					);
 				}
 			}
 
-			$ret = false;
 			if($valueset)
 			{
-				$ret = $GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
 
-			$this->db->transaction_commit();
+			return $this->db->transaction_commit();
 
-			return $ret;
 		}
 
 		public function read()
 		{
-			$this->db->query('SELECT * FROM controller_cat_assignment',__LINE__,__FILE__);
+			$this->db->query('SELECT id, ticket_cat_id FROM controller_control',__LINE__,__FILE__);
 
 			$values = array();
 			while ($this->db->next_record())
 			{
-				$control_id = $this->db->f('control_id');
+				$control_id = $this->db->f('id');
 
 				$values[$control_id] = array(
-					'cat_id'	 => $this->db->f('cat_id'),
-					'created_on' => $this->db->f('created_on'),
-					'created_by' => $this->db->f('created_by'),
+					'cat_id'	 => $this->db->f('ticket_cat_id')
 				);
 			}
 			return $values;
@@ -118,8 +103,8 @@
 
 		public function read_single($control_id)
 		{
-			$this->db->query('SELECT cat_id FROM controller_cat_assignment WHERE control_id = ' . (int) $cat_id,__LINE__,__FILE__);
+			$this->db->query('SELECT ticket_cat_id FROM controller_control WHERE id = ' . (int) $cat_id,__LINE__,__FILE__);
 			$this->db->next_record();
-			return (int) $this->db->f('control_id');
+			return (int) $this->db->f('ticket_cat_id');
 		}
 	}
