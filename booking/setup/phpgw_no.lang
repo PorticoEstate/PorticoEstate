@@ -787,3 +787,4 @@ found none	booking	no	Fant ingen
 direct booking	booking	no	Direkte booking
 export customer	booking	no	Eksporter kundeliste
 Enter both first and last name	booking	no	Oppgi både fornavn og etternavn
+parent group	booking	no	Overordnet gruppe
