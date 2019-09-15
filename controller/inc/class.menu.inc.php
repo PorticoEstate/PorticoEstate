@@ -73,7 +73,7 @@
 					),
 
 				'cat_assignment' =>  array(
-						'text' => lang('category assignment'),
+						'text' => lang('settings'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicat_assignment.edit')),
 						'image' => array('property', 'location_1')
 					),

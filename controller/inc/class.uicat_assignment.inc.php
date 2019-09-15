@@ -38,6 +38,7 @@
 		var $public_functions = array
 		(
 			'edit'			=> true,
+			'users'			=> true,
 		);
 
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -47,9 +48,9 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu("admin::helpdesk::cat_assignment");
+			self::set_active_menu('controller::cat_assignment');
 			
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('category assignment');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('preferences');
 
 			$this->cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$this->cats->supress_info = true;
@@ -91,7 +92,7 @@
 		}
 
 
-		public function edit( $values = array(), $mode = 'edit' , $error = false)
+		public function edit( $error = false)
 		{
 
 			if(!$this->acl_add || !$this->acl_edit)
@@ -100,7 +101,7 @@
 			}
 
 
-			if(!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool')))
+			if(!$error && phpgw::get_var('save', 'bool'))
 			{
 				$this->save();
 			}
@@ -120,10 +121,14 @@
 				'lang_edit'				=> lang('edit'),
 			);
 
+			$html2text	 = createObject('phpgwapi.html2text');
+
 			$content = array();
 			foreach ($controls as $control)
 			{
 				$control_name	= $GLOBALS['phpgw']->strip_html($control->get_title());
+				$html2text->setHtml($control->get_description());
+				$control_name	.= '<p>' .($html2text->getText()) . '</p>';
 
 				$selected_cat = !empty($cat_assignment[$control->get_id()]['cat_id']) ? $cat_assignment[$control->get_id()]['cat_id'] : 0;
 
@@ -164,27 +169,48 @@
 				'lang_done'				=> lang('done'),
 				'lang_done_statustext'	=> lang('return to admin mainscreen')
 			);
+
 			$data = array
 			(
-				'form_action'	=> self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
-				'edit_action' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
-				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
-				'cat_header'	=> $cat_header,
-				'cat_data'		=> $content,
-				'cat_add'		=> $cat_add
+				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
+				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
+				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
+				'cat_header'	 => $cat_header,
+				'cat_data'		 => $content,
+				'cat_add'		 => $cat_add,
+				'tabs'			 => self::_generate_tabs('category_assignment'),
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
+//			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
 			self::render_template_xsl(array('cat_assignment'), array('edit' => $data));
 
 		}
 
+		protected function _generate_tabs( $active_tab = '' )
+		{
+			$tabs = array(
+				'category_assignment' => array('label' => lang('category assignment'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"))),
+				'users' => array('label' => lang('users'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users"))),
+				'districkt' => array('label' => lang('districkt'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.district"))),
+				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.vendors"))),
+			);
+
+			foreach ($tabs as $key => &$tab)
+			{
+				if($active_tab == $key)
+				{
+					$tab['link'] = "#{$key}";
+				}
+			}
+
+			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+		}
 
 		public function save()
 		{
 			$values = phpgw::get_var('values');
-			
+
 			try
 			{
 				$receipt = $this->so->save($values);
@@ -194,7 +220,7 @@
 				if ($e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
-					$this->edit($values, 'edit', $error = true);
+					$this->edit($error = true);
 					return;
 				}
 			}
@@ -203,5 +229,151 @@
 
 			self::message_set($this->receipt);
 			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"));
+		}
+
+		private function save_users()
+		{
+			$values = phpgw::get_var('values');
+
+			try
+			{
+				$receipt = $this->so->save_users($values);
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+					$this->users( $error = true);
+					return;
+				}
+			}
+
+			$this->receipt['message'][] = array('msg' => lang('user settings has been saved'));
+
+			self::message_set($this->receipt);
+			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.users"));
+		}
+
+
+		public function users($error = false)
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			if(!$error && phpgw::get_var('save', 'bool'))
+			{
+				$this->save_users();
+			}
+
+			$this->so_control = CreateObject('controller.socontrol');
+
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if($control_area_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_control_area_id", $control_area_id, $user_id);
+			}
+			else
+			{
+				$control_area_id = (int)phpgwapi_cache::user_get('controller', "calendar_control_area_id", $user_id);
+			}
+			if($control_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
+			}
+			else
+			{
+				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
+			}
+			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
+
+			$control_type_list = array(array('id' => '', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$control_type_list[] = array(
+					'id'		 => $control_type['id'],
+					'name'		 => $control_type['title'],
+					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
+				);
+			}
+
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	 = true;
+
+			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
+
+
+			$control_area_list = array();
+			foreach ($control_area['cat_list'] as $cat_list)
+			{
+				$control_area_list[] = array
+					(
+					'id'		 => $cat_list['cat_id'],
+					'name'		 => $cat_list['name'],
+					'selected'	 => $control_area_id == $cat_list['cat_id'] ? 1 : 0
+				);
+			}
+
+			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
+
+			$dateformat = "{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i";
+
+			$lang_status = array(
+				'A' => lang('acktive'),
+				'I' => lang('inacktive'),
+			);
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
+
+			$roles = array(
+				array(
+					'id' => 1,
+					'name' => 'Administrator'
+				),
+				array(
+					'id' => 2,
+					'name' => 'Kontrollør'
+				),
+			);
+
+
+			$user_list = array();
+			foreach ($users as $user)
+			{
+				$user_list[] = array
+				(
+					'id' => $user['account_id'],
+					'name' => "{$user['account_lastname']}, {$user['account_firstname']}",
+					'lastlogin' => $GLOBALS['phpgw']->common->show_date($user['account_lastlogin'], $dateformat),
+					'status' => $lang_status[$user['account_status']],
+					'selected_role' => 1
+				);
+			}
+
+	//		_debug_array($users);
+			$data = array
+			(
+				'user_data'			 => $user_list,
+				'roles'				 => array('options' => $roles),
+				'control_area_list'	 => array('options' => $control_area_list),
+				'control_type_list'	 => array('options' => $control_type_list),
+				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users")),
+				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users")),
+				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
+				'cat_header'	 => $cat_header,
+				'cat_data'		 => $content,
+				'cat_add'		 => $cat_add,
+				'tabs'			 => self::_generate_tabs('users'),
+			);
+
+			self::render_template_xsl(array('cat_assignment'), array('users' => $data));
+			
 		}
 	}

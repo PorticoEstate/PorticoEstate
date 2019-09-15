@@ -454,3 +454,4 @@ view_details	controller	no	Vis detaljer for sjekkliste
 view_cases	controller	no	Vis saker
 view_control_info	controller	no	Vis info om kontroll
 create_case_message	controller	no	Registrer melding
+category assignment	controller	no	Meldingskategori pr Kontrolltype
