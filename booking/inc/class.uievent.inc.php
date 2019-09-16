@@ -1056,6 +1056,21 @@
 			$activities = $activities['results'];
 #			$comments = array_reverse($event['comments']);
 			$comments = $this->bo->so->get_ordered_comments($id);
+
+			/**
+			 * Start hack
+			 */
+			$external_site_address = !empty($config->config_data['external_site_address']) ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$internal_site_address = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			foreach ($comments as  &$comment)
+			{
+				$comment['comment'] = str_replace($external_site_address, $internal_site_address, $comment['comment']);
+			}
+			/**
+			 * End hack
+			 */
+
 			$cost_history = $this->bo->so->get_ordered_costs($id);
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
