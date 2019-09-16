@@ -199,7 +199,7 @@
 					'menuaction' => 'booking.uiapplication.show',
 					'id' => $application['id']
 				),
-				false,
+				true,
 				true
 			);
 
