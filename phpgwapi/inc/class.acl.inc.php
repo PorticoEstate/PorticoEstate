@@ -2141,7 +2141,8 @@
 						'account_firstname' => $this->_db->f('account_firstname', true),
 						'account_lastname'  => $this->_db->f('account_lastname', true),
 						'account_status'    => $this->_db->f('account_status'),
-						'account_expires'   => $this->_db->f('account_expires')
+						'account_expires'   => $this->_db->f('account_expires'),
+						'account_lastlogin' => $this->_db->f('account_lastlogin')
 					);
 				}
 			}

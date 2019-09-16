@@ -236,6 +236,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'organization_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'parent_id' => array('type' => 'int', 'precision' => '4', 'nullable' => TRUE),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),

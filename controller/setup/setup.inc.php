@@ -57,5 +57,5 @@
 		'controller_document_types',
 		'controller_check_item_case',
 		'controller_check_item_status',
-		'controller_control_item_option'
+		'controller_control_item_option',
  	);

@@ -30,7 +30,7 @@
 
 			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 
-			<nav class="navbar bg-light navbar-light">
+			<nav class="navbar bg-dark navbar-dark">
 
 				<!-- LOGO -->
 				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">

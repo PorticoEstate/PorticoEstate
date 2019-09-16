@@ -113,6 +113,18 @@ function update_schedule(target_date, control_id, serie_id, check_list_id, item_
 				$("#" + item_id).removeClass('badge-primary');
 				$("#" + item_id).removeClass('badge-warning');
 				$("#" + item_id).addClass('badge-success');
+
+				if (data.status === 'ok' && data.check_list_id)
+				{
+					var oArgs = {
+						menuaction: 'controller.uicase.add_case',
+						check_list_id: data.check_list_id
+					};
+					var requestUrl = phpGWLink('index.php', oArgs);
+
+					var targetDiv = document.getElementById(item_id).getElementsByClassName("link_to_checklist")[0];
+					targetDiv.innerHTML = "<a href=\"" +requestUrl + "\" ><kbd><i class='fas fa-link'></i></kbd></a>";
+				}
 			}
 		}
 	});
