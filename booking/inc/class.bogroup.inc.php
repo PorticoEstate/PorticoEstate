@@ -106,15 +106,16 @@
 			$children = array();
 			foreach ($groups as $group)
 			{
+				$_group_parent_id = $group['parent_id'] ? $group['parent_id'] : null;
 				if (!array_key_exists($group['id'], $children))
 				{
 					$children[$group['id']] = array();
 				}
-				if (!array_key_exists($group['parent_id'], $children))
+				if (!array_key_exists($_group_parent_id, $children))
 				{
-					$children[$group['parent_id']] = array();
+					$children[$_group_parent_id] = array();
 				}
-				$children[$group['parent_id']][] = $group;
+				$children[$_group_parent_id][] = $group;
 			}
 			$result = array();
 			foreach ($children[null] as $child)
