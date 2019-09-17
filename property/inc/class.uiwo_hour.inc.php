@@ -1342,7 +1342,7 @@
 				$receipt['error'][] = array('msg' => lang('No mailaddress is selected'));
 			}
 
-			if ($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
+			if ($to_email || $print || ($workorder['mail_recipients'][0] && $send_order))
 			{
 				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
@@ -1441,8 +1441,106 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<style TYPE="text/css">
-			<!--{$css}-->
+		<style>
+
+			html {
+				font-family: arial;
+				}
+
+			.details {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.details th {
+			  background: darkblue;
+			  color: white;
+			}
+			.details td,
+			.details th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+/*
+			.details tr:nth-child(even) {
+			  background: lightblue;
+			}
+*/
+
+			@page {
+			size: A4;
+			}
+
+			#order_deadline{
+				width: 800px;
+				border:0px solid transparent;
+			}
+
+			#order_deadline td{
+				border:0px solid transparent;
+			}
+			@media print {
+			li {page-break-inside: avoid;}
+			h1, h2, h3, h4, h5 {
+			page-break-after: avoid;
+			}
+
+			table, figure {
+			page-break-inside: avoid;
+			}
+			}
+
+
+			@page:left{
+			@bottom-left {
+			content: "Page " counter(page) " of " counter(pages);
+			}
+			}
+			@media print
+			{
+				.btn
+				{
+					display: none !important;
+				}
+			}
+
+			.btn{
+			background: none repeat scroll 0 0 #2647A0;
+			color: #FFFFFF;
+			display: inline-block;
+			margin-right: 5px;
+			padding: 5px 10px;
+			text-decoration: none;
+			border: 1px solid #173073;
+			cursor: pointer;
+			}
+
+			ul{
+			list-style: none outside none;
+			}
+
+			li{
+			list-style: none outside none;
+			}
+
+			li.list_item ol li{
+			list-style: decimal;
+			}
+
+			ul.groups li {
+			padding: 3px 0;
+			}
+
+			ul.groups li.odd{
+			background: none repeat scroll 0 0 #DBE7F5;
+			}
+
+			ul.groups h3 {
+			font-size: 18px;
+			margin: 0 0 5px;
+			}
+
 		</style>
 	</head>
 		<body>
@@ -1465,7 +1563,7 @@ HTML;
 					echo <<<HTML
 						<script language="Javascript1.2">
 						<!--
-							document.write("<form><input type=button "
+							document.write("<form><input type=button class=\"btn\" "
 							+"value=\"Print Page\" onClick=\"window.print();\"></form>");
 						//-->
 						</script>
@@ -1797,7 +1895,7 @@ HTML;
 				'lang_select_email'					 => lang('Select email'),
 				'send_order_action'					 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction'	 => 'property.uiwo_hour.view',
-					'send'			 => true,
+//					'send'			 => true,
 					'workorder_id'	 => $workorder_id,
 					'show_details'	 => $show_details,
 					'sent_ok'		 => $rcpt)),
@@ -1819,15 +1917,12 @@ HTML;
 				'lang_print'						 => lang('print'),
 				'value_show_cost'					 => $show_cost,
 				'lang_print_statustext'				 => lang('open this page as printerfrendly'),
-				'print_action'						 => "javascript:openwindow('"
-				. $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction'	 => 'property.uiwo_hour.view',
-					'workorder_id'	 => $workorder_id,
-					'show_cost'		 => $show_cost,
-					'show_details'	 => $show_details,
-					'print'			 => true
-				)) . "','1000','1200')",
+				'print_action'						 => "javascript:openwindow("
+					. "phpGWLink('/index.php', {menuaction: 'property.uiwo_hour.view',"
+					. " workorder_id:'$workorder_id',"
+					. " show_cost:'$show_cost',"
+					. " show_details:'$show_details',"
+					. " print:true}) ,'1000','1200')",
 				'pdf_action'						 => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction'	 => 'property.uiwo_hour.pdf_order',
