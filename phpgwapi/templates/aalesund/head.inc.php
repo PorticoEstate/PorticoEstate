@@ -345,10 +345,13 @@ JS;
 		}
 		else
 		{
+			$org_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiorganization.show',
+				'id' => $org->get_orgid($bouser->orgnr)));
+
+			$lang_organization = lang('Organization');
+			$tpl_vars['org_info_view'] = "<span><img class='login-logo' src='{$loginlogo}' alt='{$lang_organization}'></img><a href='{$org_url}'>{$bouser->orgname}</a></span>";
 			$tpl_vars['login_text_org']	 = $bouser->orgname;
 			$tpl_vars['login_text']		 = lang('Logout');
-			$tpl_vars['org_url']		 = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiorganization.show',
-				'id' => $org->get_orgid($bouser->orgnr)));
 		}
 		$tpl_vars['login_text']	 = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url']	 = 'logout.php';

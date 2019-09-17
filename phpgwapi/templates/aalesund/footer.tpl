@@ -44,8 +44,8 @@
 			<div class="col-md-6 order-md-4 col-lg-3 order-lg-4">
 				<h3>Logg inn</h3>
 				<span><img class="login-logo" src="{loginlogo}" alt="Logg inn"></img><a href="{login_url}">{login_text}</a></span>
+				{org_info_view}
 				<span><img class="login-logo" src="{loginlogo}" alt="Logg inn"></img><a target="_blank" rel="noopener noreferrer" href="{executiveofficer_url}">{executiveofficer}</a></span>
-
 			</div>
 		</div>
     </div>
