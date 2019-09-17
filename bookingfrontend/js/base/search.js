@@ -373,7 +373,7 @@ function DoFilterSearch() {
                 var resources = [];
                 for(var k=0; k<result.buildings[i].resources.length; k++) {
             
-                    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: result.buildings[i].id, resource_id: result.buildings[i].resources[k].id }, false);
+                    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show", resource_id: result.buildings[i].resources[k].id, building_id: result.buildings[i].id }, false);
                     var facilities = [];
                     var activities = [];
                     for(var f=0; f<result.buildings[i].resources[k].facilities_list.length; f++) {
@@ -383,6 +383,7 @@ function DoFilterSearch() {
                         activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
                     }                  
                     resources.push({name: result.buildings[i].resources[k].name, forwardToApplicationPage: bookBtnURL, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false });
+                    
                 }
                 items.push({resultType: GetTypeName("building").toUpperCase(), 
                 name: result.buildings[i].name, 
