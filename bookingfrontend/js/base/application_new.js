@@ -496,13 +496,3 @@ window.onload = function() {
     } 
   })
 }
-
-const test = document.getElementById("inputEventName")
-
-test.addEventListener("input", function(){
-  if(!test.value){
-    console.log("there is no value")
-  } else {
-    console.log("there is a value")
-  }
-})
