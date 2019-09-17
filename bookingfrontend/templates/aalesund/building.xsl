@@ -151,7 +151,7 @@
 					</div>
 					<div class="col-lg-6 building-bookable">
 						<h2 class="">
-							<xsl:value-of select="php:function('lang', 'Bookable resources (2018)')" />
+							<xsl:value-of select="php:function('lang', 'For rent')" />
 						</h2>
 						<div data-bind="foreach: bookableResource">
 							<a class="bookable-resource-link-href" href="" data-bind="">
@@ -192,7 +192,7 @@
 					<div class="col-6">
 						<div class="button-group dropdown calendar-tool invisible">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<xsl:value-of select="php:function('lang', 'Choose resources')"/>
+								<xsl:value-of select="php:function('lang', 'For rent')"/>
 								<span class="caret"></span>
 							</button>
 
