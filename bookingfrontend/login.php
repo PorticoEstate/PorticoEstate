@@ -17,21 +17,47 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 
-//	$login = "bookingguest";
-	$c = createobject('phpgwapi.config', 'bookingfrontend');
-	$c->read();
-	$config = $c->config_data;
-	$login = $c->config_data['anonymous_user'];
-	$passwd = $c->config_data['anonymous_passwd'];
-	$_POST['submitit'] = "";
-	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+	$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
 
-	$GLOBALS['phpgw']->hooks->process('login');
+	if(!empty($config['debug_local_login']))
+	{
+		echo "<H1>Testing pågår - prøv igjen litt senere</H1>";
 
+	}
+
+	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	{
+
+		if(!empty($config['debug_local_login']))
+		{
+			echo "<p>Sesjonen finnes ikke - logger på</p>";
+		}
+
+		$login = $config['anonymous_user'];
+		$passwd = $config['anonymous_passwd'];
+		$_POST['submitit'] = "";
+		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+
+		$GLOBALS['phpgw']->hooks->process('login');
+	}
+
+
+	/**
+	 * Pick up the external login-info
+	 */
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$bouser->log_in();
 
-	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
+	$redirect =	json_decode(phpgwapi_cache::session_get('bookingfrontend', 'redirect'), true);
+
+
+	if(!empty($config['debug_local_login']))
+	{
+		echo "<p>redirect:</p>";
+
+		_debug_array($redirect);
+		die();
+	}
 
 	if (is_array($redirect) && count($redirect))
 	{
@@ -50,11 +76,8 @@
 			$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 		}
 
-		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+		phpgwapi_cache::session_clear('bookingfrontend', 'redirect');
 		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
-		unset($redirect);
-		unset($redirect_data);
-		unset($sessid);
 	}
 
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));

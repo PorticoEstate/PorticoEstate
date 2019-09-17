@@ -2523,8 +2523,11 @@ HTML;
 
 			foreach ($additional_notes as &$note)
 			{
-				$note['value_note']	 = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $note['value_note']);
-				$note['value_note']	 = nl2br($note['value_note']);
+				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $note['value_note']))
+				{
+					$note['value_note']	 = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $note['value_note']);
+					$note['value_note']	 = nl2br($note['value_note']);
+				}
 			}
 
 			$datatable_def = array();

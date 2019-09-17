@@ -18,7 +18,9 @@
 		function tree_walker( &$result, $children, $prefix, $node )
 		{
 			if (!$node['active'])
+			{
 				return;
+			}
 			$result[] = array('id' => $node['id'], 'name' => $prefix . $node['name']);
 			foreach ($children[$node['id']] as $child)
 			{

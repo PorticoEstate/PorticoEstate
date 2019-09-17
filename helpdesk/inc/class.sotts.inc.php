@@ -1163,7 +1163,7 @@
 			if (isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
 				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
 				$this->db->transaction_commit();
 				return $receipt;
 			}
@@ -1293,7 +1293,7 @@
 			if (isset($this->fields_updated) && $this->fields_updated)
 			{
 				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
 			}
 
 			$this->db->transaction_commit();

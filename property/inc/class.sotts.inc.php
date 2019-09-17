@@ -1592,7 +1592,7 @@
 
 			if ($ticket['billable_hours'])
 			{
-				$ticket['billable_hours']	 = (float)str_replace(',', '.', $ticket['billable_hours']);
+				$ticket['billable_hours']	 = (float)str_replace(array(' ', ','), array('', '.'), $ticket['billable_hours']);
 				$ticket['billable_hours']	 += (float)$old_billable_hours;
 //			}
 //			if ((float)$old_billable_hours != $ticket['billable_hours'])
@@ -1735,14 +1735,14 @@
 					$this->db->query("SELECT sum(amount) AS budget FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
 					$old_budget	 = $this->db->f('budget');
-					$new_budget	 = str_replace(',', '.', ($old_budget + $ticket['budget']));
+					$new_budget	 = (float) str_replace(array(' ', ','), array('', '.'), $ticket['budget']) + $old_budget;
 
 					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id='$id'", __LINE__, __FILE__);
 
 					$value_set_cost = array
 						(
 						'ticket_id'	 => $id,
-						'amount'	 => str_replace(',', '.', $ticket['budget']),
+						'amount'	 => str_replace(array(' ', ','), array('', '.'), $ticket['budget']),
 						'period'	 => $ticket['budget_period'] . '01',
 						'created_on' => time(),
 						'created_by' => $this->account
@@ -1761,14 +1761,14 @@
 					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
 					$old_actual_cost = $this->db->f('actual_cost');
-					$new_actual_cost = str_replace(',', '.', ($old_actual_cost + $ticket['actual_cost']));
+					$new_actual_cost =  (float) str_replace(array(' ', ','), array('', '.'), $ticket['actual_cost']) + $old_actual_cost;
 
 					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='{$new_actual_cost}' WHERE id='$id'", __LINE__, __FILE__);
 
 					$value_set_cost = array
 						(
 						'ticket_id'	 => $id,
-						'amount'	 => str_replace(',', '.', $ticket['actual_cost']),
+						'amount'	 => (float)str_replace(array(' ', ','), array('', '.'), $ticket['actual_cost']),
 						'period'	 => $ticket['actual_cost_period'],
 						'created_on' => time(),
 						'created_by' => $this->account

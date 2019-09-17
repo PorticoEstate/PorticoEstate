@@ -219,7 +219,7 @@
 				throw new Exception("VFS error! Missing user id!");
 			}
 			$this->working_lid = $GLOBALS['phpgw_info']['user']['account_lid'];
-			$this->now = date ('Y-m-d');
+			$this->now = date ('Y-m-d G:i:s');
 			/* These are stored in the MIME-type field and should normally 
 			* be ignored.
 			* Adding a type here will ensure it is normally ignored, 

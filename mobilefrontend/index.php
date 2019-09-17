@@ -71,7 +71,9 @@
 		'noheader' => true,
 		'currentapp' => $app,
 		'template_set' => 'mobilefrontend',
-		'custom_frontend' => 'mobilefrontend'
+		'custom_frontend' => 'mobilefrontend',
+		'session_name' => 'mobilefrontendsession'
+
 	);
 
 	/**
@@ -83,7 +85,7 @@
 
 	if ($app == 'home' && !$api_requested)
 	{
-		$GLOBALS['phpgw']->redirect_link('/mobilefrontend/home.php');
+		$GLOBALS['phpgw']->redirect_link('/home.php');
 	}
 
 	if ($api_requested)
@@ -106,7 +108,12 @@
 		$GLOBALS[$class] = new $_class;
 	}
 
-	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
+	if (!$invalid_data
+		&& is_object($GLOBALS[$class])
+		&& isset($GLOBALS[$class]->public_functions)
+		&& is_array($GLOBALS[$class]->public_functions)
+		&& isset($GLOBALS[$class]->public_functions[$method])
+		&& $GLOBALS[$class]->public_functions[$method])
 	{
 		/**
 		 * Reset timer

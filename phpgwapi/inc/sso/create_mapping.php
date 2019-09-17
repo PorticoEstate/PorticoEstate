@@ -67,7 +67,7 @@
 		}
 	}
 	
-	$uilogin = new phpgw_uilogin($tmpl, false);
+	$uilogin = new phpgw_uilogin(false);
 
 	//Build vars :
 	$variables = array();

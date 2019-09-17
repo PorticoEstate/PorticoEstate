@@ -77,7 +77,8 @@
 			'view_file'	=> true,
 			'get_report' => true,
 			'set_completed_item'	=> true,
-			'undo_completed_item'	=> true
+			'undo_completed_item'	=> true,
+			'add_billable_hours'	=> true
 		);
 
 		function __construct()
@@ -1737,6 +1738,34 @@
 			return json_encode($check_items_with_cases);
 		}
 
+
+		function add_billable_hours()
+		{
+			$error = '';
+
+			if (!$this->add && !$this->edit)
+			{
+				return json_encode(array(
+					"status" => 'not_saved',
+					'message' => '',
+					'error'	=> 'no_access'
+					));
+			}
+			$check_list_id = phpgw::get_var('check_list_id');
+			$billable_hours = phpgw::get_var('billable_hours', 'float');
+			$check_list = $this->so->get_single($check_list_id);
+			$check_list->set_delta_billable_hours($billable_hours);
+			
+			if ($this->so->store($check_list))
+			{
+				return array('status' => 'ok');
+			}
+			else
+			{
+				return array("status" => 'not_saved', 'message' => '', 'error'=> '');
+			}
+		}
+
 		/**
 		 * Public function for updateing status for a check list
 		 *
@@ -1744,9 +1773,15 @@
 		 */
 		public function update_status()
 		{
+			$error = '';
+
 			if (!$this->add && !$this->edit)
 			{
-				return json_encode(array("status" => 'not_saved', 'message' => ''));
+				return json_encode(array(
+					"status" => 'not_saved',
+					'message' => '',
+					'error'	=> 'no_access'
+					));
 			}
 
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -1763,6 +1798,7 @@
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$ok = false;
+				$error = 'missing_billable_hours';
 			}
 //
 			if (!$this->_check_for_required($check_list) || !$ok)
@@ -1781,7 +1817,13 @@
 						}
 					}
 				}
-				return json_encode(array("status" => 'not_saved', 'message' => $message));
+				return array(
+					"status" => 'not_saved',
+					'message' => $message,
+					'error'=> $error ? $error : 'missing_required',
+					'input_text' => lang("Please enter billable hours"),
+					'lang_new_value' => lang('new value')
+					);
 			}
 
 			if ($check_list_status == controller_check_list::STATUS_DONE)
@@ -1798,12 +1840,61 @@
 
 			if ($this->so->store($check_list))
 			{
-				return json_encode(array('status' => $check_list_status));
+				/**
+				 * create message....
+				 */
+				
+				$message = '';
+				if($check_list_status == controller_check_list::STATUS_DONE)
+				{
+					$message_ret = $this->create_messages($check_list->get_control_id(),$check_list_id,$check_list->get_location_code());
+					if($message_ret['message_ticket_id'])
+					{
+						$message = lang('%1 case(s) sent as message %2', $message_ret['num_cases'], $message_ret['message_ticket_id']);
+					}
+				}
+
+				return array(
+					'status' => $check_list_status,
+					'message' => $message
+					);
 			}
 			else
 			{
-				return json_encode(array("status" => 'not_saved', 'message' => ''));
+				return array("status" => 'not_saved', 'message' => '', 'error'=> 'missing_required');
 			}
+		}
+
+
+		private function create_messages($control_id, $check_list_id, $location_code)
+		{
+
+			$check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, "open", "no_message_registered");
+
+			$case_ids = array();
+			foreach ($check_items_and_cases as $check_item)
+			{
+				foreach ($check_item->get_cases_array() as $case)
+				{
+					$case_ids[] = $case->get_id();
+				}
+			}
+
+//			$config = CreateObject('phpgwapi.config', 'controller')->read();
+//			$ticket_cat_id = $config['ticket_category'];
+
+			$control = $this->so_control->get_single($control_id);
+			$ticket_cat_id = $control->get_ticket_cat_id();
+			$message_title = $control->get_title();
+
+			$uicase = createObject('controller.uicase');
+			$message_ticket_id = $uicase->send_case_message_step_2($check_list_id,$location_code, $message_title, $ticket_cat_id, $case_ids );
+
+			return array(
+				'message_ticket_id'	 => $message_ticket_id,
+				'num_cases'			 => count($case_ids)
+			);
+
 		}
 
 		public function query()

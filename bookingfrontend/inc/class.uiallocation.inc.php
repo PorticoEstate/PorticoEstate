@@ -92,8 +92,8 @@
 					$system_message['building_id']	 = intval($allocation['building_id']);
 					$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 					$system_message['created']		 = $date->format('Y-m-d  H:m');
-					$system_message					 = array_merge($system_message, extract_values($_POST, array(
-						'message')));
+//					$system_message					 = array_merge($system_message, extract_values($_POST, array('message')));
+					$system_message['message']		 = phpgw::get_var('message', 'html');
 					$system_message['type']			 = 'cancelation';
 					$system_message['status']		 = 'NEW';
 					$system_message['name']			 = $allocation['organization_name'] . ' - ' . $organization['contacts'][0]['name'];
@@ -193,8 +193,8 @@
 							$system_message['building_id']	 = intval($allocation['building_id']);
 							$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 							$system_message['created']		 = $date->format('Y-m-d  H:m');
-							$system_message					 = array_merge($system_message, extract_values($_POST, array(
-								'message')));
+//							$system_message					 = array_merge($system_message, extract_values($_POST, array('message')));
+							$system_message['message']		 = phpgw::get_var('message', 'html');
 							$system_message['type']			 = 'cancelation';
 							$system_message['status']		 = 'NEW';
 							$system_message['name']			 = $allocation['organization_name'] . ' - ' . $organization['contacts'][0]['name'];
@@ -240,8 +240,6 @@
 							$todate				 = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
 							$allocation['from_'] = $fromdate;
 							$allocation['to_']	 = $todate;
-							$fromdate			 = pretty_timestamp($fromdate);
-							$todate				 = pretty_timestamp($todate);
 
 							$id = $this->bo->so->get_allocation_id($allocation);
 							if ($id)
@@ -285,8 +283,8 @@
 							$system_message['building_id']	 = intval($allocation['building_id']);
 							$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
 							$system_message['created']		 = $date->format('Y-m-d  H:m');
-							$system_message					 = array_merge($system_message, extract_values($_POST, array(
-								'message')));
+//							$system_message					 = array_merge($system_message, extract_values($_POST, array('message')));
+							$system_message['message']		 = phpgw::get_var('message', 'html');
 							$system_message['type']			 = 'cancelation';
 							$system_message['status']		 = 'NEW';
 							$system_message['name']			 = ' ';

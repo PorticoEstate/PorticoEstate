@@ -131,6 +131,12 @@
 		'navbar_config' => $_navbar_config,
 		'lang_collapse_all'	=> lang('collapse all'),
 		'lang_expand_all'	=> lang('expand all'),
+		'privacy_url'		=> !empty($GLOBALS['phpgw_info']['server']['privacy_url']) ? $GLOBALS['phpgw_info']['server']['privacy_url'] : 'https://www.bergen.kommune.no/omkommunen/personvern',
+		'privacy_message'	=> !empty($GLOBALS['phpgw_info']['server']['privacy_message']) ? $GLOBALS['phpgw_info']['server']['privacy_message'] : 'Personvern ved bruk av elektroniske skjema.',
+		'lang_decline'		=> lang('decline'),
+		'lang_approve'		=> lang('approve'),
+		'lang_read_more'	=> lang('read more'),
+		'lang_privacy_policy' => lang('privacy policy')
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

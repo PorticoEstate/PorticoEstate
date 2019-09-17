@@ -24,7 +24,44 @@
 					<button id = "submit_parent_component" type="button" class="mb-3 btn btn-info btn-block" onclick="show_parent_component_information({component_array/location_id}, {component_array/id});">
 						<xsl:value-of select="php:function('lang', 'details')" />
 					</button>
-					<div id = "form_parent_component_2"></div>
+					<form ENCTYPE="multipart/form-data" method="post" id="frm_add_picture_parent">
+						<xsl:attribute name="action">
+							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
+						</xsl:attribute>
+
+						<input type="hidden" name="component" value="{component_array/location_id}_{component_array/id}" />
+
+						<div id="new_picture_parent" class="container" style="display:none"> 
+
+							<div class="form-group">
+<!--								<label>
+									<xsl:value-of select="php:function('lang', 'picture')" />
+								</label>-->
+								<div  id="equipment_parent_picture_container"/>
+							</div>
+							<div class="form-group">
+
+								<div class="input-group">
+									<div class="custom-file">
+										<input type="file" id="component_parent_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component_parent" onchange="show_picture_parent_submit();">
+											<xsl:attribute name="accept">image/*</xsl:attribute>
+											<xsl:attribute name="capture">camera</xsl:attribute>
+										</input>
+										<label class="custom-file-label">
+											<xsl:value-of select="php:function('lang', 'new picture')" />
+										</label>
+									</div>
+								</div>
+								<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
+									<xsl:value-of select="php:function('lang', 'add picture')" />
+								</button>
+							</div>
+						</div>
+
+					</form>
+
+					<div id = "form_parent_component_2">
+					</div>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
@@ -39,7 +76,7 @@
 			</xsl:choose>
 		</div>
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<nav class="navbar bg-light navbar-light">
+		<nav class="navbar bg-dark navbar-dark">
 
 			<!-- LOGO -->
 			<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -68,39 +105,6 @@
 				</ul>
 			</div>
 		</nav>
-
-
-		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-		<xsl:choose>
-			<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
-				<div class="box-2 select-box">
-					<xsl:variable name="action_url">
-						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
-					</xsl:variable>
-					<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
-						<input type="hidden" name="check_list_id" value="{check_list/id}" />
-						<xsl:choose>
-							<xsl:when test="check_list/status = 0">
-								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-								<input id="status_submit" type="submit" class="mt-3 btn btn-success btn-block">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'set status: done')" />
-									</xsl:attribute>
-								</input>
-							</xsl:when>
-							<xsl:otherwise>
-								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-								<input type="submit" class="mt-3 btn btn-success btn-block">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'is_executed')" />
-									</xsl:attribute>
-								</input>
-							</xsl:otherwise>
-						</xsl:choose>
-					</form>
-				</div>
-			</xsl:when>
-		</xsl:choose>
 	</div>
 
 </xsl:template>

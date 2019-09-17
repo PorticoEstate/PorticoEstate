@@ -36,6 +36,60 @@
 	{
 		public function __construct()
 		{
+			/*
+			 * Generic include for login.php like pages
+			 */
+			if(!empty( $GLOBALS['phpgw_info']['flags']['session_name'] ))
+			{
+				$session_name = $GLOBALS['phpgw_info']['flags']['session_name'];
+			}
+
+			if(!empty( $GLOBALS['phpgw_info']['flags']['custom_frontend'] ))
+			{
+				$custom_frontend = $GLOBALS['phpgw_info']['flags']['custom_frontend'];
+			}
+
+			$GLOBALS['phpgw_info'] = array();
+
+			$GLOBALS['phpgw_info']['flags'] = array
+			(
+				'disable_template_class' => true,
+				'login'                  => true,
+				'currentapp'             => 'login',
+				'noheader'               => true
+			);
+			if(!empty($session_name))
+			{
+				$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
+			}
+			if(!empty($custom_frontend))
+			{
+				$GLOBALS['phpgw_info']['flags']['custom_frontend'] = $custom_frontend;
+			}
+
+			$header = dirname(realpath(__FILE__)) . '/../../header.inc.php';
+			if ( !file_exists($header) )
+			{
+				Header('Location: ../setup/index.php');
+				exit;
+			}
+
+
+			/**
+			* check for emailaddress as username
+			*/
+			if ( isset($_POST['login']) && $_POST['login'] != '')
+			{
+				if (!filter_var($_POST['login'], FILTER_VALIDATE_EMAIL))
+				{
+					$_POST['login'] = str_replace('@', '#', $_POST['login']);
+				}
+			}
+
+			/**
+			* Include phpgroupware header
+			*/
+			require_once $header;
 
 		}
 
@@ -74,10 +128,9 @@
 				}
 			}
 
-			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
-
 			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
-			$partial_url		 = ltrim("{$frontend}/login.php", '/');
+//			$partial_url		 = ltrim("{$frontend}/login.php", '/');
+			$partial_url		 = 'login.php';
 			$phpgw_url_for_sso	 = 'phpgwapi/inc/sso/login_server.php';
 
 			if (isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
@@ -92,15 +145,15 @@
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
 
-			if(!phpgw::get_var('after','string', 'COOKIE'))
-			{
-				$after = phpgw::get_var('after', 'bool');
-				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'),$cookietime=0);
-			}
-			else
-			{
-				$after = true;
-			}
+//			if(!phpgw::get_var('after','string', 'COOKIE'))
+//			{
+//				$after = phpgw::get_var('after', 'bool');
+//				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'), 0);
+//			}
+//			else
+//			{
+//				$after = true;
+//			}
 
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try
 			{
@@ -108,13 +161,6 @@
 			}
 
 			/* Program starts here */
-			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
-
-			if(phpgw::get_var('hide_lightbox', 'bool'))
-			{
-				$uilogin->phpgw_display_login(array());
-				exit;
-			}
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
 			{
@@ -225,17 +271,17 @@
 				$GLOBALS['phpgw']->hooks->process('login');
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			//----------------- End login ntlm
@@ -337,18 +383,18 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
@@ -415,18 +461,18 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
@@ -516,37 +562,43 @@
 
 				if ($lightbox)
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
-						$this->redirect_after($frontend);
+						$this->redirect_after();
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
 					}
 				}
 			}
 
 			//Build vars :
 			$variables = array();
-			$variables['lang_login']	= lang('login');
-			$variables['partial_url']	= $partial_url;
-			$variables['lang_frontend']	= $frontend ? lang($frontend) : '';
-			if (isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')
+
+			if(!phpgw::get_var('hide_lightbox', 'bool'))
 			{
-				$variables['lang_additional_url']	 = lang('use sso login');
-				$variables['additional_url']		 = $GLOBALS['phpgw']->link('/' . $phpgw_url_for_sso);
+				$variables['lang_login']	= lang('login');
+				$variables['partial_url']	= $partial_url;
+				$variables['lang_frontend']	= $frontend ? lang($frontend) : '';
+				if (isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')
+				{
+					$variables['lang_additional_url']	 = lang('use sso login');
+					$variables['additional_url']		 = $GLOBALS['phpgw']->link('/' . $phpgw_url_for_sso);
+				}
 			}
 
+			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
+			$uilogin = new phpgw_uilogin($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 			$uilogin->phpgw_display_login($variables);
 		}
 
-		function redirect_after($frontend = '')
+		function redirect_after()
 		{
 			$redirect = phpgw::get_var('after','string', 'COOKIE');
 		//	_debug_array($_COOKIE);
@@ -568,19 +620,19 @@
 					$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 				}
 
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", $redirect_data);
+				$GLOBALS['phpgw']->redirect_link("/index.php", $redirect_data);
 			}
 
 			$redirect_arr = explode('.',$redirect);
 
 			if (count($redirect_arr) == 3 && isset($GLOBALS['phpgw_info']['user']['apps'][$redirect_arr[0]]))
 			{
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", array('menuaction' => $redirect));
+				$GLOBALS['phpgw']->redirect_link("/index.php", array('menuaction' => $redirect));
 			}
 			else
 			{
 				//failsafe
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php");
+				$GLOBALS['phpgw']->redirect_link("/home.php");
 			}
 		}
 	}

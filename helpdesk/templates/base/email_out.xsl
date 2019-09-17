@@ -28,7 +28,7 @@
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
 		</script>
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
+		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
@@ -94,6 +94,38 @@
 								</textarea>
 							</div>
 						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'upload file')"/>
+							</label>
+
+							<input type="file" name="file" class="pure-input-3-4" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'files')"/>
+							</label>
+							<div class="pure-u-md-3-4" >
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_3'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+
 						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'details')"/>

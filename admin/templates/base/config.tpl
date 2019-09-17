@@ -21,10 +21,17 @@
 					</select>
 				</td>
 			</tr-->
-
 			<tr>
 				<td>{lang_cache_refresh_token}:</td>
 				<td><input size="8" name="newsettings[cache_refresh_token]" value="{value_cache_refresh_token}"></td>
+			</tr>
+			<tr>
+				<td>{lang_privacy_url}:</td>
+				<td><input name="newsettings[privacy_url]" value="{value_privacy_url}"></td>
+			</tr>
+			<tr>
+				<td>{lang_privacy_message}:</td>
+				<td><input name="newsettings[privacy_message]" value="{value_privacy_message}"></td>
 			</tr>
 			<tr>
 				<td>{lang_Timeout_for_sessions_in_seconds} (default 14400 = 4 hours):</td>

@@ -179,21 +179,29 @@
 
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
-			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$external_site_address = !empty($config->config_data['external_site_address'])  ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$subject = $config->config_data['application_comment_mail_subject_caseofficer'];
 
 			$mailadresses = $config->config_data['emails'];
 			$mailadresses = explode("\n", $mailadresses);
 
-			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && isset($config->config_data['external_site_address']))
-			{
-				$link = $external_site_address . $GLOBALS['phpgw_info']['server']['webserver_url'] . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
-			}
-			else
-			{
-				$link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
-			}
+//			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && $external_site_address)
+//			{
+//				$link = $external_site_address . $GLOBALS['phpgw_info']['server']['webserver_url'] . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+//			}
+//			else
+//			{
+//				$link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+//			}
+
+			$link = $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'booking.uiapplication.show',
+					'id' => $application['id']
+				),
+				true,
+				true
+			);
 
 			$activity = $this->activity_bo->read_single($application['activity_id']);
 
