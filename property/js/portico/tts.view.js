@@ -25,7 +25,7 @@ this.local_DrawCallback4 = function (container)
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
+		$(api.column(col).footer()).html("<div style=\"text-align:right;\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 		amount = pageTotal;
 	});
 
@@ -53,7 +53,7 @@ this.local_DrawCallback5 = function (container)
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
+		$(api.column(col).footer()).html("<div style=\"text-align:right;\">" + $.number(pageTotal, 2, ',', '.') + "</div>");
 	});
 
 };

@@ -20,7 +20,7 @@ this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTab
 			{
 				if (typeof (nRow.getElementsByTagName('th')[j]) != 'undefined')
 				{
-					nRow.getElementsByTagName('th')[j].innerHTML = "<div align=\"right\">" + $.number(tmp_sum_budget, 0, ',', '.') + "</div>";
+					nRow.getElementsByTagName('th')[j].innerHTML = "<div style=\"text-align:right;\">" + $.number(tmp_sum_budget, 0, ',', '.') + "</div>";
 				}
 				break;
 			}
@@ -39,7 +39,7 @@ this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTab
 			{
 				if (typeof (nRow.getElementsByTagName('th')[j]) != 'undefined')
 				{
-					nRow.getElementsByTagName('th')[j].innerHTML = "<div align=\"right\">" + $.number(tmp_sum_actual_cost, 0, ',', '.') + "</div>";
+					nRow.getElementsByTagName('th')[j].innerHTML = "<div style=\"text-align:right;\">" + $.number(tmp_sum_actual_cost, 0, ',', '.') + "</div>";
 				}
 
 				show_actual_cost = true;
@@ -55,7 +55,7 @@ this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTab
 		nRow.getElementsByTagName('th')[0].innerHTML = "Sum:";
 		if (typeof (nRow.getElementsByTagName('th')[j]) != 'undefined')
 		{
-			nRow.getElementsByTagName('th')[j].innerHTML = "<div align=\"right\">" + $.number(tmp_sum_difference, 0, ',', '.') + "</div>";
+			nRow.getElementsByTagName('th')[j].innerHTML = "<div style=\"text-align:right;\">" + $.number(tmp_sum_difference, 0, ',', '.') + "</div>";
 		}
 	}
 }

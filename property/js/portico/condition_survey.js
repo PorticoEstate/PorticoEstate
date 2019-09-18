@@ -16,7 +16,7 @@ var setSuma = function (api, i)
 	}) : 0;
 	var amount = $.number(pageTotal, 0, ',', '.');
 
-	$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
+	$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + amount + "</div>");
 };
 
 this.local_DrawCallback2 = function (container)
