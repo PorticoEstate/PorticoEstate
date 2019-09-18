@@ -782,7 +782,7 @@ HTML;
 						var $el = $("#part_of_town_id");
 						$el.empty();
 						$.each(result, function(key, value) {
-						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+						  $el.append($("<option>").attr("value", value.id).text(value.name));
 						});
 					}, data, "GET", "json"
 				);

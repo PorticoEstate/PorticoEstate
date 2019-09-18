@@ -95,10 +95,10 @@
 <!-- New template-->
 <xsl:template match="table_header_deviation">
 	<tr class="th">
-		<td class="th_text" width="1%" align="right">
+		<td class="th_text" width="1%" style="text-align:right;">
 			<xsl:value-of select="lang_id"/>
 		</td>
-		<td class="th_text" width="6%" align="right">
+		<td class="th_text" width="6%" style="text-align:right;">
 			<xsl:value-of select="lang_amount"/>
 		</td>
 		<td class="th_text" width="80%">
@@ -107,10 +107,10 @@
 		<td class="th_text" width="80%">
 			<xsl:value-of select="lang_date"/>
 		</td>
-		<td class="th_text" width="5%" align="left">
+		<td class="th_text" width="5%" style="text-align:left;">
 			<xsl:value-of select="lang_edit"/>
 		</td>
-		<td class="th_text" width="5%" align="left">
+		<td class="th_text" width="5%" style="text-align:left;">
 			<xsl:value-of select="lang_delete"/>
 		</td>
 	</tr>
@@ -144,24 +144,24 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td class="small_text" align="right">
+		<td class="small_text" style="text-align:right;">
 			<xsl:value-of select="id"/>
 		</td>
-		<td class="small_text" align="right">
+		<td class="small_text" style="text-align:right;">
 			<xsl:value-of select="amount"/>
 		</td>
-		<td class="small_text" align="left">
+		<td class="small_text" style="text-align:left;">
 			<xsl:value-of select="descr"/>
 		</td>
-		<td class="small_text" align="left">
+		<td class="small_text" style="text-align:left;">
 			<xsl:value-of select="entry_date"/>
 		</td>
-		<td class="small_text" align="center">
+		<td class="small_text" style="text-align:center;">
 			<a href="{$link_edit}" onMouseover="window.status='{$lang_edit_statustext}';return true;" onMouseout="window.status='';return true;">
 				<xsl:value-of select="text_edit"/>
 			</a>
 		</td>
-		<td class="small_text" align="center">
+		<td class="small_text" style="text-align:center;">
 			<a href="{$link_delete}" onMouseover="window.status='{$lang_delete_statustext}';return true;" onMouseout="window.status='';return true;">
 				<xsl:value-of select="text_delete"/>
 			</a>
@@ -239,7 +239,7 @@
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_done_statustext"/>
 					</xsl:attribute>
-						<xsl:value-of select="$lang_done"/>
+					<xsl:value-of select="$lang_done"/>
 				</button>
 			</div>
 		</form>
@@ -266,11 +266,11 @@
 <!-- New template-->
 <xsl:template match="list_hour">
 	<xsl:apply-templates select="menu"/>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<tr>
-					<td align="left" colspan="3">
+					<td style="text-align:left;" colspan="3">
 						<xsl:call-template name="msgbox"/>
 					</td>
 				</tr>
@@ -278,13 +278,13 @@
 		</xsl:choose>
 	</table>
 	<xsl:apply-templates select="workorder_data"/>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<tr>
-			<td class="th_text" colspan="3" align="right">
+			<td class="th_text" colspan="3" style="text-align:right;">
 				<xsl:value-of select="lang_total_records"/>
 				<xsl:text> : </xsl:text>
 			</td>
-			<td class="th_text" colspan="5" align="left">
+			<td class="th_text" colspan="5" style="text-align:left;">
 				<xsl:value-of select="total_hours_records"/>
 			</td>
 		</tr>
@@ -447,7 +447,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<div class="pure-control-group">
-			<hr noshade="noshade" width="100%" align="center" size="1"/>
+			<hr noshade="noshade" width="100%" style="text-align:center;" size="1"/>
 		</div>
 		<xsl:apply-templates select="email_data"/>
 		<xsl:choose>
@@ -501,7 +501,7 @@
 		<xsl:choose>
 			<xsl:when test="table_send !=''">
 				<div class="pure-control-group">
-					<button type="submit" class="pure-button pure-button-primary" name="send_order" value="{table_send/lang_send_order}">
+					<button type="submit" class="pure-button pure-button-primary" name="send_order" value="1">
 						<xsl:attribute name="title">
 							<xsl:value-of select="table_send/lang_send_order_statustext"/>
 						</xsl:attribute>
@@ -522,16 +522,16 @@
 <!-- New template-->
 <xsl:template match="table_header_history">
 	<tr class="th">
-		<td class="th_text" width="20%" align="left">
+		<td class="th_text" width="20%" style="text-align:left;">
 			<xsl:value-of select="lang_date"/>
 		</td>
-		<td class="th_text" width="10%" align="left">
+		<td class="th_text" width="10%" style="text-align:left;">
 			<xsl:value-of select="lang_user"/>
 		</td>
-		<td class="th_text" width="30%" align="left">
+		<td class="th_text" width="30%" style="text-align:left;">
 			<xsl:value-of select="lang_action"/>
 		</td>
-		<td class="th_text" width="10%" align="left">
+		<td class="th_text" width="10%" style="text-align:left;">
 			<xsl:value-of select="lang_new_value"/>
 		</td>
 	</tr>
@@ -553,16 +553,16 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="value_date"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="value_user"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="value_action"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="value_new_value"/>
 		</td>
 	</tr>
@@ -570,23 +570,23 @@
 
 <!-- New template-->
 <xsl:template match="email_data"  xmlns:php="http://php.net/xsl">
-	<table align="left">
+	<table style="text-align:left;">
 		<tr>
 			<td width="100%">
-				<table width="100%" cellpadding="2" cellspacing="2" align="left">
+				<table width="100%" cellpadding="2" cellspacing="2" style="text-align:left;">
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_date"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<xsl:value-of select="date"/>
 						</td>
 					</tr>
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_workorder"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<xsl:value-of select="workorder_id"/>
 							<xsl:choose>
 								<xsl:when test="lang_reminder !=''">
@@ -601,10 +601,10 @@
 					<xsl:choose>
 						<xsl:when test="contract_name !=''">
 							<tr>
-								<td class="th_text" align="left">
+								<td class="th_text" style="text-align:left;">
 									<xsl:value-of select="php:function('lang', 'contract')"/>
 								</td>
-								<td align="left" colspan="2">
+								<td style="text-align:left;" colspan="2">
 									<xsl:value-of select="contract_name"/>
 								</td>
 							</tr>
@@ -612,18 +612,18 @@
 					</xsl:choose>
 
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_to"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<xsl:value-of select="to_name"/>
 						</td>
 					</tr>
 					<tr>
-						<td class="th_text" align="left" valign="top">
+						<td class="th_text" style="text-align:left;" valign="top">
 							<xsl:value-of select="lang_from"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<xsl:value-of select="from_name"/>
 							<br/>
 							<xsl:choose>
@@ -653,10 +653,10 @@
 					<xsl:choose>
 						<xsl:when test="formatted_gab_id !=''">
 							<tr>
-								<td class="th_text" align="left">
+								<td class="th_text" style="text-align:left;">
 									Gnr/Bnr/Feste/Seksjon
 								</td>
-								<td align="left" colspan="2">
+								<td style="text-align:left;" colspan="2">
 									<xsl:value-of select="formatted_gab_id"/>
 								</td>
 							</tr>
@@ -665,28 +665,28 @@
 					<xsl:choose>
 						<xsl:when test="contact_phone !=''">
 							<tr>
-								<td class="th_text" align="left">
+								<td class="th_text" style="text-align:left;">
 									<xsl:value-of select="lang_contact_phone"/>
 								</td>
-								<td align="left" colspan="2">
+								<td style="text-align:left;" colspan="2">
 									<xsl:value-of select="contact_phone"/>
 								</td>
 							</tr>
 						</xsl:when>
 					</xsl:choose>
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_title"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<xsl:value-of select="title"/>
 						</td>
 					</tr>
 					<tr>
-						<td class="th_text" align="left" valign="top">
+						<td class="th_text" style="text-align:left;" valign="top">
 							<xsl:value-of select="lang_descr"/>
 						</td>
-						<td align="left" colspan="2">
+						<td style="text-align:left;" colspan="2">
 							<table border="1" width="100%" style="border-color:#000000;" cellspacing="0" cellpadding="0">
 								<tr>
 									<td width="100%">
@@ -697,57 +697,57 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_budget_account"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="budget_account"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="lang_cost_tax"/>
 						</td>
 					</tr>
 					<xsl:choose>
 						<xsl:when test="sum_calculation!=''">
 							<tr>
-								<td class="th_text" align="left">
+								<td class="th_text" style="text-align:left;">
 									<xsl:value-of select="lang_sum_calculation"/>
 								</td>
-								<td align="left">
+								<td style="text-align:left;">
 									<xsl:value-of select="sum_calculation"/>
 								</td>
 							</tr>
 						</xsl:when>
 					</xsl:choose>
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_start_date"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="start_date"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="lang_materials"/>
 						</td>
 					</tr>
 					<tr>
-						<td class="th_text" align="left">
+						<td class="th_text" style="text-align:left;">
 							<xsl:value-of select="lang_end_date"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="end_date"/>
 						</td>
-						<td align="left">
+						<td style="text-align:left;">
 							<xsl:value-of select="lang_work"/>
 						</td>
 					</tr>
 					<xsl:choose>
 						<xsl:when test="branch_list/selected">
 							<tr>
-								<td class="th_text" align="left" valign="top">
+								<td class="th_text" style="text-align:left;" valign="top">
 									<xsl:value-of select="lang_branch"/>
 								</td>
-								<td align="left">
+								<td style="text-align:left;">
 									<xsl:for-each select="branch_list[selected='selected' or selected = 1]">
 										<xsl:value-of select="name"/>
 										<xsl:if test="position() != last()">, </xsl:if>
@@ -765,10 +765,10 @@
 					<xsl:choose>
 						<xsl:when test="key_responsible_list/selected">
 							<tr>
-								<td class="th_text" align="left">
+								<td class="th_text" style="text-align:left;">
 									<xsl:value-of select="lang_key_responsible"/>
 								</td>
-								<td align="left">
+								<td style="text-align:left;">
 									<xsl:for-each select="key_responsible_list">
 										<xsl:choose>
 											<xsl:when test="selected">
@@ -782,13 +782,13 @@
 					</xsl:choose>
 					<xsl:if test="key_fetch_list/selected">
 						<tr>
-							<td class="th_text" align="left">
+							<td class="th_text" style="text-align:left;">
 								<xsl:value-of select="lang_key_fetch"/>
 							</td>
 							<xsl:for-each select="key_fetch_list">
 								<xsl:choose>
 									<xsl:when test="selected">
-										<td align="left">
+										<td style="text-align:left;">
 											<xsl:value-of select="name"/>
 										</td>
 									</xsl:when>
@@ -798,13 +798,13 @@
 					</xsl:if>
 					<xsl:if test="key_deliver_list/selected">
 						<tr>
-							<td class="th_text" align="left">
+							<td class="th_text" style="text-align:left;">
 								<xsl:value-of select="lang_key_deliver"/>
 							</td>
 							<xsl:for-each select="key_deliver_list">
 								<xsl:choose>
 									<xsl:when test="selected">
-										<td align="left">
+										<td style="text-align:left;">
 											<xsl:value-of select="name"/>
 										</td>
 									</xsl:when>
@@ -892,25 +892,25 @@
 		<xsl:value-of select="sort_quantity"/>
 	</xsl:variable>
 	<tr>
-		<th class="th_text" width="5%" align="center">
+		<th class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'post')"/>
 		</th>
-		<th class="th_text" width="15%" align="center">
+		<th class="th_text" width="15%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'Code')"/>
 		</th>
-		<th class="th_text" width="40%" align="center">
+		<th class="th_text" width="40%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'descr')"/>
 		</th>
-		<th class="th_text" width="4%" align="center">
+		<th class="th_text" width="4%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'Unit')"/>
 		</th>
-		<th class="th_text" width="2%" align="center">
+		<th class="th_text" width="2%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'Quantity')"/>
 		</th>
-		<th nowrap="true" class="th_text" width="5%" align="center">
+		<th nowrap="true" class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'Bill per unit')"/>
 		</th>
-		<th class="th_text" width="15%" align="center">
+		<th class="th_text" width="15%" style="text-align:center;">
 			<xsl:value-of select="php:function('lang', 'cost')"/>
 		</th>
 	</tr>
@@ -921,7 +921,7 @@
 	<xsl:choose>
 		<xsl:when test="new_grouping=1">
 			<tr>
-				<td align="left" colspan="7" width="100%">
+				<td style="text-align:left;" colspan="7" width="100%">
 					<b>
 						<xsl:value-of select="grouping_descr"/>
 					</b>
@@ -930,27 +930,27 @@
 		</xsl:when>
 	</xsl:choose>
 	<tr>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="post"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="code"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="hours_descr"/>
 			<br/>
 			<xsl:value-of select="remark"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="unit_name"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="quantity"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="billperae"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="cost"/>
 		</td>
 	</tr>
@@ -960,12 +960,12 @@
 <xsl:template match="list_template">
 	<xsl:apply-templates select="menu"/>
 	<xsl:apply-templates select="workorder_data"/>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<tr>
 			<td>
 				<xsl:call-template name="chapter_filter"/>
 			</td>
-			<td align="right">
+			<td style="text-align:right;">
 				<xsl:call-template name="search_field"/>
 			</td>
 		</tr>
@@ -975,7 +975,7 @@
 			</td>
 		</tr>
 	</table>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<xsl:apply-templates select="table_header_template"/>
 		<xsl:choose>
 			<xsl:when test="values_template[template_id]!=''">
@@ -995,29 +995,29 @@
 		<xsl:value-of select="sort_template_id"/>
 	</xsl:variable>
 	<tr class="th">
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_template_id}">
 				<xsl:value-of select="lang_template_id"/>
 			</a>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_name}">
 				<xsl:value-of select="lang_name"/>
 			</a>
 		</td>
-		<td class="th_text" width="30%" align="left">
+		<td class="th_text" width="30%" style="text-align:left;">
 			<xsl:value-of select="lang_descr"/>
 		</td>
-		<td class="th_text" width="20%" align="left">
+		<td class="th_text" width="20%" style="text-align:left;">
 			<xsl:value-of select="lang_chapter"/>
 		</td>
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_owner"/>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<xsl:value-of select="lang_entry_date"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_select"/>
 		</td>
 	</tr>
@@ -1045,22 +1045,22 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="template_id"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="name"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="descr"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="chapter"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="owner"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="entry_date"/>
 		</td>
 		<xsl:variable name="form_action_select">
@@ -1087,18 +1087,18 @@
 <!-- New template-->
 <xsl:template match="list_template_hour">
 	<xsl:apply-templates select="menu"/>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<tr>
-					<td align="left" colspan="3">
+					<td style="text-align:left;" colspan="3">
 						<xsl:call-template name="msgbox"/>
 					</td>
 				</tr>
 			</xsl:when>
 		</xsl:choose>
 	</table>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<tr>
 			<td>
 				<xsl:apply-templates select="workorder_data"/>
@@ -1106,9 +1106,9 @@
 		</tr>
 		<tr>
 			<td>
-				<table width="100%" cellpadding="2" cellspacing="2" align="center">
+				<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 					<tr>
-						<td align="right">
+						<td style="text-align:right;">
 							<xsl:call-template name="search_field"/>
 						</td>
 					</tr>
@@ -1126,7 +1126,7 @@
 		<tr>
 			<td>
 				<form method="post" name="form" action="{$form_action}">
-					<table width="100%" cellpadding="2" cellspacing="2" align="center">
+					<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 						<xsl:apply-templates select="table_header_template_hour"/>
 						<xsl:choose>
 							<xsl:when test="values_template_hour[counter]!=''">
@@ -1138,7 +1138,7 @@
 									<td/>
 									<td/>
 									<td/>
-									<td align="center">
+									<td style="text-align:center;">
 										<xsl:variable name="img_check">
 											<xsl:value-of select="img_check"/>
 										</xsl:variable>
@@ -1150,7 +1150,7 @@
 							</xsl:when>
 						</xsl:choose>
 					</table>
-					<table align="left">
+					<table style="text-align:left;">
 						<tr height="50">
 							<td>
 								<xsl:variable name="lang_add">
@@ -1170,14 +1170,14 @@
 		</tr>
 		<tr>
 			<td>
-				<table width="100%" cellpadding="2" cellspacing="2" align="left">
-					<hr noshade="noshade" width="100%" align="center" size="1"/>
+				<table width="100%" cellpadding="2" cellspacing="2" style="text-align:left;">
+					<hr noshade="noshade" width="100%" style="text-align:center;" size="1"/>
 					<tr>
-						<td class="th_text" colspan="3" align="right">
+						<td class="th_text" colspan="3" style="text-align:right;">
 							<xsl:value-of select="lang_total_records"/>
 							<xsl:text> : </xsl:text>
 						</td>
-						<td class="th_text" colspan="5" align="left">
+						<td class="th_text" colspan="5" style="text-align:left;">
 							<xsl:value-of select="total_hours_records"/>
 						</td>
 					</tr>
@@ -1204,35 +1204,35 @@
 		<xsl:value-of select="sort_building_part"/>
 	</xsl:variable>
 	<tr class="th">
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_building_part}">
 				<xsl:value-of select="lang_building_part"/>
 			</a>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<xsl:value-of select="lang_code"/>
 		</td>
-		<td class="th_text" width="30%" align="left">
+		<td class="th_text" width="30%" style="text-align:left;">
 			<xsl:value-of select="lang_descr"/>
 		</td>
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_unit"/>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_billperae}">
 				<xsl:value-of select="lang_billperae"/>
 			</a>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_quantity"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_select"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_category"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_per_cent"/>
 		</td>
 	</tr>
@@ -1249,7 +1249,7 @@
 	<xsl:choose>
 		<xsl:when test="new_grouping=1">
 			<tr>
-				<td class="th_text" align="center" colspan="10" width="100%">
+				<td class="th_text" style="text-align:center;" colspan="10" width="100%">
 					<xsl:value-of select="grouping_descr"/>
 				</td>
 			</tr>
@@ -1269,10 +1269,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="building_part"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="code"/>
 			<input type="hidden" name="values[chapter_id][{counter}]" value="{chapter_id}"/>
 			<input type="hidden" name="values[grouping_descr][{counter}]" value="{grouping_descr}"/>
@@ -1287,15 +1287,15 @@
 			<input type="hidden" name="values[remark][{counter}]" value="{remark}"/>
 			<input type="hidden" name="values[billperae][{counter}]" value="{billperae}"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="hours_descr"/>
 			<br/>
 			<xsl:value-of select="remark"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="unit_name"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:choose>
 				<xsl:when test="billperae!=0">
 					<xsl:value-of select="billperae"/>
@@ -1308,7 +1308,7 @@
 		<td>
 			<input type="text" size="6" name="values[quantity][{counter}]"/>
 		</td>
-		<td align="center">
+		<td style="text-align:center;">
 			<input type="checkbox" name="values[select][{counter}]" value="{counter}" onMouseout="window.status='';return true;">
 				<xsl:attribute name="onMouseover">
 					<xsl:text>window.status='</xsl:text>
@@ -1341,18 +1341,18 @@
 <!-- New template-->
 <xsl:template match="prizebook">
 	<xsl:apply-templates select="menu"/>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<tr>
-					<td align="left" colspan="3">
+					<td style="text-align:left;" colspan="3">
 						<xsl:call-template name="msgbox"/>
 					</td>
 				</tr>
 			</xsl:when>
 		</xsl:choose>
 	</table>
-	<table width="100%" cellpadding="2" cellspacing="2" align="center">
+	<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 		<tr>
 			<td>
 				<xsl:apply-templates select="workorder_data"/>
@@ -1362,9 +1362,9 @@
 			<xsl:when test="values_prizebook[activity_id]!=''">
 				<tr>
 					<td>
-						<table width="100%" cellpadding="2" cellspacing="2" align="center">
+						<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 							<tr>
-								<td align="right">
+								<td style="text-align:right;">
 									<xsl:call-template name="search_field"/>
 								</td>
 							</tr>
@@ -1382,11 +1382,11 @@
 							<xsl:value-of select="form_action"/>
 						</xsl:variable>
 						<form method="post" name="form" action="{$form_action}">
-							<table width="100%" cellpadding="2" cellspacing="2" align="center">
+							<table width="100%" cellpadding="2" cellspacing="2" style="text-align:center;">
 								<xsl:apply-templates select="table_header_prizebook"/>
 								<xsl:apply-templates select="values_prizebook"/>
 							</table>
-							<table align="left">
+							<table style="text-align:left;">
 								<tr height="50">
 									<td>
 										<xsl:variable name="lang_add">
@@ -1408,18 +1408,18 @@
 		</xsl:choose>
 		<tr>
 			<td>
-				<hr noshade="noshade" width="100%" align="center" size="1"/>
+				<hr noshade="noshade" width="100%" style="text-align:center;" size="1"/>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<table width="100%" cellpadding="2" cellspacing="2" align="left">
+				<table width="100%" cellpadding="2" cellspacing="2" style="text-align:left;">
 					<tr>
-						<td class="th_text" colspan="3" align="right">
+						<td class="th_text" colspan="3" style="text-align:right;">
 							<xsl:value-of select="lang_total_records"/>
 							<xsl:text> : </xsl:text>
 						</td>
-						<td class="th_text" colspan="5" align="left">
+						<td class="th_text" colspan="5" style="text-align:left;">
 							<xsl:value-of select="total_hours_records"/>
 						</td>
 					</tr>
@@ -1468,7 +1468,7 @@
 	<tr>
 		<td>
 		</td>
-		<td class="th_text" align="left">
+		<td class="th_text" style="text-align:left;">
 			<xsl:value-of select="lang_sum_calculation"/>
 		</td>
 		<td>
@@ -1479,20 +1479,20 @@
 		</td>
 		<td>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="value_sum_calculation"/>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="sum_deviation"/>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="sum_result"/>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		</td>
-		<td class="th_text" align="left">
+		<td class="th_text" style="text-align:left;">
 			<xsl:value-of select="lang_addition_rs"/>
 		</td>
 		<td>
@@ -1507,14 +1507,14 @@
 		</td>
 		<td>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="value_addition_rs"/>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		</td>
-		<td class="th_text" align="left">
+		<td class="th_text" style="text-align:left;">
 			<xsl:value-of select="lang_addition_percentage"/>
 		</td>
 		<td>
@@ -1529,14 +1529,14 @@
 		</td>
 		<td>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="value_addition_percentage"/>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		</td>
-		<td class="th_text" align="left">
+		<td class="th_text" style="text-align:left;">
 			<xsl:value-of select="lang_sum_tax"/>
 		</td>
 		<td>
@@ -1551,14 +1551,14 @@
 		</td>
 		<td>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="value_sum_tax"/>
 		</td>
 	</tr>
 	<tr>
 		<td>
 		</td>
-		<td class="th_text" align="left">
+		<td class="th_text" style="text-align:left;">
 			<xsl:value-of select="lang_total_sum"/>
 		</td>
 		<td>
@@ -1573,7 +1573,7 @@
 		</td>
 		<td>
 		</td>
-		<td class="th_text" align="right">
+		<td class="th_text" style="text-align:right;">
 			<xsl:value-of select="value_total_sum"/>
 		</td>
 	</tr>
@@ -1588,38 +1588,38 @@
 		<xsl:value-of select="sort_total_cost"/>
 	</xsl:variable>
 	<tr class="th">
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_num}">
 				<xsl:value-of select="lang_num"/>
 			</a>
 		</td>
-		<td class="th_text" width="30%" align="left">
+		<td class="th_text" width="30%" style="text-align:left;">
 			<xsl:value-of select="lang_descr"/>
 		</td>
-		<td class="th_text" width="20%" align="left">
+		<td class="th_text" width="20%" style="text-align:left;">
 			<xsl:value-of select="lang_base_descr"/>
 		</td>
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_unit"/>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<xsl:value-of select="lang_w_cost"/>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<xsl:value-of select="lang_m_cost"/>
 		</td>
-		<td class="th_text" width="10%" align="right">
+		<td class="th_text" width="10%" style="text-align:right;">
 			<a href="{$sort_total_cost}">
 				<xsl:value-of select="lang_total_cost"/>
 			</a>
 		</td>
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_quantity"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_category"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_per_cent"/>
 		</td>
 	</tr>
@@ -1647,7 +1647,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="num"/>
 			<input type="hidden" name="values[activity_id][{counter}]" value="{activity_id}"/>
 			<input type="hidden" name="values[activity_num][{counter}]" value="{num}"/>
@@ -1657,22 +1657,22 @@
 			<input type="hidden" name="values[descr][{counter}]" value="{descr}"/>
 			<input type="hidden" name="values[total_cost][{counter}]" value="{total_cost}"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="descr"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="base_descr"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="unit_name"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="w_cost"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="m_cost"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:choose>
 				<xsl:when test="total_cost!=0">
 					<xsl:value-of select="total_cost"/>
@@ -1718,43 +1718,43 @@
 		<xsl:value-of select="sort_quantity"/>
 	</xsl:variable>
 	<tr class="th">
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_post"/>
 		</td>
-		<td class="th_text" width="15%" align="left">
+		<td class="th_text" width="15%" style="text-align:left;">
 			<xsl:value-of select="lang_code"/>
 		</td>
-		<td class="th_text" width="40%" align="left">
+		<td class="th_text" width="40%" style="text-align:left;">
 			<xsl:value-of select="lang_descr"/>
 		</td>
-		<td class="th_text" width="4%" align="left">
+		<td class="th_text" width="4%" style="text-align:left;">
 			<xsl:value-of select="lang_unit"/>
 		</td>
-		<td class="th_text" width="2%" align="right">
+		<td class="th_text" width="2%" style="text-align:right;">
 			<xsl:value-of select="lang_quantity"/>
 		</td>
-		<td class="th_text" width="5%" align="right">
+		<td class="th_text" width="5%" style="text-align:right;">
 			<xsl:value-of select="lang_billperae"/>
 		</td>
-		<td class="th_text" width="15%" align="right">
+		<td class="th_text" width="15%" style="text-align:right;">
 			<xsl:value-of select="lang_cost"/>
 		</td>
-		<td class="th_text" width="15%" align="right">
+		<td class="th_text" width="15%" style="text-align:right;">
 			<xsl:value-of select="lang_deviation"/>
 		</td>
-		<td class="th_text" width="15%" align="right">
+		<td class="th_text" width="15%" style="text-align:right;">
 			<xsl:value-of select="lang_result"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_category"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_per_cent"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_edit"/>
 		</td>
-		<td class="th_text" width="5%" align="center">
+		<td class="th_text" width="5%" style="text-align:center;">
 			<xsl:value-of select="lang_delete"/>
 		</td>
 	</tr>
@@ -1774,7 +1774,7 @@
 	<xsl:choose>
 		<xsl:when test="new_grouping=1">
 			<tr>
-				<td class="th_text" align="center" colspan="10" width="100%">
+				<td class="th_text" style="text-align:center;" colspan="10" width="100%">
 					<xsl:value-of select="grouping_descr"/>
 				</td>
 			</tr>
@@ -1794,30 +1794,30 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:attribute>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="post"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="code"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="hours_descr"/>
 			<br/>
 			<xsl:value-of select="remark"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="unit_name"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="quantity"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="billperae"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="cost"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:variable name="link_deviation">
 				<xsl:value-of select="link_deviation"/>&amp;from=<xsl:value-of select="//function"/>
 			</xsl:variable>
@@ -1825,16 +1825,16 @@
 				<xsl:value-of select="deviation"/>
 			</a>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="result"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="wo_hour_category"/>
 		</td>
-		<td align="right">
+		<td style="text-align:right;">
 			<xsl:value-of select="cat_per_cent"/>
 		</td>
-		<td align="center">
+		<td style="text-align:center;">
 			<xsl:variable name="link_edit">
 				<xsl:value-of select="link_edit"/>&amp;from=<xsl:value-of select="//function"/>&amp;template_id=<xsl:value-of select="//template_id"/>
 			</xsl:variable>
@@ -1842,7 +1842,7 @@
 				<xsl:value-of select="text_edit"/>
 			</a>
 		</td>
-		<td align="center">
+		<td style="text-align:center;">
 			<xsl:variable name="link_delete">
 				<xsl:value-of select="//link_delete"/>&amp;hour_id=<xsl:value-of select="hour_id"/>&amp;template_id=<xsl:value-of select="//template_id"/>
 			</xsl:variable>
@@ -1857,7 +1857,7 @@
 <xsl:template match="table_add">
 	<table width="80%">
 		<tr>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<xsl:variable name="add_prizebook_action">
 					<xsl:value-of select="add_prizebook_action"/>
 				</xsl:variable>
@@ -1873,7 +1873,7 @@
 					</button>
 				</form>
 			</td>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<xsl:variable name="add_template_action">
 					<xsl:value-of select="add_template_action"/>
 				</xsl:variable>
@@ -1889,7 +1889,7 @@
 					</button>
 				</form>
 			</td>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<xsl:variable name="add_custom_action">
 					<xsl:value-of select="add_custom_action"/>
 				</xsl:variable>
@@ -1905,7 +1905,7 @@
 					</button>
 				</form>
 			</td>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<xsl:variable name="save_template_action">
 					<xsl:value-of select="save_template_action"/>
 				</xsl:variable>
@@ -1930,7 +1930,7 @@
 				<xsl:value-of select="lang_print_view"/>
 			</xsl:variable>
 			<form method="post" action="{$print_view_action}">
-				<td align="left" height="50">
+				<td style="text-align:left;" height="50">
 					<button type="submit" name="print_view" value="1">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_print_view_statustext"/>
@@ -1966,7 +1966,7 @@
 				<xsl:value-of select="lang_view_tender"/>
 			</xsl:variable>
 			<form method="post" action="{$view_tender_action}" target="_new">
-				<td align="left" height="50">
+				<td style="text-align:left;" height="50">
 					<button type="submit" name="view_tender" value="1">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_view_tender_statustext"/>
@@ -1993,7 +1993,7 @@
 			</form>
 		</tr>
 		<tr>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<form method="post" action="{done_action}">
 					<button type="submit" name="save_done" value="1">
 						<xsl:value-of select="lang_done"/>
@@ -2006,9 +2006,9 @@
 
 <!-- New template-->
 <xsl:template match="table_done">
-	<table width="100%" align="left">
+	<table width="100%" style="text-align:left;">
 		<tr>
-			<td height="50" align="left">
+			<td height="50" style="text-align:left;">
 				<xsl:variable name="done_action">
 					<xsl:value-of select="done_action"/>
 				</xsl:variable>
@@ -2032,7 +2032,7 @@
 <xsl:template match="table_send">
 	<table width="80%">
 		<tr>
-			<td align="left" height="50">
+			<td style="text-align:left;" height="50">
 				<xsl:variable name="lang_send_order">
 					<xsl:value-of select="lang_send_order"/>
 				</xsl:variable>
@@ -2336,7 +2336,7 @@
 
 <!-- add_deviation / edit_deviation  -->
 <xsl:template match="edit_deviation">
-	<div align="left">
+	<div style="text-align:left;">
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
 				<dl>
@@ -2600,9 +2600,9 @@
 <!-- New template-->
 <xsl:template match="location_data_local">
 	<xsl:for-each select="location">
-		<tr>
-			<xsl:choose>
-				<xsl:when test="value !=''">
+		<xsl:choose>
+			<xsl:when test="value !=''">
+				<tr>
 					<td>
 						<xsl:value-of select="name"/>
 					</td>
@@ -2631,8 +2631,8 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</td>
-				</xsl:when>
-			</xsl:choose>
-		</tr>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:for-each>
 </xsl:template>
