@@ -10,7 +10,7 @@ formatLink_notify = function (key, oData)
 
 /*	var FormatterRight_notify = function(elCell, oRecord, oColumn, oData)
  {
- elCell.innerHTML = "<div align=\"right\">"+oData+"</div>";
+ elCell.innerHTML = "<div style=\"text-align:right;\">"+oData+"</div>";
  }	*/
 
 this.notify_contact_lookup = function ()

@@ -12,8 +12,8 @@ this.local_DrawCallback0 = function (container)
 
 				if (typeof (api.column(i).footer()) !== 'undefined')
 				{
-					$(api.column(i - 1).footer()).html("<div align=\"right\">Sum:</div>");
-					$(api.column(i).footer()).html("<div align=\"right\">" + data.sum_amount + "</div>");
+					$(api.column(i - 1).footer()).html("<div style=\"text-align:right;\">Sum:</div>");
+					$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + data.sum_amount + "</div>");
 				}
 		}
 	}

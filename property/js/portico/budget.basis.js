@@ -23,7 +23,7 @@ var addFooterDatatable = function (oTable)
 
 			var amount = $.number(pageTotal, 0, ',', '.');
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + amount + "</div>");
 		}
 	}
 };

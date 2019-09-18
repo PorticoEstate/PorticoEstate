@@ -17,7 +17,7 @@ this.local_DrawCallback0 = function (container)
 	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 //	var columns = ["6"];
-//	$(api.column(5).footer()).html("<div align=\"right\">Sum</div>");
+//	$(api.column(5).footer()).html("<div style=\"text-align:right;\">Sum</div>");
 
 	for (i = 0; i < columns0.length; i++)
 	{
@@ -30,7 +30,7 @@ this.local_DrawCallback0 = function (container)
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
 		}
 	}
 
