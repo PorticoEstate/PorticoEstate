@@ -12,7 +12,7 @@ $(document).ready(function ()
 	$(".overlay").show();
 
 	PopulateResourceData();
-	if (deactivate_calendar == 0)
+	if (deactivate_calendar == 0 || deactivate_calendar == '')
 	{
 		PopulateCalendarEvents();
 	}
