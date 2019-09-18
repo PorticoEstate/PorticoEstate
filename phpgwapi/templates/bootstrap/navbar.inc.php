@@ -255,7 +255,7 @@ HTML;
 						$var['topmenu'] .= <<<HTML
 
 						<li class="{$seleced_bm}">
-							<a href="{$entry['url']}" class="nav-link context-menu-nav" bookmark_id="{$entry['bookmark_id']}">{$entry['text']}</a>
+							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$entry['text']}</a>
 						</li>
 
 HTML;
@@ -400,7 +400,7 @@ HTML;
 		{
 			$ret = <<<HTML
 			$out
-			<a href="{$item['url']}" class="nav-link context-menu-nav" bookmark_id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
+			<a href="{$item['url']}" class="nav-link context-menu-nav" id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
 			</li>
 HTML;
 		}

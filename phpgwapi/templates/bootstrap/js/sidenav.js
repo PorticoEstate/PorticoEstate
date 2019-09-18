@@ -27,7 +27,7 @@ $(document).ready(function ()
 		selector: '.context-menu-nav',
 		callback: function (key, options)
 		{
-			var id = $(this).attr("bookmark_id");
+			var id = $(this).attr("id");
 
 			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id};
 			var requestUrl = phpGWLink('index.php', oArgs, true);

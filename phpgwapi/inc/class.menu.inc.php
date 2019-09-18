@@ -552,7 +552,12 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+//			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+
+			$bookmark_candidate_arr = explode('bookmark_', phpgw::get_var('bookmark_candidate', 'string'));
+
+			$bookmark_candidate = empty($bookmark_candidate_arr[1]) ? $bookmark_candidate_arr[0] : $bookmark_candidate_arr[1];
+
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $user_id);
