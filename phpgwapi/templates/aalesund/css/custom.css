@@ -1640,6 +1640,25 @@ NEW APPLICATION PAGE STYLE
     flex-direction: column;
 }
 
+
+
+.exitBtn {
+    padding: .75rem 0;
+    display: flex;
+    align-items: center;
+    color: #373737;
+    text-align: right;
+    margin-left: auto;
+}
+
+.exitBtn:hover {
+    color: #89266a;
+    text-decoration: none;
+}
+.exitBtn i {
+    margin-right: 0.5rem;
+}
+
 .btn-light {
     border: 1px #9e9e9e solid;
     border-radius: 0;

@@ -4,7 +4,16 @@
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
-
+			
+						<a class="exitBtn float-right">
+							<xsl:attribute name="href">
+								<xsl:value-of select="application/frontpage_link"/>
+							</xsl:attribute>
+							<i class="fas fa-times" />
+							<xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
+						</a>
+				
+					
 					<h1 class="font-weight-bold">
 						<xsl:value-of select="php:function('lang', 'New application')"/>
 					</h1>
