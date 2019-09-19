@@ -174,7 +174,7 @@
 										</div>
 										<div class="col-6">
 											<a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">
-												<xsl:value-of select="php:function('lang', 'Application')"/>
+												<xsl:value-of select="php:function('lang', 'more info	booking')"/>
 											</a>
 										</div>
 									</div>

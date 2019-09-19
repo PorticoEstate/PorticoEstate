@@ -178,19 +178,13 @@
 		}
 
 
-		public function save($init_preview = null )
+		public function save()
 		{
-			$id = phpgw::get_var('id', 'int');
-
-			/*
-			 * Overrides with incoming data from POST
-			 */
 			$values = phpgw::get_var('values');
 			
 			try
 			{
 				$receipt = $this->bo->save($values);
-				$id = $receipt['id'];
 			}
 			catch (Exception $e)
 			{
@@ -205,42 +199,7 @@
 			$this->receipt['message'][] = array('msg' => lang('category assignment has been saved'));
 
 			self::message_set($this->receipt);
-			if( phpgw::get_var('send', 'bool'))
-			{
-				$this->_send($id);
-			}
-			else
-			{
-				self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"));
-			}
+			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"));
 		}
-
-
-		private function _populate($id = false)
-		{
-			$fields = $this->bo->get_fields();
-
-			$values = array();
-
-			foreach ($fields as $field	=> $field_info)
-			{
-				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
-				{
-					$value = phpgw::get_var($field, $field_info['type']);
-
-					if ($field_info['required'] && (($value !== '0' && empty($value)) || empty($value)))
-					{
-						$this->receipt['error'][] = array('msg' => lang("Field %1 is required", lang($field_info['label'])));
-					}
-
-					$values[$field] = $value;
-				}
-			}
-
-			$values['id'] = $id;
-
-			return $values;
-		}
-
 
 	}

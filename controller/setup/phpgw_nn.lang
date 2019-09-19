@@ -447,3 +447,9 @@ other controll	controller	nn	Annen kontroll
 calendar planner	controller	nn	Planleggar
 start inspection	controller	nn	Start kontroll
 last inspection	controller	nn	Sist kontrollert
+%1 case(s) sent as message %2	controller	nn	%1 sak(er) sendt som melding %2
+add_case	controller	nn	Registrer sak
+view_details	controller	nn	Vis detaljer for sjekkliste
+view_cases	controller	nn	Vis saker
+view_control_info	controller	nn	Vis info om kontroll
+create_case_message	controller	nn	Registrer melding

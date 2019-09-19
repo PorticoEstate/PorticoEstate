@@ -84,4 +84,89 @@
 
 			return $defaultPermissions;
 		}
+
+		function tree_walker( &$result, $children, $prefix, $node )
+		{
+			if (!$node['active'])
+			{
+				return;
+			}
+			$result[] = array('id' => $node['id'], 'name' => $prefix . $node['name']);
+			foreach ($children[$node['id']] as $child)
+			{
+				$this->tree_walker($result, $children, $prefix . $node['name'] . ' / ', $child);
+			}
+		}
+
+		function fetch_groups( $parent_id = 0, $organization_id )
+		{
+			$groups = $this->so->read(array('results' => -1, 'filters' => array('organization_id' => $organization_id )));
+			$groups = $groups['results'];
+
+			$children = array();
+			foreach ($groups as $group)
+			{
+				$_group_parent_id = $group['parent_id'] ? $group['parent_id'] : null;
+				if (!array_key_exists($group['id'], $children))
+				{
+					$children[$group['id']] = array();
+				}
+				if (!array_key_exists($_group_parent_id, $children))
+				{
+					$children[$_group_parent_id] = array();
+				}
+				$children[$_group_parent_id][] = $group;
+			}
+			$result = array();
+			foreach ($children[null] as $child)
+			{
+				if ($parent_id && $child['id'] != $parent_id)
+				{
+					continue;
+				}
+				$this->tree_walker($result, $children, '', $child);
+			}
+			usort($result, 'node_sort');
+			return array('results' => $result);
+		}
+
+		public function get_path( $id )
+		{
+			return $this->so->get_path($id);
+		}
+
+		public function get_children( $parent, $level = 0, $reset = false )
+		{
+			return $this->so->get_children($parent, $level, $reset);
+		}
+
+
+		public function get_children_detailed($parent)
+		{
+			return $this->so->get_children_detailed($parent);
+		}
+
+
+		public function get_parents( $organization_id, $id )
+		{
+			$parent_list = $this->so->read_tree2($organization_id);
+			$exclude	 = array($id);
+			$children	 = $this->so->get_children2( $id, 0, true);
+
+			foreach ($children as $child)
+			{
+				$exclude[] = $child['id'];
+			}
+
+			$k = count($parent_list);
+			for ($i = 0; $i < $k; $i++)
+			{
+				if (in_array($parent_list[$i]['id'], $exclude))
+				{
+					unset($parent_list[$i]);
+				}
+			}
+			return $parent_list;
+		}
+
 	}

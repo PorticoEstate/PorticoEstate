@@ -555,10 +555,10 @@
 								</xsl:call-template>
 							</div>
 							<div class="pure-control-group">
-								<label>
+								<label for="change_category_id">
 									<xsl:value-of select="php:function('lang', 'change category')"/>
 								</label>
-								<select id="change category_id" name="change_category" class="pure-input-3-4" >
+								<select id="change_category_id" name="change_category" class="pure-input-3-4" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'change category')"/>
 									</xsl:attribute>

@@ -38,23 +38,6 @@
 	}
 	else
 	{
-//		if(isset($_POST['logindomain']))
-//		{
-//			$_logindomain = phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
-//			$_GET['domain'] = $_logindomain;
-//		}
-//
-//		if(!$session_prefix = phpgw::get_var('domain', 'string', 'GET', false))
-//		{
-//			if(!$session_prefix = phpgw::get_var('domain', 'string', 'POST', false))
-//			{
-//				if(!$session_prefix = phpgw::get_var('domain', 'string', 'COOKIE', false))
-//				{
-//					$session_identifier = 'phpgw';
-//				}
-//			}
-//		}
-//		$session_identifier = str_replace('_', '' ,$session_prefix);
 		$session_identifier = 'phpgw';
 		session_name("session{$session_identifier}sessid");
 	}
@@ -1659,7 +1642,7 @@
 
 			if($this->_cookie_domain == 'localhost')
 			{
-				$this->_cookie_domain = ''; // Sigurd august 08: somehow setcookie does not accept localhost as a valid domain.
+				$this->_cookie_domain = '';
 			}
 			/**
 			 * Test if the cookie make it through a reverse proxy where the request switch from https to http
@@ -1675,6 +1658,12 @@
 			{
 				$webserver_url = '/';
 			}
+
+			/**
+			 * 20190904: to be changed, for now
+			 */
+
+			$webserver_url = '/';
 
 			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
 			return $this->_cookie_domain;

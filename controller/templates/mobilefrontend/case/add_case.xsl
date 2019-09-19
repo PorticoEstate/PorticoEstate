@@ -58,7 +58,7 @@
 
 			<h5>
 				<a href="#" data-toggle="modal" data-target="#inspectObject">
-					<img src="{img_add2}" width="23" class="mr-2"/>Kontroller utstyr</a>
+					<img src="{img_add2}" width="23" class="mr-2"/>Utfør kontroll</a>
 			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
@@ -67,7 +67,7 @@
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
-							<h4 id="inspection_title" class="modal-title">Kontroller utstyr</h4>
+							<h4 id="inspection_title" class="modal-title">Utfør kontroll</h4>
 						</div>
 						<!-- Modal body -->
 						<div class="modal-body">
@@ -431,7 +431,7 @@
 														<input type="button" name="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="btn btn-primary btn-lg" onclick="resetForm(form);"/>
 													</form>
 													<div class="add_picture_to_case" style="display:none">
-														<form class="pure-form pure-form-aligned add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
+														<form class="add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
 															<xsl:attribute name="action">
 																<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
 															</xsl:attribute>
@@ -443,17 +443,20 @@
 																<div class="pure-custom" name="picture_container"/>
 															</div>
 															<div id="new_picture" class="form-group">
-																<label>
-																	<xsl:value-of select="php:function('lang', 'new picture')" />
-																</label>
-																<input type="file" id="case_picture_file" name="file" class="form-control">
-																	<xsl:attribute name="accept">image/*</xsl:attribute>
-																	<xsl:attribute name="capture">camera</xsl:attribute>
-																</input>
-																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3">
+																<div class="input-group">
+																	<div class="custom-file">
+																		<input type="file" id="case_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component">
+																			<xsl:attribute name="accept">image/*</xsl:attribute>
+																			<xsl:attribute name="capture">camera</xsl:attribute>
+																		</input>
+																		<label class="custom-file-label" for = "case_picture_file">
+																			<xsl:value-of select="php:function('lang', 'new picture')" />
+																		</label>
+																	</div>
+																</div>
+																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
 																	<xsl:value-of select="php:function('lang', 'add picture')" />
 																</button>
-
 															</div>
 														</form>
 													</div>
@@ -492,7 +495,11 @@
 
 
 		</div>
+		<xsl:call-template name="check_list_change_status">
+			<xsl:with-param name="active_tab">add_case</xsl:with-param>
+		</xsl:call-template>
 	</div>
+
 </xsl:template>
 
 <xsl:template match="component_options">

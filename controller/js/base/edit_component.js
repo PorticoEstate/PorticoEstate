@@ -1,17 +1,36 @@
+
+downloadComponents = function (parent_location_id, parent_id, location_id)
+{
+	var oArgs = {
+		menuaction: 'property.uientity.download',
+		parent_location_id: parent_location_id,
+		parent_id : parent_id,
+		location_id: location_id,
+		export: 1
+	};
+	var requestUrl = phpGWLink('index.php', oArgs);
+	window.location.href = requestUrl;
+};
+
+
 $(document).ready(function ()
 {
 
 	// EDIT COMPONENT
-	show_parent_component_information = function (location_id,  component_id)
+	show_parent_component_information = function (location_id, component_id)
 	{
 		var x = document.getElementById("form_parent_component_2");
+
+		var y = document.getElementById("new_picture_parent");
 		if (x.style.display === "block")
 		{
 			x.style.display = "none";
+			y.style.display = "none";
 		}
 		else
 		{
 			x.style.display = "block";
+			y.style.display = "block";
 		}
 
 		var oArgs = {
@@ -33,6 +52,7 @@ $(document).ready(function ()
 					var script = document.createElement("script");
 					script.textContent = data.lookup_functions;
 					document.head.appendChild(script);
+					show_component_parent_picture(location_id + '_' + component_id);
 				}
 			}
 		});
@@ -71,7 +91,7 @@ $(document).ready(function ()
 	{
 		var edit_parent = $(form).find("input[name=edit_parent]").val();
 
-		if(edit_parent == 1)
+		if (edit_parent == 1)
 		{
 			$("#form_parent_component_2").html('');
 			$("#form_parent_component_2").hide();
@@ -137,7 +157,7 @@ $(document).ready(function ()
 						}));
 					});
 				}
-				if(edit_parent == 1)
+				if (edit_parent == 1)
 				{
 					$("#form_parent_component_2").html(data.message);
 					$("#form_parent_component_2").hide(2000);
@@ -154,5 +174,326 @@ $(document).ready(function ()
 
 		return false;
 	};
+
+	$("#choose-child-on-component").change(function ()
+	{
+		$("#submit_update_component").hide();
+		$("#component_picture_file").val('');
+
+		if ($(this).val())
+		{
+			show_component_information($(this).val());
+			show_component_picture();
+			$("#new_picture").show();
+			$("#view_cases").show();
+			$("#inspection_title").html($("#choose-child-on-component option:selected").text());
+			$("#item_string").val($(this).val());
+		}
+		else
+		{
+			$('#equipment_picture_container').html('');
+			$("#new_picture").hide();
+			$("#form_new_component_2").html('');
+			$("#view_cases").hide();
+
+		}
+	});
+
+	show_component_parent_picture = function (component)
+	{
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "200")
+					{
+						$('#equipment_parent_picture_container').html('<img alt="Bilde" id="equipment_parent_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"  class="img-fluid"/>');
+						$('#equipment_parent_picture_container').show();
+					}
+					else
+					{
+						$('#equipment_parent_picture_container').html(data.message);
+					}
+				}
+			}
+		});
+	};
+	show_component_picture = function ()
+	{
+		var component = $("#choose-child-on-component").val();
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "200")
+					{
+						$('#equipment_picture_container').html('<img alt="Bilde" id="equipment_picture" src="' + ImageUrl + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$('#equipment_picture_container').html(data.message);
+					}
+				}
+			}
+		});
+	};
+
+	show_case_picture = function (case_id, form)
+	{
+		var oArgs = {menuaction: 'controller.uicase.get_case_image', case_id: case_id};
+		var ImageUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'GET',
+			url: ImageUrl + '&dry_run=1',
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					var picture_container = $(form).find("div[name='picture_container']");
+
+					if (data.status == "200")
+					{
+						$(picture_container).append('<br><img alt="Bilde" src="' + ImageUrl + '&file_id=' + data.file_id + '" style="width:100%;max-width:300px"/>');
+					}
+					else
+					{
+						$(picture_container).append('<br>' + data.message);
+					}
+				}
+			}
+		});
+	};
+
+	show_picture_submit = function ()
+	{
+		$("#submit_update_component").show();
+
+	};
+	show_picture_parent_submit = function ()
+	{
+		$("#submit_update_component_parent").show();
+
+	};
+
+	// REGISTER PICTURE TO PARENT COMPONENT
+	$("#frm_add_picture_parent").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		var component = $(thisForm).find("input[name='component']").val();
+
+		requestUrl += '&component=' + component;
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component_parent").hide();
+						$("#component_parent_picture_file").val('');
+						show_component_parent_picture(component);
+
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
+	// REGISTER PICTURE TO CHILD COMPONENT
+	$("#frm_add_picture").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl,
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#submit_update_component").hide();
+						$("#component_picture_file").val('');
+						show_component_picture();
+
+					}
+					else
+					{
+						alert(data.message);
+					}
+				}
+			}
+		});
+	});
+
+	// REGISTER NEW CHILD COMPONENT
+	show_component_information = function (component)
+	{
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.edit_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			get_info: 1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
+				}
+			}
+		});
+	};
+
+	get_edit_form = function ()
+	{
+		var component = $("#choose-child-on-component").val();
+
+		if (!component)
+		{
+			alert('komponent ikke valgt');
+			return false;
+		}
+
+		var parent_location_id = $('input[name=parent_location_id]')[0];
+		var parent_component_id = $('input[name=parent_component_id]')[0];
+
+		var component_arr = component.split('_');
+		var oArgs = {
+			menuaction: 'controller.uicase.edit_component_child',
+			location_id: component_arr[0],
+			component_id: component_arr[1],
+			parent_location_id: $(parent_location_id).val(),
+			parent_component_id: $(parent_component_id).val(),
+			get_edit_form: 1
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
+				}
+			}
+		});
+	};
+
+
+	// REGISTER NEW CHILD COMPONENT
+	$(".form_new_component").on("submit", function (e)
+	{
+		e.preventDefault();
+
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(thisForm).serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					$("#form_new_component_2").html(data.html);
+					var script = document.createElement("script");
+					script.textContent = data.lookup_functions;
+					document.head.appendChild(script);
+				}
+			}
+		});
+
+	});
+
+	resetForm = function (form)
+	{
+		clear_form(form);
+		$(form).find("input[type='submit']").removeAttr('disabled');
+		$(form).find("input[type='submit']").removeClass("case_saved");
+		var picture_container = $(form).next('div').find("div[name='picture_container']");
+		picture_container.html('');
+		var add_picture_to_case_container = $(form).next('.add_picture_to_case');
+		$(add_picture_to_case_container).hide();
+	};
+
+	// Add the following code if you want the name of the file appear on select
+	$(".custom-file-input").on("change", function ()
+	{
+		var fileName = $(this).val().split("\\").pop();
+		$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+	});
+
 
 });

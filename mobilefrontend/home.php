@@ -23,7 +23,8 @@
 		'enable_contacts_class' => true,
 		'enable_nextmatchs_class' => true,
 		'template_set' => 'mobilefrontend',
-		'custom_frontend' => 'mobilefrontend'
+		'custom_frontend' => 'mobilefrontend',
+		'session_name' => 'mobilefrontendsession'
 	);
 
 	/**
@@ -46,7 +47,7 @@
 			phpgwapi_cache::session_set('mobilefrontend', 'keep_alive_timestamp', $keep_alive_timestamp);
 		}
 
-		$sessions_timeout = 660; // 11 minutes
+		$sessions_timeout = 7200; // 120 minutes
 //		$sessions_timeout = $GLOBALS['phpgw_info']['server']['sessions_timeout'];
 		if(($now - $keep_alive_timestamp) > $sessions_timeout)
 		{

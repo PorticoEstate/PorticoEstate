@@ -143,12 +143,12 @@
 																		<xsl:for-each select="case_files">
 
 																			<!-- Full-width images with number and caption text -->
-																			<div class="mySlides fade">
+																			<div class="col-md-4">
 																				<div class="numbertext">
 																					<xsl:number />	/ <xsl:value-of select="$file_count"/>
 																				</div>
-																				<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
-																				<div class="text">
+																				<img src="{$get_image_url}&amp;file_id={file_id}" class="img-fluid"/>
+																				<div class="caption">
 																					<xsl:value-of select="name"/>
 																				</div>
 																			</div>
@@ -159,7 +159,7 @@
 																</xsl:if>
 																<!-- === QUICK EDIT MENU === -->
 																<div class="quick_menu">
-																	<a class="open_case pure-button pure-button-primary bigmenubutton">
+																	<a class="open_case btn btn-primary btn-lg mr-3">
 																		<xsl:attribute name="href">
 																			<xsl:text>index.php?menuaction=controller.uicase.open_case</xsl:text>
 																			<xsl:text>&amp;case_id=</xsl:text>
@@ -173,7 +173,7 @@
 																	</a>
 																	<xsl:choose>
 																		<xsl:when test="location_item_id = 0">
-																			<a class="delete_case pure-button pure-button-primary bigmenubutton">
+																			<a class="delete_case btn btn-primary btn-lg mr-3">
 																				<xsl:attribute name="href">
 																					<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 																					<xsl:text>&amp;case_id=</xsl:text>

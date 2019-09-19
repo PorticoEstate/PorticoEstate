@@ -11,60 +11,7 @@
 	* @version $Id$
 	*/
 
-	/*
-	 * Generic include for login.php like pages
-	 */
-	if(!empty( $GLOBALS['phpgw_info']['flags']['session_name'] ))
-	{
-		$session_name = $GLOBALS['phpgw_info']['flags']['session_name'];
-	}
 
-	$GLOBALS['phpgw_info'] = array();
-
-	$GLOBALS['phpgw_info']['flags'] = array
-	(
-		'disable_template_class' => true,
-		'login'                  => true,
-		'currentapp'             => 'login',
-		'noheader'               => true
-	);
-	if($session_name)
-	{
-		$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
-	}
-
-	$header = dirname(realpath(__FILE__)) . '/../../../header.inc.php';
-	if ( !file_exists($header) )
-	{
-		Header('Location: setup/index.php');
-		exit;
-	}
-
-
-	/**
-	* check for emailaddress as username
-	*/
-	require_once dirname(realpath(__FILE__)) . '/../class.EmailAddressValidator.inc.php';
-
-	$validator = new phpgwapi_EmailAddressValidator();
-	if ( isset($_POST['login']) && $_POST['login'] != '')
-	{
-		if(!$validator->check_email_address($_POST['login']))
-		{
-			$_POST['login'] = str_replace('@', '#', $_POST['login']);
-		}
-	}
-
-	/**
-	* Include phpgroupware header
-	*/
-	require_once $header;
-
-	$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['login_template_set'];
-	$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
-	 		. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
-
-	$tmpl = CreateObject('phpgwapi.template', $GLOBALS['phpgw_info']['server']['template_dir']);
 
 	/*
 	 * Generic include for mapping / remoteuser mode
@@ -93,20 +40,6 @@
 		}
 	}
 
-	// This is used for system downtime, to prevent new logins.
-	if( isset($GLOBALS['phpgw_info']['server']['deny_all_logins'])
-		&& $GLOBALS['phpgw_info']['server']['deny_all_logins'] )
-	{
-		$tmpl->set_file
-		(
-			array
-			(
-				'login_form'  => 'login_denylogin.tpl'
-			)
-		);
-		$tmpl->pfp('loginout','login_form');
-		exit;
-	}
 
 	/*
 	* Generic function for displaying login.tpl depending on needs :
@@ -116,8 +49,28 @@
 		var $tmpl = null;
 		var $msg_only=false;
 
-		function __construct(&$tmpl, $msg_only)
+		function __construct($msg_only)
 		{
+			$GLOBALS['phpgw_info']['server']['template_set'] = $GLOBALS['phpgw_info']['login_template_set'];
+			$GLOBALS['phpgw_info']['server']['template_dir'] = PHPGW_SERVER_ROOT
+					. "/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+
+			$tmpl = CreateObject('phpgwapi.template', $GLOBALS['phpgw_info']['server']['template_dir']);
+
+			// This is used for system downtime, to prevent new logins.
+			if( isset($GLOBALS['phpgw_info']['server']['deny_all_logins'])
+				&& $GLOBALS['phpgw_info']['server']['deny_all_logins'] )
+			{
+				$tmpl->set_file
+				(
+					array
+					(
+						'login_form'  => 'login_denylogin.tpl'
+					)
+				);
+				$tmpl->pfp('loginout','login_form');
+				exit;
+			}
 			$this->tmpl = $tmpl;
 			$this->msg_only = $msg_only;
 		}
@@ -130,7 +83,7 @@
 		*/
 		function check_logoutcode($code)
 		{
-			$GLOBALS['phpgw']->session->phpgw_setcookie('phpgwsessid');
+			$GLOBALS['phpgw']->session->phpgw_setcookie(session_name());
 			switch($code)
 			{
 				case 1:
@@ -452,7 +405,9 @@
 			$webserver_url = rtrim($GLOBALS['phpgw_info']['server']['webserver_url'], '/');
 			$partial_url = ltrim($variables['partial_url'], '/');
 
-			$this->tmpl->set_var('login_url', $webserver_url . '/'.$partial_url.'?' . http_build_query($extra_vars) );
+//			$this->tmpl->set_var('login_url', $webserver_url . '/'.$partial_url.'?' . http_build_query($extra_vars) );
+			$this->tmpl->set_var('login_url', $GLOBALS['phpgw']->link($partial_url, $extra_vars) );
+
 			$this->tmpl->set_var('registration_url',$webserver_url . '/registration/');
 			$this->tmpl->set_var('system', $system_name);
 			$this->tmpl->set_var('version', isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);

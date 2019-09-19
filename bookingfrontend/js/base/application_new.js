@@ -455,7 +455,8 @@ window.onload = function() {
   const error = document.getElementById("submit-error");
   const eventName = document.getElementById("inputEventName");
   const organizerName = document.getElementById("inputOrganizerName");
-  
+  const targetAudience = document.getElementById("inputTargetAudience")  
+
   let inputElements = [eventName, organizerName]
 
   for(let i = 0; i < inputElements.length; i++){
@@ -466,18 +467,32 @@ window.onload = function() {
         e.target.classList.remove("is-invalid") + e.target.classList.add("is-valid");
       }
     })
+  }
+
+  const validateTargetAudience = function() {
+    const targetAudienceBtn = document.getElementById("audienceDropdownBtn")
+
+    !targetAudience.value ? targetAudienceBtn.classList.add("is-invalid") : targetAudienceBtn.classList.replace("is-invalid", "is-valid") || targetAudienceBtn.classList.add("is-valid")
+  }
+
+  const validateInputs = function() {
+    !eventName.value ? eventName.classList.add("is-invalid") : eventName.classList.replace("is-invalid", "is-valid") || eventName.classList.add("is-valid");
     
-    form.addEventListener("submit", function(e) {
-      if(!inputElements[i].value){
-        e.preventDefault();
-        e.stopPropagation();
-        error.style.display = "block";
-        setTimeout(function () {
-          error.style.display = "none";
-        }, 5000)
-      } else {
-        return;
-      }
-    })
-  }  
+    !organizerName.value ? organizerName.classList.add("is-invalid") : organizerName.classList.replace("is-invalid", "is-valid") || organizerName.classList.add("is-valid")
+  }
+
+  form.addEventListener("submit", function(e) {
+    if(!eventName.value || !organizerName.value || !targetAudience.value){
+      e.preventDefault();
+      e.stopPropagation();
+      validateInputs();
+      validateTargetAudience();
+      error.style.display = "block";
+      setTimeout(function () {
+        error.style.display = "none";
+      }, 5000)
+    } else {
+      return;
+    } 
+  })
 }

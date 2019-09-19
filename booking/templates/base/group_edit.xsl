@@ -56,6 +56,42 @@
 						<div id="organization_container"></div>
 					</div>
 					<div class="pure-control-group">
+						<label for="field_parent_id">
+							<xsl:value-of select="php:function('lang', 'Parent group')" />
+						</label>
+						<xsl:choose>
+							<xsl:when test="group/id &gt; 0">
+								<select name="parent_id" id="field_parent_id">
+									<option value="0">
+										<xsl:value-of select="php:function('lang', 'No Parent')" />
+									</option>
+
+									<xsl:for-each select="parent_list">
+										<option>
+											<xsl:if test="../group/parent_id = id">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:attribute name="value">
+												<xsl:value-of select="id"/>
+											</xsl:attribute>
+											<xsl:value-of select="name"/>
+										</option>
+									</xsl:for-each>
+								</select>
+							</xsl:when>
+							<xsl:otherwise test="booking/reminder = 0">
+								<div id="group_container" class="pure-custom">
+									<span class="select_first_text">
+										<xsl:value-of select="php:function('lang', 'Select an organization first')" />
+									</span>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+
+
+
+					</div>
+					<div class="pure-control-group">
 						<label for="field_activity">
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
@@ -221,5 +257,9 @@
                                                  'field_organization_name', 'field_organization_id', 'organization_container');
             });
         ]]>
+
+		group_id = '<xsl:value-of select="group/id"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'Please select a season', 'Please select a group')"/>;
+
 	</script>
 </xsl:template>

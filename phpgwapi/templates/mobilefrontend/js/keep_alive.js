@@ -83,4 +83,4 @@ function keepAlive()
 	});
 }
 
-var refreshIntervalId = setInterval(keepAlive, 600000);  //My session expires at 10 minutes
+var refreshIntervalId = setInterval(keepAlive, 500000);  //My session expires at 10 minutes

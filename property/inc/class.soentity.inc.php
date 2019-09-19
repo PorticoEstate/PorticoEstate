@@ -473,6 +473,8 @@
 			$filter_entity_group = isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
 			$stray_entity_group = isset($data['stray_entity_group']) && $data['stray_entity_group'] ? (int)$data['stray_entity_group'] : false;
 			$filter_item		 = isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
+			$parent_location_id	= !empty($data['parent_location_id']) ? (int)$data['parent_location_id'] : null;
+			$parent_id			 = !empty($data['parent_id']) ? (int)$data['parent_id'] : null;
 
 
 			if ($location_id)
@@ -622,6 +624,12 @@
 			if ($location_code)
 			{
 				$filtermethod	 .= " $where $entity_table.location_code $this->like '$location_code%'";
+				$where			 = 'AND';
+			}
+
+			if($parent_location_id && $parent_id)
+			{
+				$filtermethod .= " {$where} p_location_id = {$parent_location_id} AND p_id = {$parent_id}";
 				$where			 = 'AND';
 			}
 
@@ -1562,6 +1570,9 @@
 			$filter_entity_group = isset($data['filter_entity_group']) && $data['filter_entity_group'] ? (int)$data['filter_entity_group'] : 0;
 			$stray_entity_group = isset($data['stray_entity_group']) && $data['stray_entity_group'] ? (int)$data['stray_entity_group'] : false;
 			$filter_item		 = isset($data['filter_item']) && $data['filter_item'] ? $data['filter_item'] : array();
+			$parent_location_id	= !empty($data['parent_location_id']) ? $data['parent_location_id'] : null;
+			$parent_id			 = !empty($data['parent_id']) ? (int)$data['parent_id'] : null;
+
 
 			if ($location_id)
 			{
@@ -1766,6 +1777,13 @@
 			{
 				$filtermethod	 .= " {$where} {$entity_table}.entity_group_id IS NULL";
 				$where			 = 'AND';
+			}
+
+			if($parent_location_id && $parent_id)
+			{
+				$filtermethod .= " {$where} p_location_id = {$parent_location_id} AND p_id = {$parent_id}";
+				$where			 = 'AND';
+
 			}
 
 			if (is_array($filter_item) && count($filter_item))

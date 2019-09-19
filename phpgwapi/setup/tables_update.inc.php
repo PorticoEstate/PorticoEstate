@@ -3694,3 +3694,21 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	/**
+	 * Configurable filter at table listing
+	 */
+	$test[] = '0.9.17.561';
+	function phpgwapi_upgrade0_9_17_561()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_vfs','created',array('type' => 'timestamp','nullable' => False,'default' => 'current_timestamp'));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_vfs','modified',array('type' => 'timestamp','nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.562';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

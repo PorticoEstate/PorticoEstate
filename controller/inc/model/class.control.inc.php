@@ -63,6 +63,7 @@
 		protected $agg_open_cases_pr_month_array = array();
 		// Array that contains error messages. Is populted in function validate
 		protected $error_msg_array;
+		protected $ticket_cat_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -291,6 +292,15 @@
 		{
 			$this->error_msg_array = $error_msg_array;
 		}
+		public function get_ticket_cat_id()
+		{
+			return $this->ticket_cat_id;
+		}
+
+		public function set_ticket_cat_id( $ticket_cat_id )
+		{
+			$this->ticket_cat_id = $ticket_cat_id;
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -337,6 +347,7 @@
 			$this->set_procedure_id(phpgw::get_var('procedure_id', 'int'));
 			$this->set_control_area_id(phpgw::get_var('control_area_id', 'int'));
 			$this->set_responsibility_id(phpgw::get_var('responsibility_id', 'int'));
+			$this->set_ticket_cat_id(phpgw::get_var('ticket_cat_id', 'int'));
 		}
 
 		public function serialize()
@@ -353,7 +364,8 @@
 				'control_area_name' => $this->get_control_area_name(),
 				'repeat_type' => $this->get_repeat_type(),
 				'repeat_interval' => $this->get_repeat_interval(),
-				'responsibility_name' => $this->get_responsibility_name()
+				'responsibility_name' => $this->get_responsibility_name(),
+				'ticket_cat_id' => $this->get_ticket_cat_id()
 			);
 		}
 

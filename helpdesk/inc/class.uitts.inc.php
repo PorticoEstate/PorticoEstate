@@ -2050,11 +2050,14 @@ JS;
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
+					'created'	=> $created,
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2131,6 +2134,13 @@ JS;
 				{
 					$this->parent_cat_id = $change_category[0];
 					$values['cat_id'] = (int)$change_category[1];
+					$group_assignment = createObject('helpdesk.socat_assignment')->read_single($values['cat_id']);
+
+					if($group_assignment)
+					{
+						$values['group_id'] = $group_assignment;
+						$values['assignedto'] = '';
+					}
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
@@ -2464,8 +2474,14 @@ JS;
 
 			foreach ($additional_notes as &$note)
 			{
-				$note['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $note['value_note']);
-				$note['value_note'] = nl2br($note['value_note']);
+				/**
+				 * html
+				 */
+				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $note['value_note']))
+				{
+					$note['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $note['value_note']);
+					$note['value_note'] = nl2br($note['value_note']);
+				}
 			}
 
 			$datatable_def = array();
@@ -2523,12 +2539,18 @@ JS;
 			$z = 0;
 			foreach ($ticket['files'] as $_entry)
 			{
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
+
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
-					'created'	=> $GLOBALS['phpgw']->common->show_date(strtotime($_entry['created']), $this->dateFormat)
+					'created'	=> $created
 				);
+
+
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
 					$content_files[$z]['file_name'] = $_entry['name'];
@@ -2544,7 +2566,7 @@ JS;
 			}
 
 			$attach_file_def = array(
-				array('key' => 'created', 'label' => lang('created'), 'sortable' => true,
+				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
 					'resizeable' => true),
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),

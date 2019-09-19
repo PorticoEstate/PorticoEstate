@@ -16,6 +16,7 @@
 			'show' => true,
 			'edit' => true,
 			'toggle_show_inactive' => true,
+			'fetch_groups'	=> true
 		);
 		protected $module;
 
@@ -185,6 +186,21 @@
 		public function query()
 		{
 			$groups = $this->bo->read();
+			foreach ($groups["results"] as &$group)
+			{
+				if($group['parent_id'])
+				{
+					$group_path_array = $this->bo->get_path($group['id']);
+
+					$group_path = array();
+					foreach ($group_path_array as $path_element)
+					{
+						$group_path[] = $path_element['name'];
+					}
+
+					$group['name'] = implode(' / ', $group_path);
+				}
+			}
 
 			array_walk($groups["results"], array($this, "_add_links"), $this->module . ".uigroup.show");
 			foreach ($groups["results"] as &$group)
@@ -209,6 +225,8 @@
 						"secondary_contact_email" => ($contact2["email"]) ? $contact2["email"] : '',
 					);
 				}
+
+
 			}
 			$results = $this->jquery_results($groups);
 
@@ -221,6 +239,20 @@
 			}
 
 			return $results;
+		}
+
+		public function fetch_groups( )
+		{
+
+			$parent_id = phpgw::get_var('parent_id', 'int');
+			$organization_id = phpgw::get_var('organization_id', 'int');
+			
+			$groups = $this->bo->fetch_groups($parent_id, $organization_id);
+
+			$results = $this->jquery_results($groups);
+
+			return $results;
+
 		}
 
 		public function edit()
@@ -281,6 +313,7 @@
 					'active' => 'int',
 					'activity_id' => 'int',
 					'show_in_portal' => 'int',
+					'parent_id'	=> 'int'
 				)));
 				if (!isset($group["active"]))
 				{
@@ -336,8 +369,24 @@
 			$group['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module,
-				'activities' => $activities));
+
+			if ($id)
+			{
+				$parent_list = $this->bo->get_parents($group['organization_id'], $id);
+			}
+			else
+			{
+				$parent_list = array();
+			}
+
+			self::add_javascript('booking', 'base', 'group_new.js');
+
+			self::render_template_xsl('group_edit', array(
+				'group' => $group,
+				'parent_list' => $parent_list,
+				'module' => $this->module,
+				'activities' => $activities
+			));
 		}
 
 		public function show()
@@ -357,6 +406,16 @@
 			$edit_self_link = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit',
 					'id' => $group['id']));
 
+
+			$group_path_array = $this->bo->get_path($group['id']);
+
+			$group_path = array();
+			foreach ($group_path_array as $path_element)
+			{
+				$group_path[] = $path_element['name'];
+			}
+
+			$group['name'] = implode(' / ', $group_path);
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Group'), 'link' => '#group');
 			$active_tab = 'generic';

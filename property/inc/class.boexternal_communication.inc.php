@@ -407,8 +407,13 @@ HTML;
 			$i = 0;
 			foreach ($additional_notes as $value)
 			{
-				$value_note		 = nl2br($value['value_note']);
-				$table_content	 .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value_note}</td></tr>\n";
+				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $value['value_note']))
+				{
+					$value['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $value['value_note']);
+					$value['value_note'] = nl2br($value['value_note']);
+				}
+
+				$table_content	 .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>\n";
 				$i++;
 			}
 

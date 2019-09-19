@@ -71,6 +71,12 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
 						'image' => array('property', 'location_1')
 					),
+
+				'cat_assignment' =>  array(
+						'text' => lang('settings'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicat_assignment.edit')),
+						'image' => array('property', 'location_1')
+					),
 				'start_inspection' =>  array(
 						'text' => lang('start inspection'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),

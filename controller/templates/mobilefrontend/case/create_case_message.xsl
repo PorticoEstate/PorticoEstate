@@ -28,36 +28,9 @@
 				</xsl:choose>
 			</div>
 
-			<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-			<div class="box-2 select-box">
-				<xsl:variable name="action_url">
-					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
-				</xsl:variable>
-				<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
-					<input type="hidden" name="check_list_id" value="{check_list/id}" />
-					<xsl:choose>
-						<xsl:when test="check_list/status = 0">
-							<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-							<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'set status: done')" />
-								</xsl:attribute>
-							</input>
-						</xsl:when>
-						<xsl:otherwise>
-							<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-							<input type="submit" class="pure-button pure-button-primary bigmenubutton">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'is_executed')" />
-								</xsl:attribute>
-							</input>
-						</xsl:otherwise>
-					</xsl:choose>
-				</form>
-			</div>
 			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 
-			<nav class="navbar bg-light navbar-light">
+			<nav class="navbar bg-dark navbar-dark">
 
 				<!-- LOGO -->
 				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -307,12 +280,12 @@
 																	<xsl:for-each select="case_files">
 
 																		<!-- Full-width images with number and caption text -->
-																		<div class="mySlides fade">
+																		<div class="col-md-4">
 																			<div class="numbertext">
 																				<xsl:number />	/ <xsl:value-of select="$file_count"/>
 																			</div>
-																			<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
-																			<div class="text">
+																			<img src="{$get_image_url}&amp;file_id={file_id}" class="img-fluid"/>
+																			<div class="caption">
 																				<xsl:value-of select="name"/>
 																			</div>
 																		</div>
@@ -336,7 +309,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="pure-button pure-button-primary bigmenubutton" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="btn btn-primary btn-lg mr-3" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>
@@ -345,6 +318,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+		<xsl:call-template name="check_list_change_status">
+			<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
+		</xsl:call-template>
 
 	</div>
 </xsl:template>

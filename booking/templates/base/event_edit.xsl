@@ -52,7 +52,7 @@
 									</h3>
 								</legend>
 							</div>
-							<xsl:for-each select="event/comments[author]">
+							<xsl:for-each select="comments[author]">
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
