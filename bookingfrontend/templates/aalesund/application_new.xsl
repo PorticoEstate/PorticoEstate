@@ -207,14 +207,19 @@
 						</textarea>
 					</div>
 
-					<!-- <div class="form-group">
-						<label>
-							<xsl:value-of select="config/application_equipment"/>
-						</label>
-						<textarea style="resize: none;" class="form-input" name="equipment">
-							<xsl:value-of select="application/equipment"/>
-						</textarea>
-					</div> -->
+					<xsl:if test="config/application_equipment !=''">
+						<div class="form-group">
+						   <label>
+							   <xsl:value-of select="config/application_equipment"/>
+						   </label>
+						   <textarea style="resize: none;" class="form-input" name="equipment">
+							   <xsl:attribute name="placeholder">
+								   <xsl:value-of select="php:function('lang', 'Extra information for the event')" />
+							   </xsl:attribute>
+							   <xsl:value-of select="application/equipment"/>
+						   </textarea>
+					   </div>
+					</xsl:if>
 					<!-- Estimated Number of Participants -->
 					<div class="form-group">
 						<label>
