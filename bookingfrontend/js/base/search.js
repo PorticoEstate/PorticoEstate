@@ -292,7 +292,7 @@ function doSearch(searchterm_value) {
 
                 } else if(response.results.results[i].type == "resource") {
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show",id:response.results.results[i].id,
-								buildingid: response.results.results[i].building_id}, false);
+								building_id: response.results.results[i].building_id}, false);
 
 				} else if(response.results.results[i].type == "organization") {
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiorganization.show",id:response.results.results[i].id}, false);
@@ -373,7 +373,7 @@ function DoFilterSearch() {
                 var resources = [];
                 for(var k=0; k<result.buildings[i].resources.length; k++) {
             
-                    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show", id: result.buildings[i].resources[k].id}, false);
+                    var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show", id: result.buildings[i].resources[k].id, building_id: result.buildings[i].id}, false);
                     var facilities = [];
                     var activities = [];
                     for(var f=0; f<result.buildings[i].resources[k].facilities_list.length; f++) {
