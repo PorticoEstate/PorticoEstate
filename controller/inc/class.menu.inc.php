@@ -72,9 +72,9 @@
 						'image' => array('property', 'location_1')
 					),
 
-				'cat_assignment' =>  array(
+				'settings' =>  array(
 						'text' => lang('settings'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicat_assignment.edit')),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
 						'image' => array('property', 'location_1')
 					),
 				'start_inspection' =>  array(
