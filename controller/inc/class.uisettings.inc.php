@@ -233,6 +233,7 @@
 
 		private function save_users()
 		{
+			$control_id		 = phpgw::get_var('control_id', 'int');
 			$values = phpgw::get_var('values');
 
 			try
@@ -353,7 +354,8 @@
 					'name' => "{$user['account_lastname']}, {$user['account_firstname']}",
 					'lastlogin' => $GLOBALS['phpgw']->common->show_date($user['account_lastlogin'], $dateformat),
 					'status' => $lang_status[$user['account_status']],
-					'selected_role' => 1
+					'selected_role' => 1,
+					'control_id' => $control_id
 				);
 			}
 
