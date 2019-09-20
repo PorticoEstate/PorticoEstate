@@ -32,7 +32,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 
-	class controller_uicat_assignment extends phpgwapi_uicommon
+	class controller_uisettings extends phpgwapi_uicommon
 	{
 
 		var $public_functions = array
@@ -48,7 +48,7 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu('controller::cat_assignment');
+			self::set_active_menu('controller::settings');
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('preferences');
 
@@ -60,7 +60,7 @@
 			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'controller');
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'controller');
 			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'controller');
-			$this->so			= CreateObject('controller.socat_assignment');
+			$this->so			= CreateObject('controller.sosettings');
 
 		}
 
@@ -111,8 +111,8 @@
 
 			$categories = $this->cats->return_sorted_array(0, false);
 //			_debug_array($categories);
-			$cat_assignment = $this->so->read();
-//			_debug_array($cat_assignment);die();
+			$settings = $this->so->read();
+//			_debug_array($settings);die();
 
 			$cat_header[] = array
 			(
@@ -130,7 +130,7 @@
 				$html2text->setHtml($control->get_description());
 				$control_name	.= '<p>' .($html2text->getText()) . '</p>';
 
-				$selected_cat = !empty($cat_assignment[$control->get_id()]['cat_id']) ? $cat_assignment[$control->get_id()]['cat_id'] : 0;
+				$selected_cat = !empty($settings[$control->get_id()]['cat_id']) ? $settings[$control->get_id()]['cat_id'] : 0;
 
 				$_cat_list = $categories;
 
@@ -159,7 +159,7 @@
 				);
 			}
 
-			$link_data['menuaction'] = 'controller.uicat_assignment.edit';
+			$link_data['menuaction'] = 'controller.uisettings.edit';
 
 			$cat_add[] = array
 			(
@@ -172,8 +172,8 @@
 
 			$data = array
 			(
-				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
-				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit")),
+				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.edit")),
+				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.edit")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'cat_header'	 => $cat_header,
 				'cat_data'		 => $content,
@@ -183,17 +183,17 @@
 
 //			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
 
-			self::render_template_xsl(array('cat_assignment'), array('edit' => $data));
+			self::render_template_xsl(array('settings'), array('edit' => $data));
 
 		}
 
 		protected function _generate_tabs( $active_tab = '' )
 		{
 			$tabs = array(
-				'category_assignment' => array('label' => lang('category assignment'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"))),
-				'users' => array('label' => lang('users'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users"))),
-				'districkt' => array('label' => lang('districkt'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.district"))),
-				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.vendors"))),
+				'category_assignment' => array('label' => lang('category assignment'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.edit"))),
+				'users' => array('label' => lang('users'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users"))),
+				'districkt' => array('label' => lang('districkt'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.district"))),
+				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.vendors"))),
 			);
 
 			foreach ($tabs as $key => &$tab)
@@ -228,7 +228,7 @@
 			$this->receipt['message'][] = array('msg' => lang('category assignment has been saved'));
 
 			self::message_set($this->receipt);
-			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.edit"));
+			self::redirect(array('menuaction' => "{$this->currentapp}.uisettings.edit"));
 		}
 
 		private function save_users()
@@ -252,7 +252,7 @@
 			$this->receipt['message'][] = array('msg' => lang('user settings has been saved'));
 
 			self::message_set($this->receipt);
-			self::redirect(array('menuaction' => "{$this->currentapp}.uicat_assignment.users"));
+			self::redirect(array('menuaction' => "{$this->currentapp}.uisettings.users"));
 		}
 
 
@@ -364,8 +364,8 @@
 				'roles'				 => array('options' => $roles),
 				'control_area_list'	 => array('options' => $control_area_list),
 				'control_type_list'	 => array('options' => $control_type_list),
-				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users")),
-				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uicat_assignment.users")),
+				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
+				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'cat_header'	 => $cat_header,
 				'cat_data'		 => $content,
@@ -373,7 +373,7 @@
 				'tabs'			 => self::_generate_tabs('users'),
 			);
 
-			self::render_template_xsl(array('cat_assignment'), array('users' => $data));
+			self::render_template_xsl(array('settings'), array('users' => $data));
 			
 		}
 	}

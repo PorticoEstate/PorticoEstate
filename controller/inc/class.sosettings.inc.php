@@ -31,7 +31,7 @@
 	 * @package property
 	 */
 
-	class controller_socat_assignment
+	class controller_sosettings
 	{
 
 		private $db, $like, $join, $left_join, $account;
