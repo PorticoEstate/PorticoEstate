@@ -472,3 +472,4 @@ Collects users from all applications and events	booking	nn	Haustar brukarar frå
 added %1 users	booking	nn	Lagt til %1 brukarar
 found none	booking	nn	Fann ingen
 get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
+For rent	bookingfrontend	nn	Til leige

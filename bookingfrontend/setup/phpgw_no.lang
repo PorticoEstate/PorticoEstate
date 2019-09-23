@@ -461,3 +461,4 @@ executiveofficer	bookingfrontend	no	Saksbehandler
 Privacy	bookingfrontend	no	Personvern
 manual	bookingfrontend	no	Manual
 get name from external source	bookingfrontend	no	Hent navn fra ekstern kilde (som Gule Sider)
+For rent	bookingfrontend	no	Til leie
