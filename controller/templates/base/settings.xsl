@@ -108,7 +108,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</td>
 		<td align="center">
-			<select name="values[{control_id}]" >
+			<select name="values[{control_id}][{id}]" >
 				<option value="">
 					<xsl:value-of select="php:function('lang', 'select')"/>
 				</option>
