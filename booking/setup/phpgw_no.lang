@@ -777,6 +777,7 @@ Title for filter boxes	booking	no	Tittel for filtreringsbokser
 Title for upcoming events	booking	no	Tittel for liste med kommende arrangementer
 Upcoming events	booking	no	Kommende arrangementer
 Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	no	Din søknad er lagt til. Du kan legge til en ny søknad, eller gå videre for å fullføre søknadsprosessen
+Complete application text booking	booking	no	Din søknad er lagt til i søknadskurven nede til høyre. Du kan legge til en ny søknad, eller trykke 'Fullfør Søknad' for å fullføre søknadsprosessen.
 duplicate	booking	no	Duplikat
 collect users	booking	no	Legg til brukere
 do you really want to collect users again	booking	no	Vil du legge til brukere på nytt?

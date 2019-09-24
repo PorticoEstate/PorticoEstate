@@ -787,6 +787,7 @@ Title for filter boxes	booking	nn	Tittel for filtreringsbokser
 Title for upcoming events	booking	nn	Tittel for liste med kommende arrangementer
 Upcoming events	booking	nn	Kommende arrangementer
 Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad er lagt til. Du kan legge til en ny søknad, eller gå videre for å fullføre søknadsprosessen
+Complete application text booking	booking	nn	Din søknad er lagt til i søknadskorga nede til høgre. Du kan leggje til ein ny søknad, eller trykkje 'Fullfør Søknad' for å fullføre søknadsprosessen.
 duplicate	booking	nn	Duplikat
 direct booking	booking	nn	Direkte booking
 export customer	booking	nn	Eksporter kundeliste

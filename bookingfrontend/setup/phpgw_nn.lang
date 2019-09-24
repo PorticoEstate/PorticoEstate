@@ -481,3 +481,4 @@ found none	booking	nn	Fann ingen
 optional	booking	nn	(Valfri)
 get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
 Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
+Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
