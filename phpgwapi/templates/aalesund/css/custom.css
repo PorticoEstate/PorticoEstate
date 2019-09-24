@@ -1920,8 +1920,7 @@ NEW APPLICATION PAGE STYLE
     color: #fff;
 }
 
-.booking-cart-title i:hover,
-.booking-cart-title span:nth-child(1):hover {
+.booking-cart-title:hover {
     cursor: pointer;
 }
 
