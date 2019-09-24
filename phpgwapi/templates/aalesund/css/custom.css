@@ -1640,7 +1640,9 @@ NEW APPLICATION PAGE STYLE
     flex-direction: column;
 }
 
-
+.new-application-page .textContainer {
+    display: flex;
+}
 
 .exitBtn {
     padding: .75rem 0;
@@ -1648,7 +1650,6 @@ NEW APPLICATION PAGE STYLE
     align-items: center;
     color: #373737;
     text-align: right;
-    margin-left: auto;
 }
 
 .exitBtn:hover {
@@ -1755,6 +1756,7 @@ NEW APPLICATION PAGE STYLE
     font-size: 0.8em;
     color: #373737;
     display: block;
+    margin-right: .5rem;
 }
 
 .new-application-page .form-group, .new-application-page .form-check {
