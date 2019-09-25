@@ -1679,7 +1679,7 @@ HTML;
 				}
 
 
-				if ($rcpt)
+				if (true)//$rcpt)
 				{
 					$_attachment_log		 = $attachment_log ? "::$attachment_log" : '';
 					$historylog				 = CreateObject('property.historylog', 'workorder');
@@ -1717,6 +1717,30 @@ HTML;
 							}
 						}
 					}
+
+
+					try
+					{
+						$subject = "Bestilling {$workorder_id} er sendt";
+						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+							'menuaction' => 'property.uiworkorder.edit',
+							'id'		 => $workorder_id), false, true) . '">'
+							. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+						$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+						$_to = $from_email; // reverse...
+
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+						if ($rcpt)
+						{
+							phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+						}
+					}
+					catch (Exception $exc)
+					{
+					}
+
 
 					//Sigurd: Consider remove
 					/*
@@ -3710,6 +3734,28 @@ HTML;
 					phpgwapi_cache::message_set("Bestilling {$workorder_id} er ikke sendt", 'error');
 					throw $e;
 				}
+			}
+
+			try
+			{
+				$subject = "Bestilling {$workorder_id} er sendt";
+				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uiworkorder.edit',
+					'id'		 => $workorder_id), false, true) . '">'
+					. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+				$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+				$_to = $from_email; // reverse...
+
+				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+				if ($rcpt)
+				{
+					phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+				}
+			}
+			catch (Exception $exc)
+			{
 			}
 
 			if ($_status)
