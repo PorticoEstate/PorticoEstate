@@ -1308,7 +1308,7 @@
 				'lang_title'				 => lang('Title'),
 				'title'						 => $workorder['title'],
 				'lang_descr'				 => lang('Description'),
-				'descr'						 => $workorder['descr'] . $important_imformation,
+				'descr'						 => nl2br($workorder['descr']) . $important_imformation,
 				'lang_budget_account'		 => lang('Budget account'),
 				'budget_account'			 => $workorder['b_account_id'],
 				'lang_sum_calculation'		 => lang('Sum of calculation'),
