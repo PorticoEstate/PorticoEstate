@@ -1679,7 +1679,7 @@ HTML;
 				}
 
 
-				if (true)//$rcpt)
+				if ($rcpt)
 				{
 					$_attachment_log		 = $attachment_log ? "::$attachment_log" : '';
 					$historylog				 = CreateObject('property.historylog', 'workorder');
