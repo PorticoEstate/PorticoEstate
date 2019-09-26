@@ -1310,6 +1310,10 @@ BUILDING PAGE STYLE
     margin-bottom: 0;
 }
 
+.building-place-adr span {
+    padding-right: .35rem;
+}
+
 .building-bookable h1 {
     margin-bottom: 2em !important;
 }
