@@ -3,7 +3,7 @@
 		<span class="font-weight-bold">{cart_header} </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
 		<i class="booking-cart-icon fas fa-plus float-right mr-2"></i>
 	</div>
-	<div class="booking-cart-items" style="display: none;">
+	<div class="booking-cart-items">
 		<div data-bind="foreach: applicationCartItems">
 			<div class="booking-cart-item">
 				<div class="row">
