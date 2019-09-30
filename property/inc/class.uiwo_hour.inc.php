@@ -1684,7 +1684,7 @@ HTML;
 					$_attachment_log		 = $attachment_log ? "::$attachment_log" : '';
 					$historylog				 = CreateObject('property.historylog', 'workorder');
 					$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
-					$receipt['message'][]	 = array('msg' => lang('Workorder %1 is sent by email!', $workorder_id));
+					$receipt['message'][]	 = array('msg' => lang('Workorder %1 is sent by email to %2', $workorder_id, $_to));
 					if ($attachment_log)
 					{
 						$receipt['message'][] = array('msg' => $attachment_log);
@@ -1718,29 +1718,30 @@ HTML;
 						}
 					}
 
-
-					try
+					if($this->account != $workorder['user_id'])
 					{
-						$subject = "Bestilling {$workorder_id} er sendt";
-						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
-							'menuaction' => 'property.uiworkorder.edit',
-							'id'		 => $workorder_id), false, true) . '">'
-							. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
-
-						$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-
-						$_to = $from_email; // reverse...
-
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
-						if ($rcpt)
+						try
 						{
-							phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+							$subject = "Bestilling {$workorder_id} er sendt";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+								'menuaction' => 'property.uiworkorder.edit',
+								'id'		 => $workorder_id), false, true) . '">'
+								. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+							$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+							$_to = $from_email; // reverse...
+
+							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+							if ($rcpt)
+							{
+								phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+							}
+						}
+						catch (Exception $exc)
+						{
 						}
 					}
-					catch (Exception $exc)
-					{
-					}
-
 
 					//Sigurd: Consider remove
 					/*
@@ -3736,26 +3737,29 @@ HTML;
 				}
 			}
 
-			try
+			if($this->account != $workorder['user_id'])
 			{
-				$subject = "Bestilling {$workorder_id} er sendt";
-				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
-					'menuaction' => 'property.uiworkorder.edit',
-					'id'		 => $workorder_id), false, true) . '">'
-					. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
-
-				$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-
-				$_to = $from_email; // reverse...
-
-				$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
-				if ($rcpt)
+				try
 				{
-					phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+					$subject = "Bestilling {$workorder_id} er sendt";
+					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'property.uiworkorder.edit',
+						'id'		 => $workorder_id), false, true) . '">'
+						. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+					$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+					$_to = $from_email; // reverse...
+
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+					if ($rcpt)
+					{
+						phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+					}
 				}
-			}
-			catch (Exception $exc)
-			{
+				catch (Exception $exc)
+				{
+				}
 			}
 
 			if ($_status)
