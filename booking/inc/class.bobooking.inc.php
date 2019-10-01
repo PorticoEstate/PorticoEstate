@@ -521,7 +521,7 @@
 			foreach ($events as &$event)
 			{
 
-				$event['name'] = $event['description'];
+				$event['name'] = $event['name'];
 				$event['type'] = 'event';
 				unset($event['costs']);
 				unset($event['comments']);
@@ -1019,7 +1019,7 @@
 			$events = $events['results'];
 			foreach ($events as &$event)
 			{
-				$event['name'] = $event['description'];
+				$event['name'] = $event['name'];
 				$event['type'] = 'event';
 				unset($event['costs']);
 				unset($event['comments']);
