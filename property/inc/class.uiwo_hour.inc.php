@@ -1104,14 +1104,14 @@
 			$send_as_pdf	 = phpgw::get_var('send_as_pdf', 'bool');
 			$email_receipt	 = phpgw::get_var('email_receipt', 'bool');
 
-			if ($GLOBALS['phpgw']->session->is_repost())
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array(
-					'menuaction'	 => 'property.uiwo_hour.view',
-					'workorder_id'	 => $workorder_id,
-					'from'			 => phpgw::get_var('from')));
-			}
-
+//			if ($GLOBALS['phpgw']->session->is_repost())
+//			{
+//				$GLOBALS['phpgw']->redirect_link('/index.php', array(
+//					'menuaction'	 => 'property.uiwo_hour.view',
+//					'workorder_id'	 => $workorder_id,
+//					'from'			 => phpgw::get_var('from')));
+//			}
+//
 			/*
 			  if($update_email)
 			  {
@@ -1378,6 +1378,7 @@
 				{
 					if (!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']))
 					{
+						phpgwapi_cache::message_set(lang('order is not approved'), 'error');
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uiwo_hour.view',
 							'workorder_id'	 => $workorder_id, 'from'			 => phpgw::get_var('from')));
 					}
@@ -1645,7 +1646,6 @@ HTML;
 					}
 
 					$_status = isset($this->config->config_data['workorder_ordered_status']) && $this->config->config_data['workorder_ordered_status'] ? $this->config->config_data['workorder_ordered_status'] : 0;
-
 					if (!$_status)
 					{
 						//				throw new Exception('status on ordered not given in config');
