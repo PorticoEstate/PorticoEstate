@@ -328,7 +328,7 @@
 	<xsl:variable name="send_order_action">
 		<xsl:value-of select="send_order_action"/>
 	</xsl:variable>
-	<form method="post" action="{$send_order_action}" class="pure-form pure-form-aligned">
+	<form method="post" action="{$send_order_action}" class="pure-form pure-form-aligned" name="form" id="form">
 		<xsl:choose>
 			<xsl:when test="no_email =''">
 				<div class="pure-control-group">
@@ -354,7 +354,7 @@
 				<xsl:choose>
 					<xsl:when test="table_send !=''">
 						<div class="pure-control-group">
-							<button type="submit" class="pure-button pure-button-primary" name="send_order" value="1">
+							<button type="button" class="pure-button pure-button-primary" name="send_order" value="1" onClick="confirm_session('send_order');">
 								<xsl:attribute name="title">
 									<xsl:value-of select="table_send/lang_send_order_statustext"/>
 								</xsl:attribute>
@@ -501,7 +501,7 @@
 		<xsl:choose>
 			<xsl:when test="table_send !=''">
 				<div class="pure-control-group">
-					<button type="submit" class="pure-button pure-button-primary" name="send_order" value="1">
+					<button type="button" class="pure-button pure-button-primary" name="send_order" value="1" onClick="confirm_session('send_order');">
 						<xsl:attribute name="title">
 							<xsl:value-of select="table_send/lang_send_order_statustext"/>
 						</xsl:attribute>
