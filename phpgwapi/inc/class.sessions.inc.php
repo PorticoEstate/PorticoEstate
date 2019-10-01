@@ -502,13 +502,12 @@
 			if(!isset($this->_history_id))
 			{
 				$this->_history_id = md5($this->_login . time());
-				$history = $this->appsession('history', 'phpgwapi');
 				$history = (array)phpgwapi_cache::session_get('phpgwapi', 'history');
 
 				if(count($history) >= $GLOBALS['phpgw_info']['server']['max_history'])
 				{
 					array_shift($history);
-					$history = phpgwapi_cache::session_set('phpgwapi', 'history', $history);
+					phpgwapi_cache::session_set('phpgwapi', 'history', $history);
 				}
 			}
 			return $this->_history_id;

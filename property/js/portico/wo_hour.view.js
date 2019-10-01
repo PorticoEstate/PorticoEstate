@@ -23,7 +23,12 @@ this.confirm_session = function (action)
 					var processing = document.createElement('span');
 					processing.appendChild(document.createTextNode('processing ...'));
 					form.parentNode.insertBefore(processing, form);
-					form.action += '&send_order=1';
+
+					var input = document.createElement("input");
+					input.setAttribute("type", "hidden");
+					input.setAttribute("name", "send_order");
+					input.setAttribute("value", "1");
+					form.appendChild(input);
 					form.submit();
 				}
 			}
