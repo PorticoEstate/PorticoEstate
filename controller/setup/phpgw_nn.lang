@@ -453,3 +453,5 @@ view_details	controller	nn	Vis detaljer for sjekkliste
 view_cases	controller	nn	Vis saker
 view_control_info	controller	nn	Vis info om kontroll
 create_case_message	controller	nn	Registrer melding
+performed by	controller	nn	Utført av
+inspector	controller	nn	Kontrollør

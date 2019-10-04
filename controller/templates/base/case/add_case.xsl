@@ -88,7 +88,7 @@
 														<xsl:value-of select="id"/>
 													</xsl:variable>
 													<input type="hidden" name="control_item_id" value="{$control_item_id}" />
-													<input type="hidden" name="check_list_id">
+													<input type="hidden" id="check_list_id" name="check_list_id">
 														<xsl:attribute name="value">
 															<xsl:value-of select="//check_list/id"/>
 														</xsl:attribute>

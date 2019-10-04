@@ -353,7 +353,7 @@
 				),
 				array(
 					'id' => 2,
-					'name' => 'Kontrollør'
+					'name' => lang('inspector')// 'Kontrollør'
 				),
 				array(
 					'id' => 4,

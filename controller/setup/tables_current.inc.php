@@ -328,5 +328,20 @@
 			),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'controller_check_list_inspector' => array(
+			'fd' => array(
+				'check_list_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				'user_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				'modified_on' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				'modified_by' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+			),
+			'pk' => array('check_list_id', 'user_id'),
+			'fk' => array(
+				'controller_check_list'   => array('check_list_id' => 'id'),
+				'phpgw_accounts' => array('user_id' => 'account_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);

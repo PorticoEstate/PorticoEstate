@@ -976,8 +976,12 @@
 
 			$user_role = true;
 //https://www.iconsdb.com/black-icons/undo-4-icon.html
+
+			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list->get_id());
+
 			$data = array
 			(
+				'inspectors' => $inspectors,
 				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
 				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),

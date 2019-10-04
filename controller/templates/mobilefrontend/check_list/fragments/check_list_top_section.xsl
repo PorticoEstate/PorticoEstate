@@ -16,6 +16,24 @@
 				<xsl:value-of select="last_completed_checklist_date"/>
 			</xsl:if>
 
+			<xsl:if test="inspectors != ''">
+				<br/>
+				<xsl:value-of select="php:function('lang', 'performed by')" />
+				<xsl:text>: </xsl:text>
+				<xsl:for-each select="inspectors">
+					<div class="custom-control custom-checkbox custom-control-inline">
+						<input type="checkbox" class="custom-control-input inspectors" id="inspector{id}" value="{id}">
+							<xsl:if test="selected = 1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+						<label class="custom-control-label" for="inspector{id}">
+							<xsl:value-of select="name"/>
+						</label>
+					</div>
+				</xsl:for-each>
+			</xsl:if>
+
 			<xsl:choose>
 				<xsl:when test="type = 'component'">
 					<h2>
@@ -34,7 +52,7 @@
 						<div id="new_picture_parent" class="container" style="display:none"> 
 
 							<div class="form-group">
-<!--								<label>
+								<!--								<label>
 									<xsl:value-of select="php:function('lang', 'picture')" />
 								</label>-->
 								<div  id="equipment_parent_picture_container"/>

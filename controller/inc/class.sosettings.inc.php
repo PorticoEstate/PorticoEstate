@@ -257,6 +257,59 @@
 			return $this->db->transaction_commit();
 		}
 
+		public function get_inspectors( $check_list_id )
+		{
+
+			$sql = "SELECT control_id, controller_check_list_inspector.user_id FROM controller_check_list "
+				. " $this->left_join controller_check_list_inspector ON controller_check_list.id = controller_check_list_inspector.check_list_id"
+				. " WHERE controller_check_list.id = ?";
+
+			$condition =  array((int)$check_list_id);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			$_inspectors = array();
+			while ($this->db->next_record())
+			{
+				$control_id = $this->db->f('control_id');
+				$_inspectors[] = $this->db->f('user_id');
+			}
+
+			/**
+			 * Bitwise operator on 2 (inspector)
+			 */
+			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND (roles & 2) > 0;";
+			$condition =  array((int)$control_id);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			$inspectors = array();
+			$__inspectors = array();
+
+			while ($this->db->next_record())
+			{
+				$__inspectors[] = $this->db->f('user_id');
+			}
+
+			$___inspectors = array_unique(array_merge($_inspectors, $__inspectors));
+
+			$sort_names = array();
+			foreach ($___inspectors as $user_id)
+			{
+				$name = $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				$sort_names[] = $name;
+				$inspectors[] = array(
+					'id'	=> $user_id,
+					'name'	=> $name,
+					'selected' => in_array($user_id, $_inspectors)
+				);
+			}
+
+			array_multisort($sort_names, SORT_ASC, $inspectors);
+
+			return $inspectors;
+		}
+
 		public function get_district_users($control_id)
 		{
 			if(!$control_id)

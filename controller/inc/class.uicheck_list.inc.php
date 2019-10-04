@@ -78,7 +78,8 @@
 			'get_report' => true,
 			'set_completed_item'	=> true,
 			'undo_completed_item'	=> true,
-			'add_billable_hours'	=> true
+			'add_billable_hours'	=> true,
+			'set_inspector'			=> true
 		);
 
 		function __construct()
@@ -472,6 +473,23 @@
 			return array(
 				'status' => $ok ? 'ok' : 'error'
 			);
+		}
+
+		function set_inspector()
+		{
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+			$checked = phpgw::get_var('checked', 'bool');
+			$user_id = phpgw::get_var('user_id', 'int');
+
+			if($this->edit)
+			{
+				$ok = $this->so->set_inspector($check_list_id, $user_id, $checked);
+			}
+
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
+
 		}
 
 		/**
