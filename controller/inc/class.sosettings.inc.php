@@ -257,6 +257,45 @@
 			return $this->db->transaction_commit();
 		}
 
+		public function get_user_with_role( $control_id, $role )
+		{
+			if(!$role)
+			{
+				return array();
+			}
+			/**
+			 * Bitwise operator on 2 (inspector)
+			 */
+			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND (roles & ?) > 0;";
+			$condition =  array((int)$control_id, (int)$role);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			$users = array();
+			while ($this->db->next_record())
+			{
+				$users[] = $this->db->f('user_id');
+			}
+
+			$values = array();
+
+			$sort_names = array();
+			foreach ($users as $user_id)
+			{
+				$name = $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				$sort_names[] = $name;
+				$values[] = array(
+					'id'	=> $user_id,
+					'name'	=> $name
+				);
+			}
+
+			array_multisort($sort_names, SORT_ASC, $values);
+
+			return $values;
+		
+		}
+
 		public function get_inspectors( $check_list_id )
 		{
 
@@ -272,7 +311,11 @@
 			while ($this->db->next_record())
 			{
 				$control_id = $this->db->f('control_id');
-				$_inspectors[] = $this->db->f('user_id');
+				$user_id = $this->db->f('user_id');
+				if($user_id)
+				{
+					$_inspectors[] = $user_id;
+				}
 			}
 
 			/**
@@ -332,6 +375,31 @@
 
 			return $values;
 		}
+
+		public function get_user_at_district($control_id, $location_code)
+		{
+			if(!$location_code || !$control_id)
+			{
+				return false;
+			}
+
+			$location_arr = explode('-', $location_code);
+			
+			$loc1 = $location_arr[0];
+
+			$this->db->select("SELECT part_of_town_id FROM fm_location1 WHERE loc1 = ?", array($loc1), __LINE__, __FILE__);
+			$this->db->next_record();
+			$part_of_town_id = $this->db->f('part_of_town_id');
+
+
+			$sql = "SELECT user_id FROM controller_control_user_district WHERE control_id = ? AND part_of_town_id = ?";
+			$condition =  array((int)$control_id, (int)$part_of_town_id);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('user_id');
+		}
+
 		public function save_district( $data )
 		{
 			$add = array();

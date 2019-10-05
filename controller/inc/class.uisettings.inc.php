@@ -349,7 +349,7 @@
 			$roles = array(
 				array(
 					'id' => 1,
-					'name' => 'Administrator'
+					'name' => lang('administrator')
 				),
 				array(
 					'id' => 2,
@@ -357,7 +357,7 @@
 				),
 				array(
 					'id' => 4,
-					'name' => 'Soneleder'
+					'name' => lang('supervisor')// 'Soneleder'
 				),
 			);
 
@@ -553,7 +553,7 @@
 				'tabs'			 => self::_generate_tabs('district'),
 			);
 
-			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+	//		phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::render_template_xsl(array('settings'), array('district' => $data));
 
 		}

@@ -979,9 +979,26 @@
 
 			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list->get_id());
 
+			$administrator_arr = array();
+			$administrators = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), 1);
+
+			foreach ($administrators as $administrator)
+			{
+				$administrator_arr[] = $administrator['name'];
+			}
+
+			$supervisor_id = createObject('controller.sosettings')->get_user_at_district($check_list->get_control_id(), $check_list->get_location_code());
+
+			if($supervisor_id)
+			{
+				$supervisor_name = $GLOBALS['phpgw']->accounts->get($supervisor_id)->__toString();
+			}
+
 			$data = array
 			(
 				'inspectors' => $inspectors,
+				'administrator_list' => implode('; ', $administrator_arr),
+				'supervisor_name' => $supervisor_name,
 				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
 				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),

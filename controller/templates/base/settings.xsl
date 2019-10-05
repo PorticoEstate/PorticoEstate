@@ -106,7 +106,6 @@
 
 					</div>
 					<div id="vendors">
-						2
 					</div>
 
 				</div>
@@ -232,7 +231,6 @@
 
 					</div>
 					<div id="vendors">
-						2
 					</div>
 
 				</div>
@@ -291,7 +289,6 @@
 
 					</div>
 					<div id="vendors">
-						2
 					</div>
 
 				</div>

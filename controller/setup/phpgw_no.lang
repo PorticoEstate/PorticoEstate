@@ -457,3 +457,5 @@ create_case_message	controller	no	Registrer melding
 category assignment	controller	no	Meldingskategori pr Kontrolltype
 performed by	controller	no	Utført av
 inspector	controller	no	Kontrollør
+administrator	controller	no	Administrator
+supervisor	controller	no	Soneleder

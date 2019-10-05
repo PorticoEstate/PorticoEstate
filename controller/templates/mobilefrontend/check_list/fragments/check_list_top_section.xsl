@@ -33,6 +33,18 @@
 					</div>
 				</xsl:for-each>
 			</xsl:if>
+			<xsl:if test="administrator_list != ''">
+				<br/>
+				<xsl:value-of select="php:function('lang', 'administrator')" />
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="administrator_list"/>
+			</xsl:if>
+			<xsl:if test="supervisor_name != ''">
+				<br/>
+				<xsl:value-of select="php:function('lang', 'supervisor')" />
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="supervisor_name"/>
+			</xsl:if>
 
 			<xsl:choose>
 				<xsl:when test="type = 'component'">
@@ -49,7 +61,7 @@
 
 						<input type="hidden" name="component" value="{component_array/location_id}_{component_array/id}" />
 
-						<div id="new_picture_parent" class="container" style="display:none"> 
+						<div id="new_picture_parent" class="container" style="display:none">
 
 							<div class="form-group">
 								<!--								<label>
