@@ -1,5 +1,14 @@
 this.confirm_session = function (action)
 {
+	/**
+	 * Block doubleclick
+	 */
+	var send_buttons = document.getElementsByName('send_order');
+	$(send_buttons).each(function ()
+	{
+		$(this).prop('disabled', true);
+	});
+
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
 	var strURL = phpGWLink('index.php', oArgs, true);
 
