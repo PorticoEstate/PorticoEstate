@@ -492,20 +492,12 @@
 
 			array_unshift($control_area_list, array('id' => -1, 'name' => lang('select')));
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
+//			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
+			$supervisors = createObject('controller.sosettings')->get_user_with_role($control_id, 4);
 
 
 			$district_users = $this->so->get_district_users($control_id);
 //			_debug_array($user_roles);
-			$user_list = array();
-			foreach ($users as $user)
-			{
-				$user_list[] = array
-				(
-					'id' => $user['account_id'],
-					'name' => "{$user['account_lastname']}, {$user['account_firstname']}",
-				);
-			}
 
 			$_part_of_towns	 = execMethod('property.sogeneric.get_list', array(
 				'type'	 => 'part_of_town',
@@ -540,7 +532,7 @@
 	//		_debug_array($user_list);
 			$data = array
 			(
-				'user_list'			 => array('options' => $user_list),
+				'user_list'			 => array('options' => $supervisors),
 				'part_of_town_data'	=> $part_of_towns,
 				'control_area_list'	 => array('options' => $control_area_list),
 				'control_type_list'	 => array('options' => $control_type_list),
