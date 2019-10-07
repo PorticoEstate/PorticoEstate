@@ -811,16 +811,47 @@
 		}
 				
 		/**
-		 * Execute prepared SQL statement for insert
+		 * Execute prepared SQL statement for insert and update
 		 *
-		 * @param string $sql_string 
-		 * @param array $valueset  values,id and datatypes for the insert 
+		 * @param string $sql_string
+		 * @param array $valueset  values,id and datatypes for the insert
 		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
 		public function insert($sql_string, $valueset, $line = '', $file = '')
-		{		
+		{
+			try
+			{
+				$stmt = $this->adodb->Prepare($sql_string);
+
+				foreach($valueset as $fields)
+				{
+					$values = array();
+					foreach($fields as $field => $entry)
+					{
+						$values[] = $entry['value'];
+					}
+					$this->adodb->Execute($stmt, $values);
+				}
+			}
+			catch(Exception $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+		}
+
+		/**
+		 * Execute prepared SQL statement for delete
+		 *
+		 * @param string $sql_string
+		 * @param array $valueset  values,id and datatypes for the insert
+		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
+		 * @return boolean TRUE on success or FALSE on failure
+		 */
+
+		public function delete($sql_string, $valueset, $line = '', $file = '')
+		{
 			try
 			{
 				$stmt = $this->adodb->Prepare($sql_string);

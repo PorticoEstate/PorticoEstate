@@ -1,6 +1,43 @@
 $(document).ready(function ()
 {
 
+	// Display submit button on click
+	$(".inspectors").on("click", function (e)
+	{
+		var check_list_id = $("#check_list_id").val();
+		var check = $(this);
+		var checked = check.prop("checked");
+		var user_id = check.val();
+
+		var oArgs = {
+			menuaction: 'controller.uicheck_list.set_inspector',
+			check_list_id: check_list_id,
+			checked: checked == true ? 1 : 0,
+			user_id: user_id,
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					var status = data.status;
+					if (status === 'ok')
+					{
+//						alert('ok');
+					}
+				}
+			}
+		});
+
+	});
+
+
+
+
 	// ADD CHECKLIST
 	$("#frm_add_check_list").on("submit", function (e)
 	{
@@ -83,14 +120,15 @@ $(document).ready(function ()
 	});
 });
 
-function getWidth() {
-  return Math.max(
-    document.body.scrollWidth,
-    document.documentElement.scrollWidth,
-    document.body.offsetWidth,
-    document.documentElement.offsetWidth,
-    document.documentElement.clientWidth
-  );
+function getWidth()
+{
+	return Math.max(
+		document.body.scrollWidth,
+		document.documentElement.scrollWidth,
+		document.body.offsetWidth,
+		document.documentElement.offsetWidth,
+		document.documentElement.clientWidth
+		);
 }
 this.fileuploader = function ()
 {

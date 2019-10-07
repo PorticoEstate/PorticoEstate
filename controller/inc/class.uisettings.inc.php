@@ -42,7 +42,7 @@
 		);
 
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$so, $cats;
+			$so, $cats, $so_control;
 
 		public function __construct()
 		{
@@ -61,6 +61,9 @@
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'controller');
 			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'controller');
 			$this->so			= CreateObject('controller.sosettings');
+			$this->so_control = CreateObject('controller.socontrol');
+
+			self::add_javascript('controller', 'base', 'settings.edit.js');
 
 		}
 
@@ -192,8 +195,7 @@
 			$tabs = array(
 				'category_assignment' => array('label' => lang('category assignment'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.edit"))),
 				'users' => array('label' => lang('users'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users"))),
-				'districkt' => array('label' => lang('districkt'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.district"))),
-				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.vendors"))),
+//				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.vendors"))),
 			);
 
 			foreach ($tabs as $key => &$tab)
@@ -233,7 +235,6 @@
 
 		private function save_users()
 		{
-			$control_id		 = phpgw::get_var('control_id', 'int');
 			$values = phpgw::get_var('values');
 
 			try
@@ -269,11 +270,9 @@
 				$this->save_users();
 			}
 
-			$this->so_control = CreateObject('controller.socontrol');
-
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
-
 			$control_id		 = phpgw::get_var('control_id', 'int');
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if($control_area_id)
@@ -292,9 +291,18 @@
 			{
 				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
 			}
+			if($part_of_town_id)
+			{
+				phpgwapi_cache::user_set('controller', "settings_control_id", $part_of_town_id, $user_id);
+			}
+			else
+			{
+				$part_of_town_id = (int)phpgwapi_cache::user_get('controller', "settings_control_id", $user_id);
+			}
+
 			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
 
-			$control_type_list = array(array('id' => '', 'name' => lang('select')));
+			$control_type_list = array(array('id' => '-1', 'name' => lang('select')));
 			foreach ($control_types as $control_type)
 			{
 				$control_type_list[] = array(
@@ -322,50 +330,92 @@
 				);
 			}
 
-			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
+			array_unshift($control_area_list, array('id' => '-1', 'name' => lang('select')));
 
 			$dateformat = "{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i";
+
+			
+			$part_of_towns = createObject('property.bogeneric')->get_list(array(
+				'type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id,
+				'order'		 => 'name',
+				'sort'		 => 'asc'
+				)
+			);
+
+			$part_of_town_list = array(array('id' => '-1', 'name' => lang('select')));
+
+			foreach ($part_of_towns as $part_of_town)
+			{
+				if($part_of_town['id'] > 0)
+				{
+					$part_of_town_list[] = $part_of_town;				
+				}
+
+			}
+
+			if($control_id > 0 && $control_area_id > 0 && $part_of_town_id > 0)
+			{
+				$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
+			}
+			else
+			{
+				$users = array();
+			}
+
+			/**
+			 * Bit-operator
+			 */
+			$roles = array(
+				array(
+					'id' => 1,
+					'name' => lang('administrator')
+				),
+				array(
+					'id' => 2,
+					'name' => lang('inspector')// 'Kontrollør'
+				),
+				array(
+					'id' => 4,
+					'name' => lang('supervisor')// 'Soneleder'
+				),
+			);
+
+			$user_roles = $this->so->get_roles($control_id, $part_of_town_id);
+//			_debug_array($user_roles);
+			$user_list = array();
 
 			$lang_status = array(
 				'A' => lang('acktive'),
 				'I' => lang('inacktive'),
 			);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 
-			$roles = array(
-				array(
-					'id' => 1,
-					'name' => 'Administrator'
-				),
-				array(
-					'id' => 2,
-					'name' => 'Kontrollør'
-				),
-			);
-
-
-			$user_list = array();
 			foreach ($users as $user)
 			{
+				$selected_role = $user_roles[$user['account_id']];
+
 				$user_list[] = array
 				(
 					'id' => $user['account_id'],
 					'name' => "{$user['account_lastname']}, {$user['account_firstname']}",
 					'lastlogin' => $GLOBALS['phpgw']->common->show_date($user['account_lastlogin'], $dateformat),
 					'status' => $lang_status[$user['account_status']],
-					'selected_role' => 1,
-					'control_id' => $control_id
+					'selected_role' => array(1 & $selected_role, 2 & $selected_role, 4 & $selected_role),
+					'control_id' => $control_id,
+					'part_of_town_id'	=> $part_of_town_id,
+					'original_value' => $user_roles[$user['account_id']]
 				);
 			}
 
-	//		_debug_array($users);
+	//		_debug_array($user_list);
 			$data = array
 			(
 				'user_data'			 => $user_list,
 				'roles'				 => array('options' => $roles),
 				'control_area_list'	 => array('options' => $control_area_list),
 				'control_type_list'	 => array('options' => $control_type_list),
+				'part_of_town_list'	 => array('options' => $part_of_town_list),
 				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
@@ -375,7 +425,8 @@
 				'tabs'			 => self::_generate_tabs('users'),
 			);
 
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::render_template_xsl(array('settings'), array('users' => $data));
-			
+
 		}
 	}

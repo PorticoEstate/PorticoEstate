@@ -35,6 +35,7 @@
 		protected $like;
 		protected $join;
 		protected $left_join;
+		protected $account;
 
 		public function __construct()
 		{
@@ -42,6 +43,7 @@
 			$this->like = & $this->db->like;
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		/**
