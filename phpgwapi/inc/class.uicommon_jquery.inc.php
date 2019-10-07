@@ -217,10 +217,10 @@
 			return $base;
 		}
 
-		public static function link( $data )
+		public static function link( $data, $redirect = false, $external = false, $force_backend = false )
 		{
 			$base = self::get_link_base();
-			return $GLOBALS['phpgw']->link($base, $data);
+			return $GLOBALS['phpgw']->link($base, $data, $redirect, $external, $force_backend);
 		}
 
 		public function redirect( $link_data )
