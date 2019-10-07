@@ -107,15 +107,15 @@
 		}
 
 
-		public function get_roles($control_id)
+		public function get_roles($control_id, $part_of_town_id)
 		{
-			if(!$control_id)
+			if(!$control_id || !$part_of_town_id)
 			{
 				return array();
 			}
 
-			$sql = "SELECT * FROM controller_control_user_role WHERE control_id = ?";
-			$condition =  array((int)$control_id);
+			$sql = "SELECT * FROM controller_control_user_role WHERE control_id = ? AND part_of_town_id = ?";
+			$condition =  array((int)$control_id, (int)$part_of_town_id);
 
 			$this->db->select($sql, $condition, __LINE__, __FILE__);
 
@@ -139,135 +139,176 @@
 			$delete = array();
 			$now = time();
 
-			foreach ($data as $control_id => $user_info)
+			foreach ($data as $control_id => $part_of_town_info)
 			{
 		//		_debug_array($control_id);
-				foreach ($user_info as $user_id => $role_info)
+				foreach ($part_of_town_info as $part_of_town_id => $user_info)
 				{
-					$new_roles = (int)array_sum($role_info['new']);
-					$old_roles = (int)$role_info['original'];
-
-					if($old_roles != $new_roles)
+					foreach ($user_info as $user_id => $role_info)
 					{
+						$new_roles = (int)array_sum($role_info['new']);
+						$old_roles = (int)$role_info['original'];
 
-						if($new_roles && $old_roles)
+						if($old_roles != $new_roles)
 						{
-							$update[] = array
-							(
-								1	=> array
-								(
-									'value'	=> $new_roles,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
-								(
-									'value'	=> $now,
-									'type'	=> PDO::PARAM_INT
-								),
-								3	=> array
-								(
-									'value'	=> $this->account,
-									'type'	=> PDO::PARAM_INT
-								),
-								4	=> array
-								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								5	=> array
-								(
-									'value'	=> $user_id,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
-						}
-						else if($new_roles && !$old_roles)
-						{
-							$add[] = array
-							(
-								1	=> array
-								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
-								(
-									'value'	=> $user_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								3	=> array
-								(
-									'value'	=> $new_roles,
-									'type'	=> PDO::PARAM_INT
-								),
-								4	=> array
-								(
-									'value'	=> $now,
-									'type'	=> PDO::PARAM_INT
-								),
-								5	=> array
-								(
-									'value'	=> $this->account,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
 
-						}
-						else if(!$new_roles)
-						{
-							$delete[] = array
-							(
-								1	=> array
+							if($new_roles && $old_roles)
+							{
+								$update[] = array
 								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
+									1	=> array
+									(
+										'value'	=> $new_roles,
+										'type'	=> PDO::PARAM_INT
+									),
+									2	=> array
+									(
+										'value'	=> $now,
+										'type'	=> PDO::PARAM_INT
+									),
+									3	=> array
+									(
+										'value'	=> $this->account,
+										'type'	=> PDO::PARAM_INT
+									),
+									4	=> array
+									(
+										'value'	=> $control_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									5	=> array
+									(
+										'value'	=> $part_of_town_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									6	=> array
+									(
+										'value'	=> $user_id,
+										'type'	=> PDO::PARAM_INT
+									)
+								);
+							}
+							else if($new_roles && !$old_roles)
+							{
+								$add[] = array
 								(
-									'value'	=> $user_id,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
+									1	=> array
+									(
+										'value'	=> $control_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									2	=> array
+									(
+										'value'	=> $part_of_town_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									3	=> array
+									(
+										'value'	=> $user_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									4	=> array
+									(
+										'value'	=> $new_roles,
+										'type'	=> PDO::PARAM_INT
+									),
+									5	=> array
+									(
+										'value'	=> $now,
+										'type'	=> PDO::PARAM_INT
+									),
+									6	=> array
+									(
+										'value'	=> $this->account,
+										'type'	=> PDO::PARAM_INT
+									)
+								);
+
+							}
+							else if(!$new_roles)
+							{
+								$delete[] = array
+								(
+									1	=> array
+									(
+										'value'	=> $control_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									2	=> array
+									(
+										'value'	=> $part_of_town_id,
+										'type'	=> PDO::PARAM_INT
+									),
+									3	=> array
+									(
+										'value'	=> $user_id,
+										'type'	=> PDO::PARAM_INT
+									)
+								);
+							}
 						}
+
+
 					}
 
-
 				}
+
 			}
 			$this->db->transaction_begin();
 
 			if($add)
 			{
-				$add_sql = "INSERT INTO controller_control_user_role (control_id, user_id, roles, modified_on, modified_by) VALUES (?, ?, ? ,? ,?)";
+				$add_sql = "INSERT INTO controller_control_user_role (control_id, part_of_town_id, user_id, roles, modified_on, modified_by) VALUES (?, ?, ?, ? ,? ,?)";
 				$GLOBALS['phpgw']->db->insert($add_sql, $add, __LINE__, __FILE__);
 			}
 
 			if($update)
 			{
-				$update_sql = "UPDATE controller_control_user_role SET roles =?, modified_on = ?, modified_by = ? WHERE control_id =? AND user_id = ?";
+				$update_sql = "UPDATE controller_control_user_role SET roles =?, modified_on = ?, modified_by = ? WHERE control_id =? AND part_of_town_id = ? AND user_id = ?";
 				$GLOBALS['phpgw']->db->insert($update_sql, $update, __LINE__, __FILE__);
 			}
 
 			if($delete)
 			{
-				$delete_sql = "DELETE FROM controller_control_user_role WHERE control_id =? AND user_id = ?";
+				$delete_sql = "DELETE FROM controller_control_user_role WHERE control_id =? AND part_of_town_id = ? AND user_id = ?";
 				$GLOBALS['phpgw']->db->delete($delete_sql, $delete, __LINE__, __FILE__);
 			}
 
 			return $this->db->transaction_commit();
 		}
 
-		public function get_user_with_role( $control_id, $role )
+		private function get_part_of_town( $location_code )
 		{
-			if(!$role)
+			$location_arr = explode('-', $location_code);
+
+			$loc1 = $location_arr[0];
+
+			$this->db->select("SELECT part_of_town_id FROM fm_location1 WHERE loc1 = ?", array($loc1), __LINE__, __FILE__);
+			$this->db->next_record();
+			$part_of_town_id = $this->db->f('part_of_town_id');
+			
+			return $part_of_town_id;
+			
+		}
+
+		public function get_user_with_role( $control_id , $location_code, $role)
+		{
+			if(!$location_code || !$control_id)
+			{
+				return false;
+			}
+
+			$part_of_town_id = $this->get_part_of_town($location_code);
+		
+			if(!$role || !$part_of_town_id)
 			{
 				return array();
 			}
 			/**
 			 * Bitwise operator on 2 (inspector)
 			 */
-			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND (roles & ?) > 0;";
-			$condition =  array((int)$control_id, (int)$role);
+			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND part_of_town_id = ? AND (roles & ?) > 0;";
+			$condition =  array((int)$control_id, $part_of_town_id,  (int)$role);
 
 			$this->db->select($sql, $condition, __LINE__, __FILE__);
 
@@ -299,7 +340,7 @@
 		public function get_inspectors( $check_list_id )
 		{
 
-			$sql = "SELECT control_id, controller_check_list_inspector.user_id FROM controller_check_list "
+			$sql = "SELECT control_id, controller_check_list_inspector.user_id, location_code FROM controller_check_list "
 				. " $this->left_join controller_check_list_inspector ON controller_check_list.id = controller_check_list_inspector.check_list_id"
 				. " WHERE controller_check_list.id = ?";
 
@@ -310,6 +351,7 @@
 			$_inspectors = array();
 			while ($this->db->next_record())
 			{
+				$location_code = $this->db->f('location_code');
 				$control_id = $this->db->f('control_id');
 				$user_id = $this->db->f('user_id');
 				if($user_id)
@@ -318,11 +360,13 @@
 				}
 			}
 
+			$part_of_town_id = $this->get_part_of_town($location_code);
+
 			/**
 			 * Bitwise operator on 2 (inspector)
 			 */
-			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND (roles & 2) > 0;";
-			$condition =  array((int)$control_id);
+			$sql = "SELECT user_id FROM controller_control_user_role WHERE control_id = ? AND part_of_town_id = ? AND(roles & 2) > 0;";
+			$condition =  array((int)$control_id, (int)$part_of_town_id);
 
 			$this->db->select($sql, $condition, __LINE__, __FILE__);
 
@@ -352,177 +396,4 @@
 
 			return $inspectors;
 		}
-
-		public function get_district_users($control_id)
-		{
-			if(!$control_id)
-			{
-				return array();
-			}
-
-			$sql = "SELECT * FROM controller_control_user_district WHERE control_id = ?";
-			$condition =  array((int)$control_id);
-
-			$this->db->select($sql, $condition, __LINE__, __FILE__);
-
-			$values = array();
-
-			while ($this->db->next_record())
-			{
-				$part_of_town_id = $this->db->f('part_of_town_id');
-				$values[$part_of_town_id] = $this->db->f('user_id');
-			}
-
-			return $values;
-		}
-
-		public function get_user_at_district($control_id, $location_code)
-		{
-			if(!$location_code || !$control_id)
-			{
-				return false;
-			}
-
-			$location_arr = explode('-', $location_code);
-			
-			$loc1 = $location_arr[0];
-
-			$this->db->select("SELECT part_of_town_id FROM fm_location1 WHERE loc1 = ?", array($loc1), __LINE__, __FILE__);
-			$this->db->next_record();
-			$part_of_town_id = $this->db->f('part_of_town_id');
-
-
-			$sql = "SELECT user_id FROM controller_control_user_district WHERE control_id = ? AND part_of_town_id = ?";
-			$condition =  array((int)$control_id, (int)$part_of_town_id);
-
-			$this->db->select($sql, $condition, __LINE__, __FILE__);
-			$this->db->next_record();
-			return $this->db->f('user_id');
-		}
-
-		public function save_district( $data )
-		{
-			$add = array();
-			$update = array();
-			$delete = array();
-			$now = time();
-
-			foreach ($data as $control_id => $district_info)
-			{
-				foreach ($district_info as $part_of_town_id => $user_info)
-				{
-					$new_user = (int)$user_info['new'];
-					$old_user = (int)$user_info['original'];
-
-					if($old_user != $new_user)
-					{
-
-						if($new_user && $old_user)
-						{
-							$update[] = array
-							(
-								1	=> array
-								(
-									'value'	=> $new_user,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
-								(
-									'value'	=> $now,
-									'type'	=> PDO::PARAM_INT
-								),
-								3	=> array
-								(
-									'value'	=> $this->account,
-									'type'	=> PDO::PARAM_INT
-								),
-								4	=> array
-								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								5	=> array
-								(
-									'value'	=> $part_of_town_id,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
-						}
-						else if($new_user && !$old_user)
-						{
-							$add[] = array
-							(
-								1	=> array
-								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
-								(
-									'value'	=> $part_of_town_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								3	=> array
-								(
-									'value'	=> $new_user,
-									'type'	=> PDO::PARAM_INT
-								),
-								4	=> array
-								(
-									'value'	=> $now,
-									'type'	=> PDO::PARAM_INT
-								),
-								5	=> array
-								(
-									'value'	=> $this->account,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
-
-						}
-						else if(!$new_user)
-						{
-							$delete[] = array
-							(
-								1	=> array
-								(
-									'value'	=> $control_id,
-									'type'	=> PDO::PARAM_INT
-								),
-								2	=> array
-								(
-									'value'	=> $part_of_town_id,
-									'type'	=> PDO::PARAM_INT
-								)
-							);
-						}
-					}
-
-
-				}
-			}
-			$this->db->transaction_begin();
-
-			if($add)
-			{
-				$add_sql = "INSERT INTO controller_control_user_district (control_id, part_of_town_id, user_id, modified_on, modified_by) VALUES (?, ?, ? ,? ,?)";
-				$GLOBALS['phpgw']->db->insert($add_sql, $add, __LINE__, __FILE__);
-			}
-
-			if($update)
-			{
-				$update_sql = "UPDATE controller_control_user_district SET user_id =?, modified_on = ?, modified_by = ? WHERE control_id =? AND part_of_town_id = ?";
-				$GLOBALS['phpgw']->db->insert($update_sql, $update, __LINE__, __FILE__);
-			}
-
-			if($delete)
-			{
-				$delete_sql = "DELETE FROM controller_control_user_district WHERE control_id =? AND part_of_town_id = ?";
-				$GLOBALS['phpgw']->db->delete($delete_sql, $delete, __LINE__, __FILE__);
-			}
-
-			return $this->db->transaction_commit();
-		}
-
-
 	}

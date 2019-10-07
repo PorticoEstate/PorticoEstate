@@ -11,128 +11,10 @@
 		<xsl:when test="users">
 			<xsl:apply-templates select="users"/>
 		</xsl:when>
-		<xsl:when test="district">
-			<xsl:apply-templates select="district"/>
-		</xsl:when>
 
 	</xsl:choose>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
-
-
-<xsl:template match="district" xmlns:php="http://php.net/xsl">
-
-<script type="text/javascript">
-    $(document).ready(function() {
-
-		$("#control_area_id").change(function ()
-		{
-			var control_area_id = $(this).val();
-
-			if(control_area_id == -1)
-			{
-
-				$("#district_table tbody").empty();
-			}
-		 });
-    });
-</script>
-
-	<section id="tabs" class ="project-tab mt-3" >
-		<div class="container">
-			<div class="row">
-				<div id="tab-content" class="col-xs-12">
-					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-					<div id="district">
-
-						<h1>Definer soneleder for sone</h1>
-
-						<form method="post" id="form" action="{form_action}">
-
-							<div class="row">
-								<div class="mt-5 container">
-									<div class="form-group">
-										<fieldset>
-											<legend>Velg kontroll</legend>
-
-											<label for="control_area_id">
-												<xsl:value-of select="php:function('lang', 'control type')"/>
-											</label>
-											<select id="control_area_id" name="control_area_id" class="form-control custom-select">
-												<xsl:apply-templates select="control_area_list/options"/>
-											</select>
-
-											<label for="control_id">
-												<xsl:value-of select="php:function('lang', 'control')"/>
-											</label>
-											<select id="control_id" name="control_id" class="form-control custom-select" onchange="this.form.submit()">
-												<xsl:attribute name="title">
-													<xsl:value-of select="php:function('lang', 'select control type')"/>
-												</xsl:attribute>
-												<xsl:apply-templates select="control_type_list/options"/>
-											</select>
-
-										</fieldset>
-									</div>
-								</div>
-							</div>
-
-						</form>
-						<div class="row">
-							<div class="mt-5 container">
-								<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{form_action}">
-									<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered table table-bordered table-hover" id="district_table">
-										<thead>
-											<tr>
-												<th class="text-center">
-													<xsl:value-of select="php:function('lang', 'part of town')"/>
-
-												</th>
-												<th class="text-center">
-													<xsl:value-of select="php:function('lang', 'user')"/>
-
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<xsl:apply-templates select="part_of_town_data"/>
-										</tbody>
-									</table>
-									<xsl:apply-templates select="cat_add"/>
-								</form>
-
-							</div>
-						</div>
-
-					</div>
-					<div id="vendors">
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-</xsl:template>
-
-<xsl:template match="part_of_town_data" xmlns:php="http://php.net/xsl">
-	<tr>
-		<td class="text-center">
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</td>
-		<td class="text-center">
-			<select name="values[{control_id}][{id}][new]" class="custom-select">
-				<option value="">
-					<xsl:value-of select="php:function('lang', 'select')"/>
-				</option>
-				<xsl:apply-templates select="../user_list/options">
-					<xsl:with-param name="selected" select="selected_user"/>
-				</xsl:apply-templates>
-			</select>
-			<input type="hidden" name="values[{control_id}][{id}][original]" value="{original_value}"/>
-		</td>
-	</tr>
-</xsl:template>
-
 
 
 <xsl:template match="users" xmlns:php="http://php.net/xsl">
@@ -174,7 +56,7 @@
 											<legend>Velg kontroll</legend>
 
 											<label for="control_area_id">
-												<xsl:value-of select="php:function('lang', 'control type')"/>
+												<xsl:value-of select="php:function('lang', 'control area')"/>
 											</label>
 											<select id="control_area_id" name="control_area_id" class="form-control">
 												<xsl:apply-templates select="control_area_list/options"/>
@@ -189,7 +71,15 @@
 												</xsl:attribute>
 												<xsl:apply-templates select="control_type_list/options"/>
 											</select>
-
+											<label for="part_of_town_id">
+												<xsl:value-of select="php:function('lang', 'part of town')"/>
+											</label>
+											<select id="part_of_town_id" name="part_of_town_id" class="form-control" onchange="this.form.submit()">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'select')"/>
+												</xsl:attribute>
+												<xsl:apply-templates select="part_of_town_list/options"/>
+											</select>
 										</fieldset>
 									</div>
 								</div>
@@ -247,7 +137,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</td>
 		<td align="center">
-			<select name="values[{control_id}][{id}][new][]" multiple="multiple" class="user_roles">
+			<select name="values[{control_id}][{part_of_town_id}][{id}][new][]" multiple="multiple" class="user_roles">
 <!--				<option value="">
 					<xsl:value-of select="php:function('lang', 'select')"/>
 				</option>-->
@@ -255,7 +145,7 @@
 					<xsl:with-param name="selected" select="selected_role"/>
 				</xsl:apply-templates>
 			</select>
-			<input type="hidden" name="values[{control_id}][{id}][original]" value="{original_value}"/>
+			<input type="hidden" name="values[{control_id}][{part_of_town_id}][{id}][original]" value="{original_value}"/>
 		</td>
 		<td>
 			<xsl:value-of select="lastlogin"/>

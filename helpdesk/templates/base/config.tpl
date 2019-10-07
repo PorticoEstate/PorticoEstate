@@ -49,7 +49,7 @@
 		</tr>
 
 		<tr>
-			<td>{lang_from_email}: <br>
+			<td>{lang_from_email}: </td>
 			<td><input name="newsettings[from_email]" value="{value_from_email}"></td>
 		</tr>
 		<tr class="row_off">

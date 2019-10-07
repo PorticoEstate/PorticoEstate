@@ -39,7 +39,6 @@
 		(
 			'edit'			=> true,
 			'users'			=> true,
-			'district'		=> true
 		);
 
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -64,8 +63,7 @@
 			$this->so			= CreateObject('controller.sosettings');
 			$this->so_control = CreateObject('controller.socontrol');
 
-			self::add_javascript('controller', 'base', 'calendar_planner.start.js');
-
+			self::add_javascript('controller', 'base', 'settings.edit.js');
 
 		}
 
@@ -197,7 +195,6 @@
 			$tabs = array(
 				'category_assignment' => array('label' => lang('category assignment'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.edit"))),
 				'users' => array('label' => lang('users'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users"))),
-				'district' => array('label' => lang('district'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.district"))),
 //				'vendors' => array('label' => lang('vendors'), 'link' => self::link(array('menuaction' => "{$this->currentapp}.uisettings.vendors"))),
 			);
 
@@ -274,8 +271,8 @@
 			}
 
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
-
 			$control_id		 = phpgw::get_var('control_id', 'int');
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if($control_area_id)
@@ -294,6 +291,15 @@
 			{
 				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
 			}
+			if($part_of_town_id)
+			{
+				phpgwapi_cache::user_set('controller', "settings_control_id", $part_of_town_id, $user_id);
+			}
+			else
+			{
+				$part_of_town_id = (int)phpgwapi_cache::user_get('controller', "settings_control_id", $user_id);
+			}
+
 			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
 
 			$control_type_list = array(array('id' => '-1', 'name' => lang('select')));
@@ -328,13 +334,27 @@
 
 			$dateformat = "{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i";
 
-			$lang_status = array(
-				'A' => lang('acktive'),
-				'I' => lang('inacktive'),
+			
+			$part_of_towns = createObject('property.bogeneric')->get_list(array(
+				'type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id,
+				'order'		 => 'name',
+				'sort'		 => 'asc'
+				)
 			);
 
-			
-			if($control_id > 0 && $control_area_id > 0)
+			$part_of_town_list = array(array('id' => '-1', 'name' => lang('select')));
+
+			foreach ($part_of_towns as $part_of_town)
+			{
+				if($part_of_town['id'] > 0)
+				{
+					$part_of_town_list[] = $part_of_town;				
+				}
+
+			}
+
+			if($control_id > 0 && $control_area_id > 0 && $part_of_town_id > 0)
 			{
 				$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			}
@@ -361,9 +381,16 @@
 				),
 			);
 
-			$user_roles = $this->so->get_roles($control_id);
+			$user_roles = $this->so->get_roles($control_id, $part_of_town_id);
 //			_debug_array($user_roles);
 			$user_list = array();
+
+			$lang_status = array(
+				'A' => lang('acktive'),
+				'I' => lang('inacktive'),
+			);
+
+
 			foreach ($users as $user)
 			{
 				$selected_role = $user_roles[$user['account_id']];
@@ -376,6 +403,7 @@
 					'status' => $lang_status[$user['account_status']],
 					'selected_role' => array(1 & $selected_role, 2 & $selected_role, 4 & $selected_role),
 					'control_id' => $control_id,
+					'part_of_town_id'	=> $part_of_town_id,
 					'original_value' => $user_roles[$user['account_id']]
 				);
 			}
@@ -387,6 +415,7 @@
 				'roles'				 => array('options' => $roles),
 				'control_area_list'	 => array('options' => $control_area_list),
 				'control_type_list'	 => array('options' => $control_type_list),
+				'part_of_town_list'	 => array('options' => $part_of_town_list),
 				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
@@ -398,155 +427,6 @@
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::render_template_xsl(array('settings'), array('users' => $data));
-
-		}
-
-		private function save_district()
-		{
-			$values = phpgw::get_var('values');
-//			_debug_array($values);
-//			die();
-			try
-			{
-				$receipt = $this->so->save_district($values);
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					phpgwapi_cache::message_set($e->getMessage(), 'error');
-					$this->district( $error = true);
-					return;
-				}
-			}
-
-			$this->receipt['message'][] = array('msg' => lang('district settings has been saved'));
-
-			self::message_set($this->receipt);
-			self::redirect(array('menuaction' => "{$this->currentapp}.uisettings.district"));
-		}
-
-
-		public function district($error = false)
-		{
-			if(!$this->acl_read)
-			{
-				phpgw::no_access();
-			}
-
-			if(!$error && phpgw::get_var('save', 'bool'))
-			{
-				$this->save_district();
-			}
-
-			$control_area_id = phpgw::get_var('control_area_id', 'int');
-
-			$control_id		 = phpgw::get_var('control_id', 'int');
-			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-
-			if($control_area_id)
-			{
-				phpgwapi_cache::user_set('controller', "calendar_control_area_id", $control_area_id, $user_id);
-			}
-			else
-			{
-				$control_area_id = (int)phpgwapi_cache::user_get('controller', "calendar_control_area_id", $user_id);
-			}
-			if($control_id)
-			{
-				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
-			}
-			else
-			{
-				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
-			}
-			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
-
-			$control_type_list = array(array('id' => -1, 'name' => lang('select')));
-			foreach ($control_types as $control_type)
-			{
-				$control_type_list[] = array(
-					'id'		 => $control_type['id'],
-					'name'		 => $control_type['title'],
-					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
-				);
-			}
-
-			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
-			$cats->supress_info	 = true;
-
-			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
-				'use_acl'	 => $this->_category_acl));
-
-
-			$control_area_list = array();
-			foreach ($control_area['cat_list'] as $cat_list)
-			{
-				$control_area_list[] = array
-					(
-					'id'		 => $cat_list['cat_id'],
-					'name'		 => $cat_list['name'],
-					'selected'	 => $control_area_id == $cat_list['cat_id'] ? 1 : 0
-				);
-			}
-
-			array_unshift($control_area_list, array('id' => -1, 'name' => lang('select')));
-
-//			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
-			$supervisors = createObject('controller.sosettings')->get_user_with_role($control_id, 4);
-
-
-			$district_users = $this->so->get_district_users($control_id);
-//			_debug_array($user_roles);
-
-			$_part_of_towns	 = execMethod('property.sogeneric.get_list', array(
-				'type'	 => 'part_of_town',
-				'order'	 => 'name',
-				'sort'	 => 'ASC',
-			));
-
-			$part_of_towns = array();
-
-			if($control_id > 0 && $control_area_id > 0)
-			{
-				foreach ($_part_of_towns as &$_part_of_town)
-				{
-					if(!$_part_of_town['id'])
-					{
-						continue;
-					}
-
-					$selected_user = $district_users[$_part_of_town['id']];
-
-					$part_of_towns[] = array(
-						'id'			=> $_part_of_town['id'],
-						'name'			=> $_part_of_town['name'],
-						'selected_user' => $selected_user,
-						'control_id'	=> $control_id,
-						'original_value'=> $selected_user,
-					);
-				}
-			}
-
-
-	//		_debug_array($user_list);
-			$data = array
-			(
-				'user_list'			 => array('options' => $supervisors),
-				'part_of_town_data'	=> $part_of_towns,
-				'control_area_list'	 => array('options' => $control_area_list),
-				'control_type_list'	 => array('options' => $control_type_list),
-				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.district")),
-				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.district")),
-				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
-				'cat_header'	 => $cat_header,
-				'cat_data'		 => $content,
-				'cat_add'		 => $cat_add,
-				'tabs'			 => self::_generate_tabs('district'),
-			);
-
-	//		phpgwapi_jquery::load_widget('bootstrap-multiselect');
-			self::render_template_xsl(array('settings'), array('district' => $data));
 
 		}
 	}

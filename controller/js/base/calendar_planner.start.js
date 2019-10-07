@@ -72,15 +72,15 @@ $(document).ready(function ()
 		},
 		onDropdownHidden: function (event)
 		{
-			console.log(event);
-			//		$("#form").submit();
+//			console.log(event);
+			$("#form").submit();
 		}
 	});
 
-	$("#part_of_town_id").change(function ()
-	{
-		$("#form").submit();
-	});
+//	$("#part_of_town_id").change(function ()
+//	{
+//		$("#form").submit();
+//	});
 
 	$(".btn-group").addClass('w-100');
 //	$(".multiselect ").addClass('form-control');
