@@ -1920,8 +1920,8 @@
 							$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
 						}
 
-						$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id']));
-						$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id()));
+						$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id'], false, true));
+						$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id(), false, true));
 
 						$html = <<<HTML
 							<p>$message</p>
