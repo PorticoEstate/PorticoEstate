@@ -790,3 +790,4 @@ export customer	booking	no	Eksporter kundeliste
 Enter both first and last name	booking	no	Oppgi både fornavn og etternavn
 parent group	booking	no	Overordnet gruppe
 Electronic lock	booking	no	E-lås
+booking_async_task_send_access_request	booking	no	Send bestilling om tilgang til API for E-lås

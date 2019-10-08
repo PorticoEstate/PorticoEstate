@@ -761,6 +761,8 @@
 				'contact_phone' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
 				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
 					'default' => '0'),
+				'access_requested' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
+					'default' => '0'),
 				'customer_organization_name' => array('type' => 'varchar', 'precision' => 150,
 					'nullable' => True),
 				'customer_organization_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),

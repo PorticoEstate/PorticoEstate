@@ -96,6 +96,16 @@
 			return $this->so->find_expired();
 		}
 
+		public function find_request_access()
+		{
+			return $this->so->find_request_access();
+		}
+
+		public function complete_request_access( &$events )
+		{
+			$this->so->complete_request_access($events);
+		}
+
 		/**
 		 * @ Send message about cancelation/modification on event to users of building.
 		 */
