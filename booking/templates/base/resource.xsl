@@ -96,7 +96,7 @@
 				<xsl:if test="resource/permission/write">
 					<div class="pure-control-group">
 						<label></label>
-					    <span>
+						<span>
 							<a class='button'>
 								<xsl:attribute name="href">
 									<xsl:value-of select="resource/edit_activities_link"/>
@@ -117,7 +117,7 @@
 				<xsl:if test="resource/permission/write">
 					<div class="pure-control-group">
 						<label></label>
-					    <span>
+						<span>
 							<a class='button'>
 								<xsl:attribute name="href">
 									<xsl:value-of select="resource/edit_facilities_link"/>
@@ -137,6 +137,15 @@
 					<xsl:if test="not(resource/direct_booking = '')">
 						<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
 					</xsl:if>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
+					</label>
+					<xsl:value-of select="resource/e_lock_system_id"/>
+					<xsl::text>::</xsl::text>
+					<xsl:value-of select="resource/e_lock_resource_id"/>
 				</div>
 
 				<div id="custom_fields"></div>
@@ -193,8 +202,8 @@
 		var resource_id = <xsl:value-of select="resource/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Edit', 'Delete', 'Account', 'Role', 'No records found')"/>;
 
-        var documentsURL = phpGWLink('/index.php', {menuaction:'booking.uidocument_resource.index', sort:'name', filter_owner_id:resource_id, length:-1}, true);
-        var permissionsURL = phpGWLink('/index.php', {menuaction: 'booking.uipermission_resource.index', sort:'name', filter_object_id :resource_id, length:-1}, true);
+		var documentsURL = phpGWLink('/index.php', {menuaction:'booking.uidocument_resource.index', sort:'name', filter_owner_id:resource_id, length:-1}, true);
+		var permissionsURL = phpGWLink('/index.php', {menuaction: 'booking.uipermission_resource.index', sort:'name', filter_object_id :resource_id, length:-1}, true);
 
 		var colDefsDocuments = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},

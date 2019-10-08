@@ -184,6 +184,8 @@
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 				'contact_info' => array('type' => 'text', 'nullable' => True),
 				'direct_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
+				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
