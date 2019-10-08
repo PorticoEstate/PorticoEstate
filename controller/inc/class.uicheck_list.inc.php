@@ -1922,8 +1922,14 @@
 
 						$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id'], false, true));
 						$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id(), false, true));
+						$control = $this->so_control->get_single($check_list->get_control_id());
+						$control_title = $control->get_title();
+						$location_desc = $this->get_location_desc($check_list);
 
 						$html = <<<HTML
+							<p>$control_title</p>
+							<p>{$location_desc['location_name']}</p>
+							<p>{$location_desc['short_desc']}</p>
 							<p>$message</p>
 							<br/>
 							<a href="$check_list_link">Sjekkliste</a>
@@ -1975,6 +1981,45 @@ HTML;
 			}
 		}
 
+
+		public function get_location_desc( $check_list )
+		{
+			$location_id = $check_list->get_location_id();
+			$component_id = $check_list->get_component_id();
+
+			$short_desc = '';
+			if ($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$type_info = explode('.', $location_info['location']);
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$short_desc = execMethod('property.soentity.get_short_description', array(
+						'location_id' => $location_id, 'id' => $component_id));
+				}
+			}
+
+			$location_name = execMethod('property.bolocation.get_location_name', $check_list->get_location_code());
+
+
+			return array(
+				'location_name' => $location_name,
+				'short_desc' => $short_desc,
+				);
+
+		}
 
 		private function create_messages($control_id, $check_list_id, $location_code)
 		{
