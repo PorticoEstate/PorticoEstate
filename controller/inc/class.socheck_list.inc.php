@@ -695,8 +695,11 @@
 //		}
 
 			$sql .= "AND (deadline BETWEEN $from_date_ts AND $to_date_ts ";
-			$sql .= "OR planned_date BETWEEN $from_date_ts AND $to_date_ts) ";
+			$sql .= "OR planned_date BETWEEN $from_date_ts AND $to_date_ts ";
+			$sql .= "OR completed_date BETWEEN $from_date_ts AND $to_date_ts) ";
+
 //		_debug_array($sql);
+
 			$this->db->query($sql);
 
 			$check_lists_array = array();

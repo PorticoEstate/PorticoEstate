@@ -78,14 +78,19 @@ $(document).ready(function ()
 
 	start_inspection = function ()
 	{
-		var oArgs = {menuaction: 'controller.uicase.add_case', check_list_id: $("#check_list_id").val()};
+		var check_list_id = $("#check_list_id").val();
+
+		if(!check_list_id)
+		{
+			return;
+		}
+
+		var oArgs = {menuaction: 'controller.uicase.add_case', check_list_id: check_list_id};
 		var requestUrl = phpGWLink('index.php', oArgs);
 
 		window.location.href = requestUrl;
 
 	};
-
-
 
 });
 

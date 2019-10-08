@@ -994,7 +994,7 @@
 			{
 				$supervisor_arr[] = $supervisor['name'];
 			}
-
+//			_debug_array($check_list);
 			$data = array
 			(
 				'inspectors' => $inspectors,
