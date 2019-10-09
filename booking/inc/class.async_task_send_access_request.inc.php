@@ -3,22 +3,46 @@
 
 	class booking_async_task_send_access_request extends booking_async_task
 	{
+
 		public function get_default_times()
 		{
-			return array('min' => '*/5', 'hour' => '*', 'dow' => '*', 'day' => '*', 'month' => '*',
-				'year' => '*');
+			return array('min'	 => '*', 'hour'	 => '*', 'dow'	 => '*', 'day'	 => '*', 'month'	 => '*',
+				'year'	 => '*');
 		}
 
 		public function run( $options = array() )
 		{
+
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			$request_method = !empty($config['e_lock_request_method']) ? $config['e_lock_request_method'] : 'Stavanger_e_lock.php';
+
+			if (!$request_method)
+			{
+				throw new LogicException('authentication_method not chosen');
+			}
+
+			$file = PHPGW_SERVER_ROOT . "/booking/inc/custom/default/{$request_method}";
+
+			if (!is_file($file))
+			{
+				throw new LogicException("authentication method \"{$request_method}\" not available");
+			}
+
+			require_once $file;
+
+			$e_lock_integration = new booking_e_lock_integration();
+
 			$db = & $GLOBALS['phpgw']->db;
 
 			$reservation_types = array
-			(
+				(
 //				'booking',
 				'event',
 //				'allocation'
 			);
+
+			$so_resource = CreateObject('booking.soresource');
 
 			foreach ($reservation_types as $reservation_type)
 			{
@@ -26,24 +50,46 @@
 
 				$request_access = $bo->find_request_access();
 
-				if (!is_array($expired) || !isset($expired['results']))
+				if (!is_array($request_access) || !isset($request_access['results']))
 				{
 					continue;
 				}
 
 				$db->transaction_begin();
 
-				if (count($expired['results']) > 0)
+				if (count($request_access['results']) > 0)
 				{
-					foreach ($expired['results'] as $reservation)
+					foreach ($request_access['results'] as $reservation)
 					{
 
-						/**
-						 * send request
-						 */
+						$resources = $so_resource->read(array('filters' => array('where' => 'bb_resource.id IN(' . implode(', ', $reservation['resources']) . ')'),
+							'results' => 100));
+
+						foreach ($resources['results'] as $resource)
+						{
+							if (!$resource['e_lock_resource_id'])
+							{
+								continue;
+							}
+							/**
+							 * send request
+							 */
+							$post_data = array
+							(
+								'desc'	 => $reservation['contact_name'],
+								'email'	 => $reservation['contact_email'],
+								'from'	 => date('Y-m-d\TH:i:s.v') . 'Z',
+								'mobile' => $reservation['contact_phone'],
+								'resid'	 => $resource['e_lock_resource_id'],
+								'system' => $resource['e_lock_system_id'],
+								'to'	 => date('Y-m-d\TH:i:s.v', strtotime($reservation['to_'])) . 'Z',
+							);
+							$ret = $e_lock_integration->resources_create($post_data);
+							_debug_array($ret);
+						}
 					}
 
-					$bo->complete_request_access($expired['results']);
+					$bo->complete_request_access($request_access['results']);
 				}
 
 				$db->transaction_commit();

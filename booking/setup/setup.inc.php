@@ -96,5 +96,6 @@
 		'menu' => 'booking.menu.get_menu',
 		'activity_add' => 'booking.hook_helper.activity_add',
 		'activity_delete' => 'booking.hook_helper.activity_delete',
-		'activity_edit' => 'booking.hook_helper.activity_edit'
+		'activity_edit' => 'booking.hook_helper.activity_edit',
+		'config'
 	);
