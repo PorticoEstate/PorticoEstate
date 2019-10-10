@@ -1,4 +1,5 @@
 <?php
+	phpgw::import_class('phpgwapi.datetime');
 	phpgw::import_class('booking.socommon');
 
 	class booking_soevent extends booking_socommon
@@ -29,7 +30,7 @@
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
 					'default' => '0'),
-				'access_requested' => array('type' => 'int', 'required' => true, 'nullable' => false,
+				'access_requested' => array('type' => 'int', 'required' => false, 'nullable' => true,
 					'default' => '0'),
 				'reminder' => array('type' => 'int', 'required' => true, 'nullable' => false,
 					'default' => '1'),
@@ -319,26 +320,28 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
-		public function find_request_access()
+		public function find_request_access($stage, $time_ahead)
 		{
 			$table_name = $this->table_name;
 			$db = $this->db;
-			$request_access_conditions = $this->find_request_access_sql_conditions();
+			$request_access_conditions = $this->find_request_access_sql_conditions($stage, $time_ahead);
 			return $this->read(array('filters' => array('where' => $request_access_conditions), 'results' => 1000));
 		}
 
-		protected function find_request_access_sql_conditions()
+		protected function find_request_access_sql_conditions($stage, $time_ahead)
 		{
 			$table_name = $this->table_name;
-			$slightly_before	 = '2019-05-31 14:55:00';date('Y-m-d H:i:s', (time() - 60 * 5) );
-			$slightly_after		 = '2019-05-31 15:00:00';date('Y-m-d H:i:s', (time() + 60 * 5) );
-			$now				 = '2019-05-31 15:00:00';date('Y-m-d H:i:s');
+
+			$slightly_before	 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() - $time_ahead) );
+			$slightly_after		 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() + $time_ahead) );
+			$now				 = date('Y-m-d H:i:s', phpgwapi_datetime::user_localtime());
 
 			$_conditions = "("
 				. " e_lock_resource_id IS NOT NULL"
 	//			. " AND contact_phone IS NOT NULL AND contact_phone !=''"
 				. " AND {$table_name}.active != 0"
-				. " AND {$table_name}.access_requested = 0"
+//				. " AND {$table_name}.status ='ACCEPTED'"
+				. " AND {$table_name}.access_requested = " . (int) $stage
 				. " AND {$table_name}.from_ > '{$slightly_before}'"
 				. " AND '{$slightly_after}' >= {$table_name}.from_"
 				. " AND '{$now}' <= {$table_name}.to_"
@@ -361,12 +364,13 @@
 			return $conditions;
 		}
 
-		public function complete_request_access( &$events )
+		public function complete_request_access( &$events, $stage )
 		{
+			$stage = $stage ? (int) $stage : 1;
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $events));
-			$sql = "UPDATE $table_name SET access_requested = 1 WHERE {$table_name}.id IN ($ids);";
+			$sql = "UPDATE $table_name SET access_requested = {$stage} WHERE {$table_name}.id IN ($ids);";
 			$db->query($sql, __LINE__, __FILE__);
 		}
 

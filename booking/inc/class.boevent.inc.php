@@ -96,14 +96,14 @@
 			return $this->so->find_expired();
 		}
 
-		public function find_request_access()
+		public function find_request_access($stage, $time_ahead)
 		{
-			return $this->so->find_request_access();
+			return $this->so->find_request_access($stage, $time_ahead);
 		}
 
-		public function complete_request_access( &$events )
+		public function complete_request_access( &$events, $stage )
 		{
-			$this->so->complete_request_access($events);
+			$this->so->complete_request_access($events, $stage);
 		}
 
 		/**

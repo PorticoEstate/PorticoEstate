@@ -144,10 +144,7 @@
 
 //			_debug_array($httpCode);
 //			_debug_array($ret);
-			return array(
-				'ret'		 => $ret,
-				'http_code'	 => $http_code
-			);
+			return  $http_code;
 		}
 
 		private function log( $what, $value = '' )
