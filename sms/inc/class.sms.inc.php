@@ -51,7 +51,8 @@
 		}
 		else if ($GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] && !file_exists("{$apps_path['inc']}/plugin/gateway/{$GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send']}/send.php"))
 		{
-			die("ERROR: Gateway send module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] . "' does not exists - please contact system administrator");
+			throw new Exception("ERROR: Gateway send module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] . "' does not exists - please contact system administrator");
+//			die("ERROR: Gateway send module '" . $GLOBALS['phpgw_info']['sms_config']['common']['gateway_module_send'] . "' does not exists - please contact system administrator");
 		}
 		else
 		{
