@@ -200,6 +200,7 @@
 			{
 				$array_sms_to[0] = $sms_to;
 			}
+
 			for ($i = 0; $i < count($array_sms_to); $i++)
 			{
 				$c_sms_to = str_replace(array("\'","\"", " "), array("", "", ""), $array_sms_to[$i]);
@@ -209,10 +210,10 @@
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode)
 					VALUES ('$uid','$gateway_module_send','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
 
-				$GLOBALS['phpgw']->db->transaction_begin();
+//				$GLOBALS['phpgw']->db->transaction_begin();
 				$GLOBALS['phpgw']->db->query($db_query, __LINE__, __FILE__);
 				$smslog_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_sms_tblsmsoutgoing', 'smslog_id');
-				$GLOBALS['phpgw']->db->transaction_commit();
+//				$GLOBALS['phpgw']->db->transaction_commit();
 
 				$gp_code = "PV";
 				$to[$i] = $c_sms_to;
@@ -225,6 +226,7 @@
 					}
 				}
 			}
+
 			return array($ok, $to);
 		}
 
