@@ -145,7 +145,8 @@
 				if(!empty($parent_category[0]['name']))
 				{
 					$this->parent_category_name = $parent_category[0]['name'];
-					$this->lang_app_name .= ": {$this->parent_category_name}";
+//					$this->lang_app_name .= ": {$this->parent_category_name}";
+					$this->lang_app_name = $this->parent_category_name;
 
 				}
 			}
@@ -245,7 +246,6 @@
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
 				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
-//				'parent_cat_id'	=> $this->parent_cat_id,
 				'parent_cat_id'	=> $this->_simple ? null : $this->parent_cat_id
 			);
 
@@ -951,7 +951,7 @@ HTML;
 
 			if(!$this->_simple)
 			{
-				if($this->parent_cat_id)
+				if((int)$this->parent_cat_id > 0)
 				{
 					$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
 					$_categories = array();
@@ -1150,7 +1150,7 @@ HTML;
 
 			}
 
-			if($subs && (int)$this->parent_cat_id <= 0)
+			if($subs && ((int)$this->parent_cat_id == -1 || !$this->parent_cat_id))
 			{
 				$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . lang('choose a section from the menu');
 				$sub_menu = array();
@@ -1485,7 +1485,8 @@ JS;
 				$data['datatable']['group_buttons'] = false;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->parent_category_name ? $this->parent_category_name : $this->lang_app_name;
+//			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->parent_category_name ? $this->parent_category_name : $this->lang_app_name;
+			$GLOBALS['phpgw_info']['flags']['app_header'] =  $this->lang_app_name;
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= ": {$function_msg}";
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -1844,7 +1845,7 @@ JS;
 					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
 
 			/**overide*/
-			if($this->parent_cat_id)
+			if((int)$this->parent_cat_id > 0)
 			{
 				$cat_select['cat_list'] = array();
 
@@ -2336,7 +2337,7 @@ JS;
 
 			$ticket = $this->bo->read_single($id, $values);
 
-			if($ticket && !$this->parent_cat_id)
+			if($ticket)
 			{
 				$cat_path = $this->cats->get_path($ticket['cat_id']);
 
@@ -2675,7 +2676,7 @@ JS;
 				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
 
 			/**overide*/
-			if($this->parent_cat_id)
+			if((int)$this->parent_cat_id > 0)
 			{
 				$cat_select['cat_list'] = array();
 
