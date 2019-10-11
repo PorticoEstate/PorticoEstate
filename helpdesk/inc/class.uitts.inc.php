@@ -245,7 +245,8 @@
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
 				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
-				'parent_cat_id'	=> $this->_simple ? null : $this->parent_cat_id
+				'parent_cat_id'	=> $this->parent_cat_id,
+//				'parent_cat_id'	=> $this->_simple ? null : $this->parent_cat_id
 			);
 
 			return $params;
