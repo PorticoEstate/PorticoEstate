@@ -55,22 +55,21 @@
 			$this->proxy			 = !empty($this->config['proxy']) ? $this->config['proxy'] : '';
 		}
 
-		function get_status()
+		/**
+		 *
+		 * @param type $get_data  array
+		  (
+		  'resid'	 => (int)$resource_id,,
+		  'system' => (int)$system_id,
+		  );
+
+		 * @return array
+		 */
+		function get_status( $get_data )
 		{
-			//	$webservicehost_ui = "https://akres.stavanger.kommune.no/api/ui/";
+			$get_string = http_build_query($get_data);
 
-			$post_data = array
-				(
-				"resid"	 => 1721,
-				"system" => 1,
-			);
-
-
-			$post_string = http_build_query($post_data);
-
-			$url = "{$this->webservicehost}?{$post_string}";
-//		_debug_array($url);
-//Basic Auth:
+			$url = "{$this->webservicehost}?{$get_string}";
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -81,7 +80,6 @@
 			{
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
-//		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json Accept: application/json'));
 			curl_setopt($ch, CURLOPT_FAILONERROR, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -92,8 +90,6 @@
 			curl_close($ch);
 
 			$ret = json_decode($result, true);
-
-//			_debug_array($ret);
 
 			return $ret;
 		}
@@ -111,11 +107,10 @@
 		  "system" => (int)$system_id,
 		  );
 
-		 * @return type
+		 * @return int
 		 */
 		function resources_create( $post_data )
 		{
-			_debug_array($post_data);
 			$post_string = json_encode($post_data);
 
 			$url = "{$this->webservicehost}";
@@ -135,16 +130,12 @@
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
 
-			$result = curl_exec($ch);
+			curl_exec($ch);
 
 			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			$ret = json_decode($result, true);
-
-//			_debug_array($httpCode);
-//			_debug_array($ret);
-			return  $http_code;
+			return $http_code;
 		}
 
 		private function log( $what, $value = '' )
