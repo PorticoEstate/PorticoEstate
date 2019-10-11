@@ -2676,7 +2676,7 @@ JS;
 				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
 
 			/**overide*/
-			if((int)$this->parent_cat_id)
+			if((int)$this->parent_cat_id > 0)
 			{
 				$cat_select['cat_list'] = array();
 
