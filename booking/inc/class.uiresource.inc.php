@@ -53,7 +53,9 @@
 				'rescategory_id' => 'int',
 				'activities' => 'int',
 				'facilities' => 'int',
-				'direct_booking' => 'string'
+				'direct_booking' => 'string',
+				'e_lock_system_id' => 'int',
+				'e_lock_resource_id' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
