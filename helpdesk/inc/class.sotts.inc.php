@@ -178,7 +178,7 @@
 
 			$where= 'WHERE';
 
-			if($parent_cat_id)
+			if((int)$parent_cat_id > -1)
 			{
 				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $parent_cat_id);
 				$_filter_cat = array($parent_cat_id);
@@ -227,7 +227,7 @@
 					}
 					unset($user);
 					reset($public_group_list);
-					$where = $public_user_list ? 'AND' : $where;
+		//			$where = $public_user_list ? 'AND' : $where;
 					$_additional_user_filter[] =" phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
 //					$where = 'AND';
 				}
