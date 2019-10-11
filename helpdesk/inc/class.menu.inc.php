@@ -192,6 +192,7 @@
 
 				if($subs)
 				{
+
 					$menus['navbar']['helpdesk']['url'] = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => -1));
 
 					foreach ($_categories as $_category)
