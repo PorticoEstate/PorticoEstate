@@ -130,7 +130,7 @@
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
 
-			$order_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
+			$order_join = " {$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
 
 			$result_order_field = '';
 			if ($order)
@@ -156,8 +156,8 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 			$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
-			$order_join .= "{$this->left_join} phpgw_notification ON (phpgw_notification.location_item_id = phpgw_helpdesk_tickets.id AND phpgw_notification.location_id = {$location_id})";
-			$order_join .= "{$this->left_join} phpgw_accounts AS additional_users ON (phpgw_notification.contact_id = additional_users.person_id)";
+			$order_join .= " {$this->left_join} phpgw_notification ON (phpgw_notification.location_item_id = phpgw_helpdesk_tickets.id AND phpgw_notification.location_id = {$location_id})";
+			$order_join .= " {$this->left_join} phpgw_accounts AS additional_users ON (phpgw_notification.contact_id = additional_users.person_id)";
 
 
 			$filtermethod = '';
@@ -215,7 +215,7 @@
 					unset($user);
 					reset($public_user_list);
 					$_additional_user_filter[] = "phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
-					$where = 'AND';
+//					$where = 'AND';
 				}
 
 				$public_group_list = array();
@@ -227,9 +227,9 @@
 					}
 					unset($user);
 					reset($public_group_list);
-					$where = $public_user_list ? 'OR' : $where;
+					$where = $public_user_list ? 'AND' : $where;
 					$_additional_user_filter[] =" phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
-					$where = 'AND';
+//					$where = 'AND';
 				}
 			}
 
@@ -237,7 +237,8 @@
 
 			if($_additional_user_filter)
 			{
-				$filtermethod .= ' AND (' . implode(' OR ',  $_additional_user_filter) . ')';
+				$filtermethod .= " {$where} (" . implode(' OR ',  $_additional_user_filter) . ')';
+				$where = 'AND';
 			}
 
 			if ($status_id == 'X')
