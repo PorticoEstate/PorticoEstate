@@ -226,7 +226,7 @@
 
 					if(!$_simple)
 					{
-						$menus['navigation']['helpdesk'] = array
+						$menus['navigation']['helpdesk_-2'] = array
 							(
 								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => -2)),
 								'text'	=> lang('top level'),
