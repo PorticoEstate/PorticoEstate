@@ -1,5 +1,11 @@
 this.confirm_session = function (action)
 {
+	if (action == 'cancel')
+	{
+		window.location.href = phpGWLink('index.php',{menuaction: 'helpdesk.uitts.index', parent_cat_id: parent_cat_id});
+		return;
+	}
+
 	if (action == 'save' || action == 'apply')
 	{
 		var conf = {
@@ -7,7 +13,8 @@ this.confirm_session = function (action)
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',
-			language: validateLanguage
+			language: validateLanguage,
+			validateHiddenInputs: true,
 		};
 		var test = $('form').isValid(validateLanguage, conf);
 		if (!test)
@@ -300,6 +307,13 @@ JqueryPortico.autocompleteHelper(phpGWLink('index.php',
 }, true),
 	'set_user_alternative_name', 'set_user_alternative_lid', 'set_user_alternative_container');
 
+JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+{
+	menuaction: 'helpdesk.uitts.get_on_behalf_of',
+	custom_method: true, method: 'get_on_behalf_of',
+	acl_location: '.ticket'
+}, true),
+	'set_notify_name', 'set_notify_lid', 'set_notify_container');
 
 $(window).on('load', function ()
 {
@@ -315,6 +329,16 @@ $(window).on('load', function ()
 				temp = temp + "\n";
 			}
 			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+
+			var conf = {
+				modules: 'location, date, security, file',
+				validateOnBlur: false,
+				scrollToTopOnError: false,
+		//		errorMessagePosition: 'top',
+				language: validateLanguage
+			};
+
+			$('form').isValid(validateLanguage, conf);
 		}
 		catch (err)
 		{
