@@ -322,6 +322,16 @@ $(window).on('load', function ()
 				temp = temp + "\n";
 			}
 			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+
+			var conf = {
+				modules: 'location, date, security, file',
+				validateOnBlur: false,
+				scrollToTopOnError: false,
+		//		errorMessagePosition: 'top',
+				language: validateLanguage
+			};
+
+			$('form').isValid(validateLanguage, conf);
 		}
 		catch (err)
 		{
