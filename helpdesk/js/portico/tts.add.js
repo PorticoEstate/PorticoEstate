@@ -7,7 +7,8 @@ this.confirm_session = function (action)
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',
-			language: validateLanguage
+			language: validateLanguage,
+			validateHiddenInputs: true,
 		};
 		var test = $('form').isValid(validateLanguage, conf);
 		if (!test)
