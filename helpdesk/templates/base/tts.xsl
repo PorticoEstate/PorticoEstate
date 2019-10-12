@@ -145,7 +145,8 @@
 								</input>
 								<div id="set_on_behalf_of_container"/>
 							</div>
-							<div class="pure-control-group">
+							<!-- Sigurd: 20191012: Midlertidig kommentert ut i påvente av ny integrasjon med HR-systemet for å finne nærmeste leder-->
+<!--							<div class="pure-control-group">
 								<xsl:variable name="lang_reverse">
 									<xsl:value-of select="php:function('lang', 'reverse')"/>
 								</xsl:variable>
@@ -153,10 +154,11 @@
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
 								<div class="pure-custom"  id="set_user_container"/>
-							</div>
+							</div>-->
 							<div class="pure-control-group">
 								<xsl:variable name="lang_reverse_alternative">
-									<xsl:value-of select="php:function('lang', 'reverse alternative')"/>
+<!--									<xsl:value-of select="php:function('lang', 'reverse alternative')"/>-->
+									<xsl:value-of select="php:function('lang', 'reverse')"/>
 								</xsl:variable>
 								<label for="set_user_alternative_name">
 									<xsl:value-of select="$lang_reverse_alternative"/>
