@@ -1,5 +1,11 @@
 this.confirm_session = function (action)
 {
+	if (action == 'cancel')
+	{
+		window.location.href = phpGWLink('index.php',{menuaction: 'helpdesk.uitts.index', parent_cat_id: parent_cat_id});
+		return;
+	}
+
 	if (action == 'save' || action == 'apply')
 	{
 		var conf = {
