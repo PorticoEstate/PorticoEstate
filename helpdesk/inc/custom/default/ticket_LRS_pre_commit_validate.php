@@ -71,6 +71,16 @@
 					);
 				}
 
+				if(!empty($data['set_notify_lid']))
+				{
+					$helpdesk_account = new helpdesk_account();
+					$helpdesk_account->register_accounts(array
+						(
+							$data['set_notify_lid'] => true
+						)
+					);
+				}
+
 				$org_unit = 0;
 				foreach ($values_attribute as $key => $valueset)
 				{

@@ -771,6 +771,28 @@
 
 			$id = $this->db->get_last_insert_id($table, 'id');
 
+			if( !empty($ticket['set_notify_lid']))
+			{
+				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($ticket['set_notify_lid']);
+				$person_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				$values_insert = array
+					(
+					'location_id'			 => $location_id,
+					'location_item_id'		 => $id,
+					'contact_id'			 => $person_id,
+					'is_active'				 => 1,
+					'entry_date'			 => time(),
+					'user_id'				 => $this->account,
+					'notification_method'	 => 'email'
+				);
+
+				$this->db->query("INSERT INTO phpgw_notification (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+
+			}
+
 
 			if($this->db->transaction_commit())
 			{

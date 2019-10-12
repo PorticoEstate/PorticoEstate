@@ -300,6 +300,13 @@ JqueryPortico.autocompleteHelper(phpGWLink('index.php',
 }, true),
 	'set_user_alternative_name', 'set_user_alternative_lid', 'set_user_alternative_container');
 
+JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+{
+	menuaction: 'helpdesk.uitts.get_on_behalf_of',
+	custom_method: true, method: 'get_on_behalf_of',
+	acl_location: '.ticket'
+}, true),
+	'set_notify_name', 'set_notify_lid', 'set_notify_container');
 
 $(window).on('load', function ()
 {

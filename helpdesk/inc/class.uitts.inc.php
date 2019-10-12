@@ -1839,6 +1839,7 @@ JS;
 
 			$tabs = array();
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
+			$tabs['notify'] = array('label' => lang('Notify'), 'link' => '#notify');
 			$active_tab = 'add';
 
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
@@ -2905,7 +2906,15 @@ JS;
 			//-----------------------datatable settings---
 			//_debug_array($data);die();
 
-			$function_msg = lang('view ticket detail');
+			$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
+
+			$function_msg = '';
+			if(!empty($parent_category[0]['name']))
+			{
+				$function_msg = "{$parent_category[0]['name']}::";
+			}
+
+			$function_msg .= lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg . "#{$id}";
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
