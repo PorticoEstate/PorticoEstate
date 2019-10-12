@@ -320,18 +320,23 @@ $(window).on('load', function ()
 		{
 		}
 
-		var selection = [];
-		if (on_behalf_of_lid)
-		{
-			populateTableChkAssignee(on_behalf_of_lid, selection);
-			try
-			{
-				get_user_info(on_behalf_of_lid);
-			}
-			catch (err)
-			{
-			}
-		}
+
+		/**
+		 * Denne henter kandidater for saksbehandker - basert på epostlister fra Outlook
+		 * - endres til å hende nærmeste leder
+		 */
+//		var selection = [];
+//		if (on_behalf_of_lid)
+//		{
+//			populateTableChkAssignee(on_behalf_of_lid, selection);
+//			try
+//			{
+//				get_user_info(on_behalf_of_lid);
+//			}
+//			catch (err)
+//			{
+//			}
+//		}
 	});
 
 	$("#set_user_alternative_name").on("autocompleteselect", function (event, ui)
