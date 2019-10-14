@@ -210,13 +210,14 @@
 
 		private function log( $what, $value = '' )
 		{
-			$GLOBALS['phpgw']->log->error(array(
+			$GLOBALS['phpgw']->log->message(array(
 				'text'	 => "what: %1, <br/>value: %2",
 				'p1'	 => $what,
 				'p2'	 => $value ? $value : ' ',
 				'line'	 => __LINE__,
 				'file'	 => __FILE__
 			));
+			$GLOBALS['phpgw']->log->commit();
 		}
 	}
 	/*
