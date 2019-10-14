@@ -187,6 +187,7 @@
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
+			ini_set("session.gc_maxlifetime", $GLOBALS['phpgw_info']['server']['sessions_timeout']);
 		}
 
 		public function get_session_id()
@@ -1208,7 +1209,7 @@
 			$lid_data = explode('#', $session['session_lid']);
 			$this->_account_lid = $lid_data[0];
 
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] != 'ntlm') //Timeout make no sense for SSO
+			if ( !in_array($GLOBALS['phpgw_info']['server']['auth_type'], array('ntlm', 'customsso') ) ) //Timeout make no sense for SSO
 			{
 				$timeout = time() - $GLOBALS['phpgw_info']['server']['sessions_timeout'];
 				if ( !isset($session['session_dla'])
