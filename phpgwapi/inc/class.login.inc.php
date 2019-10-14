@@ -96,6 +96,26 @@
 		public function login($frontend = '')
 		{
 
+			if(isset($_REQUEST['hide_lightbox']) && $_REQUEST['hide_lightbox'])
+			{
+				$onload = <<<JS
+					<script language="javascript" type="text/javascript">
+						if(typeof(parent.lightbox_login) != 'undefined')
+						{
+						parent.lightbox_login.hide();
+						}
+						else
+						{
+							parent.TINY.box.hide();
+						}
+					</script>
+JS;
+			echo <<<HTML
+<html><head>{$onload}</head></html>
+HTML;
+				exit;
+			}
+
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote'])
 			{
 				$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
