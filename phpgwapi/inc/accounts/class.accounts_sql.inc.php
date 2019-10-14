@@ -738,7 +738,7 @@
 				return 0;
 			}
 
-			if ( isset($name_list[$account_lid]) )
+			if ( !empty($name_list[$account_lid]) )
 			{
 				return $name_list[$account_lid];
 			}
