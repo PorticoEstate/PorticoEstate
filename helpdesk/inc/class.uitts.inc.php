@@ -1839,7 +1839,7 @@ JS;
 
 			$tabs = array();
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
-			$tabs['notify'] = array('label' => lang('Notify'), 'link' => '#notify');
+//			$tabs['notify'] = array('label' => lang('Notify'), 'link' => '#notify');
 			$active_tab = 'add';
 
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',

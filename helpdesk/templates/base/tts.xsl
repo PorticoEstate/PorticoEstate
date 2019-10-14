@@ -299,7 +299,7 @@
 
 				</fieldset>
 			</div>
-			<div id="notify">
+<!--			<div id="notify">
 				<div class="pure-control-group">
 					<xsl:variable name="lang_notify">
 						<xsl:value-of select="php:function('lang', 'notify')"/>
@@ -312,7 +312,7 @@
 					</input>
 					<div class="pure-custom"  id="set_notify_container"/>
 				</div>
-			</div>
+			</div>-->
 		</div>
 		<div class="proplist-col">
 			<input type="hidden" id="save" name="values[save]" value=""/>
