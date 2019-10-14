@@ -26,14 +26,14 @@
 
 			if (!$request_method)
 			{
-				throw new LogicException('authentication_method not chosen');
+				throw new LogicException('request_method not chosen');
 			}
 
 			$file = PHPGW_SERVER_ROOT . "/booking/inc/custom/default/{$request_method}";
 
 			if (!is_file($file))
 			{
-				throw new LogicException("authentication method \"{$request_method}\" not available");
+				throw new LogicException("request method \"{$request_method}\" not available");
 			}
 
 			require_once $file;

@@ -15,6 +15,20 @@ $(document).ready(function ()
 		case 255:  //LRS Lønn
 		case 256:  //LRS Refusjon
 			$("#arbeidssted_name").attr("data-validation", "required");
+
+			/**
+			 * Override
+			 */
+			JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+			{
+				menuaction: 'helpdesk.uitts.get_on_behalf_of',
+				custom_method: true,
+				method: 'get_on_behalf_of',
+				acl_location: '.ticket',
+				search_options: 'ressurs_nr'
+			}, true),
+				'set_user_alternative_name', 'set_user_alternative_lid', 'set_user_alternative_container');
+
 			// Leave as is...
 			break;
 		default:
@@ -37,7 +51,7 @@ $(document).ready(function ()
 		get_ressursname();
 	});
 
-	if(typeof(account_lid) !== 'undefined' && !$("#arbeidssted_id").val())
+	if (typeof (account_lid) !== 'undefined' && !$("#arbeidssted_id").val())
 	{
 		get_user_info(account_lid);
 	}
