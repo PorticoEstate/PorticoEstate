@@ -106,6 +106,7 @@
 			function get_on_behalf_of()
 			{
 				$query = phpgw::get_var('query');
+				$search_options = phpgw::get_var('search_options');
 
 				if (!$db = $this->get_db())
 				{
@@ -119,25 +120,37 @@
 				$query_arr	 = explode(" ", str_replace("  ", " ", $query));
 				$query_arr2	 = explode(",", str_replace(" ", "", $query));
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
-					. " WHERE BRUKERNAVN = '{$query}'"
+				$filtermethod = '';
+
+				if($search_options == 'ressurs_nr')
+				{
+					$filtermethod =	"RESSURSNR = '{$query}'";
+				}
+				else
+				{
+					$filtermethod =	"BRUKERNAVN = '{$query}'"
 					. " OR FODSELSNR  = '{$query}'"
 					. " OR RESSURSNR  = '{$query}'";
 
-				if(!empty($query_arr[1]) && empty($query_arr2[1]))
-				{
-					$sql .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
-					 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
+					if(!empty($query_arr[1]) && empty($query_arr2[1]))
+					{
+						$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
+						 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
+					}
+					else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
+					}
+					else if(isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
+						 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
+					}
 				}
-				else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
-				{
-					$sql .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
-				}
-				else if(isset($query_arr2[1]))
-				{
-					$sql .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
-					 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
-				}
+
+				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
+					. " WHERE {$filtermethod}";
+
 
 				$db->limit_query($sql, 0, __LINE__, __FILE__, 10);
 				$values = array();
