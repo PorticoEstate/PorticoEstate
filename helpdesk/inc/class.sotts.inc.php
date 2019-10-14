@@ -137,13 +137,13 @@
 			{
 				if( $order == 'assignedto' )
 				{
-					$result_order_field = ',account_lastname';
-					$order = 'account_lastname';
+					$result_order_field = ',phpgw_accounts.account_lastname';
+					$order = 'phpgw_accounts.account_lastname';
 				}
 				else if( $order == 'user' )
 				{
-					$result_order_field = ',account_lastname';
-					$order = 'account_lastname';
+					$result_order_field = ',phpgw_accounts.account_lastname';
+					$order = 'phpgw_accounts.account_lastname';
 				}
 
 				$ordermethod = " ORDER BY $order $sort";
