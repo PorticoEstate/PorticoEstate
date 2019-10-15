@@ -373,7 +373,7 @@ $(window).on('load', function ()
 			{
 				temp = temp + "\n";
 			}
-			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+			document.getElementById("new_note").value = temp + "Saken sendes til: " + ui.item.label;
 		}
 		catch (err)
 		{
