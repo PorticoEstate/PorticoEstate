@@ -388,7 +388,7 @@ Apply for time	bookingfrontend	no	Søk om tid
 Could not delete allocation due to a booking still use it	bookingfrontend	no	Kunne ikke slette denne tildelingen på grunn av at en interntildeling forsatt bruker den
 Event Delete Information	bookingfrontend	no	Fjerning av arrangement er permanent
 Event Delete Information2	bookingfrontend	no	Arrangement blir satt inaktivt
-Name for event/activity	bookingfrontend	no	Navn på arrangement/aktiviteten
+Name for event/activity	bookingfrontend	no	Navn på arrangementet / aktiviteten
 Edit Events	bookingfrontend	no	Rediger arrangement
 Delete Event	bookingfrontend	no	Slett arrangement
 Check calendar	bookingfrontend	no	Sjekk kalender
@@ -438,6 +438,7 @@ Needed for the return from the external logout	bookingfrontend	no	Nødvendig for
 About the service	bookingfrontend	no	Om tjenesten
 Activities (2018)	bookingfrontend	no	Tilrettelagt for
 Add application	bookingfrontend	no	Legg til søknad
+Next step	bookingfrontend	no	Gå videre
 Application cart	bookingfrontend	no	Handlekurv
 Application basket	bookingfrontend	no	Søknadskurv
 Building information	bookingfrontend	no	Informasjon om anlegget
@@ -467,8 +468,8 @@ executiveofficer	bookingfrontend	no	Saksbehandler
 Privacy	bookingfrontend	no	Personvern
 manual	bookingfrontend	no	Manual
 get name from external source	bookingfrontend	no	Hent navn fra ekstern kilde (som Gule Sider)
-organizer/responsible seeker	bookingfrontend	no	Arrangør / ansvarlig søker
-Event/activity homepage	bookingfrontend	no	Hjemmeside for arrangement / aktiviteten
+organizer/responsible seeker	bookingfrontend	no	Navn på arrangør eller ansvarlig søker
+Event/activity homepage	bookingfrontend	no	Hjemmeside for arrangementet / aktiviteten
 optional	booking	no	(Valgfritt)
 Event/activity description	bookingfrontend	no	Kort beskrivelse av arrangementet / aktiviteten
 Upload Attachment	bookingfrontend	no	Last opp vedlegg som kan gi nyttig informasjon om søknaden

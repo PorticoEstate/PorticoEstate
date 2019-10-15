@@ -777,7 +777,7 @@ Resources (2018)	booking	nn	Lokaler
 responsible_city	booking	nn	Poststed
 responsible_street	booking	nn	Gate
 responsible_zip_code	booking	nn	Postnummer
-Select a date and time	booking	nn	Velg et tidspunkt
+Select a date and time	booking	nn	Ingen leieperiodar er angitt
 Select a target audience	booking	nn	Det må velges en målgruppe
 Selected date and time	booking	nn	Valgte tidspunkter
 Send as sms	booking	nn	Send som sms

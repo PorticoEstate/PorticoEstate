@@ -116,7 +116,7 @@ group	bookingfrontend	nn	Gruppe/lag
 history and comments (%1)	bookingfrontend	nn	Historikk (%1)
 hms document	bookingfrontend	nn	HMS-dokument
 homepage	bookingfrontend	nn	Heimeside
-Event/activity homepage	bookingfrontend	nn	Heimeside for arrangement / aktiviteten
+Event/activity homepage	bookingfrontend	nn	Heimeside for arrangementet / aktiviteten
 id	bookingfrontend	nn	ID
 inactivate	bookingfrontend	nn	Inaktivert
 inactive	bookingfrontend	nn	Inaktiv
@@ -176,7 +176,7 @@ organization number	bookingfrontend	nn	Organisasjonsnummer
 organizations	bookingfrontend	nn	Organisasjonar
 organization index	bookingfrontend	nn	Organisasjonsoversikt
 other	bookingfrontend	nn	Anna
-organizer/responsible seeker	bookingfrontend	nn	Arrangør / ansvarlig søkjer
+organizer/responsible seeker	bookingfrontend	nn	Namn på arrangør eller ansvarleg søkjar
 parent activity	bookingfrontend	nn	Overordna kategori
 parent id	bookingfrontend	nn	Overordna id
 permissions	bookingfrontend	nn	Rettigheitar
@@ -387,7 +387,7 @@ Apply for time	bookingfrontend	nn	Søk om tid
 Could not delete allocation due to a booking still use it	bookingfrontend	nn	Kan ikkje slette denne interntildelinga fordi ei interntildeling framleis brukar ho
 Event Delete Information	bookingfrontend	nn	Fjerning av arrangement er permanent
 Event Delete Information2	bookingfrontend	nn	Arrangement blir sett inaktivt
-Name for event/activity	bookingfrontend	nn	Namn på arrangement/aktiviteten
+Name for event/activity	bookingfrontend	nn	Namn på arrangementet / aktiviteten
 Edit Events	bookingfrontend	nn	Rediger arrangement
 Delete Event	bookingfrontend	nn	Slett arrangement
 Check calendar	bookingfrontend	nn	Sjekk kalendar
@@ -442,6 +442,7 @@ last password change	bookingfrontend	nn	siste passordendring
 About the service	bookingfrontend	nn	Om tjenesten
 Activities (2018)	bookingfrontend	nn	Tilrettelagt for
 Add application	bookingfrontend	nn	Legg til søknad
+Next step	bookingfrontend	nn	Gå vidare
 application add	bookingfrontend	nn	søknad
 Application cart	bookingfrontend	nn	Handlekurv
 Application basket	bookingfrontend	nn	Søknadskorg
