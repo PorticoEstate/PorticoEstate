@@ -49,7 +49,7 @@
 							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 							</div>
 							<span id="chosenResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
-								<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
+								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
 							</span>
 						</div>
 					
