@@ -49,7 +49,7 @@
 							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 							</div>
 							<span id="chosenResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
-								<xsl:value-of select="php:function('lang', 'No resource chosen (2018)')" />
+								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
 							</span>
 						</div>
 					
@@ -320,7 +320,7 @@
 					<!-- Submit -->
 					<div id="submitContainer" class="form-group float-right text-center">
 						<button id="submitBtn" class="btn btn-light" type="submit">
-							<xsl:value-of select="php:function('lang', 'Add application')" />
+							<xsl:value-of select="php:function('lang', 'Next step')" />
 						</button>
 						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
 					</div>
