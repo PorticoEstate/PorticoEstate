@@ -128,6 +128,7 @@ new activity	booking	nn	Ny aktivitet
 new age group	booking	nn	Ny aldersgruppe
 new allocation	booking	nn	Ny tildeling
 new application	booking	nn	Ny søknad
+exit to homepage	booking	nn	Avbryt og gå til framsida
 new audience group	booking	nn	Ny målgruppe
 new booking	booking	nn	Ny interntildeling
 new booking application	booking	nn	Ny søknad
@@ -776,7 +777,7 @@ Resources (2018)	booking	nn	Lokaler
 responsible_city	booking	nn	Poststed
 responsible_street	booking	nn	Gate
 responsible_zip_code	booking	nn	Postnummer
-Select a date and time	booking	nn	Velg et tidspunkt
+Select a date and time	booking	nn	Ingen leieperiodar er angitt
 Select a target audience	booking	nn	Det må velges en målgruppe
 Selected date and time	booking	nn	Valgte tidspunkter
 Send as sms	booking	nn	Send som sms
@@ -786,6 +787,7 @@ Title for filter boxes	booking	nn	Tittel for filtreringsbokser
 Title for upcoming events	booking	nn	Tittel for liste med kommende arrangementer
 Upcoming events	booking	nn	Kommende arrangementer
 Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad er lagt til. Du kan legge til en ny søknad, eller gå videre for å fullføre søknadsprosessen
+Complete application text booking	booking	nn	For å fullføre søknadsprosessen må du trykkje på knappen «Fullfør søknad» og logge inn via ID-porten og bekrefte kontaktopplysningar.
 duplicate	booking	nn	Duplikat
 direct booking	booking	nn	Direkte booking
 export customer	booking	nn	Eksporter kundeliste
