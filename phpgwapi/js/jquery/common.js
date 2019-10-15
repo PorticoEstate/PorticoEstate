@@ -235,19 +235,19 @@ JqueryPortico.FormatterAmount0 = function (key, oData)
 {
 
 	var amount = $.number(oData[key], 0, ',', '.');
-	return "<div align=\"right\">" + amount + "</div>";
+	return "<div style=\"text-align:right;\">" + amount + "</div>";
 };
 
 JqueryPortico.FormatterAmount2 = function (key, oData)
 {
 
 	var amount = $.number(oData[key], 2, ',', '.');
-	return "<div align=\"right\">" + amount + "</div>";
+	return "<div style=\"text-align:right;\">" + amount + "</div>";
 };
 
 JqueryPortico.FormatterRight = function (key, oData)
 {
-	return "<div align=\"right\">" + oData[key] + "</div>";
+	return "<div style=\"text-align:right;\">" + oData[key] + "</div>";
 };
 
 JqueryPortico.FormatterCenter = function (key, oData)

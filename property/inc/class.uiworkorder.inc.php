@@ -1105,6 +1105,8 @@
 			if ($values['copy_workorder'])
 			{
 				$action = 'add';
+				$_values = $this->bo->read_single($id);
+				$values['budget'] = $_values['budget'] ? $_values['budget'] : 1;
 			}
 
 			if ($this->receipt['error'])

@@ -184,6 +184,8 @@
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 				'contact_info' => array('type' => 'text', 'nullable' => True),
 				'direct_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
+				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -758,6 +760,8 @@
 				'contact_email' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
 				'contact_phone' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
 				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
+					'default' => '0'),
+				'access_requested' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
 					'default' => '0'),
 				'customer_organization_name' => array('type' => 'varchar', 'precision' => 150,
 					'nullable' => True),

@@ -192,7 +192,47 @@
 
 				if($subs)
 				{
+
 					$menus['navbar']['helpdesk']['url'] = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => -1));
+
+					$default_interface = isset($config['tts_default_interface']) ? $config['tts_default_interface'] : '';
+
+					$_simple = false;
+					/*
+					 * Inverted logic
+					 */
+					if($default_interface == 'simplified')
+					{
+						$_simple = true;
+					}
+
+					$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+					$simple_group = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
+					foreach ($user_groups as $group => $dummy)
+					{
+						if (in_array($group, $simple_group))
+						{
+							if($default_interface == 'simplified')
+							{
+								$_simple = false;
+							}
+							else
+							{
+								$_simple = true;
+							}
+							break;
+						}
+					}
+
+					if(!$_simple)
+					{
+						$menus['navigation']['helpdesk_-2'] = array
+							(
+								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => -2)),
+								'text'	=> lang('top level'),
+								'image'		=> array('helpdesk', 'helpdesk')
+							);
+					}
 
 					foreach ($_categories as $_category)
 					{

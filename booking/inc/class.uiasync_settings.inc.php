@@ -11,8 +11,11 @@
 			'index' => true,
 			'query' => true
 		);
-		protected $fields = array('booking_async_task_update_reservation_state_enabled',
-			'booking_async_task_send_reminder_enabled');
+		protected $fields = array(
+			'booking_async_task_update_reservation_state_enabled',
+			'booking_async_task_send_reminder_enabled',
+			'booking_async_task_send_access_request_enabled'
+		);
 
 		public function __construct()
 		{
@@ -33,6 +36,7 @@
 			{
 				$settings['booking_async_task_update_reservation_state_enabled'] = phpgw::get_var('booking_async_task_update_reservation_state_enabled', 'bool', 'POST');
 				$settings['booking_async_task_send_reminder_enabled'] = phpgw::get_var('booking_async_task_send_reminder_enabled', 'bool', 'POST');
+				$settings['booking_async_task_send_access_request_enabled'] = phpgw::get_var('booking_async_task_send_access_request_enabled', 'bool', 'POST');
 				$this->bo->update($settings);
 			}
 

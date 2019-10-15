@@ -22,7 +22,7 @@ this.local_DrawCallback0 = function (container)
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + pageTotal + "</div>");
 		}
 	}
 };

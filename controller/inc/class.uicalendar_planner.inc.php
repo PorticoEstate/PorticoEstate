@@ -465,7 +465,8 @@
 				{
 					continue;
 				}
-				$controls_at_component = $this->so_control->get_controls_at_component2($_item, $filter_control_id);
+
+				$controls_at_component = $this->so_control->get_controls_at_component2($_item, $control_id);
 
 				foreach ($controls_at_component as $component)
 				{
@@ -1291,7 +1292,7 @@ HTML;
 
 					if(!empty($check_list['schedule']['info']['completed_date_ts']))
 					{
-						$completed_list[] = ltrim($check_list['component']['xml_short_desc'], ' </br>');
+						$completed_list[] = "{$check_list['schedule']['info']['check_list_id']}::{$check_list['component']['address']} {$check_list['component']['xml_short_desc']}";
 					}
 					else
 					{

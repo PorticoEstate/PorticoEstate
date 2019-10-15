@@ -1103,8 +1103,8 @@
 			$sent_ok		 = phpgw::get_var('print', 'bool');
 			$send_as_pdf	 = phpgw::get_var('send_as_pdf', 'bool');
 			$email_receipt	 = phpgw::get_var('email_receipt', 'bool');
-
-			if ($GLOBALS['phpgw']->session->is_repost())
+			
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $GLOBALS['phpgw']->session->is_repost())
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array(
 					'menuaction'	 => 'property.uiwo_hour.view',
@@ -1308,7 +1308,7 @@
 				'lang_title'				 => lang('Title'),
 				'title'						 => $workorder['title'],
 				'lang_descr'				 => lang('Description'),
-				'descr'						 => $workorder['descr'] . $important_imformation,
+				'descr'						 => nl2br($workorder['descr']) . $important_imformation,
 				'lang_budget_account'		 => lang('Budget account'),
 				'budget_account'			 => $workorder['b_account_id'],
 				'lang_sum_calculation'		 => lang('Sum of calculation'),
@@ -1342,7 +1342,7 @@
 				$receipt['error'][] = array('msg' => lang('No mailaddress is selected'));
 			}
 
-			if ($to_email || $print || ($workorder['mail_recipients'][0] && $_POST['send_order']))
+			if ($to_email || $print || ($workorder['mail_recipients'][0] && $send_order))
 			{
 				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
@@ -1378,6 +1378,7 @@
 				{
 					if (!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']))
 					{
+						phpgwapi_cache::message_set(lang('order is not approved'), 'error');
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uiwo_hour.view',
 							'workorder_id'	 => $workorder_id, 'from'			 => phpgw::get_var('from')));
 					}
@@ -1441,8 +1442,106 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<style TYPE="text/css">
-			<!--{$css}-->
+		<style>
+
+			html {
+				font-family: arial;
+				}
+
+			.details {
+			  width: 100%;
+			  border: 1px solid black;
+			  border-collapse: collapse;
+			}
+			.details th {
+			  background: darkblue;
+			  color: white;
+			}
+			.details td,
+			.details th {
+			  border: 1px solid black;
+			  text-align: left;
+			  padding: 5px 10px;
+			}
+/*
+			.details tr:nth-child(even) {
+			  background: lightblue;
+			}
+*/
+
+			@page {
+			size: A4;
+			}
+
+			#order_deadline{
+				width: 800px;
+				border:0px solid transparent;
+			}
+
+			#order_deadline td{
+				border:0px solid transparent;
+			}
+			@media print {
+			li {page-break-inside: avoid;}
+			h1, h2, h3, h4, h5 {
+			page-break-after: avoid;
+			}
+
+			table, figure {
+			page-break-inside: avoid;
+			}
+			}
+
+
+			@page:left{
+			@bottom-left {
+			content: "Page " counter(page) " of " counter(pages);
+			}
+			}
+			@media print
+			{
+				.btn
+				{
+					display: none !important;
+				}
+			}
+
+			.btn{
+			background: none repeat scroll 0 0 #2647A0;
+			color: #FFFFFF;
+			display: inline-block;
+			margin-right: 5px;
+			padding: 5px 10px;
+			text-decoration: none;
+			border: 1px solid #173073;
+			cursor: pointer;
+			}
+
+			ul{
+			list-style: none outside none;
+			}
+
+			li{
+			list-style: none outside none;
+			}
+
+			li.list_item ol li{
+			list-style: decimal;
+			}
+
+			ul.groups li {
+			padding: 3px 0;
+			}
+
+			ul.groups li.odd{
+			background: none repeat scroll 0 0 #DBE7F5;
+			}
+
+			ul.groups h3 {
+			font-size: 18px;
+			margin: 0 0 5px;
+			}
+
 		</style>
 	</head>
 		<body>
@@ -1465,7 +1564,7 @@ HTML;
 					echo <<<HTML
 						<script language="Javascript1.2">
 						<!--
-							document.write("<form><input type=button "
+							document.write("<form><input type=button class=\"btn\" "
 							+"value=\"Print Page\" onClick=\"window.print();\"></form>");
 						//-->
 						</script>
@@ -1547,7 +1646,6 @@ HTML;
 					}
 
 					$_status = isset($this->config->config_data['workorder_ordered_status']) && $this->config->config_data['workorder_ordered_status'] ? $this->config->config_data['workorder_ordered_status'] : 0;
-
 					if (!$_status)
 					{
 						//				throw new Exception('status on ordered not given in config');
@@ -1586,7 +1684,7 @@ HTML;
 					$_attachment_log		 = $attachment_log ? "::$attachment_log" : '';
 					$historylog				 = CreateObject('property.historylog', 'workorder');
 					$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
-					$receipt['message'][]	 = array('msg' => lang('Workorder %1 is sent by email!', $workorder_id));
+					$receipt['message'][]	 = array('msg' => lang('Workorder %1 is sent by email to %2', $workorder_id, $_to));
 					if ($attachment_log)
 					{
 						$receipt['message'][] = array('msg' => $attachment_log);
@@ -1617,6 +1715,31 @@ HTML;
 							{
 								throw $e;
 							}
+						}
+					}
+
+					if($this->account != $workorder['user_id'])
+					{
+						try
+						{
+							$subject = "Bestilling {$workorder_id} er sendt";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+								'menuaction' => 'property.uiworkorder.edit',
+								'id'		 => $workorder_id), false, true) . '">'
+								. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+							$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+							$_to = $from_email; // reverse...
+
+							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+							if ($rcpt)
+							{
+								phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+							}
+						}
+						catch (Exception $exc)
+						{
 						}
 					}
 
@@ -1797,7 +1920,7 @@ HTML;
 				'lang_select_email'					 => lang('Select email'),
 				'send_order_action'					 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction'	 => 'property.uiwo_hour.view',
-					'send'			 => true,
+//					'send'			 => true,
 					'workorder_id'	 => $workorder_id,
 					'show_details'	 => $show_details,
 					'sent_ok'		 => $rcpt)),
@@ -1819,15 +1942,12 @@ HTML;
 				'lang_print'						 => lang('print'),
 				'value_show_cost'					 => $show_cost,
 				'lang_print_statustext'				 => lang('open this page as printerfrendly'),
-				'print_action'						 => "javascript:openwindow('"
-				. $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction'	 => 'property.uiwo_hour.view',
-					'workorder_id'	 => $workorder_id,
-					'show_cost'		 => $show_cost,
-					'show_details'	 => $show_details,
-					'print'			 => true
-				)) . "','1000','1200')",
+				'print_action'						 => "javascript:openwindow("
+					. "phpGWLink('/index.php', {menuaction: 'property.uiwo_hour.view',"
+					. " workorder_id:'$workorder_id',"
+					. " show_cost:'$show_cost',"
+					. " show_details:'$show_details',"
+					. " print:true}) ,'1000','1200')",
 				'pdf_action'						 => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction'	 => 'property.uiwo_hour.pdf_order',
@@ -1842,6 +1962,7 @@ HTML;
 			$function_msg									 = $this->boworkorder->order_sent_adress ? lang('ReSend order') : lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			self::add_javascript('property', 'portico', 'wo_hour.view.js');
 			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array(
 				'view' => $data));
 		}
@@ -3614,6 +3735,31 @@ HTML;
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 					phpgwapi_cache::message_set("Bestilling {$workorder_id} er ikke sendt", 'error');
 					throw $e;
+				}
+			}
+
+			if($this->account != $workorder['user_id'])
+			{
+				try
+				{
+					$subject = "Bestilling {$workorder_id} er sendt";
+					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'property.uiworkorder.edit',
+						'id'		 => $workorder_id), false, true) . '">'
+						. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
+
+					$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+					$_to = $from_email; // reverse...
+
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $message, '', '', '', $_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+					if ($rcpt)
+					{
+						phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+					}
+				}
+				catch (Exception $exc)
+				{
 				}
 			}
 

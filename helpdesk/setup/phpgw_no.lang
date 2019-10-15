@@ -252,3 +252,4 @@ category respond messages has been saved	helpdesk	no	Tilbakemeldinger pr kategor
 include content	helpdesk	no	Inkluder innhold fra saken
 attach file	helpdesk	no	Legg ved fil
 modified time	helpdesk	no	Endret tid
+top level	helpdesk	no	Toppnivå

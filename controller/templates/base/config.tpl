@@ -88,6 +88,10 @@
 				</select>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_from_email}: </td>
+			<td><input name="newsettings[from_email]" value="{value_from_email}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

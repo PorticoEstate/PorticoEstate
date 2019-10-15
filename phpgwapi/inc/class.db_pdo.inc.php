@@ -22,7 +22,7 @@
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -81,7 +81,7 @@
 			}
 			return true;
 		}
-	
+
 		/**
 		* Open a connection to a database
 		*
@@ -154,7 +154,7 @@
 
 /*
 						$this->debug = true;
-						$tns = " 
+						$tns = "
 							(DESCRIPTION =
 							    (ADDRESS_LIST =
 							      (ADDRESS = (PROTOCOL = TCP)(HOST = {$this->Host})(PORT = 21521))
@@ -233,7 +233,7 @@
 					break;
 				default:
 					throw new Exception(lang('db type %1 not supported', $this->Type));
-					
+
 			}
 
 			if ( isset($e) && $e )
@@ -353,7 +353,7 @@
 		}
 
 		/**
-		* Convert a rdms specific timestamp to a unix timestamp 
+		* Convert a rdms specific timestamp to a unix timestamp
 		*
 		* @param string rdms specific timestamp
 		* @return int unix timestamp
@@ -543,7 +543,7 @@
 			$this->delayPointer = true;
 			return true;
 		}
-		
+
 		/**
 		* Move to the next row in the results set
 		*
@@ -572,7 +572,7 @@
 					$this->Record = current($this->resultSet);
 					return true;
 				}
-	
+
 				$row = next($this->resultSet);
 				$this->Record =& $row;
 				return !!$row;
@@ -616,16 +616,16 @@
 			{
 				$this->connect();
 			}
-			
+
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
-		
+
 		/**
 		* Complete the transaction
 		*
 		* @return boolean True if sucessful, False if fails
-		*/ 
+		*/
 		public function transaction_commit()
 		{
 /*
@@ -636,7 +636,7 @@
 			$this->Transaction = false;
 			return $this->db->commit();
 		}
-		
+
 		/**
 		* Rollback the current transaction
 		*
@@ -679,7 +679,7 @@
 		* @return integer the id, -1 if fails
 		*/
 		public function get_last_insert_id($table, $field = '')
-		{			
+		{
 			switch ( $GLOBALS['phpgw_info']['server']['db_type'] )
 			{
 				case 'postgres':
@@ -742,8 +742,8 @@
 		{
 			$this->transaction_begin();
 		}
-		
-		
+
+
 		/**
 		* Unlock a table
 		*
@@ -753,7 +753,7 @@
 		{
 			$this->transaction_commit();
 		}
-		
+
 
 		/**
 		* Get the number of rows affected by last update
@@ -764,7 +764,7 @@
 		{
 			return $this->affected_rows;
 		}
-		
+
 		/**
 		* Number of rows in current result set
 		*
@@ -820,7 +820,7 @@
 
 		/**
 		* Return the value of a filed
-		* 
+		*
 		* @param string $String name of field
 		* @param boolean $strip_slashes string escape chars from field(optional), default false
 		* @return string the field value
@@ -846,7 +846,7 @@
 
 		/**
 		* Print the value of a field
-		* 
+		*
 		* @param string $field name of field to print
 		* @param bool $strip_slashes string escape chars from field(optional), default false
 		*/
@@ -873,9 +873,9 @@
 		* @param string $table name of table to describe
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
-		*/  
+		*/
 		public function metadata($table, $full = false)
-		{			
+		{
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
@@ -886,7 +886,7 @@
 			}
 			$this->adodb->close();
 			return $return;
-			
+
 		}
 
 		/**
@@ -896,7 +896,7 @@
 		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
 		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
 		* @return array Table meta data
-		*/  
+		*/
 		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
 			if(!$this->adodb || !$this->adodb->IsConnected())
@@ -916,7 +916,7 @@
 		* @param string $table name of table to describe
 		* @param boolean $primary optional, default False.
 		* @return array Index data
-		*/  
+		*/
 
 		public function metaindexes($table, $primary = false)
 		{
@@ -943,7 +943,7 @@
 		{
 			$this->db->rollBack();
 		}
-		
+
 		/**
 		* Get a list of table names in the current database
 		* @param bool $include_views include views in the listing if any (optional)
@@ -971,7 +971,7 @@
 								$return[] =  $entry["Tables_in_{$this->Database}"];
 							}
 						}
-					} 
+					}
 					break;
 				case 'postgres':
 					$this->query("SELECT table_name as name, CAST(table_type = 'VIEW' AS INTEGER) as view
@@ -990,13 +990,13 @@
 								$return[] =  $entry['name'];
 							}
 						}
-					} 
+					}
 					break;
 				case 'mssql': //not testet
 					$this->query("SELECT name FROM sysobjects WHERE type='u' AND name != 'dtproperties'",__LINE__, __FILE__);
 					foreach($this->resultSet as $entry)
 					{
-						$return[] =  $entry;				
+						$return[] =  $entry;
 					}
 					break;
 				case 'oci8':
@@ -1012,10 +1012,10 @@
 						{
 							if( $entry['TABLE_TYPE']== 'TABLE')
 							{
-								$return[] =  $entry['TABLE_NAME'];							
+								$return[] =  $entry['TABLE_NAME'];
 							}
 						}
-					} 
+					}
 					break;
 				default: //fallback
 					if(!$this->adodb || !$this->adodb->IsConnected())
@@ -1030,7 +1030,7 @@
 			return $return;
 		}
 
-		
+
 		/**
 		* Create a new database
 		*
@@ -1113,16 +1113,16 @@
 		}
 
 		/**
-		 * Execute prepared SQL statement for insert
+		 * Execute prepared SQL statement for insert and update
 		 *
-		 * @param string $sql 
-		 * @param array $valueset  values,id and datatypes for the insert 
+		 * @param string $sql
+		 * @param array $valueset  values,id and datatypes for the insert
 		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
 		public function insert($sql, $valueset, $line = '', $file = '')
-		{		
+		{
 			try
 			{
 				$statement_object = $this->db->prepare($sql);
@@ -1144,15 +1144,45 @@
 		}
 
 		/**
+		 * Execute prepared SQL statement for delete
+		 *
+		 * @param string $sql
+		 * @param array $valueset  values,id and datatypes for the insert
+		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
+		 * @return boolean TRUE on success or FALSE on failure
+		 */
+		public function delete($sql, $valueset, $line = '', $file = '')
+		{
+			try
+			{
+				$statement_object = $this->db->prepare($sql);
+				foreach($valueset as $fields)
+				{
+					foreach($fields as $field => $entry)
+					{
+						$statement_object->bindParam($field, $entry['value'], $entry['type']);
+					}
+					$ret = $statement_object->execute();
+				}
+			}
+			catch(PDOException $e)
+			{
+				trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+			}
+			return $ret;
+		}
+
+
+		/**
 		 * Execute prepared SQL statement for select
 		 *
-		 * @param string $sql 
-		 * @param array $params conditions for the select 
+		 * @param string $sql
+		 * @param array $params conditions for the select
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
 		public function select($sql, $params, $line = '', $file = '')
-		{		
+		{
 			$this->_get_fetchmode();
 			$this->fetch_single = false;
 			try

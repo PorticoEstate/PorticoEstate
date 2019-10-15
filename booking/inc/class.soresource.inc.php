@@ -25,6 +25,8 @@
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'direct_booking' => array('type' => 'int', 'required' => false),
+				'e_lock_system_id' => array('type' => 'int', 'required' => false),
+				'e_lock_resource_id' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,

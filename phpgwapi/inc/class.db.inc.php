@@ -710,6 +710,17 @@
 		abstract public function insert($sql_string, $valueset, $line = '', $file = '');
 
 		/**
+		 * Execute prepared SQL statement for delete
+		 *
+		 * @param string $sql_string
+		 * @param array $valueset  values,id and datatypes for the insert
+		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
+		 * @return boolean TRUE on success or FALSE on failure
+		 */
+
+		abstract public function delete($sql_string, $valueset, $line = '', $file = '');
+
+		/**
 		 * Execute prepared SQL statement for select
 		 *
 		 * @param string $sql_string

@@ -197,6 +197,34 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
+					</label>
+					<xsl:variable name="lang_system_id">
+						<xsl:value-of select="php:function('lang', 'System id')"/>
+					</xsl:variable>
+					<xsl:variable name="lang_resource_id">
+							<xsl:value-of select="php:function('lang', 'resource id')"/>
+					</xsl:variable>
+
+					<input type="text" id="e_lock_system_id" name="e_lock_system_id" value="{resource/e_lock_system_id}">
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="$lang_system_id"/>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_system_id"/>
+						</xsl:attribute>
+					</input>
+					<input type="text" id="e_lock_resource_id" name="e_lock_resource_id" value="{resource/e_lock_resource_id}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_resource_id"/>
+						</xsl:attribute>
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="$lang_resource_id"/>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
 					<div class="custom-container">

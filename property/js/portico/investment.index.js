@@ -28,7 +28,7 @@ var addFooterDatatable = function (oTable)
 
 			var amount = $.number(pagetotal, 0, ',', '.');
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + amount + "</div>");
 		}
 
 		if (JqueryPortico.columns[i]['data'] === 'value')
@@ -42,7 +42,7 @@ var addFooterDatatable = function (oTable)
 
 			var amount = $.number(pagetotal, 0, ',', '.');
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + amount + "</div>");
 		}
 
 		if (JqueryPortico.columns[i]['data'] === 'this_write_off')
@@ -56,7 +56,7 @@ var addFooterDatatable = function (oTable)
 
 			var amount = $.number(pagetotal, 0, ',', '.');
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
+			$(api.column(i).footer()).html("<div style=\"text-align:right;\">" + amount + "</div>");
 		}
 	}
 };

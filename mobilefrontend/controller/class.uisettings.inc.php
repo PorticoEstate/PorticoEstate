@@ -26,9 +26,9 @@
 	 * @subpackage controller
 	 * @version $Id$
 	 */
-	phpgw::import_class('controller.uicat_assignment');
+	phpgw::import_class('controller.uisettings');
 
-	class mobilefrontend_uicat_assignment extends controller_uicat_assignment
+	class mobilefrontend_uisettings extends controller_uisettings
 	{
 
 		public function __construct()

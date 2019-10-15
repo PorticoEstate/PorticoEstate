@@ -229,5 +229,6 @@
 		var resourcename = "<xsl:value-of select="resource/name" />";
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+		var building_id = "<xsl:value-of select="building/id" />";
 	</script>
 </xsl:template>
