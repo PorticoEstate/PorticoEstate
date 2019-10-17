@@ -739,7 +739,7 @@
 					if ($is_partial1)
 					{
 						phpgwapi_cache::message_set(
-							lang("Your application with event details has been added. You can add another application, or finalise the application with contact details.") .
+							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
 							lang("Complete applications") .
 							'</button>'

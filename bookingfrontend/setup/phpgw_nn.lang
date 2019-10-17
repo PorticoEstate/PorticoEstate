@@ -76,6 +76,10 @@ contact 2	bookingfrontend	nn	Kontakt 2
 contact person	bookingfrontend	nn	Kontaktperson
 contact information	bookingfrontend	nn	Kontaktinformasjon
 cost	bookingfrontend	nn	Pris
+choose rent object and rentperiod	bookingfrontend	nn	Vel leieobjekt og leieperiode
+chosen rent object	bookingfrontend	nn	Valde leieobjekter
+chosen rent period	bookingfrontend	nn	Valde leieperioder
+choose target audience	bookingfrontend	no	Vel målgruppe for arrangement/aktiviteten
 create	bookingfrontend	nn	Lagre
 created	bookingfrontend	nn	Oppretta
 dashboard	bookingfrontend	nn	Skrivebord
@@ -112,6 +116,7 @@ group	bookingfrontend	nn	Gruppe/lag
 history and comments (%1)	bookingfrontend	nn	Historikk (%1)
 hms document	bookingfrontend	nn	HMS-dokument
 homepage	bookingfrontend	nn	Heimeside
+Event/activity homepage	bookingfrontend	nn	Heimeside for arrangementet / aktiviteten
 id	bookingfrontend	nn	ID
 inactivate	bookingfrontend	nn	Inaktivert
 inactive	bookingfrontend	nn	Inaktiv
@@ -171,6 +176,7 @@ organization number	bookingfrontend	nn	Organisasjonsnummer
 organizations	bookingfrontend	nn	Organisasjonar
 organization index	bookingfrontend	nn	Organisasjonsoversikt
 other	bookingfrontend	nn	Anna
+organizer/responsible seeker	bookingfrontend	nn	Namn på arrangør eller ansvarleg søkjar
 parent activity	bookingfrontend	nn	Overordna kategori
 parent id	bookingfrontend	nn	Overordna id
 permissions	bookingfrontend	nn	Rettigheitar
@@ -381,6 +387,7 @@ Apply for time	bookingfrontend	nn	Søk om tid
 Could not delete allocation due to a booking still use it	bookingfrontend	nn	Kan ikkje slette denne interntildelinga fordi ei interntildeling framleis brukar ho
 Event Delete Information	bookingfrontend	nn	Fjerning av arrangement er permanent
 Event Delete Information2	bookingfrontend	nn	Arrangement blir sett inaktivt
+Name for event/activity	bookingfrontend	nn	Namn på arrangementet / aktiviteten
 Edit Events	bookingfrontend	nn	Rediger arrangement
 Delete Event	bookingfrontend	nn	Slett arrangement
 Check calendar	bookingfrontend	nn	Sjekk kalendar
@@ -435,8 +442,10 @@ last password change	bookingfrontend	nn	siste passordendring
 About the service	bookingfrontend	nn	Om tjenesten
 Activities (2018)	bookingfrontend	nn	Tilrettelagt for
 Add application	bookingfrontend	nn	Legg til søknad
+Next step	bookingfrontend	nn	Gå vidare
 application add	bookingfrontend	nn	søknad
 Application cart	bookingfrontend	nn	Handlekurv
+Application basket	bookingfrontend	nn	Søknadskorg
 back	bookingfrontend	nn	tilbake
 Building information	bookingfrontend	nn	Informasjon om anlegget
 Choose another building	bookingfrontend	nn	Velg annet anlegg
@@ -471,5 +480,9 @@ Back to user list	booking	nn	Attende til brukarlista
 Collects users from all applications and events	booking	nn	Haustar brukarar frå alle søknader og arrangement
 added %1 users	booking	nn	Lagt til %1 brukarar
 found none	booking	nn	Fann ingen
+optional	booking	nn	(Valfri)
 get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
+Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
+Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
+No rent object chosen	nn	Ingen leieobjekt er valgt
 For rent	bookingfrontend	nn	Til leige
