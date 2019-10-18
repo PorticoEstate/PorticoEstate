@@ -38,7 +38,7 @@
 	* $js =& $GLOBALS['phpgw']->js;
 	*
 	* This way a theme can see if this is a defined object and include the data,
-	* while the is_object() wrapper prevents whiping out existing data held in 
+	* while the is_object() wrapper prevents whiping out existing data held in
 	* this instance variables, primarily the $files variable.
 	*
 	* Note: The package arguement is the subdirectory of js - all js should live in subdirectories
@@ -64,7 +64,7 @@
 		protected $files = array();
 
 		/**
-		* @var array list of validated files to be included in the end of a page
+		* @var array list of validated files to be included at the end of a page
 		*/
 		protected $end_files = array();
 
@@ -76,6 +76,14 @@
 		 * because the js files are using relative paths
 		 */
 		protected $external_files;
+
+		/**
+		 *
+		 * @var array list of "external files to be included at the end of a page
+		 * Some times while using libs and such its not fesable to move js files to /app/js/package/
+		 * because the js files are using relative paths
+		 */
+		protected $external_end_files;
 
 		protected $webserver_url;
 
@@ -103,7 +111,7 @@
 			}
 			$this->win_events[$event][] = $code;
 		}
-		
+
 		/**
 		* Returns the javascript required for displaying a popup message box
 		*
@@ -125,7 +133,7 @@
 		{
 			return 'return confirm("'.lang($msg).'");';
 		}
-		
+
 		/**
 		* Used for generating the list of external js files to be included in the head of a page
 		*
@@ -139,21 +147,23 @@
 			if($end_files)
 			{
 				$files = $this->end_files;
+				$external_files = $this->external_end_files;
 			}
 			else
 			{
 				$files = $this->files;
+				$external_files = $this->external_files;
 			}
 
 
 			$combine = true;
 			$combine = false; // Temporary
-			
+
 			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
 			{
-				$combine = false;			
+				$combine = false;
 			}
-			
+
 			if(ini_get('suhosin.get.max_value_length') && ini_get('suhosin.get.max_value_length') < 2000)
 			{
 				$combine = false;
@@ -200,10 +210,10 @@
 				}
 			}
 
-			if ( !empty($this->external_files) && is_array($this->external_files) )
+			if ( !empty($external_files) && is_array($external_files) )
 			{
-				foreach($this->external_files as $file => $dummy)
-				{					
+				foreach($external_files as $file => $dummy)
+				{
 					if($combine)
 					{
 						// Add file path to array and replace path separator with "--" for URL-friendlyness
@@ -368,13 +378,20 @@ HTML;
 		/**
 		 * Adds js file to external files.
 		 *
-		 * @param string $file Full path to js file relative to root of phpgw install 
+		 * @param string $file Full path to js file relative to root of phpgw install
 		 */
-		function add_external_file($file)
+		function add_external_file($file, $end_of_page = false)
 		{
 			if ( is_file(PHPGW_SERVER_ROOT . "/$file") )
 			{
-				$this->external_files[$file] = true;
+				if($end_of_page)
+				{
+					$this->external_end_files[$file] = true;
+				}
+				else
+				{
+					$this->external_files[$file] = true;
+				}
 			}
 		}
 	}

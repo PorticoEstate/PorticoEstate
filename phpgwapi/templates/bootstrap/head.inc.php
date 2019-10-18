@@ -155,7 +155,12 @@
 
 	function parse_footer_end_noframe()
 	{
-		$javascript_end = $GLOBALS['phpgw']->common->get_javascript_end();
+		$cache_refresh_token = '';
+		if(!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+		{
+			$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+		}
+		$javascript_end = $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token);
 
 		$footer = <<<HTML
 		</body>
