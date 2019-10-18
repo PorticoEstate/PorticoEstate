@@ -46,6 +46,7 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
+		var simple = '<xsl:value-of select="simple"/>';
 		var account_lid =  '<xsl:value-of select="account_lid"/>';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
 
@@ -351,6 +352,7 @@
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
+		var simple = '<xsl:value-of select="simple"/>';
 
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
@@ -823,6 +825,17 @@
 						<input type="hidden" id="notify_contact" name="notify_contact" value="">
 						</input>
 						<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly"/>
+
+					<xsl:variable name="lang_notify">
+						<xsl:value-of select="php:function('lang', 'notify')"/>
+					</xsl:variable>
+					<label for="set_notify_name">
+						<xsl:value-of select="$lang_notify"/>
+					</label>
+					<input type="hidden" id="set_notify_lid" name="set_notify_lid" />
+					<input type="text" id="set_notify_name" name="set_notify_name" class="pure-input-3-4">
+					</input>
+
 						<div class="pure-u-md-3-4" >
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_6'">

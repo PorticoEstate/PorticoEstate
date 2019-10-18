@@ -126,6 +126,80 @@
 				{
 					$filtermethod =	"RESSURSNR = '{$query}'";
 				}
+				else if($search_options == 'resultat_enhet')
+				{
+					$filtermethod =	"BRUKERNAVN = '{$query}'"
+					. " OR FODSELSNR  = '{$query}'"
+					. " OR RESSURSNR  = '{$query}'";
+
+					if(!empty($query_arr[1]) && empty($query_arr2[1]))
+					{
+						$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
+						 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
+					}
+					else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
+					}
+					else if(isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
+						 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
+					}
+
+					$ticket_id = (int)phpgw::get_var('ticket_id');
+
+					$GLOBALS['phpgw']->db->query("SELECT user_id FROM phpgw_helpdesk_tickets WHERE id = {$ticket_id}", __LINE__, __FILE__);
+					$GLOBALS['phpgw']->db->next_record();
+					$user_id = $GLOBALS['phpgw']->db->f('user_id');
+					$user_lid = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
+
+					$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM V_SOA_ANSATT WHERE BRUKERNAVN = '{$user_lid}'";
+
+					$db->query($sql, __LINE__, __FILE__);
+
+					if ($db->next_record())
+					{
+						$org_unit	 = $db->f('ORG_ENHET_ID');
+						$level		 = $db->f('ORG_NIVAA');
+					}
+
+					if (!$org_unit)
+					{
+						return;
+					}
+
+					$path = CreateObject('property.sogeneric')->get_path(array(
+						'type' => 'org_unit',
+						'id' => $org_unit,
+						'path_by_id' => true
+						));
+
+					$levels = count($path);
+
+					if ($levels > 1)
+					{
+						$parent_id = (int)$path[($levels - 2)];
+					}
+					else
+					{
+						$parent_id = (int)$path[0];
+					}
+
+					$sql = "SELECT id FROM fm_org_unit WHERE parent_id  = {$parent_id}";
+
+					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+
+					$org_units = array(-1);
+
+					while ($GLOBALS['phpgw']->db->next_record())
+					{
+						$org_units[] = (int)$GLOBALS['phpgw']->db->f('id');
+					}
+
+					$filtermethod .= " AND V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
+
+				}
 				else
 				{
 					$filtermethod =	"BRUKERNAVN = '{$query}'"

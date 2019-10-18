@@ -29,6 +29,35 @@ $(document).ready(function ()
 			}, true),
 				'set_user_alternative_name', 'set_user_alternative_lid', 'set_user_alternative_container');
 
+			/**
+			 * sentrale saksbehandlere må slå opp på ressursnr
+			 */
+			if(simple != 1 && !$("#id").val())
+			{
+				JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+				{
+					menuaction: 'helpdesk.uitts.get_on_behalf_of',
+					custom_method: true,
+					method: 'get_on_behalf_of',
+					acl_location: '.ticket',
+					search_options: 'ressurs_nr'
+				}, true),
+					'set_notify_name', 'set_notify_lid', 'set_notify_container');
+			}
+			//on "view"
+			else if ($("#id").val())
+			{
+				JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+				{
+					menuaction: 'helpdesk.uitts.get_on_behalf_of',
+					custom_method: true,
+					method: 'get_on_behalf_of',
+					acl_location: '.ticket',
+					search_options: 'resultat_enhet',
+					ticket_id:$("#id").val()
+				}, true),
+					'set_notify_name', 'set_notify_lid', 'set_notify_container');
+			}
 			// Leave as is...
 			break;
 		default:
