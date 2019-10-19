@@ -3008,6 +3008,8 @@ JS;
 						case 'get_reverse_assignee':
 							return $this->get_reverse_assignee('id');
 							break;
+						case 'set_notify':
+							break;
 						default:
 							break;
 					}

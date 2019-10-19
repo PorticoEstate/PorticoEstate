@@ -809,22 +809,7 @@
 				</fieldset>
 			</div>
 			<div id="notify">
-				<fieldset>
-
-					<xsl:variable name="lang_contact_statustext">
-						<xsl:value-of select="php:function('lang', 'click this link to select')"/>
-					</xsl:variable>
-					<div class="pure-control-group">
-						<label>
-							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}" class="pure-button pure-button-primary">
-								<i class="fas fa-user-plus"></i>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'add')"/>
-							</a>
-						</label>
-						<input type="hidden" id="notify_contact" name="notify_contact" value="">
-						</input>
-						<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly"/>
+				<fieldset class="pure-form-stacked">
 
 					<xsl:variable name="lang_notify">
 						<xsl:value-of select="php:function('lang', 'notify')"/>
@@ -836,20 +821,19 @@
 					<input type="text" id="set_notify_name" name="set_notify_name" class="pure-input-3-4">
 					</input>
 
-						<div class="pure-u-md-3-4" >
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_6'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl'/>
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-										<xsl:with-param name="data" select ='data'/>
-										<xsl:with-param name="tabletools" select ='tabletools'/>
-										<xsl:with-param name="config" select ='config'/>
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
-						</div>
+					<div class="pure-u-md-3-4" >
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_6'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="tabletools" select ='tabletools'/>
+									<xsl:with-param name="config" select ='config'/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
 					</div>
 				</fieldset>
 			</div>

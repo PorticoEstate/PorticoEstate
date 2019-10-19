@@ -18,6 +18,7 @@
 
 			function __construct()
 			{
+				$this->account	= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 				$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
 			}
 
@@ -62,6 +63,57 @@
 
 				$this->db = $db;
 				return $db;
+			}
+
+			function set_notify()
+			{
+				if (!$GLOBALS['phpgw']->acl->check('.ticket', PHPGW_ACL_EDIT, 'helpdesk'))
+				{
+					return;
+				}
+
+				$account_lid = phpgw::get_var('account_lid');
+				$location_item_id = (int)phpgw::get_var('ticket_id', 'int');
+				if($account_lid)
+				{
+					$helpdesk_account = new helpdesk_account();
+					$helpdesk_account->register_accounts(array
+						(
+							$account_lid => true
+						)
+					);
+				}
+
+				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($account_lid);
+				$contact_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				$values_insert = array
+					(
+					'location_id'			 => $location_id,
+					'location_item_id'		 => $location_item_id,
+					'contact_id'			 => $contact_id,
+					'is_active'				 => 1,
+					'entry_date'			 => time(),
+					'user_id'				 => $this->account,
+					'notification_method'	 => 'email'
+				);
+
+				$ret = false;
+
+				$sql = "SELECT id FROM phpgw_notification WHERE location_id = ? AND location_item_id = ? AND contact_id = ?";
+				$condition =  array((int)$location_id, (int)$location_item_id, (int)$contact_id);
+
+				$GLOBALS['phpgw']->db->select($sql, $condition, __LINE__, __FILE__);
+
+				if(!$GLOBALS['phpgw']->db->next_record())
+				{
+					$ret =  $GLOBALS['phpgw']->db->query("INSERT INTO phpgw_notification (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+						. $GLOBALS['phpgw']->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+				}
+
+				return array('status' => $ret);
+
 			}
 
 			function get_user_info()
@@ -270,9 +322,33 @@
 					$value['name'] .= " {$org_unit_name}";
 				}
 
+
+				/**
+				 * fallback for external users
+				 */
+
+				if(!$values)
+				{
+					$sql = "SELECT * FROM phpgw_accounts WHERE account_lid ilike '{$query}' AND account_status = 'A'";
+					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+					while ($GLOBALS['phpgw']->db->next_record())
+					{
+						$values[] = array(
+							'id'		 => $GLOBALS['phpgw']->db->f('account_lid', true),
+							'name'		 => $GLOBALS['phpgw']->db->f('account_lid') . ' [' . $GLOBALS['phpgw']->db->f('account_lastname', true) . ', ' . $GLOBALS['phpgw']->db->f('account_firstname', true) . ']' ,
+							'org_unit'	 => $db->f('ORG_ENHET_ID'),
+							'level'		 => $db->f('ORG_NIVAA'),
+						);
+					}
+				}
+
 				return array('ResultSet' => array('Result' => $values));
 			}
 
+			/**
+			 * Fetch data from outlook integration
+			 * @return array
+			 */
 			function get_reverse_assignee()
 			{
 				$on_behalf_of_lid = phpgw::get_var('on_behalf_of_lid', 'string');
@@ -394,6 +470,51 @@
 		}
 	}
 
+
+	if (!class_exists("helpdesk_account"))
+	{
+		phpgw::import_class('helpdesk.hook_helper');
+
+		class helpdesk_account extends helpdesk_hook_helper
+		{
+
+			public function __construct()
+			{
+				$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+			}
+
+			public function register_accounts( $values )
+			{
+				foreach ($values as $account_lid => $entry)
+				{
+					if (!$GLOBALS['phpgw']->accounts->exists($account_lid))
+					{
+
+						$autocreate_user = isset($this->config['autocreate_user']) && $this->config['autocreate_user'] ? $this->config['autocreate_user'] : 0;
+
+						if ($autocreate_user)
+						{
+							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($account_lid);
+							if ($fellesdata_user && $fellesdata_user['firstname'])
+							{
+								// Read default assign-to-group from config
+								$default_group_id	 = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
+								$group_lid			 = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
+								$group_lid			 = $group_lid ? $group_lid : 'frontend_delegates';
+
+								$password	 = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
+								$account_id	 = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+
 	$method = phpgw::get_var('method');
 
 	if ($method == 'get_reverse_assignee')
@@ -411,3 +532,9 @@
 		$reverse_assignee	 = new ticket_LRS_reverse_assignee();
 		$ajax_result		 = $reverse_assignee->get_user_info();
 	}
+	else if ($method == 'set_notify')
+	{
+		$reverse_assignee	 = new ticket_LRS_reverse_assignee();
+		$ajax_result		 = $reverse_assignee->set_notify();
+	}
+

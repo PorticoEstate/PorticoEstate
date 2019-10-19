@@ -371,3 +371,33 @@ var oArgs = {
 };
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'set_user_name', 'set_user_lid', 'set_user_container');
+
+JqueryPortico.autocompleteHelper(phpGWLink('index.php',
+{
+	menuaction: 'helpdesk.uitts.get_on_behalf_of',
+	custom_method: true,
+	method: 'get_on_behalf_of',
+	acl_location: '.ticket'
+}, true),
+	'set_notify_name', 'set_notify_lid', 'set_notify_container');
+
+
+$(window).on('load', function ()
+{
+	$("#set_notify_name").on("autocompleteselect", function (event, ui)
+	{
+		var set_notify_lid = ui.item.value;
+
+		if (set_notify_lid)
+		{
+			try
+			{
+				set_notify(set_notify_lid);
+				JqueryPortico.updateinlineTableHelper('datatable-container_6');
+			}
+			catch (err)
+			{
+			}
+		}
+	});
+});

@@ -122,6 +122,8 @@
 			{
 				if (!$GLOBALS['phpgw']->accounts->exists($username))
 				{
+					$contacts = createObject('phpgwapi.contacts');
+
 					$account = new phpgwapi_user();
 					$account->lid = $username;
 					$account->firstname = $firstname;
@@ -129,11 +131,19 @@
 					$account->passwd = $password;
 					$account->enabled = true;
 					$account->expires = -1;
+
+					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+
+					$contact_data = array('comms' => array(array(
+						'comm_descr'		=> $contacts->search_comm_descr('work email'),
+						'comm_data'			=> $fellesdata_user['email'],
+						'comm_preferred'	=> 'Y'
+					)));
+
 					$result = $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array(
-						'helpdesk'));
+						'helpdesk'),$contact_data);
 					if ($result)
 					{
-						$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
 						if ($fellesdata_user)
 						{
 							$email = $fellesdata_user['email'];
