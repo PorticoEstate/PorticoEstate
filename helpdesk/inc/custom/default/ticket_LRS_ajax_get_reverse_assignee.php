@@ -83,6 +83,10 @@
 						)
 					);
 				}
+				else
+				{
+					return;
+				}
 
 				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($account_lid);
 				$contact_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
@@ -180,7 +184,7 @@
 				}
 				else if($search_options == 'resultat_enhet')
 				{
-					$filtermethod =	"BRUKERNAVN = '{$query}'"
+					$filtermethod =	"(BRUKERNAVN = '{$query}'"
 					. " OR FODSELSNR  = '{$query}'"
 					. " OR RESSURSNR  = '{$query}'";
 
@@ -249,7 +253,7 @@
 						$org_units[] = (int)$GLOBALS['phpgw']->db->f('id');
 					}
 
-					$filtermethod .= " AND V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
+					$filtermethod .= ") AND V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
 
 				}
 				else
@@ -329,16 +333,33 @@
 
 				if(!$values)
 				{
+					$_values = array();
 					$sql = "SELECT * FROM phpgw_accounts WHERE account_lid ilike '{$query}' AND account_status = 'A'";
 					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 					while ($GLOBALS['phpgw']->db->next_record())
 					{
-						$values[] = array(
+						$_values[] = array(
 							'id'		 => $GLOBALS['phpgw']->db->f('account_lid', true),
 							'name'		 => $GLOBALS['phpgw']->db->f('account_lid') . ' [' . $GLOBALS['phpgw']->db->f('account_lastname', true) . ', ' . $GLOBALS['phpgw']->db->f('account_firstname', true) . ']' ,
 							'org_unit'	 => $db->f('ORG_ENHET_ID'),
 							'level'		 => $db->f('ORG_NIVAA'),
 						);
+					}
+				}
+
+				/**
+				 * Remove false hit
+				 */
+				if($search_options == 'resultat_enhet')
+				{
+					foreach ($_values as $entry)
+					{
+						$sql = "SELECT BRUKERNAVN FROM V_SOA_ANSATT WHERE BRUKERNAVN ='{$entry['id']}'";
+						$db->query($sql, __LINE__, __FILE__);
+						if(!$db->next_record())
+						{
+							$values[] = $entry;
+						}
 					}
 				}
 
