@@ -87,6 +87,7 @@
 			if(false)
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.bootstrap4.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.bootstrap4.min.css');
 				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.bootstrap4.min.js');
 			}
 			else

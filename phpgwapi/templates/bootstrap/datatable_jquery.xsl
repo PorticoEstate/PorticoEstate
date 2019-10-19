@@ -49,287 +49,251 @@
 
 
 <xsl:template match="toolbar" xmlns:php="http://php.net/xsl">
-	<style id='toggle-box-css' type='text/css' scoped='scoped'>
-		.toggle-box {
-		display: none;
-		}
-
-		.toggle-box + label {
-		cursor: pointer;
-		display: block;
-		font-weight: bold;
-		line-height: 21px;
-		margin-bottom: 5px;
-		}
-
-		.toggle-box + label + #toolbar {
-		display: none;
-	/*	margin-bottom: 10px;*/
-		}
-
-		.toggle-box:checked + label + #toolbar {
-		display: block;
-		}
-
-		.toggle-box + label:before {
-		background-color: #4F5150;
-		-webkit-border-radius: 10px;
-		-moz-border-radius: 10px;
-		border-radius: 10px;
-		color: #FFFFFF;
-		content: "+";
-		display: block;
-		float: left;
-		font-weight: bold;
-		height: 20px;
-		line-height: 20px;
-		margin-right: 5px;
-		text-align: center;
-		width: 20px;
-		}
-
-		.toggle-box:checked + label:before {
-		content: "\2212";
-		}
-	</style>
-	<div id="active_filters"></div>
-	<xsl:if test="item">
-		<input class="toggle-box" id="header1" type="checkbox" />
-		<label for="header1">
-			<xsl:value-of select="php:function('lang', 'filter')"/>
-		</label>
-		<div id="toolbar" class='dtable_custom_controls'>
-			<form>
-				 <fieldset>
-				<div class="form-row">
-					<xsl:for-each select="item">
-						<script type="text/javascript">
-							number_of_toolbar_items += 1;
-						</script>
-						 <div class="form-group col-md-4">
-
-							<xsl:variable name="filter_key" select="concat('filter_', name)"/>
-							<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
-							<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
-							<xsl:if test="name">
-								<label>
-									<xsl:attribute name="for">
-										<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
-									</xsl:attribute>
-									<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-								</label>
-							</xsl:if>
-							<xsl:choose>
-								<xsl:when test="type = 'date-picker'">
-									<input class="form-control" id="filter_{name}" name="filter_{name}" value="{value}" type="text">
-										<xsl:attribute name="title">
-											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-										</xsl:attribute>
-									</input>
-								</xsl:when>
-								<xsl:when test="type = 'autocomplete'">
-											<input id="filter_{name}_name" name="{name}_name" type="text" class="form-control">
-												<xsl:attribute name="value">
-													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
-												</xsl:attribute>
-												<xsl:attribute name="title">
-													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-												</xsl:attribute>
-											</input>
-											<input id="filter_{name}_id" name="filter_{name}_id" type="hidden">
-												<xsl:attribute name="value">
-													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_id]"/>
-												</xsl:attribute>
-											</input>
-											<div id="filter_{name}_container"/>
-										<!--/div-->
-										<script type="text/javascript">
-											$(document).ready(function() {
-											var app = "<xsl:value-of select="app"/>";
-											app = app || 'booking';
-											var FunctionName = "<xsl:value-of select="function"/>";
-											FunctionName = FunctionName || 'index';
-											var label_attr = "<xsl:value-of select="label_attr"/>";
-											label_attr = label_attr || 'name';
-											var show_id =  false;
-											<xsl:if test="show_id = 1">
-												show_id = true;
-											</xsl:if>
-
-											var name = "<xsl:value-of select="name"/>";
-											var ui = "<xsl:value-of select="ui"/>";
-											var requestGenerator = false;
-											<xsl:if test="requestGenerator">
-												requestGenerator = '<xsl:value-of select="requestGenerator"/>';
-											</xsl:if>
-											var depends = false;
-											var filter_depends = "";
-											var filter_selected = "";
-											<xsl:if test="depends">
-												depends = "<xsl:value-of select="depends"/>";
-												//filter_depends = $('#filer_'+depends+'_id').val();
-												$("#filter_"+depends+"_name").on("autocompleteselect", function(event, i){
-												var filter_select = i.item.value;
-												filter_depends = i.item.value;
-												if (filter_select != filter_selected){
-												if (filter_depends) {
-													<![CDATA[
-															JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
-																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
-													]]>
-												}
-												oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
-												$('#filter_'+name+'_name').val('');
-												$('#filter_'+name+'_id').val('');
-												filter_selected = filter_select;
-												}
-												});
-												$("#filter_"+depends+"_name").on("keyup", function(){
-												if ($(this).val() == ''){
-												filter_depends = false;
-												if (!filter_depends) {
-															<![CDATA[
-																JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) +'&',
-																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
-															]]>
-												}
-												filter_selected = "";
-												oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
-												$('#filter_'+name+'_name').val('');
-												$('#filter_'+name+'_id').val('');
-												}
-												});
-											</xsl:if>
-											if (filter_depends) {
-													<![CDATA[
-														JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
-																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
-													]]>
-											}else{
-													<![CDATA[
-														JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&',
-																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
-													]]>
-											}
-											});
-										</script>
-								</xsl:when>
-								<xsl:when test="type = 'filter'">
-									<xsl:variable name="name">
-										<xsl:value-of select="name"/>
-									</xsl:variable>
-									<script type="text/javascript">
-										filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
-									</script>
-									<select id="{$name}" name="{$name}" class="form-control">
-										<xsl:if test="multiple">
-											<xsl:attribute name="multiple">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-										<xsl:attribute name="title">
-											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-										</xsl:attribute>
-										<xsl:for-each select="list">
-											<xsl:variable name="id">
-												<xsl:value-of select="id"/>
-											</xsl:variable>
-											<xsl:choose>
-												<xsl:when test="selected = 'selected'">
-													<option value="{$id}" selected="selected">
-														<xsl:value-of select="name"/>
-													</option>
-												</xsl:when>
-												<xsl:when test="selected = '1'">
-													<option value="{$id}" selected="selected">
-														<xsl:value-of select="name"/>
-													</option>
-												</xsl:when>
-												<xsl:otherwise>
-													<option value="{$id}">
-														<xsl:value-of select="name"/>
-													</option>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:for-each>
-									</select>
-								</xsl:when>
-								<xsl:when test="type = 'link'">
-									<label>
-										<xsl:value-of select="value"/>
-									</label>
-										<input type="button" class="form-control btn btn-primary">
-											<xsl:choose>
-												<xsl:when test="onclick">
-													<xsl:attribute name="onclick">
-														<xsl:value-of select="onclick"/>
-													</xsl:attribute>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
-												</xsl:otherwise>
-											</xsl:choose>
-											<xsl:attribute name="value">
-												<xsl:value-of select="value"/>
-											</xsl:attribute>
-										</input>
-								</xsl:when>
-								<xsl:when test="type = 'hidden'">
-										<input>
-											<xsl:attribute name="type">
-												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
-											</xsl:attribute>
-											<xsl:attribute name="id">
-												<xsl:value-of select="phpgw:conditional(not(id), '', id)"/>
-											</xsl:attribute>
-											<xsl:attribute name="name">
-												<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
-											</xsl:attribute>
-											<xsl:attribute name="value">
-												<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
-											</xsl:attribute>
-										</input>
-								</xsl:when>
-								<xsl:when test="type = 'label'">
-										<label>
-											<xsl:attribute name="id">
-												<xsl:value-of select="phpgw:conditional(not(id), '', id)"/>
-											</xsl:attribute>
-										</label>
-								</xsl:when>
-								<xsl:otherwise>
-										<input id="innertoolbar_{name}" class="form-control">
-											<xsl:attribute name="type">
-												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
-											</xsl:attribute>
-											<xsl:attribute name="name">
-												<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
-											</xsl:attribute>
-											<xsl:attribute name="onclick">
-												<xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/>
-											</xsl:attribute>
-											<xsl:attribute name="value">
-												<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
-											</xsl:attribute>
-											<xsl:attribute name="href">
-												<xsl:value-of select="phpgw:conditional(not(href), '', href)"/>
-											</xsl:attribute>
-											<xsl:attribute name="class">
-												<xsl:value-of select="phpgw:conditional(not(class), '', class)"/>
-											</xsl:attribute>
-											<xsl:attribute name="checked">
-												<xsl:value-of select="phpgw:conditional(not(checked), '', checked)"/>
-											</xsl:attribute>
-										</input>
-								</xsl:otherwise>
-							</xsl:choose>
-						 </div>
-					</xsl:for-each>
-				</div>
-			 </fieldset>
-			</form>
+	<div class="row">
+		<div id="active_filters">
 		</div>
-	</xsl:if>
+	</div>
+	<div class="row mt-2">
+		<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
+			<xsl:value-of select="php:function('lang', 'filter')"/>
+		</button>
+	</div>
+
+	<div class="row mt-2 collapse" id="democollapseBtn">
+		<xsl:if test="item">
+			<div id="toolbar" class='dtable_custom_controls'>
+				<form>
+					 <fieldset>
+					<div class="form-row">
+						<xsl:for-each select="item">
+							<script type="text/javascript">
+								number_of_toolbar_items += 1;
+							</script>
+							 <div class="form-group col-md-4">
+
+								<xsl:variable name="filter_key" select="concat('filter_', name)"/>
+								<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
+								<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
+								<xsl:if test="name">
+									<label>
+										<xsl:attribute name="for">
+											<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+										</xsl:attribute>
+										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+									</label>
+								</xsl:if>
+								<xsl:choose>
+									<xsl:when test="type = 'date-picker'">
+										<input class="form-control" id="filter_{name}" name="filter_{name}" value="{value}" type="text">
+											<xsl:attribute name="title">
+												<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+											</xsl:attribute>
+										</input>
+									</xsl:when>
+									<xsl:when test="type = 'autocomplete'">
+												<input id="filter_{name}_name" name="{name}_name" type="text" class="form-control">
+													<xsl:attribute name="value">
+														<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
+													</xsl:attribute>
+													<xsl:attribute name="title">
+														<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+													</xsl:attribute>
+												</input>
+												<input id="filter_{name}_id" name="filter_{name}_id" type="hidden">
+													<xsl:attribute name="value">
+														<xsl:value-of select="../../../filters/*[local-name() = $filter_key_id]"/>
+													</xsl:attribute>
+												</input>
+												<div id="filter_{name}_container"/>
+											<!--/div-->
+											<script type="text/javascript">
+												$(document).ready(function() {
+												var app = "<xsl:value-of select="app"/>";
+												app = app || 'booking';
+												var FunctionName = "<xsl:value-of select="function"/>";
+												FunctionName = FunctionName || 'index';
+												var label_attr = "<xsl:value-of select="label_attr"/>";
+												label_attr = label_attr || 'name';
+												var show_id =  false;
+												<xsl:if test="show_id = 1">
+													show_id = true;
+												</xsl:if>
+
+												var name = "<xsl:value-of select="name"/>";
+												var ui = "<xsl:value-of select="ui"/>";
+												var requestGenerator = false;
+												<xsl:if test="requestGenerator">
+													requestGenerator = '<xsl:value-of select="requestGenerator"/>';
+												</xsl:if>
+												var depends = false;
+												var filter_depends = "";
+												var filter_selected = "";
+												<xsl:if test="depends">
+													depends = "<xsl:value-of select="depends"/>";
+													//filter_depends = $('#filer_'+depends+'_id').val();
+													$("#filter_"+depends+"_name").on("autocompleteselect", function(event, i){
+													var filter_select = i.item.value;
+													filter_depends = i.item.value;
+													if (filter_select != filter_selected){
+													if (filter_depends) {
+														<![CDATA[
+																JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
+																										'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
+														]]>
+													}
+													oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
+													$('#filter_'+name+'_name').val('');
+													$('#filter_'+name+'_id').val('');
+													filter_selected = filter_select;
+													}
+													});
+													$("#filter_"+depends+"_name").on("keyup", function(){
+													if ($(this).val() == ''){
+													filter_depends = false;
+													if (!filter_depends) {
+																<![CDATA[
+																	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) +'&',
+																										'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
+																]]>
+													}
+													filter_selected = "";
+													oTable.dataTableSettings[0]['ajax']['data']['filter_'+name+'_id'] = "";
+													$('#filter_'+name+'_name').val('');
+													$('#filter_'+name+'_id').val('');
+													}
+													});
+												</xsl:if>
+												if (filter_depends) {
+														<![CDATA[
+															JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
+																								'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
+														]]>
+												}else{
+														<![CDATA[
+															JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&',
+																								'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
+														]]>
+												}
+												});
+											</script>
+									</xsl:when>
+									<xsl:when test="type = 'filter'">
+										<xsl:variable name="name">
+											<xsl:value-of select="name"/>
+										</xsl:variable>
+										<script type="text/javascript">
+											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
+										</script>
+										<select id="{$name}" name="{$name}" class="form-control">
+											<xsl:if test="multiple">
+												<xsl:attribute name="multiple">
+													<xsl:text>true</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+											<xsl:attribute name="title">
+												<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+											</xsl:attribute>
+											<xsl:for-each select="list">
+												<xsl:variable name="id">
+													<xsl:value-of select="id"/>
+												</xsl:variable>
+												<xsl:choose>
+													<xsl:when test="selected = 'selected'">
+														<option value="{$id}" selected="selected">
+															<xsl:value-of select="name"/>
+														</option>
+													</xsl:when>
+													<xsl:when test="selected = '1'">
+														<option value="{$id}" selected="selected">
+															<xsl:value-of select="name"/>
+														</option>
+													</xsl:when>
+													<xsl:otherwise>
+														<option value="{$id}">
+															<xsl:value-of select="name"/>
+														</option>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:for-each>
+										</select>
+									</xsl:when>
+									<xsl:when test="type = 'link'">
+										<label>
+											<xsl:value-of select="value"/>
+										</label>
+											<input type="button" class="form-control btn btn-primary">
+												<xsl:choose>
+													<xsl:when test="onclick">
+														<xsl:attribute name="onclick">
+															<xsl:value-of select="onclick"/>
+														</xsl:attribute>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
+													</xsl:otherwise>
+												</xsl:choose>
+												<xsl:attribute name="value">
+													<xsl:value-of select="value"/>
+												</xsl:attribute>
+											</input>
+									</xsl:when>
+									<xsl:when test="type = 'hidden'">
+											<input>
+												<xsl:attribute name="type">
+													<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
+												</xsl:attribute>
+												<xsl:attribute name="id">
+													<xsl:value-of select="phpgw:conditional(not(id), '', id)"/>
+												</xsl:attribute>
+												<xsl:attribute name="name">
+													<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+												</xsl:attribute>
+												<xsl:attribute name="value">
+													<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
+												</xsl:attribute>
+											</input>
+									</xsl:when>
+									<xsl:when test="type = 'label'">
+											<label>
+												<xsl:attribute name="id">
+													<xsl:value-of select="phpgw:conditional(not(id), '', id)"/>
+												</xsl:attribute>
+											</label>
+									</xsl:when>
+									<xsl:otherwise>
+											<input id="innertoolbar_{name}" class="form-control">
+												<xsl:attribute name="type">
+													<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
+												</xsl:attribute>
+												<xsl:attribute name="name">
+													<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
+												</xsl:attribute>
+												<xsl:attribute name="onclick">
+													<xsl:value-of select="phpgw:conditional(not(onClick), '', onClick)"/>
+												</xsl:attribute>
+												<xsl:attribute name="value">
+													<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
+												</xsl:attribute>
+												<xsl:attribute name="href">
+													<xsl:value-of select="phpgw:conditional(not(href), '', href)"/>
+												</xsl:attribute>
+												<xsl:attribute name="class">
+													<xsl:value-of select="phpgw:conditional(not(class), '', class)"/>
+												</xsl:attribute>
+												<xsl:attribute name="checked">
+													<xsl:value-of select="phpgw:conditional(not(checked), '', checked)"/>
+												</xsl:attribute>
+											</input>
+									</xsl:otherwise>
+								</xsl:choose>
+							 </div>
+						</xsl:for-each>
+					</div>
+				 </fieldset>
+				</form>
+			</div>
+		</xsl:if>
+	</div>
 
 </xsl:template>
 
@@ -1332,7 +1296,7 @@
 
 			if(number_of_toolbar_items < 5 || show_filter_group == true)
 			{
-				$('#header1').prop("checked", true);
+				$('#democollapseBtn').addClass("show");
 			}
 
 			$('div.dataTables_filter input').focus();
