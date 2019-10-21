@@ -65,6 +65,7 @@
 
 		var $apps_path;
 		var $generic_config;
+		protected $global_lock	 = false;
 
 		function __construct()
 		{
@@ -210,10 +211,17 @@
 					(uid,p_gateway,p_src,p_dst,p_footer,p_msg,p_datetime,p_sms_type,unicode)
 					VALUES ('$uid','$gateway_module_send','$mobile_sender','$c_sms_to','$sms_sender','$message','$datetime_now','$sms_type','$unicode')";
 
-//				$GLOBALS['phpgw']->db->transaction_begin();
+				if ($GLOBALS['phpgw']->db->get_transaction())
+				{
+					$this->global_lock = true;
+				}
+				else
+				{
+					$GLOBALS['phpgw']->db->transaction_begin();
+				}
+
 				$GLOBALS['phpgw']->db->query($db_query, __LINE__, __FILE__);
 				$smslog_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_sms_tblsmsoutgoing', 'smslog_id');
-//				$GLOBALS['phpgw']->db->transaction_commit();
 
 				$gp_code = "PV";
 				$to[$i] = $c_sms_to;
@@ -225,6 +233,12 @@
 						$ok[$i] = $smslog_id;
 					}
 				}
+
+				if (!$this->global_lock)
+				{
+					$GLOBALS['phpgw']->db->transaction_commit();
+				}
+
 			}
 
 			return array($ok, $to);
@@ -507,15 +521,8 @@
 		{
 			$external_id = (int)$external_id;
 			$datetime_now = $this->datetime_now();
-			$ok = false;
 			$db_query = "UPDATE phpgw_sms_tblsmsoutgoing SET p_update='{$datetime_now}',p_status='{$p_status}', external_id = {$external_id} WHERE smslog_id='$smslog_id' AND uid='$uid'";
-			$this->db->transaction_begin();
-			$this->db->query($db_query, __LINE__, __FILE__);
-
-			if ($this->db->transaction_commit())
-			{
-				$ok = true;
-			}
+			$ok = $GLOBALS['phpgw']->db->query($db_query, __LINE__, __FILE__);
 			return $ok;
 		}
 
