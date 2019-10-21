@@ -1160,7 +1160,7 @@
 			if(!$get_message && !empty($config_new_message))
 			{
 				$link_text = "<H2>{$config_new_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
+				$link_text = nl2br(str_replace(array('__ID__', '[', ']'), array($id, '<', '>'), $link_text));
 			}
 
 			$set_user_id = false;
@@ -1168,14 +1168,14 @@
 			{
 				$set_user_id =  true;
 				$link_text = "<H2>{$config_set_user_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
+				$link_text = nl2br(str_replace(array('__ID__', '[', ']'), array($id, '<', '>'), $link_text));
 			}
 
 			// Normal update message
 			if(!$get_message && !empty($config_update_message) && $messages_sendt && !$set_user_id)
 			{
 				$link_text = "<H2>{$config_update_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
+				$link_text = nl2br(str_replace(array('__ID__', '__#__', '[', ']'), array($id, $num_updates, '<', '>'), $link_text));
 			}
 
 			$status_closed = array('X' => true);
@@ -1190,7 +1190,7 @@
 			if(!$get_message && !empty($config_close_message) && $status_closed[$ticket['status']])
 			{
 				$link_text = "<H4>{$config_close_message}</H4>";
-				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
+				$link_text = nl2br(str_replace(array('__ID__', '__#__', '[', ']'), array($id, $num_updates, '<', '>'), $link_text));
 			}
 
 			//message when closed;
