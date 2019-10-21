@@ -17,7 +17,43 @@
 					<button id = "submit_parent_component" type="button" class="pure-button pure-button-primary" onclick="show_parent_component_information({component_array/location_id}, {component_array/id});">
 						<xsl:value-of select="php:function('lang', 'details')" />
 					</button>
-					<div id = "form_parent_component_2"></div>
+					<form ENCTYPE="multipart/form-data" method="post" id="frm_add_picture_parent">
+						<xsl:attribute name="action">
+							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
+						</xsl:attribute>
+
+						<input type="hidden" name="component" value="{component_array/location_id}_{component_array/id}" />
+
+						<div id="new_picture_parent" class="container" style="display:none">
+
+							<div class="form-group">
+								<!--								<label>
+									<xsl:value-of select="php:function('lang', 'picture')" />
+								</label>-->
+								<div  id="equipment_parent_picture_container"/>
+							</div>
+							<div class="form-group">
+
+								<div class="input-group">
+									<div class="custom-file">
+										<input type="file" id="component_parent_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component_parent" onchange="show_picture_parent_submit();">
+											<xsl:attribute name="accept">image/*</xsl:attribute>
+											<xsl:attribute name="capture">camera</xsl:attribute>
+										</input>
+										<label class="custom-file-label">
+											<xsl:value-of select="php:function('lang', 'new picture')" />
+										</label>
+									</div>
+								</div>
+								<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
+									<xsl:value-of select="php:function('lang', 'add picture')" />
+								</button>
+							</div>
+						</div>
+
+					</form>
+					<div id="form_parent_component_2">
+					</div>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
