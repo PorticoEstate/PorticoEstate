@@ -268,4 +268,8 @@
 				}
 			}
 		}
+		public function add_single_comment( $event_id, $comment, $type = 'comment'  )
+		{
+			return $this->so->add_single_comment( $event_id, $comment, $type );
+		}
 	}

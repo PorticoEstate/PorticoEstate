@@ -99,7 +99,7 @@
 									/**
 									 * send SMS
 									 */
-									$sms_text = "Hei {$reservation['contact_name']}\n"
+									$sms_text = "Hei {$reservation['contact_name']}\n "
 										. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}";
 
 									try
@@ -115,7 +115,7 @@
 									if (!empty($sms_res[0][0]))
 									{
 										$comment = 'Melding om tilgang er sendt til ' . $reservation['contact_phone'];
-//										$this->add_comment($event, $comment);
+										$bo->add_single_comment($reservation['id'], $comment);
 									}
 
 									/**
@@ -156,8 +156,9 @@
 									 */
 									$get_data = array
 										(
-										'resid'	 => $resource['e_lock_resource_id'],
-										'system' => $resource['e_lock_system_id'],
+										'resid'		 => $resource['e_lock_resource_id'],
+										'system'	 => $resource['e_lock_system_id'],
+										'reserved'	 => 1
 									);
 
 									$status_arr = $e_lock_integration->get_status($get_data);
@@ -165,8 +166,47 @@
 									$log_data = _debug_array($get_data, false);
 									$this->log('get_data', $log_data);
 
+									$found_reservation = false;
 									foreach ($status_arr as $status)
 									{
+										if ($status['mobile'] == $reservation['contact_phone'])
+										{
+											$found_reservation	 = true;
+											$request_from		 = strtotime($reservation['from_']) - phpgwapi_datetime::user_timezone();
+											$status_from		 = strtotime($status['from']);
+											$status_to			 = strtotime($status['to']);
+											if ($request_from > $status_from && $request_from <= $status_to)
+											{
+												/**
+												 * send SMS
+												 */
+												$sms_text = "Hei {$reservation['contact_name']}\n "
+													. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
+													. "Koden er: {$status['key']}";
+
+												try
+												{
+													$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $sms_text);
+												}
+												catch (Exception $ex)
+												{
+													$this->log('sms_error', $ex->getMessage());
+												}
+
+												if (!empty($sms_res[0][0]))
+												{
+													$comment = 'Melding om tilgang og kode er sendt til ' . $reservation['contact_phone'];
+													$bo->add_single_comment($reservation['id'], $comment);
+												}
+
+												/**
+												 * send email
+												 */
+												$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($sms_text));
+
+												$this->log('sms_tekst', $sms_text);
+											}
+										}
 										/**
 										 * Implement me:
 										 * look for contact_phone, and send email/sms with key

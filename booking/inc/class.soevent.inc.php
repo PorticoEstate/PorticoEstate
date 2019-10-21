@@ -231,6 +231,43 @@
 			}
 		}
 
+		public function add_single_comment( $event_id, $comment, $type = 'comment'  )
+		{
+			$sql = "INSERT INTO bb_event_comment (event_id, time, author, comment, type) VALUES (?, ?, ?, ?, ?)";
+			$valueset=array();
+			$valueset[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $event_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> date('Y-m-d H:i'),
+					'type'	=> PDO::PARAM_STR
+				),
+				3	=> array
+				(
+					'value'	=> $GLOBALS['phpgw_info']['user']['account_id'],
+					'type'	=> PDO::PARAM_INT
+				),
+				4	=> array
+				(
+					'value'	=> $this->db->db_addslashes($comment),
+					'type'	=> PDO::PARAM_STR
+				),
+				5	=> array
+				(
+					'value'	=> $type,
+					'type'	=> PDO::PARAM_STR
+				),
+			);
+
+			return $this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		
+		}
+
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			$event_id = $entity['id'] ? $entity['id'] : -1;
