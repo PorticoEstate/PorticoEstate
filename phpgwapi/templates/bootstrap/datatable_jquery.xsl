@@ -218,10 +218,21 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type = 'link'">
-										<label>
-											<xsl:value-of select="value"/>
-										</label>
-											<input type="button" class="form-control btn btn-primary">
+										<div class="form-row  ml-1">
+											<label>
+												<xsl:value-of select="value"/>
+											</label>
+											<input type="button">
+												<xsl:attribute name="class">
+													<xsl:choose>
+														<xsl:when test="count(//item) > 1 ">
+															<xsl:text>form-control btn btn-primary</xsl:text>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:text>btn btn-primary</xsl:text>
+														</xsl:otherwise>
+													</xsl:choose>
+												</xsl:attribute>
 												<xsl:choose>
 													<xsl:when test="onclick">
 														<xsl:attribute name="onclick">
@@ -236,6 +247,7 @@
 													<xsl:value-of select="value"/>
 												</xsl:attribute>
 											</input>
+										</div>
 									</xsl:when>
 									<xsl:when test="type = 'hidden'">
 											<input>

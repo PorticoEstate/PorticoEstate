@@ -99,7 +99,7 @@
 									/**
 									 * send SMS
 									 */
-									$sms_text = "Hei {$reservation['contact_name']}\n"
+									$sms_text = "Hei {$reservation['contact_name']}\n "
 										. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}";
 
 									try
@@ -115,7 +115,7 @@
 									if (!empty($sms_res[0][0]))
 									{
 										$comment = 'Melding om tilgang er sendt til ' . $reservation['contact_phone'];
-//										$this->add_comment($event, $comment);
+										$bo->add_single_comment($reservation['id'], $comment);
 									}
 
 									/**
@@ -156,8 +156,9 @@
 									 */
 									$get_data = array
 										(
-										'resid'	 => $resource['e_lock_resource_id'],
-										'system' => $resource['e_lock_system_id'],
+										'resid'		 => $resource['e_lock_resource_id'],
+										'system'	 => $resource['e_lock_system_id'],
+										'reserved'	 => 1
 									);
 
 									$status_arr = $e_lock_integration->get_status($get_data);
@@ -165,12 +166,63 @@
 									$log_data = _debug_array($get_data, false);
 									$this->log('get_data', $log_data);
 
+									/**
+									 * look for contact_phone, and send email/sms with key
+									 */
+									$found_reservation = false;
 									foreach ($status_arr as $status)
 									{
-										/**
-										 * Implement me:
-										 * look for contact_phone, and send email/sms with key
-										 */
+										if ($status['mobile'] == $reservation['contact_phone'])
+										{
+											$found_reservation	 = true;
+											$request_from		 = strtotime($reservation['from_']);// - phpgwapi_datetime::user_timezone();
+											$status_from		 = strtotime($status['from']);
+											$status_to			 = strtotime($status['to']);
+											if ($request_from > $status_from && $request_from <= $status_to)
+											{
+												/**
+												 * send SMS
+												 */
+												$sms_text = "Hei {$reservation['contact_name']}\n "
+													. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
+													. "Koden er: {$status['key']}";
+
+												try
+												{
+													$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $sms_text);
+												}
+												catch (Exception $ex)
+												{
+													$this->log('sms_error', $ex->getMessage());
+												}
+
+												if (!empty($sms_res[0][0]))
+												{
+													$comment = 'Melding om tilgang og kode er sendt til ' . $reservation['contact_phone'];
+													$bo->add_single_comment($reservation['id'], $comment);
+												}
+
+												/**
+												 * send email
+												 */
+												if($this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($sms_text)))
+												{
+													$comment = 'Melding om tilgang og kode er sendt til ' . $reservation['contact_email'];
+													$bo->add_single_comment($reservation['id'], $comment);
+												}
+
+												$this->log('sms_tekst', $sms_text);
+
+												break;
+											}
+										}
+									}
+
+									if (!$found_reservation)
+									{
+										$error_msg	 = "Fann ikkje reservasjonen i adgangskontrollen";
+										$sms_res	 = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $error_msg);
+										$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
 									}
 								}
 							}
@@ -186,6 +238,7 @@
 
 		private function send_mailnotification( $receiver, $subject, $body )
 		{
+			$rcpt = false;
 			$send = CreateObject('phpgwapi.send');
 
 			$from = isset($this->config['email_sender']) && $this->config['email_sender'] ? $this->config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
@@ -199,13 +252,14 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+					$rcpt = $send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 				}
 				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
 			}
+			return $rcpt;
 		}
 
 		private function log( $what, $value = '' )
