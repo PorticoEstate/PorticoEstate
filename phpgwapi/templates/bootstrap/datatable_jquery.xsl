@@ -221,21 +221,21 @@
 										<label>
 											<xsl:value-of select="value"/>
 										</label>
-											<input type="button" class="form-control btn btn-primary">
-												<xsl:choose>
-													<xsl:when test="onclick">
-														<xsl:attribute name="onclick">
-															<xsl:value-of select="onclick"/>
-														</xsl:attribute>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
-													</xsl:otherwise>
-												</xsl:choose>
-												<xsl:attribute name="value">
-													<xsl:value-of select="value"/>
-												</xsl:attribute>
-											</input>
+										<input type="button" class="form-control btn btn-primary mr-5">
+											<xsl:choose>
+												<xsl:when test="onclick">
+													<xsl:attribute name="onclick">
+														<xsl:value-of select="onclick"/>
+													</xsl:attribute>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
+												</xsl:otherwise>
+											</xsl:choose>
+											<xsl:attribute name="value">
+												<xsl:value-of select="value"/>
+											</xsl:attribute>
+										</input>
 									</xsl:when>
 									<xsl:when test="type = 'hidden'">
 											<input>

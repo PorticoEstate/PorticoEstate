@@ -172,7 +172,7 @@
 										if ($status['mobile'] == $reservation['contact_phone'])
 										{
 											$found_reservation	 = true;
-											$request_from		 = strtotime($reservation['from_']) - phpgwapi_datetime::user_timezone();
+											$request_from		 = strtotime($reservation['from_']);// - phpgwapi_datetime::user_timezone();
 											$status_from		 = strtotime($status['from']);
 											$status_to			 = strtotime($status['to']);
 											if ($request_from > $status_from && $request_from <= $status_to)
@@ -211,6 +211,13 @@
 										 * Implement me:
 										 * look for contact_phone, and send email/sms with key
 										 */
+									}
+
+									if(!$found_reservation)
+									{
+										$error_msg = "Fann ikkje reservasjonen i adgangskontrollen";
+										$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $error_msg);
+										$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
 									}
 								}
 							}
