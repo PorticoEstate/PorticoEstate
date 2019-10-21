@@ -118,6 +118,15 @@
 			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
 
+			if($this->cat_id)
+			{
+				$cat_path = $this->cats->get_path($this->cat_id);
+				if(count($cat_path) > 1)
+				{
+					$this->parent_cat_id = $cat_path[0]['id'];
+				}
+			}
+
 			if($this->parent_cat_id)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_$this->parent_cat_id";
@@ -1813,13 +1822,16 @@ JS;
 				$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['groupdefault'] : '');
 			}
 
-			if (!isset($values['cat_id']))
+			if(!$this->cat_id)
 			{
-				$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category'] : '');
-			}
-			else
-			{
-				$this->cat_id = $values['cat_id'];
+				if (!isset($values['cat_id']))
+				{
+					$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category'] : '');
+				}
+				else
+				{
+					$this->cat_id = $values['cat_id'];
+				}
 			}
 
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
@@ -1936,8 +1948,14 @@ JS;
 				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid']
 			);
 
-			//_debug_array($data);
-			$function_msg = lang('add ticket');
+			$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
+
+			$function_msg = '';
+			if(!empty($parent_category[0]['name']))
+			{
+				$function_msg = "{$parent_category[0]['name']}::";
+			}
+			$function_msg .= lang('add ticket');
 
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
@@ -3008,6 +3026,8 @@ JS;
 						case 'get_reverse_assignee':
 							return $this->get_reverse_assignee('id');
 							break;
+						case 'set_notify':
+							break;
 						default:
 							break;
 					}
@@ -3092,7 +3112,7 @@ JS;
 
 				if ($entry['active'] && $entry['client_side'] && is_file($file))
 				{
-					$GLOBALS['phpgw']->js->add_external_file("/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+					$GLOBALS['phpgw']->js->add_external_file("/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}", true);
 					$js_found = true;
 				}
 			}

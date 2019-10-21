@@ -510,12 +510,18 @@ HTML;
 			$powered_by = lang('Powered by phpGroupWare version %1', $version);
 		}
 
+		$cache_refresh_token = '';
+		if(!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+		{
+			$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+		}
+
 		$var = array
 		(
 	//		'user_fullname'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString(),
 			'powered_by'	=> $powered_by,
 			'lang_login'	=> lang('login'),
-			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
+			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token)
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);
