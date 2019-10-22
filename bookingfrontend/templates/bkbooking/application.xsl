@@ -166,13 +166,13 @@
 									<xsl:text>mime size</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-allowing">
-									<xsl:text>jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+									<xsl:text>jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-max-size">
 									<xsl:text>2M</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
-									<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+									<xsl:text>Max 2M:: jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
 								</xsl:attribute>
 							</input>
 							<br/>
