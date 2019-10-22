@@ -21,6 +21,7 @@
 				<input type="hidden" name="repeat_until" value="{repeat_until}" />
 				<input type="hidden" name="field_interval" value="{interval}" />
 				<input type="hidden" name="outseason" value="{outseason}" />
+				<input type="hidden" name="application_id" value="{allocation/application_id}"/>
 				<xsl:for-each select="allocation/resources">
 					<input type="hidden" name="resources[]" value="{.}" />
 				</xsl:for-each>
