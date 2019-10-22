@@ -172,7 +172,7 @@
 				$errors['category'] = lang('Invalid category');
 			}
 
-			if (!preg_match('/(jpg|png|gif|xls|xlsx|doc|docx|txt|pdf|odt|ods)$/i', $document['name']))
+			if (!preg_match('/(jpg|jpeg|png|gif|xls|xlsx|doc|docx|txt|pdf|odt|ods)$/i', $document['name']))
 			{
 				$errors['name'] = lang('Not a valid filetype');
 			}

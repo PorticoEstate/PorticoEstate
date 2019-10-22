@@ -144,7 +144,7 @@
 					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM V_SOA_ANSATT WHERE {$filtermethod}";
+				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM FELLESDATA.V_SOA_ANSATT WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
@@ -210,7 +210,7 @@
 					$user_id = $GLOBALS['phpgw']->db->f('user_id');
 					$user_lid = $GLOBALS['phpgw']->accounts->get($user_id)->lid;
 
-					$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM V_SOA_ANSATT WHERE BRUKERNAVN = '{$user_lid}'";
+					$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM FELLESDATA.V_SOA_ANSATT WHERE BRUKERNAVN = '{$user_lid}'";
 
 					$db->query($sql, __LINE__, __FILE__);
 
@@ -278,7 +278,7 @@
 					}
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM V_SOA_ANSATT"
+				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM FELLESDATA.V_SOA_ANSATT"
 					. " WHERE {$filtermethod}";
 
 
@@ -354,7 +354,7 @@
 				{
 					foreach ($_values as $entry)
 					{
-						$sql = "SELECT BRUKERNAVN FROM V_SOA_ANSATT WHERE BRUKERNAVN ='{$entry['id']}'";
+						$sql = "SELECT BRUKERNAVN FROM FELLESDATA.V_SOA_ANSATT WHERE BRUKERNAVN ='{$entry['id']}'";
 						$db->query($sql, __LINE__, __FILE__);
 						if(!$db->next_record())
 						{
@@ -393,7 +393,7 @@
 					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM V_SOA_ANSATT WHERE {$filtermethod}";
+				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA FROM FELLESDATA.V_SOA_ANSATT WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 
@@ -438,8 +438,8 @@
 					$org_units[] = (int)$GLOBALS['phpgw']->db->f('id');
 				}
 
-				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST, V_ORG_ENHET.ORG_NAVN FROM V_SOA_ANSATT"
-					. " JOIN V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_SOA_ANSATT.ORG_ENHET_ID"
+				$sql = "SELECT BRUKERNAVN, STILLINGSTEKST, V_ORG_ENHET.ORG_NAVN FROM FELLESDATA.V_SOA_ANSATT AS V_SOA_ANSATT"
+					. " JOIN FELLESDATA.V_ORG_ENHET AS V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_SOA_ANSATT.ORG_ENHET_ID"
 					. " WHERE V_SOA_ANSATT.ORG_ENHET_ID IN (" . implode(',', $org_units) . ')';
 
 				$db->query($sql, __LINE__, __FILE__);
