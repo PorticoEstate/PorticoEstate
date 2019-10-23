@@ -81,6 +81,12 @@
 	$c = CreateObject('admin.soconfig', $location_id);
 
 	$login			 = $c->config_data[$section]['anonymous_user'];
+	$logindomain = phpgw::get_var('domain', 'string', 'GET');
+	if (strstr($login, '#') === false && $logindomain)
+	{
+		$login .= "#{$logindomain}";
+	}
+
 	$passwd			 = $c->config_data[$section]['anonymous_pass'];
 	$location_url	 = $c->config_data[$section]['location_url'];
 	$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];

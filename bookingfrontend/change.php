@@ -18,6 +18,11 @@
 	}
 	$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
 	$login = $config['anonymous_user'];
+	$logindomain = phpgw::get_var('domain', 'string', 'GET');
+	if (strstr($login, '#') === false && $logindomain)
+	{
+		$login .= "#{$logindomain}";
+	}
 	$passwd = $config['anonymous_passwd'];
 
 	$_POST['submitit'] = "";

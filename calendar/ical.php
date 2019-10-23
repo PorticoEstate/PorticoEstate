@@ -78,9 +78,16 @@
 	$login  = (isset($_GET['user']) ? $_GET['user'] : $_SERVER['PHP_AUTH_USER']);
 	$passwd = (isset($_GET['pass']) ? $_GET['pass'] : $_SERVER['PHP_AUTH_PW']);
 
-	$uid = $GLOBALS['phpgw']->accounts->name2id($login);
+
+	$logindomain = phpgw::get_var('domain', 'string', 'GET');
+	if (strstr($login, '#') === false && $logindomain)
+	{
+		$login .= "#{$logindomain}";
+	}
 
 	$sessionid = $GLOBALS['phpgw']->session->create($login, $passwd);
+
+	$uid = $GLOBALS['phpgw']->accounts->name2id($login);
 
 	$params = array('owner' => (int)$GLOBALS['phpgw_info']['user']['person_id']);
 	$owner = $params['owner'];
