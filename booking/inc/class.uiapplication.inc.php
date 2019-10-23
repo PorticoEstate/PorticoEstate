@@ -645,6 +645,32 @@
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
 				}
+				else if (isset($application['formstage']) && $application['formstage'] == 'partial2')
+				{
+					$is_partial1 = true;
+					$application['status'] = 'NEWPARTIAL1';
+					$session_id = $GLOBALS['phpgw']->session->get_session_id();
+					if (!empty($session_id))
+					{
+						$application['session_id'] = $session_id;
+					}
+					else
+					{
+						$session_id_ok = false;
+					}
+					// Application contains only event details. Use dummy values for contact fields
+					$dummyfields_string = array('contact_name','contact_phone','responsible_city','responsible_street', 'name', 'organizer', 'homepage', 'description', 'equipment');
+					foreach ($dummyfields_string as $field)
+					{
+						$application[$field] = 'dummy';
+					}
+
+					$application['contact_email'] = 'dummy@example.com';
+					$application['contact_email2'] = 'dummy@example.com';
+					$application['responsible_zip_code'] = '0000';
+					$application['customer_identifier_type'] = 'organization_number';
+					$application['customer_organization_number'] = '';
+				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
 					$application['name'] = $application['description'] ;
@@ -912,7 +938,19 @@
 
 			self::adddatetimepicker();
 
-			self::render_template_xsl('application_new', array('application' => $application,
+			$simple = false;
+
+			if($simple)
+			{
+				$template = 'application_new_simple';
+			}
+			else
+			{
+				$template = 'application_new';
+				$GLOBALS['phpgw']->js->add_external_file("/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+			}
+
+			self::render_template_xsl($template, array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
 		}

@@ -169,7 +169,7 @@ JS;
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/knockout.validation.js";
 //	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/aui-min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js";
+//	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/jquery.autocompleter.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/common.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/custom.js";
