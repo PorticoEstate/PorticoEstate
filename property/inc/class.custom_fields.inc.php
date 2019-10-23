@@ -660,7 +660,7 @@ JS;
 							$sql														 = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . (int)$data['attrib_id'] . "  AND id=" . (int)$data['value'];
 							$this->_db2->query($sql);
 							$this->_db2->next_record();
-							$ret														 = $this->_db2->f('value');
+							$ret														 = $this->_db2->f('value', true);
 							$cache_lb[$location_id][$data['attrib_id']][$data['value']]	 = $ret;
 						}
 					}
