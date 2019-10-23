@@ -50,6 +50,12 @@
 		$config = $c->config_data;
 
 		$login = $c->config_data['anonymous_user'];
+		$logindomain = phpgw::get_var('domain', 'string', 'GET');
+		if (strstr($login, '#') === false && $logindomain)
+		{
+			$login .= "#{$logindomain}";
+		}
+
 		$passwd = $c->config_data['anonymous_passwd'];
 		$_POST['submitit'] = "";
 

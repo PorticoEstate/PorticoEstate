@@ -17,8 +17,18 @@
 		include_once('../header.inc.php');
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
-	$login = "bookingguest";
-	$passwd = "bkbooking";
+	/**
+	 * Not in use ?
+	 */
+	$login = "";
+	$passwd = "";
+
+	$logindomain = phpgw::get_var('domain', 'string', 'GET');
+	if (strstr($login, '#') === false && $logindomain)
+	{
+		$login .= "#{$logindomain}";
+	}
+
 	$_POST['submitit'] = "";
 	if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 	{

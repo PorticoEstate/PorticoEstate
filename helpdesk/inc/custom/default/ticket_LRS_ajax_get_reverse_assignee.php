@@ -350,7 +350,7 @@
 				/**
 				 * Remove false hit
 				 */
-				if($search_options == 'resultat_enhet')
+				if(in_array($search_options, array('ressurs_nr', 'resultat_enhet')))
 				{
 					foreach ($_values as $entry)
 					{
