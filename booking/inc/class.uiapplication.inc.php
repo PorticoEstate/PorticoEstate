@@ -913,13 +913,12 @@
 			}
 
 
-//			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-//			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0);
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['to_']) :0);
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
+				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0);
+				$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['to_']) :0);
+				self::adddatetimepicker();
 				$tabs = array();
 				$tabs['generic'] = array('label' => lang('Application Add'), 'link' => '#application_add');
 				$active_tab = 'generic';
@@ -930,24 +929,24 @@
 			else
 			{
 				self::add_javascript('bookingfrontend', 'base', 'application.js');
-				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
-
-			self::adddatetimepicker();
 
 			$simple = false;
 
 			if($simple)
 			{
 				$template = 'application_new_simple';
+				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0, array('min_date' => time()));
+				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js');
 			}
 			else
 			{
 				$template = 'application_new';
 				$GLOBALS['phpgw']->js->add_external_file("/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
 			self::render_template_xsl($template, array('application' => $application,

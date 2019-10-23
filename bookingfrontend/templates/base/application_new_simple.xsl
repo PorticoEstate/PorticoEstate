@@ -104,7 +104,7 @@
 												<i class="far fa-calendar-alt"></i>
 											</span>
 										</div>
-										<input type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn" data-bind="textInput: bookingDate">
+										<input id="start_date" type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn" data-bind="textInput: bookingDate">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'Date')"/>
 											</xsl:attribute>
