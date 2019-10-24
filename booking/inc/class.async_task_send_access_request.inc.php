@@ -174,12 +174,13 @@
 									{
 										if ($status['mobile'] == $reservation['contact_phone'])
 										{
-											$found_reservation	 = true;
-											$request_from		 = strtotime($reservation['from_']);// - phpgwapi_datetime::user_timezone();
+											$reservation_from	 = strtotime($reservation['from_']);// - phpgwapi_datetime::user_timezone();
+											$reservation_to	 = strtotime($reservation['to_']);// - phpgwapi_datetime::user_timezone();
 											$status_from		 = strtotime($status['from']);
 											$status_to			 = strtotime($status['to']);
-											if ($request_from > $status_from && $request_from <= $status_to)
+											if ($reservation_to >= $status_from && $reservation_to <= $status_to)
 											{
+												$found_reservation	 = true;
 												/**
 												 * send SMS
 												 */
