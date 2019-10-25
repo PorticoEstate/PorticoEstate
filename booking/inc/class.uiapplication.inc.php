@@ -585,11 +585,13 @@
 		{
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
+			$building_id = phpgw::get_var('building_id', 'int');
+
 			$errors = array();
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'int'))));
+				$building = $this->building_bo->so->read(array('filters' => array('id' => $building_id)));
 
 				array_set_default($_POST, 'resources', array());
 				array_set_default($_POST, 'accepted_documents', array());
@@ -771,7 +773,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => phpgw::get_var('building_id', 'int')));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id));
 					}
 					else
 					{
@@ -804,9 +806,9 @@
 
 				array_set_default($application, 'resources', $resources);
 			}
-			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'int'));
+			array_set_default($application, 'building_id', $building_id);
 
-			$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
+			$_building = $this->building_bo->so->read_single($building_id);
 
 			array_set_default($application, 'building_name', $_building['name']);
 
@@ -855,7 +857,7 @@
 			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$application['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => phpgw::get_var('building_id', 'int')));
+						'id' => $building_id));
 				$filter_activity_top = $top_level_activity > 0 ? $top_level_activity : 0;
 			}
 			$application['frontpage_link'] = self::link(array());
@@ -949,9 +951,38 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
-			self::render_template_xsl($template, array('application' => $application,
-				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
+			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
+			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resources = array();
+			if(!empty($_resources['results']))
+			{
+				foreach ($_resources['results'] as $_resource)
+				{
+					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
+					{
+						$_resource['name'] .= ' *';
+					}
+
+					$resources[] = array(
+						'id' => $_resource['id'],
+						'name' => $_resource['name'],
+						'selected' => $resource_id == $_resource['id'] ? 1 : 0
+					);
+				}
+			}
+
+			self::render_template_xsl($template, array(
+				'application' => $application,
+				'activities' => $activities,
+				'agegroups' => $agegroups,
+				'audience' => $audience,
+				'resource_list'	=> array('options' => $resources),
+				'config' => CreateObject('phpgwapi.config', 'booking')->read()
+				)
+			);
 		}
 
 
