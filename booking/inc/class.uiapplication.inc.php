@@ -927,18 +927,18 @@
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 				self::add_javascript('booking', 'base', 'application.js');
+				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
+					'file'), 'application_form');
 			}
-			else
-			{
-				self::add_javascript('bookingfrontend', 'base', 'application.js');
-			}
+//			else
+//			{
+//				self::add_javascript('bookingfrontend', 'base', 'application.js');
+//			}
 
-			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
-				'file'), 'application_form');
 
 			$simple = false;
 
-			if($simple)
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $simple)
 			{
 				$template = 'application_new_simple';
 				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0, array('min_date' => time()));
