@@ -64,7 +64,7 @@
 								<li>
 									<div class="form-check checkbox checkbox-primary">
 										<label class="check-box-label">
-											<input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
+											<input class="form-check-input choosenResource" type="radio" name="resources[]" data-bind="textInput: id, checked: selected" />
 											<span class="label-text" data-bind="html: name"></span>
 										</label>
 									</div>
@@ -72,6 +72,23 @@
 							</ul>
 						</div>
 					</div>
+
+<!--test-->
+<!--					<div class="form-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'resources')" />
+						</label>
+						<div class="form-control text-left dropdown-toggle w-100" id="resourceDropdownBtn" type="input" data-toggle="dropdown">
+							<xsl:value-of select="php:function('lang', 'Choose resource')" />
+							<span class="caret"></span>
+						</div>
+
+						<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource" aria-label="Large">
+							<li class="dropdown-item" data-bind="text: name, id: id, click: $root.resourceSelected, selected: selected"></li>
+						</ul>
+						<input class="form-control" id="inputResource" required="true" type="text" style="display: block" name="resources[]"  data-bind="value: selectedResources"/>
+					</div>-->
+<!--test-->
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<!-- Display Time Chosen -->

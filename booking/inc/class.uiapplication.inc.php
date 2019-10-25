@@ -940,12 +940,12 @@
 			{
 				$template = 'application_new_simple';
 				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0, array('min_date' => time()));
-				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js');
+				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', 'text/javascript', true);
 			}
 			else
 			{
 				$template = 'application_new';
-				$GLOBALS['phpgw']->js->add_external_file("/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 

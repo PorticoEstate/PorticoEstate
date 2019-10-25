@@ -4316,7 +4316,7 @@ HTML;
 
 				if ($entry['active'] && $entry['client_side'] && is_file($file))
 				{
-					$GLOBALS['phpgw']->js->add_external_file("/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+					$GLOBALS['phpgw']->js->add_external_file("property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
 					$js_found = true;
 				}
 			}

@@ -247,7 +247,7 @@
 						$load['bootstrap'] = array("js/bootstrap{$_type}");
 						$load['bootstrap-multiselect'] = array("js/bootstrap-multiselect");
 
-						$GLOBALS['phpgw']->css->add_external_file("/phpgwapi/js/bootstrap/css/bootstrap.min.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap/css/bootstrap.min.css");
 					}
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.css");

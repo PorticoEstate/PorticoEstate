@@ -3112,7 +3112,7 @@ JS;
 
 				if ($entry['active'] && $entry['client_side'] && is_file($file))
 				{
-					$GLOBALS['phpgw']->js->add_external_file("/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}", true);
+					$GLOBALS['phpgw']->js->add_external_file("helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}", true);
 					$js_found = true;
 				}
 			}
