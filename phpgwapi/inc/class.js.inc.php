@@ -382,15 +382,16 @@ HTML;
 		 */
 		function add_external_file($file, $end_of_page = false)
 		{
-			if ( is_file(PHPGW_SERVER_ROOT . "/$file") )
+			$_file = ltrim($file, '/');
+			if ( is_file(PHPGW_SERVER_ROOT . "/$_file") )
 			{
 				if($end_of_page)
 				{
-					$this->external_end_files[$file] = true;
+					$this->external_end_files[$_file] = true;
 				}
 				else
 				{
-					$this->external_files[$file] = true;
+					$this->external_files[$_file] = true;
 				}
 			}
 		}
