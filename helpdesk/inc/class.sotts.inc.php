@@ -750,7 +750,7 @@
 			$value_set['reverse_id'] = $GLOBALS['phpgw_info']['user']['account_id']; //The originator for the reversed ticket
 			$value_set['assignedto'] = $ticket['assignedto'];
 			$value_set['group_id'] = $ticket['group_id'];
-			$value_set['subject'] = $this->db->db_addslashes($ticket['subject']);
+			$value_set['subject'] = substr($this->db->db_addslashes($ticket['subject']), 0, 255);
 			$value_set['cat_id'] = $ticket['cat_id'];
 			$value_set['status'] = $ticket['status'];
 			$value_set['details'] = $this->db->db_addslashes($ticket['details']);
