@@ -508,6 +508,28 @@ input[type="checkbox"]:disabled + .label-text:before{
 	color: #ccc;
 }
 
+/*Radio*/
+
+input[type="radio"] + .label-text:before{
+	content: "\f111";
+	font-family: "Font Awesome 5 Free";
+	speak-as: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing:antialiased;
+	width: 1em;
+	display: inline-block;
+	margin-right: 5px;
+}
+
+input[type="radio"]:checked + .label-text:before{
+	content: "\f192";
+	animation: effect 250ms ease-in;
+}
+
 
 .container-top-fix {
     margin-top: 7rem;

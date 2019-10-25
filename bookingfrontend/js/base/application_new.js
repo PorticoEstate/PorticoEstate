@@ -271,6 +271,7 @@ YUI({ lang: 'nb-no' }).use(
         on: {
           selectionChange: function (event) {
             new Date(event.newSelection);
+			console.log(event.newSelection);
             $(".datepicker-btn").val(event.newSelection);
             am.bookingDate(event.newSelection);
             return false;
@@ -297,7 +298,8 @@ YUI({ lang: 'nb-no' }).use(
           selectionChange: function (event) {
             new Date(event.newSelection);
             $(this).val(event.newSelection);
-            am.bookingStartTime(event.newSelection);
+ 			console.log(event.newSelection);
+           am.bookingStartTime(event.newSelection);
             //am.bookingDate(event.newSelection);
           }
         }
