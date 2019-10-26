@@ -1584,27 +1584,24 @@ JS;
 				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
 				$values['p'][$p_entity_id]['p_num'] = phpgw::get_var('p_num');
-
-				$origin = phpgw::get_var('origin');
-				$origin_id = phpgw::get_var('origin_id', 'int');
 			}
 
-			if (isset($values['origin']) && $values['origin'])
+			$origin_id = phpgw::get_var('origin_id', 'int');
+
+			if (!empty($values['origin_id']))
 			{
 				$origin = $values['origin'];
 				$origin_id = $values['origin_id'];
 			}
 
-			$interlink = CreateObject('property.interlink');
-
-			if (isset($origin) && $origin)
+			if (!empty($origin_id))
 			{
-				$values['origin_data'][0]['location'] = $origin;
-				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['location'] = 'helpdesk.ticket';
+				$values['origin_data'][0]['descr'] = lang('ticket');
 				$values['origin_data'][0]['data'][] = array
-					(
+				(
 					'id' => $origin_id,
-					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					'link' =>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $origin_id)),
 				);
 			}
 			//_debug_array($insert_record);
@@ -2935,6 +2932,7 @@ JS;
 						'id_in_name' => 'num'))),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
+				'reverse_assigned' => $ticket['user_id'] != $ticket['reverse_id'] ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
 				'cat_change_list' => $cat_change_list
 			);

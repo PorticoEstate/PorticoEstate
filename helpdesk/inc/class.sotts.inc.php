@@ -770,13 +770,12 @@
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 			$id = $this->db->get_last_insert_id($table, 'id');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 			if( !empty($ticket['set_notify_lid']))
 			{
 				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($ticket['set_notify_lid']);
 				$person_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
-				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
-
 				$values_insert = array
 					(
 					'location_id'			 => $location_id,
@@ -793,6 +792,20 @@
 
 			}
 
+			if (!empty($ticket['origin_id']) && $ticket['origin_id'])
+			{
+				$interlink = CreateObject('property.interlink');
+				$interlink_data = array
+					(
+					'location1_id'		 => $location_id,
+					'location1_item_id'	 => (int)$ticket['origin_id'],
+					'location2_id'		 => $location_id,
+					'location2_item_id'	 => $id,
+					'account_id'		 => $this->account
+				);
+
+				$interlink->add($interlink_data, $this->db);
+			}
 
 			if($this->db->transaction_commit())
 			{
