@@ -468,6 +468,7 @@
 
 		function read( $data = array() )
 		{
+			static $parent_category_name = array();
 			static $category_name = array();
 			static $account = array();
 			static $vendor_cache = array();
@@ -528,6 +529,23 @@
 				}
 
 				$ticket['category'] = $category_name[$ticket['cat_id']];
+
+
+				if (!isset($parent_category_name[$ticket['cat_id']]))
+				{
+					$cat_path = $this->cats->get_path($ticket['cat_id']);
+					if(count($cat_path) > 1)
+					{
+						$parent_cat_id = $cat_path[0]['id'];
+					}
+
+					$parent_category_name[$ticket['cat_id']] = $this->get_category_name($parent_cat_id);
+				}
+
+				if(isset($parent_category_name[$ticket['cat_id']]))
+				{
+					$ticket['parent_category'] = $parent_category_name[$ticket['cat_id']];
+				}
 
 				if (!$ticket['subject'])
 				{

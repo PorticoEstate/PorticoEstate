@@ -840,8 +840,10 @@ HTML;
 			$uicols['descr'][] = lang('subject');
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][] = lang('entry date');
+			$uicols['name'][] = 'parent_category';
+			$uicols['descr'][] = lang('top level');
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
+			$custom_cols = !empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
 			$columns = $this->bo->get_columns();
 
 			foreach ($custom_cols as $col)
