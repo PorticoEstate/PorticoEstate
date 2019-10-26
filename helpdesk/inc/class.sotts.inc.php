@@ -682,6 +682,7 @@
 				$ticket['modified_date']	= $this->db->f('modified_date');
 				$ticket['external_ticket_id'] = $this->db->f('external_ticket_id');
 				$ticket['external_origin_email'] =  $this->db->f('external_origin_email', true);
+				$ticket['on_behalf_of_name'] =  $this->db->f('on_behalf_of_name', true);
 
 				if($ticket['reverse_id'])
 				{
@@ -762,6 +763,7 @@
 			$value_set['publish_note'] = 1;
 			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? (int)$ticket['external_ticket_id'] : null;
 			$value_set['external_origin_email'] = $this->db->db_addslashes($ticket['external_origin_email']);
+			$value_set['on_behalf_of_name'] = $this->db->db_addslashes($ticket['set_on_behalf_of_name']);
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));

@@ -1217,19 +1217,33 @@
 					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
 
 			$body .= "<table class='overview'>";
+
+			if($ticket['on_behalf_of_name'])
+			{
+				$body .= '<tr><td>'. lang('on behalf of')."</td><td>:&nbsp;{$ticket['on_behalf_of_name']}</td></tr>";
+			}
+
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
 			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;<b>'.$status_text[$ticket['status']]."</b></td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
 
-			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
+			if($ticket['assignedto'])
+			{
+				$_assignedto = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+			}
+			else if($ticket['group_id'])
+			{
+				$_assignedto = str_replace('_', ' ', $group_name);
+			}
+
+			if($_assignedto)
+			{
+				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$_assignedto."</td></tr>";
+			}
+
 			if(empty($this->config->config_data['disable_priority']))
 			{
 				$body .= '<tr><td>'. lang('Priority').'</td><td>:&nbsp;'.$ticket['priority']."</td></tr>";
-			}
-
-			if(empty($this->config->config_data['tts_disable_groupassign_on_add']))
-			{
-				$body .= '<tr><td>'. lang('Group').'</td><td>:&nbsp;'. $group_name ."</td></tr>";
 			}
 
 			if($ticket['reverse_id'])
