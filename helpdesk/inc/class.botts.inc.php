@@ -1564,9 +1564,8 @@ HTML;
 				if ($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
 				{
 					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+					$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 				}
-
-				$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 			}
 			unset($entry);
 
