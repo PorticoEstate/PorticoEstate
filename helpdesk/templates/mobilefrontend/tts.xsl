@@ -401,7 +401,7 @@
 							<xsl:choose>
 								<xsl:when test="set_user ='1'">
 									<input type="hidden" id="set_user_lid" name="values[set_user_lid]"  value="{value_set_user}"/>
-									<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-3-4">
+									<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1">
 									</input>
 									<div id="set_user_container"/>
 								</xsl:when>
