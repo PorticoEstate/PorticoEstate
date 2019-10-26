@@ -2250,12 +2250,25 @@ JS;
 				 */
 				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute, $this->_simple);
 
-				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
-					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
-					)
+				if (!empty($values['send_mail']) 
+					|| (!empty($this->bo->config->config_data['mailnotification']) && $this->bo->fields_updated)
+					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated)
 				)
 				{
-					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
+					if(!empty($values['send_mail']))
+					{
+						$_send_mail = true;
+					}
+					else if ($this->_simple)
+					{
+						$_send_mail = true;
+					}
+					else
+					{
+						$_send_mail = false;
+					}
+
+					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, $_send_mail);
 				}
 
 				//--------- files

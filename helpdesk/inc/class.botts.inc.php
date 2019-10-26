@@ -1549,6 +1549,11 @@ HTML;
 				/**
 				 * Calculate email from username
 				 */
+				if ($validator->check_email_address($entry['account_lid']))
+				{
+					$entry['email'] = $entry['account_lid'];
+				}
+
 				if(!$entry['email'])
 				{
 					$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
@@ -1569,7 +1574,15 @@ HTML;
 			if(!empty($this->config->config_data['from_email']))
 			{
 				$from_address = $this->config->config_data['from_email'];
-				$from_name = 'NoReply';
+				$from_address_arr = explode('<', $from_address);
+				if(!empty($from_address_arr[1]))
+				{
+					$from_name = trim($from_address_arr[0]);
+				}
+				else
+				{
+					$from_name = 'NoReply';
+				}
 			}
 			else
 			{
