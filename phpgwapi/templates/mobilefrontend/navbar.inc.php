@@ -492,11 +492,17 @@ HTML;
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
+		$cache_refresh_token = '';
+		if (!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+		{
+			$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+		}
+
 		$var = array
 		(
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 			'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
+			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token)
 		);
 
 		$GLOBALS['phpgw']->template->set_var($var);
