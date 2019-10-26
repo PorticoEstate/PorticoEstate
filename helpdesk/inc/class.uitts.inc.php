@@ -159,7 +159,7 @@
 
 				}
 			}
-			if((int)$this->parent_cat_id > 0)
+			if((int)$this->parent_cat_id > 0 && !phpgw::get_var('id', 'int', 'GET'))
 			{
 				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
 				{
@@ -1133,6 +1133,14 @@ HTML;
 
 		function index()
 		{
+			if((int)$this->parent_cat_id > 0)
+			{
+				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+				{
+					phpgw::no_access();
+				}
+			}
+
 			if (!$this->acl_read)
 			{
 				phpgw::no_access();
