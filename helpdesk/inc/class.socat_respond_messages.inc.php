@@ -59,9 +59,7 @@
 
 			foreach ($data as $cat_id => $entry)
 			{
-				$test = (array_unique(array_values($entry)));
-
-				if(!empty($test[0]))
+				if($entry['new_message'] || $entry['set_user_message'] || $entry['update_message'] || $entry['close_message'])
 				{
 					$valueset[] = array
 						(
