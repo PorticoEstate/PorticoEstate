@@ -184,8 +184,11 @@
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 				'contact_info' => array('type' => 'text', 'nullable' => True),
 				'direct_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
-				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'booking_day_default_lenght' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'booking_dow_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'booking_dow_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'booking_time_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'booking_time_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -216,6 +219,24 @@
 			'fk' => array(
 				'bb_resource' => array('resource_id' => 'id'),
 				'bb_facility' => array('facility_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
+		'bb_resource_e_lock' => array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'e_lock_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+				'access_code_format' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+				'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
+				'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'e_lock_system_id', 'e_lock_resource_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array(),
