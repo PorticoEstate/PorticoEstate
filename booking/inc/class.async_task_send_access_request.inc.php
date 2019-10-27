@@ -185,6 +185,15 @@
 												$status_to			 = strtotime($status['to']);
 												$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
 
+												if($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
+												{
+													$e_loc_key = str_replace('__key__', $status['key'], $e_lock['access_code_format']);
+												}
+												else
+												{
+													$e_loc_key = $status['key'];
+												}
+
 												if ($reservation_to >= $status_from && $reservation_to <= $status_to)
 												{
 													$found_reservation	 = true;
@@ -193,7 +202,7 @@
 													 */
 													$sms_text			 = "Hei {$reservation['contact_name']}\n "
 														. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
-														. "Koden for {$e_lock_name} er: {$status['key']}";
+														. "Koden for {$e_lock_name} er: {$e_loc_key}";
 
 													try
 													{
