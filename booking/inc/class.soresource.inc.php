@@ -25,8 +25,11 @@
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'direct_booking' => array('type' => 'int', 'required' => false),
-				'e_lock_system_id' => array('type' => 'int', 'required' => false),
-				'e_lock_resource_id' => array('type' => 'int', 'required' => false),
+				'booking_day_default_lenght' => array('type' => 'int', 'required' => false),
+				'booking_dow_default_start' => array('type' => 'int', 'required' => false),
+				'booking_dow_default_end' => array('type' => 'int', 'required' => false),
+				'booking_time_default_start' => array('type' => 'int', 'required' => false),
+				'booking_time_default_end' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
@@ -107,6 +110,12 @@
 						'table' => 'bb_resource_facility',
 						'key' => 'resource_id',
 						'column' => 'facility_id',
+					)),
+				'e_locks' => array('type' => 'string',
+					'manytomany' => array(
+						'table' => 'bb_resource_e_lock',
+						'key' => 'resource_id',
+						'column' => array('e_lock_system_id', 'e_lock_resource_id', 'e_lock_name','access_code_format', 'active', 'modified_on', 'modified_by'),
 					)),
 				)
 			);
@@ -315,5 +324,140 @@
 			{
 				return false;
 			}
+		}
+
+		function get_e_locks( $resource_id )
+		{
+			$values = array();
+
+			$this->db->query("SELECT * FROM bb_resource_e_lock " .
+				"WHERE resource_id = {$resource_id}", __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'resource_id' => $this->db->f('resource_id'),
+					'e_lock_system_id' => $this->db->f('e_lock_system_id'),
+					'e_lock_resource_id' => $this->db->f('e_lock_resource_id'),
+					'e_lock_name' => $this->db->f('e_lock_name',true),
+					'access_code_format' => $this->db->f('access_code_format',true),
+					'active' => $this->db->f('active'),
+					'modified_on' => $this->db->f('modified_on'),
+					'modified_by' => $this->db->f('modified_by'),
+				);
+			}
+
+			return array(
+				'results' => $values,
+				'total_records' => count($values),
+				'start' => 0,
+				'sort' => '',
+				'dir' => ''
+			);
+		}
+
+		function add_e_lock( $resource_id, $e_lock_system_id, $e_lock_resource_id, $e_lock_name = '', $access_code_format = '' )
+		{
+			$ret = 0;
+			if (!$resource_id || !$e_lock_system_id || !$e_lock_resource_id)
+			{
+				return false;
+			}
+
+			$insert_update[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $this->db->db_addslashes(substr($e_lock_name, 0, 20)),
+					'type'	=> PDO::PARAM_STR
+				),
+				2	=> array
+				(
+					'value'	=> $this->db->db_addslashes($access_code_format),
+					'type'	=> PDO::PARAM_STR
+				),
+				3	=> array
+				(
+					'value'	=> date($this->db->datetime_format()),
+					'type'	=> PDO::PARAM_STR
+				),
+				4	=> array
+				(
+					'value'	=> (int)$GLOBALS['phpgw_info']['user']['account_id'],
+					'type'	=> PDO::PARAM_INT
+				),
+				5	=> array
+				(
+					'value'	=> $resource_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				6	=> array
+				(
+					'value'	=> $e_lock_system_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				7	=> array
+				(
+					'value'	=> $e_lock_resource_id,
+					'type'	=> PDO::PARAM_INT
+				)
+			);
+			//check for duplicate
+
+			$sql = "SELECT resource_id FROM bb_resource_e_lock"
+				. " WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
+			$condition =  array((int)$resource_id, (int)$e_lock_system_id,  (int)$e_lock_resource_id);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			if ($this->db->next_record())
+			{
+				$update_sql = "UPDATE bb_resource_e_lock SET e_lock_name = ?, access_code_format = ?, modified_on = ?, modified_by = ? WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
+				if( $this->db->insert($update_sql, $insert_update, __LINE__, __FILE__))
+				{
+					$ret = 2;
+				}
+			}
+			else
+			{
+				$add_sql = "INSERT INTO bb_resource_e_lock (e_lock_name, access_code_format, modified_on, modified_by, resource_id, e_lock_system_id, e_lock_resource_id)"
+					. " VALUES (?, ?, ?, ?, ? ,? ,?)";
+				if( $this->db->insert($add_sql, $insert_update, __LINE__, __FILE__))
+				{
+					$ret = 1;
+				}
+			}
+
+			return $ret;
+		}
+
+		function remove_e_lock( $resource_id, $e_lock_system_id, $e_lock_resource_id)
+		{
+			if (!$resource_id || !$e_lock_system_id || !$e_lock_resource_id)
+			{
+				return false;
+			}
+
+			$delete_sql = "DELETE FROM bb_resource_e_lock WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
+			$delete[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $resource_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> $e_lock_system_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				3	=> array
+				(
+					'value'	=> $e_lock_resource_id,
+					'type'	=> PDO::PARAM_INT
+				)
+			);
+
+			return $this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
 		}
 	}

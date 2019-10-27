@@ -284,4 +284,22 @@
 			}
 			return false;
 		}
+
+		function add_e_lock( $entity, $resource_id, $e_lock_system_id, $e_lock_resource_id,$e_lock_name = '', $access_code_format = '' )
+		{
+			if ($this->authorize_write($entity))
+			{
+				return parent::add_e_lock($resource_id, $e_lock_system_id, $e_lock_resource_id, $e_lock_name, $access_code_format);
+			}
+			return false;
+		}
+
+		function remove_e_lock( $entity, $resource_id, $e_lock_system_id, $e_lock_resource_id)
+		{
+			if ($this->authorize_write($entity))
+			{
+				return parent::remove_e_lock($resource_id, $e_lock_system_id, $e_lock_resource_id);
+			}
+			return false;
+		}
 	}
