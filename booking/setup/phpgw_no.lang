@@ -793,3 +793,15 @@ Enter both first and last name	booking	no	Oppgi både fornavn og etternavn
 parent group	booking	no	Overordnet gruppe
 Electronic lock	booking	no	E-lås
 booking_async_task_send_access_request	booking	no	Send bestilling om tilgang til API for E-lås
+add electronic lock	booking	no	Legg til E-lås
+System id	booking	no	System ID
+resource id	booking	no	Ressurs ID
+access code format	booking	no	Kodeformat: #__key__
+day of week	booking	no	Ukedag: 1 = Mandag, 7 = Søndag
+day default lenght	booking	no	Periode, antall dager
+dow default start	booking	no	Start på ukedag nr:
+dow default end	booking	no	Slutt på ukedag nr:
+time default start	booking	no	Start/utlevering time
+time default end	booking	no	Slutt/innlevering time
+added	booking	no	Lagt til
+updated	booking	no	Oppdatert

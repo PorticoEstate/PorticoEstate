@@ -4124,3 +4124,119 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.46 to 0.2.47
+	 *
+	 */
+	$test[] = '0.2.48';
+	function booking_upgrade0_2_48()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+			$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'bb_resource_e_lock',  array(
+					'fd' => array(
+						'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+						'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'e_lock_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+						'access_code_format' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+						'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
+						'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+						'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					),
+					'pk' => array('resource_id', 'e_lock_system_id', 'e_lock_resource_id'),
+					'fk' => array(
+						'bb_resource' => array('resource_id' => 'id'),
+					),
+					'ix' => array(),
+					'uc' => array(),
+				)
+			);
+
+
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT id, e_lock_system_id, e_lock_resource_id FROM bb_resource WHERE e_lock_system_id IS NOT NULL', __LINE__, __FILE__);
+
+		// using stored prosedures
+		$sql = 'INSERT INTO bb_resource_e_lock (resource_id, e_lock_system_id, e_lock_resource_id, modified_by )'
+			. ' VALUES(?, ?, ?, ?)';
+		$valueset = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$valueset[] = array
+				(
+				1 => array
+					(
+					'value' => $GLOBALS['phpgw_setup']->oProc->f('id'),
+					'type' => 1 //PDO::PARAM_INT
+				),
+				2 => array
+					(
+					'value' => $GLOBALS['phpgw_setup']->oProc->f('e_lock_system_id'),
+					'type' => 1 //PDO::PARAM_INT
+				),
+				3 => array
+					(
+					'value' => $GLOBALS['phpgw_setup']->oProc->f('e_lock_resource_id'),
+					'type' => 1 //PDO::PARAM_INT
+				),
+				4 => array
+					(
+					'value' => (int)$GLOBALS['phpgw_info']['user']['account_id'],
+					'type' => 1 //PDO::PARAM_INT
+				)
+			);
+		}
+
+		if ($valueset)
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'e_lock_system_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'e_lock_resource_id');
+		
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_day_default_lenght',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_dow_default_start',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_dow_default_end',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_time_default_start',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_time_default_end',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.49';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

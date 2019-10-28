@@ -503,7 +503,14 @@
 		*/
 		function return_single($id = '')
 		{
+			static $cat_cache = array();
 			$id = (int) $id;
+
+			if(!empty($cat_cache[$id]))
+			{
+				return $cat_cache[$id];
+			}
+
 			$this->db->query("SELECT * FROM phpgw_categories WHERE cat_id = {$id}",__LINE__,__FILE__);
 
 			$cats = array();
@@ -532,6 +539,8 @@
 				}
 				$cats[] = $cat;
 			}
+
+			$cat_cache[$id] = $cats;
 
 			return $cats;
 		}
@@ -1096,7 +1105,14 @@
 
 		public function get_path($cat_id)
 		{
+			static $cat_cache = array();
 			$cat_id = (int) $cat_id;
+
+			if(!empty($cat_cache[$cat_id]))
+			{
+				return $cat_cache[$cat_id];
+			}
+
 			$sql = "SELECT cat_parent, cat_name FROM phpgw_categories WHERE cat_id = {$cat_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
@@ -1117,6 +1133,8 @@
 			{
 				$path = array_merge($this->get_path($parent_id), $path);
 			}
+
+			$cat_cache[$cat_id] = $path;
 
 			return $path;
 		}

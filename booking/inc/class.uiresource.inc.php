@@ -26,7 +26,10 @@
 			'get_rescategories' => true,
 			'get_buildings' => true,
 			'add_building' => true,
-			'remove_building' => true
+			'remove_building' => true,
+			'get_e_locks'	=> true,
+			'add_e_lock'	=> true,
+			'remove_e_lock'	=> true,
 		);
 
 		public function __construct()
@@ -54,8 +57,11 @@
 				'activities' => 'int',
 				'facilities' => 'int',
 				'direct_booking' => 'string',
-				'e_lock_system_id' => 'int',
-				'e_lock_resource_id' => 'int',
+				'booking_day_default_lenght' => 'int',
+				'booking_dow_default_start' => 'int',
+				'booking_dow_default_end' => 'int',
+				'booking_time_default_start' => 'int',
+				'booking_time_default_end' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
@@ -274,7 +280,7 @@
 					'date', 'security', 'file'));
 			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
 
-			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_building_datatable_def($id),
+			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_datatable_def($id),
 				'resource' => $resource, 'activitydata' => $activity_data, 'rescategorydata' => $rescategory_data));
 		}
 
@@ -441,6 +447,52 @@
 			return $rescategory_data;
 		}
 
+		private static function get_datatable_def( $id )
+		{
+			return array(
+				self::get_building_datatable_def($id),
+				self::get_e_lock_datatable_def($id),
+			);
+		}
+
+		private static function get_e_lock_columns()
+		{
+
+			$columns = array
+			(
+				array('key' => 'e_lock_system_id', 'label' => lang('system id'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'e_lock_resource_id', 'label' => lang('resource id'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'e_lock_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'access_code_format', 'label' => lang('access code format'), 'sortable' => false, 'resizeable' => true),
+			);
+			return $columns;
+		}
+
+		private static function get_e_lock_datatable_def( $id )
+		{
+			return	array
+			(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_e_locks',
+						'resource_id' => $id, 'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => self::get_e_lock_columns(),
+				'data' => json_encode(array()),
+				'config' => array
+				(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+		}
+
+		public function get_e_locks()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int');
+
+			$lock_result = $this->bo->so->get_e_locks($resource_id);
+
+			return $this->jquery_results($lock_result);
+		}
 
 		private static function get_building_columns()
 		{
@@ -459,21 +511,85 @@
 		private static function get_building_datatable_def( $id )
 		{
 			return array
+			(
+				'container' => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_buildings',
+						'resource_id' => $id, 'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => self::get_building_columns(),
+				'data' => json_encode(array()),
+				'config' => array
 				(
-				array
-					(
-					'container' => 'datatable-container_0',
-					'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_buildings',
-							'resource_id' => $id, 'phpgw_return_as' => 'json'))),
-					'ColumnDefs' => self::get_building_columns(),
-					'data' => json_encode(array()),
-					'config' => array(
-						array('disableFilter' => true),
-						array('disablePagination' => true)
-					)
+					array('disableFilter' => true),
+					array('disablePagination' => true)
 				)
 			);
 		}
+
+		public function add_e_lock()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$e_lock_system_id = phpgw::get_var('e_lock_system_id', 'int');
+			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'int');
+			$e_lock_name = phpgw::get_var('e_lock_name', 'string');
+			$access_code_format = phpgw::get_var('access_code_format', 'string');
+
+			if (!$e_lock_system_id || !$e_lock_resource_id )
+			{
+				return array(
+					'ok' => false,
+					'msg' => lang('select')
+				);
+			}
+
+			try
+			{
+				$resource = $this->bo->read_single($resource_id);
+				$receipt = $this->bo->add_e_lock($resource, $resource_id, $e_lock_system_id, $e_lock_resource_id,$e_lock_name, $access_code_format);
+				$msg = $receipt == 1 ? lang('added') : lang('updated');
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				return false;
+				$msg = lang('Could not add object due to insufficient permissions');
+			}
+
+			return array(
+				'ok' => $receipt,
+				'msg' => $msg
+			);
+		}
+
+		public function remove_e_lock()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$e_lock_system_id = phpgw::get_var('e_lock_system_id', 'int');
+			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'int');
+
+			if (!$e_lock_system_id || !$e_lock_resource_id )
+			{
+				return array(
+					'ok' => false,
+					'msg' => lang('select')
+				);
+			}
+			try
+			{
+				$resource = $this->bo->read_single($resource_id);
+				$receipt = $this->bo->remove_e_lock($resource, $resource_id, $e_lock_system_id, $e_lock_resource_id);
+				$msg = '';
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				return false;
+				$msg = lang('Could not update object due to insufficient permissions');
+			}
+
+			return array(
+				'ok' => $receipt,
+				'msg' => $msg
+			);
+		}
+
 
 		public function get_buildings()
 		{
@@ -594,7 +710,7 @@
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 			$data = array(
-				'datatable_def' => self::get_building_datatable_def($id),
+				'datatable_def' => self::get_datatable_def($id),
 				'resource' => $resource
 			);
 			self::add_javascript('booking', 'base', 'resource_new.js'); // to render custom fields

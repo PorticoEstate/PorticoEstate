@@ -255,17 +255,17 @@
 
 			if ($type == '.ticket')
 			{
-				$link = array('menuaction' => 'property.uitts.view', 'id' => $id);
+				$link = array('menuaction' => "{$linkend_location['appname']}.uitts.view", 'id' => $id);
 			}
-			if ($type == '.s_agreement')
+			else if ($type == '.s_agreement')
 			{
 				$link = array('menuaction' => 'property.uis_agreement.edit', 'id' => $id);
 			}
-			if ($type == '.agreement')
+			else if ($type == '.agreement')
 			{
 				$link = array('menuaction' => 'property.uiagreement.edit', 'id' => $id);
 			}
-			if ($type == '.document')
+			else if ($type == '.document')
 			{
 				$link = array('menuaction' => 'property.uidocument.edit', 'document_id' => $id);
 			}
@@ -354,7 +354,22 @@
 			$relation_info	 = array();
 			$id				 = isset($linkend_location['id']) ? (int)$linkend_location['id'] : (int)$id;
 			$type			 = $linkend_location['location'];
-			if ($type == '.ticket')
+			if ($linkend_location['appname'] == 'helpdesk' && $type == '.ticket')
+			{
+				$this->_db->query("SELECT status, subject AS title FROM phpgw_helpdesk_tickets WHERE id = {$id}", __LINE__, __FILE__);
+				$this->_db->next_record();
+				$status_code			 = $this->_db->f('status');
+				$relation_info['title']	 = $this->_db->f('title');
+
+				static $status_text_helpdesk;
+				if (!$status_text_helpdesk)
+				{
+					$status_text_helpdesk = execMethod('helpdesk.botts.get_status_text');
+				}
+				$relation_info['statustext'] = $status_text_helpdesk[$status_code];
+				return $relation_info;
+			}
+			else if ($type == '.ticket')
 			{
 				$this->_db->query("SELECT status, subject as title FROM fm_tts_tickets WHERE id = {$id}", __LINE__, __FILE__);
 				$this->_db->next_record();

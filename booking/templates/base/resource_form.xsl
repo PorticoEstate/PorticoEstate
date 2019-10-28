@@ -1,5 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
 	<xsl:call-template name="msgbox"/>
 	<script type="text/javascript">
 		var resource_id = "<xsl:value-of select="resource/id"/>";
@@ -35,7 +37,7 @@
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
+							<xsl:attribute name="data-validation-error-msg">
 								<xsl:value-of select="php:function('lang', 'Please select a resource category')" />
 							</xsl:attribute>
 							<option value=''>
@@ -195,34 +197,146 @@
 						</xsl:if>
 					</input>
 				</div>
+
 				<div class="pure-control-group">
 					<label>
-						<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
+						<xsl:value-of select="php:function('lang', 'day default lenght')"/>
 					</label>
-					<xsl:variable name="lang_system_id">
-						<xsl:value-of select="php:function('lang', 'System id')"/>
-					</xsl:variable>
-					<xsl:variable name="lang_resource_id">
-							<xsl:value-of select="php:function('lang', 'resource id')"/>
-					</xsl:variable>
-
-					<input type="text" id="e_lock_system_id" name="e_lock_system_id" value="{resource/e_lock_system_id}">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="$lang_system_id"/>
-						</xsl:attribute>
+					<input type="number" id="booking_day_default_lenght" name="booking_day_default_lenght" value="{resource/booking_day_default_lenght}">
 						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_system_id"/>
-						</xsl:attribute>
-					</input>
-					<input type="text" id="e_lock_resource_id" name="e_lock_resource_id" value="{resource/e_lock_resource_id}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_resource_id"/>
-						</xsl:attribute>
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="$lang_resource_id"/>
+							<xsl:value-of select="php:function('lang', 'day default lenght')"/>
 						</xsl:attribute>
 					</input>
 				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'dow default start')"/>
+					</label>
+					<input type="number" id="booking_dow_default_start" name="booking_dow_default_start" value="{resource/booking_dow_default_start}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'day of week')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'dow default end')"/>
+					</label>
+					<input type="number" id="booking_dow_default_end" name="booking_dow_default_end" value="{resource/booking_dow_default_end}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'day of week')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'time default start')"/>
+					</label>
+					<input type="number" id="booking_time_default_start" name="booking_time_default_start" value="{resource/booking_time_default_start}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'time default start')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'time default end')"/>
+					</label>
+					<input type="number" id="booking_time_default_end" name="booking_time_default_end" value="{resource/booking_time_default_end}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'time default end')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
+						</label>
+						<div class = 'pure-u-md-1-2'>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_1'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Add Electronic lock')"/>
+						</label>
+
+						<xsl:variable name="lang_system_id">
+							<xsl:value-of select="php:function('lang', 'System id')"/>
+						</xsl:variable>
+						<xsl:variable name="lang_resource_id">
+							<xsl:value-of select="php:function('lang', 'resource id')"/>
+						</xsl:variable>
+						<xsl:variable name="lang_access_code_format">
+							<xsl:value-of select="php:function('lang', 'access code format')"/>
+						</xsl:variable>
+
+						<input type="text" id="e_lock_system_id" name="e_lock_system_id">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="$lang_system_id"/>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_system_id"/>
+							</xsl:attribute>
+						</input>
+						<input type="text" id="e_lock_resource_id" name="e_lock_resource_id">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_resource_id"/>
+							</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="$lang_resource_id"/>
+							</xsl:attribute>
+						</input>
+						<input type="text" id="e_lock_name" name="e_lock_name">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'name')"/>
+							</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'name')"/>
+							</xsl:attribute>
+						</input>
+						<input type="text" id="access_code_format" name="access_code_format">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_access_code_format"/>
+							</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="$lang_access_code_format"/>
+							</xsl:attribute>
+						</input>
+						<xsl:if test="resource/permission/write">
+							<a class='btn btn-info'>
+								<xsl:attribute name="onClick">
+									<xsl:text>addELock()</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Add')" />
+							</a>
+							<xsl:text> | </xsl:text>
+							<a class='btn btn-info'>
+								<xsl:attribute name="onClick">
+									<xsl:text>removeELock()</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Delete')" />
+							</a>
+						</xsl:if>
+
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />

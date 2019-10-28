@@ -122,6 +122,7 @@ function applicationModel()
 	{
 		self.date.remove(this);
 
+
 	};
 	self.aboutArrangement = ko.observable("");
 	self.agegroupList = agegroup;
@@ -270,10 +271,6 @@ $(document).ready(function ()
 
 	});
 
-	$('.resourceDropdown').on('click', function ()
-	{
-		$(this).parent().toggleClass('show');
-	});
 
 	$("#application_form").submit(function (event)
 	{
@@ -295,7 +292,7 @@ function PopulatePostedDate()
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			am.date.push({from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_))});
+			am.date = [{from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_))}];
 		}
 	}
 	else
@@ -332,7 +329,10 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 		am.bookingDate(ct);
 		am.bookingStartTime(startTime);
 		am.bookingEndTime(EndTime);
-		//	$i.datetimepicker('destroy');
+		$('#bookingStartTime').val(12);
+		$('#bookingEndTime').val(15);
+
+//		$i.datetimepicker('destroy');
 	}});
 
 

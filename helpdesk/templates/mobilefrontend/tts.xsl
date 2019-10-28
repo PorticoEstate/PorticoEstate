@@ -74,17 +74,19 @@
 			<div id="add">
 				<fieldset>
 					<xsl:for-each select="value_origin">
+						<xsl:variable name="lang_origin_type">
+							<xsl:value-of select="descr"/>
+						</xsl:variable>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="descr"/>
+								<xsl:value-of select="php:function('lang', 'started from')"/>
 							</label>
 							<div class="pure-custom">
 								<xsl:for-each select="data">
 									<div>
-										<xsl:variable name="link_request">
-											<xsl:value-of select="//link_request"/>&amp;id=<xsl:value-of select="id"/>
-										</xsl:variable>
-										<a href="{link}" title="{//lang_origin_statustext}">
+										<a href="{link}">
+											<xsl:value-of select="$lang_origin_type"/>
+											<xsl:text>::</xsl:text>
 											<xsl:value-of select="id"/>
 										</a>
 										<xsl:text> </xsl:text>
@@ -388,7 +390,7 @@
 						</label>
 						<xsl:value-of select="value_owned_by"/>
 					</div>
-					<xsl:if test="set_user ='1'">
+					<xsl:if test="simple !='1' and reverse_assigned = 1">
 						<div class="pure-control-group">
 							<xsl:variable name="lang_forward">
 								<xsl:value-of select="php:function('lang', 'forward')"/>
@@ -396,21 +398,33 @@
 							<label>
 								<xsl:value-of select="$lang_forward"/>
 							</label>
-							<input type="hidden" id="set_user_lid" name="values[set_user_lid]"  value="{value_set_user}"/>
-							<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1">
-							</input>
-							<div id="set_user_container"/>
+							<xsl:choose>
+								<xsl:when test="set_user ='1'">
+									<input type="hidden" id="set_user_lid" name="values[set_user_lid]"  value="{value_set_user}"/>
+									<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1">
+									</input>
+									<div id="set_user_container"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="php:function('lang', 'take over the ticket in order to be able to forward')"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</div>
 					</xsl:if>
 					<xsl:for-each select="value_origin">
+						<xsl:variable name="lang_origin_type">
+							<xsl:value-of select="descr"/>
+						</xsl:variable>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="descr"/>
+								startet fra
 							</label>
 							<div class="pure-custom">
 								<xsl:for-each select="data">
 									<div>
 										<a href="{link}" title="{statustext}">
+											<xsl:value-of select="$lang_origin_type"/>
+											<xsl:text>::</xsl:text>
 											<xsl:value-of select="id"/>
 										</a>
 										<xsl:text> </xsl:text>
@@ -431,12 +445,17 @@
 					</xsl:choose>
 					<!--xsl:call-template name="contact_form"/-->
 					<xsl:for-each select="value_target">
+						<xsl:variable name="lang_target_type">
+							<xsl:value-of select="descr"/>
+						</xsl:variable>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="descr"/>
+								<xsl:value-of select="php:function('lang', 'Referred from')"/>
 							</label>
 							<xsl:for-each select="data">
 								<a href="{link}" title="{statustext}">
+									<xsl:value-of select="$lang_target_type"/>
+									<xsl:text>::</xsl:text>
 									<xsl:value-of select="id"/>
 								</a>
 								<xsl:text> </xsl:text>

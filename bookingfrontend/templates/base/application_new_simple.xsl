@@ -18,10 +18,10 @@
 						<xsl:value-of select="php:function('lang', 'New application')"/>
 					</h1>
 
-					<p>
+<!--					<p>
 						<xsl:value-of select="config/application_new_application"/>
 					</p>
-					<hr class="mt-5 mb-5"></hr>
+					<hr class="mt-5 mb-5"></hr>-->
 
 					<div class="mb-4">
 						<xsl:call-template name="msgbox"/>
@@ -39,56 +39,24 @@
 						<br/>
 					</p>
 
+
 					<div class="form-group">
-					
-						<div class="form-group">
-							<span class="font-weight-bold d-block mt-2 span-label">
-								<xsl:value-of select="php:function('lang', 'Chosen rent object')" />:
-							</span>
-							<div id="bookable-resource" data-bind="foreach: bookableresource">
-								<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
-							</div>
-							<span id="chosenResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
-								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
-							</span>
-						</div>
-					
-
-						<div class="">	
-							<div type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
-								<xsl:value-of select="php:function('lang', 'choose')" />
-								<span class="caret"></span>
-							</div>
-
-							<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
-								<li>
-									<div class="form-check checkbox checkbox-primary">
-										<label class="check-box-label">
-											<input class="form-check-input choosenResource" type="radio" name="resources[]" data-bind="textInput: id, checked: selected" />
-											<span class="label-text" data-bind="html: name"></span>
-										</label>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-
-<!--test-->
-<!--					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'resources')" />
 						</label>
-						<div class="form-control text-left dropdown-toggle w-100" id="resourceDropdownBtn" type="input" data-toggle="dropdown">
-							<xsl:value-of select="php:function('lang', 'Choose resource')" />
-							<span class="caret"></span>
-						</div>
+						<select id="resource_id" name="resources[]" class="form-control text-left w-100 custom-select" required="true">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'Choose resource')"/>
+							</xsl:attribute>
+							<xsl:if test="count(resource_list/options) > 1 ">
+								<option value="">
+								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
+								</option>
+							</xsl:if>
+							<xsl:apply-templates select="resource_list/options"/>
+						</select>
+					</div>
 
-						<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource" aria-label="Large">
-							<li class="dropdown-item" data-bind="text: name, id: id, click: $root.resourceSelected, selected: selected"></li>
-						</ul>
-						<input class="form-control" id="inputResource" required="true" type="text" style="display: block" name="resources[]"  data-bind="value: selectedResources"/>
-					</div>-->
-<!--test-->
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<!-- Display Time Chosen -->
@@ -121,7 +89,7 @@
 												<i class="far fa-calendar-alt"></i>
 											</span>
 										</div>
-										<input id="start_date" type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn" data-bind="textInput: bookingDate">
+										<input id="start_date" type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'Date')"/>
 											</xsl:attribute>
@@ -136,7 +104,7 @@
 												<i class="far fa-clock"></i>
 											</span>
 										</div>
-										<input type="text" onkeydown="return false" class="form-control bookingStartTime mr-2" data-bind="textInput: bookingStartTime">
+										<input type="text" id="bookingStartTime" onkeydown="return false" disabled="disabled" class="form-control mr-2">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'from')"/>
 											</xsl:attribute>
@@ -151,7 +119,7 @@
 												<i class="far fa-clock"></i>
 											</span>
 										</div>
-										<input type="text" onkeydown="return false" class="form-control bookingEndTime" data-bind="textInput: bookingEndTime">
+										<input type="text" id="bookingEndTime" onkeydown="return false" disabled="disabled" class="form-control">
 											<xsl:attribute name="placeholder">
 												<xsl:value-of select="php:function('lang', 'to')"/>
 											</xsl:attribute>
@@ -297,4 +265,13 @@
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 	</script>
+</xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

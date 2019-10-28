@@ -251,3 +251,6 @@ include content	helpdesk	nn	Inkluder innhold frå saka
 attach file	helpdesk	nn	Legg ved fil
 modified time	helpdesk	no	Endra tid
 top level	helpdesk	no	Toppnivå
+take over the ticket in order to be able to forward	helpdesk	nn	For å videresende, må du fyrst overta saka.
+Referred from	helpdesk	nn	Referert frå
+Started from	helpdesk	nn	Startet frå

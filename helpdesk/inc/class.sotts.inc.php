@@ -682,6 +682,7 @@
 				$ticket['modified_date']	= $this->db->f('modified_date');
 				$ticket['external_ticket_id'] = $this->db->f('external_ticket_id');
 				$ticket['external_origin_email'] =  $this->db->f('external_origin_email', true);
+				$ticket['on_behalf_of_name'] =  $this->db->f('on_behalf_of_name', true);
 
 				if($ticket['reverse_id'])
 				{
@@ -762,6 +763,7 @@
 			$value_set['publish_note'] = 1;
 			$value_set['external_ticket_id'] = !empty($ticket['external_ticket_id']) ? (int)$ticket['external_ticket_id'] : null;
 			$value_set['external_origin_email'] = $this->db->db_addslashes($ticket['external_origin_email']);
+			$value_set['on_behalf_of_name'] = $this->db->db_addslashes($ticket['set_on_behalf_of_name']);
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
@@ -770,13 +772,12 @@
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 			$id = $this->db->get_last_insert_id($table, 'id');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 			if( !empty($ticket['set_notify_lid']))
 			{
 				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($ticket['set_notify_lid']);
 				$person_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
-				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
-
 				$values_insert = array
 					(
 					'location_id'			 => $location_id,
@@ -793,6 +794,20 @@
 
 			}
 
+			if (!empty($ticket['origin_id']) && $ticket['origin_id'])
+			{
+				$interlink = CreateObject('property.interlink');
+				$interlink_data = array
+					(
+					'location1_id'		 => $location_id,
+					'location1_item_id'	 => (int)$ticket['origin_id'],
+					'location2_id'		 => $location_id,
+					'location2_item_id'	 => $id,
+					'account_id'		 => $this->account
+				);
+
+				$interlink->add($interlink_data, $this->db);
+			}
 
 			if($this->db->transaction_commit())
 			{

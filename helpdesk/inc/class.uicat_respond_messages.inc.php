@@ -174,7 +174,7 @@
 
 		public function save($init_preview = null )
 		{
-			$values = phpgw::get_var('values');
+			$values = phpgw::get_var('values', 'html');
 			
 			try
 			{

@@ -1,3 +1,5 @@
+/* global resource_id, oTable1, oTable0 */
+
 $(document).ready(function ()
 {
 	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uibuilding.index'}, true),
@@ -125,6 +127,66 @@ populate_rescategory_select = function (activity_id)
 				$.each(data, function(key,value) {
 					$select.append($("<option></option>").attr("value", value.id).text(value.name));
 				});
+			}
+		}
+	});
+};
+
+addELock = function ()
+{
+	var oArgs = {menuaction: 'booking.uiresource.add_e_lock'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var e_lock_system_id = $("#e_lock_system_id").val();
+	var e_lock_resource_id = $("#e_lock_resource_id").val();
+	var e_lock_name = $("#e_lock_name").val();
+
+
+	var access_code_format = $("#access_code_format").val();
+	$.ajax({
+		type: 'POST',
+		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format,  resource_id: resource_id},
+		dataType: 'JSON',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data.ok == 1 || data.ok == 2)
+			{
+				oTable1.fnDraw();
+				$("#e_lock_system_id").val('');
+				$("#e_lock_resource_id").val('');
+				$("#e_lock_name").val('');
+				$("#access_code_format").val('');
+			}
+			if (data.msg !== '')
+			{
+				alert(data.msg);
+			}
+		}
+	});
+};
+
+removeELock = function ()
+{
+	var oArgs = {menuaction: 'booking.uiresource.remove_e_lock'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var e_lock_system_id = $("#e_lock_system_id").val();
+	var e_lock_resource_id = $("#e_lock_resource_id").val();
+	$.ajax({
+		type: 'POST',
+		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, resource_id: resource_id},
+		dataType: 'JSON',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data.ok == true)
+			{
+				oTable1.fnDraw();
+				$("#field_building_id").val('');
+				$("#field_building_name").val('');
+			}
+			if (data.msg !== '')
+			{
+				alert(data.msg);
 			}
 		}
 	});

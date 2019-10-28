@@ -157,7 +157,17 @@
 			$cc ='';
 			$bcc = '';
 			$from_email = $config['from_email'];
-			$from_name = $config['from_email'];
+			$from_address_arr = explode('<', $from_email);
+
+			if(!empty($from_address_arr[1]))
+			{
+				$from_name = trim($from_address_arr[0]);
+			}
+			else
+			{
+				$from_name = $config['from_email'];
+			}
+
 			foreach ($ids as $recipient_id)
 			{
 				$recipient = $sogeneric->read_single(array('id' => $recipient_id));

@@ -468,6 +468,7 @@
 
 		function read( $data = array() )
 		{
+			static $parent_category_name = array();
 			static $category_name = array();
 			static $account = array();
 			static $vendor_cache = array();
@@ -528,6 +529,23 @@
 				}
 
 				$ticket['category'] = $category_name[$ticket['cat_id']];
+
+
+				if (!isset($parent_category_name[$ticket['cat_id']]))
+				{
+					$cat_path = $this->cats->get_path($ticket['cat_id']);
+					if(count($cat_path) > 1)
+					{
+						$parent_cat_id = $cat_path[0]['id'];
+					}
+
+					$parent_category_name[$ticket['cat_id']] = $this->get_category_name($parent_cat_id);
+				}
+
+				if(isset($parent_category_name[$ticket['cat_id']]))
+				{
+					$ticket['parent_category'] = $parent_category_name[$ticket['cat_id']];
+				}
 
 				if (!$ticket['subject'])
 				{
@@ -1199,19 +1217,33 @@
 					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
 
 			$body .= "<table class='overview'>";
+
+			if($ticket['on_behalf_of_name'])
+			{
+				$body .= '<tr><td>'. lang('on behalf of')."</td><td>:&nbsp;{$ticket['on_behalf_of_name']}</td></tr>";
+			}
+
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
 			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;<b>'.$status_text[$ticket['status']]."</b></td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
 
-			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
+			if($ticket['assignedto'])
+			{
+				$_assignedto = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+			}
+			else if($ticket['group_id'])
+			{
+				$_assignedto = str_replace('_', ' ', $group_name);
+			}
+
+			if($_assignedto)
+			{
+				$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$_assignedto."</td></tr>";
+			}
+
 			if(empty($this->config->config_data['disable_priority']))
 			{
 				$body .= '<tr><td>'. lang('Priority').'</td><td>:&nbsp;'.$ticket['priority']."</td></tr>";
-			}
-
-			if(empty($this->config->config_data['tts_disable_groupassign_on_add']))
-			{
-				$body .= '<tr><td>'. lang('Group').'</td><td>:&nbsp;'. $group_name ."</td></tr>";
 			}
 
 			if($ticket['reverse_id'])
@@ -1549,6 +1581,11 @@ HTML;
 				/**
 				 * Calculate email from username
 				 */
+				if ($validator->check_email_address($entry['account_lid']))
+				{
+					$entry['email'] = $entry['account_lid'];
+				}
+
 				if(!$entry['email'])
 				{
 					$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
@@ -1559,9 +1596,8 @@ HTML;
 				if ($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
 				{
 					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+					$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 				}
-
-				$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
 			}
 			unset($entry);
 
@@ -1569,7 +1605,15 @@ HTML;
 			if(!empty($this->config->config_data['from_email']))
 			{
 				$from_address = $this->config->config_data['from_email'];
-				$from_name = 'NoReply';
+				$from_address_arr = explode('<', $from_address);
+				if(!empty($from_address_arr[1]))
+				{
+					$from_name = trim($from_address_arr[0]);
+				}
+				else
+				{
+					$from_name = 'NoReply';
+				}
 			}
 			else
 			{

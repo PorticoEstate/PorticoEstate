@@ -387,6 +387,7 @@
 			$sql = "SELECT bb_event.id FROM bb_event"
 				. " JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id"
 				. " JOIN bb_resource ON bb_resource.id = bb_event_resource.resource_id"
+				. " JOIN bb_resource_e_lock ON bb_resource.id = bb_resource_e_lock.resource_id"
 				. " WHERE $_conditions";
 
 			$this->db->query($sql, __LINE__, __FILE__);

@@ -490,3 +490,22 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.18.012';
+	function helpdesk_upgrade0_9_18_012()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_tickets', 'on_behalf_of_name',array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.013';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}

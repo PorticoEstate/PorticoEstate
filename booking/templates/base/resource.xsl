@@ -141,11 +141,57 @@
 
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'day default lenght')"/>
+					</label>
+					<xsl:value-of select="resource/booking_day_default_lenght"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'dow default start')"/>
+					</label>
+					<xsl:value-of select="resource/booking_dow_default_start"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'dow default end')"/>
+					</label>
+					<xsl:value-of select="resource/booking_dow_default_end"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'time default start')"/>
+					</label>
+					<xsl:value-of select="resource/booking_time_default_start"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'time default end')"/>
+					</label>
+					<xsl:value-of select="resource/booking_time_default_end"/>
+				</div>
+
+
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
 					</label>
-					<xsl:value-of select="resource/e_lock_system_id"/>
-					<xsl::text>::</xsl::text>
-					<xsl:value-of select="resource/e_lock_resource_id"/>
+					<div class = 'pure-u-md-1-2'>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_1'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="config" select ='config'/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
 				</div>
 
 				<div id="custom_fields"></div>

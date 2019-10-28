@@ -159,7 +159,7 @@
 
 				}
 			}
-			if((int)$this->parent_cat_id > 0)
+			if((int)$this->parent_cat_id > 0 && !phpgw::get_var('id', 'int', 'GET'))
 			{
 				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
 				{
@@ -840,8 +840,10 @@ HTML;
 			$uicols['descr'][] = lang('subject');
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][] = lang('entry date');
+			$uicols['name'][] = 'parent_category';
+			$uicols['descr'][] = lang('top level');
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
+			$custom_cols = !empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
 			$columns = $this->bo->get_columns();
 
 			foreach ($custom_cols as $col)
@@ -1131,6 +1133,14 @@ HTML;
 
 		function index()
 		{
+			if((int)$this->parent_cat_id > 0)
+			{
+				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+				{
+					phpgw::no_access();
+				}
+			}
+
 			if (!$this->acl_read)
 			{
 				phpgw::no_access();
@@ -1574,27 +1584,24 @@ JS;
 				$values['p'][$p_entity_id]['p_entity_id'] = $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id'] = $p_cat_id;
 				$values['p'][$p_entity_id]['p_num'] = phpgw::get_var('p_num');
-
-				$origin = phpgw::get_var('origin');
-				$origin_id = phpgw::get_var('origin_id', 'int');
 			}
 
-			if (isset($values['origin']) && $values['origin'])
+			$origin_id = phpgw::get_var('origin_id', 'int');
+
+			if (!empty($values['origin_id']))
 			{
 				$origin = $values['origin'];
 				$origin_id = $values['origin_id'];
 			}
 
-			$interlink = CreateObject('property.interlink');
-
-			if (isset($origin) && $origin)
+			if (!empty($origin_id))
 			{
-				$values['origin_data'][0]['location'] = $origin;
-				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['location'] = 'helpdesk.ticket';
+				$values['origin_data'][0]['descr'] = lang('ticket');
 				$values['origin_data'][0]['data'][] = array
-					(
+				(
 					'id' => $origin_id,
-					'link' => $interlink->get_relation_link(array('location' => $origin), $origin_id),
+					'link' =>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $origin_id)),
 				);
 			}
 			//_debug_array($insert_record);
@@ -2250,12 +2257,25 @@ JS;
 				 */
 				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute, $this->_simple);
 
-				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
-					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
-					)
+				if (!empty($values['send_mail']) 
+					|| (!empty($this->bo->config->config_data['mailnotification']) && $this->bo->fields_updated)
+					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated)
 				)
 				{
-					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
+					if(!empty($values['send_mail']))
+					{
+						$_send_mail = true;
+					}
+					else if ($this->_simple)
+					{
+						$_send_mail = true;
+					}
+					else
+					{
+						$_send_mail = false;
+					}
+
+					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, $_send_mail);
 				}
 
 				//--------- files
@@ -2912,6 +2932,7 @@ JS;
 						'id_in_name' => 'num'))),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
+				'reverse_assigned' => $ticket['user_id'] != $ticket['reverse_id'] ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
 				'cat_change_list' => $cat_change_list
 			);

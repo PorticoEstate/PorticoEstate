@@ -125,7 +125,9 @@
 					{
 						temp = temp + "\\n";
 					}
-					parent.document.getElementById("new_note").value = temp + aData["content"];
+
+					var content  = $('<textarea />').html(aData["content"]).text();
+					parent.document.getElementById("new_note").value = temp + content;
 				}
 
 				parent.JqueryPortico.onPopupClose("close");
