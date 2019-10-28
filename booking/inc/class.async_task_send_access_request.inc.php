@@ -132,6 +132,8 @@
 									 */
 									foreach ($resource['e_locks'] as $e_lock)
 									{
+										$to = $this->round_to_next_hour($reservation['to_']);
+
 										$post_data = array
 											(
 											'desc'	 => $reservation['contact_name'],
@@ -140,7 +142,8 @@
 											'mobile' => $reservation['contact_phone'],
 											'resid'	 => $e_lock['e_lock_resource_id'],
 											'system' => $e_lock['e_lock_system_id'],
-											'to'	 => date('Y-m-d\TH:i:s.v', strtotime($reservation['to_'])) . 'Z',
+									//		'to'	 => date('Y-m-d\TH:i:s.v', strtotime($reservation['to_'])) . 'Z',
+											'to'	=> $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
 
 										$http_code = $e_lock_integration->resources_create($post_data);
@@ -183,9 +186,9 @@
 												$reservation_to		 = strtotime($reservation['to_']);// - phpgwapi_datetime::user_timezone();
 												$status_from		 = strtotime($status['from']);
 												$status_to			 = strtotime($status['to']);
-												$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
+												$e_lock_name		 = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
 
-												if($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
+												if ($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
 												{
 													$e_loc_key = str_replace('__key__', $status['key'], $e_lock['access_code_format']);
 												}
@@ -291,40 +294,16 @@
 			));
 			$GLOBALS['phpgw']->log->commit();
 		}
+
+		function round_to_next_hour( $dateString )
+		{
+			$date	 = new DateTime($dateString);
+			$minutes = $date->format('i');
+			if ($minutes > 0)
+			{
+				$date->modify("+1 hour");
+				$date->modify('-' . $minutes . ' minutes');
+			}
+			return $date;
+		}
 	}
-	/*
-Begreper:
-application  - Søknad
-allocation   - tildeling
-booking      - Booking
-event        - Arrangementer
-reservation  - reservasjon / betalingsgrunnlag
-
-En Søknad (application) kan resultere i en tildeling(allocation) eller et Arrangement(event).
-En tildeling(allocation) kan deles opp i flere Booking(booking).
-
-Utgangspunktet for 'Klar for fakturering' ligger i tabellen 'bb_completed_reservation'
-
-Denne (reservation) er satt sammen av tre ulike element-typer: tildeling(allocation), Booking(booking) og Arrangement(event)
-
-En Booking referer til en tildeling (allocation_id).
-
-For å produsere innholdet i bb_completed_reservation:
-
-cron-job som starter i booking/inc/class.async_task_update_reservation_state.inc.php
-
-async_task_update_reservation_state::run()
-
-Uttrekket defineres her (pr type):
-
- booking_sobooking::find_expired();
- booking_soallocation::find_expired();
- booking_soevent::find_expired();
-
-Oppgaven her blir da:
-
-1) Alle kandidater for 'booking' skal faktureres (som før)
-2) Alle kandidater for 'event' skal faktureres (som før)
-3) kandidater for 'allocation' som ikke er referert til fra 'booking' skal faktureres (omarbeides)
-
-*/

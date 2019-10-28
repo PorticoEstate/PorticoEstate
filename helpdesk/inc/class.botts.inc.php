@@ -1173,27 +1173,26 @@
 			$config_update_message = $cat_respond_messages[$category_parent]['update_message'] ? $cat_respond_messages[$category_parent]['update_message'] : $this->config->config_data['update_message'];
 			$config_close_message = $cat_respond_messages[$category_parent]['close_message'] ? $cat_respond_messages[$category_parent]['close_message'] : $this->config->config_data['close_message'];
 
-
 			//New message
 			if(!$get_message && !empty($config_new_message))
 			{
-				$link_text = "<H2>{$config_new_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__', '[', ']'), array($id, '<', '>'), $link_text));
+				$link_text = $config_new_message;
+				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
 			}
 
 			$set_user_id = false;
 			if(!$get_message && !empty($config_set_user_message) && ($_POST['values']['set_user_alternative_lid'] || $ticket['user_id'] != $ticket['reverse_id']))
 			{
 				$set_user_id =  true;
-				$link_text = "<H2>{$config_set_user_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__', '[', ']'), array($id, '<', '>'), $link_text));
+				$link_text = $config_set_user_message;
+				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
 			}
 
 			// Normal update message
 			if(!$get_message && !empty($config_update_message) && $messages_sendt && !$set_user_id)
 			{
-				$link_text = "<H2>{$config_update_message}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__', '__#__', '[', ']'), array($id, $num_updates, '<', '>'), $link_text));
+				$link_text = $config_update_message;
+				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
 			}
 
 			$status_closed = array('X' => true);
@@ -1207,14 +1206,26 @@
 			//Message when ticket is closed
 			if(!$get_message && !empty($config_close_message) && $status_closed[$ticket['status']])
 			{
-				$link_text = "<H4>{$config_close_message}</H4>";
-				$link_text = nl2br(str_replace(array('__ID__', '__#__', '[', ']'), array($id, $num_updates, '<', '>'), $link_text));
+				$link_text = $config_close_message;
+				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
 			}
 
 			//message when closed;
+			$link_to_ticket =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
+					'id' => $id), false, true);
 
-			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
-					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
+			preg_match_all("/\[[^\]\]]*\]\]/", $link_text, $matches);
+
+			if (empty($matches[0][0]))
+			{
+				$body = "<a href ='{$link_to_ticket}'>{$link_text}</a>\n";
+			}
+			else
+			{
+				$replace = trim($matches[0][0], '[]');
+				$link_to_ticket_text = "<a href ='{$link_to_ticket}'>{$replace}</a>";
+				$body = str_ireplace($matches[0][0], $link_to_ticket_text, $link_text);
+			}
 
 			$body .= "<table class='overview'>";
 
