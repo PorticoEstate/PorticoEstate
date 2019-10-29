@@ -484,5 +484,5 @@ optional	booking	nn	(Valfri)
 get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
 Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
 Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
-No rent object chosen	nn	Ingen leieobjekt er valgt
+No rent object chosen	bookingfrontend	nn	Ingen leieobjekt er valgt
 For rent	bookingfrontend	nn	Til leige

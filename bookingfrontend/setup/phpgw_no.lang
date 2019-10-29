@@ -473,5 +473,5 @@ Event/activity homepage	bookingfrontend	no	Hjemmeside for arrangementet / aktivi
 optional	booking	no	(Valgfritt)
 Event/activity description	bookingfrontend	no	Kort beskrivelse av arrangementet / aktiviteten
 Upload Attachment	bookingfrontend	no	Last opp vedlegg som kan gi nyttig informasjon om søknaden
-No rent object chosen	no	Ingen leieobjekter er valgt
+No rent object chosen	bookingfrontend	no	Ingen leieobjekter er valgt
 For rent	bookingfrontend	no	Til leie
