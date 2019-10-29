@@ -327,7 +327,7 @@
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Next step')" />
 						</button>
-						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
+						<div id="submit-error" style="display: none"><xsl:value-of select="php:function('lang', 'Please fill all fields')"/></div>
 					</div>
 					
 					<!-- Submit error modal -->

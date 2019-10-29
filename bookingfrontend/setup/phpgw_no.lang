@@ -71,7 +71,7 @@ choose file	bookingfrontend	no	Velg dokument
 choose rent object and rentperiod	bookingfrontend	no	Velg leieobjekt og leieperiode
 chosen rent object	bookingfrontend	no	Valgte leieobjekter
 chosen rent period	bookingfrontend	no	Valgte leieperioder
-choose target audience	bookingfrontend	no	Velg målgruppe for arrangement/aktiviteten
+choose target audience	bookingfrontend	no	Velg målgruppe for arrangement / aktiviteten
 city	bookingfrontend	no	Poststed
 click to sort ascending	bookingfrontend	no	Klikk for å sortere stigende
 click to sort descending	bookingfrontend	no	Klikk for å sortere synkende
@@ -475,3 +475,5 @@ Event/activity description	bookingfrontend	no	Kort beskrivelse av arrangementet 
 Upload Attachment	bookingfrontend	no	Last opp vedlegg som kan gi nyttig informasjon om søknaden
 No rent object chosen	bookingfrontend	no	Ingen leieobjekter er valgt
 For rent	bookingfrontend	no	Til leie
+Choose atleast one object	bookingfrontend	no	Velg minst ett leieobjekt
+Please fill all fields	bookingfrontend	no	Vennligst fyll ut alle obligatoriske felt!
