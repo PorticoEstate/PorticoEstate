@@ -11,13 +11,35 @@
 		<xsl:when test="users">
 			<xsl:apply-templates select="users"/>
 		</xsl:when>
+
 	</xsl:choose>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
 
 <xsl:template match="users" xmlns:php="http://php.net/xsl">
+<script type="text/javascript">
+    $(document).ready(function() {
 
+        $('.user_roles').multiselect({
+            templates: {
+                li: '<li><div style="display:inline;"><a><label></label></a></div></li>'
+            }
+        });
+
+		$("#control_area_id").change(function ()
+		{
+			var control_area_id = $(this).val();
+
+			if(control_area_id == -1)
+			{
+
+				$("#user_table tbody").empty();
+			}
+		 });
+
+    });
+</script>
 	<section id="tabs">
 		<div class="container">
 			<div class="row">
@@ -34,7 +56,7 @@
 											<legend>Velg kontroll</legend>
 
 											<label for="control_area_id">
-												<xsl:value-of select="php:function('lang', 'control type')"/>
+												<xsl:value-of select="php:function('lang', 'control area')"/>
 											</label>
 											<select id="control_area_id" name="control_area_id" class="form-control">
 												<xsl:apply-templates select="control_area_list/options"/>
@@ -49,7 +71,15 @@
 												</xsl:attribute>
 												<xsl:apply-templates select="control_type_list/options"/>
 											</select>
-
+											<label for="part_of_town_id">
+												<xsl:value-of select="php:function('lang', 'part of town')"/>
+											</label>
+											<select id="part_of_town_id" name="part_of_town_id" class="form-control" onchange="this.form.submit()">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'select')"/>
+												</xsl:attribute>
+												<xsl:apply-templates select="part_of_town_list/options"/>
+											</select>
 										</fieldset>
 									</div>
 								</div>
@@ -59,7 +89,7 @@
 						<div class="row">
 							<div class="mt-5 container">
 								<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{form_action}">
-									<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered ">
+									<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered " id='user_table'>
 										<thead>
 											<tr>
 												<th>
@@ -91,7 +121,6 @@
 
 					</div>
 					<div id="vendors">
-						2
 					</div>
 
 				</div>
@@ -108,15 +137,15 @@
 			<xsl:value-of disable-output-escaping="yes" select="name"/>
 		</td>
 		<td align="center">
-			<select name="values[{control_id}]" >
-				<option value="">
+			<select name="values[{control_id}][{part_of_town_id}][{id}][new][]" multiple="multiple" class="user_roles">
+<!--				<option value="">
 					<xsl:value-of select="php:function('lang', 'select')"/>
-				</option>
+				</option>-->
 				<xsl:apply-templates select="../roles/options">
 					<xsl:with-param name="selected" select="selected_role"/>
 				</xsl:apply-templates>
-
 			</select>
+			<input type="hidden" name="values[{control_id}][{part_of_town_id}][{id}][original]" value="{original_value}"/>
 		</td>
 		<td>
 			<xsl:value-of select="lastlogin"/>
@@ -150,7 +179,6 @@
 
 					</div>
 					<div id="vendors">
-						2
 					</div>
 
 				</div>
@@ -226,6 +254,7 @@
 <xsl:template match="options">
 	<xsl:param name="selected"/>
 	<option value="{id}">
+		<!--<xsl:if test="selected = 1 or id = $selected or contains($selected, id )">-->
 		<xsl:if test="selected = 1 or id = $selected">
 			<xsl:attribute name="selected" value="selected"/>
 		</xsl:if>

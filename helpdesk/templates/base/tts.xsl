@@ -145,7 +145,8 @@
 								</input>
 								<div id="set_on_behalf_of_container"/>
 							</div>
-							<div class="pure-control-group">
+							<!-- Sigurd: 20191012: Midlertidig kommentert ut i påvente av ny integrasjon med HR-systemet for å finne nærmeste leder-->
+							<!--							<div class="pure-control-group">
 								<xsl:variable name="lang_reverse">
 									<xsl:value-of select="php:function('lang', 'reverse')"/>
 								</xsl:variable>
@@ -153,7 +154,7 @@
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
 								<div class="pure-custom"  id="set_user_container"/>
-							</div>
+							</div>-->
 							<div class="pure-control-group">
 								<xsl:variable name="lang_reverse_alternative">
 									<xsl:value-of select="php:function('lang', 'reverse alternative')"/>
@@ -296,6 +297,20 @@
 					</div>
 
 				</fieldset>
+			</div>
+			<div id="notify">
+				<div class="pure-control-group">
+					<xsl:variable name="lang_notify">
+						<xsl:value-of select="php:function('lang', 'notify')"/>
+					</xsl:variable>
+					<label for="set_notify_name">
+						<xsl:value-of select="$lang_notify"/>
+					</label>
+					<input type="hidden" id="set_notify_lid" name="values[set_notify_lid]" />
+					<input type="text" id="set_notify_name" name="values[set_notify_name]" class="pure-input-3-4">
+					</input>
+					<div class="pure-custom"  id="set_notify_container"/>
+				</div>
 			</div>
 		</div>
 		<div class="proplist-col">

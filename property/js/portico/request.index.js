@@ -11,25 +11,25 @@ var addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTabl
 			case 'amount_investment':
 				if (typeof (nCells[i]) !== 'undefined')
 				{
-					nCells[i].innerHTML = "<div align=\"right\">" + data.amount_investment + "</div>";
+					nCells[i].innerHTML = "<div style=\"text-align:right;\">" + data.amount_investment + "</div>";
 				}
 				break;
 			case 'amount_operation':
 				if (typeof (nCells[i]) !== 'undefined')
 				{
-					nCells[i].innerHTML = "<div align=\"right\">" + data.amount_operation + "</div>";
+					nCells[i].innerHTML = "<div style=\"text-align:right;\">" + data.amount_operation + "</div>";
 				}
 				break;
 			case 'amount_potential_grants':
 				if (typeof (nCells[i]) !== 'undefined')
 				{
-					nCells[i].innerHTML = "<div align=\"right\">" + data.amount_potential_grants + "</div>";
+					nCells[i].innerHTML = "<div style=\"text-align:right;\">" + data.amount_potential_grants + "</div>";
 				}
 				break;
 			case 'consume':
 				if (typeof (nCells[i]) !== 'undefined' && data.consume != null)
 				{
-					nCells[i].innerHTML = "<div align=\"right\">" + data.consume + "</div>";
+					nCells[i].innerHTML = "<div style=\"text-align:right;\">" + data.consume + "</div>";
 				}
 				break;
 		}

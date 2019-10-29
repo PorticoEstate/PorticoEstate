@@ -695,8 +695,11 @@
 //		}
 
 			$sql .= "AND (deadline BETWEEN $from_date_ts AND $to_date_ts ";
-			$sql .= "OR planned_date BETWEEN $from_date_ts AND $to_date_ts) ";
+			$sql .= "OR planned_date BETWEEN $from_date_ts AND $to_date_ts ";
+			$sql .= "OR completed_date BETWEEN $from_date_ts AND $to_date_ts) ";
+
 //		_debug_array($sql);
+
 			$this->db->query($sql);
 
 			$check_lists_array = array();
@@ -1053,4 +1056,63 @@
 			$sql = "DELETE FROM {$table} WHERE id  = {$completed_id}";
 			return $this->db->query($sql, __LINE__, __FILE__);
 		}
+
+		function set_inspector($check_list_id, $user_id, $checked)
+		{
+
+			if($checked)
+			{
+				$add = array();
+				$add[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $check_list_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> $user_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					3	=> array
+					(
+						'value'	=> time(),
+						'type'	=> PDO::PARAM_INT
+					),
+					4	=> array
+					(
+						'value'	=> $this->account,
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+
+				$add_sql = "INSERT INTO controller_check_list_inspector (check_list_id, user_id, modified_on, modified_by) VALUES (?, ?, ? ,? )";
+				$ok = $this->db->insert($add_sql, $add, __LINE__, __FILE__);
+			}
+			else
+			{
+				$delete = array();
+				$delete[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $check_list_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> $user_id,
+						'type'	=> PDO::PARAM_INT
+					)
+				);
+				$delete_sql = "DELETE FROM controller_check_list_inspector WHERE check_list_id =? AND user_id = ?";
+				$ok = $this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
+			}
+
+			return $ok;
+
+		}
+
+
 	}

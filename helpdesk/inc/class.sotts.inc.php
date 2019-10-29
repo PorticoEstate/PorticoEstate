@@ -130,20 +130,20 @@
 			$GLOBALS['phpgw']->acl->set_account_id($this->account);
 			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
 
-			$order_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
+			$order_join = " {$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
 
 			$result_order_field = '';
 			if ($order)
 			{
 				if( $order == 'assignedto' )
 				{
-					$result_order_field = ',account_lastname';
-					$order = 'account_lastname';
+					$result_order_field = ',phpgw_accounts.account_lastname';
+					$order = 'phpgw_accounts.account_lastname';
 				}
 				else if( $order == 'user' )
 				{
-					$result_order_field = ',account_lastname';
-					$order = 'account_lastname';
+					$result_order_field = ',phpgw_accounts.account_lastname';
+					$order = 'phpgw_accounts.account_lastname';
 				}
 
 				$ordermethod = " ORDER BY $order $sort";
@@ -156,8 +156,8 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 			$order_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
-			$order_join .= "{$this->left_join} phpgw_notification ON (phpgw_notification.location_item_id = phpgw_helpdesk_tickets.id AND phpgw_notification.location_id = {$location_id})";
-			$order_join .= "{$this->left_join} phpgw_accounts AS additional_users ON (phpgw_notification.contact_id = additional_users.person_id)";
+			$order_join .= " {$this->left_join} phpgw_notification ON (phpgw_notification.location_item_id = phpgw_helpdesk_tickets.id AND phpgw_notification.location_id = {$location_id})";
+			$order_join .= " {$this->left_join} phpgw_accounts AS additional_users ON (phpgw_notification.contact_id = additional_users.person_id)";
 
 
 			$filtermethod = '';
@@ -178,7 +178,7 @@
 
 			$where= 'WHERE';
 
-			if($parent_cat_id)
+			if((int)$parent_cat_id > -1)
 			{
 				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $parent_cat_id);
 				$_filter_cat = array($parent_cat_id);
@@ -215,7 +215,7 @@
 					unset($user);
 					reset($public_user_list);
 					$_additional_user_filter[] = "phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
-					$where = 'AND';
+//					$where = 'AND';
 				}
 
 				$public_group_list = array();
@@ -227,9 +227,9 @@
 					}
 					unset($user);
 					reset($public_group_list);
-					$where = $public_user_list ? 'OR' : $where;
+		//			$where = $public_user_list ? 'AND' : $where;
 					$_additional_user_filter[] =" phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
-					$where = 'AND';
+//					$where = 'AND';
 				}
 			}
 
@@ -237,7 +237,8 @@
 
 			if($_additional_user_filter)
 			{
-				$filtermethod .= ' AND (' . implode(' OR ',  $_additional_user_filter) . ')';
+				$filtermethod .= " {$where} (" . implode(' OR ',  $_additional_user_filter) . ')';
+				$where = 'AND';
 			}
 
 			if ($status_id == 'X')
@@ -769,6 +770,28 @@
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
 			$id = $this->db->get_last_insert_id($table, 'id');
+
+			if( !empty($ticket['set_notify_lid']))
+			{
+				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($ticket['set_notify_lid']);
+				$person_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				$values_insert = array
+					(
+					'location_id'			 => $location_id,
+					'location_item_id'		 => $id,
+					'contact_id'			 => $person_id,
+					'is_active'				 => 1,
+					'entry_date'			 => time(),
+					'user_id'				 => $this->account,
+					'notification_method'	 => 'email'
+				);
+
+				$this->db->query("INSERT INTO phpgw_notification (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+
+			}
 
 
 			if($this->db->transaction_commit())

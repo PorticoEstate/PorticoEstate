@@ -30,9 +30,8 @@
 									</span>
 									<br></br>
 									<span id="buildingZipCode">
-										<xsl:value-of select="building/zip_code"/>
+										<xsl:value-of select="building/zip_code"/> 
 									</span>
-									<span>, </span>
 									<span id="buildingCity">
 										<xsl:value-of select="building/city" />
 									</span>

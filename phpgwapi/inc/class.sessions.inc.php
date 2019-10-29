@@ -187,6 +187,7 @@
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
+			ini_set("session.gc_maxlifetime", $GLOBALS['phpgw_info']['server']['sessions_timeout']);
 		}
 
 		public function get_session_id()
@@ -502,13 +503,12 @@
 			if(!isset($this->_history_id))
 			{
 				$this->_history_id = md5($this->_login . time());
-				$history = $this->appsession('history', 'phpgwapi');
 				$history = (array)phpgwapi_cache::session_get('phpgwapi', 'history');
 
 				if(count($history) >= $GLOBALS['phpgw_info']['server']['max_history'])
 				{
 					array_shift($history);
-					$history = phpgwapi_cache::session_set('phpgwapi', 'history', $history);
+					phpgwapi_cache::session_set('phpgwapi', 'history', $history);
 				}
 			}
 			return $this->_history_id;
@@ -1209,7 +1209,7 @@
 			$lid_data = explode('#', $session['session_lid']);
 			$this->_account_lid = $lid_data[0];
 
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] != 'ntlm') //Timeout make no sense for SSO
+			if ( !in_array($GLOBALS['phpgw_info']['server']['auth_type'], array('ntlm', 'customsso') ) ) //Timeout make no sense for SSO
 			{
 				$timeout = time() - $GLOBALS['phpgw_info']['server']['sessions_timeout'];
 				if ( !isset($session['session_dla'])

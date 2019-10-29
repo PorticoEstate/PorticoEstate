@@ -289,7 +289,7 @@
 
 			unset($_my_negative_self);
 			array_unshift($user_list, $default_value);
-			array_unshift($user_list, array('id' => 'all', 'name' => lang('select')));
+			array_unshift($user_list, array('id' => 'all', 'name' => lang('all')));
 
 			// Sigurd: Start categories
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -928,15 +928,17 @@
 					}
 				}
 			}
-			else if (!$location_id)
+			else if (!$location_id && !$filter_control_id)
 			{
+//				_debug_array('test');
 				//nothing
 			}
 			else if ($location_id == -1 && !$entity_group_id)
 			{
+//				_debug_array('test2');
 				//nothing
 			}
-			else if (!$location_id && $entity_group_id)
+			else if (!$location_id && $entity_group_id && !$filter_control_id)
 			{
 				//still nothing
 			}

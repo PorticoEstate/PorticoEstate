@@ -3,9 +3,9 @@ open_monthly = function (part_of_town_id, year, month)
 	var oArgs = {menuaction: 'controller.uicalendar_planner.monthly', year: year,
 		month: month,
 		part_of_town_id: part_of_town_id,
-		control_id:$("#control_id").val(),
-		control_area_id:$("#control_area_id").val(),
-		entity_group_id:$("#entity_group_id").val()
+		control_id: $("#control_id").val(),
+		control_area_id: $("#control_area_id").val(),
+		entity_group_id: $("#entity_group_id").val()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs);
 	location = requestUrl;
@@ -72,9 +72,16 @@ $(document).ready(function ()
 		},
 		onDropdownHidden: function (event)
 		{
+//			console.log(event);
 			$("#form").submit();
 		}
 	});
+
+//	$("#part_of_town_id").change(function ()
+//	{
+//		$("#form").submit();
+//	});
+
 	$(".btn-group").addClass('w-100');
 //	$(".multiselect ").addClass('form-control');
 //	$(".multiselect").removeClass('btn');

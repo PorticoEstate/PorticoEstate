@@ -1342,7 +1342,8 @@
 				. " {$this->join} fm_location1  ON (fm_bim_item.loc1 = fm_location1.loc1)"
 				. " WHERE part_of_town_id = {$part_of_town_id}"
 				. " AND controller_control.id = {$control_id}"
-				. " AND (planned_date >= $timestamp_start AND planned_date <= $timestamp_end)";
+				. " AND ( completed_date IS NULL AND planned_date >= $timestamp_start AND planned_date <= $timestamp_end "
+				. " OR completed_date >= $timestamp_start AND completed_date <= $timestamp_end)";
 
 //			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);

@@ -13,7 +13,7 @@ this.local_DrawCallback2 = function (container)
 
 	var columns = ["6"];
 
-	$(api.column(5).footer()).html("<div align=\"right\">Sum</div>");
+	$(api.column(5).footer()).html("<div style=\"text-align:right;\">Sum</div>");
 
 	columns.forEach(function (col)
 	{
@@ -24,7 +24,7 @@ this.local_DrawCallback2 = function (container)
 				return intVal(a) + intVal(b);
 			}) : 0;
 
-		$(api.column(col).footer()).html("<div align=\"right\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
+		$(api.column(col).footer()).html("<div style=\"text-align:right;\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
 	});
 
 };
@@ -37,7 +37,7 @@ FormatterCenter = function (key, oData)
 
 FormatterRight = function (key, oData)
 {
-	return "<div align=\"right\">" + oData[key] + "</div>";
+	return "<div style=\"text-align:right;\">" + oData[key] + "</div>";
 };
 
 this.fileuploader = function ()

@@ -976,8 +976,30 @@
 
 			$user_role = true;
 //https://www.iconsdb.com/black-icons/undo-4-icon.html
+
+			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list->get_id());
+
+			$administrator_arr = array();
+			$administrators = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), 1);
+
+			foreach ($administrators as $administrator)
+			{
+				$administrator_arr[] = $administrator['name'];
+			}
+
+			$supervisor_arr = array();
+			$supervisors = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), 4);
+
+			foreach ($supervisors as $supervisor)
+			{
+				$supervisor_arr[] = $supervisor['name'];
+			}
+//			_debug_array($check_list);
 			$data = array
 			(
+				'inspectors' => $inspectors,
+				'administrator_list' => implode('; ', $administrator_arr),
+				'supervisor_name' => implode('; ', $supervisor_arr),
 				'img_add2' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'img_undo' => $GLOBALS['phpgw']->common->image('phpgwapi', 'undo-4-512'),
 				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),

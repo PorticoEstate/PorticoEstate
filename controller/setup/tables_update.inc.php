@@ -1321,3 +1321,121 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.60';
+	function controller_upgrade0_1_60()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_user_role',  array(
+				'fd' => array(
+					'control_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'user_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'roles' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_on' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_by' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				),
+				'pk' => array('control_id', 'user_id'),
+				'fk' => array(
+					'controller_control'   => array('control_id' => 'id'),
+					'phpgw_accounts' => array('user_id' => 'account_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_user_district', array(
+				'fd' => array(
+					'control_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'part_of_town_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'user_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_on' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_by' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				),
+				'pk' => array('control_id', 'part_of_town_id'),
+				'fk' => array(
+					'controller_control'   => array('control_id' => 'id'),
+					'fm_part_of_town'   => array('part_of_town_id' => 'id'),
+					'phpgw_accounts' => array('user_id' => 'account_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.61';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.61';
+	function controller_upgrade0_1_61()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_check_list_inspector', array(
+				'fd' => array(
+					'check_list_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'user_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_on' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_by' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				),
+				'pk' => array('check_list_id', 'user_id'),
+				'fk' => array(
+					'controller_check_list'   => array('check_list_id' => 'id'),
+					'phpgw_accounts' => array('user_id' => 'account_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.62';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.62';
+	function controller_upgrade0_1_62()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('controller_control_user_district');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('controller_control_user_role');
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_user_role', array(
+				'fd' => array(
+					'control_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'part_of_town_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'user_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'roles' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_on' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+					'modified_by' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  false),
+				),
+				'pk' => array('control_id', 'user_id', 'part_of_town_id'),
+				'fk' => array(
+					'controller_control'   => array('control_id' => 'id'),
+					'fm_part_of_town' => array('part_of_town_id' => 'id'),
+					'phpgw_accounts' => array('user_id' => 'account_id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.63';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
