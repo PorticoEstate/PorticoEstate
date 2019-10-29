@@ -1227,7 +1227,8 @@
 				$body = str_ireplace($matches[0][0], $link_to_ticket_text, $link_text);
 			}
 
-			$body .= "<table class='overview'>";
+			$body .= "<p>&nbsp;</p>"
+				. "<table class='overview'>";
 
 			if($ticket['on_behalf_of_name'])
 			{
