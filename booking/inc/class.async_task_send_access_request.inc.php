@@ -9,6 +9,7 @@
 
 		public function __construct()
 		{
+			parent::__construct();
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->config	 = CreateObject('phpgwapi.config', 'booking')->read();
 		}
@@ -163,16 +164,18 @@
 									foreach ($resource['e_locks'] as $e_lock)
 									{
 										$get_data = array
-											(
+										(
 											'resid'		 => (int)$e_lock['e_lock_resource_id'],
+											'reserved'	 => 1,
 											'system'	 => (int)$e_lock['e_lock_system_id'],
-											'reserved'	 => 1
 										);
 
 										$status_arr = $e_lock_integration->get_status($get_data);
 
 										$log_data = _debug_array($get_data, false);
 										$this->log('get_data', $log_data);
+										$log_data = _debug_array($status_arr, false);
+										$this->log('status_arr', $log_data);
 
 										/**
 										 * look for contact_phone, and send email/sms with key
