@@ -140,8 +140,8 @@
 											'email'	 => $reservation['contact_email'],
 											'from'	 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
 											'mobile' => $reservation['contact_phone'],
-											'resid'	 => $e_lock['e_lock_resource_id'],
-											'system' => $e_lock['e_lock_system_id'],
+											'resid'	 => (int)$e_lock['e_lock_resource_id'],
+											'system' => (int)$e_lock['e_lock_system_id'],
 									//		'to'	 => date('Y-m-d\TH:i:s.v', strtotime($reservation['to_'])) . 'Z',
 											'to'	=> $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
@@ -164,8 +164,8 @@
 									{
 										$get_data = array
 											(
-											'resid'		 => $e_lock['e_lock_resource_id'],
-											'system'	 => $e_lock['e_lock_system_id'],
+											'resid'		 => (int)$e_lock['e_lock_resource_id'],
+											'system'	 => (int)$e_lock['e_lock_system_id'],
 											'reserved'	 => 1
 										);
 
