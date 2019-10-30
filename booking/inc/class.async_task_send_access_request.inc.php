@@ -67,11 +67,13 @@
 				{
 					$bo = CreateObject('booking.bo' . $reservation_type);
 
-					$_stage = $stage;
+					/**
+					 * Condition: < $_stage
+					 * update to $_stage after check
+					 */
+					$_stage = $stage +1;
 
 					$request_access = $bo->find_request_access($_stage, $time_ahead);
-
-					$_stage ++;
 
 					if (!is_array($request_access) || !isset($request_access['results']))
 					{
