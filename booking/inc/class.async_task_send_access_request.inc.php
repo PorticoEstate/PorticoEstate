@@ -71,7 +71,7 @@
 					 * Condition: < $_stage
 					 * update to $_stage after check
 					 */
-					$_stage = $stage +1;
+					$_stage = $stage + 1;
 
 					$request_access = $bo->find_request_access($_stage, $time_ahead);
 
@@ -139,19 +139,16 @@
 
 										$post_data = array
 											(
-											'desc'	 => $reservation['contact_name'],
+											'desc'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
 											'email'	 => $reservation['contact_email'],
 											'from'	 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
 											'mobile' => $reservation['contact_phone'],
 											'resid'	 => (int)$e_lock['e_lock_resource_id'],
 											'system' => (int)$e_lock['e_lock_system_id'],
-									//		'to'	 => date('Y-m-d\TH:i:s.v', strtotime($reservation['to_'])) . 'Z',
-											'to'	=> $to->format('Y-m-d\TH:i:s.v') . 'Z',
+											'to'	 => $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
 
 										$http_code = $e_lock_integration->resources_create($post_data);
-
-										//							_debug_array($http_code);
 
 										$log_data = _debug_array($post_data, false);
 										$this->log('post_data', $log_data);
@@ -166,7 +163,7 @@
 									foreach ($resource['e_locks'] as $e_lock)
 									{
 										$get_data = array
-										(
+											(
 											'resid'		 => (int)$e_lock['e_lock_resource_id'],
 											'reserved'	 => 1,
 											'system'	 => (int)$e_lock['e_lock_system_id'],
@@ -174,9 +171,9 @@
 
 										$status_arr = $e_lock_integration->get_status($get_data);
 
-										$log_data = _debug_array($get_data, false);
+										$log_data	 = _debug_array($get_data, false);
 										$this->log('get_data', $log_data);
-										$log_data = _debug_array($status_arr, false);
+										$log_data	 = _debug_array($status_arr, false);
 										$this->log('status_arr', $log_data);
 
 										/**
@@ -185,13 +182,11 @@
 										$found_reservation = false;
 										foreach ($status_arr as $status)
 										{
-											if ($status['mobile'] == $reservation['contact_phone'])
+											$desc = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
+
+											if ($desc == $status['desc'])
 											{
-												$reservation_from	 = strtotime($reservation['from_']);// - phpgwapi_datetime::user_timezone();
-												$reservation_to		 = strtotime($reservation['to_']);// - phpgwapi_datetime::user_timezone();
-												$status_from		 = strtotime($status['from']);
-												$status_to			 = strtotime($status['to']);
-												$e_lock_name		 = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
+												$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
 
 												if ($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
 												{
@@ -202,44 +197,41 @@
 													$e_loc_key = $status['key'];
 												}
 
-												if ($reservation_to >= $status_from && $reservation_to <= $status_to)
+												$found_reservation	 = true;
+												/**
+												 * send SMS
+												 */
+												$sms_text			 = "Hei {$reservation['contact_name']}\n "
+													. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
+													. "Koden for {$e_lock_name} er: {$e_loc_key}";
+
+												try
 												{
-													$found_reservation	 = true;
-													/**
-													 * send SMS
-													 */
-													$sms_text			 = "Hei {$reservation['contact_name']}\n "
-														. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
-														. "Koden for {$e_lock_name} er: {$e_loc_key}";
-
-													try
-													{
-														$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $sms_text);
-													}
-													catch (Exception $ex)
-													{
-														$this->log('sms_error', $ex->getMessage());
-													}
-
-													if (!empty($sms_res[0][0]))
-													{
-														$comment = 'Melding om tilgang og kode er sendt til ' . $reservation['contact_phone'];
-														$bo->add_single_comment($reservation['id'], $comment);
-													}
-
-													/**
-													 * send email
-													 */
-													if ($this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($sms_text)))
-													{
-														$comment = "Melding om tilgang og kode for {$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']} er sendt til {$reservation['contact_email']}";
-														$bo->add_single_comment($reservation['id'], $comment);
-													}
-
-													$this->log('sms_tekst', $sms_text);
-
-													break;
+													$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $sms_text);
 												}
+												catch (Exception $ex)
+												{
+													$this->log('sms_error', $ex->getMessage());
+												}
+
+												if (!empty($sms_res[0][0]))
+												{
+													$comment = 'Melding om tilgang og kode er sendt til ' . $reservation['contact_phone'];
+													$bo->add_single_comment($reservation['id'], $comment);
+												}
+
+												/**
+												 * send email
+												 */
+												if ($this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($sms_text)))
+												{
+													$comment = "Melding om tilgang og kode for {$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']} er sendt til {$reservation['contact_email']}";
+													$bo->add_single_comment($reservation['id'], $comment);
+												}
+
+												$this->log('sms_tekst', $sms_text);
+
+												break;
 											}
 										}
 
