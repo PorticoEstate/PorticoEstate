@@ -376,7 +376,7 @@
 			$_conditions = " bb_resource_e_lock.e_lock_resource_id IS NOT NULL"
 				. " AND {$table_name}.active != 0"
 //				. " AND {$table_name}.status ='ACCEPTED'"
-				. " AND {$table_name}.access_requested = " . (int) $stage
+				. " AND {$table_name}.access_requested < " . (int) $stage
 				. " AND {$table_name}.from_ > '{$slightly_before}'"
 				. " AND '{$slightly_after}' >= {$table_name}.from_"
 				. " AND '{$now}' <= {$table_name}.to_";
