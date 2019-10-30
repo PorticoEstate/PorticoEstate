@@ -178,8 +178,9 @@
 										$this->log('status_arr', $log_data);
 
 										/**
-										 * look for contact_phone, and send email/sms with key
+										 * look for descr, and send email/sms with key
 										 */
+										$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
 										$found_reservation = false;
 										foreach ($status_arr as $status)
 										{
@@ -187,7 +188,7 @@
 
 											if ($desc == $status['desc'])
 											{
-												$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
+												$found_reservation	 = true;
 
 												if ($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
 												{
@@ -198,7 +199,6 @@
 													$e_loc_key = $status['key'];
 												}
 
-												$found_reservation	 = true;
 												/**
 												 * send SMS
 												 */
@@ -232,14 +232,14 @@
 
 												$this->log('sms_tekst', $sms_text);
 
-												break;
+	//											break;
 											}
 										}
 										unset($status);
 
 										if (!$found_reservation)
 										{
-											$error_msg	 = "Fann ikkje reservasjonen i adgangskontrollen";
+											$error_msg	 = "Fann ikkje reservasjonen for {$e_lock_name} i adgangskontrollen";
 											$sms_res	 = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $error_msg);
 											$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
 										}
