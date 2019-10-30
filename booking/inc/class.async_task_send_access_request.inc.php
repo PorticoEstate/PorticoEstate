@@ -154,6 +154,7 @@
 										$this->log('post_data', $log_data);
 										$this->log('http_code', $http_code);
 									}
+									unset($e_lock);
 								}
 								else if ($stage == 2)
 								{
@@ -234,6 +235,7 @@
 												break;
 											}
 										}
+										unset($status);
 
 										if (!$found_reservation)
 										{
@@ -242,9 +244,13 @@
 											$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
 										}
 									}
+									unset($e_lock);
 								}
 							}
+							unset($resource);
 						}
+
+						unset($reservation);
 
 						$bo->complete_request_access($request_access['results'], $_stage);
 					}
