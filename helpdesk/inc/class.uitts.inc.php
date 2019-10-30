@@ -2257,7 +2257,8 @@ JS;
 				 */
 				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute, $this->_simple);
 
-				if (!empty($values['send_mail']) 
+				if (!empty($values['send_mail'])
+					|| phpgw::get_var('set_notify_lid', 'bool')
 					|| (!empty($this->bo->config->config_data['mailnotification']) && $this->bo->fields_updated)
 					|| (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated)
 				)

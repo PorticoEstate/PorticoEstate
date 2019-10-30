@@ -373,21 +373,17 @@
 			$slightly_after		 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() + $time_ahead) );
 			$now				 = date('Y-m-d H:i:s', phpgwapi_datetime::user_localtime());
 
-			$_conditions = "("
-				. " e_lock_resource_id IS NOT NULL"
-	//			. " AND contact_phone IS NOT NULL AND contact_phone !=''"
+			$_conditions = " bb_resource_e_lock.e_lock_resource_id IS NOT NULL"
 				. " AND {$table_name}.active != 0"
 //				. " AND {$table_name}.status ='ACCEPTED'"
 				. " AND {$table_name}.access_requested = " . (int) $stage
 				. " AND {$table_name}.from_ > '{$slightly_before}'"
 				. " AND '{$slightly_after}' >= {$table_name}.from_"
-				. " AND '{$now}' <= {$table_name}.to_"
-				. " )";
+				. " AND '{$now}' <= {$table_name}.to_";
 
 			$sql = "SELECT bb_event.id FROM bb_event"
 				. " JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id"
-				. " JOIN bb_resource ON bb_resource.id = bb_event_resource.resource_id"
-				. " JOIN bb_resource_e_lock ON bb_resource.id = bb_resource_e_lock.resource_id"
+				. " JOIN bb_resource_e_lock ON bb_event_resource.resource_id = bb_resource_e_lock.resource_id"
 				. " WHERE $_conditions";
 
 			$this->db->query($sql, __LINE__, __FILE__);

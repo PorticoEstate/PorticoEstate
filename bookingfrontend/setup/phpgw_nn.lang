@@ -79,7 +79,7 @@ cost	bookingfrontend	nn	Pris
 choose rent object and rentperiod	bookingfrontend	nn	Vel leieobjekt og leieperiode
 chosen rent object	bookingfrontend	nn	Valde leieobjekter
 chosen rent period	bookingfrontend	nn	Valde leieperioder
-choose target audience	bookingfrontend	no	Vel målgruppe for arrangement/aktiviteten
+choose target audience	bookingfrontend	no	Vel målgruppe for arrangement / aktiviteten
 create	bookingfrontend	nn	Lagre
 created	bookingfrontend	nn	Oppretta
 dashboard	bookingfrontend	nn	Skrivebord
@@ -486,3 +486,5 @@ Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet 
 Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
 No rent object chosen	bookingfrontend	nn	Ingen leieobjekt er valgt
 For rent	bookingfrontend	nn	Til leige
+Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
+Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!

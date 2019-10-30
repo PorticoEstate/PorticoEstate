@@ -174,7 +174,7 @@
 						</label>
 						<input required="true" id="inputEventName" type="text" class="form-control" name="name" value="{application/name}">
 							<xsl:attribute name="placeholder">
-								<xsl:value-of select="php:function('lang', 'Name for event/activity')"/>
+								<xsl:value-of select="config/application_description"/>
 							</xsl:attribute>
 						</input>
 					</div>
@@ -218,7 +218,7 @@
 
 						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
 						<xsl:attribute name="placeholder">
-								<xsl:value-of select="php:function('lang', 'Event/activity description')"/>
+								<xsl:value-of select="config/application_equipment"/>
 						</xsl:attribute>
 						</textarea>
 					</div>
@@ -327,7 +327,7 @@
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Next step')" />
 						</button>
-						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
+						<div id="submit-error" style="display: none"><xsl:value-of select="php:function('lang', 'Please fill all fields')"/></div>
 					</div>
 					
 					<!-- Submit error modal -->
