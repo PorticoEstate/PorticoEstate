@@ -37,10 +37,10 @@
 
 
 		<!--disabled consent script...for now...-->
-		<!--link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
-		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script-->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
 		<script>
-/*
+
 			window.addEventListener("load", function ()
 			{
 				window.cookieconsent.initialise({
@@ -66,11 +66,14 @@
 							policy: '{lang_privacy_policy}',
 							target: '_blank',
 					},
+					position: "top",
 					cookie: {
 						name: 'cookieconsent_backend'
 					},
+					law: {
+					 regionalLaw: true,
+					},
 					revokable:false,
-					regionalLaw:false,
 					onStatusChange: function(status) {
 						if(!this.hasConsented())
 						{
@@ -80,7 +83,7 @@
 					 }
 				})
 			});
-*/
+
 		</script>
 	</head>
 <!-- END head -->
