@@ -381,7 +381,7 @@
 				. " AND '{$slightly_after}' >= {$table_name}.from_"
 				. " AND '{$now}' <= {$table_name}.to_";
 
-			$sql = "SELECT bb_event.id FROM bb_event"
+			$sql = "SELECT DISTINCT bb_event.id FROM bb_event"
 				. " JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id"
 				. " JOIN bb_resource_e_lock ON bb_event_resource.resource_id = bb_resource_e_lock.resource_id"
 				. " WHERE $_conditions";
