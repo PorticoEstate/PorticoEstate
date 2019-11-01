@@ -375,7 +375,7 @@
 			$_conditions = " bb_resource_e_lock.e_lock_resource_id IS NOT NULL"
 				. " AND {$table_name}.active != 0"
 				. " AND {$table_name}.access_requested < " . (int) $stage
-				. " AND '{$slightly_before}' BETWEEN {$table_name}.from_ AND {$table_name}.to_";
+				. " AND ('{$slightly_before}' BETWEEN {$table_name}.from_ AND {$table_name}.to_ OR '{$now}' BETWEEN {$table_name}.from_ AND {$table_name}.to_)";
 
 			$sql = "SELECT DISTINCT bb_event.id FROM bb_event"
 				. " JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id"
