@@ -75,7 +75,7 @@
 
 					$request_access = $bo->find_request_access($_stage, $time_ahead);
 
-					if (!is_array($request_access) || !isset($request_access['results']))
+					if (!is_array($request_access) || empty($request_access['results']))
 					{
 						continue;
 					}

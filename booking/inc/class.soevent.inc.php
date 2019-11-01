@@ -369,17 +369,13 @@
 		{
 			$table_name = $this->table_name;
 
-			$slightly_before	 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() - $time_ahead) );
-			$slightly_after		 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() + $time_ahead) );
+			$slightly_before	 = date('Y-m-d H:i:s', (phpgwapi_datetime::user_localtime() + $time_ahead) );
 			$now				 = date('Y-m-d H:i:s', phpgwapi_datetime::user_localtime());
 
 			$_conditions = " bb_resource_e_lock.e_lock_resource_id IS NOT NULL"
 				. " AND {$table_name}.active != 0"
-//				. " AND {$table_name}.status ='ACCEPTED'"
 				. " AND {$table_name}.access_requested < " . (int) $stage
-				. " AND {$table_name}.from_ > '{$slightly_before}'"
-				. " AND '{$slightly_after}' >= {$table_name}.from_"
-				. " AND '{$now}' <= {$table_name}.to_";
+				. " AND '{$slightly_before}' BETWEEN {$table_name}.from_ AND {$table_name}.to_";
 
 			$sql = "SELECT DISTINCT bb_event.id FROM bb_event"
 				. " JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id"
