@@ -114,6 +114,68 @@
 	}
 
 	$_navbar_config			= json_encode($navbar_config);
+	$concent_script = '';
+	$privacy_url		= !empty($GLOBALS['phpgw_info']['server']['privacy_url']) ? $GLOBALS['phpgw_info']['server']['privacy_url'] : '';//https://www.bergen.kommune.no/omkommunen/personvern';
+
+	if($privacy_url)
+	{
+		$privacy_message	= !empty($GLOBALS['phpgw_info']['server']['privacy_message']) ? $GLOBALS['phpgw_info']['server']['privacy_message'] : 'Personvern ved bruk av elektroniske skjema.';
+		$lang_decline		= lang('decline');
+		$lang_approve		= lang('approve');
+		$lang_read_more		= lang('read more');
+		$lang_privacy_policy = lang('privacy policy');
+
+		$concent_script = <<<JS
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
+		<script>
+
+			window.addEventListener("load", function ()
+			{
+				window.cookieconsent.initialise({
+					type: 'opt-out',
+					"palette": {
+						"popup": {
+							"background": "#000"
+						},
+						"button": {
+							"background": "#f1d600"
+						}
+					},
+					"showLink": true,
+					content: {
+							header: 'Cookies used on the website!',
+							message: '{$privacy_message}',
+							dismiss: 'Got it!',
+							allow: '{$lang_approve}',
+							deny: '{$lang_decline}',
+							link: '{$lang_read_more}',
+							href: '{$privacy_url}',
+							close: '&#x274c;',
+							policy: '{$lang_privacy_policy}',
+							target: '_blank',
+					},
+					position: "top",
+					cookie: {
+						name: 'cookieconsent_backend'
+					},
+					law: {
+					 regionalLaw: true,
+					},
+					revokable:false,
+					onStatusChange: function(status) {
+						if(!this.hasConsented())
+						{
+							document.cookie = "cookieconsent_backend=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+							window.location.replace(phpGWLink('logout.php'));
+						}
+					 }
+				})
+			});
+
+		</script>
+JS;
+	}
 
 	$app = lang($app);
 	$tpl_vars = array
@@ -131,12 +193,7 @@
 		'navbar_config' => $_navbar_config,
 		'lang_collapse_all'	=> lang('collapse all'),
 		'lang_expand_all'	=> lang('expand all'),
-		'privacy_url'		=> !empty($GLOBALS['phpgw_info']['server']['privacy_url']) ? $GLOBALS['phpgw_info']['server']['privacy_url'] : 'https://www.bergen.kommune.no/omkommunen/personvern',
-		'privacy_message'	=> !empty($GLOBALS['phpgw_info']['server']['privacy_message']) ? $GLOBALS['phpgw_info']['server']['privacy_message'] : 'Personvern ved bruk av elektroniske skjema.',
-		'lang_decline'		=> lang('decline'),
-		'lang_approve'		=> lang('approve'),
-		'lang_read_more'	=> lang('read more'),
-		'lang_privacy_policy' => lang('privacy policy')
+		'concent_script'	=> $concent_script
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
