@@ -391,14 +391,20 @@
 
 				}
 JS;
-			$tabletools[]	 = array
-				(
-				'my_name'		 => 'edit',
-				'text'			 => lang('copy'),
-				'type'			 => 'custom',
-				'custom_code'	 => $custom_code
-			);
-
+			if($mode == 'edit')
+			{
+				$tabletools	 = array
+					(
+					'my_name'		 => 'edit',
+					'text'			 => lang('copy'),
+					'type'			 => 'custom',
+					'custom_code'	 => $custom_code
+				);
+			}
+			else
+			{
+				$tabletools = array();
+			}
 
 			$datatable_def[] = array
 				(
@@ -523,11 +529,20 @@ JS;
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'JqueryPortico.FormatterCenter')
 			);
 
-			$tabletools		 = array
-				(
-				array('my_name' => 'select_all'),
-				array('my_name' => 'select_none')
-			);
+
+			if($mode == 'edit')
+			{
+				$tabletools		 = array
+					(
+					array('my_name' => 'select_all'),
+					array('my_name' => 'select_none')
+				);
+			}
+			else
+			{
+				$tabletools = array();
+			}
+
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_2',

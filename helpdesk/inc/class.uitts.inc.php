@@ -2686,11 +2686,21 @@ JS;
 
 			$external_messages = createObject('helpdesk.soexternal_communication')->read($id);
 
+
+			if($this->_simple)
+			{
+				$menuaction_external_message = 'helpdesk.uiexternal_communication.view';
+			}
+			else
+			{
+				$menuaction_external_message = 'helpdesk.uiexternal_communication.edit';
+			}
+
 			foreach ($external_messages as &$external_message)
 			{
 				$external_message['modified_date'] = $GLOBALS['phpgw']->common->show_date($external_message['modified_date']);
 				$external_message['mail_recipients'] = implode(', ', $external_message['mail_recipients']);
-				$external_message['subject_link'] = "<a href=\"" . self::link(array('menuaction' => 'helpdesk.uiexternal_communication.edit',
+				$external_message['subject_link'] = "<a href=\"" . self::link(array('menuaction' => $menuaction_external_message,
 						'id' => $external_message['id'], 'ticket_id' => $id)) . "\">{$external_message['subject']}</a>";
 			}
 

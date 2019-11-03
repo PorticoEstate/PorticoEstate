@@ -788,13 +788,13 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:if test="simple !='1'">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'external communication')"/>
-							</label>
-							<input type="hidden" id="external_communication" name="external_communication" value=""/>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'external communication')"/>
+						</label>
+						<input type="hidden" id="external_communication" name="external_communication" value=""/>
 
+						<xsl:if test="simple !='1'">
 							<input type="button" class="pure-button pure-button-primary" name="init_external_communication" onClick="confirm_session('external_communication');">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'new')"/>
@@ -803,27 +803,27 @@
 									<xsl:value-of select="php:function('lang', 'external communication')"/>
 								</xsl:attribute>
 							</input>
+						</xsl:if>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'messages')"/>
+						</label>
+						<div class="pure-u-md-3-4" >
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_7'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
 						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'messages')"/>
-							</label>
-							<div class="pure-u-md-3-4" >
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_7'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl'/>
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											<xsl:with-param name="data" select ='data'/>
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="config" select ='config'/>
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</div>
-						</div>
-					</xsl:if>
+					</div>
 
 				</fieldset>
 			</div>
