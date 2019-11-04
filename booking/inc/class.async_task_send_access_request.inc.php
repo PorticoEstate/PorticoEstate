@@ -138,8 +138,9 @@
 										$to = $this->round_to_next_hour($reservation['to_']);
 
 										$post_data = array
-											(
-											'desc'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
+										(
+											'id'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
+											'desc'	 => $reservation['contact_name'],
 											'email'	 => $reservation['contact_email'],
 											'from'	 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
 											'mobile' => $reservation['contact_phone'],
@@ -184,9 +185,9 @@
 										$found_reservation = false;
 										foreach ($status_arr as $status)
 										{
-											$desc = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
+											$status_id = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
 
-											if ($desc == $status['desc'])
+											if ($status_id == $status['id'])
 											{
 												$found_reservation	 = true;
 
