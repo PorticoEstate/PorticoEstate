@@ -1281,6 +1281,27 @@
 
 			$body .= '<tr><td>'. lang('Opened By').'</td><td>:&nbsp;'. $user_name ."</td></tr>";
 
+			$notify_list = execMethod('property.notify.read', array
+				(
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location),
+				'location_item_id' => $id
+				)
+			);
+
+			$notify_arr = array();
+			foreach ($notify_list as $entry)
+			{
+				if ($entry['is_active'])
+				{
+					$notify_arr[] = "{$entry['first_name']} {$entry['last_name']}";
+				}
+			}
+			unset($entry);
+			if($notify_arr)
+			{
+				$body .= '<tr><td>'. lang('notify').'</td><td>:&nbsp;'. implode(";", $notify_arr) ."</td></tr>";
+			}
+
 			if($timestampclosed)
 			{
 				$body .= '<tr><td>'. lang('Date Closed').'</td><td>:&nbsp;'.$timestampclosed."</td></tr>";
@@ -1562,16 +1583,7 @@ HTML;
 				}
 			}
 
-			if($send_mail)
-			{
-				$notify_list = execMethod('property.notify.read', array
-					(
-					'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location),
-					'location_item_id' => $id
-					)
-				);
-			}
-			else
+			if(!$send_mail)
 			{
 				$notify_list = array();
 			}
