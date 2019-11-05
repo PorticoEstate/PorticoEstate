@@ -51,7 +51,7 @@
 		var $group_id;
 		var $total_records;
 		var $use_session;
-		var $_simple, $_group_candidates, $_show_finnish_date;
+		var $_simple, $_group_candidates, $_show_finnish_date, $account;
 
 		var $public_functions = array
 			(
@@ -71,6 +71,7 @@
 			$this->cats					= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket');
 			$this->cats->supress_info	= true;
 			$this->acl_location			= $this->so->acl_location;
+			$this->account				= $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->config->read();
 
@@ -1546,6 +1547,11 @@ HTML;
 
 			foreach($members as $account_id => $account_name)
 			{
+
+				if($account_id == $this->account)
+				{
+					continue;
+				}
 				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1 || $ticket['reverse_id'])
 				{
@@ -1596,6 +1602,11 @@ HTML;
 
 				foreach ($notify_list as $entry)
 				{
+					if($entry['account_id'] == $this->account)
+					{
+						continue;
+					}
+
 					if ($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
 					{
 						$sms->websend2pv($this->account, $entry['sms'], $sms_text);
@@ -1613,6 +1624,11 @@ HTML;
 			reset($notify_list);
 			foreach ($notify_list as $entry)
 			{
+				if($entry['account_id'] == $this->account)
+				{
+					continue;
+				}
+
 				/**
 				 * Calculate email from username
 				 */
