@@ -56,6 +56,7 @@
 			   set_attributes now uses this array().   07-Dec-01 skeeter
 			*/
 
+			$this->db2 = clone $GLOBALS['phpgw']->db;
 			$this->attributes[] = 'deleteable';
 			$this->attributes[] = 'content';
 
@@ -2984,7 +2985,7 @@
 			   We don't use ls() because it calls file_type() to determine if it has been
 			   passed a directory
 			*/
-			$db2 = clone($GLOBALS['phpgw']->db);
+			$db2 = & $this->db2;
 			$db2->query("SELECT mime_type FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
 			. " AND name='{$p->fake_name_clean}'"
 			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
@@ -3035,7 +3036,7 @@
 				return $rr;
 			}
 
-			$db2 = clone($GLOBALS['phpgw']->db);
+			$db2 = & $this->db2;
 			$db2->query("SELECT name FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
 			. " AND name='{$p->fake_name_clean}'"
 			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
@@ -3130,7 +3131,7 @@
 				/* We return an array of one array to maintain the standard */
 				$rarray = array();
 				//reset($this->attributes);
-				$db2 = clone($GLOBALS['phpgw']->db);
+				$db2 = & $this->db2;
 				//while(list($num, $attribute) = each($this->attributes))
 				foreach($this->attributes as $num => $attribute)
 				{
@@ -3237,9 +3238,9 @@
 					continue;
 				}
 
-				$db2 = clone($GLOBALS['phpgw']->db);
 				if( isset($this->attributes['mime_type']) && !isset($record['mime_type']) )
 				{
+					$db2 = & $this->db2;
 					$record['mime_type'] == $this->get_ext_mime_type(array('string' => $p->fake_name_clean));
 
 					if( $record['mime_type'] )
