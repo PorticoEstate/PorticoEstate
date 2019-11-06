@@ -4,16 +4,12 @@
 	class helpdesk_uiasync_settings extends phpgwapi_uicommon_jquery
 	{
 
-		var $asyncservice, $acl_edit;
+		protected $asyncservice, $acl_edit;
+
 		public $public_functions = array
 			(
 			'index'	 => true,
 			'query'	 => true
-		);
-		protected $fields		 = array(
-			'booking_async_task_update_reservation_state_enabled',
-			'booking_async_task_send_reminder_enabled',
-			'booking_async_task_send_access_request_enabled'
 		);
 
 		public function __construct()
@@ -27,7 +23,6 @@
 
 			$this->asyncservice	 = $GLOBALS['phpgw']->asyncservice;
 			$this->acl_edit		 = $GLOBALS['phpgw']->acl->check('.admin', PHPGW_ACL_EDIT, 'helpdesk');
-
 
 			self::set_active_menu('admin::helpdesk::async_settings');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . "::" . lang('Asynchronous Tasks');
@@ -69,7 +64,6 @@
 		{
 			$settings = array();
 
-			foreach ($settings as $task_id)
 			foreach (self::getAvailableTasks() as $task_id => $method)
 			{
 				$settings["{$task_id}_enabled"] = $this->is_enabled($task_id);
@@ -94,8 +88,8 @@
 		private function get_default_times()
 		{
 			return array(
-				'min'	 => '*',
-				'hour'	 => '*',
+//				'min'	 => '*',
+//				'hour'	 => '*',
 				'day' => '*/1',
 				'month'	 => '*',
 				'year'	 => '*'

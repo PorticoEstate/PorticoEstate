@@ -256,6 +256,10 @@
 			<td>{lang_uploader_filetypes}: jpg,gif,png</td>
 			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
 		</tr>
+		<tr>
+			<td>{lang_age_before_anonymize}: days</td>
+			<td><input type="number" name="newsettings[anonymize_days]" value="{value_anonymize_days}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
