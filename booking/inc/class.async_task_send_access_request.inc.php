@@ -138,15 +138,15 @@
 										$to = $this->round_to_next_hour($reservation['to_']);
 
 										$post_data = array
-										(
-											'id'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
-											'desc'	 => $reservation['contact_name'],
-											'email'	 => $reservation['contact_email'],
-											'from'	 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
-											'mobile' => $reservation['contact_phone'],
-											'resid'	 => (int)$e_lock['e_lock_resource_id'],
-											'system' => (int)$e_lock['e_lock_system_id'],
-											'to'	 => $to->format('Y-m-d\TH:i:s.v') . 'Z',
+											(
+											'custom_id'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
+											'desc'		 => $reservation['contact_name'],
+											'email'		 => $reservation['contact_email'],
+											'from'		 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
+											'mobile'	 => $reservation['contact_phone'],
+											'resid'		 => (int)$e_lock['e_lock_resource_id'],
+											'system'	 => (int)$e_lock['e_lock_system_id'],
+											'to'		 => $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
 
 										$http_code = $e_lock_integration->resources_create($post_data);
@@ -181,15 +181,15 @@
 										/**
 										 * look for descr, and send email/sms with key
 										 */
-										$e_lock_name = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
-										$found_reservation = false;
+										$e_lock_name		 = $e_lock['e_lock_name'] ? $e_lock['e_lock_name'] : 'låsen';
+										$found_reservation	 = false;
 										foreach ($status_arr as $status)
 										{
 											$status_id = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
 
-											if ($status_id == $status['id'])
+											if ($status_id == $status['custom_id'])
 											{
-												$found_reservation	 = true;
+												$found_reservation = true;
 
 												if ($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))
 												{
@@ -203,7 +203,7 @@
 												/**
 												 * send SMS
 												 */
-												$sms_text			 = "Hei {$reservation['contact_name']}\n "
+												$sms_text = "Hei {$reservation['contact_name']}\n "
 													. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
 													. "Koden for {$e_lock_name} er: {$e_loc_key}";
 
@@ -233,7 +233,7 @@
 
 												$this->log('sms_tekst', $sms_text);
 
-	//											break;
+												break;
 											}
 										}
 										unset($status);
