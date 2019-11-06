@@ -256,3 +256,5 @@ top level	helpdesk	no	Toppnivå
 take over the ticket in order to be able to forward	helpdesk	no	For å videresende, må du først overta saken.
 Referred from	helpdesk	no	Referert fra
 Started from	helpdesk	no	Startet fra
+Asynchronous Tasks	helpdesk	no	Systemjobber
+helpdesk_async_task_anonyminizer_enabled	helpdesk	no	Anonymiser data
