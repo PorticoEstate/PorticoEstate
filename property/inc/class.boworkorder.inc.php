@@ -577,6 +577,7 @@
 
 			$workorder['files'] = $vfs->ls(array(
 				'string'	 => "/property/workorder/{$workorder_id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)
 			));
 
@@ -1121,6 +1122,7 @@ HTML;
 
 			$files = $vfs->ls(array(
 				'string'	 => "/property/workorder/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)
 			));
 

@@ -696,6 +696,7 @@
 
 			$ticket['files'] = $vfs->ls (array(
 				'string' => "/helpdesk/{$id}",
+				'checksubdirs'	=> false,
 				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
@@ -918,6 +919,7 @@
 
 				if ($bofiles->vfs->file_exists(array(
 						'string' => $to_file,
+						'checksubdirs'	=> false,
 						'relatives' => array(RELATIVE_NONE)
 					)))
 				{

@@ -963,6 +963,7 @@
 
 			$files = $vfs->ls(array(
 				'string'	 => "/property/project/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)
 			));
 

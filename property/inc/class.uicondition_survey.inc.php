@@ -750,6 +750,7 @@
 
 			$files = $vfs->ls(array(
 				'string'	 => "/property/condition_survey/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;

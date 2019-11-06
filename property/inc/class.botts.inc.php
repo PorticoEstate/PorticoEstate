@@ -878,6 +878,7 @@
 
 			$ticket['files'] = $vfs->ls(array(
 				'string'	 => "/property/fmticket/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;

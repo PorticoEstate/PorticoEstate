@@ -751,6 +751,7 @@
 				{
 					$_files = $vfs->ls(array(
 						'string'	 => "/property/{$this->category_dir}/{$_loc1}/{$entity_entry['id']}",
+						'checksubdirs'	=> false,
 						'relatives'	 => array(RELATIVE_NONE)));
 
 					$mime_in_array = in_array($_files[0]['mime_type'], $img_types);

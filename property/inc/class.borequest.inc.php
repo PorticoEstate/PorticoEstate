@@ -645,6 +645,7 @@
 
 			$values['files'] = $vfs->ls(array(
 				'string'	 => "/property/request/$request_id",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;
@@ -820,6 +821,7 @@
 
 			$files = $vfs->ls(array(
 				'string'	 => "/property/request/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)
 			));
 

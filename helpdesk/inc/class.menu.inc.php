@@ -138,7 +138,13 @@
 							'text' => lang('custom menu items'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
 								'type' => 'custom_menu_items'))
-						)
+						),
+						'async_settings' => array
+							(
+							'text' => lang('Asynchronous Tasks'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uiasync_settings.index',
+								'appname' => 'helpdesk'))
+						),
 					);
 			}
 
