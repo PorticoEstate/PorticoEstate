@@ -78,7 +78,7 @@
 					return;
 				}
 
-				$sql = "SELECT * FROM FELLESDATA.V_SOA_ANSATT WHERE RESSURSNR = {$ressursnr_id}";
+				$sql = "SELECT * FROM FELLESDATA.V_PORTICO_ANSATT WHERE RESSURSNR = {$ressursnr_id}";
 
 				$db->query($sql, __LINE__, __FILE__);
 
