@@ -1,4 +1,8 @@
-//alert('test');
+var day_default_lenght = 1;
+var dow_default_end;
+var dow_default_start;
+var time_default_end = 10;
+var time_default_start = 15;
 
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
@@ -8,8 +12,6 @@ $(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name':
 var urlParams = [];
 CreateUrlParams(window.location.search);
 
-var bookableresource = ko.observableArray();
-var bookingDates = ko.observableArray();
 var agegroup = ko.observableArray();
 var audiences = ko.observableArray();
 ko.validation.locale('nb-NO');
@@ -24,45 +26,9 @@ function applicationModel()
 	{
 		return bc.applicationCartItems();
 	});
-	self.bookingDate = ko.observable("");
-	self.bookingStartTime = ko.observable("");
-	self.bookingEndTime = ko.observable("");
-	self.bookingAddFilledDate = ko.computed(function ()
-	{
-		if (self.bookingEndTime() != "" && self.bookingStartTime() != "" && self.bookingDate() != "")
-		{
-			self.addDate();
-		}
-	});
-	self.bookableResource = bookableresource;
+
 	self.selectedResources = ko.observableArray(0);
-	self.isResourceSelected = ko.computed(function ()
-	{
-		var k = 0;
-		for (var i = 0; i < self.bookableResource().length; i++)
-		{
-			if (self.bookableResource()[i].selected())
-			{
-				if (self.selectedResources.indexOf(self.bookableResource()[i].id) < 0)
-				{
-					self.selectedResources.push(self.bookableResource()[i].id);
-				}
-				k++;
-			}
-			else
-			{
-				if (self.selectedResources.indexOf(self.bookableResource()[i].id) > -1)
-				{
-					self.selectedResources.splice(self.selectedResources.indexOf(self.bookableResource()[i].id), 1);
-				}
-			}
-		}
-		if (k > 0)
-		{
-			return true;
-		}
-		return false;
-	}).extend({required: true});
+
 	self.audiences = audiences;
 	self.audienceSelectedValue = ko.observable();
 	self.audienceSelected = (function (e)
@@ -78,52 +44,7 @@ function applicationModel()
 	});
 	self.activityId = ko.observable();
 	self.date = ko.observableArray();
-	self.addDate = function ()
-	{
 
-		if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime())
-		{
-			var start = new Date(self.bookingDate());
-			start.setHours(new Date(self.bookingStartTime()).getHours());
-			start.setMinutes(new Date(self.bookingStartTime()).getMinutes());
-			var end = new Date(self.bookingEndTime());
-			end.setHours(new Date(self.bookingEndTime()).getHours());
-			end.setMinutes(new Date(self.bookingEndTime()).getMinutes());
-
-			if (start.getTime() < end.getTime())
-			{
-				var match = ko.utils.arrayFirst(self.date(), function (item)
-				{
-					return item.id === [start, end].join("");
-				});
-				if (!match)
-				{
-					self.date.push({id: [start, end
-						].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatPeriodeHours(start, end)});  /*repeat: self.repeat(),*/
-					setTimeout(function ()
-					{
-						self.bookingDate("");
-						self.bookingStartTime("");
-						self.bookingEndTime("");
-						$(".applicationSelectedDates").html("");
-					}, 500); //self.repeat(false);
-				}
-
-			}
-			else if (start.getTime() >= end.getTime())
-			{
-				$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
-			}
-
-		}
-	};
-
-	self.removeDate = function ()
-	{
-		self.date.remove(this);
-
-
-	};
 	self.aboutArrangement = ko.observable("");
 	self.agegroupList = agegroup;
 	self.specialRequirements = ko.observable("");
@@ -208,30 +129,22 @@ $(document).ready(function ()
 		{
 			for (var i = 0; i < result.results.length; i++)
 			{
-				if (result.results[i].building_id == urlParams['building_id'])
+				if($("#resource_id").val() == result.results[i].id)
 				{
-					var tempSelected = false;
-					if ($.inArray(result.results[i].id, initialSelection) > -1)
+					if(result.results[i].booking_day_default_lenght)
 					{
-						tempSelected = true;
+						day_default_lenght = result.results[i].booking_day_default_lenght;
 					}
-					if (typeof urlParams['resource_id'] !== "undefined" && initialSelection.length == 0)
+					if(result.results[i].booking_time_default_end)
 					{
-						if (urlParams['resource_id'] == result.results[i].id)
-						{
-							tempSelected = true;
-						}
+						time_default_end = result.results[i].booking_time_default_end;
 					}
-					var resource_name = result.results[i].name;
-
-					var now = Math.floor(Date.now() / 1000);
-
-					if (result.results[i].direct_booking && result.results[i].direct_booking < now)
+					if(result.results[i].booking_time_default_start)
 					{
-						resource_name += ' *';
+						time_default_start = result.results[i].booking_time_default_start;
 					}
 
-					bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
+//					console.log(result.results[i]);
 				}
 			}
 		});
@@ -268,7 +181,8 @@ $(document).ready(function ()
 		{
 			am.audienceSelectedValue(initialAudience);
 		}
-
+		$('#bookingStartTime').val(time_default_start);
+		$('#bookingEndTime').val(time_default_end);
 	});
 
 
@@ -292,7 +206,9 @@ function PopulatePostedDate()
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			am.date = [{from_: formatSingleDate(new Date(from_)), to_: formatSingleDate(new Date(to_)), formatedPeriode: formatDate(new Date(from_), new Date(to_))}];
+			$('#from_').val(formatSingleDate(new Date(from_)));
+			$('#to_').val(formatSingleDate(new Date(to_)));
+
 		}
 	}
 	else
@@ -301,7 +217,8 @@ function PopulatePostedDate()
 		{
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
-				am.date.push({from_: formatSingleDate(new Date(parseInt(urlParams['start']))), to_: formatSingleDate(new Date(parseInt(urlParams['end']))), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])))});
+			$('#from_').val(formatSingleDate(new Date(parseInt(urlParams['start']))));
+			$('#to_').val(formatSingleDate(new Date(parseInt(urlParams['end']))));
 			}
 		}
 	}
@@ -317,95 +234,32 @@ function validate()
 $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 	{
 		var startTime = new Date(ct);
-		startTime.setHours(15, 0);
+		startTime.setHours(time_default_start, 0);
 		var EndTime = new Date(ct);
 		EndTime.setDate(ct.getDate() + 1);
-		EndTime.setHours(12, 0);
+		EndTime.setHours(time_default_end, 0);
 		console.log(ct);
 		console.log(startTime);
 		console.log(EndTime);
 
+		if (startTime.getTime() < EndTime.getTime())
+		{
+			$('#from_').val(formatSingleDate(startTime));
+			$('#to_').val(formatSingleDate(EndTime));
+		}
+		else if (startTime.getTime() >= EndTime.getTime())
+		{
+			$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
+		}
 
-		am.bookingDate(ct);
-		am.bookingStartTime(startTime);
-		am.bookingEndTime(EndTime);
-		$('#bookingStartTime').val(12);
-		$('#bookingEndTime').val(15);
-
-//		$i.datetimepicker('destroy');
 	}});
 
 
-var startTimeScrollTopValue = 800;
-var endTimeScrollTopValue = 825;
 $(document).ready(function ()
 {
-	document.addEventListener('scroll', function (event)
-	{
-		if (typeof event.target.className !== "undefined")
-		{
-			if (!$(".bookingStartTime-popover").hasClass("popover-hidden"))
-			{
 
-				if ((event.target.className).indexOf("popover-content") > 0)
-				{
-					startTimeScrollTopValue = (event.target.scrollTop);
-				}
-			}
-			else if (!$(".bookingEndTime-popover").hasClass("popover-hidden"))
-			{
-
-				if ((event.target.className).indexOf("popover-content") > 0)
-				{
-					endTimeScrollTopValue = (event.target.scrollTop);
-				}
-			}
-
-		}
-	}, true);
 });
 
-$(".bookingStartTime").on("click", function ()
-{
-	setTimeout(function ()
-	{
-		if (am.bookingEndTime() != "")
-		{
-			if (startTimeScrollTopValue > endTimeScrollTopValue)
-			{
-				$(".popover-content").scrollTop(endTimeScrollTopValue - 100);
-				return;
-			}
-			$(".popover-content").scrollTop(startTimeScrollTopValue);
-		}
-		else
-		{
-			$(".popover-content").scrollTop(startTimeScrollTopValue);
-		}
-
-	}, 200);
-});
-
-$(".bookingEndTime").on("click", function ()
-{
-	setTimeout(function ()
-	{
-		if (am.bookingStartTime() != "")
-		{
-			if (endTimeScrollTopValue < startTimeScrollTopValue)
-			{
-				$(".popover-content").scrollTop(startTimeScrollTopValue + 100);
-				return;
-			}
-			$(".popover-content").scrollTop(endTimeScrollTopValue);
-		}
-		else
-		{
-			$(".popover-content").scrollTop(endTimeScrollTopValue);
-		}
-
-	}, 200);
-});
 
 
 // Grab attachment elements

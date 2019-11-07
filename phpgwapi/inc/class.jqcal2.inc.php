@@ -107,7 +107,8 @@
 			{
 				if($datepicker)
 				{
-					$start_value = "new Date('{$start_value}')";
+//					$start_value = "new Date('{$start_value}')";
+					$start_value = "'{$start_value}'";
 				}
 				else if($timepicker)
 				{

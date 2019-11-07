@@ -62,22 +62,10 @@
 						<!-- Display Time Chosen -->
 						<div class="form-group">
 							<span class="font-weight-bold d-block mt-2 span-label">
-								<xsl:value-of select="php:function('lang', 'Chosen rent period')" />
+								<xsl:value-of select="php:function('lang', 'choose rent period')" />
 							</span>
-							<div data-bind="foreach: date">
-								<div class="d-block">
-									<input required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
-									<input required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
-									<span data-bind='text: formatedPeriode'></span>
-									
-									<button class="ml-2" data-bind="click: $parent.removeDate">
-										<i class="fas fa-minus-circle"></i>
-									</button>
-								</div>
-							</div>
-							<span id="inputTime" data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">
-								<xsl:value-of select="php:function('lang', 'Select a date and time')" />
-							</span>
+							<input id="from_" type="text" required="true" name="from_[]" class="form-control"/>
+							<input id="to_" type="text" required="true" name="to_[]" class="form-control"/>
 						</div>
 						<div class="form-group">
 							<div class="row">
