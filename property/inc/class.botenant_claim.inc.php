@@ -328,6 +328,7 @@
 
 			$files = $vfs->ls(array(
 				'string'	 => "/property/tenant_claim/{$id}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE)
 			));
 

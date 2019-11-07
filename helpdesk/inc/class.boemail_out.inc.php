@@ -141,6 +141,7 @@
 
 			$files = (array)$vfs->ls (array(
 				'string' => "/{$class_info[0]}/{$class_info[1]}/{$id}",
+				'checksubdirs'	=> false,
 				'relatives' => array(RELATIVE_NONE)));
 
 			$vfs->override_acl = 0;

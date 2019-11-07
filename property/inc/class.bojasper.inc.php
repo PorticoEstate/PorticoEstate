@@ -122,6 +122,7 @@
 
 				if ($files = $vfs->ls(array(
 					'string'	 => "/property/jasper/{$entry['id']}",
+					'checksubdirs'	=> false,
 					'relatives'	 => array(RELATIVE_NONE))))
 				{
 					$entry['file_name'] = $files[0]['name'];
@@ -141,6 +142,7 @@
 			$vfs->override_acl	 = 1;
 			if ($files				 = $vfs->ls(array(
 				'string'	 => "/property/jasper/{$jasper['id']}",
+				'checksubdirs'	=> false,
 				'relatives'	 => array(RELATIVE_NONE))))
 			{
 				$jasper['file_name'] = $files[0]['name'];

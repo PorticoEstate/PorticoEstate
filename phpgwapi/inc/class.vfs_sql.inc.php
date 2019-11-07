@@ -56,6 +56,7 @@
 			   set_attributes now uses this array().   07-Dec-01 skeeter
 			*/
 
+			$this->db2 = clone $GLOBALS['phpgw']->db;
 			$this->attributes[] = 'deleteable';
 			$this->attributes[] = 'content';
 
@@ -75,7 +76,7 @@
 			{
 				$file_store_contents = 'filesystem';
 			}
-			
+
 			switch ($file_store_contents)
 			{
 				case 'braArkiv':
@@ -780,7 +781,7 @@
 					'checksubdirs' => false,
 					'nofiles' => true
 				));
-			
+
 			return isset($ls_array[0]) && $ls_array[0] ? $ls_array[0] : array();
 		}
 
@@ -1170,7 +1171,7 @@
 			$sql = "INSERT INTO phpgw_vfs ({$cols}) VALUES ({$values})";
 
 			$query = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			
+
 			$last_insert_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_vfs', 'file_id');
 
 			$this->set_attributes(array(
@@ -1190,7 +1191,7 @@
 					'relatives'	=> array($p->mask)
 				)
 			);
-			
+
 			$this->add_journal(array(
 					'string'	=> $p->fake_full_path,
 					'relatives'	=> array($p->mask),
@@ -1207,7 +1208,7 @@
 				return false;
 			}
 		}
-		
+
 		/*
 		 * See vfs_shared
 		 */
@@ -1399,7 +1400,7 @@
 							'relatives'	=> array($t->mask)
 						)
 					);
-					
+
 					$set_attributes_array = array
 					(
 						'createdby_id'	=> $account_id,
@@ -1785,7 +1786,7 @@
 
 			return true;
 		}
-		
+
 
 		function cp3($data)
 		{
@@ -1793,7 +1794,7 @@
 			{
 				throw new Exception('nothing to copy from');
 			}
-			
+
 			if(!is_array($data))
 			{
 				$data = array();
@@ -1926,13 +1927,13 @@
 				{
 					$file_info = $this->get_info($data['id']);
 					$old_file = "{$file_info['directory']}/{$file_info['name']}";
-				
+
 					$p = $this->path_parts(array(
 							'string'	=> $old_file,
 							'relatives'	=> array($data['relatives'][0])
 						)
 					);
- 
+
 					if(!$this->acl_check(array(
 							'string'	=> $p->fake_full_path,
 							'relatives'	=> array($p->mask),
@@ -1942,7 +1943,7 @@
 					{
 						return false;
 					}
-			
+
 					if(!$this->file_exists(array(
 							'string'	=> $old_file,
 							'relatives'	=> array($data['relatives'][0])
@@ -1954,26 +1955,26 @@
 							$this->fileoperation->unlink($p);
 						}
 					}
-					
+
 					$file_name = $t->fake_leading_dirs .'/'.$data['id'].'_#' .$t->fake_name;
 					$t2 = $this->path_parts(array(
 							'string'	=> $file_name,
 							'relatives'	=> array($data['relatives'][1])
 						)
-					);						
+					);
 
 					if (!$this->fileoperation->rename($t, $t2))
 					{
 						return false;
 					}
-							
+
 					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
 					. " directory='{$t2->fake_leading_dirs_clean}',"
 					. " name='{$t2->fake_name_clean}'"
 					. " WHERE owner_id='{$this->working_id}' AND file_id='{$data['id']}'" . $this->extra_sql(VFS_SQL_UPDATE), __LINE__, __FILE__);
-					
+
 					$t = $t2;
-					
+
 					$set_attributes_array = array
 					(
 						'createdby_id'	=> $account_id,
@@ -2012,7 +2013,7 @@
 							'relatives'	=> array($t->mask)
 						)
 					);
-					
+
 					if ($file_id)
 					{
 						if($this->file_actions)
@@ -2023,7 +2024,7 @@
 									'string'	=> $new_name,
 									'relatives'	=> array($data['relatives'][1])
 								)
-							);						
+							);
 
 							$rr = $this->fileoperation->rename($t, $t2);
 
@@ -2033,7 +2034,7 @@
 								. " directory='{$t2->fake_leading_dirs_clean}',"
 								. " name='{$t2->fake_name_clean}'"
 								. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
-								. " AND name='{$t->fake_name_clean}'", __LINE__, __FILE__);	
+								. " AND name='{$t->fake_name_clean}'", __LINE__, __FILE__);
 
 								$t = $t2;
 							}
@@ -2060,7 +2061,7 @@
 								'relatives'	=> array($t->mask),
 								'attributes'	=> $set_attributes_array
 							)
-						);					
+						);
 					}
 				}
 				$this->correct_attributes(array(
@@ -2068,14 +2069,14 @@
 						'relatives'	=> array($t->mask)
 					)
 				);
-				
+
 				if ($file_id)
 				{
 					return $file_id;
 				}
 				else {
 					return false;
-				}				
+				}
 			}
 			else	/* It's a directory */
 			{
@@ -2152,7 +2153,7 @@
 
 			return true;
 		}
-		
+
 		/*
 		 * See vfs_shared
 		 */
@@ -2984,7 +2985,7 @@
 			   We don't use ls() because it calls file_type() to determine if it has been
 			   passed a directory
 			*/
-			$db2 = clone($GLOBALS['phpgw']->db);
+			$db2 = & $this->db2;
 			$db2->query("SELECT mime_type FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
 			. " AND name='{$p->fake_name_clean}'"
 			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
@@ -3035,7 +3036,7 @@
 				return $rr;
 			}
 
-			$db2 = clone($GLOBALS['phpgw']->db);
+			$db2 = & $this->db2;
 			$db2->query("SELECT name FROM phpgw_vfs WHERE directory='{$p->fake_leading_dirs_clean}'"
 			. " AND name='{$p->fake_name_clean}'"
 			. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
@@ -3130,7 +3131,7 @@
 				/* We return an array of one array to maintain the standard */
 				$rarray = array();
 				//reset($this->attributes);
-				$db2 = clone($GLOBALS['phpgw']->db);
+				$db2 = & $this->db2;
 				//while(list($num, $attribute) = each($this->attributes))
 				foreach($this->attributes as $num => $attribute)
 				{
@@ -3197,7 +3198,15 @@
 			$sql = 'SELECT ' . implode(',', $this->attributes);
 
 			$dir_clean = $this->clean_string(array('string' => $p->fake_full_path));
-			$sql .= " FROM phpgw_vfs WHERE directory LIKE '{$dir_clean}%'";
+			if($data['checksubdirs'])
+			{
+				$sql .= " FROM phpgw_vfs WHERE directory LIKE '{$dir_clean}%'";
+			}
+			else
+			{
+				$sql .= " FROM phpgw_vfs WHERE directory = '{$dir_clean}'";
+			}
+
 			$sql .= $this->extra_sql(array('query_type' => VFS_SQL_SELECT));
 
 			if($data['mime_type'])
@@ -3229,9 +3238,9 @@
 					continue;
 				}
 
-				$db2 = clone($GLOBALS['phpgw']->db);
 				if( isset($this->attributes['mime_type']) && !isset($record['mime_type']) )
 				{
+					$db2 = & $this->db2;
 					$record['mime_type'] == $this->get_ext_mime_type(array('string' => $p->fake_name_clean));
 
 					if( $record['mime_type'] )

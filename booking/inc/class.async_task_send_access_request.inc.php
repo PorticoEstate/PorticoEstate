@@ -139,6 +139,7 @@
 
 										$post_data = array
 											(
+											'id'		 => 0,
 											'custom_id'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
 											'desc'		 => $reservation['contact_name'],
 											'email'		 => $reservation['contact_email'],

@@ -204,4 +204,97 @@
 			return false;
 		}
 
+		public function anonyminizer()
+		{
+			$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+			$number_of_days = !empty($config['anonymize_days']) ? $config['anonymize_days'] : 365;
+			$anonyminized_text = 'Anonymisert';
+
+			$db 			= & $GLOBALS['phpgw']->db;
+			$db->transaction_begin();
+
+			$tickets = array();
+			$sql = "SELECT id, to_char(to_timestamp(entry_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets"
+			. " WHERE entry_date <  extract(epoch FROM  (now() - interval '{$number_of_days} day') )"
+			. " AND (on_behalf_of_name IS NULL OR on_behalf_of_name != '{$anonyminized_text}')"
+			. " ORDER BY id";
+
+//			$sql = "SELECT id, to_char(to_timestamp(entry_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets WHERE  on_behalf_of_name = 'Anonymisert' ORDER BY id";
+//		_debug_array($sql);
+			$db->limit_query($sql,0,__LINE__,__FILE__, 200);
+			while ($db->next_record())
+			{
+				$tickets[] = $db->f('id');
+			}
+
+//		_debug_array($tickets);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			foreach ($tickets as $ticket_id)
+			{
+				$files = $vfs->ls (array(
+					'string' => "/helpdesk/{$ticket_id}",
+					'checksubdirs'	=> false,
+					'relatives' => array(RELATIVE_NONE)));
+
+				foreach ($files as $entry)
+				{
+					$vfs->rm(array(
+						'string'	 => "{$entry['directory']}/{$entry['name']}",
+						'relatives'	 => array(
+							RELATIVE_NONE
+						)
+					));
+				}
+			}
+
+			$vfs->override_acl = 0;
+
+			if($tickets)
+			{
+
+				$sql = "UPDATE phpgw_helpdesk_tickets SET subject = '{$anonyminized_text}', details = '{$anonyminized_text}', on_behalf_of_name = '{$anonyminized_text}'"
+				. " WHERE id IN (" . implode(',', $tickets) . ')';
+//			_debug_array($sql);
+				$db->query($sql);
+
+				$sql = "UPDATE phpgw_history_log SET history_new_value = '{$anonyminized_text}', history_old_value = '{$anonyminized_text}'"
+				. " WHERE history_status = 'C'"
+				. " AND history_record_id IN (" . implode(',', $tickets) . ')';
+//			_debug_array($sql);
+				$db->query($sql);
+
+
+				$sql = "UPDATE phpgw_helpdesk_external_communication SET subject = '{$anonyminized_text}', file_attachments = NULL"
+				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
+//			_debug_array($sql);
+				$db->query($sql);
+
+			$sql = "SELECT id FROM phpgw_helpdesk_external_communication"
+				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
+//		_debug_array($sql);
+				$db->query($sql);
+				$excom_ids = array();
+				while ($db->next_record())
+				{
+					$excom_ids[] = $db->f('id');
+				}
+
+				if($excom_ids)
+				{
+					$sql = "UPDATE phpgw_helpdesk_external_communication_msg SET message = '{$anonyminized_text}', file_attachments = NULL"
+					. " WHERE excom_id IN (" . implode(',', $excom_ids) . ')';
+					$db->query($sql);
+				}
+
+//			_debug_array($sql);
+
+			}
+//			$db->transaction_abort();
+			$db->transaction_commit();
+
+		}
+
 	}

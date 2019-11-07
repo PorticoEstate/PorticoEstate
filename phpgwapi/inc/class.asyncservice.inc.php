@@ -161,7 +161,12 @@
 			foreach($units as $u => $date_pattern)
 			{
 				++$n;
-				if ($this->debug) { echo "<p>n=$n, $u: isset(times[$u]="; print_r($times[$u]); echo ")=".(isset($times[$u])?'True':'False')."</p>\n"; }
+				if ($this->debug)
+				{
+					echo "<p>n=$n, $u: isset(times[$u]=";
+					print_r($times[$u]);
+					echo ")=".(isset($times[$u])?'True':'False')."</p>\n";
+				}
 				if (isset($times[$u]))
 				{
 					$time = explode(',',$times[$u]);
@@ -176,7 +181,7 @@
 
 							if (count($arr) != 2 || !is_numeric($min) || !is_numeric($max) || $min > $max)
 							{
-								if ($debug) echo "<p>Syntax error in $u='$t', allowed is 'min-max', min <= max, min='$min', max='$max'</p>\n";
+								if ($this->debug) echo "<p>Syntax error in $u='$t', allowed is 'min-max', min <= max, min='$min', max='$max'</p>\n";
 
 								return False;
 							}
@@ -197,7 +202,10 @@
 							if (!(is_numeric($one) && count($arr) == 1 ||
 								  count($arr) == 2 && is_numeric($inc)))
 							{
-								if ($debug) echo "<p>Syntax error in $u='$t', allowed is a number or '{*|range}/inc', inc='$inc'</p>\n";
+								if ($this->debug)
+								{
+									echo "<p>Syntax error in $u='$t', allowed is a number or '{*|range}/inc', inc='$inc'</p>\n";
+								}
 
 								return False;
 							}
@@ -215,7 +223,10 @@
 								}
 								else if (count($arr) != 2 || $min > $max)
 								{
-									if ($debug) echo "<p>Syntax error in $u='$t', allowed is '{*|min-max}/inc', min='$min',max='$max', inc='$inc'</p>\n";
+									if ($this->debug)
+									{
+										echo "<p>Syntax error in $u='$t', allowed is '{*|min-max}/inc', min='$min',max='$max', inc='$inc'</p>\n";
+									}
 									return False;
 								}
 								for ($i = $min; $i <= $max; $i += $inc)
@@ -238,7 +249,11 @@
 					$times[$u][$min_unit[$u]] = True;
 				}
 			}
-			if ($this->debug) { echo "enumerated times=<pre>"; print_r($times); echo "</pre>\n"; }
+			if ($this->debug)
+			{
+				echo "enumerated times=<pre>"; print_r($times); echo "</pre>\n";
+
+			}
 
 			// now we have the times enumerated, lets find the first not expired one
 			$found = array();
@@ -254,7 +269,10 @@
 					if (isset($found[$u]))
 					{
 						$future = $future || $found[$u] > $unit_now;
-						if ($this->debug) echo "--> already have a $u = ".$found[$u].", future='$future'<br>\n";
+						if ($this->debug)
+						{
+							echo "--> already have a $u = ".$found[$u].", future='$future'<br>\n";
+						}
 						continue;	// already set
 					}
 					foreach($times[$u] as $unit_value => $nul)
@@ -284,18 +302,27 @@
 						$next = array_keys($units);
 						if (!isset($next[count($found)-1]))
 						{
-							if ($this->debug) echo "<p>Nothing found, exiting !!!</p>\n";
+							if ($this->debug)
+							{
+								echo "<p>Nothing found, exiting !!!</p>\n";
+							}
 							return False;
 						}
 						$next = $next[count($found)-1];
 						$over = $found[$next];
 						unset($found[$next]);
-						if ($this->debug) echo "<p>Have to try the next $next, $u's are over for $next=$over !!!</p>\n";
+						if ($this->debug)
+						{
+							echo "<p>Have to try the next $next, $u's are over for $next=$over !!!</p>\n";
+						}
 						break;
 					}
 				}
 			}
-			if ($this->debug) { echo "<p>next="; print_r($found); echo "</p>\n"; }
+			if ($this->debug)
+			{
+				echo "<p>next="; print_r($found); echo "</p>\n";
+			}
 
 			return mktime($found['hour'],$found['min'],0,$found['month'],$found['day'],$found['year']);
 		}

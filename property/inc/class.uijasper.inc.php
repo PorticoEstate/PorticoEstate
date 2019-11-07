@@ -440,6 +440,7 @@
 
 							if ($old_file = $bofiles->vfs->ls(array(
 								'string'	 => "{$bofiles->fakebase}/jasper/{$id}",
+								'checksubdirs'	=> false,
 								'relatives'	 => Array(RELATIVE_NONE)
 								)))
 							{
@@ -860,6 +861,7 @@
 				$bofiles	 = CreateObject('property.bofiles');
 				if ($old_file	 = $bofiles->vfs->ls(array(
 					'string'	 => "{$bofiles->fakebase}/jasper/{$id}",
+					'checksubdirs'	=> false,
 					'relatives'	 => Array(RELATIVE_NONE)
 					)))
 				{
