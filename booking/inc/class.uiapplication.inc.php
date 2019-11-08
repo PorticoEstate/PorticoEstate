@@ -661,7 +661,9 @@
 						$session_id_ok = false;
 					}
 					// Application contains only event details. Use dummy values for contact fields
-					$dummyfields_string = array('contact_name','contact_phone','responsible_city','responsible_street', 'name', 'organizer', 'homepage', 'description', 'equipment');
+					$dummyfields_string = array('contact_name','contact_phone','responsible_city',
+						'responsible_street', 'name', 'organizer', 'homepage', 'description', 'equipment'
+						);
 					foreach ($dummyfields_string as $field)
 					{
 						$application[$field] = 'dummy';

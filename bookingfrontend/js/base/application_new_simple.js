@@ -13,8 +13,8 @@ var time_default_end_fallback = 10;
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
-$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }, value: -1");
-$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }, value: -1");
+$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }, value: 1");
+$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }, value: 1");
 var urlParams = [];
 CreateUrlParams(window.location.search);
 
@@ -68,6 +68,29 @@ function applicationModel()
 		}
 		return list;
 	});
+
+	self.removeDocs = function ()
+	{
+		var length = self.termAcceptDocs().length;
+		var temp_docs = [];
+		for (var i = 0; i < length; i++)
+		{
+			temp_docs.push(self.termAcceptDocs()[i].docName);
+		}
+		for (var i = 0; i < length; i++)
+		{
+			self.removeDoc(temp_docs[i]);
+		}
+	};
+
+	self.removeDoc = function (docName)
+	{
+		self.termAcceptDocs.remove(function (doc)
+		{
+			return doc.docName == docName;
+		});
+	};
+
 }
 
 
@@ -78,6 +101,7 @@ $(document).ready(function ()
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
+		$("#inputTargetAudience").val(result.audience[0].id);
 		activityId = result.application.activity_id;
 		for (var i = 0; i < result.agegroups.length; i++)
 		{
@@ -137,11 +161,16 @@ $(document).ready(function ()
 						time_default_start = result.results[i].booking_time_default_start;
 					}
 					$('#item-description').html(result.results[i].description);
-					$('#bookingStartTime').val(time_default_start);
-					$('#bookingEndTime').val(time_default_end);
-					PopulatePostedDate();
 
 				}
+				if (!day_default_lenght)
+				{
+					time_default_end = time_default_start + 1;
+				}
+
+				$('#bookingStartTime').val(time_default_start);
+				$('#bookingEndTime').val(time_default_end);
+				PopulatePostedDate();
 			}
 		});
 
@@ -240,14 +269,12 @@ function validate()
 
 $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 	{
+
 		var startTime = new Date(ct);
 		startTime.setHours(time_default_start, 0);
 		var EndTime = new Date(ct);
 		EndTime.setDate(ct.getDate() + day_default_lenght);
 		EndTime.setHours(time_default_end, 0);
-		console.log(ct);
-		console.log(startTime);
-		console.log(EndTime);
 
 		if (startTime.getTime() < EndTime.getTime())
 		{
@@ -257,7 +284,7 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 		}
 		else if (startTime.getTime() >= EndTime.getTime())
 		{
-			$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
+			alert("Starttid må være tidligere enn sluttid");
 		}
 
 	}});
@@ -273,6 +300,11 @@ $(document).ready(function ()
 		dow_default_start = dow_default_start_fallback;
 		dow_default_end = dow_default_end_fallback;
 
+		if (!day_default_lenght)
+		{
+			time_default_end = time_default_start + 1;
+		}
+
 		var parameter = {
 			menuaction: "bookingfrontend.uiresource.read_single",
 			id: $(this).val()
@@ -280,15 +312,15 @@ $(document).ready(function ()
 		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
 		$.getJSON(getJsonURL, function (resource)
 		{
-			if (resource.booking_day_default_lenght != -1)
+			if (resource.booking_day_default_lenght !== null && resource.booking_day_default_lenght != -1)
 			{
 				day_default_lenght = resource.booking_day_default_lenght;
 			}
-			if (resource.booking_time_default_end != -1)
+			if (resource.booking_time_default_end !== null && resource.booking_time_default_end != -1)
 			{
 				time_default_end = resource.booking_time_default_end;
 			}
-			if (resource.booking_time_default_start != -1)
+			if (resource.booking_time_default_start !== null && resource.booking_time_default_start != -1)
 			{
 				time_default_start = resource.booking_time_default_start;
 			}
@@ -296,14 +328,16 @@ $(document).ready(function ()
 
 			$('#bookingStartTime').val(time_default_start);
 			$('#bookingEndTime').val(time_default_end);
-			PopulatePostedDate();
+//			PopulatePostedDate();
+			$('#from_').val();
+			$('#to_').val();
+			$('#selected_period').html('<b>Velg dato på nytt</b>');
+			$('#start_date').val('');
 
 		});
 
-		//remove...
-//https://stackoverflow.com/questions/17630350/remove-specific-element-from-array-in-knockout-js
-		am.termAcceptDocs = ko.observableArray();
-		
+		//reset...
+		am.removeDocs();
 
 		var parameter = {
 			menuaction: "bookingfrontend.uidocument_view.regulations",
@@ -329,8 +363,6 @@ $(document).ready(function ()
 			}
 		});
 
-
-
 	});
 
 });
@@ -344,9 +376,9 @@ window.onload = function ()
 
 	const validateTargetAudience = function ()
 	{
-		if(!$("#inputTargetAudience").val())
+		if (!$("#inputTargetAudience").val())
 		{
-			!$("#inputTargetAudience").val(-1);
+			$("#inputTargetAudience").val(-1);
 		}
 	}
 
@@ -359,7 +391,7 @@ window.onload = function ()
 
 	form.addEventListener("submit", function (e)
 	{
-		if (!targetAudience.value)
+		if (!$("#resource_id").val() || !$('#from_').val())
 		{
 			e.preventDefault();
 			e.stopPropagation();

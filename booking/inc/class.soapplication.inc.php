@@ -115,6 +115,10 @@
 				{
 					$errors['from_'] = lang('Invalid from date');
 				}
+				else if(empty($date['from_']) || empty($date['to_']))
+				{
+					$errors['dates'] = lang('date is required');
+				}
 			}
 			if (strlen($entity['contact_name']) > 50)
 			{

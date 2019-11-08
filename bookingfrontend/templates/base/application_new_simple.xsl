@@ -28,7 +28,7 @@
 					</div>
 
 					<input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId" />
-					<input name="formstage" value="partial1" hidden="hidden"/>
+					<input name="formstage" value="partial2" hidden="hidden"/>
 					<h2 class="font-weight-bold mb-4">
 						<xsl:value-of select="php:function('lang', 'Choose rent object and rentperiod')" />
 					</h2>
@@ -129,10 +129,10 @@
 					<input id="inputTargetAudience" required="true" type="hidden"  name="audience[]"/>
 
 					<!-- Estimated Number of Participants -->
-						<div data-bind="foreach: agegroup">
-								<input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
-								<input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
-						</div>
+					<div data-bind="foreach: agegroup">
+						<input type="text" class="form-input sm-input maleInput" data-bind=""/>
+						<input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
+					</div>
 
 
 					<!-- Terms and Conditions -->
