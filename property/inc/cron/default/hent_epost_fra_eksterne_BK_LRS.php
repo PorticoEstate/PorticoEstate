@@ -458,7 +458,6 @@
 			$subject	 = $item3->Subject;
 			$body		 = $item3->Body->_;
 			$body_type	 = $item3->Body->BodyType; //'HTML' or 'Text'
-
 //			_debug_array($body_type);
 //			echo $this->clean_html( $body );
 //			return;
@@ -666,6 +665,127 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/Varsel om mulig motregning mellom kunde - lev for utbetaling av Vrakpant/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Betalingsplan på tvers av oppdragsgivere/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Din salgsordre til EHF-kunde - mangler utfylling i feltet \"Ekstern referanse - Deres ref/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Salgsordre med Kostra art 690 fordelte utgifter - internsalg til eksterne kunder/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Salgsordre er registrert med feil Kontaktinfo - Kontakt Bergen kommune/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Salgsordre er registrert med feil tlf 5556 5556/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Salgsordre har mangler i feltet Beskrivelse på artikkel/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Manglende informasjon på kunde - må rettes av Agresso kunde/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Kreditering av salgsordre er registrert feil/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Kunder med utenlandsk adresse som har post nr eller sted/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+
 
 			/**
 			 * Ticket created / updated
@@ -691,14 +811,14 @@
 			if ($body_type == 'HTML')
 			{
 				$message_arr = explode('========', $body);
-				$message = $this->clean_html($message_arr[0]);
+				$message	 = $this->clean_html($message_arr[0]);
 			}
 			else
 			{
 				$html2text	 = createObject('phpgwapi.html2text', $body);
 				$text		 = $html2text->getText();
 				$message_arr = explode('========', $text);
-				$message = phpgw::clean_value($message_arr[0]);
+				$message	 = phpgw::clean_value($message_arr[0]);
 			}
 
 			if (!$message)
@@ -756,32 +876,32 @@
 
 			$test = str_replace('>&nbsp;<', '', $test);
 
-			$dom	 = new DOMDocument();
-			$dom->recover = true;
+			$dom			 = new DOMDocument();
+			$dom->recover	 = true;
 			$dom->loadHTML($test);//, LIBXML_NOBLANKS | LIBXML_XINCLUDE  );
-			$xpath	 = new DOMXPath($dom);
-			$nodes	 = $xpath->query('//*[@style]');  // Find elements with a style attribute
+			$xpath			 = new DOMXPath($dom);
+			$nodes			 = $xpath->query('//*[@style]');  // Find elements with a style attribute
 			foreach ($nodes as $node)
 			{
-				$node->removeAttribute('style');	// Remove style attribute
+				$node->removeAttribute('style'); // Remove style attribute
 			}
 			$nodes = $xpath->query('//*[@class]');  // Find elements with a style attribute
 			foreach ($nodes as $node)
 			{
-				$node->removeAttribute('class');	// Remove style attribute
+				$node->removeAttribute('class'); // Remove style attribute
 			}
 			$nodes = $xpath->query('//*[@lang]');  // Find elements with a style attribute
 			foreach ($nodes as $node)
 			{
-				$node->removeAttribute('lang');	// Remove style attribute
+				$node->removeAttribute('lang'); // Remove style attribute
 			}
 
 			$test = $dom->saveHTML();
-			if( class_exists('tidy'))
+			if (class_exists('tidy'))
 			{
-				$tidy = new tidy;
+				$tidy	 = new tidy;
 				$tidy->parseString($test, $tidy_options, 'utf8');
-				$test = $tidy->body();
+				$test	 = $tidy->body();
 			}
 
 			return phpgw::clean_html($test);
