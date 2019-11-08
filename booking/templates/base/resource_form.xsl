@@ -202,9 +202,9 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'day default lenght')"/>
 					</label>
-					<input type="number" id="booking_day_default_lenght" name="booking_day_default_lenght" value="{resource/booking_day_default_lenght}">
+					<input type="number" min="-1" id="booking_day_default_lenght" name="booking_day_default_lenght" value="{resource/booking_day_default_lenght}">
 						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'day default lenght')"/>
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -213,9 +213,11 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default start')"/>
 					</label>
-					<input type="number" id="booking_dow_default_start" name="booking_dow_default_start" value="{resource/booking_dow_default_start}">
+					<input type="number" min="-1" id="booking_dow_default_start" name="booking_dow_default_start" value="{resource/booking_dow_default_start}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'day of week')"/>
+							&nbsp;
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -224,9 +226,11 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default end')"/>
 					</label>
-					<input type="number" id="booking_dow_default_end" name="booking_dow_default_end" value="{resource/booking_dow_default_end}">
+					<input type="number" min="-1" id="booking_dow_default_end" name="booking_dow_default_end" value="{resource/booking_dow_default_end}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'day of week')"/>
+							<br/>
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -235,9 +239,11 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'time default start')"/>
 					</label>
-					<input type="number" id="booking_time_default_start" name="booking_time_default_start" value="{resource/booking_time_default_start}">
+					<input type="number" min="-1" id="booking_time_default_start" name="booking_time_default_start" value="{resource/booking_time_default_start}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'time default start')"/>
+							&nbsp;
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -246,9 +252,11 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'time default end')"/>
 					</label>
-					<input type="number" id="booking_time_default_end" name="booking_time_default_end" value="{resource/booking_time_default_end}">
+					<input type="number" min="-1" id="booking_time_default_end" name="booking_time_default_end" value="{resource/booking_time_default_end}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'time default end')"/>
+							&nbsp;
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
 				</div>

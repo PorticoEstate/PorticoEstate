@@ -18,7 +18,7 @@
 						<xsl:value-of select="php:function('lang', 'New application')"/>
 					</h1>
 
-<!--					<p>
+					<!--					<p>
 						<xsl:value-of select="config/application_new_application"/>
 					</p>
 					<hr class="mt-5 mb-5"></hr>-->
@@ -50,11 +50,17 @@
 							</xsl:attribute>
 							<xsl:if test="count(resource_list/options) > 1 ">
 								<option value="">
-								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
+									<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
 								</option>
 							</xsl:if>
 							<xsl:apply-templates select="resource_list/options"/>
 						</select>
+					</div>
+
+					<div class="form-group">
+						<div class="col-12 mt-4" id="item-description">
+						</div>
+
 					</div>
 
 					<!-- Select Time and Date Section -->
@@ -64,8 +70,9 @@
 							<span class="font-weight-bold d-block mt-2 span-label">
 								<xsl:value-of select="php:function('lang', 'choose rent period')" />
 							</span>
-							<input id="from_" type="text" required="true" name="from_[]" class="form-control"/>
-							<input id="to_" type="text" required="true" name="to_[]" class="form-control"/>
+							<span class="selectedItems" id="selected_period"></span>
+							<input id="from_" type="hidden" required="true" name="from_[]" class="form-control"/>
+							<input id="to_" type="hidden" required="true" name="to_[]" class="form-control"/>
 						</div>
 						<div class="form-group">
 							<div class="row">
@@ -118,91 +125,14 @@
 						</div>
 					</div>
 					
-					<!-- Information About Event -->
-					<hr class="mt-5 mb-5"></hr>
-					<h2 class="font-weight-bold mb-4">
-						<xsl:value-of select="php:function('lang', 'Information about the event')" />
-					</h2>
-
 					<!-- Target Audience Section-->
-					<div class="form-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Target audience')" />
-						</label>
-						<div class="form-control text-left dropdown-toggle w-100" id="audienceDropdownBtn" type="input" data-toggle="dropdown">
-							<xsl:value-of select="php:function('lang', 'Choose target audience')" />
-							<span class="caret"></span>
-						</div>
-
-						<ul class="dropdown-menu px-2" data-bind="foreach: audiences" aria-label="Large">
-							<li class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected"></li>
-							<!-- <a class="dropdown-item" data-bind="text: name, id: id, click: $root.audienceSelected" href="#"></a> -->
-						</ul>
-						<input class="form-control" id="inputTargetAudience" required="true" type="text" style="display: none" name="audience[]"  data-bind="value: audienceSelectedValue"/>
-					</div>		
+					<input id="inputTargetAudience" required="true" type="hidden"  name="audience[]"/>
 
 					<!-- Estimated Number of Participants -->
-					<div class="form-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
-						</label>
-						<div class="p-2 border">
-							<div class="row mb-2">
-								<div class="col-3">
-									<span class="span-label mt-2"></span>
-								</div>
-								<div class="col-4">
-									<span>
-										<xsl:value-of select="php:function('lang', 'Male')" />
-									</span>
-								</div>
-								<div class="col-4">
-									<xsl:value-of select="php:function('lang', 'Female')" />
-								</div>
-							</div>
-
-							<div class="row mb-2" data-bind="foreach: agegroup">
-								<span data-bind="text: id, visible: false"/>
-								<div class="col-3">
-									<span class="mt-2" data-bind="text: agegroupLabel"></span>
-								</div>
-								<div class="col-4">
-									<input class="form-input sm-input maleInput" data-bind=""/>
-								</div>
-								<div class="col-4">
-									<input class="form-input sm-input femaleInput" data-bind=""/>
-								</div>
-							</div>
-
+						<div data-bind="foreach: agegroup">
+								<input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
+								<input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
 						</div>
-					</div>
-					<!-- Upload Attachment -->
-					<div id="attachment" class="form-group">
-						<div class="textContainer">
-							<label>
-								<xsl:value-of select="php:function('lang', 'Upload Attachment')" />
-							</label>
-							<label>
-								<xsl:value-of select="php:function('lang', 'optional')" />
-							</label>
-						</div>
-					
-						<div id="attachment-upload">
-							<label for="field_name" class="upload-button">
-								<xsl:value-of select="php:function('lang', 'Upload')" />
-							</label>
-							
-						</div>
-						<div id="show-attachment">
-							<span id="field_name_input"></span>
-							<a style="display: none" id="attachment-remove">Fjern Vedlegg</a>
-							<!-- Input -->
-							<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
-							</input>
-						</div>
-						<!-- Remove Attachment -->
-						
-					</div>
 
 
 					<!-- Terms and Conditions -->

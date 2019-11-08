@@ -10,7 +10,8 @@
 			'query' => true,
 			'show' => true,
 			'get_custom' => true,
-			'schedule' => true
+			'schedule' => true,
+			'read_single' => true
 		);
 
 		public function __construct()
@@ -45,6 +46,13 @@
 		public function query()
 		{
 			return $this->index_json();
+		}
+
+
+		public function read_single()
+		{
+			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+			return $resource;
 		}
 
 		public function show()
