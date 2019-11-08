@@ -71,6 +71,7 @@ choose file	bookingfrontend	no	Velg dokument
 choose rent object and rentperiod	bookingfrontend	no	Velg leieobjekt og leieperiode
 chosen rent object	bookingfrontend	no	Valgte leieobjekter
 chosen rent period	bookingfrontend	no	Valgte leieperioder
+choose rent period	bookingfrontend	no	Velg leieperiode
 choose target audience	bookingfrontend	no	Velg målgruppe for arrangement / aktiviteten
 city	bookingfrontend	no	Poststed
 click to sort ascending	bookingfrontend	no	Klikk for å sortere stigende

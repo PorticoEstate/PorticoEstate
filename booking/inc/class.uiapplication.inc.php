@@ -937,11 +937,33 @@
 
 
 			$simple = false;
+//			$simple = true;
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $simple)
 			{
 				$template = 'application_new_simple';
-				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0, array('min_date' => time()));
+
+				/**
+				 * possible initial value from calendar
+				 * millisec
+				 */
+				$start = phpgw::get_var('start', 'int');
+
+				if($start)
+				{
+					$default_start_date = $start/1000;//seconds
+				}
+				elseif (!empty($default_dates))
+				{
+					$default_start_date = $default_dates[0]['from_'];
+				}
+				else
+				{
+					$default_start_date = 0;
+
+				}
+//				_debug_array($default_start_date);
+				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', $default_start_date, array('min_date' => time()));
 				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', 'text/javascript', true);
 			}
 			else

@@ -1507,7 +1507,7 @@ HTML;
 
 			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification']==1 && $ticket['group_id'] )
 			{
-				$log_recipients[] = $group_name;
+//				$log_recipients[] = $group_name;
 				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 				foreach($members_gross as $user)
 				{
@@ -1527,7 +1527,7 @@ HTML;
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
-				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
+//				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
@@ -1539,7 +1539,7 @@ HTML;
 			{
 				// add assigned to recipients
 				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
-				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+//				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 			}
 
 			$error = array();
@@ -1554,6 +1554,9 @@ HTML;
 				{
 					continue;
 				}
+
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
+
 				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1 || $ticket['reverse_id'])
 				{

@@ -213,15 +213,31 @@
 			$db 			= & $GLOBALS['phpgw']->db;
 			$db->transaction_begin();
 
+			$closed = '';
+			$db->query('SELECT * from phpgw_helpdesk_status',__LINE__,__FILE__);
+
+			while ($db->next_record())
+			{
+				if( $db->f('closed'))
+				{
+					$closed .= " OR phpgw_helpdesk_tickets.status = 'C" . $db->f('id') . "'";
+				}
+			}
+
+			$filter_closed = "AND ( phpgw_helpdesk_tickets.status='X'{$closed})";
+
+
 			$tickets = array();
-			$sql = "SELECT id, to_char(to_timestamp(entry_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets"
-			. " WHERE entry_date <  extract(epoch FROM  (now() - interval '{$number_of_days} day') )"
+			$sql = "SELECT id, to_char(to_timestamp(modified_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets"
+			. " WHERE modified_date <  extract(epoch FROM  (now() - interval '{$number_of_days} day') )"
 			. " AND (on_behalf_of_name IS NULL OR on_behalf_of_name != '{$anonyminized_text}')"
+			. " $filter_closed"
 			. " ORDER BY id";
 
-//			$sql = "SELECT id, to_char(to_timestamp(entry_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets WHERE  on_behalf_of_name = 'Anonymisert' ORDER BY id";
+//			$sql = "SELECT id, to_char(to_timestamp(modified_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets WHERE  on_behalf_of_name = 'Anonymisert' ORDER BY id";
 //		_debug_array($sql);
-			$db->limit_query($sql,0,__LINE__,__FILE__, 200);
+
+		$db->limit_query($sql,0,__LINE__,__FILE__, 200);
 			while ($db->next_record())
 			{
 				$tickets[] = $db->f('id');
