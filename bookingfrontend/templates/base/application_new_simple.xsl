@@ -130,7 +130,7 @@
 
 					<!-- Estimated Number of Participants -->
 					<div data-bind="foreach: agegroup">
-						<input type="text" class="form-input sm-input maleInput" data-bind=""/>
+						<input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
 						<input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
 					</div>
 
