@@ -785,6 +785,102 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/kvittering for godkjent forsendelse/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Varsel om mulig motregning mellom kunde/i", $subject))
+			{
+				$message_cat_id	 = 284; // LRS-Regnskap- underkategori: 22 Innbetalinger fra kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Utbetalingsvedtak av/i", $subject))
+			{
+				$message_cat_id	 = 284; // LRS-Regnskap- underkategori: 22 Innbetalinger fra kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Fakturaavvik: EDI, returnert/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Elektronisk Adresseoppdatering fra Posten/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/E-post fra DNB BANK ASA/i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Utbetalingsrapport/i", $subject))
+			{
+				$message_cat_id	 = 284; // LRS-Regnskap- underkategori: 22 Innbetalinger fra kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Fakturaavvik: Ukjent bestilling, returnert /i", $subject))
+			{
+				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 
 
 			/**
