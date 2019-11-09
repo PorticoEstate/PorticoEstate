@@ -90,12 +90,12 @@
 			}
 			else
 			{
-				$min_date = "'{$config['min_date']}'";
+				$min_date = "'" . date('Y/m/d', $config['min_date']) . "'";
 			}
 
 			if(!empty($config['max_date']))
 			{
-				$min_date .= ",maxDate:'{$config['max_date']}'";
+				$min_date .= ",maxDate:'" . date('Y/m/d', $config['max_date']) . "'";
 			}
 
 			$value = 'false';

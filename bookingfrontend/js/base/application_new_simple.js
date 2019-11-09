@@ -9,6 +9,7 @@ var dow_default_start_fallback = null;
 var dow_default_end_fallback = null;
 var time_default_start_fallback = 15;
 var time_default_end_fallback = 10;
+//var disabledDates = ko.observableArray();
 
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
@@ -38,6 +39,7 @@ function applicationModel()
 
 	self.aboutArrangement = ko.observable("");
 	self.agegroupList = agegroup;
+	self.disabledDatesList = ko.observableArray();
 	self.specialRequirements = ko.observable("");
 	self.attachment = ko.observable();
 	self.termAcceptDocs = ko.observableArray();
@@ -56,6 +58,22 @@ function applicationModel()
 			return false;
 		}
 	});
+
+	self.setdisabledDates = function ()
+	{
+		var length = self.disabledDatesList().length;
+//		console.log('length ' + length);
+
+		var disabled_dates = [];
+		for (var i = 0; i < length; i++)
+		{
+			disabled_dates.push(self.disabledDatesList()[i].date);
+		}
+
+		$('#start_date').datetimepicker('setOptions', {disabledDates: disabled_dates});
+
+	};
+
 	self.termAcceptedDocs = ko.computed(function ()
 	{
 		var list = [];
@@ -96,6 +114,7 @@ function applicationModel()
 
 $(document).ready(function ()
 {
+
 	var activityId;
 
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
@@ -170,33 +189,36 @@ $(document).ready(function ()
 
 				$('#bookingStartTime').val(time_default_start);
 				$('#bookingEndTime').val(time_default_end);
-				PopulatePostedDate();
 			}
+			PopulatePostedDate();
 		});
 
-		var parameter = {
-			menuaction: "bookingfrontend.uidocument_view.regulations",
-			'owner[]': "building::" + urlParams['building_id'],
-			sort: "name"
-		};
-		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
-		getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
-
-		$.getJSON(getJsonURL, function (result)
+		if ($("#resource_id").val())
 		{
-			for (var i = 0; i < result.data.length; i++)
+			var parameter = {
+				menuaction: "bookingfrontend.uidocument_view.regulations",
+				'owner[]': "building::" + urlParams['building_id'],
+				sort: "name"
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
+
+			$.getJSON(getJsonURL, function (result)
 			{
-				var checked = false;
-				if (initialAcceptedDocs != null)
+				for (var i = 0; i < result.data.length; i++)
 				{
-					if (initialAcceptedDocs[i] == "on")
+					var checked = false;
+					if (initialAcceptedDocs != null)
 					{
-						checked = true;
+						if (initialAcceptedDocs[i] == "on")
+						{
+							checked = true;
+						}
 					}
+					am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
 				}
-				am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
-			}
-		});
+			});
+		}
 
 	}).done(function ()
 	{
@@ -224,16 +246,21 @@ $(document).ready(function ()
 
 function PopulatePostedDate()
 {
+	if (!$("#resource_id").val())
+	{
+		$('#time_select').hide();
+		$('#item-description').html('');
+		$('#selected_period').html('<b>Velg leieobjekt</b>');
+	}
+
 	if (initialDates != null)
 	{
 		for (var i = 0; i < initialDates.length; i++)
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			$('#from_').val(formatSingleDate(new Date(from_)));
-			$('#to_').val(formatSingleDate(new Date(to_)));
-			$('#start_date').val(formatSingleDateWithoutHours(new Date(from_)));
-			$('#selected_period').html(formatPeriodeHours(new Date(from_), new Date(to_)));
+			var startTime = new Date(from_);
+			var EndTime = new Date(to_);
 		}
 	}
 	else
@@ -242,22 +269,137 @@ function PopulatePostedDate()
 		{
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
-				$('#start_date').val(formatSingleDateWithoutHours(new Date(parseInt(urlParams['start']))));
-
 				var startTime = new Date(parseInt(urlParams['start']));
 				startTime.setHours(time_default_start, 0);
-				$('#from_').val(formatSingleDate(startTime));
-
 				var EndTime = new Date(parseInt(urlParams['start']));
 				EndTime.setDate(EndTime.getDate() + day_default_lenght);
 				EndTime.setHours(time_default_end, 0);
-				$('#to_').val(formatSingleDate(EndTime));
-
-				$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
-
 			}
 		}
+		else
+		{
+			var startTime = new Date();
+			startTime.setHours(time_default_start, 0);
+
+			var EndTime = new Date();
+			EndTime.setDate(EndTime.getDate() + day_default_lenght);
+			EndTime.setHours(time_default_end, 0);
+
+		}
+
 	}
+
+
+	if ($("#resource_id").val())
+	{
+		$('#from_').val(formatSingleDate(startTime));
+		$('#to_').val(formatSingleDate(EndTime));
+		$('#start_date').val(formatSingleDateWithoutHours(startTime));
+		$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
+
+	}
+
+	setDisabledDates();
+
+}
+
+
+function setDisabledDates()
+{
+	var nextDay;
+	for (var i = 0; i < 5; i++)
+	{
+		nextDay = new Date();
+		nextDay.setDate(nextDay.getDate() + (7 * i));
+		getDisabledDates(nextDay);
+//			console.log('steg ' +i);
+	}
+
+	setTimeout(function ()
+	{
+		am.setdisabledDates();
+	}, 1000);
+
+}
+
+function getDisabledDates(startTime)
+{
+	var curr = startTime; // get current date
+	var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+	var last = first + 6; // last day is the first day + 6
+
+	var lastday = new Date(curr.setDate(last));
+	var saturday = dateFormat(lastday, 'yyyy-mm-dd');
+
+//	alert(saturday);
+	if ($("#resource_id").val())
+	{
+		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val(), date: saturday}, true);
+		$.getJSON(getJsonURL, function (result)
+		{
+			var tempDates = [];
+
+			var currentStartDate;
+			var exDate;
+
+			if (result.ResultSet.totalResultsAvailable > 0)
+			{
+				for (var k = 0; k < result.ResultSet.Result.length; k++)
+				{
+					if (typeof result.ResultSet.Result[k].Sun !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+
+					}
+					if (typeof result.ResultSet.Result[k].Mon !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+
+					}
+					if (typeof result.ResultSet.Result[k].Tue !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+					}
+					if (typeof result.ResultSet.Result[k].Wed !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+					}
+					if (typeof result.ResultSet.Result[k].Thu !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+					}
+					if (typeof result.ResultSet.Result[k].Fri !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates[exDate] = true;
+					}
+					if (typeof result.ResultSet.Result[k].Sat !== "undefined")
+					{
+						currentStartDate = new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString());
+						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
+						tempDates.push(exDate);
+					}
+				}
+			}
+			for (var i = 0; i < tempDates.length; i++)
+			{
+				am.disabledDatesList.push({date: tempDates[i]});
+			}
+
+		});
+	}
+
 }
 
 function validate()
@@ -294,6 +436,7 @@ $(document).ready(function ()
 {
 	$("#resource_id").change(function ()
 	{
+
 		day_default_lenght = day_default_lenght_fallback;
 		time_default_end = time_default_end_fallback;
 		time_default_start = time_default_start_fallback;
@@ -305,64 +448,75 @@ $(document).ready(function ()
 			time_default_end = time_default_start + 1;
 		}
 
-		var parameter = {
-			menuaction: "bookingfrontend.uiresource.read_single",
-			id: $(this).val()
-		};
-		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
-		$.getJSON(getJsonURL, function (resource)
-		{
-			if (resource.booking_day_default_lenght !== null && resource.booking_day_default_lenght != -1)
-			{
-				day_default_lenght = resource.booking_day_default_lenght;
-			}
-			if (resource.booking_time_default_end !== null && resource.booking_time_default_end != -1)
-			{
-				time_default_end = resource.booking_time_default_end;
-			}
-			if (resource.booking_time_default_start !== null && resource.booking_time_default_start != -1)
-			{
-				time_default_start = resource.booking_time_default_start;
-			}
-			$('#item-description').html(resource.description);
-
-			$('#bookingStartTime').val(time_default_start);
-			$('#bookingEndTime').val(time_default_end);
-//			PopulatePostedDate();
-			$('#from_').val();
-			$('#to_').val();
-			$('#selected_period').html('<b>Velg dato på nytt</b>');
-			$('#start_date').val('');
-
-		});
 
 		//reset...
 		am.removeDocs();
 
-		var parameter = {
-			menuaction: "bookingfrontend.uidocument_view.regulations",
-			'owner[]': "building::" + urlParams['building_id'],
-			sort: "name"
-		};
-		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
-		getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
 
-		$.getJSON(getJsonURL, function (result)
+		if (!$(this).val())
 		{
-			for (var i = 0; i < result.data.length; i++)
-			{
-				var checked = false;
-				if (initialAcceptedDocs != null)
-				{
-					if (initialAcceptedDocs[i] == "on")
-					{
-						checked = true;
-					}
-				}
-				am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
-			}
-		});
+			$('#time_select').hide();
+			$('#item-description').html('');
+			$('#selected_period').html('<b>Velg leieobjekt</b>');
 
+		}
+		else
+		{
+			var parameter = {
+				menuaction: "bookingfrontend.uiresource.read_single",
+				id: $(this).val()
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			$.getJSON(getJsonURL, function (resource)
+			{
+				if (resource.booking_day_default_lenght !== null && resource.booking_day_default_lenght != -1)
+				{
+					day_default_lenght = resource.booking_day_default_lenght;
+				}
+				if (resource.booking_time_default_end !== null && resource.booking_time_default_end != -1)
+				{
+					time_default_end = resource.booking_time_default_end;
+				}
+				if (resource.booking_time_default_start !== null && resource.booking_time_default_start != -1)
+				{
+					time_default_start = resource.booking_time_default_start;
+				}
+				$('#item-description').html(resource.description);
+
+				$('#bookingStartTime').val(time_default_start);
+				$('#bookingEndTime').val(time_default_end);
+				$('#from_').val();
+				$('#to_').val();
+				$('#selected_period').html('<b>Velg dato</b>');
+				$('#start_date').val('');
+
+			});
+			var parameter = {
+				menuaction: "bookingfrontend.uidocument_view.regulations",
+				'owner[]': "building::" + urlParams['building_id'],
+				sort: "name"
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
+
+			$.getJSON(getJsonURL, function (result)
+			{
+				for (var i = 0; i < result.data.length; i++)
+				{
+					var checked = false;
+					if (initialAcceptedDocs != null)
+					{
+						if (initialAcceptedDocs[i] == "on")
+						{
+							checked = true;
+						}
+					}
+					am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
+				}
+			});
+			$('#time_select').show();
+			setDisabledDates();
+		}
 	});
 
 });

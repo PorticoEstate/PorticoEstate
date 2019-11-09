@@ -940,6 +940,8 @@
 
 			$simple = false;
 //			$simple = true;
+//			$simple = phpgw::get_var('simple', 'bool');
+//			$simple = phpgw::get_var('formstage') == 'partial2' ? true : false;
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $simple)
 			{
@@ -964,8 +966,11 @@
 					$default_start_date = 0;
 
 				}
-//				_debug_array($default_start_date);
-				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', $default_start_date, array('min_date' => time()));
+
+				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', $default_start_date, array(
+					'min_date' => time(),
+					'max_date' => strtotime( date('Y-m-') . date('t') . " +1 month" ),
+					));
 				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', 'text/javascript', true);
 			}
 			else

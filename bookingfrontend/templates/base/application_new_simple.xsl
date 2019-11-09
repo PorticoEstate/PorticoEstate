@@ -75,7 +75,7 @@
 							<input id="to_" type="hidden" required="true" name="to_[]" class="form-control"/>
 						</div>
 						<div class="form-group">
-							<div class="row">
+							<div id="time_select" class="row">
 								<!-- Date Pick -->
 								<div class="form-group col-lg-5 col-sm-12 col-12">
 									<div class="input-group">
