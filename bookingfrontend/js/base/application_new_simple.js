@@ -339,8 +339,11 @@ function getDisabledDates(startTime)
 		{
 			var tempDates = [];
 
-			var currentStartDate;
+			var currentDate;
+			var date;
 			var exDate;
+			var from_, to_;
+			var default_start, default_end;
 
 			if (result.ResultSet.totalResultsAvailable > 0)
 			{
@@ -348,47 +351,116 @@ function getDisabledDates(startTime)
 				{
 					if (typeof result.ResultSet.Result[k].Sun !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Sun.from_;
+						to_ = result.ResultSet.Result[k].Sun.to_;
+						date = result.ResultSet.Result[k].Sun.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 
 					}
 					if (typeof result.ResultSet.Result[k].Mon !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Mon.from_;
+						to_ = result.ResultSet.Result[k].Mon.to_;
+						date = result.ResultSet.Result[k].Mon.date;
 
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 					if (typeof result.ResultSet.Result[k].Tue !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Tue.from_;
+						to_ = result.ResultSet.Result[k].Tue.to_;
+						date = result.ResultSet.Result[k].Tue.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 					if (typeof result.ResultSet.Result[k].Wed !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Wed.from_;
+						to_ = result.ResultSet.Result[k].Wed.to_;
+						date = result.ResultSet.Result[k].Wed.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 					if (typeof result.ResultSet.Result[k].Thu !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Thu.from_;
+						to_ = result.ResultSet.Result[k].Thu.to_;
+						date = result.ResultSet.Result[k].Thu.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 					if (typeof result.ResultSet.Result[k].Fri !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates[exDate] = true;
+						from_ = result.ResultSet.Result[k].Fri.from_;
+						to_ = result.ResultSet.Result[k].Fri.to_;
+						date = result.ResultSet.Result[k].Fri.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 					if (typeof result.ResultSet.Result[k].Sat !== "undefined")
 					{
-						currentStartDate = new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString());
-						exDate = dateFormat(currentStartDate, 'yyyy/mm/dd');
-						tempDates.push(exDate);
+						from_ = result.ResultSet.Result[k].Sat.from_;
+						to_ = result.ResultSet.Result[k].Sat.to_;
+						date = result.ResultSet.Result[k].Sat.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
 					}
 				}
 			}
