@@ -806,3 +806,4 @@ time default end	booking	no	Slutt/innlevering time
 added	booking	no	Lagt til
 updated	booking	no	Oppdatert
 value is ignored for -1	booking	no	Verdien blir ignorert for -1
+Simple booking	booking	no	Forenklet bestilling

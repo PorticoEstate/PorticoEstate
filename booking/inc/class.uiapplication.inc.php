@@ -586,6 +586,7 @@
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
 			$building_id = phpgw::get_var('building_id', 'int');
+			$simple = phpgw::get_var('simple', 'bool');
 
 			$errors = array();
 
@@ -775,7 +776,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 					}
 					else
 					{
@@ -938,10 +939,10 @@
 //			}
 
 
-			$simple = false;
-//			$simple = true;
-//			$simple = phpgw::get_var('simple', 'bool');
-//			$simple = phpgw::get_var('formstage') == 'partial2' ? true : false;
+			if(!$simple)
+			{
+				$simple = phpgw::get_var('formstage') == 'partial2' ? true : false;
+			}
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $simple)
 			{

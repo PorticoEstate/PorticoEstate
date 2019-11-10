@@ -2545,7 +2545,7 @@
 	/**
 	 * Update booking version from 0.2.06 to 0.2.07
 	 * Add office and office/user relation (User is added as a custom value)
-	 * 
+	 *
 	 */
 	function booking_upgrade0_2_06()
 	{
@@ -4101,7 +4101,7 @@
 		}
 	}
 	/**
-	 * Update booking version from 0.2.46 to 0.2.47
+	 * Update booking version from 0.2.47 to 0.2.48
 	 *
 	 */
 	$test[] = '0.2.47';
@@ -4126,7 +4126,7 @@
 	}
 
 	/**
-	 * Update booking version from 0.2.46 to 0.2.47
+	 * Update booking version from 0.2.48 to 0.2.49
 	 *
 	 */
 	$test[] = '0.2.48';
@@ -4197,7 +4197,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'e_lock_system_id');
 		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'e_lock_resource_id');
-		
+
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_day_default_lenght',
 			array(
 				'type' => 'int',
@@ -4237,6 +4237,79 @@
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.49';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.49 to 0.2.50
+	 *
+	 */
+	$test[] = '0.2.49';
+	function booking_upgrade0_2_49()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'simple_booking',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => true
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'booking_day_default_lenght',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'booking_dow_default_start',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'booking_dow_default_end',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'booking_time_default_start',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource', 'booking_time_default_end',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query('UPDATE bb_resource SET'
+			. ' booking_day_default_lenght = -1,'
+			. ' booking_dow_default_start = -1,'
+			. ' booking_dow_default_end = -1,'
+			. ' booking_time_default_start = -1,'
+			. ' booking_time_default_end = -1'
+			. ' WHERE booking_time_default_start IS NULL', __LINE__, __FILE__);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.50';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

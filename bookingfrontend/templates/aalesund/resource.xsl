@@ -230,5 +230,6 @@
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var building_id = "<xsl:value-of select="building/id" />";
+		var simple_booking = "<xsl:value-of select="resource/simple_booking" />";
 	</script>
 </xsl:template>

@@ -21,7 +21,7 @@ $(document).ready(function ()
 		$(".main-picture").attr("src", this.src);
 	});
 
-	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: building_id, resource_id: urlParams['id']}, false);
+	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: building_id, resource_id: urlParams['id'], simple: simple_booking}, false);
 	$(".bookBtnForward").attr("href", bookBtnURL);
 
 	$(".goToCal").click(function ()
@@ -79,7 +79,8 @@ function ForwardToNewApplication(start, end, resource)
 		building_id: building_id,
 		resource_id: (typeof resource === 'undefined') ? "" : resource,
 		start: (typeof start === 'undefined') ? "" : roundMinutes(start),
-		end: (typeof end === 'undefined') ? "" : roundMinutes(end)
+		end: (typeof end === 'undefined') ? "" : roundMinutes(end),
+		simple: simple_booking
 	}, false);
 }
 

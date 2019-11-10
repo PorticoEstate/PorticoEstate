@@ -197,7 +197,21 @@
 						</xsl:if>
 					</input>
 				</div>
-
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'simple booking')"/>
+					</label>
+					<input type="checkbox" id="simple_booking" name="simple_booking" value="1">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'Simple booking')"/>
+						</xsl:attribute>
+						<xsl:if test="resource/simple_booking = '1'">
+							<xsl:attribute name="checked">
+								<xsl:text>checked</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'day default lenght')"/>
