@@ -138,6 +138,14 @@
 						<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
 					</xsl:if>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Simple booking')"/>
+					</label>
+					<xsl:if test="not(resource/simple_booking = '')">
+						<xsl:text>X</xsl:text>
+					</xsl:if>
+				</div>
 
 				<div class="pure-control-group">
 					<label>

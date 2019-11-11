@@ -586,6 +586,7 @@
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
 			$building_id = phpgw::get_var('building_id', 'int');
+			$simple = phpgw::get_var('simple', 'bool');
 
 			$errors = array();
 
@@ -661,7 +662,9 @@
 						$session_id_ok = false;
 					}
 					// Application contains only event details. Use dummy values for contact fields
-					$dummyfields_string = array('contact_name','contact_phone','responsible_city','responsible_street', 'name', 'organizer', 'homepage', 'description', 'equipment');
+					$dummyfields_string = array('contact_name','contact_phone','responsible_city',
+						'responsible_street', 'name', 'organizer', 'homepage', 'description', 'equipment'
+						);
 					foreach ($dummyfields_string as $field)
 					{
 						$application[$field] = 'dummy';
@@ -773,7 +776,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 					}
 					else
 					{
@@ -936,8 +939,45 @@
 //			}
 
 
-			$simple = false;
-//			$simple = true;
+			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
+			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resources = array();
+
+			if(!empty($_resources['results']))
+			{
+				$_building_simple_booking = 0;
+				foreach ($_resources['results'] as $_resource)
+				{
+					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
+					{
+						$_resource['name'] .= ' *';
+					}
+
+					$resources[] = array(
+						'id' => $_resource['id'],
+						'name' => $_resource['name'],
+						'selected' => $resource_id == $_resource['id'] ? 1 : 0
+					);
+
+					if($_resource['simple_booking'] == 1)
+					{
+						$_building_simple_booking ++;
+					}
+				}
+
+				if($_building_simple_booking == count($_resources['results']))
+				{
+					$simple = true;
+				}
+			}
+
+			if(!$simple)
+			{
+				$simple = phpgw::get_var('formstage') == 'partial2' ? true : false;
+			}
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $simple)
 			{
@@ -962,8 +1002,11 @@
 					$default_start_date = 0;
 
 				}
-//				_debug_array($default_start_date);
-				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', $default_start_date, array('min_date' => time()));
+
+				$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'date', $default_start_date, array(
+					'min_date' => time(),
+					'max_date' => strtotime( date('Y-m-') . date('t') . " +1 month" ),
+					));
 				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', 'text/javascript', true);
 			}
 			else
@@ -973,28 +1016,7 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
-			// Get resources
-			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
-			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
-			$resource_id = phpgw::get_var('resource_id', 'int');
-			$resources = array();
-			if(!empty($_resources['results']))
-			{
-				foreach ($_resources['results'] as $_resource)
-				{
-					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
-					{
-						$_resource['name'] .= ' *';
-					}
-
-					$resources[] = array(
-						'id' => $_resource['id'],
-						'name' => $_resource['name'],
-						'selected' => $resource_id == $_resource['id'] ? 1 : 0
-					);
-				}
-			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,

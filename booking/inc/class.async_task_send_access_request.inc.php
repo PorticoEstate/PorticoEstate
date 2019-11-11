@@ -22,6 +22,8 @@
 
 		public function run( $options = array() )
 		{
+			static $create_call_ids = array();
+			static $status_call_ids = array();
 
 			$request_method = !empty($this->config['e_lock_request_method']) ? $this->config['e_lock_request_method'] : 'Stavanger_e_lock.php';
 
@@ -136,11 +138,17 @@
 									foreach ($resource['e_locks'] as $e_lock)
 									{
 										$to = $this->round_to_next_hour($reservation['to_']);
+										$custom_id	 = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
+
+										if(isset($create_call_ids[$custom_id]))
+										{
+											continue;
+										}
 
 										$post_data = array
 											(
 											'id'		 => 0,
-											'custom_id'	 => "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}",
+											'custom_id'	 => $custom_id,
 											'desc'		 => $reservation['contact_name'],
 											'email'		 => $reservation['contact_email'],
 											'from'		 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
@@ -151,6 +159,11 @@
 										);
 
 										$http_code = $e_lock_integration->resources_create($post_data);
+
+										if($http_code == 200)
+										{
+											$create_call_ids[$custom_id] = true;
+										}
 
 										$log_data = _debug_array($post_data, false);
 										$this->log('post_data', $log_data);
@@ -186,10 +199,16 @@
 										$found_reservation	 = false;
 										foreach ($status_arr as $status)
 										{
-											$status_id = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
-
-											if ($status_id == $status['custom_id'])
+											$custom_id = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
+											if(isset($status_call_ids[$custom_id]))
 											{
+												continue;
+											}
+
+											if ($custom_id == $status['custom_id'])
+											{
+												$status_call_ids[$custom_id] = true;
+
 												$found_reservation = true;
 
 												if ($e_lock['access_code_format'] && preg_match('/__key__/i', $e_lock['access_code_format']))

@@ -57,6 +57,7 @@
 				'activities' => 'int',
 				'facilities' => 'int',
 				'direct_booking' => 'string',
+				'simple_booking' => 'int',
 				'booking_day_default_lenght' => 'int',
 				'booking_dow_default_start' => 'int',
 				'booking_dow_default_end' => 'int',
@@ -238,6 +239,8 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+
+				$resource['simple_booking'] = phpgw::get_var('simple_booking', 'bool', 'POST');
 				$errors = $this->bo->validate($resource);
 				$location = $this->get_location();
 				$location_id = $GLOBALS['phpgw']->locations->get_id('booking', $location);

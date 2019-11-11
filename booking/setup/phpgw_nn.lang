@@ -798,11 +798,13 @@ add electronic lock	booking	nn	Legg til E-lås
 System id	booking	nn	System ID
 resource id	booking	nn	Ressurs ID
 access code format	booking	nn	Kodeformat: #__key__
-day of week	booking	nn	Ukedag: 1 = Måndag, 7 = Sundag
-day default lenght	booking	nn	Periode, antall dagar
+day of week	booking	nn	Ukedag: 1 = Måndag, 7 = Sundag.
+day default lenght	booking	nn	Periode, antall dagar.
 dow default start	booking	nn	Start på vekedag nr:
 dow default end	booking	nn	Slutt på vekedag nr:
 time default start	booking	nn	Start/utlevering time
 time default end	booking	nn	Slutt/innlevering time
 added	booking	nn	Lagt til
 updated	booking	nn	Oppdatert
+value is ignored for -1	booking	no	Verdien blir ignorert for -1
+Simple booking	booking	nn	Forenklet bestilling

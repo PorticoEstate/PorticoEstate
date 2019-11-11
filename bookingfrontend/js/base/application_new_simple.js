@@ -1,19 +1,25 @@
-var day_default_lenght = 1;
-var dow_default_end;
-var dow_default_start;
-var time_default_end = 10;
+var day_default_lenght = 0;
+var dow_default_start = null;
+var dow_default_end = null;
 var time_default_start = 15;
+var time_default_end = 10;
+
+var day_default_lenght_fallback = 0;
+var dow_default_start_fallback = null;
+var dow_default_end_fallback = null;
+var time_default_start_fallback = 15;
+var time_default_end_fallback = 10;
+//var disabledDates = ko.observableArray();
 
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
-$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
-$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
+$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }, value: 1");
+$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }, value: 1");
 var urlParams = [];
 CreateUrlParams(window.location.search);
 
 var agegroup = ko.observableArray();
-var audiences = ko.observableArray();
 ko.validation.locale('nb-NO');
 var am;
 
@@ -27,26 +33,13 @@ function applicationModel()
 		return bc.applicationCartItems();
 	});
 
-	self.selectedResources = ko.observableArray(0);
 
-	self.audiences = audiences;
-	self.audienceSelectedValue = ko.observable();
-	self.audienceSelected = (function (e)
-	{
-		$("#audienceDropdownBtn").text(e.name);
-		self.audienceSelectedValue(e.id);
-	});
-	self.resourceSelectedValue = ko.observable();
-	self.resourceSelected = (function (e)
-	{
-		$("#resourceDropdownBtn").text(e.name);
-		self.resourceSelectedValue(e.id);
-	});
 	self.activityId = ko.observable();
 	self.date = ko.observableArray();
 
 	self.aboutArrangement = ko.observable("");
 	self.agegroupList = agegroup;
+	self.disabledDatesList = ko.observableArray();
 	self.specialRequirements = ko.observable("");
 	self.attachment = ko.observable();
 	self.termAcceptDocs = ko.observableArray();
@@ -65,6 +58,22 @@ function applicationModel()
 			return false;
 		}
 	});
+
+	self.setdisabledDates = function ()
+	{
+		var length = self.disabledDatesList().length;
+//		console.log('length ' + length);
+
+		var disabled_dates = [];
+		for (var i = 0; i < length; i++)
+		{
+			disabled_dates.push(self.disabledDatesList()[i].date);
+		}
+
+		$('#start_date').datetimepicker('setOptions', {disabledDates: disabled_dates});
+
+	};
+
 	self.termAcceptedDocs = ko.computed(function ()
 	{
 		var list = [];
@@ -77,16 +86,41 @@ function applicationModel()
 		}
 		return list;
 	});
+
+	self.removeDocs = function ()
+	{
+		var length = self.termAcceptDocs().length;
+		var temp_docs = [];
+		for (var i = 0; i < length; i++)
+		{
+			temp_docs.push(self.termAcceptDocs()[i].docName);
+		}
+		for (var i = 0; i < length; i++)
+		{
+			self.removeDoc(temp_docs[i]);
+		}
+	};
+
+	self.removeDoc = function (docName)
+	{
+		self.termAcceptDocs.remove(function (doc)
+		{
+			return doc.docName == docName;
+		});
+	};
+
 }
 
 
 $(document).ready(function ()
 {
+
 	var activityId;
 
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
+		$("#inputTargetAudience").val(result.audience[0].id);
 		activityId = result.application.activity_id;
 		for (var i = 0; i < result.agegroups.length; i++)
 		{
@@ -121,68 +155,80 @@ $(document).ready(function ()
 			{
 				$("#audienceDropdownBtn").text(result.audience[i].name);
 			}
-			audiences.push({id: result.audience[i].id, name: result.audience[i].name})
+			$("#inputTargetAudience").val(result.audience[i].id);
+
 		}
+
 
 		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['building_id'], sort: "name", phpgw_return_as: "json"}, true);
 		$.getJSON(getJsonURL, function (result)
 		{
 			for (var i = 0; i < result.results.length; i++)
 			{
-				if($("#resource_id").val() == result.results[i].id)
+				if ($("#resource_id").val() == result.results[i].id)
 				{
-					if(result.results[i].booking_day_default_lenght)
+					if (result.results[i].booking_day_default_lenght)
 					{
 						day_default_lenght = result.results[i].booking_day_default_lenght;
 					}
-					if(result.results[i].booking_time_default_end)
+					if (result.results[i].booking_time_default_end)
 					{
 						time_default_end = result.results[i].booking_time_default_end;
 					}
-					if(result.results[i].booking_time_default_start)
+					if (result.results[i].booking_time_default_start)
 					{
 						time_default_start = result.results[i].booking_time_default_start;
 					}
+					$('#item-description').html(result.results[i].description);
 
-//					console.log(result.results[i]);
 				}
-			}
-		});
-
-		var parameter = {
-			menuaction: "bookingfrontend.uidocument_view.regulations",
-			'owner[]': "building::" + urlParams['building_id'],
-			sort: "name"
-		};
-		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
-		$.getJSON(getJsonURL, function (result)
-		{
-			for (var i = 0; i < result.data.length; i++)
-			{
-				var checked = false;
-				if (initialAcceptedDocs != null)
+				if (!day_default_lenght)
 				{
-					if (initialAcceptedDocs[i] == "on")
-					{
-						checked = true;
-					}
+					time_default_end = time_default_start + 1;
 				}
-				am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
+
+				$('#bookingStartTime').val(time_default_start);
+				$('#bookingEndTime').val(time_default_end);
 			}
+			PopulatePostedDate();
 		});
+
+		if ($("#resource_id").val())
+		{
+			var parameter = {
+				menuaction: "bookingfrontend.uidocument_view.regulations",
+				'owner[]': "building::" + urlParams['building_id'],
+				sort: "name"
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
+
+			$.getJSON(getJsonURL, function (result)
+			{
+				for (var i = 0; i < result.data.length; i++)
+				{
+					var checked = false;
+					if (initialAcceptedDocs != null)
+					{
+						if (initialAcceptedDocs[i] == "on")
+						{
+							checked = true;
+						}
+					}
+					am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
+				}
+			});
+		}
 
 	}).done(function ()
 	{
 		am = new applicationModel();
 		am.activityId(activityId);
 		ko.applyBindings(am, document.getElementById("new-application-page"));
-		PopulatePostedDate();
-		if (typeof initialAudience !== "undefined")
+		if (typeof initialAudience !== "undefined" && initialAudience != null)
 		{
-			am.audienceSelectedValue(initialAudience);
+			$("#inputTargetAudience").val(initialAudience);
 		}
-		$('#bookingStartTime').val(time_default_start);
-		$('#bookingEndTime').val(time_default_end);
 	});
 
 
@@ -200,15 +246,21 @@ $(document).ready(function ()
 
 function PopulatePostedDate()
 {
+	if (!$("#resource_id").val())
+	{
+		$('#time_select').hide();
+		$('#item-description').html('');
+		$('#selected_period').html('<b>Velg leieobjekt</b>');
+	}
+
 	if (initialDates != null)
 	{
 		for (var i = 0; i < initialDates.length; i++)
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			$('#from_').val(formatSingleDate(new Date(from_)));
-			$('#to_').val(formatSingleDate(new Date(to_)));
-
+			var startTime = new Date(from_);
+			var EndTime = new Date(to_);
 		}
 	}
 	else
@@ -217,11 +269,209 @@ function PopulatePostedDate()
 		{
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
-			$('#from_').val(formatSingleDate(new Date(parseInt(urlParams['start']))));
-			$('#to_').val(formatSingleDate(new Date(parseInt(urlParams['end']))));
+				var startTime = new Date(parseInt(urlParams['start']));
+				startTime.setHours(time_default_start, 0);
+				var EndTime = new Date(parseInt(urlParams['start']));
+				EndTime.setDate(EndTime.getDate() + day_default_lenght);
+				EndTime.setHours(time_default_end, 0);
 			}
 		}
+		else
+		{
+			var startTime = new Date();
+			startTime.setHours(time_default_start, 0);
+
+			var EndTime = new Date();
+			EndTime.setDate(EndTime.getDate() + day_default_lenght);
+			EndTime.setHours(time_default_end, 0);
+
+		}
+
 	}
+
+
+	if ($("#resource_id").val())
+	{
+		$('#from_').val(formatSingleDate(startTime));
+		$('#to_').val(formatSingleDate(EndTime));
+		$('#start_date').val(formatSingleDateWithoutHours(startTime));
+		$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
+
+	}
+
+	setDisabledDates();
+
+}
+
+
+function setDisabledDates()
+{
+	var nextDay;
+	for (var i = 0; i < 5; i++)
+	{
+		nextDay = new Date();
+		nextDay.setDate(nextDay.getDate() + (7 * i));
+		getDisabledDates(nextDay);
+//			console.log('steg ' +i);
+	}
+
+	setTimeout(function ()
+	{
+		am.setdisabledDates();
+	}, 1000);
+
+}
+
+function getDisabledDates(startTime)
+{
+	var curr = startTime; // get current date
+	var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+	var last = first + 6; // last day is the first day + 6
+
+	var lastday = new Date(curr.setDate(last));
+	var saturday = dateFormat(lastday, 'yyyy-mm-dd');
+
+//	alert(saturday);
+	if ($("#resource_id").val())
+	{
+		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val(), date: saturday}, true);
+		$.getJSON(getJsonURL, function (result)
+		{
+			var tempDates = [];
+
+			var currentDate;
+			var date;
+			var exDate;
+			var from_, to_;
+			var default_start, default_end;
+
+			if (result.ResultSet.totalResultsAvailable > 0)
+			{
+				for (var k = 0; k < result.ResultSet.Result.length; k++)
+				{
+					if (typeof result.ResultSet.Result[k].Sun !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Sun.from_;
+						to_ = result.ResultSet.Result[k].Sun.to_;
+						date = result.ResultSet.Result[k].Sun.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+
+					}
+					if (typeof result.ResultSet.Result[k].Mon !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Mon.from_;
+						to_ = result.ResultSet.Result[k].Mon.to_;
+						date = result.ResultSet.Result[k].Mon.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+					if (typeof result.ResultSet.Result[k].Tue !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Tue.from_;
+						to_ = result.ResultSet.Result[k].Tue.to_;
+						date = result.ResultSet.Result[k].Tue.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+					if (typeof result.ResultSet.Result[k].Wed !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Wed.from_;
+						to_ = result.ResultSet.Result[k].Wed.to_;
+						date = result.ResultSet.Result[k].Wed.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+					if (typeof result.ResultSet.Result[k].Thu !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Thu.from_;
+						to_ = result.ResultSet.Result[k].Thu.to_;
+						date = result.ResultSet.Result[k].Thu.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+					if (typeof result.ResultSet.Result[k].Fri !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Fri.from_;
+						to_ = result.ResultSet.Result[k].Fri.to_;
+						date = result.ResultSet.Result[k].Fri.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+					if (typeof result.ResultSet.Result[k].Sat !== "undefined")
+					{
+						from_ = result.ResultSet.Result[k].Sat.from_;
+						to_ = result.ResultSet.Result[k].Sat.to_;
+						date = result.ResultSet.Result[k].Sat.date;
+
+						default_start = new Date((date + "T" + time_default_start +':00').toString());
+						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						currentDate = new Date((date + "T" + to_).toString());
+
+						if	(currentDate >= default_start )
+						{
+							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+							tempDates.push(exDate);
+						}
+					}
+				}
+			}
+			for (var i = 0; i < tempDates.length; i++)
+			{
+				am.disabledDatesList.push({date: tempDates[i]});
+			}
+
+		});
+	}
+
 }
 
 function validate()
@@ -233,23 +483,22 @@ function validate()
 
 $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 	{
+
 		var startTime = new Date(ct);
 		startTime.setHours(time_default_start, 0);
 		var EndTime = new Date(ct);
-		EndTime.setDate(ct.getDate() + 1);
+		EndTime.setDate(ct.getDate() + day_default_lenght);
 		EndTime.setHours(time_default_end, 0);
-		console.log(ct);
-		console.log(startTime);
-		console.log(EndTime);
 
 		if (startTime.getTime() < EndTime.getTime())
 		{
 			$('#from_').val(formatSingleDate(startTime));
 			$('#to_').val(formatSingleDate(EndTime));
+			$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
 		}
 		else if (startTime.getTime() >= EndTime.getTime())
 		{
-			$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
+			alert("Starttid må være tidligere enn sluttid");
 		}
 
 	}});
@@ -257,90 +506,92 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 
 $(document).ready(function ()
 {
+	$("#resource_id").change(function ()
+	{
+
+		day_default_lenght = day_default_lenght_fallback;
+		time_default_end = time_default_end_fallback;
+		time_default_start = time_default_start_fallback;
+		dow_default_start = dow_default_start_fallback;
+		dow_default_end = dow_default_end_fallback;
+
+		if (!day_default_lenght)
+		{
+			time_default_end = time_default_start + 1;
+		}
+
+
+		//reset...
+		am.removeDocs();
+
+
+		if (!$(this).val())
+		{
+			$('#time_select').hide();
+			$('#item-description').html('');
+			$('#selected_period').html('<b>Velg leieobjekt</b>');
+
+		}
+		else
+		{
+			var parameter = {
+				menuaction: "bookingfrontend.uiresource.read_single",
+				id: $(this).val()
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			$.getJSON(getJsonURL, function (resource)
+			{
+				if (resource.booking_day_default_lenght !== null && resource.booking_day_default_lenght != -1)
+				{
+					day_default_lenght = resource.booking_day_default_lenght;
+				}
+				if (resource.booking_time_default_end !== null && resource.booking_time_default_end != -1)
+				{
+					time_default_end = resource.booking_time_default_end;
+				}
+				if (resource.booking_time_default_start !== null && resource.booking_time_default_start != -1)
+				{
+					time_default_start = resource.booking_time_default_start;
+				}
+				$('#item-description').html(resource.description);
+
+				$('#bookingStartTime').val(time_default_start);
+				$('#bookingEndTime').val(time_default_end);
+				$('#from_').val();
+				$('#to_').val();
+				$('#selected_period').html('<b>Velg dato</b>');
+				$('#start_date').val('');
+
+			});
+			var parameter = {
+				menuaction: "bookingfrontend.uidocument_view.regulations",
+				'owner[]': "building::" + urlParams['building_id'],
+				sort: "name"
+			};
+			getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+			getJsonURL += '&owner[]=resource::' + $("#resource_id").val();
+
+			$.getJSON(getJsonURL, function (result)
+			{
+				for (var i = 0; i < result.data.length; i++)
+				{
+					var checked = false;
+					if (initialAcceptedDocs != null)
+					{
+						if (initialAcceptedDocs[i] == "on")
+						{
+							checked = true;
+						}
+					}
+					am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
+				}
+			});
+			$('#time_select').show();
+			setDisabledDates();
+		}
+	});
 
 });
-
-
-
-// Grab attachment elements
-const attFileInput = document.getElementById("field_name_input");
-const attInput = document.getElementById("field_name");
-const attRemove = document.getElementById("attachment-remove");
-const attContainer = document.getElementById("attachment");
-const attUpload = document.getElementById("attachment-upload");
-
-// Show Alert Function
-function showAlert(message, className)
-{
-	// Create Div
-	const attError = document.createElement("div");
-	// Alert
-//  attError.className = `alert ${className}`;
-	attError.className = 'alert ' + className;
-	//Add Text
-	attError.appendChild(document.createTextNode(message));
-	// Insert Alert
-	attContainer.insertBefore(attError, attUpload);
-	// Disable "Fjern Vedlegg" button
-	attRemove.className = 'isDisabled';
-	attUpload.className = 'isDisabled';
-	// Timeout and remove error
-	setTimeout(function ()
-	{
-		document.querySelector(".alert").remove();
-		attRemove.classList.remove("isDisabled");
-		attUpload.classList.remove("isDisabled");
-	}, 2500);
-}
-
-// Shows remove attachment button when input has text:
-attInput.addEventListener("change", function ()
-{
-
-	if (attInput.value === '' && attInput.textContent === '')
-	{
-		return
-	}
-	else
-	{
-		attRemove.style.display = "block";
-	}
-})
-
-// Removes attachment when clicked
-attRemove.addEventListener("click", function ()
-{
-	if (attFileInput.textContent === '' && attInput.value === '')
-	{
-		return;
-	}
-	else
-	{
-		showAlert('Vedlegg fjernet!', "alert-success")
-		attFileInput.textContent = '';
-		attInput.value = '';
-		attRemove.style.display = "none";
-	}
-})
-
-// Pushes filename to field_name_input and validates file size
-document.getElementById('field_name').onchange = function ()
-{
-	var filePath = this.value;
-	if (filePath)
-	{
-		var fileName = filePath.split(/(\\|\/)/g).pop();
-		$("#field_name_input").empty().append(fileName);
-	}
-	// Checks if file size is greater than 2MB
-	if (attInput.files[0].size > 2000000)
-	{
-		showAlert('Filen er for stor!', 'alert-danger')
-		attFileInput.textContent = '';
-		attInput.value = '';
-	}
-	;
-};
 
 
 window.onload = function ()
@@ -351,9 +602,10 @@ window.onload = function ()
 
 	const validateTargetAudience = function ()
 	{
-		const targetAudienceBtn = document.getElementById("audienceDropdownBtn")
-
-		!targetAudience.value ? targetAudienceBtn.classList.add("is-invalid") : targetAudienceBtn.classList.replace("is-invalid", "is-valid") || targetAudienceBtn.classList.add("is-valid")
+		if (!$("#inputTargetAudience").val())
+		{
+			$("#inputTargetAudience").val(-1);
+		}
 	}
 
 	const validateInputs = function ()
@@ -365,7 +617,7 @@ window.onload = function ()
 
 	form.addEventListener("submit", function (e)
 	{
-		if (!targetAudience.value)
+		if (!$("#resource_id").val() || !$('#from_').val())
 		{
 			e.preventDefault();
 			e.stopPropagation();
