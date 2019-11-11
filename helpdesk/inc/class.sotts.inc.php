@@ -417,8 +417,8 @@
 				{
 					$end_date = time();
 				}
-				$end_date	= $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-				$start_date	= $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+				$end_date	= $end_date + (3600 * 12) - phpgwapi_datetime::user_timezone();
+				$start_date	= $start_date - (3600 * 12) - phpgwapi_datetime::user_timezone();
 				$filtermethod .= " $where phpgw_helpdesk_tickets.entry_date >= $start_date AND phpgw_helpdesk_tickets.entry_date <= $end_date ";
 				$where= 'AND';
 			}
