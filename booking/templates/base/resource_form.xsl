@@ -18,7 +18,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-					<input name="name" id="field_name" type="text" value="{resource/name}">
+					<input name="name" id="field_name" type="text" value="{resource/name}" class="pure-input-1-2">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -33,7 +33,7 @@
 							<xsl:value-of select="php:function('lang', 'Resource category')" />
 						</label>
 						<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
-						<select id="field_rescategory_id" name="rescategory_id">
+						<select id="field_rescategory_id" name="rescategory_id" class="pure-input-1-2">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -60,7 +60,7 @@
 							<xsl:value-of select="php:function('lang', 'Main activity')" />
 						</label>
 						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
-						<select id="field_activity_id" name="activity_id">
+						<select id="field_activity_id" name="activity_id" class="pure-input-1-2">
 							<xsl:for-each select="activitydata/results">
 								<option value="{id}">
 									<xsl:if test="resource_id=id">
@@ -103,7 +103,7 @@
 						<xsl:value-of select="php:function('lang', 'Building')" />
 					</label>
 					<input id="field_building_id" name="building_id" type="hidden" value=""/>
-					<input id="field_building_name" name="building_name" type="text" value="">
+					<input id="field_building_name" name="building_name" type="text" value="" class="pure-input-1-2">
 						<xsl:if test="new_form">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
@@ -142,7 +142,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Resource Type')" />
 					</label>
-					<select name='type' id='field_type'>
+					<select name='type' id='field_type' class="pure-input-1-2">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -166,7 +166,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Active')"/>
 						</label>
-						<select id="field_active" name="active">
+						<select id="field_active" name="active" class="pure-input-1-2">
 							<option value="1">
 								<xsl:if test="resource/active=1">
 									<xsl:attribute name="selected">checked</xsl:attribute>
