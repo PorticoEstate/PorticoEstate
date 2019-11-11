@@ -939,6 +939,41 @@
 //			}
 
 
+			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
+			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resources = array();
+
+			if(!empty($_resources['results']))
+			{
+				$_building_simple_booking = 0;
+				foreach ($_resources['results'] as $_resource)
+				{
+					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
+					{
+						$_resource['name'] .= ' *';
+					}
+
+					$resources[] = array(
+						'id' => $_resource['id'],
+						'name' => $_resource['name'],
+						'selected' => $resource_id == $_resource['id'] ? 1 : 0
+					);
+
+					if($_resource['simple_booking'] == 1)
+					{
+						$_building_simple_booking ++;
+					}
+				}
+
+				if($_building_simple_booking == count($_resources['results']))
+				{
+					$simple = true;
+				}
+			}
+
 			if(!$simple)
 			{
 				$simple = phpgw::get_var('formstage') == 'partial2' ? true : false;
@@ -981,28 +1016,7 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
-			// Get resources
-			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
-			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
-			$resource_id = phpgw::get_var('resource_id', 'int');
-			$resources = array();
-			if(!empty($_resources['results']))
-			{
-				foreach ($_resources['results'] as $_resource)
-				{
-					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
-					{
-						$_resource['name'] .= ' *';
-					}
-
-					$resources[] = array(
-						'id' => $_resource['id'],
-						'name' => $_resource['name'],
-						'selected' => $resource_id == $_resource['id'] ? 1 : 0
-					);
-				}
-			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,
