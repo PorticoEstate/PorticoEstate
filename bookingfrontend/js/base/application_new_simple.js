@@ -307,13 +307,19 @@ function PopulatePostedDate()
 function setDisabledDates()
 {
 	var nextDay;
-	for (var i = 0; i < 5; i++)
+	/**
+	 * Chek three months ahead
+	 */
+
+	var startTimes = []
+	for (var i = 0; i < 12; i++)
 	{
 		nextDay = new Date();
 		nextDay.setDate(nextDay.getDate() + (7 * i));
-		getDisabledDates(nextDay);
-//			console.log('steg ' +i);
+		startTimes.push(nextDay);
 	}
+
+	getDisabledDates(startTimes);
 
 	setTimeout(function ()
 	{
@@ -322,19 +328,32 @@ function setDisabledDates()
 
 }
 
-function getDisabledDates(startTime)
+function getDisabledDates(startTimes)
 {
-	var curr = startTime; // get current date
-	var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-	var last = first + 6; // last day is the first day + 6
+	var curr; // get current date
+	var first // First day is the day of the month - the day of the week
+	var last// last day is the first day + 6
 
-	var lastday = new Date(curr.setDate(last));
-	var saturday = dateFormat(lastday, 'yyyy-mm-dd');
+	var lastday;
+	var saturday;
+
 
 //	alert(saturday);
 	if ($("#resource_id").val())
 	{
-		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val(), date: saturday}, true);
+		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val()}, true);
+
+		for (var i = 0; i < startTimes.length; i++)
+		{
+			curr = startTimes[i];
+			first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+			last = first + 6; // last day is the first day + 6
+
+			lastday = new Date(curr.setDate(last));
+			saturday = dateFormat(lastday, 'yyyy-mm-dd');
+			getJsonURL += '&dates[]=' + saturday;
+		}
+
 		$.getJSON(getJsonURL, function (result)
 		{
 			var tempDates = [];
@@ -355,11 +374,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Sun.to_;
 						date = result.ResultSet.Result[k].Sun.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -372,11 +391,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Mon.to_;
 						date = result.ResultSet.Result[k].Mon.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -388,11 +407,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Tue.to_;
 						date = result.ResultSet.Result[k].Tue.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -404,11 +423,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Wed.to_;
 						date = result.ResultSet.Result[k].Wed.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -420,11 +439,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Thu.to_;
 						date = result.ResultSet.Result[k].Thu.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -436,11 +455,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Fri.to_;
 						date = result.ResultSet.Result[k].Fri.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
@@ -452,11 +471,11 @@ function getDisabledDates(startTime)
 						to_ = result.ResultSet.Result[k].Sat.to_;
 						date = result.ResultSet.Result[k].Sat.date;
 
-						default_start = new Date((date + "T" + time_default_start +':00').toString());
-						default_end = new Date((date + "T" + time_default_end +':00').toString());
+						default_start = new Date((date + "T" + time_default_start + ':00').toString());
+						default_end = new Date((date + "T" + time_default_end + ':00').toString());
 						currentDate = new Date((date + "T" + to_).toString());
 
-						if	(currentDate >= default_start )
+						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);

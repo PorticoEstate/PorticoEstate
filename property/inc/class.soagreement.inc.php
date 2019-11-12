@@ -97,6 +97,7 @@
 
 			$cols = "{$entity_table}.*,{$category_table}.descr as category, org_name, fm_agreement_status.descr as status";
 
+			$cols_return = array();
 			$cols_return[]			 = 'id';
 			$uicols['input_type'][]	 = 'text';
 			$uicols['name'][]		 = 'id';
