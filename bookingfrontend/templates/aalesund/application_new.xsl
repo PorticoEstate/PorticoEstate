@@ -365,7 +365,6 @@
 		var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
-
-
+		var direct_booking = '<xsl:value-of select="direct_booking"/>';
 	</script>
 </xsl:template>

@@ -945,6 +945,7 @@
 
 			$resource_id = phpgw::get_var('resource_id', 'int');
 			$resources = array();
+			$direct_booking = false;
 
 			if(!empty($_resources['results']))
 			{
@@ -954,6 +955,7 @@
 					if (!empty($_resource['direct_booking']) && $_resource['direct_booking'] < time())
 					{
 						$_resource['name'] .= ' *';
+						$direct_booking = true;
 					}
 
 					$resources[] = array(
@@ -1024,6 +1026,7 @@
 				'agegroups' => $agegroups,
 				'audience' => $audience,
 				'resource_list'	=> array('options' => $resources),
+				'direct_booking' => $direct_booking,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
@@ -1174,7 +1177,7 @@
 								unset($event['id_string']);
 								$event['application_id'] = $application['id'];
 								$event['completed'] = '0';
-								$event['is_public'] = 1;
+								$event['is_public'] = 0;
 								$event['include_in_list'] = 0;
 								$event['reminder'] = 0;
 								$event['customer_internal'] = 0;
