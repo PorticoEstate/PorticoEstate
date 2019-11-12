@@ -404,9 +404,12 @@
 					'id' => $event['building_id']));
 			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
 			$when = "";
-			if($interval->days > 0) {
+			if($interval->days > 0)
+			{
 				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
-			} else {
+			}
+			else
+			{
 				$end = new DateTime($event['to_']);				
 				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
 			}			
