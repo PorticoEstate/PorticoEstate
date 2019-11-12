@@ -2162,12 +2162,9 @@
 				}
 				else
 				{
-					$orders_paid_or_pending_temp[$periode]					 = array
-						(
-						'periode'				 => $periode,
-						'periodization'			 => (int)$this->db->f('periodization'),
-						'periodization_start'	 => $this->db->f('periodization_start'),
-					);
+					$orders_paid_or_pending_temp[$periode]['periode']	= $periode;
+					$orders_paid_or_pending_temp[$periode]['periodization']	=(int)$this->db->f('periodization');
+					$orders_paid_or_pending_temp[$periode]['periodization_start']	=$this->db->f('periodization_start');
 					$orders_paid_or_pending_temp[$periode]['actual_cost']	 += $_actual_cost;
 				}
 			}

@@ -2183,6 +2183,7 @@
 					'vendor'				 => $entry['vendor'],
 					'external_project_id'	 => $entry['project_id'],
 					'currency'				 => $entry['currency'],
+					'tax_code'				 => $entry['tax_code'],
 					'budget_responsible'	 => $entry['budget_responsible'],
 					'budsjettsigndato'		 => $entry['budsjettsigndato'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['budsjettsigndato']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 					'transfer_time'			 => $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
@@ -2298,6 +2299,12 @@
 					'key'		 => 'type',
 					'label'		 => lang('type'),
 					'sortable'	 => false),
+				array(
+					'key'		 => 'tax_code',
+					'label'		 => lang('tax code'),
+					'sortable'	 => false,
+					'className'	 => 'right',
+					),
 				array(
 					'key'		 => 'budget_responsible',
 					'label'		 => lang('budget responsible'),
