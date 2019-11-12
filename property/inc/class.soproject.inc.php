@@ -3586,15 +3586,28 @@
 
 			$id = (int)$id;
 
-			$location_arr	 = explode('-', $location_code);
+			$location_codes = array();
+
+			$this->db->query("SELECT DISTINCT location_code FROM fm_locations WHERE location_code {$this->like} '"
+			. $this->db->db_addslashes($location_code) . "%' ORDER BY location_code", __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$location_codes[] = $this->db->f('location_code');
+
+			}
 			$values			 = array();
 			$now			 = time();
-			$_location_arr	 = array();
-			foreach ($location_arr as $loc)
-			{
-				$_location_arr[] = $this->db->db_addslashes($loc);
+//			$_location_arr	 = array();
+//			$location_arr	 = explode('-', $location_code);
+//			foreach ($location_arr as $loc)
+//			{
+//				$_location_arr[] = $this->db->db_addslashes($loc);
+//
+//				$_location_code = implode('-', $_location_arr);
 
-				$_location_code = implode('-', $_location_arr);
+			foreach ($location_codes as $_location_code)
+			{
 
 				$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
 					. " fm_project.start_date, fm_project.name,"
