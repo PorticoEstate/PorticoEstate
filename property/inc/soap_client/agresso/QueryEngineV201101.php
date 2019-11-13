@@ -75,8 +75,9 @@
 				), $options);
 			if (!$wsdl)
 			{
-				//       $wsdl = 'http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101';
-				$wsdl = 'http://10.19.14.242/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
+	//			$wsdl = 'http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101';
+	//			$wsdl = 'http://10.19.14.242/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
+				$wsdl = "http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 			}
 			parent::__construct($wsdl, $options);
 		}

@@ -44,7 +44,7 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
-			$this->function_msg	 = 'Sjekk manglende ordreregistering i Agresso fra Portico';
+			$this->function_msg	 = 'Hent leverandører fra UBW (Agresso) til Portico';
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$this->join			 = & $this->db->join;
 		}
@@ -123,7 +123,9 @@ SQL;
 			catch (Exception $exc)
 			{
 				$error = true;
+				_debug_array($exc->getMessage());
 				echo $exc->getTraceAsString();
+				throw $exc;
 			}
 
 			$GLOBALS['phpgw']->db->transaction_begin();
@@ -134,18 +136,20 @@ SQL;
 			/**
 			 * remove duplicates
 			 */
-			if (empty($values[0]['apar_id']))
+			if (empty($values[0]->apar_id))
 			{
 				_debug_array($values);
 				$error = true;
 			}
 			$vendors = array();
-			foreach ($values as $entry)
+			foreach ($values as $value)
 			{
-				$vendors[$entry['apar_id']] = $entry;
+				$vendors[(string)$value->apar_id] = $value;
 			}
 
-			unset($entry);
+			unset($value);
+
+
 			/*
 			  [_recno] => 0
 			  [_section] => D
@@ -165,52 +169,52 @@ SQL;
 
 			foreach ($vendors as $key => $entry)
 			{
-				$email_arr	 = explode(';', $entry['e_mail']);
+				$email_arr	 = explode(';', (string)$entry->e_mail);
 				$valueset[]	 = array
 					(
 					1	 => array
 						(
-						'value'	 => (int)$entry['apar_id'],
+						'value'	 => (int)$entry->apar_id,
 						'type'	 => PDO::PARAM_INT
 					),
 					2	 => array
 						(
-						'value'	 => $entry['status'],
+						'value'	 => (string)$entry->status,
 						'type'	 => PDO::PARAM_STR
 					),
 					3	 => array
 						(
-						'value'	 => $entry['apar_name'],
+						'value'	 => (string)$entry->apar_name,
 						'type'	 => PDO::PARAM_STR
 					),
 					4	 => array
 						(
-						'value'	 => $entry['address'],
+						'value'	 => (string)$entry->address,
 						'type'	 => PDO::PARAM_STR
 					),
 					5	 => array
 						(
-						'value'	 => $entry['zip_code'],
+						'value'	 => (string)$entry->zip_code,
 						'type'	 => PDO::PARAM_STR
 					),
 					6	 => array
 						(
-						'value'	 => $entry['place'],
+						'value'	 => (string)$entry->place,
 						'type'	 => PDO::PARAM_STR
 					),
 					7	 => array
 						(
-						'value'	 => $entry['comp_reg_no'],
+						'value'	 => (string)$entry->comp_reg_no,
 						'type'	 => PDO::PARAM_STR
 					),
 					8	 => array
 						(
-						'value'	 => $entry['bank_account'],
+						'value'	 => (string)$entry->bank_account,
 						'type'	 => PDO::PARAM_STR
 					),
 					9	 => array
 						(
-						'value'	 => $entry['status'] == 'N' ? 1 : 0,
+						'value'	 => (string)$entry->status == 'N' ? 1 : 0,
 						'type'	 => PDO::PARAM_INT
 					),
 					10	 => array
@@ -609,18 +613,23 @@ XML;
 			$httpCode	 = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			// converting
-			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"), "", $response);
-			// convertingc to XML
-
-			$xmlparse	 = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('utf-8');
-			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result	 = $xmlparse->parse($response1);
-			if (!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
+			$result = array();
+			try
 			{
-				$ret	 = $var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE'];
-				$count	 = count($ret);
+				$sxe = new SimpleXMLElement($response);
+
+				$sxe->registerXPathNamespace('diffgr', 'urn:schemas-microsoft-com:xml-diffgram-v1');
+				$result = $sxe->xpath('//diffgr:diffgram/Agresso/AgressoQE');
+				
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if ($result)
+			{
+				$count	 = count($result);
 				//	if($this->debug)
 				{
 					_debug_array("{$count} leverandører funnet" . PHP_EOL);
@@ -632,9 +641,8 @@ XML;
 				{
 					_debug_array("Leverandører IKKE funnet" . PHP_EOL);
 				}
-				$ret = array();
 			}
 
-			return $ret;
+			return $result;
 		}
 	}
