@@ -420,32 +420,6 @@
 			{
 				return null;
 			}
-			// Create invoice ...
-			$invoice = new rental_invoice(
-				-1, // no identifier
-				$billing_id, // the billing identifier
-				$contract_id, // the contract identifier
-				time(), // the creation time
-				$timestamp_invoice_start, // the invoice start date
-				$timestamp_invoice_end, // the invoice end date
-				0, // the total sum of invoice (not calculated yet)
-				$contract->get_rented_area(), // the area rented on the contract
-				$contract->get_invoice_header(), // the invoice header
-				$contract->get_account_in(), // the ingoing account number
-				$account_out, // the outgoing account number
-				$contract->get_service_id(), // the service identifier (internal)
-				$contract->get_responsibility_id() // the responsibility identifier (internal)
-			);
-
-			// ... and add party identifier, project number and the old contract identifier
-			$invoice->set_party_id($contract->get_payer_id());
-			$invoice->set_project_id($contract->get_project_id());
-			$invoice->set_old_contract_id($contract->get_old_contract_id());
-
-			if (!$dry_run)
-			{
-				rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
-			}
 
 			$total_sum = 0; // Holding the total price of the invoice
 
@@ -456,6 +430,8 @@
 				$contract_end = $contract->get_contract_date()->get_end_date();
 			}
 
+			$invoice_price_items = array();
+			$updated_contract_price_items = array();
 			// Run through the contract price items
 			foreach ($contract_price_items as $contract_price_item)
 			{
@@ -542,7 +518,7 @@
 				$invoice_price_item = new rental_invoice_price_item(
 					$decimals, // the number of decimals to use for the total price of the price item
 					 -1, // no price item identifier
-					 $invoice->get_id(), // the invoice identifier
+					 -1, // the invoice identifier
 					 $contract_price_item->get_title(), // the contract price item title
 					 $contract_price_item->get_agresso_id(), // the contract price item agresso identifier
 					 $contract_price_item->is_area(), // flag for specifying if the contract is of area/piece
@@ -559,7 +535,6 @@
 				{
 					$invoice_price_item->set_is_one_time(true);
 
-
 					/**
 					 * FIXME: Sigurd: 24. mars: sjekk denne!!
 					 */
@@ -570,35 +545,72 @@
 						// ... and set the contract price item as billed
 						$contract_price_item->set_is_billed(true);
 						$contract_price_item->set_billing_id($billing_id);
-						if (!$dry_run)
-						{
-							rental_socontract_price_item::get_instance()->store($contract_price_item);
-						}
+
+						$updated_contract_price_items[] = $contract_price_item;
 					}
 				}
 
-				if (!$dry_run)
-				{
-					// Store the invoice price item
-					rental_soinvoice_price_item::get_instance()->store($invoice_price_item);
-				}
-
-				// Add the price item to the invoice
-				$invoice->add_invoice_price_item($invoice_price_item);
-
-				//FIXME
-				if($billing_term == 5)
-				{
-					$invoice->set_header($contract_price_item->get_title());
-				}
+				$invoice_price_items[] = $invoice_price_item;
 
 				// Add this price item's total sum to the tota sum of the invoice
 				$total_sum += $invoice_price_item->get_total_price();
 			} // end of looping through the contract price items
+
+
+			// Create invoice ...
+			$invoice = new rental_invoice(
+				-1, // no identifier
+				$billing_id, // the billing identifier
+				$contract_id, // the contract identifier
+				time(), // the creation time
+				$timestamp_invoice_start, // the invoice start date
+				$timestamp_invoice_end, // the invoice end date
+				0, // the total sum of invoice (not calculated yet)
+				$contract->get_rented_area(), // the area rented on the contract
+				$contract->get_invoice_header(), // the invoice header
+				$contract->get_account_in(), // the ingoing account number
+				$account_out, // the outgoing account number
+				$contract->get_service_id(), // the service identifier (internal)
+				$contract->get_responsibility_id() // the responsibility identifier (internal)
+			);
+
+			// ... and add party identifier, project number and the old contract identifier
+			$invoice->set_party_id($contract->get_payer_id());
+			$invoice->set_project_id($contract->get_project_id());
+			$invoice->set_old_contract_id($contract->get_old_contract_id());
 			// Set the total sum of the invoice rounded to the specified number of decimals
 			$invoice->set_total_sum(round($total_sum, $decimals));
 
-			if (!$dry_run)
+			if (!$dry_run && $total_sum)
+			{
+				rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
+
+				foreach ($updated_contract_price_items as $updated_contract_price_item)
+				{
+					rental_socontract_price_item::get_instance()->store($updated_contract_price_item);
+				}
+			}
+
+			// Add the price item to the invoice
+			foreach ($invoice_price_items as $_invoice_price_item)
+			{
+				$_invoice_price_item->set_invoice_id($invoice->get_id());
+
+				// Add the price item to the invoice
+				$invoice->add_invoice_price_item($_invoice_price_item);
+				if (!$dry_run && $total_sum)
+				{
+					// Store the invoice price item
+					rental_soinvoice_price_item::get_instance()->store($_invoice_price_item);
+				}
+				//FIXME
+				if($billing_term == 5)
+				{
+					$invoice->set_header($_invoice_price_item->get_title());
+				}
+			}
+
+			if (!$dry_run && $total_sum)
 			{
 				// ... and store the invoice
 				rental_soinvoice::get_instance()->store($invoice);

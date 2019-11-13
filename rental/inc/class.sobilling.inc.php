@@ -317,7 +317,7 @@
 			foreach ($contracts_to_bill as $contract_id) // Runs through all the contracts that should be billed in this run
 			{
 				$invoice = rental_invoice::create_invoice($decimals, $billing->get_id(), $contract_id, in_array($contract_id, $contracts_overriding_billing_start) ? true : false, $bill_from_timestamp, $billing_end_timestamp, in_array($contract_id, $contracts_bill_only_one_time) ? true : false, $dry_run, $billing_term, $month); // Creates an invoice of the contract
-				if ($invoice != null)
+				if ($invoice != null && $invoice->get_total_sum() !=0)
 				{
 					$total_sum += $invoice->get_total_sum();
 					$invoices[] = $invoice;
