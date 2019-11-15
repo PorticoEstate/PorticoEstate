@@ -191,12 +191,12 @@
 							'formatter' => 'JqueryPortico.formatLinkGeneric',
 						),
 						array(
-							'key' => 'event_id',
-							'label' => lang('Event id'),
+							'key' => 'reservation_id',
+							'label' => lang('reservation'),
 							'sortable' => false
 						),
 						array(
-							'key' => 'description',
+							'key' => 'article_description',
 							'label' => lang('Description'),
 						),
 						array(

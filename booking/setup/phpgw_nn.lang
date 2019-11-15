@@ -808,3 +808,4 @@ added	booking	nn	Lagt til
 updated	booking	nn	Oppdatert
 value is ignored for -1	booking	no	Verdien blir ignorert for -1
 Simple booking	booking	nn	Forenklet bestilling
+reservation	booking	nn	Reservasjon

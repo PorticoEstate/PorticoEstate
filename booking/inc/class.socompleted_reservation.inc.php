@@ -315,8 +315,16 @@
 			}
 			else
 			{
-				$entity['customer_organization_number'] = $organization['organization_number'];
-				$entity['customer_identifier_type'] = 'organization_number';
+				if ($organization['customer_identifier_type'] == 'ssn')
+				{
+					$entity['customer_ssn'] = $organization['customer_ssn'];
+					$entity['customer_identifier_type'] = 'ssn';
+				}
+				else
+				{
+					$entity['customer_organization_number'] = $organization['organization_number'];
+					$entity['customer_identifier_type'] = 'organization_number';
+				}
 			}
 		}
 
