@@ -763,7 +763,7 @@ JS;
 
 						if ($this->botts->fields_updated && $_closed)
 						{
-							$receipt = $this->botts->mail_ticket($id, $this->botts->fields_updated, $receipt, false, true);
+							$receipt = $this->botts->mail_ticket($ticket_id, $this->botts->fields_updated, $receipt, false, true);
 							self::message_set($receipt);
 						}
 
