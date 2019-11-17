@@ -140,6 +140,14 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'season')"/>
+					</label>
+					<span>
+						<xsl:value-of select="resource/direct_booking_season_name"/>
+					</span>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Simple booking')"/>
 					</label>
 					<xsl:if test="not(resource/simple_booking = '')">

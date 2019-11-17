@@ -129,7 +129,7 @@
 
 			if ($from_week_day > $to_week_day)
 			{
-				//booking week wraps around from end of week to start of week, 
+				//booking week wraps around from end of week to start of week,
 				//so we split it into two periods and validate each by itself
 				$end_of_week = strtotime('+' . (7 - $from_week_day) . ' days 23:59:00', strtotime($from_->format('Y-m-d')));
 				$end_of_week = new DateTime(date('Y-m-d H:i:s', $end_of_week));
@@ -167,6 +167,65 @@
 			$db = $this->db;
 			$sql = "UPDATE bb_allocation SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		public function get_bounderies($resource_id, $season_id, $from )
+		{
+			if(!$season_id)
+			{
+				return array();
+			}
+
+			$values = array();
+
+			$from->modify("-1 days");
+			for ($i=0; $i < 7; $i++)
+			{
+				$dates = array();
+				$from_ = $from->modify("+1 days")->format('Y-m-d');
+				$to_ = $from_;
+				$_wday = $from->format('w');
+				$wday = $_wday > 0 ? $_wday : 7;
+
+				$sql = "SELECT bb_season_boundary.id, bb_season_boundary.from_, bb_season_boundary.to_ FROM bb_season JOIN bb_season_boundary ON bb_season.id = bb_season_boundary.season_id"
+					. " WHERE status = 'PUBLISHED'"
+					. " AND season_id = " .(int) $season_id
+					. " AND wday = $wday"
+					. " AND ((bb_season.from_ >= '$from_' AND bb_season.from_ < '$to_') OR"
+					. " (bb_season.to_ > '$from_' AND bb_season.to_ <= '$to_') OR"
+					. " (bb_season.from_ < '$from_' AND bb_season.to_ > '$to_')) ";
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				if($this->db->next_record())
+				{
+					$_from = $from_ . ' ' . $this->db->f('from_');
+					$_to =  $to_ . ' ' . $this->db->f('to_');
+
+					$dates[] = array(
+						'from_' => $_from,
+						'to_' => $_to,
+						'id' => $this->db->f('id')
+					);
+					$values[] = array(
+						'type' => 'boundery',
+						'is_public'	=> 1,
+						'name'	=> 'dummy',
+						'id'	=> $season_id,
+						'id_string'	=> $season_id,
+						'active'	=> 1,
+						'description' => 'dummy',
+						'from_' => $_from,
+						'to_'	=> $_to,
+						'info_url' => '',
+						'resources'	=> array($resource_id),
+						'dates' => $dates,
+					);
+				}
+
+			}
+
+			return 	$values;
 		}
 	}
 

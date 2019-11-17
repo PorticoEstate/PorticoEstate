@@ -25,6 +25,7 @@
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'direct_booking' => array('type' => 'int', 'required' => false),
+				'direct_booking_season_id' => array('type' => 'int', 'required' => false),
 				'simple_booking' => array('type' => 'int', 'required' => false),
 				'booking_day_default_lenght' => array('type' => 'int', 'required' => false),
 				'booking_dow_default_start' => array('type' => 'int', 'required' => false),
@@ -84,6 +85,13 @@
 					'join' => array(
 						'table' => 'bb_rescategory',
 						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'name',
+					)),
+				'direct_booking_season_name' => array('type' => 'string', 'query' => false,
+					'join' => array(
+						'table' => 'bb_season',
+						'fkey' => 'direct_booking_season_id',
 						'key' => 'id',
 						'column' => 'name',
 					)),
@@ -327,6 +335,32 @@
 			}
 		}
 
+		function get_seasons( $resource_id )
+		{
+			$values = array();
+			if (!$resource_id)
+			{
+				return $values;
+			}
+
+			$sql = "SELECT bb_season.*, bb_building.name as building_name FROM bb_season"
+				. " JOIN bb_building ON bb_season.building_id = bb_building.id"
+				. " JOIN bb_season_resource ON bb_season_resource.season_id = bb_season.id"
+				. " WHERE bb_season.active = 1"
+				. " AND bb_season_resource.resource_id = " . (int)$resource_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('building_name') . '::' . $this->db->f('name')
+					);
+			}
+
+			return $values;
+		}
 		function get_e_locks( $resource_id )
 		{
 			$values = array();

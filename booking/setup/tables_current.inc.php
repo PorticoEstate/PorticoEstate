@@ -184,6 +184,7 @@
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 				'contact_info' => array('type' => 'text', 'nullable' => True),
 				'direct_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
+				'direct_booking_season_id' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 				'simple_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 2),
 				'booking_day_default_lenght' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_dow_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),

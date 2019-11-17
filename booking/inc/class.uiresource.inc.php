@@ -57,6 +57,7 @@
 				'activities' => 'int',
 				'facilities' => 'int',
 				'direct_booking' => 'string',
+				'direct_booking_season_id' => 'int',
 				'simple_booking' => 'int',
 				'booking_day_default_lenght' => 'int',
 				'booking_dow_default_start' => 'int',
@@ -283,8 +284,14 @@
 					'date', 'security', 'file'));
 			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
 
-			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_datatable_def($id),
-				'resource' => $resource, 'activitydata' => $activity_data, 'rescategorydata' => $rescategory_data));
+			self::render_template_xsl(array('resource_form', 'datatable_inline'),
+				array(
+					'datatable_def' => self::get_datatable_def($id),
+					'resource' => $resource,
+					'activitydata' => $activity_data,
+					'rescategorydata' => $rescategory_data,
+					'seasons'	=> $this->bo->so->get_seasons($id)
+				));
 		}
 
 		private function get_location()
