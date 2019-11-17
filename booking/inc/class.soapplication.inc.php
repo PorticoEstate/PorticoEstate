@@ -124,6 +124,32 @@
 			{
 				$errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
 			}
+
+			foreach ($entity['resources'] as $esource_id)
+			{
+				$this->db->query("SELECT direct_booking, direct_booking_season_id FROM bb_resource WHERE id = " . (int)$esource_id, __LINE__, __FILE__);
+				$this->db->next_record();
+				$direct_booking = $this->db->f('direct_booking');
+
+				if($direct_booking && $direct_booking < time())
+				{
+					$direct_booking_season_id = $this->db->f('direct_booking_season_id');
+					if (!$direct_booking_season_id)
+					{
+						$errors['season_boundary'] = lang("This resource is not related to a direct booking season");
+					}
+					foreach ($entity['dates'] as $date)
+					{
+						$from_ = new DateTime($date['from_']);
+						$to_ = new DateTime($date['to_']);
+
+						if ( !CreateObject('booking.soseason')->timespan_within_season($direct_booking_season_id, $from_, $to_))
+						{
+							$errors['season_boundary'] = lang("This application is not within the selected season");
+						}
+					}
+				}
+			}
 		}
 
 		function get_building_info( $id )

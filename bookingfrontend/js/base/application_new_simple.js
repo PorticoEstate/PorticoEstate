@@ -167,15 +167,15 @@ $(document).ready(function ()
 			{
 				if ($("#resource_id").val() == result.results[i].id)
 				{
-					if (result.results[i].booking_day_default_lenght)
+					if (result.results[i].booking_day_default_lenght && result.results[i].booking_day_default_lenght != -1)
 					{
 						day_default_lenght = result.results[i].booking_day_default_lenght;
 					}
-					if (result.results[i].booking_time_default_end)
+					if (result.results[i].booking_time_default_end && result.results[i].booking_time_default_end != -1)
 					{
 						time_default_end = result.results[i].booking_time_default_end;
 					}
-					if (result.results[i].booking_time_default_start)
+					if (result.results[i].booking_time_default_start && result.results[i].booking_time_default_start !=-1)
 					{
 						time_default_start = result.results[i].booking_time_default_start;
 					}
