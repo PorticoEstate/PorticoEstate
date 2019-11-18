@@ -127,6 +127,10 @@
 
 			foreach ($entity['resources'] as $esource_id)
 			{
+				if((int)$esource_id < 0)
+				{
+					continue;
+				}
 				$this->db->query("SELECT direct_booking, direct_booking_season_id FROM bb_resource WHERE id = " . (int)$esource_id, __LINE__, __FILE__);
 				$this->db->next_record();
 				$direct_booking = $this->db->f('direct_booking');
