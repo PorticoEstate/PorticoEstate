@@ -142,14 +142,17 @@
 					{
 						$errors['season_boundary'] = lang("This resource is not related to a direct booking season");
 					}
-					foreach ($entity['dates'] as $date)
+					else
 					{
-						$from_ = new DateTime($date['from_']);
-						$to_ = new DateTime($date['to_']);
-
-						if ( !CreateObject('booking.soseason')->timespan_within_season($direct_booking_season_id, $from_, $to_))
+						foreach ($entity['dates'] as $date)
 						{
-							$errors['season_boundary'] = lang("This application is not within the selected season");
+							$from_ = new DateTime($date['from_']);
+							$to_ = new DateTime($date['to_']);
+
+							if ( !CreateObject('booking.soseason')->timespan_within_season($direct_booking_season_id, $from_, $to_))
+							{
+								$errors['season_boundary'] = lang("This application is not within the selected season");
+							}
 						}
 					}
 				}
