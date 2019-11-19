@@ -257,12 +257,12 @@
 
 				foreach ($files as $entry)
 				{
-					$vfs->rm(array(
-						'string'	 => "{$entry['directory']}/{$entry['name']}",
-						'relatives'	 => array(
-							RELATIVE_NONE
-						)
-					));
+//					$vfs->rm(array(
+//						'string'	 => "{$entry['directory']}/{$entry['name']}",
+//						'relatives'	 => array(
+//							RELATIVE_NONE
+//						)
+//					));
 				}
 			}
 
@@ -273,25 +273,25 @@
 
 				$sql = "UPDATE phpgw_helpdesk_tickets SET subject = '{$anonyminized_text}', details = '{$anonyminized_text}', on_behalf_of_name = '{$anonyminized_text}'"
 				. " WHERE id IN (" . implode(',', $tickets) . ')';
-//			_debug_array($sql);
-				$db->query($sql);
+			_debug_array($sql);
+//				$db->query($sql);
 
 				$sql = "UPDATE phpgw_history_log SET history_new_value = '{$anonyminized_text}', history_old_value = '{$anonyminized_text}'"
 				. " WHERE history_status = 'C'"
 				. " AND history_record_id IN (" . implode(',', $tickets) . ')';
-//			_debug_array($sql);
-				$db->query($sql);
+			_debug_array($sql);
+//				$db->query($sql);
 
 
 				$sql = "UPDATE phpgw_helpdesk_external_communication SET subject = '{$anonyminized_text}', file_attachments = NULL"
 				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
-//			_debug_array($sql);
-				$db->query($sql);
+			_debug_array($sql);
+//				$db->query($sql);
 
 			$sql = "SELECT id FROM phpgw_helpdesk_external_communication"
 				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
-//		_debug_array($sql);
-				$db->query($sql);
+		_debug_array($sql);
+//				$db->query($sql);
 				$excom_ids = array();
 				while ($db->next_record())
 				{
@@ -302,14 +302,14 @@
 				{
 					$sql = "UPDATE phpgw_helpdesk_external_communication_msg SET message = '{$anonyminized_text}', file_attachments = NULL"
 					. " WHERE excom_id IN (" . implode(',', $excom_ids) . ')';
-					$db->query($sql);
+			_debug_array($sql);
+//					$db->query($sql);
 				}
 
-//			_debug_array($sql);
 
 			}
-//			$db->transaction_abort();
-			$db->transaction_commit();
+			$db->transaction_abort();
+//			$db->transaction_commit();
 
 		}
 
