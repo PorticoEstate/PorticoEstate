@@ -1,3 +1,4 @@
+var GlobalStartTime;
 var day_default_lenght = 0;
 var dow_default_start = null;
 var dow_default_end = null;
@@ -61,13 +62,28 @@ function applicationModel()
 
 	self.setdisabledDates = function ()
 	{
+		var checkdate;
+
+		if(GlobalStartTime)
+		{
+			checkdate =  dateFormat(new Date(GlobalStartTime), 'yyyy/mm/dd');
+		}
+
 		var length = self.disabledDatesList().length;
-//		console.log('length ' + length);
 
 		var disabled_dates = [];
 		for (var i = 0; i < length; i++)
 		{
 			disabled_dates.push(self.disabledDatesList()[i].date);
+
+			if(checkdate == self.disabledDatesList()[i].date)
+			{
+				$('#from_').val('');
+				$('#to_').val('');
+				$('#start_date').val('');
+				$('#selected_period').html('');
+			}
+
 		}
 
 		$('#start_date').datetimepicker('setOptions', {disabledDates: disabled_dates});
@@ -246,6 +262,8 @@ $(document).ready(function ()
 
 function PopulatePostedDate()
 {
+	var startTime, EndTime;
+
 	if (!$("#resource_id").val())
 	{
 		$('#time_select').hide();
@@ -259,8 +277,8 @@ function PopulatePostedDate()
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			var startTime = new Date(from_);
-			var EndTime = new Date(to_);
+			startTime = new Date(from_);
+			EndTime = new Date(to_);
 		}
 	}
 	else
@@ -269,9 +287,9 @@ function PopulatePostedDate()
 		{
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
-				var startTime = new Date(parseInt(urlParams['start']));
+				startTime = new Date(parseInt(urlParams['start']));
 				startTime.setHours(time_default_start, 0);
-				var EndTime = new Date(parseInt(urlParams['start']));
+				EndTime = new Date(parseInt(urlParams['start']));
 				EndTime.setDate(EndTime.getDate() + day_default_lenght);
 				EndTime.setHours(time_default_end, 0);
 			}
@@ -281,7 +299,7 @@ function PopulatePostedDate()
 			var startTime = new Date();
 			startTime.setHours(time_default_start, 0);
 
-			var EndTime = new Date();
+			EndTime = new Date();
 			EndTime.setDate(EndTime.getDate() + day_default_lenght);
 			EndTime.setHours(time_default_end, 0);
 
@@ -289,9 +307,9 @@ function PopulatePostedDate()
 
 	}
 
-
 	if ($("#resource_id").val())
 	{
+		GlobalStartTime = startTime;
 		$('#from_').val(formatSingleDate(startTime));
 		$('#to_').val(formatSingleDate(EndTime));
 		$('#start_date').val(formatSingleDateWithoutHours(startTime));
@@ -415,6 +433,7 @@ function getDisabledDates(startTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
+//							console.log(exDate);
 							tempDates.push(exDate);
 						}
 					}
@@ -515,6 +534,7 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 
 		if (startTime.getTime() < EndTime.getTime())
 		{
+			GlobalStartTime = startTime;
 			$('#from_').val(formatSingleDate(startTime));
 			$('#to_').val(formatSingleDate(EndTime));
 			$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
