@@ -292,6 +292,8 @@ Overlaps with existing event	booking	nn	Overlappar med eksisterande arrangement
 Overlaps with existing allocation	booking	nn	Overlappar med eksisterande tildeling
 Overlaps with existing booking	booking	nn	Overlappar med eksisterande booking
 This booking is not within the selected season	booking	nn	Denne interntildelingen ligg utanfor angjeven sesong
+This resource is not related to a direct booking season	booking	nn	Denne ressursen er ikkje koplet til sesong for direktebooking
+This application is not within the selected season	booking	nn	Denne søknaden ligger utenfor angjeven sesong
 Invalid from date	booking	nn	Ugyldig frådato
 invalid to date	booking	nn	Ugyldig tildato
 This booking is outside the organization's allocated time	booking	nn	Denne interntildelingen ligg utanfor organisasjonen si tildelte tid
@@ -808,3 +810,4 @@ added	booking	nn	Lagt til
 updated	booking	nn	Oppdatert
 value is ignored for -1	booking	no	Verdien blir ignorert for -1
 Simple booking	booking	nn	Forenklet bestilling
+reservation	booking	nn	Reservasjon

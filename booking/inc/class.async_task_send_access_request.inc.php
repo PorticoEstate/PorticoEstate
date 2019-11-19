@@ -5,7 +5,8 @@
 	class booking_async_task_send_access_request extends booking_async_task
 	{
 
-		private $account, $config;
+		private $account, $config, $e_lock_integration;
+		var	$cleanup_old_reservations = array();
 
 		public function __construct()
 		{
@@ -42,6 +43,7 @@
 			require_once $file;
 
 			$e_lock_integration = new booking_e_lock_integration();
+			$this->e_lock_integration = $e_lock_integration;
 
 			$db = & $GLOBALS['phpgw']->db;
 
@@ -187,6 +189,8 @@
 
 										$status_arr = $e_lock_integration->get_status($get_data);
 
+										$this->cleanup_old_reservations["{$get_data['system']}_{$get_data['resid']}"] = $status_arr;
+
 										$log_data	 = _debug_array($get_data, false);
 										$this->log('get_data', $log_data);
 										$log_data	 = _debug_array($status_arr, false);
@@ -279,8 +283,34 @@
 					$db->transaction_commit();
 				}
 			}
+
+			$this->cleanup_old_reservations();
 		}
 
+		private function cleanup_old_reservations()
+		{
+			foreach ($this->cleanup_old_reservations as $key => $status_arr)
+			{
+
+				$now = time() - 7*24*3600; // a week old
+
+				foreach ($status_arr as $entry)
+				{
+					$to = strtotime($entry['to']);
+
+					if( $to > 0 && $to < $now)
+					{
+						$delete_data = array(
+							'id'				 => (int)$entry['id'],
+							'deleterequest'		 =>  1,
+						);
+
+						$http_code = $this->e_lock_integration->resources_delete($delete_data);
+					}
+				}
+			}
+			
+		}
 		private function send_mailnotification( $receiver, $subject, $body )
 		{
 			$rcpt	 = false;

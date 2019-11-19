@@ -70,6 +70,10 @@ function tooltipDetails()
 	var tooltipText = "";
 	var url = $(this).find('.event-id')[0];
 	url = url.getAttribute("data-url");
+	if(!url)
+	{
+		return false;
+	}
 
 	$.ajax({
 		url: url,
@@ -159,7 +163,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 	var eventsArray = [];
 	var paramDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 	var m = 0;
-	var colors = {"allocation": "#82368c", "booking": "#27348b", "event": "#6c9ad1"}
+	var colors = {"allocation": "#82368c", "booking": "#27348b", "event": "#6c9ad1", boundery: '#0cf296'}
 	for (var i = 0; i < resourceIds.length; i++)
 	{
 		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: resourceIds[i].id, date: paramDate}, true);

@@ -96,6 +96,46 @@
 
 		/**
 		 *
+		 * @param type $delete_data  array
+		  (
+		  'id'				 => (int)$id,
+		  'deleterequest'	 =>  1,
+		  );
+
+		 * @return array
+		 */
+		function resources_delete( $delete_data )
+		{
+			$post_string = json_encode($delete_data);
+
+			$url = "{$this->webservicehost}";//_custom_update";
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$this->login}:{$this->password}");
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			if ($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json Accept: application/json'));
+			curl_setopt($ch, CURLOPT_FAILONERROR, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+
+			curl_exec($ch);
+
+			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return $http_code;
+		}
+
+		/**
+		 *
 		 * @param array $post_data array
 		  (
 		  "desc"	 => $name,

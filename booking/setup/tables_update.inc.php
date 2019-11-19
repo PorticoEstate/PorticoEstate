@@ -4313,3 +4313,28 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.50 to 0.2.51
+	 *
+	 */
+	$test[] = '0.2.50';
+	function booking_upgrade0_2_50()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'direct_booking_season_id',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => true
+				)
+			);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.51';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

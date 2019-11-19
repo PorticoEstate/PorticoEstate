@@ -396,13 +396,14 @@ function update_form_values(line_id, voucher_id_orig)
 					{
 						if (voucher[0].external_ref)
 						{
-							$("#invoice_id_text").html(voucher[0].external_ref);
-							document.getElementById('image_content').src = voucher[0].image_url;
+							var Window1=window.open(voucher[0].image_url,"invoiceimage","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes").focus();
+//							$("#invoice_id_text").html(voucher[0].external_ref);
+//							document.getElementById('image_content').src = voucher[0].image_url;
 						}
 						else
 						{
-							$("#invoice_id_text").html('FakturaNr');
-							document.getElementById('image_content').src = '';
+//							$("#invoice_id_text").html('FakturaNr');
+//							document.getElementById('image_content').src = '';
 						}
 					}
 					catch (e)

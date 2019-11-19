@@ -9,25 +9,39 @@
 		$data = array();
 		$t = '00:00';
 
-		function get_from( $a )
+
+		if (!function_exists('get_from'))
 		{
-			return $a['from_'];
+			function get_from( $a )
+			{
+				return $a['from_'];
+			}
 		}
 
-		function get_to( $a )
+		if (!function_exists('get_to'))
 		{
-			return $a['to_'];
+			function get_to( $a )
+			{
+				return $a['to_'];
+			}
 		}
 
-		function cmp_from( $a, $b )
+		if (!function_exists('cmp_from'))
 		{
-			return strcmp($a['from_'], $b['from_']);
+			function cmp_from( $a, $b )
+			{
+				return strcmp($a['from_'], $b['from_']);
+			}
 		}
 
-		function cmp_to( $a, $b )
+		if (!function_exists('cmp_to'))
 		{
-			return strcmp($a['to_'], $b['to_']);
+			function cmp_to( $a, $b )
+			{
+				return strcmp($a['to_'], $b['to_']);
+			}
 		}
+
 		while (true)
 		{
 			usort($bookings, 'cmp_from');
