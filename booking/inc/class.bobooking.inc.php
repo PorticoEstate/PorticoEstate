@@ -945,7 +945,7 @@
 		 *
 		 * @return array containg values from $array for the keys in $keys.
 		 */
-		function resource_schedule( $resource_id, $date )
+		function resource_schedule( $resource_id, $date, $timespan = 7 )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
@@ -955,7 +955,7 @@
 				$from->modify('last monday');
 			}
 			$to = clone $from;
-			$to->modify('+7 days');
+			$to->modify("+{$timespan} days");
 			$resource = $this->resource_so->read_single($resource_id);
 
 	//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, $resource['direct_booking_season_id'], clone $from);
@@ -1039,9 +1039,9 @@
 					'active'			 => $event['active'],
 					'activity_id'		 => $event['activity_id'],
 					'application_id'	 => $event['application_id'],
-					'name'				 => $event['name'],
+					'name'				 => $event['is_public'] ? $event['name'] : '',
 					'homepage'			 => $event['homepage'],
-					'description'		 => $event['description'],
+					'description'		 => $event['is_public'] ? $event['description'] : '',
 					'equipment'			 => $event['equipment'],
 					'building_id'		 => $event['building_id'],
 					'building_name'		 => $event['building_name'],
@@ -1073,15 +1073,21 @@
 		function split_allocations( $allocations, $all_bookings )
 		{
 
-			function get_from2( $a )
+			if (!function_exists('get_from2'))
 			{
-				return $a['from_'];
+				function get_from2( $a )
+				{
+					return $a['from_'];
+				}
 			}
 			;
 
-			function get_to2( $a )
+			if (!function_exists('get_to2'))
 			{
-				return $a['to_'];
+				function get_to2( $a )
+				{
+					return $a['to_'];
+				}
 			}
 			;
 			$new_allocations = array();
@@ -1145,7 +1151,9 @@
 		function _split_multi_day_bookings( $bookings, $t0, $t1 )
 		{
 			if ($t1->format('H:i') == '00:00')
+			{
 				$t1->modify('-1 day');
+			}
 			$new_bookings = array();
 			foreach ($bookings as $booking)
 			{
@@ -1156,6 +1164,7 @@
 				{
 					$booking['date'] = $from->format('Y-m-d');
 					$booking['wday'] = date_format(date_create($booking['date']), 'D');
+					$booking['week'] = date_format(date_create($booking['date']), 'W');
 					$booking['from_'] = $from->format('H:i');
 					$booking['to_'] = $to->format('H:i');
 					// We need to use 23:59 instead of 00:00 to sort correctly
@@ -1173,6 +1182,7 @@
 						$new_booking = $booking;
 						$new_booking['date'] = $date->format('Y-m-d');
 						$new_booking['wday'] = date_format($date, 'D');
+						$new_booking['week'] = date_format($date, 'W');
 						$new_booking['from_'] = '00:00';
 						$new_booking['to_'] = '00:00';
 						if ($new_booking['date'] == $from->format('Y-m-d'))
