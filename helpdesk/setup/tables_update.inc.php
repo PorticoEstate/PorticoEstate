@@ -509,3 +509,31 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.18.013';
+	function helpdesk_upgrade0_9_18_013()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'phpgw_helpdesk_cat_anonyminizer', array(
+				'fd' => array(
+					'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+					'limit_days' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('cat_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.014';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
