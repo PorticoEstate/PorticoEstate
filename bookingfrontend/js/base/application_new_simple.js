@@ -175,7 +175,7 @@ $(document).ready(function ()
 					{
 						time_default_end = result.results[i].booking_time_default_end;
 					}
-					if (result.results[i].booking_time_default_start && result.results[i].booking_time_default_start !=-1)
+					if (result.results[i].booking_time_default_start && result.results[i].booking_time_default_start != -1)
 					{
 						time_default_start = result.results[i].booking_time_default_start;
 					}
@@ -321,10 +321,10 @@ function setDisabledDates()
 
 	getDisabledDates(startTimes);
 
-	setTimeout(function ()
-	{
-		am.setdisabledDates();
-	}, 1000);
+//	setTimeout(function ()
+//	{
+//		am.setdisabledDates();
+//	}, 1000);
 
 }
 
@@ -400,6 +400,7 @@ function getDisabledDates(startTimes)
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 							tempDates.push(exDate);
 						}
+
 					}
 					if (typeof result.ResultSet.Result[k].Tue !== "undefined")
 					{
@@ -488,6 +489,9 @@ function getDisabledDates(startTimes)
 				am.disabledDatesList.push({date: tempDates[i]});
 			}
 
+		}).done(function ()
+		{
+			am.setdisabledDates();
 		});
 	}
 

@@ -80,31 +80,38 @@
 		public function resource_schedule()
 		{
 			$dates = phpgw::get_var('dates');
-			if(!$dates || is_array($dates))
+			if(!$dates || !is_array($dates))
 			{
 				$dates = array(phpgw::get_var('date'));
 			}
 
-			$results = array();
-			foreach ($dates as $date)
+			$timespan = 7;
+			$first = $dates[0];
+			$last = end($dates);
+
+			if($first != $last)
 			{
-				$_date = new DateTime($date);
-				$bookings = $this->bo->resource_schedule(phpgw::get_var('resource_id', 'int'), $_date);
-				foreach ($bookings['results'] as &$booking)
-				{
-					$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',
-						'id' => $booking['id']));
-					array_walk($booking, array($this, 'item_link'));
-
-					$results[] = $booking;
-				}
-
+				$date_diff = date_diff(date_create($first), date_create($last));
+				$timespan = ceil($date_diff->days/7) * 7;
 			}
+
+//			$results = array();
+			$_date = new DateTime($dates[0]);
+			$bookings = $this->bo->resource_schedule(phpgw::get_var('resource_id', 'int'), $_date, $timespan);
+			foreach ($bookings['results'] as &$booking)
+			{
+				$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',
+					'id' => $booking['id']));
+				array_walk($booking, array($this, 'item_link'));
+
+//				$results[] = $booking;
+			}
+
 			$data = array
-				(
+			(
 				'ResultSet' => array(
-					"totalResultsAvailable" => count($results),
-					"Result" => $results
+					"totalResultsAvailable" =>  $bookings['total_records'],
+					"Result" => $bookings['results']
 				)
 			);
 
