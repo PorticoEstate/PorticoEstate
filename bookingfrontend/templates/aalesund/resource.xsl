@@ -169,40 +169,41 @@
 			</div>
 		</xsl:if>
 		<div class="row margin-top-and-bottom">
-			<xsl:if test="building/deactivate_calendar=0">
-				<div class="col-6 button-group dropdown calendar-tool">
+			<div class="col-6 button-group dropdown calendar-tool">
+				<xsl:if test="building/deactivate_calendar=0">
 					<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0">
 						<i class="far fa-calendar-alt"></i>&#160;
 						<xsl:value-of select="php:function('lang', 'choose a date')"/>
 					</button>
-					<xsl:if test="building/deactivate_application=0">
-						<a href="" class="btn btn-default bookBtnForward">
-							<i class="fas fa-plus"></i>&#160;
-							<xsl:value-of select="php:function('lang', 'Application')" />
-						</a>
-					</xsl:if>
+				</xsl:if>
+
+				<xsl:if test="building/deactivate_application=0">
+					<a href="" class="btn btn-default bookBtnForward">
+						<i class="fas fa-plus"></i>&#160;
+						<xsl:value-of select="php:function('lang', 'Application')" />
+					</a>
+				</xsl:if>
+			</div>
+			<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
+				<div class="d-block">
+					<div class="square allocation"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'allocation')"/>
+					</span>
 				</div>
-				<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
-					<div class="d-block">
-						<div class="square allocation"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'allocation')"/>
-						</span>
-					</div>
-					<div class="d-block">
-						<div class="square booking"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
-						</span>
-					</div>
-					<div class="d-block">
-						<div class="square event"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'event')"/>
-						</span>
-					</div>
+				<div class="d-block">
+					<div class="square booking"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
+					</span>
 				</div>
-			</xsl:if>
+				<div class="d-block">
+					<div class="square event"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'event')"/>
+					</span>
+				</div>
+			</div>
 			<!--<div class="input-group date" id="datepicker" data-provide="datepicker">
 				<input type="text" class="form-control" />
 				<div class="input-group-addon">

@@ -23,20 +23,20 @@
 									<xsl:value-of select="building/name"/>
 								</h1>
 								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
-								<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
-								<div class="building-place-adr">
-									<span id="buildingStreet">
-										<xsl:value-of select="building/street" />
-									</span>
-									<br></br>
-									<span id="buildingZipCode">
-										<xsl:value-of select="building/zip_code"/> 
-									</span>
-									<span id="buildingCity">
-										<xsl:value-of select="building/city" />
-									</span>
-								</div>
-								<p>Trykk for å se kart</p>
+									<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
+									<div class="building-place-adr">
+										<span id="buildingStreet">
+											<xsl:value-of select="building/street" />
+										</span>
+										<br></br>
+										<span id="buildingZipCode">
+											<xsl:value-of select="building/zip_code"/>
+										</span>
+										<span id="buildingCity">
+											<xsl:value-of select="building/city" />
+										</span>
+									</div>
+									<p>Trykk for å se kart</p>
 								</button>
 
 								
@@ -46,13 +46,19 @@
 										<div class="modal-content">
 											<div class="modal-header text-center">
 												<h2 class="modal-title w-100">
-												<xsl:value-of select="building/name"/></h2>
+													<xsl:value-of select="building/name"/>
+												</h2>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true"><i class="fas fa-times"></i></span>
+													<span aria-hidden="true">
+														<i class="fas fa-times"></i>
+													</span>
 												</button>
 											</div>
 											<div class="modal-body">
-												<div style="width: 100%"><iframe id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe></div><br />
+												<div style="width: 100%">
+													<iframe id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+												</div>
+												<br />
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Lukk vindu</button>
@@ -187,9 +193,9 @@
 				</div>
 			</xsl:if>
 			<div class="row margin-top-and-bottom">
-				<xsl:if test="building/deactivate_calendar=0">
-					<div class="col-6">
-						<div class="button-group dropdown calendar-tool invisible">
+				<div class="col-6">
+					<div class="button-group dropdown calendar-tool invisible">
+						<xsl:if test="building/deactivate_calendar=0">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 								<xsl:value-of select="php:function('lang', 'For rent')"/>
 								<span class="caret"></span>
@@ -210,14 +216,18 @@
 								<i class="far fa-calendar-alt"></i>&#160;
 								<xsl:value-of select="php:function('lang', 'choose a date')"/>
 							</button>
-							<xsl:if test="building/deactivate_application=0">
-								<a href="" class="btn btn-default bookBtnForward">
-									<i class="fas fa-plus"></i>&#160;
-									<xsl:value-of select="php:function('lang', 'Application')" />
-								</a>
-							</xsl:if>
-						</div>
+						</xsl:if>
+
+						<xsl:if test="building/deactivate_application=0">
+							<a href="" class="btn btn-default bookBtnForward">
+								<i class="fas fa-plus"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'Application')" />
+							</a>
+						</xsl:if>
 					</div>
+				</div>
+				<xsl:if test="building/deactivate_calendar=0">
+
 					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
 						<div class="">
 							<div class="square allocation"></div>
