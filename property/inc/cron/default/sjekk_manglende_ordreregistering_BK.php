@@ -376,7 +376,7 @@ XML;
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_request);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 2);
 
 			$response	 = curl_exec($ch);
 			$httpCode	 = curl_getinfo($ch, CURLINFO_HTTP_CODE);
