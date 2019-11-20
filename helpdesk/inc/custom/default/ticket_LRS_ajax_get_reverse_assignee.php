@@ -176,7 +176,29 @@
 				$query_arr	 = explode(" ", str_replace("  ", " ", $query));
 				$query_arr2	 = explode(",", str_replace(" ", "", $query));
 
-				$filtermethod = '';
+				$filtermethod =	"(BRUKERNAVN = '{$query}'"
+				. " OR FODSELSNR  = '{$query}'"
+				. " OR RESSURSNR  = '{$query}'";
+
+				if(!empty($query_arr[1]) && empty($query_arr2[1]))
+				{
+					$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
+					 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
+				}
+				if(!empty($query_arr[2]) && empty($query_arr2[1]))
+				{
+					$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) . " " . strtolower($query_arr[1]) . "%'"
+					 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[2]) ."%')";
+				}
+				else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
+				{
+					$filtermethod .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
+				}
+				else if(isset($query_arr2[1]))
+				{
+					$filtermethod .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
+					 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
+				}
 
 				if($search_options == 'ressurs_nr')
 				{
@@ -184,24 +206,6 @@
 				}
 				else if($search_options == 'resultat_enhet')
 				{
-					$filtermethod =	"(BRUKERNAVN = '{$query}'"
-					. " OR FODSELSNR  = '{$query}'"
-					. " OR RESSURSNR  = '{$query}'";
-
-					if(!empty($query_arr[1]) && empty($query_arr2[1]))
-					{
-						$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
-						 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
-					}
-					else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
-					{
-						$filtermethod .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
-					}
-					else if(isset($query_arr2[1]))
-					{
-						$filtermethod .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
-						 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
-					}
 
 					$ticket_id = (int)phpgw::get_var('ticket_id');
 
@@ -258,24 +262,7 @@
 				}
 				else
 				{
-					$filtermethod =	"BRUKERNAVN = '{$query}'"
-					. " OR FODSELSNR  = '{$query}'"
-					. " OR RESSURSNR  = '{$query}'";
-
-					if(!empty($query_arr[1]) && empty($query_arr2[1]))
-					{
-						$filtermethod .= " OR (lower(FORNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'"
-						 . " AND lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[1]) ."%')";
-					}
-					else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
-					{
-						$filtermethod .= " OR lower(ETTERNAVN)  LIKE '" . strtolower($query_arr[0]) ."%'";
-					}
-					else if(isset($query_arr2[1]))
-					{
-						$filtermethod .= " OR (lower(ETTERNAVN)  LIKE '" . strtolower($query_arr2[0]) ."%'"
-						 . " AND lower(FORNAVN)  LIKE '" . strtolower($query_arr2[1]) ."%')";
-					}
+					$filtermethod .= ")";
 				}
 
 				$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM FELLESDATA.V_PORTICO_ANSATT"
