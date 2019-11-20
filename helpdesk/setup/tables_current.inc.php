@@ -291,5 +291,18 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'phpgw_helpdesk_cat_anonyminizer' => array(
+			'fd' => array(
+				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'limit_days' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('cat_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 	);

@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['helpdesk']['name']			= 'helpdesk';
-	$setup_info['helpdesk']['version']		= '0.9.18.013';
+	$setup_info['helpdesk']['version']		= '0.9.18.014';
 	$setup_info['helpdesk']['app_order']	= 8;
 	$setup_info['helpdesk']['enable']		= 1;
 	$setup_info['helpdesk']['app_group']	= 'office';
@@ -59,7 +59,8 @@
 		'phpgw_helpdesk_external_communication_type',
 		'phpgw_helpdesk_external_communication_msg',
 		'phpgw_helpdesk_cat_assignment',
-		'phpgw_helpdesk_cat_respond_messages'
+		'phpgw_helpdesk_cat_respond_messages',
+		'phpgw_helpdesk_cat_anonyminizer'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

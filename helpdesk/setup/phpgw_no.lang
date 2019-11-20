@@ -258,3 +258,6 @@ Referred from	helpdesk	no	Referert fra
 Started from	helpdesk	no	Startet fra
 Asynchronous Tasks	helpdesk	no	Systemjobber
 helpdesk_async_task_anonyminizer_enabled	helpdesk	no	Anonymiser data
+category anonyminizer	helpdesk	no	Anonymisering pr Kategori
+limit days	helpdesk	no	Antall dager før sletting
+category anonyminizer settings has been saved	helpdesk	no	Anonymisering pr Kategori er lagret

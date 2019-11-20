@@ -117,6 +117,11 @@
 							'text'	=> lang('category respond messages'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uicat_respond_messages.edit') )
 						),
+						'cat_anonyminizer'	=> array
+						(
+							'text'	=> lang('category anonyminizer'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uicat_anonyminizer.edit') )
+						),
 						'ticket_status'	=> array
 						(
 							'text'	=> lang('Ticket status'),
