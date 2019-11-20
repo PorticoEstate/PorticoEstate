@@ -260,7 +260,7 @@
 				'facilities'  => array(),
 				'partoftowns' => array(),
 				);
-			$fields_resource = array('id','name','activities_list','facilities_list');
+			$fields_resource = array('id','name','activities_list','facilities_list', 'simple_booking');
 			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
 
 			// Get a list of all part_of_town that are used for buildings, creating a list keyed on the part_of_town id

@@ -359,9 +359,16 @@ function doSearch(searchterm_value)
 				}
 				else if (response.results.results[i].type == "resource")
 				{
-					url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: response.results.results[i].id,
-						building_id: response.results.results[i].building_id}, false);
-
+					if (response.results.results[i].simple_booking == 1)
+					{
+						url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", resource_id: response.results.results[i].id,
+							building_id: response.results.results[i].building_id, simple: 1}, false);
+					}
+					else
+					{
+						url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: response.results.results[i].id,
+							building_id: response.results.results[i].building_id}, false);
+					}
 				}
 				else if (response.results.results[i].type == "organization")
 				{
@@ -455,8 +462,26 @@ function DoFilterSearch()
 			var resources = [];
 			for (var k = 0; k < result.buildings[i].resources.length; k++)
 			{
+				var bookBtnURL;
+				if (result.buildings[i].resources[k].simple_booking == 1)
+				{
+					bookBtnURL = phpGWLink('bookingfrontend/', {
+						menuaction: "bookingfrontend.uiapplication.add",
+						resource_id: result.buildings[i].resources[k].id,
+						building_id: result.buildings[i].id,
+						simple: 1
+					}, false);
 
-				var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: result.buildings[i].resources[k].id, building_id: result.buildings[i].id}, false);
+				}
+				else
+				{
+					bookBtnURL = phpGWLink('bookingfrontend/', {
+						menuaction: "bookingfrontend.uiresource.show",
+						id: result.buildings[i].resources[k].id,
+						building_id: result.buildings[i].id
+					}, false);
+				}
+
 				var facilities = [];
 				var activities = [];
 				for (var f = 0; f < result.buildings[i].resources[k].facilities_list.length; f++)
