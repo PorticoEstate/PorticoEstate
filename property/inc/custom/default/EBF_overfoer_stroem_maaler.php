@@ -17,7 +17,7 @@
 		{
 			parent::__construct();
 			$this->db		 = & $GLOBALS['phpgw']->db;
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 
 			if ($this->acl_location != '.entity.2.17')
 			{
@@ -165,6 +165,13 @@
 				}
 			}
 
+			$this->db->query("SELECT preference_json->>'ressursnr' AS ressursnr FROM phpgw_preferences"
+				. " WHERE phpgw_preferences.preference_owner = {$this->account}"
+				. " AND phpgw_preferences.preference_app = 'property'", __LINE__, __FILE__);
+
+			$this->db->next_record();
+			$ressursnr =  $this->db->f('ressursnr');
+
 			$subject = "Måleroverføring: {$address}";
 
 			$toarray = array('support.norway@entelios.com');
@@ -239,8 +246,8 @@
 					Bergen kommune, Etat for boligforvaltning<br/>
 					Postboks 7700, 5020 Bergen<br/>
 					Besøksadresse: Kaigaten 4, inngang fra Peter Motzfeldts gate<br/>
-					Epost: {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}
-
+					Epost: {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}<br/>
+					Ressursnr: {$ressursnr}
 				</body>
 			</html>
 HTML;
