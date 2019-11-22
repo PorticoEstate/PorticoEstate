@@ -297,21 +297,20 @@
 			$n	 = count($cols_return);
 			//_debug_array($cols_return);
 
-			$contacts		 = CreateObject('phpgwapi.contacts');
 			$agreement_list	 = array();
 
 			while ($this->db->next_record())
 			{
 				for ($i = 0; $i < $n; $i++)
 				{
-					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
+					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i], true);
 				}
 
 				foreach ($cols_return_extra as $custom_col)
 				{
 					if ($custom_value = $this->db->f($custom_col['name'], true))
 					{
-						$custom_value = $this->custom->get_translated_value(array('value'		 => $custom_value,
+						$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
 							'attrib_id'	 => $custom_col['attrib_id'], 'datatype'	 => $custom_col['datatype']), $location_id);
 					}
 					$agreement_list[$j][$custom_col['name']] = $custom_value;

@@ -305,20 +305,11 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'legal condition')" />
 						</label>
-						<span data-bind="ifnot: termAccept" class="validationMessage">
+						<span class="validationMessage" style="display: none">
 							<xsl:value-of select="config/application_terms2"/>
 						</span>
-						<div class="form-check checkbox" data-bind="foreach: termAcceptDocs">
-							<div>
-								<label class="check-box-label d-inline">
-									<input id="termsInput" class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
-									<span class="label-text" data-bind=""></span>		
-								</label>
-								<a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
-								<i class="fas fa-external-link-alt"></i>
-							</div>
+						<div id="regulation_documents" class="form-check checkbox">
 						</div>
-
 					</div>
 
 					<hr class="mt-5 mb-5"></hr>

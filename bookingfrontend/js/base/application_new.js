@@ -2,7 +2,6 @@
 
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-$(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
 $(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
 $(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
 var urlParams = [];
@@ -47,11 +46,14 @@ function applicationModel()
 	self.selectedResources = ko.observableArray(0);
 	self.isResourceSelected = ko.computed(function ()
 	{
+		var checkedResources = [];
 		var k = 0;
 		for (var i = 0; i < self.bookableResource().length; i++)
 		{
 			if (self.bookableResource()[i].selected())
 			{
+				checkedResources.push(self.bookableResource()[i].id);
+
 				if (self.selectedResources.indexOf(self.bookableResource()[i].id) < 0)
 				{
 					self.selectedResources.push(self.bookableResource()[i].id);
@@ -68,6 +70,8 @@ function applicationModel()
 		}
 		if (k > 0)
 		{
+			$("#regulation_documents").empty();
+			getDoc(checkedResources);
 			return true;
 		}
 		return false;
@@ -135,34 +139,6 @@ function applicationModel()
 	self.agegroupList = agegroup;
 	self.specialRequirements = ko.observable("");
 	self.attachment = ko.observable();
-	self.termAcceptDocs = ko.observableArray();
-	self.termAccept = ko.computed(function ()
-	{
-		var notAccepted = ko.utils.arrayFirst(self.termAcceptDocs(), function (current)
-		{
-			return current.checkedStatus() == false;
-		});
-		if (!notAccepted)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	});
-	self.termAcceptedDocs = ko.computed(function ()
-	{
-		var list = [];
-		for (var i = 0; i < self.termAcceptDocs().length; i++)
-		{
-			if (self.termAcceptDocs()[i].checkedStatus())
-			{
-				list.push("building::" + self.termAcceptDocs()[i].docId);
-			}
-		}
-		return list;
-	});
 }
 
 
@@ -249,20 +225,15 @@ $(document).ready(function ()
 			sort: "name"
 		};
 		getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+		for (var i = 0; i < initialSelection.length; i++)
+		{
+			getJsonURL += '&owner[]=resource::' + initialSelection[i];
+		}
+
 		$.getJSON(getJsonURL, function (result)
 		{
-			for (var i = 0; i < result.data.length; i++)
-			{
-				var checked = false;
-				if (initialAcceptedDocs != null)
-				{
-					if (initialAcceptedDocs[i] == "on")
-					{
-						checked = true;
-					}
-				}
-				am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
-			}
+			setDoc(result.data);
 		});
 
 	}).done(function ()
@@ -285,7 +256,7 @@ $(document).ready(function ()
 
 	$("#application_form").submit(function (event)
 	{
-		var allowSubmit = am.termAccept();
+		var allowSubmit = validate_documents();
 		if (!allowSubmit)
 		{
 			alert(errorAcceptedDocs);
@@ -294,6 +265,68 @@ $(document).ready(function ()
 	});
 
 });
+
+function validate_documents()
+{
+	var n = 0;
+	$('#regulation_documents input[name="accepted_documents[]"]').each(function ()
+	{
+		if (!$(this).is(':checked'))
+		{
+			n++;
+		}
+	});
+	var v = (n == 0) ? true : false;
+	return v;
+}
+function getDoc(checkedResources)
+{
+	var parameter = {
+		menuaction: "bookingfrontend.uidocument_view.regulations",
+		'owner[]': "building::" + urlParams['building_id'],
+		sort: "name"
+	};
+	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+	for (var i = 0; i < checkedResources.length; i++)
+	{
+		getJsonURL += '&owner[]=resource::' + checkedResources[i];
+	}
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		setDoc(result.data);
+	});
+}
+
+function setDoc(data)
+{
+	var child = '';
+	var checked;
+	var value;
+	for (var i = 0; i < data.length; i++)
+	{
+		checked = '';
+		if (initialAcceptedDocs != null)
+		{
+			if (initialAcceptedDocs[i] == data[i].id)
+			{
+				checked = ' checked= "checked"';
+			}
+		}
+
+		value = data[i].id;
+
+		child += "<div>";
+		child += '<label class="check-box-label d-inline"><input name="accepted_documents[]" value="' + value + '" class="form-check-input" type="checkbox"' + checked + '><span class="label-text">';
+		child += '</span></label>';
+		child += '<a class="d-inline termAcceptDocsUrl" target="_blank"  href="' + RemoveCharacterFromURL(data[i].link, 'amp;') + '">' + data[i].name + '</a>';
+		child += '<i class="fas fa-external-link-alt"></i>';
+		child += "</div>";
+
+	}
+	$("#regulation_documents").html(child);
+}
+
 
 function PopulatePostedDate()
 {

@@ -353,7 +353,6 @@ $(window).on('load', function ()
 	if (ecodimb)
 	{
 		populateTableChkApproval();
-//		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
 		ecodimb_selection = ecodimb;
 	}
 	$("#ecodimb_name").on("autocompleteselect", function (event, ui)
