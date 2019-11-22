@@ -73,9 +73,32 @@
 						</div>
 						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
-							<label>
-								<xsl:value-of select="php:function('lang', 'Ssn')" />*</label>
-							<input min="11" max="11" type="number" class="form-control" name="customer_ssn" value="{application/customer_ssn}" required="true"/>
+							<xsl:if test="string-length(application/customer_ssn)=0">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Ssn')" />
+									<xsl:text>*</xsl:text>
+								</label>
+							</xsl:if>
+							<input class="form-control" name="customer_ssn" value="{application/customer_ssn}" required="true">
+								<xsl:choose>
+									<xsl:when test="application/customer_ssn != ''">
+										<xsl:attribute name="type">
+											<xsl:text>hidden</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="type">
+											<xsl:text>number</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="min">
+											<xsl:text>11</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="max">
+											<xsl:text>11</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
+							</input>
 							<div class="invalid-feedback">
 								Vennligst oppgi gyldig personnummer.
 							</div>
@@ -89,7 +112,7 @@
 								Vennligst oppgi navn.
 							</div>
 						</div>
-						
+
 						<!-- Street Name -->
 						<div class="form-group">
 							<label>

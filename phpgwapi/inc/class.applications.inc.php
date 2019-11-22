@@ -291,17 +291,17 @@
 		}
 
 		/**
-		* Get the list of installed application available for the current user
-		*
-		* 
-		*/
-		public function read_account_specific()
+		 * Get the list of installed application available for the current user
+		 * @param bool $inherited - if to include rights inherited from groups
+		 * @return array
+		 */
+		public function read_account_specific($inherited = false)
 		{
 			if (!is_array($GLOBALS['phpgw_info']['apps']))
 			{
 				$this->read_installed_apps();
 			}
-			$app_list = $GLOBALS['phpgw']->acl->get_app_list_for_id('run', 1, $this->account_id);
+			$app_list = $GLOBALS['phpgw']->acl->get_app_list_for_id('run', 1, $this->account_id, $inherited);
 
 			if ( !is_array($app_list) || !count($app_list) )
 			{
