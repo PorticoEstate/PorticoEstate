@@ -198,10 +198,9 @@
 
 
 //curl -s -u portico:*** https://tjenester.usrv.ubergenkom.no/api/altinnservice/getAvgiver/***********
-//			https://tjenester.srv.bergenkom.no/AltinnReporteesService
 
 
-			$location_URL = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : "https://tjenester.usrv.ubergenkom.no/api/"; #A-test
+			$location_URL = !empty($this->config->config_data['soap_location']) ? $this->config->config_data['soap_location'] : "https://tjenester.usrv.ubergenkom.no/api/"; #A-test
 
 			$soap_login = $this->config->config_data['soap_login'];
 			$soap_password = $this->config->config_data['soap_password'];
