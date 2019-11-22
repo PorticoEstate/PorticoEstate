@@ -155,7 +155,16 @@
 
 		function add( $entity )
 		{
-			return $this->so->add($entity);
+			try
+			{
+				$ret = $this->so->add($entity);
+			}
+			catch (Exception $exc)
+			{
+				throw $exc;
+			}
+
+			return $ret;
 		}
 
 		function smart_read( $entity )
