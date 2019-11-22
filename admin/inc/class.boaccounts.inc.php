@@ -465,14 +465,14 @@
 		 *
 		 * @return array list of applications the group has access to
 		 */
-		function load_apps($account_id)
+		function load_apps($account_id, $inherited = false)
 		{
 			$account_id = (int) $account_id;
 			$account_apps = array();
 			if ( $account_id )
 			{
 				$apps = createObject('phpgwapi.applications', $account_id)
-								->read_account_specific();
+								->read_account_specific($inherited);
 
 				foreach ( $apps as $app )
 				{

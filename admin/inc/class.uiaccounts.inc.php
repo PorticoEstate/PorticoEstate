@@ -885,7 +885,7 @@
 			);
 			$GLOBALS['phpgw']->locations->verify($apps_with_acl);
 
-			$group_apps = $this->_bo->load_apps($account_id);
+			$group_apps = $this->_bo->load_apps($account_id, true);
 			$apps = array_keys($GLOBALS['phpgw_info']['apps']);
 			asort($apps);
 
@@ -1396,7 +1396,7 @@
 			{
 				$user_data['anonymous'] = $acl->check('anonymous', 1, 'phpgwapi');
 				$user_data['changepassword'] = $acl->check('changepassword', 1, 'preferences');
-				$user_data['account_permissions'] = $this->_bo->load_apps($account_id);
+				$user_data['account_permissions'] = $this->_bo->load_apps($account_id, false);
 				$user_groups = $account->membership($account_id);
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] .= lang('edit user account');
@@ -1546,10 +1546,10 @@
 			unset($group_ids);
 
 			/* create list of available apps */
-			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
-			$db_perms = $apps->read_account_specific();
+//			$apps = createObject('phpgwapi.applications', $account_id ? $account_id : -1);
+//			$db_perms = $apps->read_account_specific();
 
-			$apps_admin = $this->_acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id ? $account_id : -1);
+			$apps_admin = $this->_acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $account_id ? $account_id : -1, false);
 			
 			$available_apps = $GLOBALS['phpgw_info']['apps'];
 			asort($available_apps);
@@ -1579,9 +1579,8 @@
 			foreach ( $perm_display as $perm )
 			{
 				$checked = false;
-				if ( ( isset($user_data['account_permissions'][$perm['app_name']])
-						&& $user_data['account_permissions'][$perm['app_name']] )
-					|| ( isset($db_perms[$perm['app_name']]) && $db_perms[$perm['app_name']] ) )
+				if (  !empty($user_data['account_permissions'][$perm['app_name']])
+					||  !empty($db_perms[$perm['app_name']]) )
 				{
 					$checked = true;
 				}

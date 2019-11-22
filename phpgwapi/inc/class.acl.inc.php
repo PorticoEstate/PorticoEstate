@@ -76,7 +76,7 @@
 		* @var string $join database join statement syntax
 		*/
 		protected $_join = 'JOIN';
-		
+
 		/**
 		* @var bool $enable_inheritance determines whether rights are inherited down the hierarchy when saving permissions
 		*/
@@ -137,7 +137,7 @@
 		* define its own constants which reference this value
 		*/
 		const CUSTOM_3 = 256;
-		
+
 		protected $global_lock = false;
 
 		/**
@@ -154,8 +154,8 @@
 
 			$this->_like		=& $this->_db->like;
 			$this->_join		=& $this->_db->join;
-			$this->_left_join	=& $this->_db->left_join;		
-			
+			$this->_left_join	=& $this->_db->left_join;
+
 			if($account_id)
 			{
 				$this->set_account_id($account_id);
@@ -273,7 +273,7 @@
 		{
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			
+
 			if( !$location_id > 0)
 			{
 				return $this->_data;
@@ -399,7 +399,7 @@
 					}
 				}
 			}
-			
+
 			if($subs)
 			{
 				$_locations = array_merge($_locations, $subs);
@@ -448,9 +448,9 @@
 					$location_info = $locations->get_name($location_id);
 					foreach ($at_location as $entry)
 					{
-						$entry['grantor']	= $entry['grantor'] ? $entry['grantor'] : -1; 
-						$entry['type']		= $entry['type'] ? $entry['type'] : 0; 
-					
+						$entry['grantor']	= $entry['grantor'] ? $entry['grantor'] : -1;
+						$entry['type']		= $entry['type'] ? $entry['type'] : 0;
+
 						if ( !isset($new_data[$location_id][$entry['grantor']][$entry['type']]) )
 						{
 							$new_data[$location_id][$entry['grantor']][$entry['type']] = 0;
@@ -775,7 +775,7 @@
 			}
 
 			$app_id = $GLOBALS['phpgw']->applications->name2id($appname);
-			
+
 			if( !$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location))
 			{
 				//not a valid location
@@ -1151,10 +1151,11 @@
 		* @param integer $required  Access rights as bitmap
 		* @param integer $accountid Account id
 		*				if 0, value of $GLOBALS['phpgw_info']['user']['account_id'] is used
+		* @param bool    $inherited - if to include rights inherited from groups
 		*
 		* @return array list of applications or false
 		*/
-		public function get_app_list_for_id($location, $required, $accountid = 0 )
+		public function get_app_list_for_id($location, $required, $accountid = 0, $inherited = false )
 		{
 			static $cache_accountid;
 
@@ -1174,10 +1175,25 @@
 
 			$sql = 'SELECT DISTINCT phpgw_applications.app_name, phpgw_acl.acl_rights FROM phpgw_acl'
 				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
-				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
-				. " {$this->_left_join}  phpgw_group_map ON (phpgw_acl.acl_account = phpgw_group_map.group_id)"
-				. " WHERE phpgw_locations.name = '{$location}'"
-				. " AND (acl_account = {$account_id} OR account_id = {$account_id})";
+				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id";
+
+
+			$filtermethod = " WHERE phpgw_locations.name = '{$location}'"
+				. " AND (acl_account = {$account_id}";
+
+			if($inherited)
+			{
+				$sql .=" {$this->_left_join}  phpgw_group_map ON (phpgw_acl.acl_account = phpgw_group_map.group_id)";
+
+				$filtermethod .= " OR account_id = {$account_id})";
+			}
+			else
+			{
+				$filtermethod .= ")";
+
+			}
+
+			$sql .=" $filtermethod";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -1843,7 +1859,7 @@
 					if(isset($this->_data[$this->_account_id][$app_id][$location_id]) && is_array($this->_data[$this->_account_id][$app_id][$location_id]))
 					{
 //						throw new Exception("user_set ({$app_id}, {$location_id}) not set");
-						phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);			
+						phpgwapi_cache::user_set('phpgwapi', "acl_data_{$app_id}_{$location_id}", $this->_data[$this->_account_id][$app_id][$location_id], $this->_account_id);
 					}
 				}
 			}
