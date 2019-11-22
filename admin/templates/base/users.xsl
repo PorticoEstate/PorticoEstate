@@ -148,61 +148,67 @@
 		<h2>
 			<xsl:value-of select="l_user" />
 		</h2>
-		<span class="label">
-			<xsl:value-of select="l_loginid" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="lid"/>
-		</span>
-		<br />
+		<table  class="pure-table">
+			<tr>
+				<td>
+					<xsl:value-of select="l_loginid" />
+				</td>
+				<td>
+					<xsl:value-of select="lid"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_firstname" />
+				</td>
+				<td>
 
-		<span class="label">
-			<xsl:value-of select="l_firstname" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="firstname"/>
-		</span>
-		<br />
-
-		<span class="label">
-			<xsl:value-of select="l_lastname" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="lastname"/>
-		</span>
-		<br />
-
-		<span class="label">
-			<xsl:value-of select="l_status" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="account_status"/>
-		</span>
-		<br />
-
-		<span class="label">
-			<xsl:value-of select="l_expires" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="input_expires"/>
-		</span>
-		<br />
-
-		<span class="label">
-			<xsl:value-of select="l_lastlogin" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="account_lastlogin"/>
-		</span>
-		<br />
-
-		<span class="label">
-			<xsl:value-of select="l_pwchange" />
-		</span>
-		<span class="value">
-			<xsl:value-of select="account_lastpasswd_change"/>
-		</span>
-		<br />
+					<xsl:value-of select="firstname"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_lastname" />
+				</td>
+				<td>
+					<xsl:value-of select="lastname"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_status" />
+				</td>
+				<td>
+					<xsl:value-of select="account_status"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_expires" />
+				</td>
+				<td>
+					<xsl:value-of select="input_expires"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_lastlogin" />
+				</td>
+				<td>
+					<xsl:value-of select="account_lastlogin"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<xsl:value-of select="l_pwchange" />
+				</td>
+				<td>
+					<span class="value">
+						<xsl:value-of select="account_lastpasswd_change"/>
+					</span>
+				</td>
+			</tr>
+		</table>
 
 		<h2>
 			<xsl:value-of select="l_applications" />
