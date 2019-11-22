@@ -1737,6 +1737,11 @@
 						continue;
 					}
 					$enabled = in_array($app['name'], $perms);
+
+					if(!$enabled)
+					{
+						continue;
+					}
 					$user_data['permissions'][] = array
 					(
 						'name'	=> lang($app['name']),
