@@ -945,7 +945,7 @@
 		 *
 		 * @return array containg values from $array for the keys in $keys.
 		 */
-		function resource_schedule( $resource_id, $date, $timespan = 7 )
+		function resource_schedule( $resource_id, $date )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
@@ -955,7 +955,7 @@
 				$from->modify('last monday');
 			}
 			$to = clone $from;
-			$to->modify("+{$timespan} days");
+			$to->modify("+7 days");
 			$resource = $this->resource_so->read_single($resource_id);
 
 	//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, $resource['direct_booking_season_id'], clone $from);
