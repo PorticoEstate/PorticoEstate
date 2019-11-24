@@ -31,7 +31,7 @@
 		}
 
 		/**
-		 * @ Send message about cancelation to users of building. 
+		 * @ Send message about cancelation to users of building.
 		 */
 		function send_notification( $booking, $allocation, $maildata, $mailadresses, $valid_dates = null )
 		{
@@ -438,9 +438,9 @@
 		/**
 		 * Return a building's schedule for a given week in a YUI DataSource
 		 * compatible format
-		 * 
+		 *
 		 * @param int	$building_id
-		 * @param $date 
+		 * @param $date
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
@@ -970,12 +970,163 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
+
+		function get_free_events( $buildings, $start_date, $end_date, $weekdays )
+		{
+
+			$from = clone $start_date;
+			$from->setTime(0, 0, 0);
+			$to = clone $end_date;
+			$to->setTime(23, 59, 59);
+
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+			$resource_filters['building_id'] = $buildings;
+			$resources = $this->resource_so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+
+			$allocation_ids = array();
+			foreach ($resources['results'] as $resource)
+			{
+				$allocation_ids = array_merge($allocation_ids, $this->so->allocation_ids_for_resource($resource['id'], $from, $to));
+			}
+
+			$allocations = array();
+			if($allocation_ids)
+			{
+				$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids), 'results' => -1));
+			}
+
+			$availlableTimeSlots = array();
+			$defaultStartHour = 8;
+			$defaultEndHour = 16;
+
+			$days = array(
+				0	 => "Sunday",
+				1	 => "Monday",
+				2	 => "Tuesday",
+				3	 => "Wednesday",
+				4	 => "Thursday",
+				5	 => "Friday",
+				6	 => "Saturday",
+				7	 => "Sunday",
+			);
+
+			foreach ($resources['results'] as $resource)
+			{
+				$availlableTimeSlots[$resource['id']] = [];
+
+				if ($resource['simple_booking'])
+				{
+					$dow_start = $resource['booking_dow_default_start'];
+					$booking_lenght = $resource['booking_day_default_lenght'];
+					$booking_start = $resource['booking_time_default_start'];
+					$booking_end = $resource['booking_time_default_end'];
+
+					if ($booking_start > -1)
+					{
+						$defaultStartHour = $booking_start;
+					}
+					if ($booking_end > -1)
+					{
+						$defaultEndHour = $booking_end;
+					}
+
+					$checkDate = new DateTime();
+					$checkDate->setTime($defaultStartHour, 0, 0);
+
+					$limitDate = clone ($checkDate);
+//					$limitDate->modify("+" . $checkDate->format('m') + 2 ." month");
+					$limitDate = $this->month_shifter($limitDate, 2);
+					$test = $limitDate->format('Y-m-d');
+					$test = $checkDate->format('Y-m-d');
+
+					do
+					{
+
+						$StartTime = clone ($checkDate);
+
+						if ($StartTime->format('H') > $defaultEndHour)
+						{
+							$StartTime->modify("+1 days");
+							$StartTime->setTime($defaultStartHour, 0, 0);
+						}
+
+						if ($dow_start > -1)
+						{
+							$current_dow = $StartTime->format('w');
+							if($dow_start != $current_dow || ($dow_start == 7 && $current_dow == 0 ))
+							{
+								$modyfier = "next " . $days[$dow_start];
+								$StartTime->modify($modyfier);
+							}
+						}
+
+						$endTime = clone ($StartTime);
+
+						if ($booking_lenght > -1)
+						{
+							$endTime->modify("+{$booking_lenght} days");
+						}
+
+						if ($booking_end > -1)
+						{
+							$endTime->setTime($booking_end, 0, 0);
+						}
+						else
+						{
+							$endTime->setTime($StartTime->format('H') + 1, 0, 0);
+						}
+
+						$checkDate = clone ($endTime);
+
+
+						$availlableTimeSlots[$resource['id']][] = [
+							'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
+							'applicationLink'	 => [
+								'menuaction'	 => 'bookingfrontend.uiapplication.add',
+								'resource_id'	 => $resource['id'],
+								'building_id'	 => $resource['buildings'][0],
+								'start'			 => $StartTime->getTimestamp() . '000',
+								'end'			 => $endTime->getTimestamp() . '000',
+								'simple'		 => true
+							]
+						];
+					}
+					while ($checkDate < $limitDate);
+
+				}
+			}
+
+			return $availlableTimeSlots;
+
+		}
+
+		function month_shifter( DateTime $aDate, $months )
+		{
+			$dateA		 = clone($aDate);
+			$dateB		 = clone($aDate);
+			$plusMonths	 = clone($dateA->modify($months . ' Month'));
+			//check whether reversing the month addition gives us the original day back
+			if ($dateB != $dateA->modify($months * -1 . ' Month'))
+			{
+				$result = $plusMonths->modify('last day of last month');
+			}
+			elseif ($aDate == $dateB->modify('last day of this month'))
+			{
+				$result = $plusMonths->modify('last day of this month');
+			}
+			else
+			{
+				$result = $plusMonths;
+			}
+			return $result;
+		}
+
 		/**
 		 * Return a resource's schedule for a given week in a YUI DataSource
 		 * compatible format
-		 * 
+		 *
 		 * @param int	$resource_id
-		 * @param $date 
+		 * @param $date
 		 *
 		 * @return array containg values from $array for the keys in $keys.
 		 */

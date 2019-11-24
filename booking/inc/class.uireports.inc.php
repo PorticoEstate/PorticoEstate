@@ -654,7 +654,7 @@ HTML;
 				$allocations = $this->get_free_allocations(
 					phpgw::get_var('building'), $from_, $to_, phpgw::get_var('weekdays')
 				);
-
+				_debug_array($allocations);
 				$counter = 0;
 				foreach ($allocations['results'] as &$allocation)
 				{
@@ -720,17 +720,38 @@ HTML;
 				AND al.to_ <= '" . $to . " 23:59:59' ";
 
 			if ($buildings)
+			{
 				$sql .= "and building_id in (" . $buildings . ") ";
+			}
 
 			if ($weekdays)
+			{
 				$sql .= "and EXTRACT(DOW FROM al.from_) in (" . $weekdays . ") ";
+			}
 
 			$sql .= "order by building_name, from_, to_, resource_name";
-			$db->query($sql);
+			$db->query($sql, __LINE__, __FILE__);
 
-			$result = $db->resultSet;
+			$result = array();
+
+			while ($db->next_record())
+			{
+				$result[] = array(
+					'id' => $db->f('id'),
+					'from_' => $db->f('from_'),
+					'to_' => $db->f('to_'),
+					'day_of_week' => $db->f('day_of_week'),
+					'building_id' => $db->f('building_id'),
+					'building_name' => $db->f('building_name', true),
+					'resource_id' => $db->f('resource_id'),
+					'resource_name' => $db->f('resource_name', true)
+				);
+
+			}
 
 			$retval = array();
+
+
 			$retval['total_records'] = count($result);
 			$retval['results'] = $result;
 			$retval['start'] = 0;

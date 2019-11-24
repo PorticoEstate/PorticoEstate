@@ -2,6 +2,7 @@ $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
 var resourceIds = [];
+var availlableTimeSlots;
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
@@ -28,8 +29,9 @@ $(document).ready(function ()
 	{
 		date = new Date(urlParams['date']);
 	}
-	PopulateBuildingData(baseURL, urlParams);
-	PopulateBookableResources(baseURL, urlParams);
+	getFreetime(urlParams);
+//	PopulateBuildingData(urlParams);
+//	PopulateBookableResources(urlParams);
 
 	$(".calendar-tool").removeClass("invisible");
 
@@ -160,7 +162,7 @@ function IsExistingEvent(id, eventsArray)
 	return false;
 }
 
-function PopulateCalendarEvents(baseURL, urlParams)
+function PopulateCalendarEvents()
 {
 	$(".overlay").show();
 	$('.weekNumber').remove();
@@ -506,10 +508,44 @@ function compare(a, b)
 	return 0;
 }
 
-function PopulateBuildingData(baseURL, urlParams)
+function getFreetime(urlParams)
+{
+	var checkDate = new Date();
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 2, 0);
+
+	var getJsonURL = phpGWLink('bookingfrontend/', {
+		menuaction: "bookingfrontend.uibooking.get_freetime",
+		building_id: urlParams['id'],
+		start_date: formatSingleDateWithoutHours(new Date()),
+		end_date: formatSingleDateWithoutHours(EndDate),
+	}, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		for (var key in result)
+		{
+			for (var i = 0; i < result[key].length; i++)
+			{
+				if (typeof result[key][i].applicationLink != 'undefined')
+				{
+					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
+				}
+			}
+		}
+
+		availlableTimeSlots = result;
+	}).done(function ()
+	{
+		PopulateBuildingData(urlParams);
+		PopulateBookableResources(urlParams);
+
+	});
+}
+
+function PopulateBuildingData(urlParams)
 {
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id']}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id']}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
@@ -538,15 +574,15 @@ function PopulateBuildingData(baseURL, urlParams)
 	});
 }
 
-function PopulateBookableResources(baseURL, urlParams)
+function PopulateBookableResources(urlParams)
 {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['id'], sort: 'sort'}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['id'], sort: 'sort'}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var facilitiesList = [];
 		var activitiesList = [];
 
-		var availlableTimeSlots;
+//		var availlableTimeSlots;
 		var defaultStartHour = 8;
 		var defaultEndHour = 16;
 		var StartTime;
@@ -560,7 +596,7 @@ function PopulateBookableResources(baseURL, urlParams)
 		var booking_end;
 		for (var i = 0; i < result.results.length; i++)
 		{
-			availlableTimeSlots = [];
+//			availlableTimeSlots = [];
 
 			if (result.results[i].simple_booking)
 			{
@@ -623,17 +659,17 @@ function PopulateBookableResources(baseURL, urlParams)
 					checkDate = new Date(endTime);
 
 
-					availlableTimeSlots.push({
-						when: formatPeriodeHours(StartTime, endTime),
-						applicationLink: phpGWLink('bookingfrontend/', {
-							menuaction: 'bookingfrontend.uiapplication.add',
-							resource_id: result.results[i].id,
-							building_id: urlParams['id'],
-							start:StartTime.getTime(),
-							end:endTime.getTime(),
-							simple: true
-						})
-					});
+//					availlableTimeSlots.push({
+//						when: formatPeriodeHours(StartTime, endTime),
+//						applicationLink: phpGWLink('bookingfrontend/', {
+//							menuaction: 'bookingfrontend.uiapplication.add',
+//							resource_id: result.results[i].id,
+//							building_id: urlParams['id'],
+//							start: StartTime.getTime(),
+//							end: endTime.getTime(),
+//							simple: true
+//						})
+//					});
 
 
 				}
@@ -662,13 +698,13 @@ function PopulateBookableResources(baseURL, urlParams)
 				}),
 				facilitiesList: ko.observableArray(facilitiesList),
 				activitiesList: ko.observableArray(activitiesList),
-				availlableTimeSlots: ko.observableArray(availlableTimeSlots)
+				availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
 			});
 			resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
 		}
 		if (deactivate_calendar == 0)
 		{
-			PopulateCalendarEvents(baseURL, urlParams);
+			PopulateCalendarEvents();
 		}
 	});
 }
@@ -1317,7 +1353,7 @@ YUI({lang: 'nb-no'}).use(
 				selectionChange: function (event)
 				{
 					date = new Date(event.newSelection);
-					PopulateCalendarEvents(baseURL, urlParams);
+					PopulateCalendarEvents();
 
 					//$("#myScheduler .scheduler-base-content").first().remove();
 					//$("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();

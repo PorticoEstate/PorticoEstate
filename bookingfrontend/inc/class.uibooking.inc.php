@@ -16,6 +16,7 @@
 			'report_numbers' => true,
 			'massupdate' => true,
 			'cancel' => true,
+			'get_freetime'=> true
 		);
 
 		public function __construct()
@@ -35,6 +36,25 @@
 			if (in_array($item['type'], array('allocation', 'booking', 'event')))
 				$item['info_url'] = $this->link(array('menuaction' => 'bookingfrontend.ui' . $item['type'] . '.info',
 					'id' => $item['id']));
+		}
+
+		public function get_freetime()
+		{
+			$buildings = phpgw::get_var('buildings');
+			if(!$buildings || !is_array($buildings))
+			{
+				$buildings = array(phpgw::get_var('building_id', 'int'));
+			}
+
+			$start_date = phpgw::get_var('start_date', 'date');
+			$end_date = phpgw::get_var('end_date', 'date');
+
+			$weekdays = array();
+
+			$freetime = $this->bo->get_free_events($buildings, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+
+			return $freetime;
+
 		}
 
 		public function building_schedule()
@@ -100,7 +120,7 @@
 			}
 
 			$results = array();
-			
+
 			foreach ($dates as $date)
 			{
 				$_date = new DateTime($date);
@@ -374,7 +394,7 @@
 			if($interval->days > 0) {
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
 			} else {
-				$end = new DateTime($booking['to_']);				
+				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
 			}
 			$booking['when'] = $when;
@@ -445,7 +465,7 @@
 #					{
 #						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
 #					}
-					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");										
+					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
@@ -1245,9 +1265,9 @@
 			if($interval->days > 0) {
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
 			} else {
-				$end = new DateTime($booking['to_']);				
+				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
-			}			
+			}
 			$booking['when'] = $when;
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
