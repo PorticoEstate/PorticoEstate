@@ -516,31 +516,65 @@
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
-			$events = $events['results'];
-			foreach ($events as &$event)
-			{
+			$_events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
+//			$events = $events['results'];
+//			foreach ($events as &$event)
+//			{
+//
+//				$event['name'] = $event['name'];
+//				$event['type'] = 'event';
+//				unset($event['costs']);
+//				unset($event['comments']);
+//				unset($event['secret']);
+//				unset($event['customer_ssn']);
+//				unset($event['organizer']);
+//				unset($event['contact_name']);
+//				unset($event['contact_email']);
+//				unset($event['contact_phone']);
+//				unset($event['cost']);
+//				unset($event['sms_total']);
+//				unset($event['customer_organization_name']);
+//				unset($event['customer_organization_id']);
+//				unset($event['customer_identifier_type']);
+//				unset($event['customer_organization_number']);
+//				unset($event['customer_internal']);
+//				unset($event['include_in_list']);
+//				unset($event['agegroups']);
+//				unset($event['audience']);
+//			}
+//
 
-				$event['name'] = $event['name'];
-				$event['type'] = 'event';
-				unset($event['costs']);
-				unset($event['comments']);
-				unset($event['secret']);
-				unset($event['customer_ssn']);
-				unset($event['organizer']);
-				unset($event['contact_name']);
-				unset($event['contact_email']);
-				unset($event['contact_phone']);
-				unset($event['cost']);
-				unset($event['sms_total']);
-				unset($event['customer_organization_name']);
-				unset($event['customer_organization_id']);
-				unset($event['customer_identifier_type']);
-				unset($event['customer_organization_number']);
-				unset($event['customer_internal']);
-				unset($event['include_in_list']);
-				unset($event['agegroups']);
-				unset($event['audience']);
+			$events = array();
+
+			/**
+			 * Whitelisting
+			 */
+			foreach ($_events['results'] as $event)
+			{
+				$events[] = array(
+					'type'				 => 'event',
+					'name'				 => $event['name'],
+					'id'				 => $event['id'],
+					'id_string'			 => $event['id_string'],
+					'active'			 => $event['active'],
+					'activity_id'		 => $event['activity_id'],
+					'application_id'	 => $event['application_id'],
+					'name'				 => $event['is_public'] ? $event['name'] : '',
+					'homepage'			 => $event['homepage'],
+					'description'		 => $event['is_public'] ? $event['description'] : '',
+					'equipment'			 => $event['equipment'],
+					'building_id'		 => $event['building_id'],
+					'building_name'		 => $event['building_name'],
+					'from_'				 => $event['from_'],
+					'to_'				 => $event['to_'],
+					'completed'			 => $event['completed'],
+					'access_requested'	 => $event['access_requested'],
+					'reminder'			 => $event['reminder'],
+					'is_public'			 => $event['is_public'],
+					'activity_name'		 => $event['activity_name'],
+					'resources'			 => $event['resources'],
+					'dates'				 => $event['dates']
+				);
 			}
 
 			$bookings = array_merge($allocations, $bookings);

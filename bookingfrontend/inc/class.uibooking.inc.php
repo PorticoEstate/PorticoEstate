@@ -39,19 +39,33 @@
 
 		public function building_schedule()
 		{
-			$date = new DateTime(phpgw::get_var('date'));
-			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
-			foreach ($bookings['results'] as &$row)
+			$dates = phpgw::get_var('dates');
+			if(!$dates || !is_array($dates))
 			{
-				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
-					'id' => $row['resource_id']));
-				array_walk($row, array($this, 'item_link'));
+				$dates = array(phpgw::get_var('date'));
+			}
+
+			$results = array();
+
+			foreach ($dates as $date)
+			{
+				$_date = new DateTime($date);
+				$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $_date);
+				foreach ($bookings['results'] as &$booking)
+				{
+					$booking['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
+						'id' => $booking['resource_id']));
+					array_walk($booking, array($this, 'item_link'));
+
+					$results[] = $booking;
+
+				}
 			}
 			$data = array
-				(
+			(
 				'ResultSet' => array(
-					"totalResultsAvailable" => $bookings['total_records'],
-					"Result" => $bookings['results']
+					"totalResultsAvailable" =>  count($results),
+					"Result" => $results
 				)
 			);
 			return $data;

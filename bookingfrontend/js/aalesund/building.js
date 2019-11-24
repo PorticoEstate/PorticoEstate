@@ -6,6 +6,10 @@ var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
 $(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
+$(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
+
+
+
 function BuildingModel()
 {
 	var self = this;
@@ -70,7 +74,7 @@ function tooltipDetails()
 	var tooltipText = "";
 	var url = $(this).find('.event-id')[0];
 	url = url.getAttribute("data-url");
-	if(!url)
+	if (!url)
 	{
 		return false;
 	}
@@ -179,7 +183,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Sun !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Sun.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -220,7 +224,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Mon !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Mon.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -263,7 +267,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Tue !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Tue.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -305,7 +309,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Wed !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Wed.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -347,7 +351,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Thu !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Thu.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -389,7 +393,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Fri !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Fri.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -431,7 +435,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Sat !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Sat.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -539,10 +543,106 @@ function PopulateBookableResources(baseURL, urlParams)
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['id'], sort: 'sort'}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
+		var facilitiesList = [];
+		var activitiesList = [];
+
+		var availlableTimeSlots;
+		var defaultStartHour = 8;
+		var defaultEndHour = 16;
+		var StartTime;
+		var endTime;
+		var checkDate;
+		var limitDate;
+
+		var dow_start;
+		var booking_lenght;
+		var booking_start;
+		var booking_end;
 		for (var i = 0; i < result.results.length; i++)
 		{
-//          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&building_id="+urlParams['id']});
-			var facilitiesList = [];
+			availlableTimeSlots = [];
+
+			if (result.results[i].simple_booking)
+			{
+				console.log(result.results[i]);
+
+				dow_start = result.results[i].booking_dow_default_start;
+				booking_lenght = result.results[i].booking_day_default_lenght;
+				booking_start = result.results[i].booking_time_default_start;
+				booking_end = result.results[i].booking_time_default_end;
+
+				if (booking_start > -1)
+				{
+					defaultStartHour = booking_start;
+				}
+				if (booking_end > -1)
+				{
+					defaultEndHour = booking_end;
+				}
+
+				checkDate = new Date();
+				checkDate.setHours(defaultStartHour, 0, 0, 0);
+
+				limitDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 2, 0);
+
+				do
+				{
+
+					StartTime = new Date(checkDate);
+
+					if (StartTime.getHours() > defaultEndHour)
+					{
+						StartTime.setDate(StartTime.getDate() + 1);
+						StartTime.setHours(defaultStartHour, 0, 0, 0);
+					}
+
+					if (dow_start > -1)
+					{
+						StartTime.setDate(StartTime.getDate() + (dow_start + (7 - StartTime.getDay())) % 7);
+					}
+
+					endTime = new Date(StartTime);
+
+					if (booking_lenght > -1)
+					{
+						endTime.setDate(endTime.getDate() + booking_lenght);
+					}
+
+					if (booking_end > -1)
+					{
+						endTime.setHours(booking_end, 0, 0, 0);
+					}
+					else
+					{
+						endTime.setHours(StartTime.getHours() + 1, 0, 0, 0);
+					}
+
+//					alert(StartTime);
+//					alert(endTime);
+
+					checkDate = new Date(endTime);
+
+
+					availlableTimeSlots.push({
+						when: formatPeriodeHours(StartTime, endTime),
+						applicationLink: phpGWLink('bookingfrontend/', {
+							menuaction: 'bookingfrontend.uiapplication.add',
+							resource_id: result.results[i].id,
+							building_id: urlParams['id'],
+							start:StartTime.getTime(),
+							end:endTime.getTime(),
+							simple: true
+						})
+					});
+
+
+				}
+				while (checkDate < limitDate);
+
+			}
+
+//console.log(availlableTimeSlots);
+			facilitiesList = [];
 			activitiesList = [];
 			for (var k = 0; k < result.results[i].facilities_list.length; k++)
 			{
@@ -561,7 +661,8 @@ function PopulateBookableResources(baseURL, urlParams)
 					building_id: urlParams['id']
 				}),
 				facilitiesList: ko.observableArray(facilitiesList),
-				activitiesList: ko.observableArray(activitiesList)
+				activitiesList: ko.observableArray(activitiesList),
+				availlableTimeSlots: ko.observableArray(availlableTimeSlots)
 			});
 			resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
 		}
@@ -1228,7 +1329,8 @@ YUI({lang: 'nb-no'}).use(
 );
 
 // Init Google map
-window.onload = function() {
+window.onload = function ()
+{
 	let address = {
 		street: document.getElementById("buildingStreet").textContent,
 		zip: document.getElementById("buildingZipCode").textContent,

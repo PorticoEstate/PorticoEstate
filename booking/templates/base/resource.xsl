@@ -150,7 +150,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Simple booking')"/>
 					</label>
-					<xsl:if test="not(resource/simple_booking = '')">
+					<xsl:if test="number(resource/simple_booking) = 1">
 						<xsl:text>X</xsl:text>
 					</xsl:if>
 				</div>
