@@ -983,18 +983,23 @@
 			$resource_filters['building_id'] = $buildings;
 			$resources = $this->resource_so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
-			$allocation_ids = array();
+			$event_ids = array();
 			foreach ($resources['results'] as $resource)
 			{
-				$allocation_ids = array_merge($allocation_ids, $this->so->allocation_ids_for_resource($resource['id'], $from, $to));
+				if ($resource['simple_booking'])
+				{
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
+				}
 			}
+			unset($resource);
 
-			$allocations = array();
-			if($allocation_ids)
+			$events = array();
+			if($event_ids)
 			{
-				$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids), 'results' => -1));
+				$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
 			}
 
+//			_debug_array($events);
 			$availlableTimeSlots = array();
 			$defaultStartHour = 8;
 			$defaultEndHour = 16;
@@ -1078,9 +1083,11 @@
 
 						$checkDate = clone ($endTime);
 
+						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime->getTimestamp(), $endTime->getTimestamp(), $events);
 
 						$availlableTimeSlots[$resource['id']][] = [
 							'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
+							'overlap'			 => $overlap,
 							'applicationLink'	 => [
 								'menuaction'	 => 'bookingfrontend.uiapplication.add',
 								'resource_id'	 => $resource['id'],
@@ -1099,6 +1106,31 @@
 			return $availlableTimeSlots;
 
 		}
+
+		function check_if_resurce_is_taken($resource_id, $StartTime, $endTime, $events)
+		{
+			$overlap = false;
+
+			foreach ($events['results'] as $event)
+			{
+				if(in_array($resource_id, $event['resources']))
+				{
+					$event_start = strtotime($event['from_']);
+					$event_end = strtotime($event['to_']);
+					if (
+						($StartTime >= $event_start && $StartTime <= $event_end)
+						||
+						($event_start >= $StartTime && $event_start <= $endTime)
+					)
+					{
+						$overlap = true;
+						break;
+					}
+				}
+			}
+			return $overlap;
+		}
+
 
 		function month_shifter( DateTime $aDate, $months )
 		{
