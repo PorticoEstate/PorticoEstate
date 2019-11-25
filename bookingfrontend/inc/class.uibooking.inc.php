@@ -40,18 +40,14 @@
 
 		public function get_freetime()
 		{
-			$buildings = phpgw::get_var('buildings');
-			if(!$buildings || !is_array($buildings))
-			{
-				$buildings = array(phpgw::get_var('building_id', 'int'));
-			}
+			$building_id = phpgw::get_var('building_id', 'int');
 
 			$start_date = phpgw::get_var('start_date', 'date');
 			$end_date = phpgw::get_var('end_date', 'date');
 
 			$weekdays = array();
 
-			$freetime = $this->bo->get_free_events($buildings, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+			$freetime = $this->bo->get_free_events($building_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
 
 			return $freetime;
 

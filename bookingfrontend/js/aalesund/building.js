@@ -511,7 +511,7 @@ function compare(a, b)
 function getFreetime(urlParams)
 {
 	var checkDate = new Date();
-	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 2, 0);
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 3, 0);
 
 	var getJsonURL = phpGWLink('bookingfrontend/', {
 		menuaction: "bookingfrontend.uibooking.get_freetime",
