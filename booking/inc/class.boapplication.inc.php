@@ -156,7 +156,7 @@
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 			}
 			catch (Exception $e)
 			{
