@@ -974,6 +974,12 @@
 		function get_free_events( $buildings, $start_date, $end_date, $weekdays )
 		{
 
+			$timezone = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
+			$DateTimeZone = new DateTimeZone($timezone);
+
+			$start_date->setTimezone($DateTimeZone);
+			$end_date->setTimezone($DateTimeZone);
+
 			$from = clone $start_date;
 			$from->setTime(0, 0, 0);
 			$to = clone $end_date;
@@ -1036,24 +1042,24 @@
 					}
 
 					$checkDate = new DateTime();
+					$checkDate->setTimezone($DateTimeZone);
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
 					$limitDate = clone ($checkDate);
-//					$limitDate->modify("+" . $checkDate->format('m') + 2 ." month");
 					$limitDate = $this->month_shifter($limitDate, 2);
 					$test = $limitDate->format('Y-m-d');
 					$test = $checkDate->format('Y-m-d');
 
 					do
 					{
-
 						$StartTime = clone ($checkDate);
 
 						if ($StartTime->format('H') > $defaultEndHour)
 						{
 							$StartTime->modify("+1 days");
-							$StartTime->setTime($defaultStartHour, 0, 0);
 						}
+
+//					$test = $checkDate->format('Y-m-d');
 
 						if ($dow_start > -1)
 						{
@@ -1064,6 +1070,8 @@
 								$StartTime->modify($modyfier);
 							}
 						}
+
+						$StartTime->setTime($defaultStartHour, 0, 0);
 
 						$endTime = clone ($StartTime);
 
