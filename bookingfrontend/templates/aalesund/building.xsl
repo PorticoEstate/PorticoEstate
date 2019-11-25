@@ -154,7 +154,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-6 building-bookable">
+					<div class="col-lg-6">
 						<h2 class="">
 							<xsl:value-of select="php:function('lang', 'For rent')" />
 						</h2>
@@ -184,13 +184,23 @@
 									<span class="tagTitle" data-bind="if: $index() == 0">
 										<xsl:value-of select="php:function('lang', 'free')"/>:
 									</span>
-									<br/>
 									<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
 
-									<a class="bookable-timeslots-link-href" data-bind="" href="">
-										<span data-bind="html: when"></span>
-									</a>
-									<br/>
+									<div data-bind="if: overlap">
+										<del>
+											<span data-bind="html: when"></span>
+										</del>
+									</div>
+									<div data-bind="if: overlap == false">
+										<div class="input-group-append">
+											<a class="bookable-timeslots-link-href" data-bind="" href="">
+												<span data-bind="html: when"></span>
+											</a>
+											<span class="ml-2 input-group-text">
+												<i class="far fa-calendar-alt"></i>
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
