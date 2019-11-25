@@ -2,7 +2,7 @@ $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
 var resourceIds = [];
-var availlableTimeSlots;
+var availlableTimeSlots = {};
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
@@ -530,10 +530,13 @@ function getFreetime(urlParams)
 				{
 					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
 				}
+			
+
 			}
+			availlableTimeSlots[key] = result[key];
 		}
 
-		availlableTimeSlots = result;
+//		availlableTimeSlots = result;
 	}).done(function ()
 	{
 		PopulateBuildingData(urlParams);
