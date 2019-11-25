@@ -987,29 +987,13 @@
 
 					if ($sub_query_tenant)
 					{
-						if (strpos($query, ' '))
-						{
-							$query_arr	 = explode(" ", str_replace("  ", " ", $query));
-							$sub_query	 = " OR to_tsvector(fm_tenant.first_name || ' ' || fm_tenant.last_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
-							$sub_query	 .= " OR to_tsvector(fm_tenant.last_name || ' ' || fm_tenant.first_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
-						}
-						else
-						{
-							$sub_query = "OR fm_tenant.last_name $this->like '%$query%' OR fm_tenant.first_name $this->like '%$query%' OR fm_tenant.contact_phone $this->like '%$query%'";
-						}
+						$sub_query .= " OR concat(fm_tenant.first_name || ' ' || fm_tenant.last_name) $this->like '$query%'";
+						$sub_query .= " OR concat(fm_tenant.last_name || ' ' || fm_tenant.first_name) $this->like '$query%'";
 					}
 
 					if ($sub_query_street)
 					{
-						if (strpos($query, " "))
-						{
-							$query_arr	 = explode(" ", str_replace("  ", " ", $query));
-							$sub_query	 .= " OR to_tsvector(fm_streetaddress.descr || ' ' || street_number ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
-						}
-						else
-						{
-							$sub_query .= " OR fm_streetaddress.descr $this->like '%$query%'";
-						}
+						$sub_query .= " OR concat(fm_streetaddress.descr || ' ' || street_number) $this->like '$query%'";
 					}
 
 					$query_name = '';
@@ -1112,7 +1096,7 @@
 			}
 
 			$sql .= "$filtermethod $querymethod";
-
+//			_debug_array($sql);
 			$values = array();
 //			$this->db->query('SELECT count(*) AS cnt ' . substr($sql,strripos($sql,' from')),__LINE__,__FILE__);
 //			$this->db->next_record();

@@ -24,6 +24,7 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$reply_to = !empty($config->config_data['email_reply_to']) ? $config->config_data['email_reply_to'] : '';
 			$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$subject = $config->config_data['application_mail_subject'];
@@ -125,7 +126,7 @@
 						{
 							try
 							{
-								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, 'AktivKommune', 'html');
+								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 							}
 							catch (Exception $e)
 							{
@@ -155,7 +156,7 @@
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 			}
 			catch (Exception $e)
 			{

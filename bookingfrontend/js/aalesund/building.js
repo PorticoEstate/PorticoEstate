@@ -2,10 +2,15 @@ $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
 var resourceIds = [];
+var availlableTimeSlots = {};
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
 $(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
+$(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
+
+
+
 function BuildingModel()
 {
 	var self = this;
@@ -24,8 +29,9 @@ $(document).ready(function ()
 	{
 		date = new Date(urlParams['date']);
 	}
-	PopulateBuildingData(baseURL, urlParams);
-	PopulateBookableResources(baseURL, urlParams);
+	getFreetime(urlParams);
+//	PopulateBuildingData(urlParams);
+//	PopulateBookableResources(urlParams);
 
 	$(".calendar-tool").removeClass("invisible");
 
@@ -70,7 +76,7 @@ function tooltipDetails()
 	var tooltipText = "";
 	var url = $(this).find('.event-id')[0];
 	url = url.getAttribute("data-url");
-	if(!url)
+	if (!url)
 	{
 		return false;
 	}
@@ -156,7 +162,7 @@ function IsExistingEvent(id, eventsArray)
 	return false;
 }
 
-function PopulateCalendarEvents(baseURL, urlParams)
+function PopulateCalendarEvents()
 {
 	$(".overlay").show();
 	$('.weekNumber').remove();
@@ -179,7 +185,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Sun !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Sun.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sun.from_, result.ResultSet.Result[k].Sun.type, result.ResultSet.Result[k].Sun.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Sun.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -220,7 +226,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Mon !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Mon.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Mon.from_, result.ResultSet.Result[k].Mon.type, result.ResultSet.Result[k].Mon.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Mon.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -263,7 +269,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Tue !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Tue.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Tue.from_, result.ResultSet.Result[k].Tue.type, result.ResultSet.Result[k].Tue.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Tue.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -305,7 +311,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Wed !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Wed.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Wed.from_, result.ResultSet.Result[k].Wed.type, result.ResultSet.Result[k].Wed.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Wed.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -347,7 +353,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Thu !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Thu.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Thu.from_, result.ResultSet.Result[k].Thu.type, result.ResultSet.Result[k].Thu.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Thu.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -389,7 +395,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Fri !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Fri.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Fri.from_, result.ResultSet.Result[k].Fri.type, result.ResultSet.Result[k].Fri.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Fri.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -431,7 +437,7 @@ function PopulateCalendarEvents(baseURL, urlParams)
 					if (typeof result.ResultSet.Result[k].Sat !== "undefined" &&
 						!IsExistingEvent([
 							result.ResultSet.Result[k].Sat.id, result.ResultSet.Result[k].resource, result.ResultSet.Result[k].Sat.from_, result.ResultSet.Result[k].Sat.type, result.ResultSet.Result[k].Sat.wday
-					].join("."), eventsArray))
+						].join("."), eventsArray))
 					{
 						var event_infourl = result.ResultSet.Result[k].Sat.info_url;
 						while (event_infourl.indexOf("amp;") !== -1)
@@ -502,10 +508,47 @@ function compare(a, b)
 	return 0;
 }
 
-function PopulateBuildingData(baseURL, urlParams)
+function getFreetime(urlParams)
+{
+	var checkDate = new Date();
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 2, 0);
+
+	var getJsonURL = phpGWLink('bookingfrontend/', {
+		menuaction: "bookingfrontend.uibooking.get_freetime",
+		building_id: urlParams['id'],
+		start_date: formatSingleDateWithoutHours(new Date()),
+		end_date: formatSingleDateWithoutHours(EndDate),
+	}, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		for (var key in result)
+		{
+			for (var i = 0; i < result[key].length; i++)
+			{
+				if (typeof result[key][i].applicationLink != 'undefined')
+				{
+					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
+				}
+			
+
+			}
+			availlableTimeSlots[key] = result[key];
+		}
+
+//		availlableTimeSlots = result;
+	}).done(function ()
+	{
+		PopulateBuildingData(urlParams);
+		PopulateBookableResources(urlParams);
+
+	});
+}
+
+function PopulateBuildingData(urlParams)
 {
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id']}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id']}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
@@ -534,15 +577,17 @@ function PopulateBuildingData(baseURL, urlParams)
 	});
 }
 
-function PopulateBookableResources(baseURL, urlParams)
+function PopulateBookableResources(urlParams)
 {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['id'], sort: 'sort'}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['id'], sort: 'sort'}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
+		var facilitiesList = [];
+		var activitiesList = [];
+
 		for (var i = 0; i < result.results.length; i++)
 		{
-//          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&building_id="+urlParams['id']});
-			var facilitiesList = [];
+			facilitiesList = [];
 			activitiesList = [];
 			for (var k = 0; k < result.results[i].facilities_list.length; k++)
 			{
@@ -561,13 +606,14 @@ function PopulateBookableResources(baseURL, urlParams)
 					building_id: urlParams['id']
 				}),
 				facilitiesList: ko.observableArray(facilitiesList),
-				activitiesList: ko.observableArray(activitiesList)
+				activitiesList: ko.observableArray(activitiesList),
+				availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
 			});
 			resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
 		}
 		if (deactivate_calendar == 0)
 		{
-			PopulateCalendarEvents(baseURL, urlParams);
+			PopulateCalendarEvents();
 		}
 	});
 }
@@ -1216,7 +1262,7 @@ YUI({lang: 'nb-no'}).use(
 				selectionChange: function (event)
 				{
 					date = new Date(event.newSelection);
-					PopulateCalendarEvents(baseURL, urlParams);
+					PopulateCalendarEvents();
 
 					//$("#myScheduler .scheduler-base-content").first().remove();
 					//$("#mySchedulerSmallDeviceView .scheduler-base-content").first().remove();
@@ -1228,7 +1274,8 @@ YUI({lang: 'nb-no'}).use(
 );
 
 // Init Google map
-window.onload = function() {
+window.onload = function ()
+{
 	let address = {
 		street: document.getElementById("buildingStreet").textContent,
 		zip: document.getElementById("buildingZipCode").textContent,

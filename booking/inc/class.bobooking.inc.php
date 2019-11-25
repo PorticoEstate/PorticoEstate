@@ -31,7 +31,7 @@
 		}
 
 		/**
-		 * @ Send message about cancelation to users of building. 
+		 * @ Send message about cancelation to users of building.
 		 */
 		function send_notification( $booking, $allocation, $maildata, $mailadresses, $valid_dates = null )
 		{
@@ -438,9 +438,9 @@
 		/**
 		 * Return a building's schedule for a given week in a YUI DataSource
 		 * compatible format
-		 * 
+		 *
 		 * @param int	$building_id
-		 * @param $date 
+		 * @param $date
 		 *
 		 * @return array containing values from $array for the keys in $keys.
 		 */
@@ -516,31 +516,65 @@
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
-			$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
-			$events = $events['results'];
-			foreach ($events as &$event)
-			{
+			$_events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
+//			$events = $events['results'];
+//			foreach ($events as &$event)
+//			{
+//
+//				$event['name'] = $event['name'];
+//				$event['type'] = 'event';
+//				unset($event['costs']);
+//				unset($event['comments']);
+//				unset($event['secret']);
+//				unset($event['customer_ssn']);
+//				unset($event['organizer']);
+//				unset($event['contact_name']);
+//				unset($event['contact_email']);
+//				unset($event['contact_phone']);
+//				unset($event['cost']);
+//				unset($event['sms_total']);
+//				unset($event['customer_organization_name']);
+//				unset($event['customer_organization_id']);
+//				unset($event['customer_identifier_type']);
+//				unset($event['customer_organization_number']);
+//				unset($event['customer_internal']);
+//				unset($event['include_in_list']);
+//				unset($event['agegroups']);
+//				unset($event['audience']);
+//			}
+//
 
-				$event['name'] = $event['name'];
-				$event['type'] = 'event';
-				unset($event['costs']);
-				unset($event['comments']);
-				unset($event['secret']);
-				unset($event['customer_ssn']);
-				unset($event['organizer']);
-				unset($event['contact_name']);
-				unset($event['contact_email']);
-				unset($event['contact_phone']);
-				unset($event['cost']);
-				unset($event['sms_total']);
-				unset($event['customer_organization_name']);
-				unset($event['customer_organization_id']);
-				unset($event['customer_identifier_type']);
-				unset($event['customer_organization_number']);
-				unset($event['customer_internal']);
-				unset($event['include_in_list']);
-				unset($event['agegroups']);
-				unset($event['audience']);
+			$events = array();
+
+			/**
+			 * Whitelisting
+			 */
+			foreach ($_events['results'] as $event)
+			{
+				$events[] = array(
+					'type'				 => 'event',
+					'name'				 => $event['name'],
+					'id'				 => $event['id'],
+					'id_string'			 => $event['id_string'],
+					'active'			 => $event['active'],
+					'activity_id'		 => $event['activity_id'],
+					'application_id'	 => $event['application_id'],
+					'name'				 => $event['is_public'] ? $event['name'] : '',
+					'homepage'			 => $event['homepage'],
+					'description'		 => $event['is_public'] ? $event['description'] : '',
+					'equipment'			 => $event['equipment'],
+					'building_id'		 => $event['building_id'],
+					'building_name'		 => $event['building_name'],
+					'from_'				 => $event['from_'],
+					'to_'				 => $event['to_'],
+					'completed'			 => $event['completed'],
+					'access_requested'	 => $event['access_requested'],
+					'reminder'			 => $event['reminder'],
+					'is_public'			 => $event['is_public'],
+					'activity_name'		 => $event['activity_name'],
+					'resources'			 => $event['resources'],
+					'dates'				 => $event['dates']
+				);
 			}
 
 			$bookings = array_merge($allocations, $bookings);
@@ -936,16 +970,199 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
+
+		function get_free_events( $buildings, $start_date, $end_date, $weekdays )
+		{
+
+			$from = clone $start_date;
+			$from->setTime(0, 0, 0);
+			$to = clone $end_date;
+			$to->setTime(23, 59, 59);
+
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+			$resource_filters['building_id'] = $buildings;
+			$resources = $this->resource_so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+
+			$event_ids = array();
+			foreach ($resources['results'] as $resource)
+			{
+				if ($resource['simple_booking'])
+				{
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
+				}
+			}
+			unset($resource);
+
+			$events = array();
+			if($event_ids)
+			{
+				$events = $this->event_so->read(array('filters' => array('id' => $event_ids), 'results' => -1));
+			}
+
+//			_debug_array($events);
+			$availlableTimeSlots = array();
+			$defaultStartHour = 8;
+			$defaultEndHour = 16;
+
+			$days = array(
+				0	 => "Sunday",
+				1	 => "Monday",
+				2	 => "Tuesday",
+				3	 => "Wednesday",
+				4	 => "Thursday",
+				5	 => "Friday",
+				6	 => "Saturday",
+				7	 => "Sunday",
+			);
+
+			foreach ($resources['results'] as $resource)
+			{
+				$availlableTimeSlots[$resource['id']] = [];
+
+				if ($resource['simple_booking'])
+				{
+					$dow_start = $resource['booking_dow_default_start'];
+					$booking_lenght = $resource['booking_day_default_lenght'];
+					$booking_start = $resource['booking_time_default_start'];
+					$booking_end = $resource['booking_time_default_end'];
+
+					if ($booking_start > -1)
+					{
+						$defaultStartHour = $booking_start;
+					}
+					if ($booking_end > -1)
+					{
+						$defaultEndHour = $booking_end;
+					}
+
+					$checkDate = new DateTime();
+					$checkDate->setTime($defaultStartHour, 0, 0);
+
+					$limitDate = clone ($checkDate);
+//					$limitDate->modify("+" . $checkDate->format('m') + 2 ." month");
+					$limitDate = $this->month_shifter($limitDate, 2);
+					$test = $limitDate->format('Y-m-d');
+					$test = $checkDate->format('Y-m-d');
+
+					do
+					{
+
+						$StartTime = clone ($checkDate);
+
+						if ($StartTime->format('H') > $defaultEndHour)
+						{
+							$StartTime->modify("+1 days");
+							$StartTime->setTime($defaultStartHour, 0, 0);
+						}
+
+						if ($dow_start > -1)
+						{
+							$current_dow = $StartTime->format('w');
+							if($dow_start != $current_dow || ($dow_start == 7 && $current_dow == 0 ))
+							{
+								$modyfier = "next " . $days[$dow_start];
+								$StartTime->modify($modyfier);
+							}
+						}
+
+						$endTime = clone ($StartTime);
+
+						if ($booking_lenght > -1)
+						{
+							$endTime->modify("+{$booking_lenght} days");
+						}
+
+						if ($booking_end > -1)
+						{
+							$endTime->setTime($booking_end, 0, 0);
+						}
+						else
+						{
+							$endTime->setTime($StartTime->format('H') + 1, 0, 0);
+						}
+
+						$checkDate = clone ($endTime);
+
+						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime->getTimestamp(), $endTime->getTimestamp(), $events);
+
+						$availlableTimeSlots[$resource['id']][] = [
+							'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
+							'overlap'			 => $overlap,
+							'applicationLink'	 => [
+								'menuaction'	 => 'bookingfrontend.uiapplication.add',
+								'resource_id'	 => $resource['id'],
+								'building_id'	 => $resource['buildings'][0],
+								'start'			 => $StartTime->getTimestamp() . '000',
+								'end'			 => $endTime->getTimestamp() . '000',
+								'simple'		 => true
+							]
+						];
+					}
+					while ($checkDate < $limitDate);
+
+				}
+			}
+
+			return $availlableTimeSlots;
+
+		}
+
+		function check_if_resurce_is_taken($resource_id, $StartTime, $endTime, $events)
+		{
+			$overlap = false;
+
+			foreach ($events['results'] as $event)
+			{
+				if(in_array($resource_id, $event['resources']))
+				{
+					$event_start = strtotime($event['from_']);
+					$event_end = strtotime($event['to_']);
+					if (
+						($StartTime >= $event_start && $StartTime <= $event_end)
+						||
+						($event_start >= $StartTime && $event_start <= $endTime)
+					)
+					{
+						$overlap = true;
+						break;
+					}
+				}
+			}
+			return $overlap;
+		}
+
+
+		function month_shifter( DateTime $aDate, $months )
+		{
+			$dateA		 = clone($aDate);
+			$dateB		 = clone($aDate);
+			$plusMonths	 = clone($dateA->modify($months . ' Month'));
+			//check whether reversing the month addition gives us the original day back
+			if ($dateB != $dateA->modify($months * -1 . ' Month'))
+			{
+				$result = $plusMonths->modify('last day of last month');
+			}
+			elseif ($aDate == $dateB->modify('last day of this month'))
+			{
+				$result = $plusMonths->modify('last day of this month');
+			}
+			else
+			{
+				$result = $plusMonths;
+			}
+			return $result;
+		}
+
 		/**
 		 * Return a resource's schedule for a given week in a YUI DataSource
 		 * compatible format
-		 * 
+		 *
 		 * @param int	$resource_id
-		 * @param $date 
+		 * @param $date
 		 *
 		 * @return array containg values from $array for the keys in $keys.
 		 */
-		function resource_schedule( $resource_id, $date, $timespan = 7 )
+		function resource_schedule( $resource_id, $date )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
@@ -955,7 +1172,7 @@
 				$from->modify('last monday');
 			}
 			$to = clone $from;
-			$to->modify("+{$timespan} days");
+			$to->modify("+7 days");
 			$resource = $this->resource_so->read_single($resource_id);
 
 	//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, $resource['direct_booking_season_id'], clone $from);

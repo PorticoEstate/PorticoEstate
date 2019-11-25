@@ -35,7 +35,7 @@
 			$this->err['desc'] = ' ';
 		}
 
-		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='',$attachments=array(), $receive_notification = false)
+		function msg($service, $to, $subject, $body, $msgtype='', $cc='', $bcc='', $from='', $sender='', $content_type='', $boundary='',$attachments=array(), $receive_notification = false, $reply_to='')
 		{
 			if (!$from)
 			{
@@ -74,7 +74,7 @@
 				case 'email':
 					try
 					{
-						$ret = $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary, $attachments, $receive_notification);
+						$ret = $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary, $attachments, $receive_notification, $reply_to);
 					}
 					catch (Exception $e)
 					{
@@ -86,7 +86,7 @@
 			return $ret;
 		}
 
-		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary,$attachments, $receive_notification)
+		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary,$attachments, $receive_notification, $reply_to)
 		{
 			$mail = createObject('phpgwapi.mailer_smtp');
 			$from_array = explode('<', $from);
@@ -117,6 +117,7 @@
 						$mail->AddAddress($to_array[0]);
 					}
 				}
+				unset($entry);
 			}
 			catch (Exception $e)
 			{
@@ -142,7 +143,9 @@
 						$mail->AddCC($cc_array[0]);
 					}
 				}
+				unset($entry);
 			}
+
 			if($bcc)
 			{
 				$delimiter = ';';
@@ -161,7 +164,32 @@
 						$mail->AddBCC($bcc_array[0]);
 					}
 				}
+				unset($entry);
 			}
+
+			if($reply_to)
+			{
+				$delimiter = ';';
+				$reply_to = explode($delimiter, $reply_to);
+
+				foreach ($reply_to as $entry)
+				{
+					$entry = str_replace(array('[',']'),array('<','>'),$entry);
+					$reply_to_array = explode('<', $entry);
+					if ( count($reply_to_array) == 2 )
+					{
+						$mail->addReplyTo(trim($reply_to_array[1],'>'), $reply_to_array[0]);
+					}
+					else
+					{
+						$mail->addReplyTo($reply_to_array[0]);
+					}
+				}
+				unset($entry);
+			}
+
+
+
 			$mail->IsSMTP();
 			$mail->Subject = $subject;
 

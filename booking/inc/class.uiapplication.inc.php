@@ -958,16 +958,22 @@
 						$direct_booking = true;
 					}
 
+					if($_resource['simple_booking'] == 1)
+					{
+						$_building_simple_booking ++;
+					}
+
+					if($simple && !$_resource['simple_booking'] == 1)
+					{
+						continue;
+					}
+
 					$resources[] = array(
 						'id' => $_resource['id'],
 						'name' => $_resource['name'],
 						'selected' => $resource_id == $_resource['id'] ? 1 : 0
 					);
 
-					if($_resource['simple_booking'] == 1)
-					{
-						$_building_simple_booking ++;
-					}
 				}
 
 				if($_building_simple_booking == count($_resources['results']))

@@ -539,7 +539,7 @@ function PopulateBookableResources(baseURL, urlParams)
 		{
 //          bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&building_id="+urlParams['id']});
 			var facilitiesList = [];
-			activitiesList = [];
+			var activitiesList = [];
 			for (var k = 0; k < result.results[i].facilities_list.length; k++)
 			{
 				facilitiesList.push(result.results[i].facilities_list[k].name);

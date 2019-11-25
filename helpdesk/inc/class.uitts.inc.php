@@ -1668,7 +1668,12 @@ JS;
 							$receipt['error'][] = array('msg' => lang('Max length for attribute %1 is: %2', "\"{$attribute['input_text']}\"", $attribute['precision']));
 							$attribute['value'] = substr($attribute['value'], 0, $attribute['precision']);
 						}
+						if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
 					}
+					unset($attribute);
 				}
 
 				$disable_userassign_on_add = isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : false;
@@ -1693,17 +1698,6 @@ JS;
 					$_priority = $this->bo->get_priority_list();
 					$values['priority'] = count($_priority);
 					unset($_priority);
-				}
-
-				if (isset($values_attribute) && is_array($values_attribute))
-				{
-					foreach ($values_attribute as $attribute)
-					{
-						if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-						{
-							$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-					}
 				}
 
 				if (!isset($receipt['error']))

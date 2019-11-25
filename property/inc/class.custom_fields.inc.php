@@ -391,6 +391,7 @@ JS;
 										if ($selected == $choice['id'])
 										{
 											$choice['checked'] = 'checked';
+											$choice['selected'] = 1;
 										}
 									}
 								}
@@ -405,6 +406,7 @@ JS;
 							if ($attributes['choice'][$j]['id'] == $attributes['value'])
 							{
 								$attributes['choice'][$j]['checked'] = 'checked';
+								$attributes['choice'][$j]['selected'] = 1;
 							}
 						}
 					}

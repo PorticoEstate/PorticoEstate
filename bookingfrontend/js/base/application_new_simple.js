@@ -262,7 +262,7 @@ $(document).ready(function ()
 
 function PopulatePostedDate()
 {
-	var startTime, EndTime;
+	var StartTime, EndTime;
 
 	if (!$("#resource_id").val())
 	{
@@ -277,7 +277,7 @@ function PopulatePostedDate()
 		{
 			var from_ = (initialDates[i].from_).replace(" ", "T");
 			var to_ = (initialDates[i].to_).replace(" ", "T");
-			startTime = new Date(from_);
+			StartTime = new Date(from_);
 			EndTime = new Date(to_);
 		}
 	}
@@ -287,8 +287,8 @@ function PopulatePostedDate()
 		{
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
-				startTime = new Date(parseInt(urlParams['start']));
-				startTime.setHours(time_default_start, 0);
+				StartTime = new Date(parseInt(urlParams['start']));
+				StartTime.setHours(time_default_start, 0);
 				EndTime = new Date(parseInt(urlParams['start']));
 				EndTime.setDate(EndTime.getDate() + day_default_lenght);
 				EndTime.setHours(time_default_end, 0);
@@ -296,8 +296,8 @@ function PopulatePostedDate()
 		}
 		else
 		{
-			var startTime = new Date();
-			startTime.setHours(time_default_start, 0);
+			var StartTime = new Date();
+			StartTime.setHours(time_default_start, 0);
 
 			EndTime = new Date();
 			EndTime.setDate(EndTime.getDate() + day_default_lenght);
@@ -309,11 +309,11 @@ function PopulatePostedDate()
 
 	if ($("#resource_id").val())
 	{
-		GlobalStartTime = startTime;
-		$('#from_').val(formatSingleDate(startTime));
+		GlobalStartTime = StartTime;
+		$('#from_').val(formatSingleDate(StartTime));
 		$('#to_').val(formatSingleDate(EndTime));
-		$('#start_date').val(formatSingleDateWithoutHours(startTime));
-		$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
+		$('#start_date').val(formatSingleDateWithoutHours(StartTime));
+		$('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
 
 	}
 
@@ -329,15 +329,15 @@ function setDisabledDates()
 	 * Chek three months ahead
 	 */
 
-	var startTimes = []
+	var StartTimes = []
 	for (var i = 0; i < 12; i++)
 	{
 		nextDay = new Date();
 		nextDay.setDate(nextDay.getDate() + (7 * i));
-		startTimes.push(nextDay);
+		StartTimes.push(nextDay);
 	}
 
-	getDisabledDates(startTimes);
+	getDisabledDates(StartTimes);
 
 //	setTimeout(function ()
 //	{
@@ -346,7 +346,7 @@ function setDisabledDates()
 
 }
 
-function getDisabledDates(startTimes)
+function getDisabledDates(StartTimes)
 {
 	var curr; // get current date
 	var first // First day is the day of the month - the day of the week
@@ -361,9 +361,9 @@ function getDisabledDates(startTimes)
 	{
 		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val()}, true);
 
-		for (var i = 0; i < startTimes.length; i++)
+		for (var i = 0; i < StartTimes.length; i++)
 		{
-			curr = startTimes[i];
+			curr = StartTimes[i];
 			first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
 			last = first + 6; // last day is the first day + 6
 
@@ -526,20 +526,20 @@ function validate()
 $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 	{
 
-		var startTime = new Date(ct);
-		startTime.setHours(time_default_start, 0);
+		var StartTime = new Date(ct);
+		StartTime.setHours(time_default_start, 0);
 		var EndTime = new Date(ct);
 		EndTime.setDate(ct.getDate() + day_default_lenght);
 		EndTime.setHours(time_default_end, 0);
 
-		if (startTime.getTime() < EndTime.getTime())
+		if (StartTime.getTime() < EndTime.getTime())
 		{
-			GlobalStartTime = startTime;
-			$('#from_').val(formatSingleDate(startTime));
+			GlobalStartTime = StartTime;
+			$('#from_').val(formatSingleDate(StartTime));
 			$('#to_').val(formatSingleDate(EndTime));
-			$('#selected_period').html(formatPeriodeHours(startTime, EndTime));
+			$('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
 		}
-		else if (startTime.getTime() >= EndTime.getTime())
+		else if (StartTime.getTime() >= EndTime.getTime())
 		{
 			alert("Starttid må være tidligere enn sluttid");
 		}

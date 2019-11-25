@@ -16,6 +16,7 @@
 			'report_numbers' => true,
 			'massupdate' => true,
 			'cancel' => true,
+			'get_freetime'=> true
 		);
 
 		public function __construct()
@@ -37,21 +38,54 @@
 					'id' => $item['id']));
 		}
 
+		public function get_freetime()
+		{
+			$buildings = phpgw::get_var('buildings');
+			if(!$buildings || !is_array($buildings))
+			{
+				$buildings = array(phpgw::get_var('building_id', 'int'));
+			}
+
+			$start_date = phpgw::get_var('start_date', 'date');
+			$end_date = phpgw::get_var('end_date', 'date');
+
+			$weekdays = array();
+
+			$freetime = $this->bo->get_free_events($buildings, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+
+			return $freetime;
+
+		}
+
 		public function building_schedule()
 		{
-			$date = new DateTime(phpgw::get_var('date'));
-			$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $date);
-			foreach ($bookings['results'] as &$row)
+			$dates = phpgw::get_var('dates');
+			if(!$dates || !is_array($dates))
 			{
-				$row['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
-					'id' => $row['resource_id']));
-				array_walk($row, array($this, 'item_link'));
+				$dates = array(phpgw::get_var('date'));
+			}
+
+			$results = array();
+
+			foreach ($dates as $date)
+			{
+				$_date = new DateTime($date);
+				$bookings = $this->bo->building_schedule(phpgw::get_var('building_id', 'int'), $_date);
+				foreach ($bookings['results'] as &$booking)
+				{
+					$booking['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
+						'id' => $booking['resource_id']));
+					array_walk($booking, array($this, 'item_link'));
+
+					$results[] = $booking;
+
+				}
 			}
 			$data = array
-				(
+			(
 				'ResultSet' => array(
-					"totalResultsAvailable" => $bookings['total_records'],
-					"Result" => $bookings['results']
+					"totalResultsAvailable" =>  count($results),
+					"Result" => $results
 				)
 			);
 			return $data;
@@ -85,22 +119,12 @@
 				$dates = array(phpgw::get_var('date'));
 			}
 
-			$timespan = 7;
-			$first = $dates[0];
-			$last = end($dates);
-
-			if($first != $last)
-			{
-				$date_diff = date_diff(date_create($first), date_create($last));
-				$timespan = 7;//ceil($date_diff->days/7) * 7;
-			}
-
 			$results = array();
-			
+
 			foreach ($dates as $date)
 			{
 				$_date = new DateTime($date);
-				$bookings = $this->bo->resource_schedule(phpgw::get_var('resource_id', 'int'), $_date, $timespan);
+				$bookings = $this->bo->resource_schedule(phpgw::get_var('resource_id', 'int'), $_date);
 				foreach ($bookings['results'] as &$booking)
 				{
 					$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',
@@ -114,9 +138,7 @@
 			$data = array
 			(
 				'ResultSet' => array(
-//					"totalResultsAvailable" =>  $bookings['total_records'],
 					"totalResultsAvailable" =>  count($results),
-//					"Result" => $bookings['results']
 					"Result" => $results
 				)
 			);
@@ -372,7 +394,7 @@
 			if($interval->days > 0) {
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
 			} else {
-				$end = new DateTime($booking['to_']);				
+				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
 			}
 			$booking['when'] = $when;
@@ -443,7 +465,7 @@
 #					{
 #						$errors['booking'] = lang('You cant edit a booking that is older than 2 weeks');
 #					}
-					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");										
+					$temp_date = date_format(date_create($_POST['from_']), "Y-m-d");
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
@@ -1243,9 +1265,9 @@
 			if($interval->days > 0) {
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
 			} else {
-				$end = new DateTime($booking['to_']);				
+				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
-			}			
+			}
 			$booking['when'] = $when;
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome

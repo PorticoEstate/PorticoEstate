@@ -159,11 +159,12 @@
 							<xsl:value-of select="php:function('lang', 'For rent')" />
 						</h2>
 						<div data-bind="foreach: bookableResource">
-							<a class="bookable-resource-link-href" href="" data-bind="">
-								<div class="custom-card">
-									<!--<a class="bookable-resource-link-href" href="" data-bind="">
-											<span data-bind="html: name"></span>
-									</a>-->
+							<div class="custom-card">
+								<!--<a class="bookable-resource-link-href" href="" data-bind="">
+										<span data-bind="html: name"></span>
+								</a>-->
+								<a class="bookable-resource-link-href" href="" data-bind="">
+
 									<span data-bind="html: name"></span>
 									<div data-bind="foreach: activitiesList">
 										<span class="tagTitle" data-bind="if: $index() == 0">
@@ -177,8 +178,21 @@
 										</span>
 										<span class="textTagsItems" data-bind="html: $data"></span>
 									</div>
+								</a>
+
+								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
+									<span class="tagTitle" data-bind="if: $index() == 0">
+										<xsl:value-of select="php:function('lang', 'free')"/>:
+									</span>
+									<br/>
+									<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
+
+									<a class="bookable-timeslots-link-href" data-bind="" href="">
+										<span data-bind="html: when"></span>
+									</a>
+									<br/>
 								</div>
-							</a>
+							</div>
 						</div>
 					</div>
 				</div>

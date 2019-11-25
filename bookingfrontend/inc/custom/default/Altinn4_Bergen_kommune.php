@@ -212,7 +212,7 @@
 			curl_setopt($ch, CURLOPT_URL, $location_URL);
 			curl_setopt($ch, CURLOPT_USERPWD, "{$soap_login}:{$soap_password}");
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 			$result = curl_exec($ch);
