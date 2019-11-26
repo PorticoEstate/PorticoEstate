@@ -61,7 +61,7 @@
 				'simple_booking' => 'int',
 				'booking_day_default_lenght' => 'int',
 				'booking_dow_default_start' => 'int',
-				'booking_dow_default_end' => 'int',
+//				'booking_dow_default_end' => 'int',
 				'booking_time_default_start' => 'int',
 				'booking_time_default_end' => 'int',
 			);
