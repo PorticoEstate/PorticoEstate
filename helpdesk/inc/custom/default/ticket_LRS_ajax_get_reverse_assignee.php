@@ -206,6 +206,18 @@
 				}
 				else if($search_options == 'resultat_enhet')
 				{
+					$treff_utenfor_resultat_enhet = false;
+
+					$sql = "SELECT ORG_ENHET_ID, ORG_NIVAA, BRUKERNAVN, FORNAVN, ETTERNAVN,STILLINGSTEKST, RESSURSNR FROM FELLESDATA.V_PORTICO_ANSATT"
+						. " WHERE {$filtermethod})";
+
+
+					$db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+
+					if($db->next_record())
+					{
+						$treff_utenfor_resultat_enhet = true;
+					}
 
 					$ticket_id = (int)phpgw::get_var('ticket_id');
 
@@ -348,6 +360,14 @@
 							$values[] = $entry;
 						}
 					}
+				}
+
+				if(!$values && $treff_utenfor_resultat_enhet && $search_options == 'resultat_enhet')
+				{
+					$values = array(array(
+						'id' => '0',
+						'name' => 'Det er treff - men utenfor resultatenheten',
+					));
 				}
 
 				return array('ResultSet' => array('Result' => $values));
