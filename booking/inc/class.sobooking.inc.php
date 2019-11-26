@@ -93,6 +93,23 @@
 			);
 		}
 
+		function update( $entry )
+		{
+			$receipt = parent::update($entry);
+
+			$cost = $this->_marshal($entry['cost'], 'decimal');
+			$id = (int)$entry['id'];
+
+			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
+			. " WHERE reservation_type = 'booking'"
+			. " AND reservation_id = {$id}"
+			. " AND export_file_id IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			return $receipt;
+		}
+
 		function calculate_allocation_id( $entity )
 		{
 			if (!$entity['resources'])
@@ -108,11 +125,11 @@
 			$rids = join(',', array_map("intval", $entity['resources']));
 
 			// Check if we overlap with any existing allocation
-			$this->db->query("SELECT a.id FROM bb_allocation a 
-								WHERE a.active = 1 AND a.organization_id IN (SELECT organization_id FROM bb_group WHERE id=$group_id) AND 
+			$this->db->query("SELECT a.id FROM bb_allocation a
+								WHERE a.active = 1 AND a.organization_id IN (SELECT organization_id FROM bb_group WHERE id=$group_id) AND
 								a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
-								((a.from_ >= '$start' AND a.from_ < '$end') OR 
-					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
+								((a.from_ >= '$start' AND a.from_ < '$end') OR
+					 			 (a.to_ > '$start' AND a.to_ <= '$end') OR
 					 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
@@ -167,8 +184,8 @@
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
 				// Check if we overlap with any existing event
-				$this->db->query("SELECT e.id FROM bb_event e 
-									WHERE e.active = 1 AND 
+				$this->db->query("SELECT e.id FROM bb_event e
+									WHERE e.active = 1 AND
 									e.id IN (SELECT event_id FROM bb_event_resource WHERE resource_id IN ($rids)) AND
 									((e.from_ >= '$start' AND e.from_ < '$end') OR
 						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR
@@ -178,8 +195,8 @@
 					$errors['event'] = lang('Overlaps with existing event');
 				}
 				// Check if we overlap with any existing allocation
-				$this->db->query("SELECT a.id FROM bb_allocation a 
-									WHERE a.active = 1 AND a.id<>$allocation_id AND 
+				$this->db->query("SELECT a.id FROM bb_allocation a
+									WHERE a.active = 1 AND a.id<>$allocation_id AND
 									a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
 									((a.from_ >= '$start' AND a.from_ < '$end') OR
 						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR
@@ -190,8 +207,8 @@
 				}
 
 				// Check if we overlap with any existing booking
-				$this->db->query("SELECT b.id FROM bb_booking b 
-									WHERE  b.active = 1 AND b.id<>$booking_id AND 
+				$this->db->query("SELECT b.id FROM bb_booking b
+									WHERE  b.active = 1 AND b.id<>$booking_id AND
 									b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
 									((b.from_ >= '$start' AND b.from_ < '$end') OR
 						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR
@@ -202,14 +219,14 @@
 				}
 				if ($allocation_id != -1)
 				{
-					$this->db->query("SELECT a.id FROM bb_allocation a 
-										WHERE a.active = 1 AND a.id = $allocation_id AND 
+					$this->db->query("SELECT a.id FROM bb_allocation a
+										WHERE a.active = 1 AND a.id = $allocation_id AND
 										(a.from_ <= '$start' AND a.to_ >= '$end')", __LINE__, __FILE__);
 					if (!$this->db->next_record())
 					{
 						$errors['booking'] = lang("This booking is outside the organization's allocated time");
 					}
-					$this->db->query("SELECT count(1) FROM bb_allocation_resource 
+					$this->db->query("SELECT count(1) FROM bb_allocation_resource
 									WHERE allocation_id = $allocation_id AND resource_id IN ($rids)", __LINE__, __FILE__);
 					$this->db->next_record();
 					if ($this->db->f('count', false) != count($entity['resources']))

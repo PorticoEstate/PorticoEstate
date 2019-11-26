@@ -188,7 +188,6 @@
 				'simple_booking' => array('type' => 'int', 'nullable' => true, 'precision' => 2),
 				'booking_day_default_lenght' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_dow_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
-				'booking_dow_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 			),

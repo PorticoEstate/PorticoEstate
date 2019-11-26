@@ -663,7 +663,7 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost')"/>;
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
@@ -691,6 +691,7 @@
 		{key: 'type', label: lang['Type']},
 		{key: 'from_', label: lang['From']},
 		{key: 'to_', label: lang['To']},
+		{key: 'cost', label: lang['Cost']},
 		{key: 'active', label: lang['Active']},
 		{key: 'dellink', label: lang['Delete'], formatter: genericLink2}];
 		} else {

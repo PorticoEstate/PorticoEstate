@@ -431,6 +431,7 @@
 				'type' => array('type' => 'string', 'required' => true),
 				'from_' => array('type' => 'timestamp', 'query' => true),
 				'to_' => array('type' => 'timestamp'),
+				'cost' => array('type' => 'decimal'),
 				'active' => array('type' => 'int')));
 		}
 	}

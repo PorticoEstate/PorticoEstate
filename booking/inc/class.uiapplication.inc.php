@@ -485,6 +485,10 @@
 			$associations = $this->assoc_bo->read();
 			foreach ($associations['results'] as &$association)
 			{
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				{
+					unset($association['cost']);
+				}
 				$association['from_'] = pretty_timestamp($association['from_']);
 				$association['to_'] = pretty_timestamp($association['to_']);
 				$association['link'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.edit',
