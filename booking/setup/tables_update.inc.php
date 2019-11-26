@@ -4338,3 +4338,34 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.51 to 0.2.52
+	 *
+	 */
+	$test[] = '0.2.51';
+
+	function booking_upgrade0_2_51()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DROP VIEW bb_application_association");
+
+		$GLOBALS['phpgw_setup']->oProc->query(
+			"CREATE OR REPLACE VIEW bb_application_association AS " .
+			"SELECT 'booking' AS type, application_id, id, from_, to_, cost, active FROM bb_booking WHERE application_id IS NOT NULL " .
+			"UNION " .
+			"SELECT 'allocation' AS type, application_id, id, from_, to_, cost, active FROM bb_allocation  WHERE application_id IS NOT NULL " .
+			"UNION " .
+			"SELECT 'event' AS type, application_id, id, from_, to_, cost, active FROM bb_event  WHERE application_id IS NOT NULL"
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'booking_dow_default_end');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.52';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	
