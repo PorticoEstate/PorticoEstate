@@ -278,7 +278,7 @@
 				(
 				'id' => $_my_negative_self,
 				'name' => lang('my assigned controls'),
-				'selected' => $_my_negative_self == ($this->account * -1)
+				'selected' => !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) && $_my_negative_self == ($this->account * -1)
 			);
 
 			/* Unselect user if filter on component */
@@ -331,7 +331,7 @@
 			$month_list[] = array
 				(
 				'id' => '',
-				'name' => lang('month')
+				'name' => lang('all')
 			);
 
 			$filter_month = phpgw::get_var('month', 'int');
@@ -348,8 +348,14 @@
 				);
 			}
 			$status_list = array(
-				array('id' => 'in_queue', 'name' => lang('in queue')),
-				array('id' => 'all', 'name' => lang('All')),
+				array('id' => 'all',
+					'name' => lang('All'),
+					'selected' => empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
+					),
+				array('id' => 'in_queue',
+					'name' => lang('in queue'),
+					'selected' => !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
+					),
 				array('id' => 'performed', 'name' => lang('status done')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
