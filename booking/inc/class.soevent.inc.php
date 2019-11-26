@@ -100,6 +100,23 @@
 			);
 		}
 
+		function update( $entry )
+		{
+			$receipt = parent::update($entry);
+			
+			$cost = $this->_marshal($entry['cost'], 'decimal');
+			$id = (int)$entry['id'];
+			
+			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
+			. " WHERE reservation_type = 'event'"
+			. " AND reservation_id = {$id}"
+			. " AND export_file_id IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			return $receipt;
+		}
+
 		function get_building_info( $id )
 		{
 			$sql = "SELECT bb_building.id, bb_building.name, bb_building.email,"
