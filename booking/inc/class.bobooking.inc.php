@@ -1037,6 +1037,23 @@
 					$booking_start	 = $resource['booking_time_default_start'];
 					$booking_end	 = $resource['booking_time_default_end'];
 
+					/**
+					 * Make sure start is before end
+					 */
+					if ($booking_lenght == -1 || $booking_lenght == 0)
+					{
+						if ($resource['booking_time_default_start'] > -1)
+						{
+							$booking_start = min(array($resource['booking_time_default_start'], $resource['booking_time_default_end']));
+						}
+
+						if ($resource['booking_time_default_end'] > -1)
+						{
+							$booking_end = max(array($resource['booking_time_default_start'], $resource['booking_time_default_end']));
+						}
+					}
+
+
 					if ($booking_start > -1)
 					{
 						$defaultStartHour			 = $booking_start;
@@ -1044,7 +1061,8 @@
 					}
 					if ($booking_end > -1)
 					{
-						$defaultEndHour = $booking_end;
+						$defaultEndHour			 = $booking_end;
+						$defaultEndHour_fallback = $booking_end;
 					}
 
 					if ($booking_lenght == -1)
@@ -1057,16 +1075,6 @@
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
 					$limitDate = clone ($to);
-//					$limitDate = clone ($checkDate);
-//
-//					if ($booking_lenght > -1)
-//					{
-//						$limitDate = $this->month_shifter($limitDate, 2);
-//					}
-//					else
-//					{
-//						$limitDate = $this->month_shifter($limitDate, 1);
-//					}
 
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
@@ -1135,6 +1143,11 @@
 						if ($booking_lenght == -1)
 						{
 							$defaultStartHour = $endTime->format('H');
+
+							if($defaultStartHour > $defaultEndHour_fallback)
+							{
+								$defaultStartHour = $defaultStartHour_fallback;
+							}
 						}
 //					$test = $StartTime->format('Y-m-d H:s');
 //					$test = $endTime->format('Y-m-d H:s');
@@ -1694,4 +1707,4 @@
 			$entry['allocation_id'] = $this->so->calculate_allocation_id($entry);
 			return parent::validate($entry);
 		}
-	}	
+	}
