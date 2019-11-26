@@ -83,6 +83,21 @@
 					'toolbar' => array(
 						'item' => array(
 							array(
+								'type' => 'filter',
+								'name' => 'filter_simple_booking',
+								'text' => lang('Simple booking') . ':',
+								'list' => array(
+									array(
+										'id' => '',
+										'name' => lang('Not selected')
+									),
+									array(
+										'id' => '1',
+										'name' => lang('Simple booking'),
+									),
+								)
+							),
+							array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
 								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
@@ -141,6 +156,10 @@
 						array(
 							'key' => 'active',
 							'label' => lang('Active'),
+						),
+						array(
+							'key' => 'simple_booking',
+							'label' => lang('Simple booking'),
 						),
 					)
 				)

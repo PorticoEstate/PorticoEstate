@@ -55,8 +55,13 @@
 		protected function build_read_all_params()
 		{
 			$params = $this->build_default_read_params();
-			unset($params['start']);
-			$params['results'] = 'all';
+
+			if(empty($params['results']))
+			{
+				$params['results'] = 'all';
+				unset($params['start']);
+			}
+			
 			return $params;
 		}
 
