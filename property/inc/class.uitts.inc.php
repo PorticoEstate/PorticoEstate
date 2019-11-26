@@ -1495,6 +1495,10 @@ HTML;
 							$receipt['error'][]	 = array('msg' => lang('Max length for attribute %1 is: %2', "\"{$attribute['input_text']}\"", $attribute['precision']));
 							$attribute['value']	 = substr($attribute['value'], 0, $attribute['precision']);
 						}
+						if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+						{
+							$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
+						}
 					}
 				}
 
@@ -1540,16 +1544,6 @@ HTML;
 					unset($_priority);
 				}
 
-				if (isset($values_attribute) && is_array($values_attribute))
-				{
-					foreach ($values_attribute as $attribute)
-					{
-						if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-						{
-							$receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
-						}
-					}
-				}
 
 				if (!isset($receipt['error']))
 				{
@@ -1970,6 +1964,10 @@ HTML;
 							$receipt['error'][]	 = array('msg' => lang('Max length for attribute %1 is: %2', $attribute['input_text'], $attribute['precision']));
 							$attribute['value']	 = substr($attribute['value'], 0, $attribute['precision']);
 						}
+//						if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
+//						{
+//							$receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
+//						}
 					}
 				}
 
@@ -2011,18 +2009,6 @@ HTML;
 					$values['status'] = $this->bo->config->config_data['ticket_approval_status'];
 				}
 
-				/*
-				  if(isset($values_attribute) && is_array($values_attribute))
-				  {
-				  foreach ($values_attribute as $attribute )
-				  {
-				  if($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
-				  {
-				  $receipt['error'][]=array('msg'=>lang('Please enter value for attribute %1', $attribute['input_text']));
-				  }
-				  }
-				  }
-				 */
 				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute);
 
 				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
