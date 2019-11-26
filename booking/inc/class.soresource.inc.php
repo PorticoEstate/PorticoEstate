@@ -29,7 +29,7 @@
 				'simple_booking' => array('type' => 'int', 'required' => false),
 				'booking_day_default_lenght' => array('type' => 'int', 'required' => false),
 				'booking_dow_default_start' => array('type' => 'int', 'required' => false),
-				'booking_dow_default_end' => array('type' => 'int', 'required' => false),
+//				'booking_dow_default_end' => array('type' => 'int', 'required' => false),
 				'booking_time_default_start' => array('type' => 'int', 'required' => false),
 				'booking_time_default_end' => array('type' => 'int', 'required' => false),
 				'building_id' => array(

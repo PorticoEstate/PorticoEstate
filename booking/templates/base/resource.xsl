@@ -169,12 +169,12 @@
 					<xsl:value-of select="resource/booking_dow_default_start"/>
 				</div>
 
-				<div class="pure-control-group">
+<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default end')"/>
 					</label>
 					<xsl:value-of select="resource/booking_dow_default_end"/>
-				</div>
+				</div>-->
 
 				<div class="pure-control-group">
 					<label>

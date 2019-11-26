@@ -64,9 +64,9 @@ function applicationModel()
 	{
 		var checkdate;
 
-		if(GlobalStartTime)
+		if (GlobalStartTime)
 		{
-			checkdate =  dateFormat(new Date(GlobalStartTime), 'yyyy/mm/dd');
+			checkdate = dateFormat(new Date(GlobalStartTime), 'yyyy/mm/dd');
 		}
 
 		var length = self.disabledDatesList().length;
@@ -76,7 +76,7 @@ function applicationModel()
 		{
 			disabled_dates.push(self.disabledDatesList()[i].date);
 
-			if(checkdate == self.disabledDatesList()[i].date)
+			if (checkdate == self.disabledDatesList()[i].date)
 			{
 				$('#from_').val('');
 				$('#to_').val('');
@@ -203,10 +203,11 @@ $(document).ready(function ()
 					time_default_end = time_default_start + 1;
 				}
 
-				$('#bookingStartTime').val(time_default_start);
-				$('#bookingEndTime').val(time_default_end);
 			}
+		}).done(function ()
+		{
 			PopulatePostedDate();
+
 		});
 
 		if ($("#resource_id").val())
@@ -288,10 +289,26 @@ function PopulatePostedDate()
 			if (urlParams['start'].length > 0 && urlParams['end'].length > 0)
 			{
 				StartTime = new Date(parseInt(urlParams['start']));
+
+				if (day_default_lenght == -1 || day_default_lenght == 0)
+				{
+					time_default_start = StartTime.getHours();
+				}
+
 				StartTime.setHours(time_default_start, 0);
 				EndTime = new Date(parseInt(urlParams['start']));
 				EndTime.setDate(EndTime.getDate() + day_default_lenght);
+
+				if (day_default_lenght == -1 || day_default_lenght == 0)
+				{
+					EndTime = new Date(parseInt(urlParams['end']));
+					time_default_end = EndTime.getHours();
+				}
+
 				EndTime.setHours(time_default_end, 0);
+
+				$('#time_select').hide();
+
 			}
 		}
 		else
@@ -316,6 +333,8 @@ function PopulatePostedDate()
 		$('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
 
 	}
+	$('#bookingStartTime').val(time_default_start);
+	$('#bookingEndTime').val(time_default_end);
 
 	setDisabledDates();
 

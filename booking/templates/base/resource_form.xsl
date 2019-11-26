@@ -260,7 +260,7 @@
 					</input>
 				</div>
 
-				<div class="pure-control-group">
+<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default end')"/>
 					</label>
@@ -271,7 +271,7 @@
 							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
-				</div>
+				</div>-->
 
 				<div class="pure-control-group">
 					<label>
