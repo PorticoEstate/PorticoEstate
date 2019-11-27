@@ -1496,7 +1496,8 @@ class Cezpdf extends Cpdf
             $height = $this->getFontHeight($options['fontSize']);
             $descender = $this->getFontDescender($options['fontSize']);
 
-            $y0 = $y + $descender;
+//          $y0 = $y + $descender; // REPLACED THIS LINE WITH THE FOLLOWING
+            $y0 = $y - $options['rowGap'];
             $dy = 0;
             if ($options['showHeadings']) {
                 // patch #9 start
@@ -1564,17 +1565,13 @@ class Cezpdf extends Cpdf
                         // specified for the cell is first choice
                     if ($fillColor && count($fillColor) && is_array($fillColor)) {
                         $rowColShading[] = array('x' => $rowX, 'y' => $rowY, 'width' => $rowW, 'color' => $fillColor);
-                    } // color of the column is second choice
-                    elseif (isset($options['cols']) && isset($options['cols'][$colName]) && isset($options['cols'][$colName]['bgcolor']) && is_array($options['cols'][$colName]['bgcolor'])) {
+                    } elseif (isset($options['cols']) && isset($options['cols'][$colName]) && isset($options['cols'][$colName]['bgcolor']) && is_array($options['cols'][$colName]['bgcolor'])) {
                         $rowColShading[] = array('x' => $rowX, 'y' => $rowY, 'width' => $rowW, 'color' => $options['cols'][$colName]['bgcolor']);
-                    } // all rows use the same shadeCol
-                    elseif ($options['shaded'] == 1 && $cnt % 2 == 1) {
+                    } elseif ($options['shaded'] == 1 && $cnt % 2 == 1) {
                         $rowColShading[] = array('x' => $rowX, 'y' => $rowY, 'width' => $rowW, 'color' => $options['shadeCol']);
-                    } // alternating rows (options 1)
-                    elseif (($options['shaded'] == 2) && $cnt % 2 == 0) {
+                    } elseif (($options['shaded'] == 2) && $cnt % 2 == 0) {
                         $rowColShading[] = array('x' => $rowX, 'y' => $rowY, 'width' => $rowW, 'color' => $options['shadeCol']);
-                    } // alternating rows (options 2)
-                    elseif (($options['shaded'] == 2) && $cnt % 2 == 1) {
+                    } elseif (($options['shaded'] == 2) && $cnt % 2 == 1) {
                         $rowColShading[] = array('x' => $rowX, 'y' => $rowY, 'width' => $rowW, 'color' => $options['shadeCol2']);
                     } else {
                         $rowColShading[] = array('color' => array());
@@ -1640,7 +1637,8 @@ class Cezpdf extends Cpdf
 
                             $this->setColor($options['textCol'][0], $options['textCol'][1], $options['textCol'][2], 1);
                             $y = ($options['nextPageY']) ? $nextPageY : ($this->ez['pageHeight'] - $this->ez['topMargin']);
-                            $y0 = $y + $descender;
+//                          $y0 = $y + $descender; // REPLACED THIS LINE WITH THE FOLLOWING
+                            $y0 = $y - $options['rowGap'];
                             $mx = 0;
                             if ($options['showHeadings']) {
                                 // patch #9 start
@@ -1731,7 +1729,21 @@ class Cezpdf extends Cpdf
                                             $just = 'left';
                                         }
 
-                                        $line = $this->addText($pos[$colName], $this->y, $options['fontSize'], $line, $maxWidth[$colName], $just);
+                                        // grab the defined colors for this cell
+                                        if (isset($row[$colName."Color"])) {
+                                            $textColor = $row[$colName."Color"];
+                                        } else {
+                                            $textColor = "";
+                                        }
+
+                                        // apply the color to the text
+                                        if (is_array($textColor)) {
+                                            $this->setColor($textColor[0], $textColor[1], $textColor[2]);
+                                            $line = $this->addText($pos[$colName], $this->y, $options['fontSize'], $line, $maxWidth[$colName], $just);
+                                        } else {
+                                            $this->setColor($options['textCol'][0], $options['textCol'][1], $options['textCol'][2]);
+                                            $line = $this->addText($pos[$colName], $this->y, $options['fontSize'], $line, $maxWidth[$colName], $just);
+                                        }
                                     }
                                 }
                             }
@@ -1935,7 +1947,9 @@ class Cezpdf extends Cpdf
         }
 
         $lines = preg_split("[\r\n|\r|\n]", $text);
-        foreach ($lines as $line) {
+        $c = count($lines);
+        for ($i = 0; $i < $c; $i++) {
+            $line = $lines[$i];
             $start = 1;
             while (strlen($line) || $start) {
                 $start = 0;
@@ -1959,6 +1973,14 @@ class Cezpdf extends Cpdf
                 } else {
                     $right = $this->ez['pageWidth'] - $this->ez['rightMargin'] - ((is_array($options) && isset($options['right'])) ? $options['right'] : 0);
                 }
+
+                if ($just == 'full' && $c == $i + 1) {
+                    $tmp = $this->addText($left, $this->y, $size, $line, $right - $left, $just, 0, 0, 1);
+                    if (!strlen($tmp)) {
+                        $just = "left";
+                    }
+                }
+
                 $line = $this->addText($left, $this->y, $size, $line, $right - $left, $just, 0, 0, $test);
             }
         }
@@ -2291,9 +2313,9 @@ class Cezpdf extends Cpdf
                 }
 
                 $this->ez['links'][] = array('x' => $info['x'], 'y' => $info['y'], 'angle' => $info['angle'], 'descender' => $info['descender'], 'height' => $info['height']);
-                $this->saveState();
                 $thick = $info['height'] * $lineFactor;
                 $this->setLineStyle($thick);
+                $this->saveState();
                 break;
             case 'end':
             case 'eol':
