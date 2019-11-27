@@ -684,11 +684,15 @@ class odt2xhtml
 			$_file = "{$this->file['name']}.{$this->file['ext']}";
 		}
 
-		$archive = CreateObject('phpgwapi.pclzip', $_file);
-		if($archive->extract(PCLZIP_OPT_PATH, $this->file['dir_tmp']) == 0) 
+		$archive = new ZipArchive();
+		$archive->open($_file);
+		
+		if(!$archive->extractTo($this->file['dir_tmp'])) 
 		{
 			die($this->message->display('ko','zip_extract').$archive->errorInfo(true));
 		}
+		$archive->close();
+		
 		if(ODT2XHTML_DEBUG==TRUE) { echo $this->message->display('ok','unzip'); }
 	}
 	
