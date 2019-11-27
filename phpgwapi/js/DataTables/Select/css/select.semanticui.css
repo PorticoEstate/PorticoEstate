@@ -5,7 +5,7 @@ table.dataTable tbody > tr > .selected {
 table.dataTable.stripe tbody > tr.odd.selected,
 table.dataTable.stripe tbody > tr.odd > .selected, table.dataTable.display tbody > tr.odd.selected,
 table.dataTable.display tbody > tr.odd > .selected {
-  background-color: rgba(0, 0, 0, 0.07233);
+  background-color: rgba(0, 0, 0, 0.072325);
 }
 table.dataTable.hover tbody > tr.selected:hover,
 table.dataTable.hover tbody > tr > .selected:hover, table.dataTable.display tbody > tr.selected:hover,

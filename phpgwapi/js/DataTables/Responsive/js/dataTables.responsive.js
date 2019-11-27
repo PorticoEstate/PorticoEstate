@@ -1,11 +1,11 @@
-/*! Responsive 2.2.2
+/*! Responsive 2.2.3
  * 2014-2018 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     Responsive
  * @description Responsive tables plug-in for DataTables
- * @version     2.2.2
+ * @version     2.2.3
  * @file        dataTables.responsive.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -901,7 +901,7 @@ $.extend( Responsive.prototype, {
 		// multiple times. For example, cloning and inserting a checked radio
 		// clears the chcecked state of the original radio.
 		$( clonedTable ).find( '[name]' ).removeAttr( 'name' );
-		
+
 		// A position absolute table would take the table out of the flow of
 		// our container element, bypassing the height and width (Scroller)
 		$( clonedTable ).css( 'position', 'relative' )
@@ -980,16 +980,16 @@ $.extend( Responsive.prototype, {
 				.data( 'dtr-keyboard', 1 );
 		}
 		else {
-		// This is a bit of a hack - we need to limit the selected nodes to just
-		// those of this table
+			// This is a bit of a hack - we need to limit the selected nodes to just
+			// those of this table
 			if ( target === 'td:first-child, th:first-child' ) {
 				target = '>td:first-child, >th:first-child';
-		}
+			}
 
 			$( target, dt.rows( { page: 'current' } ).nodes() )
-			.attr( 'tabIndex', ctx.iTabIndex )
-			.data( 'dtr-keyboard', 1 );
-	}
+				.attr( 'tabIndex', ctx.iTabIndex )
+				.data( 'dtr-keyboard', 1 );
+		}
 	}
 } );
 
@@ -1362,7 +1362,7 @@ Api.registerPlural( 'columns().responsiveHidden()', 'column().responsiveHidden()
  * @name Responsive.version
  * @static
  */
-Responsive.version = '2.2.2';
+Responsive.version = '2.2.3';
 
 
 $.fn.dataTable.Responsive = Responsive;
