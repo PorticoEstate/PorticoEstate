@@ -4,8 +4,12 @@ div.dt-autofill-handle {
   width: 8px;
   z-index: 102;
   box-sizing: border-box;
-  border: 1px solid #316ad1;
-  background: linear-gradient(to bottom, #abcffb 0%, #4989de 100%);
+  background: #3366ff;
+  cursor: pointer;
+}
+
+div.dtk-focus-alt div.dt-autofill-handle {
+  background: #ff8b33;
 }
 
 div.dt-autofill-select {

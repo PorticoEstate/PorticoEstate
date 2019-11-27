@@ -195,7 +195,7 @@ $(document).on( 'init.dt', function (e, ctx) {
 		return;
 	}
 
-		var api = new $.fn.dataTable.Api( ctx );
+	var api = new $.fn.dataTable.Api( ctx );
 
 	// Length menu drop down
 	if ( $.fn.dropdown ) {

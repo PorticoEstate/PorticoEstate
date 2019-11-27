@@ -38,14 +38,14 @@ var DataTable = $.fn.dataTable;
 $.extend( true, DataTable.Buttons.defaults, {
 	dom: {
 		container: {
-			className: 'dt-buttons btn-group'
+			className: 'dt-buttons btn-group flex-wrap'
 		},
 		button: {
 			className: 'btn btn-secondary'
 		},
 		collection: {
 			tag: 'div',
-			className: 'dt-button-collection dropdown-menu',
+			className: 'dropdown-menu',
 			button: {
 				tag: 'a',
 				className: 'dt-button dropdown-item',
@@ -53,10 +53,16 @@ $.extend( true, DataTable.Buttons.defaults, {
 				disabled: 'disabled'
 			}
 		}
+	},
+	buttonCreated: function ( config, button ) {
+		return config.buttons ?
+			$('<div class="btn-group"/>').append(button) :
+			button;
 	}
 } );
 
 DataTable.ext.buttons.collection.className += ' dropdown-toggle';
+DataTable.ext.buttons.collection.rightAlignClassName = 'dropdown-menu-right';
 
 return DataTable.Buttons;
 }));

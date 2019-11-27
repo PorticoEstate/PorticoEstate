@@ -24,6 +24,7 @@ div.DTFC_RightBodyWrapper table {
 div.DTFC_LeftFootWrapper table,
 div.DTFC_RightFootWrapper table {
   margin-top: 0 !important;
+  z-index: 2;
 }
 
 div.DTFC_Blocker {
