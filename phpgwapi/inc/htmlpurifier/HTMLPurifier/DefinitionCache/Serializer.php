@@ -96,7 +96,7 @@ class HTMLPurifier_DefinitionCache_Serializer extends HTMLPurifier_DefinitionCac
             return false;
         }
         $dir = $this->generateDirectoryPath($config);
-        $dh  = opendir($dir);
+        $dh = opendir($dir);
         // Apparently, on some versions of PHP, readdir will return
         // an empty string if you pass an invalid argument to readdir.
         // So you need this test.  See #49.
@@ -126,7 +126,7 @@ class HTMLPurifier_DefinitionCache_Serializer extends HTMLPurifier_DefinitionCac
             return false;
         }
         $dir = $this->generateDirectoryPath($config);
-        $dh  = opendir($dir);
+        $dh = opendir($dir);
         // See #49 (and above).
         if (false === $dh) {
             return false;
@@ -217,9 +217,14 @@ class HTMLPurifier_DefinitionCache_Serializer extends HTMLPurifier_DefinitionCac
         $directory = $this->generateDirectoryPath($config);
         $chmod = $config->get('Cache.SerializerPermissions');
         if ($chmod === null) {
-            // TODO: This races
-            if (is_dir($directory)) return true;
-            return mkdir($directory);
+            if (!@mkdir($directory) && !is_dir($directory)) {
+                trigger_error(
+                    'Could not create directory ' . $directory . '',
+                    E_USER_WARNING
+                );
+                return false;
+            }
+            return true;
         }
         if (!is_dir($directory)) {
             $base = $this->generateBaseDirectoryPath($config);
@@ -233,7 +238,7 @@ class HTMLPurifier_DefinitionCache_Serializer extends HTMLPurifier_DefinitionCac
             } elseif (!$this->_testPermissions($base, $chmod)) {
                 return false;
             }
-            if (!mkdir($directory, $chmod)) {
+            if (!@mkdir($directory, $chmod) && !is_dir($directory)) {
                 trigger_error(
                     'Could not create directory ' . $directory . '',
                     E_USER_WARNING

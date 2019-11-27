@@ -30,10 +30,10 @@ class HTMLPurifier_ConfigSchema_ValidatorAtom
 
     public function __construct($context, $obj, $member)
     {
-        $this->context     = $context;
-        $this->obj         = $obj;
-        $this->member      = $member;
-        $this->contents    =& $obj->$member;
+        $this->context = $context;
+        $this->obj = $obj;
+        $this->member = $member;
+        $this->contents =& $obj->$member;
     }
 
     /**

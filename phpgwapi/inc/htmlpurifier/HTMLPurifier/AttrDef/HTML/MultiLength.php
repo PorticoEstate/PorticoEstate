@@ -41,7 +41,7 @@ class HTMLPurifier_AttrDef_HTML_MultiLength extends HTMLPurifier_AttrDef_HTML_Le
         }
         if (!is_numeric($int)) {
             return false;
-    }
+        }
 
         $int = (int)$int;
         if ($int < 0) {

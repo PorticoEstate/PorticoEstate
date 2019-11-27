@@ -29,7 +29,7 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
         $decorator = $this->copy();
         // reference is necessary for mocks in PHP 4
         $decorator->cache =& $cache;
-        $decorator->type  = $cache->type;
+        $decorator->type = $cache->type;
         return $decorator;
     }
 

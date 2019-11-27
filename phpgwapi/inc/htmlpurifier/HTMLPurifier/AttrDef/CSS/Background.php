@@ -48,9 +48,9 @@ class HTMLPurifier_AttrDef_CSS_Background extends HTMLPurifier_AttrDef
         $bits = explode(' ', $string); // bits to process
 
         $caught = array();
-        $caught['color']    = false;
-        $caught['image']    = false;
-        $caught['repeat']   = false;
+        $caught['color'] = false;
+        $caught['image'] = false;
+        $caught['repeat'] = false;
         $caught['attachment'] = false;
         $caught['position'] = false;
 

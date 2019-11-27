@@ -42,12 +42,12 @@ class HTMLPurifier_HTMLModule_Tables extends HTMLPurifier_HTMLModule
 
         $cell_t = array_merge(
             array(
-                'abbr'    => 'Text',
+                'abbr' => 'Text',
                 'colspan' => 'Number',
                 'rowspan' => 'Number',
                 // Apparently, as of HTML5 this attribute only applies
                 // to 'th' elements.
-                'scope'   => 'Enum#row,col,rowgroup,colgroup',
+                'scope' => 'Enum#row,col,rowgroup,colgroup',
             ),
             $cell_align
         );
@@ -58,12 +58,12 @@ class HTMLPurifier_HTMLModule_Tables extends HTMLPurifier_HTMLModule
 
         $cell_col = array_merge(
             array(
-                'span'  => 'Number',
+                'span' => 'Number',
                 'width' => 'MultiLength',
             ),
             $cell_align
         );
-        $this->addElement('col',      false, 'Empty',         'Common', $cell_col);
+        $this->addElement('col', false, 'Empty', 'Common', $cell_col);
         $this->addElement('colgroup', false, 'Optional: col', 'Common', $cell_col);
 
         $this->addElement('tbody', false, 'Required: tr', 'Common', $cell_align);

@@ -96,7 +96,7 @@ class HTMLPurifier_AttrValidator
                         $value,
                         $config,
                         $context
-                               );
+                    );
                 }
             } elseif (isset($d_defs[$attr_key])) {
                 // there is a global definition defined, validate according
@@ -105,7 +105,7 @@ class HTMLPurifier_AttrValidator
                     $value,
                     $config,
                     $context
-                           );
+                );
             } else {
                 // system never heard of the attribute? DELETE!
                 $result = false;

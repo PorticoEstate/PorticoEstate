@@ -36,7 +36,7 @@ class HTMLPurifier_ChildDef_Chameleon extends HTMLPurifier_ChildDef
     public function __construct($inline, $block)
     {
         $this->inline = new HTMLPurifier_ChildDef_Optional($inline);
-        $this->block  = new HTMLPurifier_ChildDef_Optional($block);
+        $this->block = new HTMLPurifier_ChildDef_Optional($block);
         $this->elements = $this->block->elements;
     }
 

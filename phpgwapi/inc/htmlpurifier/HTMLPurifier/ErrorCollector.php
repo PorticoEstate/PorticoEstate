@@ -78,7 +78,7 @@ class HTMLPurifier_ErrorCollector
 
         $token = $this->context->get('CurrentToken', true);
         $line  = $token ? $token->line : $this->context->get('CurrentLine', true);
-        $col   = $token ? $token->col  : $this->context->get('CurrentCol',  true);
+        $col   = $token ? $token->col  : $this->context->get('CurrentCol', true);
         $attr  = $this->context->get('CurrentAttr', true);
 
         // perform special substitutions, also add custom parameters

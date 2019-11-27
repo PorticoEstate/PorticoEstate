@@ -12,12 +12,12 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
 
         // == deprecated tag transforms ===================================
 
-        $r['font']   = new HTMLPurifier_TagTransform_Font();
-        $r['menu']   = new HTMLPurifier_TagTransform_Simple('ul');
-        $r['dir']    = new HTMLPurifier_TagTransform_Simple('ul');
-        $r['center'] = new HTMLPurifier_TagTransform_Simple('div',  'text-align:center;');
-        $r['u']      = new HTMLPurifier_TagTransform_Simple('span', 'text-decoration:underline;');
-        $r['s']      = new HTMLPurifier_TagTransform_Simple('span', 'text-decoration:line-through;');
+        $r['font'] = new HTMLPurifier_TagTransform_Font();
+        $r['menu'] = new HTMLPurifier_TagTransform_Simple('ul');
+        $r['dir'] = new HTMLPurifier_TagTransform_Simple('ul');
+        $r['center'] = new HTMLPurifier_TagTransform_Simple('div', 'text-align:center;');
+        $r['u'] = new HTMLPurifier_TagTransform_Simple('span', 'text-decoration:underline;');
+        $r['s'] = new HTMLPurifier_TagTransform_Simple('span', 'text-decoration:line-through;');
         $r['strike'] = new HTMLPurifier_TagTransform_Simple('span', 'text-decoration:line-through;');
 
         // == deprecated attribute transforms =============================
@@ -26,14 +26,14 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
             new HTMLPurifier_AttrTransform_EnumToCSS(
                 'align',
                 array(
-                // we're following IE's behavior, not Firefox's, due
-                // to the fact that no one supports caption-side:right,
-                // W3C included (with CSS 2.1). This is a slightly
-                // unreasonable attribute!
-                'left'   => 'text-align:left;',
-                'right'  => 'text-align:right;',
-                'top'    => 'caption-side:top;',
-                'bottom' => 'caption-side:bottom;' // not supported by IE
+                    // we're following IE's behavior, not Firefox's, due
+                    // to the fact that no one supports caption-side:right,
+                    // W3C included (with CSS 2.1). This is a slightly
+                    // unreasonable attribute!
+                    'left' => 'text-align:left;',
+                    'right' => 'text-align:right;',
+                    'top' => 'caption-side:top;',
+                    'bottom' => 'caption-side:bottom;' // not supported by IE
                 )
             );
 
@@ -42,11 +42,11 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
             new HTMLPurifier_AttrTransform_EnumToCSS(
                 'align',
                 array(
-                'left'   => 'float:left;',
-                'right'  => 'float:right;',
-                'top'    => 'vertical-align:top;',
-                'middle' => 'vertical-align:middle;',
-                'bottom' => 'vertical-align:baseline;',
+                    'left' => 'float:left;',
+                    'right' => 'float:right;',
+                    'top' => 'vertical-align:top;',
+                    'middle' => 'vertical-align:middle;',
+                    'bottom' => 'vertical-align:baseline;',
                 )
             );
 
@@ -55,9 +55,9 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
             new HTMLPurifier_AttrTransform_EnumToCSS(
                 'align',
                 array(
-                'left'   => 'float:left;',
-                'center' => 'margin-left:auto;margin-right:auto;',
-                'right'  => 'float:right;'
+                    'left' => 'float:left;',
+                    'center' => 'margin-left:auto;margin-right:auto;',
+                    'right' => 'float:right;'
                 )
             );
 
@@ -66,20 +66,20 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
             new HTMLPurifier_AttrTransform_EnumToCSS(
                 'align',
                 array(
-                // we use both text-align and margin because these work
-                // for different browsers (IE and Firefox, respectively)
-                // and the melange makes for a pretty cross-compatible
-                // solution
-                'left'   => 'margin-left:0;margin-right:auto;text-align:left;',
-                'center' => 'margin-left:auto;margin-right:auto;text-align:center;',
-                'right'  => 'margin-left:auto;margin-right:0;text-align:right;'
+                    // we use both text-align and margin because these work
+                    // for different browsers (IE and Firefox, respectively)
+                    // and the melange makes for a pretty cross-compatible
+                    // solution
+                    'left' => 'margin-left:0;margin-right:auto;text-align:left;',
+                    'center' => 'margin-left:auto;margin-right:auto;text-align:center;',
+                    'right' => 'margin-left:auto;margin-right:0;text-align:right;'
                 )
             );
 
         // @align for h1, h2, h3, h4, h5, h6, p, div ----------------------
         // {{{
-            $align_lookup = array();
-            $align_values = array('left', 'right', 'center', 'justify');
+        $align_lookup = array();
+        $align_values = array('left', 'right', 'center', 'justify');
         foreach ($align_values as $v) {
             $align_lookup[$v] = "text-align:$v;";
         }
@@ -90,7 +90,7 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
         $r['h4@align'] =
         $r['h5@align'] =
         $r['h6@align'] =
-        $r['p@align']  =
+        $r['p@align'] =
         $r['div@align'] =
             new HTMLPurifier_AttrTransform_EnumToCSS('align', $align_lookup);
 
@@ -108,10 +108,10 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
             new HTMLPurifier_AttrTransform_EnumToCSS(
                 'clear',
                 array(
-                'left'  => 'clear:left;',
-                'right' => 'clear:right;',
-                'all'   => 'clear:both;',
-                'none'  => 'clear:none;',
+                    'left' => 'clear:left;',
+                    'right' => 'clear:right;',
+                    'all' => 'clear:both;',
+                    'none' => 'clear:none;',
                 )
             );
 
@@ -145,19 +145,19 @@ class HTMLPurifier_HTMLModule_Tidy_XHTMLAndHTML4 extends HTMLPurifier_HTMLModule
 
         // @type for li, ol, ul -------------------------------------------
         // {{{
-            $ul_types = array(
-                'disc'   => 'list-style-type:disc;',
-                'square' => 'list-style-type:square;',
-                'circle' => 'list-style-type:circle;'
-            );
-            $ol_types = array(
-                '1'   => 'list-style-type:decimal;',
-                'i'   => 'list-style-type:lower-roman;',
-                'I'   => 'list-style-type:upper-roman;',
-                'a'   => 'list-style-type:lower-alpha;',
-                'A'   => 'list-style-type:upper-alpha;'
-            );
-            $li_types = $ul_types + $ol_types;
+        $ul_types = array(
+            'disc' => 'list-style-type:disc;',
+            'square' => 'list-style-type:square;',
+            'circle' => 'list-style-type:circle;'
+        );
+        $ol_types = array(
+            '1' => 'list-style-type:decimal;',
+            'i' => 'list-style-type:lower-roman;',
+            'I' => 'list-style-type:upper-roman;',
+            'a' => 'list-style-type:lower-alpha;',
+            'A' => 'list-style-type:upper-alpha;'
+        );
+        $li_types = $ul_types + $ol_types;
         // }}}
 
         $r['ul@type'] = new HTMLPurifier_AttrTransform_EnumToCSS('type', $ul_types);

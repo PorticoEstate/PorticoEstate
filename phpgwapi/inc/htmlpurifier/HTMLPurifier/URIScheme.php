@@ -7,7 +7,7 @@ abstract class HTMLPurifier_URIScheme
 {
 
     /**
-     * Scheme's default port (integer).  If an explicit port number is
+     * Scheme's default port (integer). If an explicit port number is
      * specified that coincides with the default port, it will be
      * elided.
      * @type int
@@ -73,7 +73,7 @@ abstract class HTMLPurifier_URIScheme
             // if the scheme is not present, a *blank* host is in error,
             // since this translates into '///path' which most browsers
             // interpret as being 'http://path'.
-             (is_null($uri->scheme) && $uri->host === '')
+            (is_null($uri->scheme) && $uri->host === '')
         ) {
             do {
                 if (is_null($uri->scheme)) {

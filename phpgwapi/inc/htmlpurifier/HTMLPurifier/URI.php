@@ -86,11 +86,11 @@ class HTMLPurifier_URI
             $scheme_obj = $def->getDefaultScheme($config, $context);
             if (!$scheme_obj) {
                 if ($def->defaultScheme !== null) {
-                // something funky happened to the default scheme object
-                trigger_error(
-                    'Default scheme object "' . $def->defaultScheme . '" was not readable',
-                    E_USER_WARNING
-                );
+                    // something funky happened to the default scheme object
+                    trigger_error(
+                        'Default scheme object "' . $def->defaultScheme . '" was not readable',
+                        E_USER_WARNING
+                    );
                 } // suppress error if it's null
                 return false;
             }

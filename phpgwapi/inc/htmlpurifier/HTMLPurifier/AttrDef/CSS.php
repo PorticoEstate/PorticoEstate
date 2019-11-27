@@ -77,7 +77,7 @@ class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
             }
             list($property, $value) = explode(':', $declaration, 2);
             $property = trim($property);
-            $value    = trim($value);
+            $value = trim($value);
             $ok = false;
             do {
                 if (isset($definition->info[$property])) {
@@ -113,8 +113,8 @@ class HTMLPurifier_AttrDef_CSS extends HTMLPurifier_AttrDef
             if ($allow_duplicates) {
                 $new_declarations .= "$property:$result;";
             } else {
-            $propvalues[$property] = $result;
-        }
+                $propvalues[$property] = $result;
+            }
         }
 
         $context->destroy('CurrentCSSProperty');

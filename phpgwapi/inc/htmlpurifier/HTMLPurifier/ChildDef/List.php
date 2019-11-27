@@ -60,10 +60,10 @@ class HTMLPurifier_ChildDef_List extends HTMLPurifier_ChildDef
             $all_whitespace = false; // phew, we're not talking about whitespace
 
             if ($node->name === 'li') {
-                    // good
+                // good
                 $current_li = $node;
                 $result[] = $node;
-                    } else {
+            } else {
                 // we want to tuck this into the previous li
                 // Invariant: we expect the node to be ol/ul
                 // ToDo: Make this more robust in the case of not ol/ul

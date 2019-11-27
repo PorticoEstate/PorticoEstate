@@ -58,7 +58,7 @@ class HTMLPurifier_Filter_YouTube extends HTMLPurifier_Filter
         'type="application/x-shockwave-flash"' .
         'wmode="transparent" width="425" height="350" />' .
         '<![endif]-->' .
-            '</object>';
+        '</object>';
     }
 }
 

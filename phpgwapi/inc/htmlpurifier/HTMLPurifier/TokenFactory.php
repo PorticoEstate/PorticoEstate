@@ -45,10 +45,10 @@ class HTMLPurifier_TokenFactory
      */
     public function __construct()
     {
-        $this->p_start  = new HTMLPurifier_Token_Start('', array());
-        $this->p_end    = new HTMLPurifier_Token_End('');
-        $this->p_empty  = new HTMLPurifier_Token_Empty('', array());
-        $this->p_text   = new HTMLPurifier_Token_Text('');
+        $this->p_start = new HTMLPurifier_Token_Start('', array());
+        $this->p_end = new HTMLPurifier_Token_End('');
+        $this->p_empty = new HTMLPurifier_Token_Empty('', array());
+        $this->p_text = new HTMLPurifier_Token_Text('');
         $this->p_comment = new HTMLPurifier_Token_Comment('');
     }
 

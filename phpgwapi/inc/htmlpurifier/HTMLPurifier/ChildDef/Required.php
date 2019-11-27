@@ -103,7 +103,7 @@ class HTMLPurifier_ChildDef_Required extends HTMLPurifier_ChildDef
                 continue;
             }
             $result[] = $node;
-            }
+        }
         if (empty($result)) {
             return false;
         }

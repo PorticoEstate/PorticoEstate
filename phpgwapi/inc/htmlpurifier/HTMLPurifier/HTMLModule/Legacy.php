@@ -34,10 +34,10 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
             'Empty',
             null,
             array(
-            'color' => 'Color',
-            'face' => 'Text', // extremely broad, we should
-            'size' => 'Text', // tighten it
-            'id' => 'ID'
+                'color' => 'Color',
+                'face' => 'Text', // extremely broad, we should
+                'size' => 'Text', // tighten it
+                'id' => 'ID'
             )
         );
         $this->addElement('center', 'Block', 'Flow', 'Common');
@@ -47,7 +47,7 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
             'Required: li',
             'Common',
             array(
-            'compact' => 'Bool#compact'
+                'compact' => 'Bool#compact'
             )
         );
         $this->addElement(
@@ -56,9 +56,9 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
             'Inline',
             array('Core', 'I18N'),
             array(
-            'color' => 'Color',
-            'face' => 'Text', // extremely broad, we should
-            'size' => 'Text', // tighten it
+                'color' => 'Color',
+                'face' => 'Text', // extremely broad, we should
+                'size' => 'Text', // tighten it
             )
         );
         $this->addElement(
@@ -67,7 +67,7 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
             'Required: li',
             'Common',
             array(
-            'compact' => 'Bool#compact'
+                'compact' => 'Bool#compact'
             )
         );
 
@@ -127,7 +127,7 @@ class HTMLPurifier_HTMLModule_Legacy extends HTMLPurifier_HTMLModule
 
         $li = $this->addBlankElement('li');
         $li->attr['value'] = new HTMLPurifier_AttrDef_Integer();
-        $li->attr['type']  = 'Enum#s:1,i,I,a,A,disc,square,circle';
+        $li->attr['type'] = 'Enum#s:1,i,I,a,A,disc,square,circle';
 
         $ol = $this->addBlankElement('ol');
         $ol->attr['compact'] = 'Bool#compact';

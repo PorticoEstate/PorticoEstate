@@ -54,7 +54,7 @@ class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule
                 'type' => 'Text',
                 'value' => 'Text',
                 'valuetype' => 'Enum#data,ref,object'
-           )
+            )
         );
     }
 }

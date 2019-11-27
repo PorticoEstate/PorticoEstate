@@ -43,9 +43,9 @@ class HTMLPurifier_URIFilter_Munge extends HTMLPurifier_URIFilter
      */
     public function prepare($config)
     {
-        $this->target    = $config->get('URI.' . $this->name);
-        $this->parser    = new HTMLPurifier_URIParser();
-        $this->doEmbed   = $config->get('URI.MungeResources');
+        $this->target = $config->get('URI.' . $this->name);
+        $this->parser = new HTMLPurifier_URIParser();
+        $this->doEmbed = $config->get('URI.MungeResources');
         $this->secretKey = $config->get('URI.MungeSecretKey');
         if ($this->secretKey && !function_exists('hash_hmac')) {
             throw new Exception("Cannot use %URI.MungeSecretKey without hash_hmac support.");
@@ -62,8 +62,8 @@ class HTMLPurifier_URIFilter_Munge extends HTMLPurifier_URIFilter
     public function filter(&$uri, $config, $context)
     {
         if ($context->get('EmbeddedURI', true) && !$this->doEmbed) {
-        return true;
-    }
+            return true;
+        }
 
         $scheme_obj = $uri->getSchemeObj($config, $context);
         if (!$scheme_obj) {

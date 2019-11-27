@@ -72,7 +72,7 @@ class HTMLPurifier_Lexer
             $lexer = $config;
             trigger_error(
                 "Passing a prototype to
-              HTMLPurifier_Lexer::create() is deprecated, please instead
+                HTMLPurifier_Lexer::create() is deprecated, please instead
                 use %Core.LexerImpl",
                 E_USER_WARNING
             );
@@ -90,24 +90,24 @@ class HTMLPurifier_Lexer
         } else {
             if (is_null($lexer)) {
                 do {
-                // auto-detection algorithm
-                if ($needs_tracking) {
-                    $lexer = 'DirectLex';
-                    break;
-                }
+                    // auto-detection algorithm
+                    if ($needs_tracking) {
+                        $lexer = 'DirectLex';
+                        break;
+                    }
 
                     if (class_exists('DOMDocument', false) &&
-                    method_exists('DOMDocument', 'loadHTML') &&
-                    !extension_loaded('domxml')
-                ) {
-                    // check for DOM support, because while it's part of the
-                    // core, it can be disabled compile time. Also, the PECL
-                    // domxml extension overrides the default DOM, and is evil
-                    // and nasty and we shan't bother to support it
-                    $lexer = 'DOMLex';
-                } else {
-                    $lexer = 'DirectLex';
-                }
+                        method_exists('DOMDocument', 'loadHTML') &&
+                        !extension_loaded('domxml')
+                    ) {
+                        // check for DOM support, because while it's part of the
+                        // core, it can be disabled compile time. Also, the PECL
+                        // domxml extension overrides the default DOM, and is evil
+                        // and nasty and we shan't bother to support it
+                        $lexer = 'DOMLex';
+                    } else {
+                        $lexer = 'DirectLex';
+                    }
                 } while (0);
             } // do..while so we can break
 
@@ -159,15 +159,15 @@ class HTMLPurifier_Lexer
      * @type array
      */
     protected $_special_entity2str =
-            array(
-                    '&quot;' => '"',
-                    '&amp;'  => '&',
-                    '&lt;'   => '<',
-                    '&gt;'   => '>',
-                    '&#39;'  => "'",
-                    '&#039;' => "'",
-                    '&#x27;' => "'"
-            );
+        array(
+            '&quot;' => '"',
+            '&amp;' => '&',
+            '&lt;' => '<',
+            '&gt;' => '>',
+            '&#39;' => "'",
+            '&#039;' => "'",
+            '&#x27;' => "'"
+        );
 
     public function parseText($string, $config) {
         return $this->parseData($string, false, $config);
@@ -213,7 +213,7 @@ class HTMLPurifier_Lexer
 
         // hmm... now we have some uncommon entities. Use the callback.
         if ($config->get('Core.LegacyEntityDecoder')) {
-        $string = $this->_entity_parser->substituteSpecialEntities($string);
+            $string = $this->_entity_parser->substituteSpecialEntities($string);
         } else {
             if ($is_attr) {
                 $string = $this->_entity_parser->substituteAttrEntities($string);
@@ -335,7 +335,7 @@ class HTMLPurifier_Lexer
 
         // expand entities that aren't the big five
         if ($config->get('Core.LegacyEntityDecoder')) {
-        $html = $this->_entity_parser->substituteNonSpecialEntities($html);
+            $html = $this->_entity_parser->substituteNonSpecialEntities($html);
         }
 
         // clean into wellformed UTF-8 string for an SGML context: this has
@@ -373,8 +373,8 @@ class HTMLPurifier_Lexer
             if ($comment_start === false ||
                 ($comment_end !== false && $comment_end > $comment_start)) {
                 return $matches[2];
+            }
         }
-    }
         return $html;
     }
 }

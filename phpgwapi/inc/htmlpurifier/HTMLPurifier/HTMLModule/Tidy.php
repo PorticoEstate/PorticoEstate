@@ -28,9 +28,9 @@ class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
      * @type array
      */
     public $fixesForLevel = array(
-        'light'  => array(),
+        'light' => array(),
         'medium' => array(),
-        'heavy'  => array()
+        'heavy' => array()
     );
 
     /**
@@ -51,7 +51,7 @@ class HTMLPurifier_HTMLModule_Tidy extends HTMLPurifier_HTMLModule
         $fixes_lookup = $this->getFixesForLevel($level);
 
         // get custom fix declarations: these need namespace processing
-        $add_fixes    = $config->get('HTML.TidyAdd');
+        $add_fixes = $config->get('HTML.TidyAdd');
         $remove_fixes = $config->get('HTML.TidyRemove');
 
         foreach ($fixes as $name => $fix) {

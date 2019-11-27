@@ -24,7 +24,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
         $result = array();
 
         $escape_invalid_tags = $config->get('Core.EscapeInvalidTags');
-        $remove_invalid_img  = $config->get('Core.RemoveInvalidImg');
+        $remove_invalid_img = $config->get('Core.RemoveInvalidImg');
 
         // currently only used to determine if comments should be kept
         $trusted = $config->get('HTML.Trusted');
@@ -33,7 +33,7 @@ class HTMLPurifier_Strategy_RemoveForeignElements extends HTMLPurifier_Strategy
         $check_comments = $comment_lookup !== array() || $comment_regexp !== null;
 
         $remove_script_contents = $config->get('Core.RemoveScriptContents');
-        $hidden_elements     = $config->get('Core.HiddenElements');
+        $hidden_elements = $config->get('Core.HiddenElements');
 
         // remove script contents compatibility
         if ($remove_script_contents === true) {

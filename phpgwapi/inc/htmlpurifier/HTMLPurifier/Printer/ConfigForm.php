@@ -44,11 +44,11 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
     ) {
         parent::__construct();
         $this->docURL = $doc_url;
-        $this->name   = $name;
+        $this->name = $name;
         $this->compress = $compress;
         // initialize sub-printers
-        $this->fields[0]    = new HTMLPurifier_Printer_ConfigForm_default();
-        $this->fields[HTMLPurifier_VarParser::BOOL]       = new HTMLPurifier_Printer_ConfigForm_bool();
+        $this->fields[0] = new HTMLPurifier_Printer_ConfigForm_default();
+        $this->fields[HTMLPurifier_VarParser::C_BOOL] = new HTMLPurifier_Printer_ConfigForm_bool();
     }
 
     /**
@@ -114,22 +114,22 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
         $ret .= $this->start('table', array('class' => 'hp-config'));
         $ret .= $this->start('thead');
         $ret .= $this->start('tr');
-            $ret .= $this->element('th', 'Directive', array('class' => 'hp-directive'));
-            $ret .= $this->element('th', 'Value', array('class' => 'hp-value'));
+        $ret .= $this->element('th', 'Directive', array('class' => 'hp-directive'));
+        $ret .= $this->element('th', 'Value', array('class' => 'hp-value'));
         $ret .= $this->end('tr');
         $ret .= $this->end('thead');
         foreach ($all as $ns => $directives) {
             $ret .= $this->renderNamespace($ns, $directives);
         }
         if ($render_controls) {
-             $ret .= $this->start('tbody');
-             $ret .= $this->start('tr');
-                 $ret .= $this->start('td', array('colspan' => 2, 'class' => 'controls'));
-                     $ret .= $this->elementEmpty('input', array('type' => 'submit', 'value' => 'Submit'));
-                     $ret .= '[<a href="?">Reset</a>]';
-                 $ret .= $this->end('td');
-             $ret .= $this->end('tr');
-             $ret .= $this->end('tbody');
+            $ret .= $this->start('tbody');
+            $ret .= $this->start('tr');
+            $ret .= $this->start('td', array('colspan' => 2, 'class' => 'controls'));
+            $ret .= $this->elementEmpty('input', array('type' => 'submit', 'value' => 'Submit'));
+            $ret .= '[<a href="?">Reset</a>]';
+            $ret .= $this->end('td');
+            $ret .= $this->end('tr');
+            $ret .= $this->end('tbody');
         }
         $ret .= $this->end('table');
         return $ret;
@@ -146,7 +146,7 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
         $ret = '';
         $ret .= $this->start('tbody', array('class' => 'namespace'));
         $ret .= $this->start('tr');
-            $ret .= $this->element('th', $ns, array('colspan' => 2));
+        $ret .= $this->element('th', $ns, array('colspan' => 2));
         $ret .= $this->end('tr');
         $ret .= $this->end('tbody');
         $ret .= $this->start('tbody');
@@ -157,44 +157,44 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
                 $url = str_replace('%s', urlencode("$ns.$directive"), $this->docURL);
                 $ret .= $this->start('a', array('href' => $url));
             }
-                $attr = array('for' => "{$this->name}:$ns.$directive");
+            $attr = array('for' => "{$this->name}:$ns.$directive");
 
-                // crop directive name if it's too long
-                if (!$this->compress || (strlen($directive) < $this->compress)) {
-                    $directive_disp = $directive;
-                } else {
-                    $directive_disp = substr($directive, 0, $this->compress - 2) . '...';
-                    $attr['title'] = $directive;
-                }
+            // crop directive name if it's too long
+            if (!$this->compress || (strlen($directive) < $this->compress)) {
+                $directive_disp = $directive;
+            } else {
+                $directive_disp = substr($directive, 0, $this->compress - 2) . '...';
+                $attr['title'] = $directive;
+            }
 
-                $ret .= $this->element(
-                    'label',
-                    $directive_disp,
-                    // component printers must create an element with this id
-                    $attr
-                );
+            $ret .= $this->element(
+                'label',
+                $directive_disp,
+                // component printers must create an element with this id
+                $attr
+            );
             if ($this->docURL) {
                 $ret .= $this->end('a');
             }
             $ret .= $this->end('th');
 
             $ret .= $this->start('td');
-                $def = $this->config->def->info["$ns.$directive"];
-                if (is_int($def)) {
-                    $allow_null = $def < 0;
-                    $type = abs($def);
-                } else {
-                    $type = $def->type;
-                    $allow_null = isset($def->allow_null);
-                }
+            $def = $this->config->def->info["$ns.$directive"];
+            if (is_int($def)) {
+                $allow_null = $def < 0;
+                $type = abs($def);
+            } else {
+                $type = $def->type;
+                $allow_null = isset($def->allow_null);
+            }
             if (!isset($this->fields[$type])) {
                 $type = 0;
             } // default
-                $type_obj = $this->fields[$type];
-                if ($allow_null) {
-                    $type_obj = new HTMLPurifier_Printer_ConfigForm_NullDecorator($type_obj);
-                }
-                $ret .= $type_obj->render($ns, $directive, $value, $this->name, array($this->genConfig, $this->config));
+            $type_obj = $this->fields[$type];
+            if ($allow_null) {
+                $type_obj = new HTMLPurifier_Printer_ConfigForm_NullDecorator($type_obj);
+            }
+            $ret .= $type_obj->render($ns, $directive, $value, $this->name, array($this->genConfig, $this->config));
             $ret .= $this->end('td');
             $ret .= $this->end('tr');
         }
@@ -339,7 +339,7 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
                     $value = '';
             }
         }
-        if ($type === HTMLPurifier_VarParser::MIXED) {
+        if ($type === HTMLPurifier_VarParser::C_MIXED) {
             return 'Not supported';
             $value = serialize($value);
         }
@@ -361,9 +361,9 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
             }
             $ret .= $this->end('select');
         } elseif ($type === HTMLPurifier_VarParser::TEXT ||
-            $type === HTMLPurifier_VarParser::ITEXT ||
-            $type === HTMLPurifier_VarParser::ALIST ||
-            $type === HTMLPurifier_VarParser::HASH ||
+                $type === HTMLPurifier_VarParser::ITEXT ||
+                $type === HTMLPurifier_VarParser::ALIST ||
+                $type === HTMLPurifier_VarParser::HASH ||
                 $type === HTMLPurifier_VarParser::LOOKUP) {
             $attr['cols'] = $this->cols;
             $attr['rows'] = $this->rows;

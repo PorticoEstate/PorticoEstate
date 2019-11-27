@@ -106,11 +106,11 @@ class HTMLPurifier_Generator
             $tidy->parseString(
                 $html,
                 array(
-               'indent'=> true,
-               'output-xhtml' => $this->_xhtml,
-               'show-body-only' => true,
-               'indent-spaces' => 2,
-               'wrap' => 68,
+                   'indent'=> true,
+                   'output-xhtml' => $this->_xhtml,
+                   'show-body-only' => true,
+                   'indent-spaces' => 2,
+                   'wrap' => 68,
                 ),
                 'utf8'
             );

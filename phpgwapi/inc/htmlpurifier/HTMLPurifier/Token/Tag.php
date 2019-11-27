@@ -56,7 +56,7 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
         }
         $this->attr = $attr;
         $this->line = $line;
-        $this->col  = $col;
+        $this->col = $col;
         $this->armor = $armor;
     }
 

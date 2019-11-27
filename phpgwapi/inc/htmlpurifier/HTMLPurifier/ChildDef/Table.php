@@ -72,8 +72,8 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
 
         // only one of these elements is allowed in a table
         $caption = false;
-        $thead   = false;
-        $tfoot   = false;
+        $thead = false;
+        $tfoot = false;
 
         // whitespace
         $initial_ws = array();
@@ -82,7 +82,7 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
         $after_tfoot_ws = array();
 
         // as many of these as you want
-        $cols    = array();
+        $cols = array();
         $content = array();
 
         $tbody_mode = false; // if true, then we need to wrap any stray
@@ -96,40 +96,40 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                 continue;
             }
             switch ($node->name) {
-                        case 'tbody':
-                            $tbody_mode = true;
+            case 'tbody':
+                $tbody_mode = true;
                 // fall through
-                        case 'tr':
+            case 'tr':
                 $content[] = $node;
                 $ws_accum =& $content;
-                            break;
-                        case 'caption':
+                break;
+            case 'caption':
                 // there can only be one caption!
-                            if ($caption !== false) break;
+                if ($caption !== false)  break;
                 $caption = $node;
                 $ws_accum =& $after_caption_ws;
-                            break;
-                        case 'thead':
-                            $tbody_mode = true;
-                            // XXX This breaks rendering properties with
-                            // Firefox, which never floats a <thead> to
-                            // the top. Ever. (Our scheme will float the
-                            // first <thead> to the top.)  So maybe
-                            // <thead>s that are not first should be
-                            // turned into <tbody>? Very tricky, indeed.
+                break;
+            case 'thead':
+                $tbody_mode = true;
+                // XXX This breaks rendering properties with
+                // Firefox, which never floats a <thead> to
+                // the top. Ever. (Our scheme will float the
+                // first <thead> to the top.)  So maybe
+                // <thead>s that are not first should be
+                // turned into <tbody>? Very tricky, indeed.
                 if ($thead === false) {
                     $thead = $node;
                     $ws_accum =& $after_thead_ws;
-                            } else {
-                                // Oops, there's a second one! What
-                                // should we do?  Current behavior is to
-                                // transmutate the first and last entries into
-                                // tbody tags, and then put into content.
-                                // Maybe a better idea is to *attach
-                                // it* to the existing thead or tfoot?
-                                // We don't do this, because Firefox
-                                // doesn't float an extra tfoot to the
-                                // bottom like it does for the first one.
+                } else {
+                    // Oops, there's a second one! What
+                    // should we do?  Current behavior is to
+                    // transmutate the first and last entries into
+                    // tbody tags, and then put into content.
+                    // Maybe a better idea is to *attach
+                    // it* to the existing thead or tfoot?
+                    // We don't do this, because Firefox
+                    // doesn't float an extra tfoot to the
+                    // bottom like it does for the first one.
                     $node->name = 'tbody';
                     $content[] = $node;
                     $ws_accum =& $content;
@@ -145,13 +145,13 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                     $node->name = 'tbody';
                     $content[] = $node;
                     $ws_accum =& $content;
-                            }
-                            break;
-                         case 'colgroup':
+                }
+                break;
+            case 'colgroup':
             case 'col':
                 $cols[] = $node;
                 $ws_accum =& $cols;
-                            break;
+                break;
             case '#PCDATA':
                 // How is whitespace handled? We treat is as sticky to
                 // the *end* of the previous element. So all of the
@@ -159,27 +159,27 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                 // together.
                 if (!empty($node->is_whitespace)) {
                     $ws_accum[] = $node;
-                    }
-                break;
                 }
+                break;
             }
+        }
 
         if (empty($content)) {
             return false;
-                }
+        }
 
         $ret = $initial_ws;
         if ($caption !== false) {
             $ret[] = $caption;
             $ret = array_merge($ret, $after_caption_ws);
-                        }
+        }
         if ($cols !== false) {
             $ret = array_merge($ret, $cols);
-                }
+        }
         if ($thead !== false) {
             $ret[] = $thead;
             $ret = array_merge($ret, $after_thead_ws);
-            }
+        }
         if ($tfoot !== false) {
             $ret[] = $tfoot;
             $ret = array_merge($ret, $after_tfoot_ws);
@@ -194,7 +194,7 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                 case 'tbody':
                     $current_tr_tbody = null;
                     $ret[] = $node;
-                        break;
+                    break;
                 case 'tr':
                     if ($current_tr_tbody === null) {
                         $current_tr_tbody = new HTMLPurifier_Node_Element('tbody');
@@ -206,11 +206,11 @@ class HTMLPurifier_ChildDef_Table extends HTMLPurifier_ChildDef
                     //assert($node->is_whitespace);
                     if ($current_tr_tbody === null) {
                         $ret[] = $node;
-                } else {
+                    } else {
                         $current_tr_tbody->children[] = $node;
-                }
+                    }
                     break;
-            }
+                }
             }
         } else {
             $ret = array_merge($ret, $content);

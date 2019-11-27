@@ -86,7 +86,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
                     //                   ----
                 }
             }
-        // Is the current parent a <p> tag?
+            // Is the current parent a <p> tag?
         } elseif (!empty($this->currentNesting) &&
             $this->currentNesting[count($this->currentNesting) - 1]->name == 'p') {
             // State 3.1: ...<p>PAR1
@@ -96,7 +96,7 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
             //                  ------------
             $token = array();
             $this->_splitText($text, $token);
-        // Abort!
+            // Abort!
         } else {
             // State 4.1: ...<b>PAR1
             //                  ----
@@ -212,9 +212,9 @@ class HTMLPurifier_Injector_AutoParagraph extends HTMLPurifier_Injector
     private function _splitText($data, &$result)
     {
         $raw_paragraphs = explode("\n\n", $data);
-        $paragraphs  = array(); // without empty paragraphs
+        $paragraphs = array(); // without empty paragraphs
         $needs_start = false;
-        $needs_end   = false;
+        $needs_end = false;
 
         $c = count($raw_paragraphs);
         if ($c == 1) {
