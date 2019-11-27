@@ -589,7 +589,7 @@
 		{
 			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
-			$building_id = phpgw::get_var('building_id', 'int');
+			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST', -1 );
 			$simple = phpgw::get_var('simple', 'bool');
 
 			$errors = array();
