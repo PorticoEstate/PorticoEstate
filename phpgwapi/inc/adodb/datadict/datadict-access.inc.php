@@ -1,56 +1,56 @@
 <?php
 
 /**
-  @version   v5.21.0-dev  ??-???-2016
+  @version   v5.20.15  24-Nov-2019
   @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
   @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
-  Released under both BSD license and Lesser GPL library license. 
-  Whenever there is any discrepancy between the two licenses, 
+  Released under both BSD license and Lesser GPL library license.
+  Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
-	
+
   Set tabs to 4 for best viewing.
- 
+
 */
 
 // security - hide paths
 if (!defined('ADODB_DIR')) die();
 
 class ADODB2_access extends ADODB_DataDict {
-	
+
 	var $databaseType = 'access';
 	var $seqField = false;
-	
- 	
+
+
  	function ActualType($meta)
 	{
 		switch($meta) {
 		case 'C': return 'TEXT';
 		case 'XL':
-		case 'X': return 'MEMO'; 
-		
+		case 'X': return 'MEMO';
+
 		case 'C2': return 'TEXT'; // up to 32K
 		case 'X2': return 'MEMO';
-		
+
 		case 'B': return 'BINARY';
-		
+
 		case 'TS':
 		case 'D': return 'DATETIME';
 		case 'T': return 'DATETIME';
-		
+
 		case 'L': return 'BYTE';
 		case 'I': return 'INTEGER';
 		case 'I1': return 'BYTE';
 		case 'I2': return 'SMALLINT';
 		case 'I4': return 'INTEGER';
 		case 'I8': return 'INTEGER';
-		
+
 		case 'F': return 'DOUBLE';
 		case 'N': return 'NUMERIC';
 		default:
 			return $meta;
 		}
 	}
-	
+
 	// return string must begin with space
 	function _CreateSuffix($fname, &$ftype, $fnotnull,$fdefault,$fautoinc,$fconstraint,$funsigned)
 	{
@@ -68,13 +68,13 @@ class ADODB2_access extends ADODB_DataDict {
 		if ($fconstraint) $suffix .= ' '.$fconstraint;
 		return $suffix;
 	}
-	
+
 	function CreateDatabase($dbname,$options=false)
 	{
 		return array();
 	}
-	
-	
+
+
 	function SetSchema($schema)
 	{
 	}
@@ -84,12 +84,12 @@ class ADODB2_access extends ADODB_DataDict {
 		if ($this->debug) ADOConnection::outp("AlterColumnSQL not supported");
 		return array();
 	}
-	
-	
+
+
 	function DropColumnSQL($tabname, $flds, $tableflds='',$tableoptions='')
 	{
 		if ($this->debug) ADOConnection::outp("DropColumnSQL not supported");
 		return array();
 	}
-	
+
 }

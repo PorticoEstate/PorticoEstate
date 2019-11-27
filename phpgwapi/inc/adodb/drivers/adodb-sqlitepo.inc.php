@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.21.0-dev  ??-???-2016
+@version   v5.20.15  24-Nov-2019
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -12,11 +12,11 @@
 
    1. When selecting (joining) multiple tables, in assoc mode the table
    	  names are included in the assoc keys in the "sqlite" driver.
-	  
-	  In "sqlitepo" driver, the table names are stripped from the returned column names. 
+
+	  In "sqlitepo" driver, the table names are stripped from the returned column names.
 	  When this results in a conflict,  the first field get preference.
 
-	Contributed by Herman Kuiper  herman#ozuzo.net  
+	Contributed by Herman Kuiper  herman#ozuzo.net
 */
 
 if (!defined('ADODB_DIR')) die();
@@ -34,6 +34,11 @@ class ADODB_sqlitepo extends ADODB_sqlite {
 class ADORecordset_sqlitepo extends ADORecordset_sqlite {
 
    var $databaseType = 'sqlitepo';
+
+   function __construct($queryID,$mode=false)
+   {
+      parent::__construct($queryID,$mode);
+   }
 
    // Modified to strip table names from returned fields
    function _fetch($ignore_fields=false)

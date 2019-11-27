@@ -1,6 +1,6 @@
 <?php
 /**
- * @version   v5.21.0-dev  ??-???-2016
+ * @version   v5.20.15  24-Nov-2019
  * @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
  * @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
  * Released under both BSD license and Lesser GPL library license.
@@ -9,13 +9,13 @@
  *
  * Set tabs to 4 for best viewing.
  *
- * Latest version is available at http://php.weblogs.com
+ * Latest version is available at http://adodb.org/
  *
 */
 
 
 // added Claudio Bustos  clbustos#entelchile.net
-if (!defined('ADODB_ERROR_HANDLER_TYPE')) define('ADODB_ERROR_HANDLER_TYPE',E_USER_ERROR); 
+if (!defined('ADODB_ERROR_HANDLER_TYPE')) define('ADODB_ERROR_HANDLER_TYPE',E_USER_ERROR);
 
 if (!defined('ADODB_ERROR_HANDLER')) define('ADODB_ERROR_HANDLER','ADODB_Error_Handler');
 
@@ -76,5 +76,5 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1, $p2, &$thisConnec
 
 
 	//print "<p>$s</p>";
-	trigger_error($s,ADODB_ERROR_HANDLER_TYPE); 
+	trigger_error($s,ADODB_ERROR_HANDLER_TYPE);
 }
