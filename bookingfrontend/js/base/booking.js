@@ -160,7 +160,7 @@ function populateTableChkResources(building_id, selection)
 
 function populateSelectGroup(organization_id, selection)
 {
-	var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uigroup.index', filter_organization_id: organization_id}, true);
+	var url = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uigroup.index', filter_organization_id: organization_id, length:-1}, true);
 	var container = $('#group_container');
 	var attr = [
 		{name: 'name', value: 'group_id'}, {name: 'data-validation', value: 'required'}

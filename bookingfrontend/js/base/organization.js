@@ -18,7 +18,7 @@ $(document).ready(function ()
 
 function PopulateOrganizationData() {
     
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.index", filter_organization_id:urlParams['id']}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.index", filter_organization_id:urlParams['id'], length:-1}, true);
 
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.data.length; i++) {            
