@@ -1,17 +1,17 @@
 <?php
-/* 
-@version   v5.21.0-dev  ??-???-2016
+/*
+@version   v5.20.15  24-Nov-2019
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
-  Released under both BSD license and Lesser GPL library license. 
-  Whenever there is any discrepancy between the two licenses, 
-  the BSD license will take precedence. See License.txt. 
+  Released under both BSD license and Lesser GPL library license.
+  Whenever there is any discrepancy between the two licenses,
+  the BSD license will take precedence. See License.txt.
   Set tabs to 4 for best viewing.
-  
-  Latest version is available at http://adodb.sourceforge.net
-  
+
+  Latest version is available at http://adodb.org/
+
 	Original Authors: Martin Jansen <mj#php.net>
-	Richard Tango-Lowy <richtl#arscognita.com>                          
+	Richard Tango-Lowy <richtl#arscognita.com>
 */
 
 require_once 'Auth/Container.php';
@@ -24,12 +24,12 @@ require_once 'adodb-errorpear.inc.php';
  *
  * This storage driver can use all databases which are supported
  * by the ADBdb DB abstraction layer to fetch login data.
- * See http://php.weblogs.com/adodb for information on ADOdb.
+ * See http://adodb.org/ for information on ADOdb.
  * NOTE: The ADOdb directory MUST be in your PHP include_path!
  *
  * @author   Richard Tango-Lowy <richtl@arscognita.com>
  * @package  Auth
- * @version  $Revision$
+ * @version  $Revision: 1.3 $
  */
 class Auth_Container_ADOdb extends Auth_Container
 {
@@ -46,7 +46,7 @@ class Auth_Container_ADOdb extends Auth_Container
      */
     var $db = null;
     var $dsn = '';
-	
+
     /**
      * User that is currently selected from the DB.
      * @var string
@@ -66,7 +66,7 @@ class Auth_Container_ADOdb extends Auth_Container
     function __construct($dsn)
     {
         $this->_setDefaults();
-		
+
         if (is_array($dsn)) {
             $this->_parseOptions($dsn);
 
@@ -98,7 +98,7 @@ class Auth_Container_ADOdb extends Auth_Container
 	   	    		return PEAR::raiseError($err);
 	    		}
         	}
-        	
+
         } else {
             return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
                                     41,
@@ -107,7 +107,7 @@ class Auth_Container_ADOdb extends Auth_Container
                                     null
                                     );
         }
-        
+
         if(!$this->db) {
         	return PEAR::raiseError(ADODB_Pear_error());
         } else {
@@ -130,7 +130,7 @@ class Auth_Container_ADOdb extends Auth_Container
     function _prepare()
     {
     	if(!$this->db) {
-    		$res = $this->_connect($this->options['dsn']);  		
+    		$res = $this->_connect($this->options['dsn']);
     	}
         return true;
     }
@@ -199,7 +199,7 @@ class Auth_Container_ADOdb extends Auth_Container
         /* Include additional fields if they exist */
         if(!empty($this->options['db_fields'])){
             if(is_array($this->options['db_fields'])){
-                $this->options['db_fields'] = join($this->options['db_fields'], ', ');
+                $this->options['db_fields'] = join(', ', $this->options['db_fields']);
             }
             $this->options['db_fields'] = ', '.$this->options['db_fields'];
         }
@@ -236,11 +236,11 @@ class Auth_Container_ADOdb extends Auth_Container
         else{
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
-        
+
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
                 " WHERE ".$this->options['usernamecol']." = " . $this->db->Quote($username);
-        
+
         $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
         $rset = $this->db->Execute( $query );
         $res = $rset->fetchRow();

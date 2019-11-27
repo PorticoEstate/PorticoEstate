@@ -7,7 +7,8 @@
 // NOTICE OF COPYRIGHT                                                   //
 //                                                                       //
 // ADOdb  - Database Abstraction Library for PHP                         //
-//          http://adodb.sourceforge.net/                                //
+//                                                                       //
+// Latest version is available at http://adodb.org                       //
 //                                                                       //
 // Copyright (c) 2000-2014 John Lim (jlim\@natsoft.com.my)               //
 //          All rights reserved.                                         //
@@ -52,14 +53,14 @@ include_once(ADODB_DIR.'/drivers/adodb-mssql.inc.php');
 
 class ADODB_mssql_n extends ADODB_mssql {
 	var $databaseType = "mssql_n";
-	
+
 	function _query($sql,$inputarr=false)
 	{
         $sql = $this->_appendN($sql);
 		return ADODB_mssql::_query($sql,$inputarr);
 	}
 
-    /**
+         /**
      * This function will intercept all the literals used in the SQL, prepending the "N" char to them
      * in order to allow mssql to store properly data sent in the correct UCS-2 encoding (by freeTDS
      * and ODBTP) keeping SQL compatibility at ADOdb level (instead of hacking every project to add
@@ -89,12 +90,12 @@ class ADODB_mssql_n extends ADODB_mssql {
         
         /*
          * All changes will be placed here
-     */
+         */
         $outboundArray = $inboundArray;
         
         foreach($inboundArray as $inboundKey=>$inboundValue)
         {
-
+        
             if (is_resource($inboundValue))
             {
                 /*
@@ -104,8 +105,8 @@ class ADODB_mssql_n extends ADODB_mssql {
                     ADOConnection::outp("{$this->databaseType} index $inboundKey value is resource, continue");
 
                 continue;
-        }
-
+            }
+           
             if (strpos($inboundValue, SINGLEQUOTE) === false)
             {
                 /*
@@ -126,55 +127,55 @@ class ADODB_mssql_n extends ADODB_mssql {
                     ADOConnection::outp("{$this->databaseType} internal transformation: not converted. Wrong number of quotes (odd)");
                
                 break;
-        }
+            }
 
             /*
             * Check we haven't any backslash + single quote combination. It should mean wrong
             *  backslashes use (bad magic_quotes_sybase?). Exit with debug info.
             */
-        $regexp = '/(\\\\' . SINGLEQUOTE . '[^' . SINGLEQUOTE . '])/';
+            $regexp = '/(\\\\' . SINGLEQUOTE . '[^' . SINGLEQUOTE . '])/';
             if (preg_match($regexp, $inboundValue))
             {
                 if ($this->debug) 
-                ADOConnection::outp("{$this->databaseType} internal transformation: not converted. Found bad use of backslash + single quote");
+                    ADOConnection::outp("{$this->databaseType} internal transformation: not converted. Found bad use of backslash + single quote");
                 
                 break;
-        }
+            }
 
             /*
             * Remove pairs of single-quotes
             */
-        $pairs = array();
-        $regexp = '/(' . SINGLEQUOTE . SINGLEQUOTE . ')/';
+            $pairs = array();
+            $regexp = '/(' . SINGLEQUOTE . SINGLEQUOTE . ')/';
             preg_match_all($regexp, $inboundValue, $list_of_pairs);
             
             if ($list_of_pairs)
             {
                 foreach (array_unique($list_of_pairs[0]) as $key=>$value)
-                $pairs['<@#@#@PAIR-'.$key.'@#@#@>'] = $value;
+                    $pairs['<@#@#@PAIR-'.$key.'@#@#@>'] = $value;
                 
                 
                 if (!empty($pairs))
                     $inboundValue = str_replace($pairs, array_keys($pairs), $inboundValue);
                 
-        }
+            }
 
             /*
             * Remove the rest of literals present in the query
             */
-        $literals = array();
-        $regexp = '/(N?' . SINGLEQUOTE . '.*?' . SINGLEQUOTE . ')/is';
+            $literals = array();
+            $regexp = '/(N?' . SINGLEQUOTE . '.*?' . SINGLEQUOTE . ')/is';
             preg_match_all($regexp, $inboundValue, $list_of_literals);
            
            if ($list_of_literals)
            {
                 foreach (array_unique($list_of_literals[0]) as $key=>$value)
-                $literals['<#@#@#LITERAL-'.$key.'#@#@#>'] = $value;
-
-
+                    $literals['<#@#@#LITERAL-'.$key.'#@#@#>'] = $value;
+                
+               
                 if (!empty($literals))
                     $inboundValue = str_replace($literals, array_keys($literals), $inboundValue);
-                }
+            }
 
             /*
             * Analyse literals to prepend the N char to them if their contents aren't numeric
@@ -189,15 +190,15 @@ class ADODB_mssql_n extends ADODB_mssql {
                         */
                         $literals[$key] = 'N' . trim($value, 'N'); 
                     
+                }
             }
-        }
 
             /*
             * Re-apply literals to the text
             */
             if (!empty($literals))
                 $inboundValue = str_replace(array_keys($literals), $literals, $inboundValue);
-
+            
 
             /*
             * Any pairs followed by N' must be switched to N' followed by those pairs
@@ -224,7 +225,7 @@ class ADODB_mssql_n extends ADODB_mssql {
                 */
                 $outboundArray[$inboundKey] = $inboundValue;
         }
-
+        
         /*
          * Any transformations are in the $outboundArray
          */
@@ -242,4 +243,8 @@ class ADODB_mssql_n extends ADODB_mssql {
 
 class ADORecordset_mssql_n extends ADORecordset_mssql {
 	var $databaseType = "mssql_n";
+	function __construct($id,$mode=false)
+	{
+		parent::__construct($id,$mode);
+	}
 }
