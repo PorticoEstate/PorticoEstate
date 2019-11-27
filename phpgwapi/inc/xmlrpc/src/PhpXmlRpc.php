@@ -2,6 +2,9 @@
 
 namespace PhpXmlRpc;
 
+/**
+ * Manages global configuration for operation of the library.
+ */
 class PhpXmlRpc
 {
     static public $xmlrpcerr = array(
@@ -33,22 +36,22 @@ class PhpXmlRpc
 
     static public $xmlrpcstr = array(
         'unknown_method' => 'Unknown method',
-        'invalid_return' => 'Invalid return payload: enable debugging to examine incoming payload',
+        'invalid_return' => 'Invalid response payload (you can use the setDebug method to allow analysis of the response)',
         'incorrect_params' => 'Incorrect parameters passed to method',
         'introspect_unknown' => "Can't introspect: method unknown",
-        'http_error' => "Didn't receive 200 OK from remote server.",
-        'no_data' => 'No data received from server.',
-        'no_ssl' => 'No SSL support compiled in.',
+        'http_error' => "Didn't receive 200 OK from remote server",
+        'no_data' => 'No data received from server',
+        'no_ssl' => 'No SSL support compiled in',
         'curl_fail' => 'CURL error',
         'invalid_request' => 'Invalid request payload',
-        'no_curl' => 'No CURL support compiled in.',
+        'no_curl' => 'No CURL support compiled in',
         'server_error' => 'Internal server error',
         'multicall_error' => 'Received from server invalid multicall response',
         'multicall_notstruct' => 'system.multicall expected struct',
-        'multicall_nomethod' => 'missing methodName',
+        'multicall_nomethod' => 'Missing methodName',
         'multicall_notstring' => 'methodName is not a string',
-        'multicall_recursion' => 'recursive system.multicall forbidden',
-        'multicall_noparams' => 'missing params',
+        'multicall_recursion' => 'Recursive system.multicall forbidden',
+        'multicall_noparams' => 'Missing params',
         'multicall_notarray' => 'params is not an array',
 
         'cannot_decompress' => 'Received from server compressed HTTP and cannot decompress',
@@ -58,25 +61,24 @@ class PhpXmlRpc
         'server_decompress_fail' => 'Received from client invalid compressed HTTP request',
     );
 
-    // The charset encoding used by the server for received requests and
-    // by the client for received responses when received charset cannot be determined
-    // and mbstring extension is not enabled
+    // The charset encoding used by the server for received requests and by the client for received responses when
+    // received charset cannot be determined and mbstring extension is not enabled
     public static $xmlrpc_defencoding = "UTF-8";
 
-    // The list of encodings used by the server for requests and by the client for responses
-    // to detect the charset of the received payload when
+    // The list of encodings used by the server for requests and by the client for responses to detect the charset of
+    // the received payload when
     // - the charset cannot be determined by looking at http headers, xml declaration or BOM
     // - mbstring extension is enabled
     public static $xmlrpc_detectencodings = array();
 
     // The encoding used internally by PHP.
-    // String values received as xml will be converted to this, and php strings will be converted to xml
-    // as if having been coded with this.
+    // String values received as xml will be converted to this, and php strings will be converted to xml as if
+    // having been coded with this.
     // Valid also when defining names of xmlrpc methods
     public static $xmlrpc_internalencoding = "UTF-8";
 
     public static $xmlrpcName = "XML-RPC for PHP";
-    public static $xmlrpcVersion = "4.0.0.alpha";
+    public static $xmlrpcVersion = "4.4.0";
 
     // let user errors start at 800
     public static $xmlrpcerruser = 800;
@@ -102,8 +104,8 @@ class PhpXmlRpc
             $GLOBALS[$name] = $value;
         }
 
-        // NB: all the variables exported into the global namespace below here do NOT guarantee 100%
-        // compatibility, as they are NOT reimported back during calls to importGlobals()
+        // NB: all the variables exported into the global namespace below here do NOT guarantee 100% compatibility,
+        // as they are NOT reimported back during calls to importGlobals()
 
         $reflection = new \ReflectionClass('PhpXmlRpc\Value');
         foreach ($reflection->getStaticProperties() as $name => $value) {
