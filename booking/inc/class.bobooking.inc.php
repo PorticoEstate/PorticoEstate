@@ -1126,9 +1126,8 @@
 
 						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 
-						if ($booking_lenght > 0 && !$overlap)
+						if (($booking_lenght > 1 && $overlap) || !$overlap)
 						{
-
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
 								'overlap'			 => $overlap,
