@@ -249,7 +249,11 @@ HTML;
 				try
 				{
 					$send->msg('email', $adr, $subject, $plain_text, '', '', '', $from, 'AktivKommune', 'text');
-					phpgwapi_cache::message_set("Epost er sendt til {$adr}");
+					
+					if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+					{
+						phpgwapi_cache::message_set("Epost er sendt til {$adr}");
+					}
 				}
 				catch (Exception $e)
 				{
