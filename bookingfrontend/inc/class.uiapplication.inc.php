@@ -45,7 +45,7 @@
 
 			if ($application['secret'] != $secret)
 			{
-//				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
+				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
 
 			$comment = phpgw::get_var('comment', 'html', 'POST');
