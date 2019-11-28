@@ -253,6 +253,18 @@
 					'group_id'		 => 4253, // LRS-DRIFT_Regnskap
 					'subject'		 => 'Digilev'
 				),
+				'Kategori 22 Innbet. fra kunde'		 => array
+					(
+					'message_cat_id' => 284, // 22 Innbetalinger fra kunde
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'subject'		 => ''
+				),
+				'Kategori 20 Fakturering til kunde'	 => array
+					(
+					'message_cat_id' => 281, // 20 Fakturering til kunde
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'subject'		 => ''
+				),
 			);
 
 			foreach ($folder_list as $folder_name => $folder_rules)
