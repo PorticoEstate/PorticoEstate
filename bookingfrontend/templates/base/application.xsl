@@ -155,89 +155,92 @@
 						</xsl:for-each>
 					</dl>
 				</div>
-				<div class="col-12 mt-4">
-					<h5 class="font-weight-bold mb-4">
-						<xsl:value-of select="php:function('lang', 'Information about the event')" />
-					</h5>
-					<dl>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Target audience')" />
-						</dt>
-						<dd>
-							<xsl:for-each select="audience">
-								<xsl:if test="../application/audience=id">
-									<xsl:value-of select="name"/>
-								</xsl:if>
-							</xsl:for-each>
-						</dd>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Event name')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="application/name"/>
-						</dd>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Organizer')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="application/organizer"/>
-						</dd>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
-						</dt>
-						<dd>
-							<xsl:value-of select="application/homepage"/>
-						</dd>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'description')" />
-						</dt>
-						<dd>
-							<xsl:value-of disable-output-escaping="yes" select="application/description"/>
-						</dd>
-						<dt>
-							<xsl:value-of select="config/application_equipment"/>
-						</dt>
-						<dd>
-							<xsl:value-of disable-output-escaping="yes" select="application/equipment"/>
-						</dd>
-						<dt>
-							<xsl:value-of select="php:function('lang', 'Number of participants')" />
-						</dt>
-						<dd>
-							<table id="agegroup">
-								<thead>
-									<tr>
-										<th/>
-										<th>
-											<xsl:value-of select="php:function('lang', 'Male')" />
-										</th>
-										<th>
-											<xsl:value-of select="php:function('lang', 'Female')" />
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									<xsl:for-each select="agegroups">
-										<xsl:variable name="id">
-											<xsl:value-of select="id"/>
-										</xsl:variable>
+				<xsl:if test="simple != 1">
+
+					<div class="col-12 mt-4">
+						<h5 class="font-weight-bold mb-4">
+							<xsl:value-of select="php:function('lang', 'Information about the event')" />
+						</h5>
+						<dl>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'Target audience')" />
+							</dt>
+							<dd>
+								<xsl:for-each select="audience">
+									<xsl:if test="../application/audience=id">
+										<xsl:value-of select="name"/>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'Event name')" />
+							</dt>
+							<dd>
+								<xsl:value-of select="application/name"/>
+							</dd>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'Organizer')" />
+							</dt>
+							<dd>
+								<xsl:value-of select="application/organizer"/>
+							</dd>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
+							</dt>
+							<dd>
+								<xsl:value-of select="application/homepage"/>
+							</dd>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'description')" />
+							</dt>
+							<dd>
+								<xsl:value-of disable-output-escaping="yes" select="application/description"/>
+							</dd>
+							<dt>
+								<xsl:value-of select="config/application_equipment"/>
+							</dt>
+							<dd>
+								<xsl:value-of disable-output-escaping="yes" select="application/equipment"/>
+							</dd>
+							<dt>
+								<xsl:value-of select="php:function('lang', 'Number of participants')" />
+							</dt>
+							<dd>
+								<table id="agegroup">
+									<thead>
 										<tr>
+											<th/>
 											<th>
-												<xsl:value-of select="name"/>
+												<xsl:value-of select="php:function('lang', 'Male')" />
 											</th>
-											<td>
-												<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-											</td>
-											<td>
-												<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-											</td>
+											<th>
+												<xsl:value-of select="php:function('lang', 'Female')" />
+											</th>
 										</tr>
-									</xsl:for-each>
-								</tbody>
-							</table>
-						</dd>
-					</dl>
-				</div>
+									</thead>
+									<tbody>
+										<xsl:for-each select="agegroups">
+											<xsl:variable name="id">
+												<xsl:value-of select="id"/>
+											</xsl:variable>
+											<tr>
+												<th>
+													<xsl:value-of select="name"/>
+												</th>
+												<td>
+													<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+												</td>
+												<td>
+													<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+												</td>
+											</tr>
+										</xsl:for-each>
+									</tbody>
+								</table>
+							</dd>
+						</dl>
+					</div>
+				</xsl:if>
 				<div class="col-12 mt-4">
 					<h5 class="font-weight-bold mb-4">
 						<xsl:value-of select="php:function('lang', 'Contact and invoice information')" />
@@ -287,7 +290,7 @@
 								<xsl:value-of select="application/customer_organization_number"/>
 							</dd>
 						</xsl:if>
-<!--						<xsl:if test="application/customer_identifier_type = 'ssn'">
+						<!--						<xsl:if test="application/customer_identifier_type = 'ssn'">
 							<dt>
 								<xsl:value-of select="php:function('lang', 'SSN')" />
 							</dt>
@@ -318,7 +321,7 @@
 		var secret = '<xsl:value-of select="application/secret" />';
 		if (!resourceIds || resourceIds == "")
 		{
-			resourceIds = false;
+		resourceIds = false;
 		}
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resources (2018)', 'Document', 'Name')" />;
 		var app_id = <xsl:value-of select="application/id" />;
@@ -332,8 +335,8 @@
         ]]>
 		if (resourceIds)
 		{
-			var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
-			createTable('resources_container', resourcesURL, colDefsResource, 'results');
+		var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
+		createTable('resources_container', resourcesURL, colDefsResource, 'results');
 		}
 		var colDefsDocument = [{key: 'name', label: lang['Document'], formatter: genericLink}];
 		createTable('regulation_documents', documentURL, colDefsDocument);

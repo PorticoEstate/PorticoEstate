@@ -45,7 +45,7 @@
 
 			if ($application['secret'] != $secret)
 			{
-				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
+//				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
 
 			$comment = phpgw::get_var('comment', 'html', 'POST');
@@ -137,6 +137,27 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 
+			$simple = false;
+
+			if ($resource_ids)
+			{
+				$resource_filters			 = array('active' => 1, 'rescategory_active' => 1, 'id' => $application['resources']);
+				$_resources					 = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+				$_building_simple_booking	 = 0;
+				foreach ($_resources['results'] as $_resource)
+				{
+					if ($_resource['simple_booking'] == 1)
+					{
+						$_building_simple_booking++;
+					}
+				}
+
+				if ($_building_simple_booking == count($resource_ids))
+				{
+					$simple = true;
+				}
+			}
+
 			//Filter application comments only after update has been attempted unless
 			//you wish to delete the comments not matching the specified types
 			$this->filter_application_comments($application, array('comment'));
@@ -164,11 +185,12 @@
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
 			self::render_template_xsl('application', array(
-				'application' => $application,
-				'audience' => $audience,
-				'agegroups' => $agegroups,
-				'frontend' => 'true',
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()
+				'application'	 => $application,
+				'audience'		 => $audience,
+				'agegroups'		 => $agegroups,
+				'frontend'		 => 'true',
+				'simple'		 => $simple,
+				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
 		}

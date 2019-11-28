@@ -1532,9 +1532,13 @@
 		{
 			$val = phpgw::get_var('display_in_dashboard', 'int', 'POST', 0);
 			if ($val <= 0)
+			{
 				return false;
+			}
 			if ($val >= 1)
+			{
 				return true;
+			}
 			return false; //Not that I think that it is necessary to return here too, but who knows, I might have overlooked something.
 		}
 
@@ -1691,6 +1695,7 @@
 			$pos = strpos($application['schedule_link'], '/index.php');
 			$application['schedule_link'] = substr_replace($application['schedule_link'], 'bookingfrontend/', $pos + 1, 0);
 
+			$simple = false;
 			$resource_ids = '';
 			foreach ($application['resources'] as $res)
 			{
@@ -1699,6 +1704,25 @@
 			if (count($application['resources']) == 0)
 			{
 				unset($application['dates']);
+			}
+			else
+			{
+				$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'id' => $application['resources'] );
+				$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
+				$_building_simple_booking = 0;
+				foreach ($_resources['results'] as $_resource)
+				{
+					if($_resource['simple_booking'] == 1)
+					{
+						$_building_simple_booking ++;
+					}
+				}
+
+				if($_building_simple_booking == count($resource_ids))
+				{
+					$simple = true;
+				}
+
 			}
 			$application['resource_ids'] = $resource_ids;
 
@@ -1756,10 +1780,18 @@
 				}
 			}
 
-			self::render_template_xsl('application', array('application' => $application,
-				'audience' => $audience, 'agegroups' => $agegroups,
-				'num_associations' => $num_associations, 'assoc' => $from, 'collision' => $collision_dates,
-				'comments' => $comments, 'config' => CreateObject('phpgwapi.config', 'booking')->read()));
+			self::render_template_xsl('application', array(
+				'application'		 => $application,
+				'audience'			 => $audience,
+				'agegroups'			 => $agegroups,
+				'num_associations'	 => $num_associations,
+				'assoc'				 => $from,
+				'collision'			 => $collision_dates,
+				'comments'			 => $comments,
+				'simple'			 => $simple,
+				'config'			 => CreateObject('phpgwapi.config', 'booking')->read()
+				)
+			);
 		}
 
 		function get_activity_data()

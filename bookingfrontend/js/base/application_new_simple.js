@@ -311,20 +311,20 @@ function PopulatePostedDate()
 
 			}
 		}
-		else
-		{
-			var StartTime = new Date();
-			StartTime.setHours(time_default_start, 0);
-
-			EndTime = new Date();
-			EndTime.setDate(EndTime.getDate() + day_default_lenght);
-			EndTime.setHours(time_default_end, 0);
-
-		}
+//		else
+//		{
+//			var StartTime = new Date();
+//			StartTime.setHours(time_default_start, 0);
+//
+//			EndTime = new Date();
+//			EndTime.setDate(EndTime.getDate() + day_default_lenght);
+//			EndTime.setHours(time_default_end, 0);
+//
+//		}
 
 	}
 
-	if ($("#resource_id").val())
+	if ($("#resource_id").val() && StartTime)
 	{
 		GlobalStartTime = StartTime;
 		$('#from_').val(formatSingleDate(StartTime));

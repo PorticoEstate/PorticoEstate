@@ -583,6 +583,7 @@ function PopulateBookableResources(urlParams)
 	$.getJSON(getJsonURL, function (result)
 	{
 		var oArgs;
+		var resourceItemLink;
 		var facilitiesList = [];
 		var activitiesList = [];
 
@@ -601,11 +602,7 @@ function PopulateBookableResources(urlParams)
 
 			if(result.results[i].simple_booking == 1)
 			{
-				oArgs = {
-					menuaction: 'bookingfrontend.uiapplication.add',
-					id: result.results[i].id,
-					building_id: urlParams['id']
-				};
+				resourceItemLink = false;
 			}
 			else
 			{
@@ -614,11 +611,13 @@ function PopulateBookableResources(urlParams)
 					id: result.results[i].id,
 					building_id: urlParams['id']
 				};
+
+				resourceItemLink = phpGWLink('bookingfrontend/', oArgs);
 			}
 
 			bookableResources.push({
 				name: result.results[i].name,
-				resourceItemLink: phpGWLink('bookingfrontend/', oArgs),
+				resourceItemLink: resourceItemLink,
 				facilitiesList: ko.observableArray(facilitiesList),
 				activitiesList: ko.observableArray(activitiesList),
 				availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
