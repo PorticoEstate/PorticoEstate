@@ -989,6 +989,7 @@
 					{
 						$sub_query .= " OR concat(fm_tenant.first_name || ' ' || fm_tenant.last_name) $this->like '$query%'";
 						$sub_query .= " OR concat(fm_tenant.last_name || ' ' || fm_tenant.first_name) $this->like '$query%'";
+						$sub_query .= " OR fm_tenant.contact_phone $this->like '%$query%'";
 					}
 
 					if ($sub_query_street)
