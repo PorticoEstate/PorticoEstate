@@ -4,7 +4,7 @@ if (isset($_GET['run'])) {
     $path = parse_url($_GET['run']);
     if (isset($path['query'])) {
         $query = '?' . $path['query'];
-  }
+    }
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"

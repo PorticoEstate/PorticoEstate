@@ -47,9 +47,9 @@ abstract class HTMLPurifier_Token
      */
     public function __get($n)
     {
-      if ($n === 'type') {
-        trigger_error('Deprecated type property called; use instanceof', E_USER_NOTICE);
-        switch (get_class($this)) {
+        if ($n === 'type') {
+            trigger_error('Deprecated type property called; use instanceof', E_USER_NOTICE);
+            switch (get_class($this)) {
                 case 'HTMLPurifier_Token_Start':
                     return 'start';
                 case 'HTMLPurifier_Token_Empty':
@@ -62,8 +62,8 @@ abstract class HTMLPurifier_Token
                     return 'comment';
                 default:
                     return null;
+            }
         }
-      }
     }
 
     /**
@@ -74,7 +74,7 @@ abstract class HTMLPurifier_Token
     public function position($l = null, $c = null)
     {
         $this->line = $l;
-        $this->col  = $c;
+        $this->col = $c;
     }
 
     /**
@@ -88,7 +88,7 @@ abstract class HTMLPurifier_Token
             $l++;
         }
         $this->line = $l;
-        $this->col  = $c;
+        $this->col = $c;
     }
 
     /**

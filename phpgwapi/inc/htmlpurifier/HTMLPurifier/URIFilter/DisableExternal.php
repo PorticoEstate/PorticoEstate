@@ -37,7 +37,7 @@ class HTMLPurifier_URIFilter_DisableExternal extends HTMLPurifier_URIFilter
         }
         if ($this->ourHostParts === false) {
             return false;
-    }
+        }
         $host_parts = array_reverse(explode('.', $uri->host));
         foreach ($this->ourHostParts as $i => $x) {
             if (!isset($host_parts[$i])) {

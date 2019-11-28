@@ -24,7 +24,7 @@ class HTMLPurifier_URIScheme_nntp extends HTMLPurifier_URIScheme
     public function doValidate(&$uri, $config, $context)
     {
         $uri->userinfo = null;
-        $uri->query    = null;
+        $uri->query = null;
         return true;
     }
 }

@@ -100,7 +100,7 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
         // e.g. array_reverse($node->children) - already processed
         // children.
 
-                    $parent_def   = $definition->info_parent_def;
+        $parent_def = $definition->info_parent_def;
         $stack = array(
             array($top_node,
                   $parent_def->descendants_are_inline,
@@ -125,8 +125,8 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
                         empty($def->excludes) ? $excludes
                                               : array_merge($excludes, $def->excludes),
                         0);
-                        break;
-                    }
+                    break;
+                }
             };
             if ($go) continue;
             list($token, $d) = $node->toTokenPair();
@@ -149,18 +149,18 @@ class HTMLPurifier_Strategy_FixNesting extends HTMLPurifier_Strategy
                 } elseif ($result === false) {
                     $node->dead = true;
                     if ($e) $e->send(E_ERROR, 'Strategy_FixNesting: Node removed');
-            } else {
+                } else {
                     $node->children = $result;
-                if ($e) {
+                    if ($e) {
                         // XXX This will miss mutations of internal nodes. Perhaps defer to the child validators
                         if (empty($result) && !empty($children)) {
-                        $e->send(E_ERROR, 'Strategy_FixNesting: Node contents removed');
+                            $e->send(E_ERROR, 'Strategy_FixNesting: Node contents removed');
                         } else if ($result != $children) {
-                        $e->send(E_WARNING, 'Strategy_FixNesting: Node reorganized');
+                            $e->send(E_WARNING, 'Strategy_FixNesting: Node reorganized');
+                        }
                     }
                 }
-                    }
-                }
+            }
         }
 
         //####################################################################//

@@ -51,8 +51,8 @@ class HTMLPurifier_Printer
     protected function start($tag, $attr = array())
     {
         return $this->generator->generateFromToken(
-                    new HTMLPurifier_Token_Start($tag, $attr ? $attr : array())
-               );
+            new HTMLPurifier_Token_Start($tag, $attr ? $attr : array())
+        );
     }
 
     /**
@@ -63,8 +63,8 @@ class HTMLPurifier_Printer
     protected function end($tag)
     {
         return $this->generator->generateFromToken(
-                    new HTMLPurifier_Token_End($tag)
-               );
+            new HTMLPurifier_Token_End($tag)
+        );
     }
 
     /**
@@ -78,8 +78,8 @@ class HTMLPurifier_Printer
     protected function element($tag, $contents, $attr = array(), $escape = true)
     {
         return $this->start($tag, $attr) .
-               ($escape ? $this->escape($contents) : $contents) .
-               $this->end($tag);
+            ($escape ? $this->escape($contents) : $contents) .
+            $this->end($tag);
     }
 
     /**
@@ -118,8 +118,8 @@ class HTMLPurifier_Printer
         }
         return
             $this->start('tr') . "\n" .
-                $this->element('th', $name) . "\n" .
-                $this->element('td', $value) . "\n" .
+            $this->element('th', $name) . "\n" .
+            $this->element('td', $value) . "\n" .
             $this->end('tr');
     }
 

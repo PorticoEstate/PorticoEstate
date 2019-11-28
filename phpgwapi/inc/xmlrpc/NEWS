@@ -1,3 +1,86 @@
+XML-RPC for PHP version 4.4.0 - 2019/7/29
+
+* fixed: allow handling huge xml messages (>=10MB) (issue #71)
+
+* improved: make it easier to overtake the library's usage of `error_log`
+
+
+XML-RPC for PHP version 4.3.2 - 2019/5/27
+
+* fixed: remove one php 7.2 warning when using the v3 api
+
+* improved: the Travis tests are now run with all php versions from 5.6 to 7.3. We dropped tests with php 5.3, 5.4 and 5.5
+
+
+XML-RPC for PHP version 4.3.1 - 2018/1/20
+
+* fixed: error when using https in non-curl mode
+
+* fixed: compatibility of tests with php 7.2
+
+* fixed: html injection in sample code
+
+* fixed: warnings emitted by the *legacy* server in xmlrpcs.inc
+
+* fixed: encoding of php variables of type 'resource' when using xmlrpc_encode in php-compatibility mode
+
+* fixed: bad html tag in sample code
+
+* improved: text of error messages
+
+
+XML-RPC for PHP version 4.3.0 - 2017/11/6
+
+* fixed: compatibility with Basic/Digest/NTLM auth when using client in cURL mode (issue #58)
+
+* improved: added unit tests for Basic and Digest http auth. Also improved tests suite
+
+* new: allow to force usage of curl for http 1.0 calls, as well as plain socket for https calls, via the method
+    `Client::setUseCurl()`
+
+
+XML-RPC for PHP version 4.2.2 - 2017/10/15
+
+* fixed: compatibility with Lighttpd target servers when using client in cURL mode and request body size > 1024 bytes (issue #56)
+
+
+XML-RPC for PHP version 4.2.1 - 2017/9/3
+
+* fixed: compatibility with php 7.2 (issue #55)
+
+
+XML-RPC for PHP version 4.2.0 - 2017/6/30
+
+* improved: allow also DateTimeImmutable objects to be detected as a date when encoding
+
+
+XML-RPC for PHP version 4.1.1 - 2016/10/1
+
+* fixed: error in server class: undefined function php_xmlrpc_encode (only triggered when not using the compatibility
+    shim with old versions)
+
+
+XML-RPC for PHP version 4.1.0 - 2016/6/26
+
+* improved: Added support for receiving <I8> and <EX:I8> integers, sending <I8>
+
+    If php is compiled in 32 bit mode, and an i8 int is received from a 3rd party, and error will be emitted.
+    Integers sent from the library to 3rd parties can be encoded using the i8 tag, but default to using 'int' by default;
+    the developer will have to create values as i8 explicitly if needed.
+    The library does *not* check if an outgoing integer is too big to fit in 4 bytes and convert it to an i8 automatically.
+
+
+XML-RPC for PHP version 4.0.1 - 2016/3/27
+
+* improved: all of the API documentation has been moved out of the manual and into the source code phpdoc comments
+
+* fixed: when the internal character set is set to UTF-8 and the client sends requests (or the server responses), too
+  many characters were encoded as numeric entities, whereas some, like åäö, needed not not be
+
+* fixed: the 'valtyp' property of Response was not present in all cases; the ValType property had been added by error
+  and has been removed
+
+
 XML-RPC for PHP version 4.0.0 - 2016/1/20
 
 This release does away with the past and starts a transition to modern-world php.
@@ -42,7 +125,7 @@ PLEASE READ CAREFULLY THE NOTES BELOW to insure a smooth upgrade.
 * improved: debug messages are not html-escaped any more when executing from the command line
 
 * improved: the library is now tested using Travis ( https://travis-ci.org/ ).
-  Tests are executed using all php versions from 5.3 to 7.0 nightly, plus HHVM; code-coverage information
+  Tests are executed using all php versions from 5.3 to 7.2; code-coverage information
   is generated using php 5.6 and uploaded to both Code Coverage and Scrutinizer online services
 
 * improved: phpunit is now installed via composer, not bundled anymore
@@ -574,7 +657,7 @@ New features include:
    xmlrpc_client::setCredentials method.
 
  * Added test script and method for verifying correct passing of
-	 booleans
+   booleans
 
 The changelog is available at: http://xmlrpc.usefulinc.com/ChangeLog.txt
 

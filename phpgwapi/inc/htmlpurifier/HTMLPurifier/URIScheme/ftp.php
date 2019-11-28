@@ -28,7 +28,7 @@ class HTMLPurifier_URIScheme_ftp extends HTMLPurifier_URIScheme
      */
     public function doValidate(&$uri, $config, $context)
     {
-        $uri->query    = null;
+        $uri->query = null;
 
         // typecode check
         $semicolon_pos = strrpos($uri->path, ';'); // reverse

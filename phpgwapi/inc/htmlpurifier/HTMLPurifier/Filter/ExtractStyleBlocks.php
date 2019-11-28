@@ -222,7 +222,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
                     // delimiters
                     $nsel = null;
                     $delim = null; // guaranteed to be non-null after
-                                   // two loop iterations
+                    // two loop iterations
                     for ($i = 0, $c = count($basic_selectors); $i < $c; $i++) {
                         $x = $basic_selectors[$i];
                         if ($i % 2) {
@@ -329,7 +329,7 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
         // that no funny business occurs (i.e. </style> in a font-family prop).
         if ($config->get('Filter.ExtractStyleBlocks.Escaping')) {
             $css = str_replace(
-                array('<',    '>',    '&'),
+                array('<', '>', '&'),
                 array('\3C ', '\3E ', '\26 '),
                 $css
             );

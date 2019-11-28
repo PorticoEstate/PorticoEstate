@@ -80,8 +80,8 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
                 if ($node instanceof HTMLPurifier_Node_Element && isset($this->elements[$node->name])) {
                     $block_wrap = false;
 
-                    }
                 }
+            }
             if ($block_wrap) {
                 $block_wrap->children[] = $node;
             } else {

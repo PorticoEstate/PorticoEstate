@@ -47,7 +47,7 @@ class HTMLPurifier_AttrDef_HTML_Nmtokens extends HTMLPurifier_AttrDef
         // see that anyway).
         $pattern = '/(?:(?<=\s)|\A)' . // look behind for space or string start
             '((?:--|-?[A-Za-z_])[A-Za-z_\-0-9]*)' .
-                   '(?:(?=\s)|\z)/'; // look ahead for space or string end
+            '(?:(?=\s)|\z)/'; // look ahead for space or string end
         preg_match_all($pattern, $string, $matches);
         return $matches[1];
     }

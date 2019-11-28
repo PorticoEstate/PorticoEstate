@@ -23,7 +23,7 @@ class HTMLPurifier_ConfigSchema_InterchangeBuilder
      */
     public static function buildFromDirectory($dir = null)
     {
-        $builder     = new HTMLPurifier_ConfigSchema_InterchangeBuilder();
+        $builder = new HTMLPurifier_ConfigSchema_InterchangeBuilder();
         $interchange = new HTMLPurifier_ConfigSchema_Interchange();
         return $builder->buildDir($interchange, $dir);
     }

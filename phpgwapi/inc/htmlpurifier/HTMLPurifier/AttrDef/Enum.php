@@ -15,7 +15,7 @@ class HTMLPurifier_AttrDef_Enum extends HTMLPurifier_AttrDef
      * @type array
      * @todo Make protected
      */
-    public $valid_values   = array();
+    public $valid_values = array();
 
     /**
      * Bool indicating whether or not enumeration is case sensitive.

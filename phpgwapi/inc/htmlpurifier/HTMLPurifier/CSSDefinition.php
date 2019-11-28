@@ -27,10 +27,10 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         );
 
         $border_style =
-        $this->info['border-bottom-style'] =
-        $this->info['border-right-style'] =
-        $this->info['border-left-style'] =
-        $this->info['border-top-style'] =  new HTMLPurifier_AttrDef_Enum(
+            $this->info['border-bottom-style'] =
+            $this->info['border-right-style'] =
+            $this->info['border-left-style'] =
+            $this->info['border-top-style'] = new HTMLPurifier_AttrDef_Enum(
                 array(
                     'none',
                     'hidden',
@@ -110,14 +110,14 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['background-position'] = new HTMLPurifier_AttrDef_CSS_BackgroundPosition();
 
         $border_color =
-        $this->info['border-top-color'] =
-        $this->info['border-bottom-color'] =
-        $this->info['border-left-color'] =
-        $this->info['border-right-color'] =
+            $this->info['border-top-color'] =
+            $this->info['border-bottom-color'] =
+            $this->info['border-left-color'] =
+            $this->info['border-right-color'] =
             $this->info['background-color'] = new HTMLPurifier_AttrDef_CSS_Composite(
                 array(
-            new HTMLPurifier_AttrDef_Enum(array('transparent')),
-            new HTMLPurifier_AttrDef_CSS_Color()
+                    new HTMLPurifier_AttrDef_Enum(array('transparent')),
+                    new HTMLPurifier_AttrDef_CSS_Color()
                 )
             );
 
@@ -126,13 +126,13 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['border-color'] = new HTMLPurifier_AttrDef_CSS_Multiple($border_color);
 
         $border_width =
-        $this->info['border-top-width'] =
-        $this->info['border-bottom-width'] =
-        $this->info['border-left-width'] =
+            $this->info['border-top-width'] =
+            $this->info['border-bottom-width'] =
+            $this->info['border-left-width'] =
             $this->info['border-right-width'] = new HTMLPurifier_AttrDef_CSS_Composite(
                 array(
-            new HTMLPurifier_AttrDef_Enum(array('thin', 'medium', 'thick')),
-            new HTMLPurifier_AttrDef_CSS_Length('0') //disallow negative
+                    new HTMLPurifier_AttrDef_Enum(array('thin', 'medium', 'thick')),
+                    new HTMLPurifier_AttrDef_CSS_Length('0') //disallow negative
                 )
             );
 
@@ -140,15 +140,15 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
 
         $this->info['letter-spacing'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_Enum(array('normal')),
-            new HTMLPurifier_AttrDef_CSS_Length()
+                new HTMLPurifier_AttrDef_Enum(array('normal')),
+                new HTMLPurifier_AttrDef_CSS_Length()
             )
         );
 
         $this->info['word-spacing'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_Enum(array('normal')),
-            new HTMLPurifier_AttrDef_CSS_Length()
+                new HTMLPurifier_AttrDef_Enum(array('normal')),
+                new HTMLPurifier_AttrDef_CSS_Length()
             )
         );
 
@@ -167,29 +167,29 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
                         'smaller'
                     )
                 ),
-            new HTMLPurifier_AttrDef_CSS_Percentage(),
-            new HTMLPurifier_AttrDef_CSS_Length()
+                new HTMLPurifier_AttrDef_CSS_Percentage(),
+                new HTMLPurifier_AttrDef_CSS_Length()
             )
         );
 
         $this->info['line-height'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_Enum(array('normal')),
-            new HTMLPurifier_AttrDef_CSS_Number(true), // no negatives
-            new HTMLPurifier_AttrDef_CSS_Length('0'),
-            new HTMLPurifier_AttrDef_CSS_Percentage(true)
+                new HTMLPurifier_AttrDef_Enum(array('normal')),
+                new HTMLPurifier_AttrDef_CSS_Number(true), // no negatives
+                new HTMLPurifier_AttrDef_CSS_Length('0'),
+                new HTMLPurifier_AttrDef_CSS_Percentage(true)
             )
         );
 
         $margin =
-        $this->info['margin-top'] =
-        $this->info['margin-bottom'] =
-        $this->info['margin-left'] =
+            $this->info['margin-top'] =
+            $this->info['margin-bottom'] =
+            $this->info['margin-left'] =
             $this->info['margin-right'] = new HTMLPurifier_AttrDef_CSS_Composite(
                 array(
-            new HTMLPurifier_AttrDef_CSS_Length(),
-            new HTMLPurifier_AttrDef_CSS_Percentage(),
-            new HTMLPurifier_AttrDef_Enum(array('auto'))
+                    new HTMLPurifier_AttrDef_CSS_Length(),
+                    new HTMLPurifier_AttrDef_CSS_Percentage(),
+                    new HTMLPurifier_AttrDef_Enum(array('auto'))
                 )
             );
 
@@ -197,13 +197,13 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
 
         // non-negative
         $padding =
-        $this->info['padding-top'] =
-        $this->info['padding-bottom'] =
-        $this->info['padding-left'] =
+            $this->info['padding-top'] =
+            $this->info['padding-bottom'] =
+            $this->info['padding-left'] =
             $this->info['padding-right'] = new HTMLPurifier_AttrDef_CSS_Composite(
                 array(
-            new HTMLPurifier_AttrDef_CSS_Length('0'),
-            new HTMLPurifier_AttrDef_CSS_Percentage(true)
+                    new HTMLPurifier_AttrDef_CSS_Length('0'),
+                    new HTMLPurifier_AttrDef_CSS_Percentage(true)
                 )
             );
 
@@ -211,40 +211,82 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
 
         $this->info['text-indent'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_CSS_Length(),
-            new HTMLPurifier_AttrDef_CSS_Percentage()
+                new HTMLPurifier_AttrDef_CSS_Length(),
+                new HTMLPurifier_AttrDef_CSS_Percentage()
             )
         );
 
         $trusted_wh = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_CSS_Length('0'),
-            new HTMLPurifier_AttrDef_CSS_Percentage(true),
-            new HTMLPurifier_AttrDef_Enum(array('auto'))
+                new HTMLPurifier_AttrDef_CSS_Length('0'),
+                new HTMLPurifier_AttrDef_CSS_Percentage(true),
+                new HTMLPurifier_AttrDef_Enum(array('auto', 'initial', 'inherit'))
+            )
+        );
+        $trusted_min_wh = new HTMLPurifier_AttrDef_CSS_Composite(
+            array(
+                new HTMLPurifier_AttrDef_CSS_Length('0'),
+                new HTMLPurifier_AttrDef_CSS_Percentage(true),
+                new HTMLPurifier_AttrDef_Enum(array('initial', 'inherit'))
+            )
+        );
+        $trusted_max_wh = new HTMLPurifier_AttrDef_CSS_Composite(
+            array(
+                new HTMLPurifier_AttrDef_CSS_Length('0'),
+                new HTMLPurifier_AttrDef_CSS_Percentage(true),
+                new HTMLPurifier_AttrDef_Enum(array('none', 'initial', 'inherit'))
             )
         );
         $max = $config->get('CSS.MaxImgLength');
 
-        $this->info['min-width'] =
-        $this->info['max-width'] =
-        $this->info['min-height'] =
-        $this->info['max-height'] =
         $this->info['width'] =
         $this->info['height'] =
             $max === null ?
-            $trusted_wh :
+                $trusted_wh :
                 new HTMLPurifier_AttrDef_Switch(
                     'img',
-                // For img tags:
+                    // For img tags:
                     new HTMLPurifier_AttrDef_CSS_Composite(
                         array(
-                    new HTMLPurifier_AttrDef_CSS_Length('0', $max),
-                    new HTMLPurifier_AttrDef_Enum(array('auto'))
+                            new HTMLPurifier_AttrDef_CSS_Length('0', $max),
+                            new HTMLPurifier_AttrDef_Enum(array('auto'))
                         )
                     ),
-                // For everyone else:
-                $trusted_wh
-            );
+                    // For everyone else:
+                    $trusted_wh
+                );
+        $this->info['min-width'] =
+        $this->info['min-height'] =
+            $max === null ?
+                $trusted_min_wh :
+                new HTMLPurifier_AttrDef_Switch(
+                    'img',
+                    // For img tags:
+                    new HTMLPurifier_AttrDef_CSS_Composite(
+                        array(
+                            new HTMLPurifier_AttrDef_CSS_Length('0', $max),
+                            new HTMLPurifier_AttrDef_Enum(array('initial', 'inherit'))
+                        )
+                    ),
+                    // For everyone else:
+                    $trusted_min_wh
+                );
+        $this->info['max-width'] =
+        $this->info['max-height'] =
+            $max === null ?
+                $trusted_max_wh :
+                new HTMLPurifier_AttrDef_Switch(
+                    'img',
+                    // For img tags:
+                    new HTMLPurifier_AttrDef_CSS_Composite(
+                        array(
+                            new HTMLPurifier_AttrDef_CSS_Length('0', $max),
+                            new HTMLPurifier_AttrDef_Enum(array('none', 'initial', 'inherit'))
+                        )
+                    ),
+                    // For everyone else:
+                    $trusted_max_wh
+                );
 
         $this->info['text-decoration'] = new HTMLPurifier_AttrDef_CSS_TextDecoration();
 
@@ -307,8 +349,8 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
                         'text-bottom'
                     )
                 ),
-            new HTMLPurifier_AttrDef_CSS_Length(),
-            new HTMLPurifier_AttrDef_CSS_Percentage()
+                new HTMLPurifier_AttrDef_CSS_Length(),
+                new HTMLPurifier_AttrDef_CSS_Percentage()
             )
         );
 
@@ -347,16 +389,16 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
     protected function doSetupProprietary($config)
     {
         // Internet Explorer only scrollbar colors
-        $this->info['scrollbar-arrow-color']        = new HTMLPurifier_AttrDef_CSS_Color();
-        $this->info['scrollbar-base-color']         = new HTMLPurifier_AttrDef_CSS_Color();
-        $this->info['scrollbar-darkshadow-color']   = new HTMLPurifier_AttrDef_CSS_Color();
-        $this->info['scrollbar-face-color']         = new HTMLPurifier_AttrDef_CSS_Color();
-        $this->info['scrollbar-highlight-color']    = new HTMLPurifier_AttrDef_CSS_Color();
-        $this->info['scrollbar-shadow-color']       = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-arrow-color'] = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-base-color'] = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-darkshadow-color'] = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-face-color'] = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-highlight-color'] = new HTMLPurifier_AttrDef_CSS_Color();
+        $this->info['scrollbar-shadow-color'] = new HTMLPurifier_AttrDef_CSS_Color();
 
         // vendor specific prefixes of opacity
-        $this->info['-moz-opacity']     = new HTMLPurifier_AttrDef_CSS_AlphaValue();
-        $this->info['-khtml-opacity']   = new HTMLPurifier_AttrDef_CSS_AlphaValue();
+        $this->info['-moz-opacity'] = new HTMLPurifier_AttrDef_CSS_AlphaValue();
+        $this->info['-khtml-opacity'] = new HTMLPurifier_AttrDef_CSS_AlphaValue();
 
         // only opacity, for now
         $this->info['filter'] = new HTMLPurifier_AttrDef_CSS_Filter();
@@ -436,15 +478,15 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
         $this->info['right'] =
         $this->info['bottom'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_CSS_Length(),
-            new HTMLPurifier_AttrDef_CSS_Percentage(),
-            new HTMLPurifier_AttrDef_Enum(array('auto')),
+                new HTMLPurifier_AttrDef_CSS_Length(),
+                new HTMLPurifier_AttrDef_CSS_Percentage(),
+                new HTMLPurifier_AttrDef_Enum(array('auto')),
             )
         );
         $this->info['z-index'] = new HTMLPurifier_AttrDef_CSS_Composite(
             array(
-            new HTMLPurifier_AttrDef_Integer(),
-            new HTMLPurifier_AttrDef_Enum(array('auto')),
+                new HTMLPurifier_AttrDef_Integer(),
+                new HTMLPurifier_AttrDef_Enum(array('auto')),
             )
         );
     }
@@ -460,7 +502,7 @@ class HTMLPurifier_CSSDefinition extends HTMLPurifier_Definition
     {
         // setup allowed elements
         $support = "(for information on implementing this, see the " .
-                   "support forums) ";
+            "support forums) ";
         $allowed_properties = $config->get('CSS.AllowedProperties');
         if ($allowed_properties !== null) {
             foreach ($this->info as $name => $d) {

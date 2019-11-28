@@ -32,30 +32,30 @@ class HTMLPurifier_HTMLModule_Text extends HTMLPurifier_HTMLModule
     public function setup($config)
     {
         // Inline Phrasal -------------------------------------------------
-        $this->addElement('abbr',    'Inline', 'Inline', 'Common');
+        $this->addElement('abbr', 'Inline', 'Inline', 'Common');
         $this->addElement('acronym', 'Inline', 'Inline', 'Common');
-        $this->addElement('cite',    'Inline', 'Inline', 'Common');
-        $this->addElement('dfn',     'Inline', 'Inline', 'Common');
-        $this->addElement('kbd',     'Inline', 'Inline', 'Common');
-        $this->addElement('q',       'Inline', 'Inline', 'Common', array('cite' => 'URI'));
-        $this->addElement('samp',    'Inline', 'Inline', 'Common');
-        $this->addElement('var',     'Inline', 'Inline', 'Common');
+        $this->addElement('cite', 'Inline', 'Inline', 'Common');
+        $this->addElement('dfn', 'Inline', 'Inline', 'Common');
+        $this->addElement('kbd', 'Inline', 'Inline', 'Common');
+        $this->addElement('q', 'Inline', 'Inline', 'Common', array('cite' => 'URI'));
+        $this->addElement('samp', 'Inline', 'Inline', 'Common');
+        $this->addElement('var', 'Inline', 'Inline', 'Common');
 
-        $em = $this->addElement('em',      'Inline', 'Inline', 'Common');
+        $em = $this->addElement('em', 'Inline', 'Inline', 'Common');
         $em->formatting = true;
 
-        $strong = $this->addElement('strong',  'Inline', 'Inline', 'Common');
+        $strong = $this->addElement('strong', 'Inline', 'Inline', 'Common');
         $strong->formatting = true;
 
-        $code = $this->addElement('code',    'Inline', 'Inline', 'Common');
+        $code = $this->addElement('code', 'Inline', 'Inline', 'Common');
         $code->formatting = true;
 
         // Inline Structural ----------------------------------------------
         $this->addElement('span', 'Inline', 'Inline', 'Common');
-        $this->addElement('br',   'Inline', 'Empty',  'Core');
+        $this->addElement('br', 'Inline', 'Empty', 'Core');
 
         // Block Phrasal --------------------------------------------------
-        $this->addElement('address',     'Block', 'Inline', 'Common');
+        $this->addElement('address', 'Block', 'Inline', 'Common');
         $this->addElement('blockquote', 'Block', 'Optional: Heading | Block | List', 'Common', array('cite' => 'URI'));
         $pre = $this->addElement('pre', 'Block', 'Inline', 'Common');
         $pre->excludes = $this->makeLookup(

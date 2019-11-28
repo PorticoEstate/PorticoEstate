@@ -24,9 +24,9 @@ class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme
     public function doValidate(&$uri, $config, $context)
     {
         $uri->userinfo = null;
-        $uri->host     = null;
-        $uri->port     = null;
-        $uri->query    = null;
+        $uri->host = null;
+        $uri->port = null;
+        $uri->query = null;
         // typecode check needed on path
         return true;
     }

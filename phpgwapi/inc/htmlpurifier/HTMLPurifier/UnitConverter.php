@@ -85,7 +85,7 @@ class HTMLPurifier_UnitConverter
             return false;
         }
 
-        $n    = $length->getN();
+        $n = $length->getN();
         $unit = $length->getUnit();
 
         if ($n === '0' || $unit === false) {
@@ -266,7 +266,7 @@ class HTMLPurifier_UnitConverter
         $neg = $n < 0 ? '-' : ''; // Negative sign
         if ($this->bcmath) {
             if ($rp >= 0) {
-                $n = bcadd($n, $neg . '0.' .  str_repeat('0', $rp) . '5', $rp + 1);
+                $n = bcadd($n, $neg . '0.' . str_repeat('0', $rp) . '5', $rp + 1);
                 $n = bcdiv($n, '1', $rp);
             } else {
                 // This algorithm partially depends on the standardized

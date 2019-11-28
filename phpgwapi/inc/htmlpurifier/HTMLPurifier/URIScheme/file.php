@@ -33,10 +33,10 @@ class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
         // Authentication method is not supported
         $uri->userinfo = null;
         // file:// makes no provisions for accessing the resource
-        $uri->port     = null;
+        $uri->port = null;
         // While it seems to work on Firefox, the querystring has
         // no possible effect and is thus stripped.
-        $uri->query    = null;
+        $uri->query = null;
         return true;
     }
 }

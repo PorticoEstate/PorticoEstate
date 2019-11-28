@@ -42,7 +42,7 @@ class HTMLPurifier_Token_Text extends HTMLPurifier_Token
         $this->data = $data;
         $this->is_whitespace = ctype_space($data);
         $this->line = $line;
-        $this->col  = $col;
+        $this->col = $col;
     }
 
     public function toNode() {

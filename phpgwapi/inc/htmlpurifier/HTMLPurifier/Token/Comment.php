@@ -27,7 +27,7 @@ class HTMLPurifier_Token_Comment extends HTMLPurifier_Token
     {
         $this->data = $data;
         $this->line = $line;
-        $this->col  = $col;
+        $this->col = $col;
     }
 
     public function toNode() {

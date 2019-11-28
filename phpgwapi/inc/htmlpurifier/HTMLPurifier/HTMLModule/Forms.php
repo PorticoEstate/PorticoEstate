@@ -34,12 +34,12 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Required: Heading | List | Block | fieldset',
             'Common',
             array(
-            'accept' => 'ContentTypes',
-            'accept-charset' => 'Charsets',
-            'action*' => 'URI',
-            'method' => 'Enum#get,post',
-            // really ContentType, but these two are the only ones used today
-            'enctype' => 'Enum#application/x-www-form-urlencoded,multipart/form-data',
+                'accept' => 'ContentTypes',
+                'accept-charset' => 'Charsets',
+                'action*' => 'URI',
+                'method' => 'Enum#get,post',
+                // really ContentType, but these two are the only ones used today
+                'enctype' => 'Enum#application/x-www-form-urlencoded,multipart/form-data',
             )
         );
         $form->excludes = array('form' => true);
@@ -50,19 +50,19 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Empty',
             'Common',
             array(
-            'accept' => 'ContentTypes',
-            'accesskey' => 'Character',
-            'alt' => 'Text',
-            'checked' => 'Bool#checked',
-            'disabled' => 'Bool#disabled',
-            'maxlength' => 'Number',
-            'name' => 'CDATA',
-            'readonly' => 'Bool#readonly',
-            'size' => 'Number',
-            'src' => 'URI#embedded',
-            'tabindex' => 'Number',
-            'type' => 'Enum#text,password,checkbox,button,radio,submit,reset,file,hidden,image',
-            'value' => 'CDATA',
+                'accept' => 'ContentTypes',
+                'accesskey' => 'Character',
+                'alt' => 'Text',
+                'checked' => 'Bool#checked',
+                'disabled' => 'Bool#disabled',
+                'maxlength' => 'Number',
+                'name' => 'CDATA',
+                'readonly' => 'Bool#readonly',
+                'size' => 'Number',
+                'src' => 'URI#embedded',
+                'tabindex' => 'Number',
+                'type' => 'Enum#text,password,checkbox,button,radio,submit,reset,file,hidden,image',
+                'value' => 'CDATA',
             )
         );
         $input->attr_transform_post[] = new HTMLPurifier_AttrTransform_Input();
@@ -73,11 +73,11 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Required: optgroup | option',
             'Common',
             array(
-            'disabled' => 'Bool#disabled',
-            'multiple' => 'Bool#multiple',
-            'name' => 'CDATA',
-            'size' => 'Number',
-            'tabindex' => 'Number',
+                'disabled' => 'Bool#disabled',
+                'multiple' => 'Bool#multiple',
+                'name' => 'CDATA',
+                'size' => 'Number',
+                'tabindex' => 'Number',
             )
         );
 
@@ -87,10 +87,10 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Optional: #PCDATA',
             'Common',
             array(
-            'disabled' => 'Bool#disabled',
-            'label' => 'Text',
-            'selected' => 'Bool#selected',
-            'value' => 'CDATA',
+                'disabled' => 'Bool#disabled',
+                'label' => 'Text',
+                'selected' => 'Bool#selected',
+                'value' => 'CDATA',
             )
         );
         // It's illegal for there to be more than one selected, but not
@@ -103,13 +103,13 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Optional: #PCDATA',
             'Common',
             array(
-            'accesskey' => 'Character',
-            'cols*' => 'Number',
-            'disabled' => 'Bool#disabled',
-            'name' => 'CDATA',
-            'readonly' => 'Bool#readonly',
-            'rows*' => 'Number',
-            'tabindex' => 'Number',
+                'accesskey' => 'Character',
+                'cols*' => 'Number',
+                'disabled' => 'Bool#disabled',
+                'name' => 'CDATA',
+                'readonly' => 'Bool#readonly',
+                'rows*' => 'Number',
+                'tabindex' => 'Number',
             )
         );
         $textarea->attr_transform_pre[] = new HTMLPurifier_AttrTransform_Textarea();
@@ -120,12 +120,12 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Optional: #PCDATA | Heading | List | Block | Inline',
             'Common',
             array(
-            'accesskey' => 'Character',
-            'disabled' => 'Bool#disabled',
-            'name' => 'CDATA',
-            'tabindex' => 'Number',
-            'type' => 'Enum#button,submit,reset',
-            'value' => 'CDATA',
+                'accesskey' => 'Character',
+                'disabled' => 'Bool#disabled',
+                'name' => 'CDATA',
+                'tabindex' => 'Number',
+                'type' => 'Enum#button,submit,reset',
+                'value' => 'CDATA',
             )
         );
 
@@ -156,8 +156,8 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Optional: #PCDATA | Inline',
             'Common',
             array(
-            'accesskey' => 'Character',
-            // 'for' => 'IDREF', // IDREF not implemented, cannot allow
+                'accesskey' => 'Character',
+                // 'for' => 'IDREF', // IDREF not implemented, cannot allow
             )
         );
         $label->excludes = array('label' => true);
@@ -168,7 +168,7 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Optional: #PCDATA | Inline',
             'Common',
             array(
-            'accesskey' => 'Character',
+                'accesskey' => 'Character',
             )
         );
 
@@ -178,8 +178,8 @@ class HTMLPurifier_HTMLModule_Forms extends HTMLPurifier_HTMLModule
             'Required: option',
             'Common',
             array(
-            'disabled' => 'Bool#disabled',
-            'label*' => 'Text',
+                'disabled' => 'Bool#disabled',
+                'label*' => 'Text',
             )
         );
         // Don't forget an injector for <isindex>. This one's a little complex

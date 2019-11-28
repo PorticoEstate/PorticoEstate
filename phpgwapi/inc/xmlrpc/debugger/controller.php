@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Gaetano Giunta
- * @copyright (C) 2005-2015 G. Giunta
+ * @copyright (C) 2005-2019 G. Giunta
  * @license code licensed under the BSD License: see file license.txt
  *
  * @todo add links to documentation from every option caption
@@ -88,136 +88,136 @@ $editorlibs = '../../phpjsrpc/lib/';
         <!--
         function verifyserver() {
             if (document.frmaction.host.value == '') {
-      alert('Please insert a server name or address');
-      return false;
-    }
-    if (document.frmaction.path.value == '')
-      document.frmaction.path.value = '/';
-    var action = '';
-    for (counter = 0; counter < document.frmaction.action.length; counter++)
+                alert('Please insert a server name or address');
+                return false;
+            }
+            if (document.frmaction.path.value == '')
+                document.frmaction.path.value = '/';
+            var action = '';
+            for (counter = 0; counter < document.frmaction.action.length; counter++)
                 if (document.frmaction.action[counter].checked) {
-        action = document.frmaction.action[counter].value;
-      }
+                    action = document.frmaction.action[counter].value;
+                }
             if (document.frmaction.method.value == '' && (action == 'execute' || action == 'wrap' || action == 'describe')) {
-      alert('Please insert a method name');
-      return false;
-    }
+                alert('Please insert a method name');
+                return false;
+            }
             if (document.frmaction.authtype.value != '1' && document.frmaction.username.value == '') {
-      alert('No username for authenticating to server: authentication disabled');
-    }
-    return true;
-  }
+                alert('No username for authenticating to server: authentication disabled');
+            }
+            return true;
+        }
 
         function switchaction() {
-    // reset html layout depending on action to be taken
-    var action = '';
-    for (counter = 0; counter < document.frmaction.action.length; counter++)
+            // reset html layout depending on action to be taken
+            var action = '';
+            for (counter = 0; counter < document.frmaction.action.length; counter++)
                 if (document.frmaction.action[counter].checked) {
-        action = document.frmaction.action[counter].value;
-      }
+                    action = document.frmaction.action[counter].value;
+                }
             if (action == 'execute') {
-      document.frmaction.methodpayload.disabled = false;
-      displaydialogeditorbtn(true);//if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = false;
-      document.frmaction.method.disabled = false;
-      document.frmaction.methodpayload.rows = 10;
-    }
+                document.frmaction.methodpayload.disabled = false;
+                displaydialogeditorbtn(true);//if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = false;
+                document.frmaction.method.disabled = false;
+                document.frmaction.methodpayload.rows = 10;
+            }
             else {
-      document.frmaction.methodpayload.rows = 1;
+                document.frmaction.methodpayload.rows = 1;
                 if (action == 'describe' || action == 'wrap') {
-        document.frmaction.methodpayload.disabled = true;
-        displaydialogeditorbtn(false); //if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = true;
-        document.frmaction.method.disabled = false;
-      }
-      else // list
-      {
-        document.frmaction.methodpayload.disabled = true;
-        displaydialogeditorbtn(false); //if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = false;
-        document.frmaction.method.disabled = true;
-      }
-    }
-  }
+                    document.frmaction.methodpayload.disabled = true;
+                    displaydialogeditorbtn(false); //if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = true;
+                    document.frmaction.method.disabled = false;
+                }
+                else // list
+                {
+                    document.frmaction.methodpayload.disabled = true;
+                    displaydialogeditorbtn(false); //if (document.getElementById('methodpayloadbtn') != undefined) document.getElementById('methodpayloadbtn').disabled = false;
+                    document.frmaction.method.disabled = true;
+                }
+            }
+        }
 
         function switchssl() {
             if (document.frmaction.protocol.value != '2') {
-      document.frmaction.verifypeer.disabled = true;
-      document.frmaction.verifyhost.disabled = true;
-      document.frmaction.cainfo.disabled = true;
-    }
+                document.frmaction.verifypeer.disabled = true;
+                document.frmaction.verifyhost.disabled = true;
+                document.frmaction.cainfo.disabled = true;
+            }
             else {
-      document.frmaction.verifypeer.disabled = false;
-      document.frmaction.verifyhost.disabled = false;
-      document.frmaction.cainfo.disabled = false;
-    }
-  }
+                document.frmaction.verifypeer.disabled = false;
+                document.frmaction.verifyhost.disabled = false;
+                document.frmaction.cainfo.disabled = false;
+            }
+        }
 
         function switchauth() {
             if (document.frmaction.protocol.value != '0') {
-      document.frmaction.authtype.disabled = false;
-    }
+                document.frmaction.authtype.disabled = false;
+            }
             else {
-      document.frmaction.authtype.disabled = true;
-      document.frmaction.authtype.value = 1;
-    }
-  }
+                document.frmaction.authtype.disabled = true;
+                document.frmaction.authtype.value = 1;
+            }
+        }
 
         function swicthcainfo() {
             if (document.frmaction.verifypeer.checked == true) {
-      document.frmaction.cainfo.disabled = false;
-    }
+                document.frmaction.cainfo.disabled = false;
+            }
             else {
-      document.frmaction.cainfo.disabled = true;
-    }
-  }
+                document.frmaction.cainfo.disabled = true;
+            }
+        }
 
         function switchtransport(is_json) {
             if (is_json == 0) {
-      document.getElementById("idcell").style.visibility = 'hidden';
-      document.frmjsonrpc.yes.checked = false;
-      document.frmxmlrpc.yes.checked = true;
+                document.getElementById("idcell").style.visibility = 'hidden';
+                document.frmjsonrpc.yes.checked = false;
+                document.frmxmlrpc.yes.checked = true;
                 document.frmaction.wstype.value = "0";
-    }
+            }
             else {
-      document.getElementById("idcell").style.visibility = 'visible';
-      document.frmjsonrpc.yes.checked = true;
-      document.frmxmlrpc.yes.checked = false;
+                document.getElementById("idcell").style.visibility = 'visible';
+                document.frmjsonrpc.yes.checked = true;
+                document.frmxmlrpc.yes.checked = false;
                 document.frmaction.wstype.value = "1";
-    }
-  }
+            }
+        }
 
         function displaydialogeditorbtn(show) {
             if (show && ((typeof base64_decode) == 'function')) {
-	  document.getElementById('methodpayloadbtn').innerHTML = '[<a href="#" onclick="activateeditor(); return false;">Edit</a>]';
-	}
+                document.getElementById('methodpayloadbtn').innerHTML = '[<a href="#" onclick="activateeditor(); return false;">Edit</a>]';
+            }
             else {
-	  document.getElementById('methodpayloadbtn').innerHTML = '';
-	}
-  }
+                document.getElementById('methodpayloadbtn').innerHTML = '';
+            }
+        }
 
         function activateeditor() {
-	  var url = '<?php echo $editorpath; ?>visualeditor.php?params=<?php echo $alt_payload; ?>';
-	  if (document.frmaction.wstype.value == "1")
-	    url += '&type=jsonrpc';
-	  var wnd = window.open(url, '_blank', 'width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=1');
-  }
+            var url = '<?php echo $editorpath; ?>visualeditor.php?params=<?php echo $alt_payload; ?>';
+            if (document.frmaction.wstype.value == "1")
+                url += '&type=jsonrpc';
+            var wnd = window.open(url, '_blank', 'width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=1');
+        }
 
-  // if javascript version of the lib is found, allow it to send us params
+        // if javascript version of the lib is found, allow it to send us params
         function buildparams(base64data) {
             if (typeof base64_decode == 'function') {
-	  if (base64data == '0') // workaround for bug in base64_encode...
-	    document.getElementById('methodpayload').value = '';
-	  else
-        document.getElementById('methodpayload').value = base64_decode(base64data);
-    }
-  }
+                if (base64data == '0') // workaround for bug in base64_encode...
+                    document.getElementById('methodpayload').value = '';
+                else
+                    document.getElementById('methodpayload').value = base64_decode(base64data);
+            }
+        }
 
-  // use GET for ease of refresh, switch to POST when payload is too big to fit in url (in IE: 2048 bytes! see http://support.microsoft.com/kb/q208427/)
+        // use GET for ease of refresh, switch to POST when payload is too big to fit in url (in IE: 2048 bytes! see http://support.microsoft.com/kb/q208427/)
         function switchFormMethod() {
-      /// @todo use a more precise calculation, adding the rest of the fields to the actual generated url lenght
+            /// @todo use a more precise calculation, adding the rest of the fields to the actual generated url lenght
             if (document.frmaction.methodpayload.value.length > 1536) {
-          document.frmaction.action = 'action.php?usepost=true';
-          document.frmaction.method = 'post';
-      }
-  }
+                document.frmaction.action = 'action.php?usepost=true';
+                document.frmaction.method = 'post';
+            }
+        }
 
         //-->
     </script>

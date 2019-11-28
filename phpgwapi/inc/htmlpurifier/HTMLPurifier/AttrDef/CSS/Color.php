@@ -104,7 +104,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
 
                     $new_parts[] = (string)$result;
                     continue;
-                    }
+                }
 
                 if (substr($part, -1) === '%') {
                     $current_type = 'percentage';
@@ -113,16 +113,16 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
                 }
 
                 if (!array_key_exists($current_type, $allowed_types[$i])) {
-                        return false;
-                    }
+                    return false;
+                }
 
                 if (!$type) {
                     $type = $current_type;
-                    }
+                }
 
                 if ($allow_different_types === false && $type != $current_type) {
                     return false;
-                    }
+                }
 
                 $max_value = $allowed_types[$i][$current_type];
 

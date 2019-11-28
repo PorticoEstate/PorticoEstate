@@ -29,7 +29,6 @@ $hosted = array (
 
 $included = array (
 	'config.php5',
-//	'pclzip/pclzip.lib.php',
 	'php5/mssg.php5',
 	'php5/odt2xhtml.php5',
 );

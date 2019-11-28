@@ -91,13 +91,17 @@ class HTMLPurifier_AttrDef_URI_Host extends HTMLPurifier_AttrDef
         // hostname    = *( domainlabel "." ) toplabel [ "." ]
         if (preg_match("/^(?:$domainlabel\.)*($toplabel)\.?$/i", $string, $matches)) {
             if (!ctype_digit($matches[1])) {
-            return $string;
-        }
+                return $string;
+            }
         }
 
         // PHP 5.3 and later support this functionality natively
         if (function_exists('idn_to_ascii')) {
-            $string = idn_to_ascii($string);
+            if (defined('IDNA_NONTRANSITIONAL_TO_ASCII') && defined('INTL_IDNA_VARIANT_UTS46')) {
+                $string = idn_to_ascii($string, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+            } else {
+                $string = idn_to_ascii($string);
+            }
 
         // If we have Net_IDNA2 support, we can support IRIs by
         // punycoding them. (This is the most portable thing to do,

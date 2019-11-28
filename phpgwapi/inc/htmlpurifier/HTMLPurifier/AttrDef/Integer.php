@@ -36,7 +36,7 @@ class HTMLPurifier_AttrDef_Integer extends HTMLPurifier_AttrDef
     public function __construct($negative = true, $zero = true, $positive = true)
     {
         $this->negative = $negative;
-        $this->zero     = $zero;
+        $this->zero = $zero;
         $this->positive = $positive;
     }
 

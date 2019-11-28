@@ -19,7 +19,7 @@ class HTMLPurifier_URIScheme_data extends HTMLPurifier_URIScheme
         'image/jpeg' => true,
         'image/gif' => true,
         'image/png' => true,
-        );
+    );
     // this is actually irrelevant since we only write out the path
     // component
     /**
@@ -89,7 +89,7 @@ class HTMLPurifier_URIScheme_data extends HTMLPurifier_URIScheme
         if (function_exists('sys_get_temp_dir')) {
             $file = tempnam(sys_get_temp_dir(), "");
         } else {
-        $file = tempnam("/tmp", "");
+            $file = tempnam("/tmp", "");
         }
         file_put_contents($file, $raw_data);
         if (function_exists('exif_imagetype')) {

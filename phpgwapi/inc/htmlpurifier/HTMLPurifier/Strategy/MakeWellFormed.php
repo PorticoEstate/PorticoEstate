@@ -78,21 +78,21 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
         if ($token === NULL) {
             return array();
         }
-        $reprocess  = false; // whether or not to reprocess the same token
+        $reprocess = false; // whether or not to reprocess the same token
         $stack = array();
 
         // member variables
-        $this->stack   =& $stack;
-        $this->tokens  =& $tokens;
+        $this->stack =& $stack;
+        $this->tokens =& $tokens;
         $this->token =& $token;
         $this->zipper =& $zipper;
-        $this->config  = $config;
+        $this->config = $config;
         $this->context = $context;
 
         // context variables
         $context->register('CurrentNesting', $stack);
         $context->register('InputZipper', $zipper);
-        $context->register('CurrentToken',   $token);
+        $context->register('CurrentToken', $token);
 
         // -- begin INJECTOR --
 
@@ -151,7 +151,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
 
         // isset is in loop because $tokens size changes during loop exec
         for (;;
-            // only increment if we don't need to reprocess
+             // only increment if we don't need to reprocess
              $reprocess ? $reprocess = false : $token = $zipper->next($token)) {
 
             // check for a rewind
@@ -284,7 +284,7 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
 
                     $parent_def = null;
                     $parent_elements = null;
-                        $autoclose = false;
+                    $autoclose = false;
                     if (isset($definition->info[$parent->name])) {
                         $parent_def = $definition->info[$parent->name];
                         $parent_elements = $parent_def->child->getAllowedElements($config);
@@ -292,8 +292,8 @@ class HTMLPurifier_Strategy_MakeWellFormed extends HTMLPurifier_Strategy
                     }
 
                     if ($autoclose && $definition->info[$token->name]->wrap) {
-                        // Check if an element can be wrapped by another 
-                        // element to make it valid in a context (for 
+                        // Check if an element can be wrapped by another
+                        // element to make it valid in a context (for
                         // example, <ul><ul> needs a <li> in between)
                         $wrapname = $definition->info[$token->name]->wrap;
                         $wrapdef = $definition->info[$wrapname];

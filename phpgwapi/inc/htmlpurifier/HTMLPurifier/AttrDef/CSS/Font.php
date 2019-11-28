@@ -22,12 +22,12 @@ class HTMLPurifier_AttrDef_CSS_Font extends HTMLPurifier_AttrDef
     public function __construct($config)
     {
         $def = $config->getCSSDefinition();
-        $this->info['font-style']   = $def->info['font-style'];
+        $this->info['font-style'] = $def->info['font-style'];
         $this->info['font-variant'] = $def->info['font-variant'];
-        $this->info['font-weight']  = $def->info['font-weight'];
-        $this->info['font-size']    = $def->info['font-size'];
-        $this->info['line-height']  = $def->info['line-height'];
-        $this->info['font-family']  = $def->info['font-family'];
+        $this->info['font-weight'] = $def->info['font-weight'];
+        $this->info['font-size'] = $def->info['font-size'];
+        $this->info['line-height'] = $def->info['line-height'];
+        $this->info['font-family'] = $def->info['font-family'];
     }
 
     /**
@@ -97,7 +97,7 @@ class HTMLPurifier_AttrDef_CSS_Font extends HTMLPurifier_AttrDef
                     $found_slash = false;
                     if (strpos($bits[$i], '/') !== false) {
                         list($font_size, $line_height) =
-                                                    explode('/', $bits[$i]);
+                            explode('/', $bits[$i]);
                         if ($line_height === '') {
                             // ooh, there's a space after the slash!
                             $line_height = false;

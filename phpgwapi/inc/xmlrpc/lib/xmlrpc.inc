@@ -35,9 +35,9 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /******************************************************************************
-		*
+ *
  * *** DEPRECATED ***
-		*
+ *
  * This file is only used to insure backwards compatibility
  * with the API of the library <= rev. 3
  *
@@ -81,78 +81,63 @@ $GLOBALS['xmlrpc_backslash'] = chr(92).chr(92);
 
 class xmlrpcval extends PhpXmlRpc\Value
 {
-		/**
+    /**
      * @deprecated
      * @param xmlrpcval $o
-		* @return string
-		*/
+     * @return string
+     */
     public function serializeval($o)
-	{
-			// add check? slower, but helps to avoid recursion in serializing broken xmlrpcvals...
-			//if (is_object($o) && (get_class($o) == 'xmlrpcval' || is_subclass_of($o, 'xmlrpcval')))
-			//{
+    {
+        // add check? slower, but helps to avoid recursion in serializing broken xmlrpcvals...
+        //if (is_object($o) && (get_class($o) == 'xmlrpcval' || is_subclass_of($o, 'xmlrpcval')))
+        //{
         $ar = $o->me;
-		reset($ar);
-		//list($typ, $val) = each($ar);
-		$typ = key($ar);
-		$val = current($ar);
+        $val = reset($ar);
+        $typ = key($ar);
 
-		return '<value>' . $this->serializedata($typ, $val) . "</value>\n";
-			//}
-	}
+        return '<value>' . $this->serializedata($typ, $val) . "</value>\n";
+        //}
+    }
 
-		/**
+    /**
      * @deprecated this code looks like it is very fragile and has not been fixed
      * for a long long time. Shall we remove it for 2.0?
-		*/
+     */
     public function getval()
-	{
-		// UNSTABLE
-		reset($this->me);
-        //list($a, $b) = each($this->me);
-		$a = key($this->me);
-		$b = current($this->me);
-		// contributed by I Sofer, 2001-03-24
-		// add support for nested arrays to scalarval
-		// i've created a new method here, so as to
-		// preserve back compatibility
+    {
+        // UNSTABLE
+        $b = reset($this->me);
+        $a = key($this->me);
+        // contributed by I Sofer, 2001-03-24
+        // add support for nested arrays to scalarval
+        // i've created a new method here, so as to
+        // preserve back compatibility
 
-        if (is_array($b)) 
-		{
-			//@reset($b);
-            //while (list($id, $cont) = @each($b))
-			foreach($b as $id => $cont)
-			{
-				$b[$id] = $cont->scalarval();
-			}
-		}
+        if (is_array($b)) {
+            foreach($b as $id => $cont) {
+                $b[$id] = $cont->scalarval();
+            }
+        }
 
-			// add support for structures directly encoding php objects
-        if (is_object($b)) 
-		{
-			$t = get_object_vars($b);
-			//@reset($t);
-			//while (list($id, $cont) = @each($t))
-			foreach($t as $id => $cont)
-			{
-				$t[$id] = $cont->scalarval();
-			}
-			//@reset($t);
-			//while (list($id, $cont) = @each($t))
-			foreach($t as $id => $cont)
-			{
-				@$b->$id = $cont;
-			}
-		}
-		// end contrib
-		return $b;
-	}
+        // add support for structures directly encoding php objects
+        if (is_object($b)) {
+            $t = get_object_vars($b);
+            foreach($t as $id => $cont) {
+                $t[$id] = $cont->scalarval();
+            }
+            foreach($t as $id => $cont) {
+                @$b->$id = $cont;
+            }
+        }
+        // end contrib
+        return $b;
+    }
 
     /// reset functionality added by parent class: same as it would happen if no interface was declared
     public function count()
-	{
+    {
         return 1;
-	}
+    }
 
     /// reset functionality added by parent class: same as it would happen if no interface was declared
     public function getIterator() {

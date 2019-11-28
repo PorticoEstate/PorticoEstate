@@ -47,9 +47,9 @@ $messages = array(
 );
 
 $errorNames = array(
-    E_ERROR   => 'Error',
+    E_ERROR => 'Error',
     E_WARNING => 'Warning',
-    E_NOTICE  => 'Notice'
+    E_NOTICE => 'Notice'
 );
 
 // vim: et sw=4 sts=4

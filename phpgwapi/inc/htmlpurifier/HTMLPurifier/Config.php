@@ -21,7 +21,7 @@ class HTMLPurifier_Config
      * HTML Purifier's version
      * @type string
      */
-    public $version = '4.9.3';
+    public $version = '4.12.0';
 
     /**
      * Whether or not to automatically finalize
@@ -653,7 +653,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('HTML', true, true);
     }
-
+    
     /**
      * @return HTMLPurifier_CSSDefinition
      */
@@ -661,7 +661,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('CSS', true, true);
     }
-
+    
     /**
      * @return HTMLPurifier_URIDefinition
      */
@@ -714,22 +714,22 @@ class HTMLPurifier_Config
             if (is_string($allowed)) {
                 $allowed = array($allowed);
             }
-             $allowed_ns = array();
-             $allowed_directives = array();
-             $blacklisted_directives = array();
-             foreach ($allowed as $ns_or_directive) {
-                 if (strpos($ns_or_directive, '.') !== false) {
-                     // directive
-                     if ($ns_or_directive[0] == '-') {
-                         $blacklisted_directives[substr($ns_or_directive, 1)] = true;
-                     } else {
-                         $allowed_directives[$ns_or_directive] = true;
-                     }
-                 } else {
-                     // namespace
-                     $allowed_ns[$ns_or_directive] = true;
-                 }
-             }
+            $allowed_ns = array();
+            $allowed_directives = array();
+            $blacklisted_directives = array();
+            foreach ($allowed as $ns_or_directive) {
+                if (strpos($ns_or_directive, '.') !== false) {
+                    // directive
+                    if ($ns_or_directive[0] == '-') {
+                        $blacklisted_directives[substr($ns_or_directive, 1)] = true;
+                    } else {
+                        $allowed_directives[$ns_or_directive] = true;
+                    }
+                } else {
+                    // namespace
+                    $allowed_ns[$ns_or_directive] = true;
+                }
+            }
         }
         $ret = array();
         foreach ($schema->info as $key => $def) {
@@ -890,7 +890,7 @@ class HTMLPurifier_Config
             // zip(tail(trace), trace) -- but PHP is not Haskell har har
             for ($i = 0, $c = count($trace); $i < $c - 1; $i++) {
                 // XXX this is not correct on some versions of HTML Purifier
-                if ($trace[$i + 1]['class'] === 'HTMLPurifier_Config') {
+                if (isset($trace[$i + 1]['class']) && $trace[$i + 1]['class'] === 'HTMLPurifier_Config') {
                     continue;
                 }
                 $frame = $trace[$i];

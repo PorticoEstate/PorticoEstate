@@ -24,7 +24,7 @@ class HTMLPurifier_AttrTransform_BoolToCSS extends HTMLPurifier_AttrTransform
     public function __construct($attr, $css)
     {
         $this->attr = $attr;
-        $this->css  = $css;
+        $this->css = $css;
     }
 
     /**
