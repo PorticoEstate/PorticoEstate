@@ -478,3 +478,5 @@ No rent object chosen	bookingfrontend	no	Ingen leieobjekter er valgt
 For rent	bookingfrontend	no	Til leie
 Choose atleast one object	bookingfrontend	no	Velg minst ett leieobjekt
 Please fill all fields	bookingfrontend	no	Vennligst fyll ut alle obligatoriske felt!
+available	bookingfrontend	no	Ledig
+leased	bookingfrontend	no	Utleid

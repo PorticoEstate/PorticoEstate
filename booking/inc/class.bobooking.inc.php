@@ -1126,19 +1126,22 @@
 
 						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 
-						$availlableTimeSlots[$resource['id']][] = [
-							'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
-							'overlap'			 => $overlap,
-							'applicationLink'	 => [
-								'menuaction'	 => 'bookingfrontend.uiapplication.add',
-								'resource_id'	 => $resource['id'],
-								'building_id'	 => $building_id,
-								'start'			 => $StartTime->getTimestamp() . '000',
-								'end'			 => $endTime->getTimestamp() . '000',
-								'simple'		 => true
-							]
-						];
+						if ($booking_lenght > 0 && !$overlap)
+						{
 
+							$availlableTimeSlots[$resource['id']][] = [
+								'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
+								'overlap'			 => $overlap,
+								'applicationLink'	 => [
+									'menuaction'	 => 'bookingfrontend.uiapplication.add',
+									'resource_id'	 => $resource['id'],
+									'building_id'	 => $building_id,
+									'start'			 => $StartTime->getTimestamp() . '000',
+									'end'			 => $endTime->getTimestamp() . '000',
+									'simple'		 => true
+								]
+							];
+						}
 
 						if ($booking_lenght == -1)
 						{

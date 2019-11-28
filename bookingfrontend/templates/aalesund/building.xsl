@@ -39,7 +39,7 @@
 									<p>Trykk for å se kart</p>
 								</button>
 
-								
+
 								<!-- Map Modal -->
 								<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
 									<div class="modal-dialog modal-lg" role="document">
@@ -181,26 +181,32 @@
 								</a>
 
 								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
-									<span class="tagTitle" data-bind="if: $index() == 0">
-										<xsl:value-of select="php:function('lang', 'free')"/>:
-									</span>
 									<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
+									<ul class="list-group list-group-flush">
+										<div data-bind="if: overlap">
 
-									<div data-bind="if: overlap">
-										<del>
-											<span data-bind="html: when"></span>
-										</del>
-									</div>
-									<div data-bind="if: overlap == false">
-										<div class="input-group-append">
-											<a class="bookable-timeslots-link-href" data-bind="" href="">
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
 												<span data-bind="html: when"></span>
-											</a>
-											<span class="ml-2 input-group-text">
-												<i class="far fa-calendar-alt"></i>
-											</span>
+												<span class="ml-2" style="font-weight: bold; color: #ff3333;">
+													<xsl:value-of select="php:function('lang', 'leased')"/>
+												</span>
+											</li>
 										</div>
-									</div>
+
+										<div data-bind="if: overlap == false">
+
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
+												<a class="bookable-timeslots-link-href" data-bind="" href="">
+													<span data-bind="html: when"></span>
+												</a>
+												<span class="ml-2" style="font-weight: bold; color: #1a8f65;">
+													<xsl:value-of select="php:function('lang', 'available')"/>
+												</span>
+											</li>
+										</div>
+									</ul>
 								</div>
 							</div>
 						</div>
