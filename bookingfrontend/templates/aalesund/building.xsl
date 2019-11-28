@@ -163,8 +163,26 @@
 								<!--<a class="bookable-resource-link-href" href="" data-bind="">
 										<span data-bind="html: name"></span>
 								</a>-->
-								<a class="bookable-resource-link-href" href="" data-bind="">
 
+								<div data-bind="if: resourceItemLink != false">
+									<a class="bookable-resource-link-href" href="" data-bind="">
+
+										<span data-bind="html: name"></span>
+										<div data-bind="foreach: activitiesList">
+											<span class="tagTitle" data-bind="if: $index() == 0">
+												<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
+											</span>
+											<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
+										</div>
+										<div class="mt-2" data-bind="foreach: facilitiesList">
+											<span class="tagTitle" data-bind="if: $index() == 0">
+												<xsl:value-of select="php:function('lang', 'Facilities')"/>:
+											</span>
+											<span class="textTagsItems" data-bind="html: $data"></span>
+										</div>
+									</a>
+								</div>
+								<div data-bind="if: resourceItemLink == false">
 									<span data-bind="html: name"></span>
 									<div data-bind="foreach: activitiesList">
 										<span class="tagTitle" data-bind="if: $index() == 0">
@@ -178,13 +196,13 @@
 										</span>
 										<span class="textTagsItems" data-bind="html: $data"></span>
 									</div>
-								</a>
+								</div>
+
 
 								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
 									<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
 									<ul class="list-group list-group-flush">
 										<div data-bind="if: overlap">
-
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
 												<span data-bind="html: when"></span>

@@ -206,59 +206,61 @@
 									<h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
 								</legend>
 							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Activity')" />
-								</label>
-								<span>
-									<xsl:value-of select="application/activity_name"/>
-								</span>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Event name')" />
-								</label>
-								<span>
-									<xsl:value-of select="application/name" disable-output-escaping="yes"/>
-								</span>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Organizer')" />
-								</label>
-								<span>
-									<xsl:value-of select="application/organizer" disable-output-escaping="yes"/>
-								</span>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Homepage')" />
-								</label>
-								<xsl:if test="application/homepage and normalize-space(application/homepage)">
-									<a>
-										<xsl:attribute name="href">
+							<xsl:if test="simple != 1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Activity')" />
+									</label>
+									<span>
+										<xsl:value-of select="application/activity_name"/>
+									</span>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Event name')" />
+									</label>
+									<span>
+										<xsl:value-of select="application/name" disable-output-escaping="yes"/>
+									</span>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Organizer')" />
+									</label>
+									<span>
+										<xsl:value-of select="application/organizer" disable-output-escaping="yes"/>
+									</span>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Homepage')" />
+									</label>
+									<xsl:if test="application/homepage and normalize-space(application/homepage)">
+										<a>
+											<xsl:attribute name="href">
+												<xsl:value-of select="application/homepage"/>
+											</xsl:attribute>
 											<xsl:value-of select="application/homepage"/>
-										</xsl:attribute>
-										<xsl:value-of select="application/homepage"/>
-									</a>
-								</xsl:if>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Description')" />
-								</label>
-								<span>
-									<xsl:value-of select="application/description" disable-output-escaping="yes"/>
-								</span>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Extra info')" />
-								</label>
-								<span>
-									<xsl:value-of select="application/equipment" disable-output-escaping="yes"/>
-								</span>
-							</div>
+										</a>
+									</xsl:if>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Description')" />
+									</label>
+									<span>
+										<xsl:value-of select="application/description" disable-output-escaping="yes"/>
+									</span>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Extra info')" />
+									</label>
+									<span>
+										<xsl:value-of select="application/equipment" disable-output-escaping="yes"/>
+									</span>
+								</div>
+							</xsl:if>
 						</div>
 
 						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
@@ -378,62 +380,65 @@
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
 								</legend>
 							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Target audience')" />
-								</label>
-								<div class="custom-container">
-									<ul class="list-left">
-										<xsl:for-each select="audience">
-											<xsl:if test="../application/audience=id">
-												<li>
-													<xsl:value-of select="name"/>
-												</li>
-											</xsl:if>
-										</xsl:for-each>
-									</ul>
-								</div>
-							</div>
-							<div class="pure-control-group">
-								<label style="vertical-align: top;width: auto;">
-									<xsl:value-of select="php:function('lang', 'Number of participants')" />
-								</label>
-								<div class="pure-form-contentTable">
-									<table id="agegroup" class="pure-table pure-table-striped">
-										<thead>
-											<tr>
-												<th>
-													<xsl:value-of select="php:function('lang', 'Name')" />
-												</th>
-												<th>
-													<xsl:value-of select="php:function('lang', 'Male')" />
-												</th>
-												<th>
-													<xsl:value-of select="php:function('lang', 'Female')" />
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<xsl:for-each select="agegroups">
-												<xsl:variable name="id">
-													<xsl:value-of select="id"/>
-												</xsl:variable>
-												<tr>
-													<td>
+							<xsl:if test="simple != 1">
+
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Target audience')" />
+									</label>
+									<div class="custom-container">
+										<ul class="list-left">
+											<xsl:for-each select="audience">
+												<xsl:if test="../application/audience=id">
+													<li>
 														<xsl:value-of select="name"/>
-													</td>
-													<td>
-														<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-													</td>
-													<td>
-														<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-													</td>
-												</tr>
+													</li>
+												</xsl:if>
 											</xsl:for-each>
-										</tbody>
-									</table>
+										</ul>
+									</div>
 								</div>
-							</div>
+								<div class="pure-control-group">
+									<label style="vertical-align: top;width: auto;">
+										<xsl:value-of select="php:function('lang', 'Number of participants')" />
+									</label>
+									<div class="pure-form-contentTable">
+										<table id="agegroup" class="pure-table pure-table-striped">
+											<thead>
+												<tr>
+													<th>
+														<xsl:value-of select="php:function('lang', 'Name')" />
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'Male')" />
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'Female')" />
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<xsl:for-each select="agegroups">
+													<xsl:variable name="id">
+														<xsl:value-of select="id"/>
+													</xsl:variable>
+													<tr>
+														<td>
+															<xsl:value-of select="name"/>
+														</td>
+														<td>
+															<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+														</td>
+														<td>
+															<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+														</td>
+													</tr>
+												</xsl:for-each>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</xsl:if>
 						</div>
 						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
