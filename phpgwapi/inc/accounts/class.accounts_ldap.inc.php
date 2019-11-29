@@ -775,9 +775,9 @@
 		* @param array $account_info Account information: account_id, account_expires, account_status, lastlogin, lastloginfrom, lastpasswd_change, account_firstname, account_lastname, account_passwd, homedirectory, ...
 		* @param string $default_prefs Unused
 		*/
-		function _create_user($account_info, $groups)
+		function _create_user($account_info, $groups, $contact_data = array())
 		{
-			$this->_save_contact_for_user($account_info);
+			$this->_save_contact_for_user($account_info, $contact_data);
 			if ( !isset($account_info->id) || !$account_info->id )
 			{
 				$account_info->id = $this->_get_nextid($account_info->type);
@@ -1507,7 +1507,7 @@
 			return $this->memberships[$account_id];
 		}
 
-		protected function read_repository()
+		public function read_repository()
 		{
 			$this->account = $this->get($this->account_id);
 			return $this->account;
