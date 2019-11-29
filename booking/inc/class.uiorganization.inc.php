@@ -204,7 +204,7 @@
 		public function add()
 		{
 			$errors = array();
-			$organization = array('customer_internal' => 1);
+			$organization = array('customer_internal' => 0);
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
