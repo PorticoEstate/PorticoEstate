@@ -28,6 +28,7 @@
 
 	class helpdesk_hook_helper
 	{
+
 		private $config;
 
 		public function __construct()
@@ -56,16 +57,16 @@
 					if ($fellesdata_user)
 					{
 						// Read default assign-to-group from config
-						$default_group_id = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
-						$group_lid = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
-						$group_lid = $group_lid ? $group_lid : 'frontend_delegates';
+						$default_group_id	 = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
+						$group_lid			 = $GLOBALS['phpgw']->accounts->id2lid($default_group_id);
+						$group_lid			 = $group_lid ? $group_lid : 'frontend_delegates';
 
-						$password = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
-						$account_id = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
+						$password	 = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
+						$account_id	 = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
 						if ($account_id)
 						{
 							$cd_array = array();
-							if(!empty($_GET['domain']))
+							if (!empty($_GET['domain']))
 							{
 								$cd_array['domain'] = $_GET['domain'];
 							}
@@ -91,11 +92,11 @@
 			// Create group account if needed
 			if (!$GLOBALS['phpgw']->accounts->exists($group_lid)) // No group account exist
 			{
-				$account = new phpgwapi_group();
-				$account->lid = $group_lid;
-				$account->firstname = 'Frontend';
-				$account->lastname = 'Delegates';
-				$frontend_delegates = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+				$account			 = new phpgwapi_group();
+				$account->lid		 = $group_lid;
+				$account->firstname	 = 'Frontend';
+				$account->lastname	 = 'Delegates';
+				$frontend_delegates	 = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
 
 				$aclobj = & $GLOBALS['phpgw']->acl;
 				$aclobj->set_account_id($frontend_delegates, true);
@@ -124,24 +125,24 @@
 				{
 					$contacts = createObject('phpgwapi.contacts');
 
-					$account = new phpgwapi_user();
-					$account->lid = $username;
-					$account->firstname = $firstname;
-					$account->lastname = $lastname;
-					$account->passwd = $password;
-					$account->enabled = true;
-					$account->expires = -1;
+					$account			 = new phpgwapi_user();
+					$account->lid		 = $username;
+					$account->firstname	 = $firstname;
+					$account->lastname	 = $lastname;
+					$account->passwd	 = $password;
+					$account->enabled	 = true;
+					$account->expires	 = -1;
 
 					$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
 
 					$contact_data = array('comms' => array(array(
-						'comm_descr'		=> $contacts->search_comm_descr('work email'),
-						'comm_data'			=> $fellesdata_user['email'],
-						'comm_preferred'	=> 'Y'
+								'comm_descr'	 => $contacts->search_comm_descr('work email'),
+								'comm_data'		 => $fellesdata_user['email'],
+								'comm_preferred' => 'Y'
 					)));
 
 					$result = $GLOBALS['phpgw']->accounts->create($account, array($frontend_delegates), array(), array(
-						'helpdesk'),$contact_data);
+						'helpdesk'), $contact_data);
 					if ($result)
 					{
 						if ($fellesdata_user)
@@ -163,8 +164,8 @@
 						}
 						$preferences->save_repository();
 
-						$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
-							'p1' => $username));
+						$GLOBALS['phpgw']->log->write(array('text'	 => 'I-Notification, user created %1',
+							'p1'	 => $username));
 					}
 
 					return $result;
@@ -199,26 +200,60 @@
 				}
 
 				return !!$rcpt;
-
 			}
 			return false;
 		}
 
 		public function anonyminizer()
 		{
-			$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
-			$number_of_days = !empty($config['anonymize_days']) ? $config['anonymize_days'] : 365;
+			$helpdesk_config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+			$number_of_days	 = !empty((int)$helpdesk_config['anonymize_days']) ? (int)$helpdesk_config['anonymize_days'] : 365;
+
+			$cat_config = CreateObject('helpdesk.socat_anonyminizer')->read();
+
+			$categories = CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket');
+
+			foreach ($cat_config as $cat_id => $config)
+			{
+
+				$filter_cat = array();
+
+				$_cats			 = $categories->return_sorted_array(0, false, '', '', '', false, $cat_id);
+				$filter_cat[]	 = $cat_id;
+				foreach ($_cats as $_cat)
+				{
+					$filter_cat[] = $_cat['id'];
+				}
+
+
+				$limit_days = !empty($config['limit_days']) ? $config['limit_days'] : $number_of_days;
+
+				if ($config['active'] && $filter_cat && $limit_days)
+				{
+					$this->_perform_anonymizing($filter_cat, $limit_days);
+				}
+			}
+		}
+
+		private function _perform_anonymizing( $filter_cat, $limit_days )
+		{
+
+			if(empty($filter_cat) || empty($limit_days))
+			{
+				throw new Exception('hook_helper::_perform_anonymizing() - missing input');
+			}
+
 			$anonyminized_text = 'Anonymisert';
 
-			$db 			= & $GLOBALS['phpgw']->db;
+			$db = & $GLOBALS['phpgw']->db;
 			$db->transaction_begin();
 
 			$closed = '';
-			$db->query('SELECT * from phpgw_helpdesk_status',__LINE__,__FILE__);
+			$db->query('SELECT * from phpgw_helpdesk_status', __LINE__, __FILE__);
 
 			while ($db->next_record())
 			{
-				if( $db->f('closed'))
+				if ($db->f('closed'))
 				{
 					$closed .= " OR phpgw_helpdesk_tickets.status = 'C" . $db->f('id') . "'";
 				}
@@ -228,16 +263,17 @@
 
 
 			$tickets = array();
-			$sql = "SELECT id, to_char(to_timestamp(modified_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets"
-			. " WHERE modified_date <  extract(epoch FROM  (now() - interval '{$number_of_days} day') )"
-			. " AND (on_behalf_of_name IS NULL OR on_behalf_of_name != '{$anonyminized_text}')"
-			. " $filter_closed"
-			. " ORDER BY id";
+			$sql	 = "SELECT id, to_char(to_timestamp(modified_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets"
+				. " WHERE modified_date <  extract(epoch FROM  (now() - interval '{$limit_days} day') )"
+				. " AND cat_id IN (" . implode(',', $filter_cat) . ')'
+				. " AND (on_behalf_of_name IS NULL OR on_behalf_of_name != '{$anonyminized_text}')"
+				. " $filter_closed"
+				. " ORDER BY id";
 
 //			$sql = "SELECT id, to_char(to_timestamp(modified_date),'YYYY.MM.DD') AS dato FROM phpgw_helpdesk_tickets WHERE  on_behalf_of_name = 'Anonymisert' ORDER BY id";
-//		_debug_array($sql);
+		_debug_array($sql);
 
-		$db->limit_query($sql,0,__LINE__,__FILE__, 200);
+			$db->limit_query($sql, 0, __LINE__, __FILE__, 200);
 			while ($db->next_record())
 			{
 				$tickets[] = $db->f('id');
@@ -245,15 +281,15 @@
 
 //		_debug_array($tickets);
 
-			$vfs = CreateObject('phpgwapi.vfs');
-			$vfs->override_acl = 1;
+			$vfs				 = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl	 = 1;
 
 			foreach ($tickets as $ticket_id)
 			{
-				$files = $vfs->ls (array(
-					'string' => "/helpdesk/{$ticket_id}",
-					'checksubdirs'	=> false,
-					'relatives' => array(RELATIVE_NONE)));
+				$files = $vfs->ls(array(
+					'string'		 => "/helpdesk/{$ticket_id}",
+					'checksubdirs'	 => false,
+					'relatives'		 => array(RELATIVE_NONE)));
 
 				foreach ($files as $entry)
 				{
@@ -268,49 +304,45 @@
 
 			$vfs->override_acl = 0;
 
-			if($tickets)
+			if ($tickets)
 			{
 
 				$sql = "UPDATE phpgw_helpdesk_tickets SET subject = '{$anonyminized_text}', details = '{$anonyminized_text}', on_behalf_of_name = '{$anonyminized_text}'"
-				. " WHERE id IN (" . implode(',', $tickets) . ')';
-			_debug_array($sql);
+					. " WHERE id IN (" . implode(',', $tickets) . ')';
+				_debug_array($sql);
 //				$db->query($sql);
 
 				$sql = "UPDATE phpgw_history_log SET history_new_value = '{$anonyminized_text}', history_old_value = '{$anonyminized_text}'"
-				. " WHERE history_status = 'C'"
-				. " AND history_record_id IN (" . implode(',', $tickets) . ')';
-			_debug_array($sql);
+					. " WHERE history_status = 'C'"
+					. " AND history_record_id IN (" . implode(',', $tickets) . ')';
+				_debug_array($sql);
 //				$db->query($sql);
 
 
 				$sql = "UPDATE phpgw_helpdesk_external_communication SET subject = '{$anonyminized_text}', file_attachments = NULL"
-				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
-			_debug_array($sql);
+					. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
+				_debug_array($sql);
 //				$db->query($sql);
 
-			$sql = "SELECT id FROM phpgw_helpdesk_external_communication"
-				. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
-		_debug_array($sql);
+				$sql		 = "SELECT id FROM phpgw_helpdesk_external_communication"
+					. " WHERE ticket_id IN (" . implode(',', $tickets) . ')';
+				_debug_array($sql);
 //				$db->query($sql);
-				$excom_ids = array();
+				$excom_ids	 = array();
 				while ($db->next_record())
 				{
 					$excom_ids[] = $db->f('id');
 				}
 
-				if($excom_ids)
+				if ($excom_ids)
 				{
 					$sql = "UPDATE phpgw_helpdesk_external_communication_msg SET message = '{$anonyminized_text}', file_attachments = NULL"
-					. " WHERE excom_id IN (" . implode(',', $excom_ids) . ')';
-			_debug_array($sql);
+						. " WHERE excom_id IN (" . implode(',', $excom_ids) . ')';
+					_debug_array($sql);
 //					$db->query($sql);
 				}
-
-
 			}
 			$db->transaction_abort();
 //			$db->transaction_commit();
-
 		}
-
 	}
