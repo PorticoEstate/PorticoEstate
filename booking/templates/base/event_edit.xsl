@@ -151,17 +151,17 @@
 									<xsl:value-of select="php:function('lang', 'Event type')"/>
 								</label>
 								<select id="field_public" name="is_public" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
-									<option value="1">
-										<xsl:if test="event/is_public=1">
-											<xsl:attribute name="selected">checked</xsl:attribute>
-										</xsl:if>
-										<xsl:value-of select="php:function('lang', 'Public event')"/>
-									</option>
 									<option value="0">
 										<xsl:if test="event/is_public=0">
 											<xsl:attribute name="selected">checked</xsl:attribute>
 										</xsl:if>
 										<xsl:value-of select="php:function('lang', 'Private event')"/>
+									</option>
+									<option value="1">
+										<xsl:if test="event/is_public=1">
+											<xsl:attribute name="selected">checked</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', 'Public event')"/>
 									</option>
 								</select>
 							</div>

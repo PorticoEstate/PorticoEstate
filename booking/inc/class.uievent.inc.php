@@ -410,7 +410,7 @@
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
-				$event['is_public'] = 1;
+				$event['is_public'] = 0;
 				$event['include_in_list'] = 0;
 				$event['building_name'] = $_POST['building_name'];
 
