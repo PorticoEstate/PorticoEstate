@@ -45,9 +45,8 @@ var $_phpTreeMenu;
 * The constructor method; it initializates some variables
 * @return void
 */
-function PHPTreeMenu() {
-	$this->LayersMenuCommon();
-
+function __construct() {
+	 parent::__construct();
 	$this->phpTreeMenuSeparator = "|";
 	$this->phpTreeMenuDefaultExpansion = "";
 	$this->phpTreeMenuImagesType = "png";

@@ -42,8 +42,9 @@ var $_horizontalPlainMenu;
 * The constructor method; it initializates some variables
 * @return void
 */
-function PlainMenu() {
-	$this->LayersMenuCommon();
+function __construct()
+{
+	parent::__construct();
 
 	$this->plainMenuTpl = $this->tpldir . "layersmenu-plain_menu.ihtml";
 	$this->_plainMenu = array();

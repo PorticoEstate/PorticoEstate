@@ -20,8 +20,9 @@ class ProcessLayersMenu extends LayersMenuCommon {
 * The constructor method
 * @return void
 */
-function ProcessLayersMenu() {
-	$this->LayersMenuCommon();
+function __construct()
+{
+	 parent::__construct();
 }
 
 /**
