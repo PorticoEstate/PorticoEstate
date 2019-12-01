@@ -123,7 +123,7 @@
 		 * Accepts RFC 822, ISO 8601 date formats as well as unix time stamps.
 		 * @param mixed $dateString optional the date this FeedDate will represent. If not specified, the current date and time is used.
 		 */
-		function FeedDate( $dateString = "" )
+		function __construct( $dateString = "" )
 		{
 			if ($dateString == "")
 				$dateString = date("r");
@@ -520,7 +520,7 @@
 		 */
 		var $RSSVersion;
 
-		function RSSCreator091()
+		function __construct()
 		{
 			$this->_setRSSVersion("0.91");
 		}
@@ -668,7 +668,7 @@
 	class RSSCreator20 extends RSSCreator091
 	{
 
-		function RSSCreator20()
+		function __construct()
 		{
 			parent::_setRSSVersion("2.0");
 		}

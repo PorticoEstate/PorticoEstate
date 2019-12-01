@@ -306,14 +306,7 @@
 
 	$GLOBALS['server']->addFunction($functions);
 
-	if (isset($HTTP_RAW_POST_DATA))
-	{
-		$request_xml = $HTTP_RAW_POST_DATA;
-	}
-	else
-	{
-		$request_xml = implode(" ", file('php://input'));
-	}
+	$request_xml = implode(" ", file('php://input'));
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST")
 	{
