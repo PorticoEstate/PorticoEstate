@@ -23,7 +23,7 @@
 		* constructor, sets up variables
 		*
 		**/
-		function mapping_ldap($auth_info='')
+		function __construct($auth_info='')
 		{
 			parent::__construct($auth_info);
 		}

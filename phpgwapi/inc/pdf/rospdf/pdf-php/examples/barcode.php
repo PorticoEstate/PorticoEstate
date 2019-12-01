@@ -50,7 +50,7 @@ function code39($text, $barcodethinwidth = 2, $barcodeheight = 40, $xpos = 0, $y
 
 class Creport extends Cezpdf
 {
-    public function Creport($p, $o)
+    public function __construct($p, $o)
     {
         parent::__construct($p, $o);
     }

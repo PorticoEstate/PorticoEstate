@@ -216,12 +216,12 @@ class odt2xhtml
 	/*** transform values cm in px ***/
 	private function _analyze_attribute($attribute) {
 		
-		if(ereg('cm',$attribute)) {
-			if(ereg(' ',$attribute)) $xploz = explode(' ',$attribute);
+		if(preg_match('/cm/i',$attribute)) {
+			if(preg_match('/ /',$attribute)) $xploz = explode(' ',$attribute);
 			
 			if(!empty($xploz) && is_array($xploz)) {
 				foreach($xploz as $k => $v) {
-					if(ereg('cm$',$v)) {
+					if(preg_match('/cm$/i',$v)) {
 						$v = round(floatval($v)*28.6264);
 						$xploz[$k] = $v.'px';
 					}
