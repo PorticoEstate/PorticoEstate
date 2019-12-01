@@ -117,7 +117,7 @@
 						$t_extras[] = $var.'='.$value;
 					}
 				}
-				$extras = implode($t_extras,'&');
+				$extras = implode('&', $t_extras);
 			}
 			
 			return $GLOBALS['phpgw']->link('/index.php','menuaction='.$this->action.$extras);
