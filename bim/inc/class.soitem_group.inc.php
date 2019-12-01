@@ -51,10 +51,10 @@
             $where_clauses  = array(' WHERE 1=1');
             $joins          = array();
 
-            $sql  = 'SELECT ' . implode($cols, ', ') .
+            $sql  = 'SELECT ' . implode(', ', $cols) .
 			" FROM $entity_table " .
-                    implode($joins, ' ') .
-                    implode($where_clauses, ' AND ');
+                    implode(' ', $joins) .
+                    implode(' AND ', $where_clauses);
 
             $this->db->query($sql);
             $i = 0;
