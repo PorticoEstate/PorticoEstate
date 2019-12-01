@@ -112,7 +112,7 @@
 		{
 			$rand_nums[] = rand(1, 9);
 		}
-		return join($rand_nums, '');
+		return join('', $rand_nums);
 	}
 
 	function generate_random_ssn()

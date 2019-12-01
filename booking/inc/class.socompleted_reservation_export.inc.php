@@ -551,7 +551,7 @@
 				call_user_func_array($combine_method, array(&$combined_data, &$export_result['export']));
 			}
 
-			return count($combined_data) > 0 ? join($combined_data, '') : '';
+			return count($combined_data) > 0 ? join('', $combined_data) : '';
 		}
 
 		protected function &combine_csv_export_data( array &$combined_data, $export )
@@ -1077,7 +1077,7 @@
 				return null;
 			}
 
-			return array('data' => join($output, ''), 'info' => $export_info);
+			return array('data' => join('', $output), 'info' => $export_info);
 		}
 
 		/**

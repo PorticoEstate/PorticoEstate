@@ -499,7 +499,7 @@
 					{
 						continue;
 					}
-					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
+					$clauses[] = strtr(join(' AND ', (array)$val ), array('%%table%%' => $this->table_name));
 				}
 			}
 			return join(' AND ', $clauses);
@@ -596,7 +596,7 @@
 					{
 						continue;
 					}
-					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
+					$clauses[] = strtr(join(' AND ', (array)$val), array('%%table%%' => $this->table_name));
 				}
 			}
 
