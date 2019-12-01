@@ -19,7 +19,7 @@
 
 		static private $instance;
 
-		function syncml_logger()
+		function __construct()
 		{
 			$this->handle = fopen(SYNCML_DEBUG_FILE, 'a');
 			$this->log_run = substr(md5(microtime()), 0, 4);

@@ -19,7 +19,7 @@
 
 		var $locname;
 
-		function syncml_auth_md5(&$session, $locname)
+		function __construct(&$session, $locname)
 		{
 			$this->session = &$session;
 			$this->locname = $locname;

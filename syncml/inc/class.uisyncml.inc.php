@@ -26,7 +26,7 @@
 			'editdatabase' => True
 		);
 
-		function uisyncml()
+		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags'] = array
 			(

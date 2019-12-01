@@ -56,7 +56,7 @@
 		 *
 		 * @param int $channel_id ID number of synchronization channel.
 		 */
-		function syncml_database($channel_id)
+		function __construct($channel_id)
 		{
 			$this->channel_id = $channel_id;
 

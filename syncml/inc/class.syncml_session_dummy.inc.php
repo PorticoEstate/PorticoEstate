@@ -21,7 +21,7 @@
 		/**
 		 * This dummy contructor by-passes the parent constructor.
 		 */
-		function syncml_session_dummy()
+		function __construct()
 		{
 		}
 		

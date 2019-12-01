@@ -42,9 +42,9 @@
 		 *
 		 * @param $offset Element offset. Tag names in order.
 		 */
-		function xml_offset_mapper($offset = array())
+		function __construct($offset = array())
 		{
-			parent::xml_mapper();
+			parent::__construct();
 
 			$this->offset_elements = array_change_key_case(
 				$offset, CASE_UPPER);

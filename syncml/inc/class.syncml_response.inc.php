@@ -35,7 +35,7 @@
 
 		var $status_count = 0;
 
-		function syncml_response()
+		function __construct()
 		{
 			$this->root_namespace = 'SYNCML:SYNCML1.1';
 		}

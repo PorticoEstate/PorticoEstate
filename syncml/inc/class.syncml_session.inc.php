@@ -44,7 +44,7 @@
 		// todo: this property is redundant.
 		var $account_id;
 
-		function syncml_session()
+		function __construct()
 		{
 		}
 
