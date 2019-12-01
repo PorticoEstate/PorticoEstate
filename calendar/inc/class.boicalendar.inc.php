@@ -1957,7 +1957,7 @@ class calendar_boicalendar
 				$exdates[] = $this->switch_date($value);
 			}
                         }
-			return ':'.implode($exdates,',');
+			return ':'.implode(',', $exdates);
 		}
 		else
 			if($property == 'rdate')
@@ -1970,7 +1970,7 @@ class calendar_boicalendar
 					$rdates[] = $this->switch_date($value);
 				}
                                 }
-				return ':'.implode($rdates,',');
+				return ':'.implode(',', $rdates);
 			}
 			else
 			{
@@ -3571,7 +3571,7 @@ class calendar_boicalendar
 				@reset($cat_id_nums);
 				if(count($cat_id_nums) > 1)
 				{
-					$so_event->set_category(implode($cat_id_nums,','));
+					$so_event->set_category(implode(',', $cat_id_nums));
 				}
 				else
 				{

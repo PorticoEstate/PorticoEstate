@@ -2018,7 +2018,7 @@
 				$owner_id = $this->g_owner;
 				if($this->debug)
 				{
-					echo '<!-- owner_id in ('.implode($owner_id,',').') -->'."\n";
+					echo '<!-- owner_id in ('.implode(',', $owner_id).') -->'."\n";
 				}
 			}
 			
