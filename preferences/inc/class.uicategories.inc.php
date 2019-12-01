@@ -73,7 +73,7 @@
 		/**
 		 * Constructor
 		 */
-		function uicategories()
+		function __construct()
 		{
 			$cats_app			= get_var('cats_app',array('GET','POST'));
 

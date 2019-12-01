@@ -47,7 +47,7 @@
 		 * 
 		 * @param $cats_app
 		 */
-		function bocategories($cats_app='')
+		function __construct($cats_app='')
 		{
 			$this->cats           = CreateObject('phpgwapi.categories');
 			$this->cats->app_name = $cats_app;
