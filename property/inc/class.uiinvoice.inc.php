@@ -2678,9 +2678,9 @@ JS;
 
 			$bolocation = CreateObject('property.bolocation');
 
-			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
-			parse_str($referer['query']); // produce $menuaction
-			if (phpgw::get_var('cancel', 'bool') || $menuaction != 'property.uiinvoice.add')
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'url', 'SERVER'));
+			parse_str($referer['query'], $output); // produce $menuaction
+			if (phpgw::get_var('cancel', 'bool') || $output['menuaction'] != 'property.uiinvoice.add')
 			{
 				$GLOBALS['phpgw']->session->appsession('session_data', 'add_values', '');
 			}

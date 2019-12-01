@@ -133,9 +133,9 @@
 		 */
 		private function read_sessiondata()
 		{
-			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'url', 'SERVER'));
 			parse_str($referer['query'], $referer_out);
-			$self	 = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER'));
+			$self	 = parse_url(phpgw::get_var('QUERY_STRING', 'url', 'SERVER'));
 			parse_str($self['path'], $self_out);
 
 			if (isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])
