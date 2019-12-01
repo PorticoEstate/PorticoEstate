@@ -232,14 +232,14 @@ class imap_client {
 
         $read = $this->_fgets();
         while ($read) {
-            $char = $read{0};
+            $char = $read[0];
             switch ($char) {
             case '+':
             default:
                 $read = $this->_fgets();
                 break;
 
-            case $tag{0}:
+            case $tag[0]:
                 /* Get the command. */
                 $arg = '';
                 $i = strlen($tag) + 1;
@@ -318,14 +318,14 @@ class imap_client {
                                 break 4; /* while while switch while */
                             }
                             /* Check for next untagged reponse and break. */
-                            if ($read{0} == '*') {
+                            if ($read[0] == '*') {
                                 break 2;
                             }
                             $s = substr($read, -3);
                         } while ($s === "}\r\n");
 
                         $s = substr($read,-3);
-                    } while (($read{0} !== '*') &&
+                    } while (($read[0] !== '*') &&
                              (substr($read, 0, strlen($tag)) !== $tag));
 
                     $resultlist[] = $fetch_data;
@@ -350,7 +350,7 @@ class imap_client {
                         $read = $this->_fgets();
                         if ($read === false) {
                             break 3; /* while switch while */
-                        } elseif ($read{0} == '*') {
+                        } elseif ($read[0] == '*') {
                             break;
                         }
                         $s = substr($read,-3);
