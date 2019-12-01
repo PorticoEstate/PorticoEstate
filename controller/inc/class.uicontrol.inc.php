@@ -590,7 +590,7 @@
 				(
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'control_items', 'control_tabview'),
 				'view' => 'control_items',
-				'control_group_ids' => implode($control_group_ids, ","),
+				'control_group_ids' => implode(",", $control_group_ids),
 				'control' => $control,
 				'groups_with_control_items' => $groups_with_control_items
 			);
