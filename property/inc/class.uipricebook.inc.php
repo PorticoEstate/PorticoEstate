@@ -763,14 +763,8 @@
 				'lang_done'					 => lang('done'),
 				'lang_descr'				 => lang('description'),
 				'value_agreement_group_id'	 => $values['agreement_group_id'],
-				'value_start_date'			 => $GLOBALS['phpgw']->common->show_date(
-					phpgwapi_datetime::date_to_timestamp($values['start_date']),
-										  $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
-				),
-				'value_end_date'			 => $GLOBALS['phpgw']->common->show_date(
-					phpgwapi_datetime::date_to_timestamp($values['end_date']),
-										  $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
-				),
+				'value_start_date'			 => $values['start_date'],
+				'value_end_date'			 => $values['end_date'],
 				'value_num'					 => $values['num'],
 				'value_descr'				 => $values['descr'],
 				'lang_num_statustext'		 => lang('An unique code for this activity'),
@@ -783,6 +777,7 @@
 			phpgwapi_jquery::formvalidator_generate(array());
 
 			$appname = lang('pricebook');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::group';
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_agreement_group' => $data));
