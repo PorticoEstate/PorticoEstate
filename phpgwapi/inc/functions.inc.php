@@ -448,25 +448,43 @@ _debug_array($error_line);
 			'line'	=> $e->getline(),
 			'file'	=> $e->getfile()
 		));
-		$help = 'Please contact your administrator for assistance';
+
+
+		/**
+		 * Friendly message.. in norwegian at least..
+		 */
+		switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+		{
+			case 'no':
+			case 'nn':
+				$error_header = 'Oops - der var det ei lus...';
+				$error_msg = 'Feilen er logget til databasen';
+				$help = 'Ta kontakt med brukerstøtte for å få hjelp.';
+				break;
+
+			default:
+				$error_header = 'Uncaught Exception';
+				$error_msg = 'Error is logged';
+				$help = 'Please contact your administrator for assistance.';
+				break;
+		}
 
 		if (!ini_get('display_errors'))
 		{
 			echo <<<HTML
-				<h1>Uncaught Exception</h1>
+				<h1>{$error_header}</h1>
 				<p>{$help}</p>
-				<p>Error is logged</p>
+				<p>{$error_msg}</p>
 HTML;
 			exit;
 		}
 
 		$msg = $e->getMessage();
-		$help = 'Please contact your administrator for assistance.';
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
-			<h1>Uncaught Exception: {$msg}</h1>
+			<h1>{$error_header}: {$msg}</h1>
 			<p>{$help}</p>
-			<p>Error is logged</p>
+			<p>{$error_msg}</p>
 			<h2>Backtrace:</h2>
 			<pre>
 {$trace}
