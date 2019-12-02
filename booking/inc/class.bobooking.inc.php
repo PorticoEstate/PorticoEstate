@@ -976,8 +976,16 @@
 		function get_free_events( $building_id, $start_date, $end_date, $weekdays )
 		{
 
-			$timezone		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
-			$DateTimeZone	 = new DateTimeZone($timezone);
+			$timezone	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
 
 			$start_date->setTimezone($DateTimeZone);
 			$end_date->setTimezone($DateTimeZone);

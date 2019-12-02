@@ -47,10 +47,16 @@
 
 			$weekdays = array();
 
-			$freetime = $this->bo->get_free_events($building_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+			try
+			{
+				$freetime = $this->bo->get_free_events($building_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+			}
+			catch (Exception $exc)
+			{
+				return "booking_bobooking::get_free_events() - " . $exc->getMessage();
+			}
 
 			return $freetime;
-
 		}
 
 		public function building_schedule()
