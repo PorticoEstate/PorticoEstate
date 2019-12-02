@@ -123,10 +123,12 @@
 		 * Accepts RFC 822, ISO 8601 date formats as well as unix time stamps.
 		 * @param mixed $dateString optional the date this FeedDate will represent. If not specified, the current date and time is used.
 		 */
-		function FeedDate( $dateString = "" )
+		function __construct( $dateString = "" )
 		{
 			if ($dateString == "")
+			{
 				$dateString = date("r");
+			}
 
 			if (is_integer($dateString))
 			{
@@ -152,11 +154,11 @@
 						{
 							$tzOffset = (ord("A") - $ord - 1) * $oneHour;
 						}
-						elseif ($ord >= ord("M") AND $matches[7] != "Z")
+						else if ($ord >= ord("M") AND $matches[7] != "Z")
 						{
 							$tzOffset = ($ord - ord("M")) * $oneHour;
 						}
-						elseif ($matches[7] == "Z")
+						else if ($matches[7] == "Z")
 						{
 							$tzOffset = 0;
 						}
@@ -520,7 +522,7 @@
 		 */
 		var $RSSVersion;
 
-		function RSSCreator091()
+		function __construct()
 		{
 			$this->_setRSSVersion("0.91");
 		}
@@ -668,7 +670,7 @@
 	class RSSCreator20 extends RSSCreator091
 	{
 
-		function RSSCreator20()
+		function __construct()
 		{
 			parent::_setRSSVersion("2.0");
 		}
@@ -764,7 +766,7 @@
 						{ // convert space at eol only
 							$c = "=20";
 						}
-						elseif (($dec == 61) || ($dec < 32 ) || ($dec > 126))
+						else if (($dec == 61) || ($dec < 32 ) || ($dec > 126))
 						{ // always encode "\t", which is *not* required
 							$h2 = floor($dec / 16);
 							$h1 = floor($dec % 16);

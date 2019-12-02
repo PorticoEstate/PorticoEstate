@@ -33,8 +33,9 @@ var $_treeMenu;
 * The constructor method; it initializates the menu system
 * @return void
 */
-function TreeMenu() {
-	$this->LayersMenuCommon();
+function __construct()
+{
+	parent::__construct();
 
 	$this->treeMenuImagesType = "png";
 	$this->_treeMenu = array();

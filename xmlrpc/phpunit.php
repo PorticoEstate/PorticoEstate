@@ -50,7 +50,7 @@
 	{
 		/* Emulate a Java exception, sort of... */
 		var $message;
-		function Exception(&$message)
+		function __construct(&$message)
 		{
 			$this->message = $message;
 		}
@@ -109,7 +109,7 @@
 		var $fResult;
 		var $fExceptions = array();
 
-		function TestCase($name)
+		function __construct($name)
 		{
 			$this->fName = $name;
 		}
@@ -208,7 +208,7 @@
 		run them all. */
 		var $fTests = array();
 
-		function TestSuite($classname=false)
+		function __construct($classname=false)
 		{
 			if ($classname)
 			{
@@ -296,7 +296,7 @@
 		var $fFailedTestName;
 		var $fExceptions;
 
-		function TestFailure(&$test, &$exceptions)
+		function __construct(&$test, &$exceptions)
 		{
 			$this->fFailedTestName = $test->name();
 			$this->fExceptions = $exceptions;
@@ -319,7 +319,7 @@
 		var $fRunTests = 0;
 		var $fStop = false;
 
-		function TestResult() { }
+		function __construct() { }
 
 		function _endTest($test) /* protected */
 		{
@@ -379,9 +379,9 @@
 	class TextTestResult extends TestResult
 	{
 		/* Specialize TestResult to produce text/html report */
-		function TextTestResult()
+		function __construct()
 		{
-			$this->TestResult();  // call superclass constructor
+			parent::__construct();
 		}
 
 		function report()

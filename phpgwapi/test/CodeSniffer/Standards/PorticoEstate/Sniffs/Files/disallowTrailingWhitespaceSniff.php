@@ -38,7 +38,15 @@
  * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class phpGroupWare_Sniffs_Files_disallowTrailingWhitespaceSniff implements PHP_CodeSniffer_Sniff
+namespace PHP_CodeSniffer\Standards\PorticoEstate\Sniffs\Files;
+//require_once 'PHP/CodeSniffer/src/Sniffs/Sniff.php';
+//require_once 'PHP/CodeSniffer/src/Files/File.php';
+
+	
+use PHP_CodeSniffer\Files\File as PHP_CodeSniffer_File;
+use PHP_CodeSniffer\Sniffs\Sniff as PHP_CodeSniffer_Sniff;
+
+class disallowTrailingWhitespaceSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * standard error message
@@ -72,13 +80,13 @@ class phpGroupWare_Sniffs_Files_disallowTrailingWhitespaceSniff implements PHP_C
 
         if($tokens[$stackPtr]['type'] === 'T_DOC_COMMENT') {
             if (preg_match("/[^*] +$/", $tokens[$stackPtr]['content']) === 1) {
-                $phpcsFile->addError(self::ERROR, $stackPtr);
+                $phpcsFile->addError(self::ERROR, $stackPtr, 'Add*ToComment');
             }
         }
 
         if($tokens[$stackPtr]['type'] === 'T_COMMENT') {
             if (preg_match("/ +$/", $tokens[$stackPtr]['content']) === 1) {
-                $phpcsFile->addError(self::ERROR, $stackPtr);
+                $phpcsFile->addError(self::ERROR, $stackPtr, 'RemoveTrailingSpaces');
             }
         }
 
@@ -96,7 +104,7 @@ class phpGroupWare_Sniffs_Files_disallowTrailingWhitespaceSniff implements PHP_C
             if (is_int($lineBreakPos)
                 && $lineBreakPos !== 0
                 && $currentLine === $tokens[($stackPtr-1)]['line']) {
-                $phpcsFile->addError(self::ERROR, $stackPtr);
+                $phpcsFile->addError(self::ERROR, $stackPtr ,'RemoveTrailingSpaces');
             }
         }
     }

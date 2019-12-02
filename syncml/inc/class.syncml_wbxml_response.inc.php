@@ -19,7 +19,7 @@
 	{
 		var $xml_parser;
 
-		function syncml_wbxml_response()
+		function __construct()
 		{
 			$this->root_namespace = '-//SYNCML//DTD SyncML 1.1//EN';
 

@@ -31,9 +31,9 @@
 	{
 		var $client;
 
-		function TestLocalhost($name)
+		function __construct($name)
 		{
-			$this->TestCase($name);
+			parent::__construct($name);
 		}
 
 		function setUp()
@@ -165,13 +165,13 @@ And turned it into nylon";
 
 	class TestFileCases extends TestCase
 	{
-		function TestFileCases($name, $base='')
+		function __construct($name, $base='')
 		{
 			if(!$base)
 			{
 				$base = PHPGW_APP_ROOT;
 			}
-			$this->TestCase($name);
+			parent::__construct($name);
 			$this->root = $base;
 		}
 
@@ -200,9 +200,9 @@ And turned it into nylon";
 
 	class TestInvalidHost extends TestCase
 	{
-		function TestInvalidHost($name)
+		function __construct($name)
 		{
-			$this->TestCase($name);
+			parent::__construct($name);
 		}
 
 		function setUp()

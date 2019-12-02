@@ -32,7 +32,7 @@
 		 */
 		var $data = "";
 
-		function xml_mapper()
+		function __construct()
 		{
 			$this->path = array(&$this->structure);
 		}

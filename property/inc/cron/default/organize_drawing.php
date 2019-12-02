@@ -43,7 +43,7 @@
 		var $bypass			 = false; // bypass location check (only for debugging)
 		var $function_name	 = 'organize_drawing';
 
-		function organize_drawing()
+		function __construct()
 		{
 			$this->bocommon	 = CreateObject('property.bocommon');
 			$this->vfs		 = CreateObject('phpgwapi.vfs');

@@ -49,7 +49,7 @@
 		var $function_name			 = 'import_from_scanner';
 		var $header					 = array('type', 'descr', 'target', 'user');
 
-		function import_from_scanner()
+		function __construct()
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon	 = CreateObject('property.bocommon');

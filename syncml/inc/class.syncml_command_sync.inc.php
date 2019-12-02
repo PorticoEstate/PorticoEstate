@@ -15,7 +15,7 @@
 	 */
 	class syncml_command_sync extends syncml_command
 	{
-		function syncml_command_sync($xml_array = array())
+		function __construct($xml_array = array())
 		{
 			if(is_array($xml_array))
 			{

@@ -17,7 +17,7 @@
 	 */
 	class syncml_command_delete extends syncml_command
 	{
-		function syncml_command_delete($xml_array = array())
+		function __construct($xml_array = array())
 		{
 			if(is_array($xml_array))
 			{

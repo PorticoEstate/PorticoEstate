@@ -28,7 +28,7 @@
 					$where_filter[] = "(%%table%%.type=$owner_type AND %%table%%.owner_id = $owner_id)";
 				}
 			}
-			$params['filters']['where'] = array('(' . join($where_filter, ' OR ') . ')');
+			$params['filters']['where'] = array('(' . join(' OR ', $where_filter) . ')');
 			return $this->so->read($params);
 		}
 	}

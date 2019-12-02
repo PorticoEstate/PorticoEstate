@@ -230,19 +230,26 @@
 				//while ( list($loc_id, $loc_data) = each($fieldlist['locations']) )
 				foreach($fieldlist['locations'] as $loc_id => $loc_data)
 				{
+					$continue = false;
 					$loc_type_id = $this->contacts->search_location_type($loc_data['type']);
 					switch($loc_type_id)
 					{
-					case $type_work:
-						$adr = 'adr_one_';
-						break;
-					case $type_home:
-						$adr = 'adr_two_';
-						break;
-					default:
-						continue;
-						break;
+						case $type_work:
+							$adr = 'adr_one_';
+							break;
+						case $type_home:
+							$adr = 'adr_two_';
+							break;
+						default:
+							$continue = true;
+							break;
 					}
+					
+					if($continue)
+					{
+						continue;
+					}
+
 					$fields[$adr.'street']       = $loc_data['add1'];
 					$fields[$adr.'ext']          = $loc_data['add2'];
 					$fields[$adr.'locality']     = $loc_data['city'];

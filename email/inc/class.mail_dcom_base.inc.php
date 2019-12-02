@@ -131,7 +131,7 @@
 				else
 				{
 					// Modif UTF-8 by Sam Przyswa so now compatible with MS-Outlook and Netscape accentued folder name
-					$name_tmp = recode_string("ISO-8859-1..UTF-7", $name['folder_before']);
+					$name_tmp = iconv("ISO-8859-1", "UTF-7", $name['folder_before']);					
 					$name['folder_after'] = str_replace("+", "&", $name_tmp);
 				}
 				// replace old folder name with new folder name
@@ -254,7 +254,7 @@
 				{
 					// Modif UTF-8 by Sam Przyswa so now compatible with MS-Outlook and Netscape accentued folder name
 					$name_tmp = str_replace("&", "+", $name['folder_before']);
-					$name['folder_after'] = recode_string("UTF-7..ISO-8859-1", $name_tmp);
+					$name['folder_after'] = iconv("UTF-7", "ISO-8859-1", $name_tmp);				
 				}
 				// "imap_utf7_decode" returns False if no translation occured (supposed to, can return identical string too)
 				if ( ($name['folder_after'] == False)

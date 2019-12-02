@@ -206,7 +206,13 @@
 
 		function read_single_agreement_group( $id = '' )
 		{
-			return $this->so->read_single_agreement_group($id);
+			$values = $this->so->read_single_agreement_group($id);
+
+			$dateformat				 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values['start_date']	 = $GLOBALS['phpgw']->common->show_date($values['start_date'], $dateformat);
+			$values['end_date']		 = $GLOBALS['phpgw']->common->show_date($values['end_date'], $dateformat);
+
+			return $values;
 		}
 
 		function read_category_name( $cat_id )

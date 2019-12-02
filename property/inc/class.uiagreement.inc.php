@@ -1037,6 +1037,7 @@
 					'perm'			 => $mode, 'acl_location'	 => $this->acl_location));
 			}
 
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::agreement::pricebook::agreement';
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
 			$config		 = CreateObject('phpgwapi.config', 'property');

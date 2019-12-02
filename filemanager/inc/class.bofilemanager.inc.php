@@ -685,7 +685,7 @@
 					$result[] = lang('file names cannot contain %1', $badchar);
 				}
 
-				if (preg_match ("/\//", $to) || ereg ("/\\\\/", $to))
+				if (preg_match ("/\//", $to) || preg_match ("/\\\\/", $to))
 				{
 					//echo $GLOBALS['phpgw']->common->error_list (array ("File names cannot contain \\ or /"));
 					$result[] = lang('file names cannot contain \\ or /');

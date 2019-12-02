@@ -116,7 +116,7 @@
 
 			if (count($where_clauses) > O)
 			{
-				$filters['where'][] = join($where_clauses, ' AND ');
+				$filters['where'][] = join(' AND ', $where_clauses);
 			}
 
 			return parent::_get_conditions($query, $filters);

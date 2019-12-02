@@ -19,7 +19,7 @@
 	{
 		var $session;
 
-		function syncml_database_devinf(&$session)
+		function __construct(&$session)
 		{
 			$this->session = &$session;
 		}

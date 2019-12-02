@@ -30,7 +30,7 @@
 		/**
 		* Constructor
 		*/
-		function bookmarks_ipc_bookmarks()
+		function __construct()
 		{
 			$this->bo =& CreateObject('bookmarks.bo');
 

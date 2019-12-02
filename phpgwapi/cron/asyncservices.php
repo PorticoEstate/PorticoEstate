@@ -46,9 +46,9 @@
 	{
 		$db_type = 'pgsql';
 	}
-	if (!extension_loaded($db_type) && !dl($db_type.'.so'))
+	if (!extension_loaded($db_type))
 	{
-		echo "Extension '$db_type' is not loaded and can't be loaded via dl('$db_type.so') !!!\n";
+		echo "Extension '$db_type' is not loaded !!!\n";
 	}
 
 	/**

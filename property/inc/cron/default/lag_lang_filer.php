@@ -36,7 +36,7 @@
 
 		var $function_name = 'lag_lang_filer';
 
-		function lag_lang_filer()
+		function __construct()
 		{
 			//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->bocommon	 = CreateObject('property.bocommon');

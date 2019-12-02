@@ -200,7 +200,7 @@ var $_tmpArray = array();
 * The constructor method; it initializates the menu system
 * @return void
 */
-function LayersMenuCommon() {
+function __construct() {
 
 	$this->_packageName = "PHP Layers Menu";
 	$this->version = "3.1.1";

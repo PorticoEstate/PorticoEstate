@@ -37,4 +37,6 @@
 
 	include('./soaplib.soapinterop.php');
 
-	$server->service($HTTP_RAW_POST_DATA);
+	$request_xml = implode(" ", file('php://input'));
+
+	$server->service($request_xml);

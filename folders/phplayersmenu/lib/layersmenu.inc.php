@@ -145,14 +145,14 @@ var $abscissaStep;
 * The constructor method; it initializates the menu system
 * @return void
 */
-function LayersMenu(
+function __construct(
 	$menuTopShift = 6,	// Gtk2-like
 	$menuRightShift = 7,	// Gtk2-like
 	$menuLeftShift = 2,	// Gtk2-like
 	$thresholdY = 5,
 	$abscissaStep = 140
 	) {
-	$this->LayersMenuCommon();
+		parent::__construct();
 
 	$this->_packageName = "PHP Layers Menu";
 	$this->version = "3.1.1";

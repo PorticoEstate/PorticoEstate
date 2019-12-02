@@ -1018,13 +1018,13 @@
 
 				$menus['navigation']['helpdesk']['children'] = array
 					(
-					'deviation' => array
+					'deviation'	 => array
 						(
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.add_deviation')),
 						'text'	 => lang('deviation'),
 						'image'	 => array('property', 'helpdesk')
 					),
-					'report' => array
+					'report'	 => array
 						(
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.report')),
 						'text'	 => lang('report'),
@@ -1443,9 +1443,9 @@
 						{
 							//bypass_acl_at_entity
 							$_required		 = !empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($entry['id'], $config['bypass_acl_at_entity']) ? '' : PHPGW_ACL_READ;
-							$entity_children	 = $entity->read_category_tree($entry['id'], 'property.uientity.index', $_required, 'navbar#');
+							$entity_children = $entity->read_category_tree($entry['id'], 'property.uientity.index', $_required, 'navbar#');
 
-							if(!$entity_children)
+							if (!$entity_children)
 							{
 								continue;
 							}
@@ -1476,7 +1476,7 @@
 
 						if ($type != 'horisontal')
 						{
-							$menus['navigation']["entity_{$entry['id']}"]['children']	 = $entity_children;
+							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity_children;
 						}
 
 						$custom_menu_items = $custom_menus->read_tree(array('type'	 => 'custom_menu_items',
@@ -1490,9 +1490,9 @@
 								{
 									$item['url'] .= '&' . get_phpgw_session_url();
 								}
-								else if($item['local_files'])
+								else if ($item['local_files'])
 								{
-									$item['url'] = 'file:///' . str_replace(':','|',$item['url']);
+									$item['url'] = 'file:///' . str_replace(':', '|', $item['url']);
 								}
 
 								$menus['navigation']["entity_{$entry['id']}"]['children'][] = $item;
@@ -1518,4 +1518,4 @@
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
-	}
+	}	

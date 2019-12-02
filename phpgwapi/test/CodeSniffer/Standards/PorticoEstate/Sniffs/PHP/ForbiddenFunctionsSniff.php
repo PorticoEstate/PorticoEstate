@@ -15,11 +15,12 @@
  * @version   CVS: $Id$
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
+namespace PHP_CodeSniffer\Standards\PorticoEstate\Sniffs\PHP;
 
 /**
  * Load the feneric forbidden functions class which we extend.
  */
-require_once 'PHP/CodeSniffer/Standards/Generic/Sniffs/PHP/ForbiddenFunctionsSniff.php';
+//require_once 'PHP/CodeSniffer/src/Standards/Generic/Sniffs/PHP/ForbiddenFunctionsSniff.php';
 
 /**
  * phpGroupWare_Sniffs_PHP_ForbiddenFunctionsSniff.
@@ -38,7 +39,10 @@ require_once 'PHP/CodeSniffer/Standards/Generic/Sniffs/PHP/ForbiddenFunctionsSni
  * @version   Release: 1.0.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class phpGroupWare_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
+
+use PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\ForbiddenFunctionsSniff as Generic_Sniffs_PHP_ForbiddenFunctionsSniff;
+
+class ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
 {
 
     /**
@@ -49,7 +53,7 @@ class phpGroupWare_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP
      *
      * @var array(string => string|null)
      */
-    protected $forbiddenFunctions = array(
+    public $forbiddenFunctions = array(
                                      'chop'                 => 'rtrim',
                                      'create_function'      => null,
                                      'delete'               => 'unset',

@@ -101,10 +101,10 @@
                 $where_clauses[] = "i.id = $specific_item_id";
             }
 
-            $sql  = 'SELECT ' . implode($select_cols, ', ') .
-                    ' FROM ' . implode($from_tables, ', ') .
-                    implode($joins, ' ') .
-                    implode($where_clauses, ' AND ');
+            $sql  = 'SELECT ' . implode(', ', $select_cols) .
+                    ' FROM ' . implode(', ', $from_tables) .
+                    implode(' ', $joins) .
+                    implode(' AND ', $where_clauses);
 
             $this->db->query($sql);
             $i = 0;

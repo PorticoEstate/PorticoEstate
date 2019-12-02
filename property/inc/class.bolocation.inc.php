@@ -116,7 +116,7 @@
 
 		function read_sessiondata()
 		{
-			$referer	 = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
+			$referer	 = parse_url(phpgw::get_var('HTTP_REFERER', 'url', 'SERVER'));
 			//cramirez@ccfirst.com validation evita NOTICE  for JSON
 			$referer_out = array();
 			if (isset($referer['query']) && is_array($referer['query']))
@@ -124,7 +124,7 @@
 				parse_str($referer['query'], $referer_out);
 			}
 			$self_out	 = array();
-			$self		 = parse_url(phpgw::get_var('QUERY_STRING', 'string', 'SERVER'));
+			$self		 = parse_url(phpgw::get_var('QUERY_STRING', 'url', 'SERVER'));
 			parse_str($self['path'], $self_out);
 
 //			if(isset($referer_out['menuaction']) && isset($self_out['menuaction']) && $referer_out['menuaction'] == $self_out['menuaction'])

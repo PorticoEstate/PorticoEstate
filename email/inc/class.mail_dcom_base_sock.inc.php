@@ -1128,7 +1128,21 @@
 		function decode_base64($string)
 		{
 			$string = str_replace("'", "\'", $string);
-			$string = preg_replace("/\=\?(.*?)\?b\?(.*?)\?\=/ieU",base64_decode("\\2"),$string);
+//			$string = preg_replace("/\=\?(.*?)\?b\?(.*?)\?\=/ieU",base64_decode("\\2"),$string);
+			
+			// Not tested..
+			$string = preg_replace_callback(
+				"/\=\?(.*?)\?b\?(.*?)\?\=/iU",
+				function( $matches )
+				{
+					foreach ($matches as $match)
+					{
+						return base64_decode($match);
+					}
+				},
+				$str
+			);
+
 			return $string;
 		}
 		
@@ -1142,7 +1156,21 @@
 		function decode_qp($string)
 		{
 			$string = str_replace("'", "\'", $string);
-			$string = preg_replace("/\=\?(.*?)\?q\?(.*?)\?\=/ieU",$this->phpGW_quoted_printable_decode2("\\2"),$string);
+//			$string = preg_replace("/\=\?(.*?)\?q\?(.*?)\?\=/ieU",$this->phpGW_quoted_printable_decode2("\\2"),$string);
+
+			// Not tested..
+			$string = preg_replace_callback(
+				"/\=\?(.*?)\?q\?(.*?)\?\=/iU",
+				function( $matches )
+				{
+					foreach ($matches as $match)
+					{
+						return $this->phpGW_quoted_printable_decode2($match);
+					}
+				},
+				$str
+			);
+
 			return $string;
 		}
 		

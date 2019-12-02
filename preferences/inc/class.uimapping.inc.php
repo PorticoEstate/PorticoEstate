@@ -27,7 +27,7 @@
 		* constructor, sets up variables
 		*
 		*/						  
-		function uimapping()
+		function __construct()
 		{
 		}
 

@@ -30,7 +30,15 @@
  * @version   Release: 1.0.1
  * @link	  http://pear.php.net/package/PHP_CodeSniffer
  */
-class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
+//require_once 'PHP/CodeSniffer/src/Sniffs/Sniff.php';	
+//require_once 'PHP/CodeSniffer/src/Files/File.php';
+
+	
+use PHP_CodeSniffer\Files\File as PHP_CodeSniffer_File;
+use PHP_CodeSniffer\Sniffs\Sniff as PHP_CodeSniffer_Sniff;
+
+
+class ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
 
 	/**
@@ -69,7 +77,7 @@ class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniff
             $error  = 'Opening brace of a ';
             $error .= $tokens[$stackPtr]['content'];
             $error .= ' must be on the line after the definition';
-            $phpcsFile->addError($error, $curlyBrace);
+            $phpcsFile->addError($error, $curlyBrace, 'MissingBraceOnLine');
             return;
         } else if ($braceLine > ($classLine + 1)) {
             $difference  = ($braceLine - $classLine - 1);
@@ -79,14 +87,14 @@ class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniff
             $error      .= ' must be on the line following the ';
             $error      .= $tokens[$stackPtr]['content'];
             $error      .= ' declaration; found '.$difference;
-            $phpcsFile->addError($error, $curlyBrace);
+            $phpcsFile->addError($error, $curlyBrace, 'MissingBraceOnNextLine');
             return;
         }
 
         if ($tokens[($curlyBrace + 1)]['content'] !== $phpcsFile->eolChar) {
             $type  = strtolower($tokens[$stackPtr]['content']);
             $error = "Opening $type brace must be on a line by itself";
-            $phpcsFile->addError($error, $curlyBrace);
+            $phpcsFile->addError($error, $curlyBrace, 'BraceError');
         }
 
         if ($tokens[($curlyBrace - 1)]['code'] === T_WHITESPACE) {
@@ -96,7 +104,7 @@ class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniff
                 $spaces     = strlen($blankSpace);
                 if ($spaces !== 4) {
                     $error = "Expected 1 tab before opening brace; $spaces found";
-                    $phpcsFile->addError($error, $curlyBrace);
+                    $phpcsFile->addError($error, $curlyBrace, 'BraceError' );
                 }
             }
         }

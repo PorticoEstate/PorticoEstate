@@ -3165,8 +3165,8 @@
 			$bolocation	 = CreateObject('property.bolocation');
 			$boinvoice	 = CreateObject('property.boinvoice');
 
-			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'string', 'SERVER'));
-			parse_str($referer['query']); // produce $menuaction
+			$referer = parse_url(phpgw::get_var('HTTP_REFERER', 'url', 'SERVER'));
+			parse_str($referer['query'], $output); // produce $menuaction
 			if (phpgw::get_var('cancel', 'bool'))
 			{
 				$redirect = true;
