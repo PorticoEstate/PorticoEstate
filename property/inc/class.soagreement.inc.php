@@ -410,11 +410,15 @@
 					case 'index_count':
 					case 'total_cost':
 					case 'w_cost':
-					case 'm_cost':
-					case 'num':
 					case 'descr':
 					case 'm_cost':
 						$ordermethod = "ORDER BY {$entity_table}.{$order} {$sort}";
+						break;
+					case 'id':
+						$ordermethod = "ORDER BY {$entity_table}.activity_id {$sort}";
+						break;
+					case 'num':
+						$ordermethod = "ORDER BY fm_activities.num {$sort}";
 						break;
 					case 'unit_name':
 						$ordermethod = "ORDER BY fm_standard_unit.name {$sort}";
