@@ -1390,7 +1390,7 @@
 
 			$myColumnDefs1 = array
 				(
-				array('key'		 => 'id', 'label'		 => $table_header[0]['header'], 'sortable'	 => false,
+				array('key'		 => 'id', 'label'		 => $table_header[0]['header'], 'sortable'	 => true,
 					'resizeable' => true),
 				array('key'		 => 'num', 'label'		 => $table_header[1]['header'], 'sortable'	 => false,
 					'resizeable' => true),
