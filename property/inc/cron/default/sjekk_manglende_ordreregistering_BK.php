@@ -130,8 +130,7 @@ HTML;
 					_debug_array($exc->getMessage());
 					echo $exc->getTraceAsString();
 				}
-
-				if ($order && ((string)$order[0]->status == 'O' || (string)$order[0]->status == 'F'))
+				if ($order && ((string)$order[0]->status == 'O' || (string)$order[0]->status == 'N' || (string)$order[0]->status == 'F'))
 				{
 					$this->db->query("UPDATE fm_workorder SET verified_transfered = 1 WHERE id = '{$order_id}'", __LINE__, __FILE__);
 					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
