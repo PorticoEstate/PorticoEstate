@@ -491,3 +491,4 @@ Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
 available	bookingfrontend	nn	Ledig
 leased	bookingfrontend	nn	Utleigd
+choose target audience	bookingfrontend nn Velg målgruppe
