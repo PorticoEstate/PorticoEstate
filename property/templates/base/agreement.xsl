@@ -548,9 +548,11 @@
 										<xsl:value-of select="lang_id"/>
 									</label>
 									<xsl:value-of select="value_id"/>
-									<xsl:text> [</xsl:text>
-									<xsl:value-of select="value_num"/>
-									<xsl:text>] </xsl:text>
+									<xsl:if test="value_num !=''">
+										<xsl:text> [</xsl:text>
+										<xsl:value-of select="value_num"/>
+										<xsl:text>] </xsl:text>
+									</xsl:if>
 								</div>
 								<div class="pure-control-group">
 									<label>
