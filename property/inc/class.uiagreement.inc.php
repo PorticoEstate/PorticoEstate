@@ -1837,7 +1837,7 @@
 				'msgbox_data'					 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'edit_url'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'lang_id'						 => lang('ID'),
-				'value_id'						 => $values['id'],
+				'value_id'						 => $id,
 				'value_num'						 => $values['num'],
 				'value_agreement_id'			 => $agreement_id,
 				'lang_category'					 => lang('category'),
