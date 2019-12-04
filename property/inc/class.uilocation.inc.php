@@ -2479,9 +2479,21 @@ JS;
 						//_debug_array($values);
 						//_debug_array($integration_src);die();
 
+
+						if(!empty($_config_section_data['new_window']))
+						{
+							$_click_function = "window.open('{$integration_src}','{$_config_section_data['tab']}','left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes').focus()";
+						}
+						else
+						{
+							$_click_function = "document.getElementById('{$_config_section_name}_content').src = '{$integration_src}'";
+						}
+
+
 						$tabs[$_config_section] = array('label'		 => $_config_section_data['tab'],
 							'link'		 => "#{$_config_section_name}",
-							'function'	 => "document.getElementById('{$_config_section_name}_content').src = '{$integration_src}';");
+							'function'	 => $_click_function
+						);
 					}
 				}
 // ---- END INTEGRATION -------------------------

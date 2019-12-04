@@ -982,7 +982,15 @@
 				'char-encoding'					 => 'utf8'
 			);
 
-			$test = str_replace('>&nbsp;<', '', $test);
+			$test = str_replace('>&nbsp;<', '><', $test);
+
+			if (class_exists('tidy'))
+			{
+				$tidy	 = new tidy;
+				$test	 = $tidy->repairString($test);
+				$tidy->parseString($test, $tidy_options, 'utf8');
+				$test	 = $tidy->body();
+			}
 
 			$dom			 = new DOMDocument();
 			$dom->recover	 = true;
@@ -993,24 +1001,33 @@
 			{
 				$node->removeAttribute('style'); // Remove style attribute
 			}
-			$nodes = $xpath->query('//*[@class]');  // Find elements with a style attribute
+			unset($node);
+			$nodes = $xpath->query('//*[@class]');  // Find elements with a class attribute
 			foreach ($nodes as $node)
 			{
-				$node->removeAttribute('class'); // Remove style attribute
+				$node->removeAttribute('class'); // Remove class attribute
 			}
-			$nodes = $xpath->query('//*[@lang]');  // Find elements with a style attribute
+			unset($node);
+			$nodes = $xpath->query('//*[@lang]');  // Find elements with a lang attribute
 			foreach ($nodes as $node)
 			{
-				$node->removeAttribute('lang'); // Remove style attribute
+				$node->removeAttribute('lang'); // Remove lang attribute
 			}
+			unset($node);
+			$nodes = $xpath->query('//*[@align]');  // Find elements with a align attribute
+			foreach ($nodes as $node)
+			{
+				$node->removeAttribute('align'); // Remove align attribute
+			}
+			unset($node);
+			$nodes = $xpath->query('//*[@size]');  // Find elements with a size attribute
+			foreach ($nodes as $node)
+			{
+				$node->removeAttribute('size'); // Remove size attribute
+			}
+			unset($node);
 
 			$test = $dom->saveHTML();
-			if (class_exists('tidy'))
-			{
-				$tidy	 = new tidy;
-				$tidy->parseString($test, $tidy_options, 'utf8');
-				$test	 = $tidy->body();
-			}
 
 			return phpgw::clean_html($test);
 		}
