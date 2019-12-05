@@ -78,6 +78,9 @@
 							<div id="time_select" class="row">
 								<!-- Date Pick -->
 								<div class="form-group col-lg-5 col-sm-12 col-12">
+									<span class="mb-2" style="font-weight: bold; color: #ff3333;">
+										<xsl:value-of select="php:function('lang', 'Date')"/>
+									</span>
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text">
@@ -93,6 +96,9 @@
 								</div>
 								<!-- From Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
+									<span class="mb-2" style="font-weight: bold; color: #ff3333;">
+										Innsjekk
+									</span>
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text">
@@ -108,6 +114,10 @@
 								</div>
 								<!-- To Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
+									<span class="mb-2" style="font-weight: bold; color: #ff3333;">
+										Utsjekk
+									</span>
+
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text">
