@@ -1029,7 +1029,12 @@
 
 			$test = $dom->saveHTML();
 
-			return phpgw::clean_html($test);
+			return $test;
+			/**
+			 * HTMLpurifier is sometimes scrambling tables
+			 * Need tidy...
+			 */
+//			return phpgw::clean_html($test);
 		}
 
 		function create_ticket( $subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority = 3 )
