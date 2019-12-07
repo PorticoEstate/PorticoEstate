@@ -63,6 +63,7 @@ function applicationModel()
 	self.setdisabledDates = function ()
 	{
 		var checkdate;
+		var resource_id = $("#resource_id").val();
 
 		if (GlobalStartTime)
 		{
@@ -74,16 +75,18 @@ function applicationModel()
 		var disabled_dates = [];
 		for (var i = 0; i < length; i++)
 		{
-			disabled_dates.push(self.disabledDatesList()[i].date);
-
-			if (checkdate == self.disabledDatesList()[i].date)
+			if(self.disabledDatesList()[i].resource_id == resource_id)
 			{
-				$('#from_').val('');
-				$('#to_').val('');
-				$('#start_date').val('');
-				$('#selected_period').html('');
-			}
+				disabled_dates.push(self.disabledDatesList()[i].date);
 
+				if (checkdate == self.disabledDatesList()[i].date)
+				{
+					$('#from_').val('');
+					$('#to_').val('');
+					$('#start_date').val('');
+					$('#selected_period').html('');
+				}				
+			}
 		}
 
 		$('#start_date').datetimepicker('setOptions', {disabledDates: disabled_dates});
@@ -418,7 +421,7 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 
 					}
@@ -435,7 +438,7 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 
 					}
@@ -453,7 +456,7 @@ function getDisabledDates(StartTimes)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
 //							console.log(exDate);
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 					}
 					if (typeof result.ResultSet.Result[k].Wed !== "undefined")
@@ -469,7 +472,7 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 					}
 					if (typeof result.ResultSet.Result[k].Thu !== "undefined")
@@ -485,7 +488,7 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 					}
 					if (typeof result.ResultSet.Result[k].Fri !== "undefined")
@@ -501,7 +504,7 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 					}
 					if (typeof result.ResultSet.Result[k].Sat !== "undefined")
@@ -517,14 +520,14 @@ function getDisabledDates(StartTimes)
 						if (currentDate >= default_start)
 						{
 							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
+							tempDates.push({resource_id: result.ResultSet.Result[k].resource_id, date:exDate});
 						}
 					}
 				}
 			}
 			for (var i = 0; i < tempDates.length; i++)
 			{
-				am.disabledDatesList.push({date: tempDates[i]});
+				am.disabledDatesList.push({resource_id:tempDates[i].resource_id, date: tempDates[i].date});
 			}
 
 		}).done(function ()
