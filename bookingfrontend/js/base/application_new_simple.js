@@ -4,6 +4,7 @@ var dow_default_start = null;
 var dow_default_end = null;
 var time_default_start = 15;
 var time_default_end = 10;
+var availlableTimeSlots = {};
 
 var day_default_lenght_fallback = 0;
 var dow_default_start_fallback = null;
@@ -59,36 +60,6 @@ function applicationModel()
 			return false;
 		}
 	});
-
-	self.setdisabledDates = function ()
-	{
-		var checkdate;
-
-		if (GlobalStartTime)
-		{
-			checkdate = dateFormat(new Date(GlobalStartTime), 'yyyy/mm/dd');
-		}
-
-		var length = self.disabledDatesList().length;
-
-		var disabled_dates = [];
-		for (var i = 0; i < length; i++)
-		{
-			disabled_dates.push(self.disabledDatesList()[i].date);
-
-			if (checkdate == self.disabledDatesList()[i].date)
-			{
-				$('#from_').val('');
-				$('#to_').val('');
-				$('#start_date').val('');
-				$('#selected_period').html('');
-			}
-
-		}
-
-		$('#start_date').datetimepicker('setOptions', {disabledDates: disabled_dates});
-
-	};
 
 	self.termAcceptedDocs = ko.computed(function ()
 	{
@@ -336,204 +307,80 @@ function PopulatePostedDate()
 	$('#bookingStartTime').val(time_default_start);
 	$('#bookingEndTime').val(time_default_end);
 
-	setDisabledDates();
-
-}
-
-
-function setDisabledDates()
-{
-	var nextDay;
-	/**
-	 * Chek three months ahead
-	 */
-
-	var StartTimes = []
-	for (var i = 0; i < 12; i++)
-	{
-		nextDay = new Date();
-		nextDay.setDate(nextDay.getDate() + (7 * i));
-		StartTimes.push(nextDay);
-	}
-
-	getDisabledDates(StartTimes);
-
-//	setTimeout(function ()
-//	{
-//		am.setdisabledDates();
-//	}, 1000);
-
-}
-
-function getDisabledDates(StartTimes)
-{
-	var curr; // get current date
-	var first // First day is the day of the month - the day of the week
-	var last// last day is the first day + 6
-
-	var lastday;
-	var saturday;
-
-
-//	alert(saturday);
 	if ($("#resource_id").val())
 	{
-		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: $("#resource_id").val()}, true);
+		getFreetime();
+	}
+}
 
-		for (var i = 0; i < StartTimes.length; i++)
+function getFreetime()
+{
+	var checkDate = new Date();
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 3, 0);
+
+	var getJsonURL = phpGWLink('bookingfrontend/', {
+		menuaction: "bookingfrontend.uibooking.get_freetime",
+		building_id: urlParams['building_id'],
+		start_date: formatSingleDateWithoutHours(new Date()),
+		end_date: formatSingleDateWithoutHours(EndDate),
+	}, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		var tempDates = [];
+
+		for (var key in result)
 		{
-			curr = StartTimes[i];
-			first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-			last = first + 6; // last day is the first day + 6
+			for (var i = 0; i < result[key].length; i++)
+			{
+				if (typeof result[key][i].applicationLink != 'undefined')
+				{
+					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
+				}
 
-			lastday = new Date(curr.setDate(last));
-			saturday = dateFormat(lastday, 'yyyy-mm-dd');
-			getJsonURL += '&dates[]=' + saturday;
+
+			}
+			availlableTimeSlots[key] = result[key];
 		}
 
-		$.getJSON(getJsonURL, function (result)
+	}).done(function ()
+	{
+		var resource_id = $("#resource_id").val();
+		console.log(availlableTimeSlots);
+		if (typeof (availlableTimeSlots[resource_id]) != 'undefined')
 		{
-			var tempDates = [];
+			var TimeSlots = availlableTimeSlots[resource_id];
+			var start;
+			var allowed_dates = [-1];
+			var AllowDate;
 
-			var currentDate;
-			var date;
-			var exDate;
-			var from_, to_;
-			var default_start, default_end;
-
-			if (result.ResultSet.totalResultsAvailable > 0)
+			for (var i = 0; i < TimeSlots.length; i++)
 			{
-				for (var k = 0; k < result.ResultSet.Result.length; k++)
+				if (TimeSlots[i].overlap == false)
 				{
-					if (typeof result.ResultSet.Result[k].Sun !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Sun.from_;
-						to_ = result.ResultSet.Result[k].Sun.to_;
-						date = result.ResultSet.Result[k].Sun.date;
+					start = new Date(parseInt(TimeSlots[i].start));
+					AllowDate = dateFormat(start, 'yyyy/mm/dd');
+					allowed_dates.push(AllowDate);
 
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-
-					}
-					if (typeof result.ResultSet.Result[k].Mon !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Mon.from_;
-						to_ = result.ResultSet.Result[k].Mon.to_;
-						date = result.ResultSet.Result[k].Mon.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-
-					}
-					if (typeof result.ResultSet.Result[k].Tue !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Tue.from_;
-						to_ = result.ResultSet.Result[k].Tue.to_;
-						date = result.ResultSet.Result[k].Tue.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-//							console.log(exDate);
-							tempDates.push(exDate);
-						}
-					}
-					if (typeof result.ResultSet.Result[k].Wed !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Wed.from_;
-						to_ = result.ResultSet.Result[k].Wed.to_;
-						date = result.ResultSet.Result[k].Wed.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-					}
-					if (typeof result.ResultSet.Result[k].Thu !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Thu.from_;
-						to_ = result.ResultSet.Result[k].Thu.to_;
-						date = result.ResultSet.Result[k].Thu.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-					}
-					if (typeof result.ResultSet.Result[k].Fri !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Fri.from_;
-						to_ = result.ResultSet.Result[k].Fri.to_;
-						date = result.ResultSet.Result[k].Fri.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-					}
-					if (typeof result.ResultSet.Result[k].Sat !== "undefined")
-					{
-						from_ = result.ResultSet.Result[k].Sat.from_;
-						to_ = result.ResultSet.Result[k].Sat.to_;
-						date = result.ResultSet.Result[k].Sat.date;
-
-						default_start = new Date((date + "T" + time_default_start + ':00').toString());
-						default_end = new Date((date + "T" + time_default_end + ':00').toString());
-						currentDate = new Date((date + "T" + to_).toString());
-
-						if (currentDate >= default_start)
-						{
-							exDate = dateFormat(currentDate, 'yyyy/mm/dd');
-							tempDates.push(exDate);
-						}
-					}
 				}
 			}
-			for (var i = 0; i < tempDates.length; i++)
+
+			if (allowed_dates.length == 1)
 			{
-				am.disabledDatesList.push({date: tempDates[i]});
+
+				$('#from_').val('');
+				$('#to_').val('');
+				$('#start_date').val('');
+				$('#selected_period').html('');
 			}
 
-		}).done(function ()
-		{
-			am.setdisabledDates();
-		});
-	}
+			$('#start_date').datetimepicker('setOptions', {allowDates: allowed_dates});
 
+		}
+
+	});
 }
+
 
 function validate()
 {
@@ -649,7 +496,8 @@ $(document).ready(function ()
 				}
 			});
 			$('#time_select').show();
-			setDisabledDates();
+			getFreetime();
+
 		}
 	});
 

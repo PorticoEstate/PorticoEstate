@@ -1138,6 +1138,8 @@
 						{
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
+								'start'			 => $StartTime->getTimestamp() . '000',
+								'end'			 => $endTime->getTimestamp() . '000',
 								'overlap'			 => $overlap,
 								'applicationLink'	 => [
 									'menuaction'	 => 'bookingfrontend.uiapplication.add',

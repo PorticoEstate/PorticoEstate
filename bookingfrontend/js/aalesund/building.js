@@ -536,7 +536,6 @@ function getFreetime(urlParams)
 			availlableTimeSlots[key] = result[key];
 		}
 
-//		availlableTimeSlots = result;
 	}).done(function ()
 	{
 		PopulateBuildingData(urlParams);
