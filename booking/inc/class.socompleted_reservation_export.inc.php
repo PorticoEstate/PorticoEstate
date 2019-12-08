@@ -1183,7 +1183,15 @@
 			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
 			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
 
-			$client_id = str_pad(substr(strtoupper('BY'), 0, 2), 2, ' ');
+			if (!empty($config->config_data['voucher_client']))
+			{
+				$client_id = str_pad(substr(strtoupper($config->config_data['voucher_client']), 0, 2), 2, ' ');
+			}
+			else
+			{
+				$client_id = str_pad(substr(strtoupper('BY'), 0, 2), 2, ' ');
+			}
+
 			$currency = str_pad(substr(strtoupper('NOK'), 0, 3), 3, ' ');
 			$order_type = str_pad(substr(strtoupper('FS'), 0, 2), 2, ' ');
 			$pay_method = str_pad(substr(strtoupper('IP'), 0, 2), 2, ' ');
@@ -1199,11 +1207,27 @@
 			$period = str_pad(substr('00' . date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 			//$period = str_pad(substr(date('Ym'), 0, 8), 8, ' ');
 
-			$responsible = str_pad(substr(strtoupper('BOOKING'), 0, 8), 8, ' ');
+			if (!empty($config->config_data['voucher_responsible']))
+			{
+				$responsible = str_pad(substr(strtoupper($config->config_data['voucher_responsible']), 0, 8), 8, ' ');
+			}
+			else
+			{
+				$responsible = str_pad(substr(strtoupper('BOOKING'), 0, 8), 8, ' ');
+			}
+
 			$responsible2 = str_pad(substr(strtoupper($responsible), 0, 8), 8, ' ');
 			$status = str_pad(substr(strtoupper('N'), 0, 1), 1, ' ');
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
-			$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
+
+			if (!empty($config->config_data['voucher_type']))
+			{
+				$voucher_type = str_pad(substr(strtoupper($config->config_data['voucher_type']), 0, 2), 2, ' ');
+			}
+			else
+			{
+				$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
+			}
 
 			$stored_header = array();
 			$line_no = 0;
