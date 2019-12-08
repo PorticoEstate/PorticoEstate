@@ -321,14 +321,13 @@ function getFreetime()
 	var getJsonURL = phpGWLink('bookingfrontend/', {
 		menuaction: "bookingfrontend.uibooking.get_freetime",
 		building_id: urlParams['building_id'],
+		resource_id: $("#resource_id").val(),
 		start_date: formatSingleDateWithoutHours(new Date()),
 		end_date: formatSingleDateWithoutHours(EndDate),
 	}, true);
 
 	$.getJSON(getJsonURL, function (result)
 	{
-		var tempDates = [];
-
 		for (var key in result)
 		{
 			for (var i = 0; i < result[key].length; i++)
@@ -346,12 +345,12 @@ function getFreetime()
 	}).done(function ()
 	{
 		var resource_id = $("#resource_id").val();
-		console.log(availlableTimeSlots);
+//		console.log(availlableTimeSlots);
 		if (typeof (availlableTimeSlots[resource_id]) != 'undefined')
 		{
 			var TimeSlots = availlableTimeSlots[resource_id];
 			var start;
-			var allowed_dates = [-1];
+			var allowed_dates = [-1]; // block everything
 			var AllowDate;
 
 			for (var i = 0; i < TimeSlots.length; i++)

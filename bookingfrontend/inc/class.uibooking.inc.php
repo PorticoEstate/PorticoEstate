@@ -41,6 +41,7 @@
 		public function get_freetime()
 		{
 			$building_id = phpgw::get_var('building_id', 'int');
+			$resource_id = phpgw::get_var('resource_id', 'int');			
 
 			$start_date = phpgw::get_var('start_date', 'date');
 			$end_date = phpgw::get_var('end_date', 'date');
@@ -49,7 +50,7 @@
 
 			try
 			{
-				$freetime = $this->bo->get_free_events($building_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+				$freetime = $this->bo->get_free_events($building_id, $resource_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
 			}
 			catch (Exception $exc)
 			{
