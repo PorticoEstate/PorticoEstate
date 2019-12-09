@@ -980,22 +980,38 @@
 			$columns[] = 'art_descr';
 			$columns[] = 'art';
 			if (isset($config->config_data['dim_1']))
+			{
 				$columns[] = $config->config_data['dim_1'];
+			}
 			if (isset($config->config_data['dim_2']))
+			{
 				$columns[] = $config->config_data['dim_2'];
+			}
 			if (isset($config->config_data['dim_3']))
+			{
 				$columns[] = $config->config_data['dim_3'];
+			}
 			if (isset($config->config_data['dim_4']))
+			{
 				$columns[] = $config->config_data['dim_4'];
+			}
 			$columns[] = 'article';
 			if (isset($config->config_data['dim_5']))
+			{
 				$columns[] = $config->config_data['dim_5'];
+			}
 			if (isset($config->config_data['dim_value_1']))
+			{
 				$columns[] = $config->config_data['dim_value_1'];
+			}
 			if (isset($config->config_data['dim_value_4']))
+			{
 				$columns[] = $config->config_data['dim_value_4'];
+			}
 			if (isset($config->config_data['dim_value_5']))
+			{
 				$columns[] = $config->config_data['dim_value_5'];
+			}
 			$columns[] = 'ext_ord_ref';
 			$columns[] = 'invoice_instruction';
 			$columns[] = 'order_id';

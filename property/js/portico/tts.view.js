@@ -484,7 +484,7 @@ $(document).ready(function ()
 		right: '10px',
 		border: '1px solid #B5076D',
 		padding: '0 10px 10px 10px',
-		width: width + 'px',
+//		width: width + 'px',
 		"background - color": '#FFF',
 		display: "block"
 	});
