@@ -973,7 +973,7 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
-		function get_free_events( $building_id, $start_date, $end_date, $weekdays )
+		function get_free_events( $building_id, $resource_id, $start_date, $end_date, $weekdays )
 		{
 
 			$timezone	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
@@ -995,9 +995,24 @@
 			$to		 = clone $end_date;
 			$to->setTime(23, 59, 59);
 
-			$resource_filters				 = array('active' => 1, 'rescategory_active' => 1);
-			$resource_filters['building_id'] = $building_id;
-			$resources						 = $this->resource_so->read(array('filters' => $resource_filters,
+			if ($resource_id)
+			{
+				$resource_filters = array(
+					'active'			 => 1,
+					'rescategory_active' => 1,
+					'id'				 => $resource_id
+				);
+			}
+			else
+			{
+				$resource_filters = array(
+					'active'			 => 1,
+					'rescategory_active' => 1,
+					'building_id'		 => $building_id
+				);
+			}
+
+			$resources	= $this->resource_so->read(array('filters' => $resource_filters,
 				'sort' => 'sort', 'results' => -1));
 
 			$event_ids = array();
