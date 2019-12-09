@@ -136,7 +136,25 @@
 					}
 					else
 					{
-						throw new UnexpectedValueException('Encountered an unexpected validation error');
+						$msg_arr = array();
+
+						foreach ($errors as $error_key => $error)
+						{
+							$msg_arr[] = implode(', ', $error);
+						}
+
+						if($msg_arr)
+						{
+							$msg = implode(', ', $msg_arr);
+						}
+						else
+						{
+							$msg = 'Encountered an unexpected validation error';
+						}
+
+						$msg .= 	" :: {$allocation['building_name']} :: {$allocation['from_']} - {$allocation['to_']}";
+
+						throw new UnexpectedValueException($msg);
 					}
 				}
 				if ($date->format('N') == 7) // sunday
@@ -222,7 +240,7 @@
 		/**
 		 * Return a season's template schedule in a datatable
 		 * compatible format
-		 * 
+		 *
 		 * @param int	$season_id_id
 		 *
 		 * @return array containing values from $array for the keys in $keys.
