@@ -989,7 +989,7 @@
 				$tidy	 = new tidy;
 				$test	 = $tidy->repairString($test);
 				$tidy->parseString($test, $tidy_options, 'utf8');
-				$test	 = $tidy->body();
+				$test	 = $tidy->html();
 			}
 
 			$dom			 = new DOMDocument();
@@ -1028,6 +1028,14 @@
 			unset($node);
 
 			$test = $dom->saveHTML();
+
+			if (class_exists('tidy'))
+			{
+				$tidy	 = new tidy;
+				$tidy->parseString($test);
+				$test	 = $tidy->body();
+		//		$test =  phpgw::clean_html($test);
+			}
 
 			return $test;
 			/**
