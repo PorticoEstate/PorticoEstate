@@ -1195,7 +1195,7 @@
 			}
 
 			$set_user_id = false;
-			if(!$get_message && !empty($config_set_user_message) && ($_POST['values']['set_user_alternative_lid'] || $ticket['user_id'] != $ticket['reverse_id']))
+			if(!$get_message && !empty($config_set_user_message) && ($_POST['values']['set_user_alternative_lid'] || ($ticket['user_id'] != $ticket['reverse_id'] && $send_mail)))
 			{
 				$set_user_id =  true;
 				$link_text = $config_set_user_message;
