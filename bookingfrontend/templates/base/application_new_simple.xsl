@@ -40,7 +40,7 @@
 					</p>
 
 
-					<div class="form-group">
+					<div id="resource_list" class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'resources')" />
 						</label>
@@ -78,7 +78,7 @@
 							<div id="time_select" class="row">
 								<!-- Date Pick -->
 								<div class="form-group col-lg-5 col-sm-12 col-12">
-									<span class="mb-2" style="font-weight: bold; color: #cc3300">
+									<span id="lang_date" class="mb-2" style="font-weight: bold; color: #cc3300">
 										<xsl:value-of select="php:function('lang', 'Date')"/>
 									</span>
 									<div class="input-group">
@@ -96,7 +96,7 @@
 								</div>
 								<!-- From Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
-									<span class="mb-2" style="font-weight: bold; color: #cc3300">
+									<span  id="lang_checkin" class="mb-2" style="font-weight: bold; color: #cc3300">
 										Innsjekk
 									</span>
 									<div class="input-group">
@@ -114,7 +114,7 @@
 								</div>
 								<!-- To Time Pick -->
 								<div class="form-group col-lg-3 col-sm-6 col-6">
-									<span class="mb-2" style="font-weight: bold; color: #cc3300">
+									<span id="lang_checkout" class="mb-2" style="font-weight: bold; color: #cc3300">
 										Utsjekk
 									</span>
 

@@ -523,11 +523,11 @@
 			$jscode = <<<JS
 
 				$(document).ready(function() {
-					
+
 					var oArgs = {menuaction:'booking.uiorganization.index'};
-					var sUrl = phpGWLink('index.php', oArgs, true);	
-	
-					JqueryPortico.autocompleteHelper(sUrl, 'organization_name', 'organization_id', 'org_container');					
+					var sUrl = phpGWLink('index.php', oArgs, true);
+
+					JqueryPortico.autocompleteHelper(sUrl, 'organization_name', 'organization_id', 'org_container');
 				});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
@@ -583,7 +583,15 @@ JS;
 				}
 				else
 				{
-					$result = $this->bo->generate_allocation($season_id, new DateTime($from_), new DateTime($to_), $interval, $step == 3);
+					try
+					{
+						$result = $this->bo->generate_allocation($season_id, new DateTime($from_), new DateTime($to_), $interval, $step == 3);
+					}
+					catch (Exception $ex)
+					{
+						$errors['validation'] = $ex->getMessage();
+						$step = 1;
+					}
 				}
 				$this->bo->so->update_id_string();
 			}

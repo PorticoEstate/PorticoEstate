@@ -167,6 +167,9 @@ $(document).ready(function ()
 						time_default_start = result.results[i].booking_time_default_start;
 					}
 					$('#item-description').html(result.results[i].description);
+					$('#resource_list').hide();
+
+					set_conditional_translation(result.results[i].type);
 
 				}
 				if (!day_default_lenght)
@@ -232,6 +235,19 @@ $(document).ready(function ()
 
 });
 
+function set_conditional_translation(type)
+{
+	if (type == 'Equipment')
+	{
+		$('#lang_checkin').text('Utlevering');
+		$('#lang_checkout').text('Innlevering');
+	}
+	else
+	{
+		$('#lang_checkin').text('Innsjekk');
+		$('#lang_checkout').text('Utsjekk');
+	}
+}
 function PopulatePostedDate()
 {
 	var StartTime, EndTime;
@@ -461,6 +477,8 @@ $(document).ready(function ()
 				{
 					time_default_start = resource.booking_time_default_start;
 				}
+
+				set_conditional_translation(resource.type);
 				$('#item-description').html(resource.description);
 
 				$('#bookingStartTime').val(time_default_start);
@@ -469,6 +487,10 @@ $(document).ready(function ()
 				$('#to_').val();
 				$('#selected_period').html('<b>Velg dato</b>');
 				$('#start_date').val('');
+
+			}).done(function ()
+			{
+				$('#time_select').show();
 
 			});
 			var parameter = {
@@ -494,7 +516,6 @@ $(document).ready(function ()
 					am.termAcceptDocs.push({docName: result.data[i].name, itemLink: RemoveCharacterFromURL(result.data[i].link, 'amp;'), checkedStatus: ko.observable(checked), docId: result.data[i].id.replace(/^\D+/g, '')});
 				}
 			});
-			$('#time_select').show();
 			getFreetime();
 
 		}
