@@ -14,7 +14,7 @@
 					</input>
 				</div>
 				<div class="pure-control-group">
-					<label>Client (pos 359 - 361)</label>
+					<label>Client (pos 359 - 360)</label>
 					<input id="field_voucher_client" name="voucher_client" type="text" maxlength="2">
 						<xsl:attribute name="value">
 							<xsl:value-of select="config_data/voucher_client"/>
@@ -86,7 +86,7 @@
 					</input>
 				</div>
 				<div class="pure-control-group">
-					<label>Responsible (pos 1650 -1658)</label>
+					<label>Responsible (pos 1629 -1636)</label>
 					<input id="field_voucher_responsible" name="voucher_responsible" type="text" maxlength="8">
 						<xsl:attribute name="value">
 							<xsl:value-of select="config_data/voucher_responsible"/>
@@ -94,7 +94,7 @@
 					</input>
 				</div>
 				<div class="pure-control-group">
-					<label>voucher_type (pos 1956 - 1958)</label>
+					<label>voucher_type (pos 1885 - 1886)</label>
 					<input id="field_voucher_type" name="voucher_type" type="text" maxlength="2">
 						<xsl:attribute name="value">
 							<xsl:value-of select="config_data/voucher_type"/>
