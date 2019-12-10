@@ -23,6 +23,14 @@ this.confirm_session = function (action)
 		}
 	}
 
+	if ($("#send_email").prop("checked") == true)
+	{
+		if (!confirm("Vil du sende epost?\n\"Cancel\" vil lagre posten uten varsling"))
+		{
+			$("#send_email").prop("checked", false);
+		}
+	}
+
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
 	var strURL = phpGWLink('index.php', oArgs, true);
 
