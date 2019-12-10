@@ -855,7 +855,7 @@ JS;
 						result:10
 						}, true);
 
-						approval_infoURL += '&location[]=.project&location[]=.ticket';
+						approval_infoURL += '&location[]=.project&location[]=.ticket&location[]=.project.workorder';
 						approval_infoURL += '{$responsible_filter}';
 
 					var rApproval_info = [{n: 'ResultSet'},{n: 'Result'}];
