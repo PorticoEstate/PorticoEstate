@@ -1983,8 +1983,13 @@ HTML;
 					{
 						$supervisor_id = $substitute;
 					}
-					$supervisors[$supervisor_id] = array('id'		 => $supervisor_id, 'required'	 => false,
-						'default'	 => true);
+
+					$supervisors[$supervisor_id] = array(
+						'id'		 => $supervisor_id,
+						'required'	 => true,
+						'default'	 => true
+					);
+
 					$default_found				 = true;
 				}
 
@@ -2000,13 +2005,21 @@ HTML;
 				{
 					foreach ($sodimb_role_users[$ecodimb][2] as $supervisor_id => $entry)
 					{
+						if(in_array($supervisor_id, array_keys($supervisors)))
+						{
+							continue;
+						}
+
 						$substitute = $sosubstitute->get_substitute($supervisor_id);
 						if ($substitute)
 						{
 							$supervisor_id = $substitute;
 						}
-						$supervisors[$supervisor_id] = array('id'		 => $supervisor_id, 'required'	 => false,
-							'default'	 => !$default_found ? !!$entry['default_user'] : false);
+						$supervisors[$supervisor_id] = array(
+							'id'		 => $supervisor_id,
+							'required'	 => false,
+							'default'	 => !$default_found ? !!$entry['default_user'] : false
+						);
 					}
 				}
 			}
@@ -2096,15 +2109,21 @@ HTML;
 					{
 						$supervisor_id = $substitute;
 					}
-					$supervisors[$supervisor_id] = array('id'		 => $supervisor_id, 'required'	 => true,
-						'default'	 => true);
+					$supervisors[$supervisor_id] = array(
+						'id'		 => $supervisor_id,
+						'required'	 => true,
+						'default'	 => true
+					);
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 
 					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
 					{
 						$supervisor_id				 = $prefs['approval_from'];
-						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
+						$supervisors[$supervisor_id] = array(
+							'id' => $supervisor_id,
+							'required' => false
+						);
 					}
 					unset($prefs);
 				}
@@ -2119,8 +2138,11 @@ HTML;
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $ecodimb);
 					if ($supervisor_id)
 					{
-						$supervisors[$supervisor_id] = array('id'		 => $supervisor_id, 'required'	 => true,
-							'default'	 => true);
+						$supervisors[$supervisor_id] = array(
+							'id'		 => $supervisor_id,
+							'required'	 => true,
+							'default'	 => true
+						);
 						$level_1_required			 = false;
 					}
 				}
@@ -2133,8 +2155,11 @@ HTML;
 					{
 						$supervisor_id = $substitute;
 					}
-					$supervisors[$supervisor_id] = array('id'		 => $supervisor_id, 'required'	 => $level_1_required,
-						'default'	 => $level_1_required);
+					$supervisors[$supervisor_id] = array(
+						'id'		 => $supervisor_id,
+						'required'	 => $level_1_required,
+						'default'	 => $level_1_required
+					);
 				}
 			}
 
@@ -2360,7 +2385,14 @@ HTML;
 				throw $ex;
 			}
 
-			$purchase_grant_ok = true;
+			if($check_purchase)
+			{
+				$purchase_grant_ok = true;
+			}
+			else
+			{
+				$purchase_grant_ok = false;
+			}
 
 			foreach ($check_purchase as $purchase_grant)
 			{
