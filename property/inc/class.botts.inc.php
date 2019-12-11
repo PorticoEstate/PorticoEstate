@@ -2162,6 +2162,20 @@ HTML;
 					);
 				}
 			}
+			else if (!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
+			{
+				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$substitute = $sosubstitute->get_substitute($supervisor_id);
+				if($substitute)
+				{
+					$supervisor_id = $substitute;
+				}
+				$supervisors[$supervisor_id] = array(
+					'id' => $supervisor_id,
+					'required' => false,
+					'default' => true
+				);
+			}
 
 //			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
 //				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
@@ -2392,12 +2406,17 @@ HTML;
 			else
 			{
 				$purchase_grant_ok = false;
+				
+				if(empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
+				{
+					phpgwapi_cache::message_set('Du må ha satt opp en som du rapporterer til','error');
+				}
+				else
+				{
+					phpgwapi_cache::message_set('er rettigheter til ansvarsstedet satt opp korrekt','error');					
+				}
 			}
 
-			/**
-			 * Temporary
-			 */
-			$purchase_grant_ok = true;
 
 			foreach ($check_purchase as $purchase_grant)
 			{
