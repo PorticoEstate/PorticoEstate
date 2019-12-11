@@ -43,7 +43,7 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
-			$this->function_msg	 = 'oppdater bestillinger med grunnlag i betalte faktura';
+			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
 			/**
 			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
 			 */
