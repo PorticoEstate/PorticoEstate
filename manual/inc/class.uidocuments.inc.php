@@ -252,7 +252,7 @@
 			}
 
 			$cat_filter = array();
-			if ($cat_id)
+//			if ($cat_id)
 			{
 				$cats = CreateObject('phpgwapi.categories', -1, 'manual', $this->acl_location);
 				$cats->supress_info = true;
