@@ -1986,11 +1986,11 @@ HTML;
 
 					$supervisors[$supervisor_id] = array(
 						'id'		 => $supervisor_id,
-						'required'	 => true,
+						'required'	 => false,
 						'default'	 => true
 					);
 
-					$default_found				 = true;
+					$default_found	 = true;
 				}
 
 				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
@@ -2240,8 +2240,11 @@ HTML;
 				$requests		 = CreateObject('property.sopending_action')->get_pending_action($action_params);
 				if ($requests)
 				{
-					$supervisors[$this->account] = array('id'		 => $this->account, 'required'	 => true,
-						'default'	 => true);
+					$supervisors[$this->account] = array(
+						'id'		 => $this->account,
+						'required'	 => true,
+						'default'	 => true
+					);
 				}
 				else
 				{
@@ -2249,12 +2252,14 @@ HTML;
 					$requests				 = CreateObject('property.sopending_action')->get_pending_action($action_params);
 					if ($requests)
 					{
-						$supervisors[$this->account] = array('id'		 => $this->account, 'required'	 => false,
-							'default'	 => true);
+						$supervisors[$this->account] = array(
+							'id'		 => $this->account,
+							'required'	 => false,
+							'default'	 => true
+						);
 					}
 				}
 			}
-
 
 			if ($supervisors)
 			{
@@ -2399,60 +2404,79 @@ HTML;
 				throw $ex;
 			}
 
+			$purchase_grant_ok = false;
+
 			if($check_purchase)
 			{
-				$purchase_grant_ok = true;
+				/**
+				 * If any of the candidates has approved
+				 */
+				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+				{
+					foreach ($check_purchase as $purchase_grant)
+					{
+						if ($purchase_grant['approved'])
+						{
+							$purchase_grant_ok = true;
+							break;
+						}
+					}
+					unset($purchase_grant);
+				}
+				else
+				{
+					$purchase_grant_ok = true;
+
+					foreach ($check_purchase as $purchase_grant)
+					{
+						if (!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+						{
+							$purchase_grant_ok = false;
+							phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
+											  $GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $order_id),
+													'error'
+							);
+						}
+						else if ($purchase_grant['is_user'] && ( $purchase_grant['required'] && !$purchase_grant['approved']))
+						{
+							$action_params = array(
+								'appname'			 => 'property',
+								'location'			 => $location,
+								'id'				 => $location_item_id,
+								'responsible'		 => '',
+								'responsible_type'	 => 'user',
+								'action'			 => 'approval',
+								'remark'			 => '',
+								'deadline'			 => ''
+							);
+
+							$_account_id = $purchase_grant['id'];//$this->account
+
+							$action_params['responsible'] = $_account_id;
+							if (!execMethod('property.sopending_action.get_pending_action', $action_params))
+							{
+								execMethod('property.sopending_action.set_pending_action', $action_params);
+							}
+							execMethod('property.sopending_action.close_pending_action', $action_params);
+							$historylog->add($history_code, $location_item_id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$budget_amount}");
+							$purchase_grant_ok = true;
+						}
+					}
+				}
 			}
 			else
 			{
-				$purchase_grant_ok = false;
-				
 				if(empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
 				{
 					phpgwapi_cache::message_set('Du må ha satt opp en som du rapporterer til','error');
 				}
 				else
 				{
-					phpgwapi_cache::message_set('er rettigheter til ansvarsstedet satt opp korrekt','error');					
+					phpgwapi_cache::message_set('er rettigheter til ansvarsstedet satt opp korrekt?','error');
 				}
 			}
 
 
-			foreach ($check_purchase as $purchase_grant)
-			{
-				if (!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$purchase_grant_ok = false;
-					phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
-									  $GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $order_id),
-											'error'
-					);
-				}
-				else if ($purchase_grant['is_user'] && ( $purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$action_params = array(
-						'appname'			 => 'property',
-						'location'			 => $location,
-						'id'				 => $location_item_id,
-						'responsible'		 => '',
-						'responsible_type'	 => 'user',
-						'action'			 => 'approval',
-						'remark'			 => '',
-						'deadline'			 => ''
-					);
-
-					$_account_id = $purchase_grant['id'];//$this->account
-
-					$action_params['responsible'] = $_account_id;
-					if (!execMethod('property.sopending_action.get_pending_action', $action_params))
-					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
-					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$historylog->add($history_code, $location_item_id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$budget_amount}");
-					$purchase_grant_ok = true;
-				}
-			}
 			return $purchase_grant_ok;
 		}
 
