@@ -1011,6 +1011,7 @@
 
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
+				pagingType:		"input",
 				processing:		true,
 				serverSide:		true,
 				responsive:		{
