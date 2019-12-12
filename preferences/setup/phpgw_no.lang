@@ -97,8 +97,8 @@ custom title on pending vendor reminders	preferences	no	Egendefinert tittel på 
 show your pending request for approvals on main screen	preferences	no	Vis ventende godkjenningsforespørsler på hjemmeskjerm
 your requests for approvals waiting decisions	preferences	no	Dine meldinger som avventer godkjenning
 custom title on pending request for approvals	preferences	no	Egendefinert tittel på ventende godkjenningsforespørsler
-show pending approvals on main screen	preferences	no	Vis meldinger du må godkjenne på hjemmeskjerm
-approvals waiting for your decisions	preferences	no	Meldinger sendt til deg for godkjenning
+show pending approvals on main screen	preferences	no	Vis saker du må godkjenne på hjemmeskjerm
+approvals waiting for your decisions	preferences	no	saker sendt til deg for godkjenning
 custom title on pending approvals	preferences	no	Egendefinert tittel på godkjenningsforespørsler
 default updated ticket status when creating project	preferences	no	Standard oppdatert meldingsstatus ved oppretting av prosjekt
 autocreate project from ticket	preferences	no	Opprett prosjekt fra melding
