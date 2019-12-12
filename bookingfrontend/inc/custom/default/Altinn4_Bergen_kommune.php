@@ -146,10 +146,10 @@
 
 					$results[] = array
 					(
-						'orgnr' => $org['orgnr']
+						'orgnr' => $org['organizationNumber']
 					);
 
-					$orgs_validate[] = $org['orgnr'];
+					$orgs_validate[] = $org['organizationNumber'];
 				}
 			}
 
