@@ -4365,7 +4365,7 @@ HTML;
 			$id			 = $ticket['id'];
 			$order_id	 = $ticket['order_id'];
 
-			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
+			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) && $ticket['file_attachments'])
 			{
 				$attachments	 = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
 				$_attachment_log = array();
