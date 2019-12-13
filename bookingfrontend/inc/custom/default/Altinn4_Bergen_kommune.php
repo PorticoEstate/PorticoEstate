@@ -195,36 +195,35 @@
 
 		private function get_orgs_from_external_service($fodselsnr)
 		{
+			//curl -s -u portico:*** https://tjenester.usrv.ubergenkom.no/api/altinnservice/getAvgiver/***********
 
+			$location_URL = !empty($this->config->config_data['soap_location']) ? $this->config->config_data['soap_location'] : "https://tjenester.srv.bergenkom.no";
 
-//curl -s -u portico:*** https://tjenester.usrv.ubergenkom.no/api/altinnservice/getAvgiver/***********
+			$username = $this->config->config_data['soap_login'];
+			$password = $this->config->config_data['soap_password'];
 
-
-			$location_URL = !empty($this->config->config_data['soap_location']) ? $this->config->config_data['soap_location'] : "https://tjenester.usrv.ubergenkom.no/api/"; #A-test
-
-			$soap_login = $this->config->config_data['soap_login'];
-			$soap_password = $this->config->config_data['soap_password'];
-
-			$url = rtrim($location_URL, '/') . "/altinnservice/getAvgiver/{$fodselsnr}";
+			$url = rtrim($location_URL, '/') . "/api/altinnservice/getAvgiver/{$fodselsnr}";
 
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $location_URL);
-			curl_setopt($ch, CURLOPT_USERPWD, "{$soap_login}:{$soap_password}");
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
 			$result = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
 			if (!$httpCode)
 			{
 				throw new Exception("No connection: {$url}");
 			}
-			curl_close($ch);
 
 			$orgs = json_decode($result, true);
+			$this->log('webservice returdata as json', print_r($result, true));
 
 			return $orgs;
 		}
