@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      "@editorjs/delimiter",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/delimiter@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/delimiter@1.1.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/delimiter",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/delimiter_1.1.0_1551541326037_0.9778585508830582"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/delimiter",
+    "raw": "@editorjs/delimiter",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/delimiter/-/delimiter-1.1.0.tgz",
+  "_shasum": "f61808ea92e4e289607d54441964f1cb8605410a",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/delimiter",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@ifmo.su",
+    "name": "CodeX Team"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/delimiter/issues"
+  },
+  "dependencies": {},
+  "description": "Delimiter Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 7,
+    "integrity": "sha512-0G36vEvvb94g6nu/qs2rVjC/qjxLnY20OfOgxROKSOOXzS7xnkTij5raeIxRiYueeLL5fMrzrvtFH7wclfxF+g==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJceqROCRA9TVsSAnZWagAAb5kP+gIIKcEMGicr7wOAIQRG\nkfbPPYp2RuqpWSVZVY8BeauEZUXg5iNVw3PlK7TNTe2eqepJF4Okc+2xts3e\npeCw5mvDXZl33Ccx43PQKUBIBOLOArBF2CXTWYw4IzVIv1oBPUvWL395tvrG\n/Jz1Fn9eB2tl/i4VFRVc/EQhEfey4zi3LPLcM30D//M2C97jE6vlv3L7zFnH\nREwtWyljK4NeHuzOt2QUwnSPKuayCc9X8FcDHXObZlv4T9o6WyaUiT6eAq8B\nNbYREFvmhufuZSr8BEiRsDBxGUYdreE51CpK/PiNmquHixb0VqU6QUQC/79r\n0BAI1lbp/fHP32QhgM476Y0GrKthrrBm8kvcinP6iOcwedln35A7nfYHSMBr\neHbBSS32xWtZFhUlB1L+n/6wkxYyy51WcSOe9lIjsA53AQEphVpBZRHC71g2\nNTNv+nagGYoy49crJy8qe187V4IEYqTYK4EuUMCdNWFsPyLM7OZ5OeJ34CT4\nAdC9XeVDVd7noPW6M1XPe4X0k/KNM9FeZ8DyhqQzBxAJ7adJRtbNtohwx/LN\nQZeh8UKsbQAY/8TRy2GKfnUZjevR27NiC8z0GApcO1JOsRCXaEC18/aCKZ2I\n1wNjdVm/SAbChfsdL2hTV1j8bru7vJq+dEvTVQLxxbL75bhPdndDmovNWxH7\nX1Jd\r\n=V6LF\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "f61808ea92e4e289607d54441964f1cb8605410a",
+    "tarball": "https://registry.npmjs.org/@editorjs/delimiter/-/delimiter-1.1.0.tgz",
+    "unpackedSize": 11550
+  },
+  "homepage": "https://github.com/editor-js/delimiter#readme",
+  "keywords": [
+    "codex editor",
+    "delimiter",
+    "editor.js",
+    "editorjs",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/delimiter",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/delimiter.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "1.1.0"
+}

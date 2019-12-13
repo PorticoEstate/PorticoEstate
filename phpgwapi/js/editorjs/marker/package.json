@@ -1,0 +1,96 @@
+{
+  "_args": [
+    [
+      "@editorjs/marker",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/marker@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/marker@1.2.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/marker",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/marker_1.2.2_1575134143899_0.6774914625063537"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/marker",
+    "raw": "@editorjs/marker",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/marker/-/marker-1.2.2.tgz",
+  "_shasum": "d9261a257436bf70179c0fa1e766ab85c823c96b",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/marker",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@codex.so",
+    "name": "CodeX"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/marker/issues"
+  },
+  "dependencies": {},
+  "description": "Marker Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^1.0.0",
+    "raw-loader": "^3.1.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 6,
+    "integrity": "sha512-BN/IHbVKKahGnMAiBOV5U7XUjfF6JkIkTZ6qNLxtTr7PUPM8UsJV8G8pyll9CX+XRUYYZyokA2kEBHTS4vUyyw==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJd4qPACRA9TVsSAnZWagAAlwwQAKUAKpVmdEXKIplHTSe0\naCJTEbZfCVVTe05j0vZKRY2J4vfQZkCzTcfZimS/hpJckYbMZFpFe6wAn/pH\nE4chLUztjrMbT31AzdfCL2CDYjnfq+K46+3gFJV6SSMVetNwM10j/r3vlI4X\noTUJKF4xGybIYU43heHHU4giVCN+OL79WsUWzN59Z5Mr9DmDfIEwi4Cfnngm\npwH39B7vnr8jvR99/5aO/h/M6M5ZniRCHzH8mCfxgSDzr74aSWyMNpfGpwSX\nt6hkvjz4xCvcF/IX/3MHOkpdjO5/eQ3Xr+v7k4WeEfbpy6VqgbxGqR0IB3Wr\nDuHnNlOqPe++AgcRxJydfntefNL+/tB1vJgjtTs+9t7QLFLH8JGXh8BV9m3n\nZeQg5t5eNXk8eon8vqBb9ovA79kGxCIhWwekuZzUdC9kJGAUA6HOILZpPFml\nQ1HxEQi/n5JUlRpmuHbxKdaz4KqhSDCq9ERhGrWRFs1Y79vWXcuzZnLnFl1z\nVZmihiH7CShp+5in/LJtW5rlw7nXlebTke7f3YoSfAR0kYXjRmNwISoajSsQ\n7VynMg1A8/tpvnmvA8GuQZyEPtvqZhcqtdOeOoc2GbpKzgNgVkngvz771aA1\n6PhACiqnP5i8CHixMgZ2QaYTKjjgI/Jtj6dL769vH9czcviQwM1pzfQxJ/hW\n4Ufk\r\n=axDG\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "d9261a257436bf70179c0fa1e766ab85c823c96b",
+    "tarball": "https://registry.npmjs.org/@editorjs/marker/-/marker-1.2.2.tgz",
+    "unpackedSize": 12262
+  },
+  "homepage": "https://github.com/editor-js/marker#readme",
+  "keywords": [
+    "codex editor",
+    "editor.js",
+    "editorjs",
+    "marker",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/marker",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/marker.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "1.2.2"
+}

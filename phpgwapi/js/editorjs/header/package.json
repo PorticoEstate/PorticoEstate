@@ -1,0 +1,96 @@
+{
+  "_args": [
+    [
+      "@editorjs/header",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/header@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/header@2.3.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/header",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/header_2.3.2_1575134043155_0.8234286188166449"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/header",
+    "raw": "@editorjs/header",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/header/-/header-2.3.2.tgz",
+  "_shasum": "419b24196ce7142c0ae8bac837e6b5f68977dc8f",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/header",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@codex.so",
+    "name": "CodeX"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/header/issues"
+  },
+  "dependencies": {},
+  "description": "Header Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^1.0.0",
+    "raw-loader": "^3.1.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 8,
+    "integrity": "sha512-Chsnwo3kRTJGtWQdxikYfPCjgA3FtFmZM5mmFno7Pwjk0AQWBnU+Vb9TCIkYw+LpchWm+D+3Px7saRchCF2jnQ==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJd4qNbCRA9TVsSAnZWagAAepUQAJhjVSz1DJ9NRLo+b54a\nkU3tLasXIU1Ldxn1DXXYeXCXitHlhevCa634kqa18gEJ8n94k9YWG4GUKU/4\nspFvbMFggIUqgF3cSqDYByBChnXdUGrRTIynecWcRyvLSoTlYd/UvJaxHCsQ\nTbjWpJ7m4T5HqQnohnHMOD+hpTXXyJ/UmT1MGHpCMK1Qt+Qa3Z9JjDHcSjvg\nkqgq4e3Qn+p95PhZkQz1KR7DD5MrZTDmbxC//zBByxYu8XER6EIjbuzV8Daq\n2z6/ki52EhzH/dthN5h09frcHwhmWDTn+bXE+hnvIE4BGLZV74lPXJkgjtzj\nXVz2152ZHpwaebPJQUkuLkYpzKhRD42vDLHw4BGns9RaL+/qyKuBWCCH4a0V\nm4I0F+5LaKZeSC0vSfTYEG6SkqcSaWFbPeXBDfF0885OWceLDW+JJMSnzpUm\n5fRS7tOSGBSrhRKpcZpYxFAOy7Z4V759iTyglz43ss13eQDrh71tysjr7zVN\nGbdKCS0YobdXqbb1fF6BlqMBxRt9B/z0m9iqjUopjd3+EnJmrF9UV96UXgjf\nhnA03J5biL4iUvGOtVjyAX0lNNTJlg4xK76ZnYc3OwbupzLsVJKm8BWIYPWJ\nLJvd8BjB41ap24GZJaZByXaA2mNLi3uMACP1uhytXI8RBXoyeWHrYUX1QVh3\nKCNA\r\n=UCmA\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "419b24196ce7142c0ae8bac837e6b5f68977dc8f",
+    "tarball": "https://registry.npmjs.org/@editorjs/header/-/header-2.3.2.tgz",
+    "unpackedSize": 24197
+  },
+  "homepage": "https://github.com/editor-js/header#readme",
+  "keywords": [
+    "codex editor",
+    "editor.js",
+    "editorjs",
+    "header",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/header",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/header.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "2.3.2"
+}

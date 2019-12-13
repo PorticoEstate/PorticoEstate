@@ -1,0 +1,98 @@
+{
+  "_args": [
+    [
+      "@editorjs/list",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/list@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/list@1.4.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/list",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/list_1.4.0_1561978954865_0.12555086061647946"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/list",
+    "raw": "@editorjs/list",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/list/-/list-1.4.0.tgz",
+  "_shasum": "e92459a8ac2305bc4385245e329c8b5c8437456a",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/list",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@codex.so",
+    "name": "CodeX"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/list/issues"
+  },
+  "dependencies": {},
+  "description": "List Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^1.0.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.2",
+    "postcss-nested-ancestors": "^2.0.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 7,
+    "integrity": "sha512-iYDXGbVXvsAJbSxbjFMP4p7kS1zhQyNDqVNzkfMRhItulzKYlOMlFjTIGHqu5SxPy6NrcckhVFaWdfGDn5/gEA==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdGehLCRA9TVsSAnZWagAAIVEQAJ1kbicI+mmXfodMxc55\niNU8XrC8OAlK+vGyE9ADXDC/DHZi8b12YQlAIdNlnAfssXEhgNsItD1asJAw\nwnBZBPGhPa4NgNXcRprfEg7PjryNvLCn1Uu9Ar1QQTKZIaoGaakB0cNvgNsq\nychzMdXQRXeqr15VOUcZU+UFg1omskRHegFOB6x6SNLtjY8I1F6Xej93OT5N\nrq0XO3uiXEtSJV/v4TnG9LBbBSsP/BEBxv4OcKM9aiRFPe43dx1eL5NJztI6\ne8yBNoQapgGNB1T9dIit50W8Scxolf+fGsm8Og7kOFml96Lgbp6DRHKsDgxa\nJDlPQWZzaD1M+BLurTy2+ec96BnvpbLMm71GyRYeV6RgkRSKsLLwEQ8XVCnC\nfcbYFNR3XQPQxTFuwPMbd4ay3CehvAhRFGP2wdmLvRuLaecYun+xCjuSkgrz\nl8GjMvxXNO8O7i1h/pKEQcTKmNINAcIyH8r1T4nJ7g8C9zX5zEnWIG2zt8HG\n2Bli6K0F8e7nXBfgNPNQqBs7LuC/SigkGveosJ/wkNsroHphoWR7SMUzNQ+r\nCKCpoVwRqfwnN/JiX2iVcvUFOx/uoXFGXtPAqzgM1qhLTo50tH58oevhkscm\nwbFYKF3gbo6T0RMo5OAPR3r1KkOKLgBgr5e+ny0roAH1f1tohPgO0hinvjxf\nghYd\r\n=Eik/\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "e92459a8ac2305bc4385245e329c8b5c8437456a",
+    "tarball": "https://registry.npmjs.org/@editorjs/list/-/list-1.4.0.tgz",
+    "unpackedSize": 18728
+  },
+  "homepage": "https://github.com/editor-js/list#readme",
+  "keywords": [
+    "codex editor",
+    "editor.js",
+    "editorjs",
+    "list",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/list",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/list.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "1.4.0"
+}

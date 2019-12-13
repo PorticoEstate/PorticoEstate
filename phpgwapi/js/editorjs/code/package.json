@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      "@editorjs/code",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/code@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/code@2.4.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/code",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/code_2.4.1_1554055640013_0.1824472785174851"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/code",
+    "raw": "@editorjs/code",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/code/-/code-2.4.1.tgz",
+  "_shasum": "a1851c781c9ead9a84bd921f04df172a2383f550",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/code",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@ifmo.su",
+    "name": "CodeX"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/code/issues"
+  },
+  "dependencies": {},
+  "description": "Code Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 7,
+    "integrity": "sha512-R4UUApkm6FLuxrQoqISg6GL73t0WWOdoPdAmAa36xarmtmBRkxu4AfxIwzW2CtUD1CqG1T7Be6jnv4ZeUoMNYQ==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJcoQHYCRA9TVsSAnZWagAAHcoQAJgYtvxH4N3cajP4pJpT\nUe5AxWcFGLh6rJXHbrCDX/z+bwBqs16YaAirvKt8NVXsN/IQsKv1S7Zp8j/C\nTD3cNSrFeI4LJYLQRSs//LQCNPp/OH/x0SJvSh642ANyjFHHaHf3Z4RYXVsM\noE7SaDHl2c43C0+a4GaQSnR9qHoQWFbb4uoNYFxelLkoRu3joVT6E43ozYga\ndur/Zn408fNYm4RJCjJOlExK64SIUGu1Mwk2wb/6a+evIrw4onBXDYslVDYx\nsiFN4YCSTyP1zjR+EJehzehSQKddLx6WSs2GcOfLJxgMYSrGWl1o5tYwDgXJ\nY2S1MQ2kemzO88VbbUalZ9F89zb+kRKmQOsu3AJVye8sFveioHYiqCqTA3kc\nLI0Rit4PSAs1VTGyPe8gvd5azbLYFxPvziubHIRgvih20HhC+wEIscQ941C3\nWxjNH+3/PgYPjTqw6qzxvZ9nNMpoLKZkc24d4FRtxkyYxn4ouLtDURfGTspT\n/r2/UXZCI5fx9Cg2aKWg5Qv4XYJiB8kvKee2Jo8qrV2A4j2TEPDGURy3cyIN\n6a1zagJZ+9E7p0F7JPeEuvJYYwNGJIitUbp8SwpZNA2vnJrsBVudoieOF1Uc\nUxPwS1//1OwayLJcvsNUK4mOx3EyrgR07RI+Qt4GCs54E5Jw5BzP7TfH1lVB\n8S7a\r\n=CmtV\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "a1851c781c9ead9a84bd921f04df172a2383f550",
+    "tarball": "https://registry.npmjs.org/@editorjs/code/-/code-2.4.1.tgz",
+    "unpackedSize": 14240
+  },
+  "homepage": "https://github.com/editor-js/code#readme",
+  "keywords": [
+    "code",
+    "codex editor",
+    "editor.js",
+    "editorjs",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/code",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/code.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "2.4.1"
+}

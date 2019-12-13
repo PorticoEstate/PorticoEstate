@@ -1,0 +1,106 @@
+{
+  "_args": [
+    [
+      "@editorjs/embed",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/embed@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/embed@2.2.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/embed",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/embed_2.2.1_1560359315326_0.8978688423428431"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/embed",
+    "raw": "@editorjs/embed",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/embed/-/embed-2.2.1.tgz",
+  "_shasum": "90dbcac6e163d20c665fcc1a218d4ba1db80e2f1",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/embed",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@ifmo.su",
+    "name": "CodeX Team"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/embed/issues"
+  },
+  "dependencies": {},
+  "description": "Embed Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "chai": "^4.2.0",
+    "css-loader": "^1.0.0",
+    "debounce": "^1.2.0",
+    "ignore-styles": "^5.0.1",
+    "mocha": "^5.2.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.1",
+    "postcss-nested-ancestors": "^2.0.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.2.3"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 7,
+    "integrity": "sha512-jjhgJf+LkYr8UfsQPavfukCq0+SIkz1MD8vmWkN29uU2zItWsScmfRis3YoLZJ7Rrz+yDeS8GyUjxTg2iQa0Vg==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdATGTCRA9TVsSAnZWagAAW7cP/0mcrWOp1PudgtLPnmkf\nmUqRJMD+cyDMbWpUzdNJVTAaNJw3JsuDvOC58TX5U0XPFR+eXp1A0YkLx5YM\nwEFywYbXEef3WNX6R7rwlD0Jjd/CQJOxvTAB0HAy44McF+551KVdufBZ4Wqz\n4uRmH5oo134ql21E6fjZ0U8WI0t/YkgPQ6YySTAcQ0YrVdxbATfBIGX+TIeV\nzoEKm0dpfPX0TaRmYfv74/GAZtZ6qUnu7fAEmOtV574ZMFXHZIHvTofWd2Hl\nFk/om9OoFgN5NcwsgdOosPqk8hLrwX9G2G+jLUsFwl/3XpCXvZ1Wjj1cQrtu\nzOp5fYR1+RF+5td47xR+UxpEy/BYbkyzoKBzlGwn+xCPbhHz9i/+XnrLIERN\nhrihUzd+CjRt1iuvDpxtMtsAt7sPTMWt3XgNZv34hNxvw9OzqdOHBkQBLJ8U\nKvoCiZatTBvXM6tUmw36ewogX0CeGj9tzpNaJcnY75jKGrBjMfPfhJcfYJr8\nqy7EnsBtfOBkArJquBgvBhzUaGSbKEXlh1gCr3MTOeQ2UGW3vaIm282ZoFsJ\nW9cxMJdYbPMBwbwO9HiabXCZebAma/e2m0eK3Snlsu9zedm4CdViWoM7rzZD\nYE/hnhMI142eDPg6hCrVug45G0Dl7qkyqYNd3oEyaji0KHzE2mYyOHq3RuWc\nR1sh\r\n=hYce\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "90dbcac6e163d20c665fcc1a218d4ba1db80e2f1",
+    "tarball": "https://registry.npmjs.org/@editorjs/embed/-/embed-2.2.1.tgz",
+    "unpackedSize": 25153
+  },
+  "homepage": "https://github.com/editor-js/embed#readme",
+  "keywords": [
+    "codex editor",
+    "editor.js",
+    "editorjs",
+    "embed",
+    "tool"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/embed",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/embed.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch",
+    "test": "mocha -r @babel/register -r ignore-styles --recursive ./test"
+  },
+  "version": "2.2.1"
+}

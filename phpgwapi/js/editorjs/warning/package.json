@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      "@editorjs/warning",
+      "/tmp"
+    ]
+  ],
+  "_from": "@editorjs/warning@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@editorjs/warning@1.1.1",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@editorjs/warning",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/warning_1.1.1_1560359456989_0.49015216672391415"
+  },
+  "_npmUser": {
+    "email": "team@ifmo.su",
+    "name": "codex-team"
+  },
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@editorjs/warning",
+    "raw": "@editorjs/warning",
+    "rawSpec": "",
+    "scope": "@editorjs",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@editorjs/warning/-/warning-1.1.1.tgz",
+  "_shasum": "8981f36f2316ae87e5204e808d22a0d9aa072468",
+  "_shrinkwrap": null,
+  "_spec": "@editorjs/warning",
+  "_where": "/tmp",
+  "author": {
+    "email": "team@ifmo.su",
+    "name": "CodeX Team"
+  },
+  "bugs": {
+    "url": "https://github.com/editor-js/warning/issues"
+  },
+  "dependencies": {},
+  "description": "Warning Tool for Editor.js",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
+    "style-loader": "^0.23.1",
+    "svg-inline-loader": "^0.8.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 7,
+    "integrity": "sha512-YIO9yEdJZMUeKPNrlwXIYmMzfBfKiXDhTgSh8JSAmh0XCV2rJfPWo9g2pgyD3g0Re/kclfbUVSfFLCBR0RsCtw==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdATIiCRA9TVsSAnZWagAAg4MP/16QK2Ec68Gj4F1pjM4u\n2FWdOqq4uaLPs3G9Gxc7hu0j/UCF9QmgDrIyppMm1lR8paGLh94RYfYijLIU\n+XxISYbIa5QJ3Z75tBl4DTV/5LB3dNf0NaToMT4PIpebw4OZWA2OLCYdBpyv\nl/Q4RzWjow/UHnSQbTLvsMfQjpiAQQ+V+RjqrV1M7nBZXHw+ZbfHASAqV6Ig\n5YaLXMwqqWsksRaPn7oXRgpmKZY0CZYQ8JsRhlIen2c2kqt3hUmzqjMgMW81\njw4poAErv5wcMYAl1XBSaw7JrDWMlHDTLsN/Uz/AiZRrLa3s7L3R0dJrr21J\noA3loqu4404a1NbVV75olz2QQbxAG53D7UPtYr+t1YlmMPpwvyK+cT85aFfP\nI1Bb1A1PM1cBHQlD9jXtM1SYkzO8AeeyYR+AaJIrtX68bQUt9eYkY87f9ShI\nSv2MHDtm8rVBhFpoce5bqyqNpq2k9cuRYAO/8N96DDQtWH6H44/xQiCfPyxX\nl925JOvdoAoMTIXCf+DFoKPkll5AqeQXyCoS5nhiYSnMFDQUoNG+MWCfYYOe\nrIucBFENwrTvTcmlNoEyMTC9e7iD4WljjucJfXrAwapKq8Oet6k5We+mmHsF\ngx8eLsj9K3/8vFqCkvrPk0Juv4I1A5d9pKlzwtiERMyUayqmVZrNb0XT2dxk\nOtW8\r\n=SwAY\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "8981f36f2316ae87e5204e808d22a0d9aa072468",
+    "tarball": "https://registry.npmjs.org/@editorjs/warning/-/warning-1.1.1.tgz",
+    "unpackedSize": 17079
+  },
+  "homepage": "https://github.com/editor-js/warning#readme",
+  "keywords": [
+    "codex editor",
+    "editor",
+    "editor.js",
+    "editorjs",
+    "tool",
+    "warning"
+  ],
+  "license": "MIT",
+  "licenseText": "MIT License\n\nCopyright (c) 2018 CodeX\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "main": "./dist/bundle.js",
+  "maintainers": [
+    {
+      "name": "codex-team",
+      "email": "team@ifmo.su"
+    }
+  ],
+  "name": "@editorjs/warning",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/editor-js/warning.git"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development --watch"
+  },
+  "version": "1.1.1"
+}
