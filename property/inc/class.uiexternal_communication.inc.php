@@ -352,6 +352,60 @@
 
 
 			$datatable_def	 = array();
+
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			{
+				default:
+				case 'ckeditor':
+					$insert_action = <<<JS
+
+						try
+						{
+							$.fn.insertAtCaret(decodedString);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+				case 'quill':
+					$insert_action = <<<JS
+
+						try
+						{
+							quill.communication_message.setText('\\n');
+							quill.communication_message.clipboard.dangerouslyPasteHTML(0, encodedStr);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+				case 'summernote':
+					$insert_action = <<<JS
+
+						try
+						{
+							$('textarea#communication_message').summernote('focus');
+							$('textarea#communication_message').summernote('reset');
+							$('textarea#communication_message').summernote('insertText', '\\n');
+							$('textarea#communication_message').summernote('pasteHTML', encodedStr);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+			}
+
+
+
 			$custom_code	 = <<<JS
 
 				var message = '';
@@ -382,7 +436,8 @@
 					var parser = new DOMParser;
 					var dom = parser.parseFromString(encodedStr,'text/html');
 					var decodedString = dom.body.textContent;
-					$.fn.insertAtCaret(decodedString);
+					{$insert_action}
+//					$.fn.insertAtCaret(decodedString);
 
 //					message = $("#communication_message").val() + space + aData['value_note'];
 //					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');

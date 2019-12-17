@@ -60,11 +60,10 @@
 
 		function __construct()
 		{
-			parent::__construct();
-
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['headonly'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			parent::__construct();
 		}
 
 		public function query()
@@ -107,19 +106,59 @@
 				);
 				return $this->jquery_results($result_data);
 			}
-
 			$action = <<<JS
 
 				var encodedStr = aData["content"];
 				var parser = new DOMParser;
 				var dom = parser.parseFromString(encodedStr,'text/html');
 				var decodedString = dom.body.textContent;
-				try
-				{
-					parent.$.fn.insertAtCaret(decodedString);
-				}
+JS;
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			{
+				default:
+				case 'ckeditor':
+						$action .= <<<JS
+
+						try
+						{
+							parent.$.fn.insertAtCaret(decodedString);
+						}
+JS;
+					break;
+				case 'quill':
+					$action .= <<<JS
+
+						try
+						{
+							parent.quill.communication_message.setText('');
+							parent.quill.communication_message.clipboard.dangerouslyPasteHTML(0, encodedStr);
+
+						}
+JS;
+					break;
+				case 'summernote':
+					$action .= <<<JS
+
+						try
+						{
+			//		alert(encodedStr);
+			//				console.log(parent.$('textarea#communication_message').summernote());
+			//				parent.$('textarea#communication_message').val('hei')
+							parent.$('textarea#communication_message').summernote('focus');
+							parent.$('textarea#communication_message').summernote('reset');
+							parent.$('textarea#communication_message').summernote('insertText', '\\n');
+							parent.$('textarea#communication_message').summernote('pasteHTML', encodedStr);
+						}
+JS;
+					break;
+			}
+
+			$action .= <<<JS
+
 				catch(e)
 				{
+					console.log(parent.quill);
+					console.log(e);
 					var temp = parent.document.getElementById("new_note").value;
 					if(temp)
 					{
@@ -249,7 +288,51 @@ JS;
 				var parser = new DOMParser;
 				var dom = parser.parseFromString(encodedStr,'text/html');
 				var decodedString = dom.body.textContent;
-				parent.$.fn.insertAtCaret(decodedString);
+JS;
+
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			{
+				default:
+				case 'ckeditor':
+					$action .= <<<JS
+
+						try
+						{
+							parent.$.fn.insertAtCaret(decodedString);
+						}
+JS;
+					break;
+				case 'quill':
+					$action .= <<<JS
+
+						try
+						{
+							parent.quill.content.setText('n');
+							parent.quill.content.clipboard.dangerouslyPasteHTML(0, encodedStr);
+						}
+JS;
+					break;
+				case 'summernote':
+					$action .= <<<JS
+
+						try
+						{
+							parent.$('textarea#content').summernote('focus');
+							parent.$('textarea#content').summernote('reset');
+							parent.$('textarea#content').summernote('insertText', '\\n');
+							parent.$('textarea#content').summernote('pasteHTML', encodedStr);
+						}
+JS;
+					break;
+			}
+
+			$action .= <<<JS
+
+				catch(e)
+				{
+				console.log(e);
+				}
+
 				parent.JqueryPortico.onPopupClose("close");
 JS;
 
