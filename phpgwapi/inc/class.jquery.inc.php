@@ -580,7 +580,140 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
 		}
-		
+
+		public static function init_summernote( $target )
+		{
+			self::load_widget('core');
+	//		$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote.min');
+			$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-bs4');
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-bs4.css");
+			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang'] ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
+			{
+				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			}
+			
+			switch ($userlang)
+			{
+				case 'nn':
+				case 'no':
+					$lang = 'nb-NO';
+					break;
+				default:
+					$lang = 'nb-NO';
+					break;
+			}
+
+			$GLOBALS['phpgw']->js->validate_file('summernote', "dist/lang/summernote-{$lang}");
+
+			
+			static $init = false;
+			
+			$js = '';
+			if(!$init)
+			{
+				$js = <<<JS
+				
+				var toolbarOptions = [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+  //              ['fontname', ['fontname']],
+  //              ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview', 'help']],
+            ];
+JS;
+			}
+ 
+			$js .= <<<JS
+ 
+
+		$( document ).ready( function() {
+			$( 'textarea#{$target}').summernote({
+			  lang: '{$lang}', // default: 'en-US'
+			  placeholder: 'write here...',
+			  toolbar: toolbarOptions
+//			  dialogsInBody: true
+			});
+		});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+			$init = true;
+
+		}
+
+		public static function init_quill( $target )
+		{
+			/**
+			 * https://github.com/tangien/quilljs-textarea
+			 */
+			
+			self::load_widget('core');
+			$GLOBALS['phpgw']->js->validate_file('quill', 'quill.min');
+			$GLOBALS['phpgw']->js->validate_file('quill', 'quill-textarea');
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/quill/quill.snow.css");
+
+			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang'] ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
+			{
+				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			}
+			
+			static $init = false;
+			
+			$js = '';
+			if(!$init)
+			{
+				$js = <<<JS
+			var quill = {};
+			var toolbarOptions = [
+			  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+//			  ['blockquote', 'code-block'],
+
+//			  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+			  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+//			  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+			  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+//			  [{ 'direction': 'rtl' }],                         // text direction
+
+//			  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+			  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+//			  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+//			  [{ 'font': [] }],
+			  [{ 'align': [] }],
+
+			  ['clean']                                         // remove formatting button
+			];
+
+JS;
+				
+			}
+
+
+			$js .= <<<JS
+
+		$( document ).ready( function() {
+				
+			var editors = quilljs_textarea('textarea#{$target}', {
+				modules: {
+				   toolbar: toolbarOptions
+				 },
+			    table: true,
+				placeholder: '',
+			    theme: 'snow'
+			 });
+			quill.$target = editors.$target
+			
+		});
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+			
+			$init = true;
+		}
+
 		public static function init_multi_upload_file()
 		{
 			self::load_widget('file-upload');

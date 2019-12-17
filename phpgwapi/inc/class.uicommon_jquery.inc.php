@@ -548,20 +548,39 @@
 		 */
 		public function rich_text_editor( $targets )
 		{
-			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
-				|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+			if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor']))
 			{
 				return;
 			}
-
 			if (!is_array($targets))
 			{
 				$targets = array($targets);
 			}
-			foreach ($targets as $target)
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
 			{
-				phpgwapi_jquery::init_ckeditor($target);
+				case 'ckeditor':
+					foreach ($targets as $target)
+					{
+						phpgwapi_jquery::init_ckeditor($target);
+					}
+					break;
+				case 'summernote':
+					foreach ($targets as $target)
+					{
+						phpgwapi_jquery::init_summernote($target);
+					}
+					break;
+				case 'quill':
+					foreach ($targets as $target)
+					{
+						phpgwapi_jquery::init_quill($target);
+					}
+					break;
+
+				default:
+					break;
 			}
+
 		}
 
 		/**
