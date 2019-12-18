@@ -364,7 +364,7 @@
 			{
 				foreach ($cols_return as $key => $field)
 				{
-					$stripslashes = !in_array($uicols['datatype'][$key], array('html', 'I'));
+					$stripslashes = !in_array($uicols['datatype'][$key], array('I'));
 
 					$dataset[$j][$field] = array
 					(
@@ -430,7 +430,7 @@
 				// FIXME - add field to $values['attributes']
 				foreach ($this->location_info['fields'] as $field)
 				{
-					$stripslashes = !in_array($field['type'], array('html', 'int', 'integer'));
+					$stripslashes = !in_array($field['type'], array('int', 'integer'));
 					$values[$field['name']] = $this->_db->f($field['name'], $stripslashes);
 				}
 

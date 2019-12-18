@@ -249,7 +249,7 @@
 				$values[] = array
 					(
 					'id'					 => $this->db->f('id'),
-					'message'				 => $this->db->f('message'),
+					'message'				 => $this->db->f('message', true),
 					'created_on'			 => $this->db->f('created_on'),
 					'created_by'			 => $this->db->f('created_by'),
 					'timestamp_sent'		 => $this->db->f('id'),
@@ -430,7 +430,7 @@
 
 			foreach ($fields as $field => $field_info)
 			{
-				$stripslashes = !in_array($field_info['type'], array('html', 'int'));
+				$stripslashes = !in_array($field_info['type'], array('int'));
 				$values[$field] = $this->db->f($field, $stripslashes);
 			}
 			$mail_recipients			 = trim($values['mail_recipients'], ',');
