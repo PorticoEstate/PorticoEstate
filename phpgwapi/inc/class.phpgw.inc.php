@@ -155,7 +155,14 @@
 			require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/htmlpurifier/HTMLPurifier.auto.php';
 
 		    $config = HTMLPurifier_Config::createDefault();
-			$config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
+			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+//			$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
+			$config->set('URI.DisableExternalResources', false);
+			$config->set('URI.DisableResources', false);
+			$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
+			$config->set('HTML.AllowedAttributes', 'src, height, width, alt');
+			$config->set('URI.AllowedSchemes', array('data' => true)); 
+
 			$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);

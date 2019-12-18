@@ -206,7 +206,7 @@
 					$value_type = 'html';
 				}
 				$data[$_field['name']]	 = $values[$_field['name']];
-				$data[$_field['name']]	 = phpgw::clean_value($data[$_field['name']], $value_type);
+//				$data[$_field['name']]	 = phpgw::clean_value($data[$_field['name']], $value_type);
 
 				if (isset($_field['nullable']) && $_field['nullable'] != true)
 				{
