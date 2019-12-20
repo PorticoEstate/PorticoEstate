@@ -692,6 +692,7 @@ JS;
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor('communication_message');
 			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline', 'files'), array(
 				'edit' => $data));

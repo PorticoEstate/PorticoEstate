@@ -287,17 +287,6 @@
 						</xsl:when>
 					</xsl:choose>
 
-<!--					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
-						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
-						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
-					</div>-->
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
@@ -740,18 +729,6 @@
 							</xsl:call-template>
 						</xsl:when>
 					</xsl:choose>
-
-
-<!--					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
-						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
-					</div>-->
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
