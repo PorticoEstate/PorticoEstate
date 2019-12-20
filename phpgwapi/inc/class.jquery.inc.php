@@ -612,9 +612,17 @@ JS;
 			$disableDragAndDrop = '';
 			if (empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
-				$disableDragAndDrop = "disableDragAndDrop: true,";
+				$disableDragAndDrop = "disableDragAndDrop: true,
+				callbacks: {
+			    onImageUpload: function (data) {
+				 data.pop();
+			    }
+		     },
+";
+				
 			}
-			
+
+			$lang_placeholder = 'write here...';
 			
 			$js = '';
 			if(!$init)
@@ -641,7 +649,7 @@ JS;
 			$( 'textarea#{$target}').summernote({
 			  lang: '{$lang}', // default: 'en-US'
 			  {$disableDragAndDrop}
-			  placeholder: 'write here...',
+			  placeholder: '{$lang_placeholder}',
 			  toolbar: toolbarOptions
 //			  dialogsInBody: true
 			});
