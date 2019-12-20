@@ -609,6 +609,13 @@ JS;
 			
 			static $init = false;
 			
+			$disableDragAndDrop = '';
+			if (empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
+			{
+				$disableDragAndDrop = "disableDragAndDrop: true,";
+			}
+			
+			
 			$js = '';
 			if(!$init)
 			{
@@ -633,6 +640,7 @@ JS;
 		$( document ).ready( function() {
 			$( 'textarea#{$target}').summernote({
 			  lang: '{$lang}', // default: 'en-US'
+			  {$disableDragAndDrop}
 			  placeholder: 'write here...',
 			  toolbar: toolbarOptions
 //			  dialogsInBody: true
