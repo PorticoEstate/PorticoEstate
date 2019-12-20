@@ -1736,25 +1736,31 @@ JS;
 					}
 					if(!empty($_POST['pasted_image']) && empty($_POST['pasted_image_is_blank'])	)
 					{
-						$img = $_POST['pasted_image'];
-						$img = str_replace('data:image/png;base64,', '', $img);
-						$img = str_replace(' ', '+', $img);
-						$data = base64_decode($img);
-						$file = '/tmp/' . uniqid() . '.png';
-						if (file_put_contents($file, $data))
-						{
-							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $values['subject']) . '.png';
-							$bofiles->create_document_dir("{$receipt['id']}");
-							$bofiles->vfs->override_acl = 1;
+						$imgs = $_POST['pasted_image'];
 
-							if (!$bofiles->vfs->cp(array(
-									'from' => $file,
-									'to' => $to_file,
-									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						$i = 1;
+						foreach ($imgs as $img)
+						{
+							$img = str_replace('data:image/png;base64,', '', $img);
+							$img = str_replace(' ', '+', $img);
+							$data = base64_decode($img);
+							$file = '/tmp/' . uniqid() . '.png';
+							if (file_put_contents($file, $data))
 							{
-								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $values['subject']) . "_{$i}.png";
+								$bofiles->create_document_dir("{$receipt['id']}");
+								$bofiles->vfs->override_acl = 1;
+
+								if (!$bofiles->vfs->cp(array(
+										'from' => $file,
+										'to' => $to_file,
+										'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
 							}
-							$bofiles->vfs->override_acl = 0;
+							$i ++;
 						}
 					}
 
@@ -1958,6 +1964,7 @@ JS;
 			}
 			$function_msg .= lang('add ticket');
 
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -2944,6 +2951,7 @@ JS;
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
