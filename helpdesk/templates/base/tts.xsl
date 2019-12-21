@@ -275,14 +275,21 @@
 						<xsl:when test="fileupload = 1">
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="lang_upload_file"/>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
 								</label>
 
-								<input type="file" name="file" class="pure-input-3-4" >
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_file_statustext"/>
-									</xsl:attribute>
-								</input>
+								<div id="drop-area" class="pure-input-3-4 pure-custom" style="border: 2px dashed #ccc; padding: 20px;">
+									<p>
+										<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
+									</p>
+
+									<input id="file_input" type="file" name="file[]" class="pure-input-3-4" multiple="multiple" onchange="handleFiles(this.files)">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+										</xsl:attribute>
+									</input>
+								</div>
+
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -291,7 +298,11 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
 						</label>
-						<textarea id="paste_image_data" class="pure-input-3-4"></textarea>
+						<div class="pure-input-3-4 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+
+							</div>
+						</div>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
 					</div>
 				</fieldset>
@@ -733,8 +744,11 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
 						</label>
-						<textarea id="paste_image_data" class="pure-input-3-4"></textarea>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<div class="pure-input-3-4 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+							</div>
+							<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						</div>
 					</div>
 
 					<xsl:choose>

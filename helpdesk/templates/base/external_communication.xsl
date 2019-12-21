@@ -271,8 +271,11 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'paste image data')"/>
 									</label>
-									<textarea id="paste_image_data" class="pure-input-3-4"></textarea>
-									<input type="hidden" id="pasted_image" name="pasted_image"></input>
+									<div class="pure-input-3-4 pure-custom">
+										<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+										</div>
+										<input type="hidden" id="pasted_image" name="pasted_image"></input>
+									</div>
 								</div>
 
 								<div class="pure-control-group">

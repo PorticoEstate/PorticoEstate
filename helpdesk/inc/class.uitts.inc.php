@@ -1705,35 +1705,48 @@ JS;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
 
-					$bofiles = CreateObject('property.bofiles','/helpdesk');
-					if ($values['file_name'] && $receipt['id'])
+					if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
 					{
-						$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$values['file_name']}";
-
-						if ($bofiles->vfs->file_exists(array(
-								'string' => $to_file,
-								'relatives' => array(RELATIVE_NONE)
-							)))
+						$bofiles = CreateObject('property.bofiles', '/helpdesk');
+						$total_files = count($_FILES['file']['name']);
+						for ($i = 0; $i < $total_files; $i++)
 						{
-							$receipt['error'][] = array('msg' => lang('This file already exists !'));
-						}
-						else
-						{
-							$bofiles->create_document_dir("{$receipt['id']}");
-							$bofiles->vfs->override_acl = 1;
+							$file_name = @str_replace(' ', '_', $_FILES['file']['name'][$i]);
 
-							if (!$bofiles->vfs->cp(array(
-									'from' => $_FILES['file']['tmp_name'],
-									'to' => $to_file,
-									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							if(empty($_FILES['file']['tmp_name'][$i]))
 							{
-								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								continue;
 							}
-							$bofiles->vfs->override_acl = 0;
+							if ($file_name && $receipt['id'])
+							{
+								$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$file_name}";
+
+								if ($bofiles->vfs->file_exists(array(
+										'string'	 => $to_file,
+										'relatives'	 => array(RELATIVE_NONE)
+									)))
+								{
+									$receipt['error'][] = array('msg' => lang('This file already exists !'));
+								}
+								else
+								{
+									$bofiles->create_document_dir("{$receipt['id']}");
+									$bofiles->vfs->override_acl = 1;
+
+									if (!$bofiles->vfs->cp(array(
+											'from'		 => $_FILES['file']['tmp_name'][$i],
+											'to'		 => $to_file,
+											'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+									{
+										$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+									}
+									$bofiles->vfs->override_acl = 0;
+								}
+							}
 						}
 					}
+
 					if(!empty($_POST['pasted_image']) && empty($_POST['pasted_image_is_blank'])	)
 					{
 						$imgs = $_POST['pasted_image'];
@@ -2287,11 +2300,11 @@ JS;
 					$bofiles->delete_file("/{$id}", $values);
 				}
 
-				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
-				if ($values['file_name'])
+				if ($file_name)
 				{
-					$to_file = "{$bofiles->fakebase}/{$id}/{$values['file_name']}";
+					$to_file = "{$bofiles->fakebase}/{$id}/{$file_name}";
 
 					if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,

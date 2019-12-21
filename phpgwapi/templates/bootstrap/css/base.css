@@ -1,6 +1,6 @@
 .paginate_input
 {
- width: 6em;
+	width: 6em;
 
 }
 
@@ -38,7 +38,7 @@ body {
 */
 
 body {
-/*    background: #fafafa;*/
+	/*    background: #fafafa;*/
 }
 
 p {
@@ -229,8 +229,8 @@ a.article:hover {
 
 button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 {
-   background: #f9f9f9;
-   color: #909090;
+	background: #f9f9f9;
+	color: #909090;
 
 }
 
@@ -268,29 +268,29 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 }
 
 @media screen and (max-width: 640px) {
-  div.dt-buttons {
-    float: left !important;
-    text-align: left;
-  }
+	div.dt-buttons {
+		float: left !important;
+		text-align: left;
+	}
 
-  div.dataTables_filter{
-    float: right !important;
-    text-align: left !important;
-  }
-  div.dataTables_length {
-    float: left !important;
-    text-align: left !important;
-  }
+	div.dataTables_filter{
+		float: right !important;
+		text-align: left !important;
+	}
+	div.dataTables_length {
+		float: left !important;
+		text-align: left !important;
+	}
 
-  div.dataTables_info {
-    float: left !important;
-    text-align: left !important;
-  }
+	div.dataTables_info {
+		float: left !important;
+		text-align: left !important;
+	}
 
-   div.dataTables_paginate {
-    float: left !important;
-    /*text-align: left;*/
-  }
+	div.dataTables_paginate {
+		float: left !important;
+		/*text-align: left;*/
+	}
 
 }
 
@@ -331,3 +331,14 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 .tablePaginator li a.disabled {cursor: not-allowed;text-decoration: none;}
 .tablePaginator li a.enabled {cursor: pointer;}
 .tablePaginatorText {margin: 0 15px;}
+
+
+.pastable{
+	transition: box-shadow ease .3s;
+}
+.pastable:hover{
+	box-shadow: 0 0 3px black;
+}
+.pastable.pastable-focus{
+	box-shadow: 0 0 10px black;
+}

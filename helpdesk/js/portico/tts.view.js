@@ -126,15 +126,7 @@ this.refresh_files = function ()
 
 $(function ()
 {
-	$('#paste_image_data').on('focus', function ()
-	{
-		var isFocused = $(this).hasClass('pastable-focus');
-		console && console.log('[textarea] focus event fired! ' + (isFocused ? 'fake onfocus' : 'real onfocus'));
-	}).pastableTextarea().on('blur', function ()
-	{
-		var isFocused = $(this).hasClass('pastable-focus');
-		console && console.log('[textarea] blur event fired! ' + (isFocused ? 'fake onblur' : 'real onblur'));
-	});
+	$('#paste_image_data').pastableNonInputable();
 
 	$('#paste_image_data').on('pasteImage', function (ev, data)
 	{
