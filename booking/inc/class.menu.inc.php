@@ -24,6 +24,15 @@
 				)
 			);
 
+			$menus['preferences'] = array
+			(
+				array
+				(
+					'text' => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'booking',
+						'type' => 'user'))
+				)
+			);
 			$menus['navigation'] = array
 				(
 				'dashboard' => array

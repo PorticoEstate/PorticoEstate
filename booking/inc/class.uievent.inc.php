@@ -375,7 +375,12 @@
 		public function add()
 		{
 			$errors = array();
-			$event = array('customer_internal' => 0);
+			$default_is_public = !empty($GLOBALS['phpgw_info']['user']['preferences']['booking']['event_is_public']) && $GLOBALS['phpgw_info']['user']['preferences']['booking']['event_is_public'] == 'public' ?  1 : 0;
+			$event = array(
+				'customer_internal' => 0,
+				'is_public' => $default_is_public
+				);
+
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				array_set_default($_POST, 'from_', array());
@@ -410,7 +415,7 @@
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());
 				$event['secret'] = $this->generate_secret();
-				$event['is_public'] = 0;
+				$event['is_public'] = $default_is_public;
 				$event['include_in_list'] = 0;
 				$event['building_name'] = $_POST['building_name'];
 

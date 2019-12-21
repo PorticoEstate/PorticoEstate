@@ -94,6 +94,7 @@
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['booking']['hooks'] = array
 		(
+		'settings',
 		'menu' => 'booking.menu.get_menu',
 		'activity_add' => 'booking.hook_helper.activity_add',
 		'activity_delete' => 'booking.hook_helper.activity_delete',

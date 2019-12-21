@@ -810,3 +810,5 @@ updated	booking	no	Oppdatert
 value is ignored for -1	booking	no	Verdien blir ignorert for -1
 Simple booking	booking	no	Forenklet bestilling
 reservation	booking	no	Reservasjon
+Booking	booking	no	Booking
+default event type	booking	no	Standard arrangement-type
