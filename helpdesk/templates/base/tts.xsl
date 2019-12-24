@@ -277,19 +277,19 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'upload files')"/>
 								</label>
+								<div class="pure-input-3-4 pure-custom">
+									<div id="drop-area" style="border: 2px dashed #ccc; padding: 20px;">
+										<p>
+											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
+										</p>
 
-								<div id="drop-area" class="pure-input-3-4 pure-custom" style="border: 2px dashed #ccc; padding: 20px;">
-									<p>
-										<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
-									</p>
-
-									<input id="file_input" type="file" name="file[]" class="pure-input-3-4" multiple="multiple" onchange="handleFiles(this.files)">
-										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-										</xsl:attribute>
-									</input>
+										<input id="file_input" type="file" name="file[]" class="pure-input-3-4" multiple="multiple" onchange="handleFiles(this.files)">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+											</xsl:attribute>
+										</input>
+									</div>
 								</div>
-
 							</div>
 						</xsl:when>
 					</xsl:choose>

@@ -552,3 +552,20 @@ SPAN.expander {
 .tablePaginator li a.disabled {cursor: not-allowed;text-decoration: none;}
 .tablePaginator li a.enabled {cursor: pointer;}
 .tablePaginatorText {margin: 0 15px;}
+
+.paginate_input
+{
+	width: 6em;
+
+}
+
+.pastable{
+	transition: box-shadow ease .3s;
+}
+.pastable:hover{
+	box-shadow: 0 0 3px black;
+}
+.pastable.pastable-focus{
+	box-shadow: 0 0 10px black;
+}
+

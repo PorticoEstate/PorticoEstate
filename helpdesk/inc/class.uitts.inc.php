@@ -1712,7 +1712,7 @@ JS;
 						$total_files = count($_FILES['file']['name']);
 						for ($i = 0; $i < $total_files; $i++)
 						{
-							$file_name = @str_replace(' ', '_', $_FILES['file']['name'][$i]);
+							$file_name = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name'][$i]);
 
 							if(empty($_FILES['file']['tmp_name'][$i]))
 							{
@@ -1979,6 +1979,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
+			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			$this->_insert_custom_js();
