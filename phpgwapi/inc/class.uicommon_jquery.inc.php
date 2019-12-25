@@ -561,7 +561,8 @@
 				case 'ckeditor':
 					foreach ($targets as $target)
 					{
-						phpgwapi_jquery::init_ckeditor($target);
+//						phpgwapi_jquery::init_ckeditor($target);
+						phpgwapi_jquery::init_summernote($target);
 					}
 					break;
 				case 'summernote':

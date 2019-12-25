@@ -157,7 +157,6 @@
 	$rteditors = array
 	(
 		'none'		=> lang('none'),
-		'ckeditor'	=> 'CKeditor',
 		'summernote'	=> 'Summernote',
 		'quill'	=> 'quill'
 	);

@@ -199,7 +199,7 @@
 					);
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
 					break;
-				
+
 				case 'chart':
 					$load = array
 						(
@@ -207,7 +207,7 @@
 					);
 
 					break;
-				
+
 				case 'print':
 					$load = array
 						(
@@ -215,7 +215,7 @@
 					);
 
 					break;
-				
+
 				case 'file-upload':
 					$load = array
 						(
@@ -431,7 +431,7 @@ JS;
 
 			{$translation}
 
-			$(document).ready(function () 
+			$(document).ready(function ()
 			{
 				$.validate({
 					lang: '{$lang}', // (supported languages are fr, de, se, sv, en, pt, no)
@@ -546,6 +546,10 @@ JS;
 			return $output;
 		}
 
+		/**
+		 * @deprecated
+		 * @param string $target
+		 */
 		public static function init_ckeditor( $target )
 		{
 			self::load_widget('core');
@@ -584,15 +588,25 @@ JS;
 		public static function init_summernote( $target )
 		{
 			self::load_widget('core');
-	//		$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote.min');
-			$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-bs4');
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-bs4.css");
+
+			switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+			{
+				case 'bootstrap':
+					$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-bs4');
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-bs4.css");
+					break;
+				default:
+					$GLOBALS['phpgw']->js->validate_file('summernote', 'dist/summernote-lite');
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/summernote/dist/summernote-lite.css");
+					break;
+			}
+
 			$userlang = isset($GLOBALS['phpgw_info']['server']['default_lang']) && $GLOBALS['phpgw_info']['server']['default_lang'] ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']))
 			{
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
-			
+
 			switch ($userlang)
 			{
 				case 'nn':
@@ -606,9 +620,9 @@ JS;
 
 			$GLOBALS['phpgw']->js->validate_file('summernote', "dist/lang/summernote-{$lang}");
 
-			
+
 			static $init = false;
-			
+
 			$disableDragAndDrop = '';
 			if (empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
@@ -619,16 +633,16 @@ JS;
 			    }
 		     },
 ";
-				
+
 			}
 
 			$lang_placeholder = 'write here...';
-			
+
 			$js = '';
 			if(!$init)
 			{
 				$js = <<<JS
-				
+
 				var toolbarOptions = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -641,9 +655,9 @@ JS;
             ];
 JS;
 			}
- 
+
 			$js .= <<<JS
- 
+
 
 		$( document ).ready( function() {
 			$( 'textarea#{$target}').summernote({
@@ -665,7 +679,7 @@ JS;
 			/**
 			 * https://github.com/tangien/quilljs-textarea
 			 */
-			
+
 			self::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('quill', 'quill.min');
 			$GLOBALS['phpgw']->js->validate_file('quill', 'quill-textarea');
@@ -676,9 +690,9 @@ JS;
 			{
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
-			
+
 			static $init = false;
-			
+
 			$js = '';
 			if(!$init)
 			{
@@ -705,14 +719,14 @@ JS;
 			];
 
 JS;
-				
+
 			}
 
 
 			$js .= <<<JS
 
 		$( document ).ready( function() {
-				
+
 			var editors = quilljs_textarea('textarea#{$target}', {
 				modules: {
 				   toolbar: toolbarOptions
@@ -722,11 +736,11 @@ JS;
 			    theme: 'snow'
 			 });
 			quill.$target = editors.$target
-			
+
 		});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
-			
+
 			$init = true;
 		}
 
@@ -734,7 +748,7 @@ JS;
 		{
 			self::load_widget('file-upload');
 		}
-		
+
 		/*
 		public static function form_file_upload_generate( $action )
 		{
@@ -764,10 +778,10 @@ JS;
 					</div>
 				</div>
 				<!-- The table listing the files available for upload/download -->
-				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">					
+				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">
 					<div class="presentation files" style="display: inline-table;"></div>
 				</div>
-			
+
 			</form>
 
 			<!-- The template to display files available for upload -->
@@ -799,10 +813,10 @@ JS;
 			<script id="template-download" type="text/x-tmpl">
 			{% for (var i=0, file; file=o.files[i]; i++) { %}
 				<div class="template-download fade table-row">
-					<div class="table-cell">						
+					<div class="table-cell">
 						<div class="name">
 							<!--<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>-->
-							{%=file.name%}							
+							{%=file.name%}
 						</div>
 						{% if (file.error) { %} <div class="error">Error: {%=file.error%} </div>{% } %}
 					</div>
@@ -817,12 +831,12 @@ JS;
 			{% } %}
 			</script>
 HTML;
-			
+
 			$js = <<<JS
-					
+
 		$(function () {
 			'use strict';
-					
+
 			// Initialize the jQuery File Upload widget:
 			$('#fileupload').fileupload({
 				// Uncomment the following to send cross-domain cookies:
@@ -831,7 +845,7 @@ HTML;
 				limitConcurrentUploads: 4,
 				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
-				
+
 			// Enable iframe cross-domain access via redirect option:
 			$('#fileupload').fileupload(
 				'option',
@@ -841,7 +855,7 @@ HTML;
 					'/cors/result.html?%s'
 				)
 			);
-				
+
 			// Load existing files:
 			$('#fileupload').addClass('fileupload-processing');
 			$.ajax({
@@ -860,8 +874,8 @@ HTML;
 		});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
-			
+
 			return $output;
 		}*/
-		
+
 	}

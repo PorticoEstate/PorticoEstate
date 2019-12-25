@@ -156,6 +156,7 @@
 
 		    $config = HTMLPurifier_Config::createDefault();
 			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+//			$config->set('Core', 'CollectErrors', true);
 			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
 				$config->set('URI.DisableExternalResources', false);
@@ -168,6 +169,12 @@
 			$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);
+			
+//			if($html && ! $clean_html)
+//			{
+//				return $purifier->context->get('ErrorCollector')->getHTMLFormatted($config);
+//			}
+			
 
 			return $clean_html;
 		}
