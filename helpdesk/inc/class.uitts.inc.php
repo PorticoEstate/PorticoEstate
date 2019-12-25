@@ -2935,7 +2935,6 @@ JS;
 				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
 				'multi_upload_parans' => "{menuaction:'helpdesk.uitts.build_multi_upload_file', id:'{$id}'}",
-//				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
 				'lang_filename' => lang('Filename'),
