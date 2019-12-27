@@ -11,14 +11,16 @@ $(document).ready(function ()
 			for (var i = 0; i < this.files.length; i++)
 			{
 				file = this.files[i];
-				file_size = file.size / (1024 * 1024);
-				$('<div class="files_to_upload">File: ' + file.name + ' size: ' + file_size.toFixed(2) + ' MB</div>').insertAfter(this);
+				file_size = formatFileSize(file.size);
+				$('<div class="files_to_upload">File: ' + file.name + ' size: ' + file_size + '</div>').insertAfter(this);
 			}
 		}
 	};
 
 
-
+//https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
+//chunking
+//https://gist.github.com/shiawuen/1534477
 // ************************ Drag and drop ***************** //
 	let dropArea = document.getElementById("drop-area")
 	let fileInput = document.getElementById('file_input');
@@ -82,10 +84,29 @@ $(document).ready(function ()
 			for (var i = 0; i < files.length; i++)
 			{
 				file = files[i];
-				file_size = file.size / (1024 * 1024);
-				$('<div class="files_to_upload">File: ' + file.name + ' size: ' + file_size.toFixed(2) + ' MB</div>').insertAfter(fileInput);
+				file_size = formatFileSize(file.size);
+
+				$('<div class="files_to_upload">File: ' + file.name + ' size: ' + file_size + '</div>').insertAfter(fileInput);
 			}
 		}
 	}
+
+	formatFileSize = function (bytes)
+	{
+		if (typeof bytes !== 'number')
+		{
+			return '';
+		}
+		if (bytes >= 1000000000)
+		{
+			return (bytes / 1000000000).toFixed(2) + ' GB';
+		}
+		if (bytes >= 1000000)
+		{
+			return (bytes / 1000000).toFixed(2) + ' MB';
+		}
+		return (bytes / 1000).toFixed(2) + ' KB';
+	};
+
 
 });
