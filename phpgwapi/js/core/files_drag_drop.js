@@ -74,7 +74,7 @@ $(document).ready(function ()
 		fileInput.files = files;
 
 		files = [...files]
-	
+
 		$('.files_to_upload').remove();
 
 		var file;

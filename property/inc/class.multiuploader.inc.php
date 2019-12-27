@@ -40,14 +40,14 @@
 			$fakebase = !empty($options['fakebase']) ? $options['fakebase'] : '/property';
 
 			$this->bofiles = CreateObject('property.bofiles', $fakebase);
-			
-			
+
+
 			if(empty($options['upload_dir']))
 			{
 //				$options['upload_dir'] = '/tmp';
 				$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
 			}
-		
+
 			if(empty($options['accept_file_types']))
 			{
 				$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -59,22 +59,22 @@
 				$uploader_filetypes = isset($config['uploader_filetypes']) ? $config['uploader_filetypes'] : 'jpg,gif,png';
 				$options['accept_file_types'] = '/\.(' . str_replace(',', '|', trim($uploader_filetypes,',')) . ')$/i';
 			}
-		
+
 			parent::__construct($options, $initialize, $error_messages);
 		}
 
 		public function add_file( $print_response = true )
 		{
-			
+
 			$content_range_header = $this->get_server_var('HTTP_CONTENT_RANGE');
-			
+
 			/**
 			 * chunked
 			 */
 			if($content_range_header)
 			{
 				$this->options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
-				
+
 				$is_last_chunk = false;
 
 				// [HTTP_CONTENT_RANGE] => bytes 10000000-17679248/17679249 - last chunk looks like this
@@ -86,7 +86,7 @@
 						$is_last_chunk = true;
 					}
 				}
-				
+
 				if(!$is_last_chunk)
 				{
 					return $this->post(true);
@@ -100,14 +100,14 @@
 					$this->upload_file( $this->options['base_dir'], $uploaded_file, $response['files'][0] );
 
 					unlink($uploaded_file);
-				}	
+				}
 
 			    return $this->generate_response($response, $print_response);
 			}
 			else
 			{
 				return $this->add_file2($print_response);
-			}		
+			}
 		}
 		public function add_file2( $print_response = true )
 		{
@@ -190,7 +190,7 @@
 				$file_path	 = $this->get_upload_path($file->name);
 				$append_file = $content_range && is_file($file_path) &&
 					$file->size > $this->get_file_size($file_path);
-				
+
 				$this->upload_file($this->options['base_dir'], $uploaded_file, $file);
 				if ($file->error)
 				{
@@ -250,7 +250,7 @@
 			$extension_whitelist = explode(',', $uploader_filetypes);
 
 			$valid_chars_regex	 = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-'; // Characters allowed in the file name (in a Regular Expression format)
-			// Other variables	
+			// Other variables
 			$MAX_FILENAME_LENGTH = 260;
 			$uploadErrors		 = array
 				(

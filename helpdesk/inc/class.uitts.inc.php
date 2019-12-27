@@ -763,10 +763,10 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id));
-			
+
 			$data = array
 				(
-				'multi_upload_action' => $multi_upload_action				
+				'multi_upload_action' => $multi_upload_action
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
@@ -1777,8 +1777,8 @@ JS;
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
-					
-					
+
+
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
 						return array(
@@ -1990,10 +1990,10 @@ JS;
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			
+
 			phpgwapi_jquery::init_multi_upload_file();
 
-			
+
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
