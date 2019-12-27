@@ -22,6 +22,20 @@ this.confirm_session = function (action)
 			return;
 		}
 	}
+	/**
+	 * Block doubleclick
+	 */
+	var send_buttons = $('.pure-button');
+	$(send_buttons).each(function ()
+	{
+		$(this).prop('disabled', true);
+	});
+
+	var form = document.getElementById('form');
+//	form.style.display = 'none';
+//	var processing = document.createElement('span');
+//	processing.appendChild(document.createTextNode('processing ...'));
+//	form.parentNode.insertBefore(processing, form);
 
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
 	var strURL = phpGWLink('index.php', oArgs, true);
@@ -42,9 +56,6 @@ this.confirm_session = function (action)
 				else
 				{
 					document.getElementById(action).value = 1;
-//					var canvas = document.getElementById("my_canvas");
-//					var image_data = canvas.toDataURL('image/png');
-//					$('#pasted_image').val(image_data);
 
 					try
 					{
@@ -52,7 +63,8 @@ this.confirm_session = function (action)
 					}
 					catch (e)
 					{
-						document.form.submit();
+						ajax_submit_form(action);
+//						document.form.submit();
 					}
 				}
 			}
@@ -64,6 +76,71 @@ this.confirm_session = function (action)
 		timeout: 5000
 	});
 };
+
+
+ajax_submit_form = function (action)
+{
+	var thisForm = $('#form');
+	var requestUrl = $(thisForm).attr("action");
+
+	var formdata = false;
+	if (window.FormData)
+	{
+		try
+		{
+			formdata = new FormData(thisForm[0]);
+		}
+		catch (e)
+		{
+
+		}
+	}
+
+	$.ajax({
+		cache: false,
+		contentType: false,
+		processData: false,
+		type: 'POST',
+		url: requestUrl + '&phpgw_return_as=json',
+		data: formdata ? formdata : thisForm.serialize(),
+		success: function (data, textStatus, jqXHR)
+		{
+			if (data)
+			{
+				if (data.status == "saved")
+				{
+					var id = data.id;
+					sendAllFiles(id);
+
+					if (action == 'apply')
+					{
+						var oArgs = {menuaction: 'helpdesk.uitts.view',
+							parent_cat_id: data.parent_cat_id,
+							id: id,
+							tab: 'general'
+						};
+					}
+					else
+					{
+						var oArgs = {menuaction: 'helpdesk.uitts.index',
+							parent_cat_id: data.parent_cat_id
+						};
+
+					}
+
+					var redirect_action = phpGWLink('index.php', oArgs);
+//					window.location.href = redirect_action;
+				}
+				else
+				{
+					alert(data.message);
+				}
+			}
+		}
+	});
+
+};
+
 $(document).ready(function ()
 {
 
@@ -82,7 +159,151 @@ $(document).ready(function ()
 		$('form').isValid(validateLanguage, conf_on_load, true);
 	}, 500);
 
+	var oArgs = {menuaction: 'helpdesk.uitts.handle_multi_upload_file'};
+	var multi_upload_action = phpGWLink('index.php', oArgs, true);
+
+	formatFileSize = function (bytes)
+	{
+		if (typeof bytes !== 'number')
+		{
+			return '';
+		}
+		if (bytes >= 1000000000)
+		{
+			return (bytes / 1000000000).toFixed(2) + ' GB';
+		}
+		if (bytes >= 1000000)
+		{
+			return (bytes / 1000000).toFixed(2) + ' MB';
+		}
+		return (bytes / 1000).toFixed(2) + ' KB';
+	};
+
+
+	var pendingList = [];
+
+	sendAllFiles = function (id)
+	{
+		pendingList.forEach(function (data)
+		{
+			data.formData = {id: id};
+			data.submit().done(function (data, status)
+			{
+
+				$.each(data.files, function (index, file)
+				{
+					if (typeof file.error != 'undefined' && file.error)
+					{
+						alert(file.name + ': ' + file.error);
+					}
+				});
+
+//				console.log(data);
+			});
+
+		});
+		pendingList = [];
+	};
+
+
+	$('#fileupload').fileupload({
+		dropZone: $('#drop-area'),
+		uploadTemplateId: null,
+		downloadTemplateId: null,
+		// Uncomment the following to send cross-domain cookies:
+		//xhrFields: {withCredentials: true},
+		url: multi_upload_action,
+		autoUpload: false,
+		add: function (e, data)
+		{
+			$.each(data.files, function (index, file)
+			{
+				var row = $('<div class="template-upload">' +
+					'<div class="table-cell">' +
+					'<div class="name">' + file.name + '</div>' +
+					'<div class="error"></div>' +
+					'</div>' +
+					'<div class="table-cell">' +
+					'<div class="size">Processing...</div>' +
+					'</div>' +
+					'<div class="table-cell">' +
+					'<div class="progress" style="width: 100px;"></div>' +
+					'</div>' +
+					'</div>');
+
+				var file_size = formatFileSize(file.size);
+
+				row.find('.size').text(file_size);
+				if (file.error)
+				{
+					row.find('.error').text(file.error);
+				}
+
+				data.context = row.appendTo($(".content_upload_download"));
+			});
+
+
+			pendingList.push(data);
+		},
+		limitConcurrentUploads: 4,
+		maxChunkSize: 8388000
+	});
+
+
+	$(document).bind('dragover', function (e)
+	{
+		var dropZone = $('#drop-area'),
+			timeout = window.dropZoneTimeout;
+		if (timeout)
+		{
+			clearTimeout(timeout);
+		}
+		else
+		{
+			dropZone.addClass('in');
+		}
+		var hoveredDropZone = $(e.target).closest(dropZone);
+		dropZone.toggleClass('hover', hoveredDropZone.length);
+		window.dropZoneTimeout = setTimeout(function ()
+		{
+			window.dropZoneTimeout = null;
+			dropZone.removeClass('in hover');
+		}, 100);
+	});
+
+	$(document).bind('drop dragover', function (e)
+	{
+		e.preventDefault();
+	});
+
+
+
+	var Allowed_Methods = [];
+	$(function ()
+	{
+		'use strict';
+
+		$('#fileupload')
+			.bind('fileuploadcompleted', function (e, data)
+			{
+				$("#files-count").html(data.result.num_files);
+			});
+
+		$('#fileupload')
+			.bind('fileuploaddestroyed', function (e, data)
+			{
+				var n = 0;
+				$(".template-download").each(function (i)
+				{
+					n++;
+				});
+				$("#files-count").html(n);
+			});
+	});
+
+
 });
+
 
 $.formUtils.addValidator({
 	name: 'assigned',
@@ -104,7 +325,7 @@ $.formUtils.addValidator({
 
 $(function ()
 {
-	
+
 	$('#paste_image_data').pastableNonInputable();
 
 	$('#paste_image_data').on('pasteImage', function (ev, data)

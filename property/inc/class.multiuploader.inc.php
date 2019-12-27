@@ -40,11 +40,76 @@
 			$fakebase = !empty($options['fakebase']) ? $options['fakebase'] : '/property';
 
 			$this->bofiles = CreateObject('property.bofiles', $fakebase);
-
+			
+			
+			if(empty($options['upload_dir']))
+			{
+//				$options['upload_dir'] = '/tmp';
+				$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			}
+		
+			if(empty($options['accept_file_types']))
+			{
+				$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+				$config = CreateObject('phpgwapi.config', $currentapp)->read();
+				if (empty($config['uploader_filetypes']))
+				{
+					$config = CreateObject('phpgwapi.config', 'property')->read();
+				}
+				$uploader_filetypes = isset($config['uploader_filetypes']) ? $config['uploader_filetypes'] : 'jpg,gif,png';
+				$options['accept_file_types'] = '/\.(' . str_replace(',', '|', trim($uploader_filetypes,',')) . ')$/i';
+			}
+		
 			parent::__construct($options, $initialize, $error_messages);
 		}
 
 		public function add_file( $print_response = true )
+		{
+			
+			$content_range_header = $this->get_server_var('HTTP_CONTENT_RANGE');
+			
+			/**
+			 * chunked
+			 */
+			if($content_range_header)
+			{
+				$this->options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
+				
+				$is_last_chunk = false;
+
+				// [HTTP_CONTENT_RANGE] => bytes 10000000-17679248/17679249 - last chunk looks like this
+
+				if (preg_match('|(\d+)/(\d+)|', $_SERVER['HTTP_CONTENT_RANGE'], $range))
+				{
+					if ($range[1] == $range[2] - 1)
+					{
+						$is_last_chunk = true;
+					}
+				}
+				
+				if(!$is_last_chunk)
+				{
+					return $this->post(true);
+				}
+				else
+				{
+					$response = $this->post(false);
+					$file_name = $response['files'][0]->name;
+					$uploaded_file = $this->get_upload_path() . $file_name;
+
+					$this->upload_file( $this->options['base_dir'], $uploaded_file, $response['files'][0] );
+
+					unlink($uploaded_file);
+				}	
+
+			    return $this->generate_response($response, $print_response);
+			}
+			else
+			{
+				return $this->add_file2($print_response);
+			}		
+		}
+		public function add_file2( $print_response = true )
 		{
 			if ($this->get_query_param('_method') === 'DELETE')
 			{
@@ -125,7 +190,7 @@
 				$file_path	 = $this->get_upload_path($file->name);
 				$append_file = $content_range && is_file($file_path) &&
 					$file->size > $this->get_file_size($file_path);
-
+				
 				$this->upload_file($this->options['base_dir'], $uploaded_file, $file);
 				if ($file->error)
 				{
@@ -263,7 +328,7 @@
 			return true;
 		}
 
-		private function upload_file( $save_path, $uploaded_file, $file )
+		private function upload_file( $save_path, $uploaded_file, &$file )
 		{
 			$to_file = "{$this->bofiles->fakebase}/{$save_path}/{$file->name}";
 

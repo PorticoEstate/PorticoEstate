@@ -669,8 +669,6 @@ HTML;
 			$new_priority = phpgw::get_var('new_priority', 'int');
 			$id = phpgw::get_var('id', 'int');
 
-//			$ticket = $this->bo->read_single($id);
-
 			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
 			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 				)
@@ -765,10 +763,10 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
 			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id));
-
+			
 			$data = array
 				(
-				'multi_upload_action' => $multi_upload_action
+				'multi_upload_action' => $multi_upload_action				
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
@@ -1705,10 +1703,9 @@ JS;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-
+					$bofiles = CreateObject('property.bofiles', '/helpdesk');
 					if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
 					{
-						$bofiles = CreateObject('property.bofiles', '/helpdesk');
 						$total_files = count($_FILES['file']['name']);
 						for ($i = 0; $i < $total_files; $i++)
 						{
@@ -1780,6 +1777,17 @@ JS;
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+					
+					
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array(
+							'status' => 'saved',
+							'parent_cat_id' => $this->parent_cat_id,
+							'id' => $receipt['id']
+							);
+					}
+
 
 					if ((isset($values['save']) && $values['save']))
 					{
@@ -1979,9 +1987,13 @@ JS;
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
-			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			
+			phpgwapi_jquery::init_multi_upload_file();
+
+			
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));

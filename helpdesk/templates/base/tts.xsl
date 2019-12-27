@@ -277,7 +277,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'upload files')"/>
 								</label>
-								<div class="pure-input-3-4 pure-custom">
+<!--								<div class="pure-input-3-4 pure-custom">
 									<div id="drop-area" style="border: 2px dashed #ccc; padding: 20px;">
 										<p>
 											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
@@ -288,6 +288,42 @@
 												<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
 											</xsl:attribute>
 										</input>
+									</div>
+								</div>-->
+								<div id="drop-area" class="pure-input-3-4 pure-custom">
+									<div id="fileupload" style="border: 2px dashed #ccc; padding: 20px;">
+										<p>
+											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
+										</p>
+										<div class="fileupload-buttonbar">
+											<div class="fileupload-buttons">
+												<!-- The fileinput-button span is used to style the file input field as button -->
+												<span class="fileinput-button pure-button">
+													<span>
+														<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
+													<input type="file" id="files" name="files[]" multiple="">
+														<xsl:attribute name="accept">image/*</xsl:attribute>
+														<xsl:attribute name="capture">camera</xsl:attribute>
+													</input>
+												</span>
+
+												<!-- The global file processing state -->
+												<span class="fileupload-process"></span>
+											</div>
+											<div class="fileupload-count">
+												<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files-count"></span>
+											</div>
+											<div class="fileupload-progress fade" style="display:none">
+												<!-- The global progress bar -->
+												<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+												<!-- The extended global progress state -->
+												<div class="progress-extended">&nbsp;</div>
+											</div>
+										</div>
+										<!-- The table listing the files available for upload/download -->
+										<div class="content_upload_download">
+											<div class="presentation files" style="display: inline-table;"></div>
+										</div>
 									</div>
 								</div>
 							</div>
