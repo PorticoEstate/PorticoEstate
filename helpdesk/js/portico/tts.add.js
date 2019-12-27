@@ -129,7 +129,7 @@ ajax_submit_form = function (action)
 					}
 
 					var redirect_action = phpGWLink('index.php', oArgs);
-//					window.location.href = redirect_action;
+					window.location.href = redirect_action;
 				}
 				else
 				{
