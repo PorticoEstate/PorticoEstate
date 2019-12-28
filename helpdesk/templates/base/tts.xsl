@@ -277,7 +277,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'upload files')"/>
 								</label>
-<!--								<div class="pure-input-3-4 pure-custom">
+								<!--								<div class="pure-input-3-4 pure-custom">
 									<div id="drop-area" style="border: 2px dashed #ccc; padding: 20px;">
 										<p>
 											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
@@ -771,9 +771,19 @@
 							<script type="text/javascript">
 								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 							</script>
-							<xsl:call-template name="file_upload">
-								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
-							</xsl:call-template>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action"/>
+									</xsl:with-param>
+								</xsl:call-template>
+							</div>
 						</xsl:when>
 					</xsl:choose>
 					<div class="pure-control-group">

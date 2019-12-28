@@ -1,3 +1,5 @@
+var pendingList = [];
+
 this.confirm_session = function (action)
 {
 	if (action == 'cancel')
@@ -30,8 +32,8 @@ this.confirm_session = function (action)
 	{
 		$(this).prop('disabled', true);
 	});
-
 	var form = document.getElementById('form');
+	form.style.opacity = 0.2;
 //	form.style.display = 'none';
 //	var processing = document.createElement('span');
 //	processing.appendChild(document.createTextNode('processing ...'));
@@ -39,7 +41,6 @@ this.confirm_session = function (action)
 
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
 	var strURL = phpGWLink('index.php', oArgs, true);
-
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -51,12 +52,11 @@ this.confirm_session = function (action)
 				if (data['sessionExpired'] == true)
 				{
 					window.alert('sessionExpired - please log in');
-					JqueryPortico.lightboxlogin();//defined in common.js
+					JqueryPortico.lightboxlogin(); //defined in common.js
 				}
 				else
 				{
 					document.getElementById(action).value = 1;
-
 					try
 					{
 						validate_submit();
@@ -76,13 +76,10 @@ this.confirm_session = function (action)
 		timeout: 5000
 	});
 };
-
-
 ajax_submit_form = function (action)
 {
 	var thisForm = $('#form');
 	var requestUrl = $(thisForm).attr("action");
-
 	var formdata = false;
 	if (window.FormData)
 	{
@@ -110,8 +107,6 @@ ajax_submit_form = function (action)
 				if (data.status == "saved")
 				{
 					var id = data.id;
-					sendAllFiles(id);
-
 					if (action == 'apply')
 					{
 						var oArgs = {menuaction: 'helpdesk.uitts.view',
@@ -125,20 +120,32 @@ ajax_submit_form = function (action)
 						var oArgs = {menuaction: 'helpdesk.uitts.index',
 							parent_cat_id: data.parent_cat_id
 						};
-
 					}
 
 					var redirect_action = phpGWLink('index.php', oArgs);
-					window.location.href = redirect_action;
+					if (pendingList.length === 0)
+					{
+						window.location.href = redirect_action;
+					}
+					else
+					{
+						sendAllFiles(id, redirect_action);
+					}
 				}
 				else
 				{
+					var form = document.getElementById('form');
+					form.style.opacity = 1;
+					var send_buttons = $('.pure-button');
+					$(send_buttons).each(function ()
+					{
+						$(this).prop('disabled', false);
+					});
 					alert(data.message);
 				}
 			}
 		}
 	});
-
 };
 
 $(document).ready(function ()
@@ -179,32 +186,36 @@ $(document).ready(function ()
 		return (bytes / 1000).toFixed(2) + ' KB';
 	};
 
-
-	var pendingList = [];
-
-	sendAllFiles = function (id)
+	sendAllFiles = function (id, redirect_action)
 	{
+
+		var total_files = pendingList.length;
+		var n = 0;
 		pendingList.forEach(function (data)
 		{
 			data.formData = {id: id};
-			data.submit().done(function (data, status)
-			{
-
-				$.each(data.files, function (index, file)
+			data.submit()
+				.done(function (data, status)
 				{
-					if (typeof file.error != 'undefined' && file.error)
+					n++;
+					$.each(data.files, function (index, file)
 					{
-						alert(file.name + ': ' + file.error);
+						if (typeof file.error != 'undefined' && file.error)
+						{
+							alert(file.name + ': ' + file.error);
+						}
+					});
+					if (n == total_files)
+					{
+						window.location.href = redirect_action;
 					}
-				});
 
 //				console.log(data);
-			});
-
+				});
 		});
+
 		pendingList = [];
 	};
-
 
 	$('#fileupload').fileupload({
 		dropZone: $('#drop-area'),
@@ -242,13 +253,11 @@ $(document).ready(function ()
 				data.context = row.appendTo($(".content_upload_download"));
 			});
 
-
 			pendingList.push(data);
 		},
-		limitConcurrentUploads: 4,
+		limitConcurrentUploads: 1,
 		maxChunkSize: 8388000
 	});
-
 
 	$(document).bind('dragover', function (e)
 	{
@@ -277,8 +286,6 @@ $(document).ready(function ()
 	});
 
 
-
-	var Allowed_Methods = [];
 	$(function ()
 	{
 		'use strict';
@@ -299,8 +306,12 @@ $(document).ready(function ()
 				});
 				$("#files-count").html(n);
 			});
-	});
+//		$('#fileupload').bind('fileuploadstart', function (e)
+//		{
+//			$('.fileupload-progress').show();
+//		});
 
+	});
 
 });
 
@@ -448,7 +459,6 @@ $(window).on('load', function ()
 		}
 	});
 });
-
 function populateTableChkAssignee(on_behalf_of_lid, selection)
 {
 	var oArgs = {
@@ -458,7 +468,6 @@ function populateTableChkAssignee(on_behalf_of_lid, selection)
 		on_behalf_of_lid: on_behalf_of_lid
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
-
 	var container = 'set_user_container';
 	var colDefs =
 	[{label: '',

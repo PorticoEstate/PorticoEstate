@@ -2177,7 +2177,7 @@ JS;
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form',
-				'datatable_inline'));
+				'datatable_inline', 'multi_upload_file_inline'));
 
 			$historylog	= & $this->bo->historylog;
 
@@ -2971,11 +2971,15 @@ JS;
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
 				'reverse_assigned' => $ticket['user_id'] != $ticket['reverse_id'] ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
-				'cat_change_list' => $cat_change_list
+				'cat_change_list' => $cat_change_list,
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id))
+
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::init_multi_upload_file();
+
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
 

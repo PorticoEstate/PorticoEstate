@@ -443,6 +443,7 @@
 		public function generate_response( $_content, $print_response = true )
 		{
 
+			$count_files	 = 0;
 			$content = array();
 			/**
 			 * Filter out thumbs as individual entries
@@ -457,6 +458,7 @@
 						continue;
 					}
 					$content['files'][] = $file;
+					$count_files ++;
 				}
 			}
 
@@ -464,16 +466,16 @@
 
 			if ($print_response)
 			{
-				$content_files	 = scandir($this->options['upload_dir']);
-				$count_files	 = 0;
-				foreach ($content_files as $key => $value)
-				{
-					$path = realpath($this->options['upload_dir'] . '/' . $value);
-					if (is_file($path))
-					{
-						$count_files ++;
-					}
-				}
+//				$content_files	 = scandir($this->options['upload_dir']);
+//				$count_files	 = 0;
+//				foreach ($content_files as $key => $value)
+//				{
+//					$path = realpath($this->options['upload_dir'] . '/' . $value);
+//					if (is_file($path))
+//					{
+//						$count_files ++;
+//					}
+//				}
 				$content['num_files'] = $count_files;
 
 				$json		 = json_encode($content);
