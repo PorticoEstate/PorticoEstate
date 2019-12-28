@@ -73,7 +73,7 @@
 			 */
 			if($content_range_header)
 			{
-				$this->options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
+				$this->options['upload_dir'] = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}/";
 
 				$is_last_chunk = false;
 
