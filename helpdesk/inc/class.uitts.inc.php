@@ -1990,9 +1990,7 @@ JS;
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-
-			phpgwapi_jquery::init_multi_upload_file();
-
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;

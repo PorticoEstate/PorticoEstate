@@ -234,6 +234,24 @@
 
 					break;
 
+				case 'file-upload-minimum':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+	//					"js/{$_jquery_ui}{$_type}",
+						"file-upload/js/tmpl{$_type}",
+						"file-upload/js/jquery.fileupload",
+						"file-upload/js/jquery.fileupload-process",
+						"file-upload/js/jquery.fileupload-validate",
+	//					"file-upload/js/jquery.fileupload-ui",
+	//					"file-upload/js/jquery.fileupload-jquery-ui",
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
+
+					break;
+
 				case 'bootstrap-multiselect':
 					$load = array(
 						"js/{$_jquery_core}{$_type}",
