@@ -2976,7 +2976,8 @@ JS;
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::init_multi_upload_file();
+//			phpgwapi_jquery::init_multi_upload_file();
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');

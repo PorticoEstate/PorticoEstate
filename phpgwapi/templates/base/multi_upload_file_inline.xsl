@@ -7,8 +7,29 @@
 	<xsl:param name="multi_upload_action" />
 
 
+	<style>
+
+.file {
+   position: relative;
+   background: linear-gradient(to right, lightblue 50%, transparent 50%);
+   background-size: 200% 100%;
+   background-position: right bottom;
+   transition:all 1s ease;
+}
+ .file.done {
+   background: lightgreen;
+}
+ .file a {
+   display: block;
+   position: relative;
+   padding: 5px;
+   color: black;
+}
+		</style>
+
+
 	<div id="drop-area" class="{$class}">
-		<div id="fileupload" style="border: 2px dashed #ccc; padding: 20px;">
+		<div style="border: 2px dashed #ccc; padding: 20px;">
 			<p>
 				<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
 			</p>
@@ -18,12 +39,14 @@
 					<span class="fileinput-button pure-button">
 						<span>
 							<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
-						<input type="file" id="files" name="files[]" multiple="">
+						<input type="file" id="fileupload" name="files[]" multiple="">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
+							<xsl:attribute name="data-url">
+								<xsl:value-of select="$multi_upload_action"/>
+							</xsl:attribute>
 						</input>
 					</span>
-					<button id="start_upload_button" type="button" class="start pure-button"><xsl:value-of select="php:function('lang', 'Start upload')"/></button>
 
 					<!-- The global file processing state -->
 					<span class="fileupload-process"></span>
@@ -45,112 +68,66 @@
 		</div>
 	</div>
 
-	<!-- The template to display files available for upload -->
-	<script id="template-upload" type="text/x-tmpl">
-<![CDATA[
-	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		<div class="template-upload">
-			<div class="table-cell">
-				<div class="name">{%=file.name%}</div>
-				<div class="error"></div>
-			</div>
-			<div class="table-cell">
-				<div class="size">Processing...</div>
-			</div>
-			<div class="table-cell">
-				<div class="progress" style="width: 100px;"></div>
-			</div>
-			<div class="table-cell">
-				{% if (!i && !o.options.autoUpload) { %}
-					<button class="start pure-button" disabled="">Start</button>
-				{% } %}
-				{% if (!i) { %}
-					<button class="cancel pure-button">Cancel</button>
-				{% } %}
-			</div>
-		</div>
-	{% } %}
-]]>	
-	</script>
-	<!-- The template to display files available for download -->
-	<script id="template-download" type="text/x-tmpl">
-<![CDATA[
-	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		{% if (file.error) { %}
-		<div class="template-download">
-			<div class="table-cell">						
-				<div class="name">
-					{%=file.name%}							
-				</div>
-				<div class="error">Error: {%=file.error%} </div>
-			</div>
-			<div class="table-cell">
-				<div class="size">{%=o.formatFileSize(file.size)%}</div>
-			</div>
-
-		</div>
-		{% } %}
-	{% } %}
-]]>	
-	</script>
-
 	<script>
-		var Allowed_Methods = [];
-		$(function () {
-		'use strict';
-		// Initialize the jQuery File Upload widget:
-		$('#fileupload').fileupload({
+	var multi_upload_action = '<xsl:value-of select="$multi_upload_action"/>';
+
+<![CDATA[
+
+var Allowed_Methods = [];
+$(function ()
+{
+	'use strict';
+	// Initialize the jQuery File Upload widget:
+	$('#fileupload').fileupload({
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
-		url: '<xsl:value-of select="$multi_upload_action"/>',
 		limitConcurrentUploads: 4,
 		//	maxChunkSize: 838855500
-		maxChunkSize: 8388000
-		//acceptFileTypes: /(\.|\/)(png|pdf)$/i
-		});
-				
-		// Enable iframe cross-domain access via redirect option:
-		$('#fileupload').fileupload(
-			'option',
-			'redirect',
-			window.location.href.replace(
-				/\/[^\/]*$/,
-				'/cors/result.html?%s'
+		maxChunkSize: 8388000,
+		dataType: "json",
+		add: function (e, data)
+		{
+			data.context = $('<p class="file">')
+				.append($('<span>').text(data.files[0].name))
+				.appendTo($(".content_upload_download"));
+			data.submit();
+		},
+		progress: function (e, data)
+		{
+			var progress = parseInt((data.loaded / data.total) * 100, 10);
+			data.context.css("background-position-x", 100 - progress + "%");
+		},
+		done: function (e, data)
+		{
+			if (data.result.files[0].error)
+			{
+				data.context
+					.removeClass("file")
+					.addClass("error")
+					.find("span")
+					.text(data.result.files[0].name + ', Error: ' + data.result.files[0].error);
+			}
+			else
+			{
+				data.context
+					.addClass("done");
+				refresh_files();
+			}
+
+		}
+	});
+
+	// Enable iframe cross-domain access via redirect option:
+	$('#fileupload').fileupload(
+		'option',
+		'redirect',
+		window.location.href.replace(
+			/\/[^\/]*$/,
+			'/cors/result.html?%s'
 			)
 		);
-				
-		$('#fileupload')
-		.bind('fileuploadcompleted', function (e, data) {
-			$( "#files-count" ).html(data.result.num_files);
-			refresh_files();
-		});
-				
-		$('#fileupload')
-		.bind('fileuploaddestroyed', function (e, data) {
-		var n = 0;
-		$( ".template-download" ).each(function( i ) {
-		n ++;
-		});
-		$("#files-count").html(n);
-		});
-												
-		// Load existing files:
-		$('#fileupload').addClass('fileupload-processing');
-		$.ajax({
-		// Uncomment the following to send cross-domain cookies:
-		//xhrFields: {withCredentials: true},
-		url: $('#fileupload').fileupload('option', 'url'),
-		dataType: 'json',
-		context: $('#fileupload')[0]
-		}).always(function () {
-		$(this).removeClass('fileupload-processing');
-		}).done(function (result, dummy, xhr) {
-		Allowed_Methods = xhr.getResponseHeader("Access-Control-Allow-Methods").split(",").map(function(item)
-		{
-		return item.trim();
-		});
-		$(this).fileupload('option', 'done').call(this, $.Event('done'), {result: result});
-		});
-		});
+});
+]]>
+
 	</script>
 </xsl:template>
