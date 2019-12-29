@@ -30,13 +30,13 @@
 	</script>
 
 	<div id="generic_edit_tabview">
-			
+
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-			
+
 		<xsl:value-of select="validator"/>
-	
+
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<dl>
 				<xsl:choose>
@@ -47,7 +47,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</dl>
-			
+
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="generic">
@@ -93,39 +93,41 @@
 								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
-							
+
 						<xsl:choose>
 							<xsl:when test="value_id != ''">
 								<input type="hidden" name="{id_name}" value="{value_id}">
 								</input>
 							</xsl:when>
 						</xsl:choose>
-							
+
 						<xsl:for-each select="fields">
-								
+
 							<xsl:variable name="descr">
 								<xsl:value-of select="descr"/>
 							</xsl:variable>
-																				
+
 							<div class="pure-control-group">
 								<label for="{name}">
 									<xsl:value-of select="$descr"/>
 								</label>
 								<xsl:choose>
 									<xsl:when test="type='text' or type='html'">
-										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}" class="pure-input-1-2" >
-											<xsl:choose>
-												<xsl:when test="nullable!='1' or required=1">
-													<xsl:attribute name="data-validation">
-														<xsl:text>required</xsl:text>
-													</xsl:attribute>
-												</xsl:when>
-											</xsl:choose>
-											<xsl:value-of select="value"/>
-										</textarea>
+										<div class="pure-custom pure-input-3-4" >
+											<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}">
+												<xsl:choose>
+													<xsl:when test="nullable!='1' or required=1">
+														<xsl:attribute name="data-validation">
+															<xsl:text>required</xsl:text>
+														</xsl:attribute>
+													</xsl:when>
+												</xsl:choose>
+												<xsl:value-of select="value"/>
+											</textarea>
+										</div>
 									</xsl:when>
 									<xsl:when test="type='varchar'">
-										<input type="text" name="values[{name}]" value="{value}" size="{size}" class="pure-input-1-2" >
+										<input type="text" name="values[{name}]" value="{value}" size="{size}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -155,7 +157,7 @@
 
 									<xsl:when test="type='location'">
 										<input type="hidden" id="location_code" name="values[{name}]" value="{value}" />
-										<input type="text"  id="location_name" name="location_name" value="{value}" class="pure-input-1-2" >
+										<input type="text"  id="location_name" name="location_name" value="{value}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -218,7 +220,7 @@
 										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="type='select'">
-										<select id="{name}" name="values[{name}]" class="pure-input-1-2" >
+										<select id="{name}" name="values[{name}]" class="pure-input-3-4" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
@@ -240,7 +242,7 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type='multiple_select'">
-										<select id="{name}" name="values[{name}][]" multiple="multiple" class="pure-input-1-2" >
+										<select id="{name}" name="values[{name}][]" multiple="multiple" class="pure-input-3-4" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
@@ -259,7 +261,7 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type='link'">
-										<input type="text" name="values[{name}]" value="{value}" size="30" class="pure-input-1-2" >
+										<input type="text" name="values[{name}]" value="{value}" size="30" class="pure-input-3-4" >
 											<xsl:choose>
 												<xsl:when test="disabled!=''">
 													<xsl:attribute name="disabled">
@@ -283,7 +285,7 @@
 										</xsl:choose>
 									</xsl:when>
 								</xsl:choose>
-									
+
 							</div>
 						</xsl:for-each>
 						<xsl:call-template name="attributes_values"/>
