@@ -772,10 +772,6 @@
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
-							<script type="text/javascript">
-								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-							</script>
-
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'upload files')"/>
