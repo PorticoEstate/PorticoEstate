@@ -188,7 +188,6 @@ $(document).ready(function ()
 
 	sendAllFiles = function (id, redirect_action)
 	{
-
 		var total_files = pendingList.length;
 		var n = 0;
 		pendingList.forEach(function (data)
@@ -209,8 +208,6 @@ $(document).ready(function ()
 					{
 						window.location.href = redirect_action;
 					}
-
-//				console.log(data);
 				});
 		});
 
@@ -245,10 +242,6 @@ $(document).ready(function ()
 				var file_size = formatFileSize(file.size);
 
 				row.find('.size').text(file_size);
-				if (file.error)
-				{
-					row.find('.error').text(file.error);
-				}
 
 				data.context = row.appendTo($(".content_upload_download"));
 			});
