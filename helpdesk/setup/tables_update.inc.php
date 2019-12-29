@@ -537,3 +537,34 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	 * convert data
+	 */
+	$test[] = '0.9.18.014';
+	function helpdesk_upgrade0_9_18_014()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id, content FROM phpgw_helpdesk_response_template");
+		$response_templates = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$response_templates[] = array(
+				'id'		 => $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'content'	 => $GLOBALS['phpgw_setup']->oProc->m_odb->db_addslashes(nl2br($GLOBALS['phpgw_setup']->oProc->f('content', true)))
+			);
+		}
+
+		foreach ($response_templates as $response_template)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_helpdesk_response_template SET content = '{$response_template['content']}'"
+			. " WHERE id = {$response_template['id']}");
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.015';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}

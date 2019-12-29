@@ -242,7 +242,7 @@
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">
-								<label>
+								<label for="new_note">
 									<a href="javascript:response_lookup()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'standard text')"/>
@@ -252,24 +252,26 @@
 								</label>
 							</xsl:when>
 							<xsl:otherwise>
-								<label>
+								<label for="new_note">
 									<xsl:value-of select="php:function('lang', 'new note')"/>
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
 
-						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-3-4" >
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
-							</xsl:attribute>
-							<xsl:value-of select="value_details"/>
-						</textarea>
+						<div class="pure-custom pure-input-3-4">
+							<textarea cols="60" rows="10" name="values[details]" id="new_note" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
+								</xsl:attribute>
+								<xsl:value-of select="value_details"/>
+							</textarea>
+							</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
@@ -722,7 +724,7 @@
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">
-								<label>
+								<label for="new_note">
 									<a href="javascript:response_lookup()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'standard text')"/>
@@ -732,16 +734,18 @@
 								</label>
 							</xsl:when>
 							<xsl:otherwise>
-								<label>
+								<label for="new_note">
 									<xsl:value-of select="php:function('lang', 'new note')"/>
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-3-4" >
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'add new comments')"/>
-							</xsl:attribute>
-						</textarea>
+						<div class="pure-custom pure-input-3-4">
+							<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'add new comments')"/>
+								</xsl:attribute>
+							</textarea>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">

@@ -2981,6 +2981,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
+			self::rich_text_editor('new_note');
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---

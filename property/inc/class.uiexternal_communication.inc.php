@@ -390,6 +390,7 @@ JS;
 
 						try
 						{
+							$('textarea#communication_message').summernote('editor.insertText', '\\n');
 							$('textarea#communication_message').summernote('focus');
 							$('textarea#communication_message').summernote('reset');
 							$('textarea#communication_message').summernote('pasteHTML', encodedStr);

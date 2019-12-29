@@ -143,9 +143,9 @@ JS;
 						{
 			//		alert(encodedStr);
 			//				console.log(parent.$('textarea#communication_message').summernote());
-			//				parent.$('textarea#communication_message').val('hei')
+			//				parent.$('textarea#communication_message').summernote('reset');
+							parent.$('textarea#communication_message').summernote('editor.insertText', '\\n');
 							parent.$('textarea#communication_message').summernote('focus');
-							parent.$('textarea#communication_message').summernote('reset');
 							parent.$('textarea#communication_message').summernote('pasteHTML', encodedStr);
 						}
 JS;
@@ -316,8 +316,9 @@ JS;
 
 						try
 						{
+							parent.$('textarea#content').summernote('editor.insertText', '\\n');
 							parent.$('textarea#content').summernote('focus');
-							parent.$('textarea#content').summernote('reset');
+			//				parent.$('textarea#content').summernote('reset');
 							parent.$('textarea#content').summernote('pasteHTML', encodedStr);
 						}
 JS;
