@@ -683,18 +683,19 @@ JS;
 				'value_active_tab'			 => 0,
 				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
 				'value_initial_message'		 => $initial_message,
-				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uitts.build_multi_upload_file', id:'{$ticket_id}'}",
-				'multiple_uploader' => true,
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uitts.handle_multi_upload_file", 'id' => $ticket_id))
 
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
 
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
 			self::rich_text_editor('communication_message');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline', 'files'), array(
+			self::render_template_xsl(array('external_communication', 'datatable_inline', 'multi_upload_file_inline'), array(
 				'edit' => $data));
 		}
 
