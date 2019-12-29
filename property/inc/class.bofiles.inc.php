@@ -212,12 +212,16 @@
 			{
 				$this->vfs->override_acl = 1;
 
-				$document = $this->vfs->get($file_id);
+				$file_info	 = $this->vfs->get_info($file_id);
 
 				$this->vfs->override_acl = 0;
-				$browser				 = CreateObject('phpgwapi.browser');
-				$browser->content_header($document['name'], $document['mime_type'], $document['size']);
-				echo $document['content'];
+
+				$file_source		 = "{$this->rootdir}{$file_info['directory']}/{$file_info['name']}";
+
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($file_info['name'], $file_info['mime_type'], $file_info['size']);
+
+				$this->readfile_chunked($file_source);
 			}
 			else //Execute the jasper report
 			{
@@ -238,6 +242,50 @@
 					echo "<H1>{$error}</H1>";
 				}
 			}
+		}
+		
+		
+
+		/**
+		 * Read a file and display its content chunk by chunk
+		 * @param type $filename
+		 * @param type $retbytes
+		 * @return boolean 
+		 */
+		function readfile_chunked( $filename, $retbytes = true )
+		{
+			$chunk_size = 1024 * 1024;
+
+			$buffer	 = '';
+			$cnt	 = 0;
+			$handle	 = fopen($filename, 'rb');
+
+			if ($handle === false)
+			{
+				return false;
+			}
+
+			while (!feof($handle))
+			{
+				$buffer = fread($handle, $chunk_size);
+				echo $buffer;
+				ob_flush();
+				flush();
+
+				if ($retbytes)
+				{
+					$cnt += strlen($buffer);
+				}
+			}
+
+			$status = fclose($handle);
+
+			if ($retbytes && $status)
+			{
+				return $cnt; // return num. bytes delivered like readfile() does.
+			}
+
+			return $status;
 		}
 
 		/**
