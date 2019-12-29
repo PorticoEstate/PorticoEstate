@@ -3207,8 +3207,6 @@ HTML;
 				'contact_phone'					 => $ticket['contact_phone'],
 				'pref_send_mail'				 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : '',
 				'fileupload'					 => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
-				'multiple_uploader'				 => true,
-				'multi_upload_parans'			 => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
 				'link_view_file'				 => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files'					 => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files'							 => isset($ticket['files']) ? $ticket['files'] : '',
@@ -3239,11 +3237,13 @@ HTML;
 				'value_order_received'			 => $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount'	 => (int)$ticket['order_received_amount'],
 				'value_extra_mail_address'		 => $value_extra_mail_address,
-				'value_continuous'				 => $ticket['continuous']
+				'value_continuous'				 => $ticket['continuous'],
+				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id))
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
@@ -3253,7 +3253,7 @@ HTML;
 			$appname										 = lang('helpdesk');
 			$function_msg									 = lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg . "#{$id}";
-			self::render_template_xsl(array('tts', 'files', 'attributes_form',
+			self::render_template_xsl(array('tts', 'multi_upload_file_inline', 'attributes_form',
 				'datatable_inline'), $data, $xsl_rootdir									 = '', 'view');
 		}
 
