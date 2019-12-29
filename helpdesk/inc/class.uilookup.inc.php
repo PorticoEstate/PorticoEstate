@@ -146,7 +146,6 @@ JS;
 			//				parent.$('textarea#communication_message').val('hei')
 							parent.$('textarea#communication_message').summernote('focus');
 							parent.$('textarea#communication_message').summernote('reset');
-							parent.$('textarea#communication_message').summernote('insertText', '\\n');
 							parent.$('textarea#communication_message').summernote('pasteHTML', encodedStr);
 						}
 JS;
@@ -319,7 +318,6 @@ JS;
 						{
 							parent.$('textarea#content').summernote('focus');
 							parent.$('textarea#content').summernote('reset');
-							parent.$('textarea#content').summernote('insertText', '\\n');
 							parent.$('textarea#content').summernote('pasteHTML', encodedStr);
 						}
 JS;
