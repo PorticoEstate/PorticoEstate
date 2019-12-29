@@ -1,14 +1,10 @@
 
-<!-- $Id: multi_upload_file.xsl 14753 2016-02-18 18:23:21Z sigurdne $ -->
-
-<!-- New template-->
+<!-- multi_upload_file_inline-->
 <xsl:template xmlns:php="http://php.net/xsl" name="multi_upload_file_inline">
 	<xsl:param name="class" />
 	<xsl:param name="multi_upload_action" />
 
-
 	<style>
-
 .file {
    position: relative;
    background: linear-gradient(to right, lightblue 50%, transparent 50%);
@@ -35,10 +31,8 @@
 			</p>
 			<div class="fileupload-buttonbar">
 				<div class="fileupload-buttons">
-					<!-- The fileinput-button span is used to style the file input field as button -->
 					<span class="fileinput-button pure-button">
-						<span>
-							<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
+						<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 						<input type="file" id="fileupload" name="files[]" multiple="">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
@@ -47,18 +41,6 @@
 							</xsl:attribute>
 						</input>
 					</span>
-
-					<!-- The global file processing state -->
-					<span class="fileupload-process"></span>
-				</div>
-<!--				<div class="fileupload-count">
-					<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files-count"></span>
-				</div>-->
-				<div class="fileupload-progress fade" style="display:none">
-					<!-- The global progress bar -->
-					<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-					<!-- The extended global progress state -->
-					<div class="progress-extended">&nbsp;</div>
 				</div>
 			</div>
 			<!-- The table listing the files available for upload/download -->
@@ -79,10 +61,10 @@ $(function ()
 	'use strict';
 	// Initialize the jQuery File Upload widget:
 	$('#fileupload').fileupload({
+		dropZone: $('#drop-area'),
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
 		limitConcurrentUploads: 4,
-		//	maxChunkSize: 838855500
 		maxChunkSize: 8388000,
 		dataType: "json",
 		add: function (e, data)
