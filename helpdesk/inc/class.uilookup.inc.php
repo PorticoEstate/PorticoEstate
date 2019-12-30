@@ -142,11 +142,11 @@ JS;
 						try
 						{
 			//		alert(encodedStr);
-			//				console.log(parent.$('textarea#communication_message').summernote());
-			//				parent.$('textarea#communication_message').summernote('reset');
-							parent.$('textarea#communication_message').summernote('editor.insertText', '\\n');
-							parent.$('textarea#communication_message').summernote('focus');
-							parent.$('textarea#communication_message').summernote('pasteHTML', encodedStr);
+			//				console.log(parent.$('textarea#new_note').summernote());
+			//				parent.$('textarea#new_note').summernote('reset');
+							parent.$('textarea#new_note').summernote('editor.insertText', '\\n');
+							parent.$('textarea#new_note').summernote('focus');
+							parent.$('textarea#new_note').summernote('pasteHTML', encodedStr);
 						}
 JS;
 					break;

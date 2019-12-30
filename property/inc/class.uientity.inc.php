@@ -2567,6 +2567,12 @@ JS;
 				. "_entity_id:'{$this->entity_id}',"
 				. "_cat_id:'{$this->cat_id}',"
 				. "_type:'{$this->type}'}",
+				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php',
+														array('menuaction' => 'property.uientity.handle_multi_upload_file',
+						'id'		 => $id,
+						'entity_id'	 => $this->entity_id,
+						'cat_id'	 => $this->cat_id,
+						'type'		 => $this->type)),
 				'value_origin'					 => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type'				 => isset($origin) ? $origin : '',
 				'value_origin_id'				 => isset($origin_id) ? $origin_id : '',
@@ -2628,8 +2634,7 @@ JS;
 				$attribute_template = 'attributes_view';
 			}
 
-			self::render_template_xsl(array('entity', 'datatable_inline', $attribute_template,
-				'files'), array('edit' => $data));
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			$criteria = array
 				(
@@ -2656,6 +2661,10 @@ JS;
 					$GLOBALS['phpgw']->js->add_external_file("{$this->type_app[$this->type]}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
 				}
 			}
+
+			self::render_template_xsl(array('entity', 'datatable_inline', $attribute_template,
+				'files', 'multi_upload_file_inline'), array('edit' => $data));
+
 		}
 
 		function attrib_help()

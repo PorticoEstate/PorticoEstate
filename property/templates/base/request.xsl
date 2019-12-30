@@ -644,7 +644,6 @@
 				<xsl:choose>
 					<xsl:when test="fileupload = 1">
 						<script type="text/javascript">
-							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 							var project_id = '<xsl:value-of select="value_request_id"/>';
 						</script>
 						<div class="pure-control-group">

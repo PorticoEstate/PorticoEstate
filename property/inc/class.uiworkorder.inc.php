@@ -3017,7 +3017,7 @@
 				'value_order_received_amount'			 => (int)$values['order_received_amount'],
 				'value_delivery_address'				 => $delivery_address,
 				'multiple_uploader'						 => true,
-				'multi_upload_parans'					 => "{menuaction:'property.uiworkorder.build_multi_upload_file', id:'{$id}'}",
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.handle_multi_upload_file','id' => $id))
 			);
 
 			$appname = lang('Workorder');
@@ -3027,13 +3027,14 @@
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			self::add_javascript('property', 'portico', 'workorder.edit.js');
 
 			self::render_template_xsl(array(
 				'workorder',
 				'datatable_inline',
-				'files',
+				'multi_upload_file_inline',
 				'cat_sub_select'), array(
 				'edit' => $data));
 		}

@@ -644,15 +644,19 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
 				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
+				$data['multi_upload_action'] = $GLOBALS['phpgw']->link('/index.php',
+														   array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
+						'id'		 => $id));
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::add_javascript('property', 'portico', 'condition_survey.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			self::render_template_xsl(array('condition_survey', 'files', 'datatable_inline'), $data);
+			self::render_template_xsl(array('condition_survey', 'files', 'multi_upload_file_inline', 'datatable_inline'), $data);
 		}
 
 		/**

@@ -1801,7 +1801,9 @@ JS;
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => !!$id,
-				'multi_upload_parans'				 => "{menuaction:'property.uirequest.build_multi_upload_file', id:'{$id}'}",
+				
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.handle_multi_upload_file','id'	 => $id))
+
 			);
 
 			$appname = lang('request');
@@ -1810,7 +1812,9 @@ JS;
 
 			self::add_javascript('property', 'portico', 'request.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::render_template_xsl(array('request', 'datatable_inline', 'files', 'attributes_form'), array(
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
+			self::render_template_xsl(array('request', 'datatable_inline', 'files', 'multi_upload_file_inline', 'attributes_form'), array(
 				'edit' => $data));
 		}
 

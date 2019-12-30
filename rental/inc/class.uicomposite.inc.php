@@ -1166,11 +1166,14 @@ JS;
 				'multiple_uploader' => true,
 				'fileupload'	=> !!$composite_id,
 				'multi_upload_parans' => "{menuaction:'rental.uicomposite.build_multi_upload_file', id:'{$composite_id}'}",
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $composite_id))				
 			);
 
 			self::add_javascript('rental', 'rental', 'composite.' . $mode . '.js');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::render_template_xsl(array('composite', 'datatable_inline', 'files'), array($mode => $data));
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
+			self::render_template_xsl(array('composite', 'datatable_inline', 'files', 'multi_upload_file_inline'), array($mode => $data));
 		}
 
 		public function save()

@@ -1563,6 +1563,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::add";
 
 			$values = phpgw::get_var('values');
+			$values['details'] = phpgw::get_var('details', 'html');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			if ((isset($values['cancel']) && $values['cancel']))
 			{
@@ -1991,6 +1992,7 @@ JS;
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
+			self::rich_text_editor('new_note');
 
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
@@ -2162,6 +2164,7 @@ JS;
 			}
 
 			$values = phpgw::get_var('values');
+			$values['note'] = phpgw::get_var('note', 'html');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');

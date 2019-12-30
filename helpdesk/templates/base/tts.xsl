@@ -259,7 +259,7 @@
 						</xsl:choose>
 
 						<div class="pure-custom pure-input-3-4">
-							<textarea cols="60" rows="10" name="values[details]" id="new_note" >
+							<textarea cols="60" rows="10" name="details" id="new_note" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 								</xsl:attribute>
@@ -740,7 +740,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<div class="pure-custom pure-input-3-4">
-							<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]">
+							<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="note">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'add new comments')"/>
 								</xsl:attribute>

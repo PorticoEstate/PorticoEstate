@@ -973,10 +973,20 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-							<script type="text/javascript">
-								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-							</script>
-							<xsl:call-template name="file_upload"/>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action"/>
+									</xsl:with-param>
+								</xsl:call-template>
+							</div>
+
 						</fieldset>
 					</div>
 					<div id="history">

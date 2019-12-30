@@ -238,8 +238,8 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-	//					"js/{$_jquery_ui}{$_type}",
-						"file-upload/js/tmpl{$_type}",
+						"js/{$_jquery_ui}{$_type}",
+	//					"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
 						"file-upload/js/jquery.fileupload-process",
 						"file-upload/js/jquery.fileupload-validate",

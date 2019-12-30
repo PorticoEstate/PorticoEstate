@@ -179,7 +179,9 @@
 					<script type="text/javascript">
 						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 					</script>
-					<xsl:call-template name="file_upload"/>
+					<xsl:call-template name="file_upload">
+						<xsl:with-param name="class">pure-input-1</xsl:with-param>
+					</xsl:call-template>
 					<xsl:if test="check_list_locked != '1'">
 						<!--div class="form-buttons">
 							<xsl:variable name="lang_save">
