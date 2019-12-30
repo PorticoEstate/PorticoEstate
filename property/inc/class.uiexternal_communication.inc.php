@@ -375,8 +375,8 @@ JS;
 
 						try
 						{
-							quill.communication_message.setText('\\n');
-							quill.communication_message.clipboard.dangerouslyPasteHTML(0, encodedStr);
+							quill.new_note.setText('\\n');
+							quill.new_note.clipboard.dangerouslyPasteHTML(0, encodedStr);
 						}
 						catch(e)
 						{
@@ -390,10 +390,10 @@ JS;
 
 						try
 						{
-							$('textarea#communication_message').summernote('editor.insertText', '\\n');
-							$('textarea#communication_message').summernote('focus');
-							$('textarea#communication_message').summernote('reset');
-							$('textarea#communication_message').summernote('pasteHTML', encodedStr);
+							$('textarea#new_note').summernote('editor.insertText', '\\n');
+							$('textarea#new_note').summernote('focus');
+//							$('textarea#new_note').summernote('reset');
+							$('textarea#new_note').summernote('pasteHTML', encodedStr);
 						}
 						catch(e)
 						{
@@ -424,7 +424,7 @@ JS;
 				{
 					var aData = selected[n];
 
-					if($("#communication_message").val())
+					if($("#new_note").val())
 					{
 						space =' ';
 					}
@@ -439,10 +439,10 @@ JS;
 					{$insert_action}
 //					$.fn.insertAtCaret(decodedString);
 
-//					message = $("#communication_message").val() + space + aData['value_note'];
+//					message = $("#new_note").val() + space + aData['value_note'];
 //					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
 //					message = message.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-//					$("#communication_message").val(message);
+//					$("#new_note").val(message);
 
 				}
 JS;
@@ -691,7 +691,7 @@ JS;
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::rich_text_editor('communication_message');
+			self::rich_text_editor('new_note');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');

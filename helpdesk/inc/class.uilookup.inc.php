@@ -49,13 +49,9 @@
 		var $currentapp;
 		var $public_functions = array
 			(
-			'phpgw_user' => true,
-			'external_project' => true,
-			'ecodimb' => true,
 			'order_template' => true,
 			'response_template' => true,
 			'email_template' => true,
-			'custom' => true
 		);
 
 		function __construct()
@@ -130,8 +126,8 @@ JS;
 
 						try
 						{
-							parent.quill.communication_message.setText('');
-							parent.quill.communication_message.clipboard.dangerouslyPasteHTML(0, encodedStr);
+							parent.quill.new_note.setText('');
+							parent.quill.new_note.clipboard.dangerouslyPasteHTML(0, encodedStr);
 
 						}
 JS;

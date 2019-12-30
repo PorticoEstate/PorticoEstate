@@ -173,7 +173,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'message')"/>
 								</label>
-								<textarea id ="communication_message" class="pure-input-3-4" rows="10" name="message">
+								<textarea id ="new_note" class="pure-input-3-4" rows="10" name="message">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'message')"/>
 									</xsl:attribute>
@@ -393,7 +393,7 @@
 											<xsl:value-of select="php:function('lang', 'descr')"/>
 										</label>
 										<div class="pure-custom pure-input-3-4">
-											<textarea id ="communication_message" rows="10" name="message">
+											<textarea id ="new_note" rows="10" name="message">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'message')"/>
 												</xsl:attribute>
