@@ -46,7 +46,7 @@
 						<span>
 							<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 						<input type="file" id="fileupload{$section}" name="files[]" multiple="multiple">
-							<xsl:attribute name="accept">image/*</xsl:attribute>
+<!--							<xsl:attribute name="accept">image/*</xsl:attribute>-->
 							<xsl:attribute name="capture">camera</xsl:attribute>
 							<xsl:attribute name="data-url">
 								<xsl:value-of select="$multi_upload_action"/>
