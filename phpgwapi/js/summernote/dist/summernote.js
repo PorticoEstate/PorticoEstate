@@ -1855,7 +1855,8 @@ function splitPoint(point, isInline) {
 
   let pivot = splitRoot && splitTree(splitRoot, point, {
     isSkipPaddingBlankHTML: isInline,
-    isNotSplitEdgePoint: isInline
+//    isNotSplitEdgePoint: isInline
+    isNotSplitEdgePoint: true
   }); // if container is point.node, find pivot with point.offset
 
   if (!pivot && container === point.node) {
