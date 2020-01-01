@@ -271,7 +271,7 @@
 								</xsl:attribute>
 								<xsl:value-of select="value_details"/>
 							</textarea>
-							</div>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
@@ -293,21 +293,28 @@
 									</div>
 								</div>-->
 								<div id="drop-area" class="pure-input-3-4 pure-custom">
-									<div id="fileupload" style="border: 2px dashed #ccc; padding: 20px;">
+									<div style="border: 2px dashed #ccc; padding: 20px;">
 										<p>
 											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
 										</p>
 										<div class="fileupload-buttonbar">
-											<div class="fileupload-buttons">
+											<div  class="fileupload-buttons">
 												<!-- The fileinput-button span is used to style the file input field as button -->
 												<span class="fileinput-button pure-button">
 													<span>
-														<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
-													<input type="file" id="files" name="files[]" multiple="">
-														<xsl:attribute name="accept">image/*</xsl:attribute>
+														<xsl:value-of select="php:function('lang', 'Add files')"/>
+														<xsl:text>...</xsl:text>
+													</span>
+													<input id="fileupload" type="file" name="files[]" multiple="multiple">
+														<xsl:attribute name="data-url">
+															<xsl:value-of select="multi_upload_action"/>
+														</xsl:attribute>
 														<xsl:attribute name="capture">camera</xsl:attribute>
 													</input>
 												</span>
+<!--												<button type="button" id="start_file_upload" class="start pure-button">
+													<xsl:value-of select="php:function('lang', 'Start upload')"/>
+												</button>-->
 
 												<!-- The global file processing state -->
 												<span class="fileupload-process"></span>
@@ -315,9 +322,9 @@
 											<div class="fileupload-count">
 												<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files-count"></span>
 											</div>
-											<div class="fileupload-progress fade" style="display:none">
+											<div class="fileupload-progress" style="display:none">
 												<!-- The global progress bar -->
-												<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+												<div id = 'progress' class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
 												<!-- The extended global progress state -->
 												<div class="progress-extended">&nbsp;</div>
 											</div>

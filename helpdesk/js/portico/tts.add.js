@@ -166,9 +166,6 @@ $(document).ready(function ()
 		$('form').isValid(validateLanguage, conf_on_load, true);
 	}, 500);
 
-	var oArgs = {menuaction: 'helpdesk.uitts.handle_multi_upload_file'};
-	var multi_upload_action = phpGWLink('index.php', oArgs, true);
-
 	formatFileSize = function (bytes)
 	{
 		if (typeof bytes !== 'number')
@@ -188,6 +185,8 @@ $(document).ready(function ()
 
 	sendAllFiles = function (id, redirect_action)
 	{
+//		$('#start_file_upload').click();
+//		return;
 		var total_files = pendingList.length;
 		var n = 0;
 		pendingList.forEach(function (data)
@@ -214,13 +213,15 @@ $(document).ready(function ()
 		pendingList = [];
 	};
 
+//	var multi_upload_action = phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file'});
+
 	$('#fileupload').fileupload({
 		dropZone: $('#drop-area'),
 		uploadTemplateId: null,
 		downloadTemplateId: null,
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
-		url: multi_upload_action,
+//		url: phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file'}),
 		autoUpload: false,
 		add: function (e, data)
 		{
@@ -237,6 +238,9 @@ $(document).ready(function ()
 					'<div class="table-cell">' +
 					'<div class="progress" style="width: 100px;"></div>' +
 					'</div>' +
+//					'<div class="table-cell">' +
+//						'<button type="button" class="start pure-button">Start</button>' +
+//					'</div>' +
 					'</div>');
 
 				var file_size = formatFileSize(file.size);
@@ -299,10 +303,17 @@ $(document).ready(function ()
 				});
 				$("#files-count").html(n);
 			});
-//		$('#fileupload').bind('fileuploadstart', function (e)
-//		{
-//			$('.fileupload-progress').show();
-//		});
+		$('#fileupload').bind('fileuploadstart', function (e)
+		{
+			$('.fileupload-progress').show();
+		});
+
+		$('#fileupload').bind('fileuploadprogressall', function (e, data)
+		{
+			var progress = parseInt((data.loaded / data.total) * 100, 10);
+			$('#progress').css("background-position-x", 100 - progress + "%");
+
+		});
 
 	});
 
