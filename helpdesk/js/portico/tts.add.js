@@ -1,4 +1,7 @@
-var pendingList = [];
+var pendingList = 0;
+var redirect_action;
+var number_of_files = 0;
+var file_count = 0;
 
 this.confirm_session = function (action)
 {
@@ -32,12 +35,6 @@ this.confirm_session = function (action)
 	{
 		$(this).prop('disabled', true);
 	});
-	var form = document.getElementById('form');
-	form.style.opacity = 0.2;
-//	form.style.display = 'none';
-//	var processing = document.createElement('span');
-//	processing.appendChild(document.createTextNode('processing ...'));
-//	form.parentNode.insertBefore(processing, form);
 
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
 	var strURL = phpGWLink('index.php', oArgs, true);
@@ -122,20 +119,18 @@ ajax_submit_form = function (action)
 						};
 					}
 
-					var redirect_action = phpGWLink('index.php', oArgs);
-					if (pendingList.length === 0)
+					redirect_action = phpGWLink('index.php', oArgs);
+					if (pendingList === 0)
 					{
 						window.location.href = redirect_action;
 					}
 					else
 					{
-						sendAllFiles(id, redirect_action);
+						sendAllFiles(id);
 					}
 				}
 				else
 				{
-					var form = document.getElementById('form');
-					form.style.opacity = 1;
 					var send_buttons = $('.pure-button');
 					$(send_buttons).each(function ()
 					{
@@ -183,37 +178,31 @@ $(document).ready(function ()
 		return (bytes / 1000).toFixed(2) + ' KB';
 	};
 
-	sendAllFiles = function (id, redirect_action)
+
+	redirect_after_upload = function ()
 	{
-//		$('#start_file_upload').click();
-//		return;
-		var total_files = pendingList.length;
-		var n = 0;
-		pendingList.forEach(function (data)
+		window.location.href = redirect_action;
+	}
+
+
+	sendAllFiles = function (id)
+	{
+
+		$('#fileupload').fileupload(
+			'option',
+			'url',
+			phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file', id: id})
+			);
+
+
+		number_of_files = $('.start_file_upload').length;
+
+		$.each($('.start_file_upload'), function (index, file_start)
 		{
-			data.formData = {id: id};
-			data.submit()
-				.done(function (data, status)
-				{
-					n++;
-					$.each(data.files, function (index, file)
-					{
-						if (typeof file.error != 'undefined' && file.error)
-						{
-							alert(file.name + ': ' + file.error);
-						}
-					});
-					if (n == total_files)
-					{
-						window.location.href = redirect_action;
-					}
-				});
+			file_start.click();
 		});
 
-		pendingList = [];
 	};
-
-//	var multi_upload_action = phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file'});
 
 	$('#fileupload').fileupload({
 		dropZone: $('#drop-area'),
@@ -221,36 +210,57 @@ $(document).ready(function ()
 		downloadTemplateId: null,
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
-//		url: phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file'}),
 		autoUpload: false,
 		add: function (e, data)
 		{
 			$.each(data.files, function (index, file)
 			{
-				var row = $('<div class="template-upload">' +
-					'<div class="table-cell">' +
-					'<div class="name">' + file.name + '</div>' +
-					'<div class="error"></div>' +
-					'</div>' +
-					'<div class="table-cell">' +
-					'<div class="size">Processing...</div>' +
-					'</div>' +
-					'<div class="table-cell">' +
-					'<div class="progress" style="width: 100px;"></div>' +
-					'</div>' +
-//					'<div class="table-cell">' +
-//						'<button type="button" class="start pure-button">Start</button>' +
-//					'</div>' +
-					'</div>');
-
 				var file_size = formatFileSize(file.size);
 
-				row.find('.size').text(file_size);
+				data.context = $('<p class="file start_file_upload">')
+					.append($('<span>').text(data.files[0].name + ' ' + file_size))
+					.appendTo($(".content_upload_download"))
+					.click(function ()
+					{
+						data.submit();
+					});
 
-				data.context = row.appendTo($(".content_upload_download"));
 			});
 
-			pendingList.push(data);
+			pendingList++;
+		},
+		progress: function (e, data)
+		{
+			var progress = parseInt((data.loaded / data.total) * 100, 10);
+			data.context.css("background-position-x", 100 - progress + "%");
+		},
+		done: function (e, data)
+		{
+			file_count++;
+
+			var result = JSON.parse(data.result);
+
+			if (result.files[0].error)
+			{
+
+				data.context
+					.removeClass("file")
+					.addClass("error")
+					.find("p")
+					.text(result.files[0].name + ', Error: ' + result.files[0].error);
+			}
+			else
+			{
+				data.context
+					.addClass("done");
+				refresh_files();
+			}
+
+			if (file_count == number_of_files)
+			{
+				window.location.href = redirect_action;
+			}
+
 		},
 		limitConcurrentUploads: 1,
 		maxChunkSize: 8388000
