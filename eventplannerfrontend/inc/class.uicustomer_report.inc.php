@@ -10,7 +10,7 @@
 			parent::__construct();
 		}
 
-		public function query()
+		public function query($relaxe_acl = false)
 		{
 			$params = $this->bo->build_default_read_params();
 			$values = $this->bo->read($params);
@@ -18,5 +18,11 @@
 
 			return $this->jquery_results($values);
 		}
+		
+		public function edit()
+		{
+			parent::edit();
+		}
+
 
 	}

@@ -58,6 +58,7 @@
 	{
 		$GLOBALS['phpgw']->translation->add_app('preferences'); // we need the prefs translations too
 	}
+	$GLOBALS['phpgw']->translation->add_app($appname);
 
 	/* Make things a little easier to follow */
 	/* Some places we will need to change this if there in common */

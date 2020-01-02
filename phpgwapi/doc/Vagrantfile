@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# Guidelines: This file will create a virtualbox instance of ubuntu server 16.04 LTS,
+# Guidelines: This file will create a virtualbox instance of ubuntu server 18.04 LTS,
 # complete with postgresql, apache, php and xdebug.
 # The user 'portico' has password 'portico' - and is member of sudoers.
 # Roles/Passwd in posgresql: portico/portico, vagrant/vagrant
@@ -57,6 +57,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://app.vagrantup.com/boxes/search/
+#  config.vm.box = "ubuntu/eoan64"
   config.vm.box = "ubuntu/bionic64"
 
   # Disable automatic box update checking. If you disable this, then
@@ -117,28 +118,30 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
+	sudo apt-get install -y software-properties-common
+	sudo add-apt-repository -y ppa:ondrej/php
     sudo apt-get update
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2
-    sudo apt-get install -y mysql-client-core-5.7
-    sudo apt-get install -y libapache2-mod-php7.2 php7.2 php7.2-curl php7.2-intl php7.2-mysql php-xdebug php-apcu php7.2-dev php7.2-xmlrpc php7.2-xml php7.2-gd php7.2-xsl php7.2-sybase php7.2-pgsql php7.2-json php7.2-gd php-imagick php7.2-imap php7.2-soap php7.2-zip php7.2-mbstring php-pear libaio1 locales
+    sudo apt-get install -y mysql-client-core-8.0
+    sudo apt-get install -y libapache2-mod-php7.4 php7.4 php7.4-curl php7.4-intl php7.4-mysql php-xdebug php-apcu php7.4-dev php7.4-xmlrpc php7.4-xml php7.4-gd php7.4-xsl php7.4-sybase php7.4-pgsql php7.4-json php7.4-gd php-imagick php7.4-imap php7.4-soap php7.4-zip php7.4-mbstring php-pear libaio1 locales
     sudo apt-get install -y git
     sudo apt-get install -y less vim-tiny
 	sudo apt-get install -y subversion
     sudo apt-get install -y apg
-	sudo apt-get install -y openjdk-8-jre-headless
+	sudo apt-get install -y openjdk-11-jre-headless
 	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 	sudo apt-get update
-	sudo apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6
+	sudo apt-get install -y postgresql-12 postgresql-client-12 postgresql-contrib-12
 
     # fix permissions
     echo "-------------------- fixing listen_addresses on postgresql.conf"
-    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/9.6/main/postgresql.conf
+    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/12/main/postgresql.conf
     echo "-------------------- fixing postgres pg_hba.conf file"
     # replace the ipv4 host line with the above line
 
-    sudo cat >> /etc/postgresql/9.6/main/pg_hba.conf <<EOF
+    sudo cat >> /etc/postgresql/12/main/pg_hba.conf <<EOF
     # Accept all IPv4 connections - FOR DEVELOPMENT ONLY!!!
     host    all         all         0.0.0.0/0             md5
 EOF
@@ -150,6 +153,7 @@ EOF
     sudo su postgres -c 'psql -c "CREATE ROLE portico SUPERUSER LOGIN PASSWORD '"'"'portico'"'"'" '
     sudo apt install -y whois
     sudo useradd -p `mkpasswd "portico"` -d /home/"portico" -m -g users -s /bin/bash "portico"
+    sudo chmod 640 /etc/sudoers
     sudo echo 'portico  ALL=(ALL:ALL) ALL' >> /etc/sudoers
 
 	sudo mkdir /var/www/html/portico
@@ -157,10 +161,10 @@ EOF
 
     sudo apt-get upgrade -y
 
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/apache2/php.ini
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/cli/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.4/apache2/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.4/cli/php.ini
 
-    sudo cat > /etc/php/7.2/apache2/conf.d/91-app.ini <<EOF
+    sudo cat > /etc/php/7.4/apache2/conf.d/91-app.ini <<EOF
 xdebug.max_nesting_level=200
 xdebug.overload_var_dump=Off
 xdebug.remote_autostart=Off
@@ -187,8 +191,11 @@ EOF
  #   Restart ssh /etc/init.d/ssh restart.
 sudo sed -i "s/PasswordAuthentication.*/PasswordAuthentication yes/" /etc/ssh/sshd_config
 sudo sed -i "s/ChallengeResponseAuthentication.*/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
+sudo sed -i "s/PermitRootLogin.*/PermitRootLogin yes/" /etc/ssh/sshd_config
 
-sudo cp /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
+sudo service ssh restart
+
+sudo cp /etc/php/7.4/apache2/conf.d/91-app.ini /etc/php/7.4/cli/conf.d/91-app.ini
 
 # Enable mod_rewrite
  sudo a2enmod rewrite

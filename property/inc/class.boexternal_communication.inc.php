@@ -532,7 +532,7 @@ HTML;
 					</style>
 				</head>
 				<body>
-					<div style='width: 800px;'>
+					<div>
 						{$body}
 					</div>
 				</body>

@@ -2372,6 +2372,14 @@ HTML;
 
 		function validate_purchase_grant( $ecodimb, $budget_amount, $order_id )
 		{
+
+			$need_approval = empty($this->config->config_data['workorder_approval']) ? false : true;
+
+			if(!$need_approval)
+			{
+				return true;
+			}
+
 			if ($order_id)
 			{
 				$order_type = $this->bocommon->socommon->get_order_type($order_id);

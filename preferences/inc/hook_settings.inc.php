@@ -157,7 +157,8 @@
 	$rteditors = array
 	(
 		'none'		=> lang('none'),
-		'ckeditor'	=> 'CKeditor'
+		'summernote'	=> 'Summernote',
+		'quill'	=> 'quill'
 	);
 	create_select_box('Rich text (WYSIWYG) editor', 'rteditor', $rteditors,
 		'Which editor would you like to use for editing html and other rich content?');

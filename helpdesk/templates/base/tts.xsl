@@ -242,7 +242,7 @@
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">
-								<label>
+								<label for="new_note">
 									<a href="javascript:response_lookup()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'standard text')"/>
@@ -252,37 +252,89 @@
 								</label>
 							</xsl:when>
 							<xsl:otherwise>
-								<label>
+								<label for="new_note">
 									<xsl:value-of select="php:function('lang', 'new note')"/>
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
 
-						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-3-4" >
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
-							</xsl:attribute>
-							<xsl:value-of select="value_details"/>
-						</textarea>
+						<div class="pure-custom pure-input-3-4">
+							<textarea cols="60" rows="10" name="details" id="new_note" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
+								</xsl:attribute>
+								<xsl:value-of select="value_details"/>
+							</textarea>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="lang_upload_file"/>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
 								</label>
+								<!--								<div class="pure-input-3-4 pure-custom">
+									<div id="drop-area" style="border: 2px dashed #ccc; padding: 20px;">
+										<p>
+											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
+										</p>
 
-								<input type="file" name="file" class="pure-input-3-4" >
-									<xsl:attribute name="title">
-										<xsl:value-of select="lang_file_statustext"/>
-									</xsl:attribute>
-								</input>
+										<input id="file_input" type="file" name="file[]" class="pure-input-3-4" multiple="multiple" onchange="handleFiles(this.files)">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+											</xsl:attribute>
+										</input>
+									</div>
+								</div>-->
+								<div id="drop-area" class="pure-input-3-4 pure-custom">
+									<div style="border: 2px dashed #ccc; padding: 20px;">
+										<p>
+											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
+										</p>
+										<div class="fileupload-buttonbar">
+											<div  class="fileupload-buttons">
+												<!-- The fileinput-button span is used to style the file input field as button -->
+												<span class="fileinput-button pure-button">
+													<span>
+														<xsl:value-of select="php:function('lang', 'Add files')"/>
+														<xsl:text>...</xsl:text>
+													</span>
+													<input id="fileupload" type="file" name="files[]" multiple="multiple">
+														<xsl:attribute name="data-url">
+															<xsl:value-of select="multi_upload_action"/>
+														</xsl:attribute>
+														<xsl:attribute name="capture">camera</xsl:attribute>
+													</input>
+												</span>
+<!--												<button type="button" id="start_file_upload" class="start pure-button">
+													<xsl:value-of select="php:function('lang', 'Start upload')"/>
+												</button>-->
+
+												<!-- The global file processing state -->
+												<span class="fileupload-process"></span>
+											</div>
+											<div class="fileupload-count">
+												<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files-count"></span>
+											</div>
+											<div class="fileupload-progress" style="display:none">
+												<!-- The global progress bar -->
+												<div id = 'progress' class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+												<!-- The extended global progress state -->
+												<div class="progress-extended">&nbsp;</div>
+											</div>
+										</div>
+										<!-- The table listing the files available for upload/download -->
+										<div class="content_upload_download">
+											<div class="presentation files" style="display: inline-table;"></div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -290,15 +342,14 @@
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<div class="pure-input-3-4 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+
+							</div>
+						</div>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
 					</div>
-
 				</fieldset>
 			</div>
 			<div id="notify">
@@ -680,7 +731,7 @@
 					<div class="pure-control-group">
 						<xsl:choose>
 							<xsl:when test="simple !='1'">
-								<label>
+								<label for="new_note">
 									<a href="javascript:response_lookup()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="php:function('lang', 'standard text')"/>
@@ -690,16 +741,18 @@
 								</label>
 							</xsl:when>
 							<xsl:otherwise>
-								<label>
+								<label for="new_note">
 									<xsl:value-of select="php:function('lang', 'new note')"/>
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-3-4" >
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'add new comments')"/>
-							</xsl:attribute>
-						</textarea>
+						<div class="pure-custom pure-input-3-4">
+							<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="note">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'add new comments')"/>
+								</xsl:attribute>
+							</textarea>
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
@@ -726,25 +779,29 @@
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
-							<script type="text/javascript">
-								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-							</script>
-							<xsl:call-template name="file_upload">
-								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
-							</xsl:call-template>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action"/>
+									</xsl:with-param>
+								</xsl:call-template>
+							</div>
 						</xsl:when>
 					</xsl:choose>
-
-
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<div class="pure-input-3-4 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+							</div>
+							<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						</div>
 					</div>
 
 					<xsl:choose>

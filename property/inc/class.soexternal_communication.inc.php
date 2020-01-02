@@ -430,7 +430,8 @@
 
 			foreach ($fields as $field => $field_info)
 			{
-				$values[$field] = $this->db->f($field, true);
+				$stripslashes = !in_array($field_info['type'], array('int'));
+				$values[$field] = $this->db->f($field, $stripslashes);
 			}
 			$mail_recipients			 = trim($values['mail_recipients'], ',');
 			$values['mail_recipients']	 = $mail_recipients ? explode(',', $mail_recipients) : array();

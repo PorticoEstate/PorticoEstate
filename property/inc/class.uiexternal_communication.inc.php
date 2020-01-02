@@ -352,6 +352,60 @@
 
 
 			$datatable_def	 = array();
+
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			{
+				default:
+				case 'ckeditor':
+					$insert_action = <<<JS
+
+						try
+						{
+							$.fn.insertAtCaret(decodedString);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+				case 'quill':
+					$insert_action = <<<JS
+
+						try
+						{
+							quill.new_note.setText('\\n');
+							quill.new_note.clipboard.dangerouslyPasteHTML(0, encodedStr);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+				case 'summernote':
+					$insert_action = <<<JS
+
+						try
+						{
+							$('textarea#new_note').summernote('editor.insertText', '\\n');
+							$('textarea#new_note').summernote('focus');
+//							$('textarea#new_note').summernote('reset');
+							$('textarea#new_note').summernote('pasteHTML', encodedStr);
+						}
+						catch(e)
+						{
+							console.log(e);
+						}
+
+JS;
+					break;
+			}
+
+
+
 			$custom_code	 = <<<JS
 
 				var message = '';
@@ -370,7 +424,7 @@
 				{
 					var aData = selected[n];
 
-					if($("#communication_message").val())
+					if($("#new_note").val())
 					{
 						space =' ';
 					}
@@ -382,12 +436,13 @@
 					var parser = new DOMParser;
 					var dom = parser.parseFromString(encodedStr,'text/html');
 					var decodedString = dom.body.textContent;
-					$.fn.insertAtCaret(decodedString);
+					{$insert_action}
+//					$.fn.insertAtCaret(decodedString);
 
-//					message = $("#communication_message").val() + space + aData['value_note'];
+//					message = $("#new_note").val() + space + aData['value_note'];
 //					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
 //					message = message.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-//					$("#communication_message").val(message);
+//					$("#new_note").val(message);
 
 				}
 JS;
@@ -628,17 +683,19 @@ JS;
 				'value_active_tab'			 => 0,
 				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
 				'value_initial_message'		 => $initial_message,
-				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uitts.build_multi_upload_file', id:'{$ticket_id}'}",
-				'multiple_uploader' => true,
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uitts.handle_multi_upload_file", 'id' => $ticket_id))
 
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('communication_message');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
+			self::rich_text_editor('new_note');
 			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline', 'files'), array(
+			self::render_template_xsl(array('external_communication', 'datatable_inline', 'multi_upload_file_inline'), array(
 				'edit' => $data));
 		}
 

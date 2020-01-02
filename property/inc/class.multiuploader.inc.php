@@ -41,6 +41,25 @@
 
 			$this->bofiles = CreateObject('property.bofiles', $fakebase);
 
+
+			if(empty($options['upload_dir']))
+			{
+//				$options['upload_dir'] = '/tmp';
+				$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			}
+
+			if(empty($options['accept_file_types']))
+			{
+				$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+				$config = CreateObject('phpgwapi.config', $currentapp)->read();
+				if (empty($config['uploader_filetypes']))
+				{
+					$config = CreateObject('phpgwapi.config', 'property')->read();
+				}
+				$uploader_filetypes = isset($config['uploader_filetypes']) ? $config['uploader_filetypes'] : 'jpg,gif,png';
+				$options['accept_file_types'] = '/\.(' . str_replace(',', '|', trim($uploader_filetypes,',')) . ')$/i';
+			}
+
 			parent::__construct($options, $initialize, $error_messages);
 		}
 
@@ -50,22 +69,62 @@
 			{
 				return $this->delete_file($print_response);
 			}
+
+			$content_range_header = $this->get_server_var('HTTP_CONTENT_RANGE');
+
+			/**
+			 * chunked
+			 */
+			if($content_range_header)
+			{
+				$this->options['upload_dir'] = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}";
+//				$this->options['user_dirs'] = '/' . $GLOBALS['phpgw_info']['user']['account_id'];
+
+				$is_last_chunk = false;
+
+				// [HTTP_CONTENT_RANGE] => bytes 10000000-17679248/17679249 - last chunk looks like this
+
+				if (preg_match('|(\d+)/(\d+)|', $_SERVER['HTTP_CONTENT_RANGE'], $range))
+				{
+					if ($range[1] == $range[2] - 1)
+					{
+						$is_last_chunk = true;
+					}
+				}
+
+				if(!$is_last_chunk)
+				{
+					return $this->post(true);
+				}
+				else
+				{
+					$response = $this->post(false);
+					$file_name = $response['files'][0]->name;
+					$uploaded_file = $this->get_upload_path() . $file_name;
+
+					$this->upload_file( $this->options['base_dir'], $uploaded_file, $response['files'][0] );
+
+					unlink($uploaded_file);
+				}
+
+			    return $this->generate_response($response, $print_response);
+			}
+			else
+			{
+				return $this->add_file2($print_response);
+			}
+		}
+		public function add_file2( $print_response = true )
+		{
+			
+			$unique_names = array();
+			
 			$upload = $this->get_upload_data($this->options['param_name']);
 
 			// Parse the Content-Disposition header, if available:
 			$content_disposition_header	 = $this->get_server_var('HTTP_CONTENT_DISPOSITION');
-			$file_name					 = $content_disposition_header ?
-				rawurldecode(preg_replace(
-						'/(^[^"]+")|("$)/',
-	  '',
-	  $content_disposition_header
-				)) : null;
-			// Parse the Content-Range header, which has the following form:
-			// Content-Range: bytes 0-524287/2000000
-			$content_range_header		 = $this->get_server_var('HTTP_CONTENT_RANGE');
-			$content_range				 = $content_range_header ?
-				preg_split('/[^0-9]+/', $content_range_header) : null;
-			$size						 = $content_range ? $content_range[3] : null;
+			$file_name					 = $content_disposition_header ? rawurldecode(preg_replace(	'/(^[^"]+")|("$)/', '',	  $content_disposition_header )) : null;
+			$size						 = null;
 			$files						 = array();
 			if ($upload)
 			{
@@ -75,14 +134,31 @@
 					// $upload is a multi-dimensional array:
 					foreach ($upload['tmp_name'] as $index => $value)
 					{
+						
+						$_file_name = $file_name ? $file_name : $upload['name'][$index];
+						
+						if(in_array($_file_name, $unique_names))
+						{
+							$file		 = new \stdClass();
+							$file->name	 = $_file_name;						
+							$file->error = lang('This file already exists !');
+							$file->size	 = $size ? $size : $upload['size'][$index];
+							$file->type	 = $upload['type'][$index];
+						
+							$response = array($this->options['param_name'] => array($file));
+							return $this->generate_response($response, $print_response);
+						}
+						
+						$unique_names[] = $_file_name;
+						
 						$files[] = $this->handle_file_upload_custom(
 							$upload['tmp_name'][$index],
-	   $file_name ? $file_name : $upload['name'][$index],
-	   $size ? $size : $upload['size'][$index],
-	   $upload['type'][$index],
-	   $upload['error'][$index],
-	   $index,
-	   $content_range
+							$file_name ? $file_name : $upload['name'][$index],
+							$size ? $size : $upload['size'][$index],
+							$upload['type'][$index],
+							$upload['error'][$index],
+							$index,
+							null
 						);
 					}
 				}
@@ -92,15 +168,12 @@
 					// $upload is a one-dimensional array:
 					$files[] = $this->handle_file_upload_custom(
 						isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
-			$file_name ? $file_name : (isset($upload['name']) ?
-						$upload['name'] : null),
-									$size ? $size : (isset($upload['size']) ?
-						$upload['size'] : $this->get_server_var('CONTENT_LENGTH')),
-											  isset($upload['type']) ?
-						$upload['type'] : $this->get_server_var('CONTENT_TYPE'),
-											  isset($upload['error']) ? $upload['error'] : null,
-				   null,
-				   $content_range
+						$file_name ? $file_name : (isset($upload['name']) ?	$upload['name'] : null),
+						$size ? $size : (isset($upload['size']) ? $upload['size'] : $this->get_server_var('CONTENT_LENGTH')),
+						isset($upload['type']) ? $upload['type'] : $this->get_server_var('CONTENT_TYPE'),
+						isset($upload['error']) ? $upload['error'] : null,
+						null,
+						null
 					);
 				}
 			}
@@ -112,8 +185,7 @@
 												$index = null, $content_range = null )
 		{
 			$file		 = new \stdClass();
-			$file->name	 = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
-									   $index, $content_range);
+			$file->name	 = $name;
 			$file->size	 = $this->fix_integer_overflow((int)$size);
 			$file->type	 = $type;
 
@@ -185,7 +257,7 @@
 			$extension_whitelist = explode(',', $uploader_filetypes);
 
 			$valid_chars_regex	 = '.A-Z0-9_ !@#$%^&()+={}\[\]\',~`-'; // Characters allowed in the file name (in a Regular Expression format)
-			// Other variables	
+			// Other variables
 			$MAX_FILENAME_LENGTH = 260;
 			$uploadErrors		 = array
 				(
@@ -263,7 +335,7 @@
 			return true;
 		}
 
-		private function upload_file( $save_path, $uploaded_file, $file )
+		private function upload_file( $save_path, $uploaded_file, &$file )
 		{
 			$to_file = "{$this->bofiles->fakebase}/{$save_path}/{$file->name}";
 
@@ -287,7 +359,7 @@
 			$this->bofiles->vfs->override_acl = 1;
 			if ($this->bofiles->vfs->cp(array(
 					'from'		 => $uploaded_file,
-					'to'		 => "{$this->bofiles->fakebase}/{$save_path}/{$file->name}",
+					'to'		 => $to_file,
 					'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
 			{
 				return true;
@@ -378,6 +450,7 @@
 		public function generate_response( $_content, $print_response = true )
 		{
 
+			$count_files	 = 0;
 			$content = array();
 			/**
 			 * Filter out thumbs as individual entries
@@ -392,6 +465,7 @@
 						continue;
 					}
 					$content['files'][] = $file;
+					$count_files ++;
 				}
 			}
 
@@ -399,16 +473,16 @@
 
 			if ($print_response)
 			{
-				$content_files	 = scandir($this->options['upload_dir']);
-				$count_files	 = 0;
-				foreach ($content_files as $key => $value)
-				{
-					$path = realpath($this->options['upload_dir'] . '/' . $value);
-					if (is_file($path))
-					{
-						$count_files ++;
-					}
-				}
+//				$content_files	 = scandir($this->options['upload_dir']);
+//				$count_files	 = 0;
+//				foreach ($content_files as $key => $value)
+//				{
+//					$path = realpath($this->options['upload_dir'] . '/' . $value);
+//					if (is_file($path))
+//					{
+//						$count_files ++;
+//					}
+//				}
 				$content['num_files'] = $count_files;
 
 				$json		 = json_encode($content);

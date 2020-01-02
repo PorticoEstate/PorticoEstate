@@ -252,7 +252,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 
-						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-1" >
+						<textarea cols="60" rows="10" name="details" id="new_note" class="pure-input-1" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 							</xsl:attribute>
@@ -284,12 +284,12 @@
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<div class="pure-input-1 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+
+							</div>
+						</div>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
 					</div>
 
@@ -674,7 +674,7 @@
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-1" >
+						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="note" class="pure-input-1" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>
@@ -705,10 +705,20 @@
 					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
-							<script type="text/javascript">
-								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-							</script>
-							<xsl:call-template name="file_upload"/>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-1 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action"/>
+									</xsl:with-param>
+								</xsl:call-template>
+							</div>
+
+
 						</xsl:when>
 					</xsl:choose>
 
@@ -716,12 +726,12 @@
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
-							<br/>
-							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1" >
-						</canvas>
-						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<div class="pure-input-1 pure-custom">
+							<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+							</div>
+							<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						</div>
 					</div>
 
 					<xsl:choose>

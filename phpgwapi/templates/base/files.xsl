@@ -21,14 +21,37 @@
 				<label>
 					<xsl:value-of select="php:function('lang', 'upload files')"/>
 				</label>
-				<a href="javascript:fileuploader('{$section}')" class="pure-button">
-					<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-					</xsl:attribute>
-					<i class="fa fa-upload" aria-hidden="true"></i>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-				</a>
+
+				<xsl:choose>
+					<xsl:when test="multi_upload_action">
+
+						<xsl:call-template name="multi_upload_file_inline">
+
+							<xsl:with-param name="class">
+								<xsl:value-of select="$class"/>
+							</xsl:with-param>
+							<xsl:with-param name="multi_upload_action">
+								<xsl:value-of select="multi_upload_action"/>
+							</xsl:with-param>
+							<xsl:with-param name="section">
+								<xsl:value-of select="$section"/>
+							</xsl:with-param>
+						</xsl:call-template>
+
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="javascript:fileuploader('{$section}')" class="pure-button">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
+							</xsl:attribute>
+							<i class="fa fa-upload" aria-hidden="true"></i>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
+						</a>
+					</xsl:otherwise>
+
+				</xsl:choose>
+
 			</xsl:when>
 			<xsl:otherwise>
 				<label>

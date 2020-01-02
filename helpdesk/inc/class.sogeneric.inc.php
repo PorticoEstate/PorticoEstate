@@ -130,7 +130,7 @@
 								(
 								'name' => 'content',
 								'descr' => lang('content'),
-								'type' => 'text',
+								'type' => 'html',
 								'nullable' => false,
 							),
 							array

@@ -126,6 +126,8 @@
 					}
 				}
 			}
+			unset($field);
+
 
 			$uicols					 = array();
 			$uicols['input_type'][]	 = 'text';
@@ -144,6 +146,8 @@
 				$uicols['sortable'][]	 = isset($field['sortable']) && $field['sortable'] ? true : false;
 				$uicols['formatter'][]	 = $field['type'] == 'int' ? 'FormatterRight' : '';
 			}
+			unset($field);
+
 
 			$custom_fields = false;
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
@@ -296,6 +300,8 @@
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
 				}
+				unset($field);
+
 				$querymethod .= ')';
 
 				if ($custom_fields)
@@ -358,9 +364,11 @@
 			{
 				foreach ($cols_return as $key => $field)
 				{
+					$stripslashes = !in_array($uicols['datatype'][$key], array('I'));
+
 					$dataset[$j][$field] = array
-						(
-						'value'		 => $this->_db->f($field, true),
+					(
+						'value'		 => $this->_db->f($field, $stripslashes),
 						'datatype'	 => $uicols['datatype'][$key],
 						'attrib_id'	 => $uicols['attib_id'][$key]
 					);
@@ -422,7 +430,8 @@
 				// FIXME - add field to $values['attributes']
 				foreach ($this->location_info['fields'] as $field)
 				{
-					$values[$field['name']] = $this->_db->f($field['name'], true);
+					$stripslashes = !in_array($field['type'], array('int', 'integer'));
+					$values[$field['name']] = $this->_db->f($field['name'], $stripslashes);
 				}
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
@@ -590,6 +599,8 @@
 					$data[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
 				}
 			}
+			unset($field);
+
 
 			$cols	 = array();
 			$vals	 = array();
@@ -752,6 +763,7 @@
 					}
 				}
 			}
+			unset($field);
 
 			if (isset($this->location_info['default']) && is_array($this->location_info['default']))
 			{
@@ -762,6 +774,8 @@
 						eval('$value_set[$field] = ' . $default['edit'] . ';');
 					}
 				}
+				unset($field);
+
 			}
 
 			$value_set = $this->_db->validate_update($value_set);

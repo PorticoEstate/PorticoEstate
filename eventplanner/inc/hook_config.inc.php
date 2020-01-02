@@ -69,7 +69,7 @@ HTML;
 		{
 			return;
 		}
-		phpgwapi_jquery::init_ckeditor('vendor_receipt_text');
+		phpgwapi_jquery::init_summernote('vendor_receipt_text');
 	}
 
 	function customer_receipt_text_editor( $config )
@@ -80,7 +80,7 @@ HTML;
 		{
 			return;
 		}
-		phpgwapi_jquery::init_ckeditor('customer_receipt_text');
+		phpgwapi_jquery::init_summernote('customer_receipt_text');
 	}
 
 	function vendor_canceled_text_editor( $config )
@@ -91,7 +91,7 @@ HTML;
 		{
 			return;
 		}
-		phpgwapi_jquery::init_ckeditor('vendor_canceled_text');
+		phpgwapi_jquery::init_summernote('vendor_canceled_text');
 	}
 
 	function customer_canceled_text_editor( $config )
@@ -102,6 +102,6 @@ HTML;
 		{
 			return;
 		}
-		phpgwapi_jquery::init_ckeditor('customer_canceled_text');
+		phpgwapi_jquery::init_summernote('customer_canceled_text');
 	}
 

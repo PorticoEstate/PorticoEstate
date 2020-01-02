@@ -189,3 +189,4 @@ filter tickets on assigned to me	preferences	no	Filtrer meldinger på tildelt ti
 Do you want av CSV download button for main tables?	preferences	no	Ønsker du en CSV nedlastingsknapp for hovedtabeller?
 CSV download button	preferences	no	CSV nedlastingsknapp
 help off	preferences	no	Slå av hjelp
+%1 - Preferences	preferences	no	%1 - Innstillinger

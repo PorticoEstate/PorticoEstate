@@ -59,9 +59,10 @@
 			parent::__construct();
 			self::set_active_menu('helpdesk::email_out');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('email out');
-			$this->bo = createObject('helpdesk.boemail_out');
-			$this->fields = helpdesk_email_out::get_fields();
-			$this->permissions = helpdesk_email_out::get_instance()->get_permission_array();
+			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
+			$this->bo				 = createObject('helpdesk.boemail_out');
+			$this->fields			 = helpdesk_email_out::get_fields();
+			$this->permissions		 = helpdesk_email_out::get_instance()->get_permission_array();
 		}
 
 

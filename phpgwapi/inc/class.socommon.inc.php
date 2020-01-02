@@ -476,7 +476,7 @@
 					}
 					else
 					{
-						$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
+						$row[$field] = $this->unmarshal($this->db->f($field), $params['type']);
 					}
 				}
 			}

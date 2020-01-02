@@ -684,7 +684,7 @@
 				'datatable_def'	=> $datatable_def,
 				'multiple_uploader' => true,
 				'multi_upload_parans' => "{menuaction:'controller.uicheck_list.build_multi_upload_file', id:'{$check_list_id}'}",
-
+//				'multi_upload_action' => self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $check_list_id))
 			);
 //			_debug_array($check_list); die();
 			$GLOBALS['phpgw']->jqcal2->add_listener('planned_date');
@@ -701,10 +701,11 @@
 			self::add_javascript('controller', 'base', 'ajax.js');
 			self::add_javascript('controller', 'base', 'check_list.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
-				'check_list/fragments/select_buildings_on_property', 'files','datatable_inline'), $data);
+				'check_list/fragments/select_buildings_on_property', 'files', 'multi_upload_file_inline', 'datatable_inline'), $data);
 		}
 
 		public function view_file()

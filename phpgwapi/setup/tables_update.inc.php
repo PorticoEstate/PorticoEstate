@@ -3712,3 +3712,22 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+	/**
+	 * Moving to summernote as rich text editor
+	 */
+	$test[] = '0.9.17.562';
+	function phpgwapi_upgrade0_9_17_562()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = "UPDATE phpgw_preferences SET preference_json=jsonb_set(preference_json, '{rteditor}', '\"summernote\"', true)"
+			. " WHERE preference_json->>'rteditor' = 'ckeditor'";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.563';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

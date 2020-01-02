@@ -136,8 +136,8 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'program type')"/>
 							</label>
-							<div class="pure-custom">
-								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
+							<div class="pure-custom pure-input-1-2">
+								<table class="pure-table pure-table-bordered pure-input-1" border="0" cellspacing="2" cellpadding="2">
 									<thead>
 										<tr>
 											<th>
@@ -296,7 +296,7 @@
 							<xsl:value-of select="php:function('lang', 'vendor report')"/>
 						</legend>
 						<div class="pure-control-group">
-							<div class="pure-custom">
+							<div class="pure-custom pure-input-1">
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_1'">
 										<xsl:call-template name="table_setup">
@@ -318,7 +318,7 @@
 							<xsl:value-of select="php:function('lang', 'customer report')"/>
 						</legend>
 						<div class="pure-control-group">
-							<div class="pure-custom">
+							<div class="pure-custom pure-input-1">
 								<xsl:for-each select="datatable_def">
 									<xsl:if test="container = 'datatable-container_2'">
 										<xsl:call-template name="table_setup">

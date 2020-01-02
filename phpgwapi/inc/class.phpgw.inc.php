@@ -1,7 +1,7 @@
 <?php
 	/**
 	* Global ugliness class
-	* 
+	*
 	* @author Dave Hall <skwashd@phpgroupware.org>
 	* @author Dan Kuykendall <seek3r@phpgroupware.org>
 	* @author Joseph Engo <jengo@phpgroupware.org>
@@ -32,7 +32,7 @@
 	/**
 	* Global ugliness class
 	*
-	* Here lives all the code which makes the API tick and makes any serious 
+	* Here lives all the code which makes the API tick and makes any serious
 	* refactoring almost impossible
 	*
 	* @package phpgroupware
@@ -44,12 +44,12 @@
 		public $adodb;
 		public $acl;
 		public $auth;
-		public $db; 
+		public $db;
 		/**
 		 * Turn on debug mode. Will output additional data for debugging purposes.
 		 * @var	string	$debug
 		 * @access public
-		 */	
+		 */
 		public $debug = 0;		// This will turn on debugging information.
 		public $contacts;
 		public $preferences;
@@ -114,7 +114,7 @@
 		*
 		* @internal we also check if it an object or not - as that is all we should be storing in here
 		* @param string $var the variable to check
-		* @return bool is the variable set or not 
+		* @return bool is the variable set or not
 		*/
 		public function __isset($var)
 		{
@@ -124,7 +124,7 @@
 		/**
 		 * Strips out html chars
 		 *
-		 * Used as a shortcut for stripping out html special chars. 
+		 * Used as a shortcut for stripping out html special chars.
 		 *
 		 * @param $s string The string to have its html special chars stripped out.
 		 * @return string The string with html special characters removed
@@ -155,10 +155,26 @@
 			require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/htmlpurifier/HTMLPurifier.auto.php';
 
 		    $config = HTMLPurifier_Config::createDefault();
-			$config->set('HTML', 'Doctype', 'HTML 4.01 Transitional');
+			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+//			$config->set('Core', 'CollectErrors', true);
+			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
+			{
+				$config->set('URI.DisableExternalResources', false);
+				$config->set('URI.DisableResources', false);
+				$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
+				$config->set('HTML.AllowedAttributes', 'src, height, width, alt');
+				$config->set('URI.AllowedSchemes', array('data' => true));
+			}
+
 			$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);
+			
+//			if($html && ! $clean_html)
+//			{
+//				return $purifier->context->get('ErrorCollector')->getHTMLFormatted($config);
+//			}
+			
 
 			return $clean_html;
 		}
@@ -166,7 +182,7 @@
 		/**
 		 * Link url generator
 		 *
-		 * Used for backwards compatibility and as a shortcut. If no url is passed, it 
+		 * Used for backwards compatibility and as a shortcut. If no url is passed, it
 		 * will use PHP_SELF. Wrapper to session->link()
 		 *
 		 * @access public
@@ -210,7 +226,7 @@
 			return $GLOBALS['phpgw_info']['server']['webserver_url']
 				. '/redirect.php?go=' . urlencode($url);
 		}
-		
+
 		/**
 		* Repsost Prevention Detection
 		*
@@ -226,7 +242,7 @@
 		{
 			return $this->session->is_repost($display_error);
 		}
-		
+
 		/**
 		 * Handles redirects under iis and apache
 		 *
@@ -238,7 +254,7 @@
 		public static function redirect($url = '')
 		{
 			$iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0) !== false;
-			
+
 			if ( !$url )
 			{
 				$url = self::get_var('PHP_SELF', 'string', 'SERVER');
@@ -291,7 +307,7 @@
 			{
 				$str = $key;
 				for ( $i = 10; $i > 0; --$i )
-				{	
+				{
 					$var = "m{$i}";
 					$str = preg_replace("/(%$i)+/", $$var, $str);
 				}
@@ -423,7 +439,7 @@
 
 				// Trim whitespace so it doesn't trip us up
 				$value = trim($value);
-				
+
 				// This won't be needed in PHP 5.4 and later as GPC magic quotes are being removed
 				if ( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_gpc() )
 				{
@@ -484,7 +500,7 @@
 								return (float) $value;
 						}
 						return (float) $default;
-					
+
 					case 'int':
 					case 'integer':
 					case 'number':
@@ -503,7 +519,7 @@
 							return $filtered;
 						}
 						return (string) $default;
-							
+
 					case 'email':
 						$filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
 						if ( $filtered == $value )
@@ -571,7 +587,7 @@
 					case 'raw':
 						$value = filter_var($value, FILTER_UNSAFE_RAW);
 						break;
-					
+
 					case 'html':
 						$value = self::clean_html($value);
 						break;

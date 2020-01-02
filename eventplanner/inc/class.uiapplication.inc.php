@@ -537,15 +537,18 @@
 				'value_active_tab' => $active_tab,
 				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiapplication.build_multi_upload_file', id:'{$id}'}",
 				'multiple_uploader' => true,
+				'multi_upload_action_documents' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => 'documents')),
+				'multi_upload_action_cv' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => 'cv')),
 				'application_condition' => !empty($config_frontend['application_condition']) ? $config_frontend['application_condition'] : null,
 				'user_agreement_text_1'=> !empty($config_frontend['user_agreement_text_1']) ? $config_frontend['user_agreement_text_1'] : null,
 				'user_agreement_text_2'=> !empty($config_frontend['user_agreement_text_2']) ? $config_frontend['user_agreement_text_2'] : null,
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::rich_text_editor('summary');
 			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
-			self::render_template_xsl(array('application', 'datatable_inline', 'files'), array($mode => $data));
+			self::render_template_xsl(array('application', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
 		function get_files()

@@ -1550,36 +1550,47 @@ HTML;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-					$values['file_name'] = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
-
-					if ($values['file_name'] && $receipt['id'])
+				if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
+				{
+					$bofiles	 = CreateObject('property.bofiles');
+					$total_files = count($_FILES['file']['name']);
+					for ($i = 0; $i < $total_files; $i++)
 					{
-						$bofiles = CreateObject('property.bofiles');
-						$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $values['file_name'];
+						$file_name = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name'][$i]);
 
-						if ($bofiles->vfs->file_exists(array(
-								'string'	 => $to_file,
-								'relatives'	 => array(RELATIVE_NONE)
-							)))
+						if(empty($_FILES['file']['tmp_name'][$i]))
 						{
-							$receipt['error'][] = array('msg' => lang('This file already exists !'));
+							continue;
 						}
-						else
+						if ($file_name && $receipt['id'])
 						{
-							$bofiles->create_document_dir("fmticket/{$receipt['id']}");
-							$bofiles->vfs->override_acl = 1;
+							$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $file_name;
 
-							if (!$bofiles->vfs->cp(array(
-									'from'		 => $_FILES['file']['tmp_name'],
-									'to'		 => $to_file,
-									'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							if ($bofiles->vfs->file_exists(array(
+									'string'	 => $to_file,
+									'relatives'	 => array(RELATIVE_NONE)
+								)))
 							{
-								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								$receipt['error'][] = array('msg' => lang('This file already exists !'));
 							}
-							$bofiles->vfs->override_acl = 0;
+							else
+							{
+								$bofiles->create_document_dir("fmticket/{$receipt['id']}");
+								$bofiles->vfs->override_acl = 1;
+
+								if (!$bofiles->vfs->cp(array(
+										'from'		 => $_FILES['file']['tmp_name'][$i],
+										'to'		 => $to_file,
+										'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
+							}
 						}
 					}
-					//--------------end files
+				}
+				//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
 
@@ -1772,6 +1783,7 @@ HTML;
 			$function_msg	 = lang('add ticket');
 
 			self::add_javascript('property', 'portico', 'tts.add.js');
+			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
@@ -2026,12 +2038,12 @@ HTML;
 					$bofiles->delete_file("/fmticket/{$id}/", $values);
 				}
 
-//				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
-				$values['file_name'] = str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
+//				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+				$file_name = str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
 
-				if ($values['file_name'])
+				if ($file_name)
 				{
-					$to_file = $bofiles->fakebase . '/fmticket/' . $id . '/' . $values['file_name'];
+					$to_file = $bofiles->fakebase . '/fmticket/' . $id . '/' . $file_name;
 
 					if ($bofiles->vfs->file_exists(array(
 							'string'	 => $to_file,
@@ -3195,8 +3207,6 @@ HTML;
 				'contact_phone'					 => $ticket['contact_phone'],
 				'pref_send_mail'				 => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : '',
 				'fileupload'					 => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
-				'multiple_uploader'				 => true,
-				'multi_upload_parans'			 => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
 				'link_view_file'				 => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files'					 => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files'							 => isset($ticket['files']) ? $ticket['files'] : '',
@@ -3227,11 +3237,13 @@ HTML;
 				'value_order_received'			 => $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount'	 => (int)$ticket['order_received_amount'],
 				'value_extra_mail_address'		 => $value_extra_mail_address,
-				'value_continuous'				 => $ticket['continuous']
+				'value_continuous'				 => $ticket['continuous'],
+				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id))
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
@@ -3241,7 +3253,7 @@ HTML;
 			$appname										 = lang('helpdesk');
 			$function_msg									 = lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg . "#{$id}";
-			self::render_template_xsl(array('tts', 'files', 'attributes_form',
+			self::render_template_xsl(array('tts', 'multi_upload_file_inline', 'attributes_form',
 				'datatable_inline'), $data, $xsl_rootdir									 = '', 'view');
 		}
 
@@ -4365,7 +4377,7 @@ HTML;
 			$id			 = $ticket['id'];
 			$order_id	 = $ticket['order_id'];
 
-			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
+			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) && $ticket['file_attachments'])
 			{
 				$attachments	 = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
 				$_attachment_log = array();

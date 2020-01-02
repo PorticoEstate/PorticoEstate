@@ -173,7 +173,7 @@
 							<xsl:choose>
 								<xsl:when test="mode = 'edit'">
 									<div class="pure-control-group">
-										<label for="communication_message">
+										<label for="new_note">
 											<xsl:value-of select="php:function('lang', 'descr')"/>
 											<br/>
 											<a href="javascript:response_lookup()">
@@ -185,7 +185,7 @@
 										</label>
 
 										<div class="pure-custom pure-input-3-4">
-											<textarea id ="communication_message" rows="10" name="message">
+											<textarea id ="new_note" rows="10" name="message">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'message')"/>
 												</xsl:attribute>
@@ -258,26 +258,31 @@
 								</div>
 							</div>
 
-							<script type="text/javascript">
-								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-							</script>
 							<xsl:if test="mode = 'edit'">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'upload files')"/>
+									</label>
 
-								<xsl:call-template name="file_upload">
-									<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
-								</xsl:call-template>
-
+									<xsl:call-template name="multi_upload_file_inline">
+										<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+										<xsl:with-param name="multi_upload_action">
+											<xsl:value-of select="multi_upload_action"/>
+										</xsl:with-param>
+									</xsl:call-template>
+								</div>
 
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="php:function('lang', 'paste image data')"/>
-										<br/>
-										<xsl:text>Ctrl + V</xsl:text>
 									</label>
-									<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-3-4" >
-									</canvas>
-									<input type="hidden" id="pasted_image" name="pasted_image"></input>
+									<div class="pure-input-3-4 pure-custom">
+										<div id="paste_image_data"  style="border: 2px dashed #ccc; padding: 20px;">
+										</div>
+										<input type="hidden" id="pasted_image" name="pasted_image"></input>
+									</div>
 								</div>
+
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="php:function('lang', 'status')"/>

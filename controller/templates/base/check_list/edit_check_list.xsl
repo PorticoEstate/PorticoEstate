@@ -187,7 +187,10 @@
 						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 					</script>
 					<div class="comment">
-						<xsl:call-template name="file_upload"/>
+						<xsl:call-template name="file_upload">
+							<xsl:with-param name="class">pure-input-1</xsl:with-param>
+						</xsl:call-template>
+
 					</div>
 				</fieldset>
 

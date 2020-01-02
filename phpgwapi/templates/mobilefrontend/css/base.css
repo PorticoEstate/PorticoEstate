@@ -1,3 +1,9 @@
+.paginate_input
+{
+	width: 6em;
+
+}
+
 table.dataTable tbody tr.priority1:not(.selected),
 table.dataTable tbody tr.odd.priority1:not(.selected)
 {
@@ -298,3 +304,14 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 .tablePaginator li a.disabled {cursor: not-allowed;text-decoration: none;}
 .tablePaginator li a.enabled {cursor: pointer;}
 .tablePaginatorText {margin: 0 15px;}
+
+
+.pastable{
+	transition: box-shadow ease .3s;
+}
+.pastable:hover{
+	box-shadow: 0 0 3px black;
+}
+.pastable.pastable-focus{
+	box-shadow: 0 0 10px black;
+}

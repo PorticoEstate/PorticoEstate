@@ -774,15 +774,29 @@
 							<legend>
 								<xsl:text>CV</xsl:text>
 							</legend>
-							<xsl:call-template name="file_upload">
+<!--							<xsl:call-template name="file_upload">
 								<xsl:with-param name="section">cv</xsl:with-param>
-							</xsl:call-template>
+							</xsl:call-template>-->
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action_cv"/>
+									</xsl:with-param>
+									<xsl:with-param name="section">cv</xsl:with-param>
+								</xsl:call-template>
+							</div>
 
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-custom">
+								<div class="pure-custom pure-input-3-4">
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_2'">
 											<xsl:call-template name="table_setup">
@@ -801,14 +815,28 @@
 							<legend>
 								<xsl:value-of select="php:function('lang', 'program description')"/>
 							</legend>
-							<xsl:call-template name="file_upload">
+<!--							<xsl:call-template name="file_upload">
 								<xsl:with-param name="section">documents</xsl:with-param>
-							</xsl:call-template>
+							</xsl:call-template>-->
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload files')"/>
+								</label>
+
+								<xsl:call-template name="multi_upload_file_inline">
+									<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+									<xsl:with-param name="multi_upload_action">
+										<xsl:value-of select="multi_upload_action_documents"/>
+									</xsl:with-param>
+									<xsl:with-param name="section">documents</xsl:with-param>
+								</xsl:call-template>
+							</div>
+
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'files')"/>
 								</label>
-								<div class="pure-custom">
+								<div class="pure-custom pure-input-3-4">
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_3'">
 											<xsl:call-template name="table_setup">

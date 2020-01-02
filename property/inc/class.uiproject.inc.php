@@ -2611,7 +2611,7 @@ JS;
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => true,
-				'multi_upload_parans'				 => "{menuaction:'property.uiproject.build_multi_upload_file', id:'{$id}'}",
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file',	'id' => $id)),					
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
 			);
@@ -2649,9 +2649,10 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			self::add_javascript('property', 'portico', 'project.edit.js');
-			self::render_template_xsl(array('project', 'datatable_inline', 'files', 'attributes_form'), array(
+			self::render_template_xsl(array('project', 'datatable_inline', 'multi_upload_file_inline', 'attributes_form'), array(
 				'edit' => $data));
 		}
 

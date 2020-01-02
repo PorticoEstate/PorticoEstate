@@ -669,8 +669,6 @@ HTML;
 			$new_priority = phpgw::get_var('new_priority', 'int');
 			$id = phpgw::get_var('id', 'int');
 
-//			$ticket = $this->bo->read_single($id);
-
 			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
 			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 				)
@@ -1565,6 +1563,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::add";
 
 			$values = phpgw::get_var('values');
+			$values['details'] = phpgw::get_var('details', 'html');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			if ((isset($values['cancel']) && $values['cancel']))
 			{
@@ -1705,62 +1704,91 @@ JS;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
-
-					$bofiles = CreateObject('property.bofiles','/helpdesk');
-					if ($values['file_name'] && $receipt['id'])
+					$bofiles = CreateObject('property.bofiles', '/helpdesk');
+					if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
 					{
-						$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$values['file_name']}";
-
-						if ($bofiles->vfs->file_exists(array(
-								'string' => $to_file,
-								'relatives' => array(RELATIVE_NONE)
-							)))
+						$total_files = count($_FILES['file']['name']);
+						for ($i = 0; $i < $total_files; $i++)
 						{
-							$receipt['error'][] = array('msg' => lang('This file already exists !'));
-						}
-						else
-						{
-							$bofiles->create_document_dir("{$receipt['id']}");
-							$bofiles->vfs->override_acl = 1;
+							$file_name = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name'][$i]);
 
-							if (!$bofiles->vfs->cp(array(
-									'from' => $_FILES['file']['tmp_name'],
-									'to' => $to_file,
-									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							if(empty($_FILES['file']['tmp_name'][$i]))
 							{
-								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								continue;
 							}
-							$bofiles->vfs->override_acl = 0;
+							if ($file_name && $receipt['id'])
+							{
+								$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$file_name}";
+
+								if ($bofiles->vfs->file_exists(array(
+										'string'	 => $to_file,
+										'relatives'	 => array(RELATIVE_NONE)
+									)))
+								{
+									$receipt['error'][] = array('msg' => lang('This file already exists !'));
+								}
+								else
+								{
+									$bofiles->create_document_dir("{$receipt['id']}");
+									$bofiles->vfs->override_acl = 1;
+
+									if (!$bofiles->vfs->cp(array(
+											'from'		 => $_FILES['file']['tmp_name'][$i],
+											'to'		 => $to_file,
+											'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+									{
+										$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+									}
+									$bofiles->vfs->override_acl = 0;
+								}
+							}
 						}
 					}
+
 					if(!empty($_POST['pasted_image']) && empty($_POST['pasted_image_is_blank'])	)
 					{
-						$img = $_POST['pasted_image'];
-						$img = str_replace('data:image/png;base64,', '', $img);
-						$img = str_replace(' ', '+', $img);
-						$data = base64_decode($img);
-						$file = '/tmp/' . uniqid() . '.png';
-						if (file_put_contents($file, $data))
-						{
-							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $values['subject']) . '.png';
-							$bofiles->create_document_dir("{$receipt['id']}");
-							$bofiles->vfs->override_acl = 1;
+						$imgs = $_POST['pasted_image'];
 
-							if (!$bofiles->vfs->cp(array(
-									'from' => $file,
-									'to' => $to_file,
-									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+						$i = 1;
+						foreach ($imgs as $img)
+						{
+							$img = str_replace('data:image/png;base64,', '', $img);
+							$img = str_replace(' ', '+', $img);
+							$data = base64_decode($img);
+							$file = '/tmp/' . uniqid() . '.png';
+							if (file_put_contents($file, $data))
 							{
-								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $values['subject']) . "_{$i}.png";
+								$bofiles->create_document_dir("{$receipt['id']}");
+								$bofiles->vfs->override_acl = 1;
+
+								if (!$bofiles->vfs->cp(array(
+										'from' => $file,
+										'to' => $to_file,
+										'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+								{
+									$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+								}
+								$bofiles->vfs->override_acl = 0;
 							}
-							$bofiles->vfs->override_acl = 0;
+							$i ++;
 						}
 					}
 
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+
+
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array(
+							'status' => 'saved',
+							'parent_cat_id' => $this->parent_cat_id,
+							'id' => $receipt['id']
+							);
+					}
+
 
 					if ((isset($values['save']) && $values['save']))
 					{
@@ -1946,7 +1974,8 @@ JS;
 				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'parent_cat_id'	=> $this->parent_cat_id,
-				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid']
+				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid'],
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file'))
 			);
 
 			$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
@@ -1958,9 +1987,14 @@ JS;
 			}
 			$function_msg .= lang('add ticket');
 
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+			self::rich_text_editor('new_note');
+
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
@@ -2131,6 +2165,7 @@ JS;
 			}
 
 			$values = phpgw::get_var('values');
+			$values['note'] = phpgw::get_var('note', 'html');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
@@ -2144,7 +2179,7 @@ JS;
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form',
-				'datatable_inline'));
+				'datatable_inline', 'multi_upload_file_inline'));
 
 			$historylog	= & $this->bo->historylog;
 
@@ -2280,11 +2315,11 @@ JS;
 					$bofiles->delete_file("/{$id}", $values);
 				}
 
-				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
-				if ($values['file_name'])
+				if ($file_name)
 				{
-					$to_file = "{$bofiles->fakebase}/{$id}/{$values['file_name']}";
+					$to_file = "{$bofiles->fakebase}/{$id}/{$file_name}";
 
 					if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
@@ -2914,7 +2949,6 @@ JS;
 				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
 				'multi_upload_parans' => "{menuaction:'helpdesk.uitts.build_multi_upload_file', id:'{$id}'}",
-//				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
 				'lang_filename' => lang('Filename'),
@@ -2939,12 +2973,19 @@ JS;
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false,
 				'reverse_assigned' => $ticket['user_id'] != $ticket['reverse_id'] ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
-				'cat_change_list' => $cat_change_list
+				'cat_change_list' => $cat_change_list,
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id))
+
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
+//			phpgwapi_jquery::init_multi_upload_file();
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
+			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
+			self::rich_text_editor('new_note');
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---

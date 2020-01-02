@@ -117,12 +117,12 @@ $(window).on('load', function()
 		{
 			location_code_selection = location_code;
 
-			var temp = document.getElementById("communication_message").value;
+			var temp = document.getElementById("new_note").value;
 			if (temp)
 			{
 				temp = temp + "\n";
 			}
-			document.getElementById("communication_message").value = temp + "Lokalisering: " + ui.item.label;
+			document.getElementById("new_note").value = temp + "Lokalisering: " + ui.item.label;
 		}
 
 		var vendor_id = $("#vendor_id").val();
@@ -143,33 +143,33 @@ $(document).ready(function ()
 	$("#datatable-container_2 tbody").on('click', 'tr', function ()
 	{
 		var order_id = $('td', this).eq(0).text();
-		var temp = document.getElementById("communication_message").value;
+		var temp = document.getElementById("new_note").value;
 		if (temp)
 		{
 			temp = temp + "\n";
 		}
-		document.getElementById("communication_message").value = temp + "Bestilling: " + order_id;
+		document.getElementById("new_note").value = temp + "Bestilling: " + order_id;
 
 	});
 
 	$("#type_id").change(function ()
 	{
-		var temp = document.getElementById("communication_message").value;
+		var temp = document.getElementById("new_note").value;
 		if (temp)
 		{
 			temp = temp + "\n";
 		}
-		document.getElementById("communication_message").value = temp + "Type: " + $( "#type_id option:selected" ).text();;
+		document.getElementById("new_note").value = temp + "Type: " + $( "#type_id option:selected" ).text();;
 	});
 
 	$("#vendor_contract_id").change(function ()
 	{
-		var temp = document.getElementById("communication_message").value;
+		var temp = document.getElementById("new_note").value;
 		if (temp)
 		{
 			temp = temp + "\n";
 		}
-		document.getElementById("communication_message").value = temp + "Kontrakt: " + $("#vendor_contract_id").val();
+		document.getElementById("new_note").value = temp + "Kontrakt: " + $("#vendor_contract_id").val();
 	});
 
 
