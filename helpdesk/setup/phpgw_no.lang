@@ -261,4 +261,3 @@ helpdesk_async_task_anonyminizer_enabled	helpdesk	no	Anonymiser data
 category anonyminizer	helpdesk	no	Anonymisering pr Kategori
 limit days	helpdesk	no	Antall dager før sletting
 category anonyminizer settings has been saved	helpdesk	no	Anonymisering pr Kategori er lagret
-Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region	helpdesk	no	Last opp flere filer ved enten å dra-og-slipp i markert område, eller ved å velge filene direkte.
