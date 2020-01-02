@@ -4,7 +4,6 @@
 		<title>{lang_title}</title>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/core/base.js"></script>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/core/events.js"></script>
-		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/sarissa/sarissa.js"></script>
 		<script type="text/javascript">
 
 			var iCat = 0;
@@ -14,6 +13,7 @@
 			{
 				var oSelect = document.getElementById('search_cat');
 				iCat = oSelect.options[oSelect.selectedIndex].value;
+				doSearch();
 			}
 
 			function doSearch()
@@ -49,7 +49,7 @@
 					{
 						document.getElementById('search_results').innerHTML = 
 							"<select id=\"search_list\" name=\"search_list\" multiple=\"multiple\" size=\"10\">" 
-								+ oHTTP.responseText 
+								+ JSON.parse(oHTTP.responseText)
 								+ "</select>";
 					}
 				}

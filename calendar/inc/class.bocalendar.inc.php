@@ -3241,22 +3241,55 @@
 		*/
 		function get_per_contacts($lookup, $cat_id)
 		{
-			//echo "lookup == $lookup and user_id == {$GLOBALS['phpgw_info']['user']['account_id']}";
-			$fields = array ('contact_id', 'per_first_name', 'per_last_name');
-
-			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_first_name', $lookup);
-			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_last_name', $lookup);
-
-			$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
-			$criteria[] = $this->contacts->criteria_for_index((int) $GLOBALS['phpgw_info']['user']['account_id']);
-
-			if ( $cat_id )
+			$access = phpgw::get_var('access');
+			switch ($access)
 			{
-				$criteria[] = phpgwapi_sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
+				case 'yours':
+					$_access = PHPGW_CONTACTS_MINE;
+					break;
+				case 'private':
+					$_access = PHPGW_CONTACTS_PRIVATE;
+					break;
+				default:
+					$_access = PHPGW_CONTACTS_ALL;
 			}
 
-			$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
-			return $this->contacts->get_persons($fields, 0, 0, 'per_first_name, per_last_name', 'ASC', '', $criteria_token);
+			if ($cat_id)
+			{
+				$category_filter = $cat_id;
+			}
+			else
+			{
+				$category_filter = PHPGW_CONTACTS_CATEGORIES_ALL;
+			}
+
+			$fields = array('owner', 'contact_id', 'per_first_name', 'per_last_name');
+
+			$query = urldecode(addslashes($lookup));
+
+			$boaddressbook		 = createObject('addressbook.boaddressbook');
+			$criteria			 = $boaddressbook->criteria_contacts($_access, $category_filter, $qfield = 'person', $query, $fields);
+//			$total_all_persons	 = $boaddressbook->get_count_persons($criteria);
+			$entries			 = $boaddressbook->get_persons($fields, 0, 0, 'per_last_name', 'ASC', '', $criteria);
+
+			return $entries;
+
+			//echo "lookup == $lookup and user_id == {$GLOBALS['phpgw_info']['user']['account_id']}";
+//			$fields = array ('contact_id', 'per_first_name', 'per_last_name');
+//
+//			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_first_name', $lookup);
+//			$criteria_search[] = phpgwapi_sql_criteria::token_begin('per_last_name', $lookup);
+//
+//			$criteria[] = phpgwapi_sql_criteria::_append_or($criteria_search);
+//			$criteria[] = $this->contacts->criteria_for_index((int) $GLOBALS['phpgw_info']['user']['account_id']);
+//
+//			if ( $cat_id )
+//			{
+//				$criteria[] = phpgwapi_sql_criteria::_equal('cat_id', phpgw::get_var('cat_id', 'int', 'bool') );
+//			}
+//
+//			$criteria_token = phpgwapi_sql_criteria::_append_and($criteria);
+//			return $this->contacts->get_persons($fields, 0, 0, 'per_first_name, per_last_name', 'ASC', '', $criteria_token);
 		}
 
 		/**

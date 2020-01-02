@@ -3742,13 +3742,15 @@ HTML;
 								return '';
 							}
 							
+							$ret = '';
 							foreach ( $contacts as $contact )
 							{
-								echo <<<HTML
-								<option value="{$contact['contact_id']}">{$contact['per_first_name']} {$contact['per_last_name']}</option>
-
+								$ret .= <<<HTML
+<option value="{$contact['contact_id']}">{$contact['per_first_name']} {$contact['per_last_name']}</option>
 HTML;
 							}
+
+							return $ret;
 					}
 				}
 				
