@@ -654,7 +654,7 @@ JS;
 
 			}
 
-			$lang_placeholder = 'write here...';
+			$lang_placeholder = lang('write here...');
 
 			$js = '';
 			if(!$init)
