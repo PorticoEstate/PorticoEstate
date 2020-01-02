@@ -152,17 +152,17 @@
 			$folder_list = array
 				(
 				'Innboks'							 => array(),
+				'Firewall-Fakturaavvik'                               => array
+				(
+					'message_cat_id' => 319, // 24 Firewall-Fakturaavvik
+					'group_id'             => 4253, //LRS-Drift_Regnskap
+					'subject'              => ''
+				),
 				'Arbeidsflyt og ehandel'			 => array
 					(
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Arbeidsflyt og ehandel'
-				),
-				'Avvist papirfaktura'				 => array
-					(
-					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
-					'subject'		 => 'Avvist papirfaktura'
 				),
 				'Innkassokrav'						 => array
 					(
@@ -182,13 +182,6 @@
 					'message_cat_id' => 280, // 24 Faktura fra leverandør
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Spørsmål fra leverandører'
-				),
-				'Spørsmål ifbm bankkvitteringer'	 => array
-					(
-					'message_cat_id' => 280, // 24 Faktura fra leverandør
-					'group_id'		 => 4253, //LRS-Drift_Regnskap
-					'subject'		 => 'Spørsmål ifbm bankkvitteringer',
-					'priority'		 => 1
 				),
 				'Lønn'								 => array
 					(
