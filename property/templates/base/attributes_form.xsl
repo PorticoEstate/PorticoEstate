@@ -162,7 +162,7 @@
 								</xsl:for-each>
 							</select>
 							<br/>
-							<a href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
+							<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
 								<img src="{add_img}" width="23"/>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'add')"/>
