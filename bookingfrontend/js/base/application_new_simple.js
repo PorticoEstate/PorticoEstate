@@ -1,3 +1,4 @@
+var booking_month_horizon = 3;
 var GlobalStartTime;
 var day_default_lenght = 0;
 var dow_default_start = null;
@@ -332,7 +333,7 @@ function PopulatePostedDate()
 function getFreetime()
 {
 	var checkDate = new Date();
-	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 3, 0);
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + booking_month_horizon, 0);
 
 	var getJsonURL = phpGWLink('bookingfrontend/', {
 		menuaction: "bookingfrontend.uibooking.get_freetime",
@@ -476,6 +477,11 @@ $(document).ready(function ()
 				if (resource.booking_time_default_start !== null && resource.booking_time_default_start != -1)
 				{
 					time_default_start = resource.booking_time_default_start;
+				}
+
+				if(Number(resource.booking_month_horizon) > (booking_month_horizon +1))
+				{
+					booking_month_horizon = Number(resource.booking_month_horizon) +1;
 				}
 
 				set_conditional_translation(resource.type);

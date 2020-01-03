@@ -613,7 +613,7 @@ file categories	common	no	Fil kategorier
 Outdoors	booking	no	Utendørs
 Indoors	booking	no	Innendørs
 Activities	booking	no	Aktiviteter
-Application on this building is not possible.	booking	no	Det er ikke mulig å søke om tid på dette bygget.
+Application on this building is not possible.	booking	no	Det er ikke mulig å søke om tid på dette objektet nå.
 Split mail if building contains swiming pools resources	booking	no	Spesialbehandle bygg med svømmebasseng
 Split mail when building has swiming pool	booking	no	Ikke send e-post om svømming til andre idretter og omvendt.
 activities that uses swimming pools	booking	no	Svømmehaller

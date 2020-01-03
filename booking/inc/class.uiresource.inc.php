@@ -64,6 +64,8 @@
 //				'booking_dow_default_end' => 'int',
 				'booking_time_default_start' => 'int',
 				'booking_time_default_end' => 'int',
+				'simple_booking_start_date' => 'string',
+				'booking_month_horizon' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
@@ -303,6 +305,7 @@
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
+			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_start_date');
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'),
 				array(

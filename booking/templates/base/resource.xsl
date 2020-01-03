@@ -154,6 +154,24 @@
 						<xsl:text>X</xsl:text>
 					</xsl:if>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'start date')"/>
+					</label>
+					<xsl:variable name="date_format">
+						<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+					</xsl:variable>
+					<xsl:if test="not(resource/simple_booking_start_date = '')">
+						<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_start_date))"/>
+					</xsl:if>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'month horizon')"/>
+					</label>
+					<xsl:value-of select="resource/booking_month_horizon"/>
+				</div>
 
 				<div class="pure-control-group">
 					<label>

@@ -238,6 +238,30 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'start date')"/>
+					</label>
+					<input type="text" id="simple_booking_start_date" name="simple_booking_start_date" size="10" readonly="readonly">
+						<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'start date')"/>
+						</xsl:attribute>
+						<xsl:if test="resource/simple_booking_start_date != ''">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_start_date))"/>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'month horizon')"/>
+					</label>
+					<input type="number" min="2" id="booking_month_horizon" name="booking_month_horizon" value="{resource/booking_month_horizon}">
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'day default lenght')"/>
 					</label>
 					<input type="number" min="-1" id="booking_day_default_lenght" name="booking_day_default_lenght" value="{resource/booking_day_default_lenght}">
