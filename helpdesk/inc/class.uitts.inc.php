@@ -724,6 +724,13 @@ HTML;
 
 			$upload_handler = new property_multiuploader($options, false);
 
+			if(!$id)
+			{
+				$response = array(files => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			switch ($_SERVER['REQUEST_METHOD']) {
 				case 'OPTIONS':
 				case 'HEAD':

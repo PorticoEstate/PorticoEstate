@@ -32,7 +32,7 @@ $(document).ready(function ()
 			/**
 			 * sentrale saksbehandlere må slå opp på ressursnr
 			 */
-			if(simple != 1 && !$("#id").val())
+			if (simple != 1 && !$("#id").val())
 			{
 				JqueryPortico.autocompleteHelper(phpGWLink('index.php',
 				{
@@ -54,7 +54,7 @@ $(document).ready(function ()
 					method: 'get_on_behalf_of',
 					acl_location: '.ticket',
 					search_options: 'resultat_enhet',
-					ticket_id:$("#id").val()
+					ticket_id: $("#id").val()
 				}, true),
 					'set_notify_name', 'set_notify_lid', 'set_notify_container');
 			}
@@ -201,9 +201,18 @@ function validate_submit()
 		}
 	}
 
-	if (!error)
+	if (error)
 	{
-		document.form.submit();
+		var send_buttons = $('.pure-button');
+		$(send_buttons).each(function ()
+		{
+			$(this).prop('disabled', false);
+		});
+	}
+	else
+	{
+		ajax_submit_form(action);
+//		document.form.submit();
 	}
 }
 
@@ -262,7 +271,7 @@ function set_notify(account_lid)
 		method: 'set_notify',
 		acl_location: '.ticket',
 		account_lid: account_lid,
-		ticket_id:$("#id").val()
+		ticket_id: $("#id").val()
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 

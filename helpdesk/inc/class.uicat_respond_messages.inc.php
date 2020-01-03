@@ -144,6 +144,12 @@
 					'status'					=> $cat['active'],
 					'status_text'				=> $cat['active'] == 1 ? 'active' : 'disabled',
 				);
+
+				phpgwapi_jquery::init_summernote("{$cat['id']}_new_message");
+				phpgwapi_jquery::init_summernote("{$cat['id']}_set_user_message");
+				phpgwapi_jquery::init_summernote("{$cat['id']}_update_message");
+				phpgwapi_jquery::init_summernote("{$cat['id']}_close_message");
+
 			}
 
 			$link_data['menuaction'] = 'helpdesk.uicat_respond_messages.edit';

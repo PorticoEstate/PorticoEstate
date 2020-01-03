@@ -42,6 +42,21 @@
 </xsl:template>
 <!-- add -->
 <xsl:template xmlns:php="http://php.net/xsl" match="add">
+	<style>
+		.file {
+		position: relative;
+		background: linear-gradient(to right, lightblue 50%, transparent 50%);
+		background-size: 200% 100%;
+		background-position: right bottom;
+		transition:all 1s ease;
+		background: lightgrey;
+		}
+		.file.done {
+		background: lightgreen;
+		}
+	</style>
+
+
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
