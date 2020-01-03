@@ -473,16 +473,6 @@
 
 			if ($print_response)
 			{
-//				$content_files	 = scandir($this->options['upload_dir']);
-//				$count_files	 = 0;
-//				foreach ($content_files as $key => $value)
-//				{
-//					$path = realpath($this->options['upload_dir'] . '/' . $value);
-//					if (is_file($path))
-//					{
-//						$count_files ++;
-//					}
-//				}
 				$content['num_files'] = $count_files;
 
 				$json		 = json_encode($content);

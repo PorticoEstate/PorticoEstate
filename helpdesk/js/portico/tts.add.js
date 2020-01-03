@@ -1,6 +1,5 @@
 var pendingList = 0;
 var redirect_action;
-var number_of_files = 0;
 var file_count = 0;
 
 this.confirm_session = function (action)
@@ -56,7 +55,7 @@ this.confirm_session = function (action)
 					document.getElementById(action).value = 1;
 					try
 					{
-						validate_submit();
+						validate_submit(action);
 					}
 					catch (e)
 					{
@@ -179,12 +178,6 @@ $(document).ready(function ()
 	};
 
 
-	redirect_after_upload = function ()
-	{
-		window.location.href = redirect_action;
-	}
-
-
 	sendAllFiles = function (id)
 	{
 
@@ -194,22 +187,16 @@ $(document).ready(function ()
 			phpGWLink('index.php', {menuaction: 'helpdesk.uitts.handle_multi_upload_file', id: id})
 			);
 
-
-		number_of_files = $('.start_file_upload').length;
-
 		$.each($('.start_file_upload'), function (index, file_start)
 		{
 			file_start.click();
 		});
-
 	};
 
 	$('#fileupload').fileupload({
 		dropZone: $('#drop-area'),
 		uploadTemplateId: null,
 		downloadTemplateId: null,
-		// Uncomment the following to send cross-domain cookies:
-		//xhrFields: {withCredentials: true},
 		autoUpload: false,
 		add: function (e, data)
 		{
@@ -217,17 +204,19 @@ $(document).ready(function ()
 			{
 				var file_size = formatFileSize(file.size);
 
-				data.context = $('<p class="file start_file_upload">')
+				data.context = $('<p class="file">')
 					.append($('<span>').text(data.files[0].name + ' ' + file_size))
 					.appendTo($(".content_upload_download"))
-					.click(function ()
-					{
-						data.submit();
-					});
+					.append($('<button type="button" class="start_file_upload" style="display:none">start</button>')
+						.click(function ()
+						{
+							data.submit();
+						}));
+
+				pendingList++;
 
 			});
 
-			pendingList++;
 		},
 		progress: function (e, data)
 		{
@@ -242,12 +231,10 @@ $(document).ready(function ()
 
 			if (result.files[0].error)
 			{
-
 				data.context
 					.removeClass("file")
 					.addClass("error")
-					.find("p")
-					.text(result.files[0].name + ', Error: ' + result.files[0].error);
+					.append($('<span>').text(' Error: ' + result.files[0].error));
 			}
 			else
 			{
@@ -256,7 +243,7 @@ $(document).ready(function ()
 				refresh_files();
 			}
 
-			if (file_count == number_of_files)
+			if (file_count === pendingList)
 			{
 				window.location.href = redirect_action;
 			}
@@ -290,41 +277,6 @@ $(document).ready(function ()
 	$(document).bind('drop dragover', function (e)
 	{
 		e.preventDefault();
-	});
-
-
-	$(function ()
-	{
-		'use strict';
-
-		$('#fileupload')
-			.bind('fileuploadcompleted', function (e, data)
-			{
-				$("#files-count").html(data.result.num_files);
-			});
-
-		$('#fileupload')
-			.bind('fileuploaddestroyed', function (e, data)
-			{
-				var n = 0;
-				$(".template-download").each(function (i)
-				{
-					n++;
-				});
-				$("#files-count").html(n);
-			});
-		$('#fileupload').bind('fileuploadstart', function (e)
-		{
-			$('.fileupload-progress').show();
-		});
-
-		$('#fileupload').bind('fileuploadprogressall', function (e, data)
-		{
-			var progress = parseInt((data.loaded / data.total) * 100, 10);
-			$('#progress').css("background-position-x", 100 - progress + "%");
-
-		});
-
 	});
 
 });
