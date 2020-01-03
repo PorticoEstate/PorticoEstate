@@ -120,6 +120,11 @@
 						}
 						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
 					}
+					if ($field == 'email')
+					{
+						$value = "<a href=\"mailto:{$value}\">{$value}</a>";
+					}
+
 					$contactdata[] = sprintf('%s: %s', lang($field), $value);
 				}
 			}
