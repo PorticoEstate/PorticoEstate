@@ -328,18 +328,18 @@ JS;
 
 			if (isset($prefs['property']['mainscreen_show_open_tenant_claim']) && $prefs['property']['mainscreen_show_open_tenant_claim'] == 'yes')
 			{
-				$sotenant_claim	 = CreateObject('property.sotenant_claim');
-				$claims			 = $sotenant_claim->read(array
-					(
-					'start'		 => 0,
-					'user_id'	 => $accound_id
-					)
-				);
-
-				$total_records	 = $sotenant_claim->total_records;
+//				$sotenant_claim	 = CreateObject('property.sotenant_claim');
+//				$claims			 = $sotenant_claim->read(array
+//					(
+//					'start'		 => 0,
+//					'user_id'	 => $accound_id
+//					)
+//				);
+				$claims = array();
+//				$total_records	 = $sotenant_claim->total_records;
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
-					'title'						 => lang('tenant claim') . " ({$total_records})",
+					'title'						 => lang('tenant claim'),
 					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -374,12 +374,44 @@ JS;
 							'claim_id'	 => $entry['claim_id']))
 					);
 				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				echo "\n" . '<!-- BEGIN claim info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
-				unset($tts);
-				unset($portalbox);
-				unset($category_name);
-				unset($default_status);
+				echo '<div id="claim_info_container"></div>';
+
+				$lang = js_lang('Name', 'address', 'status', 'id', 'entry_date', 'amount', 'actual cost');
+
+				$js = <<<JS
+					<script type="text/javascript">
+					var lang = $lang;
+					var claim_infoURL = phpGWLink('index.php', {
+						menuaction:'property.uitenant_claim.query2',
+						order:'id',
+						sort:'asc',
+						user_id:{$accound_id},
+						result:10
+						}, true);
+
+					var rClaim_info = [{n: 'ResultSet'},{n: 'Result'}];
+
+					var colDefsClaim_info = [
+						{key: 'claim_id', label: lang['id'], formatter: genericLink},
+						{key: 'name', label: lang['name']},
+						{key: 'address', label: lang['address']},
+						{key: 'entry_date', label: lang['entry_date']}
+						];
+
+					var paginatorTableClaim_info = new Array();
+					paginatorTableClaim_info.limit = 10;
+					createPaginatorTable('claim_info_container', paginatorTableClaim_info);
+
+					createTable('claim_info_container', claim_infoURL, colDefsClaim_info, rClaim_info, 'pure-table pure-table-bordered', paginatorTableClaim_info);
+
+					</script>
+
+JS;
+
+				echo $js;
+
 			}
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
