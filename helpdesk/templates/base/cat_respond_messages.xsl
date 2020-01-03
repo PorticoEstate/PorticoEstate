@@ -93,22 +93,22 @@
 
 		</td>
 		<td>
-			<textarea rows="10" name="values[{cat_id}][new_message]"  class="pure-input-1" >
+			<textarea rows="10" id="{cat_id}_new_message" name="values[{cat_id}][new_message]"  class="pure-input-1" >
 				<xsl:value-of select="new_message"/>
 			</textarea>
 		</td>
 		<td>
-			<textarea rows="10" name="values[{cat_id}][set_user_message]"  class="pure-input-1" >
+			<textarea rows="10"  id="{cat_id}_set_user_message" name="values[{cat_id}][set_user_message]"  class="pure-input-1" >
 				<xsl:value-of select="set_user_message"/>
 			</textarea>
 		</td>
 		<td>
-			<textarea rows="10" name="values[{cat_id}][update_message]"  class="pure-input-1" >
+			<textarea rows="10" id="{cat_id}_update_message" name="values[{cat_id}][update_message]"  class="pure-input-1" >
 				<xsl:value-of select="update_message"/>
 			</textarea>
 		</td>
 		<td>
-			<textarea rows="10" name="values[{cat_id}][close_message]"  class="pure-input-1" >
+			<textarea rows="10" id="{cat_id}_close_message" name="values[{cat_id}][close_message]"  class="pure-input-1" >
 				<xsl:value-of select="close_message"/>
 			</textarea>
 		</td>
