@@ -990,10 +990,10 @@
 			$start_date->setTimezone($DateTimeZone);
 			$end_date->setTimezone($DateTimeZone);
 
-			$from	 = clone $start_date;
-			$from->setTime(0, 0, 0);
-			$to		 = clone $end_date;
-			$to->setTime(23, 59, 59);
+			$_from	 = clone $start_date;
+			$_from->setTime(0, 0, 0);
+			$_to		 = clone $end_date;
+			$_to->setTime(23, 59, 59);
 
 			if ($resource_id)
 			{
@@ -1016,12 +1016,40 @@
 				'sort' => 'sort', 'results' => -1));
 
 			$event_ids = array();
-			foreach ($resources['results'] as $resource)
+			foreach ($resources['results'] as &$resource)
 			{
+				$from = clone $_from;
+
+				if($resource['simple_booking_start_date'])
+				{
+					$simple_booking_start_date = new DateTime(date('Y-m-d', $resource['simple_booking_start_date']));
+					$simple_booking_start_date->setTimezone($DateTimeZone);
+
+					if($simple_booking_start_date > $_from)
+					{
+						$from = clone $simple_booking_start_date;
+					}
+				}
+
+				$to = clone $_to;					
+				if($resource['booking_month_horizon'])
+				{
+					$__to = $this->month_shifter($from, $resource['booking_month_horizon']);
+
+					if($__to > $_to)
+					{
+						$to = clone $__to;
+					}
+				}
+
+
 				if ($resource['simple_booking'])
 				{
 					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
 				}
+
+				$resource['from'] = $from;
+				$resource['to'] = $to;
 			}
 			unset($resource);
 
@@ -1093,11 +1121,13 @@
 						$defaultEndHour--;
 					}
 
-					$checkDate = new DateTime();
-					$checkDate->setTimezone($DateTimeZone);
+//					$checkDate = new DateTime();
+					$checkDate = clone $resource['from'];
+//					$checkDate->setTimezone($DateTimeZone);
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
-					$limitDate = clone ($to);
+//					$limitDate = clone ($to);
+					$limitDate = clone ($resource['to']);
 
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
