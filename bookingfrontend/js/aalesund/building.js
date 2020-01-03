@@ -1,3 +1,4 @@
+var booking_month_horizon = 3;
 $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
@@ -511,7 +512,7 @@ function compare(a, b)
 function getFreetime(urlParams)
 {
 	var checkDate = new Date();
-	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + 3, 0);
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + booking_month_horizon, 0);
 
 	var getJsonURL = phpGWLink('bookingfrontend/', {
 		menuaction: "bookingfrontend.uibooking.get_freetime",
@@ -612,6 +613,11 @@ function PopulateBookableResources(urlParams)
 				};
 
 				resourceItemLink = phpGWLink('bookingfrontend/', oArgs);
+			}
+
+			if(Number(result.results[i].booking_month_horizon) > (booking_month_horizon +1))
+			{
+				booking_month_horizon = Number(result.results[i].booking_month_horizon) +1;
 			}
 
 			bookableResources.push({

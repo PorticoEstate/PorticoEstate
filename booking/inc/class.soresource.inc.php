@@ -27,6 +27,8 @@
 				'direct_booking' => array('type' => 'int', 'required' => false),
 				'direct_booking_season_id' => array('type' => 'int', 'required' => false),
 				'simple_booking' => array('type' => 'int', 'required' => false),
+				'simple_booking_start_date' => array('type' => 'int', 'required' => false),
+				'booking_month_horizon' => array('type' => 'int', 'required' => false),
 				'booking_day_default_lenght' => array('type' => 'int', 'required' => false),
 				'booking_dow_default_start' => array('type' => 'int', 'required' => false),
 //				'booking_dow_default_end' => array('type' => 'int', 'required' => false),
@@ -161,6 +163,10 @@
 			if (!empty($entity['direct_booking']))
 			{
 				$entity['direct_booking'] = phpgwapi_datetime::date_to_timestamp($entity['direct_booking']);
+			}
+			if (!empty($entity['simple_booking_start_date']))
+			{
+				$entity['simple_booking_start_date'] = phpgwapi_datetime::date_to_timestamp($entity['simple_booking_start_date']);
 			}
 		}
 

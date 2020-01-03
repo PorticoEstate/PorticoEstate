@@ -4368,4 +4368,37 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.52 to 0.2.53
+	 *
+	 */
+	$test[] = '0.2.52';
+
+	function booking_upgrade0_2_52()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'simple_booking_start_date',
+				array(
+					'type' => 'int',
+					'precision' => 8,
+					'nullable' => true
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_month_horizon',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.53';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
 	

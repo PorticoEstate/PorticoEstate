@@ -623,7 +623,7 @@ file categories	common	nn	Filkategorier
 Outdoors	booking	nn	Utandørs
 Indoors	booking	nn	Innandørs
 Activities	booking	nn	Aktivitetar
-Application on this building is not possible.	booking	nn	Det er ikkje mogeleg å søkje om tid på dette bygget.
+Application on this building is not possible.	booking	nn	Det er ikkje mogeleg å søkje om tid på dette objektet no.
 Split mail if building contains swiming pools resources	booking	nn	Spesialbehandle bygg med svømmebasseng
 Split mail when building has swiming pool	booking	nn	Ikkje send e-post om symjing til andre idretter og omvendt.
 activities that uses swimming pools	booking	nn	Symjehallar

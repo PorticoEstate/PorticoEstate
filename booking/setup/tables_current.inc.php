@@ -190,6 +190,8 @@
 				'booking_dow_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
+				'simple_booking_start_date' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
+				'booking_month_horizon' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 			),
 			'pk' => array('id'),
 			'fk' => array(
