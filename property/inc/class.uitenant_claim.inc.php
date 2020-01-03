@@ -45,6 +45,7 @@
 		var $public_functions = array
 			(
 			'query'		 => true,
+			'query2'	 => true,
 			'index'		 => true,
 			'check'		 => true,
 			'view'		 => true,
@@ -435,16 +436,62 @@
 			$result_data['draw']			 = $draw;
 
 			$link_data = array
-				(
-				'menuaction' => 'property.uigeneric.edit',
-				'appname'	 => $this->appname,
-				'type'		 => $this->type,
-				'type_id'	 => $this->type_id
+			(
+				'menuaction' => 'property.uitenant_claim.edit',
 			);
 
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
 
 			return $this->jquery_results($result_data);
+		}
+
+		public function _add_links( &$value, $key, $data )
+		{
+			$unset = 0;
+			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url']))
+			{
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
+				$unset = 1;
+			}
+
+			if (is_array($data))
+			{
+				$link_array = $data;
+				$link_array['claim_id'] = $value['claim_id'];
+			}
+			else
+			{
+				$link_array = array('menuaction' => $data, 'claim_id' => $value['claim_id']);
+			}
+
+			$value['link'] = self::link($link_array);
+
+			if ($unset)
+			{
+				unset($GLOBALS['phpgw_info']['server']['webserver_url']);
+			}
+		}
+
+		public function query2(  )
+		{
+			$length				 = phpgw::get_var('length', 'int', 'REQUEST', 10);
+			$_REQUEST['start']	 = phpgw::get_var('startIndex');
+			$_REQUEST['length']	 = $length;
+
+			$values = $this->query();
+
+			return array(
+				'ResultSet' => array(
+					"totalResultsAvailable"	 => $values['recordsTotal'],
+					"totalRecords"			 => $values['recordsTotal'],
+					"Result"				 => $values['data'],
+					'recordsReturned'		 => count($values['data']),
+					'pageSize'				 => $length,
+					'startIndex'			 => $this->start,
+					'sortKey'				 => $this->order,
+					'sortDir'				 => $this->sort,
+				)
+			);
 		}
 
 		function check()
