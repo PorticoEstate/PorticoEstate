@@ -530,6 +530,13 @@ HTML;
 					'id'		 => $id)));
 			$upload_handler			 = new property_multiuploader($options, false);
 
+			if(!$id)
+			{
+				$response = array(files => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			switch ($_SERVER['REQUEST_METHOD'])
 			{
 				case 'OPTIONS':
@@ -1550,49 +1557,59 @@ HTML;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-				if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
-				{
-					$bofiles	 = CreateObject('property.bofiles');
-					$total_files = count($_FILES['file']['name']);
-					for ($i = 0; $i < $total_files; $i++)
+					if (!empty($_FILES['file']['name']) && is_array($_FILES['file']['name']))
 					{
-						$file_name = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name'][$i]);
-
-						if(empty($_FILES['file']['tmp_name'][$i]))
+						$bofiles	 = CreateObject('property.bofiles');
+						$total_files = count($_FILES['file']['name']);
+						for ($i = 0; $i < $total_files; $i++)
 						{
-							continue;
-						}
-						if ($file_name && $receipt['id'])
-						{
-							$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $file_name;
+							$file_name = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name'][$i]);
 
-							if ($bofiles->vfs->file_exists(array(
-									'string'	 => $to_file,
-									'relatives'	 => array(RELATIVE_NONE)
-								)))
+							if(empty($_FILES['file']['tmp_name'][$i]))
 							{
-								$receipt['error'][] = array('msg' => lang('This file already exists !'));
+								continue;
 							}
-							else
+							if ($file_name && $receipt['id'])
 							{
-								$bofiles->create_document_dir("fmticket/{$receipt['id']}");
-								$bofiles->vfs->override_acl = 1;
+								$to_file = $bofiles->fakebase . '/fmticket/' . $receipt['id'] . '/' . $file_name;
 
-								if (!$bofiles->vfs->cp(array(
-										'from'		 => $_FILES['file']['tmp_name'][$i],
-										'to'		 => $to_file,
-										'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+								if ($bofiles->vfs->file_exists(array(
+										'string'	 => $to_file,
+										'relatives'	 => array(RELATIVE_NONE)
+									)))
 								{
-									$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+									$receipt['error'][] = array('msg' => lang('This file already exists !'));
 								}
-								$bofiles->vfs->override_acl = 0;
+								else
+								{
+									$bofiles->create_document_dir("fmticket/{$receipt['id']}");
+									$bofiles->vfs->override_acl = 1;
+
+									if (!$bofiles->vfs->cp(array(
+											'from'		 => $_FILES['file']['tmp_name'][$i],
+											'to'		 => $to_file,
+											'relatives'	 => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+									{
+										$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+									}
+									$bofiles->vfs->override_acl = 0;
+								}
 							}
 						}
 					}
-				}
 				//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'property', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
+
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array(
+							'status' => 'saved',
+							'parent_cat_id' => $this->parent_cat_id,
+							'id' => $receipt['id'],
+							'message' => isset($receipt['error']) && $receipt['error'] ? implode(', ', $receipt['error']) : ''
+							);
+					}
 
 					if ((isset($values['save']) && $values['save']))
 					{
@@ -1775,7 +1792,8 @@ HTML;
 				'cat_select'					 => $cat_select,
 				'pref_send_mail'				 => (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : ''),
 				'fileupload'					 => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
-				'tabs'							 => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs'							 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file'))
 			);
 
 			//_debug_array($data);
@@ -1783,7 +1801,9 @@ HTML;
 			$function_msg	 = lang('add ticket');
 
 			self::add_javascript('property', 'portico', 'tts.add.js');
-			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+			phpgwapi_jquery::load_widget('file-upload-minimum');
+
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
