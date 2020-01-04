@@ -682,7 +682,8 @@ JS;
 			  lang: '{$lang}', // default: 'en-US'
 			  {$disableDragAndDrop}
 			  placeholder: '{$lang_placeholder}',
-			  toolbar: toolbarOptions
+			  height: 250,
+			  toolbar: toolbarOptions,
 //			  dialogsInBody: true
 			});
 		});

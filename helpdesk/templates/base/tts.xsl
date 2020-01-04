@@ -279,7 +279,7 @@
 									<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>new_note</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
 									<xsl:value-of select="php:function('lang', 'Please give som details !')"/>
