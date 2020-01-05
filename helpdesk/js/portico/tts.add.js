@@ -152,7 +152,8 @@ $(document).ready(function ()
 		modules: 'date, file',
 		validateOnBlur: true,
 		scrollToTopOnError: false,
-		errorMessagePosition: 'inline'
+		errorMessagePosition: 'inline',
+		validateHiddenInputs: true,
 	};
 
 	setTimeout(function ()
@@ -296,6 +297,28 @@ $.formUtils.addValidator({
 		return v;
 	},
 	errorMessage: 'Assigned is required',
+	errorMessageKey: ''
+});
+
+
+$.formUtils.addValidator({
+	name: 'new_note',
+	validatorFunction: function (value, $el, config, languaje, $form)
+	{
+		var element = document.getElementById('editor_error');
+		if(element)
+		{
+			element.parentNode.removeChild(element);
+		}
+		var v = true;
+		if ($('#new_note').summernote('isEmpty'))
+		{
+			$('<span id="editor_error" class="help-block form-error">').text('Angi detaljer').insertAfter($('.note-editor'));
+			v = false;
+		}
+		return v;
+	},
+	errorMessage: 'details are required',
 	errorMessageKey: ''
 });
 

@@ -60,14 +60,20 @@ function validate_submit()
 		default:
 	}
 
-
 	if (error)
 	{
 		alert('Feiltype må velges før meldingen kan avsluttes');
+		var send_buttons = $('.pure-button');
+		$(send_buttons).each(function ()
+		{
+			$(this).prop('disabled', false);
+		});
+
 	}
 	else
 	{
-		document.form.submit();
+		ajax_submit_form(action);
+//		document.form.submit();
 	}
 }
 

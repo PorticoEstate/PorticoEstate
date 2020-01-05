@@ -98,7 +98,7 @@ label {
 }
 
 #check_list_details fieldset {
-  padding: 0px 40px 10px 40px;
+  /*padding: 0px 40px 10px 40px;*/
 }
 
 * {
@@ -246,4 +246,11 @@ li.check_item_case ul li .col_3 {
 .centered {
   display: inline-block;
   vertical-align: middle;
+}
+
+
+/*Make the multiple file-upload work for manually selecting files*/
+
+.pure-form-stacked input[type="file"]{
+    margin: 0 0;
 }

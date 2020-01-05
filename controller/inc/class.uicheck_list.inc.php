@@ -684,7 +684,7 @@
 				'datatable_def'	=> $datatable_def,
 				'multiple_uploader' => true,
 				'multi_upload_parans' => "{menuaction:'controller.uicheck_list.build_multi_upload_file', id:'{$check_list_id}'}",
-//				'multi_upload_action' => self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $check_list_id))
+				'multi_upload_action' => self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $check_list_id))
 			);
 //			_debug_array($check_list); die();
 			$GLOBALS['phpgw']->jqcal2->add_listener('planned_date');
@@ -851,6 +851,13 @@
 			$id = phpgw::get_var('id', 'int');
 
 			phpgw::import_class('property.multiuploader');
+			
+			if(!$id)
+			{
+				$response = array(files => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			$options['fakebase'] = "/controller";
 			$options['base_dir'] = "check_list/{$id}";
