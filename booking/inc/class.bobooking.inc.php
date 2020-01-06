@@ -1031,7 +1031,21 @@
 					}
 				}
 
-				$to = clone $_to;					
+
+				$to = clone $_to;
+
+				if($resource['booking_day_horizon'])
+				{
+					$__to = clone $to;
+
+					$__to->modify("+{$resource['booking_day_horizon']} days");
+
+//					if($__to > $_to)
+					{
+						$to = clone $__to;
+					}
+				}
+
 				if($resource['booking_month_horizon'])
 				{
 					$__to = $this->month_shifter($from, $resource['booking_month_horizon']);
@@ -1042,6 +1056,16 @@
 					}
 				}
 
+				if($resource['simple_booking_end_date'])
+				{
+					$simple_booking_end_date = new DateTime(date('Y-m-d', $resource['simple_booking_end_date']));
+					$simple_booking_end_date->setTimezone($DateTimeZone);
+
+					if($simple_booking_end_date < $to)
+					{
+						$to = clone $simple_booking_end_date;
+					}
+				}
 
 				if ($resource['simple_booking'])
 				{
