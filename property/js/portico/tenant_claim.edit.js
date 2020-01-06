@@ -35,3 +35,11 @@ this.local_DrawCallback0 = function (container)
 	}
 
 };
+
+this.refresh_files = function ()
+{
+	base_java_url['action'] = 'get_files';
+	var oArgs = base_java_url;
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_1', strURL);
+};
