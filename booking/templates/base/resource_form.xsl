@@ -8,7 +8,7 @@
 		var default_schema = "<xsl:value-of select="resource/activity_name"/>";
 		var schema_type = "form";
 	</script>
-				
+
 	<form action="" method="POST" id="form" class="pure-form pure-form-aligned" name="form">
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
@@ -18,7 +18,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-					<input name="name" id="field_name" type="text" value="{resource/name}" class="pure-input-1-2">
+					<input name="name" id="field_name" type="text" value="{resource/name}" class="pure-input-3-4">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -33,7 +33,7 @@
 							<xsl:value-of select="php:function('lang', 'Resource category')" />
 						</label>
 						<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
-						<select id="field_rescategory_id" name="rescategory_id" class="pure-input-1-2">
+						<select id="field_rescategory_id" name="rescategory_id" class="pure-input-3-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -60,7 +60,7 @@
 							<xsl:value-of select="php:function('lang', 'Main activity')" />
 						</label>
 						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
-						<select id="field_activity_id" name="activity_id" class="pure-input-1-2">
+						<select id="field_activity_id" name="activity_id" class="pure-input-3-4">
 							<xsl:for-each select="activitydata/results">
 								<option value="{id}">
 									<xsl:if test="resource_id=id">
@@ -142,7 +142,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Resource Type')" />
 					</label>
-					<select name='type' id='field_type' class="pure-input-1-2">
+					<select name='type' id='field_type' class="pure-input-3-4">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -166,7 +166,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Active')"/>
 						</label>
-						<select id="field_active" name="active" class="pure-input-1-2">
+						<select id="field_active" name="active" class="pure-input-3-4">
 							<option value="1">
 								<xsl:if test="resource/active=1">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -201,13 +201,15 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'season')"/>
 					</label>
-					<select id="field_direct_booking_season_id" name="direct_booking_season_id" class="pure-input-1-2">
-<!--						<xsl:attribute name="data-validation">
+					<select id="field_direct_booking_season_id" name="direct_booking_season_id" class="pure-input-3-4">
+						<!--
+						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please select a season')" />
-						</xsl:attribute>-->
+						</xsl:attribute>
+						-->
 						<option value=''>
 							<xsl:value-of select="php:function('lang', 'Select')" />
 						</option>
@@ -242,7 +244,7 @@
 					</label>
 					<input type="text" id="simple_booking_start_date" name="simple_booking_start_date" size="10" readonly="readonly">
 						<xsl:attribute name="title">
-						<xsl:value-of select="php:function('lang', 'start date')"/>
+							<xsl:value-of select="php:function('lang', 'start date')"/>
 						</xsl:attribute>
 						<xsl:if test="resource/simple_booking_start_date != ''">
 							<xsl:attribute name="value">
@@ -284,7 +286,8 @@
 					</input>
 				</div>
 
-<!--				<div class="pure-control-group">
+				<!--
+				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default end')"/>
 					</label>
@@ -295,7 +298,8 @@
 							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
 						</xsl:attribute>
 					</input>
-				</div>-->
+				</div>
+				-->
 
 				<div class="pure-control-group">
 					<label>
@@ -411,7 +415,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
-					<div class="custom-container">
+					<div class="custom-container pure-input-3-4">
 						<textarea id="field_description" name="description" type="text">
 							<xsl:value-of select="resource/description"/>
 						</textarea>
@@ -421,7 +425,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Opening hours')" />
 					</label>
-					<div class="custom-container">
+					<div class="custom-container pure-input-3-4">
 						<textarea id="field_opening_hours" name="opening_hours" type="text">
 							<xsl:value-of select="resource/opening_hours"/>
 						</textarea>
@@ -431,7 +435,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Contact information')" />
 					</label>
-					<div class="custom-container">
+					<div class="custom-container pure-input-3-4">
 						<textarea id="field_contact_info" name="contact_info" type="text">
 							<xsl:value-of select="resource/contact_info"/>
 						</textarea>

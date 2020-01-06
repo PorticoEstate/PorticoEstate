@@ -813,3 +813,4 @@ Simple booking	booking	nn	Forenklet bestilling
 reservation	booking	nn	Reservasjon
 Booking	booking	nn	Booking
 default event type	booking	nn	Standard arrangement-type
+month horizon	booking	nn	Tidshorisont (mnd)

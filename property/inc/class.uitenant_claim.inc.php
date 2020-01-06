@@ -44,15 +44,17 @@
 		var $filter;
 		var $public_functions = array
 			(
-			'query'		 => true,
-			'query2'	 => true,
-			'index'		 => true,
-			'check'		 => true,
-			'view'		 => true,
-			'edit'		 => true,
-			'delete'	 => true,
-			'view_file'	 => true,
-			'close'		 => true
+			'query'						 => true,
+			'query2'					 => true,
+			'index'						 => true,
+			'check'						 => true,
+			'view'						 => true,
+			'edit'						 => true,
+			'delete'					 => true,
+			'view_file'					 => true,
+			'close'						 => true,
+			'handle_multi_upload_file'	 => true,
+			'update_data'				 => true
 		);
 
 		function __construct()
@@ -101,6 +103,56 @@
 				'allrows'		 => $this->allrows
 			);
 			$this->bo->save_sessiondata($data);
+		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir']	 = 'tenant_claim/' . $id;
+			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
+			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file',
+					'id'		 => $id)));
+			$upload_handler			 = new property_multiuploader($options, false);
+
+			if (!$id)
+			{
+				$response = array(files => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			switch ($_SERVER['REQUEST_METHOD'])
+			{
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					if ($this->simple)
+					{
+						$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+					}
+					else
+					{
+						$upload_handler->delete_file();
+					}
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
 		function view_file()
@@ -436,7 +488,7 @@
 			$result_data['draw']			 = $draw;
 
 			$link_data = array
-			(
+				(
 				'menuaction' => 'property.uitenant_claim.edit',
 			);
 
@@ -450,14 +502,14 @@
 			$unset = 0;
 			if (!isset($GLOBALS['phpgw_info']['server']['webserver_url']))
 			{
-				$GLOBALS['phpgw_info']['server']['webserver_url'] = "/";
-				$unset = 1;
+				$GLOBALS['phpgw_info']['server']['webserver_url']	 = "/";
+				$unset												 = 1;
 			}
 
 			if (is_array($data))
 			{
-				$link_array = $data;
-				$link_array['claim_id'] = $value['claim_id'];
+				$link_array				 = $data;
+				$link_array['claim_id']	 = $value['claim_id'];
 			}
 			else
 			{
@@ -472,7 +524,7 @@
 			}
 		}
 
-		public function query2(  )
+		public function query2()
 		{
 			$length				 = phpgw::get_var('length', 'int', 'REQUEST', 10);
 			$_REQUEST['start']	 = phpgw::get_var('startIndex');
@@ -904,8 +956,7 @@
 				'lang_start_date'					 => lang('Project start date'),
 				'value_start_date'					 => $project_values['start_date'],
 				'value_entry_date'					 => $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				'base_java_url'						 => json_encode(array(menuaction	 => "property.uitenant_claim.edit",
-					claim_id	 => $claim_id)),
+				'base_java_url'						 => json_encode(array(menuaction => "property.uitenant_claim.update_data", 'id' => $claim_id)),
 				'lang_end_date'						 => lang('Project end date'),
 				'value_end_date'					 => $project_values['end_date'],
 				'lang_charge_tenant'				 => lang('Charge tenant'),
@@ -986,18 +1037,78 @@
 				'tabs'								 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date',
-					'security', 'file'))
+					'security', 'file')),
+				'multi_upload_action'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitenant_claim.handle_multi_upload_file', 'id' => $claim_id)),
+				'multiple_uploader'					 => $claim_id ? true : '',
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Tenant claim') . ': ' . ($claim_id ? lang('edit claim') : lang('add claim'));
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			self::add_javascript('property', 'portico', 'tenant_claim.edit.js');
 
-			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'files'), array(
+			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'files', 'multi_upload_file_inline'), array(
 				'edit' => $data));
+		}
+
+		function update_data()
+		{
+			$action = phpgw::get_var('action', 'string', 'GET');
+			switch ($action)
+			{
+				case 'get_files':
+					return $this->get_files();
+					break;
+				default:
+			}
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'property.uitenant_claim.view_file',
+			);
+
+
+			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$_files = $this->bo->get_files($id);
+
+
+			$content_files = array();
+
+			foreach ($_files as $_entry)
+			{
+				$content_files[] = array(
+					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+				);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data'				 => $content_files,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+			return $content_files;
 		}
 
 		function delete()
