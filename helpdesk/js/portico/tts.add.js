@@ -380,12 +380,13 @@ $(window).on('load', function ()
 		var on_behalf_of_lid = ui.item.value;
 		try
 		{
-			var temp = document.getElementById("new_note").value;
-			if (temp)
-			{
-				temp = temp + "\n";
-			}
-			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+//			var temp = document.getElementById("new_note").value;
+//			if (temp)
+//			{
+//				temp = temp + "\n";
+//			}
+//			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+			$('textarea#new_note').summernote('insertText', "Saken gjelder: " + ui.item.label);
 
 			var conf = {
 				modules: 'location, date, security, file',
@@ -425,12 +426,14 @@ $(window).on('load', function ()
 		var set_user_alternative_lid = ui.item.value;
 		try
 		{
-			var temp = document.getElementById("new_note").value;
-			if (temp)
-			{
-				temp = temp + "\n";
-			}
-			document.getElementById("new_note").value = temp + "Saken sendes til: " + ui.item.label;
+//			var temp = document.getElementById("new_note").value;
+//			if (temp)
+//			{
+//				temp = temp + "\n";
+//			}
+//			document.getElementById("new_note").value = temp + "Saken sendes til: " + ui.item.label;
+//			$('textarea#new_note').summernote('reset');
+			$('textarea#new_note').summernote('insertText', "Saken sendes til: " + ui.item.label);
 		}
 		catch (err)
 		{
