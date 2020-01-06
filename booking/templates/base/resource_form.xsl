@@ -256,9 +256,33 @@
 
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'end date')"/>
+					</label>
+					<input type="text" id="simple_booking_end_date" name="simple_booking_end_date" size="10" readonly="readonly">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'end date')"/>
+						</xsl:attribute>
+						<xsl:if test="resource/simple_booking_end_date != ''">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_end_date))"/>
+							</xsl:attribute>
+						</xsl:if>
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'day horizon')"/>
+					</label>
+					<input type="number" min="1" id="booking_day_horizon" name="booking_day_horizon" value="{resource/booking_day_horizon}">
+					</input>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'month horizon')"/>
 					</label>
-					<input type="number" min="2" id="booking_month_horizon" name="booking_month_horizon" value="{resource/booking_month_horizon}">
+					<input type="number" min="1" id="booking_month_horizon" name="booking_month_horizon" value="{resource/booking_month_horizon}">
 					</input>
 				</div>
 

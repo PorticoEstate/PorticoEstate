@@ -14,6 +14,18 @@ $(document).ready(function ()
 		get_custom_fields($(this).val());
 		populate_rescategory_select($(this).val());
 	});
+
+
+	$("#booking_day_horizon").change(function ()
+	{
+		$("#booking_month_horizon").val('');
+	});
+
+	$("#booking_month_horizon").change(function ()
+	{
+		$("#booking_day_horizon").val('');
+	});
+
 });
 
 get_custom_fields = function (schema_activity_id, schema)
@@ -191,3 +203,4 @@ removeELock = function ()
 		}
 	});
 };
+
