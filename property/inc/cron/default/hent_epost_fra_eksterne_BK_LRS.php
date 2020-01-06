@@ -944,6 +944,7 @@
 					createObject('helpdesk.boexternal_communication')->alert_assigned($msg_id);
 				}
 
+				createObject('helpdesk.sotts')->reset_views($ticket_id);
 				return $ticket_id;
 			}
 		}
