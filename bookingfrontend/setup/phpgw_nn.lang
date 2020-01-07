@@ -80,7 +80,7 @@ choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeper
 chosen rent object	bookingfrontend	nn	Valde leigeobjekter
 chosen rent period	bookingfrontend	nn	Valde leigeperioder
 choose rent period	bookingfrontend	nn	Velg leigeperiode
-choose target audience	bookingfrontend	no	Vel målgruppe for arrangement / aktiviteten
+choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
 create	bookingfrontend	nn	Lagre
 created	bookingfrontend	nn	Oppretta
 dashboard	bookingfrontend	nn	Skrivebord
@@ -491,4 +491,3 @@ Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
 available	bookingfrontend	nn	Ledig
 leased	bookingfrontend	nn	Utleigd
-choose target audience	bookingfrontend	nn	Velg målgruppe
