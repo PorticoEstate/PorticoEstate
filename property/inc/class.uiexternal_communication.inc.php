@@ -327,7 +327,12 @@
 
 			if (!$id)
 			{
-				$initial_message = nl2br($ticket['details']);
+				$initial_message = $ticket['details'];
+
+				if($initial_message == strip_tags($initial_message))
+				{
+					$initial_message = nl2br($initial_message);
+				}
 			}
 
 			$additional_notes = array_merge($notes, $additional_notes);

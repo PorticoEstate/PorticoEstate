@@ -211,7 +211,7 @@ function validate_submit()
 	}
 	else
 	{
-		ajax_submit_form(action);
+		ajax_submit_form('dummy');
 //		document.form.submit();
 	}
 }
