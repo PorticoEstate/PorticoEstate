@@ -224,7 +224,13 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uidocument.document_types',
 							'menu_selection' => 'admin::controller::controller_document_types')),
 						'text' => lang('Document types')
-					)
+					),
+					'settings' =>  array(
+						'text' => lang('settings'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
+						'image' => array('property', 'location_1')
+					),
+
 				);
 			}
 

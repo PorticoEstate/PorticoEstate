@@ -48,7 +48,15 @@
 		{
 			parent::__construct();
 
-			self::set_active_menu('controller::settings');
+
+			if($GLOBALS['phpgw_info']['server']['template_set'] == 'mobilefrontend')
+			{
+				self::set_active_menu('controller::settings');
+			}
+			else
+			{
+				self::set_active_menu('admin::controller::settings');
+			}
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('preferences');
 
