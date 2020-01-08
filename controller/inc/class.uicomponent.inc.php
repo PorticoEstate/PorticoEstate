@@ -122,6 +122,7 @@
 			}
 
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status components');
 
 		}
 
