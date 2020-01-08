@@ -315,18 +315,23 @@
 			$users = array();
 			while ($this->db->next_record())
 			{
-				$users[] = $this->db->f('user_id');
+				$users[] = array(
+					'user_id' => $this->db->f('user_id'),
+					'roles'  => $this->db->f('roles')
+				);
+
 			}
 
 			$values = array();
 
 			$sort_names = array();
-			foreach ($users as $user_id)
+			foreach ($users as $user)
 			{
-				$name = $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				$name = $GLOBALS['phpgw']->accounts->get($user['user_id'])->__toString();
 				$sort_names[] = $name;
 				$values[] = array(
-					'id'	=> $user_id,
+					'id'	=> $user['user_id'],
+					'roles'	=> $user['roles'],
 					'name'	=> $name
 				);
 			}
