@@ -115,6 +115,9 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('Check_list');
+
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 

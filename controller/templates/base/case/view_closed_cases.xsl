@@ -21,12 +21,12 @@
 			</xsl:when>
 		</xsl:choose>
 
- 
+
 		<div id="view_cases">
 			<xsl:call-template name="cases_tab_menu">
 				<xsl:with-param name="active_tab">view_closed_cases</xsl:with-param>
 			</xsl:call-template>
-	
+
 			<div class="tab_item active">
 				<xsl:choose>
 					<xsl:when test="closed_check_items_and_cases/child::node()">
@@ -58,13 +58,13 @@
 																<xsl:number />
 															</span>.
 														</div>
-										
+
 														<!--  ==================== COL2: CASE CONTENT ===================== -->
 														<div class="col_2">
-										
+
 															<!--  =============== SHOW CASE INFO ============= -->
 															<div class="case_info">
-																								
+
 																<xsl:choose>
 																	<xsl:when test="component_descr != ''">
 																		<div class="row">
@@ -97,6 +97,7 @@
 																		</xsl:for-each>
 																	</span>
 																</div>
+
 																<xsl:if test="measurement !=''">
 																	<!--  MEASUREMENT -->
 																	<div class="row">
@@ -111,6 +112,8 @@
 																<div class="row">
 																	<label>Beskrivelse:</label>
 																</div>
+
+																<!--  DESCRIPTION -->
 																<div class="case_descr">
 																	<xsl:value-of select="descr"/>
 																</div>
@@ -140,12 +143,12 @@
 																		<xsl:for-each select="case_files">
 
 																			<!-- Full-width images with number and caption text -->
-																			<div class="mySlides fade">
+																			<div class="col-md-4">
 																				<div class="numbertext">
 																					<xsl:number />	/ <xsl:value-of select="$file_count"/>
 																				</div>
-																				<img src="{$get_image_url}&amp;file_id={file_id}" style="width:100%"/>
-																				<div class="text">
+																				<img src="{$get_image_url}&amp;file_id={file_id}" class="img-fluid"/>
+																				<div class="caption">
 																					<xsl:value-of select="name"/>
 																				</div>
 																			</div>
@@ -154,10 +157,9 @@
 																	</div>
 																	<br/>
 																</xsl:if>
-
 																<!-- === QUICK EDIT MENU === -->
 																<div class="quick_menu">
-																	<a class="open_case">
+																	<a class="open_case btn btn-primary btn-lg mr-3">
 																		<xsl:attribute name="href">
 																			<xsl:text>index.php?menuaction=controller.uicase.open_case</xsl:text>
 																			<xsl:text>&amp;case_id=</xsl:text>
@@ -171,7 +173,7 @@
 																	</a>
 																	<xsl:choose>
 																		<xsl:when test="location_item_id = 0">
-																			<a class="delete_case">
+																			<a class="delete_case btn btn-primary btn-lg mr-3">
 																				<xsl:attribute name="href">
 																					<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 																					<xsl:text>&amp;case_id=</xsl:text>
@@ -207,7 +209,7 @@
 																</xsl:otherwise>
 															</xsl:choose>
 														</div>
-										
+
 													</li>
 												</xsl:for-each>
 											</ul>

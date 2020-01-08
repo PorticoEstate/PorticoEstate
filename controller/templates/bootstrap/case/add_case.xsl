@@ -5,7 +5,7 @@
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
 
-	<div id="main_content" class="medium container">
+	<div id="main_content" class="container">
 		<a href="#" class="scrollup">
 			<xsl:value-of select="php:function('lang', 'scroll to top')" />
 		</a>
@@ -46,9 +46,6 @@
 				</div>
 			</xsl:when>
 		</xsl:choose>
-		<xsl:call-template name="check_list_change_status">
-			<xsl:with-param name="active_tab">add_case</xsl:with-param>
-		</xsl:call-template>
 
 		<div id="view_cases" class="container mt-4">
 			<xsl:choose>
@@ -58,11 +55,11 @@
 					</xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
-			<!-- differ from bootstrap-->
-			<!--			<h5>
+
+			<h5>
 				<a href="#" data-toggle="modal" data-target="#inspectObject">
 					<img src="{img_add2}" width="23" class="mr-2"/>Utfør kontroll</a>
-			</h5>-->
+			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
 			<div class="modal fade" id="inspectObject">
@@ -481,21 +478,16 @@
 						</div>
 
 						<!-- Modal footer -->
-
-						<xsl:choose>
-							<xsl:when test="component_children/child::node() and count(component_children) &gt; 0">
-								<form method="post">
-									<xsl:attribute name="action">
-										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
-									</xsl:attribute>
-									<input type="hidden" name ="check_list_id" value="{check_list/id}"></input>
-									<input type="hidden" name ="item_string" id="item_string" value=""></input>
-									<div class="modal-footer">
-										<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig (delskjema)</button>
-									</div>
-								</form>
-							</xsl:when>
-						</xsl:choose>
+						<form method="post">
+							<xsl:attribute name="action">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
+							</xsl:attribute>
+							<input type="hidden" name ="check_list_id" value="{check_list/id}"></input>
+							<input type="hidden" name ="item_string" id="item_string" value=""></input>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -503,6 +495,9 @@
 
 
 		</div>
+		<xsl:call-template name="check_list_change_status">
+			<xsl:with-param name="active_tab">add_case</xsl:with-param>
+		</xsl:call-template>
 	</div>
 
 </xsl:template>
