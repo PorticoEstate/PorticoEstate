@@ -12,7 +12,9 @@
 	<div id="main_content" class="medium">
 		
 		<!-- ==================  CHECK LIST TOP SECTION  ===================== -->
-		<xsl:call-template name="check_list_top_section" />
+		<xsl:call-template name="check_list_top_section" >
+			<xsl:with-param name="active_tab">view_details</xsl:with-param>
+		</xsl:call-template>
 	
 		<!-- ==================  CHECKLIST DETAILS  ===================== -->
 		<div id="check_list_details">
