@@ -1854,7 +1854,9 @@
 
 			if ($check_list_status == controller_check_list::STATUS_DONE)
 			{
-				$check_list->set_completed_date(time());
+				$completed_date = $check_list->get_deadline() < time() ? $check_list->get_deadline() : time();
+
+				$check_list->set_completed_date($check_list->get_deadline());
 			}
 			else
 			{

@@ -43,11 +43,11 @@ $(document).ready(function ()
 	{
 		var thisForm = $(this);
 		var statusFieldVal = $("#status").val();
-		var statusRow = $("#status").closest(".row");
+		var statusRow = $("#status");
 		var plannedDateVal = $("#planned_date").val();
-		var plannedDateRow = $("#planned_date").closest(".row");
+		var plannedDateRow = $("#planned_date");
 		var completedDateVal = $("#completed_date").val();
-		var completedDateRow = $("#completed_date").closest(".row");
+		var completedDateRow = $("#completed_date");
 
 		$(thisForm).find(".input_error_msg").remove();
 
@@ -61,9 +61,10 @@ $(document).ready(function ()
 		// Is COMPLETED DATE assigned when STATUS is not done
 		else if (statusFieldVal == 0 && completedDateVal != '')
 		{
-			e.preventDefault();
+			$("#status").val(1);
+//			e.preventDefault();
 			// Displays error message above completed date
-			$(statusRow).before("<div class='input_error_msg'>Du har angitt utførtdato, men status er Ikke utført. Vennligst endre status til utført</div>");
+//			$(statusRow).before("<div class='input_error_msg'>Du har angitt utførtdato, men status er Ikke utført. Vennligst endre status til utført</div>");
 		}
 	});
 

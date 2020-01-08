@@ -1199,7 +1199,8 @@
 
 			if($GLOBALS['phpgw_info']['server']['template_set'] == 'mobilefrontend')
 			{
-				$url_target = '_self';
+//				$url_target = '_self';
+				$url_target = '_blank';
 			}
 			else
 			{
