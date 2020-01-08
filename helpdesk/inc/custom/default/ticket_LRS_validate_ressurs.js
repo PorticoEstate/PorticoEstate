@@ -211,8 +211,10 @@ function validate_submit()
 	}
 	else
 	{
-		ajax_submit_form(action);
-//		document.form.submit();
+		/**
+		 * In order to be consistent with the commit-processes in both "add" and "view"
+		 */
+		ajax_submit_form('dummy');
 	}
 }
 

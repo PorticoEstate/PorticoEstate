@@ -23,12 +23,17 @@ this.confirm_session = function (action)
 		}
 	}
 
-	if ($("#send_email").prop("checked") == true)
+	if ($("#send_email").prop("checked") == true && action !== 'external_communication')
 	{
 		if (!confirm("Vil du sende epost?\n\"Cancel\" vil lagre posten uten varsling"))
 		{
 			$("#send_email").prop("checked", false);
 		}
+	}
+
+	if ( action === 'external_communication')
+	{
+		$("#send_email").prop("checked", false);
 	}
 
 	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
@@ -69,6 +74,11 @@ this.confirm_session = function (action)
 	});
 };
 
+//Dummy function, called from custom function in view-mode
+ajax_submit_form = function (action)
+{
+	document.form.submit();
+};
 
 function SmsCountKeyUp(maxChar)
 {
