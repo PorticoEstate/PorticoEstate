@@ -1354,9 +1354,18 @@
 						$this->_set_required_control_items($check_list);
 					}
 
+					$ret = $this->notify_supervisor($check_list);
+
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
-						return array("status" => 'ok', 'message' => lang('Ok'));
+						if($ret)
+						{
+							return $ret;
+						}
+						else
+						{
+							return array("status" => 'ok', 'message' => lang('Ok'));
+						}
 					}
 					else if($submit_deviation)
 					{
@@ -1867,122 +1876,13 @@
 
 			if ($this->so->store($check_list))
 			{
+
 				/**
 				 * create message....
 				 */
+
+				return $this->notify_supervisor($check_list);
 				
-				$message = '';
-				if($check_list_status == controller_check_list::STATUS_DONE)
-				{
-					$contacts	 = CreateObject('phpgwapi.contacts');
-
-					$message_ret = $this->create_messages($check_list->get_control_id(),$check_list_id,$check_list->get_location_code());
-					if($message_ret['message_ticket_id'])
-					{
-						$message = lang('%1 case(s) sent as message %2', $message_ret['num_cases'], $message_ret['message_ticket_id']);
-					}
-
-					$to_notify = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), 1 | 4);
-					$validator = CreateObject('phpgwapi.EmailAddressValidator');
-					$toarray = array();
-					foreach ($to_notify as $entry)
-					{
-						$account_lid = $GLOBALS['phpgw']->accounts->get($entry['id'])->lid;
-						$person_id = $GLOBALS['phpgw']->accounts->get($entry['id'])->person_id;
-
-						if ($validator->check_email_address($account_lid))
-						{
-							$toarray[] = $account_lid;
-						}
-						else
-						{
-							$prefs = CreateObject('property.bocommon')->create_preferences('property',$entry['id']);
-							if ($validator->check_email_address($prefs['email']))
-							{
-								$toarray[] = $prefs['email'];
-							}
-							else
-							{
-								$contact_data	 = $contacts->read_single_entry($person_id, array('email'));
-								$contact['value_contact_email']	 = $contact_data[0]['email'];
-								if ($validator->check_email_address($contact['value_contact_email']))
-								{
-									$toarray[] = $contact['value_contact_email'];
-								}
-							}
-						}
-					}
-
-					$rc = false;
-					if($toarray)
-					{
-						$to = implode(';',$toarray);
-
-						$from_name = 'NoReply';
-						$config = CreateObject('phpgwapi.config', 'controller')->read();
-						if(!empty($config['from_email']))
-						{
-							$from_address =$config['from_email'];
-						}
-						else
-						{
-							$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
-						}
-
-						$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id'], false, true));
-						$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id(), false, true));
-						$control = $this->so_control->get_single($check_list->get_control_id());
-						$control_title = $control->get_title();
-						$location_desc = $this->get_location_desc($check_list);
-
-						$html = <<<HTML
-							<p>$control_title</p>
-							<p>{$location_desc['location_name']}</p>
-							<p>{$location_desc['short_desc']}</p>
-							<p>$message</p>
-							<br/>
-							<a href="$check_list_link">Sjekkliste</a>
-
-HTML;
-
-						if(!empty($message_ret['message_ticket_id']))
-						{
-							$html .= <<<HTML
-								<br/>
-								<a href="$ticket_link">Melding</a>
-HTML;
-						}
-
-
-						if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
-						{
-							$send = CreateObject('phpgwapi.send');
-							try
-							{
-								$subject = "Kontroll gjennomført";
-								$rc = $send->msg('email', $to, $subject, $html, '', $cc='', $bcc='',$from_address, $from_name,'html');
-							}
-							catch (Exception $e)
-							{
-								$receipt['error'][] = array('msg' => $e->getMessage());
-							}
-						}
-						else
-						{
-							$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
-						}
-
-						if($rc)
-						{
-							$message .= "\nVarslet:\n" . implode("\n",$toarray);
-						}
-					}
-				}
-
-				return array(
-					'status' => $check_list_status,
-					'message' => $message
-					);
 			}
 			else
 			{
@@ -1991,6 +1891,131 @@ HTML;
 		}
 
 
+		private function notify_supervisor($check_list)
+		{
+			$message = '';
+			if($check_list->get_status() == controller_check_list::STATUS_DONE)
+			{
+				$contacts	 = CreateObject('phpgwapi.contacts');
+
+				$message_ret = $this->create_messages($check_list->get_control_id(),$check_list_id,$check_list->get_location_code());
+				/**
+				 * "1" => supervisor
+				 * "2" => operator
+				 * "4" => District - supervisor
+				 */
+				if($message_ret['message_ticket_id'])
+				{
+					$role = 1 | 4;
+					$message = lang('%1 case(s) sent as message %2', $message_ret['num_cases'], $message_ret['message_ticket_id']);
+				}
+				else
+				{
+					$role = 1;
+				}
+
+				$to_notify = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), $role);
+				$validator = CreateObject('phpgwapi.EmailAddressValidator');
+				$toarray = array();
+				foreach ($to_notify as $entry)
+				{
+					$account_lid = $GLOBALS['phpgw']->accounts->get($entry['id'])->lid;
+					$person_id = $GLOBALS['phpgw']->accounts->get($entry['id'])->person_id;
+
+					if ($validator->check_email_address($account_lid))
+					{
+						$toarray[] = $account_lid;
+					}
+					else
+					{
+						$prefs = CreateObject('property.bocommon')->create_preferences('property',$entry['id']);
+						if ($validator->check_email_address($prefs['email']))
+						{
+							$toarray[] = $prefs['email'];
+						}
+						else
+						{
+							$contact_data	 = $contacts->read_single_entry($person_id, array('email'));
+							$contact['value_contact_email']	 = $contact_data[0]['email'];
+							if ($validator->check_email_address($contact['value_contact_email']))
+							{
+								$toarray[] = $contact['value_contact_email'];
+							}
+						}
+					}
+				}
+
+				$rc = false;
+				if($toarray)
+				{
+					$to = implode(';',$toarray);
+
+					$from_name = 'NoReply';
+					$config = CreateObject('phpgwapi.config', 'controller')->read();
+					if(!empty($config['from_email']))
+					{
+						$from_address =$config['from_email'];
+					}
+					else
+					{
+						$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
+					}
+
+					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id'], false, true));
+					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id(), false, true));
+					$control = $this->so_control->get_single($check_list->get_control_id());
+					$control_title = $control->get_title();
+					$location_desc = $this->get_location_desc($check_list);
+
+					$html = <<<HTML
+						<p>$control_title</p>
+						<p>{$location_desc['location_name']}</p>
+						<p>{$location_desc['short_desc']}</p>
+						<p>$message</p>
+						<br/>
+						<a href="$check_list_link">Sjekkliste</a>
+
+HTML;
+
+					if(!empty($message_ret['message_ticket_id']))
+					{
+						$html .= <<<HTML
+							<br/>
+							<a href="$ticket_link">Melding</a>
+HTML;
+					}
+
+
+					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					{
+						$send = CreateObject('phpgwapi.send');
+						try
+						{
+							$subject = "Kontroll gjennomført";
+							$rc = $send->msg('email', $to, $subject, $html, '', $cc='', $bcc='',$from_address, $from_name,'html');
+						}
+						catch (Exception $e)
+						{
+							$receipt['error'][] = array('msg' => $e->getMessage());
+						}
+					}
+					else
+					{
+						$receipt['error'][] = array('msg'=>lang('SMTP server is not set! (admin section)'));
+					}
+
+					if($rc)
+					{
+						$message .= "\nVarslet:\n" . implode("\n",$toarray);
+					}
+				}
+			}
+
+			return array(
+				'status' => $check_list->get_status(),
+				'message' => $message
+				);
+		}
 		public function get_location_desc( $check_list )
 		{
 			$location_id = $check_list->get_location_id();
