@@ -4,120 +4,111 @@
 		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.get_image,phpgw_return_as:json')" />
 	</xsl:variable>
 
-	<div id="main_content" class="medium">
+	<div id="main_content" class="container">
 
 		<div id="check-list-heading">
-			<div class="box-1">
-				<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
-				<xsl:choose>
-					<xsl:when test="type = 'component'">
-						<h2>
-							<xsl:value-of select="component_array/xml_short_desc"/>
-						</h2>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="location_level = 1">
-								<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
-							</xsl:when>
-							<xsl:otherwise>
-								<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
+			<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
+			<xsl:choose>
+				<xsl:when test="type = 'component'">
+					<h2>
+						<xsl:value-of select="component_array/xml_short_desc"/>
+					</h2>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="location_level = 1">
+							<h2>Eiendom: <xsl:value-of select="location_array/loc1_name"/></h2>
+						</xsl:when>
+						<xsl:otherwise>
+							<h2>Bygg: <xsl:value-of select="location_array/loc2_name"/></h2>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 
-			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
+		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 
-			<!-- differ from bootstrap-->
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+		<nav class="navbar bg-dark navbar-dark">
 
-				<!-- LOGO -->
-				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
-					<xsl:value-of select="php:function('lang', 'create_case_message')"/>
-				</a>
-<!--
-				<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
-					<span class="navbar-toggler-icon"></span>
-				</button>
--->
-				<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
+			<!-- LOGO -->
+			<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<xsl:value-of select="php:function('lang', 'create_case_message')"/>
+			</a>
+			<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
 
-					<ul class="navbar-nav">
-						<xsl:call-template name="check_list_menu" >
-							<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
-						</xsl:call-template>
+				<ul class="navbar-nav">
+					<xsl:call-template name="check_list_menu" >
+						<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
+					</xsl:call-template>
 
-						<xsl:choose>
-							<xsl:when test="type = 'component'">
-								<li class="nav-item">
+					<xsl:choose>
+						<xsl:when test="type = 'component'">
+							<li class="nav-item">
 
-									<a class="nav-link">
-										<xsl:attribute name="href">
-											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
-											<xsl:text>&amp;year=</xsl:text>
-											<xsl:value-of select="current_year"/>
-											<xsl:text>&amp;month=</xsl:text>
-											<xsl:value-of select="current_month_nr"/>
-											<xsl:text>&amp;location_id=</xsl:text>
-											<xsl:value-of select="component_array/location_id"/>
-											<xsl:text>&amp;component_id=</xsl:text>
-											<xsl:value-of select="component_array/id"/>
-											<xsl:text>&amp;get_locations=</xsl:text>
-											<xsl:value-of select="get_locations"/>
-										</xsl:attribute>
-										<i class="fa fa-calendar" aria-hidden="true"></i>
-										<xsl:text> </xsl:text>
-										Kontrollplan for komponent (år)
-									</a>
-								</li>
-							</xsl:when>
-							<xsl:otherwise>
-								<li class="nav-item">
-									<a class="nav-link">
-										<xsl:attribute name="href">
-											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
-											<xsl:text>&amp;year=</xsl:text>
-											<xsl:value-of select="current_year"/>
-											<xsl:text>&amp;location_code=</xsl:text>
-											<xsl:value-of select="location_array/location_code"/>
-										</xsl:attribute>
-										<i class="fa fa-calendar" aria-hidden="true"></i>
-										<xsl:text> </xsl:text>
-										Kontrollplan for bygg/eiendom (år)
-									</a>
-								</li>
-								<li class="nav-item">
+								<a class="nav-link">
+									<xsl:attribute name="href">
+										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
+										<xsl:text>&amp;year=</xsl:text>
+										<xsl:value-of select="current_year"/>
+										<xsl:text>&amp;month=</xsl:text>
+										<xsl:value-of select="current_month_nr"/>
+										<xsl:text>&amp;location_id=</xsl:text>
+										<xsl:value-of select="component_array/location_id"/>
+										<xsl:text>&amp;component_id=</xsl:text>
+										<xsl:value-of select="component_array/id"/>
+										<xsl:text>&amp;get_locations=</xsl:text>
+										<xsl:value-of select="get_locations"/>
+									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
+									Kontrollplan for komponent (år)
+								</a>
+							</li>
+						</xsl:when>
+						<xsl:otherwise>
+							<li class="nav-item">
+								<a class="nav-link">
+									<xsl:attribute name="href">
+										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_year' )" />
+										<xsl:text>&amp;year=</xsl:text>
+										<xsl:value-of select="current_year"/>
+										<xsl:text>&amp;location_code=</xsl:text>
+										<xsl:value-of select="location_array/location_code"/>
+									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
+									Kontrollplan for bygg/eiendom (år)
+								</a>
+							</li>
+							<li class="nav-item">
 
-									<a class="nav-link">
-										<xsl:attribute name="href">
-											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
-											<xsl:text>&amp;year=</xsl:text>
-											<xsl:value-of select="current_year"/>
-											<xsl:text>&amp;month=</xsl:text>
-											<xsl:value-of select="current_month_nr"/>
-											<xsl:text>&amp;location_code=</xsl:text>
-											<xsl:value-of select="location_array/location_code"/>
-										</xsl:attribute>
-										<i class="fa fa-calendar" aria-hidden="true"></i>
-										<xsl:text> </xsl:text>
-										Kontrolplan for bygg/eiendom (måned)
-									</a>
-								</li>
-							</xsl:otherwise>
-						</xsl:choose>
-					</ul>
-				</div>
+								<a class="nav-link">
+									<xsl:attribute name="href">
+										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicalendar.view_calendar_for_month' )" />
+										<xsl:text>&amp;year=</xsl:text>
+										<xsl:value-of select="current_year"/>
+										<xsl:text>&amp;month=</xsl:text>
+										<xsl:value-of select="current_month_nr"/>
+										<xsl:text>&amp;location_code=</xsl:text>
+										<xsl:value-of select="location_array/location_code"/>
+									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
+									Kontrolplan for bygg/eiendom (måned)
+								</a>
+							</li>
+						</xsl:otherwise>
+					</xsl:choose>
+				</ul>
 			</div>
+		</nav>
 
 		<!-- =======================  INFO ABOUT MESSAGE  ========================= -->
 		<h3 class="box_header ext">Registrer melding</h3>
-		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
-		<xsl:call-template name="check_list_change_status">
-			<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
-		</xsl:call-template>
 		<div id="caseMessage" class="box ext">
 			<xsl:choose>
 				<xsl:when test="check_items_and_cases/child::node()">
@@ -322,6 +313,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+		<xsl:call-template name="check_list_change_status">
+			<xsl:with-param name="active_tab">create_case_message</xsl:with-param>
+		</xsl:call-template>
 
 	</div>
 </xsl:template>

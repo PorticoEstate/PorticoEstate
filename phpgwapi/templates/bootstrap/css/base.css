@@ -342,3 +342,9 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 .pastable.pastable-focus{
 	box-shadow: 0 0 10px black;
 }
+
+/*Make the multiple file-upload work for manually selecting files*/
+
+.pure-form-stacked input[type="file"]{
+    margin: 0 0;
+}

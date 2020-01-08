@@ -247,10 +247,3 @@ li.check_item_case ul li .col_3 {
   display: inline-block;
   vertical-align: middle;
 }
-
-
-/*Make the multiple file-upload work for manually selecting files*/
-
-.pure-form-stacked input[type="file"]{
-    margin: 0 0;
-}

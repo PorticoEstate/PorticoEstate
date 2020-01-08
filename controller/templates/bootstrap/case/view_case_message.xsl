@@ -1,10 +1,10 @@
 <!-- $Id: edit_check_list.xsl 8374 2011-12-20 07:45:04Z vator $ -->
 <xsl:template match="data" name="view_check_list" xmlns:php="http://php.net/xsl">
 
-	<div id="main_content" class="medium">
+	<div id="main_content" class="container">
 
 		<div id="check-list-heading">
-			<div class="box-1">
+			<div>
 				<h1>Kontroll: <xsl:value-of select="control/title"/></h1>
 				<xsl:choose>
 					<xsl:when test="type = 'component'">
@@ -55,18 +55,15 @@
 			</div>
 
 			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-			<!-- differ from bootstrap-->
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
+			<nav class="navbar bg-dark navbar-dark">
 
 				<!-- LOGO -->
 				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
 					<xsl:value-of select="php:function('lang', 'view case message')"/>
 				</a>
-				<!--
 				<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				-->
 				<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
 
 					<ul class="navbar-nav">
@@ -131,7 +128,7 @@
 						</xsl:choose>
 					</ul>
 				</div>
-			</div>
+			</nav>
 
 		</div>
 

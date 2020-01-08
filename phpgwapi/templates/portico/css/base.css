@@ -569,3 +569,8 @@ SPAN.expander {
 	box-shadow: 0 0 10px black;
 }
 
+/*Make the multiple file-upload work for manually selecting files*/
+
+.pure-form-stacked input[type="file"]{
+    margin: 0 0;
+}
