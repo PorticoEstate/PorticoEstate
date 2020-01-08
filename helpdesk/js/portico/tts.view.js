@@ -74,7 +74,7 @@ this.confirm_session = function (action)
 	});
 };
 
-//Dummy function
+//Dummy function, called from custom function in view-mode
 ajax_submit_form = function (action)
 {
 	document.form.submit();
