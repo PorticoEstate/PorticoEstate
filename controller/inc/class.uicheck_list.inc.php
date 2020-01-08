@@ -1856,7 +1856,7 @@
 			{
 				$completed_date = $check_list->get_deadline() < time() ? $check_list->get_deadline() : time();
 
-				$check_list->set_completed_date($check_list->get_deadline());
+				$check_list->set_completed_date($completed_date);
 			}
 			else
 			{
