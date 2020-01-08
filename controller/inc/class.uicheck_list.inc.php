@@ -1855,7 +1855,6 @@
 			if ($check_list_status == controller_check_list::STATUS_DONE)
 			{
 				$completed_date = $check_list->get_deadline() < time() ? $check_list->get_deadline() : time();
-
 				$check_list->set_completed_date($completed_date);
 			}
 			else
@@ -1923,7 +1922,7 @@
 						$config = CreateObject('phpgwapi.config', 'controller')->read();
 						if(!empty($config['from_email']))
 						{
-							$from_address = $this->config->config_data['from_email'];
+							$from_address =$config['from_email'];
 						}
 						else
 						{
