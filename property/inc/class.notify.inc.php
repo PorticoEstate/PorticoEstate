@@ -124,7 +124,7 @@
 					$account_id				 = $this->_db2->f('account_id');
 					$entry['account_id']	 = $account_id;
 					$entry['account_lid']	 = $this->_db2->f('account_lid');
-					$prefs					 = $socommon->create_preferences('property', $account_id);
+					$prefs					 = $socommon->create_preferences('common', $account_id);
 
 					$entry['email']	 = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
 					$entry['sms']	 = isset($entry['sms']) && $entry['sms'] ? $entry['sms'] : $prefs['cellphone'];

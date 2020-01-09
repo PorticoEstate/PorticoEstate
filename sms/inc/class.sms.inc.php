@@ -143,7 +143,7 @@
 
 			//	$GLOBALS['phpgw']->preferences->account_id = $this->account;
 			//	$GLOBALS['phpgw']->preferences->read();
-			$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
+			$mobile = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			return $mobile;
 		}
 
@@ -438,7 +438,7 @@
 				}
 				//	$GLOBALS['phpgw']->preferences->account_id = $uid;
 				//	$GLOBALS['phpgw']->preferences->read();
-				$mobile = $GLOBALS['phpgw_info']['user']['preferences']['sms']['cellphone'];
+				$mobile = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 				$email = $GLOBALS['phpgw_info']['user']['preferences']['email']['address'];
 
 				if ($uid)

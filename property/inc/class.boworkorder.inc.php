@@ -934,7 +934,7 @@
 
 			$project			 = ExecMethod('property.boproject.read_single_mini', $workorder['project_id']);
 			$coordinator		 = $project['coordinator'];
-			$prefs_coordinator	 = $this->bocommon->create_preferences('property', $coordinator);
+			$prefs_coordinator	 = $this->bocommon->create_preferences('common', $coordinator);
 			if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 			{
 				$toarray[] = $prefs_coordinator['email'];
@@ -949,10 +949,10 @@
 					return false;
 				}
 
-				if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['email'])
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['email']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['email'])
 				{
 					$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 				}
 				else
 				{

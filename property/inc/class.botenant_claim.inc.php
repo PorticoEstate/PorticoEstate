@@ -236,7 +236,7 @@
 			{
 				// notify via email
 				$current_user_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
-				$current_prefs_user	 = $this->bocommon->create_preferences('property', $current_user_id);
+				$current_prefs_user	 = $this->bocommon->create_preferences('common', $current_user_id);
 				$from				 = $current_prefs_user['email'];
 				$subject			 = lang("Tenant claim %1", $receipt['claim_id']) . ' ' . $action;
 				$body				 = lang('Reminder');

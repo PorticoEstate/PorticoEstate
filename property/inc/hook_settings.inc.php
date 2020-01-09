@@ -296,12 +296,7 @@
 
 	create_select_box('Workorder Approval From', 'approval_from', $_accounts, 'If you need approval from your supervisor for projects/workorders');
 
-	//	if(!$email_org)
-	{
-		create_input_box('Your Email', 'email', 'Insert your email address');
-	}
-
-	$email_property = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+	$email_property = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 	$GLOBALS['phpgw']->preferences->add("email", "address", $email_property);
 	$GLOBALS['phpgw']->preferences->save_repository();
 

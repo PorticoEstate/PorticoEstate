@@ -251,7 +251,7 @@
 
 						if ($this->mail_receipt)
 						{
-							$prefs = $this->bocommon->create_preferences('property', $file_entry['user_id']);
+							$prefs = $this->bocommon->create_preferences('common', $file_entry['user_id']);
 							if (strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
 							{
 								$subject	 = 'Resultat fra scanner';

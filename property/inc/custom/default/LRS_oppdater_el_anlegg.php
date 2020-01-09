@@ -47,7 +47,7 @@
 					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 
 					$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email	 = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+					$coordinator_email	 = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}>";
 					$bcc				 = '';
 					$cc					 = $coordinator_email;
 

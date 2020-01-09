@@ -1257,12 +1257,12 @@
 				)
 				{
 					$bocommon = CreateObject('property.bocommon');
-					$current_prefs_user = $bocommon->create_preferences('property', $GLOBALS['phpgw_info']['user']['account_id']);
+					$current_prefs_user = $bocommon->create_preferences('common', $GLOBALS['phpgw_info']['user']['account_id']);
 					$from_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 					$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
 
 					$to_name = $GLOBALS['phpgw']->accounts->id2name($assigned_to);
-					$prefs_target = $bocommon->create_preferences('property', $assigned_to);
+					$prefs_target = $bocommon->create_preferences('common', $assigned_to);
 					$to_address = $prefs_target['email'];
 
 					if (!$start_date = $check_list->get_planned_date())
@@ -1931,7 +1931,7 @@
 					}
 					else
 					{
-						$prefs = CreateObject('property.bocommon')->create_preferences('property',$entry['id']);
+						$prefs = CreateObject('property.bocommon')->create_preferences('common',$entry['id']);
 						if ($validator->check_email_address($prefs['email']))
 						{
 							$toarray[] = $prefs['email'];

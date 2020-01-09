@@ -262,7 +262,7 @@
 
 				foreach ($toarray as $lid => $dummy)
 				{
-					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
+					$prefs = $this->bocommon->create_preferences('common', $GLOBALS['phpgw']->accounts->name2id($lid));
 					if (isset($prefs['email']) && $prefs['email'])
 					{
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',

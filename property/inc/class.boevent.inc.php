@@ -602,7 +602,7 @@
 
 			$account_id	 = $GLOBALS['phpgw']->accounts->search_person($contact_id);
 			$socommon	 = CreateObject('property.socommon');
-			$prefs		 = $socommon->create_preferences('property', $account_id);
+			$prefs		 = $socommon->create_preferences('common', $account_id);
 			$comms		 = execMethod('addressbook.boaddressbook.get_comm_contact_data', $contact_id);
 			$_address	 = isset($comms[$contact_id]['work email']) && $comms[$contact_id]['work email'] ? $comms[$contact_id]['work email'] : $prefs['email'];
 

@@ -1304,7 +1304,7 @@
 
 			//-----------from--------
 
-			$current_prefs_user		 = $this->bocommon->create_preferences('property', $GLOBALS['phpgw_info']['user']['account_id']);
+			$current_prefs_user		 = $this->bocommon->create_preferences('common', $GLOBALS['phpgw_info']['user']['account_id']);
 			$current_user_address	 = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
 			//-----------from--------
@@ -1489,7 +1489,7 @@ HTML;
 
 			foreach ($members as $account_id => $account_name)
 			{
-				$prefs = $this->bocommon->create_preferences('property', $account_id);
+				$prefs = $this->bocommon->create_preferences('common', $account_id);
 				if (!isset($prefs['tts_notify_me']) || $prefs['tts_notify_me'] == 1)
 				{
 					/**
@@ -1533,7 +1533,7 @@ HTML;
 			if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 			{
 
-				$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+				$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}";
 				$sms		 = CreateObject('sms.sms');
 
 				foreach ($notify_list as $entry)
@@ -2115,7 +2115,7 @@ HTML;
 						'default'	 => true
 					);
 
-					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+					$prefs = $this->bocommon->create_preferences('common', $supervisor_id);
 
 					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
 					{
@@ -2294,7 +2294,7 @@ HTML;
 						$requests = $pending_action->get_pending_action($action_params);
 					}
 
-					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+					$prefs = $this->bocommon->create_preferences('common', $supervisor_id);
 					if (!empty($prefs['email']))
 					{
 						$address = $prefs['email'];

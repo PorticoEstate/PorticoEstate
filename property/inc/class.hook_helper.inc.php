@@ -78,6 +78,7 @@
 				$pref = CreateObject('phpgwapi.preferences', $data['account_id']);
 				$pref->read();
 				$pref->add('property', 'email', $data['email'], 'user');
+				$pref->add('common', 'email', $data['email'], 'user');
 				$pref->save_repository();
 			}
 

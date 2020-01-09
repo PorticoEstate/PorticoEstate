@@ -179,7 +179,7 @@
 			$to		 = implode(';', $toarray);
 
 			$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-			$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+			$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}>";
 
 			$ccarray = array(
 				'Muhammed.Ibrahim@bergen.kommune.no',
@@ -246,7 +246,7 @@
 					Bergen kommune, Etat for boligforvaltning<br/>
 					Postboks 7700, 5020 Bergen<br/>
 					Besøksadresse: Kaigaten 4, inngang fra Peter Motzfeldts gate<br/>
-					Epost: {$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}<br/>
+					Epost: {$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}<br/>
 					Ressursnr: {$ressursnr}
 				</body>
 			</html>

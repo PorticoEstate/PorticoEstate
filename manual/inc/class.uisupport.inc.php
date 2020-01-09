@@ -116,7 +116,7 @@
 				(
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
 				'from_name' => $GLOBALS['phpgw_info']['user']['fullname'],
-				'from_address' => $GLOBALS['phpgw_info']['user']['preferences']['property']['email'],
+				'from_address' => $GLOBALS['phpgw_info']['user']['preferences']['common']['email'],
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uisupport.send')),
 				'support_address' => $support_address,
 			);

@@ -638,7 +638,7 @@
 				if (!$contact['value_contact_email'])
 				{
 					$user_id						 = createObject('property.soresponsible')->get_contact_user_id($data['contact_id']);
-					$prefs							 = $this->create_preferences('property', $user_id);
+					$prefs							 = $this->create_preferences('common', $user_id);
 					$contact['value_contact_email']	 = $prefs['email'];
 					$contact['value_contact_tel']	 = $prefs['cellphone'];
 				}

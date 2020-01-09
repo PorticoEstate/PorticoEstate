@@ -615,7 +615,7 @@ HTML;
 
 				if ($_responsible)
 				{
-					$prefs																		 = $this->bocommon->create_preferences('property', $_responsible);
+					$prefs																		 = $this->bocommon->create_preferences('common', $_responsible);
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']	 = 'firstname';
 					$_responsible_name															 = $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email															 = $prefs['email'];
