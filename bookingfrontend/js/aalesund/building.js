@@ -1,4 +1,4 @@
-var booking_month_horizon = 3;
+var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
