@@ -3776,7 +3776,6 @@
 
 			$sql = "UPDATE phpgw_preferences SET preference_json=jsonb_set(preference_json, '{email}', '\"{$value_set['email']}\"', true)"
 				. " WHERE preference_owner = {$value_set['owner']} AND preference_app = 'common'";
-			_debug_array($sql);
 			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 		}
