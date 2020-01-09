@@ -160,7 +160,7 @@
 						$preferences->add('common', 'default_app', 'helpdesk');
 						if (!empty($email))
 						{
-							$preferences->add('helpdesk', 'email', $email);
+							$preferences->add('common', 'email', $email);
 						}
 						$preferences->save_repository();
 
