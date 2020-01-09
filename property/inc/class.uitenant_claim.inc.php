@@ -794,6 +794,15 @@
 				'project_id' => $values['project_id']
 			);
 
+			$location_exceptions = $bolocation->get_location_exception($project_values['location_data']['location_code']);
+
+			foreach ($location_exceptions as $location_exception)
+			{
+
+				phpgwapi_cache::message_set("{$location_exception['severity']}: {$location_exception['location_descr']}", 'message');
+
+			}
+
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$cats->supress_info	 = true;
 
@@ -1199,6 +1208,15 @@
 				'lookup_entity'	 => $this->bocommon->get_lookup_entity('project'),
 				'entity_data'	 => $project_values['p']
 			));
+
+			$location_exceptions = $bolocation->get_location_exception($project_values['location_data']['location_code']);
+
+			foreach ($location_exceptions as $location_exception)
+			{
+
+				phpgwapi_cache::message_set("{$location_exception['severity']}: {$location_exception['location_descr']}", 'message');
+
+			}
 
 			if ($project_values['contact_phone'])
 			{
