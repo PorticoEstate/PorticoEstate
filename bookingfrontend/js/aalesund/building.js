@@ -30,7 +30,11 @@ $(document).ready(function ()
 	{
 		date = new Date(urlParams['date']);
 	}
-	getFreetime(urlParams);
+
+	if(active_building == 1)
+	{
+		getFreetime(urlParams);
+	}
 //	PopulateBuildingData(urlParams);
 //	PopulateBookableResources(urlParams);
 

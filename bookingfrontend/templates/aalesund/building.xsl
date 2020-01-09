@@ -21,6 +21,11 @@
 							<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
 								<h1 id="building_name">
 									<xsl:value-of select="building/name"/>
+									<xsl:if test="building/active=0">
+										<xsl:text> (</xsl:text>
+											<xsl:value-of select="php:function('lang', 'inactive')" />
+										<xsl:text>)</xsl:text>
+									</xsl:if>
 								</h1>
 								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
 									<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
@@ -154,19 +159,36 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-6">
-						<h2 class="">
-							<xsl:value-of select="php:function('lang', 'For rent')" />
-						</h2>
-						<div data-bind="foreach: bookableResource">
-							<div class="custom-card">
-								<!--<a class="bookable-resource-link-href" href="" data-bind="">
-										<span data-bind="html: name"></span>
-								</a>-->
+					<xsl:if test="building/active=1">
+						<div class="col-lg-6">
+							<h2 class="">
+								<xsl:value-of select="php:function('lang', 'For rent')" />
+							</h2>
+							<div data-bind="foreach: bookableResource">
+								<div class="custom-card">
+									<!--<a class="bookable-resource-link-href" href="" data-bind="">
+											<span data-bind="html: name"></span>
+									</a>-->
 
-								<div data-bind="if: resourceItemLink != false">
-									<a class="bookable-resource-link-href" href="" data-bind="">
+									<div data-bind="if: resourceItemLink != false">
+										<a class="bookable-resource-link-href" href="" data-bind="">
 
+											<span data-bind="html: name"></span>
+											<div data-bind="foreach: activitiesList">
+												<span class="tagTitle" data-bind="if: $index() == 0">
+													<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
+												</span>
+												<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
+											</div>
+											<div class="mt-2" data-bind="foreach: facilitiesList">
+												<span class="tagTitle" data-bind="if: $index() == 0">
+													<xsl:value-of select="php:function('lang', 'Facilities')"/>:
+												</span>
+												<span class="textTagsItems" data-bind="html: $data"></span>
+											</div>
+										</a>
+									</div>
+									<div data-bind="if: resourceItemLink == false">
 										<span data-bind="html: name"></span>
 										<div data-bind="foreach: activitiesList">
 											<span class="tagTitle" data-bind="if: $index() == 0">
@@ -180,55 +202,40 @@
 											</span>
 											<span class="textTagsItems" data-bind="html: $data"></span>
 										</div>
-									</a>
-								</div>
-								<div data-bind="if: resourceItemLink == false">
-									<span data-bind="html: name"></span>
-									<div data-bind="foreach: activitiesList">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
-										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
 									</div>
-									<div class="mt-2" data-bind="foreach: facilitiesList">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Facilities')"/>:
-										</span>
-										<span class="textTagsItems" data-bind="html: $data"></span>
-									</div>
-								</div>
 
 
-								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
-									<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
-									<ul class="list-group list-group-flush">
-										<div data-bind="if: overlap">
-											<li class="list-group-item">
-												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
-												<span data-bind="html: when"></span>
-												<span class="ml-2" style="font-weight: bold; color: #ff3333;">
-													<xsl:value-of select="php:function('lang', 'leased')"/>
-												</span>
-											</li>
-										</div>
-
-										<div data-bind="if: overlap == false">
-
-											<li class="list-group-item">
-												<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
-												<a class="bookable-timeslots-link-href" data-bind="" href="">
+									<div class="mt-2" data-bind="foreach: availlableTimeSlots">
+										<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
+										<ul class="list-group list-group-flush">
+											<div data-bind="if: overlap">
+												<li class="list-group-item">
+													<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
 													<span data-bind="html: when"></span>
-												</a>
-												<span class="ml-2" style="font-weight: bold; color: #1a8f65;">
-													<xsl:value-of select="php:function('lang', 'available')"/>
-												</span>
-											</li>
-										</div>
-									</ul>
+													<span class="ml-2" style="font-weight: bold; color: #ff3333;">
+														<xsl:value-of select="php:function('lang', 'leased')"/>
+													</span>
+												</li>
+											</div>
+
+											<div data-bind="if: overlap == false">
+
+												<li class="list-group-item">
+													<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
+													<a class="bookable-timeslots-link-href" data-bind="" href="">
+														<span data-bind="html: when"></span>
+													</a>
+													<span class="ml-2" style="font-weight: bold; color: #1a8f65;">
+														<xsl:value-of select="php:function('lang', 'available')"/>
+													</span>
+												</li>
+											</div>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</xsl:if>
 				</div>
 			</div>
 		</div>
@@ -324,5 +331,6 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+		var active_building = Number(<xsl:value-of select="building/active" />);
 	</script>
 </xsl:template>
