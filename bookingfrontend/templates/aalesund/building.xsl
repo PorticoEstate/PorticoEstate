@@ -21,12 +21,12 @@
 							<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
 								<h1 id="building_name">
 									<xsl:value-of select="building/name"/>
-									<xsl:if test="building/active=0">
-										<xsl:text> (</xsl:text>
-											<xsl:value-of select="php:function('lang', 'inactive')" />
-										<xsl:text>)</xsl:text>
-									</xsl:if>
 								</h1>
+									<xsl:if test="building/active=0">
+										<p class="error">
+											<xsl:value-of select="php:function('lang', 'It is currently not possible to rent anything here')" />
+										</p>
+									</xsl:if>
 								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
 									<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
 									<div class="building-place-adr">

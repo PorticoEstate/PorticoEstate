@@ -480,3 +480,4 @@ Choose atleast one object	bookingfrontend	no	Velg minst ett leieobjekt
 Please fill all fields	bookingfrontend	no	Vennligst fyll ut alle obligatoriske felt!
 available	bookingfrontend	no	Ledig
 leased	bookingfrontend	no	Utleid
+It is currently not possible to rent anything here	bookingfrontend	no	NB! Det er for tiden ikke mulig å leie noe her
