@@ -3746,12 +3746,19 @@
 			. " WHERE preference_app IN ('property', 'helpdesk')", __LINE__, __FILE__);
 
 		$preference_data = array('email'=> array(), 'cellphone' => array());
+		
+		$owners = array();
+
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
 			$app = $GLOBALS['phpgw_setup']->oProc->f('preference_app');
 			$owner = intval($GLOBALS['phpgw_setup']->oProc->f('preference_owner'));
 			$email = $GLOBALS['phpgw_setup']->oProc->f('email');
 			$cellphone = $GLOBALS['phpgw_setup']->oProc->f('cellphone');
+
+
+			$owners[] = $owner;
+
 
 			if ($email)
 			{
@@ -3770,6 +3777,28 @@
 				);
 			}
 		}
+		unset($owner);
+		$add_empty_prefs = array();
+
+		foreach ($owners as $owner)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT preference_owner"
+				. " FROM phpgw_preferences"
+				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
+
+			if (!$GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$add_empty_prefs[] = $owner;
+			}
+		}
+
+		foreach ($add_empty_prefs as $add_empty_pref_owner)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_preferences (preference_app, preference_owner, preference_json)"
+				. " VALUES ('common', {$add_empty_pref_owner}, '{}')", __LINE__, __FILE__);
+
+		}
+
 
 		foreach ($preference_data['email'] as $value_set)
 		{
