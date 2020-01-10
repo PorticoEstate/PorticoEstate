@@ -218,7 +218,7 @@
 
 						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
 						<xsl:attribute name="placeholder">
-								<xsl:value-of select="config/application_equipment"/>
+							<xsl:value-of select="php:function('lang', 'write here...')" />
 						</xsl:attribute>
 						</textarea>
 					</div>
