@@ -227,7 +227,6 @@ $(document).ready(function ()
 			{
 				data.context
 					.addClass("done");
-				refresh_files();
 			}
 
 			if (file_count === pendingList)
