@@ -1096,7 +1096,7 @@
 
 			//-----------from--------
 
-			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
+			$current_prefs_user = $this->bocommon->create_preferences('common',$GLOBALS['phpgw_info']['user']['account_id']);
 
 			if(!$current_prefs_user['email'])
 			{
@@ -1557,7 +1557,7 @@ HTML;
 
 				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($account_id)->__toString();
 
-				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
+				$prefs = $this->bocommon->create_preferences('common',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1 || $ticket['reverse_id'])
 				{
 					$account_lid = $GLOBALS['phpgw']->accounts->get($account_id)->lid;
@@ -1602,7 +1602,7 @@ HTML;
 			if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 			{
 
-				$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+				$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}";
 				$sms = CreateObject('sms.sms');
 
 				foreach ($notify_list as $entry)

@@ -3731,3 +3731,97 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	/**
+	 * Moving to email-address from helpdesk and property to common
+	 */
+	$test[] = '0.9.17.563';
+	function phpgwapi_upgrade0_9_17_563()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT preference_app, preference_owner, preference_json->>'email' AS email, preference_json->>'cellphone' AS cellphone"
+			. " FROM phpgw_preferences"
+			. " WHERE preference_app IN ('property', 'helpdesk')", __LINE__, __FILE__);
+
+		$preference_data = array('email'=> array(), 'cellphone' => array());
+		
+		$owners = array();
+
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$app = $GLOBALS['phpgw_setup']->oProc->f('preference_app');
+			$owner = intval($GLOBALS['phpgw_setup']->oProc->f('preference_owner'));
+			$email = $GLOBALS['phpgw_setup']->oProc->f('email');
+			$cellphone = $GLOBALS['phpgw_setup']->oProc->f('cellphone');
+
+
+			$owners[] = $owner;
+
+
+			if ($email)
+			{
+				$preference_data['email'][] = array(
+					'app'	=> $app,
+					'owner'	=> $owner,
+					'email'	=> $email
+				);
+			}
+			if ($cellphone)
+			{
+				$preference_data['cellphone'][] = array(
+					'app'	=> $app,
+					'owner'	=> $owner,
+					'cellphone'	=> $cellphone
+				);
+			}
+		}
+		unset($owner);
+		$add_empty_prefs = array();
+
+		foreach ($owners as $owner)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT preference_owner"
+				. " FROM phpgw_preferences"
+				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
+
+			if (!$GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$add_empty_prefs[] = $owner;
+			}
+		}
+
+		foreach ($add_empty_prefs as $add_empty_pref_owner)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_preferences (preference_app, preference_owner, preference_json)"
+				. " VALUES ('common', {$add_empty_pref_owner}, '{}')", __LINE__, __FILE__);
+
+		}
+
+
+		foreach ($preference_data['email'] as $value_set)
+		{
+
+			$sql = "UPDATE phpgw_preferences SET preference_json=jsonb_set(preference_json, '{email}', '\"{$value_set['email']}\"', true)"
+				. " WHERE preference_owner = {$value_set['owner']} AND preference_app = 'common'";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		}
+		unset($value_set);
+		foreach ($preference_data['cellphone'] as $value_set)
+		{
+
+			$sql = "UPDATE phpgw_preferences SET preference_json=jsonb_set(preference_json, '{cellphone}', '\"{$value_set['cellphone']}\"', true)"
+				. " WHERE preference_owner = {$value_set['owner']} AND preference_app = 'common'";
+
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.564';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

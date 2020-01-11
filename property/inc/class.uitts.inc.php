@@ -2344,7 +2344,7 @@ HTML;
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
 				$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-				$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 				$subject = lang(Approval) . ": " . $ticket['order_id'];
 				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
@@ -2381,7 +2381,7 @@ HTML;
 						$_account_id = $substitute;
 					}
 
-					$prefs = $this->bocommon->create_preferences('property', $_account_id);
+					$prefs = $this->bocommon->create_preferences('common', $_account_id);
 					if (!empty($prefs['email']))
 					{
 						$_address = $prefs['email'];
@@ -3596,8 +3596,8 @@ HTML;
 //			$from = lang('date') . ": {$date}\n";
 //			$from .= lang('dimb') . ": {$ticket['ecodimb']}\n";
 //			$from .= lang('from') . ":\n   {$from_name}";
-//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
-//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
+//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['email']}";
+//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
 //
 
 
@@ -3657,8 +3657,8 @@ HTML;
 			$pdf->ezText($ticket['order_descr'], 14);
 			$pdf->ezSetDy(-20);
 
-			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
+			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -3673,7 +3673,7 @@ HTML;
 
 				if ($_responsible)
 				{
-					$prefs																		 = $this->bocommon->create_preferences('property', $_responsible);
+					$prefs																		 = $this->bocommon->create_preferences('common', $_responsible);
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']	 = 'firstname';
 					$_responsible_name															 = $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email															 = $prefs['email'];
@@ -3948,8 +3948,8 @@ HTML;
 
 			$order_id						 = $ticket['order_id'];
 //account_display
-			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
+			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -3964,7 +3964,7 @@ HTML;
 
 				if ($_responsible)
 				{
-					$prefs																		 = $this->bocommon->create_preferences('property', $_responsible);
+					$prefs																		 = $this->bocommon->create_preferences('common', $_responsible);
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']	 = 'firstname';
 					$_responsible_name															 = $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email															 = $prefs['email'];
@@ -4458,11 +4458,11 @@ HTML;
 				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 
-			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}>";
 
 			$validator = CreateObject('phpgwapi.EmailAddressValidator');
 
-			if (!$validator->check_email_address($GLOBALS['phpgw_info']['user']['preferences']['property']['email']))
+			if (!$validator->check_email_address($GLOBALS['phpgw_info']['user']['preferences']['common']['email']))
 			{
 				$bcc = '';
 				phpgwapi_cache::message_set(lang('please update <a href="%1">your email address here</a>', $GLOBALS['phpgw']->link('/preferences/preferences.php', array(

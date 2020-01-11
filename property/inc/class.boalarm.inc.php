@@ -398,7 +398,7 @@
 			// build subject
 			$subject = lang('Alarm') . ': ' . $alarm['event_name'];
 
-			$prefs_user = $this->bocommon->create_preferences('property', $alarm['owner']);
+			$prefs_user = $this->bocommon->create_preferences('common', $alarm['owner']);
 
 			$from_address = $prefs_user['email'];
 
@@ -413,7 +413,7 @@
 
 			$current_user_name = $user_firstname . " " . $user_lastname;
 
-			$current_prefs_user		 = $this->bocommon->create_preferences('property', $alarm['owner']);
+			$current_prefs_user		 = $this->bocommon->create_preferences('common', $alarm['owner']);
 			$current_user_address	 = $current_prefs_user['email'];
 
 			//-----------from--------
@@ -442,7 +442,7 @@
 			{
 				if ($members[$i]['account_id'])
 				{
-					$prefs = $this->bocommon->create_preferences('property', $members[$i]['account_id']);
+					$prefs = $this->bocommon->create_preferences('common', $members[$i]['account_id']);
 					if (strlen($prefs['email']) > (strlen($members[$i]['account_name']) + 1))
 					{
 						$toarray[$prefs['email']] = $prefs['email'];

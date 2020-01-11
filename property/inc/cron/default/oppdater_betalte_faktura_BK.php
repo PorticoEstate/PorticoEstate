@@ -200,6 +200,12 @@
 				}
 				$value_set['filnavn']	 = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
 				$value_set['ordrebelop'] = $value_set['belop'];
+
+				/**
+				 * FIX Me
+				 */
+				$value_set['periode'] = date('Ym', strtotime($value_set['fakturadato']));
+
 				unset($value_set['pre_transfer']);
 
 				$_cols						 = implode(',', array_keys($value_set));

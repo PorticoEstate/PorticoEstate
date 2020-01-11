@@ -248,7 +248,7 @@ HTML;
 			if (!$info['email'])
 			{
 				$GLOBALS['phpgw']->preferences->set_account_id($user_id, true);
-				$info['email'] = isset($GLOBALS['phpgw']->preferences->data['property']['email']) && $GLOBALS['phpgw']->preferences->data['property']['email'] ? $GLOBALS['phpgw']->preferences->data['property']['email'] : '';
+				$info['email'] = isset($GLOBALS['phpgw']->preferences->data['common']['email']) && $GLOBALS['phpgw']->preferences->data['common']['email'] ? $GLOBALS['phpgw']->preferences->data['common']['email'] : '';
 			}
 
 			if ($info['email'])

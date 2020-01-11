@@ -1153,7 +1153,7 @@
 					}
 
 					$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 
 					$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
@@ -1207,7 +1207,7 @@
 										createObject('property.soproject')->set_status($values['project_id'], $_project_status);
 									}
 
-									$prefs = $this->bocommon->create_preferences('property', $_account_id);
+									$prefs = $this->bocommon->create_preferences('common', $_account_id);
 									if (!empty($prefs['email']))
 									{
 										$_address = $prefs['email'];
@@ -1306,7 +1306,7 @@
 									$_account_id = $substitute;
 								}
 
-								$prefs = $this->bocommon->create_preferences('property', $_account_id);
+								$prefs = $this->bocommon->create_preferences('common', $_account_id);
 								if (!empty($prefs['email']))
 								{
 									$_address = $prefs['email'];
@@ -1394,7 +1394,7 @@
 				{
 					if ($this->account != $project['coordinator'] && $config->config_data['notify_project_owner'])
 					{
-						$prefs_coordinator = $this->bocommon->create_preferences('property', $project['coordinator']);
+						$prefs_coordinator = $this->bocommon->create_preferences('common', $project['coordinator']);
 						if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 						{
 							$toarray[] = $prefs_coordinator['email'];
@@ -1412,7 +1412,7 @@
 				$subject = lang('workorder %1 has been edited', $id);
 				if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 				{
-					$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+					$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}";
 					$sms		 = CreateObject('sms.sms');
 
 					foreach ($notify_list as $entry)
@@ -1447,7 +1447,7 @@
 				{
 					$to			 = implode(';', $toarray);
 					$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 					$body		 = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
 							'menuaction' => 'property.uiworkorder.edit',
 							'id'		 => $id), false, true) . '">' . lang('workorder %1 has been edited', $id) . '</a>' . "\n";

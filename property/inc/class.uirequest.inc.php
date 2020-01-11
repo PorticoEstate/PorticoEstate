@@ -1242,7 +1242,7 @@ JS;
 				if ($values['notify'])
 				{
 					$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 					$headers			 = "Return-Path: <" . $coordinator_email . ">\r\n";
 					$headers			 .= "From: " . $coordinator_name . "<" . $coordinator_email . ">\r\n";
 					$headers			 .= "Bcc: " . $coordinator_name . "<" . $coordinator_email . ">\r\n";
@@ -1479,7 +1479,7 @@ JS;
 
 			if ($supervisor_id && ($notify == 'yes'))
 			{
-				$prefs				 = $this->bocommon->create_preferences('property', $supervisor_id);
+				$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
 				$supervisor_email	 = $prefs['email'];
 			}
 

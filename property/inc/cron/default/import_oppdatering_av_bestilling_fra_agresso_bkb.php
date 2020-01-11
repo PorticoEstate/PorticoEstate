@@ -407,7 +407,7 @@
 			$subject	 = 'Melding er oppdatert fra Agresso';
 			$from		 = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
 			$bocommon	 = CreateObject('property.bocommon');
-			$prefs		 = $bocommon->create_preferences('property', $assignedto);
+			$prefs		 = $bocommon->create_preferences('common', $assignedto);
 			if (isset($prefs['email']) && $prefs['email'])
 			{
 				$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',

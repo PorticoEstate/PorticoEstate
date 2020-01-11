@@ -229,6 +229,10 @@
 			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
 
+			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
+			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_end_date');
+
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));

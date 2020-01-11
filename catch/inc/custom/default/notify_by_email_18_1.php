@@ -43,7 +43,7 @@
 		//_debug_array($to_array);
 
 		$socommon	 = CreateObject('property.socommon');
-		$prefs		 = $socommon->create_preferences('property', $user_id);
+		$prefs		 = $socommon->create_preferences('common', $user_id);
 
 		if($validator->check_email_address($prefs['email']))
 		{

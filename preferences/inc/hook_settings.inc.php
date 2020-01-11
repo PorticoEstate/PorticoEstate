@@ -184,3 +184,6 @@
 
 	create_select_box('Tabel export format', 'export_format', array('excel' => 'Excel',
 		'csv' => 'CSV', 'ods' => 'ODS'), 'Choose which format to export from the system for tables');
+
+	create_input_box('Your Cellphone', 'cellphone');
+	create_input_box('Your Email', 'email', 'Insert your email address');

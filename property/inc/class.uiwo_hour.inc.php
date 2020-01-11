@@ -1214,7 +1214,7 @@
 			$GLOBALS['phpgw']->preferences->set_account_id($workorder['user_id'], true);
 
 			$from_name	 = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
-			$from_email	 = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
+			$from_email	 = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['common']['email']}>";
 
 			if ($this->config->config_data['wo_status_sms'])
 			{
@@ -1299,7 +1299,7 @@
 				'lang_from'					 => lang('From'),
 				'from_name'					 => $from_name,
 				'from_email'				 => $from_email,
-				'from_phone'				 => $GLOBALS['phpgw']->preferences->data['property']['cellphone'],
+				'from_phone'				 => $GLOBALS['phpgw']->preferences->data['common']['cellphone'],
 				'lang_district'				 => lang('District'),
 				'district'					 => $project['location_data']['district_id'],
 				'ressursnr'					 => isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? 'Brukes ikke for denne ordren' : '',
@@ -1728,7 +1728,7 @@ HTML;
 								'id'		 => $workorder_id), false, true) . '">'
 								. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
 
-							$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+							$_address = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 							$_to = $from_email; // reverse...
 
@@ -2206,8 +2206,8 @@ HTML;
 			$from	 = lang('date') . ": {$date}\n";
 			$from	 .= lang('dimb') . ": {$ecodimb}\n";
 			$from	 .= lang('from') . ":\n   {$from_name}";
-			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
-			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
+			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['email']}";
+			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
 
 			$data = array
 				(
@@ -3691,8 +3691,8 @@ HTML;
 			$GLOBALS['phpgw']->preferences->set_account_id($workorder['user_id'], true);
 
 			$from_name	 = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
-			$from_email	 = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
-			$bcc		 = !empty($GLOBALS['phpgw']->preferences->data['property']['email']) ? $from_email : '';
+			$from_email	 = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['common']['email']}>";
+			$bcc		 = !empty($GLOBALS['phpgw']->preferences->data['common']['email']) ? $from_email : '';
 
 			$subject = lang('Workorder') . ": " . $workorder_id;
 
@@ -3748,7 +3748,7 @@ HTML;
 						'id'		 => $workorder_id), false, true) . '">'
 						. lang('Workorder %1 is sent by email to %2', $workorder_id, $_to) . '</a>';
 
-					$_address = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+					$_address = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 					$_to = $from_email; // reverse...
 

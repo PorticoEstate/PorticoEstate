@@ -1323,7 +1323,7 @@ JS;
 
 						$action_params['responsible']	 = $_account_id;
 						$from_name						 = $GLOBALS['phpgw_info']['user']['fullname'];
-						$from_email						 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+						$from_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 						$subject = lang('Approval') . ": " . $id;
 						$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
@@ -1387,7 +1387,7 @@ JS;
 							//							 && $config->config_data['mailnotification']
 							)
 							{
-								$prefs_coordinator = $this->bocommon->create_preferences('property', $values['coordinator']);
+								$prefs_coordinator = $this->bocommon->create_preferences('common', $values['coordinator']);
 								if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 								{
 									$toarray[] = $prefs_coordinator['email'];
@@ -1406,7 +1406,7 @@ JS;
 
 						if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
 						{
-							$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+							$sms_text	 = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}";
 							$sms		 = CreateObject('sms.sms');
 
 							foreach ($notify_list as $entry)
@@ -1440,7 +1440,7 @@ JS;
 						{
 							$to			 = implode(';', $toarray);
 							$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
-							$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+							$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
 							$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.edit',
 									'id'		 => $id), false, true) . '">' . lang('project %1 has been edited', $id) . '</a>' . "\n";
@@ -1820,7 +1820,7 @@ JS;
 					{
 						foreach ($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
 						{
-							$prefs				 = $this->bocommon->create_preferences('property', $supervisor_id);
+							$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
 							$supervisor_email[]	 = array
 								(
 								'id'		 => $supervisor_id,
@@ -1831,7 +1831,7 @@ JS;
 					}
 
 					$supervisor2_id		 = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
-					$prefs2				 = $this->bocommon->create_preferences('property', $supervisor2_id);
+					$prefs2				 = $this->bocommon->create_preferences('common', $supervisor2_id);
 					$supervisor_email[]	 = array
 						(
 						'id'		 => $supervisor2_id,
@@ -1854,7 +1854,7 @@ JS;
 
 					if ($supervisor_id)
 					{
-						$prefs				 = $this->bocommon->create_preferences('property', $supervisor_id);
+						$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
 						$supervisor_email[]	 = array
 							(
 							'id'		 => $supervisor_id,
@@ -1863,7 +1863,7 @@ JS;
 
 						if (isset($prefs['approval_from']))
 						{
-							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+							$prefs2 = $this->bocommon->create_preferences('common', $prefs['approval_from']);
 
 
 

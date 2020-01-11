@@ -87,7 +87,7 @@
 
 		foreach ($projects as $project_info)
 		{
-			$prefs			 = $socommon->create_preferences('property', $project_info['coordinator']);
+			$prefs			 = $socommon->create_preferences('common', $project_info['coordinator']);
 			$account_name	 = $GLOBALS['phpgw']->accounts->get($project_info['coordinator'])->__toString();
 			if ($validator->check_email_address($prefs['email']))
 			{
@@ -108,7 +108,7 @@
 					$from_name	 = ltrim($_from_name[1]) . ' ' . $_from_name[0];
 				}
 
-				$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+				$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}>";
 				$cc			 = '';
 				$bcc		 = '';
 				$subject	 = "Status er endret for melding tilknyttet prosjekt {$project_info['id']}";

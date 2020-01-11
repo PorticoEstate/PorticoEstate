@@ -651,6 +651,7 @@
 				if ($values['old_phone'] != $values['phone'])
 				{
 					$GLOBALS['phpgw']->preferences->add('property', "cellphone", $values['phone'], 'user');
+					$GLOBALS['phpgw']->preferences->add('common', "cellphone", $values['phone'], 'user');
 					$receipt['message'][] = array('msg' => lang('Users phone is updated'));
 				}
 				if ($values['old_approval_from'] != $values['approval_from'])
@@ -683,7 +684,7 @@
 
 			if ($user_id)
 			{
-				$prefs = $this->bocommon->create_preferences('property', $user_id);
+				$prefs = $this->bocommon->create_preferences('common', $user_id);
 			}
 
 			$cats = CreateObject('phpgwapi.categories', -1, 'property', '.vendor');

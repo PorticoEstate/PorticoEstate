@@ -148,7 +148,7 @@
 				{
 					$user_contacts[] = $account->person_id;
 
-					$prefs[$account->person_id] = $socommon->create_preferences('property', $account->id);
+					$prefs[$account->person_id] = $socommon->create_preferences('common', $account->id);
 				}
 			}
 
@@ -197,7 +197,7 @@
 				}
 				else
 				{
-					$prefs	 = $socommon->create_preferences('property', $user->id);
+					$prefs	 = $socommon->create_preferences('common', $user->id);
 					$email	 = $prefs['email'];
 				}
 				if (!empty($comms[$user->person_id]['mobile (cell) phone']))
@@ -206,7 +206,7 @@
 				}
 				else
 				{
-					$prefs	 = $socommon->create_preferences('property', $user->id);
+					$prefs	 = $socommon->create_preferences('common', $user->id);
 					$mobile	 = $prefs['cellphone'];
 				}
 
