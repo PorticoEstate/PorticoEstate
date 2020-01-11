@@ -218,8 +218,9 @@
 
 				$file_source		 = "{$this->rootdir}{$file_info['directory']}/{$file_info['name']}";
 
+				$filesize = filesize($file_source);
 				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($file_info['name'], $file_info['mime_type'], $file_info['size']);
+				$browser->content_header($file_info['name'], $file_info['mime_type'], $filesize);
 
 				$this->readfile_chunked($file_source);
 			}
