@@ -46,6 +46,7 @@
 			'download'					 => true,
 			'download2'					 => true,
 			'view_file'					 => true,
+			'view_image'				 => true,
 			'edit_status'				 => true,
 			'edit_priority'				 => true,
 			'update_data'				 => true,
@@ -1825,6 +1826,68 @@ HTML;
 			}
 		}
 
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -1846,9 +1909,18 @@ HTML;
 			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
 			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
 
+			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
 				$_checked = '';
 				if (in_array($_entry['file_id'], $file_attachments))
 				{
@@ -1858,8 +1930,21 @@ HTML;
 				$content_files[] = array(
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
+					'created'	=> $created,
 				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'helpdesk.uitts.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -2601,7 +2686,13 @@ HTML;
 			$file_attachments = isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) ? $ticket['file_attachments'] : array();
 
 			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
 
+			$z = 0;
 			foreach ($ticket['files'] as $_entry)
 			{
 				$_checked = '';
@@ -2609,18 +2700,39 @@ HTML;
 				{
 					$_checked = 'checked="checked"';
 				}
+				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
+				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
+				$created = $datetime->format('Y-m-d H:i:s');
 
 				$content_files[] = array(
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
+					'created'	=> $created
 				);
+
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'property.uitts.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
 			}
 
 			$attach_file_def = array
 				(
+				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
+					'resizeable' => true),
 				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
 					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
 				array('key'		 => 'delete_file', 'label'		 => lang('Delete file'), 'sortable'	 => false,
 					'resizeable' => true, 'formatter'	 => 'FormatterCenter'),
 			);
