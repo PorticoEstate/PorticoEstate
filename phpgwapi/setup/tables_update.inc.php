@@ -3782,13 +3782,19 @@
 
 		foreach ($owners as $owner)
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("SELECT preference_owner"
+			$GLOBALS['phpgw_setup']->oProc->query("SELECT preference_owner, preference_json"
 				. " FROM phpgw_preferences"
 				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 
 			if (!$GLOBALS['phpgw_setup']->oProc->next_record())
 			{
 				$add_empty_prefs[] = $owner;
+			}
+			else if($GLOBALS['phpgw_setup']->oProc->f('preference_json') == '[]')
+			{
+				$add_empty_prefs[] = $owner;
+				$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_preferences"
+				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 			}
 		}
 
