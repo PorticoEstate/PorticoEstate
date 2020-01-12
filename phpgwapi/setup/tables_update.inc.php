@@ -3786,17 +3786,23 @@
 				. " FROM phpgw_preferences"
 				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 
-			if (!$GLOBALS['phpgw_setup']->oProc->next_record())
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			
+			$preference_json = $GLOBALS['phpgw_setup']->oProc->f('preference_json');
+			
+			if (!$GLOBALS['phpgw_setup']->oProc->f('preference_owner'))
 			{
 				$add_empty_prefs[] = $owner;
 			}
-			else if($GLOBALS['phpgw_setup']->oProc->f('preference_json') == '[]')
+			else if($preference_json == '[]' || $preference_json == '')
 			{
 				$add_empty_prefs[] = $owner;
 				$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_preferences"
 				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 			}
 		}
+		
+		$add_empty_prefs = array_unique($add_empty_prefs);
 
 		foreach ($add_empty_prefs as $add_empty_pref_owner)
 		{
@@ -3804,7 +3810,6 @@
 				. " VALUES ('common', {$add_empty_pref_owner}, '{}')", __LINE__, __FILE__);
 
 		}
-
 
 		foreach ($preference_data['email'] as $value_set)
 		{
