@@ -215,6 +215,17 @@
 			$mailadresses = $config->config_data['emails'];
 			$mailadresses = explode("\n", $mailadresses);
 
+			$extra_mail_addresses = CreateObject('booking.boapplication')->get_mail_addresses( $event['building_id'] );
+
+			if($mailadresses)
+			{
+				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+			}
+			else
+			{
+				$mailadresses = $extra_mail_addresses;
+			}
+
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';
 			$link .= $event['building_id'] . '&date=' . substr($event['from_'], 0, 10);
 

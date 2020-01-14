@@ -186,6 +186,17 @@
 			$mailadresses	 = $config->config_data['emails'];
 			$mailadresses	 = explode("\n", $mailadresses);
 
+			$extra_mail_addresses = CreateObject('booking.boapplication')->get_mail_addresses( $booking['building_id'] );
+
+			if($mailadresses)
+			{
+				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+			}
+			else
+			{
+				$mailadresses = $extra_mail_addresses;
+			}
+
 			if (($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
 				($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] == 'on' &&
 				$maildata['allocation'] == 0))

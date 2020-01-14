@@ -164,6 +164,46 @@
 			}
 		}
 
+
+		/**
+		 * 
+		 * @param int $building_id
+		 * @param int $user_id - the case officer, if any
+		 * @return array
+		 */
+		function get_mail_addresses( $building_id, $user_id = 0 )
+		{
+			$roles_at_building = CreateObject('booking.sopermission_building')->get_roles_at_building($building_id);
+
+			$users = array();
+
+			foreach ($roles_at_building as $role)
+			{
+				$users[] = $role['user_id'];
+			}
+
+			if($user_id && !in_array($user_id, $users))
+			{
+				$users[] = $user_id;
+
+			}
+
+			$mail_addresses = array();
+			foreach ($users as $user)
+			{
+
+				$prefs =CreateObject('phpgwapi.preferences',$user)->read();
+
+				if(!empty($prefs['common']['email']))
+				{
+					$mail_addresses[] = $prefs['common']['email'];
+				}
+			}
+
+			return $mail_addresses;
+		}
+		
+
 		/**
 		 * @ Send message about comment on application to case officer.
 		 */
@@ -186,6 +226,20 @@
 
 			$mailadresses = $config->config_data['emails'];
 			$mailadresses = explode("\n", $mailadresses);
+
+
+			$building_info = $this->so->get_building_info($application['id']);
+
+			$extra_mail_addresses = $this->get_mail_addresses( $building_info['id'], $application['case_officer_id'] );
+
+			if($mailadresses)
+			{
+				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+			}
+			else
+			{
+				$mailadresses = $extra_mail_addresses;
+			}
 
 //			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && $external_site_address)
 //			{
