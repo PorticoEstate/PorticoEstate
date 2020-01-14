@@ -102,6 +102,17 @@
 			$mailadresses = $config->config_data['emails'];
 			$mailadresses = explode("\n", $mailadresses);
 
+			$extra_mail_addresses = CreateObject('booking.boapplication')->get_mail_addresses( $allocation['building_id'] );
+
+			if($mailadresses)
+			{
+				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+			}
+			else
+			{
+				$mailadresses = $extra_mail_addresses;
+			}
+
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
