@@ -94,4 +94,21 @@
 		</a>
 	</li>
 
+	<li class="nav-item">
+		<xsl:if test="$active_tab = 'create_case_message'">
+			<xsl:attribute name="class">nav-item active</xsl:attribute>
+		</xsl:if>
+		<a class="nav-link" target="_blank">
+			<xsl:attribute name="href">
+				<xsl:text>index.php?menuaction=controller.uicheck_list.get_report</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
+				<xsl:value-of select="$session_url"/>
+			</xsl:attribute>
+			<i class="far fa-file-pdf" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="php:function('lang', 'report')"/>
+		</a>
+	</li>
+
 </xsl:template>
