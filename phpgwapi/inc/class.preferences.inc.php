@@ -21,7 +21,7 @@
 	 * @internal $default the default preferences, always used when the user has no own preference set
 	 * @internal $forced forced preferences set by the admin, they take precedence over user or default prefs
 	 */
-	class preferences
+	class phpgwapi_preferences
 	{
 		/**
 		 * @var account_id
@@ -276,14 +276,7 @@
 					// The following ereg is required for PostgreSQL to work
 					$app = str_replace(' ','',$this->db->f('preference_app'));
 
-//					if(!isset($metadata['preference_json']))
-//					{
-//						$value = unserialize($this->db->f('preference_value'));
-//					}
-//					else
-					{
-						$value = json_decode($this->db->f('preference_json'), true);
-					}
+					$value = json_decode($this->db->f('preference_json'), true);
 
 					$this->unquote($value);
 					if (!is_array($value))
