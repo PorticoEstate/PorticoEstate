@@ -140,7 +140,11 @@ JS;
 			//		alert(encodedStr);
 			//				console.log(parent.$('textarea#new_note').summernote());
 			//				parent.$('textarea#new_note').summernote('reset');
-							parent.$('textarea#new_note').summernote('editor.insertText', '\\n');
+							if (parent.$('textarea#new_note').summernote('isEmpty'))
+							{
+								parent.$('textarea#new_note').summernote('editor.insertText', '\\n');
+							}
+
 							parent.$('textarea#new_note').summernote('focus');
 							parent.$('textarea#new_note').summernote('pasteHTML', encodedStr);
 						}
@@ -312,7 +316,11 @@ JS;
 
 						try
 						{
-							parent.$('textarea#content').summernote('editor.insertText', '\\n');
+							if (parent.$('textarea#content').summernote('isEmpty'))
+							{
+								parent.$('textarea#content').summernote('editor.insertText', '\\n');
+							}
+
 							parent.$('textarea#content').summernote('focus');
 			//				parent.$('textarea#content').summernote('reset');
 							parent.$('textarea#content').summernote('pasteHTML', encodedStr);
