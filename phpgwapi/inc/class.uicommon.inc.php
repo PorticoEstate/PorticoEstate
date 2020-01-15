@@ -55,6 +55,13 @@
 		public function __construct()
 		{
 			parent::__construct();
+			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
+			{
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+				{
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] = 'ckeditor';
+				}
+			}
 			$called_class = get_called_class();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->called_class_arr = explode('_', $called_class, 2);

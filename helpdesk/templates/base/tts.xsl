@@ -64,6 +64,7 @@
 		var simple = '<xsl:value-of select="simple"/>';
 		var account_lid =  '<xsl:value-of select="account_lid"/>';
 		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+		var html_editor = '<xsl:value-of select="html_editor"/>';
 
 		function response_lookup()
 		{
@@ -274,7 +275,7 @@
 						</xsl:choose>
 
 						<div class="pure-custom pure-input-3-4">
-							<textarea cols="60" rows="10" name="details" id="new_note" >
+							<textarea rows="10" name="details" id="new_note" class="pure-input-1">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 								</xsl:attribute>

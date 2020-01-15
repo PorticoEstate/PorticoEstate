@@ -50,6 +50,13 @@
 			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
 			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+//			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
+			{
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+				{
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] = 'ckeditor';
+				}
+			}
 
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
@@ -561,14 +568,14 @@
 				case 'ckeditor':
 					foreach ($targets as $target)
 					{
-//						phpgwapi_jquery::init_ckeditor($target);
-						phpgwapi_jquery::init_summernote($target);
+						phpgwapi_jquery::init_ckeditor($target);
+//						phpgwapi_jquery::init_summernote($target);
 					}
 					break;
 				case 'summernote':
 					foreach ($targets as $target)
 					{
-						phpgwapi_jquery::init_summernote($target);
+						phpgwapi_jquery::init_quill($target);
 					}
 					break;
 				case 'quill':

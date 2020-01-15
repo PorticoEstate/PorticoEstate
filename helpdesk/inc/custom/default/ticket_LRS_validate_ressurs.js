@@ -208,6 +208,12 @@ function validate_submit()
 		{
 			$(this).prop('disabled', false);
 		});
+		var element = document.getElementById('spinner');
+		if (element)
+		{
+			element.parentNode.removeChild(element);
+		}
+
 	}
 	else
 	{

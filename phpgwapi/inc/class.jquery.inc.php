@@ -52,7 +52,7 @@
 		{
 			$migration_test = false;
 
-			if (preg_match('/MSIE (6|7|8)/i', $_SERVER['HTTP_USER_AGENT']))
+			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
 			{
 				$message = lang('outdated browser: %1', $_SERVER['HTTP_USER_AGENT']);
 				phpgwapi_cache::message_set($message, 'error');
@@ -583,21 +583,25 @@ JS;
 			$js = <<<JS
 
 		$( document ).ready( function() {
-			$( 'textarea#{$target}' ).ckeditor(
-				{
-					uiColor: '#9AB8F3',
-					language: '{$userlang}',
-					resize_dir: 'both',
-					extraAllowedContent: [
-						'div(*){*}[*]',
-						'h1(*){*}[*]',
-						'h2(*){*}[*]',
-						'h3(*){*}[*]',
-						'h4(*){*}[*]',
-						'h5(*){*}[*]'
-						].join("; ")
-				}
-			);
+
+			CKEDITOR.replace('$target', {
+			   language: '$userlang'
+			 });
+
+//		$( 'textarea#{$target}' ).ckeditor(
+//				{
+//					language: '{$userlang}',
+//					resize_dir: 'both',
+//					extraAllowedContent: [
+//						'div(*){*}[*]',
+//						'h1(*){*}[*]',
+//						'h2(*){*}[*]',
+//						'h3(*){*}[*]',
+//						'h4(*){*}[*]',
+//						'h5(*){*}[*]'
+//						].join("; ")
+//				}
+//			);
 		} );
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);

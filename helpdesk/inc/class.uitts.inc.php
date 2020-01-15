@@ -1982,7 +1982,8 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'parent_cat_id'	=> $this->parent_cat_id,
 				'account_lid'	=> $GLOBALS['phpgw_info']['user']['account_lid'],
-				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file'))
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file')),
+				'html_editor'	=> $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor']
 			);
 
 			$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);

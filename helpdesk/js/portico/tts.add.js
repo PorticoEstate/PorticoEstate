@@ -1,3 +1,5 @@
+/* global html_editor, CKEDITOR */
+
 var pendingList = 0;
 var redirect_action;
 var file_count = 0;
@@ -53,10 +55,10 @@ this.confirm_session = function (action)
 				else
 				{
 					var form = document.getElementById('form');
-	//				form.style.display = 'none';
+					//				form.style.display = 'none';
 					$('<div id="spinner" class="d-flex align-items-center">')
-					.append($('<strong>').text('Lagrer...'))
-					.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
+						.append($('<strong>').text('Lagrer...'))
+						.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
 					window.scrollBy(0, 100); //
 
 					document.getElementById(action).value = 1;
@@ -89,6 +91,10 @@ ajax_submit_form = function (action)
 		try
 		{
 			formdata = new FormData(thisForm[0]);
+			if (html_editor === 'ckeditor')
+			{
+				formdata.new_note = CKEDITOR.instances['new_note'].getData();
+			}
 		}
 		catch (e)
 		{
@@ -144,7 +150,7 @@ ajax_submit_form = function (action)
 					});
 
 					var element = document.getElementById('spinner');
-					if(element)
+					if (element)
 					{
 						element.parentNode.removeChild(element);
 					}
@@ -319,15 +325,41 @@ $.formUtils.addValidator({
 	validatorFunction: function (value, $el, config, languaje, $form)
 	{
 		var element = document.getElementById('editor_error');
-		if(element)
+		if (element)
 		{
 			element.parentNode.removeChild(element);
 		}
 		var v = true;
-		if ($('#new_note').summernote('isEmpty'))
+		if (html_editor === 'summernote')
 		{
-			$('<span id="editor_error" class="help-block form-error">').text('Angi detaljer').insertAfter($('.note-editor'));
-			v = false;
+			if ($('#new_note').summernote('isEmpty'))
+			{
+				$('<span id="editor_error" class="help-block form-error">').text('Angi detaljer').insertAfter($('.note-editor'));
+				v = false;
+			}
+		}
+		else if (html_editor === 'ckeditor')
+		{
+			var data = CKEDITOR.instances['new_note'].getData();
+
+			document.getElementById("new_note").value = data;
+
+			if (!data)
+			{
+				$('<span id="editor_error" class="help-block form-error">').text('Angi detaljer').insertAfter($('#new_note'));
+				v = false;
+			}
+		}
+		else
+		{
+			var data = document.getElementById("new_note").value;
+
+			if (!data)
+			{
+				$('<span id="editor_error" class="help-block form-error">').text('Angi detaljer').insertAfter($('#new_note'));
+				v = false;
+			}
+
 		}
 		return v;
 	},
@@ -387,19 +419,41 @@ JqueryPortico.autocompleteHelper(phpGWLink('index.php',
 
 $(window).on('load', function ()
 {
+	$.fn.insertAtCaret = function (myValue)
+	{
+		myValue = myValue.trim();
+		CKEDITOR.instances['new_note'].insertText(myValue);
+	};
+
 	$("#set_on_behalf_of_name").on("autocompleteselect", function (event, ui)
 	{
 		//	console.log(ui);
 		var on_behalf_of_lid = ui.item.value;
 		try
 		{
-//			var temp = document.getElementById("new_note").value;
-//			if (temp)
-//			{
-//				temp = temp + "\n";
-//			}
-//			document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
-			$('textarea#new_note').summernote('insertText', "Saken gjelder: " + ui.item.label);
+			if (html_editor === 'summernote')
+			{
+				$('textarea#new_note').summernote('insertText', "Saken gjelder: " + ui.item.label);
+			}
+			else if (html_editor === 'ckeditor')
+			{
+				var temp = document.getElementById("new_note").value;
+				if (temp)
+				{
+					temp = temp + "<br/>";
+				}
+				CKEDITOR.instances['new_note'].insertText(temp + "Saken sendes til: " + ui.item.label);
+
+			}
+			else
+			{
+				var temp = document.getElementById("new_note").value;
+				if (temp)
+				{
+					temp = temp + "\n";
+				}
+				document.getElementById("new_note").value = temp + "Saken gjelder: " + ui.item.label;
+			}
 
 			var conf = {
 				modules: 'location, date, security, file',
@@ -439,14 +493,29 @@ $(window).on('load', function ()
 		var set_user_alternative_lid = ui.item.value;
 		try
 		{
-//			var temp = document.getElementById("new_note").value;
-//			if (temp)
-//			{
-//				temp = temp + "\n";
-//			}
-//			document.getElementById("new_note").value = temp + "Saken sendes til: " + ui.item.label;
-//			$('textarea#new_note').summernote('reset');
-			$('textarea#new_note').summernote('insertText', "Saken sendes til: " + ui.item.label);
+			if (html_editor === 'summernote')
+			{
+				$('textarea#new_note').summernote('insertText', "Saken sendes til: " + ui.item.label);
+			}
+			else if (html_editor === 'ckeditor')
+			{
+				var temp = document.getElementById("new_note").value;
+				if (temp)
+				{
+					temp = temp + "<br/>";
+				}
+				CKEDITOR.instances['new_note'].insertText(temp + "Saken sendes til: " + ui.item.label);
+
+			}
+			else
+			{
+				var temp = document.getElementById("new_note").value;
+				if (temp)
+				{
+					temp = temp + "\n";
+				}
+				document.getElementById("new_note").value = temp + "Saken sendes til: " + ui.item.label;
+			}
 		}
 		catch (err)
 		{

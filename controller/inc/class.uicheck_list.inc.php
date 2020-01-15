@@ -2533,6 +2533,9 @@ HTML;
 
 		function get_report()
 		{
+			$config = createObject('phpgwapi.config', 'property')->read();
+
+
 			$check_list_id = phpgw::get_var('check_list_id');
 			$case_location_code = phpgw::get_var('location_code');
 
@@ -2599,14 +2602,12 @@ HTML;
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-
-			$pdf->selectFont('Helvetica-Bold');
-			
+	
 			$pdf->setStrokeColor(0, 0, 0, 1);
 			$pdf->line(20, 40, 578, 40);
 			//	$pdf->line(20,820,578,820);
 			//	$pdf->addText(50,823,6,lang('order'));
-			$pdf->addText(50, 28, 6, $this->bo->config->config_data['org_name']);
+			$pdf->addText(50, 28, 6, $config['org_name']);
 			$pdf->addText(300, 28, 6, $date);
 
 			if ($preview)
@@ -2669,23 +2670,22 @@ HTML;
 			);
 
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => '', 'col3' => '', 'col4' => ''), '',
+			$pdf->ezTable($data, '', '',
 				array(
 				'gridlines'=> EZ_GRIDLINE_ALL,
 				'shadeHeadingCol'=> [0.9,0.9,0.7],
 				'showHeadings'	 => 0,
 				'shaded'		 => 0,
 				'xPos' => 0,
-				'xOrientation'	 => 'right', 'width' => 500,
+				'xOrientation'	 => 'right',
+				'width' => 500,
 				'cols'			 => array
 				(
-					'col1'	 => array('width' => 125, 'justification' => 'left','bgcolor'=> [0.9,0.9,0.7]),
+					'col1'	 => array('width' => 125, 'justification' => 'left'),
 					'col2'	 => array('width' => 125, 'justification' => 'left'),
 					'col3'	 => array('width' => 125, 'justification' => 'left'),
 					'col4'	 => array('width' => 125, 'justification' => 'left'),
 				)
-
-
 			));
 
 			$data = array(
@@ -2695,9 +2695,12 @@ HTML;
 				),
 			);
 
-			$pdf->ezTable($data, array('col1' => ''), '', array('showHeadings' => 0,
-				'shaded'		 => 0, 'xPos' => 0,
-				'xOrientation'	 => 'right', 'width' => 500,
+			$pdf->ezTable($data, '', '', array(
+				'showHeadings' => 0,
+				'shaded'	 => 0,
+				'xPos' => 0,
+				'xOrientation'	 => 'right',
+				'width' => 500,
 				'gridlines'		 => EZ_GRIDLINE_ALL,
 				'cols'			 => array
 				(
@@ -2705,10 +2708,76 @@ HTML;
 				)
 			));
 
+			$data = array(
+				array
+				(
+					'col1' => "Antall kontrollerte objekter",
+					'col2' => 6,
+				),
+				array
+				(
+					'col1' => "Merknader",
+					'col2' => 3,
+				),
+			);
 
+			$pdf->ezTable($data, '', '', array(
+				'showHeadings' => 0,
+				'shaded'	 => 0,
+				'xPos' => 0,
+				'xOrientation'	 => 'right',
+				'width' => 400,
+				'gridlines'		 => EZ_GRIDLINE_HEADERONLY,
+				'cols'			 => array
+				(
+					'col1'	 => array('width' => 300, 'justification' => 'left'),
+					'col2'	 => array('width' => 100, 'justification' => 'left'),
+				)
+			));
+
+
+			$data = array(
+				array
+				(
+					'col1' => "<c:color:1,0,0>A</c:color>-kan medføre fare for barnets liv",
+					'col2' => "<c:color:1,0,0>0</c:color>",
+				),
+				array
+				(
+					'col1' => "<c:color:0,0,1>B</c:color>-kan medføre fare for livsvarig skade hos barnet",
+					'col2' => "<c:color:0,0,1>1</c:color>",
+				),
+				array
+				(
+					'col1' => "<c:color:0,1,0>C</c:color>-kan medføre mindre alvorlig skade",
+					'col2' => "<c:color:0,1,0>2</c:color>",
+				),
+			);
+
+			$pdf->ezTable($data, '', '', array(
+				'showHeadings' => 0,
+				'shaded'	 => 0,
+				'xPos' => 0,
+				'xOrientation'	 => 'right',
+				'width' => 400,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array
+				(
+					'col1'	 => array('width' => 300, 'justification' => 'left'),
+					'col2'	 => array('width' => 100, 'justification' => 'left'),
+				)
+			));
+			$pdf->ezSetDy(-20);
 
 			// Output some colored text by using text directives and justify it to the right of the document
-			$pdf->ezText("PDF with some <c:color:1,0,0>blue</c:color> <c:color:0,1,0>red</c:color> and <c:color:0,0,1>green</c:color> colours", 12, array('justification' => 'right'));
+			$pdf->ezText("Se hjemmel ved hver avviksbeskrivelse for kontrollgrunnlag. Alle mål i rapporten er oppgitt i cm. ", 10, array('justification' => 'left'));
+
+			$pdf->ezSetDy(-20);
+
+
+			$pdf->ezText("Inspektør(ene) er sertifisert i henhold til gjeldende utgave av tjeneste-beskrivelse for sertifisering av lekeplassutstyrs-inspektører som i sin helhet er gjengitt på sertifiserings-organets hjemmeside. Inspektøren er kun sertifisert for å påvise avvik i henhold til gjeldende utgave av NS-EN 1176 del 1-7 og del 10-11 Lekeplassutstyr og underlag.", 10, array('justification' => 'left'));
+
+			$pdf->ezNewPage();
 			// Output the pdf as stream, but uncompress
 			$pdf->ezStream(array('compress' => 0));
 		}
