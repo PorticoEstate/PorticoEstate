@@ -52,6 +52,13 @@ this.confirm_session = function (action)
 				}
 				else
 				{
+					var form = document.getElementById('form');
+	//				form.style.display = 'none';
+					$('<div id="spinner" class="d-flex align-items-center">')
+					.append($('<strong>').text('Lagrer...'))
+					.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
+					window.scrollBy(0, 100); //
+
 					document.getElementById(action).value = 1;
 					try
 					{
@@ -135,6 +142,13 @@ ajax_submit_form = function (action)
 					{
 						$(this).prop('disabled', false);
 					});
+
+					var element = document.getElementById('spinner');
+					if(element)
+					{
+						element.parentNode.removeChild(element);
+					}
+
 					alert(data.message);
 				}
 			}
