@@ -584,7 +584,7 @@
 				case 'summernote':
 					foreach ($targets as $target)
 					{
-						phpgwapi_jquery::init_quill($target);
+						phpgwapi_jquery::init_summernote($target);
 					}
 					break;
 				case 'quill':
