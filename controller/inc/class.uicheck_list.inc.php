@@ -95,6 +95,8 @@
 			$this->so_control_group = CreateObject('controller.socontrol_group');
 			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
 			$this->so_case = CreateObject('controller.socase');
+			$this->vfs = CreateObject('phpgwapi.vfs');
+
 			$this->location_finder = new location_finder();
 
 			$this->acl_location = '.checklist';
@@ -2538,9 +2540,57 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
+//			$preview = true;
+
 			$report_info = $this->_get_report_info($check_list_id, $case_location_code);
-			_debug_array($report_info);
+//			_debug_array($report_info);die();
+
+
+			$location_code = $report_info['check_list']->get_location_code();
+			$completed_date = $report_info['check_list']->get_completed_date();
+
+
+
+
+			$loction_name_info = createObject('property.solocation')->get_part_of_town($location_code);
+	//		_debug_array($location_code);
+
+
+	//		die();
+
+			$location_id = $report_info['check_list']->get_location_id();
+			$item_id	 = $report_info['check_list']->get_component_id();
+
+			$soentity = createObject('property.soentity');
+
+			$location_code = $soentity->get_location_code($location_id, $item_id);
+			$location_arr = explode('-', $location_code);
+			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+			$this->vfs->override_acl = 1;
+
+			$files = $this->vfs->ls(array(
+				'orderby' => 'file_id',
+				'mime_type'	=> 'image/jpeg',
+				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$this->vfs->override_acl = 0;
+
+			$file = end($files);
+
+
+
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
+
 			$pdf = CreateObject('phpgwapi.pdf');
+			// Modified to use the local file if it can
+			$pdf->openHere('Fit');
 
 			$pdf->ezSetMargins(50, 70, 50, 50);
 			$pdf->selectFont('Helvetica');
@@ -2549,6 +2599,118 @@ HTML;
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
+
+			$pdf->selectFont('Helvetica-Bold');
+			
+			$pdf->setStrokeColor(0, 0, 0, 1);
+			$pdf->line(20, 40, 578, 40);
+			//	$pdf->line(20,820,578,820);
+			//	$pdf->addText(50,823,6,lang('order'));
+			$pdf->addText(50, 28, 6, $this->bo->config->config_data['org_name']);
+			$pdf->addText(300, 28, 6, $date);
+
+			if ($preview)
+			{
+				$pdf->setColor(1, 0, 0);
+				$pdf->addText(200, 400, 40, lang('DRAFT'), -10);
+				$pdf->setColor(1, 0, 0);
+			}
+
+			$pdf->restoreState();
+			$pdf->closeObject();
+
+			// note that object can be told to appear on just odd or even pages by changing 'all' to 'odd'
+			// or 'even'.
+			$pdf->addObject($all, 'all');
+
+//			$pdf->ezSetDy(-100);
+
+			$pdf->ezStartPageNumbers(500, 28, 6, 'right', '{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}', 1);
+
+
+			$pdf->ezText($report_info['control']->get_control_area_name(), 20);
+			$pdf->ezText($report_info['control']->get_title(), 20);
+			$pdf->selectFont('Helvetica');
+
+
+			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
+
+			$selected_inspectors = array();
+			foreach ($inspectors as $inspector)
+			{
+				if($inspector['selected'])
+				{
+					$selected_inspectors[] = $inspector['name'];
+				}
+			}
+
+			$data = array(
+				array
+				(
+					'col1' => "Kontrolldato",
+					'col2' => $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat),
+					'col3' => "Sted",
+					'col4' => $report_info['component_array']['xml_short_desc']
+				),
+				array
+				(
+					'col1' => "Inspektør",
+					'col2' => implode("\n", $selected_inspectors),
+					'col3' => "Bydel",
+					'col4' => $loction_name_info['part_of_town']
+				),
+				array
+				(
+					'col1' => "Sertifikatnummer",
+					'col2' => '',
+					'col3' => "Rapportnummer",
+					'col4' => $check_list_id
+				),
+			);
+
+
+			$pdf->ezTable($data, array('col1' => '', 'col2' => '', 'col3' => '', 'col4' => ''), '',
+				array(
+				'gridlines'=> EZ_GRIDLINE_ALL,
+				'shadeHeadingCol'=> [0.9,0.9,0.7],
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos' => 0,
+				'xOrientation'	 => 'right', 'width' => 500,
+				'cols'			 => array
+				(
+					'col1'	 => array('width' => 125, 'justification' => 'left','bgcolor'=> [0.9,0.9,0.7]),
+					'col2'	 => array('width' => 125, 'justification' => 'left'),
+					'col3'	 => array('width' => 125, 'justification' => 'left'),
+					'col4'	 => array('width' => 125, 'justification' => 'left'),
+				)
+
+
+			));
+
+			$data = array(
+				array
+				(
+					'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
+				),
+			);
+
+			$pdf->ezTable($data, array('col1' => ''), '', array('showHeadings' => 0,
+				'shaded'		 => 0, 'xPos' => 0,
+				'xOrientation'	 => 'right', 'width' => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array
+				(
+					'col1'	 => array('width' => 500, 'justification' => 'left'),
+				)
+			));
+
+
+
+			// Output some colored text by using text directives and justify it to the right of the document
+			$pdf->ezText("PDF with some <c:color:1,0,0>blue</c:color> <c:color:0,1,0>red</c:color> and <c:color:0,0,1>green</c:color> colours", 12, array('justification' => 'right'));
+			// Output the pdf as stream, but uncompress
+			$pdf->ezStream(array('compress' => 0));
 		}
 
 
