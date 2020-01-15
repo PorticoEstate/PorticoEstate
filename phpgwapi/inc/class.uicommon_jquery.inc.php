@@ -50,7 +50,7 @@
 			$yui = isset($yui) && $yui == 'yui3' ? 'yui3' : 'yahoo';
 			$currentapp = $currentapp ? $currentapp : $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-//			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
+			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
 			{
 				if($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
 				{
@@ -453,6 +453,15 @@
 
 			$this->add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
+			{
+				$data['browser_support'] = 'legacy';
+			}
+			else
+			{
+				$data['browser_support'] = 'modern';				
+			}
 
 			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
 			{
