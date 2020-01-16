@@ -154,9 +154,19 @@
 			}
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
+			$building_info = $this->so->get_building_info($application['id']);
+
+			$extra_mail_addresses = $this->get_mail_addresses( $building_info['id'], $application['case_officer_id'] );
+			
+			$bcc = implode(';', $extra_mail_addresses);
+
 			try
 			{
 				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
+				if($bcc && $created)
+				{
+					$send->msg('email', $bcc, "KOPI::$subject", "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>$body", '', '', '', $from, 'AktivKommune', 'html', '',array(), false);			
+				}
 			}
 			catch (Exception $e)
 			{
