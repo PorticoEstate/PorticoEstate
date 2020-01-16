@@ -520,7 +520,7 @@
 									<h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3>
 								</legend>
 							</div>
-							<p>Alle som leier lokaler hos Bergen kommune må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
+							<p>Alle som leier lokaler må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
 							<div class="pure-control-group">
 								<input type="hidden" data-validation="regulations_documents">
 									<xsl:attribute name="data-validation-error-msg">
