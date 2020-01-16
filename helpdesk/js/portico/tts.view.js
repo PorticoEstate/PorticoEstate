@@ -1,4 +1,6 @@
 
+/* global CKEDITOR */
+
 var FormatterCenter = function (key, oData)
 {
 
@@ -136,6 +138,12 @@ this.refresh_files = function ()
 
 $(function ()
 {
+	$.fn.insertAtCaret = function (myValue)
+	{
+		myValue = myValue.trim();
+		CKEDITOR.instances['new_note'].insertText(myValue);
+	};
+
 	$('#paste_image_data').pastableNonInputable();
 
 	$('#paste_image_data').on('pasteImage', function (ev, data)

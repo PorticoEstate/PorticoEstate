@@ -35,7 +35,7 @@ function show_feiltyper()
 	}
 }
 
-function validate_submit()
+function validate_submit(action)
 {
 	var error = false;
 	var feiltype_id = $("#id_feiltyper").val();
@@ -75,7 +75,7 @@ function validate_submit()
 		/**
 		 * In order to be consistent with the commit-processes in both "add" and "view"
 		 */
-		ajax_submit_form('dummy');
+		ajax_submit_form(action);
 	}
 }
 

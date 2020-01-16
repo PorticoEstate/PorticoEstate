@@ -69,7 +69,17 @@
 							<script type="text/javascript">
 								number_of_toolbar_items += 1;
 							</script>
-							 <div class="form-group col-md-4">
+							 <div>
+								 <xsl:attribute name="class">
+									 <xsl:choose>
+										 <xsl:when test="//browser_support = 'legacy'">
+											 <xsl:text>pure-u-1 pure-u-md-1-3</xsl:text>
+										 </xsl:when>
+										 <xsl:otherwise>
+											 <xsl:text>form-group col-md-4</xsl:text>
+										 </xsl:otherwise>
+									 </xsl:choose>
+								 </xsl:attribute>
 
 								<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 								<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
