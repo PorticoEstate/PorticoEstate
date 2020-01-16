@@ -420,24 +420,27 @@
 
 		function get_uicols_at_location()
 		{
-			$uicols['name'][0]		 = 'document_name';
-			$uicols['descr'][0]		 = lang('Document name');
-			$uicols['datatype'][0]	 = 'link';
-			$uicols['name'][1]		 = 'title';
-			$uicols['descr'][1]		 = lang('Title');
-			$uicols['datatype'][1]	 = 'text';
-			$uicols['name'][2]		 = 'doc_type';
-			$uicols['descr'][2]		 = lang('Doc type');
+			$uicols['name'][0]		 = 'location_code';
+			$uicols['descr'][0]		 = lang('location');
+			$uicols['datatype'][0]	 = 'text';
+			$uicols['name'][1]		 = 'document_name';
+			$uicols['descr'][1]		 = lang('Document name');
+			$uicols['datatype'][1]	 = 'link';
+			$uicols['name'][2]		 = 'title';
+			$uicols['descr'][2]		 = lang('Title');
 			$uicols['datatype'][2]	 = 'text';
-			$uicols['name'][3]		 = 'user';
-			$uicols['descr'][3]		 = lang('coordinator');
+			$uicols['name'][3]		 = 'doc_type';
+			$uicols['descr'][3]		 = lang('Doc type');
 			$uicols['datatype'][3]	 = 'text';
-			$uicols['name'][4]		 = 'document_id';
-			$uicols['descr'][4]		 = lang('document id');
+			$uicols['name'][4]		 = 'user';
+			$uicols['descr'][4]		 = lang('coordinator');
 			$uicols['datatype'][4]	 = 'text';
-			$uicols['name'][5]		 = 'document_date';
-			$uicols['descr'][5]		 = lang('document date');
+			$uicols['name'][5]		 = 'document_id';
+			$uicols['descr'][5]		 = lang('document id');
 			$uicols['datatype'][5]	 = 'text';
+			$uicols['name'][6]		 = 'document_date';
+			$uicols['descr'][6]		 = lang('document date');
+			$uicols['datatype'][6]	 = 'text';
 			return $uicols;
 		}
 
@@ -551,7 +554,7 @@
 			{
 				$data['datatable']['new_item'] = self::link(array(
 						'menuaction'	 => 'property.uidocument.edit',
-						'from'			 => 'list_doc',
+						'from'			 => 'property.uidocument.list_doc',
 						'location_code'	 => $location_code,
 						'p_entity_id'	 => $this->entity_id,
 						'p_cat_id'		 => $this->cat_id,
@@ -609,7 +612,7 @@
 					'action'	 => $GLOBALS['phpgw']->link('/index.php', array
 						(
 						'menuaction' => 'property.uidocument.view',
-						'from'		 => 'list_doc'
+						'from'		 => 'property.uidocument.list_doc'
 					)),
 					'parameters' => json_encode($parameters)
 				);
@@ -624,7 +627,7 @@
 					'action'	 => $GLOBALS['phpgw']->link('/index.php', array
 						(
 						'menuaction' => 'property.uidocument.edit',
-						'from'		 => 'list_doc'
+						'from'		 => 'property.uidocument.list_doc'
 					)),
 					'parameters' => json_encode($parameters)
 				);
@@ -673,15 +676,20 @@
 					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
 			}
 
-			$from		 = phpgw::get_var('from');
+			$_from		 = phpgw::get_var('from');
 			$document_id = phpgw::get_var('document_id', 'int');
 			//			$location_code 		= phpgw::get_var('location_code');
 			$values		 = phpgw::get_var('values');
 
-			if (!$from)
+			if (!$_from)
 			{
-				$from = 'index';
+				$from = 'property.uidocument.index';
 			}
+			else
+			{
+				$from = $_from;
+			}
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('document', 'datatable_inline'));
 
 			$bypass = phpgw::get_var('bypass', 'bool');
@@ -851,7 +859,7 @@
 					$receipt = $this->bo->save($values);
 					//					$document_id=$receipt['document_id'];
 					$GLOBALS['phpgw']->session->appsession('session_data', 'document_receipt', $receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uidocument.list_doc',
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => $_from ?  $from : 'property.uidocument.list_doc',
 						'location_code'	 => implode("-", $values['location']), 'entity_id'		 => $this->entity_id,
 						'cat_id'		 => $this->cat_id, 'p_num'			 => $values['extra']['p_num']));
 				}
@@ -975,7 +983,7 @@
 				'lang_category'					 => lang('category'),
 				'lang_save'						 => lang('save'),
 				'lang_save_statustext'			 => lang('Save the document'),
-				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uidocument.' . $from,
+				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $from,
 					'location_code'	 => $location_code, 'entity_id'		 => $this->entity_id, 'cat_id'		 => $this->cat_id,
 					'p_num'			 => $p_num, 'preserve'		 => 1)),
 				'lang_done'						 => lang('done'),
@@ -1085,12 +1093,12 @@
 				phpgw::no_access();
 			}
 
-			$from		 = phpgw::get_var('from');
+			$_from		 = phpgw::get_var('from');
 			$document_id = phpgw::get_var('document_id', 'int');
 
-			if (!$from)
+			if (!$_from)
 			{
-				$from = 'index';
+				$from = 'property.uidocument.index';
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('document', 'datatable_inline'));
@@ -1168,7 +1176,7 @@
 				'location_data'					 => $location_data,
 				'location_type'					 => 'form',
 				'form_action'					 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uidocument.' . $from,
+				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $from,
 					'location_code'	 => $values['location_code'], 'entity_id'		 => $values['p_entity_id'],
 					'cat_id'		 => $values['p_cat_id'], 'preserve'		 => 1)),
 				'lang_year'						 => lang('Year'),

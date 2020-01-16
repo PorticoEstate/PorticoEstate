@@ -23,6 +23,7 @@ $(document).ready(function ()
 function newDocument(oArgs)
 {
 	oArgs['doc_type'] = $('#doc_type').val();
+	oArgs['from'] = 'property.uilocation.edit';
 
 	var requestUrl = phpGWLink('index.php', oArgs);
 
@@ -33,6 +34,7 @@ function newDocument(oArgs)
 
 function editDocument(oArgs, parameters)
 {
+	oArgs['from'] = 'property.uilocation.edit';
 	var api = $('#datatable-container_0').dataTable().api();
 	var selected = api.rows({selected: true}).data();
 
@@ -58,7 +60,7 @@ function editDocument(oArgs, parameters)
 				oArgs[val.name] = selected[n][val.source];
 			}
 			requestUrl = phpGWLink('index.php', oArgs);
-			window.open(requestUrl, '_blank');
+			window.open(requestUrl, '_self');
 		});
 	}
 };

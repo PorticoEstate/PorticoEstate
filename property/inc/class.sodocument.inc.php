@@ -410,8 +410,8 @@
 			if ($query)
 			{
 				$query		 = $this->db->db_addslashes($query);
-				$querymethod = " $where (fm_document.title $this->like '%$query%' OR fm_document.document_name"
-					. " $this->like '%$query%')";
+				$querymethod = " {$where} (fm_document.title {$this->like} '%{$query}%' OR fm_document.document_name"
+					. " {$this->like} '%{$query}%' OR fm_document.location_code {$this->like} '{$query}%')";
 			}
 
 			$sql = "SELECT DISTINCT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
@@ -435,6 +435,7 @@
 			{
 				$document_list[] = array
 					(
+					'location_code'	 => $this->db->f('location_code'),
 					'document_id'	 => $this->db->f('id'),
 					'document_name'	 => $this->db->f('document_name', true),
 					'link'			 => $this->db->f('link', true),
