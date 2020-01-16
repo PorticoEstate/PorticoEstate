@@ -3545,7 +3545,7 @@ HTML;
 				$result[$_index]['name'] = $sheet_name;
 				$spreadsheet->setActiveSheetIndex($_index);
 
-				$highestColumn = $spreadsheet->getActiveSheet()->getHighestColumn();
+				$highestColumn = 'H';//$spreadsheet->getActiveSheet()->getHighestColumn();
 
 				$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
@@ -3553,10 +3553,10 @@ HTML;
 
 				$start = 9; // Read the first line to get the headers out of the way
 
-				for ($j = 1; $j <= $highestColumnIndex; $j++)
-				{
-					$this->fields[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
-				}
+//				for ($j = 1; $j <= $highestColumnIndex; $j++)
+//				{
+//					$this->fields[] = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
+//				}
 
 				for ($row = $start; $row <= $rows; $row++)
 				{
