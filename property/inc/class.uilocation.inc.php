@@ -1731,6 +1731,24 @@ JS;
 			$total_records	 = $document->total_records;
 			foreach ($documents as $item)
 			{
+				if ($item['link'])
+				{
+					if (!preg_match('/^HTTP/i', $item['link']))
+					{
+						$link = 'file:///' . str_replace(':', '|', $item['link']);
+					}
+
+					$values[]		 = array(
+						'id'			 => $item['document_id'],
+						'type'			 => 'location',
+						'document_name'	 => "<a href='{$link}'>{$item['title']}</a>",
+						'title'			 => $item['title'],
+						'document_date'	 => $GLOBALS['phpgw']->common->show_date($item['document_date'], $dateformat)
+					);
+
+					continue;
+				}
+
 				$document_name	 = '<a href="' . self::link(array('menuaction' => 'property.uidocument.view_file',
 						'id'		 => $item['document_id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
 				$values[]		 = array(
