@@ -56,9 +56,16 @@ this.confirm_session = function (action)
 				{
 					var form = document.getElementById('form');
 					//				form.style.display = 'none';
-					$('<div id="spinner" class="d-flex align-items-center">')
-						.append($('<strong>').text('Lagrer...'))
-						.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
+//					$('<div id="spinner" class="d-flex align-items-center">')
+//						.append($('<strong>').text('Lagrer...'))
+//						.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>'))
+//						.insertAfter(form);
+
+					$('<div id="spinner" class="text-cente mt-2  ml-2">')
+						.append($('<div class="spinner-border" role="status">')
+							.append($('<span class="sr-only">Loading...</span>')))
+						.insertAfter(form);
+
 					window.scrollBy(0, 100); //
 
 					document.getElementById(action).value = 1;
