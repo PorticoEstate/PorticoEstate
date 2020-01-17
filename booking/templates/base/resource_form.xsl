@@ -274,7 +274,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'day horizon')"/>
 					</label>
-					<input type="number" min="1" id="booking_day_horizon" name="booking_day_horizon" value="{resource/booking_day_horizon}">
+					<input type="number" min="0" id="booking_day_horizon" name="booking_day_horizon" value="{resource/booking_day_horizon}">
 					</input>
 				</div>
 
@@ -282,7 +282,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'month horizon')"/>
 					</label>
-					<input type="number" min="1" id="booking_month_horizon" name="booking_month_horizon" value="{resource/booking_month_horizon}">
+					<input type="number" min="0" id="booking_month_horizon" name="booking_month_horizon" value="{resource/booking_month_horizon}">
 					</input>
 				</div>
 
