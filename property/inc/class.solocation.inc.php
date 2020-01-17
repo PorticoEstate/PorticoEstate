@@ -2296,7 +2296,10 @@
 			$values			 = array();
 			if ($location_name)
 			{
-				$this->db->query("SELECT loc{$level}_name as name, location_code FROM fm_location{$level} WHERE loc{$level}_name {$this->like} '{$location_name}%'", __LINE__, __FILE__);
+				$this->db->query("SELECT loc{$level}_name as name, location_code"
+				. " FROM fm_location{$level}"
+				. " WHERE loc{$level}_name {$this->like} '{$location_name}%'"
+				. " OR location_code {$this->like} '{$location_name}%'", __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
 					$values[] = array
