@@ -853,7 +853,7 @@
 				phpgw::no_access();
 			}
 
-			$id = phpgw::get_var('id', 'int');
+			$id = phpgw::get_var('id', 'int', 'GET');
 
 			phpgw::import_class('property.multiuploader');
 			

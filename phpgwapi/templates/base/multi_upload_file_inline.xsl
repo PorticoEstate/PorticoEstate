@@ -83,7 +83,7 @@
 			dataType: "json",
 			add: function (e, data)
 			{
-				console.log($(this));
+				//console.log($(this));
 <![CDATA[
 				data.context = $('<p class="file">')
 					.append($('<span>').text(data.files[0].name))

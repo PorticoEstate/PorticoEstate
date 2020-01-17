@@ -105,7 +105,7 @@
 
 		public function handle_multi_upload_file()
 		{
-			$id = phpgw::get_var('id');
+			$id = phpgw::get_var('id', 'int', 'GET');
 
 			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php',
 												  array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
