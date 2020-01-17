@@ -2644,6 +2644,7 @@ HTML;
 					$selected_inspectors[] = $inspector['name'];
 				}
 			}
+			unset($inspector);
 
 			$data = array(
 				array
@@ -2777,7 +2778,19 @@ HTML;
 
 			$pdf->ezText("Inspektør(ene) er sertifisert i henhold til gjeldende utgave av tjeneste-beskrivelse for sertifisering av lekeplassutstyrs-inspektører som i sin helhet er gjengitt på sertifiserings-organets hjemmeside. Inspektøren er kun sertifisert for å påvise avvik i henhold til gjeldende utgave av NS-EN 1176 del 1-7 og del 10-11 Lekeplassutstyr og underlag.", 10, array('justification' => 'left'));
 
+			$pdf->ezSetDy(-20);
+
+			$pdf->ezText("Kontrollener gjennomført av:");
+
+			foreach ($selected_inspectors as $selected_inspector)
+			{
+				$pdf->ezText($selected_inspector);
+			}
 			$pdf->ezNewPage();
+
+
+			
+
 			// Output the pdf as stream, but uncompress
 			$pdf->ezStream(array('compress' => 0));
 		}
