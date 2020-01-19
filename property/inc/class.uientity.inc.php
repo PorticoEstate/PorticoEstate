@@ -387,7 +387,7 @@
 
 		public function handle_multi_upload_file()
 		{
-			$id			 = phpgw::get_var('id');
+			$id			 = phpgw::get_var('id', 'int', 'GET');
 			$entity_id	 = phpgw::get_var('entity_id');
 			$cat_id		 = phpgw::get_var('cat_id');
 			$type		 = phpgw::get_var('type');

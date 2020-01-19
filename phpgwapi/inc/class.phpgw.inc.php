@@ -156,17 +156,28 @@
 
 		    $config = HTMLPurifier_Config::createDefault();
 			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+			$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
+			$config->set('HTML.AllowedAttributes', 'src, height, width, alt, href');
+			
 //			$config->set('Core', 'CollectErrors', true);
 			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
 				$config->set('URI.DisableExternalResources', false);
 				$config->set('URI.DisableResources', false);
-				$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
-				$config->set('HTML.AllowedAttributes', 'src, height, width, alt');
-				$config->set('URI.AllowedSchemes', array('data' => true));
-			}
+				$config->set('URI.AllowedSchemes', array(
+					'data'	 => true,
+					'http'	 => true,
+					'https'	 => true,
+					'mailto' => true,
+					'ftp'	 => true,
+					'nntp'	 => true,
+					'news'	 => true,
+					'tel'	 => true
+					)
+				);
+		}
 
-			$purifier = new HTMLPurifier($config);
+		$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);
 			

@@ -1059,12 +1059,15 @@
 
 				if($resource['booking_month_horizon'])
 				{
+//					$test = $from->format('Y-m-d');
 					$__to = $this->month_shifter($from, $resource['booking_month_horizon']);
 
+//					$test = $__to->format('Y-m-d');
 					if($__to > $_to)
 					{
 						$to = clone $__to;
 					}
+//					$test = $to->format('Y-m-d');
 				}
 
 				if($resource['simple_booking_end_date'])
@@ -1292,7 +1295,7 @@
 			}
 			else
 			{
-				$result = $plusMonths;
+				$result = $plusMonths->modify('last day of this month');
 			}
 			return $result;
 		}

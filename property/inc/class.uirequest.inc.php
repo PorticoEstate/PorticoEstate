@@ -268,7 +268,7 @@
 
 		public function handle_multi_upload_file()
 		{
-			$id = phpgw::get_var('id');
+			$id = phpgw::get_var('id', 'int', 'GET');
 
 			phpgw::import_class('property.multiuploader');
 
