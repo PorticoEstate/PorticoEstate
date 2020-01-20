@@ -717,10 +717,10 @@
 				}
 				array_set_default($_POST, 'resources', array());
 
-
-
-//                        $event['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['from_']));
-//                        $event['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($event['to_']));
+				/**
+				 * Update the bb_event_date - which is used for collision test
+				 */
+				$event['dates'] = array_map(array(self, '_combine_dates'), array($_POST['from_']), array($_POST['to_']));
 
 				if ($_POST['organization_name'])
 				{
