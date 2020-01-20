@@ -1115,6 +1115,10 @@
 				7	 => "Sunday",
 			);
 
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$datetimeformat = "{$dateformat} H:i";
+
 			foreach ($resources['results'] as $resource)
 			{
 				$availlableTimeSlots[$resource['id']] = [];
@@ -1220,9 +1224,9 @@
 						if (($booking_lenght > 1 && $overlap) || !$overlap)
 						{
 							$availlableTimeSlots[$resource['id']][] = [
-								'when'				 => $GLOBALS['phpgw']->common->show_date($StartTime->getTimestamp()) . ' - ' . $GLOBALS['phpgw']->common->show_date($endTime->getTimestamp()),
-								'start'			 => $StartTime->getTimestamp() . '000',
-								'end'			 => $endTime->getTimestamp() . '000',
+								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
+								'start'				 => $StartTime->getTimestamp() . '000',
+								'end'				 => $endTime->getTimestamp() . '000',
 								'overlap'			 => $overlap,
 								'applicationLink'	 => [
 									'menuaction'	 => 'bookingfrontend.uiapplication.add',
