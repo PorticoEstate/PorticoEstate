@@ -1966,8 +1966,8 @@
 						$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
 					}
 
-					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id'], false, true));
-					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id(), false, true));
+					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id']), false, true);
+					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id()), false, true);
 					$control = $this->so_control->get_single($check_list->get_control_id());
 					$control_title = $control->get_title();
 					$location_desc = $this->get_location_desc($check_list);
