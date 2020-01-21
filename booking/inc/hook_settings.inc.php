@@ -37,7 +37,7 @@
 
 	$notify_alterntive = array
 	(
-		''	 => lang('No'),
+		'0'	 => lang('No'),
 		'1'	 => 'Email',
 		'2'	 => 'SMS',
 		'3'	 => 'Email ' . lang('and') . ' SMS',
