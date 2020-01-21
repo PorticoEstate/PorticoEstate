@@ -74,8 +74,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
-				return;
+				phpgw::no_access();
 			}
 			$this->edit(null, $mode = 'view');
 		}
@@ -89,8 +88,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
-				return;
+				phpgw::no_access();
 			}
 			$this->edit(null, $mode = 'view');
 		}
@@ -116,27 +114,19 @@
 				$cat_id = phpgw::get_var('cat_id', 'int');
 			}
 
-			if (!$this->acl_add && !$this->acl_edit)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'manual.uidocuments.view',
-					'cat_id' => $cat_id));
-			}
-
 			if ($mode == 'view')
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "manual::view";
 				if (!$this->acl_read)
 				{
-					$this->bocommon->no_access();
-					return;
+					phpgw::no_access();
 				}
 			}
 			else
 			{
 				if (!$this->acl_add && !$this->acl_edit)
 				{
-					$this->bocommon->no_access();
-					return;
+					phpgw::no_access();
 				}
 			}
 
