@@ -106,11 +106,11 @@
 
 			if($mailadresses)
 			{
-				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}
 			else
 			{
-				$mailadresses = $extra_mail_addresses;
+				$mailadresses = array_values($extra_mail_addresses);
 			}
 
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";

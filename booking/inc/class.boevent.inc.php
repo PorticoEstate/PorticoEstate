@@ -219,11 +219,11 @@
 
 			if($mailadresses)
 			{
-				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}
 			else
 			{
-				$mailadresses = $extra_mail_addresses;
+				$mailadresses = array_values($extra_mail_addresses);
 			}
 
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=';

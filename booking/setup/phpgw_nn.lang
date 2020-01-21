@@ -815,3 +815,5 @@ Booking	booking	nn	Booking
 default event type	booking	nn	Standard arrangement-type
 month horizon	booking	nn	Tidshorisont (mnd)
 day horizon	booking	nn	Tidshorisont (dager)
+Notify on new application	booking	nn	Varsle ved ny søknad
+and	booking	nn	og

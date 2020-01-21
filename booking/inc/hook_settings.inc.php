@@ -35,3 +35,12 @@
 
 	create_select_box('Default event type', 'event_is_public', $private_or_public, 'Default event type: private or bublic');
 
+	$notify_alterntive = array
+	(
+		''	 => lang('No'),
+		'1'	 => 'Email',
+		'2'	 => 'SMS',
+		'3'	 => 'Email ' . lang('and') . ' SMS',
+	);
+
+	create_select_box('Notify on new application', 'notify_on_new', $notify_alterntive, 'Notify on new application', '');

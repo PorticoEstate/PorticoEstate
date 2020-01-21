@@ -190,11 +190,11 @@
 
 			if($mailadresses)
 			{
-				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}
 			else
 			{
-				$mailadresses = $extra_mail_addresses;
+				$mailadresses = array_values($extra_mail_addresses);
 			}
 
 			if (($maildata['outseason'] != 'on' && $maildata['recurring'] != 'on' && $maildata['delete_allocation'] != 'on') ||
