@@ -1,4 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<span class="d-block">
+		<xsl:text>#</xsl:text>
+		<xsl:value-of select="booking/id"/>
+	</span>
 	<h3>
 		<xsl:value-of select="booking/group/organization_name"/>
 	</h3>

@@ -1,4 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<span class="d-block">
+		<xsl:text>#</xsl:text>
+		<xsl:value-of select="allocation/id"/>
+	</span>
 	<h3>
 		<!--<xsl:value-of select="php:function('lang', 'Allocation')"/> #
 		<xsl:value-of select="allocation/id"/>-->
