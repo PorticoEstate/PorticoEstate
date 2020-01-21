@@ -16,7 +16,7 @@
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
 			{
-				return;
+//				return;
 			}
 
 			$send = CreateObject('phpgwapi.send');
@@ -157,8 +157,24 @@
 			$building_info = $this->so->get_building_info($application['id']);
 
 			$extra_mail_addresses = $this->get_mail_addresses( $building_info['id'], $application['case_officer_id'] );
+
+			$mail_addresses = array();
+			$cellphones = array();
+			foreach ($extra_mail_addresses as $user_id => $extra_mail_addresse)
+			{
+				$prefs =CreateObject('phpgwapi.preferences',$user)->read();
+
+				if(isset($prefs['booking']['notify_on_new']) && ($prefs['booking']['notify_on_new'] & 1))
+				{
+					$mail_addresses[] =  $prefs['common']['email'];
+				}
+				if(isset($prefs['booking']['notify_on_new']) && ($prefs['booking']['notify_on_new'] & 2))
+				{
+					$cellphones[] =  $prefs['common']['cellphone'];
+				}
+			}
 			
-			$bcc = implode(';', $extra_mail_addresses);
+			$bcc = implode(';', $mail_addresses);
 
 			try
 			{
@@ -171,6 +187,18 @@
 			catch (Exception $e)
 			{
 				// TODO: Inform user if something goes wrong
+			}
+
+			$sms = CreateObject('sms.sms');
+
+			if($cellphones && $created)
+			{
+				$sms_message = "Ny søknad på {$application['building_name']}";
+
+				foreach ($cellphones as $cellphone)
+				{
+					$sms->websend2pv($GLOBALS['phpgw_info']['user']['account_id'], $cellphone, $sms_message);
+				}
 			}
 		}
 
@@ -206,7 +234,7 @@
 
 				if(!empty($prefs['common']['email']))
 				{
-					$mail_addresses[] = $prefs['common']['email'];
+					$mail_addresses[$user] =  $prefs['common']['email'];
 				}
 			}
 
@@ -244,11 +272,11 @@
 
 			if($mailadresses)
 			{
-				$mailadresses = array_merge($mailadresses, $extra_mail_addresses);
+				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}
 			else
 			{
-				$mailadresses = $extra_mail_addresses;
+				$mailadresses = array_values($extra_mail_addresses);
 			}
 
 //			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && $external_site_address)
