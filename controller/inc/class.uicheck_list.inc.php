@@ -2786,9 +2786,192 @@ HTML;
 			{
 				$pdf->ezText($selected_inspector);
 			}
+
 			$pdf->ezNewPage();
 
 
+//				'control' => $control,
+//				'check_list' => $check_list,
+//				'buildings_on_property' => $buildings_on_property,
+//				'location_array' => $location_array,
+//				'component_array' => $component_array,
+//				'type' => $type,
+//				'location_level' => $level,
+//				'get_locations'	=> $get_locations,
+//				'current_year' => $year,
+//				'current_month_nr' => $month,
+//				'open_check_items_and_cases' => $open_check_items_and_cases,
+//
+//			foreach ($report_info['component_array'] as $key => $value)
+//			{
+//				_debug_array($value);
+//			}
+
+//				_debug_array($report_info['component_array']);
+//				_debug_array($report_info);
+
+
+
+			$i = 1;
+
+			foreach ($report_info['open_check_items_and_cases'] as $check_item)
+			{
+//				_debug_array($check_item->get_control_item());
+
+				$num_open_cases = 0;
+				$num_pending_cases = 0;
+	
+				$cases_array = $check_item->get_cases_array();
+
+//				_debug_array($cases_array);die();
+				$data = array();
+
+				$n = 1;
+				foreach ($check_item->get_cases_array() as $case)
+				{
+
+					$entry = array
+					(
+						'col1' => "#{$i}",
+						'col2' => ''
+					);
+ 					$data[] = $entry;
+
+					$case_files = $case->get_case_files();
+ 					$status_text = lang('closed');
+					
+					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					{
+						$status_text = lang('open');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					{
+						$status_text = lang('pending');
+					}
+
+					$entry = array
+					(
+						'col1' => lang('status'),
+						'col2' => $status_text
+					);
+ 					$data[] = $entry;
+					$entry = array
+					(
+						'col1' => lang('condition degree'),
+						'col2' => $case->get_condition_degree()
+					);
+					$data[] = $entry;
+					$entry = array
+					(
+						'col1' => lang('consequence'),
+						'col2' => $case->get_consequence()
+					);
+					$data[] = $entry;
+
+					$entry = array
+					(
+						'col1' => lang('measurement'),
+						'col2' => $case->get_measurement()
+					);
+
+					$data[] = $entry;
+
+					$entry = array
+					(
+						'col1' => lang('descr'),
+						'col2' => $case->get_descr()
+					);
+					$data[] = $entry;
+
+					$entry = array
+					(
+						'col1' => lang('proposed counter measure'),
+						'col2' => $case->get_proposed_counter_measure()
+					);
+					$data[] = $entry;
+
+					foreach ($case_files as $case_file)
+					{
+						$entry = array
+						(
+							'col1' => lang('picture') . " #{$i}_{$n}",
+							'col2' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
+						);
+						$data[] = $entry;
+						$n ++;
+					}
+
+
+					if ($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					{
+						$num_open_cases++;
+					}
+
+					if ($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					{
+						$num_pending_cases++;
+					}
+
+					$i++;
+
+
+//					_debug_array($case);
+
+//die();
+				}
+
+
+				if($cases_array)
+				{
+					$pdf->ezTable($data, '', $check_item->get_control_item()->get_title() . " {$num_open_cases}/" . count($cases_array), array(
+						'showHeadings' => 0,
+						'shaded'	 => 0,
+						'xPos' => 0,
+						'xOrientation'	 => 'right',
+						'width' => 400,
+						'gridlines'		 => EZ_GRIDLINE_ALL,
+						'cols'			 => array
+						(
+							'col1'	 => array('width' => 100, 'justification' => 'left'),
+							'col2'	 => array('width' => 400, 'justification' => 'left'),
+						)
+					));
+				}
+
+				if(false)//$case_files)
+				{
+	//				_debug_array($case_files);die();
+					$data = array();
+
+					foreach ($case_files as $case_file)
+					{
+						$entry = array
+						(
+							'col1' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
+						);
+						$data[] = $entry;
+					}
+
+					$pdf->ezTable($data, '', '', array(
+						'showHeadings' => 0,
+						'shaded'	 => 0,
+						'xPos' => 0,
+						'xOrientation'	 => 'right',
+						'width' => 500,
+						'gridlines'		 => EZ_GRIDLINE_ALL,
+						'cols'			 => array
+						(
+							'col1'	 => array('width' => 500, 'justification' => 'left'),
+						)
+					));
+				}
+
+				$pdf->ezSetDy(-20);
+
+			}
+
+
+	//		die();
 			
 
 			// Output the pdf as stream, but uncompress
