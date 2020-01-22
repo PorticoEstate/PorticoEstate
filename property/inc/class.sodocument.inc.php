@@ -366,10 +366,10 @@
 				$results		 = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
-			if (!$location_code && !($entity_id && $cat_id && $p_num))
-			{
-				return array();
-			}
+//			if (!$location_code && !($entity_id && $cat_id && $p_num))
+//			{
+//				return array();
+//			}
 
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
