@@ -2838,31 +2838,12 @@ HTML;
 
 //				_debug_array($component_child);die();
 
-				$values = array();
-				$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
-				$values = $soentity->read_single(array(
-					'location_id' => $component_child['location_id'],
-					'id' => $component_child['id'],
-					'entity_id' => $system_location_arr[2],
-					'cat_id' => $system_location_arr[3],
-					), $values
-				);
-				$values = $custom->prepare($values, 'property', $system_location['location'], false);
-				_debug_array($values);die();
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-
-
-//				_debug_array($component_child);
-//				_debug_array($completed_items);die();
-
-//					$component_child['completed_id'] = $completed_items[$component_child['location_id']][$component_child['id']]['completed_id'];
-//					$completed_list[]= $component_child;
-
 					$entry = array
 					(
 						'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
-						'col2' => "{$component_child['short_description']}",
+						'col2' => "<b>{$component_child['short_description']}</b>",
 						'col3' => $GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
 					);
 
@@ -2873,13 +2854,63 @@ HTML;
 					$entry = array
 					(
 						'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
-						'col2' => "{$component_child['short_description']}",
+						'col2' => "<b>{$component_child['short_description']}</b>",
 						'col3' => 'Ikke kontrollert'
 					);
 
 				}
-
  				$data[] = $entry;
+
+				$values = array();
+				$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values = $soentity->read_single(array(
+					'location_id' => $component_child['location_id'],
+					'id' => $component_child['id'],
+					'entity_id' => $system_location_arr[2],
+					'cat_id' => $system_location_arr[3],
+					), $values
+				);
+				$values = $custom->prepare($values, 'property', $system_location['location'], false);
+//				_debug_array($values);die();
+				foreach ($values['attributes'] as  $attribute)
+				{
+
+					if($attribute['short_description'])
+					{
+						continue;
+					}
+
+
+					if($attribute['value'])
+					{
+						$_value = $attribute['value'];
+
+						if( in_array($attribute['datatype'], array('LB', 'R')) )
+						{
+							$_choice = array();
+							foreach ($attribute['choice'] as $choice)
+							{
+								if($_value == $choice['id'])
+								{
+									$_choice[] = $choice['value'];
+								}
+							}
+							$_value = implode(',', $_choice);
+						}
+
+						$entry = array
+						(
+							'col1' => "",
+							'col2' => $attribute['input_text'],
+							'col3' => $_value
+						);
+
+						$data[] = $entry;
+					}
+
+				}
+
+
 
 			}
 
@@ -2894,9 +2925,9 @@ HTML;
 					'gridlines'		 => EZ_GRIDLINE_ALL,
 					'cols'			 => array
 					(
-						'col1'	 => array('width' => 300, 'justification' => 'left'),
-						'col2'	 => array('width' => 100, 'justification' => 'left'),
-						'col3'	 => array('width' => 100, 'justification' => 'left'),
+						'col1'	 => array('width' => 100, 'justification' => 'left'),
+						'col2'	 => array('width' => 200, 'justification' => 'left'),
+						'col3'	 => array('width' => 200, 'justification' => 'left'),
 					)
 				));
 				$pdf->ezSetDy(-20);
