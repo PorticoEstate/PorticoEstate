@@ -189,12 +189,10 @@
 				// TODO: Inform user if something goes wrong
 			}
 
-			$sms = CreateObject('sms.sms');
-
 			if($cellphones && $created)
 			{
+				$sms = CreateObject('sms.sms');
 				$sms_message = "Ny søknad på {$application['building_name']}";
-
 				foreach ($cellphones as $cellphone)
 				{
 					$sms->websend2pv($GLOBALS['phpgw_info']['user']['account_id'], $cellphone, $sms_message);
