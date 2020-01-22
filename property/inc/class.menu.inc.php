@@ -1380,7 +1380,7 @@
 						),
 						'location'		 => array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.list_doc')),
 							'text'	 => lang('location')
 						)
 					)

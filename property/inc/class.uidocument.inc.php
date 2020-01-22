@@ -53,7 +53,8 @@
 			'view'		 => true,
 			'view_file'	 => true,
 			'edit'		 => true,
-			'delete'	 => true
+			'delete'	 => true,
+			'download'	 => true
 		);
 
 		function __construct()
@@ -364,10 +365,6 @@
 
 			$values = $this->bo->read_at_location($params);
 
-			if ($export)
-			{
-				return $values;
-			}
 
 			if ($this->cat_id)
 			{
@@ -390,8 +387,8 @@
 						$document_entry['link'] = 'file:///' . str_replace(':', '|', $document_entry['link']);
 					}
 
-					$link_view_file					 = $document_entry['link'];
-					$document_entry['document_name'] = 'link';
+//					$link_view_file					 = $document_entry['link'];
+					$document_entry['document_name'] = $document_entry['title'];
 					unset($link_to_files);
 				}
 				else
@@ -411,6 +408,10 @@
 				}
 			}
 
+			if ($export)
+			{
+				return $values;
+			}
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
@@ -442,6 +443,24 @@
 			$uicols['descr'][6]		 = lang('document date');
 			$uicols['datatype'][6]	 = 'text';
 			return $uicols;
+		}
+
+		function download()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$list	 = $this->query_at_location();
+			$uicols = $this->get_uicols_at_location();
+			
+			$uicols['name'][]		 = 'link';
+			$uicols['descr'][]		 = lang('link');
+			$uicols['datatype'][]	 = 'text';
+
+
+			$this->bocommon->download($list, $uicols['name'], $uicols['descr'], $uicols['input_type']);
 		}
 
 		function list_doc()
@@ -533,12 +552,12 @@
 						'cat_id'			 => $this->cat_id,
 						'p_num'				 => $p_num,
 						'doc_type'			 => $this->doc_type,
-						'location_code'		 => $location_code,
+				//		'location_code'		 => $location_code,
 						'phpgw_return_as'	 => 'json'
 						)
 					),
 					'allrows'	 => true,
-					'download'	 => self::link(array('menuaction' => 'property.uidocument.list_doc',
+					'download'	 => self::link(array('menuaction' => 'property.uidocument.download',
 						'doc_type'	 => $this->doc_type,
 						'entity_id'	 => $this->entity_id,
 						'export'	 => true,
@@ -555,7 +574,7 @@
 				$data['datatable']['new_item'] = self::link(array(
 						'menuaction'	 => 'property.uidocument.edit',
 						'from'			 => 'property.uidocument.list_doc',
-						'location_code'	 => $location_code,
+				//		'location_code'	 => $location_code,
 						'p_entity_id'	 => $this->entity_id,
 						'p_cat_id'		 => $this->cat_id,
 						'p_num'			 => $p_num
@@ -860,8 +879,10 @@
 					//					$document_id=$receipt['document_id'];
 					$GLOBALS['phpgw']->session->appsession('session_data', 'document_receipt', $receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => $_from ?  $from : 'property.uidocument.list_doc',
-						'location_code'	 => implode("-", $values['location']), 'entity_id'		 => $this->entity_id,
-						'cat_id'		 => $this->cat_id, 'p_num'			 => $values['extra']['p_num']));
+					//	'location_code'	 => implode("-", $values['location']),
+						'entity_id'		 => $this->entity_id,
+						'cat_id'		 => $this->cat_id,
+						'p_num'			 => $values['extra']['p_num']));
 				}
 				else
 				{
@@ -1053,7 +1074,7 @@
 			$link_data = array
 				(
 				'menuaction'	 => 'property.uidocument.list_doc',
-				'location_code'	 => $location_code,
+	//			'location_code'	 => $location_code,
 				'p_num'			 => $p_num
 			);
 

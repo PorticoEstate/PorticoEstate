@@ -357,7 +357,7 @@
 </xsl:template>
 
 <!-- add / edit -->
-<xsl:template match="edit">
+<xsl:template match="edit" xmlns:php="http://php.net/xsl">
 	<div align="left">
 		<dl>
 			<xsl:choose>
@@ -376,7 +376,19 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
 					<fieldset>
-
+						<xsl:choose>
+							<xsl:when test="location_type='form'">
+								<xsl:call-template name="location_form"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="location_view"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						<div class="pure-control-group">
+							<xsl:call-template name="vendor_form">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
+						</div>
 						<xsl:choose>
 							<xsl:when test="value_document_name!=''">
 								<div class="pure-control-group">
@@ -393,11 +405,9 @@
 							<label>
 								<xsl:value-of select="lang_update_file"/>
 							</label>
-							<input type="file" size="50" name="document_file" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
-									<xsl:value-of select="lang_name_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
+							<input type="file"  name="document_file" class="pure-input-3-4">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'update file')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -405,11 +415,9 @@
 							<label>
 								<xsl:value-of select="lang_version"/>
 							</label>
-							<input type="text" name="values[version]" value="{value_version}" size="12" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="text" name="values[version]" value="{value_version}" size="12" class="pure-input-3-4">
+								<xsl:attribute name="titlr">
 									<xsl:value-of select="lang_version_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -417,11 +425,9 @@
 							<label>
 								<xsl:value-of select="lang_link"/>
 							</label>
-							<input type="text" name="values[link]" value="{value_link}" size="50" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="text" name="values[link]" value="{value_link}" size="50" class="pure-input-3-4">
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_link_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -429,11 +435,9 @@
 							<label>
 								<xsl:value-of select="lang_title"/>
 							</label>
-							<input type="text" name="values[title]" value="{value_title}" size="50" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="text" name="values[title]" value="{value_title}" size="50" class="pure-input-3-4">
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_title_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -441,54 +445,45 @@
 							<label>
 								<xsl:value-of select="lang_descr"/>
 							</label>
-							<textarea cols="60" rows="6" name="values[descr]" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<textarea cols="60" rows="6" name="values[descr]" class="pure-custom pure-input-3-4">
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_descr_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 								<xsl:value-of select="value_descr"/>
 							</textarea>
 						</div>
 						<div class="pure-control-group">
-					
-							<xsl:call-template name="vendor_form"/>
-						</div>
-						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="lang_category"/>
 							</label>
-							<xsl:call-template name="categories"/>
+							<xsl:call-template name="categories">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
 						</div>
-						<xsl:choose>
-							<xsl:when test="location_type='form'">
-								<xsl:call-template name="location_form"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:call-template name="location_view"/>
-							</xsl:otherwise>
-						</xsl:choose>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="lang_coordinator"/>
 							</label>
-							<xsl:call-template name="user_id_select"/>
+							<xsl:call-template name="user_id_select">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="lang_status"/>
 							</label>
-							<xsl:call-template name="status_select"/>
+							<xsl:call-template name="status_select">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
+
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="lang_document_date"/>
 							</label>
-							<input type="text" id="values_document_date" name="values[document_date]" size="10" value="{value_document_date}" readonly="readonly" onMouseout="window.status='';return true;">
-								<xsl:attribute name="onMouseover">
-									<xsl:text>window.status='</xsl:text>
+							<input type="text" id="values_document_date" name="values[document_date]" size="10" value="{value_document_date}" readonly="readonly">
+								<xsl:attribute name="title">
 									<xsl:value-of select="lang_document_date_statustext"/>
-									<xsl:text>'; return true;</xsl:text>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -499,7 +494,10 @@
 							<xsl:variable name="lang_branch_statustext">
 								<xsl:value-of select="lang_branch_statustext"/>
 							</xsl:variable>
-							<select name="values[branch_id]" class="forms" onMouseover="window.status='{$lang_branch_statustext}'; return true;" onMouseout="window.status='';return true;">
+							<select name="values[branch_id]"  class="pure-input-3-4">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_branch_statustext"/>
+								</xsl:attribute>
 								<option value="">
 									<xsl:value-of select="lang_no_branch"/>
 								</option>
@@ -507,16 +505,14 @@
 							</select>
 						</div>
 						<div class="pure-control-group">
-								<xsl:variable name="lang_save">
-									<xsl:value-of select="lang_save"/>
-								</xsl:variable>
-								<input type="submit" name="values[save]" value="{$lang_save}" onMouseout="window.status='';return true;">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
-										<xsl:value-of select="lang_save_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
-									</xsl:attribute>
-								</input>
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="lang_save"/>
+							</xsl:variable>
+							<input type="submit" name="values[save]" value="{$lang_save}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="lang_save_statustext"/>
+								</xsl:attribute>
+							</input>
 						</div>
 					</fieldset>
 				</div>
@@ -531,11 +527,9 @@
 					<xsl:value-of select="lang_done"/>
 				</xsl:variable>
 				<form method="post" action="{$done_action}">
-					<input type="submit" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<input type="submit" name="done" value="{$lang_done}">
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_done_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</form>
