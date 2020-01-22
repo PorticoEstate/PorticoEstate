@@ -2546,13 +2546,12 @@ HTML;
 //			$preview = true;
 
 			$report_info = $this->_get_report_info($check_list_id, $case_location_code);
-//			_debug_array($report_info);die();
 
+			$_component_children = (array)$report_info['component_children'];
+			$completed_items = $this->so->get_completed_item($check_list_id);
 
 			$location_code = $report_info['check_list']->get_location_code();
 			$completed_date = $report_info['check_list']->get_completed_date();
-
-
 
 
 			$loction_name_info = createObject('property.solocation')->get_part_of_town($location_code);
@@ -2810,6 +2809,99 @@ HTML;
 //				_debug_array($report_info['component_array']);
 //				_debug_array($report_info);
 
+			$custom = createObject('property.custom_fields');
+
+			$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
+			$data = array();
+			$component_children = array();
+			$completed_list = array();
+			foreach ($_component_children as &$component_child)
+			{
+				$component_children[$component_child['location_id']][$component_child['id']] = $component_child;
+
+				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
+				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
+				$system_location_arr = explode('.', $system_location['location']);
+				$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+				$this->vfs->override_acl = 1;
+
+				$files = $this->vfs->ls(array(
+					'orderby' => 'file_id',
+					'mime_type'	=> 'image/jpeg',
+					'string' => "/property/{$category_dir}/{$loc1}/{$component_child['id']}",
+					'relatives' => array(RELATIVE_NONE)));
+
+				$this->vfs->override_acl = 0;
+
+				$file = end($files);
+
+//				_debug_array($component_child);die();
+
+				$values = array();
+				$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values = $soentity->read_single(array(
+					'location_id' => $component_child['location_id'],
+					'id' => $component_child['id'],
+					'entity_id' => $system_location_arr[2],
+					'cat_id' => $system_location_arr[3],
+					), $values
+				);
+				$values = $custom->prepare($values, 'property', $system_location['location'], false);
+				_debug_array($values);die();
+				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
+				{
+
+
+//				_debug_array($component_child);
+//				_debug_array($completed_items);die();
+
+//					$component_child['completed_id'] = $completed_items[$component_child['location_id']][$component_child['id']]['completed_id'];
+//					$completed_list[]= $component_child;
+
+					$entry = array
+					(
+						'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
+						'col2' => "{$component_child['short_description']}",
+						'col3' => $GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
+					);
+
+				}
+				else
+				{
+
+					$entry = array
+					(
+						'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
+						'col2' => "{$component_child['short_description']}",
+						'col3' => 'Ikke kontrollert'
+					);
+
+				}
+
+ 				$data[] = $entry;
+
+			}
+
+			if($data)
+			{
+				$pdf->ezTable($data, array('col1' => 'Bilde','col2' => 'Komponent', 'col3' => 'Kontrollert'), 'Delsystemer', array(
+					'showHeadings' => 1,
+					'shaded'	 => 0,
+					'xPos' => 0,
+					'xOrientation'	 => 'right',
+					'width' => 400,
+					'gridlines'		 => EZ_GRIDLINE_ALL,
+					'cols'			 => array
+					(
+						'col1'	 => array('width' => 300, 'justification' => 'left'),
+						'col2'	 => array('width' => 100, 'justification' => 'left'),
+						'col3'	 => array('width' => 100, 'justification' => 'left'),
+					)
+				));
+				$pdf->ezSetDy(-20);
+
+			}
 
 
 			$i = 1;
@@ -2826,6 +2918,13 @@ HTML;
 //				_debug_array($cases_array);die();
 				$data = array();
 
+
+//				_debug_array($component_children);
+//				_debug_array($completed_items);
+
+//die();
+
+
 				$n = 1;
 				foreach ($check_item->get_cases_array() as $case)
 				{
@@ -2836,6 +2935,21 @@ HTML;
 						'col2' => ''
 					);
  					$data[] = $entry;
+
+                    $case->get_component_child_location_id();//:protected] => 456
+                    $case->get_component_child_item_id();//:protected] => 2835
+
+					if($case->get_component_child_item_id())
+					{
+						$entry = array
+						(
+							'col1' => 'komponent',
+							'col2' => $component_children[$case->get_component_child_location_id()][$case->get_component_child_item_id()]['short_description']
+						);
+						$data[] = $entry;
+
+					}
+
 
 					$case_files = $case->get_case_files();
  					$status_text = lang('closed');
@@ -2870,7 +2984,7 @@ HTML;
 
 					$entry = array
 					(
-						'col1' => lang('measurement'),
+						'col1' => 'Verdi',//lang('measurement'),
 						'col2' => $case->get_measurement()
 					);
 
@@ -2921,7 +3035,7 @@ HTML;
 				}
 
 
-				if($cases_array)
+				if($data)//$cases_array)
 				{
 					$pdf->ezTable($data, '', $check_item->get_control_item()->get_title() . " {$num_open_cases}/" . count($cases_array), array(
 						'showHeadings' => 0,
@@ -3030,6 +3144,39 @@ HTML;
 				$type = 'component';
 				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
 				$buildings_on_property = array();
+				$system_location_arr = explode('.', $location_info['location']);
+				$property_soadmin_entity = createObject('property.soadmin_entity');
+				$location_children = $property_soadmin_entity->get_children( $system_location_arr[2], $system_location_arr[3], 0, '' );
+				$property_soentity = createObject('property.soentity');
+
+				$component_children = array();
+				foreach ($location_children as $key => &$location_children_info)
+				{
+					$location_children_info['parent_location_id'] = $location_id;
+					$location_children_info['parent_component_id'] = $component_id;
+
+					$_component_children = $property_soentity->get_eav_list(array
+					(
+						'location_id' => $location_children_info['location_id'],
+						'parent_location_id' => $location_id,
+						'parent_id' => $component_id,
+						'allrows'	=> true
+					));
+
+					$component_children = array_merge($component_children, $_component_children);
+				}
+
+				if($location_children)
+				{
+					$short_description = array();
+					foreach ($component_children as $_value)
+					{
+						$short_description[] = $_value['short_description'];
+					}
+
+					array_multisort($short_description, SORT_ASC, $component_children);
+
+				}
 			}
 			else
 			{
@@ -3113,6 +3260,7 @@ HTML;
 				'control' => $control,
 				'check_list' => $check_list,
 				'buildings_on_property' => $buildings_on_property,
+				'component_children'	=> $component_children,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'type' => $type,
