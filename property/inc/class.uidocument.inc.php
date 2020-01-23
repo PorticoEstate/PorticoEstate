@@ -421,27 +421,39 @@
 
 		function get_uicols_at_location()
 		{
-			$uicols['name'][0]		 = 'location_code';
-			$uicols['descr'][0]		 = lang('location');
-			$uicols['datatype'][0]	 = 'text';
-			$uicols['name'][1]		 = 'document_name';
-			$uicols['descr'][1]		 = lang('Document name');
-			$uicols['datatype'][1]	 = 'link';
-			$uicols['name'][2]		 = 'title';
-			$uicols['descr'][2]		 = lang('Title');
-			$uicols['datatype'][2]	 = 'text';
-			$uicols['name'][3]		 = 'doc_type';
-			$uicols['descr'][3]		 = lang('Doc type');
-			$uicols['datatype'][3]	 = 'text';
-			$uicols['name'][4]		 = 'user';
-			$uicols['descr'][4]		 = lang('coordinator');
-			$uicols['datatype'][4]	 = 'text';
-			$uicols['name'][5]		 = 'document_id';
-			$uicols['descr'][5]		 = lang('document id');
-			$uicols['datatype'][5]	 = 'text';
-			$uicols['name'][6]		 = 'document_date';
-			$uicols['descr'][6]		 = lang('document date');
-			$uicols['datatype'][6]	 = 'text';
+
+			$uicols = array();
+
+			$uicols['name'][]		 = 'location_code';
+			$uicols['descr'][]		 = lang('location');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'loc1_name';
+			$uicols['descr'][]		 = lang('name');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'owner';
+			$uicols['descr'][]		 = lang('owner');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'owner_type';
+			$uicols['descr'][]		 = lang('owner type');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'document_name';
+			$uicols['descr'][]		 = lang('Document name');
+			$uicols['datatype'][]	 = 'link';
+			$uicols['name'][]		 = 'title';
+			$uicols['descr'][]		 = lang('Title');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'doc_type';
+			$uicols['descr'][]		 = lang('Doc type');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'user';
+			$uicols['descr'][]		 = lang('coordinator');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'document_id';
+			$uicols['descr'][]		 = lang('document id');
+			$uicols['datatype'][]	 = 'text';
+			$uicols['name'][]		 = 'document_date';
+			$uicols['descr'][]		 = lang('document date');
+			$uicols['datatype'][]	 = 'text';
 			return $uicols;
 		}
 

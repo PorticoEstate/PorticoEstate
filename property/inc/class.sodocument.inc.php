@@ -414,8 +414,14 @@
 					. " {$this->like} '%{$query}%' OR fm_document.location_code {$this->like} '{$query}%')";
 			}
 
-			$sql = "SELECT DISTINCT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
-				. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
+			$sql = "SELECT DISTINCT fm_document.*, phpgw_categories.cat_name AS category,"
+				. " fm_location1.loc1_name, fm_owner.org_name AS owner, fm_owner_category.descr AS owner_type"
+				. " FROM fm_document"
+				. " {$this->join} phpgw_categories ON fm_document.category = phpgw_categories.cat_id"
+				. " {$this->join} fm_locations ON fm_locations.location_code = fm_document.location_code"
+				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_owner ON fm_location1.owner_id = fm_owner.id"
+				. " {$this->join} fm_owner_category ON fm_owner.category = fm_owner_category.id"
 				. " $filtermethod $querymethod";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -442,7 +448,10 @@
 					'title'			 => $this->db->f('title', true),
 					'doc_type'		 => $this->db->f('category'),
 					'user_id'		 => $this->db->f('coordinator'),
-					'document_date'	 => $this->db->f('document_date')
+					'document_date'	 => $this->db->f('document_date'),
+					'loc1_name'		 => $this->db->f('loc1_name', true),
+					'owner'			 => $this->db->f('owner', true),
+					'owner_type'	 => $this->db->f('owner_type', true),
 				);
 			}
 
