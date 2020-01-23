@@ -43,6 +43,7 @@
 		protected $id;
 		protected $title;
 		protected $description;
+		protected $report_intro;
 		protected $start_date;
 		protected $end_date;
 		protected $repeat_type;
@@ -104,6 +105,15 @@
 		public function get_description()
 		{
 			return $this->description;
+		}
+		public function set_report_intro( $report_intro )
+		{
+			$this->report_intro = $report_intro;
+		}
+
+		public function get_report_intro()
+		{
+			return $this->report_intro;
 		}
 
 		public function set_end_date( $end_date )
@@ -321,6 +331,7 @@
 		{
 			$this->set_title(phpgw::get_var('title', 'string'));
 			$this->set_description(phpgw::get_var('description', 'html'));
+			$this->set_report_intro(phpgw::get_var('report_intro', 'html'));
 
 			if (phpgw::get_var('start_date', 'string') != '')
 			{
@@ -356,6 +367,7 @@
 				'id' => $this->get_id(),
 				'title' => $this->get_title(),
 				'description' => $this->get_description(),
+				'report_intro' => $this->get_report_intro(),
 				'start_date' => $this->get_start_date(),
 				'end_date' => $this->get_end_date(),
 				'procedure_id' => $this->get_procedure_id(),

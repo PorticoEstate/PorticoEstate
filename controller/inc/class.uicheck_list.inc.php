@@ -2547,6 +2547,8 @@ HTML;
 
 			$report_info = $this->_get_report_info($check_list_id, $case_location_code);
 
+			$report_intro = $report_info['control']->get_report_intro();
+
 			$_component_children = (array)$report_info['component_children'];
 			$completed_items = $this->so->get_completed_item($check_list_id);
 
@@ -2648,24 +2650,18 @@ HTML;
 			$data = array(
 				array
 				(
-					'col1' => "Kontrolldato",
-					'col2' => $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat),
-					'col3' => "Sted",
-					'col4' => $report_info['component_array']['xml_short_desc']
+					'col1' => "<b>Kontrolldato:</b>\n" . $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat),
+					'col2' => "<b>Sted:</b>\n" . $report_info['component_array']['xml_short_desc']
 				),
 				array
 				(
-					'col1' => "Inspektør",
-					'col2' => implode("\n", $selected_inspectors),
-					'col3' => "Bydel",
-					'col4' => $loction_name_info['part_of_town']
+					'col1' => "<b>Inspektør:</b>\n" . implode("\n", $selected_inspectors),
+					'col2' => "<b>Bydel:</b>\n" . $loction_name_info['part_of_town']
 				),
 				array
 				(
-					'col1' => "Sertifikatnummer",
-					'col2' => '',
-					'col3' => "Rapportnummer",
-					'col4' => $check_list_id
+					'col1' => "<b>Sertifikatnummer</b>\n" . '',
+					'col2' => "<b>Rapportnummer:</b>\n" . $check_list_id
 				),
 			);
 
@@ -2681,17 +2677,15 @@ HTML;
 				'width' => 500,
 				'cols'			 => array
 				(
-					'col1'	 => array('width' => 125, 'justification' => 'left'),
-					'col2'	 => array('width' => 125, 'justification' => 'left'),
-					'col3'	 => array('width' => 125, 'justification' => 'left'),
-					'col4'	 => array('width' => 125, 'justification' => 'left'),
+					'col1'	 => array('width' => 200, 'justification' => 'left'),
+					'col2'	 => array('width' => 300, 'justification' => 'left'),
 				)
 			));
 
 			$data = array(
 				array
 				(
-					'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
+					'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 500>",
 				),
 			);
 
@@ -2701,23 +2695,55 @@ HTML;
 				'xPos' => 0,
 				'xOrientation'	 => 'right',
 				'width' => 500,
-				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'gridlines'		 => EZ_GRIDLINE_HEADERONLY,
 				'cols'			 => array
 				(
 					'col1'	 => array('width' => 500, 'justification' => 'left'),
 				)
 			));
+//			_debug_array($report_info['check_list']);die();
+
+			$pdf->ezSetDy(-20);
+
+
+			$html2text	 = createObject('phpgwapi.html2text', $report_intro, array('width' => 0));
+			$pdf->ezText($html2text->getText(), 10, array('justification' => 'left'));
+
+			$pdf->ezSetDy(-20);
+
+			$pdf->ezText("Kontrollener gjennomført av:");
+
+			foreach ($selected_inspectors as $selected_inspector)
+			{
+				$pdf->ezText($selected_inspector);
+			}
+
+			$pdf->ezNewPage();
+
+			$count_completed = 0;
+
+			foreach ($completed_items as $completed_item_location)
+			{
+				$count_completed += count($completed_item_location);
+			}
+			unset($completed_item_location);
+
 
 			$data = array(
 				array
 				(
 					'col1' => "Antall kontrollerte objekter",
-					'col2' => 6,
+					'col2' => $count_completed . ' av ' . count($_component_children),
 				),
 				array
 				(
-					'col1' => "Merknader",
-					'col2' => 3,
+					'col1' => "Antall åpne saker",
+					'col2' => $report_info['check_list']->get_num_open_cases(),
+				),
+				array
+				(
+					'col1' => "Antall ventende saker",
+					'col2' => $report_info['check_list']->get_num_pending_cases(),
 				),
 			);
 
@@ -2735,27 +2761,36 @@ HTML;
 				)
 			));
 
+			$pdf->ezSetDy(-20);
 
-			$data = array(
-				array
-				(
-					'col1' => "<c:color:1,0,0>A</c:color>-kan medføre fare for barnets liv",
-					'col2' => "<c:color:1,0,0>0</c:color>",
-				),
-				array
-				(
-					'col1' => "<c:color:0,0,1>B</c:color>-kan medføre fare for livsvarig skade hos barnet",
-					'col2' => "<c:color:0,0,1>1</c:color>",
-				),
-				array
-				(
-					'col1' => "<c:color:0,1,0>C</c:color>-kan medføre mindre alvorlig skade",
-					'col2' => "<c:color:0,1,0>2</c:color>",
-				),
-			);
+			//Summary of findings:
 
-			$pdf->ezTable($data, '', '', array(
-				'showHeadings' => 0,
+			$findings = $this->so->get_findings_summary($check_list_id);
+
+	//		_debug_array($findings);
+	//		die();
+
+
+			$data = array();
+			
+			for ($i = 0; $i < 5; $i++)
+			{
+				$data[] = array(
+					'col1' => lang('condition degree') . ' - ' .$i,
+					'col2' => (int)$findings['condition_degree'][$i],
+				);
+			}
+
+			for ($i = 0; $i < 5; $i++)
+			{
+				$data[] = array(
+					'col1' => lang('consequence') . ' - ' .$i,
+					'col2' => (int)$findings['consequence'][$i],
+				);
+			}
+
+			$pdf->ezTable($data, array('col1' => '<b>Klassifisering</b>', 'col2' => '<b>Antall</b>'), '', array(
+				'showHeadings' => 1,
 				'shaded'	 => 0,
 				'xPos' => 0,
 				'xOrientation'	 => 'right',
@@ -2764,42 +2799,12 @@ HTML;
 				'cols'			 => array
 				(
 					'col1'	 => array('width' => 300, 'justification' => 'left'),
-					'col2'	 => array('width' => 100, 'justification' => 'left'),
+					'col2'	 => array('width' => 200, 'justification' => 'left'),
 				)
 			));
-			$pdf->ezSetDy(-20);
-
-			// Output some colored text by using text directives and justify it to the right of the document
-			$pdf->ezText("Se hjemmel ved hver avviksbeskrivelse for kontrollgrunnlag. Alle mål i rapporten er oppgitt i cm. ", 10, array('justification' => 'left'));
 
 			$pdf->ezSetDy(-20);
 
-
-			$pdf->ezText("Inspektør(ene) er sertifisert i henhold til gjeldende utgave av tjeneste-beskrivelse for sertifisering av lekeplassutstyrs-inspektører som i sin helhet er gjengitt på sertifiserings-organets hjemmeside. Inspektøren er kun sertifisert for å påvise avvik i henhold til gjeldende utgave av NS-EN 1176 del 1-7 og del 10-11 Lekeplassutstyr og underlag.", 10, array('justification' => 'left'));
-
-			$pdf->ezSetDy(-20);
-
-			$pdf->ezText("Kontrollener gjennomført av:");
-
-			foreach ($selected_inspectors as $selected_inspector)
-			{
-				$pdf->ezText($selected_inspector);
-			}
-
-			$pdf->ezNewPage();
-
-
-//				'control' => $control,
-//				'check_list' => $check_list,
-//				'buildings_on_property' => $buildings_on_property,
-//				'location_array' => $location_array,
-//				'component_array' => $component_array,
-//				'type' => $type,
-//				'location_level' => $level,
-//				'get_locations'	=> $get_locations,
-//				'current_year' => $year,
-//				'current_month_nr' => $month,
-//				'open_check_items_and_cases' => $open_check_items_and_cases,
 //
 //			foreach ($report_info['component_array'] as $key => $value)
 //			{
@@ -2870,7 +2875,7 @@ HTML;
 					'cat_id' => $system_location_arr[3],
 					), $values
 				);
-				$values = $custom->prepare($values, 'property', $system_location['location'], false);
+				$values = $custom->prepare($values, 'property', $system_location['location'], true);
 //				_debug_array($values);die();
 				foreach ($values['attributes'] as  $attribute)
 				{
@@ -2897,6 +2902,22 @@ HTML;
 							}
 							$_value = implode(',', $_choice);
 						}
+
+						if ($attributes['datatype'] == 'CH')
+						{
+							$_selected = explode(',', trim($_value, ','));
+
+							$_choice = array();
+							foreach ($attribute['choice'] as $choice)
+							{
+								if(in_array($choice['id'], $_selected))
+								{
+									$_choice[] = $choice['value'];
+								}
+							}
+							$_value = implode(',', $_choice);
+						}
+
 
 						$entry = array
 						(
@@ -3068,7 +3089,7 @@ HTML;
 
 				if($data)//$cases_array)
 				{
-					$pdf->ezTable($data, '', $check_item->get_control_item()->get_title() . " {$num_open_cases}/" . count($cases_array), array(
+					$pdf->ezTable($data, '', $check_item->get_control_item()->get_title(), array(
 						'showHeadings' => 0,
 						'shaded'	 => 0,
 						'xPos' => 0,

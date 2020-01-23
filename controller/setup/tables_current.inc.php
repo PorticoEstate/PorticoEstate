@@ -16,6 +16,7 @@
 				'repeat_interval' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'ticket_cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'report_intro' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

@@ -1114,5 +1114,41 @@
 
 		}
 
+		function get_findings_summary( $check_list_id )
+		{
+			$check_list_id = (int)$check_list_id;
+			$sql = "SELECT condition_degree, count(condition_degree) as cnt FROM controller_check_item"
+					. " JOIN controller_check_item_case ON controller_check_item.id = controller_check_item_case.check_item_id"
+					. " WHERE controller_check_item.check_list_id  = {$check_list_id}"
+					. " GROUP BY condition_degree";
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			$values = array('condition_degree' => array(), 'consequence' => array());
 
+			while ($this->db->next_record())
+			{
+				$condition_degree = (int)$this->db->f('condition_degree');
+				$cnt = (int)$this->db->f('cnt');
+				$values['condition_degree'][$condition_degree] = $cnt;
+
+			}
+
+			$sql = "SELECT consequence, count(consequence) as cnt FROM controller_check_item"
+					. " JOIN controller_check_item_case ON controller_check_item.id = controller_check_item_case.check_item_id"
+					. " WHERE controller_check_item.check_list_id  = {$check_list_id}"
+					. " GROUP BY consequence";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$consequence =(int)$this->db->f('consequence');
+				$cnt = (int)$this->db->f('cnt');
+				$values['consequence'][$consequence] = $cnt;
+			}
+
+			ksort($values['condition_degree']);
+			ksort($values['consequence']);
+
+			return $values;
+		}
 	}

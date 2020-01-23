@@ -343,7 +343,7 @@
 
 			self::add_javascript('controller', 'base', 'ajax.js');
 
-			$this->use_yui_editor(array('description'));
+			$this->rich_text_editor(array('description', 'report_intro'));
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
