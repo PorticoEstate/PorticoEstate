@@ -27,7 +27,7 @@
 	<xsl:variable name="action_url">
 		<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicontrol.save_control_details')" />
 	</xsl:variable>
-	<form id="frm_save_control_details" action="{$action_url}" method="post">
+	<form id="frm_save_control_details" action="{$action_url}" method="post" class="pure-form pure-form-stacked">
 		<input type="hidden" name="control_id" value="{$control_id}" />
 		<input type="hidden" name="saved_control_area_id" value="{$control_area_id}" />
 	
@@ -46,7 +46,7 @@
 								<xsl:value-of select="php:function('lang', $error_msg)" />
 							</div>
 						</xsl:if>
-						<select class="required" id="control_area_id" name="control_area_id">
+						<select id="control_area_id" name="control_area_id" class="required pure-input-3-4">
 							<option value="">Velg kontrollområde</option>
 							<xsl:for-each select="control_areas_array">
 								<xsl:choose>
@@ -84,7 +84,7 @@
 								<xsl:value-of select="php:function('lang', $error_msg)" />
 							</div>
 						</xsl:if>
-						<select id="procedure_id" name="procedure_id">
+						<select id="procedure_id" name="procedure_id" class="pure-input-3-4">
 							<option value="">Velg prosedyre</option>
 							<xsl:for-each select="procedures_array">
 								<xsl:choose>
@@ -122,7 +122,8 @@
 								<xsl:value-of select="php:function('lang', $error_msg)" />
 							</div>
 						</xsl:if>
-						<input class="required" type="text" name="title" id="title" value="{control/title}" size="70"/>
+						<input type="text" name="title" id="title" value="{control/title}" size="70" class="required pure-input-3-4">
+						</input>
 						<div class="help_text below">Angi tittel på kontrollen</div>
 					</xsl:when>
 					<xsl:otherwise>
@@ -184,7 +185,7 @@
 						<xsl:value-of select="php:function('lang', $error_msg)" />
 					</div>
 				</xsl:if>
-				<select class="required" id="repeat_type" name="repeat_type">
+				<select id="repeat_type" name="repeat_type" class="required pure-input-3-4">
 					<option value="">Velg frekvenstype</option>
 					<xsl:for-each select="repeat_type_array">
 						<xsl:choose>
@@ -238,7 +239,7 @@
 						<xsl:value-of select="php:function('lang', $error_msg)" />
 					</div>
 				</xsl:if>
-				<select class="required" id="ticket_cat_id" name="ticket_cat_id">
+				<select id="ticket_cat_id" name="ticket_cat_id" class="required pure-input-3-4">
 					<xsl:if test="editable !=1">
 						<xsl:attribute name="disabled">disabled</xsl:attribute>
 					</xsl:if>
@@ -270,7 +271,7 @@
 								<xsl:value-of select="php:function('lang', $error_msg)" />
 							</div>
 						</xsl:if>
-						<select class="required" id="responsibility_id" name="responsibility_id">
+						<select id="responsibility_id" name="responsibility_id" class="required pure-input-3-4">
 							<xsl:for-each select="role_array">
 								<xsl:choose>
 									<xsl:when test="id = $control_role">
@@ -299,12 +300,27 @@
 			<dd>
 				<xsl:choose>
 					<xsl:when test="editable">
-						<textarea cols="70" rows="5" name="description" id="description">
+						<textarea cols="70" rows="5" name="description" id="description" class="pure-input-3-4">
 							<xsl:value-of select="control/description" />
 						</textarea>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="control/description" disable-output-escaping="yes"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dd>
+			<dt>
+				<label for="report_intro">Innledning til rapport</label>
+			</dt>
+			<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<textarea cols="70" rows="5" name="report_intro" id="report_intro" class="pure-input-3-4">
+							<xsl:value-of select="control/report_intro" />
+						</textarea>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/report_intro" disable-output-escaping="yes"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</dd>

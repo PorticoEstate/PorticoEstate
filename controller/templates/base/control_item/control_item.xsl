@@ -370,7 +370,7 @@
 						<input type="submit" name="cancel_control_item" value="{$lang_cancel}" title = "{$lang_cancel}" />
 					</xsl:when>
 					<xsl:otherwise>
-						<a class="btn">
+						<a class="pure-button pure-button-primary">
 							<xsl:attribute name="href">
 								<xsl:>index.php?menuaction=controller.uicontrol_item.edit</xsl:>
 								<xsl:>&amp;id=</xsl:>

@@ -93,6 +93,7 @@
 			$values = array(
 				'title = ' . $this->marshal($control->get_title(), 'string'),
 				'description = ' . $this->marshal($control->get_description(), 'string'),
+				'report_intro = ' . $this->marshal($control->get_report_intro(), 'string'),
 				'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 				'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
 				'control_area_id = ' . $this->marshal($control->get_control_area_id(), 'int'),
@@ -1550,6 +1551,7 @@
 			$control = new controller_control((int)$id);
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+			$control->set_report_intro($this->unmarshal($this->db->f('report_intro', true), 'string'));
 			$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
