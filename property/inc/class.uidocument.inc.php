@@ -433,9 +433,9 @@
 			$uicols['name'][]		 = 'owner';
 			$uicols['descr'][]		 = lang('owner');
 			$uicols['datatype'][]	 = 'text';
-			$uicols['name'][]		 = 'owner_type';
-			$uicols['descr'][]		 = lang('owner type');
-			$uicols['datatype'][]	 = 'text';
+//			$uicols['name'][]		 = 'owner_type';
+//			$uicols['descr'][]		 = lang('owner type');
+//			$uicols['datatype'][]	 = 'text';
 			$uicols['name'][]		 = 'document_name';
 			$uicols['descr'][]		 = lang('Document name');
 			$uicols['datatype'][]	 = 'link';
