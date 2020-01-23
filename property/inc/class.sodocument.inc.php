@@ -424,7 +424,7 @@
 				. " {$this->join} fm_owner_category ON fm_owner.category = fm_owner_category.id"
 				. " $filtermethod $querymethod";
 
-			_debug_array($sql);
+//			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
