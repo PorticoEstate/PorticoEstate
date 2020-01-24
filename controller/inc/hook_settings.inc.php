@@ -29,3 +29,4 @@
 	 */
 	create_input_box('Number of planned controls on home page', 'no_of_planned_controls', '');
 	create_input_box('Number of assigned controls on home page', 'no_of_assigned_controls', '');
+	create_input_box('certificate', 'certificate', '');
