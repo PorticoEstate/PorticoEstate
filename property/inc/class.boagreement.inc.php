@@ -156,20 +156,21 @@
 			$this->total_records = $this->so->total_records;
 			$this->uicols		 = $this->so->uicols;
 
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($agreements as &$agreement)
 			{
 				if ($agreement['start_date'])
 				{
-					$agreement['start_date'] = $GLOBALS['phpgw']->common->show_date($agreement['start_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$agreement['start_date'] = $GLOBALS['phpgw']->common->show_date($agreement['start_date'], $dateformat);
 				}
 				if ($agreement['termination_date'])
 				{
-					$agreement['termination_date'] = $GLOBALS['phpgw']->common->show_date($agreement['termination_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$agreement['termination_date'] = $GLOBALS['phpgw']->common->show_date($agreement['termination_date'], $dateformat);
 				}
 
 				if ($agreement['end_date'])
 				{
-					$agreement['end_date'] = $GLOBALS['phpgw']->common->show_date($agreement['end_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+					$agreement['end_date'] = $GLOBALS['phpgw']->common->show_date($agreement['end_date'], $dateformat);
 				}
 			}
 			return $agreements;
