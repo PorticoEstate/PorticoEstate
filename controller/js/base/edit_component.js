@@ -480,6 +480,8 @@ $(document).ready(function ()
 	resetForm = function (form)
 	{
 		clear_form(form);
+		$("#cache_case_id").val('');
+		$(form).find("input[type='submit']").show();
 		$(form).find("input[type='submit']").removeAttr('disabled');
 		$(form).find("input[type='submit']").removeClass("case_saved");
 		var picture_container = $(form).next('div').find("div[name='picture_container']");

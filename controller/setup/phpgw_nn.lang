@@ -458,3 +458,6 @@ inspector	controller	nn	Kontrollør
 administrator	controller	nn	Administrator
 supervisor	controller	nn	Soneleiar
 part of town	controller	nn	Bydel
+open	controller	nn	Open
+closed	controller	nn	lukka
+certificate	controller	nn	Sertifikat

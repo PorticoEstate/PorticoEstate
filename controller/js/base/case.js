@@ -89,6 +89,13 @@ $(document).ready(function ()
 		});
 	});
 
+	$('#inspectObject').on('hidden.bs.modal', function (e)
+	{
+		if($("#cache_case_id").val())
+		{
+			$('#set_completed_item').submit();
+		}
+	});
 
 	// REGISTER CASE
 	$(".frm_register_case").on("submit", function (e)
@@ -166,6 +173,7 @@ $(document).ready(function ()
 							// Changes text on save button back to original
 							window.setTimeout(function ()
 							{
+								$(submitBnt).hide();
 								if (type == "control_item_type_2")
 								{
 									$(submitBnt).val('Lagre måling');
@@ -174,9 +182,9 @@ $(document).ready(function ()
 								{
 									$(submitBnt).val('Lagre ny sak');
 								}
-
-								$(submitBnt).addClass("case_saved");
-								$(submitBnt).attr("disabled", true);
+//
+//								$(submitBnt).addClass("case_saved");
+//								$(submitBnt).attr("disabled", true);
 							}, 1000);
 
 							/*

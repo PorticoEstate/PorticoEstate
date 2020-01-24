@@ -5,12 +5,12 @@
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
 
-	<div id="main_content" class="container">
+	<div id="main_content" class="medium container">
 		<a href="#" class="scrollup">
 			<xsl:value-of select="php:function('lang', 'scroll to top')" />
 		</a>
 
-		<div class="mt-3">
+		<div class="row mt-3">
 			<xsl:call-template name="check_list_top_section">
 				<xsl:with-param name="active_tab">add_case</xsl:with-param>
 			</xsl:call-template>
@@ -478,7 +478,7 @@
 						</div>
 
 						<!-- Modal footer -->
-						<form method="post">
+						<form method="post" id="set_completed_item">
 							<xsl:attribute name="action">
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
 							</xsl:attribute>

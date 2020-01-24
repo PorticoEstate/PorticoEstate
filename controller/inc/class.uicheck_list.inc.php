@@ -2636,13 +2636,23 @@ HTML;
 
 
 			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
+//			_debug_array($inspectors);die();
 
 			$selected_inspectors = array();
 			foreach ($inspectors as $inspector)
 			{
 				if($inspector['selected'])
 				{
-					$selected_inspectors[] = $inspector['name'];
+					$prefs =CreateObject('phpgwapi.preferences',$inspector['id'])->read();
+
+					$inspector_name = $inspector['name'];
+
+					if(!empty($prefs['controller']['certificate']))
+					{
+						$inspector_name .= " ( {$prefs['controller']['certificate']} )";
+					}
+
+					$selected_inspectors[] = $inspector_name;
 				}
 			}
 			unset($inspector);
@@ -2650,19 +2660,15 @@ HTML;
 			$data = array(
 				array
 				(
-					'col1' => "<b>Kontrolldato:</b>\n" . $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat),
+					'col1' => "<b>Rapportnummer:</b>\n" . $check_list_id
+							. "\n<b>Kontrolldato:</b>\n" . $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat),
 					'col2' => "<b>Sted:</b>\n" . $report_info['component_array']['xml_short_desc']
 				),
 				array
 				(
 					'col1' => "<b>Inspektør:</b>\n" . implode("\n", $selected_inspectors),
 					'col2' => "<b>Bydel:</b>\n" . $loction_name_info['part_of_town']
-				),
-				array
-				(
-					'col1' => "<b>Sertifikatnummer</b>\n" . '',
-					'col2' => "<b>Rapportnummer:</b>\n" . $check_list_id
-				),
+				)
 			);
 
 
@@ -2789,21 +2795,26 @@ HTML;
 				);
 			}
 
-			$pdf->ezTable($data, array('col1' => '<b>Klassifisering</b>', 'col2' => '<b>Antall</b>'), '', array(
-				'showHeadings' => 1,
-				'shaded'	 => 0,
-				'xPos' => 0,
-				'xOrientation'	 => 'right',
-				'width' => 400,
-				'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-				(
-					'col1'	 => array('width' => 300, 'justification' => 'left'),
-					'col2'	 => array('width' => 200, 'justification' => 'left'),
-				)
-			));
 
-			$pdf->ezSetDy(-20);
+			if(array_sum(array_values($findings['consequence'])) > 0 || array_sum(array_values($findings['condition_degree'])) > 0 )
+			{
+				$pdf->ezTable($data, array('col1' => '<b>Klassifisering</b>', 'col2' => '<b>Antall</b>'), '', array(
+					'showHeadings' => 1,
+					'shaded'	 => 0,
+					'xPos' => 0,
+					'xOrientation'	 => 'right',
+					'width' => 400,
+					'gridlines'		 => EZ_GRIDLINE_ALL,
+					'cols'			 => array
+					(
+						'col1'	 => array('width' => 300, 'justification' => 'left'),
+						'col2'	 => array('width' => 200, 'justification' => 'left'),
+					)
+				));
+
+				$pdf->ezSetDy(-20);
+			}
+
 
 //
 //			foreach ($report_info['component_array'] as $key => $value)
@@ -2937,7 +2948,7 @@ HTML;
 
 			if($data)
 			{
-				$pdf->ezTable($data, array('col1' => 'Bilde','col2' => 'Komponent', 'col3' => 'Kontrollert'), 'Delsystemer', array(
+				$pdf->ezTable($data, array('col1' => '<b>Bilde</b>','col2' => '<b>Komponent</b>', 'col3' => '<b>Kontrollert</b>'), 'Delsystemer', array(
 					'showHeadings' => 1,
 					'shaded'	 => 0,
 					'xPos' => 0,
@@ -2983,7 +2994,7 @@ HTML;
 
 					$entry = array
 					(
-						'col1' => "#{$i}",
+						'col1' => "<b>#{$i}</b>",
 						'col2' => ''
 					);
  					$data[] = $entry;

@@ -484,7 +484,7 @@
 
 						<xsl:choose>
 							<xsl:when test="component_children/child::node() and count(component_children) &gt; 0">
-								<form method="post">
+								<form method="post" id="set_completed_item">
 									<xsl:attribute name="action">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
 									</xsl:attribute>

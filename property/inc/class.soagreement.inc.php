@@ -249,11 +249,12 @@
 
 			if ($query)
 			{
+				$_querymethod = array();
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod[]	 = "fm_vendor.org_name {$this->like} '%{$query}%'";
-				$querymethod[]	 = "fm_branch.descr {$this->like} '%{$query}%'";
-				$querymethod[]	 = "{$entity_table}.name {$this->like} '%{$query}%'";
+				$_querymethod[]	 = "fm_vendor.org_name {$this->like} '%{$query}%'";
+				$_querymethod[]	 = "fm_branch.descr {$this->like} '%{$query}%'";
+				$_querymethod[]	 = "{$entity_table}.name {$this->like} '%{$query}%'";
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
@@ -265,17 +266,17 @@
 						case 'T':
 						case 'email':
 						case 'CH':
-							$querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%$query%'";
+							$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%$query%'";
 							break;
 						default:
-							$querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = '$query'";
+							$_querymethod[]	 = "$entity_table." . $this->db->f('column_name') . " = '$query'";
 							break;
 					}
 				}
 
-				if (isset($querymethod) AND is_array($querymethod))
+				if ($_querymethod)
 				{
-					$querymethod = " $where (" . implode(' OR ', $querymethod) . ')';
+					$querymethod = " $where (" . implode(' OR ', $_querymethod) . ')';
 					$where		 = 'AND';
 				}
 			}
