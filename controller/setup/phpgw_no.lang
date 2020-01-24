@@ -461,4 +461,5 @@ administrator	controller	no	Administrator
 supervisor	controller	no	Soneleder
 part of town	controller	no	Bydel
 open	controller	no	Åpen
+closed	controller	no	lukket
 certificate	controller	no	Sertifikat
