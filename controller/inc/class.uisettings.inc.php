@@ -58,7 +58,7 @@
 				self::set_active_menu('admin::controller::settings');
 			}
 			
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('preferences');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('settings');
 
 			$this->cats		= CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
 			$this->cats->supress_info = true;

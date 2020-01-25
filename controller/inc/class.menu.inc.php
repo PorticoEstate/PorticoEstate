@@ -81,6 +81,11 @@
 						'text' => lang('start inspection'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
 						'image' => array('property', 'location_1')
+					),
+				'inspection_history' =>  array(
+						'text' => lang('inspection history'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
+						'image' => array('property', 'location_1')
 					)
 				);
 
@@ -182,6 +187,11 @@
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uibulk_update.assign' )),
 				'image' => array('property', 'location_1'),
 			);
+			$menus['navigation']['inspection_history'] =  array(
+						'text' => lang('inspection history'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
+						'image' => array('property', 'location_1')
+					);
 
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{

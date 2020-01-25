@@ -463,3 +463,5 @@ part of town	controller	no	Bydel
 open	controller	no	Åpen
 closed	controller	no	lukket
 certificate	controller	no	Sertifikat
+inspection history	controller	no	Utførte kontroller
+settings	controller	no	Innstillinger

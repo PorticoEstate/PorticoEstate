@@ -36,6 +36,7 @@
 	class controller_socheck_list extends controller_socommon
 	{
 
+		public $total_records;
 		protected static $so;
 
 		/**
@@ -1122,7 +1123,7 @@
 					. " WHERE controller_check_item.check_list_id  = {$check_list_id}"
 					. " GROUP BY condition_degree";
 			$this->db->query($sql, __LINE__, __FILE__);
-			
+
 			$values = array('condition_degree' => array(), 'consequence' => array());
 
 			while ($this->db->next_record())
@@ -1150,5 +1151,93 @@
 			ksort($values['consequence']);
 
 			return $values;
+		}
+
+
+		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $allrows = null)
+		{
+			$control_id = (int)$control_id;
+			if(!$selected_part_of_town)
+			{
+				return array();
+			}
+
+			$to_date_ts = time();
+			$from_date_ts = $to_date_ts - ($age * 240 * 3600);
+
+			$sql = "SELECT DISTINCT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment,"
+				. " deadline, original_deadline, planned_date, completed_date, cl.assigned_to,";
+			$sql .= " cl.component_id as cl_component_id, cl.location_id as cl_location_id,"
+				. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases,"
+				. " cl.serie_id, cl.billable_hours, cs.repeat_type, fm_location1.loc1_name";
+			$sql .= " FROM controller_check_list cl";
+			$sql .= " {$this->left_join} controller_control c on cl.control_id = c.id";
+			$sql .= " {$this->left_join} controller_control_serie cs on cl.serie_id = cs.id"
+				. " {$this->join} fm_locations ON fm_locations.location_code = cl.location_code"
+				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id";
+			$sql .= " WHERE cl.control_id = {$control_id}"
+				. " AND fm_part_of_town.id IN (" . implode(',', $selected_part_of_town) . ")"
+				. " AND completed_date IS NOT NULL";
+
+
+			if($query)
+			{
+				$query = $this->db->db_addslashes($query);
+				$sql .= " AND loc1_name {$this->like} '%{$query}%'";
+			}
+
+//			$sql .= " AND completed_date BETWEEN $from_date_ts AND $to_date_ts";
+			$sql .= " ORDER BY completed_date DESC";
+
+
+//		_debug_array($sql);
+
+			$sql_arr = explode('FROM', $sql);
+
+			$sql_cnt = "SELECT cl.id FROM " . $sql_arr[1];
+
+			$this->db->query($sql_cnt,__LINE__,__FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if($allrows)
+			{
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+			else
+			{
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results = 20);
+			}
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'				 => $this->db->f('cl_id'),
+					'status'			 => $this->db->f('cl_status'),
+					'comment'			 => $this->db->f('cl_comment', true),
+					'deadline'			 => $this->db->f('deadline'),
+					'original_deadline'	 => $this->db->f('original_deadline'),
+					'planned_date'		 => $this->db->f('planned_date'),
+					'completed_date'	 => $this->db->f('completed_date'),
+					'component_id'		 => $this->db->f('cl_component_id'),
+					'location_id'		 => $this->db->f('cl_location_id'),
+					'location_code'		 => $this->db->f('cl_location_code', true),
+					'loc1_name'			 => $this->db->f('loc1_name', true),
+					'num_open_cases'	 => $this->db->f('num_open_cases'),
+					'num_pending_cases'	 => $this->db->f('num_pending_cases'),
+					'assigned_to'		 => $this->db->f('assigned_to'),
+					'serie_id'			 => $this->db->f('serie_id'),
+					'repeat_type'		 => $this->db->f('repeat_type'),
+					'billable_hours'	 => (float) $this->db->f('billable_hours')
+				);
+			}
+
+			foreach ($values as &$value)
+			{
+				$value['findings_summary'] = $this->get_findings_summary($value['id']);
+
+			}
+			return  $values;
 		}
 	}

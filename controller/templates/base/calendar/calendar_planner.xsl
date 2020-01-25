@@ -13,6 +13,9 @@
 		<xsl:when test="start_inspection">
 			<xsl:apply-templates select="start_inspection"/>
 		</xsl:when>
+		<xsl:when test="inspection_history">
+			<xsl:apply-templates select="inspection_history"/>
+		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
@@ -200,6 +203,177 @@
 			</span>
 		</div>
 	</div>
+
+</xsl:template>
+
+
+<xsl:template match="inspection_history" xmlns:php="http://php.net/xsl">
+	<style>
+		.table-hover-cells > tbody > tr > th:hover,
+		.table-hover-cells > tbody > tr > td:hover {
+		background-color: #f5f5f5;
+		}
+
+		.table-hover-cells > tbody > tr > th.active:hover,
+		.table-hover-cells > tbody > tr > td.active:hover,
+		.table-hover-cells > tbody > tr.active > th:hover,
+		.table-hover-cells > tbody > tr.active > td:hover {
+		background-color: #e8e8e8;
+		}
+
+		.table-hover.table-hover-cells > tbody > tr:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr:hover > td:hover {
+		background-color: #e8e8e8;
+		}
+
+		.table-hover.table-hover-cells > tbody > tr.active:hover > th:hover,
+		.table-hover.table-hover-cells > tbody > tr.active:hover > td:hover {
+		background-color: #d8d8d8;
+		}
+
+		h1 > .divider:before,
+		h2 > .divider:before,
+		h3 > .divider:before,
+		h4 > .divider:before,
+		h5 > .divider:before,
+		h6 > .divider:before,
+		.h1 > .divider:before,
+		.h2 > .divider:before,
+		.h3 > .divider:before,
+		.h4 > .divider:before,
+		.h5 > .divider:before,
+		.h6 > .divider:before {
+		color: #777;
+		content: "\0223E\0020";
+		}
+		.table-plain tbody tr,
+		.table-plain tbody tr:hover,
+		.table-plain tbody td {
+		background-color:transparent;
+		border:none;
+		}
+
+	</style>
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
+	<xsl:variable name="current_year">
+		<xsl:value-of select="current_year"/>
+	</xsl:variable>
+
+	<form method="post" id="form" action="{form_action}">
+
+		<div class="row">
+			<div class="mt-5 container">
+				<div class="form-group">
+					<fieldset>
+						<legend>Velg kontroll</legend>
+
+						<label for="control_area_id">
+							<xsl:value-of select="php:function('lang', 'control type')"/>
+						</label>
+						<select id="control_area_id" name="control_area_id" class="form-control">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>
+
+						<label for="control_id">
+							<xsl:value-of select="php:function('lang', 'control')"/>
+						</label>
+						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select control type')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="control_type_list/options"/>
+						</select>
+
+						<label for="part_of_town_id">
+							<xsl:value-of select="php:function('lang', 'part of town')"/>
+						</label>
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+							<xsl:attribute name="multiple">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select part of town')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="part_of_town_list/options"/>
+
+						</select>
+
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="mt-5 container">
+				<h2 class="text-center">Siste utførte rapporter</h2>
+
+<!--				<div class="search">
+					<input type="text" name="query" value="{query}"/>
+					<input type="submit" name="submit" value="Søk"/>
+				</div>-->
+
+				<div>
+					<xsl:call-template name="nextmatchs"/>
+				</div>
+
+				<div class="mt-3 row">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>
+									<h5>Enhet</h5>
+								</th>
+								<th>
+									<h5>Se rapport</h5>
+								</th>
+								<th>
+									<h5>Siste rapportdato</h5>
+								</th>
+								<th colspan = '3'>
+									<table class="table-plain">
+										<tr>
+											<td colspan = '3'>
+												<h5>Tilstandsgrader</h5>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<h5>1</h5>
+											</td>
+											<td>
+												<h5>2</h5>
+											</td>
+											<td>
+												<h5>3</h5>
+											</td>
+
+										</tr>
+									</table>
+								</th>
+								<th>
+									<h5>Åpne avvik</h5>
+								</th>
+								<th>
+									<h5>Handlinger</h5>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<xsl:apply-templates select="history_content/history_rows">
+								<xsl:with-param name="date_format" select ='$date_format'/>
+							</xsl:apply-templates>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="mt-5 container text-right">
+				Eksport <a href="#">
+					<img src="images/excel.png" width="35"/>
+				</a>
+			</div>
+		</div>
+	</form>
 
 </xsl:template>
 
@@ -621,6 +795,64 @@
 
 			</td>
 		</xsl:for-each>
+	</tr>
+</xsl:template>
+
+<xsl:template match="history_rows">
+	<xsl:param name="date_format"/>
+	<xsl:variable name="completed_date">
+		<xsl:value-of select="completed_date"/>
+	</xsl:variable>
+	<xsl:variable name="check_list_id">
+		<xsl:value-of select="id"/>
+	</xsl:variable>
+
+	<tr>
+		<th scope="row">
+			<xsl:value-of select="loc1_name"/>
+		</th>
+		<td class="text-center">
+			<a>
+				<xsl:attribute name="href">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.get_report')" />
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="$check_list_id"/>
+				</xsl:attribute>
+				<xsl:attribute name="target">
+					<xsl:text>_blank</xsl:text>
+				</xsl:attribute>
+				<i class="far fa-file-pdf fa-3x"></i>
+			</a>
+		</td>
+		<td>
+			<xsl:value-of select="php:function('date', $date_format, number($completed_date))"/>
+		</td>
+		<td>
+			<xsl:value-of select="findings_summary/condition_degree_1"/>
+		</td>
+		<td>
+			<xsl:value-of select="findings_summary/condition_degree_2"/>
+		</td>
+		<td>
+			<xsl:value-of select="findings_summary/condition_degree_3"/>
+		</td>
+		<td>
+			<xsl:value-of select="num_open_cases"/>
+		</td>
+
+		<td class="text-center">
+			<a >
+				<xsl:attribute name="href">
+					<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.edit_check_list')" />
+					<xsl:text>&amp;check_list_id=</xsl:text>
+					<xsl:value-of select="$check_list_id"/>
+				</xsl:attribute>
+				<xsl:attribute name="target">
+					<xsl:text>_blank</xsl:text>
+				</xsl:attribute>
+				<i class="far fa-edit fa-3x"></i>
+			</a>
+		</td>
 	</tr>
 </xsl:template>
 
