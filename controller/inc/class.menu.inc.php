@@ -81,6 +81,11 @@
 						'text' => lang('start inspection'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
 						'image' => array('property', 'location_1')
+					),
+				'inspection_history' =>  array(
+						'text' => lang('inspection history'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
+						'image' => array('property', 'location_1')
 					)
 				);
 
