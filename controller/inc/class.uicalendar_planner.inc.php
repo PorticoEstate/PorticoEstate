@@ -946,6 +946,7 @@ HTML;
 				phpgw::no_access();
 			}
 			
+			self::set_active_menu('controller::inspection_history');
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
 
 			$control_id		 = phpgw::get_var('control_id', 'int');

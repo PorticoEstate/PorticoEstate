@@ -313,7 +313,7 @@
 					<input type="submit" name="submit" value="Søk"/>
 				</div>-->
 
-				<div>
+				<div class="row">
 					<xsl:call-template name="nextmatchs"/>
 				</div>
 

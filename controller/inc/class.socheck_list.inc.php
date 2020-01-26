@@ -1206,7 +1206,7 @@
 			}
 			else
 			{
-				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results = 20);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
 			}
 
 			$values = array();
