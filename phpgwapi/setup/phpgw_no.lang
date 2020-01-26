@@ -114,6 +114,7 @@ june	common	no	Juni
 last name	common	no	Etternavn
 last name of the user, eg. %1	common	no	Etternavn til bruker, %1
 last page	common	no	siste side
+first page	common	no	Første side
 last	common	no	Siste
 Loading...	common	no	Laster...
 login	common	no	Login
@@ -126,7 +127,7 @@ monday	common	no	Mandag
 name	common	no	Navn
 name of the user, eg. %1	common	no	Fullt navn på bruker, %1
 new entry added sucessfully	common	no	Ny entry er lagt til
-next page	common	no	neste side
+next page	common	no	Neste side
 next	common	no	Neste
 no	common	no	Nei
 No matching records found	common	no	Ingen poster funnet som passer med søket
@@ -158,8 +159,8 @@ search	common	no	Søk
 september	common	no	September
 session has been killed	common	no	Session har blitt avsluttet
 show all	common	no	Vis alle
-showing %1	common	no	showing %1
-showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
+showing %1	common	no	Viser %1
+showing %1 - %2 of %3	common	no	Viser %1 - %2 av %3
 showing items	common	no	Viser
 shows from	common	no	Viser fra
 Showing _START_ to _END_ of _TOTAL_ entries	common	no	Viser _START_ til _END_ av _TOTAL_ poster
