@@ -85,11 +85,12 @@
 				{
 					$status = "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS";
 				}
-				else if ($this->check_list->get_status() == controller_check_list::STATUS_DONE & $this->check_list->get_num_open_cases() > 0)
+				else if ($this->check_list->get_status() == controller_check_list::STATUS_DONE & ($this->check_list->get_num_open_cases() > 0 || $this->check_list->get_num_corrected_cases() > 0) )
 				{
 					$status = "CONTROL_DONE_WITH_ERRORS";
 
 					$check_list_status_info->set_num_open_cases($this->check_list->get_num_open_cases());
+					$check_list_status_info->set_num_corrected_cases($this->check_list->get_num_corrected_cases());
 				}
 				else if ($this->check_list->get_status() == controller_check_list::STATUS_CANCELED)
 				{

@@ -46,6 +46,7 @@
 		private $location_id;
 		private $type;
 		private $num_open_cases;
+		private $num_corrected_cases;
 		private $serie_id;
 		private $assigned_to;
 		private $billable_hours;
@@ -205,6 +206,16 @@
 			return $this->num_open_cases;
 		}
 
+		public function set_num_corrected_cases( $num_corrected_cases )
+		{
+			$this->num_corrected_cases = $num_corrected_cases;
+		}
+
+		public function get_num_corrected_cases()
+		{
+			return $this->num_corrected_cases;
+		}
+
 		public function set_assigned_to( $assigned_to )
 		{
 			$this->assigned_to = $assigned_to;
@@ -253,6 +264,7 @@
 				'component_id' => $this->get_component_id(),
 				'type' => $this->get_type(),
 				'num_open_cases' => $this->get_num_open_cases(),
+				'num_corrected_cases' => $this->get_num_corrected_cases(),
 				'assigned_to' => $this->get_assigned_to(),
 				'billable_hours' => $this->get_billable_hours(),
 				'serie_id' => $this->get_serie_id()

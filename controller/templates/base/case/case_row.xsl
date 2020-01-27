@@ -84,7 +84,7 @@
 												<xsl:when test="status = 0">Åpen</xsl:when>
 												<xsl:when test="status = 1">Lukket</xsl:when>
 												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
-												<xsl:when test="status = 3">Korrigert ved kontroll</xsl:when>
+												<xsl:when test="status = 3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></xsl:when>
 											</xsl:choose>
 										</span>
 									</div>
@@ -244,25 +244,25 @@
 													<option value="0" SELECTED="SELECTED">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3">Korrigert ved kontroll</option>
+													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 												</xsl:when>
 												<xsl:when test="status = 1">
 													<option value="0">Åpen</option>
 													<option value="1" SELECTED="SELECTED">Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3">Korrigert ved kontroll</option>
+													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 												</xsl:when>
 												<xsl:when test="status = 2">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2" SELECTED="SELECTED">Venter på tilbakemelding</option>
-													<option value="3">Korrigert ved kontroll</option>
+													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 												</xsl:when>
 												<xsl:when test="status = 3">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3" SELECTED="SELECTED">Korrigert ved kontroll</option>
+													<option value="3" SELECTED="SELECTED"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 												</xsl:when>
 											</xsl:choose>
 										</select>

@@ -200,7 +200,7 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" >Korrigert ved kontroll</option>
+																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -237,7 +237,7 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" >Korrigert ved kontroll</option>
+																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -287,7 +287,7 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" >Korrigert ved kontroll</option>
+																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -341,7 +341,7 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" >Korrigert ved kontroll</option>
+																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
 																	</select>
 																</div>
 																<div class="form-group">

@@ -409,7 +409,7 @@ CONTROL_REGISTERED	controller	nn	Kontroll satt opp
 CONTROL_PLANNED	controller	nn	Kontroll har planlagt dato
 CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS	controller	nn	Kontroll gjennomført uten åpne saker etter frist
 CONTROL_DONE_IN_TIME_WITHOUT_ERRORS	controller	nn	Kontroll gjennomført uten åpne saker før frist
-CONTROL_DONE_WITH_ERRORS	controller	nn	Kontroll gjennomført med åpne saker
+CONTROL_DONE_WITH_ERRORS	controller	nn	Kontroll gjennomført med saker
 CONTROL_NOT_DONE	controller	nn	Kontroll ikke gjennomført
 CONTROL_CANCELED	controller	nn	Kontroll kansellert
 document types	controller	nn	Dokumenttyper
@@ -463,3 +463,5 @@ closed	controller	nn	lukka
 certificate	controller	nn	Sertifikat
 inspection history	controller	nn	Utførte kontrollar
 settings	controller	nn	Innstillingar
+corrected	controller	nn	Korrigert
+corrected on controll	controller	nn	Korrigert ved utført kontroll

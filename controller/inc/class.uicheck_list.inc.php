@@ -2748,8 +2748,8 @@ HTML;
 				),
 				array
 				(
-					'col1' => "Antall ventende saker",
-					'col2' => $report_info['check_list']->get_num_pending_cases(),
+					'col1' => "Antall korrigerte saker",
+					'col2' => $report_info['check_list']->get_num_corrected_cases(),
 				),
 			);
 
@@ -3021,6 +3021,10 @@ HTML;
 					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
 					{
 						$status_text = lang('pending');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
+					{
+						$status_text = lang('corrected on controll');
 					}
 
 					$entry = array

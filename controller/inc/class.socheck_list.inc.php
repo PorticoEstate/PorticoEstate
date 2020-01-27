@@ -391,7 +391,7 @@
 		function get_num_open_cases_for_control( $cl_criteria, $from_date_ts, $to_date_ts )
 		{
 
-			$sql = "SELECT c.id as c_id, sum(cl.num_open_cases) as count ";
+			$sql = "SELECT c.id as c_id, sum(cl.num_open_cases) as count_open, sum(cl.num_corrected_cases) as count_corrected ";
 			$sql .= "FROM controller_check_list cl, controller_control c ";
 
 			if ($cl_criteria->get_component_id() > 0 && $cl_criteria->get_location_id() > 0)
@@ -410,13 +410,17 @@
 			$sql .= "GROUP BY c.id";
 
 			$this->db->query($sql);
+			
+			$this->db->next_record();
+			
+			$count = (int)$this->db->f('count_open') + (int)$this->db->f('count_corrected');
 
-			if ($this->db->next_record() & $this->db->f('count') > 0)
+			if ($count > 0)
 			{
 				$control_array = array
 					(
 					"id" => $this->unmarshal($this->db->f('c_id'), 'int'),
-					"count" => $this->db->f('count')
+					"count" => $count
 				);
 			}
 
