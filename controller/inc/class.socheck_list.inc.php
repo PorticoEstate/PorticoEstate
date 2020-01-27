@@ -1154,7 +1154,7 @@
 		}
 
 
-		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $allrows = null)
+		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null)
 		{
 			$control_id = (int)$control_id;
 			if(!$selected_part_of_town)
@@ -1181,6 +1181,10 @@
 				. " AND completed_date IS NOT NULL";
 
 
+			if($deviation)
+			{
+				$sql .= " AND num_open_cases IS NOT NULL AND num_open_cases > 0";
+			}
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
