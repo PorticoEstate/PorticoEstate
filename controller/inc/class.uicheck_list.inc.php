@@ -2973,9 +2973,6 @@ HTML;
 			{
 //				_debug_array($check_item->get_control_item());
 
-				$num_open_cases = 0;
-				$num_pending_cases = 0;
-	
 				$cases_array = $check_item->get_cases_array();
 
 //				_debug_array($cases_array);die();
@@ -3078,19 +3075,7 @@ HTML;
 						$n ++;
 					}
 
-
-					if ($case->get_status() == controller_check_item_case::STATUS_OPEN)
-					{
-						$num_open_cases++;
-					}
-
-					if ($case->get_status() == controller_check_item_case::STATUS_PENDING)
-					{
-						$num_pending_cases++;
-					}
-
 					$i++;
-
 
 //					_debug_array($case);
 

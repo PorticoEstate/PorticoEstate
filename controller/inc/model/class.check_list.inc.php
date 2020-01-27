@@ -62,6 +62,7 @@
 		// Aggregate fields. Fields not in a table
 		protected $num_open_cases;
 		protected $num_pending_cases;
+		protected $num_corrected_cases;
 		// Objects
 		protected $check_item_array = array();
 		// Array that contains error messages. Is populted in function validate
@@ -279,6 +280,16 @@
 		public function set_num_pending_cases( $num_pending_cases )
 		{
 			$this->num_pending_cases = $num_pending_cases;
+		}
+
+		public function get_num_corrected_cases()
+		{
+			return $this->num_corrected_cases;
+		}
+
+		public function set_num_corrected_cases( $num_corrected_cases )
+		{
+			$this->num_corrected_cases = $num_corrected_cases;
 		}
 
 		public function set_control( $control )

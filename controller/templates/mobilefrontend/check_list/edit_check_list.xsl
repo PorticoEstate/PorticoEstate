@@ -36,6 +36,10 @@
 							<label>Antall ventende saker</label>
 							<xsl:value-of select="check_list/num_pending_cases"/>
 						</div>
+						<div class="pure-u-1 pure-u-md-1-2">
+							<label>Antall korrigerte saker</label>
+							<xsl:value-of select="check_list/num_corrected_cases"/>
+						</div>
 					</div>
 					<xsl:variable name="check_list_id">
 						<xsl:value-of select="check_list/id"/>

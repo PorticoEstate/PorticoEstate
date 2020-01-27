@@ -1455,3 +1455,21 @@
 		}
 	}
 
+
+	$test[] = '0.1.64';
+	function controller_upgrade0_1_64()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','num_corrected_cases',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.65';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}

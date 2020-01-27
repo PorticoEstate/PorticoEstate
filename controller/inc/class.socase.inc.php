@@ -297,6 +297,7 @@
 
 			$num_open_cases = 0;
 			$num_pending_cases = 0;
+			$num_corrected_cases = 0;
 
 			foreach ($check_items as $check_item)
 			{
@@ -312,6 +313,10 @@
 					{
 						$num_pending_cases++;
 					}
+					if ($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
+					{
+						$num_corrected_cases++;
+					}
 				}
 			}
 
@@ -319,6 +324,7 @@
 				(
 				'num_open_cases' => $num_open_cases,
 				'num_pending_cases' => $num_pending_cases,
+				'num_corrected_cases' => $num_corrected_cases,
 			);
 
 //			if($num_open_cases > 0)
