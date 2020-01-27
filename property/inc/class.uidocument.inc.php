@@ -744,6 +744,9 @@
 				$location_code								 = phpgw::get_var('location_code');
 				$p_entity_id								 = phpgw::get_var('p_entity_id', 'int');
 				$p_cat_id									 = phpgw::get_var('p_cat_id', 'int');
+				$this->entity_id							 = $p_entity_id;
+				$this->cat_id								 = $p_cat_id;
+
 				$values['p'][$p_entity_id]['p_entity_id']	 = $p_entity_id;
 				$values['p'][$p_entity_id]['p_cat_id']		 = $p_cat_id;
 				$values['p'][$p_entity_id]['p_num']			 = phpgw::get_var('p_num');
@@ -772,7 +775,7 @@
 				}
 			}
 
-			if ($values[extra]['p_entity_id'])
+			if ($values['extra']['p_entity_id'])
 			{
 				$this->entity_id = $values['extra']['p_entity_id'];
 				$this->cat_id	 = $values['extra']['p_cat_id'];
@@ -894,7 +897,9 @@
 					//	'location_code'	 => implode("-", $values['location']),
 						'entity_id'		 => $this->entity_id,
 						'cat_id'		 => $this->cat_id,
-						'p_num'			 => $values['extra']['p_num']));
+						'p_num'			 => $values['extra']['p_num'],
+						'id'			 => $this->entity_id ? $values['extra']['p_num'] : ''
+					));
 				}
 				else
 				{
@@ -1016,9 +1021,16 @@
 				'lang_category'					 => lang('category'),
 				'lang_save'						 => lang('save'),
 				'lang_save_statustext'			 => lang('Save the document'),
-				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $from,
-					'location_code'	 => $location_code, 'entity_id'		 => $this->entity_id, 'cat_id'		 => $this->cat_id,
-					'p_num'			 => $p_num, 'preserve'		 => 1)),
+				'done_action'					 => $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction'	 => $from,
+					'location_code'	 => $location_code,
+					'entity_id'		 => $this->entity_id,
+					'cat_id'		 => $this->cat_id,
+					'p_num'			 => $p_num,
+					'preserve'		 => 1,
+					'id'			 => $this->entity_id ? ($values['extra']['p_num'] ? $values['extra']['p_num'] : phpgw::get_var('p_num')) : ''
+					)
+				),
 				'lang_done'						 => lang('done'),
 				'lang_done_statustext'			 => lang('Back to the list'),
 				'lang_update_file'				 => lang('Update file'),

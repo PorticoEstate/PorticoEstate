@@ -290,6 +290,7 @@ function updateCaseTable(check_list_id)
 function newDocument(oArgs)
 {
 	oArgs['doc_type'] = $('#doc_type').val();
+	oArgs['from'] = 'property.uientity.edit';
 
 	var requestUrl = phpGWLink('index.php', oArgs);
 
