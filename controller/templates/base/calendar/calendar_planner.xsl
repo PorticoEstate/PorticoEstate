@@ -78,7 +78,7 @@
 						<legend>Velg kontroll</legend>
 
 						<label for="control_area_id">
-							<xsl:value-of select="php:function('lang', 'control type')"/>
+							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
 						<select id="control_area_id" name="control_area_id" class="form-control">
 							<xsl:apply-templates select="control_area_list/options"/>
@@ -270,7 +270,7 @@
 						<legend>Velg kontroll</legend>
 
 						<label for="control_area_id">
-							<xsl:value-of select="php:function('lang', 'control type')"/>
+							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
 						<select id="control_area_id" name="control_area_id" class="form-control">
 							<xsl:apply-templates select="control_area_list/options"/>
@@ -297,8 +297,27 @@
 								<xsl:value-of select="php:function('lang', 'select part of town')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="part_of_town_list/options"/>
-
 						</select>
+
+						<div class="form-inline mt-1">
+							<input class="form-control" type="text" name="query" value="{query}"/>
+
+							<div class="form-check">
+								<label class="form-check-label ml-2">
+									<input class="form-check-input ml-2" type="checkbox" name="deviation" value="1">
+										<xsl:if test="deviation = 1">
+											<xsl:attribute name="checked">
+												<xsl:text>true</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'deviation')"/>
+								</label>
+							</div>
+							<button class="btn btn-primary ml-2" type="submit">
+								<xsl:value-of select="php:function('lang', 'search')"/>
+							</button>
+						</div>
 
 					</fieldset>
 				</div>
@@ -307,12 +326,6 @@
 		<div class="row">
 			<div class="mt-5 container">
 				<h2 class="text-center">Siste utførte rapporter</h2>
-
-<!--				<div class="search">
-					<input type="text" name="query" value="{query}"/>
-					<input type="submit" name="submit" value="Søk"/>
-				</div>-->
-
 				<div class="row">
 					<xsl:call-template name="nextmatchs"/>
 				</div>
@@ -621,7 +634,7 @@
 						<legend>Velg kontroll</legend>
 
 						<label for="control_area_id">
-							<xsl:value-of select="php:function('lang', 'control type')"/>
+							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
 						<select id="control_area_id" name="control_area_id" class="form-control">
 							<xsl:apply-templates select="control_area_list/options"/>

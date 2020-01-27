@@ -307,10 +307,10 @@
 			$part_of_town['planned_status'] = $planned_status;
 		}
 
-		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '', $allrows = null)
+		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null)
 		{
 
-			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query, $allrows);
+			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows);
 			
 			return $historic_check_lists;
 		}
@@ -1052,8 +1052,9 @@ HTML;
 			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
 			$sort		= phpgw::get_var('sort', 'string', 'GET', 'ASC');
 			$allrows	= phpgw::get_var('allrows', 'bool');
+			$deviation	= phpgw::get_var('deviation', 'bool');
 
-			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query, $allrows);
+			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows);
 			$total = $this->so->total_records;
 
 			
@@ -1076,7 +1077,8 @@ HTML;
 			$link_data = array
 			(
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
-				'part_of_town_id' => $part_of_town_id
+				'part_of_town_id' => $part_of_town_id,
+				'deviation'	=> $deviation
 			);
 
 			$nm = array
@@ -1095,6 +1097,7 @@ HTML;
 			(
 				'nm_data'			 => $this->_nextmatches->xslt_nm($nm),
 				'query'				 => $query,
+				'deviation'			 => $deviation,
 				'control_area_list'	 => array('options' => $control_area_list),
 				'entity_group_list'	 => array('options' => $entity_groups),
 				'part_of_town_list'	 => array('options' => $part_of_town_list),
