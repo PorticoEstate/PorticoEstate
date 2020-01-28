@@ -84,7 +84,9 @@
 												<xsl:when test="status = 0">Åpen</xsl:when>
 												<xsl:when test="status = 1">Lukket</xsl:when>
 												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
-												<xsl:when test="status = 3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></xsl:when>
+												<xsl:when test="status = 3">
+													<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+												</xsl:when>
 											</xsl:choose>
 										</span>
 									</div>
@@ -244,25 +246,33 @@
 													<option value="0" SELECTED="SELECTED">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 1">
 													<option value="0">Åpen</option>
 													<option value="1" SELECTED="SELECTED">Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 2">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2" SELECTED="SELECTED">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 3">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3" SELECTED="SELECTED"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3" SELECTED="SELECTED">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 											</xsl:choose>
 										</select>
@@ -348,19 +358,24 @@
 											</xsl:when>
 											<xsl:when test="$control_item_type = 'control_item_type_5'">
 												<!--  MEASUREMENT -->
-												<div class="row">
-													<label class="comment">Velg verdi fra liste</label>
-													<br/>
-													<xsl:for-each select="../control_item/options_array">
-														<input type="checkbox" name="measurement[]">
-															<xsl:attribute name="value">
-																<xsl:value-of select="option_value"/>
-															</xsl:attribute>
-														</input>
-														<xsl:value-of select="option_value"/>
-														<br/>
+												<div class="row pure-form pure-form-aligned">
+													<div class="pure-control-group">
 
-													</xsl:for-each>
+													<label class="comment">Velg verdi fra liste</label>
+													</div>
+													<div class="pure-control-group">
+
+														<xsl:for-each select="../control_item/options_array">
+															<label class="pure-checkbox">
+																<input type="checkbox" name="measurement[]">
+																	<xsl:attribute name="value">
+																		<xsl:value-of select="option_value"/>
+																	</xsl:attribute>
+																</input>
+																<xsl:value-of select="option_value"/>
+															</label>
+														</xsl:for-each>
+													</div>
 												</div>
 											</xsl:when>
 

@@ -348,19 +348,24 @@
 											</xsl:when>
 											<xsl:when test="$control_item_type = 'control_item_type_5'">
 												<!--  MEASUREMENT -->
-												<div class="row">
-													<label class="comment">Velg verdi fra liste</label>
-													<br/>
-													<xsl:for-each select="../control_item/options_array">
-														<input type="checkbox" name="measurement[]">
-															<xsl:attribute name="value">
-																<xsl:value-of select="option_value"/>
-															</xsl:attribute>
-														</input>
-														<xsl:value-of select="option_value"/>
-														<br/>
+												<div class="row pure-form pure-form-aligned">
+													<div class="pure-control-group">
 
-													</xsl:for-each>
+													<label class="comment">Velg verdi fra liste</label>
+													</div>
+													<div class="pure-control-group">
+
+														<xsl:for-each select="../control_item/options_array">
+															<label class="pure-checkbox">
+																<input type="checkbox" name="measurement[]">
+																	<xsl:attribute name="value">
+																		<xsl:value-of select="option_value"/>
+																	</xsl:attribute>
+																</input>
+																<xsl:value-of select="option_value"/>
+															</label>
+														</xsl:for-each>
+													</div>
 												</div>
 											</xsl:when>
 
