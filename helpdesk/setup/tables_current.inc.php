@@ -76,8 +76,10 @@
 				'on_behalf_of_name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 			),
 			'pk' => array('id'),
-			'ix' => array(),
 			'ix' => array('location_code'),
+			'fk' => array(
+				'phpgw_categories' => array('cat_id' => 'cat_id')
+			),
 			'uc' => array()
 		),
 		'phpgw_helpdesk_views' => array(
