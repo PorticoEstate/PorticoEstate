@@ -48,13 +48,13 @@
 		</xsl:choose>
 
 		<div id="view_cases" class="container mt-4">
-			<xsl:choose>
+			<!--			<xsl:choose>
 				<xsl:when test="component_children/child::node() and count(component_children) &gt; 0">
 					<xsl:attribute name="style">
 						<xsl:text>display:none</xsl:text>
 					</xsl:attribute>
 				</xsl:when>
-			</xsl:choose>
+			</xsl:choose>-->
 
 			<h5>
 				<a href="#" data-toggle="modal" data-target="#inspectObject">
@@ -72,7 +72,7 @@
 						<!-- Modal body -->
 						<div class="modal-body">
 
-							<div class="tab_item active ext">
+							<!--<div class="tab_item active ">-->
 								<input type="hidden" id="cache_case_id" value=""></input>
 
 								<xsl:variable name="action_url">
@@ -197,7 +197,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -234,7 +236,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -284,7 +288,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -338,6 +344,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -386,24 +395,23 @@
 																<input name="type" type="hidden" value="control_item_type_5" />
 																<input name="status" type="hidden" value="1" />
 
-																<div class="form-group">
-																	<label class="pure-checkbox">Velg verdi fra lister</label>
-																	<br/>
-																	<div>
-																		<xsl:if test="required = 1">
-																			<xsl:attribute name="class" >
-																				<xsl:text>required</xsl:text>
-																			</xsl:attribute>
-																		</xsl:if>
-																		<xsl:for-each select="options_array">
-																			<input type="checkbox" name="option_value[]" value="{option_value}">
-																			</input>
+																<label>Velg verdi fra lister</label>
+																<!--<br/>-->
+																<div class="form-check">
+																	<xsl:if test="required = 1">
+																		<xsl:attribute name="class" >
+																			<xsl:text>required</xsl:text>
+																		</xsl:attribute>
+																	</xsl:if>
+																	<xsl:for-each select="options_array">
+																		<input type="checkbox" class="form-check-input" name="option_value[]" value="{option_value}"/>
+																		<label class="form-check-label">
 																			<xsl:value-of select="option_value"/>
-																			<br/>
-																		</xsl:for-each>
-																	</div>
+																		</label>
+																		<br/>
+																	</xsl:for-each>
 																</div>
-																<div class="form-group">
+																<div class="form-group mt-3">
 																	<label>
 																		<xsl:value-of select="php:function('lang', 'comment')" />
 																	</label>
@@ -477,7 +485,7 @@
 									</xsl:choose>
 								</xsl:for-each>
 
-							</div>
+							<!--</div>-->
 						</div>
 
 						<!-- Modal footer -->

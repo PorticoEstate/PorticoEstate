@@ -1154,7 +1154,8 @@
 			else if ($type == 'control_item_type_5')
 			{
 				$option_value = phpgw::get_var('option_value');
-				$case->set_measurement(serialize($option_value));
+//				$case->set_measurement(serialize($option_value));
+				$case->set_measurement($option_value);
 			}
 
 			$case_id = $this->so->store($case);
@@ -1198,7 +1199,8 @@
 			$case->set_modified_date($todays_date_ts);
 			if($measurement && is_array($measurement))
 			{
-				$case->set_measurement(serialize($measurement));
+//				$case->set_measurement(serialize($measurement));
+				$case->set_measurement($measurement);
 			}
 			else
 			{
@@ -1901,10 +1903,10 @@
 				{
 					$measurement = $case->get_measurement();
 
-					if(unserialize($measurement))
-					{
-						$case->set_measurement(unserialize($measurement));
-					}
+//					if(unserialize($measurement))
+//					{
+//						$case->set_measurement(unserialize($measurement));
+//					}
 
 					$component_location_id = $case->get_component_location_id();
 					$component_id = $case->get_component_id();
@@ -2126,7 +2128,7 @@
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list()),
 				'status_list' => array('options' => $status_list)
 			);
-
+//			_debug_array($closed_check_items_and_cases);
 			phpgwapi_jquery::load_widget('core');
 			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'case.js');

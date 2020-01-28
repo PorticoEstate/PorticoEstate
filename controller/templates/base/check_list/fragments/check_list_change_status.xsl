@@ -25,7 +25,7 @@
 									<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
 									<input type="submit" class="mt-3 btn btn-success btn-block">
 										<xsl:attribute name="value">
-											<xsl:value-of select="php:function('lang', 'is_executed')" />
+											<xsl:value-of select="php:function('lang', 'set status: not done')" />
 										</xsl:attribute>
 									</input>
 								</xsl:otherwise>

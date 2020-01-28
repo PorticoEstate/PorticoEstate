@@ -108,6 +108,10 @@
 			{
 				return 'NULL';
 			}
+			else if ($type == 'string' && $value && is_array($value))
+			{
+				return "'" . $this->db->db_addslashes(serialize($value)) . "'";
+			}
 
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}

@@ -51,13 +51,13 @@
 		</xsl:call-template>
 
 		<div id="view_cases" class="container mt-4">
-			<xsl:choose>
+<!--			<xsl:choose>
 				<xsl:when test="component_children/child::node() and count(component_children) &gt; 0">
 					<xsl:attribute name="style">
 						<xsl:text>display:none</xsl:text>
 					</xsl:attribute>
 				</xsl:when>
-			</xsl:choose>
+			</xsl:choose>-->
 			<!-- differ from bootstrap-->
 			<!--			<h5>
 				<a href="#" data-toggle="modal" data-target="#inspectObject">

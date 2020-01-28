@@ -3264,10 +3264,10 @@ HTML;
 				{
 					$measurement = $case->get_measurement();
 
-					if(unserialize($measurement))
-					{
-						$case->set_measurement(unserialize($measurement));
-					}
+//					if(unserialize($measurement))
+//					{
+//						$case->set_measurement(unserialize($measurement));
+//					}
 
 					$component_location_id = $case->get_component_location_id();
 					$component_id = $case->get_component_id();

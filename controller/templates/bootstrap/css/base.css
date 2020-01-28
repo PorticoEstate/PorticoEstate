@@ -353,9 +353,9 @@ input[type="radio"] {
   padding: 3px 6px;
 }
 
-input[type="checkbox"] {
+/*input[type="checkbox"] {
   margin: 5px;
-}
+}*/
 
 input[type="text"] {
   padding: 5px 5px 2px;
@@ -1898,7 +1898,7 @@ li.check_item_case ul li .col_3 {
 .frm_register_case label {
   display: inline-block;
   width: 18%;
-  margin-left: 50px;
+  /*margin-left: 50px;*/
 }
 
 .frm_register_case .what-to-do, .frm_register_case .how-to-do {

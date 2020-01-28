@@ -81,7 +81,7 @@
 																	</xsl:when>
 																</xsl:choose>
 																<div class="row">
-																	<label>Status:</label>
+																	<label>Status:_</label>
 																	<span class="case_condition_degree">
 																		<xsl:for-each select="//status_list/options">
 																			<xsl:if test="$status = id">

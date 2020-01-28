@@ -189,7 +189,16 @@
 
 		public function set_measurement( $measurement )
 		{
-			$this->measurement = $measurement;
+			if(unserialize($measurement))
+			{
+				$_measurement = unserialize($measurement);
+			}
+			else
+			{
+				$_measurement = $measurement;
+			}
+
+			$this->measurement = $_measurement;
 		}
 
 		public function get_location_code()
