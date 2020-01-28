@@ -154,7 +154,7 @@
 						<xsl:value-of select="info/check_list_id"/>
 						<xsl:text>&amp;phpgw_return_as=json</xsl:text>
 					</span>
-					<xsl:value-of select="info/num_open_cases"/>
+					<xsl:value-of select="number(info/num_open_cases + info/num_corrected_cases)"/>
 				</a>
 			</div>
 		</xsl:when>

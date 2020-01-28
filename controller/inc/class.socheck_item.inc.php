@@ -310,9 +310,9 @@
 			{
 				$sql .= "AND cic.status = 0 ";
 			}
-			else if ($status == 'closed')
+			else if ($status == 'closed') // and corrected
 			{
-				$sql .= "AND cic.status = 1 ";
+				$sql .= "AND (cic.status = 1  OR cic.status = 3)";
 			}
 			else if ($status == 'waiting')
 			{

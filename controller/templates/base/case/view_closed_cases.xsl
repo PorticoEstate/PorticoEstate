@@ -45,6 +45,9 @@
 													<xsl:variable name="cases_id">
 														<xsl:value-of select="id"/>
 													</xsl:variable>
+													<xsl:variable name="status">
+														<xsl:value-of select="status"/>
+													</xsl:variable>
 													<xsl:variable name="condition_degree">
 														<xsl:value-of select="condition_degree"/>
 													</xsl:variable>
@@ -77,6 +80,16 @@
 																		</div>
 																	</xsl:when>
 																</xsl:choose>
+																<div class="row">
+																	<label>Status:</label>
+																	<span class="case_condition_degree">
+																		<xsl:for-each select="//status_list/options">
+																			<xsl:if test="$status = id">
+																				<xsl:value-of disable-output-escaping="yes" select="name"/>
+																			</xsl:if>
+																		</xsl:for-each>
+																	</span>
+																</div>
 																<div class="row">
 																	<label>Tilstandsgrad:</label>
 																	<span class="case_condition_degree">

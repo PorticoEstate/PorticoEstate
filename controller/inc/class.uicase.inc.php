@@ -2099,6 +2099,12 @@
 //-------
 
 
+			$status_list = array(
+				array('id' => controller_check_item_case::STATUS_OPEN, 'name' => lang('open')),
+				array('id' => controller_check_item_case::STATUS_CLOSED, 'name' => lang('closed')),
+				array('id' => controller_check_item_case::STATUS_PENDING, 'name' => lang('pending')),
+				array('id' => controller_check_item_case::STATUS_CORRECTED_ON_CONTROL, 'name' => lang('corrected on controll')),
+			);
 			$data = array
 				(
 				'control' => $control,
@@ -2117,7 +2123,8 @@
 				'cases_view' => 'closed_cases',
 				'building_location_code' => $building_location_code,
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list()),
-				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list()),
+				'status_list' => array('options' => $status_list)
 			);
 
 			phpgwapi_jquery::load_widget('core');

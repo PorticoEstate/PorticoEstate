@@ -19,7 +19,7 @@
     </li>
     <li>
       <img height="15" src="controller/images/status_icon_red_empty.png" />
-      <span>Kontroll gjennomført med åpne saker</span>
+      <span>Kontroll gjennomført med saker</span>
     </li>
     <li>
       <img height="15" src="controller/images/status_icon_red_cross.png" />

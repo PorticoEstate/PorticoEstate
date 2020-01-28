@@ -368,6 +368,9 @@
 									<h5>Åpne avvik</h5>
 								</th>
 								<th>
+									<h5>Korrigert ved kontroll</h5>
+								</th>
+								<th>
 									<h5>Handlinger</h5>
 								</th>
 							</tr>
@@ -851,6 +854,9 @@
 		</td>
 		<td>
 			<xsl:value-of select="num_open_cases"/>
+		</td>
+		<td>
+			<xsl:value-of select="num_corrected_cases"/>
 		</td>
 
 		<td class="text-center">

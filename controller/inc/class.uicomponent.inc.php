@@ -1707,8 +1707,9 @@
 					$img = "<img height=\"15\" src=\"controller/images/status_icon_dark_green.png\" title=\"{$status}\"/>";
 					break;
 				case "CONTROL_DONE_WITH_ERRORS":
-					$status = "Utført med {$param['info']['num_open_cases']} åpne avvik";
-					$img = "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"{$status}\"/> ({$param['info']['num_open_cases']})";
+					$num_cases = (int)$param['info']['num_open_cases'] + (int)$param['info']['num_corrected_cases'];
+					$status = "Utført med {$num_cases} avvik";
+					$img = "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"{$status}\"/> ({$num_cases})";
 					break;
 				case "CONTROL_CANCELED":
 					$status = 'Kansellert';
@@ -1843,8 +1844,8 @@ HTML;
 					'img' => "<img height=\"15\" src=\"controller/images/status_icon_light_green.png\" title=\"Kontroll gjennomført uten åpne saker etter frist\"/>"
 				),
 				"CONTROL_DONE_WITH_ERRORS" => array(
-					'name' => 'Gjennomført med åpne saker',
-					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"Kontroll gjennomført med åpne saker\"/>"
+					'name' => 'Gjennomført med saker',
+					'img' => "<img height=\"15\" src=\"controller/images/status_icon_red_empty.png\" title=\"Kontroll gjennomført med åpne/korrigerte saker\"/>"
 				),
 				"CONTROL_NOT_DONE" => array(
 					'name' => 'Ikke gjennomført (ikke planlagt)',

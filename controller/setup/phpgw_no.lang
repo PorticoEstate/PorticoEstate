@@ -410,7 +410,7 @@ CONTROL_REGISTERED	controller	no	Kontroll satt opp
 CONTROL_PLANNED	controller	no	Kontroll har planlagt dato
 CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS	controller	no	Kontroll gjennomført uten åpne saker etter frist
 CONTROL_DONE_IN_TIME_WITHOUT_ERRORS	controller	no	Kontroll gjennomført uten åpne saker før frist
-CONTROL_DONE_WITH_ERRORS	controller	no	Kontroll gjennomført med åpne saker
+CONTROL_DONE_WITH_ERRORS	controller	no	Kontroll gjennomført med saker
 CONTROL_NOT_DONE	controller	no	Kontroll ikke gjennomført
 CONTROL_CANCELED	controller	no	Kontroll kansellert
 document types	controller	no	Dokumenttyper
@@ -465,3 +465,5 @@ closed	controller	no	lukket
 certificate	controller	no	Sertifikat
 inspection history	controller	no	Utførte kontroller
 settings	controller	no	Innstillinger
+corrected	controller	no	Korrigert
+corrected on controll	controller	no	Korrigert ved utført kontroll

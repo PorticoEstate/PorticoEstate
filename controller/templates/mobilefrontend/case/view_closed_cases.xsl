@@ -78,6 +78,16 @@
 																	</xsl:when>
 																</xsl:choose>
 																<div class="row">
+																	<label>Status:</label>
+																	<span class="case_condition_degree">
+																		<xsl:for-each select="//status_list/options">
+																			<xsl:if test="$status = id">
+																				<xsl:value-of disable-output-escaping="yes" select="name"/>
+																			</xsl:if>
+																		</xsl:for-each>
+																	</span>
+																</div>
+																<div class="row">
 																	<label>Tilstandsgrad:</label>
 																	<span class="case_condition_degree">
 																		<xsl:for-each select="//degree_list/options">

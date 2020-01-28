@@ -2748,8 +2748,8 @@ HTML;
 				),
 				array
 				(
-					'col1' => "Antall ventende saker",
-					'col2' => $report_info['check_list']->get_num_pending_cases(),
+					'col1' => "Antall korrigerte saker",
+					'col2' => $report_info['check_list']->get_num_corrected_cases(),
 				),
 			);
 
@@ -2973,9 +2973,6 @@ HTML;
 			{
 //				_debug_array($check_item->get_control_item());
 
-				$num_open_cases = 0;
-				$num_pending_cases = 0;
-	
 				$cases_array = $check_item->get_cases_array();
 
 //				_debug_array($cases_array);die();
@@ -3024,6 +3021,10 @@ HTML;
 					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
 					{
 						$status_text = lang('pending');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
+					{
+						$status_text = lang('corrected on controll');
 					}
 
 					$entry = array
@@ -3078,19 +3079,7 @@ HTML;
 						$n ++;
 					}
 
-
-					if ($case->get_status() == controller_check_item_case::STATUS_OPEN)
-					{
-						$num_open_cases++;
-					}
-
-					if ($case->get_status() == controller_check_item_case::STATUS_PENDING)
-					{
-						$num_pending_cases++;
-					}
-
 					$i++;
-
 
 //					_debug_array($case);
 

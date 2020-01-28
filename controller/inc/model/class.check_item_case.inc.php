@@ -37,6 +37,7 @@
 		const STATUS_OPEN = 0;
 		const STATUS_CLOSED = 1;
 		const STATUS_PENDING = 2;
+		const STATUS_CORRECTED_ON_CONTROL = 3;
 
 		protected $id;
 		protected $check_item_id;
