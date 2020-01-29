@@ -30,6 +30,10 @@
 		var $permission;
 		var $sub;
 		var $currentapp;
+		/**
+		 * @var object $nextmatchss pager object
+		 */
+		protected $nextmatchs;
 
 		var $public_functions = array
 		(
@@ -238,8 +242,23 @@
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
+			$nm = array
+			(
+				'link_data'		 => $link_data,
+				'query'			 => $this->query,
+				'allrows'		 => $this->allrows,
+				'allow_allrows'	 => false,
+				'start'			 => $this->start,
+				'record_limit'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
+				'num_records'	 => $num_records,
+				'all_records'	 => $this->bo->total_records,
+			);
+
 			$data = array
 			(
+				'search_access' => true,
+				'nm_data'						=> $this->nextmatchs->xslt_nm($nm),
+				'search_data'					=> $this->nextmatchs->xslt_search(array('query' => $this->query, 'link_data' => $link_data)),
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'done_action'					=> $GLOBALS['phpgw']->link('/preferences/index.php'),
@@ -247,11 +266,6 @@
 				'lang_done'						=> lang('done'),
 				'processed'						=> (isset($processed)?$processed:''),
 				'location'						=> $this->location,
-				'allow_allrows'					=> false,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
-				'num_records'					=> $num_records,
-				'all_records'					=> $this->bo->total_records,
 				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
@@ -268,7 +282,6 @@
 
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
 				'table_header_permission'		=> $table_header,
 				'values_groups'					=> (isset($groups)?$groups:''),
@@ -484,12 +497,23 @@
 
 			$msgbox_data = (isset($receipt)?$GLOBALS['phpgw']->common->msgbox_data($receipt):'');
 
+			$nm = array
+			(
+				'link_data'		 => $link_data,
+				'query'			 => $this->query,
+				'allrows'		 => $this->allrows,
+				'allow_allrows'	 => true,
+				'start'			 => $this->start,
+				'record_limit'	 => $record_limit,
+				'num_records'	 => $num_records,
+				'all_records'	 => $this->bo->total_records,
+			);
+
 			$data = array
 			(
-				'allrows'						=> $this->allrows,
-				'allow_allrows'					=> true,
-				'start_record'					=> $this->start,
-				'record_limit'					=> $record_limit,
+				'search_access' => true,
+				'nm_data'						=> $this->nextmatchs->xslt_nm($nm),
+				'search_data'					=> $this->nextmatchs->xslt_search(array('query' => $this->query, 'link_data' => $link_data)),
 
 				'msgbox_data'					=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'					=> $GLOBALS['phpgw']->link('/index.php',$link_data),
@@ -499,8 +523,6 @@
 				'processed'						=> $processed,
 				'location'						=> $this->location,
 
-				'num_records'					=> $num_records,
-				'all_records'					=> $this->bo->total_records,
 				'link_url'						=> $GLOBALS['phpgw']->link('/index.php',$link_data),
 				'img_path'						=> $GLOBALS['phpgw']->common->get_image_path('phpgwapi','default'),
 
@@ -514,7 +536,6 @@
 
 				'lang_searchfield_statustext'	=> lang('Enter the search string. To show all entries, empty this field and press the SUBMIT button again'),
 				'lang_searchbutton_statustext'	=> lang('Submit the search string'),
-				'query'							=> $this->query,
 				'lang_search'					=> lang('search'),
 				'table_header_permission'		=> $table_header,
 				'values_groups'					=> $groups,
