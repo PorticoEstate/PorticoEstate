@@ -8,8 +8,11 @@
 		{
 			$building_id = (int)$building_id;
 
-			$sql = "SELECT subject_id AS user_id, role FROM bb_permission"
-				. " WHERE object_id ={$building_id} AND object_type = 'building'";
+			$sql = "SELECT bb_permission.subject_id AS user_id, bb_permission.role FROM bb_permission"
+				. " JOIN phpgw_accounts ON bb_permission.subject_id = phpgw_accounts.account_id"
+				. " WHERE object_id ={$building_id}"
+				. " AND object_type = 'building'"
+				. " AND account_status = 'A'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
