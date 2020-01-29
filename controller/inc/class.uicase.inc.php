@@ -769,8 +769,6 @@
 					array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 				}
 
-//				_debug_array($component_children);
-
 			}
 			else
 			{
@@ -961,6 +959,7 @@
 
 			}
 
+//			_debug_array($component_children);
 //			_debug_array($completed_items);
 //			_debug_array($completed_list);
 
