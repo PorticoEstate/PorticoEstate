@@ -1037,7 +1037,7 @@ input.date {
 }
 
 #check_list_details textarea{
-  width:400px;
+  /*width:400px;*/
   height:100px;
 }
 
