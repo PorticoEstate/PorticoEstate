@@ -559,7 +559,7 @@
 				$property_soentity = createObject('property.soentity');
 
 				$component_children = array();
-				foreach ($location_children as $key => $location_children_info)
+				foreach ($location_children as $key => &$location_children_info)
 				{
 					$location_children_info['parent_location_id'] = $location_id;
 					$location_children_info['parent_component_id'] = $component_id;
@@ -683,7 +683,7 @@
 			);
 			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
 			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';
-
+//			_debug_array($component_children);
 			$data = array
 				(
 				'inspectors' => createObject('controller.sosettings')->get_inspectors($check_list->get_id()),
@@ -693,6 +693,7 @@
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
+				'location_children' => $location_children,
 				'get_locations' => $get_locations,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
