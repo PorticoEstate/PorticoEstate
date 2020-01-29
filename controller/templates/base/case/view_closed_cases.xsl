@@ -116,7 +116,19 @@
 																	<div class="row">
 																		<label>Måleverdi:</label>
 																		<span class="measurement">
-																			<xsl:value-of select="measurement"/>
+																			<xsl:choose>
+																				<xsl:when test="measurement/child::node()">
+																					<xsl:for-each select="measurement">
+																						<xsl:value-of select="node()"/>
+																						<xsl:if test="not(position() = last())">
+																							<br/>
+																						</xsl:if>
+																					</xsl:for-each>
+																				</xsl:when>
+																				<xsl:otherwise>
+																					<xsl:value-of select="measurement"/>
+																				</xsl:otherwise>
+																			</xsl:choose>
 																		</span>
 																	</div>
 																</xsl:if>

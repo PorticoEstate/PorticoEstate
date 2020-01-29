@@ -6,6 +6,15 @@ $(document).ready(function ()
 	{
 		e.preventDefault();
 
+		if ($("#update-check-list-status-value").val() == 0)
+		{
+			var proceed = confirm("Vi du oppheve status som utført");
+			if (proceed !== true)
+			{
+				return false;
+			}
+		}
+
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");
 		var submitBnt = $(thisForm).find("input[type='submit']");
@@ -46,7 +55,7 @@ $(document).ready(function ()
 					}
 					else if (data.status == '1')
 					{
-						$(submitBnt).val("Utført");
+						$(submitBnt).val("Oppheve status: Utført");
 						$("#update-check-list-status-value").val(0);
 						$(submitBnt).removeClass('btn-danger');
 						$(submitBnt).removeClass('btn-warning');
@@ -108,7 +117,7 @@ function fallback_status_update()
 				}
 				else if (data.status == '1')
 				{
-					$(submitBnt).val("Utført");
+					$(submitBnt).val("Oppheve status: Utført");
 					$("#update-check-list-status-value").val(0);
 					$(submitBnt).removeClass('btn-danger');
 					$(submitBnt).removeClass('btn-warning');
