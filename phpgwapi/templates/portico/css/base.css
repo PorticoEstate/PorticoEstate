@@ -574,3 +574,8 @@ SPAN.expander {
 .pure-form-stacked input[type="file"]{
     margin: 0 0;
 }
+
+.inactive
+{
+	text-decoration: line-through;
+}
