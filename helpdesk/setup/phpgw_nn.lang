@@ -256,3 +256,4 @@ Referred from	helpdesk	nn	Referert frå
 Started from	helpdesk	nn	Startet frå
 Asynchronous Tasks	helpdesk	nn	Systemjobbar
 helpdesk_async_task_anonyminizer_enabled	helpdesk	nn	Anonymiser data
+entry time	helpdesk	nn	Registrert tid
