@@ -1388,7 +1388,11 @@
 						$this->_set_required_control_items($check_list);
 					}
 
-					$ret = $this->notify_supervisor($check_list);
+					$ret = array();
+					if(!$submit_deviation)
+					{
+						$ret = $this->notify_supervisor($check_list);
+					}
 
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
