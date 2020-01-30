@@ -209,6 +209,11 @@
 		{
 			$columns = array();
 
+			$columns['entry_time'] = array(
+				'id' => 'entry_time',
+				'name' => lang('entry time'),
+			);
+
 			$columns['modified_date'] = array(
 				'id' => 'modified_date',
 				'name' => lang('modified date'),
@@ -590,6 +595,7 @@
 				}
 
 				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], $this->dateformat);
+				$ticket['entry_time'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], 'H:i:s');
 				$ticket['modified_time'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'], 'H:i:s');
 				$ticket['modified_date'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'], $this->dateformat);
 				if ($ticket['finnish_date2'])
