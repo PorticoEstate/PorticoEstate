@@ -594,8 +594,8 @@
 					}
 				}
 
-				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], $this->dateformat);
 				$ticket['entry_time'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], 'H:i:s');
+				$ticket['entry_date'] = $GLOBALS['phpgw']->common->show_date($ticket['entry_date'], $this->dateformat);
 				$ticket['modified_time'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'], 'H:i:s');
 				$ticket['modified_date'] = $GLOBALS['phpgw']->common->show_date($ticket['modified_date'], $this->dateformat);
 				if ($ticket['finnish_date2'])
