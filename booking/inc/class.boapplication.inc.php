@@ -182,13 +182,20 @@
 				// TODO: Inform user if something goes wrong
 			}
 
-			if($cellphones && $created)
+			if ($cellphones && $created)
 			{
-				$sms = CreateObject('sms.sms');
-				$sms_message = "Ny søknad på {$application['building_name']}";
-				foreach ($cellphones as $cellphone)
+				try
 				{
-					$sms->websend2pv($GLOBALS['phpgw_info']['user']['account_id'], $cellphone, $sms_message);
+					$sms = CreateObject('sms.sms');
+					$sms_message = "Ny søknad på {$application['building_name']}";
+					foreach ($cellphones as $cellphone)
+					{
+						$sms->websend2pv($GLOBALS['phpgw_info']['user']['account_id'], $cellphone, $sms_message);
+					}
+				}
+				catch (Exception $e)
+				{
+					// TODO: Inform user if something goes wrong
 				}
 			}
 		}
