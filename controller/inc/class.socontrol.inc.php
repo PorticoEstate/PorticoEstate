@@ -121,12 +121,12 @@
 		/**
 		 * Get controls that should be carried out on a location within period
 		 *
-		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $location_code the locaction code for the location the control should be carried out for
 		 * @param $from_date start date for period
 		 * @param $to_date end date for period
-		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $repeat_type Dag, Uke, Måned, År
 		 * @param $return_type return data as objects or as arrays
-		 * @param $role_id responsible role for carrying out the control  
+		 * @param $role_id responsible role for carrying out the control
 		 * @return array with controls as objects or arrays
 		 */
 		public function get_assigned_check_list_at_location( $from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object" )
@@ -199,12 +199,12 @@
 		/**
 		 * Get components and populates array of controls that should be carried out on the components on a location within period
 		 *
-		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $location_code the locaction code for the location the control should be carried out for
 		 * @param $from_date start date for period
 		 * @param $to_date end date for period
-		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $repeat_type Dag, Uke, Måned, År
 		 * @param $return_type return data as objects or as arrays
-		 * @param $role_id responsible role for carrying out the control  
+		 * @param $role_id responsible role for carrying out the control
 		 * @return array of components as objects or arrays
 		 */
 		public function get_assigned_check_list_by_component( $from_date, $to_date, $repeat_type, $user_id, $completed = null, $return_type = "return_object" )
@@ -236,7 +236,7 @@
 
 //				$sql .= " AND ((deadline <= $to_date AND controller_control.end_date IS NULL) ";
 //				$sql .= " OR (deadline <= $to_date AND deadline > $from_date ))";
-//				$sql .= " AND controller_check_list.completed_date IS NULL ";			
+//				$sql .= " AND controller_check_list.completed_date IS NULL ";
 			}
 			else
 			{
@@ -282,12 +282,12 @@
 		/**
 		 * Get controls that should be carried out on a location within period
 		 *
-		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $location_code the locaction code for the location the control should be carried out for
 		 * @param $from_date start date for period
 		 * @param $to_date end date for period
-		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $repeat_type Dag, Uke, Måned, År
 		 * @param $return_type return data as objects or as arrays
-		 * @param $role_id responsible role for carrying out the control  
+		 * @param $role_id responsible role for carrying out the control
 		 * @return array with controls as objects or arrays
 		 */
 		public function get_controls_by_location( $location_code, $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0 )
@@ -361,12 +361,12 @@
 		/**
 		 * Get controls that should be carried out on components on a location within period
 		 *
-		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $location_code the locaction code for the location the control should be carried out for
 		 * @param $from_date start date for period
 		 * @param $to_date end date for period
-		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $repeat_type Dag, Uke, Måned, År
 		 * @param $return_type return data as objects or as arrays
-		 * @param $role_id responsible role for carrying out the control  
+		 * @param $role_id responsible role for carrying out the control
 		 * @return array with controls as objects or arrays
 		 */
 		public function get_controls_for_components_by_location( $location_code, $from_date, $to_date, $repeat_type, $role_id = 0 )
@@ -426,12 +426,12 @@
 		/**
 		 * Get components and populates array of controls that should be carried out on the components on a location within period
 		 *
-		 * @param $location_code the locaction code for the location the control should be carried out for   
+		 * @param $location_code the locaction code for the location the control should be carried out for
 		 * @param $from_date start date for period
 		 * @param $to_date end date for period
-		 * @param $repeat_type Dag, Uke, Måned, År 
+		 * @param $repeat_type Dag, Uke, Måned, År
 		 * @param $return_type return data as objects or as arrays
-		 * @param $role_id responsible role for carrying out the control  
+		 * @param $role_id responsible role for carrying out the control
 		 * @return array of components as objects or arrays
 		 */
 		public function get_controls_by_component( $from_date, $to_date, $repeat_type, $return_type = "return_object", $role_id = 0, $filter = null )
@@ -555,7 +555,7 @@
 		/**
 		 * Get controls with a control area
 		 *
-		 * @param $control_area_id  
+		 * @param $control_area_id
 		 * @return array with controls as objects or arrays
 		 */
 		function get_controls_by_control_area( $control_area_id )
@@ -600,7 +600,7 @@
 		 *
 		 * @param int $control_id control id
 		 * @param array $location_code_filter
-		 * @return array with arrays of location info  
+		 * @return array with arrays of location info
 		 */
 		function get_locations_for_control( $control_id )
 		{
@@ -661,7 +661,7 @@
 		 * Get arrays with component info that a control should be carried out on
 		 *
 		 * @param $control_id control id
-		 * @return array with arrays of component info  
+		 * @return array with arrays of component info
 		 */
 		function get_components_for_control( $control_id, $location_id = 0, $component_id = 0, $serie_id = 0, $user_id = 0 )
 		{
@@ -743,7 +743,7 @@
 		 *
 		 * @param $control_id control id
 		 * @param $location_code location code
-		 * @return array with control_location_list objects  
+		 * @return array with control_location_list objects
 		 */
 		function get_control_location( $control_id, $location_code )
 		{
@@ -1058,7 +1058,7 @@
 		 *
 		 * @param $control_id control id
 		 * @param $component_id component id
-		 * @return void  
+		 * @return void
 		 */
 		function add_component_to_control( $control_id, $component_id )
 		{
@@ -1127,7 +1127,7 @@
 
 		/**
 		 * Get all controls assosiated with a component
-		 * 
+		 *
 		 * @param array $data location_id and component_id
 		 * @return array controls assosiated with a component
 		 * @throws Exception if missing valid input
@@ -1532,7 +1532,7 @@
 
 		/**
 		 * Get single control
-		 * 
+		 *
 		 * @param	$id	id of the control to return
 		 * @return a controller_control object
 		 */
@@ -1554,6 +1554,8 @@
 			$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 			$control->set_report_intro($this->unmarshal($this->db->f('report_intro', true), 'string'));
+			$control->set_send_notification_subject($this->unmarshal($this->db->f('send_notification_subject', true), 'string'));
+			$control->set_send_notification_content($this->unmarshal($this->db->f('send_notification_content', true), 'string'));
 			$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
