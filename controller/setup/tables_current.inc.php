@@ -17,6 +17,8 @@
 				'enabled' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'ticket_cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'report_intro' => array('type' => 'text', 'nullable' => True),
+				'send_notification_subject' => array('type' => 'text', 'nullable' => True),
+				'send_notification_content' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

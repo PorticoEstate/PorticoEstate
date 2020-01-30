@@ -94,6 +94,8 @@
 				'title = ' . $this->marshal($control->get_title(), 'string'),
 				'description = ' . $this->marshal($control->get_description(), 'string'),
 				'report_intro = ' . $this->marshal($control->get_report_intro(), 'string'),
+				'send_notification_subject = ' . $this->marshal($control->get_send_notification_subject(), 'string'),
+				'send_notification_content = ' . $this->marshal($control->get_send_notification_content(), 'string'),
 				'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 				'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
 				'control_area_id = ' . $this->marshal($control->get_control_area_id(), 'int'),

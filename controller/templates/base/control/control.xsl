@@ -324,6 +324,35 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</dd>
+			<dt>
+				<label for="report_intro">send_notification_subject</label>
+			</dt>
+			<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<input id="send_notification_subject" size="255" type="text" name="send_notification_subject" value="{control/send_notification_subject}" class="pure-input-3-4" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/send_notification_subject" disable-output-escaping="yes"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dd>
+
+			<dt>
+				<label for="report_intro">send_notification_content</label>
+			</dt>
+			<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<textarea cols="70" rows="5" name="send_notification_content" id="send_notification_content" class="pure-input-3-4">
+							<xsl:value-of select="control/send_notification_content" />
+						</textarea>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/send_notification_content" disable-output-escaping="yes"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dd>
 		</dl>
 			
 		<div class="form-buttons">
