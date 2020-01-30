@@ -253,7 +253,7 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 ----------------------------------------------------- */
 
 #content {
-    width: 100%;
+    /*width: 100%;*/
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;

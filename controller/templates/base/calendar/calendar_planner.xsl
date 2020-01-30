@@ -265,9 +265,9 @@
 
 		<div class="row">
 			<div class="mt-5 container">
-				<div class="form-group">
-					<fieldset>
-						<legend>Velg kontroll</legend>
+				<fieldset>
+					<legend>Velg kontroll</legend>
+					<div class="form-group">
 
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control types')"/>
@@ -275,6 +275,8 @@
 						<select id="control_area_id" name="control_area_id" class="form-control">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
+					</div>
+					<div class="form-group">
 
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
@@ -285,6 +287,9 @@
 							</xsl:attribute>
 							<xsl:apply-templates select="control_type_list/options"/>
 						</select>
+					</div>
+					<div class="form-group">
+
 
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
@@ -298,29 +303,31 @@
 							</xsl:attribute>
 							<xsl:apply-templates select="part_of_town_list/options"/>
 						</select>
+					</div>
 
-						<div class="form-inline mt-1">
-							<input class="form-control" type="text" name="query" value="{query}"/>
+					<div class="form-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'search')"/>
+						</label>
+						<input class="form-control" type="text" name="query" value="{query}" placeholder="Fritekstsøk..."/>
+					</div>
+					<div class="form-group form-check">
+						<label class="form-check-label">
+							<input class="form-check-input" type="checkbox" name="deviation" value="1">
+								<xsl:if test="deviation = 1">
+									<xsl:attribute name="checked">
+										<xsl:text>true</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:value-of select="php:function('lang', 'deviation')"/>
+						</label>
+					</div>
+					<button class="btn btn-primary ml-2" type="submit">
+						<xsl:value-of select="php:function('lang', 'search')"/>
+					</button>
 
-							<div class="form-check">
-								<label class="form-check-label ml-2">
-									<input class="form-check-input ml-2" type="checkbox" name="deviation" value="1">
-										<xsl:if test="deviation = 1">
-											<xsl:attribute name="checked">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-									</input>
-									<xsl:value-of select="php:function('lang', 'deviation')"/>
-								</label>
-							</div>
-							<button class="btn btn-primary ml-2" type="submit">
-								<xsl:value-of select="php:function('lang', 'search')"/>
-							</button>
-						</div>
-
-					</fieldset>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 		<div class="row">

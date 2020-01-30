@@ -559,15 +559,33 @@
 				$property_soentity = createObject('property.soentity');
 
 				$component_children = array();
-				foreach ($location_children as $key => $location_children_info)
+				foreach ($location_children as $key => &$location_children_info)
 				{
+					$location_children_info['parent_location_id'] = $location_id;
+					$location_children_info['parent_component_id'] = $component_id;
+
 					$_component_children = $property_soentity->get_eav_list(array
 					(
 						'location_id' => $location_children_info['location_id'],
+						'parent_location_id' => $location_id,
+						'parent_id' => $component_id,
 						'allrows'	=> true
 					));
 
 					$component_children = array_merge($component_children, $_component_children);
+				}
+
+				if ($location_children)
+				{
+					$short_description = array();
+					foreach ($component_children as $_value)
+					{
+						$short_description[] = $_value['short_description'];
+					}
+
+					array_multisort($short_description, SORT_ASC, $component_children);
+
+					array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 				}
 
 //				_debug_array($component_children);
@@ -665,15 +683,17 @@
 			);
 			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
 			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';
-
+//			_debug_array($component_children);
 			$data = array
 				(
+				'inspectors' => createObject('controller.sosettings')->get_inspectors($check_list->get_id()),
 				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
+				'location_children' => $location_children,
 				'get_locations' => $get_locations,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
@@ -708,9 +728,17 @@
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
-				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
-				'check_list/fragments/select_buildings_on_property', 'files', 'multi_upload_file_inline', 'datatable_inline'), $data);
+			self::render_template_xsl(array(
+				'check_list/fragments/check_list_menu',
+				'check_list/fragments/nav_control_plan',
+				'check_list/fragments/check_list_top_section',
+				'check_list/edit_check_list',
+				'check_list/fragments/select_buildings_on_property',
+				'check_list/fragments/select_component_children',
+				'files',
+				'multi_upload_file_inline',
+				'datatable_inline'
+				), $data);
 		}
 
 		public function view_file()
@@ -1102,11 +1130,11 @@
 
 			if($submit_deviation)
 			{
-				$completed_date_ts = 0;
-				$status = controller_check_list::STATUS_NOT_DONE;
-				$assigned_to = $GLOBALS['phpgw_info']['user']['account_id'];
+//				$completed_date_ts = 0;
+//				$status = controller_check_list::STATUS_NOT_DONE;
+				$assigned_to = $assigned_to ? $assigned_to : $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			else if ($completed_date != '')
+			if ($completed_date != '')
 			{
 				$completed_date_ts = phpgwapi_datetime::date_to_timestamp($completed_date);
 				$status = controller_check_list::STATUS_DONE;
@@ -1114,6 +1142,7 @@
 			else
 			{
 				$completed_date_ts = 0;
+				$status = controller_check_list::STATUS_NOT_DONE;
 			}
 
 			if($submit_ok)

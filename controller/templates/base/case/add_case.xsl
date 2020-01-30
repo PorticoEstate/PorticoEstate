@@ -23,7 +23,7 @@
 			</xsl:when>
 		</xsl:choose>
 
-		<xsl:choose>
+<!--		<xsl:choose>
 			<xsl:when test="component_children/child::node()">
 				<div id="choose-building-wrp">
 					<xsl:call-template name="select_component_children" />
@@ -45,7 +45,7 @@
 					</div>
 				</div>
 			</xsl:when>
-		</xsl:choose>
+		</xsl:choose>-->
 		<xsl:call-template name="check_list_change_status">
 			<xsl:with-param name="active_tab">add_case</xsl:with-param>
 		</xsl:call-template>
