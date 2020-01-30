@@ -38,6 +38,10 @@
 			<i class="fa fa-list-ol" aria-hidden="true"></i>
 			<xsl:text> </xsl:text>
 			Vis saker
+			<xsl:if test="number_of_cases > 0">
+				(<xsl:value-of select="number_of_cases"/>)
+			</xsl:if>
+
 		</a>
 	</li>
 	<!-- ==================  LOADS INFO ABOUT CONTROL  ===================== -->

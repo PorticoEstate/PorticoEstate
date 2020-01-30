@@ -407,4 +407,18 @@
 		{
 
 		}
+
+		function get_number_of_cases($check_list_id)
+		{
+			$sql = "SELECT count(controller_check_item_case.id) AS cnt FROM controller_check_item_case "
+				. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
+				. " {$this->join} controller_control_item ON controller_control_item.id = controller_check_item.control_item_id"
+				. " WHERE check_list_id = " . (int)$check_list_id;
+
+			$this->db->query($sql);
+			$this->db->next_record();
+
+			return (int)$this->db->f('cnt');
+
+		}
 	}

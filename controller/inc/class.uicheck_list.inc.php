@@ -510,6 +510,13 @@
 				$check_list_id = phpgw::get_var('check_list_id');
 				$check_list = $this->so->get_single($check_list_id);
 			}
+			else
+			{
+				$check_list_id = $check_list->get_id();
+			}
+
+			$number_of_cases = $this->so_case->get_number_of_cases($check_list_id);
+
 
 			$current_time = time();
 			$absolute_deadline = time() + (14 * 24 * 60 * 60);
@@ -690,6 +697,7 @@
 				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
+				'number_of_cases'	=> $number_of_cases,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
 				'buildings_on_property' => $buildings_on_property,
 				'component_children'	=> $component_children,
