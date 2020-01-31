@@ -81,6 +81,8 @@ window.on_vendor_updated = function ()
 	var vendor_id = $("#vendor_id").val();
 
 	get_other_orders(location_code, vendor_id);
+	get_other_deviations(location_code, vendor_id);
+
 
 };
 
@@ -129,6 +131,7 @@ $(window).on('load', function()
 		if (vendor_id && location_code)
 		{
 			get_other_orders(location_code, vendor_id);
+			get_other_deviations(location_code, vendor_id);
 
 		}
 	});
@@ -181,5 +184,12 @@ this.get_other_orders = function (location_code, vendor_id)
 	var oArgs = {menuaction:'property.uiworkorder.get_other_orders',location_code:location_code,vendor_id:vendor_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_2', strURL);
+};
+
+this.get_other_deviations = function (location_code, vendor_id)
+{
+	var oArgs = {menuaction:'property.uiexternal_communication.get_other_deviations',location_code:location_code,vendor_id:vendor_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_3', strURL);
 };
 

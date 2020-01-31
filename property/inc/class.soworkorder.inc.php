@@ -3261,14 +3261,21 @@
 				return array();
 			}
 
-			$location_arr	 = explode('-', $location_code);
-			$values			 = array();
-			$_location_arr	 = array();
-			foreach ($location_arr as $loc)
-			{
-				$_location_arr[] = $this->db->db_addslashes($loc);
+			$location_codes = array();
 
-				$_location_code = implode('-', $_location_arr);
+			$this->db->query("SELECT DISTINCT location_code FROM fm_locations WHERE location_code {$this->like} '"
+			. $this->db->db_addslashes($location_code) . "%' ORDER BY location_code", __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$location_codes[] = $this->db->f('location_code');
+
+			}
+
+			$values			 = array();
+
+			foreach ($location_codes as $_location_code)
+			{
 
 				$sql = "SELECT DISTINCT fm_workorder.id, fm_project.location_code,"
 					. " fm_workorder.start_date, fm_workorder.title,"

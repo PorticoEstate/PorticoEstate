@@ -38,14 +38,15 @@
 
 		var $public_functions = array
 			(
-			'index'	 => true,
-			'query'	 => true,
-			'view'	 => true,
-			'add'	 => true,
-			'edit'	 => true,
-			'save'	 => true,
-			'delete' => true,
-			'add_deviation'	=> true
+			'index'					 => true,
+			'query'					 => true,
+			'view'					 => true,
+			'add'					 => true,
+			'edit'					 => true,
+			'save'					 => true,
+			'delete'				 => true,
+			'add_deviation'			 => true,
+			'get_other_deviations'	 => true
 		);
 		var $acl, $historylog;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -183,6 +184,31 @@
 				)
 			);
 
+
+			$other_deviations_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'subject', 'label' => lang('subject'), 'sortable' => false),
+				array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false),
+				array('key' => 'user', 'label' => lang('user'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_3',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_deviations_def,
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('singleSelect' => true),
+				//	array('order' => json_encode(array(0, 'desc')))
+				)
+			);
+
 			$tabs			 = array();
 			$tabs['main']	 = array(
 				'label'	 => lang('deviation'),
@@ -220,6 +246,78 @@
 				'add_deviation' => $data));
 			
 		}
+
+		public function get_other_deviations( $vendor_id = 0, $location_code = '' )
+		{
+			if (!$this->acl_read)
+			{
+				return array();
+			}
+
+			if (!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			if (!$location_code)
+			{
+				$location_code = phpgw::get_var('location_code', 'string');
+			}
+
+			$botts		 = createObject("{$this->currentapp}.botts");
+
+			$data = array(
+			//	'vendor_id'		 => $vendor_id,
+				'cat_id'		 => $this->config['tts_deviation_category'],
+				'location_code'	 => $location_code,
+				'status_id'		 => 'all',
+				'results'		 => -1
+			);
+
+			$values = $botts->read( $data );
+
+			if ($values)
+			{
+				$status		 = array();
+				$status['X'] = lang('closed');
+				$status['O'] = isset($botts->config->config_data['tts_lang_open']) && $botts->config->config_data['tts_lang_open'] ? $botts->config->config_data['tts_lang_open'] : lang('Open');
+				$status['C'] = lang('closed');
+
+				$custom_status = $botts->get_custom_status();
+
+				foreach ($custom_status as $custom)
+				{
+					$status["C{$custom['id']}"] = $custom['name'];
+				}
+			}
+
+//			_debug_array($values);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values as &$entry)
+			{
+				$entry['status'] = $status[$entry['status']];
+				$link				 = self::link(array('menuaction' => 'property.uitts.view', 'id' => $entry['id']));
+				$entry['url']		 = "<a href='{$link}'>{$entry['id']}</a>";
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($values);
+
+				return array
+					(
+					'data'				 => $values,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+
+			return $values;
+		}
+
 		public function add()
 		{
 			if (!$this->acl_add)
