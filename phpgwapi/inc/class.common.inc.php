@@ -1233,11 +1233,12 @@ HTML;
 			if (!$t || (substr(php_uname(), 0, 7) == "Windows" && intval($t) <= 0))
 			{
 				return ''; // return nothing if not valid input
-//				$t = phpgwapi_datetime::gmtnow();
 			}
 
-			//  + (date('I') == 1?3600:0)
-			$t += phpgwapi_datetime::user_timezone();
+			$date = new DateTime(date('Y-m-d H:i:s', $t));
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+			$DateTimeZone	 = new DateTimeZone($timezone);
+			$date->setTimezone($DateTimeZone);
 
 			if (! $format)
 			{
@@ -1251,7 +1252,8 @@ HTML;
 					$format .= 'H:i';
 				}
 			}
-			return date($format,$t);
+
+			return $date->format($format);
 		}
 
 		/**

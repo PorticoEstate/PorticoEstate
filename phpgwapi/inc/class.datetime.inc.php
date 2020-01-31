@@ -186,8 +186,9 @@
 				// This one should cope with daylight saving time
 				// Create two timezone objects, one for UTC (GMT) and one for
 				// user pref
+				$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 				$dateTimeZone_utc = new DateTimeZone('UTC');
-				$dateTimeZone_pref = new DateTimeZone(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC');
+				$dateTimeZone_pref = new DateTimeZone($timezone);
 
 				// Create two DateTime objects that will contain the same Unix timestamp, but
 				// have different timezones attached to them.
