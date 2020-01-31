@@ -53,7 +53,8 @@
 		*/
 		const SECONDS_IN_HOUR = 3600; // 60 * 60
 
-		var $tz_offset;
+		static $tz_offset;
+		static $tz_offset_calculated = false;
 		var $days = array();
 		var $users_localtime;
 		var $cv_gmtdate;
@@ -179,8 +180,30 @@
 		*/
 		public static function user_timezone()
 		{
-				return isset($GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']) 
-					? (int) $GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * self::SECONDS_IN_HOUR : 0;
+
+			if(!self::$tz_offset_calculated)
+			{
+				// This one should cope with daylight saving time
+				// Create two timezone objects, one for UTC (GMT) and one for
+				// user pref
+				$dateTimeZone_utc = new DateTimeZone('UTC');
+				$dateTimeZone_pref = new DateTimeZone(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC');
+
+				// Create two DateTime objects that will contain the same Unix timestamp, but
+				// have different timezones attached to them.
+				$dateTime_utc = new DateTime("now", $dateTimeZone_utc);
+				$dateTime_pref = new DateTime("now", $dateTimeZone_pref);
+
+				// Calculate the GMT offset for the date/time contained in the $dateTime_utc
+				// object, but using the timezone rules as defined for Tokyo
+
+				self::$tz_offset = (int)$dateTimeZone_pref->getOffset($dateTime_utc)/3600;
+
+				$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] = self::$tz_offset;
+				self::$tz_offset_calculated = true;
+			}
+
+			return self::$tz_offset ?  self::$tz_offset * self::SECONDS_IN_HOUR : 0;
 		}
 
 		/**
@@ -192,7 +215,7 @@
 		{
 			return time() + self::user_timezone();
 		}
-		
+
 		/**
 		* Get the current server UTC offset using an NTP server
 		*
@@ -240,7 +263,7 @@
 			{
 				$error_occured = True;
 			}
-			
+
 			if($error_occured == True)
 			{
 				return self::getbestguess();
@@ -259,7 +282,7 @@
 		public static function gethttpoffset()
 		{
 			$error_occured = false;
-			if ( !isset($GLOBALS['phpgw']->network) 
+			if ( !isset($GLOBALS['phpgw']->network)
 				|| !is_object($GLOBALS['phpgw']->network) )
 			{
 				$GLOBALS['phpgw']->network = createObject('phpgwapi.network');
@@ -322,7 +345,7 @@
 			$ampm = '';
 			if ( $GLOBALS['phpgw_info']['user']['preferences']['common']['timeformat'] == '12' )
 			{
-				if ($hour >= 12) 
+				if ($hour >= 12)
 				{
 					$ampm = ' pm';
 				}
@@ -342,7 +365,7 @@
 					$h12 = 0;
 				}
 			}
-			else 
+			else
 			{
 				$h12 = $hour;
 			}
@@ -360,7 +383,7 @@
 		*
 		* @param string $date_str RFC 2822 date string
 		* @return int unix timestamp
-		*/ 
+		*/
 		public static function convert_rfc_to_epoch($date_str)
 		{
 			$comma_pos = strpos($date_str,',');
@@ -371,7 +394,7 @@
 
 			// This may need to be a reference to the different months in native tongue....
 			$month = array_flip(self::$month_shortnames);
-			
+
 			$dta = array();
 			$ta = array();
 
@@ -628,7 +651,7 @@
 		{
 			return date('N', mktime(13, 0, 0, $month, $day, $year));
 		}
-	
+
 		/**
 		* Get the day of the year
 		*
@@ -640,7 +663,7 @@
 		public static function day_of_year($year,$month,$day)
 		{
 			//date(z) starts at 0
-			return date('z', mktime(13, 0, 0, $month, $day, $year)) + 1; 
+			return date('z', mktime(13, 0, 0, $month, $day, $year)) + 1;
 		}
 
 		/**
@@ -672,7 +695,7 @@
 		* @param int $b_month the month of the second date
 		* @param int $b_day the day of the second date
 		* @return int comparsion result - same as php's native strcmp()
-		*/ 
+		*/
 		public static function date_compare($a_year, $a_month, $a_day, $b_year, $b_month, $b_day)
 		{
 			$a_date = mktime(13, 0, 0, (int)$a_month, (int)$a_day, (int)$a_year);
@@ -702,7 +725,7 @@
 		*/
 		public static function time_compare($a_hour, $a_minute, $a_second, $b_hour, $b_minute, $b_second)
 		{
-			// I use the 1970/1/2 to compare the times, as the 1. can get via TZ-offest still 
+			// I use the 1970/1/2 to compare the times, as the 1. can get via TZ-offest still
 			// before 1970/1/1, which is the earliest date allowed on windows
 			$a_time = mktime( (int)$a_hour, (int)$a_minute, (int)$a_second, 1, 2, 1970);
 			$b_time = mktime( (int)$b_hour, (int)$b_minute, (int)$b_second, 1, 2, 1970);
@@ -753,7 +776,7 @@
 			$date['hour'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'H');
 			$date['minute'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'i');
 			$date['second'] = (int) $GLOBALS['phpgw']->common->show_date($date['raw'],'s');
-		
+
 			return $date;
 		}
 
@@ -770,7 +793,7 @@
 
 		/**
 		 * Convert a date from one format to another
-		 * 
+		 *
 		 * @param string $date Date in source format representation
 		 * @param string $formatSource Format of the passed date
 		 * @param string $formatTarget Target date format
@@ -865,11 +888,10 @@
 				$second	= isset($time_part[2]) && $time_part[2] ? (int)$time_part[2] : 0;
 			}
 
-
-			if( version_compare(PHP_VERSION, '5.3.0') >= 0  && strpos($datestr, ':'))
-			{
-				return self::datetime_to_timestamp($datestr);
-			}
+//			if( version_compare(PHP_VERSION, '5.3.0') >= 0  && strpos($datestr, ':'))
+//			{
+//				return self::datetime_to_timestamp($datestr);
+//			}
 
 			$date_array	= self::date_array($datestr);
 			return mktime ($hour, $minute, $second, $date_array['month'], $date_array['day'], $date_array['year']);
@@ -898,7 +920,7 @@
 			{
 				$format .= ' H:i:s';
 			}
-			
+
 			$date = DateTime::createFromFormat("{$format}", $datestr);
 			if($date)
 			{
@@ -959,7 +981,7 @@
 			{
 				$raw_list =  self::$month_fullnames;
 				unset($raw_list[0]); // WAR month index hack
-				
+
 				$month_list = array();
 				foreach ( $raw_list as $id => $month )
 				{
@@ -1128,7 +1150,7 @@
 
 			$easter_day = easter_days($year);
 			$maundy_thursday = $easter_day -3;
-			
+
 			$holidays[$year] = array
 			(
 				date('Y-m-d', mktime(0, 0, 0, 12, 25, ($year-1))),

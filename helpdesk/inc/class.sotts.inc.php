@@ -413,16 +413,20 @@
 
 			if ($start_date)
 			{
+				$start_date	= $start_date - (3600 * 13) - phpgwapi_datetime::user_timezone();
+				$end_date	= $end_date + (3600 * 11) - phpgwapi_datetime::user_timezone();
 				if(!$end_date)
 				{
 					$end_date = time();
 				}
-				$end_date	= $end_date + (3600 * 12) - phpgwapi_datetime::user_timezone();
-				$start_date	= $start_date - (3600 * 12) - phpgwapi_datetime::user_timezone();
 				$filtermethod .= " $where phpgw_helpdesk_tickets.entry_date >= $start_date AND phpgw_helpdesk_tickets.entry_date <= $end_date ";
 				$where= 'AND';
 			}
-
+//			_debug_array(array(
+//				$start_date,
+//				$end_date,
+//				phpgwapi_datetime::user_timezone(),
+//				$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']));
 
 			$querymethod = '';
 			if($query)

@@ -1473,3 +1473,25 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+
+	$test[] = '0.1.65';
+	function controller_upgrade0_1_65()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control','send_notification_subject',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control','send_notification_content',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.66';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
