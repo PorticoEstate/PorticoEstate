@@ -37,6 +37,12 @@
 	class sjekk_manglende_fakturamottak_BK extends property_cron_parent
 	{
 
+		var $connection,
+			$soap_url,
+			$soap_username,
+			$soap_password,
+			$config_invoice;
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -47,10 +53,11 @@
 			/**
 			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
 			 */
-			$config				 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url		 = $config->config_data['external_register']['url'];
-			$this->soap_username = $config->config_data['external_register']['username'];
-			$this->soap_password = $config->config_data['external_register']['password'];
+			$config					 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->soap_url			 = $config->config_data['external_register']['url'];
+			$this->soap_username	 = $config->config_data['external_register']['username'];
+			$this->soap_password	 = $config->config_data['external_register']['password'];
+			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 		}
 
 		function execute()
@@ -164,7 +171,117 @@ SQL;
 				$regtid	 = $this->db->f('regtid');
 
 				$valueset['Mottatt_fra_Agresso'] = $regtid ? $regtid : 'Ikke mottatt';
+
+
+				if($regtid)
+				{
+					$date	 = new DateTime($regtid);
+					if( (time() - $date->getTimestamp() ) > (24*3600))
+					{
+						$fil_katalog = $this->config_invoice->config_data['export']['path'];
+						
+						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['ordreNr']}_{$valueset['bilagsNr']}.xml";
+
+						//Sjekk om filen eksisterer
+						if (file_exists($filename))
+						{
+							if($this->transfer($filename))
+							{
+								$valueset['Filnavn'] = $filename;
+								$valueset['overført på nytt'] = date('Y-m-d H:i:s', time() + phpgwapi_datetime::user_timezone());
+							}
+						}
+					}
+				}
 			}
+		}
+
+		function transfer($filename)
+		{
+			$content = file_get_contents($filename);
+
+			$transfer_ok = false;
+
+			if (!$debug && ($this->config_invoice->config_data['common']['method'] == 'ftp' || $this->config_invoice->config_data['common']['method'] == 'ssh'))
+			{
+				if (!$connection = $this->connection)
+				{
+					$connection = $this->phpftp_connect();
+				}
+
+				$basedir = $this->config_invoice->config_data['export']['remote_basedir'];
+				if ($basedir)
+				{
+					$remote_file = $basedir . '/' . basename($filename);
+				}
+				else
+				{
+					$remote_file = basename($filename);
+				}
+
+				switch ($this->config_invoice->config_data['common']['method'])
+				{
+					case 'ftp';
+						$tmp		 = tmpfile();
+						fwrite($tmp, $content);
+						rewind($tmp);
+						$transfer_ok = ftp_fput($connection, $remote_file, $tmp, FTP_BINARY);
+						fclose($tmp);
+						//	$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
+						break;
+					case 'ssh';
+						$sftp		 = ssh2_sftp($connection);
+						$stream		 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+						fwrite($stream, $content);
+						$transfer_ok = @fclose($stream);
+						break;
+					default:
+						$transfer_ok = false;
+				}
+			}
+			return $transfer_ok;
+		}
+
+		function phpftp_connect()
+		{
+			$server		 = $this->config_invoice->config_data['common']['host'];
+			$user		 = $this->config_invoice->config_data['common']['user'];
+			$password	 = $this->config_invoice->config_data['common']['password'];
+			$port		 = 22;
+
+			switch ($this->config_invoice->config_data['common']['method'])
+			{
+				case 'ftp';
+					if ($connection = ftp_connect($server))
+					{
+						ftp_login($connection, $user, $password);
+					}
+					break;
+				case 'ssh';
+					if (!function_exists("ssh2_connect"))
+					{
+						die("function ssh2_connect doesn't exist");
+					}
+					if (!($connection = ssh2_connect("$server", $port)))
+					{
+						$message = "fail: unable to establish connection";
+						_debug_array($message);
+						//$receipt['error'][]= array('msg' => $message);
+					}
+					else
+					{
+						// try to authenticate with username root, password secretpassword
+						if (!ssh2_auth_password($connection, $user, $password))
+						{
+							$message = "fail: unable to authenticate";
+							_debug_array($message);
+							//$receipt['error'][]= array('msg' => $message);
+						}
+					}
+					break;
+			}
+			$this->connection = $connection;
+			return $connection;
 		}
 
 		function get_data()
