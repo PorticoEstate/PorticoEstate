@@ -115,8 +115,21 @@
 			$type		 = isset($data['type']) && $data['type'] ? (int)$data['type'] : 0;
 			$start_date	 = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date	 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : mktime(23, 59, 59, date("n"), date("j"), date("Y"));
-			$_end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-			$_start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+//			$_end_time_ts	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+//			$_start_date_ts = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+
+			$timezone		 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+			$DateTimeZone	 = new DateTimeZone($timezone);
+			$_start_time	 = new DateTime(date('Y-m-d', $start_date));
+			$_start_time->setTimezone($DateTimeZone);
+			$_start_time->setTime(0, 0, 0);
+			$_start_date_ts	 = $_start_time->getTimestamp();
+
+			$_end_time		 = new DateTime(date('Y-m-d H:i:s', $end_date));
+			$_end_time->setTimezone($DateTimeZone);
+			$_end_time->setTime(23, 59, 59);
+			$_end_time_ts	 = $_end_time->getTimestamp();
+
 
 			$data_report = array();
 			if ($type == 1)
@@ -134,7 +147,7 @@
 				return array();
 			}
 
-			$sql = "SELECT {$fields} FROM fm_tts_tickets WHERE fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date "
+			$sql = "SELECT {$fields} FROM fm_tts_tickets WHERE fm_tts_tickets.entry_date >= $_start_date_ts AND fm_tts_tickets.entry_date <= $_end_time_ts "
 				. " {$groupmethod}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -501,15 +514,31 @@
 			{
 				$order_add	 = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property');
 				$order_edit	 = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
-				$_end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
-				$_start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+
+				$timezone		 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+				$DateTimeZone	 = new DateTimeZone($timezone);
+				$_start_time	 = new DateTime(date('Y-m-d', $start_date));
+				$_start_time->setTimezone($DateTimeZone);
+				$_start_time->setTime(0, 0, 0);
+				$_start_date_ts	 = $_start_time->getTimestamp();
+
+				$_end_time		 = new DateTime(date('Y-m-d H:i:s', $end_date));
+				$_end_time->setTimezone($DateTimeZone);
+				$_end_time->setTime(23, 59, 59);
+				$_end_time_ts	 = $_end_time->getTimestamp();
+
+//				$_end_time_ts	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+//				$_start_date_ts = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+
+
+
 				if ($check_date_type == 1)
 				{
-					$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
+					$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date_ts AND fm_tts_tickets.modified_date <= $_end_time_ts ";
 				}
 				else if ($check_date_type == 2)
 				{
-					$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
+					$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date_ts AND fm_tts_tickets.entry_date <= $_end_time_ts ";
 				}
 
 				if ($order_add || $order_edit)

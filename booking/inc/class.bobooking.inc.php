@@ -987,7 +987,7 @@
 		function get_free_events( $building_id, $resource_id, $start_date, $end_date, $weekdays )
 		{
 
-			$timezone	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 
 			try
 			{
