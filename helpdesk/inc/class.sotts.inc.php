@@ -413,20 +413,37 @@
 
 			if ($start_date)
 			{
-				$start_date	= $start_date - (3600 * 13) - phpgwapi_datetime::user_timezone();
-				$end_date	= $end_date + (3600 * 11) - phpgwapi_datetime::user_timezone();
+//				$_start_date_ts	= $start_date - (3600 * 13) - phpgwapi_datetime::user_timezone() - (date('I', $start_date) == 1?3600:0);
+//				$_end_time_ts	= $end_date + (3600 * 11) - phpgwapi_datetime::user_timezone() - (date('I', $end_date) == 1?3600:0);
+
+				$timezone		 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+				$DateTimeZone	 = new DateTimeZone($timezone);
+				$_start_time	 = new DateTime(date('Y-m-d', $start_date));
+				$_start_time->setTimezone($DateTimeZone);
+				$_start_time->setTime(0, 0, 0);
+				$_start_date_ts	 = $_start_time->getTimestamp();
+
 				if(!$end_date)
 				{
-					$end_date = time();
+					$_end_time_ts = time();
 				}
-				$filtermethod .= " $where phpgw_helpdesk_tickets.entry_date >= $start_date AND phpgw_helpdesk_tickets.entry_date <= $end_date ";
+				else
+				{
+					$_end_time		 = new DateTime(date('Y-m-d H:i:s', $end_date));
+					$_end_time->setTimezone($DateTimeZone);
+					$_end_time->setTime(23, 59, 59);
+					$_end_time_ts	 = $_end_time->getTimestamp();
+				}
+
+				$filtermethod .= " $where phpgw_helpdesk_tickets.entry_date >= $_start_date_ts AND phpgw_helpdesk_tickets.entry_date <= $_end_time_ts ";
 				$where= 'AND';
 			}
 //			_debug_array(array(
-//				$start_date,
-//				$end_date,
-//				phpgwapi_datetime::user_timezone(),
-//				$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset']));
+//				$_start_date_ts,
+//				$_end_time_ts,
+//				$timezone,
+//				$_end_time->format('Y-m-d H:i:s'),
+//			));
 
 			$querymethod = '';
 			if($query)
