@@ -38,14 +38,15 @@
 
 		var $public_functions = array
 			(
-			'index'	 => true,
-			'query'	 => true,
-			'view'	 => true,
-			'add'	 => true,
-			'edit'	 => true,
-			'save'	 => true,
-			'delete' => true,
-			'add_deviation'	=> true
+			'index'					 => true,
+			'query'					 => true,
+			'view'					 => true,
+			'add'					 => true,
+			'edit'					 => true,
+			'save'					 => true,
+			'delete'				 => true,
+			'add_deviation'			 => true,
+			'get_other_deviations'	 => true
 		);
 		var $acl, $historylog;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -120,8 +121,8 @@
 			}
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
-				'vendor_id'		 => $ticket['vendor_id'],
-				'vendor_name'	 => $ticket['vendor_name'],
+				'vendor_id'		 => $receipt['vendor_id'],
+				'vendor_name'	 => $receipt['vendor_name'],
 				'type'			 => 'form'
 			));
 
@@ -176,10 +177,35 @@
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $other_orders_def,
 				'config'	 => array(
-					//array('disableFilter' => true),
+				//	array('disableFilter' => true),
+				//	array('disablePagination' => true),
+					array('singleSelect' => true),
+				//	array('order' => json_encode(array(1, 'desc')))
+				)
+			);
+
+
+			$other_deviations_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'subject', 'label' => lang('subject'), 'sortable' => false),
+				array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false),
+				array('key' => 'user', 'label' => lang('user'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_3',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_deviations_def,
+				'config'	 => array(
+					array('disableFilter' => true),
 					array('disablePagination' => true),
 					array('singleSelect' => true),
-					array('order' => json_encode(array(1, 'desc')))
+				//	array('order' => json_encode(array(0, 'desc')))
 				)
 			);
 
@@ -218,8 +244,79 @@
 			self::add_javascript($this->currentapp, 'portico', 'external_communication.add_deviation.js');
 			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
 				'add_deviation' => $data));
-			
+
 		}
+
+		public function get_other_deviations( $vendor_id = 0, $location_code = '' )
+		{
+			if (!$this->acl_read)
+			{
+				return array();
+			}
+
+			if (!$vendor_id)
+			{
+				$vendor_id = phpgw::get_var('vendor_id', 'int');
+			}
+
+			if (!$location_code)
+			{
+				$location_code = phpgw::get_var('location_code', 'string');
+			}
+
+			$botts		 = createObject("{$this->currentapp}.botts");
+
+			$data = array(
+				'deviation_vendor_id'	 => $vendor_id,
+				'cat_id'				 => $this->config['tts_deviation_category'],
+				'location_code'			 => $location_code,
+				'status_id'				 => 'all',
+				'results'				 => -1
+			);
+
+			$values = $botts->read( $data );
+
+			if ($values)
+			{
+				$status		 = array();
+				$status['X'] = lang('closed');
+				$status['O'] = isset($botts->config->config_data['tts_lang_open']) && $botts->config->config_data['tts_lang_open'] ? $botts->config->config_data['tts_lang_open'] : lang('Open');
+				$status['C'] = lang('closed');
+
+				$custom_status = $botts->get_custom_status();
+
+				foreach ($custom_status as $custom)
+				{
+					$status["C{$custom['id']}"] = $custom['name'];
+				}
+			}
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values as &$entry)
+			{
+				$entry['status'] = $status[$entry['status']];
+				$link				 = self::link(array('menuaction' => 'property.uiexternal_communication.edit', 'id' => $entry['external_communication_id']));
+				$entry['url']		 = "<a href='{$link}' target='_blank'>{$entry['external_communication_id']}</a>";
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($values);
+
+				return array
+					(
+					'data'				 => $values,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+
+			return $values;
+		}
+
 		public function add()
 		{
 			if (!$this->acl_add)
@@ -313,6 +410,11 @@
 			}
 
 			$ticket				 = $this->botts->read_single($ticket_id);
+
+			if(!$id)
+			{
+				$values['vendor_id'] = $ticket['vendor_id'];
+			}
 			$additional_notes	 = $this->botts->read_additional_notes($ticket_id);
 
 			$notes = array(
@@ -494,14 +596,14 @@ JS;
 			);
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
-				'vendor_id'		 => $ticket['vendor_id'],
-				'vendor_name'	 => $ticket['vendor_name'],
+				'vendor_id'		 => $values['vendor_id'],
+				'vendor_name'	 => $values['vendor_name'],
 				'type'			 => 'form'
 			));
 
 			$contact_data = $this->bo->get_contact_data($ticket);
 
-			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id']) ? $ticket['vendor_id'] : 0, 'mail_recipients');
+			$content_email = $this->bocommon->get_vendor_email(isset($values['vendor_id']) ? $values['vendor_id'] : 0, 'mail_recipients');
 
 			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
 			{
@@ -742,8 +844,8 @@ JS;
 					'ticket_id'			 => $ticket_id,
 					'subject'			 => $subject,
 					'message'			 => $message,
-					'mail_recipients'	 =>  $mail_recipients
-	//				'sender'			 => $sender
+					'mail_recipients'	 => $mail_recipients,
+					'vendor_id'			 => $vendor_id
 				);
 
 				$external_message_receipt =  CreateObject('property.soexternal_communication')->add($external_message);
@@ -777,7 +879,8 @@ JS;
 			return array(
 				'id'			 => $external_message_receipt['id'],
 				'ticket_id'		 => $ticket_id,
-				'type_id'		 => $type_id
+				'type_id'		 => $type_id,
+				'vendor_id'		 => $vendor_id
 			);
 		}
 
@@ -808,7 +911,7 @@ JS;
 					{
 						$new_status = $values['ticket_status'];
 						$ticket_id 	= $values['ticket_id'];
-						$receipt 	= $this->botts->update_status(array('status'=>$new_status),$ticket_id);						
+						$receipt 	= $this->botts->update_status(array('status'=>$new_status),$ticket_id);
 						self::message_set($receipt);
 
 						$custom_status = $this->botts->get_custom_status();
