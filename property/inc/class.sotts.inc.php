@@ -187,6 +187,7 @@
 			$location_code		 = isset($data['location_code']) ? $data['location_code'] : '';
 			$p_num				 = isset($data['p_num']) ? $data['p_num'] : '';
 			$vendor_id			 = isset($data['vendor_id']) && $data['vendor_id'] ? (int)$data['vendor_id'] : 0;
+			$deviation_vendor_id = isset($data['deviation_vendor_id']) && $data['deviation_vendor_id'] ? (int)$data['deviation_vendor_id'] : 0;
 			$ecodimb			 = isset($data['ecodimb']) && $data['ecodimb'] ? (int)$data['ecodimb'] : 0;
 			$b_account			 = isset($data['b_account']) && $data['b_account'] ? $data['b_account'] : '';
 			$building_part		 = isset($data['building_part']) && $data['building_part'] ? $data['building_part'] : '';
@@ -198,6 +199,13 @@
 
 			$result_order_field	 = array();
 			$order_join			 = " {$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
+			
+			if($deviation_vendor_id)
+			{
+				$order_join			 .= " {$this->join} fm_tts_external_communication"
+				. " ON fm_tts_tickets.id = fm_tts_external_communication.ticket_id"
+				. " AND fm_tts_external_communication.vendor_id = {$deviation_vendor_id}";	
+			}
 
 			if ($order)
 			{
@@ -217,7 +225,7 @@
 			}
 			else
 			{
-				$ordermethod = ' ORDER BY id DESC';
+				$ordermethod = ' ORDER BY fm_tts_tickets.id DESC';
 			}
 			$union_select	 = false;
 			$filtermethod	 = '';
@@ -677,6 +685,11 @@
 			{
 				$_return_field_array[$custom_col['column_name']] = "fm_tts_tickets.{$custom_col['column_name']}";
 			}
+			
+			if($deviation_vendor_id)
+			{
+				$_return_field_array['external_communication_id'] = 'fm_tts_external_communication.id as external_communication_id';
+			}
 
 			if ($result_order_field)
 			{
@@ -735,8 +748,19 @@
 				$limit_and_offset	 = $this->db->get_offset('', $start);
 			}
 
-			$group_fields = str_ireplace(array('fm_district.descr as district', 'fm_tts_views.id as view'), array(
-				'fm_district.descr', 'fm_tts_views.id'), $return_fields_plain);
+			$group_fields = str_ireplace(
+				array(
+					'fm_district.descr as district',
+					'fm_tts_views.id as view',
+					'fm_tts_external_communication.id as external_communication_id'
+				),
+				array(
+					'fm_district.descr',
+					'fm_tts_views.id',
+					'fm_tts_external_communication.id'
+				),
+				$return_fields_plain
+			);
 
 			if ($union_select)
 			{
@@ -788,7 +812,7 @@
 			{
 				$cache_info = array();
 			}
-//_debug_array($main_sql);
+
 			if (!$cache_info)
 			{
 
@@ -833,41 +857,42 @@
 				{
 					$tickets[] = array
 						(
-						'id'					 => (int)$this->db->f('id'),
-						'subject'				 => $this->db->f('subject', true),
-						'loc1_name'				 => $this->db->f('loc1_name', true),
-						'location_code'			 => $this->db->f('location_code'),
-						'district'				 => $this->db->f('district', true),
-						'user_id'				 => $this->db->f('user_id'),
-						'address'				 => $this->db->f('address', true),
-						'assignedto'			 => $this->db->f('assignedto'),
-						'status'				 => $this->db->f('status'),
-						'priority'				 => $this->db->f('priority'),
-						'cat_id'				 => $this->db->f('cat_id'),
-						'group_id'				 => $this->db->f('group_id'),
-						'entry_date'			 => $this->db->f('entry_date'),
-						'modified_date'			 => $this->db->f('modified_date'),
-						'finnish_date'			 => $this->db->f('finnish_date'),
-						'finnish_date2'			 => $this->db->f('finnish_date2'),
-						'order_id'				 => $this->db->f('order_id'),
-						'vendor_id'				 => $this->db->f('vendor_id'),
-						'actual_cost'			 => $this->db->f('actual_cost'),
-						'estimate'				 => $this->db->f('budget'),
-						'new_ticket'			 => $this->db->f('view') ? false : true,
-						'billable_hours'		 => $this->db->f('billable_hours'),
-						'ecodimb'				 => $this->db->f('ecodimb'),
-						'order_dim1'			 => $this->db->f('order_dim1'),
-						'external_project_id'	 => $this->db->f('external_project_id'),
-						'contract_id'			 => $this->db->f('contract_id'),
-						'service_id'			 => $this->db->f('service_id'),
-						'tax_code'				 => $this->db->f('tax_code'),
-						'unspsc_code'			 => $this->db->f('unspsc_code'),
-						'b_account_id'			 => $this->db->f('b_account_id'),
-						'continuous'			 => $this->db->f('continuous'),
-						'order_deadline'		 => $this->db->f('order_deadline'),
-						'order_deadline2'		 => $this->db->f('order_deadline2'),
-						'details'				 => $this->db->f('details', true),
-						'mail_recipients'		 => $this->db->f('mail_recipients', true),
+						'id'						 => (int) $this->db->f('id'),
+						'subject'					 => $this->db->f('subject', true),
+						'loc1_name'					 => $this->db->f('loc1_name', true),
+						'location_code'				 => $this->db->f('location_code'),
+						'district'					 => $this->db->f('district', true),
+						'user_id'					 => $this->db->f('user_id'),
+						'address'					 => $this->db->f('address', true),
+						'assignedto'				 => $this->db->f('assignedto'),
+						'status'					 => $this->db->f('status'),
+						'priority'					 => $this->db->f('priority'),
+						'cat_id'					 => $this->db->f('cat_id'),
+						'group_id'					 => $this->db->f('group_id'),
+						'entry_date'				 => $this->db->f('entry_date'),
+						'modified_date'				 => $this->db->f('modified_date'),
+						'finnish_date'				 => $this->db->f('finnish_date'),
+						'finnish_date2'				 => $this->db->f('finnish_date2'),
+						'order_id'					 => $this->db->f('order_id'),
+						'vendor_id'					 => $this->db->f('vendor_id'),
+						'actual_cost'				 => $this->db->f('actual_cost'),
+						'estimate'					 => $this->db->f('budget'),
+						'new_ticket'				 => $this->db->f('view') ? false : true,
+						'billable_hours'			 => $this->db->f('billable_hours'),
+						'ecodimb'					 => $this->db->f('ecodimb'),
+						'order_dim1'				 => $this->db->f('order_dim1'),
+						'external_project_id'		 => $this->db->f('external_project_id'),
+						'contract_id'				 => $this->db->f('contract_id'),
+						'service_id'				 => $this->db->f('service_id'),
+						'tax_code'					 => $this->db->f('tax_code'),
+						'unspsc_code'				 => $this->db->f('unspsc_code'),
+						'b_account_id'				 => $this->db->f('b_account_id'),
+						'continuous'				 => $this->db->f('continuous'),
+						'order_deadline'			 => $this->db->f('order_deadline'),
+						'order_deadline2'			 => $this->db->f('order_deadline2'),
+						'details'					 => $this->db->f('details', true),
+						'mail_recipients'			 => $this->db->f('mail_recipients', true),
+						'external_communication_id'	 => $this->db->f('external_communication_id'),
 					);
 
 					foreach ($custom_cols as $custom_col)
