@@ -436,6 +436,8 @@ JS;
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			
+			$responsibility_id = phpgw::get_var('responsibility_id');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'agresso_id';
@@ -475,7 +477,7 @@ JS;
 					break;
 				default:
 					//$filters = array('price_item_status' => 'active','responsibility_id' => phpgw::get_var('responsibility_id'));
-					$filters = array();
+					$filters = array('responsibility_id' => $responsibility_id);
 					$result_objects = rental_soprice_item::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_soprice_item::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
