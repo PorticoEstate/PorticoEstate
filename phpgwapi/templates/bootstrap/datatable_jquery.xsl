@@ -61,6 +61,7 @@
 
 	<div class="row mt-2 collapse" id="democollapseBtn">
 		<xsl:if test="item">
+			<xsl:variable name="count_items" select="count(item)"/>
 			<div id="toolbar" class='dtable_custom_controls'>
 				<form>
 					 <fieldset>
@@ -76,7 +77,14 @@
 											 <xsl:text>pure-u-1 pure-u-md-1-3</xsl:text>
 										 </xsl:when>
 										 <xsl:otherwise>
-											 <xsl:text>form-group col-md-4</xsl:text>
+										 	<xsl:choose>
+												<xsl:when test="$count_items > 3">
+													 <xsl:text>form-group col-md-4</xsl:text>
+												</xsl:when>
+												<xsl:otherwise>
+													 <xsl:text>form-group</xsl:text>
+												</xsl:otherwise>
+												 </xsl:choose>
 										 </xsl:otherwise>
 									 </xsl:choose>
 								 </xsl:attribute>
