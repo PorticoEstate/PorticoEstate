@@ -39,3 +39,11 @@ $(document).ready(function ()
 		preview(do_preview);
 	}
 });
+
+this.refresh_files = function ()
+{
+	base_java_url['action'] = 'get_files';
+	var oArgs = base_java_url;
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper(oTable2, strURL);
+};

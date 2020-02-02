@@ -2732,7 +2732,7 @@ JS;
 					)
 				);
 
-			$external_messages = createObject('helpdesk.soexternal_communication')->read($id);
+			$external_messages = createObject('helpdesk.soexternal_communication')->get_at_ticket($id);
 
 
 			if($this->_simple)

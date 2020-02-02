@@ -26,12 +26,13 @@
 	 * @subpackage helpdesk
 	 * @version $Id$
 	 */
+	phpgw::import_class('phpgwapi.bocommon');
 
 	/**
 	 * Description
 	 * @package property
 	 */
-	class property_boexternal_communication
+	class property_boexternal_communication  extends phpgwapi_bocommon
 	{
 
 		var $so, $historylog, $config, $bocommon, $preview_html, $dateformat, $currentapp;
@@ -45,6 +46,26 @@
 			$this->config		 = CreateObject('phpgwapi.config', $this->currentapp)->read();
 			$this->preview_html	 = phpgw::get_var('preview_html', 'bool');
 			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$this->fields = $this->so->get_fields();
+
+		}
+
+		public function read($params)
+		{
+			$values =  $this->so->read($params);
+	//		$status_text = eventplanner_customer::get_status_list();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values['results'] as &$entry)
+			{
+	//				$entry['status'] = $status_text[$entry['status']];
+					$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
+					$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
+			}
+			return $values;
+		}
+
+		public function store($object)
+		{
 		}
 
 		function read_additional_notes( $id = 0 )

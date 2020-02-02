@@ -1020,9 +1020,24 @@
 					(
 					'deviation'	 => array
 						(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.add_deviation')),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.index')),
 						'text'	 => lang('deviation'),
-						'image'	 => array('property', 'helpdesk')
+						'image'	 => array('property', 'helpdesk'),
+						'children'	 => array
+						(
+							'list_deviation' => array
+							(
+								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.index')),
+								'text'	 => lang('list deviation'),
+								'image'	 => array('property', 'helpdesk'),
+							),
+							'add_deviation' => array
+							(
+								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.add_deviation')),
+								'text'	 => lang('add'),
+								'image'	 => array('property', 'helpdesk'),
+							)
+						)
 					),
 					'report'	 => array
 						(
