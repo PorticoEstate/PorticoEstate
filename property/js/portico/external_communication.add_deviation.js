@@ -167,12 +167,18 @@ $(document).ready(function ()
 
 	$("#vendor_contract_id").change(function ()
 	{
+		var vendor_contract_id = $("#vendor_contract_id").val();
+		if(!vendor_contract_id || vendor_contract_id == -1)
+		{
+			return;
+		}
+
 		var temp = document.getElementById("new_note").value;
 		if (temp)
 		{
 			temp = temp + "\n";
 		}
-		document.getElementById("new_note").value = temp + "Kontrakt: " + $("#vendor_contract_id").val();
+		document.getElementById("new_note").value = temp + "Kontrakt: " + vendor_contract_id;
 	});
 
 
