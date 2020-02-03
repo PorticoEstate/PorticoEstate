@@ -48,9 +48,9 @@
 			'add_deviation'			 => true,
 			'get_other_deviations'	 => true
 		);
-		var $acl, $historylog;
+		var $acl, $historylog, $bo;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$bo, $botts, $bocommon, $config, $dateformat, $preview_html, $account;
+			 $botts, $bocommon, $config, $dateformat, $preview_html, $account;
 
 		public function __construct()
 		{
@@ -86,6 +86,125 @@
 			$this->preview_html	 = $this->bo->preview_html;
 		}
 
+
+		function get_category_options( $selected = 0 )
+		{
+				$data =$this->botts->cats->formatted_xslt_list(array('format'	 => 'filter',
+					'selected'	 => $this->cat_id, 'globals'	 => true, 'use_acl'	 => false));
+				$default_value		 = array('cat_id' => '', 'name' => lang('no category'));
+				array_unshift($data['cat_list'], $default_value);
+
+				$_categories = array();
+				foreach ($data['cat_list'] as $_category)
+				{
+					$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
+				}
+				
+				return $_categories;	
+		}
+
+
+		public function index()
+		{
+			self::set_active_menu("property::helpdesk::deviation::list_deviation");
+
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query(true);
+			}
+
+			phpgwapi_jquery::load_widget('autocomplete');
+
+			$function_msg = lang('deviation');
+			
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) ."::{$function_msg}";
+			
+			$_fields = $this->bo->get_fields();
+			
+			$fields = array();
+			
+			foreach ($_fields as $key => $_field)
+			{
+				if(!($_field['action'] & PHPGW_ACL_READ))
+				{
+					continue;
+				}
+				$_field['key'] = $key;
+				$_field['label'] = lang($_field['label']);
+				$fields[] = $_field;
+			}
+			
+			
+
+			$data = array(
+				'datatable_name' => $function_msg,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(
+							array(
+								'type' => 'filter',
+								'name' => 'filter_cat_id',
+								'text' => lang('category'),
+								'list' =>  $this->get_category_options()
+							),
+						)
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => "{$this->currentapp}.uiexternal_communication.index",
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows' => true,
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add")),
+					'editor_action' => '',
+					'field' => $fields
+				)
+			);
+//			_debug_array($this->bo->get_fields());
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name' => 'id',
+						'source' => 'id'
+					)
+				)
+			);
+
+/*			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'view',
+				'text' => lang('show'),
+				'action' => self::link(array
+					(
+					'menuaction' => "{$this->currentapp}.uicustomer.view"
+				)),
+				'parameters' => json_encode($parameters)
+			);
+*/
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'action' => self::link(array
+					(
+					'menuaction' => "{$this->currentapp}.uiexternal_communication.edit"
+				)),
+				'parameters' => json_encode($parameters)
+			);
+
+//			self::add_javascript($this->currentapp, 'portico', 'customer.index.js');
+//			phpgwapi_jquery::load_widget('numberformat');
+
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+		
 		public function add_deviation()
 		{
 			if (!$this->acl_add)
@@ -93,7 +212,7 @@
 				phpgw::no_access();
 			}
 
-			self::set_active_menu("property::helpdesk::deviation");
+			self::set_active_menu("property::helpdesk::deviation::add_deviation");
 
 			/**
 			 * Save first, then preview - first pass

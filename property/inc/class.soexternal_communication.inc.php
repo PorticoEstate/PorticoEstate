@@ -51,6 +51,128 @@
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
+		
+		function read( $params )
+		{
+			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
+			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
+			$query = isset($params['query']) && $params['query'] ? $this->db->db_addslashes($params['query']) : null;
+			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
+	
+			$fields	 = $this->get_fields();
+			
+			$or_conditions = array();
+			$and_conditions = array();
+			$joins = '';
+			$cols = '';
+
+			switch ($this->currentapp)
+			{
+				case 'property':
+					$table	 = 'fm_tts_external_communication';
+					$joins = " {$this->join} fm_tts_tickets ON {$table}.ticket_id = fm_tts_tickets.id";
+	//				$joins .= " {$this->left_join} fm_tts_external_communication_msg ON fm_tts_external_communication_msg.excom_id = fm_tts_external_communication.id";
+	//				$cols = ",fm_tts_external_communication_msg.message";
+					if($query)
+					{
+						$or_conditions[] = " location_code {$this->like} '{$query}%'";
+						$or_conditions[] = " fm_tts_tickets.subject {$this->like} '%{$query}%'";
+						$or_conditions[] = " {$table}.mail_recipients {$this->like} '%{$query}%'";
+						$or_conditions[] = " {$table}.id =" . (int) $query;
+					}
+					foreach ($filters as $key => $val)
+					{
+						if($fields[$key]['type'] = 'int')
+						{
+							$and_conditions[] = " $key = " . (int) $val;
+						}
+						else
+						{
+							$and_conditions[] = " $key = '" . $this->db->db_addslashes($val) . "'";
+						}
+					}
+
+
+					break;
+				case 'helpdesk':
+					$table	 = 'phpgw_helpdesk_external_communication';
+					break;
+				default:
+					throw new Exception("External communication for {$this->currentapp} is not supported");
+			}
+
+			if ($sort)
+			{
+				if (is_array($sort))
+				{
+					$order = "ORDER BY {$sort[0]} {$dir}, {$sort[1]}";
+				}
+				else
+				{
+					$order = "ORDER BY {$table}.{$sort} {$dir}";
+				}
+			}
+			else
+			{
+				$order = "ORDER BY fm_tts_external_communication.id DESC";
+			}
+
+			$filtermethod = 'WHERE 1=1';
+			
+			if($or_conditions)
+			{		
+				$filtermethod .=  ' AND (' . implode(' OR ', $or_conditions) . ')';
+			}
+			if($and_conditions)
+			{		
+				$filtermethod .=  ' AND (' . implode(' AND ', $and_conditions) . ')';
+			}
+			
+			
+			$this->db->query("SELECT count(1) AS count FROM {$table} {$joins} {$filtermethod}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$total_records = (int)$this->db->f('count');
+
+			$sql	 = "SELECT {$table}.* {$cols} FROM {$table} {$joins} {$filtermethod} {$order}";
+			if ($results > -1)
+			{
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
+
+			$values	 = array();
+
+			while ($this->db->next_record())
+			{
+				foreach ($fields as $field => $field_info)
+				{
+					$row[$field] = $this->db->f($field, true);
+				}
+
+				$mail_recipients		 = trim($row['mail_recipients'], ',');
+				$row['mail_recipients']	 = $mail_recipients ? explode(',', $mail_recipients) : array();
+				$file_attachments		 = trim($row['file_attachments'], ',');
+				$row['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
+				$row['created_on']		 = $this->db->f('created_on');
+				$row['created_by']		 = $this->db->f('created_by');
+				$row['modified_date']	 = $this->db->f('modified_date');
+				$values[]				 = $row;
+			}
+			return array(
+				'total_records' => $total_records,
+				'results' => $values,
+				'start' => $start,
+				'sort' => is_array($sort) ? $sort[0] : $sort,
+				'dir' => $dir
+			);
+		}
+		
 		function add( $values )
 		{
 			$sender = !empty($values['sender']) ? $values['sender'] : '';
@@ -368,7 +490,7 @@
 			return $value_string;
 		}
 
-		function read( $ticket_id )
+		function get_at_ticket( $ticket_id )
 		{
 
 			switch ($this->currentapp)
@@ -478,7 +600,7 @@
 					'public'	 => true,
 					'required'	 => true,
 				),
-				'message'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD,
+				'message'			 => array('action'	 => PHPGW_ACL_ADD,
 					'type'		 => 'html',
 					'label'		 => 'descr',
 					'sortable'	 => false,
@@ -488,7 +610,7 @@
 				),
 				'vendor_id'			 => array('action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'int',
-					'label'		 => 'vendor id',
+					'label'		 => 'vendor',
 					'sortable'	 => false,
 					'query'		 => false,
 					'public'	 => true,
@@ -505,6 +627,14 @@
 				'file_attachments'	 => array('action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'int',
 					'label'		 => 'file attachments',
+					'sortable'	 => false,
+					'query'		 => false,
+					'public'	 => true,
+					'required'	 => false,
+				),
+				'cat_id'	 => array('action'	 => null,
+					'type'		 => 'int',
+					'label'		 => 'category',
 					'sortable'	 => false,
 					'query'		 => false,
 					'public'	 => true,

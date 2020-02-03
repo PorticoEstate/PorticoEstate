@@ -1009,7 +1009,7 @@ HTML;
 		{
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
+				phpgw::no_access();
 				return;
 			}
 
@@ -3136,7 +3136,7 @@ HTML;
 				)
 			);
 
-			$external_messages = createObject('property.soexternal_communication')->read($id);
+			$external_messages = createObject('property.soexternal_communication')->get_at_ticket($id);
 
 			foreach ($external_messages as &$external_message)
 			{

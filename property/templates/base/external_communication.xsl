@@ -7,9 +7,6 @@
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit" />
 		</xsl:when>
-		<xsl:when test="view">
-			<xsl:apply-templates select="view" />
-		</xsl:when>
 	</xsl:choose>
 </xsl:template>
 
@@ -483,6 +480,18 @@
 										</xsl:if>
 									</xsl:for-each>
 								</div>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'upload file')"/>
+								</label>
+
+									<xsl:call-template name="multi_upload_file_inline">
+										<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+										<xsl:with-param name="multi_upload_action">
+											<xsl:value-of select="multi_upload_action"/>
+										</xsl:with-param>
+									</xsl:call-template>
 							</div>
 
 						</fieldset>
