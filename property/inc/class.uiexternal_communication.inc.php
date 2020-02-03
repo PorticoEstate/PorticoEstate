@@ -393,7 +393,14 @@
 				'results'				 => -1
 			);
 
-			$values = $botts->read( $data );
+			if($location_code)
+			{
+				$values = $botts->read( $data );
+			}
+			else
+			{
+				$values = array();
+			}
 
 			if ($values)
 			{
