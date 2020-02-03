@@ -613,6 +613,7 @@
 			$function_msg	 = lang('list Project');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$query = phpgw::get_var('query');
 
 			$data = array(
 				'datatable_name' => $appname . ': ' . $function_msg,
@@ -656,13 +657,15 @@
 					)),
 					"columns"		 => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"),
 					'new_item'		 => self::link(array(
-						'menuaction' => 'property.uiproject.add'
+						'menuaction' => 'property.uiproject.add',
+						'location_code'	=> $this->criteria_id == 4 ? $query : '',
+						'bypass'		=> $this->criteria_id == 4 && $query ? true : false
 					)),
 					'allrows'		 => true,
 					'select_all'	 => $make_relation,
 					'editor_action'	 => '',
 					'field'			 => array(),
-					'query'			 => phpgw::get_var('query')
+					'query'			 => $query
 				)
 			);
 
@@ -896,7 +899,6 @@
 				);
 			}
 
-			$query = phpgw::get_var('query');
 			if (!empty($query))
 			{
 				$code = <<<JS
