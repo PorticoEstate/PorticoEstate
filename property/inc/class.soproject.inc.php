@@ -3586,53 +3586,32 @@
 
 			$id = (int)$id;
 
-			$location_codes = array();
+			$location_code = $this->db->db_addslashes($location_code);
 
-			$this->db->query("SELECT DISTINCT location_code FROM fm_locations WHERE location_code {$this->like} '"
-			. $this->db->db_addslashes($location_code) . "%' ORDER BY location_code", __LINE__, __FILE__);
+			$values = array();
+
+			$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
+				. " fm_project.start_date, fm_project.name,"
+				. " account_lid as coordinator, fm_project_status.descr as status "
+				. " FROM fm_project"
+				. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
+				. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
+				. " WHERE location_code {$this->like} '{$location_code}%'"
+				. " AND fm_project.id !={$id}"
+				. " ORDER BY fm_project.id DESC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
-				$location_codes[] = $this->db->f('location_code');
-
-			}
-			$values			 = array();
-			$now			 = time();
-//			$_location_arr	 = array();
-//			$location_arr	 = explode('-', $location_code);
-//			foreach ($location_arr as $loc)
-//			{
-//				$_location_arr[] = $this->db->db_addslashes($loc);
-//
-//				$_location_code = implode('-', $_location_arr);
-
-			foreach ($location_codes as $_location_code)
-			{
-
-				$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
-					. " fm_project.start_date, fm_project.name,"
-					. " account_lid as coordinator, fm_project_status.descr as status "
-					. " FROM fm_project"
-					. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
-					. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
-					. " WHERE location_code = '{$_location_code}'"
-					. " AND fm_project.id !={$id}"
-					. " ORDER BY fm_project.id DESC";
-
-
-				$this->db->query($sql, __LINE__, __FILE__);
-
-				while ($this->db->next_record())
-				{
-					$values[] = array(
-						'id'			 => $this->db->f('id', true),
-						'location_code'	 => $this->db->f('location_code', true),
-						'start_date'	 => $this->db->f('start_date'),
-						'name'			 => $this->db->f('name', true),
-						'coordinator'	 => $this->db->f('coordinator', true),
-						'status'		 => $this->db->f('status', true),
-					);
-				}
+				$values[] = array(
+					'id'			 => $this->db->f('id', true),
+					'location_code'	 => $this->db->f('location_code', true),
+					'start_date'	 => $this->db->f('start_date'),
+					'name'			 => $this->db->f('name', true),
+					'coordinator'	 => $this->db->f('coordinator', true),
+					'status'		 => $this->db->f('status', true),
+				);
 			}
 
 			return $values;
