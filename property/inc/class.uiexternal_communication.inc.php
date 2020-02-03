@@ -162,7 +162,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add")),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation")),
 					'editor_action' => '',
 					'field' => $fields
 				)
