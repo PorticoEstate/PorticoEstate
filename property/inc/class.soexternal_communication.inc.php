@@ -608,7 +608,7 @@
 					'public'	 => true,
 					'required'	 => false,
 				),
-				'vendor_id'			 => array('action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'vendor_id'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'int',
 					'label'		 => 'vendor',
 					'sortable'	 => false,

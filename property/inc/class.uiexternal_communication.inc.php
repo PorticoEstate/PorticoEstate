@@ -789,7 +789,7 @@ JS;
 					$content_files[$z]['file_name'] = $_entry['name'];
 					$content_files[$z]['img_id'] = $_entry['file_id'];
 					$content_files[$z]['img_url'] = self::link(array(
-							'menuaction' => 'helpdesk.uitts.view_image',
+							'menuaction' => "{$this->currentapp}.uitts.view_image",
 							'img_id'	=>  $_entry['file_id'],
 							'file' => $_entry['directory'] . '/' . $_entry['file_name']
 					));

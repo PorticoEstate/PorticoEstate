@@ -3026,9 +3026,9 @@ HTML;
 //die();
 
 
-				$n = 1;
 				foreach ($check_item->get_cases_array() as $case)
 				{
+					$n = 1;
 
 					$entry = array
 					(
