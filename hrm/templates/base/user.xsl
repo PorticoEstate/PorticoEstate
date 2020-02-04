@@ -18,21 +18,21 @@
 </xsl:template>
 	
 <xsl:template match="list">
+	<dl>
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</xsl:when>
+		</xsl:choose>
+	</dl>
 	<xsl:choose>
 		<xsl:when test="menu != ''">
 			<xsl:apply-templates select="menu"/>
 		</xsl:when>
 	</xsl:choose>
 	<table width="100%" cellpadding="2" cellspacing="2" align="center">
-		<xsl:choose>
-			<xsl:when test="msgbox_data != ''">
-				<tr>
-					<td align="left" colspan="3">
-						<xsl:call-template name="msgbox"/>
-					</td>
-				</tr>
-			</xsl:when>
-		</xsl:choose>
 		<tr>
 			<td align="right">
 				<xsl:call-template name="search_field"/>
@@ -47,8 +47,12 @@
 		</tr>
 	</table>
 	<table class="pure-table pure-table-bordered">
-		<xsl:apply-templates select="table_header"/>
-		<xsl:apply-templates select="values"/>
+		<thead>
+			<xsl:apply-templates select="table_header"/>
+		</thead>
+		<tbody>
+			<xsl:apply-templates select="values"/>
+		</tbody>
 	</table>
 </xsl:template>
 
@@ -60,25 +64,25 @@
 		<xsl:value-of select="sort_first_name"/>
 	</xsl:variable>
 	<tr class="th">
-		<td class="th_text" width="10%" align="left">
+		<th style="width:20%; text-align:left;">
 			<a href="{$sort_first_name}">
 				<xsl:value-of select="lang_first_name"/>
 			</a>
-		</td>
-		<td class="th_text" width="10%" align="left">
+		</th>
+		<th style="width:20%; text-align:left;">
 			<a href="{$sort_last_name}">
 				<xsl:value-of select="lang_last_name"/>
 			</a>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_training"/>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_edit"/>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_view"/>
-		</td>
+		</th>
 	</tr>
 </xsl:template>
 
@@ -94,27 +98,13 @@
 	</xsl:variable>
 
 	<tr>
-		<xsl:attribute name="class">
-			<xsl:choose>
-				<xsl:when test="@class">
-					<xsl:value-of select="@class"/>
-				</xsl:when>
-				<xsl:when test="position() mod 2 = 0">
-					<xsl:text>row_off</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>row_on</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:attribute>
-
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="first_name"/>
 		</td>
-		<td align="left">
+		<td style="text-align:left;">
 			<xsl:value-of select="last_name"/>
 		</td>
-		<td align="center">
+		<td style="text-align:center;">
 			<xsl:variable name="link_training">
 				<xsl:value-of select="link_training"/>
 			</xsl:variable>
@@ -136,22 +126,26 @@
 
 <!-- training  -->
 <xsl:template match="training">
+	<dl>
+		<xsl:choose>
+			<xsl:when test="msgbox_data != ''">
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</xsl:when>
+		</xsl:choose>
+	</dl>
 	<div align="left">
 
 		<table>
-			<xsl:choose>
-				<xsl:when test="msgbox_data != ''">
-					<tr>
-						<td align="left" colspan="3">
-							<xsl:call-template name="msgbox"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
 			<xsl:call-template name="user_values"/>
 			<table class="pure-table pure-table-bordered">
-				<xsl:apply-templates select="table_header_training"/>
-				<xsl:apply-templates select="values_training"/>
+				<thead>
+					<xsl:apply-templates select="table_header_training"/>
+				</thead>
+				<tbody>
+					<xsl:apply-templates select="values_training"/>
+				</tbody>
 			</table>
 			<table width="100%" cellpadding="2" cellspacing="2" align="center">
 				<xsl:apply-templates select="table_add"/>
@@ -190,42 +184,42 @@
 	<xsl:variable name="sort_start_date">
 		<xsl:value-of select="sort_start_date"/>
 	</xsl:variable>
-	<tr class="th">
-		<td class="th_text" width="5%" align="center">
+	<tr>
+		<th style="width:5%; text-align:left;">
 			<xsl:value-of select="lang_category"/>
-		</td>
-		<td class="th_text" width="10%" align="left">
+		</th>
+		<th style="width:10%; text-align:left;">
 			<a href="{$sort_title}">
 				<xsl:value-of select="lang_title"/>
 			</a>
-		</td>
-		<td class="th_text" width="10%" align="left">
+		</th>
+		<th style="width:10%; text-align:left;">
 			<a href="{$sort_place}">
 				<xsl:value-of select="lang_place"/>
 			</a>
-		</td>
-		<td class="th_text" width="10%" align="right">
+		</th>
+		<th style="width:10%; text-align:right;">
 			<a href="{$sort_place}">
 				<xsl:value-of select="lang_credits"/>
 			</a>
-		</td>
-		<td class="th_text" width="10%" align="center">
+		</th>
+		<th style="width:10%; text-align:center;">
 			<a href="{$sort_start_date}">
 				<xsl:value-of select="lang_start_date"/>
 			</a>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_end_date"/>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_view"/>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_edit"/>
-		</td>
-		<td class="th_text" width="5%" align="center">
+		</th>
+		<th style="width:5%; text-align:center;">
 			<xsl:value-of select="lang_delete"/>
-		</td>
+		</th>
 	</tr>
 </xsl:template>
 

@@ -49,7 +49,6 @@
 					</div>
 				</xsl:if>
 			</td>
-
 		</tr>
 	</table>
 
@@ -70,43 +69,42 @@
 			</dt>
 		</dl>
 		<table class="pure-table pure-table-horizontal" border="0" cellspacing="2" cellpadding="2">
-			<thead>
-			<tr>
-				<xsl:choose>
-					<xsl:when test="values_groups!=''">
-						<th class="th_text" width="10%" align="center">
-							<xsl:value-of select="lang_groups"/>
-						</th>
-						<th>
-						</th>
-					</xsl:when>
-				</xsl:choose>
-			</tr>
-			</thead>
-						 <tbody>
-
-			<xsl:apply-templates select="values_groups"/>
-						 </tbody>
-			<thead>
-			<tr>
-				<xsl:choose>
-					<xsl:when test="values_users!=''">
-						<th class="th_text" width="10%" align="center">
-							<xsl:value-of select="lang_users"/>
-						</th>
-						<th>
-						</th>
-					</xsl:when>
-				</xsl:choose>
-			</tr>
-			</thead>
-			 <tbody>
-			<xsl:apply-templates select="values_users"/>
-			 </tbody>
+			<xsl:choose>
+				<xsl:when test="values_groups!=''">
+					<thead>
+						<tr>
+							<th width="10%" align="center">
+								<xsl:value-of select="lang_groups"/>
+							</th>
+							<th>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<xsl:apply-templates select="values_groups"/>
+					</tbody>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="values_users!=''">
+					<thead>
+						<tr>
+							<th width="10%" align="center">
+								<xsl:value-of select="lang_users"/>
+							</th>
+							<th>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<xsl:apply-templates select="values_users"/>
+					</tbody>
+				</xsl:when>
+			</xsl:choose>
 		</table>
 		<br/>
 		<dl>
-			<dt>
+			<dd>
 				<xsl:variable name="location">
 					<xsl:value-of select="location"/>
 				</xsl:variable>
@@ -125,11 +123,11 @@
 					</xsl:attribute>
 				</input>
 
-			</dt>
+			</dd>
 		</dl>
 	</form>
 	<dl>
-		<dt>
+		<dd>
 			<form method="post" action="{done_action}">
 				<input type="submit" name="done" value="{lang_done}">
 					<xsl:attribute name="title">
@@ -137,7 +135,7 @@
 					</xsl:attribute>
 				</input>
 			</form>
-		</dt>
+		</dd>
 	</dl>
 
 </xsl:template>
@@ -194,20 +192,6 @@
 	<xsl:choose>
 		<xsl:when test="account_id !=''">
 			<tr>
-				<xsl:attribute name="class">
-					<xsl:choose>
-						<xsl:when test="@class">
-							<xsl:value-of select="@class"/>
-						</xsl:when>
-						<xsl:when test="position() mod 2 = 0">
-							<xsl:text>row_off</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>row_on</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-
 				<td align="left">
 					<xsl:value-of select="name"/>
 				</td>
@@ -218,15 +202,17 @@
 								<xsl:call-template name="value_header"/>
 							</tr>
 						</thead>
-						<tr>
-							<xsl:call-template name="right"/>
-						</tr>
-						<tr>
-							<xsl:call-template name="mask"/>
-						</tr>
-						<tr>
-							<xsl:call-template name="result"/>
-						</tr>
+						<tbody>
+							<tr>
+								<xsl:call-template name="right"/>
+							</tr>
+							<tr>
+								<xsl:call-template name="mask"/>
+							</tr>
+							<tr>
+								<xsl:call-template name="result"/>
+							</tr>
+						</tbody>
 					</table>
 				</td>
 				

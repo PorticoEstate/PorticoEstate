@@ -108,6 +108,7 @@
 														'cat_id'	=> $this->cat_id,
 														'allrows'	=> $this->allrows)
 										)),
+				'lang_name'	=> lang('name'),
 				'lang_delete'	=> lang('delete'),
 				'lang_edit'	=> lang('edit'),
 				'lang_view'	=> lang('view'),

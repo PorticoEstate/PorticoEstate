@@ -315,7 +315,7 @@
 				<xsl:value-of select="lang_id"/>
 			</a>
 		</th>
-		<th  style="width:10%; text-align:left;">
+		<th style="width:10%; text-align:left;">
 			<a href="{$sort_code}">
 				<xsl:value-of select="lang_code"/>
 			</a>
