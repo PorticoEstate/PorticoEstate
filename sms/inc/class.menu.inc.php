@@ -140,34 +140,51 @@
 					(
 					'text' => lang('Outbox'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'))
-				),
-				'autoreply' => array
-					(
-					'text' => lang('Autoreply'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.index'))
-				),
-				'board' => array
-					(
-					'text' => lang('Boards'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.index'))
-				),
-				'command' => array
-					(
-					'text' => lang('Command'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicommand.index')),
-					'children' => $command_children
-				),
-				'custom' => array
-					(
-					'text' => lang('Custom'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.index'))
-				),
-				'poll' => array
-					(
-					'text' => lang('Polls'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uipoll.index'))
 				)
 			);
+
+			if ($GLOBALS['phpgw']->acl->check('.autoreply', phpgwapi_acl::READ, 'sms'))
+			{
+				$menus['navigation']['autoreply'] = array
+						(
+						'text' => lang('Autoreply'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiautoreply.index'))
+					);
+			}
+			if ($GLOBALS['phpgw']->acl->check('.board', phpgwapi_acl::READ, 'sms'))
+			{
+				$menus['navigation']['board'] = array
+						(
+					'text' => lang('Boards'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uiboard.index'))
+					);
+			}
+			if ($GLOBALS['phpgw']->acl->check('.command', phpgwapi_acl::READ, 'sms'))
+			{
+				$menus['navigation']['command'] = array
+						(
+					'text' => lang('commands'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicommand.index')),
+					'children' => $command_children
+					);
+			}
+			if ($GLOBALS['phpgw']->acl->check('.custom', phpgwapi_acl::READ, 'sms'))
+			{
+				$menus['navigation']['custom'] = array
+						(
+					'text' => lang('Custom'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uicustom.index'))
+					);
+			}
+			if ($GLOBALS['phpgw']->acl->check('.poll', phpgwapi_acl::READ, 'sms'))
+			{
+				$menus['navigation']['poll'] = array
+						(
+					'text' => lang('Polls'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uipoll.index'))
+					);
+			}
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

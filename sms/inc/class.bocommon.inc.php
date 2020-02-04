@@ -39,29 +39,15 @@
 		{
 			if (isset($input_list) AND is_array($input_list))
 			{
-				foreach ($input_list as $entry)
+				foreach ($input_list as &$entry)
 				{
-					$sel_entry = '';
-					if ($entry['id'] == $selected)
+					if($entry['id'] == $selected)
 					{
-						$sel_entry = 'selected';
-					}
-					$entry_list[] = array
-						(
-						'id' => $entry['id'],
-						'name' => $entry['name'],
-						'selected' => $sel_entry
-					);
-				}
-				for ($i = 0; $i < count($entry_list); $i++)
-				{
-					if ($entry_list[$i]['selected'] != 'selected')
-					{
-						unset($entry_list[$i]['selected']);
+						$entry['selected'] = 1;
 					}
 				}
 			}
-			return $entry_list;
+			return $input_list;
 		}
 
 		function no_access( $message = '' )

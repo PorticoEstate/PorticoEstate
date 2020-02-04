@@ -200,8 +200,8 @@
 			{
 				$table_add[] = array
 					(
-					'lang_send' => lang('Send text SMS'),
-					'lang_send_statustext' => lang('send single'),
+					'lang_send' => lang('Send SMS'),
+					'lang_send_statustext' => lang('Send SMS'),
 					'send_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.send',
 						'from' => 'index')),
 					'lang_send_group' => lang('Send broadcast SMS'),
@@ -342,8 +342,8 @@
 			{
 				$table_add[] = array
 					(
-					'lang_send' => lang('Send text SMS'),
-					'lang_send_statustext' => lang('send single'),
+					'lang_send' => lang('Send SMS'),
+					'lang_send_statustext' => lang('Send SMS'),
 					'send_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.send',
 						'from' => 'outbox')),
 					'lang_send_group' => lang('Send broadcast SMS'),
@@ -419,7 +419,7 @@
 
 				$p_num = $values['p_num_text'] ? $values['p_num_text'] : $p_num;
 
-				if ($values['save'] || $values['apply'])
+				if ($values['save'])
 				{
 
 					if (!$values['message'])

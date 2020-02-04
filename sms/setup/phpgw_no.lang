@@ -7,3 +7,22 @@ log	sms	no	Logg
 outbox	sms	no	Utbox
 polls	sms	no	Avstemninger
 receipt on code miss	sms	no	Tilbakemelding ved bom på kodeord
+sender	sms	no	Avsender
+code	sms	no	Kode
+id	sms	no	Id
+param	sms	no	Parameter
+success	sms	no	Resultat
+commands	sms	no	Regler
+command	sms	no	Regel
+list sms command log	sms	no	List logg for SMS-regler
+sms command code	sms	no	SMS-kode for regel
+add command	sms	no	Legg til regel
+send sms	sms	no	Send SMS
+from	sms	no	Fra
+character left	sms	no	Maks tegn
+message	sms	no	Melding
+sent	sms	no	Sendt
+list outbox	sms	no	List utboks
+list inbox	sms	no	List Innboks
+answer	sms	no	Svar
+user	sms	no	Bruker
