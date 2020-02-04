@@ -114,6 +114,13 @@
 			$command_info = $this->so->read_log(array('start' => $this->start, 'query' => $this->query,
 				'sort' => $this->sort, 'order' => $this->order,
 				'allrows' => $this->allrows, 'cat_id' => $this->cat_id));
+
+			foreach ($command_info as &$entry)
+			{
+				$entry['datetime'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['datetime']));
+
+			}
+
 			$this->total_records = $this->so->total_records;
 			return $command_info;
 		}
