@@ -262,15 +262,17 @@ JS;
 				$sort_field = "responsibility_id";
 			}
 
+			$responsibility_id = phpgw::get_var('responsibility_id');
+
 			$type = phpgw::get_var('type');
 			switch ($type)
 			{
 				case 'manual_adjustments':
-					$filters = array('manual_adjustment' => 'true');
+					$filters = array('manual_adjustment' => 'true', 'responsibility_id' => $responsibility_id);
 					break;
 				case 'non_manual_adjustments':
 				default:
-					$filters = array('non_manual_adjustment' => 'true');
+					$filters = array('non_manual_adjustment' => 'true', 'responsibility_id' => $responsibility_id);
 			}
 
 			$result_objects = rental_soadjustment::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -423,6 +425,7 @@ JS;
 			$interval_options[] = array('id' => '1', 'name' => '1 ' . lang('year'), 'selected' => (($current_interval == '1') ? 1 : 0));
 			$interval_options[] = array('id' => '2', 'name' => '2 ' . lang('year'), 'selected' => (($current_interval == '2') ? 1 : 0));
 			$interval_options[] = array('id' => '3', 'name' => '3 ' . lang('year'), 'selected' => (($current_interval == '3') ? 1 : 0));
+			$interval_options[] = array('id' => '5', 'name' => '5 ' . lang('year'), 'selected' => (($current_interval == '5') ? 1 : 0));
 			$interval_options[] = array('id' => '10', 'name' => '10 ' . lang('year'), 'selected' => (($current_interval == '10') ? 1 : 0));
 
 			$adjustment_year = $adjustment->get_year();
