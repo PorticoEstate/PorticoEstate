@@ -51,10 +51,12 @@
 						<br/>
 						<xsl:value-of select="php:function('lang', 'contact_phone')"/>: <xsl:value-of select="event/contact_phone"/>
 					</xsl:if>
+<!--
 					<xsl:if test="event/equipment != ''">
 						<br/>
 						<xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
 					</xsl:if>
+-->
 				</span>
 			</p>
 		</div>
