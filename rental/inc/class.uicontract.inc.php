@@ -2003,6 +2003,10 @@ JS;
 				'name' => '3 ' . lang('year'),
 				'selected' => (($current_interval == '3') ? 1 : 0));
 			$adjustment_interval_options[] = array(
+				'id' => '5',
+				'name' => '5 ' . lang('year'),
+				'selected' => (($current_interval == '5') ? 1 : 0));
+			$adjustment_interval_options[] = array(
 				'id' => '10',
 				'name' => '10 ' . lang('year'),
 				'selected' => (($current_interval == '10') ? 1 : 0));

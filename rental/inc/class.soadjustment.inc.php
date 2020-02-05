@@ -53,6 +53,11 @@
 				}
 			}
 
+			if (!empty($filters['responsibility_id']))
+			{
+				$clauses[] = "responsibility_id = " . (int) $filters['responsibility_id'];
+			}
+
 			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);
