@@ -894,7 +894,7 @@
 					//					$document_id=$receipt['document_id'];
 					$GLOBALS['phpgw']->session->appsession('session_data', 'document_receipt', $receipt);
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => $_from ?  $from : 'property.uidocument.list_doc',
-					//	'location_code'	 => implode("-", $values['location']),
+						'location_code'	 => implode("-", $values['location']),
 						'entity_id'		 => $this->entity_id,
 						'cat_id'		 => $this->cat_id,
 						'p_num'			 => $values['extra']['p_num'],

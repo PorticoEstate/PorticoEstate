@@ -239,7 +239,13 @@
 																		{               
 																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
-																					document.getElementById("message<xsl:number value="$num"/>").innerHTML += '<br/>' + result;
+
+																					//document.getElementById("message<xsl:number value="$num"/>").innerHTML += '<br/>' + result;
+																					var message = document.getElementById("message<xsl:number value="$num"/>");
+																					$('<div id="spinner" class="msg_good"/>')
+																						.append($('<span>' + result + '</span>'))
+																						.insertAfter(message);
+
 																					oTable<xsl:number value="$num"/>.fnDraw();
 																				});																			
 																		}

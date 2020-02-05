@@ -2228,6 +2228,22 @@ JS;
 						"
 					);
 
+					$documents_tabletools[] = array
+					(
+						'my_name'		 => 'delete',
+						'text'			 => lang('delete'),
+						'confirm_msg'	 => lang('do you really want to delete this entry'),
+						'action'		 => $GLOBALS['phpgw']->link('/index.php', array
+							(
+							'menuaction'	 => 'property.uidocument.delete',
+						)),
+						'parameters'	 => json_encode(array(
+							'parameter' => array(array(
+									'name'	 => 'document_id',
+									'source' => 'id'
+									))))
+					);
+
 					$documents_def = array(
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
 						array('key'		 => 'document_name', 'label'		 => lang('name'), 'sortable'	 => true,
