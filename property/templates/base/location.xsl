@@ -288,6 +288,7 @@ onMouseOut="nd()">
 			</xsl:when>
 		</xsl:choose>
 	</dl>
+	<div id="message"/>
 	<div id="location_edit_tabview">
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
