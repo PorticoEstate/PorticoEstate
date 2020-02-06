@@ -679,7 +679,7 @@ SQL;
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
 				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
