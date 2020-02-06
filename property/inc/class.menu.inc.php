@@ -1507,7 +1507,7 @@
 								}
 								else if ($item['local_files'])
 								{
-									$item['url'] = 'file:///' . str_replace(':', '|', $item['url']);
+									$item['url'] = 'file:///' . str_replace(':', '|', ltrim($item['url'], '/'));
 								}
 
 								$menus['navigation']["entity_{$entry['id']}"]['children'][] = $item;
