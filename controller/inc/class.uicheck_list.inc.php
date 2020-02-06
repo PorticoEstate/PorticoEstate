@@ -2591,6 +2591,14 @@ HTML;
 			$report_intro = $report_info['control']->get_report_intro();
 
 			$_component_children = (array)$report_info['component_children'];
+
+			$component_children = array();
+			foreach ($_component_children as $component_child)
+			{
+				$component_children[$component_child['location_id']][$component_child['id']] = $component_child;
+			}
+			unset($component_child);
+
 			$completed_items = $this->so->get_completed_item($check_list_id);
 
 			$location_code = $report_info['check_list']->get_location_code();
@@ -2673,7 +2681,7 @@ HTML;
 
 			$pdf->ezText($report_info['control']->get_control_area_name(), 20);
 			$pdf->ezText($report_info['control']->get_title(), 20);
-			$pdf->selectFont('Helvetica');
+//			$pdf->selectFont('Courier');
 
 
 			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
@@ -2719,6 +2727,7 @@ HTML;
 				'shadeHeadingCol'=> [0.9,0.9,0.7],
 				'showHeadings'	 => 0,
 				'shaded'		 => 0,
+//				'fontSize'		=> 10,
 				'xPos' => 0,
 				'xOrientation'	 => 'right',
 				'width' => 500,
@@ -2758,7 +2767,7 @@ HTML;
 
 			$pdf->ezSetDy(-20);
 
-			$pdf->ezText("Kontrollener gjennomført av:");
+			$pdf->ezText("Kontrollen er gjennomført av:");
 
 			foreach ($selected_inspectors as $selected_inspector)
 			{
@@ -2866,15 +2875,180 @@ HTML;
 //				_debug_array($report_info['component_array']);
 //				_debug_array($report_info);
 
+
+
+			$i = 1;
+
+			foreach ($report_info['open_check_items_and_cases'] as $check_item)
+			{
+//				_debug_array($check_item->get_control_item());
+
+				$cases_array = $check_item->get_cases_array();
+
+//				_debug_array($cases_array);die();
+				$data_case = array();
+
+//				_debug_array($component_children);
+//				_debug_array($completed_items);
+
+//die();
+
+
+				foreach ($check_item->get_cases_array() as $case)
+				{
+					$n = 1;
+
+					$entry = array
+					(
+						'col1' => "<b>#{$i}</b>",
+						'col2' => $check_item->get_control_item()->get_title(),
+					);
+ 					
+					$location_identificator = 0;
+
+					if($case->get_component_child_item_id())
+					{
+
+						$location_identificator = $case->get_component_child_location_id() . '_' .$case->get_component_child_item_id();
+					}
+
+					$data_case[$location_identificator][] = $entry;
+
+					$case->get_component_child_location_id();//:protected] => 456
+                    $case->get_component_child_item_id();//:protected] => 2835
+
+					if($case->get_component_child_item_id())
+					{
+						$entry = array
+						(
+							'col1' => 'komponent',
+							'col2' => $component_children[$case->get_component_child_location_id()][$case->get_component_child_item_id()]['short_description']
+						);
+						$data_case[$location_identificator][] = $entry;
+					}
+
+
+					$case_files = $case->get_case_files();
+ 					$status_text = lang('closed');
+					
+					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					{
+						$status_text = lang('open');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					{
+						$status_text = lang('pending');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
+					{
+						$status_text = lang('corrected on controll');
+					}
+
+					$entry = array
+					(
+						'col1' => lang('status'),
+						'col2' => $status_text
+					);
+ 					$data_case[$location_identificator][] = $entry;
+					$entry = array
+					(
+						'col1' => lang('condition degree'),
+						'col2' => $case->get_condition_degree()
+					);
+					$data_case[$location_identificator][] = $entry;
+					$entry = array
+					(
+						'col1' => lang('consequence'),
+						'col2' => $case->get_consequence()
+					);
+					$data_case[$location_identificator][] = $entry;
+
+					$entry = array
+					(
+						'col1' => 'Verdi',//lang('measurement'),
+						'col2' => $case->get_measurement()
+					);
+
+					$data_case[$location_identificator][] = $entry;
+
+					$entry = array
+					(
+						'col1' => lang('descr'),
+						'col2' => $case->get_descr()
+					);
+					$data_case[$location_identificator][] = $entry;
+
+					$entry = array
+					(
+						'col1' => lang('proposed counter measure'),
+						'col2' => $case->get_proposed_counter_measure()
+					);
+					$data_case[$location_identificator][] = $entry;
+
+					foreach ($case_files as $case_file)
+					{
+						$entry = array
+						(
+							'col1' => lang('picture') . " #{$i}_{$n}",
+							'col2' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
+						);
+						$data_case[$location_identificator][] = $entry;
+						$n ++;
+					}
+
+					$i++;
+
+//					_debug_array($case);
+
+//die();
+				}
+
+
+				if(false)//$case_files)
+				{
+	//				_debug_array($case_files);die();
+					$data = array();
+
+					foreach ($case_files as $case_file)
+					{
+						$entry = array
+						(
+							'col1' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
+						);
+						$data[] = $entry;
+					}
+
+					$pdf->ezTable($data, '', '', array(
+						'showHeadings' => 0,
+						'shaded'	 => 0,
+						'xPos' => 0,
+						'xOrientation'	 => 'right',
+						'width' => 500,
+						'gridlines'		 => EZ_GRIDLINE_ALL,
+						'cols'			 => array
+						(
+							'col1'	 => array('width' => 500, 'justification' => 'left'),
+						)
+					));
+				}
+
+				$pdf->ezSetDy(-20);
+
+			}
+
+
 			$custom = createObject('property.custom_fields');
 
-			$soentity = CreateObject('property.soentity', $entity_id, $cat_id);
-			$data = array();
-			$component_children = array();
+			$soentity = CreateObject('property.soentity');
+	//		$component_children = array();
 			$completed_list = array();
+			$reported_cases = array();
 			foreach ($_component_children as &$component_child)
 			{
-				$component_children[$component_child['location_id']][$component_child['id']] = $component_child;
+				$data = array();
+				$location_identificator = $component_child['location_id'] . '_' . $component_child['id'];
+
+	//			$component_children[$component_child['location_id']][$component_child['id']] = $component_child;
 
 				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
 				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
@@ -2901,7 +3075,7 @@ HTML;
 					(
 						'col1' => "<C:showimage:{$this->vfs->basedir}/{$file['directory']}/{$file['name']} 90>",
 						'col2' => "<b>{$component_child['short_description']}</b>",
-						'col3' => $GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
+						'col3' => 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
 					);
 
 				}
@@ -2936,7 +3110,6 @@ HTML;
 					{
 						continue;
 					}
-
 
 					if($attribute['value'])
 					{
@@ -2983,154 +3156,31 @@ HTML;
 
 				}
 
-
-
-			}
-
-			if($data)
-			{
-				$pdf->ezTable($data, array('col1' => '<b>Bilde</b>','col2' => '<b>Komponent</b>', 'col3' => '<b>Kontrollert</b>'), 'Delsystemer', array(
-					'showHeadings' => 1,
-					'shaded'	 => 0,
-					'xPos' => 0,
-					'xOrientation'	 => 'right',
-					'width' => 400,
-					'gridlines'		 => EZ_GRIDLINE_ALL,
-					'cols'			 => array
-					(
-						'col1'	 => array('width' => 100, 'justification' => 'left'),
-						'col2'	 => array('width' => 200, 'justification' => 'left'),
-						'col3'	 => array('width' => 200, 'justification' => 'left'),
-					)
-				));
-				$pdf->ezSetDy(-20);
-
-			}
-
-
-			$i = 1;
-
-			foreach ($report_info['open_check_items_and_cases'] as $check_item)
-			{
-//				_debug_array($check_item->get_control_item());
-
-				$cases_array = $check_item->get_cases_array();
-
-//				_debug_array($cases_array);die();
-				$data = array();
-
-
-//				_debug_array($component_children);
-//				_debug_array($completed_items);
-
-//die();
-
-
-				foreach ($check_item->get_cases_array() as $case)
+				if($data)
 				{
-					$n = 1;
-
-					$entry = array
-					(
-						'col1' => "<b>#{$i}</b>",
-						'col2' => ''
-					);
- 					$data[] = $entry;
-
-                    $case->get_component_child_location_id();//:protected] => 456
-                    $case->get_component_child_item_id();//:protected] => 2835
-
-					if($case->get_component_child_item_id())
-					{
-						$entry = array
+					$pdf->ezTable($data, array('col1' => '<b>Bilde</b>','col2' => '<b>Hva</b>', 'col3' => '<b>Verdi</b>'), 'Delsystem', array(
+						'showHeadings' => 1,
+						'shaded'	 => 0,
+						'xPos' => 0,
+						'xOrientation'	 => 'right',
+						'width' => 400,
+						'gridlines'		 => EZ_GRIDLINE_ALL,
+						'cols'			 => array
 						(
-							'col1' => 'komponent',
-							'col2' => $component_children[$case->get_component_child_location_id()][$case->get_component_child_item_id()]['short_description']
-						);
-						$data[] = $entry;
+							'col1'	 => array('width' => 100, 'justification' => 'left'),
+							'col2'	 => array('width' => 200, 'justification' => 'left'),
+							'col3'	 => array('width' => 200, 'justification' => 'left'),
+						)
+					));
+					$pdf->ezSetDy(-20);
 
-					}
-
-
-					$case_files = $case->get_case_files();
- 					$status_text = lang('closed');
-					
-					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
-					{
-						$status_text = lang('open');
-					}
-					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
-					{
-						$status_text = lang('pending');
-					}
-					else if($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
-					{
-						$status_text = lang('corrected on controll');
-					}
-
-					$entry = array
-					(
-						'col1' => lang('status'),
-						'col2' => $status_text
-					);
- 					$data[] = $entry;
-					$entry = array
-					(
-						'col1' => lang('condition degree'),
-						'col2' => $case->get_condition_degree()
-					);
-					$data[] = $entry;
-					$entry = array
-					(
-						'col1' => lang('consequence'),
-						'col2' => $case->get_consequence()
-					);
-					$data[] = $entry;
-
-					$entry = array
-					(
-						'col1' => 'Verdi',//lang('measurement'),
-						'col2' => $case->get_measurement()
-					);
-
-					$data[] = $entry;
-
-					$entry = array
-					(
-						'col1' => lang('descr'),
-						'col2' => $case->get_descr()
-					);
-					$data[] = $entry;
-
-					$entry = array
-					(
-						'col1' => lang('proposed counter measure'),
-						'col2' => $case->get_proposed_counter_measure()
-					);
-					$data[] = $entry;
-
-					foreach ($case_files as $case_file)
-					{
-						$entry = array
-						(
-							'col1' => lang('picture') . " #{$i}_{$n}",
-							'col2' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
-						);
-						$data[] = $entry;
-						$n ++;
-					}
-
-					$i++;
-
-//					_debug_array($case);
-
-//die();
 				}
 
-
-				if($data)//$cases_array)
+				if(isset($data_case[$location_identificator]))//$cases_array)
 				{
-					$pdf->ezTable($data, '', $check_item->get_control_item()->get_title(), array(
+					//FIXME
+					//$check_item->get_control_item()->get_title();
+					$pdf->ezTable($data_case[$location_identificator], '','Registrering', array(
 						'showHeadings' => 0,
 						'shaded'	 => 0,
 						'xPos' => 0,
@@ -3143,39 +3193,37 @@ HTML;
 							'col2'	 => array('width' => 400, 'justification' => 'left'),
 						)
 					));
-				}
+					$reported_cases[] = $location_identificator;
 
-				if(false)//$case_files)
+					$pdf->ezSetDy(-20);
+				}
+			}
+
+
+			foreach ($data_case as $key => $values)
+			{
+				if(in_array($key, $reported_cases ))
 				{
-	//				_debug_array($case_files);die();
-					$data = array();
-
-					foreach ($case_files as $case_file)
-					{
-						$entry = array
-						(
-							'col1' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
-						);
-						$data[] = $entry;
-					}
-
-					$pdf->ezTable($data, '', '', array(
-						'showHeadings' => 0,
-						'shaded'	 => 0,
-						'xPos' => 0,
-						'xOrientation'	 => 'right',
-						'width' => 500,
-						'gridlines'		 => EZ_GRIDLINE_ALL,
-						'cols'			 => array
-						(
-							'col1'	 => array('width' => 500, 'justification' => 'left'),
-						)
-					));
+					continue;
 				}
 
-				$pdf->ezSetDy(-20);
+				//$check_item->get_control_item()->get_title();
+				$pdf->ezTable($values, '', '', array(
+					'showHeadings' => 0,
+					'shaded'	 => 0,
+					'xPos' => 0,
+					'xOrientation'	 => 'right',
+					'width' => 400,
+					'gridlines'		 => EZ_GRIDLINE_ALL,
+					'cols'			 => array
+					(
+						'col1'	 => array('width' => 100, 'justification' => 'left'),
+						'col2'	 => array('width' => 400, 'justification' => 'left'),
+					)
+				));
 
 			}
+
 
 
 	//		die();
