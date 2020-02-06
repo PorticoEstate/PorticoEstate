@@ -665,7 +665,6 @@ SQL;
 					namssakstatusokonomi_id smallint,
 					hemmeligadresse smallint,
 					obskode character varying(12),
-					hemmeligadresse smallint,
 					CONSTRAINT boei_leietaker_pkey PRIMARY KEY (leietaker_id)
 				);
 SQL;
@@ -674,12 +673,12 @@ SQL;
 			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
 
 			$sql_boei	 = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
-				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode, hemmeligAdresse'
+				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode'
 				. ' FROM Leietaker';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
-				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode, hemmeligadresse)'
+				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset	 = array();
 
@@ -731,11 +730,6 @@ SQL;
 						(
 						'value'	 => ($this->db_boei->f('OBSKode')),
 						'type'	 => PDO::PARAM_STR
-					),
-					10	 => array
-						(
-						'value'	 => (int)$this->db_boei->f('hemmeligAdresse'),
-						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
