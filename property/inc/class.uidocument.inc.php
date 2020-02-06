@@ -384,7 +384,7 @@
 				{
 					if (!preg_match('/^HTTP/i', $document_entry['link']))
 					{
-						$document_entry['link'] = 'file:///' . str_replace(':', '|', $document_entry['link']);
+						$document_entry['link'] = 'file:///' . str_replace(':', '|', ltrim($document_entry['link'], '/'));
 					}
 
 //					$link_view_file					 = $document_entry['link'];

@@ -1735,7 +1735,7 @@ JS;
 				{
 					if (!preg_match('/^HTTP/i', $item['link']))
 					{
-						$link = 'file:///' . str_replace(':', '|', $item['link']);
+						$link = 'file:///' . str_replace(':', '|', ltrim($item['link'], '/'));
 					}
 
 					$values[]		 = array(
