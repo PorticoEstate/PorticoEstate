@@ -182,6 +182,21 @@
 			return $receipt;
 		}
 
+		public function get_user_id( $ssn )
+		{
+			$ssn = $this->db->db_addslashes($ssn);
+			
+			$this->db->query("SELECT id FROM bb_user WHERE customer_ssn = '{$ssn}'", __LINE__, __FILE__);
+			if (!$this->db->next_record())
+			{
+				return False;
+			}
+
+			$user_id = (int)$this->db->f('user_id');
+			
+			return $user_id;			
+		}
+		
 		public function delete( $id )
 		{
 			$this->db->query("SELECT customer_ssn FROM bb_user WHERE customer_ssn != '00000000000' AND id = " . (int)$id, __LINE__, __FILE__);

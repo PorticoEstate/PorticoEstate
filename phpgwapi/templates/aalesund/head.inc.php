@@ -313,6 +313,17 @@ JS;
 
 	if ($bouser->is_logged_in())
 	{
+		
+//		$ssn = (string)$_SERVER['HTTP_UID'];
+
+		if($ssn)
+		{
+			$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));
+			$lang_user = lang('My page');
+			$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ml-1 mr-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
+			
+		}
+		
 		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
 		$session_org_id = phpgw::get_var('session_org_id', 'int', 'GET');
