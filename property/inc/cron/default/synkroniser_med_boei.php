@@ -1216,7 +1216,7 @@ SQL;
 			if($hemmeligadresser)
 			{
 				$sql2 = "UPDATE fm_tenant SET first_name = 'Skjult', last_name = 'Skjult'"
-					. " WHERE tenant_id IN (". implode(',', $hemmeligadresser) . ')';
+					. " WHERE id IN (". implode(',', $hemmeligadresser) . ')';
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
