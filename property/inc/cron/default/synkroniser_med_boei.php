@@ -97,6 +97,7 @@
 			$this->slett_feil_telefon();
 			$this->update_tenant_name();
 			$this->update_obskode();
+			$this->update_hemmelig_adresse();
 			$this->oppdater_namssakstatus_pr_leietaker();
 
 			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
@@ -517,6 +518,7 @@ SQL;
 					leietaker_id integer,
 					beregnet_boa numeric(20,2),
 					tv_signal_id smallint,
+					disponert_av character varying(60),
 
 				  CONSTRAINT boei_leieobjekt_pkey PRIMARY KEY (objekt_id, bygg_id, seksjons_id, leie_id)
 				);
@@ -526,15 +528,15 @@ SQL;
 			$this->db->query('DELETE FROM boei_leieobjekt', __LINE__, __FILE__);
 			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, Leie_ID, Flyttenr,'
 				. ' Formaal_ID, Gateadresse_ID, Gatenr, Etasje, AntallRom, Boareal,'
-				. ' AndelAvFellesareal, Livslopsstd, Heis, Driftsstatus_ID, Leietaker_ID, Beregnet_Boa, TVSignal_ID'
+				. ' AndelAvFellesareal, Livslopsstd, Heis, Driftsstatus_ID, Leietaker_ID, Beregnet_Boa, TVSignal_ID, DisponertAv'
 				. ' FROM Leieobjekt';
 
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr,'
 				. ' formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal,'
-				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa, tv_signal_id)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa, tv_signal_id, disponert_av)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
@@ -630,7 +632,12 @@ SQL;
 						(
 						'value'	 => (int)$this->db_boei->f('TVSignal_ID'),
 						'type'	 => PDO::PARAM_INT
-					)
+					),
+					19	 => array
+						(
+						'value'	 => $this->db_boei->f('DisponertAv'),
+						'type'	 => PDO::PARAM_STR
+					),
 				);
 			}
 //			_debug_array($valueset);
@@ -658,6 +665,7 @@ SQL;
 					namssakstatusokonomi_id smallint,
 					hemmeligadresse smallint,
 					obskode character varying(12),
+					hemmeligadresse smallint,
 					CONSTRAINT boei_leietaker_pkey PRIMARY KEY (leietaker_id)
 				);
 SQL;
@@ -666,13 +674,13 @@ SQL;
 			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
 
 			$sql_boei	 = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
-				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode'
+				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode, hemmeligAdresse'
 				. ' FROM Leietaker';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
-				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode, hemmeligadresse)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
@@ -723,6 +731,11 @@ SQL;
 						(
 						'value'	 => ($this->db_boei->f('OBSKode')),
 						'type'	 => PDO::PARAM_STR
+					),
+					10	 => array
+						(
+						'value'	 => (int)$this->db_boei->f('hemmeligAdresse'),
+						'type'	 => PDO::PARAM_INT
 					)
 				);
 			}
@@ -1191,6 +1204,31 @@ SQL;
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
+
+
+		function update_hemmelig_adresse()
+		{
+			$sql = "SELECT DISTINCT boei_leietaker.leietaker_id as tenant_id, boei_leietaker.hemmeligadresse FROM boei_leietaker"
+				. " WHERE hemmeligadresse IS NOT NULL AND hemmeligadresse = 1";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$hemmeligadresser = array();
+			while ($this->db->next_record())
+			{
+				$hemmeligadresser[] =  (int)$this->db->f('tenant_id');
+			}
+
+			if($hemmeligadresser)
+			{
+				$sql2 = "UPDATE fm_tenant SET first_name = 'Skjult', last_name = 'Skjult'"
+					. " WHERE tenant_id IN (". implode(',', $hemmeligadresser) . ')';
+
+				$this->db2->query($sql2, __LINE__, __FILE__);
+			}
+			
+		}
+
 
 		function update_obskode()
 		{
