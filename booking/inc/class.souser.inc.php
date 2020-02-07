@@ -31,7 +31,7 @@
 
 		function get_userid( $ssn )
 		{
-			$this->db->query("SELECT id FROM bb_user where customer_ssn ='{$ssn}'", __LINE__, __FILE__);
+			$this->db->query("SELECT id FROM bb_user WHERE customer_ssn ='{$ssn}'", __LINE__, __FILE__);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -192,7 +192,7 @@
 				return False;
 			}
 
-			$user_id = (int)$this->db->f('user_id');
+			$user_id = (int)$this->db->f('id');
 			
 			return $user_id;			
 		}

@@ -24,7 +24,7 @@
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$this->external_login_info = $bouser->validate_ssn_login();
 			
-			$this->ssn = $external_login_info['ssn'];			
+			$this->ssn = $external_login_info['ssn'];
 		}
 
 		public function show()
@@ -52,10 +52,8 @@
 				$user['homepage'] = 'http://' . $user['homepage'];
 			}
 			$user['users_link'] = self::link(array('menuaction' => $this->module . '.uiuser.index'));
-			$user['edit_link'] = self::link(array('menuaction' => $this->module . '.uiuser.edit',
-					'id' => $user['id']));
-			$user['delete_link'] = self::link(array('menuaction' => $this->module . '.uiuser.delete',
-					'id' => $user['id']));
+			$user['edit_link'] = self::link(array('menuaction' => $this->module . '.uiuser.edit'));
+//			$user['delete_link'] = self::link(array('menuaction' => $this->module . '.uiuser.delete'));
 			$user['cancel_link'] = self::link(array());
 			$user['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			self::render_template_xsl('user', array('user' => $user));
@@ -68,7 +66,8 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				list($user, $errors) = $this->extract_and_validate(array('active' => 1));
+				
+				list($user, $errors) = $this->extract_and_validate(array('active' => 1, 'customer_ssn' => $this->ssn));
 				if (strlen($_POST['name']) > 50)
 				{
 					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
@@ -86,7 +85,7 @@
 			self::rich_text_editor('field_description');
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('User New'), 'link' => '#user_edit');
+			$tabs['generic'] = array('label' => lang('New user'), 'link' => '#user_edit');
 			$active_tab = 'generic';
 
 			$user['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);

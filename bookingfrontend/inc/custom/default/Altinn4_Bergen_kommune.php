@@ -52,7 +52,7 @@
 		protected function get_user_org_id()
 		{
 			$headers = getallheaders();
-			$fodselsnr = $headers['uid'];
+			$fodselsnr = 20056432559;$headers['uid'];
 
 			$bregorgs = $this->get_breg_orgs($fodselsnr);
 			$myorgnr = array();

@@ -3172,7 +3172,7 @@ HTML;
 							'col3'	 => array('width' => 200, 'justification' => 'left'),
 						)
 					));
-					$pdf->ezSetDy(-20);
+					$pdf->ezSetDy(-10);
 
 				}
 
@@ -3180,7 +3180,7 @@ HTML;
 				{
 					//FIXME
 					//$check_item->get_control_item()->get_title();
-					$pdf->ezTable($data_case[$location_identificator], '','Registrering', array(
+					$pdf->ezTable($data_case[$location_identificator], '','', array(
 						'showHeadings' => 0,
 						'shaded'	 => 0,
 						'xPos' => 0,
