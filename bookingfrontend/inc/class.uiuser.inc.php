@@ -66,7 +66,7 @@
 
 			if(!$id)
 			{
-				$this->bo->so->collect_users();
+				$this->bo->so->collect_users($this->ssn);
 				$id = $this->bo->so->get_user_id($this->ssn);
 				if(!$id)
 				{

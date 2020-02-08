@@ -51,7 +51,7 @@
 			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
 
 			$this->db->query("SELECT * FROM bb_application WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'", __LINE__, __FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -73,14 +73,14 @@
 			{
 				return array();
 			}
-			
+
 			$bouser = CreateObject('bookingfrontend.bouser');
 
 			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
 
 			$this->db->query("SELECT * FROM bb_completed_reservation WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
 			. " AND cost > 0", __LINE__, __FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -102,7 +102,7 @@
 			{
 				return array();
 			}
-			
+
 			$hash = sha1($ssn);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
@@ -113,7 +113,7 @@
 
 
 			$this->db->query($sql, __LINE__, __FILE__);
-			
+
 			$values = array();
 			while ($this->db->next_record())
 			{
@@ -147,32 +147,33 @@
 			}
 		}
 
-		function collect_users()
+		function collect_users($ssn = '')
 		{
-			$ssn = (string)$_SERVER['HTTP_UID'];
 			$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
 				'invalid' => 'ssn is invalid'));
 			$sf_validator->setOption('required', true);
 
-
-			$sql = "SELECT DISTINCT customer_ssn,  contact_name ,contact_email, contact_phone, responsible_street, responsible_zip_code, responsible_city FROM
-				(
-					SELECT  organizer, contact_name, contact_email, contact_phone, customer_ssn, responsible_street, responsible_zip_code, responsible_city FROM bb_application WHERE length(customer_ssn) = 11 AND substring(customer_ssn, 1, 4) != '0000'
-					UNION
-					SELECT  organizer, contact_name, contact_email, contact_phone, customer_ssn, null as responsible_street,  null as responsible_zip_code, null as responsible_city FROM bb_event WHERE length(customer_ssn) = 11 AND substring(customer_ssn, 1, 4) != '0000'
-				)
-				AS t ORDER BY customer_ssn, responsible_street";
-
+			if($ssn)
+			{
+				$ssn = $this->db->db_addslashes($ssn);
+				$filter_application = "bb_application.customer_ssn = '{$ssn}' AND bb_user.customer_ssn IS NULL";
+				$filter_event = "bb_event.customer_ssn = '{$ssn}' AND bb_user.customer_ssn IS NULL";
+			}
+			else
+			{
+				$filter_application = "length(bb_application.customer_ssn) = 11 AND substring(bb_application.customer_ssn, 1, 4) != '0000' AND bb_user.customer_ssn IS NULL";
+				$filter_event = "length(bb_event.customer_ssn) = 11 AND substring(bb_event.customer_ssn, 1, 4) != '0000'  AND bb_user.customer_ssn IS NULL";
+			}
 
 			$sql = "SELECT DISTINCT customer_ssn,  contact_name ,contact_email, contact_phone, responsible_street, responsible_zip_code, responsible_city FROM
 				(
 					SELECT  organizer, contact_name, contact_email, contact_phone, bb_application.customer_ssn, responsible_street, responsible_zip_code, responsible_city FROM bb_application
 					LEFT JOIN bb_user ON bb_user.customer_ssn = bb_application.customer_ssn
-					WHERE length(bb_application.customer_ssn) = 11 AND substring(bb_application.customer_ssn, 1, 4) != '0000' AND bb_user.customer_ssn IS NULL
+					WHERE {$filter_application}
 					UNION
 					SELECT  organizer, contact_name, contact_email, contact_phone, bb_event.customer_ssn, null as responsible_street,  null as responsible_zip_code, null as responsible_city FROM bb_event
 					LEFT JOIN bb_user ON bb_user.customer_ssn = bb_event.customer_ssn
-					WHERE length(bb_event.customer_ssn) = 11 AND substring(bb_event.customer_ssn, 1, 4) != '0000'  AND bb_user.customer_ssn IS NULL
+					WHERE {$filter_event}
 				)
 				AS t ORDER BY customer_ssn, responsible_street";
 
@@ -273,7 +274,7 @@
 		public function get_user_id( $ssn )
 		{
 			$ssn = $this->db->db_addslashes($ssn);
-			
+
 			$this->db->query("SELECT id FROM bb_user WHERE customer_ssn = '{$ssn}'", __LINE__, __FILE__);
 			if (!$this->db->next_record())
 			{
@@ -281,10 +282,10 @@
 			}
 
 			$user_id = (int)$this->db->f('id');
-			
-			return $user_id;			
+
+			return $user_id;
 		}
-		
+
 		public function delete( $id )
 		{
 			$this->db->query("SELECT customer_ssn FROM bb_user WHERE customer_ssn != '00000000000' AND id = " . (int)$id, __LINE__, __FILE__);

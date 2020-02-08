@@ -1014,7 +1014,7 @@
 					$default_start_date = 0;
 
 				}
-				
+
 				$_months_ahead = 2;
 				$_date_ahead_ts = strtotime(date('Y-m-d') . " +{$_months_ahead} month");
 				$_last_day_in_month = date('t', $_date_ahead_ts);
@@ -1132,6 +1132,11 @@
 							$application['modified'] = 'now';
 							$application['session_id'] = null;
 
+							if(empty($application['customer_ssn']))
+							{
+								$application['customer_ssn'] = phpgw::get_var('customer_ssn', 'string', 'POST');
+							}
+
 							$GLOBALS['phpgw']->db->transaction_begin();
 
 							$receipt = $this->bo->update($application);
@@ -1218,7 +1223,7 @@
 								{
 									$receipt = $booking_boevent->so->add($event);
 									$booking_boevent->so->update_id_string();
-
+									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 									$GLOBALS['phpgw']->db->transaction_commit();
 								}
 								else
@@ -1234,6 +1239,7 @@
 							 */
 							else
 							{
+								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 								$GLOBALS['phpgw']->db->transaction_commit();
 								$this->bo->send_notification($application, true);
 							}
@@ -1307,6 +1313,18 @@
 
 			if(!empty($external_login_info['ssn']))
 			{
+				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+				if($user_id)
+				{
+					$user = CreateObject('booking.bouser')->read_single($user_id);
+					$external_login_info['phone'] = $user['phone'] ? $user['phone'] : $external_login_info['phone'];
+					$external_login_info['email'] = $user['email'] ? $user['email'] : $external_login_info['email'];
+					$external_login_info['name'] = $user['name'] ? $user['name'] : $external_login_info['name'];
+					$external_login_info['street'] = $user['street'] ? $user['street'] : $external_login_info['street'];
+					$external_login_info['zip_code'] = $user['zip_code'] ? $user['zip_code'] : $external_login_info['zip_code'];
+					$external_login_info['city'] = $user['city'] ? $user['city'] : $external_login_info['city'];
+				}
+
 				$partial2['customer_ssn'] = $external_login_info['ssn'];
 			}
 			if(empty($partial2['contact_email']) && !empty($external_login_info['email']))
