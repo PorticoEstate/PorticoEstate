@@ -86,12 +86,11 @@
 
 			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js');
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 
 			/**
 			 * If we want to use boostrap - styling
 			 */
-			if(false)
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.bootstrap4.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.bootstrap4.min.css');
@@ -99,7 +98,9 @@
 			}
 			else
 			{
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 			}
 
 			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js');
@@ -117,7 +118,6 @@
 			self::add_javascript('phpgwapi', 'DataTables', 'plugins/input.js');
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 
 			//pop up script
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');

@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<div class="container wrapper">
 		<div class="col mb-4">
 			<xsl:call-template name="msgbox"/>
@@ -104,6 +105,49 @@
 						</xsl:attribute>
 					</input>
 				</div>
+			</div>
+
+			<div id="applications">
+				<xsl:for-each select="user/datatable_def">
+					<xsl:if test="container = 'datatable-container_0'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl'/>
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+							<xsl:with-param name="data" select ='data'/>
+							<xsl:with-param name="config" select ='config'/>
+							<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
+			</div>
+			<div id="invoice">
+				<xsl:for-each select="user/datatable_def">
+					<xsl:if test="container = 'datatable-container_1'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl'/>
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+							<xsl:with-param name="data" select ='data'/>
+							<xsl:with-param name="config" select ='config'/>
+							<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
+			</div>
+			<div id="delegate">
+				<xsl:for-each select="user/datatable_def">
+					<xsl:if test="container = 'datatable-container_2'">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl'/>
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+							<xsl:with-param name="data" select ='data'/>
+							<xsl:with-param name="config" select ='config'/>
+							<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+						</xsl:call-template>
+					</xsl:if>
+				</xsl:for-each>
 			</div>
 		</div>
 	</div>

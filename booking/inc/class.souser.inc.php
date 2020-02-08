@@ -39,6 +39,94 @@
 			return $this->db->f('id');
 		}
 
+		function get_applications( $ssn )
+		{
+			if(!$ssn)
+			{
+				return array();
+			}
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
+
+			$this->db->query("SELECT * FROM bb_application WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'", __LINE__, __FILE__);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'							 => $this->db->f('id'),
+					'created'						 => $this->db->f('created'),
+					'building_name'					 => $this->db->f('building_name', true),
+					'secret'						 => $this->db->f('secret', true),
+					'customer_organization_number'	 => $this->db->f('customer_organization_number', true),
+					'contact_name'					 => $this->db->f('contact_name', true),
+				);
+			}
+			return $values;
+		}
+
+		function get_invoices( $ssn )
+		{
+			if(!$ssn)
+			{
+				return array();
+			}
+			
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
+
+			$this->db->query("SELECT * FROM bb_completed_reservation WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
+			. " AND cost > 0", __LINE__, __FILE__);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'							 => $this->db->f('id'),
+					'description'					 => $this->db->f('description', true),
+					'cost'							 => $this->db->f('cost'),
+					'building_name'					 => $this->db->f('building_name', true),
+					'article_description'			 => $this->db->f('article_description', true),
+					'customer_organization_number'	 => $this->db->f('customer_organization_number', true),
+					'exported'						 => $this->db->f('exported'),
+				);
+			}
+			return $values;
+		}
+		function get_delegate( $ssn )
+		{
+			if(!$ssn)
+			{
+				return array();
+			}
+			
+			$hash = sha1($ssn);
+			$ssn =  '{SHA1}' . base64_encode($hash);
+
+
+			$sql = "SELECT bb_organization.* FROM bb_delegate"
+				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE ssn = '{$ssn}'";
+
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'							 => $this->db->f('id'),
+					'name'							 => $this->db->f('name', true),
+					'active'						 => $this->db->f('active'),
+					'organization_number'			 => $this->db->f('organization_number', true),
+				);
+			}
+			return $values;
+		}
+
 
 		protected function preValidate( &$entity )
 		{

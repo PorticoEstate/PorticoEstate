@@ -492,3 +492,6 @@ Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske f
 available	bookingfrontend	nn	Ledig
 leased	bookingfrontend	nn	Utleigd
 It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
+my page	bookingfrontend	nn	Mi side
+invoice	bookingfrontend	nn	Faktura
+delegate from	bookingfrontend	nn	Delegert frå
