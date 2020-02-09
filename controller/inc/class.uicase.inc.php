@@ -131,7 +131,7 @@
 
 		function edit_component_child($edit_parent = false)
 		{
-			if(!$this->edit )
+			if(!$this->read )
 			{
 				phpgw::no_access();
 			}
@@ -188,6 +188,15 @@
 				$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
 				if($get_form || $get_edit_form)
 				{
+					if(!$this->edit)
+					{
+						return array(
+							'html'				 => '<h2>'. lang('No access') . '</h2>',
+							'lookup_functions'	 => ''
+							);
+							phpgw::no_access();
+					}
+					
 					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
 				}
 				else
