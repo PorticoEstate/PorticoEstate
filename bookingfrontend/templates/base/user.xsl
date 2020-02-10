@@ -135,20 +135,22 @@
 					</xsl:if>
 				</xsl:for-each>
 			</div>
-			<div id="delegate">
-				<xsl:for-each select="user/datatable_def">
-					<xsl:if test="container = 'datatable-container_2'">
-						<xsl:call-template name="table_setup">
-							<xsl:with-param name="container" select ='container'/>
-							<xsl:with-param name="requestUrl" select ='requestUrl'/>
-							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-							<xsl:with-param name="data" select ='data'/>
-							<xsl:with-param name="config" select ='config'/>
-							<xsl:with-param name="class" select="'table table-striped table-bordered'" />
-						</xsl:call-template>
-					</xsl:if>
-				</xsl:for-each>
-			</div>
+			<xsl:if test="user/delegate_data = 1">
+				<div id="delegate">
+					<xsl:for-each select="user/datatable_def">
+						<xsl:if test="container = 'datatable-container_2'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl'/>
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+								<xsl:with-param name="data" select ='data'/>
+								<xsl:with-param name="config" select ='config'/>
+								<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:for-each>
+				</div>
+			</xsl:if>
 		</div>
 	</div>
 </xsl:template>
