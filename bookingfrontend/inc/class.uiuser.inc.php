@@ -205,6 +205,7 @@
 			$user['cancel_link'] = self::link(array());
 			$user['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$user['lang'] = $lang;
+			$user['delegate_data'] = !!$delegate_data;
 			$user['datatable_def'] = $datatable_def;
 
 			self::render_template_xsl(array('user', 'datatable_inline'), array('user' => $user));
