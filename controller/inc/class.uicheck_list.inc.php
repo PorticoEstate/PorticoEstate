@@ -3599,12 +3599,46 @@ HTML;
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
 			$html = trim($proc->transformToXML($xml));
-//			$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
-//			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
 			echo $html;
+			
+//			$this->makePDF($html);
 		}
 
+		public function makePDF($stringData)
+		{
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			fwrite($fh, $stringData);
+			fclose($fh);
+
+			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+
+			//var_dump($config->config_data['path_to_wkhtmltopdf']);
+			//var_dump($GLOBALS['phpgw_info']);
+			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
+			if (!is_file($wkhtmltopdf_executable))
+			{
+				throw new Exception('wkhtmltopdf not configured correctly');
+			}
+			$snappy = new SnappyPdf();
+			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+			$snappy->save($myFile, $pdf_file_name);
+
+			if (!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');
+			}
+			$filesize = filesize($pdf_file_name);
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header('report.pdf', 'application/pdf', $filesize);
+
+			readfile($pdf_file_name);
+
+		}
 
 		/**
 		 *
