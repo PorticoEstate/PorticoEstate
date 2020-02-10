@@ -3267,27 +3267,27 @@ HTML;
 			$location_id = $report_info['check_list']->get_location_id();
 			$item_id	 = $report_info['check_list']->get_component_id();
 
-			$soentity = createObject('property.soentity');
-
-			$location_code = $soentity->get_location_code($location_id, $item_id);
-			$location_arr = explode('-', $location_code);
-			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
-
-			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-			$system_location_arr = explode('.', $system_location['location']);
-			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
-
-			$this->vfs->override_acl = 1;
-
-			$files = $this->vfs->ls(array(
-				'orderby' => 'file_id',
-				'mime_type'	=> 'image/jpeg',
-				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
-				'relatives' => array(RELATIVE_NONE)));
-
-			$this->vfs->override_acl = 0;
-
-			$file = end($files);
+//			$soentity = createObject('property.soentity');
+//
+//			$location_code = $soentity->get_location_code($location_id, $item_id);
+//			$location_arr = explode('-', $location_code);
+//			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+//
+//			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+//			$system_location_arr = explode('.', $system_location['location']);
+//			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+//
+//			$this->vfs->override_acl = 1;
+//
+//			$files = $this->vfs->ls(array(
+//				'orderby' => 'file_id',
+//				'mime_type'	=> 'image/jpeg',
+//				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
+//				'relatives' => array(RELATIVE_NONE)));
+//
+//			$this->vfs->override_acl = 0;
+//
+//			$file = end($files);
 
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
@@ -3324,9 +3324,9 @@ HTML;
 			$report_data['completed_date'] = $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat);
 			$report_data['where'] = $report_info['component_array']['xml_short_desc'];
 			$report_data['part_of_town'] = $loction_name_info['part_of_town'];
-			$report_data['location_image'] = $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" :'';
-			$report_data['report_intro'] = $report_intro;
 
+			$report_data['location_image'] = self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}"));
+			$report_data['report_intro'] = $report_intro;
 
 			$count_completed = 0;
 
@@ -3616,19 +3616,19 @@ HTML;
 				$report_data['stray_cases'][] = $values;
 			}
 			
-			_debug_array($report_data);
+//			_debug_array($report_data);
 			
-			$this->renter_report($report_data);
+			$this->render_report($report_data);
 		}
 		
 		
-		function renter_report($report_data)
+		function render_report($report_data)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
-			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
-			$xslttemplates->set_var('phpgw', array('new_component' => $report_data));
+			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
+			$xslttemplates->set_var('phpgw', array('report' => $report_data));
 
-			$xslttemplates->set_output('html');
+			$xslttemplates->set_output('html5');
 			$xslttemplates->xsl_parse();
 			$xslttemplates->xml_parse();
 
@@ -3642,10 +3642,9 @@ HTML;
 			$proc->registerPHPFunctions(); // enable php functions
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
-
 			$html = trim($proc->transformToXML($xml));
-			$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
-			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
+//			$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+//			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
 			echo $html;
 		}
