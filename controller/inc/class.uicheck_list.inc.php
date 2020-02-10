@@ -892,7 +892,7 @@
 			$id = phpgw::get_var('id', 'int', 'GET');
 
 			phpgw::import_class('property.multiuploader');
-			
+
 			if(!$id)
 			{
 				$response = array(files => array(array('error' => 'missing id in request')));
@@ -1291,7 +1291,7 @@
 				/**
 				 * Add an iCal-event if there is a serie - and the checklist is visited the first time - or assigned is changed
 				 */
-				if (!$submit_deviation && 
+				if (!$submit_deviation &&
 					(($check_list_id && $serie && !phpgw::get_var('check_list_id')) || ($serie && $orig_assigned_to != $assigned_to))
 				)
 				{
@@ -1836,7 +1836,7 @@
 			$billable_hours = phpgw::get_var('billable_hours', 'float');
 			$check_list = $this->so->get_single($check_list_id);
 			$check_list->set_delta_billable_hours($billable_hours);
-			
+
 			if ($this->so->store($check_list))
 			{
 				return array('status' => 'ok');
@@ -1928,7 +1928,7 @@
 				 */
 
 				return $this->notify_supervisor($check_list);
-				
+
 			}
 			else
 			{
@@ -2191,7 +2191,7 @@ HTML;
 				}
 
 			}
-			
+
 		}
 
 		private function _save_required_case($check_list, $control_item)
@@ -2572,7 +2572,7 @@ HTML;
 			return $rc;
 		}
 
-		function get_report()
+		function get_report_()
 		{
 			$config = createObject('phpgwapi.config', 'property')->read();
 
@@ -2652,7 +2652,7 @@ HTML;
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-	
+
 			$pdf->setStrokeColor(0, 0, 0, 1);
 			$pdf->line(20, 40, 578, 40);
 			//	$pdf->line(20,820,578,820);
@@ -2828,7 +2828,7 @@ HTML;
 
 
 			$data = array();
-			
+
 			for ($i = 0; $i < 5; $i++)
 			{
 				$data[] = array(
@@ -2903,7 +2903,7 @@ HTML;
 						'col1' => "<b>#{$i}</b>",
 						'col2' => $check_item->get_control_item()->get_title(),
 					);
- 					
+
 					$location_identificator = 0;
 
 					if($case->get_component_child_item_id())
@@ -2930,7 +2930,7 @@ HTML;
 
 					$case_files = $case->get_case_files();
  					$status_text = lang('closed');
-					
+
 					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
 					{
 						$status_text = lang('open');
@@ -3172,7 +3172,7 @@ HTML;
 							'col3'	 => array('width' => 200, 'justification' => 'left'),
 						)
 					));
-					$pdf->ezSetDy(-20);
+					$pdf->ezSetDy(-10);
 
 				}
 
@@ -3180,7 +3180,7 @@ HTML;
 				{
 					//FIXME
 					//$check_item->get_control_item()->get_title();
-					$pdf->ezTable($data_case[$location_identificator], '','Registrering', array(
+					$pdf->ezTable($data_case[$location_identificator], '','', array(
 						'showHeadings' => 0,
 						'shaded'	 => 0,
 						'xPos' => 0,
@@ -3227,15 +3227,432 @@ HTML;
 
 
 	//		die();
-			
+
 
 			// Output the pdf as stream, but uncompress
 			$pdf->ezStream(array('compress' => 0));
 		}
 
+		function get_report()
+		{
+			$config = createObject('phpgwapi.config', 'property')->read();
+
+			$check_list_id = phpgw::get_var('check_list_id');
+			$case_location_code = phpgw::get_var('location_code');
+
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$report_info = $this->_get_report_info($check_list_id, $case_location_code);
+
+			$report_intro = $report_info['control']->get_report_intro();
+
+			$_component_children = (array)$report_info['component_children'];
+
+			$component_children = array();
+			foreach ($_component_children as $component_child)
+			{
+				$component_children[$component_child['location_id']][$component_child['id']] = $component_child;
+			}
+			unset($component_child);
+
+			$completed_items = $this->so->get_completed_item($check_list_id);
+
+			$location_code = $report_info['check_list']->get_location_code();
+			$completed_date = $report_info['check_list']->get_completed_date();
+
+			$loction_name_info = createObject('property.solocation')->get_part_of_town($location_code);
+
+			$location_id = $report_info['check_list']->get_location_id();
+			$item_id	 = $report_info['check_list']->get_component_id();
+
+			$soentity = createObject('property.soentity');
+
+			$location_code = $soentity->get_location_code($location_id, $item_id);
+			$location_arr = explode('-', $location_code);
+			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+			$this->vfs->override_acl = 1;
+
+			$files = $this->vfs->ls(array(
+				'orderby' => 'file_id',
+				'mime_type'	=> 'image/jpeg',
+				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$this->vfs->override_acl = 0;
+
+			$file = end($files);
+
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
+
+			$report_data = array();
+
+			$report_data['control_area_name'] = $report_info['control']->get_control_area_name();
+			$report_data['title'] = $report_info['control']->get_title();
+
+
+			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
+
+			$selected_inspectors = array();
+			foreach ($inspectors as $inspector)
+			{
+				if($inspector['selected'])
+				{
+					$prefs =CreateObject('phpgwapi.preferences',$inspector['id'])->read();
+
+					$inspector_name = $inspector['name'];
+
+					if(!empty($prefs['controller']['certificate']))
+					{
+						$inspector_name .= " ( {$prefs['controller']['certificate']} )";
+					}
+
+					$selected_inspectors[] = $inspector_name;
+				}
+			}
+			unset($inspector);
+
+			$report_data['inspectors'] = $selected_inspectors;
+			$report_data['check_list_id'] = $check_list_id;
+			$report_data['completed_date'] = $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat);
+			$report_data['where'] = $report_info['component_array']['xml_short_desc'];
+			$report_data['part_of_town'] = $loction_name_info['part_of_town'];
+			$report_data['location_image'] = $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" :'';
+			$report_data['report_intro'] = $report_intro;
+
+
+			$count_completed = 0;
+
+			foreach ($completed_items as $completed_item_location)
+			{
+				$count_completed += count($completed_item_location);
+			}
+			unset($completed_item_location);
+
+			$report_data['count_completed'] = $count_completed;
+			$report_data['num_open_cases'] = $report_info['check_list']->get_num_open_cases();
+			$report_data['num_corrected_cases'] = $report_info['check_list']->get_num_corrected_cases();
+
+
+			//Summary of findings:
+
+			$findings = $this->so->get_findings_summary($check_list_id);
+
+
+			$data_condition = array();
+			$data_consequence = array();
+
+			for ($i = 0; $i < 5; $i++)
+			{
+				$data_condition[] = array(
+					'text' => lang('condition degree') . ' - ' .$i,
+					'value' => (int)$findings['condition_degree'][$i],
+				);
+			}
+
+			for ($i = 0; $i < 5; $i++)
+			{
+				$data_consequence[] = array(
+					'text' => lang('consequence') . ' - ' .$i,
+					'value' => (int)$findings['consequence'][$i],
+				);
+			}
+
+			$report_data['findings'] = array('condition' => $data_condition,  'consequence' => $data_consequence);
+
+			$i = 1;
+
+			foreach ($report_info['open_check_items_and_cases'] as $check_item)
+			{
+
+				$cases_array = $check_item->get_cases_array();
+				$data_case = array();
+
+				foreach ($check_item->get_cases_array() as $case)
+				{
+					$n = 1;
+					
+					$entry = array();
+
+					$entry[] = array
+					(
+						'text' => "<b>#{$i}</b>",
+						'value' => $check_item->get_control_item()->get_title(),
+					);
+
+					$location_identificator = 0;
+
+					if($case->get_component_child_item_id())
+					{
+
+						$location_identificator = $case->get_component_child_location_id() . '_' .$case->get_component_child_item_id();
+					}
+
+					$case->get_component_child_location_id();//:protected] => 456
+                    $case->get_component_child_item_id();//:protected] => 2835
+
+					if($case->get_component_child_item_id())
+					{
+						$entry[] = array
+						(
+							'text' => 'komponent',
+							'value' => $component_children[$case->get_component_child_location_id()][$case->get_component_child_item_id()]['short_description']
+						);
+					}
+
+					$case_files = $case->get_case_files();
+ 					$status_text = lang('closed');
+
+					if($case->get_status() == controller_check_item_case::STATUS_OPEN)
+					{
+						$status_text = lang('open');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_PENDING)
+					{
+						$status_text = lang('pending');
+					}
+					else if($case->get_status() == controller_check_item_case::STATUS_CORRECTED_ON_CONTROL)
+					{
+						$status_text = lang('corrected on controll');
+					}
+
+					$entry[] = array
+					(
+						'text' => lang('status'),
+						'value' => $status_text
+					);
+					$entry[] = array
+					(
+						'text' => lang('condition degree'),
+						'value' => $case->get_condition_degree()
+					);
+					$entry[] = array
+					(
+						'text' => lang('consequence'),
+						'value' => $case->get_consequence()
+					);
+
+					$entry[] = array
+					(
+						'text' => 'Verdi',//lang('measurement'),
+						'value' => $case->get_measurement()
+					);
+
+
+					$entry[] = array
+					(
+						'text' => lang('descr'),
+						'value' => $case->get_descr()
+					);
+
+					$entry[] = array
+					(
+						'col1' => lang('proposed counter measure'),
+						'value' => $case->get_proposed_counter_measure()
+					);
+
+					foreach ($case_files as $case_file)
+					{
+						$entry[] = array
+						(
+							'text' => lang('picture') . " #{$i}_{$n}",
+							'value' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
+						);
+						$n ++;
+					}
+					$data_case[$location_identificator][] = $entry;
+
+					$i++;
+				}
+
+			}
+
+			$custom = createObject('property.custom_fields');
+
+			$soentity = CreateObject('property.soentity');
+			$completed_list = array();
+			$reported_cases = array();
+			$$component_child_data = array();
+			foreach ($_component_children as &$component_child)
+			{
+				$data = array();
+				$location_identificator = $component_child['location_id'] . '_' . $component_child['id'];
+
+				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
+				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
+				$system_location_arr = explode('.', $system_location['location']);
+				$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+				$this->vfs->override_acl = 1;
+
+				$files = $this->vfs->ls(array(
+					'orderby' => 'file_id',
+					'mime_type'	=> 'image/jpeg',
+					'string' => "/property/{$category_dir}/{$loc1}/{$component_child['id']}",
+					'relatives' => array(RELATIVE_NONE)));
+
+				$this->vfs->override_acl = 0;
+
+				$file = end($files);
+
+				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
+				{
+					$entry = array
+					(
+						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
+						'col2' => "<b>{$component_child['short_description']}</b>",
+						'col3' => 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
+					);
+				}
+				else
+				{
+					$entry = array
+					(
+						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
+						'col2' => "<b>{$component_child['short_description']}</b>",
+						'col3' => 'Ikke kontrollert'
+					);
+
+				}
+ 				$data[] = $entry;
+
+				$values = array();
+				$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values = $soentity->read_single(array(
+					'location_id' => $component_child['location_id'],
+					'id' => $component_child['id'],
+					'entity_id' => $system_location_arr[2],
+					'cat_id' => $system_location_arr[3],
+					), $values
+				);
+				$values = $custom->prepare($values, 'property', $system_location['location'], true);
+//				_debug_array($values);die();
+				foreach ($values['attributes'] as  $attribute)
+				{
+
+					if($attribute['short_description'])
+					{
+						continue;
+					}
+
+					if($attribute['value'])
+					{
+						$_value = $attribute['value'];
+
+						if( in_array($attribute['datatype'], array('LB', 'R')) )
+						{
+							$_choice = array();
+							foreach ($attribute['choice'] as $choice)
+							{
+								if($_value == $choice['id'])
+								{
+									$_choice[] = $choice['value'];
+								}
+							}
+							$_value = implode(',', $_choice);
+						}
+
+						if ($attributes['datatype'] == 'CH')
+						{
+							$_selected = explode(',', trim($_value, ','));
+
+							$_choice = array();
+							foreach ($attribute['choice'] as $choice)
+							{
+								if(in_array($choice['id'], $_selected))
+								{
+									$_choice[] = $choice['value'];
+								}
+							}
+							$_value = implode(',', $_choice);
+						}
+
+
+						$entry = array
+						(
+							'col1' => "",
+							'col2' => $attribute['input_text'],
+							'col3' => $_value
+						);
+
+						$data[] = $entry;
+					}
+
+				}
+
+				if($data)
+				{
+
+					$component_child_data[] = array(
+						'name'	=> '',
+						'data' => $data,
+						'cases' => $data_case[$location_identificator]
+						);
+
+				}
+
+				if(isset($data_case[$location_identificator]))//$cases_array)
+				{
+					$reported_cases[] = $location_identificator;
+				}
+			}
+
+			$report_data['component_child_data'] = $component_child_data;
+
+			$report_data['stray_cases'] = array();
+			foreach ($data_case as $key => $values)
+			{
+				if(in_array($key, $reported_cases ))
+				{
+					continue;
+				}
+				$report_data['stray_cases'][] = $values;
+			}
+			
+			_debug_array($report_data);
+			
+			$this->renter_report($report_data);
+		}
+		
+		
+		function renter_report($report_data)
+		{
+			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
+			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
+			$xslttemplates->set_var('phpgw', array('new_component' => $report_data));
+
+			$xslttemplates->set_output('html');
+			$xslttemplates->xsl_parse();
+			$xslttemplates->xml_parse();
+
+			$xml = new DOMDocument;
+			$xml->loadXML($xslttemplates->xmldata);
+			$xsl = new DOMDocument;
+			$xsl->loadXML($xslttemplates->xsldata);
+
+			// Configure the transformer
+			$proc = new XSLTProcessor;
+			$proc->registerPHPFunctions(); // enable php functions
+			$proc->importStyleSheet($xsl); // attach the xsl rules
+
+
+			$html = trim($proc->transformToXML($xml));
+			$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
+			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
+
+			echo $html;
+		}
+
 
 		/**
-		 * 
+		 *
 		 * @param type $check_list_id
 		 * @param type $case_location_code
 		 */

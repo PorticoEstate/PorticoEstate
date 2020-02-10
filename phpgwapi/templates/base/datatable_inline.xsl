@@ -23,6 +23,7 @@
 	<xsl:param name="config" />
 	<xsl:param name="data" />
 	<xsl:param name="separator" select="'_'" />
+	<xsl:param name="class"/>
 	
 	<xsl:variable name="num">
 		<xsl:number value="substring-after($container, $separator)"/>
@@ -30,7 +31,18 @@
 	
 	<div id='message{$num}' class='message'/>
 	
-	<table id="{$container}" class="display cell-border compact responsive no-wrap" width="100%">
+	<table id="{$container}" width="100%">
+		<xsl:choose>
+			<xsl:when test="$class != ''">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="class" select="'display cell-border compact responsive no-wrap'" />
+			</xsl:otherwise>
+		</xsl:choose>
+
 		<thead>
 			<tr>
 				<xsl:for-each select="$ColumnDefs">

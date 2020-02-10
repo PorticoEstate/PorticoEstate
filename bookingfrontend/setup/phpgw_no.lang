@@ -481,3 +481,6 @@ Please fill all fields	bookingfrontend	no	Vennligst fyll ut alle obligatoriske f
 available	bookingfrontend	no	Ledig
 leased	bookingfrontend	no	Utleid
 It is currently not possible to rent anything here	bookingfrontend	no	NB! Det er for tiden ikke mulig å leie noe her
+my page	bookingfrontend	no	Min side
+invoice	bookingfrontend	no	Faktura
+delegate from	bookingfrontend	no	Delegert fra
