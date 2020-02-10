@@ -39,7 +39,9 @@
 				</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:attribute name="class" select="'display cell-border compact responsive no-wrap'" />
+				<xsl:attribute name="class">
+					<xsl:text>display cell-border compact responsive no-wrap</xsl:text>
+				</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
 

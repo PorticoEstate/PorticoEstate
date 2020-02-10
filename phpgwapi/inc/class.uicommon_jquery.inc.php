@@ -86,7 +86,7 @@
 
 			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js');
 
-
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 			/**
 			 * If we want to use boostrap - styling
 			 */
@@ -100,7 +100,6 @@
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 			}
 
 			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js');
