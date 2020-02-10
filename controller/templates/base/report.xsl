@@ -166,154 +166,104 @@
 					<h2>Del 1. Lekeplassutstyr</h2>
 				</div>
 
-				<!-- START LEKEUTSTYR -->
-				<div class="row mt-5">
-					<div class="col-md-12 text-center bg-light">
-						<h4>Lekeutstyr nr 1: Huske</h4>
+				<xsl:for-each select="component_child_data">
+
+					<div class="row mt-5">
+						<div class="col-md-12 text-center bg-light">
+							<h4>
+								<xsl:value-of select="name"/>
+							</h4>
+						</div>
+						<div class="col-md-4">
+							<a href="{image_link}">
+								<img src="{image_link}" class="img-thumbnail img-fluid"/>
+							</a>
+						</div>
+						<div class="col-md-8">
+							<table class="table">
+								<xsl:for-each select="data">
+									<tr>
+										<td>
+											<xsl:value-of select="text"/>
+										</td>
+										<td>
+											<xsl:value-of select="value"/>
+
+										</td>
+									</tr>
+								</xsl:for-each>
+							</table>
+						</div>
+						<div class="col-md-12 bg-light text-center">
+							<h5>Avvik</h5>
+						</div>
+
+						<xsl:for-each select="cases">
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-8">
+								<table class="table">
+									<xsl:for-each select="data">
+										<tr>
+											<td>
+												<xsl:value-of select="text"/>
+											</td>
+											<td>
+												<xsl:value-of select="value"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</table>
+							</div>
+							<xsl:for-each select="files">
+								<div class="col-md-4">
+									<a href="{link}" title="{text}">
+										<img src="{link}" class="img-thumbnail img-fluid"/>
+									</a>
+								</div>
+							</xsl:for-each>
+						</xsl:for-each>
 					</div>
-					<div class="col-md-4">
-						<a href="images/playground.jpg">
-							<img src="images/playground.jpg" class="img-thumbnail img-fluid"/>
-						</a>
+				</xsl:for-each>
+
+				<xsl:if test= "stray_cases !=''">
+					<div class="row mt-5">
+						<div class="col-md-12 text-center bg-light">
+							<h4>
+								Avvik ikke knyttet til utstyr
+							</h4>
+						</div>
+						<div class="col-md-12">
+						</div>
+	
+						<xsl:for-each select="stray_cases">
+							<div class="col-md-4">
+							</div>
+							<div class="col-md-8">
+								<table class="table">
+									<xsl:for-each select="data">
+										<tr>
+											<td>
+												<xsl:value-of select="text"/>
+											</td>
+											<td>
+												<xsl:value-of select="value"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</table>
+							</div>
+							<xsl:for-each select="files">
+								<div class="col-md-4">
+									<a href="{link}" title="{text}">
+										<img src="{link}" class="img-thumbnail img-fluid"/>
+									</a>
+								</div>
+							</xsl:for-each>
+						</xsl:for-each>
 					</div>
-					<div class="col-md-8">
-						<table class="table">
-							<tr>
-								<td>Produsent</td>
-								<td>Kompan</td>
-							</tr>
-							<tr>
-								<td>Oppført</td>
-								<td>2018</td>
-							</tr>
-							<tr>
-								<td>Tilstandsvurdering sist</td>
-								<td>2</td>
-							</tr>
-							<tr>
-								<td>Tilstandsvurdering nå</td>
-								<td>3</td>
-							</tr>
-						</table>
-					</div>
-
-
-
-
-					<!-- START AVVIK -->
-					<div class="col-md-12 bg-light text-center">
-						<h5>Avvik</h5>
-					</div>
-					<div class="col-md-4">
-						<a href="images/playground.jpg">
-							<img src="images/playground.jpg" class="img-thumbnail img-fluid"/>
-						</a>
-					</div>
-					<div class="col-md-8">
-						<table class="table">
-							<tr>
-								<td>Nummer</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td>Avvik</td>
-								<td>B</td>
-							</tr>
-							<tr>
-								<td>Henvisning til NS</td>
-								<td>NS 1-4.2.8.3.5</td>
-							</tr>
-							<tr>
-								<td>Beskrivelse</td>
-								<td>Enkelte lenger er åpnet og kan løsne ved stress</td>
-							</tr>
-							<tr>
-								<td>Forslag til tiltak</td>
-								<td>Bør byttes</td>
-							</tr>
-						</table>
-					</div>
-
-					<!-- END AVVIK-->
-
-				</div>
-
-				<!-- END LEKEUTSTYR -->
-
-
-
-				<div class="row mt-5">
-					<div class="col-md-12 text-center bg-light">
-						<h4>Lekeutstyr nr 1: Huske</h4>
-					</div>
-					<div class="col-md-4">
-						<a href="images/playground.jpg">
-							<img src="images/playground.jpg" class="img-thumbnail img-fluid"/>
-						</a>
-					</div>
-					<div class="col-md-8">
-						<table class="table">
-							<tr>
-								<td>Produsent</td>
-								<td>Kompan</td>
-							</tr>
-							<tr>
-								<td>Oppført</td>
-								<td>2018</td>
-							</tr>
-							<tr>
-								<td>Tilstandsvurdering sist</td>
-								<td>2</td>
-							</tr>
-							<tr>
-								<td>Tilstandsvurdering nå</td>
-								<td>3</td>
-							</tr>
-						</table>
-					</div>
-					<div class="col-md-12 bg-light text-center">
-						<h5>Avvik</h5>
-					</div>
-					<div class="col-md-4">
-						<a href="images/playground.jpg">
-							<img src="images/playground.jpg" class="img-thumbnail img-fluid"/>
-						</a>
-					</div>
-					<div class="col-md-8">
-						<table class="table">
-							<tr>
-								<td>Nummer</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td>Avvik</td>
-								<td>B</td>
-							</tr>
-							<tr>
-								<td>Henvisning til NS</td>
-								<td>NS 1-4.2.8.3.5</td>
-							</tr>
-							<tr>
-								<td>Beskrivelse</td>
-								<td>Enkelte lenger er åpnet og kan løsne ved stress</td>
-							</tr>
-							<tr>
-								<td>Forslag til tiltak</td>
-								<td>Bør byttes</td>
-							</tr>
-						</table>
-					</div>
-
-      
-
-				</div>
-
-
-
-
+				</xsl:if>
 			</div>
-
-
 		</body>
 	</html>
 

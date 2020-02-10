@@ -3267,28 +3267,6 @@ HTML;
 			$location_id = $report_info['check_list']->get_location_id();
 			$item_id	 = $report_info['check_list']->get_component_id();
 
-//			$soentity = createObject('property.soentity');
-//
-//			$location_code = $soentity->get_location_code($location_id, $item_id);
-//			$location_arr = explode('-', $location_code);
-//			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
-//
-//			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-//			$system_location_arr = explode('.', $system_location['location']);
-//			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
-//
-//			$this->vfs->override_acl = 1;
-//
-//			$files = $this->vfs->ls(array(
-//				'orderby' => 'file_id',
-//				'mime_type'	=> 'image/jpeg',
-//				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
-//				'relatives' => array(RELATIVE_NONE)));
-//
-//			$this->vfs->override_acl = 0;
-//
-//			$file = end($files);
-
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
 
@@ -3383,7 +3361,7 @@ HTML;
 
 					$entry[] = array
 					(
-						'text' => "<b>#{$i}</b>",
+						'text' => "#{$i}",
 						'value' => $check_item->get_control_item()->get_title(),
 					);
 
@@ -3454,20 +3432,18 @@ HTML;
 
 					$entry[] = array
 					(
-						'col1' => lang('proposed counter measure'),
+						'text' => lang('proposed counter measure'),
 						'value' => $case->get_proposed_counter_measure()
 					);
 
-					foreach ($case_files as $case_file)
-					{
-						$entry[] = array
-						(
-							'text' => lang('picture') . " #{$i}_{$n}",
-							'value' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
-						);
+					foreach ($case_files as &$case_file)
+					{	
+						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
+						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
 						$n ++;
 					}
-					$data_case[$location_identificator][] = $entry;
+					unset($case_file);
+					$data_case[$location_identificator][] = array('data' => $entry, 'files' => $case_files);
 
 					$i++;
 				}
@@ -3485,42 +3461,22 @@ HTML;
 				$data = array();
 				$location_identificator = $component_child['location_id'] . '_' . $component_child['id'];
 
-				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
 				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
 				$system_location_arr = explode('.', $system_location['location']);
-				$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
 
-				$this->vfs->override_acl = 1;
-
-				$files = $this->vfs->ls(array(
-					'orderby' => 'file_id',
-					'mime_type'	=> 'image/jpeg',
-					'string' => "/property/{$category_dir}/{$loc1}/{$component_child['id']}",
-					'relatives' => array(RELATIVE_NONE)));
-
-				$this->vfs->override_acl = 0;
-
-				$file = end($files);
-
+				$controlled_text = 'Ikke kontrollert';
+				
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-					$entry = array
-					(
-						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
-						'col2' => "<b>{$component_child['short_description']}</b>",
-						'col3' => 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
-					);
+						$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
 				}
-				else
-				{
-					$entry = array
-					(
-						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
-						'col2' => "<b>{$component_child['short_description']}</b>",
-						'col3' => 'Ikke kontrollert'
-					);
+			
+				$entry = array
+				(
+					'text' => $component_child['short_description'],
+					'value' => $controlled_text
+				);
 
-				}
  				$data[] = $entry;
 
 				$values = array();
@@ -3577,9 +3533,8 @@ HTML;
 
 						$entry = array
 						(
-							'col1' => "",
-							'col2' => $attribute['input_text'],
-							'col3' => $_value
+							'text' => $attribute['input_text'],
+							'value' => $_value
 						);
 
 						$data[] = $entry;
@@ -3591,7 +3546,8 @@ HTML;
 				{
 
 					$component_child_data[] = array(
-						'name'	=> '',
+						'name'	=> $component_child['short_description'],
+						'image_link' => self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")),
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
 						);
@@ -3607,13 +3563,13 @@ HTML;
 			$report_data['component_child_data'] = $component_child_data;
 
 			$report_data['stray_cases'] = array();
-			foreach ($data_case as $key => $values)
+			foreach ($data_case as $key => $value_set)
 			{
 				if(in_array($key, $reported_cases ))
 				{
 					continue;
 				}
-				$report_data['stray_cases'][] = $values;
+				$report_data['stray_cases'] = array_merge($report_data['stray_cases'], $value_set);
 			}
 			
 //			_debug_array($report_data);
