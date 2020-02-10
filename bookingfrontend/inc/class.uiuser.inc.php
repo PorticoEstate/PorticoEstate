@@ -51,7 +51,7 @@
 				}
 			}
 
-			$external_login_info = $bouser->validate_ssn_login();
+			$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
 			$this->ssn = $external_login_info['ssn'];
 			
 			if(!$this->ssn)
