@@ -15,10 +15,23 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
 			<!-- Bootstrap CSS -->
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+			<xsl:for-each select="stylesheets">
+				<link rel="stylesheet" type="text/css">
+					<xsl:attribute name="href">
+						<xsl:value-of select="node()"/>
+					</xsl:attribute>
+				</link>
+			</xsl:for-each>
 
-				<title>Barnas Byrom - rapportnummer <!-- INSERT VARIABEL --> </title>
-			</link>
+			<xsl:for-each select="javascripts">
+				<script>
+					<xsl:attribute name="src">
+						<xsl:value-of select="node()"/>
+					</xsl:attribute>
+				</script>
+			</xsl:for-each>
+
+			<title>Barnas Byrom - rapportnummer <!-- INSERT VARIABEL --> </title>
 			<style>
 
 				@page {
@@ -54,11 +67,15 @@
 		</head>
 
 		<body>
-
+						
+			<button class="btn btn-secondary" onClick="window.print();">
+				<xsl:value-of select="php:function('lang', 'print')" />
+			</button>
+		
 			<div class="container">
 				<div class="mt-5 row">
 					<div class="col-md-6 align-left">
-						<img src="logo bk.png" width="200"/>
+						<!--<img src="logo bk.png" width="200"/>-->
 					</div>
 					<div class="col-md-6 align-right">
 						<xsl:value-of select="title"/>
@@ -101,7 +118,16 @@
 					</table>
 				</div>
 				<div class="row mt-2">
-					<img src="{location_image}" class="img-fluid"/>
+					<xsl:if test="location_image !=''">
+						<xsl:choose>
+							<xsl:when test="inline_images =1">
+								<img src="data:image/jpg;base64,{image_data}" class="img-fluid"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<img src="{location_image}" class="img-fluid"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 				</div>
 				<div class="row mt-2">
 					<table class="table table-bordered">
@@ -167,18 +193,34 @@
 				</div>
 
 				<xsl:for-each select="component_child_data">
-
 					<div class="row mt-5">
 						<div class="col-md-12 text-center bg-light">
 							<h4>
 								<xsl:value-of select="name"/>
 							</h4>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-4">
-							<a href="{image_link}">
-								<img src="{image_link}" class="img-thumbnail img-fluid"/>
-							</a>
+							<xsl:if test="image_data !=''">
+								<a href="{image_link}">
+
+									<xsl:choose>
+										<xsl:when test="inline_images =1">
+											<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<img src="{image_link}" class="img-thumbnail img-fluid"/>
+										</xsl:otherwise>
+									</xsl:choose>
+
+
+
+								</a>
+							</xsl:if>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col-md-8">
 							<table class="table">
 								<xsl:for-each select="data">
@@ -188,17 +230,24 @@
 										</td>
 										<td>
 											<xsl:value-of select="value"/>
-
 										</td>
 									</tr>
 								</xsl:for-each>
 							</table>
 						</div>
-						<div class="col-md-12 bg-light text-center">
-							<h5>Avvik</h5>
-						</div>
+					</div>
 
-						<xsl:for-each select="cases">
+					<xsl:if test="cases !=''">
+						<div class="row">
+							<div class="col-md-12 bg-light text-center">
+								<h5>Avvik</h5>
+							</div>
+						</div>
+					</xsl:if>
+
+					<xsl:for-each select="cases">
+						<div class="row">
+
 							<div class="col-md-4">
 							</div>
 							<div class="col-md-8">
@@ -215,15 +264,28 @@
 									</xsl:for-each>
 								</table>
 							</div>
-							<xsl:for-each select="files">
+						</div>
+						<xsl:for-each select="files">
+							<div class="row">
+								<div class="col-md-4">
+								</div>
 								<div class="col-md-4">
 									<a href="{link}" title="{text}">
-										<img src="{link}" class="img-thumbnail img-fluid"/>
+										<xsl:choose>
+											<xsl:when test="inline_images =1">
+												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<img src="{link}" class="img-thumbnail img-fluid"/>
+											</xsl:otherwise>
+										</xsl:choose>
+
+
 									</a>
 								</div>
-							</xsl:for-each>
+							</div>
 						</xsl:for-each>
-					</div>
+					</xsl:for-each>
 				</xsl:for-each>
 
 				<xsl:if test= "stray_cases !=''">
@@ -256,7 +318,14 @@
 							<xsl:for-each select="files">
 								<div class="col-md-4">
 									<a href="{link}" title="{text}">
-										<img src="{link}" class="img-thumbnail img-fluid"/>
+										<xsl:choose>
+											<xsl:when test="inline_images =1">
+												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<img src="{link}" class="img-thumbnail img-fluid"/>
+											</xsl:otherwise>
+										</xsl:choose>
 									</a>
 								</div>
 							</xsl:for-each>

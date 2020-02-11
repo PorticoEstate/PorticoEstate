@@ -79,7 +79,8 @@
 			'set_completed_item'	=> true,
 			'undo_completed_item'	=> true,
 			'add_billable_hours'	=> true,
-			'set_inspector'			=> true
+			'set_inspector'			=> true,
+			'view_image'			=> true
 		);
 
 		function __construct()
@@ -3235,6 +3236,8 @@ HTML;
 
 		function get_report()
 		{
+			$inline_images = false;
+
 			$config = createObject('phpgwapi.config', 'property')->read();
 
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -3272,6 +3275,18 @@ HTML;
 
 			$report_data = array();
 
+			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$stylesheets = array();
+			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+
+			$javascripts = array();
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper.min.js";
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+
+			$report_data['stylesheets'] = $stylesheets;
+			$report_data['javascripts'] = $javascripts;
+			$report_data['inline_images'] = $inline_images;
 			$report_data['control_area_name'] = $report_info['control']->get_control_area_name();
 			$report_data['title'] = $report_info['control']->get_title();
 
@@ -3303,7 +3318,34 @@ HTML;
 			$report_data['where'] = $report_info['component_array']['xml_short_desc'];
 			$report_data['part_of_town'] = $loction_name_info['part_of_town'];
 
+//			$location_code = $soentity->get_location_code($location_id, $item_id);
+			$location_arr = explode('-', $location_code);
+			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
+
+			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$system_location_arr = explode('.', $system_location['location']);
+			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+			$this->vfs->override_acl = 1;
+
+			$files = $this->vfs->ls(array(
+				'orderby' => 'file_id',
+				'mime_type'	=> 'image/jpeg',
+				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$this->vfs->override_acl = 0;
+
+			$file = end($files);
+
+
 			$report_data['location_image'] = self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}"));
+			
+			if($file && $inline_images)
+			{
+				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
+			}
+
 			$report_data['report_intro'] = $report_intro;
 
 			$count_completed = 0;
@@ -3439,7 +3481,12 @@ HTML;
 					foreach ($case_files as &$case_file)
 					{	
 						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
-						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
+//						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
+						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
+						if($inline_images)
+						{
+							$case_file['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
+						}
 						$n ++;
 					}
 					unset($case_file);
@@ -3461,8 +3508,22 @@ HTML;
 				$data = array();
 				$location_identificator = $component_child['location_id'] . '_' . $component_child['id'];
 
+				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
 				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
 				$system_location_arr = explode('.', $system_location['location']);
+				$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
+
+				$this->vfs->override_acl = 1;
+
+				$files = $this->vfs->ls(array(
+					'orderby' => 'file_id',
+					'mime_type'	=> 'image/jpeg',
+					'string' => "/property/{$category_dir}/{$loc1}/{$component_child['id']}",
+					'relatives' => array(RELATIVE_NONE)));
+
+				$this->vfs->override_acl = 0;
+
+				$file = end($files);
 
 				$controlled_text = 'Ikke kontrollert';
 				
@@ -3548,6 +3609,7 @@ HTML;
 					$component_child_data[] = array(
 						'name'	=> $component_child['short_description'],
 						'image_link' => self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")),
+						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
 						);
@@ -3638,6 +3700,30 @@ HTML;
 
 			readfile($pdf_file_name);
 
+		}
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->read)
+			{
+				phpgw::no_access();
+			}
+
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/**
