@@ -75,6 +75,7 @@
 			'handle_multi_upload_file'	 => true,
 			'build_multi_upload_file'	 => true,
 			'get_files'					 => true,
+			'get_files_attachments'		 => true,
 			'view_image'				 => true,
 			'get_other_orders'			 => true
 		);
@@ -269,6 +270,92 @@
 				);
 			}
 			return $content_files;
+		}
+
+
+		function get_files_attachments()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'property.uiworkorder.view_file',
+			);
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$values = $this->bo->read_single($id);
+
+			$file_attachments	 = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
+
+			$content_attachments = array();
+			$link_view_file		 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$lang_view_file		 = lang('click to view file');
+			$lang_select_file	 = lang('Check to attach file');
+			$lang_workorder		 = lang('workorder');
+			foreach ($values['files'] as $_entry)
+			{
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$content_attachments[] = array(
+					'source'		 => $lang_workorder,
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
+				);
+			}
+			unset($_entry);
+
+			$project_link_file_data	 = array
+				(
+				'menuaction' => 'property.uiproject.view_file',
+				'id'		 => $project['project_id']
+			);
+			$link_view_file			 = $GLOBALS['phpgw']->link('/index.php', $project_link_file_data);
+
+			$boproject		 = CreateObject('property.boproject');
+			$files			 = $boproject->get_files($values['project_id']);
+			$lang_project	 = lang('project');
+
+			foreach ($files as $_entry)
+			{
+
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+				$content_attachments[] = array(
+					'source'		 => $lang_project,
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
+				);
+			}
+
+
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_attachments);
+
+				return array
+					(
+					'data'				 => $content_attachments,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+			return $content_attachments;
 		}
 
 		public function handle_multi_upload_file()
@@ -2758,17 +2845,17 @@
 			$attach_file_def	 = array
 				(
 				array(
+					'key'		 => 'source',
+					'label'		 => lang('source'),
+					'sortable'	 => false,
+					'resizeable' => true
+				),
+				array(
 					'key'		 => 'file_name',
 					'label'		 => lang('Filename'),
 					'sortable'	 => false,
 					'resizeable' => true
 				),
-//				array('key' => 'picture',
-//					'label' => lang('picture'),
-//					'sortable' => false,
-//					'resizeable' => true,
-//					'formatter' => 'JqueryPortico.showPicture'
-//					),
 				array(
 					'key'		 => 'attach_file',
 					'label'		 => lang('attach file'),
@@ -2792,7 +2879,8 @@
 				}
 
 				$content_attachments[] = array(
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$lang_workorder}::${_entry['name']}</a>",
+					'source'		 => $lang_workorder,
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 			}
@@ -2817,7 +2905,8 @@
 					$_checked = 'checked="checked"';
 				}
 				$content_attachments[] = array(
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$lang_project}::${_entry['name']}</a>",
+					'source'		 => $lang_project,
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 			}
