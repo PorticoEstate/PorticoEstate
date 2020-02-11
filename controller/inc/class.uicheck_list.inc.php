@@ -3267,28 +3267,6 @@ HTML;
 			$location_id = $report_info['check_list']->get_location_id();
 			$item_id	 = $report_info['check_list']->get_component_id();
 
-			$soentity = createObject('property.soentity');
-
-			$location_code = $soentity->get_location_code($location_id, $item_id);
-			$location_arr = explode('-', $location_code);
-			$loc1 = !empty($location_arr[0]) ? $location_arr[0] : 'dummy';
-
-			$system_location = $GLOBALS['phpgw']->locations->get_name($location_id);
-			$system_location_arr = explode('.', $system_location['location']);
-			$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
-
-			$this->vfs->override_acl = 1;
-
-			$files = $this->vfs->ls(array(
-				'orderby' => 'file_id',
-				'mime_type'	=> 'image/jpeg',
-				'string' => "/property/{$category_dir}/{$loc1}/{$item_id}",
-				'relatives' => array(RELATIVE_NONE)));
-
-			$this->vfs->override_acl = 0;
-
-			$file = end($files);
-
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
 
@@ -3324,9 +3302,9 @@ HTML;
 			$report_data['completed_date'] = $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat);
 			$report_data['where'] = $report_info['component_array']['xml_short_desc'];
 			$report_data['part_of_town'] = $loction_name_info['part_of_town'];
-			$report_data['location_image'] = $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" :'';
-			$report_data['report_intro'] = $report_intro;
 
+			$report_data['location_image'] = self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}"));
+			$report_data['report_intro'] = $report_intro;
 
 			$count_completed = 0;
 
@@ -3383,7 +3361,7 @@ HTML;
 
 					$entry[] = array
 					(
-						'text' => "<b>#{$i}</b>",
+						'text' => "#{$i}",
 						'value' => $check_item->get_control_item()->get_title(),
 					);
 
@@ -3454,20 +3432,18 @@ HTML;
 
 					$entry[] = array
 					(
-						'col1' => lang('proposed counter measure'),
+						'text' => lang('proposed counter measure'),
 						'value' => $case->get_proposed_counter_measure()
 					);
 
-					foreach ($case_files as $case_file)
-					{
-						$entry[] = array
-						(
-							'text' => lang('picture') . " #{$i}_{$n}",
-							'value' => "<C:showimage:{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']} 90>",
-						);
+					foreach ($case_files as &$case_file)
+					{	
+						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
+						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
 						$n ++;
 					}
-					$data_case[$location_identificator][] = $entry;
+					unset($case_file);
+					$data_case[$location_identificator][] = array('data' => $entry, 'files' => $case_files);
 
 					$i++;
 				}
@@ -3485,42 +3461,22 @@ HTML;
 				$data = array();
 				$location_identificator = $component_child['location_id'] . '_' . $component_child['id'];
 
-				$loc1 = !empty($component_child['loc1']) ? $component_child['loc1'] : 'dummy';
 				$system_location = $GLOBALS['phpgw']->locations->get_name($component_child['location_id']);
 				$system_location_arr = explode('.', $system_location['location']);
-				$category_dir = "{$system_location_arr[1]}_{$system_location_arr[2]}_{$system_location_arr[3]}";
 
-				$this->vfs->override_acl = 1;
-
-				$files = $this->vfs->ls(array(
-					'orderby' => 'file_id',
-					'mime_type'	=> 'image/jpeg',
-					'string' => "/property/{$category_dir}/{$loc1}/{$component_child['id']}",
-					'relatives' => array(RELATIVE_NONE)));
-
-				$this->vfs->override_acl = 0;
-
-				$file = end($files);
-
+				$controlled_text = 'Ikke kontrollert';
+				
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-					$entry = array
-					(
-						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
-						'col2' => "<b>{$component_child['short_description']}</b>",
-						'col3' => 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat)
-					);
+						$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
 				}
-				else
-				{
-					$entry = array
-					(
-						'col1' => $file ? "{$this->vfs->basedir}/{$file['directory']}/{$file['name']}" : '',
-						'col2' => "<b>{$component_child['short_description']}</b>",
-						'col3' => 'Ikke kontrollert'
-					);
+			
+				$entry = array
+				(
+					'text' => $component_child['short_description'],
+					'value' => $controlled_text
+				);
 
-				}
  				$data[] = $entry;
 
 				$values = array();
@@ -3577,9 +3533,8 @@ HTML;
 
 						$entry = array
 						(
-							'col1' => "",
-							'col2' => $attribute['input_text'],
-							'col3' => $_value
+							'text' => $attribute['input_text'],
+							'value' => $_value
 						);
 
 						$data[] = $entry;
@@ -3591,7 +3546,8 @@ HTML;
 				{
 
 					$component_child_data[] = array(
-						'name'	=> '',
+						'name'	=> $component_child['short_description'],
+						'image_link' => self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")),
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
 						);
@@ -3607,28 +3563,28 @@ HTML;
 			$report_data['component_child_data'] = $component_child_data;
 
 			$report_data['stray_cases'] = array();
-			foreach ($data_case as $key => $values)
+			foreach ($data_case as $key => $value_set)
 			{
 				if(in_array($key, $reported_cases ))
 				{
 					continue;
 				}
-				$report_data['stray_cases'][] = $values;
+				$report_data['stray_cases'] = array_merge($report_data['stray_cases'], $value_set);
 			}
 			
-			_debug_array($report_data);
+//			_debug_array($report_data);
 			
-			$this->renter_report($report_data);
+			$this->render_report($report_data);
 		}
 		
 		
-		function renter_report($report_data)
+		function render_report($report_data)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
-			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/new_component'));
-			$xslttemplates->set_var('phpgw', array('new_component' => $report_data));
+			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
+			$xslttemplates->set_var('phpgw', array('report' => $report_data));
 
-			$xslttemplates->set_output('html');
+			$xslttemplates->set_output('html5');
 			$xslttemplates->xsl_parse();
 			$xslttemplates->xml_parse();
 
@@ -3642,14 +3598,47 @@ HTML;
 			$proc->registerPHPFunctions(); // enable php functions
 			$proc->importStyleSheet($xsl); // attach the xsl rules
 
-
 			$html = trim($proc->transformToXML($xml));
-			$html = preg_replace('/<\?xml version([^>])+>/', '', $html);
-			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
 			echo $html;
+			
+//			$this->makePDF($html);
 		}
 
+		public function makePDF($stringData)
+		{
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			fwrite($fh, $stringData);
+			fclose($fh);
+
+			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+
+			//var_dump($config->config_data['path_to_wkhtmltopdf']);
+			//var_dump($GLOBALS['phpgw_info']);
+			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
+			if (!is_file($wkhtmltopdf_executable))
+			{
+				throw new Exception('wkhtmltopdf not configured correctly');
+			}
+			$snappy = new SnappyPdf();
+			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+			$snappy->save($myFile, $pdf_file_name);
+
+			if (!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');
+			}
+			$filesize = filesize($pdf_file_name);
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header('report.pdf', 'application/pdf', $filesize);
+
+			readfile($pdf_file_name);
+
+		}
 
 		/**
 		 *
