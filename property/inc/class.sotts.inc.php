@@ -769,7 +769,7 @@
 					'fm_district.descr', 'fm_tts_views.id'), $return_fields_union);
 				$sub_select			 = "(SELECT {$return_fields_union},{$union_budget} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset})"
 					. " UNION (SELECT {$return_fields_union},{$union_cost} {$filtermethod} {$querymethod} GROUP BY {$group_fields_union} {$ordermethod} {$limit_and_offset})";
-				$main_sql			 = "SELECT {$return_fields} FROM ({$sub_select} ) as t GROUP BY " . implode(',', array_keys($_return_field_array)) . " {$ordermethod}";
+				$main_sql			 = "SELECT {$return_fields} FROM ({$sub_select} ) as t GROUP BY " . implode(',', array_keys($_return_field_array));
 			}
 			else
 			{
