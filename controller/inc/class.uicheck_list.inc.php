@@ -3339,7 +3339,7 @@ HTML;
 			$file = end($files);
 
 
-			$report_data['location_image'] = self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}"));
+			$report_data['location_image'] = $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}")) : '';
 			
 			if($file && $inline_images)
 			{

@@ -215,8 +215,6 @@
 								</a>
 							</xsl:if>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-md-8">
 							<table class="table">
 								<xsl:for-each select="data">
@@ -244,8 +242,20 @@
 					<xsl:for-each select="cases">
 						<div class="row">
 
-							<div class="col-md-4">
-							</div>
+						<div class="col-md-4">
+							<xsl:for-each select="files">
+								<a href="{link}" title="{text}">
+									<xsl:choose>
+										<xsl:when test="inline_images =1">
+											<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<img src="{link}" class="img-thumbnail img-fluid"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</xsl:for-each>
+						</div>
 							<div class="col-md-8">
 								<table class="table">
 									<xsl:for-each select="data">
@@ -261,26 +271,6 @@
 								</table>
 							</div>
 						</div>
-						<xsl:for-each select="files">
-							<div class="row">
-								<div class="col-md-4">
-								</div>
-								<div class="col-md-4">
-									<a href="{link}" title="{text}">
-										<xsl:choose>
-											<xsl:when test="inline_images =1">
-												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<img src="{link}" class="img-thumbnail img-fluid"/>
-											</xsl:otherwise>
-										</xsl:choose>
-
-
-									</a>
-								</div>
-							</div>
-						</xsl:for-each>
 					</xsl:for-each>
 				</xsl:for-each>
 
@@ -295,7 +285,21 @@
 						</div>
 	
 						<xsl:for-each select="stray_cases">
+							<!--							<div class="col-md-4">
+							</div>-->
 							<div class="col-md-4">
+								<xsl:for-each select="files">
+									<a href="{link}" title="{text}">
+										<xsl:choose>
+											<xsl:when test="inline_images =1">
+												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<img src="{link}" class="img-thumbnail img-fluid"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</a>
+								</xsl:for-each>
 							</div>
 							<div class="col-md-8">
 								<table class="table">
@@ -311,20 +315,6 @@
 									</xsl:for-each>
 								</table>
 							</div>
-							<xsl:for-each select="files">
-								<div class="col-md-4">
-									<a href="{link}" title="{text}">
-										<xsl:choose>
-											<xsl:when test="inline_images =1">
-												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<img src="{link}" class="img-thumbnail img-fluid"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</a>
-								</div>
-							</xsl:for-each>
 						</xsl:for-each>
 					</div>
 				</xsl:if>
