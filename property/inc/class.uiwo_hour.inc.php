@@ -1860,10 +1860,20 @@ HTML;
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('select');
 
+
+			$file_attachments	 = isset($workorder['file_attachments']) && is_array($workorder['file_attachments']) ? $workorder['file_attachments'] : array();
+
+
 			for ($z = 0; $z < count($files); $z++)
 			{
+				$_checked = '';
+				if (in_array($files[$z]['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
 				$content_files[$z]['file_name']		 = "<a href='{$link_view_file}&amp;file_id={$files[$z]['file_id']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				$content_files[$z]['select_file']	 = "<input type='checkbox' name='values[file_action][workorder][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
+				$content_files[$z]['select_file']	 = "<input type='checkbox' {$_checked} name='values[file_action][workorder][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
 			}
 
 			$project_link_file_data	 = array
@@ -1879,8 +1889,14 @@ HTML;
 			$i = $z;
 			for ($z = 0; $z < count($files); $z++)
 			{
+				$_checked = '';
+				if (in_array($files[$z]['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
 				$content_files[$i]['file_name']		 = "<a href='{$link_view_file}&amp;file_id={$files[$z]['file_id']}' target='_blank' title='{$lang_view_file}'>{$files[$z]['name']}</a>";
-				$content_files[$i]['select_file']	 = "<input type='checkbox' name='values[file_action][project][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
+				$content_files[$i]['select_file']	 = "<input type='checkbox' {$_checked} name='values[file_action][project][]' value='{$files[$z]['file_id']}' title='{$lang_select_file}'>";
 				$i ++;
 			}
 
