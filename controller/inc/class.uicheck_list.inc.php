@@ -3608,7 +3608,7 @@ HTML;
 
 					$component_child_data[] = array(
 						'name'	=> $component_child['short_description'],
-						'image_link' => self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")),
+						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
 						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]

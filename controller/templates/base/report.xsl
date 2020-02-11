@@ -202,9 +202,8 @@
 					</div>
 					<div class="row">
 						<div class="col-md-4">
-							<xsl:if test="image_data !=''">
+							<xsl:if test="image_link !=''">
 								<a href="{image_link}">
-
 									<xsl:choose>
 										<xsl:when test="inline_images =1">
 											<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
@@ -213,9 +212,6 @@
 											<img src="{image_link}" class="img-thumbnail img-fluid"/>
 										</xsl:otherwise>
 									</xsl:choose>
-
-
-
 								</a>
 							</xsl:if>
 						</div>
