@@ -2405,3 +2405,4 @@ mail recipients	property	no	Mailmottaker
 create summary	property	no	Generer sammendrag
 order is not approved	property	no	Bestillingen er ikke godkjent
 list deviation	property	no	List avvik
+source	property	no	Kilde

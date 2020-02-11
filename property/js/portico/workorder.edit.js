@@ -739,5 +739,8 @@ this.refresh_files = function ()
 	var oArgs = {menuaction:'property.uiworkorder.get_files',id:order_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_1', strURL);
-	JqueryPortico.updateinlineTableHelper('datatable-container_8', strURL + "&attachments=true");
+
+	oArgs = {menuaction:'property.uiworkorder.get_files_attachments',id:order_id};
+	strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_8', strURL);
 };

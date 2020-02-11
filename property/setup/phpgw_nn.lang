@@ -2396,3 +2396,4 @@ external id	property	nn	Ekstern ID
 mail recipients	property	nn	Mailmottakar
 create summary	property	nn	Generer sammendrag
 list deviation	property	nn	List avvik
+source	property	nn	Opphav
