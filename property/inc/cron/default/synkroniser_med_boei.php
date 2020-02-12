@@ -138,6 +138,7 @@
 			$this->update_table_LeieobjektTVSignal();
 			$this->update_table_eier();
 			$this->update_table_gateadresse();
+			$this->update_table_poststed();
 			$this->update_table_Objekt();
 			$this->update_table_Bygg();
 			$this->update_table_seksjon();
@@ -292,6 +293,54 @@ SQL;
 				);
 			}
 
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
+		function update_table_poststed()
+		{
+//			$metadata_boei	 = $this->db_boei->metadata('Poststed');
+//	_debug_array($metadata_boei);
+			$metadata		 = $this->db->metadata('boei_poststed');
+//_debug_array($metadata);
+//die();
+			if (!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_poststed
+				(
+					id character varying(4) NOT NULL,
+					navn character varying(50),
+				  CONSTRAINT boei_poststed_pkey PRIMARY KEY (id)
+				);
+SQL;
+				$this->db->query($sql_table, __LINE__, __FILE__);
+			}
+			$this->db->query('DELETE FROM boei_poststed', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT Postnr_ID, CAST(Poststed as TEXT) AS Poststed  FROM Poststed';
+
+			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
+			// using stored prosedures
+			$sql		 = 'INSERT INTO boei_poststed (id, navn)'
+				. ' VALUES(?, ?)';
+			$valueset	 = array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+					(
+					1	 => array
+						(
+						'value'	 => $this->db_boei->f('Postnr_ID'),
+						'type'	 => PDO::PARAM_STR
+					),
+					2	 => array
+						(
+						'value'	 => $this->db->db_addslashes(($this->db_boei->f('Poststed'))),
+						'type'	 => PDO::PARAM_STR
+					)
+				);
+			}
+//			_debug_array($valueset);
 			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 		}
 
