@@ -31,7 +31,13 @@
 				</script>
 			</xsl:for-each>
 
-			<title>Barnas Byrom - rapportnummer <!-- INSERT VARIABEL --> </title>
+			<title>
+					<xsl:value-of select="control_area_name"/>
+					<xsl:text> / </xsl:text>
+					<xsl:value-of select="title"/>
+					<xsl:text> #</xsl:text>
+					<xsl:value-of select="check_list_id"/>
+			</title>
 			<style>
 
 				@page {
