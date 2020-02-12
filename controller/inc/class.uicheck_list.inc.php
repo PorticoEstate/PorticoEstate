@@ -3398,6 +3398,8 @@ HTML;
 				foreach ($check_item->get_cases_array() as $case)
 				{
 //					_debug_array($case);
+//					_debug_array($check_item->get_control_item());
+					
 					$n = 1;
 					
 					$entry = array();

@@ -387,6 +387,7 @@
 				{
 					$case = new controller_check_item_case($this->unmarshal($this->db->f('cic_id'), 'int'));
 					$case->set_check_item_id($this->unmarshal($this->db->f('check_item_id'), 'int'));
+					$case->set_control_item_id($this->unmarshal($this->db->f('control_item_id'), 'int'));
 					$case->set_status($this->unmarshal($this->db->f('cic_status'), 'int'));
 					$case->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
 					$case->set_location_item_id($this->unmarshal($this->db->f('location_item_id'), 'int'));

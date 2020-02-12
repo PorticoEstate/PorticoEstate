@@ -93,6 +93,16 @@
 			return $this->check_item_id;
 		}
 
+		public function set_control_item_id( $control_item_id )
+		{
+			$this->control_item_id = $control_item_id;
+		}
+
+		public function get_control_item_id()
+		{
+			return $this->control_item_id;
+		}
+
 		public function set_status( $status )
 		{
 			$this->status = (int)$status;
