@@ -3525,6 +3525,14 @@ HTML;
 
 				$file = end($files);
 
+				$entry = array
+				(
+					'text' => lang('name'),
+					'value' => $component_child['short_description']
+				);
+
+				$data[] = $entry;
+
 				$controlled_text = 'Ikke kontrollert';
 				
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
@@ -3534,7 +3542,7 @@ HTML;
 			
 				$entry = array
 				(
-					'text' => $component_child['short_description'],
+					'text' => 'Kontrollstatus',
 					'value' => $controlled_text
 				);
 

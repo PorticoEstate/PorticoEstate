@@ -72,7 +72,7 @@
 				<xsl:value-of select="php:function('lang', 'print')" />
 			</button>
 		
-			<div class="container">
+			<div class="container small">
 				<div class="mt-5 row">
 					<div class="col-md-6 align-left">
 						<!--<img src="logo bk.png" width="200"/>-->
@@ -102,7 +102,7 @@
 
 						<tr>
 							<td>Inspektør</td>
-							<td>
+							<td class="text-nowrap">
 								<xsl:for-each select="inspectors">
 									<xsl:value-of select="node()"/>
 									<xsl:if test="last() != 1">
@@ -132,43 +132,46 @@
 				<div class="row mt-2">
 					<table class="table table-bordered">
 						<tr>
-							<td colspan="2" class="text-center">Antall avvik</td>
-							<td rowspan="5"></td>
-							<td colspan="2" class="text-center">Tilstandsvurdering - forklaring</td>
+							<td colspan="3" class="text-center">Funn - sammendrag</td>
 						</tr>
 						<tr>
-							<td class="small">
-								<b>A</b> - kan medføre fare for barnets liv</td>
-							<td class="small bg-danger text-white text-center">0</td>
-							<td class="small">Lekeutstyr med mer enn 10 års levetid med jevnlig vedlikehold</td>
-							<td class="small">1 - Svært bra</td>
+							<td class="text-left border-bottom-0">Tilstand</td>
+							<td rowspan="2"></td>
+							<td class="text-left border-bottom-0">konsekvens</td>
 						</tr>
 						<tr>
-							<td class="small">
-								<b>B</b> - kan medføre fare for livsvarig skade hos barnet</td>
-							<td class="small bg-warning text-dark text-center">1</td>
-
-							<td class="small">Lekeutstyr med 5 - 10 års levetid med jevnlig vedlikehold</td>
-							<td class="small">2 - Bra</td>
-						</tr>
-						<tr>
-							<td class="small">
-								<b>C</b> - kan medføre mindre alvorlig skade</td>
-							<td class="small bg-success text-white text-center">2</td>
-
-							<td class="small">Lekeutstyr med 1 - 5 års levetid med jevnlig vedlikehold</td>
-							<td class="small">3 - Dårlig</td>
-						</tr>
-						<tr>
-							<td class="small">
-								<b>M</b> - merknad</td>
-							<td class="small text-center">4</td>
-
-							<td class="small">Lekeutstyr som bør fjernesinnen 1 år</td>
-							<td class="small">1 - Svært bra</td>
+							<td>
+								<table class="table">
+									<xsl:for-each select="findings/condition">
+										<tr>
+											<td class="small border-0">
+												<xsl:value-of select="text"/>
+											</td>
+											<td class="small border-0">
+												<xsl:value-of select="value"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</table>
+							</td>
+							<td>
+								<table>
+									<xsl:for-each select="findings/consequence">
+										<tr>
+											<td class="small border-0">
+												<xsl:value-of select="text"/>
+											</td>
+											<td class="small border-0">
+												<xsl:value-of select="value"/>
+											</td>
+										</tr>
+									</xsl:for-each>
+								</table>
+							</td>
 						</tr>
 					</table>
 				</div>
+
 				<div class="row">
 
 					<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
@@ -242,20 +245,20 @@
 					<xsl:for-each select="cases">
 						<div class="row">
 
-						<div class="col-md-4">
-							<xsl:for-each select="files">
-								<a href="{link}" title="{text}">
-									<xsl:choose>
-										<xsl:when test="inline_images =1">
-											<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<img src="{link}" class="img-thumbnail img-fluid"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</a>
-							</xsl:for-each>
-						</div>
+							<div class="col-md-4">
+								<xsl:for-each select="files">
+									<a href="{link}" title="{text}">
+										<xsl:choose>
+											<xsl:when test="inline_images =1">
+												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<img src="{link}" class="img-thumbnail img-fluid"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</a>
+								</xsl:for-each>
+							</div>
 							<div class="col-md-8">
 								<table class="table">
 									<xsl:for-each select="data">
