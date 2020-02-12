@@ -49,6 +49,7 @@
 				'type' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'include_condition_degree' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'include_counter_measure' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'report_summary' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

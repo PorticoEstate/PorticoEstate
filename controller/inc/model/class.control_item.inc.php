@@ -46,6 +46,7 @@
 		protected $required;
 		protected $include_counter_measure;
 		protected $include_condition_degree;
+		protected $report_summary;
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
@@ -116,6 +117,16 @@
 		public function get_include_counter_measure()
 		{
 			return $this->include_counter_measure;
+		}
+
+		public function set_report_summary( $report_summary )
+		{
+			$this->report_summary = $report_summary;
+		}
+
+		public function get_report_summary()
+		{
+			return $this->report_summary;
 		}
 
 		public function set_what_to_do( $what_to_do )
@@ -246,6 +257,7 @@
 			$result['required'] = $this->get_required();
 			$result['include_condition_degree'] = $this->get_include_condition_degree();
 			$result['include_counter_measure'] = $this->get_include_counter_measure();
+			$result['report_summary'] = $this->get_report_summary();
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
