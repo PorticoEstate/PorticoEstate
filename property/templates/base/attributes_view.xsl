@@ -469,8 +469,6 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="history=1">
-						<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
-						</input>
 						<xsl:variable name="link_history">
 							<xsl:value-of select="link_history"/>
 						</xsl:variable>
@@ -480,6 +478,7 @@
 						<xsl:variable name="lang_history">
 							<xsl:value-of select="php:function('lang', 'history')" />
 						</xsl:variable>
+						<xsl:text> </xsl:text>
 						<a href="javascript:JqueryPortico.showlightbox_history('{$link_history}')" title="{$lang_history}">
 							<xsl:value-of select="$lang_history"/>
 						</a>

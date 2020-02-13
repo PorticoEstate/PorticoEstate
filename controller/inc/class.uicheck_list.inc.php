@@ -122,6 +122,10 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('Check_list');
 
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 		}
 
 		/**
@@ -3385,20 +3389,66 @@ HTML;
 				);
 			}
 
-			$report_data['findings'] = array('condition' => $data_condition,  'consequence' => $data_consequence);
+			$report_data['findings'] = array(
+				array('name' => lang('condition degree'), 'values' => $data_condition),
+				array('name' => lang('consequence'), 'values' => $data_consequence)
+			);
 
 			$i = 1;
 
+			$findings_map = array();
+			$include_condition_degree = 0;
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
 
-				$cases_array = $check_item->get_cases_array();
+				$findings_map[$check_item->get_control_item()->get_id()] = $check_item->get_control_item()->get_title();
+
+
 				$data_case = array();
+//				_debug_array($check_item->get_control_item());
+
+				$include_condition_degree += (int)$check_item->get_control_item()->get_include_condition_degree();
+
+				if($check_item->get_control_item()->get_report_summary())
+				{
+
+					$_temp_options = $check_item->get_control_item()->get_options_array();
+					$findings_options = array();
+
+					if($_temp_options)
+					{
+						foreach ($_temp_options as $option_entry)
+						{
+							$findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+						}
+					}
+				}
+
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
-//					_debug_array($case);
-//					_debug_array($check_item->get_control_item());
+
+					if(in_array($case->get_control_item_id(), array_keys($findings_map)))
+					{
+
+						foreach ($findings_options[$findings_map[$case->get_control_item_id()]] as $key => &$value)
+						{
+
+							if($key == $case->get_measurement())
+							{
+								$value +=1;
+							}
+						}
+						unset($value);
+
+//						_debug_array($case);
+//					_debug_array($findings_map);
+//	_debug_array($findings_options);
+//	die();
+						
+					}
+
+
 					
 					$n = 1;
 					
@@ -3644,8 +3694,29 @@ HTML;
 				}
 				$report_data['stray_cases'] = array_merge($report_data['stray_cases'], $value_set);
 			}
-			
-//			_debug_array($report_data);
+
+			$findings = array();
+
+			foreach ($findings_options as $key => $options)
+			{
+				$values = array();
+				foreach ($options as $text => $value)
+				{
+					$values[] = array(
+						'text' => $text,
+						'value' => $value,
+					);
+				}
+				$findings[] = array('name' => $key, 'values' => $values);
+			}
+
+			if(!$include_condition_degree)
+			{
+				$report_data['findings'] = array();
+			}
+
+			$report_data['findings'] = array_merge($report_data['findings'],$findings);
+//			_debug_array($report_data['findings']);die();
 			
 			$this->render_report($report_data);
 		}
