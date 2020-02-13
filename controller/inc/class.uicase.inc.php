@@ -153,7 +153,34 @@
 			$custom = createObject('property.custom_fields');
 			$values['attributes'] = $custom->find('property', $system_location['location'], 0, '', 'ASC', 'attrib_sort', true, true);
 
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				foreach ($values['attributes'] as & $attribute)
+				{
+					if ($attribute['history'] == true)
+					{
+						$link_history_data = array
+							(
+							'menuaction'	 => 'property.uientity.attrib_history',
+							'acl_location'	 => $system_location['location'],
+							'attrib_id'		 => $attribute['id'],
+							'id'			 => $component_id,
+							'edit'			 => true,
+							'type'			 => $this->type
+						);
 
+						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php', $link_history_data);
+					}
+
+					/*
+					 * Hide dummy attributes that act as placeholders
+					 */
+					if ($attribute['datatype'] == 'R' && isset($attribute['choice']) && !$attribute['choice'])
+					{
+						$attribute['hide_row'] = true;
+					}
+				}
+			}
 			if($get_form || $get_edit_form || $get_info)
 			{
 				$soentity = CreateObject('property.soentity', $entity_id, $cat_id);

@@ -140,53 +140,53 @@
 						</xsl:choose>
 					</xsl:if>
 				</div>
+
 				<div class="row mt-2">
-					<table class="table table-bordered">
-						<tr>
-							<td colspan="3" class="text-center">Funn - sammendrag</td>
-						</tr>
-						<tr>
-							<td class="text-left border-bottom-0">Tilstand</td>
-							<td rowspan="2"></td>
-							<td class="text-left border-bottom-0">konsekvens</td>
-						</tr>
-						<tr>
-							<td>
-								<table class="table">
-									<xsl:for-each select="findings/condition">
-										<tr>
-											<td class="small border-0">
-												<xsl:value-of select="text"/>
-											</td>
-											<td class="small border-0">
-												<xsl:value-of select="value"/>
-											</td>
-										</tr>
-									</xsl:for-each>
-								</table>
-							</td>
-							<td>
-								<table>
-									<xsl:for-each select="findings/consequence">
-										<tr>
-											<td class="small border-0">
-												<xsl:value-of select="text"/>
-											</td>
-											<td class="small border-0">
-												<xsl:value-of select="value"/>
-											</td>
-										</tr>
-									</xsl:for-each>
-								</table>
-							</td>
-						</tr>
-					</table>
-				</div>
 
-				<div class="row">
+					<xsl:variable name="witdth">
+						<xsl:value-of select="count(findings) * 2"/>
+					</xsl:variable>
 
-					<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
+					<!--<div class="col-md-{$witdth}">-->
+					<div>
+						<table class="table table-bordered table-sm">
+							<tr>
+								<th class="text-left text-left border-bottom-0">
+									<xsl:attribute name="colspan">
+										<xsl:value-of select="count(findings)"/>
+									</xsl:attribute>
+									Funn - sammendrag
+								</th>
+							</tr>
+							<tr>
+								<xsl:for-each select="findings">
+									<th class="text-left border-bottom-0 border-top-0">
+										<xsl:value-of select="name"/>
+									</th>
+								</xsl:for-each>
+							</tr>
+							<tr>
+								<xsl:for-each select="findings">
+									<td>
+										<table class="table table-sm">
+											<xsl:for-each select="values">
+												<tr>
+													<td class="small border-0">
+														<xsl:value-of select="text"/>
+													</td>
+													<td class="small border-0">
+														<xsl:value-of select="value"/>
+													</td>
+												</tr>
+											</xsl:for-each>
+										</table>
+									</td>
+								</xsl:for-each>
+							</tr>
+						</table>
+					</div>
 				</div>
+				<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
 
 				<div class="row">
 
