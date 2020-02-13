@@ -182,7 +182,7 @@
 					. "<p>Forresten...:<br/>"
 					. "<a href=\"{$link_backend}\">Link til søknad i backend</a></p>";
 
-					$send->msg('email', $bcc, "KOPI::$subject", "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>$body", '', '', '', $from, 'AktivKommune', 'html', '',array(), false);
+					$send->msg('email', $bcc, "KOPI::$subject", $new_body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false);
 				}
 			}
 			catch (Exception $e)
