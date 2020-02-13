@@ -790,18 +790,6 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/kvittering for godkjent forsendelse/i", $subject))
-			{
-				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
-				$group_id		 = 4253; //LRS-Drift_Regnskap
-				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				if ($ticket_id)
-				{
-					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type']				 = 'helpdesk';
-					$target['id']				 = $ticket_id;
-				}
-			}
 			else if (preg_match("/Varsel om mulig motregning mellom kunde/i", $subject))
 			{
 				$message_cat_id	 = 284; // LRS-Regnskap- underkategori: 22 Innbetalinger fra kunde
@@ -877,6 +865,30 @@
 			else if (preg_match("/Fakturaavvik: Ukjent bestilling, returnert /i", $subject))
 			{
 				$message_cat_id	 = 281; // LRS-Regnskap- underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Faktura må behandles – Purring mottatt/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Fakturakopi etterspørres – Bergen kommune/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
