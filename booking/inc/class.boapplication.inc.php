@@ -174,7 +174,7 @@
 				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 				if($bcc && $created)
 				{
-					$link_backend = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+					$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
 
 					$new_body = "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>"
 					. "$body"
