@@ -176,6 +176,11 @@
 				{
 					$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
 
+					/**
+					 * Evil hack
+					 */
+					$link_backend = preg_replace('/http:/', 'https:', $link_backend);
+
 					$new_body = "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>"
 					. "$body"
 					. "<br/>"
