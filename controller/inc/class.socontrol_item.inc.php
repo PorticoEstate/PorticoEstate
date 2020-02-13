@@ -62,6 +62,7 @@
 				'title',
 				'required',
 				'include_counter_measure',
+				'report_summary',
 				'include_condition_degree',
 				'type',
 				'what_to_do',
@@ -74,6 +75,7 @@
 				$this->marshal($control_item->get_title(), 'string'),
 				$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 				$this->marshal(($control_item->get_include_counter_measure() ? 'true' : 'false'), 'bool'),
+				$this->marshal(($control_item->get_report_summary() ? 'true' : 'false'), 'bool'),
 				$this->marshal(($control_item->get_include_condition_degree() ? 'true' : 'false'), 'bool'),
 				$this->marshal($control_item->get_type(), 'string'),
 				$this->marshal($control_item->get_what_to_do(), 'string'),
@@ -109,6 +111,7 @@
 				'title = ' . $this->marshal($control_item->get_title(), 'string'),
 				'required = ' . $this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 				'include_counter_measure = ' . $this->marshal(($control_item->get_include_counter_measure() ? 'true' : 'false'), 'bool'),
+				'report_summary = ' . $this->marshal(($control_item->get_report_summary() ? 'true' : 'false'), 'bool'),
 				'include_condition_degree = ' . $this->marshal(($control_item->get_include_condition_degree() ? 'true' : 'false'), 'bool'),
 				'type = ' . $this->marshal($control_item->get_type(), 'string'),
 				'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
@@ -148,6 +151,7 @@
 			$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 			$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
+			$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
 			$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -189,6 +193,7 @@
 					$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 					$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
+					$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
 					$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -250,6 +255,7 @@
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
+				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
@@ -357,7 +363,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control_item.id, controller_control_item.title, required,include_condition_degree, include_counter_measure, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.type, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
+				$cols = 'controller_control_item.id, controller_control_item.title, required,include_condition_degree, include_counter_measure,report_summary, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.type, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -382,6 +388,7 @@
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
+				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -442,6 +449,7 @@
 				$control_item->set_title($this->unmarshal($this->db->f('title', true), 'string'));
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
+				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));

@@ -116,6 +116,18 @@
 					</xsl:choose>
 				</dt>
 				<dt>
+					<label for="report_summary" class="line">Skal telles opp i rapport</label>
+					<xsl:variable name="report_summary"><xsl:value-of select="control_item/report_summary" /></xsl:variable>
+					<input type="checkbox" name="report_summary" value="1" id="report_summary">
+						<xsl:if test="not(editable)">
+							<xsl:attribute name="disabled">true</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="$report_summary =1">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>
+				</dt>
+				<dt>
 					<label class="top" for="required">Velg hvordan kontrollpunktet skal sjekkes av kontrollør</label>
 					<div class="styleWrp">
 						<xsl:variable name="control_item_type"><xsl:value-of select="control_item/type" /></xsl:variable>

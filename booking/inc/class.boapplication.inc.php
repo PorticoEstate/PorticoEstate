@@ -174,7 +174,15 @@
 				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 				if($bcc && $created)
 				{
-					$send->msg('email', $bcc, "KOPI::$subject", "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>$body", '', '', '', $from, 'AktivKommune', 'html', '',array(), false);			
+					$link_backend = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+
+					$new_body = "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>"
+					. "$body"
+					. "<br/>"
+					. "<p>Forresten...:<br/>"
+					. "<a href=\"{$link_backend}\">Link til søknad i backend</a></p>";
+
+					$send->msg('email', $bcc, "KOPI::$subject", $new_body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false);
 				}
 			}
 			catch (Exception $e)

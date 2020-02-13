@@ -297,6 +297,7 @@
 			$control_item->set_title($title);
 			$control_item->set_required($required);
 			$control_item->set_include_counter_measure(phpgw::get_var('include_counter_measure', 'bool'));
+			$control_item->set_report_summary(phpgw::get_var('report_summary', 'bool'));
 			$control_item->set_include_condition_degree(phpgw::get_var('include_condition_degree', 'bool'));
 			$control_item->set_control_group_id($control_group_id);
 			$control_item->set_control_area_id($control_area_id);

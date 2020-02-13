@@ -32,11 +32,11 @@
 			</xsl:for-each>
 
 			<title>
-					<xsl:value-of select="control_area_name"/>
-					<xsl:text> / </xsl:text>
-					<xsl:value-of select="title"/>
-					<xsl:text> #</xsl:text>
-					<xsl:value-of select="check_list_id"/>
+				<xsl:value-of select="control_area_name"/>
+				<xsl:text> / </xsl:text>
+				<xsl:value-of select="title"/>
+				<xsl:text> #</xsl:text>
+				<xsl:value-of select="check_list_id"/>
 			</title>
 			<style>
 
@@ -83,8 +83,13 @@
 					<div class="col-md-6 align-left">
 						<!--<img src="logo bk.png" width="200"/>-->
 					</div>
-					<div class="col-md-6 align-right">
-						<xsl:value-of select="title"/>
+					<div class="col-md-6 text-right">
+						Barnas Byrom - Forvaltningsavdelingen - Bymiljøetaten
+					</div>
+					<div class="col-md-12 align-right">
+						<h2>
+							<xsl:value-of select="title"/>
+						</h2>
 					</div>
 
 				</div>

@@ -46,6 +46,7 @@
 		protected $location_item_id;  // MELDINGS ID
 		protected $descr;
 		protected $proposed_counter_measure;
+		protected $report_summary;
 		protected $user_id;
 		protected $entry_date;
 		protected $modified_date;
@@ -90,6 +91,16 @@
 		public function get_check_item_id()
 		{
 			return $this->check_item_id;
+		}
+
+		public function set_control_item_id( $control_item_id )
+		{
+			$this->control_item_id = $control_item_id;
+		}
+
+		public function get_control_item_id()
+		{
+			return $this->control_item_id;
 		}
 
 		public function set_status( $status )
@@ -180,6 +191,16 @@
 		public function set_modified_by( $modified_by )
 		{
 			$this->modified_by = $modified_by;
+		}
+
+		public function get_report_summary()
+		{
+			return (int)$this->report_summary;
+		}
+
+		public function set_report_summary( $report_summary )
+		{
+			$this->report_summary = $report_summary;
 		}
 
 		public function get_measurement()
