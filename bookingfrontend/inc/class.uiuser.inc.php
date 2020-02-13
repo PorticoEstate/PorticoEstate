@@ -82,7 +82,7 @@
 			$application_def = array
 			(
 				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'date', 'label' => lang('Date'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
