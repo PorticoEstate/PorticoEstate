@@ -541,6 +541,7 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 	<form method="post" id="send_notification" action="{form_action}" onsubmit="return submitSendNotificationForm(event, this);">
+		<input type="hidden" name="control_id" value="{control_id}"/>
 		<div class="mt-5 container">
 			<div class="row">
 				<div class="col">

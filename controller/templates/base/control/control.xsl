@@ -325,7 +325,9 @@
 				</xsl:choose>
 			</dd>
 			<dt>
-				<label for="report_intro">send_notification_subject</label>
+				<label for="send_notification_subject">
+					<xsl:value-of select="php:function('lang', 'notification subject')" />
+				</label>
 			</dt>
 			<dd>
 				<xsl:choose>
@@ -339,7 +341,10 @@
 			</dd>
 
 			<dt>
-				<label for="report_intro">send_notification_content</label>
+				<label for="send_notification_content">
+					<xsl:value-of select="php:function('lang', 'notification content')" />
+					:__location__, __week__, __sender__
+				</label>
 			</dt>
 			<dd>
 				<xsl:choose>
