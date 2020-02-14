@@ -905,7 +905,7 @@
 			{
 				$message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -917,7 +917,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -929,7 +929,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -941,7 +941,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -953,7 +953,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -965,7 +965,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -977,7 +977,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -989,7 +989,7 @@
 			{
 				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1001,7 +1001,7 @@
 			{
 				 $message_cat_id = 363; // LRS-Intern- underkategori: Prekontering
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1013,7 +1013,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1025,7 +1025,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1037,7 +1037,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1049,7 +1049,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1061,7 +1061,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1073,7 +1073,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1085,7 +1085,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1097,7 +1097,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1109,7 +1109,7 @@
 			{
 				 $message_cat_id = 358; // LRS-System  -  Intel Agent
 				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1121,7 +1121,7 @@
 			{
 				 $message_cat_id = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
 				 $group_id = 4169; //LRS-Service_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1133,7 +1133,7 @@
 			{
 				 $message_cat_id = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
 				 $group_id = 4169; //LRS-Service_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1145,7 +1145,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1157,7 +1157,7 @@
 			{
 				 $message_cat_id = 313; // LRS-Regnskap- underkategori:25 Bilag til bokføring (parkerte/fra excel)
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1169,7 +1169,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1181,7 +1181,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1193,7 +1193,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1205,7 +1205,7 @@
 			{
 				 $message_cat_id = 281; // LRS-Regnskap  -  20 Fakturering til kunde
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1217,7 +1217,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1229,7 +1229,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
@@ -1241,7 +1241,7 @@
 			{
 				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
 				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender);
+				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				 if($ticket_id)
 				 {
 					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
