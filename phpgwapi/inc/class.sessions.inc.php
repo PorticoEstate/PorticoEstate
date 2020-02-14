@@ -628,7 +628,7 @@
 
 			if($external || $GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
 			{
-				$server_port = phpgw::get_var('SERVER_PORT', 'int','SERVER');
+				$server_port = !empty($GLOBALS['phpgw_info']['server']['enforce_ssl']) ? 443 : phpgw::get_var('SERVER_PORT', 'int','SERVER');
 
 				if($server_port == 443)
 				{
