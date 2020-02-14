@@ -174,12 +174,14 @@
 				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 				if($bcc && $created)
 				{
-					$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
 
 					/**
 					 * Evil hack
 					 */
-					$link_backend = preg_replace('/http:/', 'https:', $link_backend);
+					$enforce_ssl = $GLOBALS['phpgw_info']['server']['enforce_ssl'];
+					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+					$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
+					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = $enforce_ssl;
 
 					$new_body = "<h1>NB!! KOPI av epost til {$application['contact_email']}</h1>"
 					. "$body"
