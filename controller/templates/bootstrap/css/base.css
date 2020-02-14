@@ -39,9 +39,9 @@ h3 {
   font-weight: bold;
   margin: 1em 0;
 }
-#content {
+/*#content {
   margin: 2em 1em;
-}
+}*/
 .clr { clear: both;}
 
 #active {
@@ -1552,10 +1552,10 @@ ul#search_list input[type="text"] {
   padding: 3px;
 }
 
-#queryForm {
+/*#queryForm {
   clear: both;
   overflow: hidden;
-}
+}*/
 
 fieldset.add_check_list div{
   padding:2px; 

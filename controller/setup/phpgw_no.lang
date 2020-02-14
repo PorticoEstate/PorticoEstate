@@ -468,3 +468,5 @@ settings	controller	no	Innstillinger
 corrected	controller	no	Korrigert
 corrected on controll	controller	no	Korrigert ved utført kontroll
 set status: not done	controller	no	Sett status: ikke utført
+notification subject	controller	no	Overskrift på varsling
+notification content	controller	no	Innhold i varsling

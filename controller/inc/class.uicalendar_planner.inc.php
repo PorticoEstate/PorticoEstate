@@ -674,7 +674,8 @@
 					'control_area_id' => $control_area_id,
 					'entity_group_id'=> $entity_group_id,
 					'phpgw_return_as' => 'json')),
-				'control_info' => $control_info
+				'control_info' => $control_info,
+				'control_id'	=> $control_id,
 			);
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -697,24 +698,33 @@
 			$email = (array)phpgw::get_var('email');
 			$send_email = (array)phpgw::get_var('send_email');
 			$timestamp = (array)phpgw::get_var('timestamp');
+			$control_id		 = phpgw::get_var('control_id', 'int');
 
 			$soentity = createObject('property.soentity');
 
 			$send = CreateObject('phpgwapi.send');
 
+			$control = $this->so_control->get_single($control_id);
 
-			$subject = "Varsel om planlagt kontroll";
+			$subject = $control->get_send_notification_subject();
+			$content = $control->get_send_notification_content();
+
+			if(!$subject)
+			{
+				throw new Exception('Missing subject');
+			}
+			if(!$content)
+			{
+				throw new Exception('Missing content');
+			}
+
 			$html = <<<HTML
 			<!DOCTYPE html>
 			<html>
 				<head>
 				</head>
 				<body>
-				<h1>
-					Kontroll med lekeplass/utstyr
-				</h1>
-				Det er planlagt en kontroll den __control_date__.
-
+				{$content}
 				</body>
 			<html>
 HTML;
@@ -727,6 +737,10 @@ HTML;
 					'location_id' => $item_arr[0],
 					'id' => $item_arr[1]));
 
+				$location_data = explode('-', $component_arr['location_code']);
+
+				$location_name = execMethod('property.bolocation.get_location_name', $location_data[0]);
+
 				$notification_email = $soentity->get_json_attribute($item_arr[0], $item_arr[1], 'notification_email');
 
 				if($notification_email != $email[$item])
@@ -736,9 +750,9 @@ HTML;
 
 				if($email[$item])
 				{
-					$date = $GLOBALS['phpgw']->common->show_date($timestamp[$item], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-
-					$html = str_replace('__control_date__', $date, $html);
+					$week = date("W", $timestamp[$item]);
+					
+					$html = str_replace(array('__location__', '__week__', '__sender__'), array($location_name, $week, $GLOBALS['phpgw_info']['user']['fullname']), $html);
 
 					$toarray = array($email[$item]);
 					$to		 = implode(';', $toarray);
