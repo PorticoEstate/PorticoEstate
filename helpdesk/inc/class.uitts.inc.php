@@ -161,7 +161,7 @@
 			}
 			if((int)$this->parent_cat_id > 0 && !phpgw::get_var('id', 'int', 'GET'))
 			{
-				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_ADD, 'helpdesk'))
 				{
 					phpgw::no_access();
 				}
@@ -1569,6 +1569,11 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['menu_selection'] . "::add";
 
+			if($this->parent_cat_id && !$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+			{
+				$this->parent_cat_id = 0;
+			}
+
 			$values = phpgw::get_var('values');
 			$values['details'] = phpgw::get_var('details', 'html');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
@@ -2909,6 +2914,15 @@ JS;
 			$tabs['history'] = array('label' => lang('History'), 'link' => '#history');
 			$active_tab = 'general';
 
+			if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_READ, 'helpdesk'))
+			{
+				$done_parent_cat_id = 0;
+			}
+			else
+			{
+				$done_parent_cat_id = $this->parent_cat_id;
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'my_groups' => json_encode($my_groups),
@@ -2951,7 +2965,7 @@ JS;
 				'cat_select' => $cat_select,
 				'value_category_name' => $ticket['category_name'],
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $form_link),
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index','parent_cat_id' => $this->parent_cat_id)),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index','parent_cat_id' => $done_parent_cat_id)),
 				'value_subject' => $ticket['subject'],
 				'value_id' => '[ #' . $id . ' ] - ',
 				'id'		=> $id,
