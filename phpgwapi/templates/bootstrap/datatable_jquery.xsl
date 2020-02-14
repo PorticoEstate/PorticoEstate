@@ -49,17 +49,17 @@
 
 
 <xsl:template match="toolbar" xmlns:php="http://php.net/xsl">
-	<div class="row">
+	<div class="row ml-1">
 		<div id="active_filters">
 		</div>
 	</div>
-	<div class="row mt-2 mb-2">
+	<div class="row mt-2 mb-2 ml-1">
 		<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
 			<xsl:value-of select="php:function('lang', 'filter')"/>
 		</button>
 	</div>
 
-	<div class="row mt-2 collapse" id="democollapseBtn">
+	<div class="row mt-2 collapse ml-1" id="democollapseBtn">
 		<xsl:if test="item">
 			<xsl:variable name="count_items" select="count(item)"/>
 			<div id="toolbar" class='dtable_custom_controls'>
