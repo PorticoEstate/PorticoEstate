@@ -163,7 +163,7 @@
 			{
 				if(!$this->acl->check(".ticket.category.{$this->parent_cat_id}",PHPGW_ACL_ADD, 'helpdesk'))
 				{
-					phpgw::no_access();
+//					phpgw::no_access();
 				}
 			}
 		}
