@@ -301,13 +301,14 @@
 //				$link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
 //			}
 
-			$link = $GLOBALS['phpgw']->link('/index.php', array(
-					'menuaction' => 'booking.uiapplication.show',
-					'id' => $application['id']
-				),
-				true,
-				true
-			);
+			/**
+			 * Evil hack
+			 */
+			$enforce_ssl = $GLOBALS['phpgw_info']['server']['enforce_ssl'];
+			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+			$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
+			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = $enforce_ssl;
+
 
 			$activity = $this->activity_bo->read_single($application['activity_id']);
 
