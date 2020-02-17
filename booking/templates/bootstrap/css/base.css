@@ -373,9 +373,9 @@ dl.extrawidth select {
 	background-color: #e0e0e0 !important;
 }
 
-th{
+/*th{
     border: 0px solid #FFFFFF !important;
-}
+}*/
 
 #schedule_container tbody tr th:first-child {
     background-color: #f5f5f5 !important;
