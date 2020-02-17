@@ -236,21 +236,16 @@
 											</select>
 										</xsl:when>
 										<xsl:when test="type = 'link'">
-											<div class="form-row  ml-1">
+											<!--<div class="form-row ml-1">-->
 												<label>
+													<!--<xsl:if test="count(//item) = 1 ">-->
+														<xsl:attribute name="class">
+														<xsl:text>invisible</xsl:text>
+														</xsl:attribute>
+													<!--</xsl:if>-->
 													<xsl:value-of select="value"/>
 												</label>
-												<input type="button">
-													<xsl:attribute name="class">
-														<xsl:choose>
-															<xsl:when test="count(//item) > 1 ">
-																<xsl:text>form-control btn btn-primary</xsl:text>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:text>btn btn-primary</xsl:text>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:attribute>
+												<input type="button" class= "form-control btn btn-primary ml-2">
 													<xsl:choose>
 														<xsl:when test="onclick">
 															<xsl:attribute name="onclick">
@@ -265,7 +260,7 @@
 														<xsl:value-of select="value"/>
 													</xsl:attribute>
 												</input>
-											</div>
+											<!--</div>-->
 										</xsl:when>
 										<xsl:when test="type = 'hidden'">
 											<input>
@@ -417,15 +412,15 @@
 		<div class="toolbar">
 			<form>
 				<div class="form-row">
-					<div class="form-group col-md-4">
-						<xsl:for-each select="//end-toolbar/fields/field">
+					<xsl:for-each select="//end-toolbar/fields/field">
+						<div class="form-group col-md-2">
 							<xsl:choose>
 								<xsl:when test="type = 'date-picker'">
-									<td valign="top">
-										<div>
-											<input id="filter_{name}" name="filter_{name}" type="text"></input>
-										</div>
-									</td>
+									<input class="form-control" id="filter_{name}" name="filter_{name}" value="{value}" type="text">
+										<xsl:attribute name="title">
+											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+										</xsl:attribute>
+									</input>
 								</xsl:when>
 								<xsl:when test="type='button'">
 									<button id="{id}" type="{type}" class="form-control btn btn-primary" onclick="{action}">
@@ -436,15 +431,15 @@
 									<xsl:value-of select="value"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<input id="{id}" type="{type}" name="{name}" value="{value}">
+									<input id="{id}" type="{type}" name="{name}" value="{value}" class="form-control">
 										<xsl:if test="type = 'checkbox' and checked = '1'">
 											<xsl:attribute name="checked">checked</xsl:attribute>
 										</xsl:if>
 									</input>
 								</xsl:otherwise>
 							</xsl:choose>
-						</xsl:for-each>
-					</div>
+						</div>
+					</xsl:for-each>
 				</div>
 			</form>
 		</div>
