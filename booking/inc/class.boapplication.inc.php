@@ -306,7 +306,7 @@
 			 */
 			$enforce_ssl = $GLOBALS['phpgw_info']['server']['enforce_ssl'];
 			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
-			$link_backend =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
+			$link =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
 			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = $enforce_ssl;
 
 
