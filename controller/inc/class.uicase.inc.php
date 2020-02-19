@@ -721,8 +721,28 @@
 			$check_list_id = phpgw::get_var('check_list_id');
 			$case_location_code = phpgw::get_var('location_code');
 			$check_list = $this->so_check_list->get_single($check_list_id);
+
+			$repeat_descr = '';
+			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()));
+			{
+				$repeat_type_array = array
+					(
+					"0" => lang('day'),
+					"1" => lang('week'),
+					"2" => lang('month'),
+					"3" => lang('year')
+				);
+				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+			}
+
 			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
 			$control = $this->so_control->get_single($check_list->get_control_id());
+
+			if ($repeat_descr)
+			{
+				$repeat_descr .= " :: " . $control->get_title();
+				$control->set_title($repeat_descr);
+			}
 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
 
@@ -1001,6 +1021,7 @@
 
 
 			$check_list = $case_data['check_list'];
+
 			$last_completed_checklist = $case_data['last_completed_checklist'];
 
 			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';

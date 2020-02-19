@@ -65,33 +65,36 @@
 
 			$menus['navigation'] = array();
 
-			$menus['navigation'] = array(
-				'calendar_planner' =>  array(
-						'text' => lang('calendar planner'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
-						'image' => array('property', 'location_1')
-					),
+			$menus['navigation']					 = array();
+			$menus['navigation']['calendar_planner'] = array(
+				'text'	 => lang('calendar planner'),
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index')),
+				'image'	 => array('property', 'location_1')
+			);
 
-				'settings' =>  array(
-						'text' => lang('settings'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
-						'image' => array('property', 'location_1')
-					),
-				'start_inspection' =>  array(
-						'text' => lang('start inspection'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
-						'image' => array('property', 'location_1')
-					),
-				'inspection_history' =>  array(
-						'text' => lang('inspection history'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
-						'image' => array('property', 'location_1')
-					)
+
+			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('.control', phpgwapi_acl::EDIT, 'controller'))
+			{
+				$menus['navigation']['settings']			 = array(
+					'text'	 => lang('settings'),
+					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
+					'image'	 => array('property', 'location_1')
 				);
+			}
+
+			$menus['navigation']['start_inspection']	 = array(
+				'text'	 => lang('start inspection'),
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
+				'image'	 => array('property', 'location_1')
+			);
+			$menus['navigation']['inspection_history']	 = array(
+				'text'	 => lang('inspection history'),
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
+				'image'	 => array('property', 'location_1')
+			);
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
-
 		}
 
 		function get_menu()

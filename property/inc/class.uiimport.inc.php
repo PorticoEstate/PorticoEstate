@@ -42,7 +42,7 @@
 			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-				execMethod('property.bocommon.no_access');
+				phpgw::no_access();
 			}
 
 			set_time_limit(10000);
@@ -94,6 +94,9 @@
 			{
 				throw new Exception("Not a valid table: {$this->table}");
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import';
+
 		}
 
 		/**

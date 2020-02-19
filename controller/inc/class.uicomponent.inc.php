@@ -1028,6 +1028,7 @@
 			$control_names = array();
 
 			$components_with_calendar_array = array();
+			$duplicate_calendar = array();
 //			_debug_array($items);
 			foreach ($items as $_item)
 			{
@@ -1147,6 +1148,31 @@
 
 						$year_calendar = new year_calendar($control, $year, $component, null, "component", $control_relation);
 						$calendar_array = $year_calendar->build_calendar($check_lists_array);
+						foreach ($calendar_array as & $_month_info)
+						{
+							//remove duplicates from multiple seriens based on deadline
+
+							if(isset($_month_info['info']))
+							{
+								if(!empty($_month_info['info']['original_deadline_date_ts']))
+								{
+									$deadline_date_ts = $_month_info['info']['original_deadline_date_ts'];
+								}
+								else
+								{
+									$deadline_date_ts = $_month_info['info']['deadline_date_ts'];
+								}
+
+								if(isset($duplicate_calendar[$deadline_date_ts][$component->get_location_id()][$component->get_id()]))
+								{
+									$_month_info = array();
+								}
+
+								$duplicate_calendar[$deadline_date_ts][$component->get_location_id()][$component->get_id()] = true;
+							}
+						}
+
+						unset($_month_info);
 
 						if ($user_only && $user_id)
 						{
@@ -1156,7 +1182,6 @@
 							{
 								foreach ($calendar_array as $_month => $_month_info)
 								{
-
 									if($filter_month &&  $_month != $filter_month)
 									{
 										continue;
@@ -1871,7 +1896,7 @@ HTML;
 
 				for ($_month = 1; $_month < 13; $_month++)
 				{
-					if ($user_id 
+					if ($user_id
 						&& ( (!is_array($user_id) && $user_id != $entry[$_month]['info']['assigned_to'])
 							||  (!in_array($entry[$_month]['info']['assigned_to'], $user_id))
 							)

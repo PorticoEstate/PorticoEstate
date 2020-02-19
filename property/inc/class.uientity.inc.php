@@ -3587,8 +3587,14 @@ JS;
 			$writer->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}");
 
 			$soentity = createObject('property.soentity');
-			$categories = $this->soadmin_entity->read_category(array('entity_id' => $this->entity_id));
-//			_debug_array($categories);
+			$categories = $this->soadmin_entity->read_category(array
+				(
+					'entity_id' => $this->entity_id,
+					'results'	=> -1,
+					'allrows'	=> true
+				)
+			);
+
 			foreach ($categories as $category)
 			{
 				$items	 =  $soentity->read(array(

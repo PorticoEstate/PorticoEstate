@@ -66,6 +66,9 @@
 			$this->db				 = & $GLOBALS['phpgw']->db;
 			$this->config			 = createObject('phpgwapi.config', 'component_import');
 			$this->config_repository = $this->config->read_repository();
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_components';
+
 		}
 
 		public function download()
