@@ -390,11 +390,6 @@
 					</table>
 				</div>
 			</div>
-			<div class="mt-5 container text-right">
-				Eksport <a href="#">
-					<img src="images/excel.png" width="35"/>
-				</a>
-			</div>
 		</div>
 	</form>
 

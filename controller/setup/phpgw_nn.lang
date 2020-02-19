@@ -466,3 +466,6 @@ settings	controller	nn	Innstillingar
 corrected	controller	nn	Korrigert
 corrected on controll	controller	nn	Korrigert ved utført kontroll
 set status: not done	controller	nn	Sett status: ikkje utført
+notification subject	controller	nn	Overskrift på varsling
+notification content	controller	nn	Innhold i varsling
+send notification	controller	nn	Send varsel

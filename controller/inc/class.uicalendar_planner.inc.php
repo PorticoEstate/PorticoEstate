@@ -70,10 +70,10 @@
 		{
 			parent::__construct();
 
-			$this->read	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_READ, 'controller'); //1
-			$this->add	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller'); //2
-			$this->edit	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller'); //4
-			$this->delete	 = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller'); //8
+			$this->read	 = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_READ, 'controller'); //1
+			$this->add	 = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_ADD, 'controller'); //2
+			$this->edit	 = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_EDIT, 'controller'); //4
+			$this->delete	 = $GLOBALS['phpgw']->acl->check('.checklist', PHPGW_ACL_DELETE, 'controller'); //8
 
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
@@ -445,6 +445,14 @@
 			$control_names = array();
 
 			$item_calendar = array();
+			$repeat_type_array = array
+				(
+				"0" => lang('day'),
+				"1" => lang('week'),
+				"2" => lang('month'),
+				"3" => lang('year')
+			);
+			$duplicate_calendar = array();
 
 //			_debug_array($items);
 			foreach ($items as $_item)
@@ -602,11 +610,20 @@
 									$shedule_date = date('Y-m-d', $_month_info['info']['deadline_date_ts']);
 								}
 
-								if(isset($item_calendar[$deadline_date_ts]['component'][$component->get_location_id()][$component->get_id()]))
+								if(isset($duplicate_calendar[$deadline_date_ts][$component->get_location_id()][$component->get_id()]))
 								{
 									continue;
 								}
-								$item_calendar[$deadline_date_ts]['component'][$component->get_location_id()][$component->get_id()] = true;
+								$duplicate_calendar[$deadline_date_ts][$component->get_location_id()][$component->get_id()] = true;
+
+								$serie_id  = $_month_info['info']['serie_id'];
+								$serie = $this->so_control->get_serie($serie_id);
+								$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+
+								if($serie_id)
+								{
+									$component->set_xml_short_desc($component->get_xml_short_desc() . '( ' . $repeat_descr . ')');
+								}
 
 								$item_calendar["{$shedule_date}"][] = array(
 									'component' => $component->toArray(),
@@ -1501,6 +1518,15 @@ HTML;
 				$item_schedule = $this->get_items(0, 0, $control_id,  $entity_group_id, $part_of_town_id , $items, $from_date_ts, $to_date_ts);
 			}
 
+			$repeat_type_array = array
+				(
+				"0" => lang('day'),
+				"1" => lang('week'),
+				"2" => lang('month'),
+				"3" => lang('year')
+			);
+
+//			_debug_array($item_schedule);
 			$todo_list = array();
 			$completed_list = array();
 
@@ -1508,16 +1534,19 @@ HTML;
 			{
 				foreach ($item_schedule[$current_day_str] as $check_list)
 				{
+					$serie_id  = $check_list['schedule']['info']['serie_id'];
+					$serie = $this->so_control->get_serie($serie_id);
+					$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
 
 					if(!empty($check_list['schedule']['info']['completed_date_ts']))
 					{
-						$completed_list[] = "{$check_list['schedule']['info']['check_list_id']}::{$check_list['component']['address']} {$check_list['component']['xml_short_desc']}";
+						$completed_list[] = "{$check_list['schedule']['info']['check_list_id']}::{$check_list['component']['address']} {$check_list['component']['xml_short_desc']} ($repeat_descr)";
 					}
 					else
 					{
 						$todo_list[] = array(
 							'id' => $check_list['schedule']['info']['check_list_id'],
-							'name' => $check_list['component']['xml_short_desc']
+							'name' => "{$check_list['component']['xml_short_desc']} ($repeat_descr)"
 						);			
 					}
 				}
