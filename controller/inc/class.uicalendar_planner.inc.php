@@ -450,17 +450,21 @@
 			foreach ($items as $_item)
 			{
 				$location_id = $_item['location_id'];
+
 				$item_id = $_item['id'];
 				$all_components["{$location_id}_{$item_id}"] = $_item;
 
+
+				$short_description = $_item['location_name'];
+
 				if(empty($get_locations))
 				{
-					$short_description = $_item['short_description'];
+					$short_description .= '<br/>' . $_item['short_description'];
 //					$short_description .= ' [' . $_item['location_name'] . ']';
 				}
 				else
 				{
-					$short_description = $_item['location_code'];
+					$short_description .= '<br/>' . $_item['location_code'];
 					$short_description .= ' [' . $_item['loc1_name'] . ']';
 
 				}
@@ -512,7 +516,7 @@
 					{
 						//FIXME: Not currently supported
 
-						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+						$component->set_xml_short_desc($short_description);
 
 						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
 
@@ -533,7 +537,7 @@
 					// Process values for controls with repeat type month or year
 					else if ($repeat_type > controller_control::REPEAT_TYPE_WEEK)
 					{
-						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
+						$component->set_xml_short_desc($short_description);
 
 						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
 
@@ -543,6 +547,7 @@
 						 * start override control with data from serie
 						 */
 						$control_relation = $component->get_control_relation();
+
 						if (isset($control_relation['start_date']) && $control_relation['start_date'])
 						{
 							$control->set_start_date($control_relation['start_date']);
@@ -563,7 +568,6 @@
 
 						$year_calendar = new year_calendar($control, $year, $component, null, "component", $control_relation);
 						$calendar_array = $year_calendar->build_calendar($check_lists_array);
-
 						foreach ($calendar_array as $_month => $_month_info)
 						{
 							if($month !== $_month)
@@ -573,6 +577,18 @@
 
 							if($_month_info)
 							{
+								//deadline
+
+								if(!empty($_month_info['info']['original_deadline_date_ts']))
+								{
+									$deadline_date_ts = $_month_info['info']['original_deadline_date_ts'];
+								}
+								else
+								{
+									$deadline_date_ts = $_month_info['info']['deadline_date_ts'];
+
+								}
+
 								if(!empty($_month_info['info']['completed_date_ts']))
 								{
 									$shedule_date = date('Y-m-d', $_month_info['info']['completed_date_ts']);
@@ -586,6 +602,12 @@
 									$shedule_date = date('Y-m-d', $_month_info['info']['deadline_date_ts']);
 								}
 
+								if(isset($item_calendar[$deadline_date_ts]['component'][$component->get_location_id()][$component->get_id()]))
+								{
+									continue;
+								}
+								$item_calendar[$deadline_date_ts]['component'][$component->get_location_id()][$component->get_id()] = true;
+
 								$item_calendar["{$shedule_date}"][] = array(
 									'component' => $component->toArray(),
 									'schedule' => $_month_info
@@ -595,7 +617,7 @@
 					}
 				}
 			}
-
+//			_debug_array($item_calendar);
 			return $item_calendar;
 
 		}
