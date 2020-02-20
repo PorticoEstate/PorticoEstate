@@ -55,7 +55,7 @@ $(document).ready(function ()
 					}
 					else if (data.status == '1')
 					{
-						$(submitBnt).val("Oppheve status: Utført");
+						$("#status_text").html("Utført");
 						$("#update-check-list-status-value").val(0);
 						$(submitBnt).removeClass('btn-danger');
 						$(submitBnt).removeClass('btn-warning');
@@ -68,7 +68,7 @@ $(document).ready(function ()
 					}
 					else
 					{
-						$(submitBnt).val("Sett status: Utført");
+						$("#status_text").html("Ikke utført");
 						$("#update-check-list-status-value").val(1);
 						$(submitBnt).removeClass('btn-danger');
 						$(submitBnt).removeClass('btn-success');
@@ -117,7 +117,7 @@ function fallback_status_update()
 				}
 				else if (data.status == '1')
 				{
-					$(submitBnt).val("Oppheve status: Utført");
+					$("#status_text").html("Utført");
 					$("#update-check-list-status-value").val(0);
 					$(submitBnt).removeClass('btn-danger');
 					$(submitBnt).removeClass('btn-warning');
@@ -130,7 +130,7 @@ function fallback_status_update()
 				}
 				else
 				{
-					$(submitBnt).val("Sett status: Utført");
+					$("#status_text").html("Ikke utført");
 					$("#update-check-list-status-value").val(1);
 					$(submitBnt).removeClass('btn-danger');
 					$(submitBnt).removeClass('btn-success');

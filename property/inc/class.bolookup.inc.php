@@ -343,7 +343,7 @@
 				foreach ($users as $user)
 				{
 
-					if ($data['query'] && (!preg_match("/{$data['query']}/i", $user['account_lastname']) || !preg_match("/{$data['query']}/i", $user['account_lastname'])))
+					if ($data['query'] && (!preg_match("/{$data['query']}/i", $user['account_firstname']) && !preg_match("/{$data['query']}/i", $user['account_lastname'])))
 					{
 						continue;
 					}
