@@ -710,11 +710,14 @@
 					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, '', 'account_lastname');
 					foreach ($_accounts as $_account)
 					{
-						$accounts[] = array
-							(
-							'id'	 => $_account->id,
-							'name'	 => $_account->__toString()
-						);
+						if($_account->enabled)
+						{
+							$accounts[] = array
+								(
+								'id'	 => $_account->id,
+								'name'	 => $_account->__toString()
+							);
+						}
 					}
 					unset($_accounts);
 				}
@@ -724,11 +727,14 @@
 					foreach ($_accounts as $_account)
 					{
 						$__account	 = $GLOBALS['phpgw']->accounts->get($_account['account_id']);
-						$accounts[]	 = array
-							(
-							'id'	 => $__account->id,
-							'name'	 => $__account->__toString()
-						);
+						if($__account->enabled)
+						{
+							$accounts[]	 = array
+								(
+								'id'	 => $__account->id,
+								'name'	 => $__account->__toString()
+							);
+						}
 					}
 				}
 
