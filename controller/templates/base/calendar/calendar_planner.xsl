@@ -193,17 +193,6 @@
 			</div>
 		</div>
 	</form>
-
-	<div class="container">
-		<div class="clearfix">
-			<span class="float-left">
-				<a href="#">
-					<button type="button" class="btn btn-warning">Nullstill kalender</button>
-				</a>
-			</span>
-		</div>
-	</div>
-
 </xsl:template>
 
 
@@ -513,11 +502,6 @@
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
-				<!--				<span class="ml-2 float-left">
-					<a href="#">
-						<button type="button" class="btn btn-warning">Nullstill kalender</button>
-					</a>
-				</span>-->
 				<span class="float-right">
 					<a href="{send_notification_url}">
 						<button type="button" class="btn btn-success">Gå til utsending</button>
