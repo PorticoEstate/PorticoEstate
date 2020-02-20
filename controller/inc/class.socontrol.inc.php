@@ -1768,6 +1768,7 @@
 		function get_next_start_date($start_date, $repeat_type, $repeat_interval)
 		{
 			$next_date = $start_date;
+			$return_date = $start_date;
 			$now = time();
 			while ($next_date < $now)
 			{

@@ -469,3 +469,7 @@ set status: not done	controller	nn	Sett status: ikkje utført
 notification subject	controller	nn	Overskrift på varsling
 notification content	controller	nn	Innhold i varsling
 send notification	controller	nn	Send varsel
+change status	controller	nn	endre status
+performed	controller	nn	Utført
+not performed	controller	nn	Ikkje utført
+check list status	controller	nn	Status for heile kontrollen

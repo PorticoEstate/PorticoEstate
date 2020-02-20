@@ -315,6 +315,9 @@
 			array_unshift($district_list, array('id' => '', 'name' => lang('no district')));
 			// end district
 
+			$part_of_town_list = $property_bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
+			array_unshift($part_of_town_list, array('id' => '', 'name' => lang('no part of town')));
+
 			$year_list = array();
 
 			$year = phpgw::get_var('year', 'int');
@@ -448,6 +451,13 @@
 								'name' => 'district_id',
 								'text' => lang('district'),
 								'list' => $district_list,
+								'onchange' => 'update_table();'
+							),
+							array('type'	 => 'filter',
+								'name'	 => 'part_of_town_id',
+								'extra'	 => '',
+								'text'	 => lang('part of town'),
+								'list'	 => $part_of_town_list,
 								'onchange' => 'update_table();'
 							),
 							array('type' => 'filter',
@@ -798,6 +808,7 @@
 			$control_area = phpgw::get_var('control_area', 'int');
 			$user_id = $this->user_id;
 			$district_id = phpgw::get_var('district_id', 'int');
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
 			$filter_month = phpgw::get_var('month', 'int');
@@ -909,6 +920,7 @@
 							'location_id' => $_location_id,
 							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
 							'location_code'	=> $location_code,
 							'allrows' => true,
 							'filter_item' => $item_list
@@ -926,6 +938,7 @@
 							'location_id' => $_location_id,
 							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
 							'location_code'	=> $location_code,
 							'allrows' => true,
 							'filter_item' => $item_list
@@ -972,6 +985,7 @@
 							'location_id' => $_location_id,
 							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
 							'location_code'	=> $location_code,
 							'org_units' => $this->org_units,
 							'allrows' => true,
@@ -990,6 +1004,7 @@
 							'location_id' => $_location_id,
 							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
+							'part_of_town_id' => $part_of_town_id,
 							'location_code'	=> $location_code,
 							'control_registered' => !$all_items,
 							'check_for_control' => true,
@@ -1011,6 +1026,7 @@
 						'location_id' => $_location_id,
 						'control_id' => $filter_control_id,
 						'district_id' => $district_id,
+						'part_of_town_id' => $part_of_town_id,
 						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
 						'allrows' => true,
