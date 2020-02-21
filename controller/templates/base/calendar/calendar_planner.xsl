@@ -452,14 +452,14 @@
 				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i <xsl:value-of select="part_of_town"/>:
 				</p>
 			</div>
-			<div class="col">
+<!--			<div class="col">
 				<div class="clearfix">
 					<span class="float-right" style="font-size: 14px">Legg til ny <i class="far fa-plus-square"></i></span>
 				</div>
 				<div class="mt-2 clearfix">
 					<span class="float-right" style="font-size: 14px">Merk som inaktiv <i class="far fa-trash-alt"></i></span>
 				</div>
-			</div>
+			</div>-->
 		</div>
 
 
