@@ -46,7 +46,7 @@
 				}
 				$mailsubject = phpgw::get_var('mailsubject', 'string');
 				$mailbody = phpgw::get_var('mailbody', 'string');
-				$contacts = null;
+				$contacts = phpgw::get_var('contacts', 'string');
 
 				if ($step == 1)
 				{
@@ -67,8 +67,16 @@
 				}
 				elseif ($step == 3)
 				{
-					$contacts = $this->get_email_addresses($building_id, $season);
-					$result = $this->send_emails($contacts, $mailsubject, $mailbody);
+					$_contacts = array();
+
+					foreach ($contacts as $contact)
+					{
+						$_contacts[] = array('email' => $contact);
+					}
+
+//					$contacts = $this->get_email_addresses($building_id, $season);
+
+					$result = $this->send_emails($_contacts, $mailsubject, $mailbody);
 					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt',
 						'ok' => count($result['ok']),
 						'failed' => count($result['failed'])
@@ -91,13 +99,18 @@
 					'date', 'security', 'file'));
 
 			if ($step == 1)
+			{
+				$this->rich_text_editor(array('field_mailbody'));
 				self::render_template_xsl('email_index', array('building' => $building,
 					'season' => $season,
 					'mailsubject' => $mailsubject,
 					'mailbody' => $mailbody,
 					'step' => $step));
+			}
 
 			if ($step == 2)
+			{
+				phpgwapi_jquery::load_widget('bootstrap-multiselect');
 				self::render_template_xsl('email_preview', array('building' => $building,
 					'building_id' => $building_id,
 					'season' => $season,
@@ -105,6 +118,7 @@
 					'mailbody' => $mailbody,
 					'contacts' => $contacts,
 					'step' => $step));
+			}
 		}
 
 		public function receipt()
@@ -165,9 +179,16 @@
 			$db->query($sql);
 
 			$result = $db->resultSet;
+
+			$duplicates = array();
+
 			foreach ($result as $c)
 			{
-				$contacts[] = array('email' => $c['email'], 'name' => $c['name']);
+				if(!isset($duplicates[$c['email']]))
+				{
+					$contacts[] = array('email' => $c['email'], 'name' => $c['name']);
+					$duplicates[$c['email']] = true;
+				}
 			}
 
 			return $contacts;

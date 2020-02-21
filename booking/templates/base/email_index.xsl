@@ -15,7 +15,7 @@
 							<xsl:value-of select="building/id"/>
 						</xsl:attribute>
 					</input>
-					<input id="field_building_name" name="building_name" type="text">
+					<input id="field_building_name" name="building_name" type="text" class="pure-input-3-4" >
 						<xsl:attribute name="value">
 							<xsl:value-of select="building/name"/>
 						</xsl:attribute>
@@ -46,7 +46,7 @@
 					<label for="field_mailsubject">
 						<xsl:value-of select="php:function('lang', 'Mail subject')" />
 					</label>
-					<input type="text" id="field_mailsubject" name="mailsubject" class="full-width">
+					<input type="text" id="field_mailsubject" name="mailsubject" class="pure-input-3-4" >
 						<xsl:attribute name="value">
 							<xsl:value-of select="mailsubject"/>
 						</xsl:attribute>
@@ -62,15 +62,17 @@
 					<label for="field_mailbody">
 						<xsl:value-of select="php:function('lang', 'Mail body')" />
 					</label>
-					<textarea id="field_mailbody" name="mailbody" class="full-width">
-						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please enter a mail body')" />
-						</xsl:attribute>
-						<xsl:value-of select="mailbody"/>
-					</textarea>
+					<div class="pure-custom pure-input-3-4">
+						<textarea id="field_mailbody" name="mailbody">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please enter a mail body')" />
+							</xsl:attribute>
+							<xsl:value-of select="mailbody"/>
+						</textarea>
+					</div>
 				</div>
 			</div>
 		</div>
