@@ -360,7 +360,14 @@
 					"2" => lang('month'),
 					"3" => lang('year')
 				);
-				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				if($serie['repeat_type'] == 3)
+				{
+					$repeat_descr = 'Årskontroll';
+				}
+				else
+				{
+					$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				}
 			}
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
@@ -545,7 +552,14 @@
 					"2" => lang('month'),
 					"3" => lang('year')
 				);
-				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				if($serie['repeat_type'] == 3)
+				{
+					$repeat_descr = 'Årskontroll';
+				}
+				else
+				{
+					$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				}
 			}
 
 			$control = $this->so_control->get_single($check_list->get_control_id());
@@ -3828,7 +3842,14 @@ HTML;
 					"2" => lang('month'),
 					"3" => lang('year')
 				);
-				$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				if($serie['repeat_type'] == 3)
+				{
+					$repeat_descr = 'Årskontroll';
+				}
+				else
+				{
+					$repeat_descr = "{$repeat_type_array[$serie['repeat_type']]}/{$serie['repeat_interval']}";
+				}
 			}
 
 			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
