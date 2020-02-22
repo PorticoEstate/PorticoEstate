@@ -69,10 +69,11 @@
 		<xsl:value-of select="current_year"/>
 	</xsl:variable>
 
-	<form method="post" id="form" action="{form_action}">
+	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
+	<form method="post" id="form" action="{form_action}">
 		<div class="row">
-			<div class="mt-5 container">
+			<div id="democollapseBtn" class="mt-2 container collapse">
 				<div class="form-group">
 					<fieldset>
 						<legend>Velg kontroll</legend>
@@ -250,10 +251,12 @@
 		<xsl:value-of select="current_year"/>
 	</xsl:variable>
 
+	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+
 	<form method="post" id="form" action="{form_action}">
 
-		<div class="row">
-			<div class="mt-5 container">
+		<div id="democollapseBtn" class="row collapse">
+			<div class="mt-2 container">
 				<fieldset>
 					<legend>Velg kontroll</legend>
 					<div class="form-group">
@@ -452,7 +455,7 @@
 				<p style="font-size: 14px">I <xsl:value-of select="current_month"/> er det satt opp befaring i <xsl:value-of select="part_of_town"/>:
 				</p>
 			</div>
-<!--			<div class="col">
+			<!--			<div class="col">
 				<div class="clearfix">
 					<span class="float-right" style="font-size: 14px">Legg til ny <i class="far fa-plus-square"></i></span>
 				</div>
@@ -615,10 +618,12 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
+	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+
 	<form method="post" id="form" action="{form_action}">
 
-		<div class="row">
-			<div class="mt-5 container">
+		<div id="democollapseBtn" class="row collapse">
+			<div class="mt-2 container">
 				<div class="form-group">
 					<fieldset>
 						<legend>Velg kontroll</legend>
