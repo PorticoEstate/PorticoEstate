@@ -1052,6 +1052,8 @@ JS;
 				}
 			}
 
+			array_unshift($field_of_responsibility_options, array('id' => '', 'name' => lang('select')));
+
 			$data = array(
 				'datatable_name' => lang('invoice_menu'),
 				'form' => array(
@@ -1704,6 +1706,7 @@ JS;
 			// Form variables
 			$search_for = (string)$search['value'];
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
+			$contract_type = phpgw::get_var('contract_type');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -1720,7 +1723,7 @@ JS;
 			switch ($query_type)
 			{
 				case 'all_billings':
-					$filters = array();
+					$filters = array('contract_type' => $contract_type );
 					if (!$sort_field)
 					{
 						$sort_field = 'timestamp_stop';

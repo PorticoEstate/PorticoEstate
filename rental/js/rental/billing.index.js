@@ -1,6 +1,15 @@
 function onCreateBilling()
 {
-	var oArgs = {menuaction: 'rental.uibilling.add', contract_type: document.getElementById('contract_type').value};
+	var contract_type = document.getElementById('contract_type').value;
+
+	if(!contract_type)
+	{
+		alert('Velg ansvarsområde');
+		return;
+	}
+
+
+	var oArgs = {menuaction: 'rental.uibilling.add', contract_type: contract_type};
 	var sUrl = phpGWLink('index.php', oArgs);
 	window.location = sUrl;
 }

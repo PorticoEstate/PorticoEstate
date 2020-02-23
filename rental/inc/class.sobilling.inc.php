@@ -48,6 +48,12 @@
 				$filter_clauses[] = "rb.location_id=$location_id";
 				$filter_clauses[] = "rb.timestamp_commit is null";
 			}
+			if (!empty($filters['contract_type']))
+			{
+				$contract_type = $this->marshal($filters['contract_type'], 'int');
+				$filter_clauses[] = "rb.location_id=$contract_type";
+			}
+
 			$filter_clauses[] = "rb.deleted = false";
 			if (count($filter_clauses))
 			{
