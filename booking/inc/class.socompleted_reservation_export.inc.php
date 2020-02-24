@@ -923,7 +923,7 @@
 
 				$line_field = array();
 
-				$line_field[] = "\"{$reservation['id']}\"";
+				$line_field[] = "\"{$reservation['reservation_id']}\"";
 				$line_field[] = "\"{$reservation['reservation_type']}\"";
 				$line_field[] = "\"{$log_order_id}\"";
 				$line_field[] = "\"{$log_customer_name}\"";
@@ -1459,7 +1459,7 @@
 
 					$line_field = array();
 
-					$line_field[] = "\"{$reservation['id']}\"";
+					$line_field[] = "\"{$reservation['reservation_id']}\"";
 					$line_field[] = "\"{$reservation['reservation_type']}\"";
 					$line_field[] = "\"{$log_order_id}\"";
 					$line_field[] = "\"{$log_customer_name}\"";
