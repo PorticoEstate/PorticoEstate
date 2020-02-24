@@ -355,7 +355,7 @@
 				'sort_name'				=> $this->_nextmatches->show_sort_order(array
 											(
 												'sort'	=> $sort,
-												'var'	=> 'lid',
+												'var'	=> 'account_lid',
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),

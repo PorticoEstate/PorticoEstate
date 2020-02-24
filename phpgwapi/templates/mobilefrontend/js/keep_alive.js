@@ -77,8 +77,9 @@ function keepAlive()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
-			clearInterval(refreshIntervalId);
-			alert('expired');
+			//Test...
+//			clearInterval(refreshIntervalId);
+//			alert('expired');
 		}
 	});
 }
