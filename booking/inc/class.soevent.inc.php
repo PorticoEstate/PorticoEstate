@@ -469,6 +469,11 @@
 
 		function get_org( $orgnumber )
 		{
+			if(!$orgnumber)
+			{
+				return array();
+			}
+
 			$sql = "SELECT id,name,street,zip_code,city FROM bb_organization WHERE (organization_number='" . $orgnumber . "' OR customer_organization_number='" . $orgnumber . "') AND active != 0";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
