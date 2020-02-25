@@ -1,4 +1,5 @@
 <xsl:template name="select_component_children" xmlns:php="http://php.net/xsl">
+	<xsl:param name="template_set" />
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">
 		<xsl:attribute name="action">
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
@@ -66,13 +67,37 @@
 				<input type="hidden" name="parent_component_id" value="{parent_component_id}" />
 				<input type="hidden" name="location_id" value="{location_id}" />
 
-				<div class="pure-controls">
-					<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
+				<div class="pure-controls pure-custom">
+					<button id = "submit_component_form" type="submit" >
+						<xsl:choose>
+							<xsl:when test="$template_set = 'boostrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:value-of select="php:function('lang', 'new')" />
 						<xsl:text>: </xsl:text>
 						<xsl:value-of select="name" />
 					</button>
-					<button id = "download_components" type="button" class="pure-button pure-button-primary" onclick="downloadComponents({parent_location_id}, {parent_component_id}, {location_id});">
+					<button id = "download_components" type="button" onclick="downloadComponents({parent_location_id}, {parent_component_id}, {location_id});">
+						<xsl:choose>
+							<xsl:when test="$template_set = 'boostrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:value-of select="php:function('lang', 'download')" />
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="name" />

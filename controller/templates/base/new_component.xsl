@@ -26,7 +26,7 @@
 					</button>
 				</xsl:if>
 				<xsl:if test="get_info =1">
-					<button id = "submit_component_form" type="button" class="pure-button pure-button-primary" onclick="get_edit_form();">
+					<button id = "submit_component_form" type="button" onclick="get_edit_form();">
 						<xsl:choose>
 							<xsl:when test="edit_parent !=1">
 								<xsl:attribute name="onclick">
@@ -39,16 +39,38 @@
 								</xsl:attribute>
 							</xsl:otherwise>
 						</xsl:choose>
+						<xsl:choose>
+							<xsl:when test="template_set = 'boostrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:value-of select="php:function('lang', 'edit')" />
 					</button>
 				</xsl:if>
-				<button id = "cancel_new_component" type="button" class="pure-button pure-button-primary" onclick="remove_component_form(form);">
+				<button id = "cancel_new_component" type="button"  onclick="remove_component_form(form);">
+					<xsl:choose>
+						<xsl:when test="template_set = 'boostrap'">
+							<xsl:attribute name="class">
+								<xsl:text>btn btn-primary btn-sm</xsl:text>
+							</xsl:attribute>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:attribute name="class">
+								<xsl:text>pure-button pure-button-primary</xsl:text>
+							</xsl:attribute>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:value-of select="php:function('lang', 'cancel')" />
 				</button>
 			</div>
-
 		</fieldset>
 	</form>
-
 </xsl:template>
 

@@ -137,7 +137,11 @@
 	<xsl:choose>
 		<xsl:when test="component_children/child::node()">
 			<div id="choose-building-wrp">
-				<xsl:call-template name="select_component_children" />
+				<xsl:call-template name="select_component_children">
+					<xsl:with-param name="template_set">
+						<xsl:text>boostrap</xsl:text>
+					</xsl:with-param>
+				</xsl:call-template>
 				<xsl:if test="$active_tab != 'view_details'">
 					<div class="row mt-2">
 						<div class="container">
