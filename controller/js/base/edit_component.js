@@ -231,8 +231,10 @@ $(document).ready(function ()
 	};
 	show_component_picture = function ()
 	{
+		var d = new Date();
+		var n = d.getTime();// to forse refrech cache
 		var component = $("#choose-child-on-component").val();
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
