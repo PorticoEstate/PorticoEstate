@@ -222,6 +222,7 @@ registered	controller	nn	Registrert
 remove	controller	nn	Fjern
 controller	controller	nn	Kontroll
 reports	controller	nn	Rapporter
+report	controller	nn	Rapport
 Receipt	controller	nn	Kvittering
 reset	controller	nn	Nullstill
 responsibility	controller	nn	Ansvar
