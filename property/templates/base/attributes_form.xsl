@@ -749,7 +749,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:choose>
-					<xsl:when test="history=1">
+					<xsl:when test="history=1 and //supress_history_date !=1">
 						<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
 						</input>
 						<xsl:variable name="link_history">
