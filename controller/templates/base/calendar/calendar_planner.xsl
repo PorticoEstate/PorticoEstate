@@ -342,27 +342,32 @@
 								<th>
 									<h5>Siste rapportdato</h5>
 								</th>
-								<th colspan = '3'>
-									<table class="table-plain">
-										<tr>
-											<td colspan = '3'>
-												<h5>Tilstandsgrader</h5>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<h5>1</h5>
-											</td>
-											<td>
-												<h5>2</h5>
-											</td>
-											<td>
-												<h5>3</h5>
-											</td>
 
-										</tr>
-									</table>
-								</th>
+								<xsl:choose>
+									<xsl:when test="condition_degree =1">
+										<th colspan = '3'>
+											<table class="table-plain">
+												<tr>
+													<td colspan = '3'>
+														<h5>Tilstandsgrader</h5>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<h5>1</h5>
+													</td>
+													<td>
+														<h5>2</h5>
+													</td>
+													<td>
+														<h5>3</h5>
+													</td>
+
+												</tr>
+											</table>
+										</th>
+									</xsl:when>
+								</xsl:choose>
 								<th>
 									<h5>Åpne avvik</h5>
 								</th>
@@ -377,6 +382,7 @@
 						<tbody>
 							<xsl:apply-templates select="history_content/history_rows">
 								<xsl:with-param name="date_format" select ='$date_format'/>
+								<xsl:with-param name="condition_degree" select ='condition_degree'/>
 							</xsl:apply-templates>
 						</tbody>
 					</table>
@@ -808,6 +814,7 @@
 
 <xsl:template match="history_rows">
 	<xsl:param name="date_format"/>
+	<xsl:param name="condition_degree"/>
 	<xsl:variable name="completed_date">
 		<xsl:value-of select="completed_date"/>
 	</xsl:variable>
@@ -835,15 +842,21 @@
 		<td>
 			<xsl:value-of select="php:function('date', $date_format, number($completed_date))"/>
 		</td>
-		<td>
-			<xsl:value-of select="findings_summary/condition_degree_1"/>
-		</td>
-		<td>
-			<xsl:value-of select="findings_summary/condition_degree_2"/>
-		</td>
-		<td>
-			<xsl:value-of select="findings_summary/condition_degree_3"/>
-		</td>
+
+		<xsl:choose>
+			<xsl:when test="$condition_degree =1">
+				<td>
+					<xsl:value-of select="findings_summary/condition_degree_1"/>
+				</td>
+				<td>
+					<xsl:value-of select="findings_summary/condition_degree_2"/>
+				</td>
+				<td>
+					<xsl:value-of select="findings_summary/condition_degree_3"/>
+				</td>
+			</xsl:when>
+		</xsl:choose>
+
 		<td>
 			<xsl:value-of select="num_open_cases"/>
 		</td>

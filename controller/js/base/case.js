@@ -38,9 +38,17 @@ $(document).ready(function ()
 
 	$(".add_picture_to_case_form").on("submit", function (e)
 	{
+
 		e.preventDefault();
 
 		var thisForm = $(this);
+//		var submitBnt = $(thisForm).find("button[type='submit']");
+//		submitBnt.prop('disabled', true);
+
+		$('<div id="spinner" class="text-cente mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Loading...</span>')))
+			.insertAfter(thisForm);
 
 		var oArgs = {menuaction: 'controller.uicase.add_case_image'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -79,6 +87,13 @@ $(document).ready(function ()
 					{
 						$("#case_picture_file").val('');
 						show_case_picture(case_id, thisForm);
+//						submitBnt.prop('disabled', false);
+						var element = document.getElementById('spinner');
+						if (element)
+						{
+							element.parentNode.removeChild(element);
+						}
+
 					}
 					else
 					{
@@ -91,7 +106,7 @@ $(document).ready(function ()
 
 	$('#inspectObject').on('hidden.bs.modal', function (e)
 	{
-		if($("#cache_case_id").val())
+		if ($("#cache_case_id").val())
 		{
 			$('#set_completed_item').submit();
 		}
@@ -185,8 +200,9 @@ $(document).ready(function ()
 //
 //								$(submitBnt).addClass("case_saved");
 //								$(submitBnt).attr("disabled", true);
-							}, 1000);
+							}, 500);
 
+							$("#reset_form").val('Ny sak');
 							/*
 							 $(thisForm).delay(1500).slideUp(500, function(){
 							 $(thisForm).parents("ul.expand_list").find("h4 img").attr("src", "controller/images/arrow_right.png");

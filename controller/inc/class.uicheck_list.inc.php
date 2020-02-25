@@ -3358,7 +3358,7 @@ HTML;
 
 
 			$report_data['location_image'] = $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}")) : '';
-			
+
 			if($file && $inline_images)
 			{
 				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
@@ -3459,13 +3459,13 @@ HTML;
 //					_debug_array($findings_map);
 //	_debug_array($findings_options);
 //	die();
-						
+
 					}
 
 
-					
+
 					$n = 1;
-					
+
 					$entry = array();
 
 					$entry[] = array
@@ -3515,16 +3515,21 @@ HTML;
 						'text' => lang('status'),
 						'value' => $status_text
 					);
-					$entry[] = array
-					(
-						'text' => lang('condition degree'),
-						'value' => $case->get_condition_degree()
-					);
-					$entry[] = array
-					(
-						'text' => lang('consequence'),
-						'value' => $case->get_consequence()
-					);
+
+					if($check_item->get_control_item()->get_include_condition_degree())
+					{
+						$entry[] = array
+						(
+							'text' => lang('condition degree'),
+							'value' => $case->get_condition_degree()
+						);
+						$entry[] = array
+						(
+							'text' => lang('consequence'),
+							'value' => $case->get_consequence()
+						);
+					}
+
 
 					$entry[] = array
 					(
@@ -3546,7 +3551,7 @@ HTML;
 					);
 
 					foreach ($case_files as &$case_file)
-					{	
+					{
 						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
 //						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
 						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
@@ -3601,12 +3606,12 @@ HTML;
 				$data[] = $entry;
 
 				$controlled_text = 'Ikke kontrollert';
-				
+
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
 						$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
 				}
-			
+
 				$entry = array
 				(
 					'text' => 'Kontrollstatus',
@@ -3731,11 +3736,11 @@ HTML;
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
 //			_debug_array($report_data['findings']);die();
-			
+
 			$this->render_report($report_data);
 		}
-		
-		
+
+
 		function render_report($report_data)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
@@ -3759,7 +3764,7 @@ HTML;
 			$html = trim($proc->transformToXML($xml));
 
 			echo $html;
-			
+
 //			$this->makePDF($html);
 		}
 

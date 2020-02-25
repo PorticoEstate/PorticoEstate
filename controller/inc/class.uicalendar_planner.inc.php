@@ -1120,19 +1120,37 @@ HTML;
 			$total = $this->so->total_records;
 
 			
+			$condition_degree = 0;
+
+			$soentity = createObject('property.soentity');
+
 			foreach ($history_content as &$entry)
 			{
+				if($entry['location_id'])
+				{
+					$entry['loc1_name'] = $entry['loc1_name'] . '::' . $soentity->get_short_description(
+						array
+						(
+							'location_id' => $entry['location_id'],
+							'id' => $entry['component_id']
+						)
+					);
+				}
+
 				if(isset($entry['findings_summary']['condition_degree'][1]))
 				{
 					$entry['findings_summary']['condition_degree_1'] = $entry['findings_summary']['condition_degree'][1];
+					$condition_degree ++;
 				}
 				if(isset($entry['findings_summary']['condition_degree'][2]))
 				{
 					$entry['findings_summary']['condition_degree_2'] = $entry['findings_summary']['condition_degree'][2];
+					$condition_degree ++;
 				}
 				if(isset($entry['findings_summary']['condition_degree'][3]))
 				{
 					$entry['findings_summary']['condition_degree_3'] = $entry['findings_summary']['condition_degree'][3];
+					$condition_degree ++;
 				}
 			}
 
@@ -1166,6 +1184,7 @@ HTML;
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
 				'control_type_list'	 => array('options' => $control_type_list),
 				'history_content'	 => array('history_rows' => $history_content),
+				'condition_degree'	 => !!$condition_degree
 			);
 //			_debug_array($data['control_type_list']);
 //			_debug_array($data['history_content']);

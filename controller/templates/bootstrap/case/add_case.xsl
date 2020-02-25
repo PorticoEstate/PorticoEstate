@@ -433,7 +433,7 @@
 													<xsl:variable name="lang_reset_form">
 														<xsl:value-of select="php:function('lang', 'reset form')" />
 													</xsl:variable>
-													<input type="button" name="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="btn btn-primary btn-lg" onclick="resetForm(form);"/>
+													<input type="button" name="reset_form" id="reset_form" value="{$lang_reset_form}" title="{lang_reset_form}" class="btn btn-primary btn-lg" onclick="resetForm(form);"/>
 												</form>
 												<div class="add_picture_to_case" style="display:none">
 													<form class="add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
@@ -459,9 +459,9 @@
 																	</label>
 																</div>
 															</div>
-															<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
+<!--															<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
 																<xsl:value-of select="php:function('lang', 'add picture')" />
-															</button>
+															</button>-->
 														</div>
 													</form>
 												</div>
