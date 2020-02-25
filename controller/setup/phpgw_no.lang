@@ -223,6 +223,7 @@ registered	controller	no	Registrert
 remove	controller	no	Fjern
 controller	controller	no	Kontroll
 reports	controller	no	Rapporter
+report	controller	no	Rapport
 Receipt	controller	no	Kvittering
 reset	controller	no	Nullstill
 responsibility	controller	no	Ansvar
