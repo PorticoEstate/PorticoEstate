@@ -208,7 +208,8 @@
 					'get_form'	=> $get_form,
 					'get_info'	=> $get_info,
 					'get_edit_form' => $get_edit_form,
-					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']
+					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
+					'supress_history_date' => true
 					);
 
 				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
