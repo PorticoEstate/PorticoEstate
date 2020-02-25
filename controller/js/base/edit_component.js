@@ -4,7 +4,7 @@ downloadComponents = function (parent_location_id, parent_id, location_id)
 	var oArgs = {
 		menuaction: 'property.uientity.download',
 		parent_location_id: parent_location_id,
-		parent_id : parent_id,
+		parent_id: parent_id,
 		location_id: location_id,
 		export: 1
 	};
@@ -201,7 +201,9 @@ $(document).ready(function ()
 
 	show_component_parent_picture = function (component)
 	{
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component};
+		var d = new Date();
+		var n = d.getTime();// to forse refrech cache
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -288,12 +290,16 @@ $(document).ready(function ()
 
 	show_picture_submit = function ()
 	{
-		$("#submit_update_component").show();
+
+		var form = $('#component_picture_file').closest('form');
+		form.submit();
+
+//		$("#submit_update_component").show();
 
 	};
 	show_picture_parent_submit = function ()
 	{
-		$("#submit_update_component_parent").show();
+//		$("#submit_update_component_parent").show();
 
 	};
 
@@ -307,6 +313,11 @@ $(document).ready(function ()
 		var component = $(thisForm).find("input[name='component']").val();
 
 		requestUrl += '&component=' + component;
+
+		$('<div id="spinner" class="text-cente mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Loading...</span>')))
+			.insertAfter(thisForm);
 
 		var formdata = false;
 		if (window.FormData)
@@ -330,6 +341,11 @@ $(document).ready(function ()
 						$("#submit_update_component_parent").hide();
 						$("#component_parent_picture_file").val('');
 						show_component_parent_picture(component);
+						var element = document.getElementById('spinner');
+						if (element)
+						{
+							element.parentNode.removeChild(element);
+						}
 
 					}
 					else
@@ -349,6 +365,10 @@ $(document).ready(function ()
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");
 
+		$('<div id="spinner" class="text-cente mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Loading...</span>')))
+			.insertAfter(thisForm);
 
 		var formdata = false;
 		if (window.FormData)
@@ -372,6 +392,11 @@ $(document).ready(function ()
 						$("#submit_update_component").hide();
 						$("#component_picture_file").val('');
 						show_component_picture();
+						var element = document.getElementById('spinner');
+						if (element)
+						{
+							element.parentNode.removeChild(element);
+						}
 
 					}
 					else
@@ -488,6 +513,9 @@ $(document).ready(function ()
 		picture_container.html('');
 		var add_picture_to_case_container = $(form).next('.add_picture_to_case');
 		$(add_picture_to_case_container).hide();
+
+		$("#reset_form").val('Tøm skjema');
+
 	};
 
 	// Add the following code if you want the name of the file appear on select
@@ -495,6 +523,8 @@ $(document).ready(function ()
 	{
 		var fileName = $(this).val().split("\\").pop();
 		$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		var form = $(this).closest('form');
+		form.submit();
 	});
 
 

@@ -80,9 +80,9 @@
 								</label>
 							</div>
 						</div>
-						<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
+<!--						<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
 							<xsl:value-of select="php:function('lang', 'add picture')" />
-						</button>
+						</button>-->
 					</div>
 				</div>
 
