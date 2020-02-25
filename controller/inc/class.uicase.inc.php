@@ -207,7 +207,8 @@
 					'attributes_general' => array('attributes' => $values['attributes']),
 					'get_form'	=> $get_form,
 					'get_info'	=> $get_info,
-					'get_edit_form' => $get_edit_form
+					'get_edit_form' => $get_edit_form,
+					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']
 					);
 
 				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
