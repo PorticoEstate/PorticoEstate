@@ -148,7 +148,7 @@
 					</xsl:variable>
 
 					<!--<div class="col-md-{$witdth}">-->
-					<div>
+					<div class="col-sm-3">
 						<table class="table table-bordered table-sm">
 							<tr>
 								<th class="text-left text-left border-bottom-0">
@@ -185,8 +185,8 @@
 							</tr>
 						</table>
 					</div>
+					<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
 				</div>
-				<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
 
 				<div class="row">
 
