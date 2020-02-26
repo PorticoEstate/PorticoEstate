@@ -3244,8 +3244,7 @@
 			if (!$this->acl_add)
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
-				echo lang('No Access');
-				$GLOBALS['phpgw']->common->phpgw_exit();
+				phpgw::no_access();
 			}
 
 			$order_id = phpgw::get_var('order_id');
@@ -3272,8 +3271,6 @@
 				}
 				$values['amount'] = str_replace(array(' ', ','), array('', '.'), $values['amount']);
 
-				$insert_record					 = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
-				$values							 = $this->bocommon->collect_locationdata($values, $insert_record);
 				$values['b_account_id']			 = phpgw::get_var('b_account_id');
 				$values['external_project_id']	 = phpgw::get_var('external_project_id');
 				$values['dimb']					 = phpgw::get_var('ecodimb');
@@ -3307,6 +3304,11 @@
 						'msg' => lang('Please - select type invoice!'));
 				}
 
+				if($values['artid'] == 2)
+				{
+					$values['amount'] = abs((float)$values['amount']) * -1;
+				}
+
 				if ($values['vendor_id'] == 99)
 				{
 					$values['invoice_id'] = $boinvoice->get_auto_generated_invoice_num($values['vendor_id']);
@@ -3324,14 +3326,21 @@
 
 				if (!$values['typeid'])
 				{
-					$receipt['error'][] = array(
-						'msg' => lang('Please - select type order!'));
+					$values['typeid'] = 1;
+//					$receipt['error'][] = array(
+//						'msg' => lang('Please - select type order!'));
 				}
 
 				if (!$values['budget_responsible'])
 				{
 					$receipt['error'][] = array(
 						'msg' => lang('Please - select budget responsible!'));
+				}
+
+				if (!$values['voucher_out_id'])
+				{
+					$receipt['error'][] = array(
+						'msg' => lang('enter invoice number'));
 				}
 
 				if (!$values['invoice_id'])
@@ -3352,23 +3361,70 @@
 					$values['regtid'] = date($GLOBALS['phpgw']->db->datetime_format());
 
 					$_receipt	 = array();//local errors
+
+					$values['external_voucher_id'] = $values['voucher_out_id'];
 					$receipt	 = $boinvoice->add_manual_invoice($values);
 
 					if (!isset($receipt['error'])) // all ok
 					{
+						$file_name = @str_replace(' ', '_', $_FILES['file']['name']);
+
+						if ($file_name)
+						{
+
+							$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+							$directory_local		 = rtrim($config->config_data['import']['local_path'], '/');
+							$directory_attachment	 = "{$directory_local}/attachment/{$values['voucher_out_id']}";
+
+							if($directory_local)
+							{
+								if (!$this->check_storage_dir($directory_attachment))
+								{
+									$this->create_storage_dir($directory_attachment);
+								}
+
+								copy($_FILES['file']['tmp_name'], "{$directory_attachment}/{$file_name}");
+							}
+							else
+							{
+
+								$bofiles = CreateObject('property.bofiles');
+								$to_file = $bofiles->fakebase . '/workorder/' . $order_id . '/' . $file_name;
+
+								if ($bofiles->vfs->file_exists(array(
+										'string'	 => $to_file,
+										'relatives'	 => array(
+											RELATIVE_NONE)
+									)))
+								{
+									$this->receipt['error'][] = array(
+										'msg' => lang('This file already exists !'));
+								}
+								else
+								{
+									$bofiles->create_document_dir("workorder/{$order_id}");
+									$bofiles->vfs->override_acl = 1;
+
+									if (!$bofiles->vfs->cp(array(
+											'from'		 => $_FILES['file']['tmp_name'],
+											'to'		 => $to_file,
+											'relatives'	 => array(
+												RELATIVE_NONE | VFS_REAL,
+												RELATIVE_ALL))))
+									{
+										$this->receipt['error'][] = array(
+											'msg' => lang('Failed to upload file !'));
+									}
+									$bofiles->vfs->override_acl = 0;
+								}
+
+							}
+						}
+
 						execMethod('property.soXport.update_actual_cost_from_archive', array(
 							$values['order_id'] => true));
 						$redirect = true;
-					}
-				}
-				else
-				{
-					if ($values['location'])
-					{
-						$location_code			 = implode("-", $values['location']);
-						$_location				 = $bolocation->read_single($location_code, isset($values['extra']) ? $values['extra'] : '');
-						unset($_location['attributes']);
-						$values['location_data'] = $_location;
 					}
 				}
 			}
@@ -3380,7 +3436,7 @@
 				if (!$add_invoice && !$redirect)
 				{
 					$_criteria						 = array
-						(
+					(
 						'dimb' => $workorder['ecodimb']
 					);
 					$_responsible					 = $boinvoice->set_responsible($_criteria, $workorder['user_id'], $workorder['b_account_id'] ? $workorder['b_account_id'] : $values['b_account_id']);
@@ -3392,44 +3448,54 @@
 
 			if (isset($values['location_data']) && $values['location_data'])
 			{
-				$_location_data = $values['location_data'];
+				$location_code = $values['location_data']['location_code'];
 			}
 			else if (isset($workorder['location_data']) && $workorder['location_data'])
 			{
-				$_location_data = $workorder['location_data'];
+				$location_code = $workorder['location_data']['location_code'];;
 			}
 			else if (isset($project['location_data']) && $project['location_data'])
 			{
-				$_location_data = $project['location_data'];
+				$location_code = $project['location_data']['location_code'];;
 			}
 			else
 			{
-				$_location_data = array();
+				$location_code = '';
 			}
-//_debug_array($project);die();
-
-			$location_data = $bolocation->initiate_ui_location(array
-				(
-				'values'		 => $_location_data,
-				'type_id'		 => 2, // calculated from location_types
-				'no_link'		 => false, // disable lookup links for location type less than type_id
-				'tenant'		 => false,
-				'lookup_type'	 => 'form',
-				'lookup_entity'	 => false,
-				'entity_data'	 => false
-				)
-			);
-
-			$external_project_data = $this->bocommon->initiate_external_project_lookup(array(
-				'external_project_id'	 => $values['external_project_id'] ? $values['external_project_id'] : $project['external_project_id'],
-				'external_project_name'	 => $values['external_project_name']));
-
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 				(
 				'b_account_id'	 => isset($values['b_account_id']) && $values['b_account_id'] ? $values['b_account_id'] : $workorder['b_account_id'],
 				'b_account_name' => isset($values['b_account_name']) ? $values['b_account_name'] : '')
 			);
+
+			$b_account_list_favorite = ExecMethod('property.sob_account_user.get_favorite', $this->account);
+
+			if ($b_account_list_favorite)
+			{
+				$b_account_list = $b_account_list_favorite;
+			}
+			else
+			{
+				$b_account_list = execMethod('property.bogeneric.get_list', array(
+					'type'		 => 'budget_account', 'selected'	 => $values['b_account_id'] ? $values['b_account_id'] : $project['b_account_id'],
+					'add_empty'	 => true, 'filter'	 => array('active' => 1)));
+			}
+
+			$_b_account_found = false;
+			foreach ($b_account_list as &$entry)
+			{
+				$entry['name'] = "{$entry['id']} {$entry['name']}";
+				if (!empty($b_account_data['value_b_account_id']) && $b_account_data['value_b_account_id'] == $entry['id'])
+				{
+					$_b_account_found = true;
+				}
+			}
+			if (!empty($b_account_data['value_b_account_id']) && !$_b_account_found)
+			{
+				array_unshift($b_account_list, array('id'	 => $b_account_data['value_b_account_id'],
+					'name'	 => "{$b_account_data['value_b_account_id']} {$b_account_data['value_b_account_name']}"));
+			}
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
 				'vendor_id'		 => $values['vendor_id'] ? $values['vendor_id'] : $workorder['vendor_id'],
@@ -3463,15 +3529,9 @@
 
 			$order_id = isset($values['order_id']) && $values['order_id'] ? $values['order_id'] : $order_id;
 
-			$tabs			 = array();
-			$tabs['invoice'] = array(
-				'label'	 => lang('Invoice'),
-				'link'	 => '#invoice');
-			$active_tab		 = 'invoice';
-
 			$account_lid = $GLOBALS['phpgw']->accounts->get($this->account)->lid;
 			$data		 = array
-				(
+			(
 				'msgbox_data'				 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action'				 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_action'				 => $GLOBALS['phpgw']->link('/index.php', array(
@@ -3483,7 +3543,8 @@
 				'value_paid_date'			 => isset($values['paid_date']) ? $values['paid_date'] : '',
 				'vendor_data'				 => $vendor_data,
 				'ecodimb_data'				 => $ecodimb_data,
-				'external_project_data'		 => $external_project_data,
+				'value_external_project_id'			 => $values['external_project_id'],
+				'value_external_project_name'		 => $this->bocommon->get_external_project_name($values['external_project_id'] ? $values['external_project_id'] : $project['external_project_id']),
 				'value_service_id'			 => $values['service_id'],
 				'value_service_name'		 => $this->_get_eco_service_name($values['service_id']),
 				'tax_code_list'				 => array('options' => $this->bocommon->select_category_list(array(
@@ -3511,21 +3572,42 @@
 					'options_lid' => $this->bocommon->get_user_list_right(64, isset($values['supervisor']) && $values['supervisor'] ? $values['supervisor'] : $account_lid, '.invoice')),
 				'budget_responsible_list'	 => array(
 					'options_lid' => $this->bocommon->get_user_list_right(128, isset($values['budget_responsible']) && $values['budget_responsible'] ? $values['budget_responsible'] : $account_lid, '.invoice')),
-				'location_data'				 => $location_data,
+				'location_code'				 => $location_code,
 				'b_account_data'			 => $b_account_data,
-				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'redirect'					 => isset($redirect) && $redirect ? $GLOBALS['phpgw']->link('/index.php', array(
+				'b_account_list'			 => array('options' => $b_account_list),
+				'b_account_as_listbox'		 => $GLOBALS['phpgw_info']['user']['preferences']['property']['b_account_as_listbox'],
+				'redirect'					 => !empty($redirect) ? $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiworkorder.edit',
 					'id'		 => $order_id,
 					'active_tab' => 'budget')) : null,
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array(
-				'workorder'));
+			self::add_javascript('property', 'portico', 'workorder.add_invoice.js');
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array(	'workorder'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_invoice' => $data));
+		}
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array(
-				'add_invoice' => $data));
+		protected function check_storage_dir( $files_path )
+		{
+			if (is_dir($files_path) && is_writable($files_path) && is_readable($files_path))
+			{
+				return true;
+			}
+		}
+
+		protected function create_storage_dir( $files_path )
+		{
+			$dirMode = 0777;
+			if (!mkdir($files_path, $dirMode, true))
+			{
+				// failed to create the directory
+				throw new Exception(sprintf('Failed to create file storage "%s".', $files_path));
+			}
+
+			chmod($files_path, $dirMode);
+			return true;
 		}
 
 		function recalculate()
