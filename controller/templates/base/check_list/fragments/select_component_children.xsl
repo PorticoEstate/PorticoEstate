@@ -49,9 +49,9 @@
 				<xsl:attribute name="accept">image/*</xsl:attribute>
 				<xsl:attribute name="capture">camera</xsl:attribute>
 			</input>
-			<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
+<!--			<button id = "submit_update_component" type="submit" class="pure-button pure-button-primary">
 				<xsl:value-of select="php:function('lang', 'add picture')" />
-			</button>
+			</button>-->
 
 		</div>
 	</form>

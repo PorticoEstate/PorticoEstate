@@ -461,9 +461,9 @@
 																		</label>
 																	</div>
 																</div>
-																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
+<!--																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
 																	<xsl:value-of select="php:function('lang', 'add picture')" />
-																</button>
+																</button>-->
 															</div>
 														</form>
 													</div>
