@@ -1963,7 +1963,7 @@
 			{
 				$contacts	 = CreateObject('phpgwapi.contacts');
 
-				$message_ret = $this->create_messages($check_list->get_control_id(),$check_list_id,$check_list->get_location_code());
+				$message_ret = $this->create_messages($check_list->get_control_id(), $check_list->get_id(), $check_list->get_location_code());
 				/**
 				 * "1" => supervisor
 				 * "2" => operator
