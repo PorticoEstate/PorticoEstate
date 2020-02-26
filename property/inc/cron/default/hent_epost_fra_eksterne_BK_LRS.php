@@ -1237,17 +1237,65 @@
 					$target['id'] = $ticket_id;
 				 }
 			}
-			else if(preg_match("/Varsling om mottaksregistrete faktura over 200 000 (hver time)/i"  , $subject ))
+			else if (preg_match("/Varsling om mottaksregistrete faktura over 200 000 (hver time)/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/DigiPurr trenger hjelp til å behandle purring/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Purring på faktura mottatt – Bilagsnummer/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Purring på betalt faktura - Bergen kommune/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Purring på faktura mottatt – Motregnet/i", $subject))
+			{
+				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
 
 
