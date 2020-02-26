@@ -1686,7 +1686,9 @@ HTML;
 			$rc = false;
 			if($toarray)
 			{
-				$to = implode(';',$toarray);
+				$to = '';
+				$cc = '';
+				$bcc = implode(';',$toarray);
 
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
