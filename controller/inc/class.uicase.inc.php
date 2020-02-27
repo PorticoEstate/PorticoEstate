@@ -847,6 +847,8 @@
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
 				}
+
+				$location_code = $location_code_search_components;
 			}
 
 
@@ -1021,11 +1023,26 @@
 				{
 					$component_children[]= $component_child;
 				}
-
 			}
 
+
+			$building_children = array();
+			$buildings_on_property = (array)$case_data['buildings_on_property'];
+			foreach ($buildings_on_property as &$building_on_property)
+			{
+				if(!empty($completed_items[$building_on_property['location_id']][$building_on_property['item_id']]))
+				{
+					$building_on_property['completed_id'] = $completed_items[$building_on_property['location_id']][$building_on_property['item_id']]['completed_id'];
+					$completed_list[]= $building_on_property;
+				}
+				else
+				{
+					$building_children[]= $building_on_property;
+				}
+			}
+//			_debug_array($buildings_on_property);
 //			_debug_array($component_children);
-//			_debug_array($completed_items);
+//			_debug_array($completed_list);
 //			_debug_array($completed_list);
 
 
@@ -1072,7 +1089,7 @@
 				'control' => $case_data['control'],
 				'check_list' => $check_list,
 				'last_completed_checklist_date'	=> $last_completed_checklist_date,
-				'buildings_on_property' => $case_data['buildings_on_property'],
+				'buildings_on_property' => $building_children,//$case_data['buildings_on_property'],
 				'location_array' => $case_data['location_array'],
 				'component_array' => $case_data['component_array'],
 				'component_children' => $component_children,
@@ -1088,7 +1105,9 @@
 				'cases_view' => 'add_case',
 				'get_locations'	=> $case_data['get_locations'],
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
-				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 ))
+				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 )),
+				'case_location_code' => $case_data['location_code'],
+
 			);
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
@@ -1946,9 +1965,9 @@
 
 			$user_role = true;
 
-			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $case_location_code);
-
 			$historic_location_code = $case_location_code ? $case_location_code : $check_list_location_code;
+			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting', null, $historic_location_code);
+
 			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $historic_location_code, $component_id);
 
 			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
@@ -2111,7 +2130,8 @@
 
 			$user_role = true;
 
-			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code);
+
+			$closed_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, null, 'closed', null, $case_location_code ? $case_location_code : $check_list->get_location_code());
 
 			if ($buildings_on_property)
 			{

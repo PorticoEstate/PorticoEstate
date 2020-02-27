@@ -15,15 +15,15 @@
 				<xsl:with-param name="active_tab">add_case</xsl:with-param>
 			</xsl:call-template>
 		</div>
-		<xsl:choose>
+<!--		<xsl:choose>
 			<xsl:when test="buildings_on_property/child::node()">
 				<div id="choose-building-wrp" class="row mt-3">
 					<xsl:call-template name="select_buildings_on_property" />
 				</div>
 			</xsl:when>
-		</xsl:choose>
+		</xsl:choose>-->
 
-<!--		<xsl:choose>
+		<!--		<xsl:choose>
 			<xsl:when test="component_children/child::node()">
 				<div id="choose-building-wrp">
 					<xsl:call-template name="select_component_children" />
@@ -51,7 +51,7 @@
 		</xsl:call-template>
 
 		<div id="view_cases" class="container mt-4">
-<!--			<xsl:choose>
+			<!--			<xsl:choose>
 				<xsl:when test="component_children/child::node() and count(component_children) &gt; 0">
 					<xsl:attribute name="style">
 						<xsl:text>display:none</xsl:text>
@@ -109,7 +109,10 @@
 													</legend>
 													<form class="frm_register_case" action="{$action_url}" method="post">
 														<!--input type="hidden" name="location_code"  value="" class="required" /-->
-														<input type="hidden" name="location_code"  value="" >
+														<input type="hidden" name="location_code" >
+															<xsl:attribute name="value" >
+																<xsl:value-of select="//case_location_code"/>
+															</xsl:attribute>
 															<xsl:if test="//location_required = 1">
 																<xsl:attribute name="class" >
 																	<xsl:text>required</xsl:text>
@@ -200,7 +203,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -237,7 +242,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -287,7 +294,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -341,7 +350,9 @@
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
-																		<option value="3" ><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
 																	</select>
 																</div>
 																<div class="form-group">
@@ -461,7 +472,7 @@
 																		</label>
 																	</div>
 																</div>
-<!--																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
+																<!--																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
 																	<xsl:value-of select="php:function('lang', 'add picture')" />
 																</button>-->
 															</div>
@@ -494,6 +505,11 @@
 									</xsl:attribute>
 									<input type="hidden" name ="check_list_id" value="{check_list/id}"></input>
 									<input type="hidden" name ="item_string" id="item_string" value=""></input>
+									<input type="hidden" name="location_code" >
+										<xsl:attribute name="value" >
+											<xsl:value-of select="//case_location_code"/>
+										</xsl:attribute>
+									</input>
 									<div class="modal-footer">
 										<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig (delskjema)</button>
 									</div>

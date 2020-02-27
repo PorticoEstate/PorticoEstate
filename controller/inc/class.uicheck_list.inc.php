@@ -464,10 +464,21 @@
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
 			$item_string = phpgw::get_var('item_string');
+			$location_code = phpgw::get_var('location_code');
 
-			$item_arr = explode('_', $item_string);
-			$location_id = $item_arr[0];
-			$item_id = $item_arr[1];
+			if(!$item_string && $location_code)
+			{
+				$location_arr = explode('-', $location_code);
+				$type_id = count($location_arr);
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+				$item_id = createObject('property.solocation')->get_item_id( $location_code );
+			}
+			else
+			{
+				$item_arr = explode('_', $item_string);
+				$location_id = $item_arr[0];
+				$item_id = $item_arr[1];
+			}
 
 			if($this->edit)
 			{

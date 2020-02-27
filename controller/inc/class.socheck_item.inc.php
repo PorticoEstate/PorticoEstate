@@ -279,7 +279,7 @@
 		{
 			$check_list_id = (int)$check_list_id;
 			$sql = "SELECT DISTINCT ci.id as ci_id, control_item_id, check_list_id, cic.component_location_id,";
-			$sql .= "cic.id as cic_id, cic.status as cic_status, cic.*, ";
+			$sql .= "cic.id as cic_id, cic.status as cic_status,cic.location_code as cic_location_code, cic.*, ";
 			$sql .= "coi.id as coi_id, coi.* ";
 			//	$sql .= "FROM controller_check_item ci ";
 
@@ -291,12 +291,12 @@
 
 			if($status == 'open_or_waiting_old')
 			{
-				$sql .= "WHERE ci.check_list_id != {$check_list_id} ";
-				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
-				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
+				$sql .= " WHERE ci.check_list_id != {$check_list_id}";
+				$sql .= " AND (cic.status = 0 OR cic.status = 2)";
+				$sql .= " AND (cic.status = 0 OR cic.status = 2)";
 				if($component_id)
 				{
-					$sql .= "AND cic.component_id = " . (int) $component_id . " ";
+					$sql .= " AND cic.component_id = " . (int) $component_id;
 				}
 				else if (!$location_code)
 				{
@@ -305,46 +305,46 @@
 			}
 			else
 			{
-				$sql .= "WHERE ci.check_list_id = {$check_list_id} ";
+				$sql .= " WHERE ci.check_list_id = {$check_list_id}";
 			}
 
 			if ($status == 'open')
 			{
-				$sql .= "AND cic.status = 0 ";
+				$sql .= " AND cic.status = 0";
 			}
 			else if ($status == 'closed') // and corrected
 			{
-				$sql .= "AND (cic.status = 1  OR cic.status = 3)";
+				$sql .= " AND (cic.status = 1  OR cic.status = 3)";
 			}
 			else if ($status == 'waiting')
 			{
-				$sql .= "AND cic.status = 2 ";
+				$sql .= " AND cic.status = 2";
 			}
 			else if ($status == 'open_or_waiting')
 			{
-				$sql .= "AND (cic.status = 0 OR cic.status = 2) ";
+				$sql .= " AND (cic.status = 0 OR cic.status = 2)";
 			}
 
 			if ($type != null)
 			{
-				$sql .= "AND coi.type = '$type' ";
+				$sql .= " AND coi.type = '$type'";
 			}
 
 			if ($messageStatus != null & $messageStatus == 'no_message_registered')
 			{
-				$sql .= "AND cic.location_item_id IS NULL ";
+				$sql .= " AND cic.location_item_id IS NULL";
 			}
 			else if ($messageStatus != null & $messageStatus == 'message_registered')
 			{
-				$sql .= "AND cic.location_item_id > 0 ";
+				$sql .= " AND cic.location_item_id > 0";
 			}
 
 			if ($location_code != null)
 			{
-				$sql .= "AND cic.location_code = '$location_code' ";
+				$sql .= " AND cic.location_code = '$location_code'";
 			}
 
-			$sql .= "ORDER BY ci.id, cic.id";
+			$sql .= " ORDER BY ci.id, cic.id";
 
 			$this->db->query($sql);
 
@@ -405,6 +405,7 @@
 					$case->set_component_child_item_id($this->unmarshal($this->db->f('component_child_item_id'), 'int'));
 					$case->set_condition_degree($this->unmarshal($this->db->f('condition_degree'), 'int'));
 					$case->set_consequence($this->unmarshal($this->db->f('consequence'), 'int'));
+					$case->set_location_code($this->unmarshal($this->db->f('cic_location_code', true), 'string'));
 
 					$cases_array[] = $case;
 				}
