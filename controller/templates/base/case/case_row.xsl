@@ -50,6 +50,12 @@
 								<div class="case_info">
 									<div class="row">
 										<label>
+											<xsl:value-of select="php:function('lang','location')" />
+										</label>
+										<xsl:value-of select="location_code"/>
+									</div>
+									<div class="row">
+										<label>
 											<xsl:value-of select="php:function('lang','date')" />
 										</label>
 										<xsl:value-of select="php:function('date', $date_format, number(entry_date))"/>

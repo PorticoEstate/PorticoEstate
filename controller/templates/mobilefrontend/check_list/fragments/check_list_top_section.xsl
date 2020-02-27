@@ -80,7 +80,7 @@
 								</label>
 							</div>
 						</div>
-<!--						<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
+						<!--						<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
 							<xsl:value-of select="php:function('lang', 'add picture')" />
 						</button>-->
 					</div>
@@ -133,6 +133,32 @@
 			</ul>
 		</div>
 	</nav>
+	<xsl:choose>
+		<xsl:when test="buildings_on_property/child::node()">
+			<div id="choose-building-wrp" class="row mt-3">
+				<xsl:call-template name="select_buildings_on_property" />
+				<xsl:if test="$active_tab != 'view_details'">
+					<div class="row mt-2">
+						<div class="container">
+							<h5 class="ml-5">Kontrollert lokasjon</h5>
+							<ul class="ml-2">
+								<xsl:for-each select="completed_list">
+									<li style="display: block;">
+										<a href="#">
+											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+										</a>
+										<img src="{//img_green_check}" width="16" class="mr-2"/>
+										<xsl:value-of select="name" />
+									</li>
+								</xsl:for-each>
+							</ul>
+						</div>
+					</div>
+				</xsl:if>
+			</div>
+		</xsl:when>
+	</xsl:choose>
+
 	<xsl:choose>
 		<xsl:when test="component_children/child::node()">
 			<div id="choose-building-wrp">

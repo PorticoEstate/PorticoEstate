@@ -9,13 +9,13 @@
 			<xsl:with-param name="active_tab">view_cases</xsl:with-param>
 		</xsl:call-template>
 
-		<xsl:choose>
+<!--		<xsl:choose>
 			<xsl:when test="buildings_on_property/child::node()">
 				<div id="choose-building-wrp">
 					<xsl:call-template name="select_buildings_on_property" />
 				</div>
 			</xsl:when>
-		</xsl:choose>
+		</xsl:choose>-->
 		<div id="view_cases">
 			<xsl:call-template name="cases_tab_menu">
 				<xsl:with-param name="active_tab">view_open_cases</xsl:with-param>
