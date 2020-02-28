@@ -99,30 +99,39 @@
 			{
 				$mail->setFrom($from_array[0], $sender );
 			}
-			$delimiter = ';';
-			$to = explode($delimiter, $to);
 
-			try
+			$delimiter = ';';
+
+			if($to)
 			{
-				foreach ($to as $entry)
+				$to = explode($delimiter, $to);
+				try
 				{
-					$entry = str_replace(array('[',']'),array('<','>'),$entry);
-					$to_array = explode('<', $entry);
-					if ( count($to_array) == 2 )
+					foreach ($to as $entry)
 					{
-						$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
+						$entry = str_replace(array('[',']'),array('<','>'),$entry);
+						$to_array = explode('<', $entry);
+						if ( count($to_array) == 2 )
+						{
+							$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
+						}
+						else
+						{
+							$mail->AddAddress($to_array[0]);
+						}
 					}
-					else
-					{
-						$mail->AddAddress($to_array[0]);
-					}
+					unset($entry);
 				}
-				unset($entry);
+				catch (Exception $e)
+				{
+					throw $e;
+					return false;
+				}
+
 			}
-			catch (Exception $e)
+			else
 			{
-				throw $e;
-				return false;
+				$mail->AddAddress("undisclosed-recipients:;");
 			}
 
 			if($cc)
