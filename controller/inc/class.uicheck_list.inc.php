@@ -2037,8 +2037,10 @@
 						$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
 					}
 
+					$config_frontend = CreateObject('phpgwapi.config', 'mobilefrontend')->read();
+
 					$enforce_ssl = $GLOBALS['phpgw_info']['server']['enforce_ssl'];
-					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = !!$config_frontend['backend_ssl'];
 					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id']), false, true, true);
 					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id()), false, true, true);
 					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = $enforce_ssl;
