@@ -31,6 +31,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="pure-table-odd">
+			<td>{lang_Use_ssl_for_backend_links}:</td>
+			<td>
+				<select name="newsettings[backend_ssl]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_backend_ssl_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
