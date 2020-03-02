@@ -146,6 +146,18 @@
 					</label>
 				</div>
 				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Repeat until')" />
+						<input type="checkbox" name="recurring" id="recurring">
+							<xsl:if test="recurring='on'">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+					</label>
+					<input class="datetime" id="field_repeat_until" name="repeat_until" type="text" style="display:inline-block;" />
+				</div>
+
+				<div class="pure-control-group">
 					<label for="field_interval">
 						<xsl:value-of select="php:function('lang', 'Interval')" />
 					</label>

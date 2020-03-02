@@ -389,8 +389,15 @@
 				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
 				{
 
-					$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-					$_POST['repeat_until'] = $season['to_'];
+					if ($_POST['recurring'] == 'on')
+					{
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+					}
+					else
+					{
+						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
+						$_POST['repeat_until'] = $season['to_'];
+					}
 
 					$max_dato = strtotime($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
@@ -511,6 +518,7 @@
 	//				$_timeTo = $allocation['to_'];
 				}
 
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', $_timeTo);
 
