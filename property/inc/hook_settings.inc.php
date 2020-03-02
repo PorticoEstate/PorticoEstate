@@ -261,7 +261,6 @@
 	create_select_box('Default project categories', 'project_category', $_categories_project, 'The default category for your projects and workorders');
 	create_select_box('Default district-filter', 'default_district', $_districts, 'Your default district-filter ');
 
-	create_input_box('Your Cellphone', 'cellphone');
 	create_input_box('RessursNr', 'ressursnr');
 	$ecodimb	 = CreateObject('property.sogeneric');
 	$ecodimb->get_location_info('dimb', false);

@@ -650,7 +650,6 @@
 				}
 				if ($values['old_phone'] != $values['phone'])
 				{
-					$GLOBALS['phpgw']->preferences->add('property', "cellphone", $values['phone'], 'user');
 					$GLOBALS['phpgw']->preferences->add('common', "cellphone", $values['phone'], 'user');
 					$receipt['message'][] = array('msg' => lang('Users phone is updated'));
 				}

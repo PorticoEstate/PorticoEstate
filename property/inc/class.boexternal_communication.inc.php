@@ -617,8 +617,8 @@ HTML;
 
 			$order_id						 = $ticket['order_id'];
 			//account_display
-			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['cellphone'];
-			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['email'];
+			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
+			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 //			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_contact_block_1'];
 
