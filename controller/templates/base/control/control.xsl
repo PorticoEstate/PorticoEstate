@@ -310,6 +310,37 @@
 				</xsl:choose>
 			</dd>
 			<dt>
+				<label for="responsible_organization">
+					<xsl:value-of select="php:function('lang', 'responsible organization')" />
+				</label>
+			</dt>
+			<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<input id="responsible_organization" size="255" type="text" name="responsible_organization" value="{control/responsible_organization}" class="pure-input-3-4" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/responsible_organization" disable-output-escaping="yes"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dd>
+			<dt>
+				<label for="responsible_logo">
+					<xsl:value-of select="php:function('lang', 'responsible_logo')" />
+				</label>
+			</dt>
+			<dd>
+				<xsl:choose>
+					<xsl:when test="editable">
+						<input id="responsible_logo" size="255" type="text" name="responsible_logo" value="{control/responsible_logo}" class="pure-input-3-4" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="control/responsible_logo" disable-output-escaping="yes"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dd>
+
+			<dt>
 				<label for="report_intro">Innledning til rapport</label>
 			</dt>
 			<dd>
