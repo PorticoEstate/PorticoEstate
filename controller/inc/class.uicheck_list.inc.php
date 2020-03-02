@@ -2037,8 +2037,12 @@
 						$from_address = "NoReply@{$GLOBALS['phpgw_info']['server']['hostname']}";
 					}
 
-					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id']), false, true);
-					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id()), false, true);
+					$enforce_ssl = $GLOBALS['phpgw_info']['server']['enforce_ssl'];
+					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+					$ticket_link = self::link(array('menuaction' => "property.uitts.view", 'id' => $message_ret['message_ticket_id']), false, true, true);
+					$check_list_link = self::link(array('menuaction' => "controller.uicase.view_open_cases", 'check_list_id' => $check_list->get_id()), false, true, true);
+					$GLOBALS['phpgw_info']['server']['enforce_ssl'] = $enforce_ssl;
+
 					$control = $this->so_control->get_single($check_list->get_control_id());
 					$control_title = $control->get_title();
 					$location_desc = $this->get_location_desc($check_list);
@@ -2049,7 +2053,7 @@
 						<p>{$location_desc['short_desc']}</p>
 						<p>$message</p>
 						<br/>
-						<a href="$check_list_link">Sjekkliste</a>
+						<a href="$check_list_link">Sjekkliste (backend)</a>
 
 HTML;
 
@@ -2057,7 +2061,7 @@ HTML;
 					{
 						$html .= <<<HTML
 							<br/>
-							<a href="$ticket_link">Melding</a>
+							<a href="$ticket_link">Melding (backend)</a>
 HTML;
 					}
 
