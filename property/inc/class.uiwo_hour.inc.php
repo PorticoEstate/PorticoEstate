@@ -2092,7 +2092,7 @@ HTML;
 
 				if (!$_ok)
 				{
-					throw new Exception(lang('order %1 is not approved'), $workorder_id);
+					throw new Exception(lang('order %1 is not approved', $workorder_id) );
 //					phpgwapi_cache::message_set(lang('order is not approved'), 'error');
 //					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
 //						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
@@ -2112,7 +2112,7 @@ HTML;
 
 				if (!$_validated)
 				{
-					throw new Exception(lang('order %1 is not approved'), $workorder_id);
+					throw new Exception(lang('order %1 is not approved', $workorder_id) );
 //					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
 //						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
 				}

@@ -2397,3 +2397,5 @@ mail recipients	property	nn	Mailmottakar
 create summary	property	nn	Generer sammendrag
 list deviation	property	nn	List avvik
 source	property	nn	Opphav
+order is not approved	property	nn	Bestillingen er ikkje godkjent
+order %1 is not approved	property	nn	Bestilling %1 er ikkje godkjent
