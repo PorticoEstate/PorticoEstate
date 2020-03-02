@@ -96,6 +96,8 @@
 				'report_intro = ' . $this->marshal($control->get_report_intro(), 'string'),
 				'send_notification_subject = ' . $this->marshal($control->get_send_notification_subject(), 'string'),
 				'send_notification_content = ' . $this->marshal($control->get_send_notification_content(), 'string'),
+				'responsible_organization = ' . $this->marshal($control->get_responsible_organization(), 'string'),
+				'responsible_logo = ' . $this->marshal($control->get_responsible_logo(), 'string'),
 				'start_date = ' . $this->marshal($control->get_start_date(), 'int'),
 				'end_date = ' . $this->marshal($control->get_end_date(), 'int'),
 				'control_area_id = ' . $this->marshal($control->get_control_area_id(), 'int'),
@@ -1556,6 +1558,8 @@
 			$control->set_report_intro($this->unmarshal($this->db->f('report_intro', true), 'string'));
 			$control->set_send_notification_subject($this->unmarshal($this->db->f('send_notification_subject', true), 'string'));
 			$control->set_send_notification_content($this->unmarshal($this->db->f('send_notification_content', true), 'string'));
+			$control->set_responsible_organization($this->unmarshal($this->db->f('responsible_organization', true), 'string'));
+			$control->set_responsible_logo($this->unmarshal($this->db->f('responsible_logo', true), 'string'));
 			$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
 			$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
 			$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));

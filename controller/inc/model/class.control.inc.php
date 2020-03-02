@@ -46,6 +46,8 @@
 		protected $report_intro;
 		protected $send_notification_subject;
 		protected $send_notification_content;
+		protected $responsible_organization;
+		protected $responsible_logo;
 		protected $start_date;
 		protected $end_date;
 		protected $repeat_type;
@@ -116,6 +118,25 @@
 		public function get_report_intro()
 		{
 			return $this->report_intro;
+		}
+
+		public function set_responsible_logo( $responsible_logo )
+		{
+			$this->responsible_logo = $responsible_logo;
+		}
+
+		public function get_responsible_logo()
+		{
+			return $this->responsible_logo;
+		}
+		public function set_responsible_organization( $responsible_organization )
+		{
+			$this->responsible_organization = $responsible_organization;
+		}
+
+		public function get_responsible_organization()
+		{
+			return $this->responsible_organization;
 		}
 
 		public function set_send_notification_subject( $send_notification_subject )
@@ -356,6 +377,8 @@
 			$this->set_report_intro(phpgw::get_var('report_intro', 'html'));
 			$this->set_send_notification_subject(phpgw::get_var('send_notification_subject', 'string'));
 			$this->set_send_notification_content(phpgw::get_var('send_notification_content', 'html'));
+			$this->set_responsible_organization(phpgw::get_var('responsible_organization', 'string'));
+			$this->set_responsible_logo(phpgw::get_var('responsible_logo', 'string'));
 
 			if (phpgw::get_var('start_date', 'string') != '')
 			{
@@ -394,6 +417,8 @@
 				'report_intro' => $this->get_report_intro(),
 				'send_notification_subject' => $this->get_send_notification_subject(),
 				'send_notification_content' => $this->get_send_notification_content(),
+				'responsible_organization' => $this->get_responsible_organization(),
+				'responsible_logo' => $this->get_responsible_logo(),
 				'start_date' => $this->get_start_date(),
 				'end_date' => $this->get_end_date(),
 				'procedure_id' => $this->get_procedure_id(),

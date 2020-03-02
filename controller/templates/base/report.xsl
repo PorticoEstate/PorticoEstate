@@ -81,10 +81,14 @@
 			<div class="container small">
 				<div class="mt-5 row">
 					<div class="col-md-6 align-left">
-						<!--<img src="logo bk.png" width="200"/>-->
+						<xsl:choose>
+							<xsl:when test="responsible_logo !=''">
+								<img src="{responsible_logo}" width="200"/>
+							</xsl:when>
+						</xsl:choose>
 					</div>
 					<div class="col-md-6 text-right">
-						Barnas Byrom - Forvaltningsavdelingen - Bymiljøetaten
+						<xsl:value-of select="responsible_organization"/>
 					</div>
 					<div class="col-md-12 align-right">
 						<h2>
@@ -148,43 +152,47 @@
 					</xsl:variable>
 
 					<!--<div class="col-md-{$witdth}">-->
-					<div class="col-sm-3">
-						<table class="table table-bordered table-sm">
-							<tr>
-								<th class="text-left text-left border-bottom-0">
-									<xsl:attribute name="colspan">
-										<xsl:value-of select="count(findings)"/>
-									</xsl:attribute>
-									Funn - sammendrag
-								</th>
-							</tr>
-							<tr>
-								<xsl:for-each select="findings">
-									<th class="text-left border-bottom-0 border-top-0">
-										<xsl:value-of select="name"/>
-									</th>
-								</xsl:for-each>
-							</tr>
-							<tr>
-								<xsl:for-each select="findings">
-									<td>
-										<table class="table table-sm">
-											<xsl:for-each select="values">
-												<tr>
-													<td class="small border-0">
-														<xsl:value-of select="text"/>
-													</td>
-													<td class="small border-0">
-														<xsl:value-of select="value"/>
-													</td>
-												</tr>
-											</xsl:for-each>
-										</table>
-									</td>
-								</xsl:for-each>
-							</tr>
-						</table>
-					</div>
+					<xsl:choose>
+						<xsl:when test="findings/child::node()">
+							<div class="col-sm-3">
+								<table class="table table-bordered table-sm">
+									<tr>
+										<th class="text-left text-left border-bottom-0">
+											<xsl:attribute name="colspan">
+												<xsl:value-of select="count(findings)"/>
+											</xsl:attribute>
+											Funn - sammendrag
+										</th>
+									</tr>
+									<tr>
+										<xsl:for-each select="findings">
+											<th class="text-left border-bottom-0 border-top-0">
+												<xsl:value-of select="name"/>
+											</th>
+										</xsl:for-each>
+									</tr>
+									<tr>
+										<xsl:for-each select="findings">
+											<td>
+												<table class="table table-sm">
+													<xsl:for-each select="values">
+														<tr>
+															<td class="small border-0">
+																<xsl:value-of select="text"/>
+															</td>
+															<td class="small border-0">
+																<xsl:value-of select="value"/>
+															</td>
+														</tr>
+													</xsl:for-each>
+												</table>
+											</td>
+										</xsl:for-each>
+									</tr>
+								</table>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:value-of disable-output-escaping="yes" select="report_intro"/>
 				</div>
 
@@ -203,7 +211,7 @@
 
 				<!-- DEL 1 START -->
 				<div class="row mt-5">
-					<h2>Del 1. Lekeplassutstyr</h2>
+					<h2>Del 1. Utstyr</h2>
 				</div>
 
 				<xsl:for-each select="component_child_data">

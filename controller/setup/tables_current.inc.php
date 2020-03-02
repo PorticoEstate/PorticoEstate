@@ -19,6 +19,8 @@
 				'report_intro' => array('type' => 'text', 'nullable' => True),
 				'send_notification_subject' => array('type' => 'text', 'nullable' => True),
 				'send_notification_content' => array('type' => 'text', 'nullable' => True),
+				'responsible_organization' => array('type' => 'text', 'nullable' => True),
+				'responsible_logo' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

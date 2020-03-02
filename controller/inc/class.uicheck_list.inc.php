@@ -3423,13 +3423,13 @@ HTML;
 
 			$findings_map = array();
 			$include_condition_degree = 0;
+			$location_identificator_fallback = 0;
+			$data_case = array();
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
 
 				$findings_map[$check_item->get_control_item()->get_id()] = $check_item->get_control_item()->get_title();
 
-
-				$data_case = array();
 //				_debug_array($check_item->get_control_item());
 
 				$include_condition_degree += (int)$check_item->get_control_item()->get_include_condition_degree();
@@ -3452,8 +3452,9 @@ HTML;
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
+//						_debug_array($case);
 
-					if(in_array($case->get_control_item_id(), array_keys($findings_map)))
+					if(isset($findings_map[$case->get_control_item_id()]) && $check_item->get_control_item()->get_report_summary())
 					{
 
 						foreach ($findings_options[$findings_map[$case->get_control_item_id()]] as $key => &$value)
@@ -3466,7 +3467,6 @@ HTML;
 						}
 						unset($value);
 
-//						_debug_array($case);
 //					_debug_array($findings_map);
 //	_debug_array($findings_options);
 //	die();
@@ -3485,12 +3485,16 @@ HTML;
 						'value' => $check_item->get_control_item()->get_title(),
 					);
 
-					$location_identificator = 0;
 
 					if($case->get_component_child_item_id())
 					{
 
 						$location_identificator = $case->get_component_child_location_id() . '_' .$case->get_component_child_item_id();
+					}
+					else
+					{
+						$location_identificator = $location_identificator_fallback;
+						$location_identificator_fallback ++;
 					}
 
 					$case->get_component_child_location_id();//:protected] => 456
@@ -3579,7 +3583,7 @@ HTML;
 				}
 
 			}
-
+//			_debug_array($data_case);
 			$custom = createObject('property.custom_fields');
 
 			$soentity = CreateObject('property.soentity');
@@ -3744,6 +3748,9 @@ HTML;
 			{
 				$report_data['findings'] = array();
 			}
+
+			$report_data['responsible_organization'] = $report_info['control']->get_responsible_organization();//'Barnas Byrom - Forvaltningsavdelingen - Bymiljøetaten';
+			$report_data['responsible_logo'] = $report_info['control']->get_responsible_logo();
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
 //			_debug_array($report_data['findings']);die();

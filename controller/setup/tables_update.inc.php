@@ -1513,3 +1513,24 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.67';
+	function controller_upgrade0_1_67()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control','responsible_organization',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control','responsible_logo',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.68';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
