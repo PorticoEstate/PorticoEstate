@@ -210,9 +210,11 @@
 				</div>
 
 				<!-- DEL 1 START -->
-				<div class="row mt-5">
-					<h2>Del 1. Utstyr</h2>
-				</div>
+				<xsl:if test= "component_child_data !=''">
+					<div class="row mt-5">
+						<h2>Del 1. Utstyr</h2>
+					</div>
+				</xsl:if>
 
 				<xsl:for-each select="component_child_data">
 					<div class="row mt-5">
@@ -256,7 +258,7 @@
 					<xsl:if test="cases !=''">
 						<div class="row">
 							<div class="col-md-12 bg-light text-center">
-								<h5>Avvik</h5>
+								<h5>Saker</h5>
 							</div>
 						</div>
 					</xsl:if>
@@ -300,7 +302,14 @@
 					<div class="row mt-5">
 						<div class="col-md-12 text-center bg-light">
 							<h4>
-								Avvik ikke knyttet til utstyr
+								<xsl:choose>
+									<xsl:when test="component_child_data !=''">
+										Saker som ikke er knyttet til utstyr
+									</xsl:when>
+									<xsl:otherwise>
+										Saker/registreringer
+									</xsl:otherwise>
+								</xsl:choose>
 							</h4>
 						</div>
 						<div class="col-md-12">

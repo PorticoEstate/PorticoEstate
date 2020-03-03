@@ -727,9 +727,27 @@
 			$last_completed_checklist = $this->so_check_item->get_last_completed_checklist($check_list_id);
 			$last_completed_checklist_date = !empty($last_completed_checklist['completed_date']) ? $GLOBALS['phpgw']->common->show_date($last_completed_checklist['completed_date'], $this->dateFormat) : '';
 //			_debug_array($component_children);
+			$administrator_arr = array();
+			$administrators = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), 1);
+
+			foreach ($administrators as $administrator)
+			{
+				$administrator_arr[] = $administrator['name'];
+			}
+
+			$supervisor_arr = array();
+			$supervisors = createObject('controller.sosettings')->get_user_with_role($check_list->get_control_id(), $check_list->get_location_code(), 4);
+
+			foreach ($supervisors as $supervisor)
+			{
+				$supervisor_arr[] = $supervisor['name'];
+			}
+
 			$data = array
 				(
 				'inspectors' => createObject('controller.sosettings')->get_inspectors($check_list->get_id()),
+				'administrator_list' => implode('; ', $administrator_arr),
+				'supervisor_name' => implode('; ', $supervisor_arr),
 				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
