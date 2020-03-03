@@ -373,7 +373,7 @@
 				{
 					$step++;
 				}
-				if (!$errors && $_POST['outseason'] != 'on')
+				if (!$errors && ($_POST['outseason'] != 'on' && !phpgw::get_var('repeat_until', 'bool')))
 				{
 					try
 					{
@@ -386,10 +386,9 @@
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
-				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
+				else if (($_POST['outseason'] == 'on' || phpgw::get_var('repeat_until', 'bool')) && !$errors && $step > 1)
 				{
-
-					if ($_POST['recurring'] == 'on')
+					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
 					}
@@ -525,6 +524,7 @@
 				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
 					'step' => $step,
 					'interval' => $_POST['field_interval'],
+					'outseason' => $_POST['outseason'],
 					'repeat_until' => $_POST['repeat_until'],
 					'outseason' => $_POST['outseason'],
 					'weekday' => $weekday,
@@ -534,7 +534,6 @@
 			{
 				self::render_template_xsl('allocation_new_preview', array('allocation' => $allocation,
 					'step' => $step,
-					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],
