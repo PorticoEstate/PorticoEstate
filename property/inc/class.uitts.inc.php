@@ -3381,7 +3381,8 @@ HTML;
 				'value_order_received_amount'	 => (int)$ticket['order_received_amount'],
 				'value_extra_mail_address'		 => $value_extra_mail_address,
 				'value_continuous'				 => $ticket['continuous'],
-				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id))
+				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id)),
+				'order_read'					 => $order_read
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3396,8 +3397,8 @@ HTML;
 			$appname										 = lang('helpdesk');
 			$function_msg									 = lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg . "#{$id}";
-			self::render_template_xsl(array('tts', 'multi_upload_file_inline', 'attributes_form',
-				'datatable_inline'), $data, $xsl_rootdir									 = '', 'view');
+			self::render_template_xsl(array('tts', 'multi_upload_file_inline', 'attributes_form','datatable_inline'),
+				$data, $xsl_rootdir = '', 'view');
 		}
 
 		function view_file()

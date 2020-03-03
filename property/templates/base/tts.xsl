@@ -1464,7 +1464,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="value_order_id!=''">
+								<xsl:when test="value_order_id!='' and order_read=1">
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'order id')"/>
