@@ -583,6 +583,8 @@
 
 			$component_id = $check_list->get_component_id();
 			$get_locations = false;
+			$buildings_on_property = array();
+			$get_buildings_on_property = false;
 
 			if ($component_id > 0)
 			{
@@ -665,6 +667,7 @@
 			}
 			else
 			{
+				$get_buildings_on_property = true;
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
@@ -678,7 +681,10 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			if($get_buildings_on_property)
+			{
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);				
+			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
 
