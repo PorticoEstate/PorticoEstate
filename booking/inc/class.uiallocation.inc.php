@@ -373,7 +373,7 @@
 				{
 					$step++;
 				}
-				if (!$errors && $_POST['outseason'] != 'on')
+				if (!$errors && ($_POST['outseason'] != 'on' && !phpgw::get_var('repeat_until', 'bool')))
 				{
 					try
 					{
@@ -386,11 +386,17 @@
 						$errors['global'] = lang('Could not add object due to insufficient permissions');
 					}
 				}
-				else if ($_POST['outseason'] == 'on' && !$errors && $step > 1)
+				else if (($_POST['outseason'] == 'on' || phpgw::get_var('repeat_until', 'bool')) && !$errors && $step > 1)
 				{
-
-					$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-					$_POST['repeat_until'] = $season['to_'];
+					if (phpgw::get_var('repeat_until', 'bool'))
+					{
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+					}
+					else
+					{
+						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
+						$_POST['repeat_until'] = $season['to_'];
+					}
 
 					$max_dato = strtotime($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
@@ -511,12 +517,14 @@
 	//				$_timeTo = $allocation['to_'];
 				}
 
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', $_timeTo);
 
 				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
 					'step' => $step,
 					'interval' => $_POST['field_interval'],
+					'outseason' => $_POST['outseason'],
 					'repeat_until' => $_POST['repeat_until'],
 					'outseason' => $_POST['outseason'],
 					'weekday' => $weekday,
@@ -526,7 +534,6 @@
 			{
 				self::render_template_xsl('allocation_new_preview', array('allocation' => $allocation,
 					'step' => $step,
-					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => $_POST['repeat_until'],

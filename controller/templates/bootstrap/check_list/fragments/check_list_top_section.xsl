@@ -135,7 +135,7 @@
 		</nav>
 	</div>
 	<xsl:choose>
-		<xsl:when test="buildings_on_property/child::node()">
+		<xsl:when test="buildings_on_property/child::node() and not(component_children/child::node())">
 			<div id="choose-building-wrp" class="row mt-3">
 				<xsl:call-template name="select_buildings_on_property" />
 				<xsl:if test="$active_tab != 'view_details'">

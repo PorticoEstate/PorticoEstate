@@ -146,6 +146,13 @@
 					</label>
 				</div>
 				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Repeat until')" />
+					</label>
+					<input class="datetime" id="field_repeat_until" name="repeat_until" type="text" value="{repeat_until}" />
+				</div>
+
+				<div class="pure-control-group">
 					<label for="field_interval">
 						<xsl:value-of select="php:function('lang', 'Interval')" />
 					</label>
