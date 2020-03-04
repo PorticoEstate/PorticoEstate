@@ -510,7 +510,7 @@
 			{
 
 				$message_cat_id	 = 302; // Fra postmottak LRS
-				$group_id		 = 4174; //LRS-EDD telefoni
+				$group_id		 = 4169; //LRS-SERVICE_Regnskap
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
 				{
@@ -1387,15 +1387,20 @@
 				'char-encoding'					 => 'utf8'
 			);
 
+			if(!mb_check_encoding($test, 'UTF-8'))
+			{
+				$test = utf8_encode($test);
+			}
+
 			$test = str_replace('>&nbsp;<', '><', $test);
 
-//			if (class_exists('tidy'))
-//			{
-//				$tidy	 = new tidy;
-//				$test	 = $tidy->repairString($test);
-//				$tidy->parseString($test, $tidy_options, 'utf8');
-//				$test	 = $tidy->html();
-//			}
+			if (class_exists('tidy'))
+			{
+				$tidy	 = new tidy;
+				$test	 = $tidy->repairString($test);
+				$tidy->parseString($test, $tidy_options, 'utf8');
+				$test	 = $tidy->html();
+			}
 
 			$dom			 = new DOMDocument();
 			$dom->recover	 = true;
@@ -1434,13 +1439,13 @@
 
 			$test = $dom->saveHTML();
 
-//			if (class_exists('tidy'))
-//			{
-//				$tidy	 = new tidy;
-//				$tidy->parseString($test);
-//				$test	 = $tidy->body();
-//		//		$test =  phpgw::clean_html($test);
-//			}
+			if (class_exists('tidy'))
+			{
+				$tidy	 = new tidy;
+				$tidy->parseString($test);
+				$test	 = $tidy->body();
+		//		$test =  phpgw::clean_html($test);
+			}
 
 			return $test;
 			/**
