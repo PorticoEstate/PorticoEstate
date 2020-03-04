@@ -1389,13 +1389,13 @@
 
 			$test = str_replace('>&nbsp;<', '><', $test);
 
-			if (class_exists('tidy'))
-			{
-				$tidy	 = new tidy;
-				$test	 = $tidy->repairString($test);
-				$tidy->parseString($test, $tidy_options, 'utf8');
-				$test	 = $tidy->html();
-			}
+//			if (class_exists('tidy'))
+//			{
+//				$tidy	 = new tidy;
+//				$test	 = $tidy->repairString($test);
+//				$tidy->parseString($test, $tidy_options, 'utf8');
+//				$test	 = $tidy->html();
+//			}
 
 			$dom			 = new DOMDocument();
 			$dom->recover	 = true;
@@ -1434,13 +1434,13 @@
 
 			$test = $dom->saveHTML();
 
-			if (class_exists('tidy'))
-			{
-				$tidy	 = new tidy;
-				$tidy->parseString($test);
-				$test	 = $tidy->body();
-		//		$test =  phpgw::clean_html($test);
-			}
+//			if (class_exists('tidy'))
+//			{
+//				$tidy	 = new tidy;
+//				$tidy->parseString($test);
+//				$test	 = $tidy->body();
+//		//		$test =  phpgw::clean_html($test);
+//			}
 
 			return $test;
 			/**
