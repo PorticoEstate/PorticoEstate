@@ -696,11 +696,14 @@
 					</span>
 					<span class="float-none">
 						<h4>
-							<input type="text" id="current_day_str" name="current_day_str" class="form-check form-check-inline" readonly= "true" style="border:none;text-align: center">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
-								</xsl:attribute>
-							</input>
+							<div>
+								<input type="text" id="current_day_str" name="current_day_str" class="form-check form-check-inline" readonly= "true" style="border:none;text-align: center; width:6em">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
+									</xsl:attribute>
+								</input>
+								<i class="fas fa-calendar ml-2"></i>
+							</div>
 
 						</h4>
 					</span>
