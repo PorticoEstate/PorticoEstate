@@ -163,7 +163,7 @@
 				$config->set('HTML.SafeIframe', true);
 			//	$config->set('URI.SafeIframeRegexp', '/^https:\/\/(www.youtube.com\/embed\/|player.vimeo.com\/video\/|use\.mazemap\.com\/)');
 			//	$config->set('URI.SafeIframeRegexp', '%^https://(www.youtube.com/embed/|player.vimeo.com/video/|use.mazemap.com/)%');
-				$config->set('URI.SafeIframeRegexp', '%^https:\/\/(www\.youtube\.com\/embed\/|player\.vimeo\.com\/video/|use\.mazemap\.com\/)%');
+				$config->set('URI.SafeIframeRegexp', '%^(https?:)?//(www\.youtube\.com/embed/|player\.vimeo\.com/video/|use\.mazemap\.com/)%');
 			}
 
 			$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
