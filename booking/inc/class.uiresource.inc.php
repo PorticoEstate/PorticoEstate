@@ -254,6 +254,7 @@
 		public function edit()
 		{
 			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
+			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
 			$resource['id'] = $id;

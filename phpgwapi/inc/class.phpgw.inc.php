@@ -158,6 +158,14 @@
 			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
 			$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
 			$config->set('HTML.AllowedAttributes', 'class, src, height, width, alt, id, target, href, colspan');
+			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_iframe']))
+			{
+				$config->set('HTML.SafeIframe', true);
+			//	$config->set('URI.SafeIframeRegexp', '/^https:\/\/(www.youtube.com\/embed\/|player.vimeo.com\/video\/|use\.mazemap\.com\/)');
+			//	$config->set('URI.SafeIframeRegexp', '%^https://(www.youtube.com/embed/|player.vimeo.com/video/|use.mazemap.com/)%');
+				$config->set('URI.SafeIframeRegexp', '%^https:\/\/(www\.youtube\.com\/embed\/|player\.vimeo\.com\/video/|use\.mazemap\.com\/)%');
+			}
+
 			$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
 			
 //			$config->set('Core', 'CollectErrors', true);
