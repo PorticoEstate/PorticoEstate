@@ -29,6 +29,10 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|property|textarearows')" />
 	</xsl:variable>
 
+	<xsl:variable name="supress_history_date">
+		<xsl:value-of select="supress_history_date"/>
+	</xsl:variable>
+
 	<xsl:for-each select="attributes_group">
 		<div id="{link}">
 			<fieldset>
@@ -48,6 +52,9 @@
 					<xsl:with-param name="textarearows">
 						<xsl:value-of select="$textarearows" />
 					</xsl:with-param>
+					<xsl:with-param name="supress_history_date">
+						<xsl:value-of select="$supress_history_date" />
+					</xsl:with-param>
 				</xsl:apply-templates>
 			</fieldset>
 		</div>
@@ -61,6 +68,7 @@
 	<xsl:param name="statustext" />
 	<xsl:param name="textareacols" />
 	<xsl:param name="textarearows" />
+	<xsl:param name="supress_history_date" />
 
 	<xsl:choose>
 		<xsl:when test="datatype='section'">
@@ -749,7 +757,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:choose>
-					<xsl:when test="history=1 and //supress_history_date !=1">
+					<xsl:when test="history=1 and $supress_history_date !=1">
 						<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
 						</input>
 						<xsl:variable name="link_history">
