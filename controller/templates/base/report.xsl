@@ -177,10 +177,10 @@
 												<table class="table table-sm">
 													<xsl:for-each select="values">
 														<tr>
-															<td class="small border-0">
+															<td class="border-0">
 																<xsl:value-of select="text"/>
 															</td>
-															<td class="small border-0">
+															<td class="border-0">
 																<xsl:value-of select="value"/>
 															</td>
 														</tr>
