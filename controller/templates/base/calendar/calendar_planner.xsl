@@ -697,12 +697,12 @@
 					<span class="float-none">
 						<h4>
 							<div>
-								<input type="text" id="current_day_str" name="current_day_str" class="form-check form-check-inline" readonly= "true" style="border:none;text-align: center; width:6em">
+								<input type="text" id="current_day_str" name="current_day_str" readonly= "true" style="border:none;text-align: center; width:6em">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
 									</xsl:attribute>
 								</input>
-								<i class="fas fa-calendar ml-2"></i>
+								<i class="fa fa-calendar ml-1"></i>
 							</div>
 
 						</h4>
