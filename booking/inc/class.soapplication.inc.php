@@ -373,7 +373,8 @@
                       UNION
                       SELECT be.id
                       FROM bb_event be, bb_event_resource ber, bb_event_date bed
-                      WHERE be.id = ber.event_id
+                      WHERE active = 1
+					  AND be.id = ber.event_id
                       AND be.id = bed.event_id
                       AND ber.resource_id in ($rids)
                       AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
