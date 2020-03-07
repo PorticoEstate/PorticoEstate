@@ -179,6 +179,7 @@
 
 			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
 			phpgwapi_cache::session_clear('frontend', 'msgbox');
+//			_debug_array($this->header_state);die();
 
 			$data = array(
 				'header' => $this->header_state,

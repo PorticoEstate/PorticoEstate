@@ -73,6 +73,12 @@
 			$this->location_id = $location_id;
 			$this->tab_selected = $selected;
 
+			foreach ($tabs as $key => &$_tab)
+			{
+				$_tab['location_id'] = $key;
+			}
+			
+			$this->tabs_data = $tabs;
 			$this->tabs = phpgwapi_jquery::tabview_generate($tabs, $this->tab_selected);
 			$this->tabs_content = $this->generate_tabs_content($tabs);
 
@@ -86,6 +92,9 @@
 			$this->header_state['use_fellesdata'] = $use_fellesdata;
 			$this->header_state['logo_path'] = $logo_path;
 			$this->header_state['form_action'] = $tabs[$selected]['link'];
+
+			$columns = 3;
+			$this->header_state['tabs_data'] = array_chunk($this->tabs_data, ceil(count($this->tabs_data) / $columns));
 
 			// Get navigation parameters
 			$param_selected_location = phpgw::get_var('location'); // New location selected from locations list
@@ -151,7 +160,7 @@
 					$org_unit_ids = array(
 						array(
 							"ORG_UNIT_ID" => $param_only_org_unit,
-							"ORG_NAME" => $name_and_result_number['UNIT_NAME'],
+							"ORG_NAME" =>  $name_and_result_number['UNIT_NAME'] ? $name_and_result_number['UNIT_NAME'] : 'Org Name (Fellesdata utenfor rekkevidde)',
 							"UNIT_ID" => $name_and_result_number['UNIT_NUMBER']
 						)
 					);
@@ -278,6 +287,7 @@
 			{
 				$this->header_state['new_messages'] = lang('no_new_messages');
 			}
+			$this->header_state['total_messages'] = $total_messages;
 
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
@@ -336,7 +346,7 @@
 
 			$extra_tabs = phpgwapi_cache::session_get('frontend', 'extra_tabs');
 
-			if (isset($extra_tabs))
+			if (isset($extra_tabs) && $extra_tabs)
 			{
 				$tabs = $extra_tabs + $tabs;
 			}

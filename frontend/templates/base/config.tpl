@@ -165,7 +165,7 @@
 			<td colspan="2">&nbsp;<b>{lang_logo_settings}</b></td>
 		</tr>
 		<tr class="row_on">
-			<td>{lang_logo_contract_messages}:</td>
+			<td>{lang_logo_url}:</td>
 			<td><input name="newsettings[logo_path]" value="{value_logo_path}"></td>
 		</tr>
 		<!-- END body -->

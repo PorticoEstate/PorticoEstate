@@ -1,4 +1,5 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
+	<xsl:param name="template_set"/>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
 			<xsl:call-template name="msgbox"/>
@@ -6,8 +7,11 @@
 	</xsl:choose>
 
 	<div class="frontend_body">
-		<div id="tab-content">
-			<xsl:value-of disable-output-escaping="yes" select="tabs" />
+		<div>
+			<xsl:if test="$template_set != 'bootstrap'">
+				<xsl:attribute name="id">tab-content</xsl:attribute>
+				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			</xsl:if>
 			<xsl:variable name="tab_selected">
 				<xsl:value-of select="tab_selected"/>
 			</xsl:variable>
