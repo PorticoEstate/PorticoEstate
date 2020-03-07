@@ -111,7 +111,7 @@
 	<!-- ACCORDION START -->
 
 	<div class="container mt-3">
-		<div id="accordion">
+		<div id="accordion1">
 			<div class="card">
 				<div class="card-header" id="headingOne">
 					<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -124,7 +124,7 @@
 					</button>
 				</div>
 
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion1">
 					<div class="card-body">
 						<div class="row">
 							<!-- RESULTATENHET -->
@@ -206,6 +206,8 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div id="accordion">
 			<div class="card mt-1">
 				<div class="card-header" id="headingTwo">
 
@@ -319,7 +321,7 @@
 	<!-- CONTENT START -->
 
 	<div class="container mt-1">
-		<div id="accordion">
+		<div id="accordion_">
 			<div class="card">
 				<div class="card-header" id="subMenuHeading">
 					<h5 class="mb-0">
@@ -329,7 +331,7 @@
 					</h5>
 				</div>
 
-				<div id="collapseSubMenu" class="collapse" aria-labelledby="subMenuHeading" data-parent="#accordion">
+				<div id="collapseSubMenu" class="collapse" aria-labelledby="subMenuHeading" data-parent="#accordion_">
 
 					<div class="row p-3">
 

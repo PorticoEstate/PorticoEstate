@@ -79,8 +79,11 @@
 			}
 			
 			$this->tabs_data = $tabs;
-			$this->tabs = phpgwapi_jquery::tabview_generate($tabs, $this->tab_selected);
-			$this->tabs_content = $this->generate_tabs_content($tabs);
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] !== 'bootstrap')
+			{
+				$this->tabs = phpgwapi_jquery::tabview_generate($tabs, $this->tab_selected);
+				$this->tabs_content = $this->generate_tabs_content($tabs);
+			}
 
 			//$this->tabs		= $GLOBALS['phpgw']->common->create_tabs($tabs, $selected);
 			$this->menu = $this->create_menu($tabs, $selected);
