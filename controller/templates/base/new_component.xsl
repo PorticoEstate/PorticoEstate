@@ -40,7 +40,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:choose>
-							<xsl:when test="template_set = 'boostrap'">
+							<xsl:when test="template_set = 'bootstrap'">
 								<xsl:attribute name="class">
 									<xsl:text>btn btn-primary btn-sm</xsl:text>
 								</xsl:attribute>
@@ -56,7 +56,7 @@
 				</xsl:if>
 				<button id = "cancel_new_component" type="button"  onclick="remove_component_form(form);">
 					<xsl:choose>
-						<xsl:when test="template_set = 'boostrap'">
+						<xsl:when test="template_set = 'bootstrap'">
 							<xsl:attribute name="class">
 								<xsl:text>btn btn-primary btn-sm</xsl:text>
 							</xsl:attribute>

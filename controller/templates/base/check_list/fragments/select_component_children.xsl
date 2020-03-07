@@ -70,7 +70,7 @@
 				<div class="pure-controls pure-custom">
 					<button id = "submit_component_form" type="submit" >
 						<xsl:choose>
-							<xsl:when test="$template_set = 'boostrap'">
+							<xsl:when test="$template_set = 'bootstrap'">
 								<xsl:attribute name="class">
 									<xsl:text>btn btn-primary btn-sm</xsl:text>
 								</xsl:attribute>
@@ -87,7 +87,7 @@
 					</button>
 					<button id = "download_components" type="button" onclick="downloadComponents({parent_location_id}, {parent_component_id}, {location_id});">
 						<xsl:choose>
-							<xsl:when test="$template_set = 'boostrap'">
+							<xsl:when test="$template_set = 'bootstrap'">
 								<xsl:attribute name="class">
 									<xsl:text>btn btn-primary btn-sm ml-1</xsl:text>
 								</xsl:attribute>
