@@ -559,9 +559,9 @@
 				'p_num' => $p_num,
 			);
 
-			$tabs = array();
-			$tabs['details'] = array('label' => lang('Ny melding'), 'link' => '#details');
-			$active_tab = 'details';
+//			$tabs = array();
+//			$tabs['details'] = array('label' => lang('Ny melding'), 'link' => '#details');
+//			$active_tab = 'details';
 
 			$data = array(
 				'redirect' => isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array(
@@ -573,8 +573,9 @@
 				'description' => $values['description'],
 				'noform' => $noform,
 				'category_list' => $category_list,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+//				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'custom_attributes' => array('attributes' => $item['attributes']),
+				'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'attributes_view'));
