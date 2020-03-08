@@ -3293,13 +3293,16 @@ HTML;
 			$pdf->ezStream(array('compress' => 0));
 		}
 
-		function get_report()
+		function get_report($check_list_id = null)
 		{
 			$inline_images = false;
 
 			$config = createObject('phpgwapi.config', 'property')->read();
 
-			$check_list_id = phpgw::get_var('check_list_id');
+			if(!$check_list_id)
+			{
+				$check_list_id = phpgw::get_var('check_list_id');
+			}
 			$case_location_code = phpgw::get_var('location_code');
 
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;

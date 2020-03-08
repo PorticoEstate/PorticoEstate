@@ -72,7 +72,7 @@
 				</a>
 			</div>
 			<div class="btn-group float-right">
-				
+
 				<a href="{home_url}"   class="btn btn-light pt-4 pb-4">
 					<xsl:value-of select="php:function('lang', 'home')"/>
 				</a>
@@ -115,8 +115,8 @@
 			<div class="card">
 				<div class="card-header" id="headingOne">
 					<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						<h5>		    					
-							<xsl:value-of select="php:function('lang', 'organisational_units')"/> 
+						<h5>
+							<xsl:value-of select="php:function('lang', 'organisational_units')"/>
 							<span class="badge badge-info badge-pill float-right mt-2">
 								<xsl:value-of select="number_of_org_units"/>
 							</span>
@@ -133,7 +133,7 @@
 								<div class="card">
 									<div class="card-header">
 										<h6 class="text-uppercase">
-											<xsl:value-of select="php:function('lang', 'select organisational unit')"/> 
+											<xsl:value-of select="php:function('lang', 'select organisational unit')"/>
 										</h6>
 									</div>
 
@@ -214,6 +214,22 @@
 					<button class="btn collapsed btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 						<h5>
 							Bygninger
+							<xsl:for-each select="locations">
+								<xsl:if test="location_code = //header/selected_location">
+									<span class="text-lowercase">
+										(
+										<xsl:choose>
+											<xsl:when test="name != ''">
+												<xsl:value-of select="name"/>, <xsl:value-of select="location_code"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
+											</xsl:otherwise>
+										</xsl:choose>
+										)
+									</span>
+								</xsl:if>
+							</xsl:for-each>
 							<span class="badge badge-info badge-pill float-right mt-2">
 								<xsl:value-of select="count(locations)"/>
 							</span>
@@ -236,7 +252,7 @@
 										<ul class="list-group list-group-flush">
 
 											<xsl:for-each select="locations">
-												<xsl:sort select="loc1_name"/>
+												<xsl:sort select="location_code"/>
 												<li class="list-group-item">
 													<xsl:choose>
 														<xsl:when test="name != ''">
@@ -326,7 +342,18 @@
 				<div class="card-header" id="subMenuHeading">
 					<h5 class="mb-0">
 						<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu" aria-expanded="true" aria-controls="collapseSubMenu">
-							<h5>Innholdsmeny</h5>
+							<h5>
+								Innholdsmeny
+								<xsl:for-each select="tabs_data">
+									<xsl:for-each select="node()">
+										<span>
+											<xsl:if test="location_id = //section/tab_selected">
+												(<xsl:value-of select="label"/>)
+											</xsl:if>
+										</span>
+									</xsl:for-each>
+								</xsl:for-each>
+							</h5>
 						</button>
 					</h5>
 				</div>

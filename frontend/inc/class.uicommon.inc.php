@@ -77,7 +77,7 @@
 			{
 				$_tab['location_id'] = $key;
 			}
-			
+
 			$this->tabs_data = $tabs;
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] !== 'bootstrap')
 			{
@@ -96,7 +96,15 @@
 			$this->header_state['logo_path'] = $logo_path;
 			$this->header_state['form_action'] = $tabs[$selected]['link'];
 
-			$columns = 3;
+			$columns = 1;
+			if(count($this->tabs_data) > 5)
+			{
+				$columns = 2;
+			}
+			if(count($this->tabs_data) > 8)
+			{
+				$columns = 3;
+			}
 			$this->header_state['tabs_data'] = array_chunk($this->tabs_data, ceil(count($this->tabs_data) / $columns));
 
 			// Get navigation parameters

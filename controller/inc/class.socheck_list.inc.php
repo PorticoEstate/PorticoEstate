@@ -1177,10 +1177,10 @@
 		}
 
 
-		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null)
+		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null, $location_code = null, $results = null)
 		{
 			$control_id = (int)$control_id;
-			if(!$selected_part_of_town)
+			if(!$selected_part_of_town && !$location_code)
 			{
 				return array();
 			}
@@ -1200,9 +1200,18 @@
 				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id";
 			$sql .= " WHERE cl.control_id = {$control_id}"
-				. " AND fm_part_of_town.id IN (" . implode(',', $selected_part_of_town) . ")"
 				. " AND completed_date IS NOT NULL";
-
+			
+			if($selected_part_of_town)
+			{
+				$sql .=  " AND fm_part_of_town.id IN (" . implode(',', $selected_part_of_town) . ")";	
+			}
+			if($location_code)
+			{
+				$location_arr = explode('-', $location_code);
+				
+				$sql .=  " AND cl.location_code {$this->like} '" .  $this->db->db_addslashes($location_arr[0]) . "%'";
+			}
 
 			if($deviation)
 			{
@@ -1211,7 +1220,8 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$sql .= " AND loc1_name {$this->like} '%{$query}%'";
+				$sql .= " AND (loc1_name {$this->like} '%{$query}%'"
+				. " OR cl.location_code {$this->like} '{$query}%')";
 			}
 
 //			$sql .= " AND completed_date BETWEEN $from_date_ts AND $to_date_ts";
@@ -1233,7 +1243,7 @@
 			}
 			else
 			{
-				$this->db->limit_query($sql, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 			}
 
 			$values = array();

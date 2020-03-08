@@ -34,13 +34,15 @@
 	{
 
 		public $public_functions = array
-			(
+		(
 			'index' => true,
+			'view' => true,
+			'query' => true
 		);
 
 		public function __construct()
 		{
-			$GLOBALS['phpgw']->translation->add_app('property');
+			$GLOBALS['phpgw']->translation->add_app('controller');
 			$this->location_id = phpgw::get_var('location_id', 'int', 'REQUEST', 0);
 			$location_info = $GLOBALS['phpgw']->locations->get_name($this->location_id);
 			$this->acl_location = $location_info['location'];
@@ -53,30 +55,6 @@
 			phpgwapi_cache::session_set('frontend', 'tab', $this->location_id);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
-			/*
-			  $this->bo->location_code = $this->location_code;
-
-			  $_org_units = array();
-			  if(is_array($this->header_state['org_unit']))
-			  {
-			  foreach ($this->header_state['org_unit'] as $org_unit)
-			  {
-			  $_org_unit_id = (int)$org_unit['ORG_UNIT_ID'];
-			  $_subs = execMethod('property.sogeneric.read_tree',array('node_id' => $_org_unit_id, 'type' => 'org_unit'));
-			  $_org_units[$_org_unit_id] = true;
-			  foreach($_subs as $entry)
-			  {
-			  $_org_units[$entry['id']] = true;
-			  if(isset($entry['children']) && $entry['children'])
-			  {
-			  $this->_get_children($entry['children'], $_org_units);
-			  }
-			  }
-			  }
-			  }
-			  $org_units = array_keys($_org_units);
-			  $this->bo->org_units = $org_units;
-			 */
 		}
 
 		/**
@@ -102,24 +80,239 @@
 
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
-			$data = array
+			$filters = array();
+			
+			
+			$so_control = CreateObject('controller.socontrol');
+			
+			$control_types = $so_control->get_controls_by_control_area();
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
+
+
+			$search_option = array(array('id' => '', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$search_option[] = array(
+					'id'		 => $control_type['id'],
+					'name'		 => $control_type['title'],
+					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
+				);
+			}
+
+			$filters[] = array
 				(
+				'type' => 'filter',
+				'name' => 'control_id',
+				'text' => lang('control type'),
+				'list' => $search_option
+			);
+
+			$uicols = array();
+
+			$uicols['name'][] = 'id';
+			$uicols['descr'][] = lang('id');
+			$uicols['name'][] = 'loc1_name';
+			$uicols['descr'][] = lang('name');
+			$uicols['name'][] = 'comment';
+			$uicols['descr'][] = lang('comment');
+			$uicols['name'][] = 'location_code';
+			$uicols['descr'][] = lang('location_code');
+			$uicols['name'][] = 'num_open_cases';
+			$uicols['descr'][] = lang('num_open_cases');
+			$uicols['name'][] = 'num_corrected_cases';
+			$uicols['descr'][] = lang('num_corrected_cases');
+			$uicols['name'][] = 'completed_date_text';
+			$uicols['descr'][] = lang('completed_date');
+
+			$count_uicols_name = count($uicols['name']);
+
+			$uicols_helpdesk = array();
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				$params = array(
+					'key' => $uicols['name'][$k],
+					'label' => $uicols['descr'][$k],
+					'sortable' => ($uicols['sortable'][$k]) ? true : false,
+					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
+				);
+
+				$params['sortable'] = false;
+				if ($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'user' || $uicols['name'][$k] == 'completed_date_text')
+				{
+					$params['sortable'] = true;
+				}
+				if ($uicols['name'][$k] == 'id')
+				{
+					$params['hidden'] = true;
+				}
+
+				array_push($uicols_helpdesk, $params);
+			}
+
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					)
+				)
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'view',
+				'text' => lang('view'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'frontend.uicontroller.view',
+					'location_id' => $this->location_id,
+				)),
+				'target'	 => '_blank',
+				'parameters' => json_encode($parameters)
+			);
+
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array
+						(
+						'menuaction' => 'frontend.uicontroller.query',
+						'location_id' => $this->location_id,
+						'phpgw_return_as' => 'json'))
+				),
+				'ColumnDefs' => $uicols_helpdesk,
+				'tabletools' => $tabletools,
+				'config'	 => array(
+					array('order' => json_encode(array(1, 'desc'))),
+				)
+			);
+
+			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
+
+			$data = array(
 				'header' => $this->header_state,
 				'section' => array(
+					'datatable_def' => $datatable_def,
 					'tabs' => $this->tabs,
-					'menu' => $this->menu,
-					'controller' => array('location_code' => $this->location_code)
-				)
+					'tabs_content' => $this->tabs_content,
+					'filters' => $filters,
+					'tab_selected' => $this->tab_selected,
+					'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($msglog))
+				),
+				'lightbox_name' => lang('add ticket')
 			);
 			self::render_template_xsl(array('controller', 'datatable_inline', 'frontend'), $data);
 		}
 
 		public function query()
 		{
+			phpgwapi_cache::session_clear('frontend', 'msgbox');
 
+			$so = CreateObject('controller.socheck_list');
+			
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$control_id = phpgw::get_var('control_id', 'int');
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if($control_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
+			}
+			else
+			{
+				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);				
+			}
+			
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'order' => ($columns[$order[0]['column']]['data'] == 'subject') ? 'entry_date' : $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
+
+			if (isset($this->location_code) && $this->location_code != '')
+			{
+				$params['location_code'] = $this->location_code;
+				$values = $so->get_historic_check_lists( $control_id, null, $params['start'], $params['query'], $deviation = null, $params['allrows'], $this->location_code, $params['results']);
+
+			}
+			else
+			{
+				$values = array();
+			}
+
+			
+			
+			$condition_degree = 0;
+
+			$soentity = createObject('property.soentity');
+			
+			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			foreach ($values as &$entry)
+			{
+				if($entry['location_id'])
+				{
+					$entry['loc1_name'] = $entry['loc1_name'] . '::' . $soentity->get_short_description(
+						array
+						(
+							'location_id' => $entry['location_id'],
+							'id' => $entry['component_id']
+						)
+					);
+				}
+				
+				$entry['completed_date_text'] = $GLOBALS['phpgw']->common->show_date($entry['completed_date'], $dateFormat);
+
+				if(isset($entry['findings_summary']['condition_degree'][1]))
+				{
+					$entry['findings_summary']['condition_degree_1'] = $entry['findings_summary']['condition_degree'][1];
+					$condition_degree ++;
+				}
+				if(isset($entry['findings_summary']['condition_degree'][2]))
+				{
+					$entry['findings_summary']['condition_degree_2'] = $entry['findings_summary']['condition_degree'][2];
+					$condition_degree ++;
+				}
+				if(isset($entry['findings_summary']['condition_degree'][3]))
+				{
+					$entry['findings_summary']['condition_degree_3'] = $entry['findings_summary']['condition_degree'][3];
+					$condition_degree ++;
+				}
+			}
+
+			
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $so->total_records;
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
+		
+		public function view()
+		{
+			$check_list_id = phpgw::get_var('id', 'int');
+			
+			createObject('controller.uicheck_list')->get_report($check_list_id);
+					
+		}
+
 	}

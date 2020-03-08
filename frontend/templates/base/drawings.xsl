@@ -32,6 +32,7 @@
 											<xsl:with-param name="tabletools" select ='tabletools' />
 											<xsl:with-param name="data" select ='data' />
 											<xsl:with-param name="config" select ='config' />
+											<xsl:with-param name="class" select="'table table-striped table-bordered'" />
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>						
