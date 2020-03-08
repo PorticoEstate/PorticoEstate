@@ -137,3 +137,5 @@ contracts	frontend	no	Kontrakt
 max %1 delegates	frontend	no	Maximum %1 delegerte
 monthly	frontend	no	Månedlig
 remark	frontend	no	Merknad
+details	frontend	no	Detaljer
+phone	frontend	no	Telefonnummer

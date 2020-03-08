@@ -95,7 +95,7 @@
 						<i class="fas fa-user-cog"></i>
 					</button>
 					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Min profil</a>
+						<a class="dropdown-item" href="#" data-toggle="modal" data-target="#myProfile">Min profil</a>
 						<a class="dropdown-item" href="logout.php" >
 							<xsl:value-of select="php:function('lang', 'logout')"/>
 						</a>
@@ -387,5 +387,55 @@
 			</div>
 		</div>
 	</div>
+	<!-- MODAL PROFILE START -->
+	<div class="modal fade" id="myProfile">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 id="inspection_title" class="modal-title">Min profil</h4>
+				</div>
+				<!-- Modal body -->
+				<div class="modal-body">
+					<xsl:variable name="action_url">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:frontend.uifrontend.save_profile,phpgw_return_as:json')" />
+					</xsl:variable>
+					<form ENCTYPE="multipart/form-data" name="myProfile_form" id="myProfile_form" method="post" action="{$action_url}" class="was-validated">
+						<fieldset class="border p-2">
+							<legend  class="w-auto">
+								<xsl:value-of select="profile/name" />
+							</legend>
+
+							<div class="form-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'phone')" />
+								</label>
+								<input type="text" name="values[cellphone]" value="{profile/cellphone}" required="required" class="form-control">
+								</input>
+							</div>
+							<div class="form-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'email')" />
+								</label>
+								<input type="Email" name="values[email]" value="{profile/email}" required="required" class="form-control">
+								</input>
+							</div>
+							<div class="form-group">
+								<xsl:variable name="lang_send">
+									<xsl:value-of select="php:function('lang', 'save')" />
+								</xsl:variable>
+								<label>
+									<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
+								</label>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+
+				<!-- Modal footer -->
+			</div>
+		</div>
+	</div>
+	<!-- MODAL PROFILE END -->
 
 </xsl:template>

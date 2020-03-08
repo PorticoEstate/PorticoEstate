@@ -45,7 +45,8 @@
 		public $public_functions = array
 			(
 			'index' => true,
-			'objectimg' => true
+			'objectimg' => true,
+			'save_profile' => true
 		);
 
 		public function __construct()
@@ -299,6 +300,11 @@
 				$this->header_state['new_messages'] = lang('no_new_messages');
 			}
 			$this->header_state['total_messages'] = $total_messages;
+			$this->header_state['profile'] = array(
+				'name'	=> $GLOBALS['phpgw_info']['user']['fullname'],
+				'email' => $GLOBALS['phpgw_info']['user']['preferences']['common']['email'],
+				'cellphone' => $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone']
+				);
 
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 

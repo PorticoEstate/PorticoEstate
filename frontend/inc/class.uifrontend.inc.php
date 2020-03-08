@@ -50,4 +50,21 @@
 		{
 
 		}
+
+		public function save_profile()
+		{
+			$values = phpgw::get_var('values');
+			
+			if ($values)
+			{
+				$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$pref = CreateObject('phpgwapi.preferences', $user_id);
+				$pref->read();
+				$pref->add('common', 'cellphone', $values['cellphone'], 'user');
+				$pref->add('common', 'email', $values['email'], 'user');
+				$pref->save_repository();
+				
+				return array('status' => 'saved');
+			}
+		}
 	}

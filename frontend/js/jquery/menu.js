@@ -56,6 +56,31 @@ $(document).ready(function ()
 	{
 		setCookie('collapseSubMenu', true, 1);
 	});
+
+
+
+	$("#myProfile_form").on("submit", function (e)
+	{
+		e.preventDefault();
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: $(thisForm).serialize(),
+			success: function (data)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						var submitBnt = $(thisForm).find("input[type='submit']");
+						$(submitBnt).val("Lagret");
+					}
+				}
+			}
+		});
+	});
 });
 
 
@@ -85,4 +110,3 @@ function getCookie(cname)
 	}
 	return "";
 }
-
