@@ -1,11 +1,13 @@
 
 <xsl:template match="data">
 	<xsl:apply-templates select="header"/>
-	<xsl:apply-templates select="section">
-		<xsl:with-param name="template_set">
-			<xsl:text>bootstrap</xsl:text>
-		</xsl:with-param>
-	</xsl:apply-templates>
+	<div class="container mt-3">
+		<xsl:apply-templates select="section">
+			<xsl:with-param name="template_set">
+				<xsl:text>bootstrap</xsl:text>
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</div>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
@@ -42,7 +44,7 @@
 
 		.topHeader:after {
 		content: "";
-		background: #5bc0de;
+		background: #17a2b8;
 		position: absolute;
 		bottom: 0;
 		left: 0;
@@ -53,9 +55,87 @@
 		.smallboxline
 		{
 		width: 100%;
-		background: #5bc0de;
+		background: #17a2b8;
 		height: 5px;
 		}
+
+		label{
+		position: relative;
+		cursor: pointer;
+		color: #000;
+		font-size: 18px;
+		}
+
+		input[type="checkbox"], input[type="radio"]{
+		position: absolute;
+		right: 9000px;
+		}
+
+
+		.toggle input[type="radio"] + .label-text:before{
+		content: "\f204";
+		font-family: "Font Awesome 5 Free";
+		speak: none;
+		font-style: normal;
+		font-weight: 900;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		-webkit-font-smoothing:antialiased;
+		width: 1em;
+		display: inline-block;
+		margin-right: 10px;
+		}
+
+		.toggle input[type="radio"]:checked + .label-text:before{
+		content: "\f205";
+		color: #17a2b8;
+		animation: effect 250ms ease-in;
+		}
+
+		.toggle input[type="radio"]:disabled + .label-text{
+		color: #aaa;
+		}
+
+		.toggle input[type="radio"]:disabled + .label-text:before{
+		content: "\f204";
+		color: #ccc;
+		}
+
+
+		@keyframes effect{
+		0%{transform: scale(0);}
+		25%{transform: scale(1.3);}
+		75%{transform: scale(1.4);}
+		100%{transform: scale(1);}
+		}
+
+		.nav-pills > li > a.active {
+		background-color: #17a2b8!important;
+		}
+
+		a.footerlink:link {color:#17a2b8;}
+		a.footerlink:visited {color:#17a2b8;}
+		a.footerlink:hover {color:#FFFFFF;}
+
+		p.footertext {
+		line-height: 21px;
+		}
+
+		.menubtnactive {
+		background: #17a2b8;
+		color: #FFFFFF;
+		}
+
+		.menubtnactive:hover {
+		background: #17a2b8;
+		color: #000000;
+		}
+
+		ul {
+		list-style-type: none;
+		}
+
 
 	</style>
 

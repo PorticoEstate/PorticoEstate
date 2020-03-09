@@ -56,7 +56,11 @@
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
-	$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
+	
+	if($app != 'frontend')
+	{
+		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
+	}
 
 
     if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))

@@ -12,11 +12,11 @@
 
 
 		<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}" class="was-validated">
-			<fieldset class="border p-2">
-				<legend  class="w-auto">
-					<xsl:value-of select="php:function('lang', 'ticket')" />
-				</legend>
-				<xsl:if test="noform != 1">
+			<xsl:if test="noform != 1">
+				<fieldset class="border p-2">
+					<legend  class="w-auto">
+						<xsl:value-of select="php:function('lang', 'ticket')" />
+					</legend>
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'category')" />
@@ -59,19 +59,21 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<div class="form-group">
-						<xsl:variable name="lang_send">
-							<xsl:value-of select="php:function('lang', 'send')" />
-						</xsl:variable>
-						<label>
-							<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
-						</label>
-					</div>
 					<div class="ticket_content attributes">
 						<xsl:apply-templates select="custom_attributes/attributes"/>
 					</div>
-				</xsl:if>
-			</fieldset>
+				</fieldset>
+
+				<div class="form-group mt-2">
+					<xsl:variable name="lang_send">
+						<xsl:value-of select="php:function('lang', 'send')" />
+					</xsl:variable>
+					<label>
+						<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
+					</label>
+				</div>
+			</xsl:if>
+
 		</form>
 	</div>
 </xsl:template>
