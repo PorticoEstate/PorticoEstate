@@ -1,29 +1,23 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
 	<xsl:param name="template_set"/>
-	
+	<xsl:variable name="form_url">
+		<xsl:value-of select="form_url"/>
+	</xsl:variable>
+
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
 			<xsl:call-template name="msgbox"/>
 		</xsl:when>
 	</xsl:choose>
-	
+
 	<div class="container mt-3">
 		<div class="row p-3">
 			<h4>Interleiekontrakter</h4>
 		</div>
 
 		<!-- Tab links -->
-
-		<ul class="nav nav-pills" role="tablist">
-			<li class="nav-item">
-				<a class="nav-link active" data-toggle="pill" href="#aktive">Aktive</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="pill" href="#inaktive">Inaktive</a>
-			</li>
-		</ul>
-		<form action="{form_url}" method="post">
-			<select name="contract_filter" onchange="this.form.submit()">
+		<form action="{$form_url}" method="post">
+			<select class="form-control" name="contract_filter" onchange="this.form.submit()">
 				<xsl:choose>
 					<xsl:when test="//contract_filter = 'active'">
 						<option value="active" selected="selected">
@@ -72,32 +66,44 @@
 				<br/>
 				<div class="row p-3">
 					<div class="col-md-3" >
-						<div class="card">
-							<div class="card-header bg-light content-center">
-								<h6 class="text-uppercase">Aktive kontrakter</h6>
 
-							</div>
-							<div class="card-body row text-center">
-								<form action="{form_url}" method="post">
-									<xsl:for-each select="select">
-										<div class="form-check">
-											<label class="toggle">
-												<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();">
-													<xsl:if test="id = //selected_contract">
-														<xsl:attribute name="checked">
-															<xsl:text>true</xsl:text>
-														</xsl:attribute>
-													</xsl:if>
-												</input>
-												<span class="label-text">
-													<xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)
-												</span>
-											</label>
-										</div>
-									</xsl:for-each>
-								</form>
-							</div>
-						</div>
+						<xsl:choose>
+							<xsl:when test="not(normalize-space(select)) and (count(select) &lt;= 1)">
+								<div class="pure-u-1">
+									<xsl:value-of select="php:function('lang', 'no_contracts')"/>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div class="card">
+									<div class="card-header bg-light content-center">
+										<h6 class="text-uppercase">
+											<xsl:value-of select="php:function('lang', 'contracts')"/>
+
+										</h6>
+									</div>
+									<div class="card-body row text-center">
+										<form action="{$form_url}" method="post">
+											<xsl:for-each select="select">
+												<div class="form-check">
+													<label class="toggle">
+														<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();">
+															<xsl:if test="id = //selected_contract">
+																<xsl:attribute name="checked">
+																	<xsl:text>true</xsl:text>
+																</xsl:attribute>
+															</xsl:if>
+														</input>
+														<span class="label-text">
+															<xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)
+														</span>
+													</label>
+												</div>
+											</xsl:for-each>
+										</form>
+									</div>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
 					</div>
 					<xsl:for-each select="contract">
 						<div class="col-md-9">
@@ -245,77 +251,92 @@
 													<h6 class="text-uppercase">Leieobjekt</h6>
 
 												</div>
-												<div class="card-body row">
-													<div class="col text-center">
-														<div class="smallboxline"></div>
-														<div class="text-value-xl">Rothaugen skole - Hovedbygg</div>
-														<div class="text-uppercase text-muted small">Rotthaugsgaten 10</div>
+												<xsl:for-each select="../composite">
+
+													<div class="card-body row">
+														<div class="col text-center">
+															<div class="smallboxline"></div>
+															<div class="text-value-xl">
+																<xsl:value-of select="name" />
+															</div>
+
+															<xsl:if test="normalize-space(address)">
+																<div class="text-uppercase text-muted small">
+																	<xsl:value-of select="address" disable-output-escaping="yes"/>
+																</div>
+															</xsl:if>
+														</div>
 													</div>
-
-												</div>
+												</xsl:for-each>
 											</div>
-
-
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="row">
-								<div id="accordion4" class="col-md-6">
-									<div class="card">
-										<div class="card-header" id="subMenuHeading4">
-											<h5 class="mb-0">
-												<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
-													<h6 class="text-uppercase">Se kommentarer</h6>
-												</button>
-											</h5>
-										</div>
+								<xsl:choose>
+									<xsl:when test="publish_comment = 1">
 
-										<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
-
-											<div class="card-body row">
-												<div class="col text-center">
-													<div class="smallboxline"></div>
-													<div class="text-value-xl">Kunnskapsløftet investering 2020: kr. 777 777,-</div>
-													<div class="text-muted small">Ole Nilsen, 22.03.2020</div>
+										<div id="accordion4" class="col-md-6">
+											<div class="card">
+												<div class="card-header" id="subMenuHeading4">
+													<h5 class="mb-0">
+														<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
+															<h6 class="text-uppercase">
+																<xsl:value-of select="php:function('lang', 'remark')"/>
+															</h6>
+														</button>
+													</h5>
 												</div>
 
-											</div>
-											<div class="card-body row">
-												<div class="col text-center">
-													<div class="smallboxline"></div>
-													<div class="text-value-xl">Kunnskapsløftet investering 2017: kr. 555 555,-</div>
-													<div class="text-muted small">Ole Nilsen, 28.02.2017</div>
+												<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
+													<div class="card-body row">
+														<div class="col text-left">
+															<div class="smallboxline"></div>
+															<div class="text-value-xl">
+																<xsl:value-of select="comment" disable-output-escaping="yes"/>
+															</div>
+														</div>
+													</div>
 												</div>
-
 											</div>
-
-
 										</div>
+									</xsl:when>
+								</xsl:choose>
 
-									</div>
-								</div>
 								<div id="accordion5" class="col-md-6">
 									<div class="card">
 										<div class="card-header" id="subMenuHeading5">
 											<h5 class="mb-0">
 												<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
-													<h6 class="text-uppercase">Send melding</h6>
+													<h6 class="text-uppercase">
+														<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
+													</h6>
 												</button>
 											</h5>
 										</div>
 
 										<div id="collapseSubMenu5" class="collapse p-3" aria-labelledby="subMenuHeading5" data-parent="#accordion5">
 											<div class="row px-3">
-												<div class="form-group w-100">
-													<label for="exampleFormControlTextarea6">Tilbakemelding eller spørsmål angående kontrakten?</label>
-													<textarea class="form-control" id="exampleFormControlTextarea6" rows="3" width="32" placeholder="Skriv inn din melding her" style="border-width: 0px 0px 1px 0px;"></textarea>
-												</div>
-												<div class="form-group w-100">
-													<button class="btn btn-info float-right w-50">
-														<h6 class="text-uppercase">Send melding</h6>
-													</button>
-												</div>
+												<form action="{$form_url}" method="post">
+													<input type="hidden" name="contract_id" value="{//selected_contract}"/>
+
+													<div class="form-group w-100">
+														<label for="exampleFormControlTextarea6">
+															<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
+
+														</label>
+														<textarea name="contract_message" class="form-control" id="exampleFormControlTextarea6" rows="3" width="32" placeholder="Skriv inn din melding her" style="border-width: 0px 0px 1px 0px;">
+														</textarea>
+													</div>
+													<div class="form-group w-100">
+														<button class="btn btn-info float-right w-50" type="submit" name="send">
+															<h6 class="text-uppercase">
+																<xsl:value-of select="php:function('lang', 'btn_send')"/>
+															</h6>
+														</button>
+													</div>
+												</form>
 											</div>
 										</div>
 									</div>
@@ -324,15 +345,14 @@
 						</div>
 					</xsl:for-each>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </xsl:template>
- 
+
 <xsl:template match="contract">
 	<xsl:copy-of select="."/>
-	
+
 </xsl:template>
 
 
