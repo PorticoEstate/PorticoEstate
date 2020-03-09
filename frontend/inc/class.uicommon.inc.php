@@ -611,46 +611,42 @@ HTML;
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 
-			$ls_array = $vfs->ls(array(
+			$files = $vfs->ls(array(
+				'orderby' => 'file_id',
+				'mime_type'	=> 'image/jpeg',
 				'string' => $directory,
 				'relatives' => array(RELATIVE_NONE)
 			));
 
-			$file = isset($ls_array[0]['directory']['name']) ? "{$ls_array[0]['directory']}/{$ls_array[0]['name']}" : '';
-
-			$document = $vfs->read(array(
-				'string' => $file,
-				'relatives' => array(RELATIVE_NONE))
-			);
-
 			$vfs->override_acl = 0;
 
-			$mime_type = 'text/plain';
+			$file = end($files);
+
+			if(empty($file['file_id']))
+			{
+				$GLOBALS['phpgw']->redirect_link('templates/base/images/missing_picture.png');
+			}
+
+			$mime_type = 'image/jpeg';
 			if ($ls_array[0]['mime_type'])
 			{
 				$mime_type = $ls_array[0]['mime_type'];
 			}
 
-			if (isset($document) && $document != '')
+			header('Content-type: ' . $mime_type);
+
+			if (function_exists('imagejpeg'))
 			{
-				header('Content-type: ' . $mime_type);
-
-				if (function_exists('imagejpeg'))
-				{
-					$source = "{$GLOBALS['phpgw_info']['server']['files_dir']}{$ls_array[0]['directory']}/{$ls_array[0]['name']}";
-					$this->create_thumb($source, 173);
-				}
-				else
-				{
-					echo $document;
-				}
-
-				$GLOBALS['phpgw']->common->phpgw_exit();
+				$source = "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file['directory']}/{$file['name']}";
+				$this->create_thumb($source, 173);
 			}
 			else
 			{
-				$GLOBALS['phpgw']->redirect_link('templates/base/images/missing_picture.png');
+				ExecMethod('property.bofiles.get_file', $file['file_id']);
 			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+
 		}
 
 		function create_thumb( $source, $target_height = 100 )
