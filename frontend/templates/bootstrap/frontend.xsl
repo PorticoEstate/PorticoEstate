@@ -148,7 +148,9 @@
 													<label class="checkbox">
 														<input type="radio" value="{ORG_UNIT_ID}" name="org_unit_id" onchange="this.form.submit()">
 															<xsl:if test="ORG_UNIT_ID = //header/selected_org_unit">
-																<xsl:attribute name="checked" value="checked"/>
+																<xsl:attribute name="checked">
+																	<xsl:text>true</xsl:text>
+																</xsl:attribute>
 															</xsl:if>
 														</input>
 														<span class="success"></span>
@@ -267,7 +269,9 @@
 														<label class="checkbox">
 															<input type="radio" value="{location_code}" name="location" onchange="this.form.submit()">
 																<xsl:if test="location_code = //header/selected_location">
-																	<xsl:attribute name="checked" value="checked"/>
+																	<xsl:attribute name="checked">
+																		<xsl:text>true</xsl:text>
+																	</xsl:attribute>
 																</xsl:if>
 															</input>
 															<span class="success"></span>
