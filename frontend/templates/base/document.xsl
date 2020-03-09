@@ -1,4 +1,5 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
+	<xsl:param name="template_set"/>
 
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -12,8 +13,11 @@
 	
 	<div class="frontend_body">
 		<div class="pure-form pure-form-aligned">
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div>
+				<xsl:if test="$template_set != 'bootstrap'">
+					<xsl:attribute name="id">tab-content</xsl:attribute>
+					<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				</xsl:if>
 				<div id="{$tab_selected}">
 					<div>
 						<div class="pure-g">
@@ -98,6 +102,7 @@
 									<xsl:with-param name="tabletools" select ='tabletools' />
 									<xsl:with-param name="data" select ='data' />
 									<xsl:with-param name="config" select ='config' />
+									<xsl:with-param name="class" select="'table table-striped table-bordered'" />
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>	

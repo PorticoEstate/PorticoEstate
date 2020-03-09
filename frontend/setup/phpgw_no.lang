@@ -56,6 +56,7 @@ square_meters	frontend	no	kvm
 currency	frontend	no	kr
 contracts_not_included_in_totals	frontend	no	Innleiekontrakter er ikke tatt med i totalt areal og pris
 organisational_units	frontend	no	Resultatenheter
+select organisational unit	frontend	no	Velg resultatenhet
 all_organisational_units	frontend	no	Alle enheter
 chosen_unit	frontend	no	Valgt bygg
 choose_contract	frontend	no	Velg kontrakt
@@ -136,3 +137,5 @@ contracts	frontend	no	Kontrakt
 max %1 delegates	frontend	no	Maximum %1 delegerte
 monthly	frontend	no	Månedlig
 remark	frontend	no	Merknad
+details	frontend	no	Detaljer
+phone	frontend	no	Telefonnummer

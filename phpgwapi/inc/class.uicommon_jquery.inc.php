@@ -90,10 +90,12 @@
 			/**
 			 * If we want to use boostrap - styling
 			 */
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' 
+				|| ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'frontend'))
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.bootstrap4.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.bootstrap4.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Select/css/select.bootstrap4.min.css');
 				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.bootstrap4.min.js');
 			}
 			else

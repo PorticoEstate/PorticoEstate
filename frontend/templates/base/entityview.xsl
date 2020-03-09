@@ -1,4 +1,5 @@
 <xsl:template match="section" xmlns:php="http://php.net/xsl">
+	<xsl:param name="template_set"/>
 	
 	<script type="text/javascript">
 
@@ -41,8 +42,11 @@
 	
 	<div class="frontend_body">
 		<div>
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs" />
+			<div>
+				<xsl:if test="$template_set != 'bootstrap'">
+					<xsl:attribute name="id">tab-content</xsl:attribute>
+					<xsl:value-of disable-output-escaping="yes" select="tabs" />
+				</xsl:if>
 				<div id="{$tab_selected}">
 					<div class="ticket_content">
 						<div class="pure-control-group">

@@ -296,6 +296,6 @@
 			phpgwapi_cache::session_set('frontend', 'contracts_per_location', $contracts_per_location);
 			phpgwapi_cache::session_set('frontend', 'contracts_in_per_location', $contracts_in_per_location);
 			phpgwapi_cache::session_set('frontend', 'contracts_ex_per_location', $contracts_ex_per_location);
-			return $$this->contracts_per_location_identifier[$org_unit];
+			return $this->contracts_per_location_identifier[$org_unit];
 		}
 	}

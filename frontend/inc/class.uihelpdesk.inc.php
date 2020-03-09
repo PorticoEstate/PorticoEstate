@@ -108,6 +108,7 @@
 					'hidden' => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
+				$params['sortable'] = false;
 				if ($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'user' || $uicols['name'][$k] == 'entry_date')
 				{
 					$params['sortable'] = true;
@@ -169,7 +170,10 @@
 						'phpgw_return_as' => 'json'))
 				),
 				'ColumnDefs' => $uicols_helpdesk,
-				'tabletools' => $tabletools
+				'tabletools' => $tabletools,
+				'config'	 => array(
+					array('order' => json_encode(array(1, 'desc'))),
+				)
 			);
 
 			/* $link =	$GLOBALS['phpgw']->link(
@@ -179,6 +183,7 @@
 
 			$msglog = phpgwapi_cache::session_get('frontend', 'msgbox');
 			phpgwapi_cache::session_clear('frontend', 'msgbox');
+//			_debug_array($this->header_state);die();
 
 			$data = array(
 				'header' => $this->header_state,
@@ -558,9 +563,6 @@
 				'p_num' => $p_num,
 			);
 
-			$tabs = array();
-			$tabs['details'] = array('label' => lang('Ny melding'), 'link' => '#details');
-			$active_tab = 'details';
 
 			$data = array(
 				'redirect' => isset($redirect) ? $GLOBALS['phpgw']->link('/index.php', array(
@@ -572,11 +574,11 @@
 				'description' => $values['description'],
 				'noform' => $noform,
 				'category_list' => $category_list,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'custom_attributes' => array('attributes' => $item['attributes']),
+				'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']
 			);
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk', 'attributes_view'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('frontend', 'helpdesk_add_ticket', 'attributes_view'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add_ticket' => $data));
 
 			/*

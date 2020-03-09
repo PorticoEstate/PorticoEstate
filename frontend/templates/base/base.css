@@ -16,7 +16,9 @@ div#wrapper {}
 	padding-top: 1em;
 	padding-bottom: 1em;
 }
-
+ul {
+  list-style-type: none;
+ }
 .frontend_body {
 	padding-left: 2em;
 	padding-right: 2em;

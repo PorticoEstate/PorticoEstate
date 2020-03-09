@@ -144,7 +144,7 @@
 		/**
 		 * Get the org_units by hierarchical inheritance
 		 */
-		function get_all_parties( $top_org_units = array(), $selected_org_unit = 0 )
+		static function get_all_parties( $top_org_units = array(), $selected_org_unit = 0 )
 		{
 			static $parties = array(); // cache result
 			//already calculated

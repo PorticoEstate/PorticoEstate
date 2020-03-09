@@ -560,12 +560,18 @@
 		 * @param $control_area_id
 		 * @return array with controls as objects or arrays
 		 */
-		function get_controls_by_control_area( $control_area_id )
+		function get_controls_by_control_area( $control_area_id = null )
 		{
 			$control_area_id = (int)$control_area_id;
 			$controls_array = array();
 
-			$sql = "SELECT * FROM controller_control WHERE control_area_id=$control_area_id";
+			$sql = "SELECT * FROM controller_control";
+			
+			if($control_area_id)
+			{
+				$sql .= " WHERE control_area_id = $control_area_id";
+			}
+			
 			$this->db->query($sql);
 
 			while ($this->db->next_record())

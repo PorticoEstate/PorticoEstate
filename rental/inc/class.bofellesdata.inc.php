@@ -820,7 +820,7 @@
 		{
 			if (!$db = $this->get_db())
 			{
-				return;
+				return $this->get_org_unit_ids_from_top_fallback($org_unit_id);
 			}
 
 			if (!$org_unit_id)
@@ -851,6 +851,29 @@
 				{
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}
+			}
+
+			return $this->unit_ids;
+		}
+
+		function get_org_unit_ids_from_top_fallback( $org_unit_id )
+		{
+			$db	= & $GLOBALS['phpgw']->db;
+
+			if (!$org_unit_id)
+			{
+				return array();
+			}
+
+			$this->unit_ids[] = $org_unit_id;
+
+			$q = "SELECT id FROM fm_org_unit WHERE parent_id= " . (int)$org_unit_id;
+
+			$db->query($q);
+
+			while ($db->next_record())
+			{
+				$this->unit_ids[] = $db->f('id');
 			}
 
 			return $this->unit_ids;
