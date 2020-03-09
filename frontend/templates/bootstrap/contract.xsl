@@ -11,9 +11,6 @@
 	</xsl:choose>
 
 	<div class="container mt-3">
-		<div class="row p-3">
-			<h4>Interleiekontrakter</h4>
-		</div>
 
 		<!-- Tab links -->
 		<form action="{$form_url}" method="post">
@@ -207,7 +204,6 @@
 													<h6 class="text-uppercase">Kontraktsparter</h6>
 												</div>
 
-
 												<xsl:for-each select="../party">
 													<div class="card-body row">
 														<div class="col text-center">
@@ -242,8 +238,6 @@
 													</div>
 												</xsl:for-each>
 
-
-
 											</div>
 
 											<div class="card mt-4">
@@ -273,11 +267,12 @@
 									</div>
 								</div>
 							</div>
+						</div>
+						<div class="col-md-12">
 							<div class="row">
 								<xsl:choose>
 									<xsl:when test="publish_comment = 1">
-
-										<div id="accordion4" class="col-md-6">
+										<div id="accordion4" class="col-md-12 mt-3">
 											<div class="card">
 												<div class="card-header" id="subMenuHeading4">
 													<h5 class="mb-0">
@@ -288,7 +283,6 @@
 														</button>
 													</h5>
 												</div>
-
 												<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
 													<div class="card-body row">
 														<div class="col text-left">
@@ -304,7 +298,7 @@
 									</xsl:when>
 								</xsl:choose>
 
-								<div id="accordion5" class="col-md-6">
+								<div id="accordion5" class="col-md-12 mt-3">
 									<div class="card">
 										<div class="card-header" id="subMenuHeading5">
 											<h5 class="mb-0">
@@ -318,7 +312,7 @@
 
 										<div id="collapseSubMenu5" class="collapse p-3" aria-labelledby="subMenuHeading5" data-parent="#accordion5">
 											<div class="row px-3">
-												<form action="{$form_url}" method="post">
+												<form action="{$form_url}" method="post" class="w-100">
 													<input type="hidden" name="contract_id" value="{//selected_contract}"/>
 
 													<div class="form-group w-100">
