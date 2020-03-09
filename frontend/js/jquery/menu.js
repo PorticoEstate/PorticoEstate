@@ -81,6 +81,23 @@ $(document).ready(function ()
 			}
 		});
 	});
+
+
+//	$('input[type="radio"]').on('click', function ()
+//	{
+//		$(this).toggleClass('checked');
+//		var radio = $(this);
+//
+//		var checked = radio.is(":checked");
+//
+//		if (checked)
+//		{
+//			radio.prop("checked", false);
+//		}
+//		var form = radio.closest('form');
+//		form.submit();
+//	});
+
 });
 
 
