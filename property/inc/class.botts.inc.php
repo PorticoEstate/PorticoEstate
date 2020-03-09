@@ -2138,6 +2138,11 @@ HTML;
 					$supervisor_id = $invoice->get_default_dimb_role_user(2, $ecodimb);
 					if ($supervisor_id)
 					{
+						$substitute = $sosubstitute->get_substitute($supervisor_id);
+						if ($substitute)
+						{
+							$supervisor_id = $substitute;
+						}
 						$supervisors[$supervisor_id] = array(
 							'id'		 => $supervisor_id,
 							'required'	 => true,
