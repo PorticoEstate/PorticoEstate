@@ -132,6 +132,11 @@
 		color: #000000;
 		}
 
+		ul {
+		list-style-type: none;
+		}
+
+
 	</style>
 
 	<!-- NAVIGATION START -->
