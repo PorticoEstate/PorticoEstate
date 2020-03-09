@@ -78,420 +78,254 @@
 
 							</div>
 							<div class="card-body row text-center">
-
-								<form>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00001111</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00002222</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00003333</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00004444</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00005555</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00006666</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00007777</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00008888</span>
-										</label>
-									</div>
+								<form action="{form_url}" method="post">
+									<xsl:for-each select="select">
+										<div class="form-check">
+											<label class="toggle">
+												<input name="contract_id" type="radio" value="{id}" onclick	="this.form.submit();">
+													<xsl:if test="id = //selected_contract">
+														<xsl:attribute name="checked">
+															<xsl:text>true</xsl:text>
+														</xsl:attribute>
+													</xsl:if>
+												</input>
+												<span class="label-text">
+													<xsl:value-of select="old_contract_id"/> (<xsl:value-of select="contract_status"/>)
+												</span>
+											</label>
+										</div>
+									</xsl:for-each>
 								</form>
 							</div>
-
-
-
 						</div>
 					</div>
-					<div class="col-md-9">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="card">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Kontraktsdetaljer</h6>
+					<xsl:for-each select="contract">
+						<div class="col-md-9">
+							<div>
+								<div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="card">
+												<div class="card-header bg-light content-center">
+													<h6 class="text-uppercase">Kontraktsdetaljer</h6>
+												</div>
+												<div class="card-body row">
 
-									</div>
-									<div class="card-body row">
-										<table class="table table-borderless">
-											<tr>
-												<td>Kontraktsnummer</td>
-												<td>K00009999</td>
-											</tr>
-											<tr>
-												<td>Kontraktsområde</td>
-												<td>Interleie</td>
-											</tr>
-											<tr>
-												<td>Startdato</td>
-												<td>01.01.2000</td>
-											</tr>
-											<tr>
-												<td>Sluttdato</td>
-												<td> - </td>
-											</tr>
-											<tr>
-												<td>Leid areal</td>
-												<td>5,00 kvm</td>
-											</tr>
-											<tr>
-												<td>Total pris</td>
-												<td>99 999,99</td>
-											</tr>
-											<tr>
-												<td>Tjenestested</td>
-												<td>999999</td>
-											</tr>
-											<tr>
-												<td>Ansvarssted</td>
-												<td>888888</td>
-											</tr>
+													<table class="table table-borderless">
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'old_contract_id')"/>
+															</td>
+															<td>
+																<xsl:value-of select="old_contract_id"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'contract_type')"/>
+															</td>
+															<td>
+																<xsl:value-of select="type"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'contract_status')"/>
+															</td>
+															<td>
+																<xsl:value-of select="contract_status"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'date_start')"/>
+															</td>
+															<td>
+																<xsl:value-of select="date_start"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'date_end')"/>
+															</td>
+															<td>
+																<xsl:choose>
+																	<xsl:when test="date_end != ''">
+																		<xsl:value-of select="date_end"/>
+																	</xsl:when>
+																	<xsl:otherwise >
+																		<xsl:value-of select="php:function('lang', 'no_end_date')"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'rented_area')"/>
+															</td>
+															<td>
+																<xsl:value-of select="rented_area"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'total_price')"/>
+															</td>
+															<td>
+																<xsl:value-of select="total_price"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'service_id')"/>
+															</td>
+															<td>
+																<xsl:value-of select="service_id"/>
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<xsl:value-of select="php:function('lang', 'responsibility_id')"/>
+															</td>
+															<td>
+																<xsl:value-of select="responsibility_id"/>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="card">
+												<div class="card-header bg-light content-center">
+													<h6 class="text-uppercase">Kontraktsparter</h6>
+												</div>
 
 
-										</table>
+												<xsl:for-each select="../party">
+													<div class="card-body row">
+														<div class="col text-center">
+															<div class="smallboxline"></div>
+															<div class="text-value-xl">
+																<xsl:value-of select="name"/>
+															</div>
+
+															<xsl:choose>
+																<xsl:when test="normalize-space(address)">
+																	<div class="text-uppercase text-muted small">
+																		<xsl:value-of select="address"/>
+																	</div>
+																</xsl:when>
+																<xsl:when test="normalize-space(address1)">
+																	<div class="text-uppercase text-muted small">
+																		<xsl:value-of select="address1"/>
+																		<br/>
+																		<xsl:value-of select="address2"/>
+																		<br/>
+																		<xsl:value-of select="postal_code"/>&nbsp;
+																		<xsl:value-of select="place"/>
+																	</div>
+																</xsl:when>
+																<xsl:when test="normalize-space(department)">
+																	<div class="text-uppercase text-muted small">
+																		<xsl:value-of select="department"/>
+																	</div>
+																</xsl:when>
+															</xsl:choose>
+														</div>
+													</div>
+												</xsl:for-each>
+
+
+
+											</div>
+
+											<div class="card mt-4">
+												<div class="card-header bg-light content-center">
+													<h6 class="text-uppercase">Leieobjekt</h6>
+
+												</div>
+												<div class="card-body row">
+													<div class="col text-center">
+														<div class="smallboxline"></div>
+														<div class="text-value-xl">Rothaugen skole - Hovedbygg</div>
+														<div class="text-uppercase text-muted small">Rotthaugsgaten 10</div>
+													</div>
+
+												</div>
+											</div>
+
+
+										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-6">
-								<div class="card">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Kontraktsparter</h6>
+							<div class="row">
+								<div id="accordion4" class="col-md-6">
+									<div class="card">
+										<div class="card-header" id="subMenuHeading4">
+											<h5 class="mb-0">
+												<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
+													<h6 class="text-uppercase">Se kommentarer</h6>
+												</button>
+											</h5>
+										</div>
 
-									</div>
-									<div class="card-body row">
-										<div class="col text-center">
-											<div class="smallboxline"></div>
-											<div class="text-value-xl">Rothaugen skole</div>
-											<div class="text-uppercase text-muted small">Bergen kommune</div>
-											<div class="text-uppercase text-muted small">Byrådsavd. for barnehage, skole og idrett</div>
-											<div class="text-uppercase text-muted small">Etat for skole</div>
+										<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
+
+											<div class="card-body row">
+												<div class="col text-center">
+													<div class="smallboxline"></div>
+													<div class="text-value-xl">Kunnskapsløftet investering 2020: kr. 777 777,-</div>
+													<div class="text-muted small">Ole Nilsen, 22.03.2020</div>
+												</div>
+
+											</div>
+											<div class="card-body row">
+												<div class="col text-center">
+													<div class="smallboxline"></div>
+													<div class="text-value-xl">Kunnskapsløftet investering 2017: kr. 555 555,-</div>
+													<div class="text-muted small">Ole Nilsen, 28.02.2017</div>
+												</div>
+
+											</div>
+
+
 										</div>
 
 									</div>
 								</div>
-
-								<div class="card mt-4">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Leieobjekt</h6>
-
-									</div>
-									<div class="card-body row">
-										<div class="col text-center">
-											<div class="smallboxline"></div>
-											<div class="text-value-xl">Rothaugen skole - Hovedbygg</div>
-											<div class="text-uppercase text-muted small">Rotthaugsgaten 10</div>
+								<div id="accordion5" class="col-md-6">
+									<div class="card">
+										<div class="card-header" id="subMenuHeading5">
+											<h5 class="mb-0">
+												<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
+													<h6 class="text-uppercase">Send melding</h6>
+												</button>
+											</h5>
 										</div>
 
+										<div id="collapseSubMenu5" class="collapse p-3" aria-labelledby="subMenuHeading5" data-parent="#accordion5">
+											<div class="row px-3">
+												<div class="form-group w-100">
+													<label for="exampleFormControlTextarea6">Tilbakemelding eller spørsmål angående kontrakten?</label>
+													<textarea class="form-control" id="exampleFormControlTextarea6" rows="3" width="32" placeholder="Skriv inn din melding her" style="border-width: 0px 0px 1px 0px;"></textarea>
+												</div>
+												<div class="form-group w-100">
+													<button class="btn btn-info float-right w-50">
+														<h6 class="text-uppercase">Send melding</h6>
+													</button>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
-
-
 							</div>
 						</div>
-					</div>
+					</xsl:for-each>
 				</div>
-				<div class="row">
-					<div id="accordion4" class="col-md-6">
-						<div class="card">
-							<div class="card-header" id="subMenuHeading4">
-								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
-										<h6 class="text-uppercase">Se kommentarer</h6>
-									</button>
-								</h5>
-							</div>
-
-							<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
-
-								<div class="card-body row">
-									<div class="col text-center">
-										<div class="smallboxline"></div>
-										<div class="text-value-xl">Kunnskapsløftet investering 2020: kr. 777 777,-</div>
-										<div class="text-muted small">Ole Nilsen, 22.03.2020</div>
-									</div>
-
-								</div>
-								<div class="card-body row">
-									<div class="col text-center">
-										<div class="smallboxline"></div>
-										<div class="text-value-xl">Kunnskapsløftet investering 2017: kr. 555 555,-</div>
-										<div class="text-muted small">Ole Nilsen, 28.02.2017</div>
-									</div>
-
-								</div>
-
-
-							</div>
-
-						</div>
-					</div>
-
-
-
-					<div id="accordion5" class="col-md-6">
-						<div class="card">
-							<div class="card-header" id="subMenuHeading5">
-								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
-										<h6 class="text-uppercase">Send melding</h6>
-									</button>
-								</h5>
-							</div>
-
-							<div id="collapseSubMenu5" class="collapse p-3" aria-labelledby="subMenuHeading5" data-parent="#accordion5">
-								<div class="row px-3">
-									<div class="form-group w-100">
-										<label for="exampleFormControlTextarea6">Tilbakemelding eller spørsmål angående kontrakten?</label>
-										<textarea class="form-control" id="exampleFormControlTextarea6" rows="3" width="32" placeholder="Skriv inn din melding her" style="border-width: 0px 0px 1px 0px;"></textarea>
-									</div>
-									<div class="form-group w-100">
-										<button class="btn btn-info float-right w-50">
-											<h6 class="text-uppercase">Send melding</h6>
-										</button>
-									</div>
-
-
-								</div>
-							</div>
-
-						</div>
-					</div>
-
-
-
-
-
-				</div>
-
-
-
 
 			</div>
-
-
-			<!-- TAB #2 -->
-
-			<div id="inaktive" class="container tab-pane fade">
-
-				<div class="row p-3">
-					<div class="col-md-3" >
-						<div class="card">
-							<div class="card-header bg-light content-center">
-								<h6 class="text-uppercase">Inktive kontrakter</h6>
-
-							</div>
-							<div class="card-body row text-center">
-								<form>
-
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00001111</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00002222</span>
-										</label>
-									</div>
-									<div class="form-check">
-										<label class="toggle">
-											<input type="radio" name="toggle"/>
-											<span class="label-text">K00003333</span>
-										</label>
-									</div>
-								</form>
-							</div>
-
-
-
-						</div>
-					</div>
-					<div class="col-md-9">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="card">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Kontraktsdetaljer</h6>
-
-									</div>
-									<div class="card-body row">
-										<table class="table table-borderless">
-											<tr>
-												<td>Kontraktsnummer</td>
-												<td>K00009999</td>
-											</tr>
-											<tr>
-												<td>Kontraktsområde</td>
-												<td>Interleie</td>
-											</tr>
-											<tr>
-												<td>Startdato</td>
-												<td>01.01.2000</td>
-											</tr>
-											<tr>
-												<td>Sluttdato</td>
-												<td>01.01.2018</td>
-											</tr>
-											<tr>
-												<td>Leid areal</td>
-												<td>5,00 kvm</td>
-											</tr>
-											<tr>
-												<td>Total pris</td>
-												<td>99 999,99</td>
-											</tr>
-											<tr>
-												<td>Tjenestested</td>
-												<td>999999</td>
-											</tr>
-											<tr>
-												<td>Ansvarssted</td>
-												<td>888888</td>
-											</tr>
-
-
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="card">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Kontraktsparter</h6>
-
-									</div>
-									<div class="card-body row">
-										<div class="col text-center">
-											<div class="smallboxline"></div>
-											<div class="text-value-xl">Rothaugen skole</div>
-											<div class="text-uppercase text-muted small">Bergen kommune</div>
-											<div class="text-uppercase text-muted small">Byrådsavd. for barnehage, skole og idrett</div>
-											<div class="text-uppercase text-muted small">Etat for skole</div>
-										</div>
-
-									</div>
-								</div>
-
-								<div class="card mt-4">
-									<div class="card-header bg-light content-center">
-										<h6 class="text-uppercase">Leieobjekt</h6>
-
-									</div>
-									<div class="card-body row">
-										<div class="col text-center">
-											<div class="smallboxline"></div>
-											<div class="text-value-xl">Rothaugen skole - Hovedbygg</div>
-											<div class="text-uppercase text-muted small">Rotthaugsgaten 10</div>
-										</div>
-
-									</div>
-								</div>
-
-
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div id="accordion4" class="col-md-6">
-						<div class="card">
-							<div class="card-header" id="subMenuHeading4">
-								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
-										<h6 class="text-uppercase">Se kommentarer</h6>
-									</button>
-								</h5>
-							</div>
-
-							<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
-
-								<div class="card-body row">
-									<div class="col text-center">
-										<div class="smallboxline"></div>
-										<div class="text-value-xl">Kunnskapsløftet investering 2020: kr. 777 777,-</div>
-										<div class="text-muted small">Ole Nilsen, 22.03.2020</div>
-									</div>
-
-								</div>
-								<div class="card-body row">
-									<div class="col text-center">
-										<div class="smallboxline"></div>
-										<div class="text-value-xl">Kunnskapsløftet investering 2017: kr. 555 555,-</div>
-										<div class="text-muted small">Ole Nilsen, 28.02.2017</div>
-									</div>
-
-								</div>
-
-
-							</div>
-
-						</div>
-					</div>
-
-					<div id="accordion5" class="col-md-6">
-						<div class="card">
-							<div class="card-header" id="subMenuHeading5">
-								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
-										<h6 class="text-uppercase">Send melding</h6>
-									</button>
-								</h5>
-							</div>
-
-							<div id="collapseSubMenu5" class="collapse p-3" aria-labelledby="subMenuHeading5" data-parent="#accordion5">
-								<div class="row px-3">
-									<div class="form-group w-100">
-										<label for="exampleFormControlTextarea6">Tilbakemelding eller spørsmål angående kontrakten?</label>
-										<textarea class="form-control" id="exampleFormControlTextarea6" rows="3" width="32" placeholder="Skriv inn din melding her" style="border-width: 0px 0px 1px 0px;"></textarea>
-									</div>
-									<div class="form-group w-100">
-										<button class="btn btn-info float-right w-50">
-											<h6 class="text-uppercase">Send melding</h6>
-										</button>
-									</div>
-
-								</div>
-							</div>
-
-						</div>
-					</div>
-
-				</div>
-			</div>
-
 		</div>
 	</div>
 </xsl:template>
