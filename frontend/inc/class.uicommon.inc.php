@@ -308,7 +308,7 @@
 
 			phpgwapi_cache::session_set('frontend', 'header_state', $this->header_state);
 
-			$GLOBALS['phpgw']->css->add_external_file('frontend/templates/base/base.css');
+			$GLOBALS['phpgw']->css->add_external_file("frontend/templates/{$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']}/css/base.css");
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 
 			$GLOBALS['phpgw']->js->validate_file('jquery', 'menu', 'frontend');
