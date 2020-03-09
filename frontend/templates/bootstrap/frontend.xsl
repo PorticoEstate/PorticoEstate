@@ -214,25 +214,27 @@
 					<button class="btn collapsed btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 						<h5>
 							Bygninger
-							<xsl:for-each select="locations">
-								<xsl:if test="location_code = //header/selected_location">
-									<span class="text-lowercase">
-										(
-										<xsl:choose>
-											<xsl:when test="name != ''">
-												<xsl:value-of select="name"/>, <xsl:value-of select="location_code"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
-											</xsl:otherwise>
-										</xsl:choose>
-										)
-									</span>
-								</xsl:if>
-							</xsl:for-each>
-							<span class="badge badge-info badge-pill float-right mt-2">
-								<xsl:value-of select="count(locations)"/>
-							</span>
+							<xsl:if test="locations !=''">
+								<xsl:for-each select="locations">
+									<xsl:if test="location_code = //header/selected_location">
+										<span class="text-lowercase">
+											(
+											<xsl:choose>
+												<xsl:when test="name != ''">
+													<xsl:value-of select="name"/>, <xsl:value-of select="location_code"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
+												</xsl:otherwise>
+											</xsl:choose>
+											)
+										</span>
+									</xsl:if>
+								</xsl:for-each>
+								<span class="badge badge-info badge-pill float-right mt-2">
+									<xsl:value-of select="count(locations)"/>
+								</span>
+							</xsl:if>
 						</h5>
 					</button>
 				</div>
@@ -250,33 +252,32 @@
 									</div>
 									<form action="{form_action}" method="post">
 										<ul class="list-group list-group-flush">
-
-											<xsl:for-each select="locations">
-												<xsl:sort select="location_code"/>
-												<li class="list-group-item">
-													<xsl:choose>
-														<xsl:when test="name != ''">
-															<xsl:value-of select="name"/>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
-														</xsl:otherwise>
-													</xsl:choose>
-													<label class="checkbox">
-														<input type="radio" value="{location_code}" name="location" onchange="this.form.submit()">
-															<xsl:if test="location_code = //header/selected_location">
-																<xsl:attribute name="checked" value="checked"/>
-															</xsl:if>
-														</input>
-														<span class="success"></span>
-													</label>
-												</li>
-											</xsl:for-each>
+											<xsl:if test="locations !=''">
+												<xsl:for-each select="locations">
+													<xsl:sort select="location_code"/>
+													<li class="list-group-item">
+														<xsl:choose>
+															<xsl:when test="name != ''">
+																<xsl:value-of select="name"/>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of select="$lang_no_name_unit"/> (<xsl:value-of select="location_code"/>)
+															</xsl:otherwise>
+														</xsl:choose>
+														<label class="checkbox">
+															<input type="radio" value="{location_code}" name="location" onchange="this.form.submit()">
+																<xsl:if test="location_code = //header/selected_location">
+																	<xsl:attribute name="checked" value="checked"/>
+																</xsl:if>
+															</input>
+															<span class="success"></span>
+														</label>
+													</li>
+												</xsl:for-each>
+											</xsl:if>
 										</ul>
 									</form>
 								</div>
-
-
 							</div>
 							<!-- BYGG INFO -->
 							<div class="col-md-6">
