@@ -1,11 +1,13 @@
 
 <xsl:template match="data">
 	<xsl:apply-templates select="header"/>
-	<xsl:apply-templates select="section">
-		<xsl:with-param name="template_set">
-			<xsl:text>bootstrap</xsl:text>
-		</xsl:with-param>
-	</xsl:apply-templates>
+	<div class="container mt-3">
+		<xsl:apply-templates select="section">
+			<xsl:with-param name="template_set">
+				<xsl:text>bootstrap</xsl:text>
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</div>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
