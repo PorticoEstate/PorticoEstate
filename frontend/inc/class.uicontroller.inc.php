@@ -42,11 +42,7 @@
 
 		public function __construct()
 		{
-			$GLOBALS['phpgw']->translation->add_app('controller');
-			$this->location_id = phpgw::get_var('location_id', 'int', 'REQUEST', 0);
-			$location_info = $GLOBALS['phpgw']->locations->get_name($this->location_id);
-			$this->acl_location = $location_info['location'];
-
+			$this->acl_location = '.controller';
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
@@ -55,6 +51,7 @@
 			phpgwapi_cache::session_set('frontend', 'tab', $this->location_id);
 			parent::__construct();
 			$this->location_code = $this->header_state['selected_location'];
+			$GLOBALS['phpgw']->translation->add_app('controller');
 		}
 
 		/**
