@@ -184,6 +184,20 @@
 				}
 			}
 
+
+			$join_location = false;
+			if (isset($filters['location_code']))
+			{
+				$location_code = $this->db->db_addslashes($filters['location_code']);
+				if ($location_code)
+				{
+					$location_arr = explode('-', $location_code);
+					$filter_clauses[] = "location_code $this->like '{$location_arr[0]}%'";
+					$join_location = true;
+				}
+			}
+
+
 			if (isset($filters['not_contract_id']))
 			{
 				$contract_id = $this->marshal($filters['not_contract_id'], 'int');
@@ -304,12 +318,18 @@
 
 			$tables = "rental_party party";
 
-			$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)
-		{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
+			$join_contracts = "	{$this->left_join} rental_contract_party c_p ON (c_p.party_id = party.id)"
+			. "	{$this->left_join} rental_contract contract ON (contract.id = c_p.contract_id)";
+
+			if($join_location)
+			{
+				$join_contracts .= " {$this->join} rental_contract_composite ON (rental_contract_composite.contract_id = contract.id)";
+				$join_contracts .= " {$this->join} rental_unit ON (rental_contract_composite.composite_id = rental_unit.composite_id)";
+			}
 
 			$joins = $join_contracts;
 
-			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
+			return "SELECT DISTINCT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
 
 		/**

@@ -204,7 +204,10 @@
 		private function get_contracts_per_location()
 		{
 			$org_unit = $this->header_state['selected_org_unit'];
-			if ($org_unit == 'all' || $org_unit == 'none')
+
+			$location_code = $this->header_state['selected_location'];
+
+			if (($org_unit == 'all' || $org_unit == 'none') || !$location_code)
 			{
 				phpgwapi_cache::message_set('Velg organisasjon', 'error');
 				return array();
@@ -212,13 +215,13 @@
 
 			$values = phpgwapi_cache::session_get('frontend', $this->contracts_per_location_identifier);
 
-			if (isset($values[$org_unit]))
+			if (isset($values[$org_unit][$location_code]))
 			{
-				return $values[$org_unit];
+				return $values[$org_unit][$location_code];
 			}
 
 			$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
-				'org_unit_id' => $org_unit));
+				'org_unit_id' => $org_unit, 'location_code' => $location_code));
 
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
 			$location_id_internal = array_search('contract_type_internleie', $types);
@@ -261,33 +264,33 @@
 								$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
 								$contract->set_total_price($total_price);
 
-								if (!is_array($contracts_per_location[$org_unit][$property_location->get_location_code()]))
+								if (!is_array($contracts_per_location[$org_unit][$location_code][$property_location->get_location_code()]))
 								{
-									$contracts_per_location[$org_unit][$property_location->get_location_code()] = array();
+									$contracts_per_location[$org_unit][$location_code][$property_location->get_location_code()] = array();
 								}
-								array_push($contracts_per_location[$org_unit][$property_location->get_location_code()], $contract);
+								array_push($contracts_per_location[$org_unit][$location_code][$property_location->get_location_code()], $contract);
 							}
 							else if ($contract->get_location_id() == $location_id_in)
 							{
 								$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
 								$contract->set_total_price($total_price);
 
-								if (!is_array($contracts_in_per_location[$org_unit][$property_location->get_location_code()]))
+								if (!is_array($contracts_in_per_location[$org_unit][$location_code][$property_location->get_location_code()]))
 								{
-									$contracts_in_per_location[$org_unit][$property_location->get_location_code()] = array();
+									$contracts_in_per_location[$org_unit][$location_code][$property_location->get_location_code()] = array();
 								}
-								array_push($contracts_in_per_location[$org_unit][$property_location->get_location_code()], $contract);
+								array_push($contracts_in_per_location[$org_unit][$location_code][$property_location->get_location_code()], $contract);
 							}
 							else if ($contract->get_location_id() == $location_id_ex)
 							{
 								$total_price = rental_socontract_price_item::get_instance()->get_total_price($contract->get_id());
 								$contract->set_total_price($total_price);
 
-								if (!is_array($contracts_ex_per_location[$org_unit][$property_location->get_location_code()]))
+								if (!is_array($contracts_ex_per_location[$org_unit][$location_code][$property_location->get_location_code()]))
 								{
-									$contracts_ex_per_location[$org_unit][$property_location->get_location_code()] = array();
+									$contracts_ex_per_location[$org_unit][$location_code][$property_location->get_location_code()] = array();
 								}
-								array_push($contracts_ex_per_location[$org_unit][$property_location->get_location_code()], $contract);
+								array_push($contracts_ex_per_location[$org_unit][$location_code][$property_location->get_location_code()], $contract);
 							}
 						}
 					}
@@ -303,6 +306,6 @@
 				'contracts_ex_per_location' => $contracts_ex_per_location,
 			);
 
-			return $values[$this->contracts_per_location_identifier][$org_unit];
+			return $values[$this->contracts_per_location_identifier][$org_unit][$location_code];
 		}
 	}
