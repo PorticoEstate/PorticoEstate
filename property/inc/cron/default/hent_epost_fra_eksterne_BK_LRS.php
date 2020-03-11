@@ -886,7 +886,7 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/Fakturakopi etterspørres – Bergen kommune/i", $subject))
+			else if (preg_match("/Fakturakopi etterspørres - Bergen kommune/i", $subject))
 			{
 				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-Drift_Regnskap
@@ -1249,7 +1249,7 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/DigiPurr trenger hjelp til å behandle purring/i", $subject))
+			else if (preg_match("/Digifrid trenger hjelp til å behandle purring/i", $subject))
 			{
 				$message_cat_id	 = 321; // LRS-Regnskap- underkategori: 24 Purringer/Inkasso
 				$group_id		 = 4253; //LRS-Drift_Regnskap
