@@ -109,14 +109,14 @@ $(document).ready(function ()
 		e.preventDefault();
 		var requestUrl = $(form).attr("action");
 
-		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
+		var inputs = $("select, input"), input = null, flag = true;
 		for (var i = 0, len = inputs.length; i < len; i++)
 		{
 			input = inputs[i];
 
 			if ($(input).attr("data-validation") == "required")
 			{
-				if (!input.value)
+				if (!$(input).val())
 				{
 					$(input).addClass('error');
 					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
@@ -136,6 +136,10 @@ $(document).ready(function ()
 		{
 			return false;
 		}
+		var submitBnt = $('#submit_component_form');
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 
 		$.ajax({
 			type: 'POST',
@@ -143,6 +147,8 @@ $(document).ready(function ()
 			data: $(form).serialize(),
 			success: function (data)
 			{
+				$(submitBnt).prop("disabled", false);
+
 				if (data.status == "saved")
 				{
 					$("#choose-child-on-component").empty();
@@ -447,6 +453,12 @@ $(document).ready(function ()
 			alert('komponent ikke valgt');
 			return false;
 		}
+
+		var submitBnt = $('#submit_component_form');
+
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 
 		var parent_location_id = $('input[name=parent_location_id]')[0];
 		var parent_component_id = $('input[name=parent_component_id]')[0];

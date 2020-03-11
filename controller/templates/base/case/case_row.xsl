@@ -5,6 +5,7 @@
 	<xsl:param name="control_item_type" />
 	<xsl:param name="check_list_id" />
 	<xsl:param name="date_format" />
+	<xsl:param name="component_children" />
 	<xsl:variable name="session_url">
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
@@ -27,6 +28,36 @@
 					<xsl:value-of select="php:function('lang',$control_item_type)" />
 					<!--xsl:value-of select="control_item/type" /-->
 				</span>
+				<xsl:value-of select="$component_children"/>
+
+<!--				<xsl:choose>
+					<xsl:when test="$component_children/child::node()">
+						<div class="pure-control-group row mt-3">
+							<label>
+								<xsl:value-of select="php:function('lang', 'equipment')" />
+							</label>
+							<select name="component" class="pure-input-1-2 select-component">
+								<xsl:for-each select="$component_children">
+									<option>
+										<xsl:if test="id = //current_child/id">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="value">
+											<xsl:if test="id &gt; 0">
+												<xsl:value-of select="location_id"/>
+												<xsl:text>_</xsl:text>
+												<xsl:value-of select="id"/>
+											</xsl:if>
+										</xsl:attribute>
+										<xsl:value-of select="short_description" />
+									</option>
+								</xsl:for-each>
+							</select>
+						</div>
+
+					</xsl:when>
+				</xsl:choose>-->
+
 				<ul>
 					<xsl:for-each select="cases_array">
 						<xsl:variable name="cases_id">
@@ -367,7 +398,7 @@
 												<div class="row pure-form pure-form-aligned">
 													<div class="pure-control-group">
 
-													<label class="comment">Velg verdi fra liste</label>
+														<label class="comment">Velg verdi fra liste</label>
 													</div>
 													<div class="pure-control-group">
 

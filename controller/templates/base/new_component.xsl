@@ -11,7 +11,9 @@
 
 	<form class="pure-form pure-form-aligned" action="{action}" onsubmit="return submitComponentForm(event, this);">
 		<fieldset>
-			<xsl:apply-templates select="attributes_general/attributes"/>
+			<xsl:apply-templates select="attributes_general/attributes">
+				<xsl:with-param name="supress_history_date" select ='supress_history_date'/>
+			</xsl:apply-templates>
 
 			<input type="hidden" name="edit_parent" value="{edit_parent}" />
 			<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
@@ -22,7 +24,34 @@
 			<div class="pure-controls pure-button-group" role="group" aria-label="">
 				<xsl:if test="get_form =1 or get_edit_form = 1">
 					<button id = "submit_component_form" type="submit" class="pure-button pure-button-primary">
+						<xsl:choose>
+							<xsl:when test="template_set = 'bootstrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:value-of select="php:function('lang', 'save')" />
+					</button>
+					<button id = "cancel_new_component" type="button"  onclick="remove_component_form(form);">
+						<xsl:choose>
+							<xsl:when test="template_set = 'bootstrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm ml-2</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:value-of select="php:function('lang', 'cancel')" />
 					</button>
 				</xsl:if>
 				<xsl:if test="get_info =1">
@@ -54,21 +83,23 @@
 						<xsl:value-of select="php:function('lang', 'edit')" />
 					</button>
 				</xsl:if>
-				<button id = "cancel_new_component" type="button"  onclick="remove_component_form(form);">
-					<xsl:choose>
-						<xsl:when test="template_set = 'bootstrap'">
-							<xsl:attribute name="class">
-								<xsl:text>btn btn-primary btn-sm</xsl:text>
-							</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="class">
-								<xsl:text>pure-button pure-button-primary</xsl:text>
-							</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:value-of select="php:function('lang', 'cancel')" />
-				</button>
+				<xsl:if test="get_info =1">
+					<button id = "cancel_new_component" type="button" data-toggle="modal" data-target="#inspectObject">
+						<xsl:choose>
+							<xsl:when test="template_set = 'bootstrap'">
+								<xsl:attribute name="class">
+									<xsl:text>btn btn-primary btn-sm ml-2</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="class">
+									<xsl:text>pure-button pure-button-primary</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:value-of select="php:function('lang', 'perform control')" />
+					</button>
+				</xsl:if>
 			</div>
 		</fieldset>
 	</form>

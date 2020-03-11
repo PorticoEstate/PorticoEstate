@@ -2030,7 +2030,14 @@
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
-//			_debug_array($open_check_items_and_cases);die();
+
+			$case_data = $this->_get_case_data();
+
+//			_debug_array($case_data['check_list']->get_id());
+//			_debug_array($case_data['component_children']);
+
+			$component_children = (array)$case_data['component_children'];
+//			_debug_array($_component_children);die();
 			$data = array
 				(
 				'control' => $control,
@@ -2038,6 +2045,7 @@
 				'buildings_on_property' => $buildings_on_property,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
+				'component_children' => $component_children,
 				'type' => $type,
 				'location_level' => $level,
 				'get_locations'	=> $get_locations,
@@ -2055,9 +2063,13 @@
 			self::add_javascript('controller', 'base', 'case.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
-				'case/view_open_cases', 'case/case_row',
-				'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section',
+			self::render_template_xsl(array(
+				'check_list/fragments/check_list_menu',
+				'case/cases_tab_menu',
+				'case/view_open_cases',
+				'case/case_row',
+				'check_list/fragments/nav_control_plan',
+				'check_list/fragments/check_list_top_section',
 				'check_list/fragments/select_buildings_on_property'), $data);
 		}
 

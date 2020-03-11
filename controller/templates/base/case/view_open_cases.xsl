@@ -9,7 +9,7 @@
 			<xsl:with-param name="active_tab">view_cases</xsl:with-param>
 		</xsl:call-template>
 
-<!--		<xsl:choose>
+		<!--		<xsl:choose>
 			<xsl:when test="buildings_on_property/child::node()">
 				<div id="choose-building-wrp">
 					<xsl:call-template name="select_buildings_on_property" />
@@ -36,6 +36,9 @@
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
 										</xsl:with-param>
+										<xsl:with-param name="component_children">
+											<xsl:value-of select="//component_children"/>
+										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
 								<!--  ==================== CONTROL TYPE 2 ===================== -->
@@ -47,6 +50,9 @@
 										</xsl:with-param>
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
+										</xsl:with-param>
+										<xsl:with-param name="component_children">
+											<xsl:value-of select="//component_children"/>
 										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
@@ -60,6 +66,9 @@
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
 										</xsl:with-param>
+										<xsl:with-param name="component_children">
+											<xsl:value-of select="//component_children"/>
+										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
 								<!--  ==================== CONTROL TYPE 5 ===================== -->
@@ -71,6 +80,9 @@
 										</xsl:with-param>
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
+										</xsl:with-param>
+										<xsl:with-param name="component_children">
+											<xsl:value-of select="//component_children"/>
 										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>

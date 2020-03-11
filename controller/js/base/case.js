@@ -136,6 +136,10 @@ $(document).ready(function ()
 			$(thisForm).find("input[name=component_id]").val(component_id);
 		}
 
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 		var validate_status = validate_form(thisForm);
 
 		if (validate_status)
@@ -153,7 +157,6 @@ $(document).ready(function ()
 						if (jsonObj.status == "saved")
 						{
 							var type = $(thisForm).find("input[name='type']").val();
-							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
 							var add_picture_to_case_container = thisForm.next('.add_picture_to_case');
@@ -189,6 +192,7 @@ $(document).ready(function ()
 							window.setTimeout(function ()
 							{
 								$(submitBnt).hide();
+								$(submitBnt).prop("disabled", true);
 								if (type == "control_item_type_2")
 								{
 									$(submitBnt).val('Lagre måling');
@@ -197,6 +201,14 @@ $(document).ready(function ()
 								{
 									$(submitBnt).val('Lagre ny sak');
 								}
+
+								var element = document.getElementById('spinner');
+								if (element)
+								{
+									element.parentNode.removeChild(element);
+								}
+
+
 //
 //								$(submitBnt).addClass("case_saved");
 //								$(submitBnt).attr("disabled", true);

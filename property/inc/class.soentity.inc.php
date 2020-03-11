@@ -334,6 +334,33 @@
 				$querymethod .= " {$where} p_location_id = {$parent_location_id} AND p_id = {$parent_id}";
 			}
 
+			/*
+			 * Filter inactive
+			 */
+			static $cache_attribute_status = array();
+
+			if (!isset($cache_attribute_status[$location_id]))
+			{
+				$filters								 = array("column_name" => "status");
+				$cache_attribute_status[$location_id]	 = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true, $filters);
+			}
+
+			$_querymethod_status = '';
+			if (!phpgw::get_var('status', 'int'))
+			{
+				if (!empty($cache_attribute_status[$location_id]))
+				{
+					foreach ($cache_attribute_status[$location_id] as $attibute_id => $attibute)
+					{
+						if (!empty($attibute['choice']))
+						{
+							$_querymethod_status = "(NULLIF(json_representation->>'status', '')::integer IS NULL OR NULLIF(json_representation->>'status', '')::integer < 90)";
+							$querymethod .= " {$where} $_querymethod_status";
+						}
+					}
+				}
+			}
+
 			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, json_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
 			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
