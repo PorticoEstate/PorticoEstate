@@ -358,6 +358,8 @@ $(document).ready(function ()
 							$(clickRow).find(".case_info .measurement").html(measurement_text);
 						}
 
+						var case_component_child = $(thisForm).find("select[name='component_child'] option:selected").text();
+						$(clickRow).find(".case_info .case_component_child").empty().text(case_component_child);
 						var case_condition_degree = $(thisForm).find("select[name='condition_degree'] option:selected").text();
 						$(clickRow).find(".case_info .case_condition_degree").empty().text(case_condition_degree);
 						var case_consequence = $(thisForm).find("select[name='consequence'] option:selected").text();

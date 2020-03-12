@@ -36,9 +36,6 @@
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
 										</xsl:with-param>
-										<xsl:with-param name="component_children">
-											<xsl:value-of select="//component_children"/>
-										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
 								<!--  ==================== CONTROL TYPE 2 ===================== -->
@@ -50,9 +47,6 @@
 										</xsl:with-param>
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
-										</xsl:with-param>
-										<xsl:with-param name="component_children">
-											<xsl:value-of select="//component_children"/>
 										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
@@ -66,9 +60,6 @@
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
 										</xsl:with-param>
-										<xsl:with-param name="component_children">
-											<xsl:value-of select="//component_children"/>
-										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
 								<!--  ==================== CONTROL TYPE 5 ===================== -->
@@ -80,9 +71,6 @@
 										</xsl:with-param>
 										<xsl:with-param name="date_format">
 											<xsl:value-of select="$date_format"/>
-										</xsl:with-param>
-										<xsl:with-param name="component_children">
-											<xsl:value-of select="//component_children"/>
 										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>

@@ -360,6 +360,8 @@
 				'status = ' . $case->get_status(),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
+				'component_child_location_id = ' . $this->marshal($case->get_component_child_location_id(), 'int'),
+				'component_child_item_id = ' . $this->marshal($case->get_component_child_item_id(), 'int'),
 				'condition_degree = ' . $this->marshal($case->get_condition_degree(), 'int'),
 				'consequence = ' . $this->marshal($case->get_consequence(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),

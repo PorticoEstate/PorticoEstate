@@ -5,7 +5,6 @@
 	<xsl:param name="control_item_type" />
 	<xsl:param name="check_list_id" />
 	<xsl:param name="date_format" />
-	<xsl:param name="component_children" />
 	<xsl:variable name="session_url">
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
@@ -28,35 +27,6 @@
 					<xsl:value-of select="php:function('lang',$control_item_type)" />
 					<!--xsl:value-of select="control_item/type" /-->
 				</span>
-				<xsl:value-of select="$component_children"/>
-
-<!--				<xsl:choose>
-					<xsl:when test="$component_children/child::node()">
-						<div class="pure-control-group row mt-3">
-							<label>
-								<xsl:value-of select="php:function('lang', 'equipment')" />
-							</label>
-							<select name="component" class="pure-input-1-2 select-component">
-								<xsl:for-each select="$component_children">
-									<option>
-										<xsl:if test="id = //current_child/id">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
-										<xsl:attribute name="value">
-											<xsl:if test="id &gt; 0">
-												<xsl:value-of select="location_id"/>
-												<xsl:text>_</xsl:text>
-												<xsl:value-of select="id"/>
-											</xsl:if>
-										</xsl:attribute>
-										<xsl:value-of select="short_description" />
-									</option>
-								</xsl:for-each>
-							</select>
-						</div>
-
-					</xsl:when>
-				</xsl:choose>-->
 
 				<ul>
 					<xsl:for-each select="cases_array">
@@ -68,6 +38,9 @@
 						</xsl:variable>
 						<xsl:variable name="consequence">
 							<xsl:value-of select="consequence"/>
+						</xsl:variable>
+						<xsl:variable name="component_child_item_id">
+							<xsl:value-of select="component_child_item_id"/>
 						</xsl:variable>
 						<li>
 							<!--  ==================== COL1: ORDERNR ===================== -->
@@ -85,6 +58,25 @@
 										</label>
 										<xsl:value-of select="location_code"/>
 									</div>
+
+									<xsl:choose>
+										<xsl:when test="count(//component_children) > 1">
+											<div class="row">
+												<label>
+													<xsl:value-of select="php:function('lang', 'equipment')" />
+												</label>
+												<span class="case_component_child">
+													<xsl:for-each select="//component_children">
+														<xsl:if test="$component_child_item_id = id">
+															<xsl:value-of disable-output-escaping="yes" select="short_description"/>
+														</xsl:if>
+													</xsl:for-each>
+												</span>
+											</div>
+
+										</xsl:when>
+									</xsl:choose>
+
 									<div class="row">
 										<label>
 											<xsl:value-of select="php:function('lang','date')" />
@@ -99,7 +91,7 @@
 										</xsl:if>
 									</div>
 
-									<xsl:choose>
+									<!--									<xsl:choose>
 										<xsl:when test="component_descr != ''">
 											<div class="row">
 												<label>
@@ -110,11 +102,11 @@
 												<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
 											</div>
 										</xsl:when>
-									</xsl:choose>
+									</xsl:choose>-->
 
 									<!-- STATUS -->
 
-									<div class="row first">
+									<div class="row">
 										<label>Status:</label>
 										<span class="case_status">
 											<xsl:choose>
@@ -273,6 +265,34 @@
 											<xsl:value-of select="//control_item/type" />
 										</xsl:attribute>
 									</input>
+
+
+									<xsl:choose>
+										<xsl:when test="count(//component_children) > 1">
+											<div class="row first">
+												<label>
+													<xsl:value-of select="php:function('lang', 'equipment')" />
+												</label>
+												<select name="component_child" class="pure-input-1">
+													<xsl:for-each select="//component_children">
+														<option>
+															<xsl:if test="$component_child_item_id = id">
+																<xsl:attribute name="selected">selected</xsl:attribute>
+															</xsl:if>
+															<xsl:attribute name="value">
+																<xsl:if test="id &gt; 0">
+																	<xsl:value-of select="location_id"/>
+																	<xsl:text>_</xsl:text>
+																	<xsl:value-of select="id"/>
+																</xsl:if>
+															</xsl:attribute>
+															<xsl:value-of select="short_description" />
+														</option>
+													</xsl:for-each>
+												</select>
+											</div>
+										</xsl:when>
+									</xsl:choose>
 
 									<!--  STATUS -->
 									<div class="row first">

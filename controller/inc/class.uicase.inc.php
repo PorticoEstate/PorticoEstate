@@ -1266,6 +1266,7 @@
 				return json_encode(array("status" => "not_saved"));
 			}
 
+
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
 			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
@@ -1273,12 +1274,30 @@
 			$measurement = phpgw::get_var('measurement');
 			$check_list_id = phpgw::get_var('check_list_id');
 
+
+			$component_child =  phpgw::get_var('component_child');
+
+			if($component_child)
+			{
+				$component_child_arr = explode('_', $component_child);
+				$component_child_location_id = $component_child_arr[0];
+				$component_child_item_id = $component_child_arr[1];
+			}
+			else
+			{
+				$component_child_location_id = null;
+				$component_child_item_id = null;
+			}
+
+
 			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
 			$condition_degree =  phpgw::get_var('condition_degree');
 			$consequence =  phpgw::get_var('consequence');
 
 			$case = $this->so->get_single($case_id);
+			$case->set_component_child_location_id($component_child_location_id);
+			$case->set_component_child_item_id($component_child_item_id);
 			$case->set_descr($case_descr);
 			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
@@ -2037,7 +2056,7 @@
 //			_debug_array($case_data['component_children']);
 
 			$component_children = (array)$case_data['component_children'];
-//			_debug_array($_component_children);die();
+//			_debug_array($open_check_items_and_cases);die();
 			$data = array
 				(
 				'control' => $control,
