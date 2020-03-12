@@ -84,7 +84,7 @@
 							<xsl:value-of select="php:function('lang', 'edit')" />
 						</button>
 					</xsl:if>
-					<xsl:if test="get_info =1">
+					<xsl:if test="get_info =1 and enable_add_case = 1">
 						<button id = "perform_control_on_selected" type="button" data-toggle="modal" data-target="#inspectObject">
 							<xsl:choose>
 								<xsl:when test="template_set = 'bootstrap'">

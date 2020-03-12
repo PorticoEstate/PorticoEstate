@@ -1,4 +1,6 @@
 
+/* global enable_add_case */
+
 downloadComponents = function (parent_location_id, parent_id, location_id)
 {
 	var oArgs = {
@@ -430,6 +432,12 @@ $(document).ready(function ()
 			component_id: component_arr[1],
 			get_info: 1
 		};
+
+		if(typeof(enable_add_case) !=='undefined' && enable_add_case === true)
+		{
+			oArgs.enable_add_case = true;
+		}
+
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({

@@ -139,6 +139,7 @@
 			$get_form = phpgw::get_var('get_form', 'bool');
 			$get_edit_form = phpgw::get_var('get_edit_form', 'bool');
 			$get_info = phpgw::get_var('get_info', 'bool');
+			$enable_add_case = phpgw::get_var('enable_add_case', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
@@ -221,6 +222,7 @@
 					'attributes_general' => array('attributes' => $values['attributes']),
 					'get_form'	=> $get_form,
 					'get_info'	=> $get_info,
+					'enable_add_case' => $enable_add_case,
 					'get_edit_form' => $get_edit_form,
 					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
 					'supress_history_date' => true,
@@ -1127,6 +1129,14 @@
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
 
+			
+			$js = <<<JS
+				var enable_add_case = true;
+
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+
+			
 			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
