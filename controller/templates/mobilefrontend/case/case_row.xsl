@@ -38,6 +38,9 @@
 						<xsl:variable name="consequence">
 							<xsl:value-of select="consequence"/>
 						</xsl:variable>
+						<xsl:variable name="component_child_item_id">
+							<xsl:value-of select="component_child_item_id"/>
+						</xsl:variable>
 						<li>
 							<!--  ==================== COL1: ORDERNR ===================== -->
 							<div class="col_1">
@@ -48,6 +51,30 @@
 							<!--  ==================== COL2: CASE CONTENT ===================== -->
 							<div class="col_2">
 								<div class="case_info">
+									<div class="row">
+										<label>
+											<xsl:value-of select="php:function('lang','location')" />
+										</label>
+										<xsl:value-of select="location_code"/>
+									</div>
+
+									<xsl:choose>
+										<xsl:when test="count(//component_children) > 1">
+											<div class="row">
+												<label>
+													<xsl:value-of select="php:function('lang', 'equipment')" />
+												</label>
+												<span class="case_component_child">
+													<xsl:for-each select="//component_children">
+														<xsl:if test="$component_child_item_id = id">
+															<xsl:value-of disable-output-escaping="yes" select="short_description"/>
+														</xsl:if>
+													</xsl:for-each>
+												</span>
+											</div>
+
+										</xsl:when>
+									</xsl:choose>
 									<div class="row">
 										<label>
 											<xsl:value-of select="php:function('lang','date')" />
@@ -62,7 +89,7 @@
 										</xsl:if>
 									</div>
 
-									<xsl:choose>
+									<!--									<xsl:choose>
 										<xsl:when test="component_descr != ''">
 											<div class="row">
 												<label>
@@ -73,7 +100,7 @@
 												<xsl:value-of disable-output-escaping="yes" select="component_descr"/>
 											</div>
 										</xsl:when>
-									</xsl:choose>
+									</xsl:choose>-->
 
 									<!-- STATUS -->
 
@@ -84,7 +111,9 @@
 												<xsl:when test="status = 0">Åpen</xsl:when>
 												<xsl:when test="status = 1">Lukket</xsl:when>
 												<xsl:when test="status = 2">Venter på tilbakemelding</xsl:when>
-												<xsl:when test="status = 3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></xsl:when>
+												<xsl:when test="status = 3">
+													<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+												</xsl:when>
 											</xsl:choose>
 										</span>
 									</div>
@@ -234,6 +263,32 @@
 											<xsl:value-of select="//control_item/type" />
 										</xsl:attribute>
 									</input>
+									<xsl:choose>
+										<xsl:when test="count(//component_children) > 1">
+											<div class="row first">
+												<label>
+													<xsl:value-of select="php:function('lang', 'equipment')" />
+												</label>
+												<select name="component_child" class="pure-input-1">
+													<xsl:for-each select="//component_children">
+														<option>
+															<xsl:if test="$component_child_item_id = id">
+																<xsl:attribute name="selected">selected</xsl:attribute>
+															</xsl:if>
+															<xsl:attribute name="value">
+																<xsl:if test="id &gt; 0">
+																	<xsl:value-of select="location_id"/>
+																	<xsl:text>_</xsl:text>
+																	<xsl:value-of select="id"/>
+																</xsl:if>
+															</xsl:attribute>
+															<xsl:value-of select="short_description" />
+														</option>
+													</xsl:for-each>
+												</select>
+											</div>
+										</xsl:when>
+									</xsl:choose>
 
 									<!--  STATUS -->
 									<div class="row first">
@@ -244,25 +299,33 @@
 													<option value="0" SELECTED="SELECTED">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 1">
 													<option value="0">Åpen</option>
 													<option value="1" SELECTED="SELECTED">Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 2">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2" SELECTED="SELECTED">Venter på tilbakemelding</option>
-													<option value="3"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 												<xsl:when test="status = 3">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
 													<option value="2">Venter på tilbakemelding</option>
-													<option value="3" SELECTED="SELECTED"><xsl:value-of select="php:function('lang', 'corrected on controll')"/></option>
+													<option value="3" SELECTED="SELECTED">
+														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+													</option>
 												</xsl:when>
 											</xsl:choose>
 										</select>
@@ -351,7 +414,7 @@
 												<div class="row pure-form pure-form-aligned">
 													<div class="pure-control-group">
 
-													<label class="comment">Velg verdi fra liste</label>
+														<label class="comment">Velg verdi fra liste</label>
 													</div>
 													<div class="pure-control-group">
 

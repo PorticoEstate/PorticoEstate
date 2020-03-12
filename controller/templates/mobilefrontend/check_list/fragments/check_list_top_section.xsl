@@ -160,7 +160,7 @@
 	</xsl:choose>
 
 	<xsl:choose>
-		<xsl:when test="component_children/child::node()">
+		<xsl:when test="component_children/child::node() and $active_tab != 'view_cases'">
 			<div id="choose-building-wrp">
 				<xsl:call-template name="select_component_children">
 					<xsl:with-param name="template_set">

@@ -106,7 +106,7 @@
 			</fieldset>
 		</form>
 	</xsl:for-each>
-	<div id = "form_new_component_2" class="row">
+	<div id = "form_new_component_2">
 
 	</div>
 

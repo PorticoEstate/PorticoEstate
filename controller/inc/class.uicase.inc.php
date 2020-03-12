@@ -196,6 +196,20 @@
 				$lookup_functions = $values['lookup_functions'];
 
 				$menuaction = $edit_parent ? 'controller.uicase.edit_parent_component' : 'controller.uicase.edit_component_child';
+				
+				
+				$open_cases = array();
+				if($get_info)
+				{
+					$open_cases = $this->so->get_open_cases_by_component_child($location_id, $component_id);
+					
+					foreach ($open_cases as &$open_case)
+					{
+						$open_case['modified_date_text'] = $GLOBALS['phpgw']->common->show_date($open_case['modified_date'], $this->dateFormat);					
+						$open_case['open_case_url'] = self::link(array('menuaction' => 'controller.uicase.view_open_cases', 'check_list_id'=> $open_case['check_list_id']));
+					}
+					
+				}
 
 				$data = array(
 					'action'=> self::link(array('menuaction' => $menuaction, 'phpgw_return_as'=>'json')),
@@ -209,7 +223,8 @@
 					'get_info'	=> $get_info,
 					'get_edit_form' => $get_edit_form,
 					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
-					'supress_history_date' => true
+					'supress_history_date' => true,
+					'open_cases' => $open_cases
 					);
 
 				$xslttemplates = CreateObject('phpgwapi.xslttemplates');

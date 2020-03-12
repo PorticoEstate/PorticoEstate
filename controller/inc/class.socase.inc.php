@@ -209,6 +209,59 @@
 			return $values;
 		}
 
+		public function get_open_cases_by_component_child( $component_child_location_id, $component_child_item_id, $control_item_id = 0 )
+		{
+			$component_child_location_id = (int)$component_child_location_id;
+			$component_child_item_id = (int)$component_child_item_id;
+			$control_item_id = (int)$control_item_id;
+
+			$sql = "SELECT controller_check_item_case.*, check_list_id, controller_control_item.title FROM controller_check_item_case "
+				. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
+				. " {$this->join} controller_control_item ON controller_control_item.id = controller_check_item.control_item_id"
+				. " WHERE controller_check_item_case.component_child_location_id = {$component_child_location_id}"
+				. " AND controller_check_item_case.component_child_item_id = {$component_child_item_id}"
+				. " AND controller_check_item_case.status = 0";
+
+			if ($control_item_id)
+			{
+				$sql .= " AND controller_check_item.control_item_id = {$control_item_id}";
+			}
+
+			if ($check_list_id)
+			{
+				$sql .= " AND check_list_id = {$check_list_id}";
+			}
+
+			$sql .= " ORDER BY modified_date DESC";
+
+			$this->db->query($sql);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'check_list_id' => $this->db->f('check_list_id'),
+					'title' => $this->db->f('title', true),
+					'descr' => $this->db->f('descr', true),
+					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
+					'measurement' => $this->db->f('measurement', true),
+					'user_id' => $this->db->f('user_id'),
+					'status' => $this->db->f('status'),
+					'modified_date' => $this->db->f('modified_date'),
+					'component_child_location_id' => $this->db->f('component_child_location_id'),
+					'component_child_item_id' => $this->db->f('component_child_item_id'),
+					'condition_degree' => $this->db->f('condition_degree'),
+					'consequence' => $this->db->f('consequence'),
+					'location_id' => $this->db->f('location_id'),//ticket location
+					'location_item_id' => $this->db->f('location_item_id'),//ticket item
+				);
+			}
+
+			return $values;
+		}
+
 		/**
 		 * Inserts a new case in database
 		 *

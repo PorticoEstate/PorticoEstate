@@ -99,8 +99,11 @@ $(document).ready(function ()
 		else
 		{
 			$("#form_new_component_2").html('');
+			document.getElementById("choose-child-on-component").selectedIndex = "0";
+			$('#equipment_picture_container').html('');
 		}
 	};
+
 
 	submitComponentForm = function (e, form)
 	{
@@ -201,6 +204,7 @@ $(document).ready(function ()
 			$("#new_picture").hide();
 			$("#form_new_component_2").html('');
 			$("#view_cases").hide();
+			$("#perform_control_on_selected").remove();
 
 		}
 	});
@@ -209,7 +213,7 @@ $(document).ready(function ()
 	{
 		var d = new Date();
 		var n = d.getTime();// to forse refrech cache
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n: n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -240,7 +244,7 @@ $(document).ready(function ()
 		var d = new Date();
 		var n = d.getTime();// to forse refrech cache
 		var component = $("#choose-child-on-component").val();
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n: n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -494,7 +498,11 @@ $(document).ready(function ()
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
 	{
+
 		e.preventDefault();
+		$('#equipment_picture_container').html('');
+		$("#new_picture").hide();
+		document.getElementById("choose-child-on-component").selectedIndex = "0";
 
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");

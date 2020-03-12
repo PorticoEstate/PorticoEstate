@@ -476,4 +476,5 @@ change status	controller	no	endre status
 performed	controller	no	Utført
 not performed	controller	no	Ikke utført
 check list status	controller	no	Status for hele kontrollen
-perform control	no	Utfør kontroll
+perform control	controller	no	Utfør kontroll
+perform control on selected	controller	no	Utfør kontroll på valgt utstyr
