@@ -2325,6 +2325,10 @@ HTML;
 				$case->set_measurement($option_value);
 			}
 
+			$regulation_reference_option = (array)end($control_item['regulation_reference_options_array']);
+			$regulation_reference_option_value = $regulation_reference_option['option_value'];
+			$case->set_regulation_reference($regulation_reference_option_value);
+
 			$case_id = CreateObject('controller.socase')->store($case);
 
 			if ($case_id > 0)
@@ -3029,6 +3033,12 @@ HTML;
 						'col2' => $case->get_measurement()
 					);
 
+					$entry = array
+					(
+						'col1' => 'Verdi',//lang('regulation_reference'),
+						'col2' => $case->get_regulation_reference()
+					);
+
 					$data_case[$location_identificator][] = $entry;
 
 					$entry = array
@@ -3585,6 +3595,14 @@ HTML;
 						'value' => $case->get_measurement()
 					);
 
+					if($case->get_regulation_reference())
+					{
+						$entry[] = array
+						(
+							'text' => lang('regulation reference'),
+							'value' => $case->get_regulation_reference()
+						);
+					}
 
 					$entry[] = array
 					(
@@ -4023,6 +4041,7 @@ HTML;
 				foreach ($check_item->get_cases_array() as $case)
 				{
 					$measurement = $case->get_measurement();
+					$regulation_reference = $case->get_regulation_reference();
 
 //					if(unserialize($measurement))
 //					{

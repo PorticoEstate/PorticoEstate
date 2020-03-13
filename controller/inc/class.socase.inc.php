@@ -91,6 +91,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+				$case->set_regulation_reference($this->unmarshal($this->db->f('regulation_reference'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -140,6 +141,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+				$case->set_regulation_reference($this->unmarshal($this->db->f('regulation_reference'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -196,6 +198,7 @@
 					'descr' => $this->db->f('descr', true),
 					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
 					'measurement' => $this->db->f('measurement', true),
+					'regulation_reference' => $this->db->f('regulation_reference', true),
 					'user_id' => $this->db->f('user_id'),
 					'status' => $this->db->f('status'),
 					'modified_date' => $this->db->f('modified_date'),
@@ -247,6 +250,7 @@
 					'descr' => $this->db->f('descr', true),
 					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
 					'measurement' => $this->db->f('measurement', true),
+					'regulation_reference' => $this->db->f('regulation_reference', true),
 					'user_id' => $this->db->f('user_id'),
 					'status' => $this->db->f('status'),
 					'modified_date' => $this->db->f('modified_date'),
@@ -284,6 +288,7 @@
 				'modified_date',
 				'modified_by',
 				'measurement',
+				'regulation_reference',
 				'location_code',
 				'component_location_id',
 				'component_id',
@@ -305,6 +310,7 @@
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
 				$this->marshal($case->get_measurement(), 'string'),
+				$this->marshal($case->get_regulation_reference(), 'string'),
 				$this->marshal($case->get_location_code(), 'string'),
 				$this->marshal($case->get_component_location_id(), 'int'),
 				$this->marshal($case->get_component_id(), 'int'),
@@ -424,6 +430,7 @@
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
 				'measurement = ' . $this->marshal($case->get_measurement(), 'string'),
+				'regulation_reference = ' . $this->marshal($case->get_regulation_reference(), 'string'),
 				'location_code = ' . $this->marshal($case->get_location_code(), 'string')
 			);
 

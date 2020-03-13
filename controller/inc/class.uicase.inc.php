@@ -1268,6 +1268,8 @@ JS;
 				$case->set_measurement($option_value);
 			}
 
+			$regulation_reference = phpgw::get_var('regulation_reference');
+			$case->set_regulation_reference($regulation_reference);
 			$case_id = $this->so->store($case);
 
 			if ($case_id > 0)
@@ -1297,6 +1299,8 @@ JS;
 			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$case_status = phpgw::get_var('case_status');
 			$measurement = phpgw::get_var('measurement');
+			$regulation_reference = phpgw::get_var('regulation_reference');
+
 			$check_list_id = phpgw::get_var('check_list_id');
 
 
@@ -1335,6 +1339,9 @@ JS;
 			{
 				$case->set_measurement($measurement);
 			}
+
+			$case->set_regulation_reference($regulation_reference);
+
 			$case->set_status($case_status);
 			$case->set_condition_degree($condition_degree);
 			$case->set_consequence($consequence);
@@ -2031,6 +2038,7 @@ JS;
 				foreach ($check_item->get_cases_array() as $case)
 				{
 					$measurement = $case->get_measurement();
+					$regulation_reference = $case->get_regulation_reference();
 
 //					if(unserialize($measurement))
 //					{
@@ -2072,6 +2080,7 @@ JS;
 				}
 
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
+				$check_item->get_control_item()->set_regulation_reference_options_array($control_item_with_options->get_regulation_reference_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
 

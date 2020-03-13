@@ -63,6 +63,7 @@
 				'required',
 				'include_counter_measure',
 				'report_summary',
+				'include_regulation_reference',
 				'include_condition_degree',
 				'type',
 				'what_to_do',
@@ -76,6 +77,7 @@
 				$this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 				$this->marshal(($control_item->get_include_counter_measure() ? 'true' : 'false'), 'bool'),
 				$this->marshal(($control_item->get_report_summary() ? 'true' : 'false'), 'bool'),
+				$this->marshal(($control_item->get_include_regulation_reference() ? 'true' : 'false'), 'bool'),
 				$this->marshal(($control_item->get_include_condition_degree() ? 'true' : 'false'), 'bool'),
 				$this->marshal($control_item->get_type(), 'string'),
 				$this->marshal($control_item->get_what_to_do(), 'string'),
@@ -112,6 +114,7 @@
 				'required = ' . $this->marshal(($control_item->get_required() ? 'true' : 'false'), 'bool'),
 				'include_counter_measure = ' . $this->marshal(($control_item->get_include_counter_measure() ? 'true' : 'false'), 'bool'),
 				'report_summary = ' . $this->marshal(($control_item->get_report_summary() ? 'true' : 'false'), 'bool'),
+				'include_regulation_reference = ' . $this->marshal(($control_item->get_include_regulation_reference() ? 'true' : 'false'), 'bool'),
 				'include_condition_degree = ' . $this->marshal(($control_item->get_include_condition_degree() ? 'true' : 'false'), 'bool'),
 				'type = ' . $this->marshal($control_item->get_type(), 'string'),
 				'what_to_do = ' . $this->marshal($control_item->get_what_to_do(), 'string'),
@@ -152,6 +155,7 @@
 			$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 			$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
 			$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
+			$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference', true), 'bool'));
 			$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 			$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 			$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -165,6 +169,32 @@
 			return $control_item;
 		}
 
+
+		function get_regulation_reference_options( $control_item_id )
+		{
+			$sql = "SELECT cirfo.option_value as reference_option_value, cirfo.id as cirfo_id ";
+			$sql .= "FROM controller_control_item ci ";
+			$sql .= "JOIN controller_control_item_regulation_reference_option cirfo ON cirfo.control_item_id = ci.id ";
+			$sql .= "WHERE ci.id = $control_item_id"
+				. " ORDER BY cirfo.option_value";
+
+			$values = array();
+
+			$this->db->query($sql);
+			while ($this->db->next_record())
+			{
+				$control_regulation_reference_option_item_option = new controller_control_regulation_reference_option();
+				$control_regulation_reference_option_item_option->set_id($this->unmarshal($this->db->f('cirfo_id'), 'int'));
+				$control_regulation_reference_option_item_option->set_option_value($this->unmarshal($this->db->f('reference_option_value', true), 'string'));
+				$control_regulation_reference_option_item_option->set_control_item_id($id);
+
+				$values[] = $control_regulation_reference_option_item_option;
+			}
+
+			return $values;
+			
+		}
+
 		/**
 		 * Get single control item with options
 		 *
@@ -175,7 +205,8 @@
 		public function get_single_with_options( $id )
 		{
 			$id = (int)$id;
-			$sql = "SELECT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
+
+			$sql = "SELECT DISTINCT ci.id as ci_id, ci.*, cio.id as cio_id, cio.*, cg.group_name ";
 			$sql .= "FROM controller_control_item ci ";
 			$sql .= "LEFT JOIN controller_control_item_option as cio ON cio.control_item_id = ci.id ";
 			$sql .= "LEFT JOIN controller_control_group as cg ON ci.control_group_id = cg.id ";
@@ -194,6 +225,7 @@
 					$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 					$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
 					$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
+					$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference', true), 'bool'));
 					$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -219,6 +251,8 @@
 			}
 
 			$control_item->set_options_array($options_array);
+			$regulation_reference_options_array = $this->get_regulation_reference_options($id);
+			$control_item->set_regulation_reference_options_array($regulation_reference_options_array);
 
 			return $control_item;
 		}
@@ -256,6 +290,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
@@ -363,7 +398,7 @@
 			}
 			else
 			{
-				$cols = 'controller_control_item.id, controller_control_item.title, required,include_condition_degree, include_counter_measure,report_summary, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.type, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
+				$cols = 'controller_control_item.id, controller_control_item.title, required,include_condition_degree, include_counter_measure,report_summary,include_regulation_reference, what_to_do, how_to_do, controller_control_item.control_area_id, controller_control_item.type, controller_control_item.control_group_id, controller_control_group.group_name AS control_group_name';
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -389,6 +424,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -450,6 +486,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required', true), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure', true), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary', true), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference', true), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree', true), 'bool'));
 				$control_item->set_type($this->unmarshal($this->db->f('type', true), 'string'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));

@@ -222,6 +222,30 @@
 																	</textarea>
 																</div>
 															</xsl:if>
+																														<xsl:if test="include_regulation_reference = 1">
+																<div class="form-group">
+																	<label>
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																		</xsl:attribute>
+																		<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																	</label>
+																	<select name="regulation_reference" class="form-control">
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'select value')"/>
+																		</xsl:attribute>
+																		<xsl:for-each select="regulation_reference_options_array">
+																			<option>
+																				<xsl:attribute name="value">
+																					<xsl:value-of select="option_value"/>
+																				</xsl:attribute>
+																				<xsl:value-of select="option_value"/>
+																			</option>
+																		</xsl:for-each>
+																	</select>
+																</div>
+															</xsl:if>
+
 															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak" />
 
 														</xsl:when>
@@ -271,6 +295,30 @@
 																	</textarea>
 																</div>
 															</xsl:if>
+															<xsl:if test="include_regulation_reference = 1">
+																<div class="form-group">
+																	<label>
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																		</xsl:attribute>
+																		<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																	</label>
+																	<select name="regulation_reference" class="form-control">
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'select value')"/>
+																		</xsl:attribute>
+																		<xsl:for-each select="regulation_reference_options_array">
+																			<option>
+																				<xsl:attribute name="value">
+																					<xsl:value-of select="option_value"/>
+																				</xsl:attribute>
+																				<xsl:value-of select="option_value"/>
+																			</option>
+																		</xsl:for-each>
+																	</select>
+																</div>
+															</xsl:if>
+
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -326,6 +374,30 @@
 																	</textarea>
 																</div>
 															</xsl:if>
+															<xsl:if test="include_regulation_reference = 1">
+																<div class="form-group">
+																	<label>
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																		</xsl:attribute>
+																		<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																	</label>
+																	<select name="regulation_reference" class="form-control">
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'select value')"/>
+																		</xsl:attribute>
+																		<xsl:for-each select="regulation_reference_options_array">
+																			<option>
+																				<xsl:attribute name="value">
+																					<xsl:value-of select="option_value"/>
+																				</xsl:attribute>
+																				<xsl:value-of select="option_value"/>
+																			</option>
+																		</xsl:for-each>
+																	</select>
+																</div>
+															</xsl:if>
+
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -382,6 +454,30 @@
 																	</textarea>
 																</div>
 															</xsl:if>
+																														<xsl:if test="include_regulation_reference = 1">
+																<div class="form-group">
+																	<label>
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																		</xsl:attribute>
+																		<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																	</label>
+																	<select name="regulation_reference" class="form-control">
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'select value')"/>
+																		</xsl:attribute>
+																		<xsl:for-each select="regulation_reference_options_array">
+																			<option>
+																				<xsl:attribute name="value">
+																					<xsl:value-of select="option_value"/>
+																				</xsl:attribute>
+																				<xsl:value-of select="option_value"/>
+																			</option>
+																		</xsl:for-each>
+																	</select>
+																</div>
+															</xsl:if>
+
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
@@ -427,6 +523,30 @@
 																	</textarea>
 																</div>
 															</xsl:if>
+																														<xsl:if test="include_regulation_reference = 1">
+																<div class="form-group">
+																	<label>
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																		</xsl:attribute>
+																		<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+																	</label>
+																	<select name="regulation_reference" class="form-control">
+																		<xsl:attribute name="title">
+																			<xsl:value-of select="php:function('lang', 'select value')"/>
+																		</xsl:attribute>
+																		<xsl:for-each select="regulation_reference_options_array">
+																			<option>
+																				<xsl:attribute name="value">
+																					<xsl:value-of select="option_value"/>
+																				</xsl:attribute>
+																				<xsl:value-of select="option_value"/>
+																			</option>
+																		</xsl:for-each>
+																	</select>
+																</div>
+															</xsl:if>
+
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>

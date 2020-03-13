@@ -162,6 +162,13 @@
 										</div>
 									</xsl:if>
 
+									<div class="row">
+										<label>Hjemmel:</label>
+										<span class="regulation_reference">
+											<xsl:value-of select="regulation_reference"/>
+										</span>
+									</div>
+
 									<!--  DESCRIPTION -->
 									<div class="row">
 										<label>Beskrivelse:</label>
@@ -455,6 +462,31 @@
 											<xsl:value-of select="proposed_counter_measure"/>
 										</textarea>
 									</div>
+
+									<xsl:if test="../control_item/include_regulation_reference = 1">
+										<div class="form-group">
+											<label>
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+												</xsl:attribute>
+												<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+											</label>
+											<select name="regulation_reference" class="pure-input-1">
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'select value')"/>
+												</xsl:attribute>
+												<xsl:for-each select="../control_item/regulation_reference_options_array">
+													<option>
+														<xsl:attribute name="value">
+															<xsl:value-of select="option_value"/>
+														</xsl:attribute>
+														<xsl:value-of select="option_value"/>
+													</option>
+												</xsl:for-each>
+											</select>
+										</div>
+									</xsl:if>
+
 									<div>
 										<input class='btn_m first btn btn-primary btn-lg mr-3' type='submit' value='Oppdater' />
 										<input class='btn_m cancel first btn btn-primary btn-lg mr-3' type='button' value='Avbryt' />
