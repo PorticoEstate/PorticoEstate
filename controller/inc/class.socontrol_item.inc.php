@@ -195,6 +195,38 @@
 			
 		}
 
+		public function add_regulation_reference_options($control_item_id, $new_value)
+		{
+			$control_item_id = (int) $control_item_id;
+			$new_value = $this->db->db_addslashes($new_value);
+
+			$this->db->query("SELECT id FROM controller_control_item_regulation_reference_option WHERE option_value = '{$new_value}'",__LINE__,__FILE__);
+			$this->db->next_record();
+			$id = (int)$this->db->f('id');
+			
+			if($id)
+			{
+				return $id;
+			}
+
+			$values= array(
+				$control_item_id,
+				$new_value
+				);
+
+			$values	= $this->db->validate_insert($values);
+
+			$ok = $this->db->query("INSERT INTO controller_control_item_regulation_reference_option (control_item_id, option_value) "
+			. "VALUES ({$values})",__LINE__,__FILE__);
+			
+			if($ok)
+			{
+				$id = $this->db->get_last_insert_id('controller_control_item_regulation_reference_option', 'id');
+				return $id;
+			}
+		}
+
+
 		/**
 		 * Get single control item with options
 		 *

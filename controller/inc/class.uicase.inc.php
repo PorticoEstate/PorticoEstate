@@ -82,7 +82,8 @@
 			'add_component_image'=> true,
 			'add_case_image'	=> true,
 			'edit_component_child' => true,
-			'edit_parent_component'	=> true
+			'edit_parent_component'	=> true,
+			'add_regulation_option'	=> true
 		);
 
 		function __construct()
@@ -123,6 +124,26 @@
 
 		}
 
+		function add_regulation_option()
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			$control_item_id	 = phpgw::get_var('control_item_id', 'int');
+			$new_value		 = phpgw::get_var('new_value');
+
+			$id = createObject('controller.socontrol_item')->add_regulation_reference_options($control_item_id, $new_value);
+
+			$receipt = array(
+				'status' => 'ok',
+				'choice_id' => 100
+			);
+
+			return $receipt;
+
+		}
 
 		function edit_parent_component()
 		{
@@ -1124,6 +1145,7 @@
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 )),
 				'case_location_code' => $case_data['location_code'],
+				'add_img' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2')
 
 			);
 //			_debug_array($data);die();
