@@ -191,6 +191,12 @@
 				$values[] = $control_regulation_reference_option_item_option;
 			}
 
+			if($values)
+			{
+				$dummy_element = new controller_control_regulation_reference_option(lang('none'), $control_item_id);
+				array_unshift($values, $dummy_element);
+			}
+
 			return $values;
 			
 		}
