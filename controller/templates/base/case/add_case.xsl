@@ -525,7 +525,7 @@
 															<div id="new_picture" class="form-group">
 																<div class="input-group">
 																	<div class="custom-file">
-																		<input type="file" id="case_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component">
+																		<input type="file" name="file" class="custom-file-input" aria-describedby="submit_update_component">
 																			<xsl:attribute name="accept">image/*</xsl:attribute>
 																			<xsl:attribute name="capture">camera</xsl:attribute>
 																		</input>

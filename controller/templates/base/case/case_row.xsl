@@ -30,7 +30,7 @@
 
 				<ul>
 					<xsl:for-each select="cases_array">
-						<xsl:variable name="cases_id">
+						<xsl:variable name="case_id">
 							<xsl:value-of select="id"/>
 						</xsl:variable>
 						<xsl:variable name="condition_degree">
@@ -217,7 +217,33 @@
 										</div>
 										<br/>
 									</xsl:if>
+									<form class="add_picture_to_case_form" ENCTYPE="multipart/form-data" method="post">
+										<xsl:attribute name="action">
+											<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_case_image, phpgw_return_as:json')" />
+										</xsl:attribute>
 
+										<input type="hidden" name="case_id" value="{$case_id}"/>
+
+										<div class="form-group">
+											<label>
+												<xsl:value-of select="php:function('lang', 'picture')" />
+											</label>
+											<div class="pure-custom" name="picture_container"/>
+										</div>
+										<div id="new_picture" class="form-group">
+											<div class="input-group">
+												<div class="custom-file">
+													<input type="file" name="file" class="custom-file-input" aria-describedby="submit_update_component">
+														<xsl:attribute name="accept">image/*</xsl:attribute>
+														<xsl:attribute name="capture">camera</xsl:attribute>
+													</input>
+													<label class="custom-file-label" for = "case_picture_file">
+														<xsl:value-of select="php:function('lang', 'new picture')" />
+													</label>
+												</div>
+											</div>
+										</div>
+									</form>
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
 										<a class="quick_edit_case first btn btn-primary btn-lg mr-3" href="#">
@@ -464,7 +490,7 @@
 									</div>
 
 									<xsl:if test="../control_item/include_regulation_reference = 1">
-										<div class="form-group">
+										<div class="row">
 											<label>
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'regulation reference')"/>
@@ -485,6 +511,7 @@
 												</xsl:for-each>
 											</select>
 										</div>
+
 									</xsl:if>
 
 									<div>

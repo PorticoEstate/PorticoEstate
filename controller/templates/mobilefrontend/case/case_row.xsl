@@ -29,7 +29,7 @@
 				</span>
 				<ul>
 					<xsl:for-each select="cases_array">
-						<xsl:variable name="cases_id">
+						<xsl:variable name="case_id">
 							<xsl:value-of select="id"/>
 						</xsl:variable>
 						<xsl:variable name="condition_degree">
