@@ -191,7 +191,7 @@
 										</h4>
 										<ul>
 											<xsl:for-each select="cases_array">
-												<xsl:variable name="cases_id">
+												<xsl:variable name="case_id">
 													<xsl:value-of select="id"/>
 												</xsl:variable>
 												<xsl:variable name="condition_degree">
@@ -205,7 +205,7 @@
 													<div class="col_1">
 														<span class="order_nr">
 															<xsl:number />.
-															<input type="checkbox"  name="case_ids[]" value="{$cases_id}"  />
+															<input type="checkbox"  name="case_ids[]" value="{$case_id}"  />
 														</span>
 													</div>
 													<!--  ==================== COL2: CASE CONTENT ===================== -->

@@ -55,9 +55,12 @@ $(document).ready(function ()
 
 //		var requestUrl = $(thisForm).attr("action");
 
-//		var case_id = $("form").prev().find("input[name='case_id']").val();
+		var case_id = $("form").prev().find("input[name='case_id']").val();
 
-		var case_id = $("#cache_case_id").val();
+		if (!case_id)
+		{
+			var case_id = $("#cache_case_id").val();
+		}
 
 		var formdata = false;
 		if (window.FormData)
@@ -85,7 +88,11 @@ $(document).ready(function ()
 				{
 					if (data.status == "saved")
 					{
-						$("#case_picture_file").val('');
+						$('.custom-file-input').each(function (i, obj)
+						{
+							$(obj).val('');
+							$(obj).siblings(".custom-file-label").removeClass("selected").html('Nytt bilde');
+						});
 						show_case_picture(case_id, thisForm);
 //						submitBnt.prop('disabled', false);
 						var element = document.getElementById('spinner');
@@ -657,7 +664,7 @@ function undo_completed(completed_id)
 /**
  * Open a prompt for input
  * @param {type} id
-  * @param {type} input_text
+ * @param {type} input_text
  * @param {type} lang_new_value
  * @returns {undefined}
  */
@@ -683,45 +690,48 @@ function addNewValueToRegulationReference(control_item_id, input_text, lang_new_
 	 * alertify.prompt(title, message, value, onok, oncancel);
 	 *
 	 */
-	alertify.prompt( input_text, lang_new_value, ''
-               , function(evt, value)
-			   {
-					var new_value = value;
-					if (new_value !== null && new_value !== "")
+	alertify.prompt(input_text, lang_new_value, ''
+		, function (evt, value)
+		{
+			var new_value = value;
+			if (new_value !== null && new_value !== "")
+			{
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function ()
+				{
+					if (this.readyState == 4 && this.status == 200)
 					{
-						var xmlhttp = new XMLHttpRequest();
-						xmlhttp.onreadystatechange = function ()
-						{
-							if (this.readyState == 4 && this.status == 200)
-							{
-								var data = JSON.parse(this.responseText);
+						var data = JSON.parse(this.responseText);
 
-								if (data.status == 'ok' && data.choice_id)
-								{
-									alertify.success('You entered: ' + value);
-									var select = document.getElementById('regulation_reference');
-									var option = document.createElement("option");
-									option.text = new_value;
-									option.id = data.choice_id;
-									select.add(option, select[1]);
-									select.selectedIndex = "1";
-								}
-								else
-								{
-									alertify.error('Error');
-								}
-							}
-						};
-						xmlhttp.open("POST", requestUrl, true);
-						xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						var params = 'new_value=' + new_value;
-						xmlhttp.send(params);
+						if (data.status == 'ok' && data.choice_id)
+						{
+							alertify.success('You entered: ' + value);
+							var select = document.getElementById('regulation_reference');
+							var option = document.createElement("option");
+							option.text = new_value;
+							option.id = data.choice_id;
+							select.add(option, select[1]);
+							select.selectedIndex = "1";
+						}
+						else
+						{
+							alertify.error('Error');
+						}
 					}
-					else
-					{
-						alertify.error('Cancel');
-					}
-				}
-               , function() { alertify.error('Cancel') });
+				};
+				xmlhttp.open("POST", requestUrl, true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				var params = 'new_value=' + new_value;
+				xmlhttp.send(params);
+			}
+			else
+			{
+				alertify.error('Cancel');
+			}
+		}
+	, function ()
+	{
+		alertify.error('Cancel')
+	});
 
 }
