@@ -52,6 +52,7 @@
 				'include_condition_degree' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'include_counter_measure' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 				'report_summary' => array('type' => 'bool','nullable' => true,'default' => 'false'),
+				'include_regulation_reference' => array('type' => 'bool','nullable' => true,'default' => 'false'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -257,6 +258,7 @@
 				'check_item_id'					=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'status'						=> array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'measurement'					=> array('type' => 'text','nullable' => true),
+				'regulation_reference'			=> array('type' => 'text','nullable' => true), //hjemmel
 				'location_id'					=> array('type' => 'int', 'precision' => '4', 'nullable' => true), // representer meldingsfregisteret
 				'location_item_id'				=> array('type' => 'int', 'precision' => '8', 'nullable' => true), //meldings id
 				'descr'							=> array('type' => 'text','nullable' => true),
@@ -297,6 +299,17 @@
 				'id' 							=> array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
 				'option_value' 		=>  array('type' =>  'varchar','precision' =>  '255','nullable' =>  False),
 				'control_item_id' =>  array('type' =>  'int', 'precision' =>  4, 'nullable' =>  True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'controller_control_item_regulation_reference_option' => array(
+			'fd' => array(
+				'id'				=> array('type' => 'auto', 'precision' => 4, 'nullable' => false),
+				'option_value'		=>  array('type' => 'varchar', 'precision' => '255','nullable' => false),
+				'control_item_id'	=>  array('type' => 'int', 'precision' => 4, 'nullable' => true)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

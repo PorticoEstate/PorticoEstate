@@ -68,7 +68,7 @@
 				<input type="hidden" name="location_id" value="{location_id}" />
 
 				<div class="pure-controls pure-custom">
-					<button id = "submit_component_form" type="submit" >
+					<button id = "get_component_form" type="submit" >
 						<xsl:choose>
 							<xsl:when test="$template_set = 'bootstrap'">
 								<xsl:attribute name="class">
@@ -106,7 +106,7 @@
 			</fieldset>
 		</form>
 	</xsl:for-each>
-	<div id = "form_new_component_2" class="row">
+	<div id = "form_new_component_2">
 
 	</div>
 

@@ -211,7 +211,7 @@
 										<hr />
 										<xsl:choose>
 											<xsl:when test="//control_item/type = 'control_item_type_3'">
-												<h2 class="type">Nedtrekksliste</h2>	
+												<h2 class="type">Nedtrekksliste</h2>
 											</xsl:when>
 											<xsl:otherwise>
 												<h2 class="type">Radioknapper</h2>
@@ -270,6 +270,20 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
+				</dt>
+				<dt>
+					<label for="include_regulation_reference" class="line">Inkluder hjemmel</label>
+					<xsl:variable name="include_regulation_reference">
+						<xsl:value-of select="control_item/include_regulation_reference" />
+					</xsl:variable>
+					<input type="checkbox" name="include_regulation_reference" value="1" id="include_regulation_reference">
+						<xsl:if test="not(editable)">
+							<xsl:attribute name="disabled">true</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="$include_regulation_reference =1">
+							<xsl:attribute name="checked">true</xsl:attribute>
+						</xsl:if>
+					</input>
 				</dt>
 				<dt>
 					<label class="top" for="required">Velg hvilken kontrollgruppe kontrollpunktet skal tilhøre</label>

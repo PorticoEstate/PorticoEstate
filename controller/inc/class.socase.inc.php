@@ -91,6 +91,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+				$case->set_regulation_reference($this->unmarshal($this->db->f('regulation_reference'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -140,6 +141,7 @@
 				$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 				$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				$case->set_measurement($this->unmarshal($this->db->f('measurement'), 'string'));
+				$case->set_regulation_reference($this->unmarshal($this->db->f('regulation_reference'), 'string'));
 				$case->set_location_code($this->unmarshal($this->db->f('location_code'), 'string'));
 				$case->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
 				$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -196,6 +198,7 @@
 					'descr' => $this->db->f('descr', true),
 					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
 					'measurement' => $this->db->f('measurement', true),
+					'regulation_reference' => $this->db->f('regulation_reference', true),
 					'user_id' => $this->db->f('user_id'),
 					'status' => $this->db->f('status'),
 					'modified_date' => $this->db->f('modified_date'),
@@ -203,6 +206,60 @@
 					'component_child_item_id' => $this->db->f('component_child_item_id'),
 					'condition_degree' => $this->db->f('condition_degree'),
 					'consequence' => $this->db->f('consequence')
+				);
+			}
+
+			return $values;
+		}
+
+		public function get_open_cases_by_component_child( $component_child_location_id, $component_child_item_id, $control_item_id = 0 )
+		{
+			$component_child_location_id = (int)$component_child_location_id;
+			$component_child_item_id = (int)$component_child_item_id;
+			$control_item_id = (int)$control_item_id;
+
+			$sql = "SELECT controller_check_item_case.*, check_list_id, controller_control_item.title FROM controller_check_item_case "
+				. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
+				. " {$this->join} controller_control_item ON controller_control_item.id = controller_check_item.control_item_id"
+				. " WHERE controller_check_item_case.component_child_location_id = {$component_child_location_id}"
+				. " AND controller_check_item_case.component_child_item_id = {$component_child_item_id}"
+				. " AND controller_check_item_case.status = 0";
+
+			if ($control_item_id)
+			{
+				$sql .= " AND controller_check_item.control_item_id = {$control_item_id}";
+			}
+
+			if ($check_list_id)
+			{
+				$sql .= " AND check_list_id = {$check_list_id}";
+			}
+
+			$sql .= " ORDER BY modified_date DESC";
+
+			$this->db->query($sql);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'check_list_id' => $this->db->f('check_list_id'),
+					'title' => $this->db->f('title', true),
+					'descr' => $this->db->f('descr', true),
+					'proposed_counter_measure' => $this->db->f('proposed_counter_measure', true),
+					'measurement' => $this->db->f('measurement', true),
+					'regulation_reference' => $this->db->f('regulation_reference', true),
+					'user_id' => $this->db->f('user_id'),
+					'status' => $this->db->f('status'),
+					'modified_date' => $this->db->f('modified_date'),
+					'component_child_location_id' => $this->db->f('component_child_location_id'),
+					'component_child_item_id' => $this->db->f('component_child_item_id'),
+					'condition_degree' => $this->db->f('condition_degree'),
+					'consequence' => $this->db->f('consequence'),
+					'location_id' => $this->db->f('location_id'),//ticket location
+					'location_item_id' => $this->db->f('location_item_id'),//ticket item
 				);
 			}
 
@@ -231,6 +288,7 @@
 				'modified_date',
 				'modified_by',
 				'measurement',
+				'regulation_reference',
 				'location_code',
 				'component_location_id',
 				'component_id',
@@ -252,6 +310,7 @@
 				$this->marshal($case->get_modified_date(), 'int'),
 				$this->marshal($case->get_modified_by(), 'int'),
 				$this->marshal($case->get_measurement(), 'string'),
+				$this->marshal($case->get_regulation_reference(), 'string'),
 				$this->marshal($case->get_location_code(), 'string'),
 				$this->marshal($case->get_component_location_id(), 'int'),
 				$this->marshal($case->get_component_id(), 'int'),
@@ -360,6 +419,8 @@
 				'status = ' . $case->get_status(),
 				'location_id = ' . $this->marshal($case->get_location_id(), 'int'),
 				'location_item_id = ' . $this->marshal($case->get_location_item_id(), 'int'),
+				'component_child_location_id = ' . $this->marshal($case->get_component_child_location_id(), 'int'),
+				'component_child_item_id = ' . $this->marshal($case->get_component_child_item_id(), 'int'),
 				'condition_degree = ' . $this->marshal($case->get_condition_degree(), 'int'),
 				'consequence = ' . $this->marshal($case->get_consequence(), 'int'),
 				'descr = ' . $this->marshal($case->get_descr(), 'string'),
@@ -369,6 +430,7 @@
 				'modified_date = ' . $this->marshal($case->get_modified_date(), 'int'),
 				'modified_by = ' . $this->marshal($case->get_modified_by(), 'int'),
 				'measurement = ' . $this->marshal($case->get_measurement(), 'string'),
+				'regulation_reference = ' . $this->marshal($case->get_regulation_reference(), 'string'),
 				'location_code = ' . $this->marshal($case->get_location_code(), 'string')
 			);
 

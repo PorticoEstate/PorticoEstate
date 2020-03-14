@@ -1534,3 +1534,45 @@
 			return $GLOBALS['setup_info']['controller']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.68';
+	function controller_upgrade0_1_68()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_control_item','include_regulation_reference',array(
+			'type' => 'bool',
+			'default' => 'false',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_item_case','regulation_reference',array(
+			'type' => 'text',
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_item_regulation_reference_option',  array(
+				'fd' => array(
+					'id'				=> array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+					'option_value'		=> array('type' => 'varchar', 'precision' =>  '255','nullable' =>  False),
+					'control_item_id'	=> array('type' => 'int', 'precision' =>  4, 'nullable' =>  True)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.69';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+
+
+
+

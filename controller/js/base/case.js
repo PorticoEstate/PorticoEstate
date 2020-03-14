@@ -136,6 +136,10 @@ $(document).ready(function ()
 			$(thisForm).find("input[name=component_id]").val(component_id);
 		}
 
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 		var validate_status = validate_form(thisForm);
 
 		if (validate_status)
@@ -153,7 +157,6 @@ $(document).ready(function ()
 						if (jsonObj.status == "saved")
 						{
 							var type = $(thisForm).find("input[name='type']").val();
-							var submitBnt = $(thisForm).find("input[type='submit']");
 							$(submitBnt).val("Lagret");
 
 							var add_picture_to_case_container = thisForm.next('.add_picture_to_case');
@@ -189,6 +192,7 @@ $(document).ready(function ()
 							window.setTimeout(function ()
 							{
 								$(submitBnt).hide();
+								$(submitBnt).prop("disabled", true);
 								if (type == "control_item_type_2")
 								{
 									$(submitBnt).val('Lagre måling');
@@ -197,6 +201,14 @@ $(document).ready(function ()
 								{
 									$(submitBnt).val('Lagre ny sak');
 								}
+
+								var element = document.getElementById('spinner');
+								if (element)
+								{
+									element.parentNode.removeChild(element);
+								}
+
+
 //
 //								$(submitBnt).addClass("case_saved");
 //								$(submitBnt).attr("disabled", true);
@@ -346,6 +358,11 @@ $(document).ready(function ()
 							$(clickRow).find(".case_info .measurement").html(measurement_text);
 						}
 
+						var regulation_reference_text = $(thisForm).find("select[name='regulation_reference'] option:selected").val();
+						$(clickRow).find(".case_info .regulation_reference").text(regulation_reference_text);
+
+						var case_component_child = $(thisForm).find("select[name='component_child'] option:selected").text();
+						$(clickRow).find(".case_info .case_component_child").empty().text(case_component_child);
 						var case_condition_degree = $(thisForm).find("select[name='condition_degree'] option:selected").text();
 						$(clickRow).find(".case_info .case_condition_degree").empty().text(case_condition_degree);
 						var case_consequence = $(thisForm).find("select[name='consequence'] option:selected").text();
@@ -635,4 +652,76 @@ function undo_completed(completed_id)
 			}
 		}
 	});
+}
+
+/**
+ * Open a prompt for input
+ * @param {type} id
+  * @param {type} input_text
+ * @param {type} lang_new_value
+ * @returns {undefined}
+ */
+
+function addNewValueToRegulationReference(control_item_id, input_text, lang_new_value)
+{
+
+	var oArgs = {
+		menuaction: 'controller.uicase.add_regulation_option',
+		control_item_id: control_item_id
+	};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	//	var new_value = prompt(input_text, "");
+
+	/*
+	 * @title {String or DOMElement} The dialog title.
+	 * @message {String or DOMElement} The dialog contents.
+	 * @value {String} The default input value.
+	 * @onok {Function} Invoked when the user clicks OK button.
+	 * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+	 *
+	 * alertify.prompt(title, message, value, onok, oncancel);
+	 *
+	 */
+	alertify.prompt( input_text, lang_new_value, ''
+               , function(evt, value)
+			   {
+					var new_value = value;
+					if (new_value !== null && new_value !== "")
+					{
+						var xmlhttp = new XMLHttpRequest();
+						xmlhttp.onreadystatechange = function ()
+						{
+							if (this.readyState == 4 && this.status == 200)
+							{
+								var data = JSON.parse(this.responseText);
+
+								if (data.status == 'ok' && data.choice_id)
+								{
+									alertify.success('You entered: ' + value);
+									var select = document.getElementById('regulation_reference');
+									var option = document.createElement("option");
+									option.text = new_value;
+									option.id = data.choice_id;
+									select.add(option, select[1]);
+									select.selectedIndex = "1";
+								}
+								else
+								{
+									alertify.error('Error');
+								}
+							}
+						};
+						xmlhttp.open("POST", requestUrl, true);
+						xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						var params = 'new_value=' + new_value;
+						xmlhttp.send(params);
+					}
+					else
+					{
+						alertify.error('Cancel');
+					}
+				}
+               , function() { alertify.error('Cancel') });
+
 }

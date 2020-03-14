@@ -82,7 +82,8 @@
 			'add_component_image'=> true,
 			'add_case_image'	=> true,
 			'edit_component_child' => true,
-			'edit_parent_component'	=> true
+			'edit_parent_component'	=> true,
+			'add_regulation_option'	=> true
 		);
 
 		function __construct()
@@ -123,6 +124,26 @@
 
 		}
 
+		function add_regulation_option()
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			$control_item_id	 = phpgw::get_var('control_item_id', 'int');
+			$new_value		 = phpgw::get_var('new_value');
+
+			$id = createObject('controller.socontrol_item')->add_regulation_reference_options($control_item_id, $new_value);
+
+			$receipt = array(
+				'status' => 'ok',
+				'choice_id' => 100
+			);
+
+			return $receipt;
+
+		}
 
 		function edit_parent_component()
 		{
@@ -139,6 +160,7 @@
 			$get_form = phpgw::get_var('get_form', 'bool');
 			$get_edit_form = phpgw::get_var('get_edit_form', 'bool');
 			$get_info = phpgw::get_var('get_info', 'bool');
+			$enable_add_case = phpgw::get_var('enable_add_case', 'bool');
 			$parent_location_id = phpgw::get_var('parent_location_id', 'int');
 			$parent_component_id = phpgw::get_var('parent_component_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
@@ -196,6 +218,20 @@
 				$lookup_functions = $values['lookup_functions'];
 
 				$menuaction = $edit_parent ? 'controller.uicase.edit_parent_component' : 'controller.uicase.edit_component_child';
+				
+				
+				$open_cases = array();
+				if($get_info)
+				{
+					$open_cases = $this->so->get_open_cases_by_component_child($location_id, $component_id);
+					
+					foreach ($open_cases as &$open_case)
+					{
+						$open_case['modified_date_text'] = $GLOBALS['phpgw']->common->show_date($open_case['modified_date'], $this->dateFormat);					
+						$open_case['open_case_url'] = self::link(array('menuaction' => 'controller.uicase.view_open_cases', 'check_list_id'=> $open_case['check_list_id']));
+					}
+					
+				}
 
 				$data = array(
 					'action'=> self::link(array('menuaction' => $menuaction, 'phpgw_return_as'=>'json')),
@@ -207,9 +243,11 @@
 					'attributes_general' => array('attributes' => $values['attributes']),
 					'get_form'	=> $get_form,
 					'get_info'	=> $get_info,
+					'enable_add_case' => $enable_add_case,
 					'get_edit_form' => $get_edit_form,
 					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
-					'supress_history_date' => true
+					'supress_history_date' => true,
+					'open_cases' => $open_cases
 					);
 
 				$xslttemplates = CreateObject('phpgwapi.xslttemplates');
@@ -1107,11 +1145,20 @@
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 )),
 				'case_location_code' => $case_data['location_code'],
+				'add_img' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2')
 
 			);
 //			_debug_array($data);die();
 			phpgwapi_jquery::load_widget('core');
 
+			
+			$js = <<<JS
+				var enable_add_case = true;
+
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+
+			
 			self::add_javascript('controller', 'base', 'edit_component.js');
 			self::add_javascript('controller', 'base', 'custom_ui.js');
 			self::add_javascript('controller', 'base', 'ajax.js');
@@ -1243,6 +1290,8 @@
 				$case->set_measurement($option_value);
 			}
 
+			$regulation_reference = phpgw::get_var('regulation_reference');
+			$case->set_regulation_reference($regulation_reference);
 			$case_id = $this->so->store($case);
 
 			if ($case_id > 0)
@@ -1266,12 +1315,31 @@
 				return json_encode(array("status" => "not_saved"));
 			}
 
+
 			$case_id = phpgw::get_var('case_id');
 			$case_descr = phpgw::get_var('case_descr');
 			$proposed_counter_measure =  phpgw::get_var('proposed_counter_measure');
 			$case_status = phpgw::get_var('case_status');
 			$measurement = phpgw::get_var('measurement');
+			$regulation_reference = phpgw::get_var('regulation_reference');
+
 			$check_list_id = phpgw::get_var('check_list_id');
+
+
+			$component_child =  phpgw::get_var('component_child');
+
+			if($component_child)
+			{
+				$component_child_arr = explode('_', $component_child);
+				$component_child_location_id = $component_child_arr[0];
+				$component_child_item_id = $component_child_arr[1];
+			}
+			else
+			{
+				$component_child_location_id = null;
+				$component_child_item_id = null;
+			}
+
 
 			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
@@ -1279,6 +1347,8 @@
 			$consequence =  phpgw::get_var('consequence');
 
 			$case = $this->so->get_single($case_id);
+			$case->set_component_child_location_id($component_child_location_id);
+			$case->set_component_child_item_id($component_child_item_id);
 			$case->set_descr($case_descr);
 			$case->set_proposed_counter_measure($proposed_counter_measure);
 			$case->set_modified_date($todays_date_ts);
@@ -1291,6 +1361,9 @@
 			{
 				$case->set_measurement($measurement);
 			}
+
+			$case->set_regulation_reference($regulation_reference);
+
 			$case->set_status($case_status);
 			$case->set_condition_degree($condition_degree);
 			$case->set_consequence($consequence);
@@ -1987,6 +2060,7 @@
 				foreach ($check_item->get_cases_array() as $case)
 				{
 					$measurement = $case->get_measurement();
+					$regulation_reference = $case->get_regulation_reference();
 
 //					if(unserialize($measurement))
 //					{
@@ -2028,8 +2102,16 @@
 				}
 
 				$check_item->get_control_item()->set_options_array($control_item_with_options->get_options_array());
+				$check_item->get_control_item()->set_regulation_reference_options_array($control_item_with_options->get_regulation_reference_options_array());
 				$open_check_items_and_cases[$key] = $check_item;
 			}
+
+			$case_data = $this->_get_case_data();
+
+//			_debug_array($case_data['check_list']->get_id());
+//			_debug_array($case_data['component_children']);
+
+			$component_children = (array)$case_data['component_children'];
 //			_debug_array($open_check_items_and_cases);die();
 			$data = array
 				(
@@ -2038,6 +2120,7 @@
 				'buildings_on_property' => $buildings_on_property,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
+				'component_children' => $component_children,
 				'type' => $type,
 				'location_level' => $level,
 				'get_locations'	=> $get_locations,
@@ -2055,9 +2138,13 @@
 			self::add_javascript('controller', 'base', 'case.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 
-			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/cases_tab_menu',
-				'case/view_open_cases', 'case/case_row',
-				'check_list/fragments/nav_control_plan', 'check_list/fragments/check_list_top_section',
+			self::render_template_xsl(array(
+				'check_list/fragments/check_list_menu',
+				'case/cases_tab_menu',
+				'case/view_open_cases',
+				'case/case_row',
+				'check_list/fragments/nav_control_plan',
+				'check_list/fragments/check_list_top_section',
 				'check_list/fragments/select_buildings_on_property'), $data);
 		}
 

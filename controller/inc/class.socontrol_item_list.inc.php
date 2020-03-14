@@ -181,6 +181,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary'), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference'), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -219,6 +220,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary'), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference'), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -270,6 +272,7 @@
 				$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 				$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
 				$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary'), 'bool'));
+				$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference'), 'bool'));
 				$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 				$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 				$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -326,6 +329,10 @@
 					{
 						$control_item->set_options_array($options_array);
 
+						$regulation_reference_options_array = $this->get_regulation_reference_options($control_item_id);
+
+						$control_item->set_regulation_reference_options_array($regulation_reference_options_array);
+
 						if ($return_type == "return_array")
 						{
 							$control_item_array[] = $control_item->toArray();
@@ -341,6 +348,7 @@
 					$control_item->set_required($this->unmarshal($this->db->f('required'), 'bool'));
 					$control_item->set_include_counter_measure($this->unmarshal($this->db->f('include_counter_measure'), 'bool'));
 					$control_item->set_report_summary($this->unmarshal($this->db->f('report_summary'), 'bool'));
+					$control_item->set_include_regulation_reference($this->unmarshal($this->db->f('include_regulation_reference'), 'bool'));
 					$control_item->set_include_condition_degree($this->unmarshal($this->db->f('include_condition_degree'), 'bool'));
 					$control_item->set_what_to_do($this->unmarshal($this->db->f('what_to_do', true), 'string'));
 					$control_item->set_how_to_do($this->unmarshal($this->db->f('how_to_do', true), 'string'));
@@ -369,6 +377,10 @@
 			{
 				$control_item->set_options_array($options_array);
 
+				$regulation_reference_options_array = $this->get_regulation_reference_options($control_item->get_id());
+
+				$control_item->set_regulation_reference_options_array($regulation_reference_options_array);
+
 				if ($return_type == "return_array")
 				{
 					$control_item_array[] = $control_item->toArray();
@@ -384,6 +396,21 @@
 			{
 				return null;
 			}
+		}
+
+		function get_regulation_reference_options( $control_item_id )
+		{
+			static $values = array();
+
+			if(isset($values[$control_item_id]))
+			{
+				return $values[$control_item_id];
+			}
+
+			$options = createObject('controller.socontrol_item')->get_regulation_reference_options($control_item_id);
+			$values[$control_item_id] = $options;
+
+			return $options;
 		}
 
 		/**

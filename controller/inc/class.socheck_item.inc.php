@@ -130,6 +130,7 @@
 				$control_item->set_required($this->db->f('required', true), 'string');
 				$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
 				$control_item->set_report_summary($this->db->f('report_summary', true), 'string');
+				$control_item->set_include_regulation_reference($this->db->f('include_regulation_reference', true), 'string');
 				$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
@@ -251,6 +252,7 @@
 				$control_item->set_required($this->db->f('required', true), 'string');
 				$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
 				$control_item->set_report_summary($this->db->f('report_summary', true), 'string');
+				$control_item->set_include_regulation_reference($this->db->f('include_regulation_reference', true), 'string');
 				$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 				$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 				$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
@@ -372,6 +374,7 @@
 					$control_item->set_required($this->db->f('required', true), 'string');
 					$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
 					$control_item->set_report_summary($this->db->f('report_summary', true));
+					$control_item->set_include_regulation_reference($this->db->f('include_regulation_reference', true));
 					$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');
@@ -394,11 +397,13 @@
 					$case->set_descr($this->unmarshal($this->db->f('descr', true), 'string'));
 					$case->set_proposed_counter_measure($this->unmarshal($this->db->f('proposed_counter_measure', true), 'string'));
 					$case->set_report_summary($this->db->f('report_summary'));
+					$case->set_include_regulation_reference($this->db->f('include_regulation_reference'));
 					$case->set_user_id($this->unmarshal($this->db->f('user_id'), 'int'));
 					$case->set_entry_date($this->unmarshal($this->db->f('entry_date'), 'int'));
 					$case->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
 					$case->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 					$case->set_measurement($this->unmarshal($this->db->f('measurement', true), 'string'));
+					$case->set_regulation_reference($this->unmarshal($this->db->f('regulation_reference', true), 'string'));
 					$case->set_component_location_id($this->db->f('component_location_id'), 'int');
 					$case->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
 					$case->set_component_child_location_id($this->unmarshal($this->db->f('component_child_location_id'), 'int'));
@@ -516,6 +521,7 @@
 					$control_item->set_required($this->db->f('required', true), 'string');
 					$control_item->set_include_counter_measure($this->db->f('include_counter_measure', true), 'string');
 					$control_item->set_report_summary($this->db->f('report_summary', true), 'string');
+					$control_item->set_include_regulation_reference($this->db->f('include_regulation_reference', true), 'string');
 					$control_item->set_include_condition_degree($this->db->f('include_condition_degree', true), 'string');
 					$control_item->set_what_to_do($this->db->f('what_to_do', true), 'string');
 					$control_item->set_how_to_do($this->db->f('how_to_do', true), 'string');

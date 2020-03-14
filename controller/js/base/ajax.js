@@ -842,8 +842,10 @@ function clear_form(form)
 	{
 		switch (this.type)
 		{
-			case 'select-multiple':
 			case 'select-one':
+				$(this).prop('selectedIndex', 0);
+				break;
+			case 'select-multiple':
 			case 'text':
 				$(this).val('');
 				break;

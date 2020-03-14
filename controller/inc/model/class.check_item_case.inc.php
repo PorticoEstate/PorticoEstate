@@ -47,11 +47,13 @@
 		protected $descr;
 		protected $proposed_counter_measure;
 		protected $report_summary;
+		protected $include_regulation_reference;
 		protected $user_id;
 		protected $entry_date;
 		protected $modified_date;
 		protected $modified_by;
 		protected $measurement;
+		protected $regulation_reference;
 		protected $location_code;
 		protected $component_location_id; // komponent type
 		protected $component_id;
@@ -203,6 +205,16 @@
 			$this->report_summary = $report_summary;
 		}
 
+		public function get_include_regulation_reference()
+		{
+			return (int)$this->include_regulation_reference;
+		}
+
+		public function set_include_regulation_reference( $include_regulation_reference )
+		{
+			$this->include_regulation_reference = $include_regulation_reference;
+		}
+
 		public function get_measurement()
 		{
 			return $this->measurement;
@@ -220,6 +232,17 @@
 			}
 
 			$this->measurement = $_measurement;
+		}
+
+		public function get_regulation_reference()
+		{
+			return $this->regulation_reference;
+		}
+
+		public function set_regulation_reference( $regulation_reference )
+		{
+
+			$this->regulation_reference = $regulation_reference;
 		}
 
 		public function get_location_code()

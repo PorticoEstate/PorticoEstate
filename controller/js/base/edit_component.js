@@ -1,4 +1,6 @@
 
+/* global enable_add_case */
+
 downloadComponents = function (parent_location_id, parent_id, location_id)
 {
 	var oArgs = {
@@ -99,8 +101,11 @@ $(document).ready(function ()
 		else
 		{
 			$("#form_new_component_2").html('');
+			document.getElementById("choose-child-on-component").selectedIndex = "0";
+			$('#equipment_picture_container').html('');
 		}
 	};
+
 
 	submitComponentForm = function (e, form)
 	{
@@ -109,14 +114,14 @@ $(document).ready(function ()
 		e.preventDefault();
 		var requestUrl = $(form).attr("action");
 
-		var inputs = form.getElementsByTagName("input"), input = null, flag = true;
+		var inputs = $("select, input"), input = null, flag = true;
 		for (var i = 0, len = inputs.length; i < len; i++)
 		{
 			input = inputs[i];
 
 			if ($(input).attr("data-validation") == "required")
 			{
-				if (!input.value)
+				if (!$(input).val())
 				{
 					$(input).addClass('error');
 					$(input).attr("style", 'border-color: rgb(185, 74, 72);');
@@ -136,6 +141,10 @@ $(document).ready(function ()
 		{
 			return false;
 		}
+		var submitBnt = $('#submit_component_form');
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 
 		$.ajax({
 			type: 'POST',
@@ -143,6 +152,8 @@ $(document).ready(function ()
 			data: $(form).serialize(),
 			success: function (data)
 			{
+				$(submitBnt).prop("disabled", false);
+
 				if (data.status == "saved")
 				{
 					$("#choose-child-on-component").empty();
@@ -195,6 +206,7 @@ $(document).ready(function ()
 			$("#new_picture").hide();
 			$("#form_new_component_2").html('');
 			$("#view_cases").hide();
+			$("#perform_control_on_selected").remove();
 
 		}
 	});
@@ -203,7 +215,7 @@ $(document).ready(function ()
 	{
 		var d = new Date();
 		var n = d.getTime();// to forse refrech cache
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n: n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -234,7 +246,7 @@ $(document).ready(function ()
 		var d = new Date();
 		var n = d.getTime();// to forse refrech cache
 		var component = $("#choose-child-on-component").val();
-		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n:n};
+		var oArgs = {menuaction: 'controller.uicase.get_image', component: component, n: n};
 		var ImageUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -420,6 +432,12 @@ $(document).ready(function ()
 			component_id: component_arr[1],
 			get_info: 1
 		};
+
+		if(typeof(enable_add_case) !=='undefined' && enable_add_case === true)
+		{
+			oArgs.enable_add_case = true;
+		}
+
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
@@ -447,6 +465,12 @@ $(document).ready(function ()
 			alert('komponent ikke valgt');
 			return false;
 		}
+
+		var submitBnt = $('#submit_component_form');
+
+		$(submitBnt).prop("disabled", true);
+		var spinner = '<div id="spinner" class="d-flex justify-content-center">  <div class="spinner-border" role="status"> <span class="sr-only"></span> </div></div>';
+		$(spinner).insertBefore($(submitBnt));
 
 		var parent_location_id = $('input[name=parent_location_id]')[0];
 		var parent_component_id = $('input[name=parent_component_id]')[0];
@@ -482,7 +506,11 @@ $(document).ready(function ()
 	// REGISTER NEW CHILD COMPONENT
 	$(".form_new_component").on("submit", function (e)
 	{
+
 		e.preventDefault();
+		$('#equipment_picture_container').html('');
+		$("#new_picture").hide();
+		document.getElementById("choose-child-on-component").selectedIndex = "0";
 
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");

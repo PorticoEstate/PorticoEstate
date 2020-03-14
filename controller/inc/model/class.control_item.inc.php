@@ -28,6 +28,7 @@
 	 * @version $Id$
 	 */
 	include_class('controller', 'model', 'inc/model/');
+	include_class('controller', 'control_regulation_reference_option', 'inc/model/');
 
 	class controller_control_item extends controller_model
 	{
@@ -47,6 +48,7 @@
 		protected $include_counter_measure;
 		protected $include_condition_degree;
 		protected $report_summary;
+		protected $include_regulation_reference;
 		protected $what_to_do;
 		protected $how_to_do;
 		protected $control_group_id;
@@ -56,6 +58,7 @@
 		protected $type;
 		protected $component_location_id;
 		protected $options_array;
+		protected $regulation_reference_options_array;
 		protected $error_msg_array;
 
 		/**
@@ -128,6 +131,16 @@
 		{
 			return $this->report_summary;
 		}
+		public function set_include_regulation_reference( $include_regulation_reference )
+		{
+			$this->include_regulation_reference = $include_regulation_reference;
+		}
+
+		public function get_include_regulation_reference()
+		{
+			return $this->include_regulation_reference;
+		}
+
 
 		public function set_what_to_do( $what_to_do )
 		{
@@ -219,6 +232,16 @@
 			return $this->options_array;
 		}
 
+		public function set_regulation_reference_options_array( $regulation_reference_options_array )
+		{
+			$this->regulation_reference_options_array = $regulation_reference_options_array;
+		}
+
+		public function get_regulation_reference_options_array()
+		{
+			return $this->regulation_reference_options_array;
+		}
+
 		public function get_control_item_types()
 		{
 			return array_values($this->type_array);
@@ -258,6 +281,7 @@
 			$result['include_condition_degree'] = $this->get_include_condition_degree();
 			$result['include_counter_measure'] = $this->get_include_counter_measure();
 			$result['report_summary'] = $this->get_report_summary();
+			$result['include_regulation_reference'] = $this->get_include_regulation_reference();
 			$result['what_to_do'] = $this->get_what_to_do();
 			$result['how_to_do'] = $this->get_how_to_do();
 			$result['control_group'] = $this->get_control_group_name();
