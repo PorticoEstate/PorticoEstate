@@ -722,7 +722,7 @@
 
 			if (!$db = $this->get_db())
 			{
-				return;
+				return 0;
 			}
 
 			if ($db->Type == "postgres")
