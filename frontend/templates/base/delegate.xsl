@@ -91,6 +91,7 @@
 										</xsl:variable>
 										<ul>
 											<xsl:for-each select="delegate">
+												<xsl:sort select="account_lastname"/>
 												<li>
 													<xsl:choose>
 														<xsl:when test="$unit_leader = '1'">
@@ -141,6 +142,7 @@
 										</xsl:variable>
 										<ul>
 											<xsl:for-each select="user_delegate">
+												<xsl:sort select="account_lastname"/>
 												<li>
 													<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
 														<input type="hidden" name="account_id" value="{account_id}"/>
