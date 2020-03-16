@@ -2278,6 +2278,7 @@ HTML;
 
 				foreach ($supervisors as $supervisor_id => $info)
 				{
+					$approved = false;
 
 					if ($location_item_id)
 					{
@@ -2298,7 +2299,19 @@ HTML;
 						);
 
 						$approvals = $pending_action->get_pending_action($action_params);
-						if (!$approvals)
+
+						if(!empty($approvals[0]['action_performed']))
+						{
+							if(isset($approvals[0]['data']['limit']) && ((int)$approvals[0]['data']['limit'] >= $amount ))
+							{
+								$approved = true;
+							}
+							else if (empty($approvals[0]['data']['limit']))
+							{
+								$approved = true;
+							}
+						}
+						if (!$approved)
 						{
 							$action_params['closed'] = false;
 						}
@@ -2315,20 +2328,6 @@ HTML;
 					{
 						$email_domain	 = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
 						$address		 = $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '&lt;' . $GLOBALS['phpgw']->accounts->id2lid($supervisor_id) . "@{$email_domain}&gt;";
-					}
-
-					$approved = false;
-
-					if(!empty($approvals[0]['action_performed']))
-					{
-						if(isset($approvals[0]['data']['limit']) && ((int)$approvals[0]['data']['limit'] >= $amount ))
-						{
-							$approved = true;
-						}
-						else if (empty($approvals[0]['data']['limit']))
-						{
-							$approved = true;
-						}
 					}
 
 					$requested = false;
