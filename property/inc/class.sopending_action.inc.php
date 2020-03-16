@@ -152,6 +152,11 @@
 					$value_set['action_performed'] = phpgwapi_datetime::user_localtime();
 				}
 
+				if (isset($data['data']) && is_array($data['data']))
+				{
+					$value_set['data'] = json_encode($data['data']);
+				}
+
 				$value_set	 = $this->db->validate_update($value_set);
 				$sql		 = "UPDATE fm_action_pending SET {$value_set} WHERE id = $id";
 				$ok			 = !!$this->db->query($sql, __LINE__, __FILE__);
@@ -172,27 +177,27 @@
 				return 0;
 			}
 
-
-			$values = array
-				(
-				$item_id, //item_id
-				$location_id,
-				$responsible, // responsible
-				$responsible_type, // responsible_type
-				$action_category, //action_category
-				phpgwapi_datetime::user_localtime(), // action_requested
-				$reminder,
-				$deadline, //action_deadline
-				phpgwapi_datetime::user_localtime(), //created_on
-				$this->account, //created_by
-				$remark   //remark
+			$values_insert = array
+			(
+				'item_id' => $item_id, //item_id
+				'location_id' =>  $location_id,
+				'responsible' => $responsible, // responsible
+				'responsible_type' => $responsible_type, // responsible_type
+				'action_category' => $action_category, //action_category
+				'action_requested' => phpgwapi_datetime::user_localtime(), // action_requested
+				'reminder' => $reminder,
+				'action_deadline' => $deadline, //action_deadline
+				'created_on' => phpgwapi_datetime::user_localtime(), //created_on
+				'created_by' => $this->account, //created_by
+				'remark' => $remark   //remark
 			);
+			if (isset($data['data']) && is_array($data['data']))
+			{
+				$values_insert['data'] = json_encode($data['data']);
+			}
 
-			$values	 = $this->db->validate_insert($values);
-			$sql	 = "INSERT INTO fm_action_pending ("
-				. "item_id, location_id, responsible, responsible_type,"
-				. "action_category, action_requested, reminder, action_deadline,"
-				. "created_on, created_by, remark) VALUES ( $values $vals)";
+			$sql = 'INSERT INTO fm_action_pending (' . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($values_insert)) . ')';
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if (!$this->global_transaction)
@@ -335,6 +340,10 @@
 					$location_map[$entry['location_id']] = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
 				}
 				$entry['url'] = $interlink->get_relation_link($location_map[$entry['location_id']], $entry['item_id'], 'edit');
+				if($entry['data'])
+				{
+					$entry['data'] = json_decode($entry['data'], true);
+				}
 			}
 			return $ret;
 		}

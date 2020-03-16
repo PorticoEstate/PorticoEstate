@@ -1841,7 +1841,8 @@
 						'responsible_type'	 => 'user',
 						'action'			 => 'approval',
 						'remark'			 => '',
-						'deadline'			 => ''
+						'deadline'			 => '',
+						'data'				 => array('limit' => (int)$new_budget + (int)$project['reserve'] )
 					);
 
 					$pending_action = createObject('property.sopending_action');

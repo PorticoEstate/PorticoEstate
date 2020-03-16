@@ -1349,6 +1349,7 @@
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
 				var location_item_id = '<xsl:value-of select="location_item_id"/>';
 				var order_id = '<xsl:value-of select="value_workorder_id"/>';
+				var project_id = '<xsl:value-of select="value_project_id"/>';
 			</script>
 		</div>
 		<div class="proplist-col">

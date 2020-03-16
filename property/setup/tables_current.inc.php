@@ -2843,7 +2843,8 @@
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'expired_on' => array('type' => 'int', 'precision' => 4, 'nullable' => True), //timestamp
 				'expired_by' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'remark' => array('type' => 'text', 'nullable' => True)
+				'remark' => array('type' => 'text', 'nullable' => True),
+				'data' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

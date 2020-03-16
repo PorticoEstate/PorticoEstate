@@ -1255,6 +1255,7 @@
 									'id'		 => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
 
 							//already approved?
+							$_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
 
 							$pending_action = CreateObject('property.sopending_action');
 
@@ -1270,13 +1271,27 @@
 									'action'			 => 'approval',
 									'remark'			 => '',
 									'deadline'			 => '',
-									'closed'			 => true
+									'closed'			 => true,
+									'data'				 => array('limit' => (int)$_budget_amount )
 								);
 
 								$approvals = $pending_action->get_pending_action($action_params_approved);
+								$approved = false;
+
+								if(!empty($approvals[0]['action_performed']))
+								{
+									if(isset($approvals[0]['data']['limit']) && ((int)$approvals[0]['data']['limit'] >= $_budget_amount ))
+									{
+										$approved = true;
+									}
+									else if (empty($approvals[0]['data']['limit']))
+									{
+										$approved = true;
+									}
+								}
 
 								//Not approved
-								if (!$approvals)
+								if (!$approved)
 								{
 									$substitute = $sosubstitute->get_substitute($_account_id);
 
@@ -1285,7 +1300,6 @@
 										$_account_id = $substitute;
 									}
 
-									$_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
 
 									$pending_action->set_pending_action($action_params_approved);
 									if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])

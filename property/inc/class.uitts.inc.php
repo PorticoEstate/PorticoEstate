@@ -3433,9 +3433,10 @@ HTML;
 		{
 			$ecodimb	 = phpgw::get_var('ecodimb');
 			$amount		 = phpgw::get_var('amount', 'int');
+			$project_id	 = phpgw::get_var('project_id', 'int');
 			$order_id	 = phpgw::get_var('order_id', 'int');
 
-			return $this->bo->check_purchase_right($ecodimb, $amount, $order_id);
+			return $this->bo->check_purchase_right($ecodimb, $amount, $order_id, $project_id);
 		}
 
 		/**
