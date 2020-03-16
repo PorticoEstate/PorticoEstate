@@ -27,7 +27,7 @@
 					<input type="hidden" name="tab" value=""/>
 					<fieldset class="border p-2">
 						<legend  class="w-auto">
-							<xsl:value-of select="php:function('lang', 'user')" />
+							<xsl:value-of select="php:function('lang', 'edit data')" />
 						</legend>
 						<div class="form-group">
 							<label for="inputs">
@@ -175,8 +175,7 @@
 						</div>
 
 					</fieldset>
-					<div  class="btn-group" role="group">
-						<input type="submit" class="btn btn-secondary">
+						<input type="submit" class="btn btn-secondary mt-2">
 							<xsl:if test="new_form">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'Create')" />
@@ -188,13 +187,12 @@
 								</xsl:attribute>
 							</xsl:if>
 						</input>
-						<a class="btn btn-secondary">
+						<a class="btn btn-secondary mt-2 ml-3">
 							<xsl:attribute name="href">
 								<xsl:value-of select="user/cancel_link"/>
 							</xsl:attribute>
 							<xsl:value-of select="php:function('lang', 'Cancel')" />
 						</a>
-					</div>
 				</form>
 			</div>
 		</div>
