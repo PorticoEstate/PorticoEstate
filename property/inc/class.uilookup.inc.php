@@ -1613,7 +1613,7 @@ JS;
 			$action	 = 'var temp = parent.document.getElementsByName("values[response_text]")[0].value;' . "\r\n";
 			$action	 .= 'if(temp){temp = temp + "\n";}' . "\r\n";
 			$action	 .= 'parent.document.getElementsByName("values[response_text]")[0].value = temp + aData["content"];' . "\r\n";
-			$action	 .= 'parent.SmsCountKeyUp(160);' . "\r\n";
+			$action	 .= 'parent.SmsCountKeyUp(804);' . "\r\n";
 
 			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
 
