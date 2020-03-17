@@ -33,7 +33,7 @@
 			$this->module = "booking";
 			$this->fields = array(
 				'name' => 'string',
-				'homepage' => 'url',
+				'homepage' => 'string',
 				'phone' => 'string',
 				'email' => 'email',
 				'street' => 'string',

@@ -64,6 +64,7 @@
 					'write' => array_fill_keys(array('name', 'homepage', 'phone', 'email', 'description',
 						'street', 'zip_code', 'district', 'city', 'active', 'user_number',
 						'contacts'), true),
+					'create' =>  true,
 				);
 			}
 

@@ -227,7 +227,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($user);
-					$this->redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt['id']));
+					$this->redirect(array('menuaction' => $this->module  . '.uiuser.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
