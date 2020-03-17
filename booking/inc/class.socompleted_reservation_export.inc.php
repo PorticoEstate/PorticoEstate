@@ -1552,12 +1552,13 @@
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
 
+					$log_buidling = $reservation['building_name'];
 					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
 
-					$line_field[] = "\"{$reservation['id']}\"";
+					$line_field[] = "\"{$reservation['reservation_id']}\"";
 					$line_field[] = "\"{$reservation['reservation_type']}\"";
 					$line_field[] = "\"{$log_order_id}\"";
 					$line_field[] = "\"{$log_customer_name}\"";
