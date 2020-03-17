@@ -1175,6 +1175,39 @@ JS;
 				$this->receipt['error'][]	 = array('msg' => lang('Please select a status !'));
 				$error_id					 = true;
 			}
+			else
+			{
+				$status_list	 = execMethod('property.bogeneric.get_list', array('type' => 'project_status', 'fields' => array('approved')));
+
+				foreach ($status_list as $status_entry)
+				{
+
+					if($status_entry['id'] == $values['status'] && $status_entry['approved'])
+					{
+						$_budget_amount = execMethod('property.boworkorder.get_accumulated_budget_amount', $id);
+
+						$project = $this->bo->read_single($id);
+
+						if((int)$values['budget'])
+						{
+							if(!((int)$values['budget'] >= $_budget_amount) )
+							{
+								$this->receipt['error'][]	 = array('msg' => lang('The budget for project %1 must be at least %2', $id, $_budget_amount ));
+								$error_id					 = true;
+							}
+						}
+						else
+						{
+							if(!((int)$project['budget'] >= $_budget_amount) )
+							{
+								$this->receipt['error'][]	 = array('msg' => lang('The budget for project %1 must be at least %2', $id, $_budget_amount ));
+								$error_id					 = true;
+							}
+						}
+					}
+				}
+
+			}
 
 			if (!$id && empty($values['budget']))
 			{
@@ -1482,7 +1515,7 @@ JS;
 				}
 			}
 
-			if ($id)
+			if ($id && ! isset($this->receipt['error']))
 			{
 				self::message_set($this->receipt);
 				$active_tab = phpgw::get_var('active_tab');
