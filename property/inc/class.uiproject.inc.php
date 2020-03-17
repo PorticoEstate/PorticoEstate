@@ -1175,7 +1175,7 @@ JS;
 				$this->receipt['error'][]	 = array('msg' => lang('Please select a status !'));
 				$error_id					 = true;
 			}
-			else
+			else if($id)
 			{
 				$status_list	 = execMethod('property.bogeneric.get_list', array('type' => 'project_status', 'fields' => array('approved')));
 
