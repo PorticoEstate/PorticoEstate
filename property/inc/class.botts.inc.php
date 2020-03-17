@@ -1942,13 +1942,14 @@ HTML;
 
 		/**
 		 *
-		 * @param type $ecodimb
-		 * @param type $amount
-		 * @param type $order_id
+		 * @param int $ecodimb
+		 * @param int $amount
+		 * @param int $order_id
+		 * @param int $project_id
 		 * @return array
 		 * @throws Exception
 		 */
-		public function check_purchase_right( $ecodimb = 0, $amount = 0, $order_id = 0 )
+		public function check_purchase_right( $ecodimb = 0, $amount = 0, $order_id = 0, $project_id = 0 )
 		{
 			$sosubstitute = CreateObject('property.sosubstitute');
 
@@ -2194,7 +2195,7 @@ HTML;
 //				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
 //			}
 
-			return $this->get_supervisor_approval($supervisors, $order_id);
+			return $this->get_supervisor_approval($supervisors, $order_id, $project_id, $amount);
 		}
 
 		/**
@@ -2204,11 +2205,16 @@ HTML;
 		 * @return array
 		 * @throws Exception
 		 */
-		protected function get_supervisor_approval( $supervisors, $order_id = 0 )
+		protected function get_supervisor_approval( $supervisors, $order_id = 0, $project_id = 0, $amount = 0 )
 		{
 			$order_type = $this->bocommon->socommon->get_order_type($order_id);
-
-			if ($order_id)
+			
+			if($project_id)
+			{
+				$location			 = '.project';
+				$location_item_id	 = $project_id;
+			}
+			else if ($order_id)
 			{
 				switch ($order_type)
 				{
@@ -2272,6 +2278,7 @@ HTML;
 
 				foreach ($supervisors as $supervisor_id => $info)
 				{
+					$approved = false;
 
 					if ($location_item_id)
 					{
@@ -2287,11 +2294,24 @@ HTML;
 							'deadline'			 => '',
 							'created_by'		 => '',
 							'allrows'			 => false,
-							'closed'			 => true
+							'closed'			 => true,
+							'limit'				 => $amount
 						);
 
 						$approvals = $pending_action->get_pending_action($action_params);
-						if (!$approvals)
+
+						if(!empty($approvals[0]['action_performed']))
+						{
+							if(isset($approvals[0]['data']['limit']) && ((int)$approvals[0]['data']['limit'] >= $amount ))
+							{
+								$approved = true;
+							}
+							else if (empty($approvals[0]['data']['limit']))
+							{
+								$approved = true;
+							}
+						}
+						if (!$approved)
 						{
 							$action_params['closed'] = false;
 						}
@@ -2310,14 +2330,34 @@ HTML;
 						$address		 = $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '&lt;' . $GLOBALS['phpgw']->accounts->id2lid($supervisor_id) . "@{$email_domain}&gt;";
 					}
 
+					$requested = false;
+					if(!empty($requests[0]['action_requested']))
+					{
+						if(isset($requests[0]['data']['limit']) && ((int)$requests[0]['data']['limit'] >= $amount ))
+						{
+							$requested = true;
+						}
+						/**
+						 * Request made without limit, but approved with limit
+						 */
+						else if(isset($approvals[0]['data']['limit']) && ((int)$approvals[0]['data']['limit'] < $amount ))
+						{
+							$requested = false;
+						}
+						else if (empty($requests[0]['data']['limit']))
+						{
+							$requested = true;
+						}
+					}
+
 					$supervisor_email[] = array(
 						'id'			 => $supervisor_id,
 						'address'		 => $address,
 						'required'		 => $info['required'],
 						'default'		 => !!$info['default'],
-						'requested'		 => !!$requests[0]['action_requested'],
+						'requested'		 => $requested,
 						'requested_time' => $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
-						'approved'		 => !!$approvals[0]['action_performed'],
+						'approved'		 => $approved,
 						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
 						'is_user'		 => $supervisor_id == $this->account ? true : false
 					);

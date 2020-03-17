@@ -1,7 +1,9 @@
+/* global project_id */
+/* global order_id */
+
 //var amount = 0;
 var local_value_budget;
 var accumulated_budget_amount;
-var order_id;
 var vendor_id;
 var project_ecodimb;
 
@@ -561,7 +563,7 @@ function populateTableChkApproval(ecodimb)
 
 	$("#order_received_amount").val(order_received_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, project_id: project_id, order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 

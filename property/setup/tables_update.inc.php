@@ -10583,3 +10583,27 @@
 		}
 	}
 
+	/**
+	*
+	* Update property version from 0.9.17.740 to 0.9.17.741
+	*
+	*/
+	$test[] = '0.9.17.740';
+	function property_upgrade0_9_17_740()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_action_pending", 'data', array
+				(
+					'type'		=> 'jsonb',
+					'nullable'	=> True
+				)
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.741';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

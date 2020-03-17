@@ -2407,3 +2407,4 @@ order is not approved	property	no	Bestillingen er ikke godkjent
 list deviation	property	no	List avvik
 source	property	no	Kilde
 order %1 is not approved	property	no	Bestilling %1 er ikke godkjent
+The budget for project %1 must be at least %2	property	no	Budsjettet for prosjekt %1 må minst være på %2
