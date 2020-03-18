@@ -10607,3 +10607,141 @@
 		}
 	}
 
+	/**
+	*
+	* Update property version from 0.9.17.741 to 0.9.17.742
+	* Use bigint for timestamp
+	*
+	*/
+	$test[] = '0.9.17.741';
+	function property_upgrade0_9_17_741()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_payments', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_budget', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_org_unit', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_org_unit', 'modified_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb_role_user', 'active_from', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb_role_user', 'active_to', array('type' => 'int', 'precision' => 8, 'nullable' => true, 'default' => 0));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb_role_user', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb_role_user', 'expired_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_module', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_contact', 'active_from', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_contact', 'active_to', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_contact', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+//		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_contact', 'expired_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_action_pending', 'action_requested', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_action_pending', 'action_deadline', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_action_pending', 'action_performed', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_action_pending', 'created_on', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_action_pending', 'expired_on', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_gab_location', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tenant', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location1', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location1_history', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location2', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location2_history', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location3', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location3_history', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location4', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location4_history', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_b_account', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_b_account', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder_budget', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_workorder_budget', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_agreement', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_agreement', 'start_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_agreement', 'end_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_agreement', 'termination_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_activity_price_index', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_activity_price_index', 'index_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_hours', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_wo_h_deviation', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_template', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_template_hours', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_authorities_demands', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_authorities_demands', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_condition_survey', 'report_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_condition_survey', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_condition_survey', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request', 'closed_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request', 'in_progress_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request', 'delivered_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_condition', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_consume', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request_planning', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+//		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_tickets', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag_process_code', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag_process_code', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag_process_log', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecobilag_process_log', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_period_transition', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_eco_period_transition', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_action', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_action', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event', 'start_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event', 'end_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_exception', 'exception_time', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_exception', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_exception', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_receipt', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_receipt', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project_budget', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project_budget', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_project_buffer_budget', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_idgenerator', 'start_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_document', 'document_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_document', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_document_relation', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_owner', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_custom', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_order_template', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_order_template', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_response_template', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_response_template', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement', 'start_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement', 'end_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement', 'termination_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement_budget', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement_budget', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement_detail', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement_pricing', 'index_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_s_agreement_pricing', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tenant_claim', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget_basis', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_budget_period', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_role', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_responsibility_role', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_jasper', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_jasper', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_custom_menu_items', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_custom_menu_items', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_regulations', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_regulations', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location_contact', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location_contact', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_view_dataset', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_view_dataset_report', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => true));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location_exception', 'entry_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_location_exception', 'modified_date', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_views', 'time', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_schedule', 'schedule_time', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_event_receipt', 'receipt_time', array('type' => 'int', 'precision' => 8, 'nullable' => false));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.742';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
