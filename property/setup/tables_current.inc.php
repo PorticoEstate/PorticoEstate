@@ -1269,6 +1269,42 @@
 			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
 			'uc' => array()
 		),
+		/*tre varianter av (nøkkel)bestillinger:
+		 *	1)	Bestillinger der nøkler leveres til etaten – og som skal betales av oss
+		 *	2)	Bestillinger der nøkler skal leveres enten her, sendes bofellesskap – eller hentes hos leverandør og betales av annen avdeling i kommunen
+		 *	3)	Bestillinger der nøkler skal leveres enten her, hentes i «post i butikk» – eller hentes hos leverandør og betales av leietaker (privatperson)
+		 *
+		 */
+		'fm_tts_quick_order_template' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'external_project_id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
+				'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
+				'service_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
+				'ecodimb' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'order_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'building_part' => array('type' => 'varchar', 'precision' => 4, 'nullable' => True),
+				'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'order_descr' => array('type' => 'text', 'nullable' => True),
+				'remark' => array('type' => 'text', 'nullable' => true),
+				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
 		'fm_tts_external_communication_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

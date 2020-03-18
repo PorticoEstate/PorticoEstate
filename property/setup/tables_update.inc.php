@@ -10745,3 +10745,21 @@
 		}
 	}
 
+	/**
+	*
+	* Update property version from 0.9.17.742 to 0.9.17.743
+	*
+	*/
+	$test[] = '0.9.17.742';
+	function property_upgrade0_9_17_742()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.743';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
