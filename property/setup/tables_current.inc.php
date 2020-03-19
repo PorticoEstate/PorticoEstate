@@ -1279,7 +1279,6 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'location_code' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -1293,6 +1292,8 @@
 				'building_part' => array('type' => 'varchar', 'precision' => 4, 'nullable' => True),
 				'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_descr' => array('type' => 'text', 'nullable' => True),
+				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
+				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
 				'remark' => array('type' => 'text', 'nullable' => true),
 				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),

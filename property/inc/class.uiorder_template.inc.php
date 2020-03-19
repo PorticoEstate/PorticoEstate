@@ -68,16 +68,16 @@
 					throw new Exception("External communication for {$this->currentapp} is not supported");
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('external communication');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('quick order template');
 
-			$this->account								 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account		 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
 			$this->acl_location	 = '.ticket';
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->currentapp);
 			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->currentapp);
 			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->currentapp);
 			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->currentapp);
-			$this->bo			 = createObject("{$this->currentapp}.boexternal_communication");
+			$this->bo			 = createObject("{$this->currentapp}.boorder_template");
 			$this->botts		 = createObject("{$this->currentapp}.botts");
 			$this->bocommon		 = createObject('property.bocommon');
 			$this->config		 = CreateObject('phpgwapi.config', $this->currentapp)->read();
@@ -87,20 +87,19 @@
 		}
 
 
-		function get_category_options( $selected = 0 )
+		function get_vendor_options( $selected = 0 )
 		{
-				$data =$this->botts->cats->formatted_xslt_list(array('format'	 => 'filter',
-					'selected'	 => $this->cat_id, 'globals'	 => true, 'use_acl'	 => false));
-				$default_value		 = array('cat_id' => '', 'name' => lang('no category'));
-				array_unshift($data['cat_list'], $default_value);
+				$values = $this->bo->get_vendors();
+				$default_value		 = array('cat_id' => '', 'name' => lang('select'));
+				array_unshift($values, $default_value);
 
 				$_categories = array();
-				foreach ($data['cat_list'] as $_category)
+				foreach ($values as & $value)
 				{
-					$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
+					$value['selected'] = $value['id'] == $selected ? 1 : 0;
 				}
 				
-				return $_categories;	
+				return $values;
 		}
 
 
@@ -121,7 +120,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('deviation');
+			$function_msg = lang('quick order template');
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) ."::{$function_msg}";
 			
@@ -149,9 +148,9 @@
 						'item' => array(
 							array(
 								'type' => 'filter',
-								'name' => 'filter_cat_id',
-								'text' => lang('category'),
-								'list' =>  $this->get_category_options()
+								'name' => 'filter_vendor_id',
+								'text' => lang('vendor'),
+								'list' =>  $this->get_vendor_options()
 							),
 						)
 					)
@@ -162,7 +161,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.add_deviation")),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.edit")),
 					'editor_action' => '',
 					'field' => $fields
 				)
@@ -205,14 +204,14 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 		
-		public function add_deviation()
+		public function edit($values = array(), $mode = 'edit', $error = false )
 		{
 			if (!$this->acl_add)
 			{
 				phpgw::no_access();
 			}
 
-			self::set_active_menu("property::helpdesk::deviation::add_deviation");
+	//		self::set_active_menu("property::helpdesk::deviation::add_deviation");
 
 			/**
 			 * Save first, then preview - first pass
@@ -236,7 +235,7 @@
 					$this->_send($receipt['id']);
 				}
 
-				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiorder_template.add_deviation"));
+				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiorder_template.edit"));
 			}
 
 			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
@@ -342,105 +341,59 @@
 			{
 				array_unshift($type_list, array('id' => '', 'name' => lang('select')));
 			}
+			$_filter_buildingpart	 = array();
+			$filter_buildingpart	 = isset($this->config['filter_buildingpart']) ? $this->config['filter_buildingpart'] : array();
 
+			if ($filter_key = array_search('.b_account', $filter_buildingpart))
+			{
+				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
+			}
 
 			$data = array(
 				'type_list'					 => array('options' => $type_list),
 				'datatable_def'				 => $datatable_def,
-				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.add_deviation")),
+				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.edit")),
 				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab'			 => 0,
-				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}"
+				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}",
+				'building_part_list'		 => array('options' => $this->bocommon->select_category_list(array(
+						'type'		 => 'building_part',
+						'selected'	 => $ticket['building_part'],
+						'order'		 => 'id',
+						'id_in_name' => 'num',
+						'filter'	 => $_filter_buildingpart
+					))),
+				'order_dim1_list'				 => array('options' => $this->bocommon->select_category_list(array(
+						'type'		 => 'order_dim1',
+						'selected'	 => $ticket['order_dim1'],
+						'order'		 => 'id',
+						'id_in_name' => 'num'
+					))),
+				'tax_code_list'					 => array('options' => $this->bocommon->select_category_list(array(
+						'type'		 => 'tax',
+					'selected'	 => $ticket['tax_code'],
+					'order'		 => 'id',
+						'id_in_name' => 'num'
+					))),
+				'branch_list'			 => !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) ? array
+					(
+						'options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])
+					) : '',
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('deviation');
+
+//			self::rich_text_editor('order_descr');
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->currentapp, 'portico', 'external_communication.add_deviation.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
-				'add_deviation' => $data));
+			self::add_javascript($this->currentapp, 'portico', 'order_template.edit.js');
+			self::render_template_xsl(array('order_template', 'datatable_inline'), array(
+				'edit' => $data));
 
-		}
-
-		public function get_other_deviations( $vendor_id = 0, $location_code = '' )
-		{
-			if (!$this->acl_read)
-			{
-				return array();
-			}
-
-			if (!$vendor_id)
-			{
-				$vendor_id = phpgw::get_var('vendor_id', 'int');
-			}
-
-			if (!$location_code)
-			{
-				$location_code = phpgw::get_var('location_code', 'string');
-			}
-
-			$botts		 = createObject("{$this->currentapp}.botts");
-
-			$data = array(
-				'deviation_vendor_id'	 => $vendor_id,
-				'cat_id'				 => $this->config['tts_deviation_category'],
-				'location_code'			 => $location_code,
-				'status_id'				 => 'all',
-				'results'				 => -1
-			);
-
-			if($location_code)
-			{
-				$values = $botts->read( $data );
-			}
-			else
-			{
-				$values = array();
-			}
-
-			if ($values)
-			{
-				$status		 = array();
-				$status['X'] = lang('closed');
-				$status['O'] = isset($botts->config->config_data['tts_lang_open']) && $botts->config->config_data['tts_lang_open'] ? $botts->config->config_data['tts_lang_open'] : lang('Open');
-				$status['C'] = lang('closed');
-
-				$custom_status = $botts->get_custom_status();
-
-				foreach ($custom_status as $custom)
-				{
-					$status["C{$custom['id']}"] = $custom['name'];
-				}
-			}
-
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach ($values as &$entry)
-			{
-				$entry['status'] = $status[$entry['status']];
-				$link				 = self::link(array('menuaction' => 'property.uiorder_template.edit', 'id' => $entry['external_communication_id']));
-				$entry['url']		 = "<a href='{$link}' target='_blank'>{$entry['external_communication_id']}</a>";
-				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
-			}
-
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-
-				$total_records = count($values);
-
-				return array
-					(
-					'data'				 => $values,
-					'draw'				 => phpgw::get_var('draw', 'int'),
-					'recordsTotal'		 => $total_records,
-					'recordsFiltered'	 => $total_records
-				);
-			}
-
-			return $values;
 		}
 
 		public function add()
@@ -469,469 +422,6 @@
 			}
 			$this->edit(array(), 'view');
 		}
-
-		public function edit( $values = array(), $mode = 'edit', $error = false )
-		{
-			if (!$this->acl_add || !$this->acl_edit)
-			{
-				phpgw::no_access();
-			}
-
-			/**
-			 * Save first, then preview - first pass
-			 */
-			$init_preview = phpgw::get_var('init_preview', 'bool');
-
-			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
-			{
-				$this->save($init_preview);
-			}
-
-			$id = phpgw::get_var('id', 'int');
-			if ($this->preview_html)
-			{
-				$this->_send($id);
-			}
-
-			/**
-			 * Save first, then preview - second pass
-			 */
-			if (phpgw::get_var('init_preview2', 'bool'))
-			{
-				$do_preview = $id;
-			}
-			else
-			{
-				$do_preview = null;
-			}
-
-			$ticket_id = phpgw::get_var('ticket_id', 'int');
-
-			if (!$error && $id)
-			{
-				$values		 = $this->bo->read_single($id);
-				$ticket_id	 = $values['ticket_id'];
-			}
-
-			$additional_message_notes = $this->bo->read_additional_notes($id);
-
-			$message_note_def = array(
-				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
-				array('key'		 => 'value_note', 'label'		 => lang('message'), 'sortable'	 => true,
-					'resizeable' => true)
-			);
-
-			foreach ($additional_message_notes as &$message_note)
-			{
-				/**
-				 * html
-				 */
-				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $message_note['value_note']))
-				{
-					$message_note['value_note']	 = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $message_note['value_note']);
-					$message_note['value_note']	 = nl2br($message_note['value_note']);
-				}
-			}
-
-			$ticket				 = $this->botts->read_single($ticket_id);
-
-			if(!$id)
-			{
-				$values['vendor_id'] = $ticket['vendor_id'];
-			}
-			$additional_notes	 = $this->botts->read_additional_notes($ticket_id);
-
-			$notes = array(
-				array(
-					'value_id'		 => '', //not from historytable
-					'value_count'	 => 1,
-					'value_date'	 => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
-					'value_user'	 => $ticket['user_name'],
-					'value_note'	 => $ticket['details'],
-				)
-			);
-
-			if (!$id)
-			{
-				$initial_message = $ticket['details'];
-
-				if($initial_message == strip_tags($initial_message))
-				{
-					$initial_message = nl2br($initial_message);
-				}
-			}
-
-			$additional_notes = array_merge($notes, $additional_notes);
-
-			//		_debug_array($additional_notes);die();
-
-			$note_def = array(
-				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_user', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_note', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
-			);
-
-			foreach ($additional_notes as &$note)
-			{
-				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $note['value_note']))
-				{
-					$note['value_note']	 = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $note['value_note']);
-					$note['value_note']	 = nl2br($note['value_note']);
-				}
-			}
-
-
-			$datatable_def	 = array();
-
-			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
-			{
-				default:
-				case 'ckeditor':
-					$insert_action = <<<JS
-
-						try
-						{
-							$.fn.insertAtCaret(decodedString);
-						}
-						catch(e)
-						{
-							console.log(e);
-						}
-
-JS;
-					break;
-				case 'quill':
-					$insert_action = <<<JS
-
-						try
-						{
-							quill.new_note.setText('\\n');
-							quill.new_note.clipboard.dangerouslyPasteHTML(0, encodedStr);
-						}
-						catch(e)
-						{
-							console.log(e);
-						}
-
-JS;
-					break;
-				case 'summernote':
-					$insert_action = <<<JS
-
-						try
-						{
-							$('textarea#new_note').summernote('editor.insertText', '\\n');
-							$('textarea#new_note').summernote('focus');
-//							$('textarea#new_note').summernote('reset');
-							$('textarea#new_note').summernote('pasteHTML', encodedStr);
-						}
-						catch(e)
-						{
-							console.log(e);
-						}
-
-JS;
-					break;
-			}
-
-
-
-			$custom_code	 = <<<JS
-
-				var message = '';
-				var space = '';
-				var api = oTable0.api();
-				var selected = api.rows( { selected: true } ).data();
-
-				var numSelected = 	selected.length;
-
-				if (numSelected ==0)
-				{
-					alert('None selected');
-					return false;
-				}
-				for ( var n = 0; n < selected.length; ++n )
-				{
-					var aData = selected[n];
-
-					if($("#new_note").val())
-					{
-						space =' ';
-					}
-					else
-					{
-						space = '';
-					}
-					var encodedStr = aData["value_note"];
-					var parser = new DOMParser;
-					var dom = parser.parseFromString(encodedStr,'text/html');
-					var decodedString = dom.body.textContent;
-					{$insert_action}
-//					$.fn.insertAtCaret(decodedString);
-
-//					message = $("#new_note").val() + space + aData['value_note'];
-//					message = message.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-//					message = message.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-//					$("#new_note").val(message);
-
-				}
-JS;
-			if($mode == 'edit')
-			{
-				$tabletools	 = array
-					(
-					'my_name'		 => 'edit',
-					'text'			 => lang('copy'),
-					'type'			 => 'custom',
-					'custom_code'	 => $custom_code
-				);
-			}
-			else
-			{
-				$tabletools = array();
-			}
-
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_0',
-				'requestUrl' => "''",
-				'ColumnDefs' => $note_def,
-				'data'		 => json_encode($additional_notes),
-				'tabletools' => $tabletools,
-				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true),
-					array('order' => json_encode(array(0, 'asc'))),
-				)
-			);
-
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_3',
-				'requestUrl' => "''",
-				'ColumnDefs' => $message_note_def,
-				'data'		 => json_encode($additional_message_notes),
-				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true),
-					array('order' => json_encode(array(0, 'asc'))),
-				)
-			);
-
-			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
-				'vendor_id'		 => $values['vendor_id'],
-				'vendor_name'	 => $values['vendor_name'],
-				'type'			 => 'form'
-			));
-
-			$contact_data = $this->bo->get_contact_data($ticket);
-
-			$content_email = $this->bocommon->get_vendor_email(isset($values['vendor_id']) ? $values['vendor_id'] : 0, 'mail_recipients');
-
-			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
-			{
-				$_recipients_found = array();
-				foreach ($content_email as &$vendor_email)
-				{
-					if (in_array($vendor_email['value_email'], $values['mail_recipients']))
-					{
-						$vendor_email['value_select']	 = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
-						$_recipients_found[]			 = $vendor_email['value_email'];
-					}
-				}
-				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
-			}
-
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_1',
-				'requestUrl' => "''",
-				'ColumnDefs' => array(array('key'		 => 'value_email', 'label'		 => lang('email'),
-						'sortable'	 => true, 'resizeable' => true),
-					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
-						'resizeable' => true)),
-				'data'		 => json_encode($content_email),
-				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uitts.view_file"));
-
-			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
-
-			$content_files		 = array();
-			$lang_view_file		 = lang('click to view file');
-			$lang_attach_file	 = lang('Check to attach file');
-
-			$img_types = array(
-				'image/jpeg',
-				'image/png',
-				'image/gif'
-			);
-
-			$z = 0;
-			foreach ($ticket['files'] as $_entry)
-			{
-				$_checked = '';
-				if (in_array($_entry['file_id'], $file_attachments))
-				{
-					$_checked = 'checked="checked"';
-				}
-
-				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
-				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
-				$created = $datetime->format('Y-m-d H:i:s');
-				$content_files[] = array(
-					'created'	=> $created,
-					'file_name'		 => "<a href=\"{$link_view_file}&amp;file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_entry['name']}</a>",
-					'attach_file'	 => "<input type=\"checkbox\" {$_checked} class=\"mychecks\" name=\"file_attachments[]\" value=\"{$_entry['file_id']}\" title=\"$lang_attach_file\">"
-				);
-				if ( in_array($_entry['mime_type'], $img_types))
-				{
-					$content_files[$z]['file_name'] = $_entry['name'];
-					$content_files[$z]['img_id'] = $_entry['file_id'];
-					$content_files[$z]['img_url'] = self::link(array(
-							'menuaction' => "{$this->currentapp}.uitts.view_image",
-							'img_id'	=>  $_entry['file_id'],
-							'file' => $_entry['directory'] . '/' . $_entry['file_name']
-					));
-					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
-				}
-				$z ++;
-			}
-
-			$attach_file_def = array
-				(
-				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
-					'resizeable' => true),
-				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
-					'resizeable' => true),
-				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
-				array('key'		 => 'attach_file', 'label'		 => lang('attach file'),
-					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'JqueryPortico.FormatterCenter')
-			);
-
-
-			if($mode == 'edit')
-			{
-				$tabletools		 = array
-					(
-					array('my_name' => 'select_all'),
-					array('my_name' => 'select_none')
-				);
-			}
-			else
-			{
-				$tabletools = array();
-			}
-
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_2',
-				'requestUrl' => "''",
-				'ColumnDefs' => $attach_file_def,
-				'data'		 => json_encode($content_files),
-				'tabletools' => $tabletools,
-				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$record_history	 = $this->bo->read_record_history($id);
-			$z				 = 1;
-			foreach ($record_history as &$history_entry)
-			{
-				$history_entry['sort_key'] = $z++;
-			}
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_4',
-				'requestUrl' => "''",
-				'ColumnDefs' => array(
-					array('key'		 => 'sort_key', 'label'		 => '#', 'sortable'	 => true,
-						'resizeable' => true),
-					array('key'		 => 'value_date', 'label'		 => lang('Date'), 'sortable'	 => false,
-						'resizeable' => true),
-					array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
-					array('key'		 => 'value_action', 'label'		 => lang('Action'), 'sortable'	 => true,
-						'resizeable' => true),
-					array('key'		 => 'value_old_value', 'label'		 => lang('old value'), 'sortable'	 => true,
-						'resizeable' => true),
-					array('key'		 => 'value_new_value', 'label'		 => lang('New value'), 'sortable'	 => true,
-						'resizeable' => true)),
-				'data'		 => json_encode($record_history),
-				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$tabs			 = array();
-			$tabs['main']	 = array(
-				'label'	 => lang('message'),
-				'link'	 => '#main'
-			);
-			$tabs['history'] = array(
-				'label'	 => lang('history'),
-				'link'	 => '#history'
-			);
-
-			$type_list	 = array();
-			$type_list	 = execMethod("{$this->currentapp}.bogeneric.get_list", array('type'		 => 'external_com_type',
-				'selected'	 => (int)$values['type_id']));
-
-			if (count($type_list) > 1)
-			{
-				array_unshift($type_list, array('id' => '', 'name' => lang('select')));
-			}
-
-
-			$data	 = array(
-				'type_list'					 => array('options' => $type_list),
-				'status_list'				 => array('options' => $this->botts->get_status_list($ticket['status'])),
-				'datatable_def'				 => $datatable_def,
-				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.{$mode}",
-					'id'		 => $id)),
-				'edit_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.edit",
-					'id'		 => $id)),
-				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.view",
-					'id'		 => $ticket_id)),
-				'value_ticket_id'			 => $ticket_id,
-				'value_ticket_subject'		 => $ticket['subject'],
-				'value_subject'				 => !empty($values['subject']) ? $values['subject'] : $ticket['subject'],
-				'value_extra_mail_address'	 => $value_extra_mail_address,
-				'value_id'					 => $id,
-				'value_do_preview'			 => $do_preview,
-				'vendor_data'				 => $vendor_data,
-				'contact_data'				 => $contact_data,
-				'mode'						 => $mode,
-				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
-				'value_active_tab'			 => 0,
-				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data',id:{$ticket_id}}",
-				'value_initial_message'		 => $initial_message,
-				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uitts.handle_multi_upload_file", 'id' => $ticket_id))
-
-			);
-			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang($mode);
-
-			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::load_widget('file-upload-minimum');
-
-			self::rich_text_editor('new_note');
-			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('phpgwapi', 'paste', 'paste.js');
-			self::add_javascript($this->currentapp, 'portico', 'external_communication.edit.js');
-			self::render_template_xsl(array('external_communication', 'datatable_inline', 'multi_upload_file_inline'), array(
-				'edit' => $data));
-		}
-
 
 		public function save_ticket()
 		{
@@ -974,7 +464,7 @@ JS;
 					'vendor_id'			 => $vendor_id
 				);
 
-				$external_message_receipt =  CreateObject('property.soexternal_communication')->add($external_message);
+				$external_message_receipt =  CreateObject('property.soorder_template')->add($external_message);
 
 				$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 

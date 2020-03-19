@@ -10756,6 +10756,40 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_quick_order_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+					'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+					'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'external_project_id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
+					'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
+					'service_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
+					'ecodimb' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+					'order_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+					'building_part' => array('type' => 'varchar', 'precision' => 4, 'nullable' => True),
+					'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'order_descr' => array('type' => 'text', 'nullable' => True),
+					'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
+					'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
+					'remark' => array('type' => 'text', 'nullable' => true),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'fk' => array(),
+				'uc' => array()
+			)
+		);
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.743';

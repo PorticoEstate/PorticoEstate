@@ -148,6 +148,7 @@
 		'fm_tts_external_communication_type',
 		'fm_tts_external_communication',
 		'fm_tts_external_communication_msg',
+		'fm_tts_quick_order_template',
 		'fm_org_unit',
 		'fm_ecoart',
 		'fm_ecoavvik',

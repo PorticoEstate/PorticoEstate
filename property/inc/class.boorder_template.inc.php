@@ -64,6 +64,11 @@
 			return $values;
 		}
 
+		public function get_vendors( )
+		{
+			return $this->so->get_vendors();
+		}
+
 		public function store($object)
 		{
 		}
