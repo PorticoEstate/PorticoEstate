@@ -1258,7 +1258,7 @@ HTML;
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
 					'bigmenubutton' => true,
-					'editor_action' => self::link(array('menuaction' => 'helpdesk.uitts.edit_survey_title')),
+					'editor_action' => '',
 					'field' => $this->_get_fields(),
 					'query' => phpgw::get_var('query'),
 					'group_buttons' => false,
