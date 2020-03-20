@@ -152,11 +152,11 @@
 			$folder_list = array
 				(
 				'Innboks'							 => array(),
-				'Firewall-Fakturaavvik'                               => array
-				(
+				'Firewall-Fakturaavvik'				 => array
+					(
 					'message_cat_id' => 319, // 24 Firewall-Fakturaavvik
-					'group_id'             => 4253, //LRS-Drift_Regnskap
-					'subject'              => ''
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'subject'		 => ''
 				),
 				'Arbeidsflyt og ehandel'			 => array
 					(
@@ -901,341 +901,341 @@
 			/**
 			 * Nye regler 14. februar 2020
 			 */
-			else if(preg_match("/BOEi filer/i" , $subject ))
+			else if (preg_match("/BOEi filer/i", $subject))
 			{
-				$message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innlesing av lønnsfil/i" , $subject ))
+			else if (preg_match("/Innlesing av lønnsfil/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innlesing av BOEI hovedboksfil/i" , $subject ))
+			else if (preg_match("/Innlesing av BOEI hovedboksfil/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innlesing av fil fra PARKA/i" , $subject ))
+			else if (preg_match("/Innlesing av fil fra PARKA/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innlesing av fil fra PILEN/i" , $subject ))
+			else if (preg_match("/Innlesing av fil fra PILEN/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innlesing av refusjonsfil/i" , $subject ))
+			else if (preg_match("/Innlesing av refusjonsfil/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Ikke bokførte bunter fra Sosio pr/i" , $subject ))
+			else if (preg_match("/Ikke bokførte bunter fra Sosio pr/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Ikke bokførte bunter fra SoSys pr/i" , $subject ))
+			else if (preg_match("/Ikke bokførte bunter fra SoSys pr/i", $subject))
 			{
-				 $message_cat_id = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 362; // LRS-Intern- underkategori: filer til bokføring(IA varsel)
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Det er registrert duplikater eller feil i prekonteringsdetaljer/i" , $subject ))
+			else if (preg_match("/Det er registrert duplikater eller feil i prekonteringsdetaljer/i", $subject))
 			{
-				 $message_cat_id = 363; // LRS-Intern- underkategori: Prekontering
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 363; // LRS-Intern- underkategori: Prekontering
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Doble begrepsverdier/i" , $subject ))
+			else if (preg_match("/Doble begrepsverdier/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Ressurser i Agresso med samme personnummer/i" , $subject ))
+			else if (preg_match("/Ressurser i Agresso med samme personnummer/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/EI02 - varsling ved nye forekomster i acrxmlimport/i" , $subject ))
+			else if (preg_match("/EI02 - varsling ved nye forekomster i acrxmlimport/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Det er nye filer i AbwError/i" , $subject ))
+			else if (preg_match("/Det er nye filer i AbwError/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsel om feilid 4 for EI02 variant 31/i" , $subject ))
+			else if (preg_match("/Varsel om feilid 4 for EI02 variant 31/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsel om PR43 som feiler pga flere rader på samme ressurs/i" , $subject ))
+			else if (preg_match("/Varsel om PR43 som feiler pga flere rader på samme ressurs/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsel om feil i kvitteringsfil fra Multikanal/i" , $subject ))
+			else if (preg_match("/Varsel om feil i kvitteringsfil fra Multikanal/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Prosjektregisteret- feil oppdatering av hovedprosjekt/i" , $subject ))
+			else if (preg_match("/Prosjektregisteret- feil oppdatering av hovedprosjekt/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Manglende adresseoppsett nye landkoder/i" , $subject ))
+			else if (preg_match("/Manglende adresseoppsett nye landkoder/i", $subject))
 			{
-				 $message_cat_id = 358; // LRS-System  -  Intel Agent
-				 $group_id = 4252; //LRS-System_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 358; // LRS-System  -  Intel Agent
+				$group_id		 = 4252; //LRS-System_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsling - brukere som mangler overordnet/i" , $subject ))
+			else if (preg_match("/Varsling - brukere som mangler overordnet/i", $subject))
 			{
-				 $message_cat_id = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
-				 $group_id = 4169; //LRS-Service_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
+				$group_id		 = 4169; //LRS-Service_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Ressurser som ligger igjen i ajourhold ressurser etter PR43/i" , $subject ))
+			else if (preg_match("/Ressurser som ligger igjen i ajourhold ressurser etter PR43/i", $subject))
 			{
-				 $message_cat_id = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
-				 $group_id = 4169; //LRS-Service_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
+				$group_id		 = 4169; //LRS-Service_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Faktura med status ulik N som må kontrolleres og leses inn/i" , $subject ))
+			else if (preg_match("/Faktura med status ulik N som må kontrolleres og leses inn/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS-Drift_Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS-Drift_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Tilskudd uten motregning klar for bokføring/i"  , $subject ))
+			else if (preg_match("/Tilskudd uten motregning klar for bokføring/i", $subject))
 			{
-				 $message_cat_id = 313; // LRS-Regnskap- underkategori:25 Bilag til bokføring (parkerte/fra excel)
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Spørsmål fra leverandører
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Godkjente innkjøpsfaktura mangler mva-linjer/i"  , $subject ))
+			else if (preg_match("/Godkjente innkjøpsfaktura mangler mva-linjer/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Ajourhold faktura har poster som må behandles/i"  , $subject ))
+			else if (preg_match("/Ajourhold faktura har poster som må behandles/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Innkjøpsfaktura med feil leverandør ifht ordre/i"  , $subject ))
+			else if (preg_match("/Innkjøpsfaktura med feil leverandør ifht ordre/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Mottatt kredtitnota med feil fortegn/i"  , $subject ))
+			else if (preg_match("/Mottatt kredtitnota med feil fortegn/i", $subject))
 			{
-				 $message_cat_id = 281; // LRS-Regnskap  -  20 Fakturering til kunde
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 281; // LRS-Regnskap  -  20 Fakturering til kunde
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsel om nye forekomster av bilag uten MVA/i"  , $subject ))
+			else if (preg_match("/Varsel om nye forekomster av bilag uten MVA/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
-			else if(preg_match("/Varsling om faktura med arbeidsflyt på reskontrolinje - mva-transaksjoner/i"  , $subject ))
+			else if (preg_match("/Varsling om faktura med arbeidsflyt på reskontrolinje - mva-transaksjoner/i", $subject))
 			{
-				 $message_cat_id = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
-				 $group_id = 4253; //LRS- Drift _Regnskap
-				 $ticket_id = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
-				 if($ticket_id)
-				 {
-					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
-					$target['type'] = 'helpdesk';
-					$target['id'] = $ticket_id;
-				 }
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Faktura fra leverandør
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
 			else if (preg_match("/Varsling om mottaksregistrete faktura over 200 000 (hver time)/i", $subject))
 			{
@@ -1297,6 +1297,19 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/Doble ansvar i ansvarstreet/i", $subject))
+			{
+				$message_cat_id	 = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
+				$group_id		 = 4169; //LRS-Service_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+
 
 
 			/**
