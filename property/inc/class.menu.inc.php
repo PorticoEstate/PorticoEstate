@@ -1017,7 +1017,7 @@
 				);
 
 				$menus['navigation']['helpdesk']['children'] = array
-					(
+				(
 					'deviation'	 => array
 						(
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.index')),
@@ -1060,6 +1060,12 @@
 
 			if ($acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))
 			{
+				$menus['navigation']['helpdesk']['children']['quick_order_template']	 = array
+				(
+					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiorder_template.index')),
+					'text'	 => lang('quick order template'),
+					'image'	 => array('property', 'helpdesk')
+				);
 				$menus['navigation']['helpdesk']['children']['order_template'] = array
 					(
 					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',

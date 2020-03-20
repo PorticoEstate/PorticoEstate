@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.741';
+	$setup_info['property']['version']		= '0.9.17.743';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -148,6 +148,7 @@
 		'fm_tts_external_communication_type',
 		'fm_tts_external_communication',
 		'fm_tts_external_communication_msg',
+		'fm_tts_quick_order_template',
 		'fm_org_unit',
 		'fm_ecoart',
 		'fm_ecoavvik',

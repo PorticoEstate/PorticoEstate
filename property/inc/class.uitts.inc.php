@@ -3382,7 +3382,8 @@ HTML;
 				'value_extra_mail_address'		 => $value_extra_mail_address,
 				'value_continuous'				 => $ticket['continuous'],
 				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id)),
-				'order_read'					 => $order_read
+				'order_read'					 => $order_read,
+				'order_template_list'			 => array('options' => createObject('property.soorder_template')->get_list()),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

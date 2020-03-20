@@ -211,7 +211,7 @@ this.fetch_vendor_contract = function ()
 						return;
 					}
 
-					if(data.length > 0)
+					if (data.length > 0)
 					{
 						$("#vendor_contract_id").attr("data-validation", "required");
 						htmlString = "<option value=''> kontrakter funnet</option>";
@@ -373,6 +373,19 @@ $(window).on('load', function ()
 	$("#field_budget").change(function ()
 	{
 		populateTableChkApproval();
+	});
+
+	$("#make_order").change(function ()
+	{
+		if ($(this).prop('checked'))
+		{
+			$("#quick_order_template").show(50);
+
+		}
+		else
+		{
+			$("#quick_order_template").hide(50);
+		}
 	});
 
 });
@@ -562,7 +575,7 @@ window.on_location_updated = function (location_code)
 				var exceptions = data.location_exception;
 				$.each(exceptions, function (k, v)
 				{
-					if(v.alert_vendor == 1)
+					if (v.alert_vendor == 1)
 					{
 						htmlString += "<div class=\"error\">";
 					}

@@ -263,6 +263,8 @@
 				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
 			}
 
+			$datatable_def = array();
+
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_1',
