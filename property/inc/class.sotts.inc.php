@@ -199,12 +199,12 @@
 
 			$result_order_field	 = array();
 			$order_join			 = " {$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
-			
+
 			if($deviation_vendor_id)
 			{
 				$order_join			 .= " {$this->join} fm_tts_external_communication"
 				. " ON fm_tts_tickets.id = fm_tts_external_communication.ticket_id"
-				. " AND fm_tts_external_communication.vendor_id = {$deviation_vendor_id}";	
+				. " AND fm_tts_external_communication.vendor_id = {$deviation_vendor_id}";
 			}
 
 			if ($order)
@@ -685,7 +685,7 @@
 			{
 				$_return_field_array[$custom_col['column_name']] = "fm_tts_tickets.{$custom_col['column_name']}";
 			}
-			
+
 			if($deviation_vendor_id)
 			{
 				$_return_field_array['external_communication_id'] = 'fm_tts_external_communication.id as external_communication_id';
@@ -1011,6 +1011,7 @@
 				$ticket['mail_recipients']		 = $mail_recipients ? explode(',', $mail_recipients) : array();
 				$file_attachments				 = trim($this->db->f('file_attachments'), ',');
 				$ticket['file_attachments']		 = $file_attachments ? explode(',', $file_attachments) : array();
+				$ticket['order_template_id']	 = $this->db->f('order_template_id');
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1760,6 +1761,29 @@
 
 					$ticket['invoice_remark'] = $ticket['subject'];
 				}
+
+				if($ticket['order_template_id'])
+				{
+					$order_template_id = (int)$ticket['order_template_id'];
+					$this->db->query("UPDATE fm_tts_tickets SET order_template_id = {$order_template_id} WHERE id={$id}", __LINE__, __FILE__);
+
+					$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
+
+					$ticket['vendor_id']			 = $order_template['vendor_id'];
+					$ticket['vendor_email']			 = (array)$order_template['mail_recipients'];
+					$ticket['contract_id']			 = $order_template['contract_id'];
+					$ticket['service_id']			 = $order_template['service_id'];
+					$ticket['external_project_id']	 = $order_template['external_project_id'];
+					$ticket['unspsc_code']			 = $order_template['unspsc_code'];
+					$ticket['b_account_id']			 = $order_template['b_account_id'];
+					$ticket['order_descr']			 = $order_template['order_descr'];
+					$ticket['ecodimb']				 = $order_template['ecodimb'];
+					$ticket['branch_id']			 = $order_template['branch_id'];
+					$ticket['tax_code']				 = $order_template['tax_code'];
+					$ticket['building_part']		 = $order_template['building_part'];
+					$ticket['order_dim1']			 = $order_template['order_dim1'];
+
+				}
 			}
 
 			$value_set = array();
@@ -2388,19 +2412,19 @@
 			foreach ($add_relation['request_id'] as $relation_id)
 			{
 				$target_id = false;
-				if ($relation_type == 'request')
-				{
-					$target = $interlink->get_specific_relation('property', $acl_location, '.ticket', $relation_id, 'target');
-				}
-				else //reverse
-				{
-					$target = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
-				}
-
-				if ($target)
-				{
-					$target_id = $target[0];
-				}
+//				if ($relation_type == 'request')
+//				{
+//					$target = $interlink->get_specific_relation('property', $acl_location, '.ticket', $relation_id, 'target');
+//				}
+//				else //reverse
+//				{
+//					$target = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
+//				}
+//
+//				if ($target)
+//				{
+//					$target_id = $target[0];
+//				}
 
 				if (!$target_id)
 				{

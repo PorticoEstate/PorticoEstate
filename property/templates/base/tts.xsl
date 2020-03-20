@@ -215,7 +215,7 @@
 									<xsl:value-of select="php:function('lang', 'Upload file')"/>
 								</label>
 
-<!--								<div class="pure-input-3-4 pure-custom">
+								<!--								<div class="pure-input-3-4 pure-custom">
 									<div id="drop-area" style="border: 2px dashed #ccc; padding: 20px;">
 										<p>
 											<xsl:value-of select="php:function('lang', 'Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region')"/>
@@ -249,7 +249,7 @@
 														<xsl:attribute name="capture">camera</xsl:attribute>
 													</input>
 												</span>
-<!--												<button type="button" id="start_file_upload" class="start pure-button">
+												<!--												<button type="button" id="start_file_upload" class="start pure-button">
 													<xsl:value-of select="php:function('lang', 'Start upload')"/>
 												</button>-->
 
@@ -845,12 +845,27 @@
 											<xsl:value-of select="php:function('lang', 'make order')"/>
 										</label>
 
-										<input type="checkbox" name="values[make_order]" value="True">
+										<input type="checkbox" id="make_order" name="values[make_order]" value="True">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'make order')"/>
 											</xsl:attribute>
 										</input>
 									</div>
+									<xsl:if test="count(order_template_list/options) &gt; 0">
+										<div id="quick_order_template" class="pure-control-group" style="display:none;">
+											<label>
+												<xsl:value-of select="php:function('lang', 'quick order template')"/>
+											</label>
+
+											<select id="order_template_id" name="values[order_template_id]" class="pure-input-3-4">
+												<option value="">
+													<xsl:value-of select="php:function('lang', 'select')"/>
+												</option>
+												<xsl:apply-templates select="order_template_list/options"/>
+											</select>
+										</div>
+									</xsl:if>
+
 								</xsl:when>
 							</xsl:choose>
 							<xsl:choose>

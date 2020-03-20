@@ -10755,6 +10755,13 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_template_id', array
+		(
+			'type'		=> 'int',
+			'precision' => 4,
+			'nullable'	=> True
+			)
+		);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_tts_quick_order_template', array(
@@ -10763,6 +10770,7 @@
 					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 					'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 					'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+					'mail_recipients' => array('type' => 'text', 'nullable' => True),
 					'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 					'external_project_id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
 					'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
@@ -10796,4 +10804,3 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-

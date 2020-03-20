@@ -35,7 +35,6 @@
 	{
 
 		var $fields_updated = array();
-		var $historylog;
 		private $db, $like, $join, $left_join, $account, $currentapp;
 		protected $global_lock	 = false;
 
@@ -47,7 +46,6 @@
 			$this->like			 = & $this->db->like;
 			$this->join			 = & $this->db->join;
 			$this->left_join	 = & $this->db->left_join;
-			$this->historylog	 = CreateObject('phpgwapi.historylog', $this->currentapp, 'order_template');
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
@@ -73,6 +71,7 @@
 			if($query)
 			{
 				$or_conditions[] = " {$table}.name {$this->like} '%{$query}%'";
+				$or_conditions[] = " {$table}.mail_recipients {$this->like} '%{$query}%'";
 				$or_conditions[] = " {$table}.id =" . (int) $query;
 			}
 			foreach ($filters as $key => $val)
@@ -138,6 +137,8 @@
 				{
 					$row[$field] = $this->db->f($field, true);
 				}
+				$mail_recipients		 = trim($row['mail_recipients'], ',');
+				$row['mail_recipients']	 = $mail_recipients ? explode(',', $mail_recipients) : array();
 				$row['created_on']		 = $this->db->f('created_on');
 				$row['created_by']		 = $this->db->f('created_by');
 				$row['modified_date']	 = $this->db->f('modified_date');
@@ -151,7 +152,25 @@
 				'dir' => $dir
 			);
 		}
-		
+
+		function get_list()
+		{
+			$sql	 = "SELECT id, name FROM fm_tts_quick_order_template ORDER BY name";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values	 = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' =>  $this->db->f('id'),
+					'name' =>  $this->db->f('name', true),
+				);
+			}
+			return $values;
+		}
+
+
 		function add( $values )
 		{
 			$sender = !empty($values['sender']) ? $values['sender'] : '';
@@ -243,18 +262,7 @@
 			}
 
 
-			if (isset($values['file_attachments']) && is_array($values['file_attachments']))
-			{
-				$file_attachments = array();
-				foreach ($values['file_attachments'] as $_temp)
-				{
-					if ($_temp)
-					{
-						$file_attachments[] = (int)$_temp;
-					}
-				}
-				$value_set['file_attachments'] = implode(',', $file_attachments);
-			}
+			$value_set['mail_recipients'] = $this->organize_mail_recipients($values);
 
 			$this->db->transaction_begin();
 
@@ -286,6 +294,8 @@
 				$stripslashes = !in_array($field_info['type'], array('int'));
 				$values[$field] = $this->db->f($field, $stripslashes);
 			}
+			$mail_recipients			 = trim($values['mail_recipients'], ',');
+			$values['mail_recipients']	 = $mail_recipients ? explode(',', $mail_recipients) : array();
 			$values['created_on']		 = $this->db->f('created_on');
 			$values['created_by']		 = $this->db->f('created_by');
 
@@ -311,6 +321,53 @@
 			return $values;
 		}
 
+		function organize_mail_recipients( $values )
+		{
+			$value_string	 = '';
+			$mail_recipients = array();
+			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+
+				foreach ($values['mail_recipients'] as $_temp)
+				{
+					if ($_temp)
+					{
+						$_temp = str_replace(array(' ', '&amp;#59;', '&#59;', ';'), array('', ',',
+							',', ','), $_temp);
+						if (preg_match('/,/', $_temp))
+						{
+							$mail_recipients = array_merge($mail_recipients, explode(',', $_temp));
+						}
+						else
+						{
+							$mail_recipients[] = $_temp;
+						}
+					}
+				}
+				unset($_temp);
+
+				$vendor_email	 = array();
+				$validator		 = CreateObject('phpgwapi.EmailAddressValidator');
+				foreach ($mail_recipients as $_temp)
+				{
+					if ($_temp)
+					{
+						if ($validator->check_email_address($_temp))
+						{
+							$vendor_email[] = $_temp;
+						}
+						else
+						{
+							phpgwapi_cache::message_set(lang('%1 is not a valid address', $_temp), 'error');
+						}
+					}
+				}
+				$value_string = implode(',', $vendor_email);
+				unset($_temp);
+			}
+			return $value_string;
+		}
+
 		function get_fields()
 		{
 			$fields = array(
@@ -321,6 +378,7 @@
 					'hidden'	 => false,
 					'public'	 => true,
 					'required'	 => false,
+					'formatter' => 'JqueryPortico.formatLink'
 				),
 				'name'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'string',
@@ -339,11 +397,19 @@
 					'required'	 => false,
 				),
 				'contract_id'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type'		 => 'int',
+					'type'		 => 'string',
 					'label'		 => 'contract',
 					'sortable'	 => false,
 					'query'		 => false,
 					'public'	 => true,
+					'required'	 => false,
+				),
+				'mail_recipients'	 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type'		 => 'string',
+					'label'		 => 'mail recipients',
+					'sortable'	 => false,
+					'query'		 => true,
+					'public'	 => false,
 					'required'	 => false,
 				),
 				'tax_code'			 => array('action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

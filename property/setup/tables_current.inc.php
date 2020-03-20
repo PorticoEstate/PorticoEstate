@@ -1219,7 +1219,8 @@
 				'external_ticket_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'document_required' => array('type' =>	'int', 'precision' => 4, 'nullable' => True),
 				'handyman_checklist_id' => array('type' => 'int','precision' => 8, 'nullable' => true),
-				'handyman_order_number' => array('type' =>	'int', 'precision' => 8, 'nullable' => true)
+				'handyman_order_number' => array('type' =>	'int', 'precision' => 8, 'nullable' => true),
+				'order_template_id' => array('type' =>	'int', 'precision' => 4, 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1281,6 +1282,7 @@
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
+				'mail_recipients' => array('type' => 'text', 'nullable' => True),
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'external_project_id' => array('type' => 'varchar', 'precision' => '10', 'nullable' => True),
 				'unspsc_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
