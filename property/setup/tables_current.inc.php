@@ -1212,6 +1212,7 @@
 				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'payment_info' => array('type' => 'text', 'nullable' => True),
 				'continuous' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'order_deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
