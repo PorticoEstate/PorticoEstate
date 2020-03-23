@@ -246,9 +246,9 @@
 				array('id' => 4, 'name' => 'Hentes hos leverandør', 'selected' => $values['delivery_type'] == 4 ? 1 : 0),
 				);
 			$payment_type_list = array(
-				array('id' => 1, 'name' => 'Ordrenr', 'selected' => $values['delivery_type'] == 1 ? 1 : 0),
-				array('id' => 2, 'name' => 'Ressursnr', 'selected' => $values['delivery_type'] == 2 ? 1 : 0),
-				array('id' => 3, 'name' => 'Privat leietaker', 'selected' => $values['delivery_type'] == 3 ? 1 : 0),
+				array('id' => 1, 'name' => 'Ordrenr', 'selected' => $values['payment_type'] == 1 ? 1 : 0),
+				array('id' => 2, 'name' => 'Ressursnr', 'selected' => $values['payment_type'] == 2 ? 1 : 0),
+				array('id' => 3, 'name' => 'Privat leietaker', 'selected' => $values['payment_type'] == 3 ? 1 : 0),
 			);
 
 

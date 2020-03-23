@@ -273,7 +273,7 @@
 									</div>
 								</div>
 
-								
+
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -1123,6 +1123,28 @@
 										</div>
 									</xsl:if>
 									<div class="pure-control-group">
+										<label for="delivery_address">
+											<xsl:value-of select="php:function('lang', 'delivery address')"/>
+										</label>
+										<textarea  class="pure-input-3-4" rows="6" id="delivery_address" name="values[delivery_address]">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'delivery address')"/>
+											</xsl:attribute>
+											<xsl:value-of select="value_delivery_address"/>
+										</textarea>
+									</div>
+									<div class="pure-control-group">
+										<label for="delivery_address">
+											<xsl:value-of select="php:function('lang', 'payment info')"/>
+										</label>
+										<textarea  class="pure-input-3-4" rows="6" id="payment_info" name="values[payment_info]">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'payment info')"/>
+											</xsl:attribute>
+											<xsl:value-of select="value_payment_info"/>
+										</textarea>
+									</div>
+									<div class="pure-control-group">
 										<label>
 											<a href="javascript:template_lookup()">
 												<xsl:attribute name="title">
@@ -1225,6 +1247,14 @@
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 															</xsl:attribute>
+															<xsl:if test="budgets_data =''">
+																<xsl:attribute name="data-validation">
+																	<xsl:text>required</xsl:text>
+																</xsl:attribute>
+																<xsl:attribute name="data-validation-error-msg">
+																	<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+																</xsl:attribute>
+															</xsl:if>
 														</input>
 													</td>
 													<td>

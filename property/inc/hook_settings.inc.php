@@ -333,7 +333,7 @@
 	$default .= "\n";
 	$default .= "\n" . '__contact_block__';
 	$default .= "\n";
-	$default .= "\n" . '[b]Faktura må merkes med ordrenummer: __order_id__ og ressursnr.: __ressursnr__[/b]';
+	$default .= "\n" . '[b]__order_payment_info__[/b]';
 	$default .= "\n";
 	$default .= "\n" . 'Med hilsen';
 	$default .= "\n" . '__user_name__';
@@ -341,7 +341,7 @@
 	$default .= "\n" . '__user_email__';
 	$default .= "\n" . '__organisation__';
 
-	create_text_area('order email', 'order_email_template', 10, 60, '', $default);
+	create_text_area('order email', 'order_email_template', 10, 60, '__vendor_name__,__organisation__, __ressursnr__ , __location__,__order_description__, __contact_block__, __user_name__, __user_phone__, __user_email__  ', $default);
 
 
 	$default_block_1 = '';
@@ -351,7 +351,7 @@
 	$default_block_1 .= "\n" . '__contact_email__';
 	$default_block_1 .= "\n" . '__contact_phone__';
 
-	create_text_area('contact block 1', 'order_contact_block_1', 10, 60, '', $default_block_1);
+	create_text_area('contact block 1', 'order_contact_block_1', 10, 60, '__contact_name__, __contact_email__, __contact_phone__', $default_block_1);
 
 
 	$default_block_2 = '';
@@ -363,5 +363,8 @@
 	$default_block_2 .= "\n" . 'blir kontaktet minst 1 dag i forkant av oppdrag';
 
 
+	create_text_area('contact block 2', 'order_contact_block_2', 10, 60, '__contact_name__, __contact_email__, __contact_phone__, __contact_name2__, __contact_email2__, __contact_phone2__', $default_block_2);
 
-	create_text_area('contact block 2', 'order_contact_block_2', 10, 60, '', $default_block_2);
+	$default_payment_info = 'Faktura må merkes med ordrenummer: __order_id__ og ressursnr.: __ressursnr__';
+
+	create_text_area('payment info', 'order_payment_info', 10, 60, '__order_id__, __ressursnr__', $default_payment_info);

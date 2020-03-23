@@ -3263,6 +3263,97 @@ HTML;
 //				),
 			);
 
+			$delivery_address = '';
+			$payment_info = '';
+			if($ticket['order_template_id'])
+			{
+				$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
+
+
+//				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
+//				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
+
+				switch ($order_template['delivery_type'])
+				{
+					case '1':
+						$delivery_address = "Leveransen sendes Bergen kommune\n"
+						. "etat for boligforvalning\n"
+						. "Postboks 7700\n"
+						. "5020 Bergen";
+						break;
+					case '2':
+						$delivery_address = "Leveransen sendes Bergen kommune\n...";
+						break;
+					case '3':
+						$delivery_address = "Leveransen sendes til privat leietaker\n...";
+						break;
+					case '4':
+						$delivery_address = "Hentes hos leverandør";
+						break;
+
+					default:
+						break;
+				}
+				switch ($order_template['payment_type'])
+				{
+					case '2':
+						$payment_info = 'Fakturaen sendes Bergen kommune, ressursnr ....';
+						break;
+					case '3':
+						$payment_info = 'Fakturaen sendes privat leietaker: ...';
+						break;
+
+					default:
+						break;
+				}
+			}
+
+
+			if(!$delivery_address)
+			{
+				$solocation	 = createObject('property.solocation');
+				$delivery_address	 = $solocation->get_location_address($ticket['location_code']) . "\n";
+
+				$address_element = $this->bo->get_address_element($ticket['location_code']);
+
+				foreach ($address_element as $address_entry)
+				{
+					$delivery_address .= "\n{$address_entry['text']}: {$address_entry['value']}";
+				}
+
+				$district_name = $solocation->get_district_name($ticket['location_code']);
+
+				$delivery_address .= "\nSone: {$district_name}";
+			}
+
+
+			$delivery_address = $values['delivery_address'] ? $values['delivery_address'] : $delivery_address;
+
+			if (!$delivery_address && !empty($location_data['loc1']))
+			{
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
+			}
+
+
+
+
+			if(!$payment_info && $GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
+			{
+				$payment_info = str_replace(
+					array(
+						'__ressursnr__',
+						'__order_id__',
+					),
+					array(
+						$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
+						$ticket['order_id']
+					),
+					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info']
+					);
+			}
+			
+			$payment_info = $ticket['payment_info'] ? $ticket['payment_info'] : $payment_info;
+
 			$data = array(
 				'datatable_def'					 => $datatable_def,
 				'relation_type_list'			 => array('options' => $relation_type_list),
@@ -3384,6 +3475,9 @@ HTML;
 				'multi_upload_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file','id' => $id)),
 				'order_read'					 => $order_read,
 				'order_template_list'			 => array('options' => createObject('property.soorder_template')->get_list()),
+				'value_delivery_address'		 => $delivery_address,
+				'value_payment_info'			 => $payment_info,
+				'budgets_data'					 =>	$budgets
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3683,7 +3777,12 @@ HTML;
 			$solocation = createObject('property.solocation');
 
 			$delivery_address = lang('delivery address') . ':';
-			if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+
+			if($ticket['delivery_address'])
+			{
+				$delivery_address = "\n{$ticket['delivery_address']}";
+			}
+			else if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
 			{
 				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
 			}
@@ -3696,11 +3795,10 @@ HTML;
 				{
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
+				$district_name = $solocation->get_district_name($ticket['location_code']);
+
+				$delivery_address .= "\nSone: {$district_name}";
 			}
-
-			$district_name = $solocation->get_district_name($ticket['location_code']);
-
-			$delivery_address .= "\nSone: {$district_name}";
 
 			$data = array
 				(
@@ -3904,7 +4002,28 @@ HTML;
 			}
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
+
+			if($ticket['payment_info'])
+			{
+				$payment_info = $ticket['payment_info'];
+			}
+			else
+			{
+				$payment_info = str_replace(
+					array(
+						'__ressursnr__',
+						'__order_id__',
+					),
+					array(
+						$ressursnr,
+						$order_id
+					),
+					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info']
+					);
+			}
+
+//			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
+			$pdf->ezText($payment_info, 14);
 			$pdf->selectFont('Helvetica');
 			if ($content)
 			{
@@ -4036,21 +4155,28 @@ HTML;
 				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-//			$location = $ticket['address'];
 
-			$solocation	 = createObject('property.solocation');
-			$location	 = $solocation->get_location_address($ticket['location_code']) . '<br>';
 
-			$address_element = $this->bo->get_address_element($ticket['location_code']);
-
-			foreach ($address_element as $address_entry)
+			if($ticket['delivery_address'])
 			{
-				$location .= "<br>{$address_entry['text']}: {$address_entry['value']}";
+				$delivery_address = nl2br($ticket['delivery_address']);
 			}
+			else
+			{
+				$solocation	 = createObject('property.solocation');
+				$delivery_address	 = $solocation->get_location_address($ticket['location_code']) . '<br>';
 
-			$district_name = $solocation->get_district_name($ticket['location_code']);
+				$address_element = $this->bo->get_address_element($ticket['location_code']);
 
-			$location .= "<br>Sone: {$district_name}";
+				foreach ($address_element as $address_entry)
+				{
+					$delivery_address .= "<br>{$address_entry['text']}: {$address_entry['value']}";
+				}
+
+				$district_name = $solocation->get_district_name($ticket['location_code']);
+
+				$delivery_address .= "<br>Sone: {$district_name}";
+			}
 
 			$order_description = $ticket['order_descr'];
 
@@ -4191,7 +4317,7 @@ HTML;
 				. "</td>";
 			$body		 .= "</tr>";
 			$body		 .= "<tr>";
-			$body		 .= "<td colspan=2>" . lang('delivery address') . ":<br/>{$location}</td>";
+			$body		 .= "<td colspan=2>" . lang('delivery address') . ":<br/>{$delivery_address}</td>";
 			$body		 .= "</tr>";
 			$body		 .= "<tr>";
 			$body		 .= "<td valign='top'>" . lang('to') . ":<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
@@ -4255,6 +4381,25 @@ HTML;
 				$important_imformation .= "\n" . implode("\n", $important_imformation_arr);
 			}
 
+			if($ticket['payment_info'])
+			{
+				$payment_info = nl2br($ticket['payment_info']);
+			}
+			else
+			{
+				$payment_info = nl2br2(str_replace(
+					array(
+						'__ressursnr__',
+						'__order_id__',
+					),
+					array(
+						$ressursnr,
+						$order_id
+					),
+					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
+					);
+			}
+
 			$body .= '<br/>' . nl2br(str_replace(array
 					(
 					'__vendor_name__',
@@ -4263,6 +4408,7 @@ HTML;
 					'__user_phone__',
 					'__user_email__',
 					'__ressursnr__',
+					'__payment_info__',
 					'__location__',
 					'__order_description__',
 					'__deadline_block__',
@@ -4282,7 +4428,8 @@ HTML;
 					$user_phone,
 					$user_email,
 					$ressursnr,
-					$location,
+					$payment_info,
+					$delivery_address,
 					$order_description,
 					$deadline_block,
 					$important_imformation,
