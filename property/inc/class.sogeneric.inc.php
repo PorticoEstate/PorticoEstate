@@ -935,6 +935,62 @@
 					);
 					break;
 
+				case 'order_template_delivery_type':
+					$info	 = array
+						(
+						'table'			 => 'fm_tts_quick_order_template_delivery_type',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array
+							(
+							array
+								(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array
+								(
+								'name'	 => 'descr',
+								'descr'	 => lang('descr'),
+								'type'	 => 'text'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('delivery type'),
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::accounting::quick_order_delivery_type'
+					);
+					break;
+				case 'order_template_payment_type':
+					$info	 = array
+						(
+						'table'			 => 'fm_tts_quick_order_template_payment_type',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array
+							(
+							array
+								(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array
+								(
+								'name'	 => 'descr',
+								'descr'	 => lang('descr'),
+								'type'	 => 'text'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('payment type'),
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::accounting::quick_order_payment_type'
+					);
+					break;
 				//-------- ID type varchar
 				case 'external_project':
 					$info	 = array

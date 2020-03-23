@@ -393,7 +393,19 @@
 						'text'	 => lang('Accounting voucher type'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type'		 => 'voucher_type'))
-					)
+					),
+					'quick_order_delivery_type'			 => array
+						(
+						'text'	 => lang('delivery type'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'order_template_delivery_type'))
+					),
+					'order_template_payment_type'	=> array
+						(
+						'text'	 => lang('payment type'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'order_template_payment_type'))
+					),
 				);
 
 				$admin_children_agreement = array
