@@ -1784,7 +1784,7 @@
 					$ticket['tax_code']				 = $order_template['tax_code'];
 					$ticket['building_part']		 = $order_template['building_part'];
 					$ticket['order_dim1']			 = $order_template['order_dim1'];
-
+					$ticket['order_cat_id']			 = $order_template['order_cat_id'];
 				}
 			}
 

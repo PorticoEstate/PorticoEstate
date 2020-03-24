@@ -491,6 +491,53 @@ function populateTableChkApproval(ecodimb)
 $(document).ready(function ()
 {
 
+	$.formUtils.addValidator({
+		name: 'category',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var validatet_category = $('#validatet_category').val();
+			if(validatet_category ==1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		errorMessage: 'Ugyldig kategori',
+		errorMessageKey: ''
+	});
+
+	$("#order_cat_id").change(function ()
+	{
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					if (data.active != 1 || data.is_node === false)
+					{
+						alert('Denne kan ikke velges');
+						$('#order_cat_id').prop('selectedIndex', 0);
+						$('#validatet_category').val('');
+					}
+					else
+					{
+						$('#validatet_category').val(1);
+					}
+				}
+			}
+		});
+	});
+
 	var test = document.getElementById('send_order_button');
 	if (test == null)
 	{

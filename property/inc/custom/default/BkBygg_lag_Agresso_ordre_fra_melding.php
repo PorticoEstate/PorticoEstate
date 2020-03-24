@@ -41,11 +41,14 @@
 	class lag_agresso_ordre_fra_melding
 	{
 
-		var $debug = true;
+		var $debug = false;
 
 		function __construct()
 		{
-
+			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$this->cats->supress_info	 = true;
+			$config						 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->debug				 = empty($config->config_data['export']['activate_transfer']) ? true : false;
 		}
 
 		public function transfer( $id )
@@ -55,6 +58,9 @@
 			{
 				return 2;
 			}
+
+			$config			 = CreateObject('phpgwapi.config', 'property');
+			$config->read();
 
 			$price	 = 0;
 			$budgets = ExecMethod('property.botts.get_budgets', $id);
@@ -166,15 +172,34 @@
 					break;
 			}
 
-			if ($_ticket['order_dim1'])
+			$collect_building_part = false;
+			if (isset($config->config_data['workorder_require_building_part']))
 			{
-				$sogeneric		 = CreateObject('property.sogeneric', 'order_dim1');
-				$sogeneric_data	 = $sogeneric->read_single(array('id' => $_ticket['order_dim1']));
-				if ($sogeneric_data)
+				if ($config->config_data['workorder_require_building_part'] == 1)
 				{
-					$dim6 = "{$_ticket['building_part']}{$sogeneric_data['num']}";
+					$collect_building_part = true;
 				}
 			}
+			if ($collect_building_part)
+			{
+				if ($_ticket['order_dim1'])
+				{
+					$sogeneric		 = CreateObject('property.sogeneric', 'order_dim1');
+					$sogeneric_data	 = $sogeneric->read_single(array('id' => $_ticket['order_dim1']));
+					if ($sogeneric_data)
+					{
+						$dim6 = "{$_ticket['building_part']}{$sogeneric_data['num']}";
+					}
+				}
+			}
+			else
+			{
+				$category		 = $this->cats->return_single($_ticket['order_cat_id']);
+				$category_arr	 = explode('-', $category[0]['name']);
+				$dim6			 = (int)trim($category_arr[0]);
+			}
+
+
 			/*
 			  P3: EBF Innkjøpsordre Portico : 45000000-45249999
 			  V3: EBF Varemotttak Portico   : 45500000-45749999

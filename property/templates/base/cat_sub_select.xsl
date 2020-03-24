@@ -2,13 +2,14 @@
 <!-- $Id$ -->
 <xsl:template name="cat_sub_select">
 	<xsl:param name="class" />
+	<xsl:param name="id" />
 	<xsl:variable name="lang_cat_sub_statustext">
 		<xsl:value-of select="lang_cat_sub_statustext"/>
 	</xsl:variable>
 	<xsl:variable name="cat_sub_name">
 		<xsl:value-of select="cat_sub_name"/>
 	</xsl:variable>
-	<select id = "global_category_id" name="{$cat_sub_name}"  title="{$lang_cat_sub_statustext}" class="pure-input-1-2">
+	<select name="{$cat_sub_name}"  title="{$lang_cat_sub_statustext}" class="pure-input-1-2">
 		<xsl:attribute name="data-validation">
 			<xsl:text>category</xsl:text>
 		</xsl:attribute>
@@ -21,6 +22,18 @@
 			<xsl:otherwise>
 				<xsl:attribute name="class">
 					<xsl:text>pure-input-1-2</xsl:text>
+				</xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="$id !=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="$id"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="id">
+					<xsl:text>global_category_id</xsl:text>
 				</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>

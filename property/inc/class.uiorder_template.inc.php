@@ -328,12 +328,11 @@
 					))),
 				'enable_unspsc'					=> !empty($this->config['enable_unspsc']) ? true : false,
 				'value_unspsc_code_name'		=> $this->bocommon->get_unspsc_code_name($values['unspsc_code']),
-				'lang_cat_sub'							 => lang('category'),
-				'cat_sub_list'							 => $this->bocommon->select_list($selected_cat, $cat_sub),
-				'cat_sub_name'							 => 'order_cat_id',
-				'lang_cat_sub_statustext'				 => lang('select sub category'),
-				'validatet_category'					 => $validatet_category,
-
+				'lang_cat_sub'					=> lang('category'),
+				'cat_sub_list'					=> $this->bocommon->select_list($selected_cat, $cat_sub),
+				'cat_sub_name'					=> 'order_cat_id',
+				'lang_cat_sub_statustext'		=> lang('select sub category'),
+				'validatet_category'			=> $validatet_category,
 
 //				'branch_list'			 => !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) ? array
 //					(
