@@ -238,22 +238,8 @@
 				'link'	 => '#main'
 			);
 
-
-			$delivery_type_list = array(
-				array('id' => 1, 'name' => 'Til etaten', 'selected' => $values['delivery_type'] == 1 ? 1 : 0),
-				array('id' => 2, 'name' => 'Til ekstern, kommunal avdeling', 'selected' => $values['delivery_type'] == 2 ? 1 : 0),
-				array('id' => 3, 'name' => 'Til privat leietaker', 'selected' => $values['delivery_type'] == 3 ? 1 : 0),
-				array('id' => 4, 'name' => 'Hentes hos leverandør', 'selected' => $values['delivery_type'] == 4 ? 1 : 0),
-				);
-			$payment_type_list = array(
-				array('id' => 1, 'name' => 'Ordrenr', 'selected' => $values['payment_type'] == 1 ? 1 : 0),
-				array('id' => 2, 'name' => 'Ressursnr', 'selected' => $values['payment_type'] == 2 ? 1 : 0),
-				array('id' => 3, 'name' => 'Privat leietaker', 'selected' => $values['payment_type'] == 3 ? 1 : 0),
-			);
-
-
-//			array_unshift($delivery_type_list, array('id' => '', 'name' => lang('select')));
-//			array_unshift($payment_type_list, array('id' => '', 'name' => lang('select')));
+			$delivery_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $values['delivery_type']));
+			$payment_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $values['payment_type']));
 
 			$_filter_buildingpart	 = array();
 			$filter_buildingpart	 = isset($this->config['filter_buildingpart']) ? $this->config['filter_buildingpart'] : array();
@@ -263,6 +249,39 @@
 				$_filter_buildingpart = array("filter_{$filter_key}" => 1);
 			}
 
+			$cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$cats->supress_info	 = true;
+
+			$_cat_sub	= $cats->return_sorted_array(0, false, '', '', '', false, false);
+
+			$selected_cat		 = $values['order_cat_id'] ? $values['order_cat_id'] : 0;
+			$validatet_category	 = '';
+			$cat_sub			 = array();
+			foreach ($_cat_sub as $entry)
+			{
+				if ($entry['active'] == 2 && $entry['id'] != $selected_cat)//hidden
+				{
+					continue;
+				}
+
+				if (!$validatet_category)
+				{
+					if ($entry['active'] && $entry['id'] == $selected_cat)
+					{
+						$_category = $cats->return_single($entry['id']);
+						if ($_category[0]['is_node'])
+						{
+							$validatet_category = 1;
+						}
+					}
+				}
+				$entry['name']	 = str_repeat(' . ', (int)$entry['level']) . $entry['name'];
+				$entry['title']	 = $entry['description'];
+				$cat_sub[]		 = $entry;
+			}
+
+			array_unshift($cat_sub, array('id' => '', 'name' => lang('category')));
+		
 			$data = array(
 				'values'					 =>$values,
 				'value_external_project_name' => $this->bocommon->get_external_project_name($values['external_project_id']),
@@ -309,6 +328,12 @@
 					))),
 				'enable_unspsc'					=> !empty($this->config['enable_unspsc']) ? true : false,
 				'value_unspsc_code_name'		=> $this->bocommon->get_unspsc_code_name($values['unspsc_code']),
+				'lang_cat_sub'							 => lang('category'),
+				'cat_sub_list'							 => $this->bocommon->select_list($selected_cat, $cat_sub),
+				'cat_sub_name'							 => 'order_cat_id',
+				'lang_cat_sub_statustext'				 => lang('select sub category'),
+				'validatet_category'					 => $validatet_category,
+
 
 //				'branch_list'			 => !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) ? array
 //					(
@@ -323,7 +348,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript($this->currentapp, 'portico', 'order_template.edit.js');
-			self::render_template_xsl(array('order_template', 'datatable_inline'), array(
+			self::render_template_xsl(array('order_template', 'datatable_inline', 'cat_sub_select'), array(
 				'edit' => $data));
 		}
 

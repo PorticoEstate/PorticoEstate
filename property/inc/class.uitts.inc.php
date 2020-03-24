@@ -3268,46 +3268,38 @@ HTML;
 			if($ticket['order_template_id'])
 			{
 				$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
+				$delivery_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'fields' => array('descr')));
+				$payment_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'fields' => array('descr')));
 
 
 //				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
 //				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
 
-				switch ($order_template['delivery_type'])
+				foreach ($delivery_type_list as $delivery_type)
 				{
-					case '1':
-						$delivery_address = "Leveransen sendes Bergen kommune\n"
-						. "etat for boligforvalning\n"
-						. "Postboks 7700\n"
-						. "5020 Bergen";
-						break;
-					case '2':
-						$delivery_address = "Leveransen sendes Bergen kommune\n...";
-						break;
-					case '3':
-						$delivery_address = "Leveransen sendes til privat leietaker\n...";
-						break;
-					case '4':
-						$delivery_address = "Hentes hos leverandør";
-						break;
-
-					default:
-						break;
+					if($delivery_type['id'] == $order_template['delivery_type'])
+					{
+						$delivery_address = $delivery_type['descr'];
+					}
 				}
-				switch ($order_template['payment_type'])
+				foreach ($payment_type_list as $payment_type)
 				{
-					case '2':
-						$payment_info = 'Fakturaen sendes Bergen kommune, ressursnr ....';
-						break;
-					case '3':
-						$payment_info = 'Fakturaen sendes privat leietaker: ...';
-						break;
-
-					default:
-						break;
+					if($payment_type['id'] == $order_template['payment_type'])
+					{
+						$payment_info = str_replace(
+							array(
+								'__ressursnr__',
+								'__order_id__',
+							),
+							array(
+								$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
+								$ticket['order_id']
+							),
+							$payment_type['descr']
+						);
+					}
 				}
 			}
-
 
 			if(!$delivery_address)
 			{
@@ -3333,9 +3325,6 @@ HTML;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
-
-
-
 
 			if(!$payment_info && $GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
 			{

@@ -87,21 +87,55 @@ window.on_vendor_updated = function ()
 };
 
 
-this.preview = function (id)
-{
-	var oArgs = {menuaction: 'property.uiexternal_communication.view', id: id, preview_html: true};
-	var strURL = phpGWLink('index.php', oArgs);
-	Window1 = window.open(strURL, 'Search', "left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-};
-
 $(document).ready(function ()
 {
-	var do_preview = $("#do_preview").val();
+	$.formUtils.addValidator({
+		name: 'category',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var validatet_category = $('#validatet_category').val();
+			if(validatet_category ==1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		errorMessage: 'Ugyldig kategori',
+		errorMessageKey: ''
+	});
 
-	if (do_preview)
+	$("#global_category_id").change(function ()
 	{
-		preview(do_preview);
-	}
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					if (data.active != 1 || data.is_node === false)
+					{
+						alert('Denne kan ikke velges');
+						$('#global_category_id').prop('selectedIndex', 0);
+						$('#validatet_category').val('');
+					}
+					else
+					{
+						$('#validatet_category').val(1);
+					}
+				}
+			}
+		});
+	});
 });
 
 var oArgs = {menuaction: 'property.uitts.get_eco_service'};
@@ -123,96 +157,4 @@ JqueryPortico.autocompleteHelper(strURL, 'external_project_name', 'external_proj
 var oArgs = {menuaction: 'property.uitts.get_unspsc_code'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'unspsc_code_container');
-
-
-$(window).on('load', function()
-{
-
-	$("#location_name").on("autocompleteselect", function (event, ui)
-	{
-		var location_code = ui.item.value;
-
-		if (location_code !== location_code_selection)
-		{
-			location_code_selection = location_code;
-
-			var temp = document.getElementById("new_note").value;
-			if (temp)
-			{
-				temp = temp + "\n";
-			}
-			document.getElementById("new_note").value = temp + "Lokalisering: " + ui.item.label;
-		}
-
-		var vendor_id = $("#vendor_id").val();
-		if (vendor_id && location_code)
-		{
-			get_other_orders(location_code, vendor_id);
-			get_other_deviations(location_code, vendor_id);
-
-		}
-	});
-
-
-});
-
-$(document).ready(function ()
-{
-
-	//$("#datatable-container_2 tr").on("click", function (e)
-	$("#datatable-container_2 tbody").on('click', 'tr', function ()
-	{
-		var order_id = $('td', this).eq(0).text();
-		var temp = document.getElementById("new_note").value;
-		if (temp)
-		{
-			temp = temp + "\n";
-		}
-		document.getElementById("new_note").value = temp + "Bestilling: " + order_id;
-
-	});
-
-	$("#type_id").change(function ()
-	{
-		var temp = document.getElementById("new_note").value;
-		if (temp)
-		{
-			temp = temp + "\n";
-		}
-		document.getElementById("new_note").value = temp + "Type: " + $( "#type_id option:selected" ).text();;
-	});
-
-	$("#vendor_contract_id").change(function ()
-	{
-		var vendor_contract_id = $("#vendor_contract_id").val();
-		if(!vendor_contract_id || vendor_contract_id == -1)
-		{
-			return;
-		}
-
-		var temp = document.getElementById("new_note").value;
-		if (temp)
-		{
-			temp = temp + "\n";
-		}
-		document.getElementById("new_note").value = temp + "Kontrakt: " + vendor_contract_id;
-	});
-
-
-});
-
-
-this.get_other_orders = function (location_code, vendor_id)
-{
-	var oArgs = {menuaction:'property.uiworkorder.get_other_orders',location_code:location_code,vendor_id:vendor_id};
-	var strURL = phpGWLink('index.php', oArgs, true);
-	JqueryPortico.updateinlineTableHelper('datatable-container_2', strURL);
-};
-
-this.get_other_deviations = function (location_code, vendor_id)
-{
-	var oArgs = {menuaction:'property.uiexternal_communication.get_other_deviations',location_code:location_code,vendor_id:vendor_id};
-	var strURL = phpGWLink('index.php', oArgs, true);
-	JqueryPortico.updateinlineTableHelper('datatable-container_3', strURL);
-};
 

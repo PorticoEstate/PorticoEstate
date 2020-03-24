@@ -400,7 +400,7 @@
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type'		 => 'order_template_delivery_type'))
 					),
-					'order_template_payment_type'	=> array
+					'quick_order_payment_type'	=> array
 						(
 						'text'	 => lang('payment type'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
