@@ -1642,7 +1642,7 @@
 						'name'			 => lang('service'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.b_account',
-						'menu_selection' => 'property::economy::eco_service',
+						'menu_selection' => 'admin::property::accounting::eco_service',
 						'check_grant'	 => false
 					);
 					break;
