@@ -1390,9 +1390,8 @@
 											<xsl:value-of select="php:function('lang', 'send order')"/>
 										</label>
 										<table class="pure-table pure-u-md-3-4">
-											<thead>
 												<tr>
-													<th>
+													<td>
 														<select name="values[send_order_format]">
 															<xsl:attribute name="title">
 																<xsl:value-of select="php:function('lang', 'format')"/>
@@ -1404,9 +1403,8 @@
 																<xsl:text>PDF</xsl:text>
 															</option>
 														</select>
-													</th>
+													</td>
 												</tr>
-											</thead>
 											<tbody>
 												<tr>
 													<td>
@@ -1451,7 +1449,7 @@
 											<xsl:apply-templates select="status_list/options"/>
 										</select>
 									</div>
-									<div class="pure-control-group">
+<!--									<div class="pure-control-group">
 										<label for="name">
 											<xsl:value-of select="php:function('lang', 'order received')"/>
 										</label>
@@ -1483,9 +1481,13 @@
 											</table>
 										</div>
 										<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
-									</div>
+									</div>-->
 
 									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'invoice')"/>
+										</label>
+
 										<div class="pure-custom">
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_7'">
