@@ -10804,3 +10804,89 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	*
+	* Update property version from 0.9.17.743 to 0.9.17.744
+	*
+	*/
+	$test[] = '0.9.17.743';
+	function property_upgrade0_9_17_743()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'payment_info', array
+		(
+			'type'		=> 'text',
+			'nullable'	=> True
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.744';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	*
+	* Update property version from 0.9.17.744 to 0.9.17.745
+	*
+	*/
+	$test[] = '0.9.17.744';
+	function property_upgrade0_9_17_744()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_quick_order_template_delivery_type', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_tts_quick_order_template_payment_type', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+					'descr' => array('type' => 'text', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'ix' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		$sql =	"ALTER TABLE public.fm_tts_quick_order_template
+		ADD CONSTRAINT fm_tts_quick_order_template_delivery_type_fkey FOREIGN KEY (delivery_type)
+		REFERENCES public.fm_tts_quick_order_template_delivery_type (id) MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$sql =	"ALTER TABLE public.fm_tts_quick_order_template
+			ADD CONSTRAINT fm_tts_quick_order_template_payment_type_fkey FOREIGN KEY (payment_type)
+			REFERENCES public.fm_tts_quick_order_template_payment_type (id) MATCH SIMPLE
+			ON UPDATE NO ACTION
+			ON DELETE NO ACTION";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.745';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

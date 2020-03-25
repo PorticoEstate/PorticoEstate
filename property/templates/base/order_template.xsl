@@ -21,6 +21,7 @@
 			</xsl:variable>
 
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned" enctype="multipart/form-data">
+				<input type="hidden" name='validatet_category' id="validatet_category" value="{validatet_category}"/>
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
@@ -210,7 +211,7 @@
 								<xsl:apply-templates select="building_part_list/options"/>
 							</select>
 						</div>
-<!--						<xsl:choose>
+						<!--						<xsl:choose>
 							<xsl:when test="branch_list!=''">
 								<div class="pure-control-group">
 									<label>
@@ -276,6 +277,16 @@
 								</select>
 							</div>
 						</xsl:if>
+
+						<div class="pure-control-group">
+							<label for="name">
+								<xsl:value-of select="php:function('lang', 'category')"/>
+							</label>
+							<xsl:call-template name="cat_sub_select">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
+						</div>
+
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'order text')"/>

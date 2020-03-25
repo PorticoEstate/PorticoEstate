@@ -2411,3 +2411,4 @@ The budget for project %1 must be at least %2	property	no	Budsjettet for prosjek
 quick order template	property	no	Mal for hurtigbestilling
 delivery type	property	no	Leveringsmetode
 payment type	property	no	Betalingstype
+payment info	property	no	Fakturainformasjon

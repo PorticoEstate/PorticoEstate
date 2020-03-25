@@ -1012,6 +1012,8 @@
 				$file_attachments				 = trim($this->db->f('file_attachments'), ',');
 				$ticket['file_attachments']		 = $file_attachments ? explode(',', $file_attachments) : array();
 				$ticket['order_template_id']	 = $this->db->f('order_template_id');
+				$ticket['delivery_address']		 = $this->db->f('delivery_address', true);
+				$ticket['payment_info']			 = $this->db->f('payment_info', true);
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1782,7 +1784,7 @@
 					$ticket['tax_code']				 = $order_template['tax_code'];
 					$ticket['building_part']		 = $order_template['building_part'];
 					$ticket['order_dim1']			 = $order_template['order_dim1'];
-
+					$ticket['order_cat_id']			 = $order_template['order_cat_id'];
 				}
 			}
 
@@ -1905,6 +1907,8 @@
 				$value_set['continuous']			 = $ticket['continuous'];
 				$value_set['order_deadline']		 = $ticket['order_deadline'];// delete value if empty
 				$value_set['order_deadline2']		 = $ticket['order_deadline2'];// delete value if empty
+				$value_set['delivery_address']		 = $this->db->db_addslashes($ticket['delivery_address']);
+				$value_set['payment_info']			 = $this->db->db_addslashes($ticket['payment_info']);
 
 				if (!empty($ticket['invoice_remark']) && !$order_sent)
 				{

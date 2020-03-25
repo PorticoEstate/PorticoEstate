@@ -1212,6 +1212,7 @@
 				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'payment_info' => array('type' => 'text', 'nullable' => True),
 				'continuous' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'order_deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
@@ -1276,6 +1277,28 @@
 		 *	3)	Bestillinger der nøkler skal leveres enten her, hentes i «post i butikk» – eller hentes hos leverandør og betales av leietaker (privatperson)
 		 *
 		 */
+		'fm_tts_quick_order_template_delivery_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'descr' => array('type' => 'text', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_tts_quick_order_template_payment_type' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'descr' => array('type' => 'text', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_tts_quick_order_template' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
@@ -1305,7 +1328,10 @@
 			),
 			'pk' => array('id'),
 			'ix' => array(),
-			'fk' => array(),
+			'fk' => array(
+				'fm_tts_quick_order_template_delivery_type' => array('delivery_type' => 'id'),
+				'fm_tts_quick_order_template_payment_type' => array('payment_type' => 'id'),
+				),
 			'uc' => array()
 		),
 		'fm_tts_external_communication_type' => array(
