@@ -306,57 +306,6 @@
 						</div>
 
 						<div class="pure-control-group">
-							<xsl:variable name="lang_delivery_type">
-								<xsl:value-of select="php:function('lang', 'delivery type')"/>
-							</xsl:variable>
-							<label>
-								<xsl:value-of select="$lang_delivery_type"/>
-							</label>
-
-							<select name="delivery_type" class="pure-input-3-4" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="$lang_delivery_type"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_delivery_type"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="$lang_delivery_type"/>
-								</option>
-								<xsl:apply-templates select="delivery_type_list/options"/>
-							</select>
-						</div>
-						<div class="pure-control-group">
-							<xsl:variable name="lang_payment_type">
-								<xsl:value-of select="php:function('lang', 'payment type')"/>
-							</xsl:variable>
-							<label>
-								<xsl:value-of select="$lang_payment_type"/>
-							</label>
-
-							<select name="payment_type" class="pure-input-3-4" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="$lang_payment_type"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_payment_type"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="$lang_payment_type"/>
-								</option>
-								<xsl:apply-templates select="payment_type_list/options"/>
-							</select>
-						</div>
-
-
-
-						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>

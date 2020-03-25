@@ -507,22 +507,6 @@
 					'query'		 => false,
 					'public'	 => true,
 					'required'	 => false,
-				),
-				'delivery_type'	 => array('action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type'		 => 'int',
-					'label'		 => 'delivery type',
-					'sortable'	 => false,
-					'query'		 => false,
-					'public'	 => true,
-					'required'	 => false,
-				),
-				'payment_type'	 => array('action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type'		 => 'int',
-					'label'		 => 'payment type',
-					'sortable'	 => false,
-					'query'		 => false,
-					'public'	 => true,
-					'required'	 => false,
 				)
 			);
 
