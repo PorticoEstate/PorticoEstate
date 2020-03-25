@@ -57,7 +57,7 @@
 
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 
-			$sql = "SELECT fm_workorder.id AS order_id, fm_workorder.status,"
+			$sql = "SELECT fm_workorder.id AS order_id, fm_workorder_status.descr as status,fm_workorder.title,"
 				. " to_char(to_timestamp(fm_workorder.entry_date ),'DD/MM-YYYY') as date,"
 				. " to_char(to_timestamp(fm_workorder.entry_date ),'YYYYMMDD') as sorteringsdato,"
 				. " fm_workorder.account_id as kostnadsart,"
@@ -79,6 +79,7 @@
 			{
 				$orderserie[] = array(
 					'order_id'			 => $this->db->f('order_id'),
+					'title'				 => $this->db->f('title', true),
 					'status'			 => $this->db->f('status'),
 					'date'				 => $this->db->f('date'),
 					'kostnadsart'		 => $this->db->f('kostnadsart'),
@@ -112,6 +113,8 @@
 						<th>Ordre</th>
 						<th>Dato</th>
 						<th>Bestillingssum</th>
+						<th>Overskrift</th>
+						<th>Status</th>
 						<th>Bestiller</th>
 						<th>#</th>
 					</tr>
@@ -151,6 +154,8 @@ HTML;
 						<td>{$order_link}</td>
 						<td>{$entry['date']}</td>
 						<td>{$entry['budget']}</td>
+						<td>{$entry['title']}</td>
+						<td>{$entry['status']}</td>
 						<td>{$entry['account_lastname']}, {$entry['account_firstname']}</td>
 						<td>{$i}</td>
 					</tr>
