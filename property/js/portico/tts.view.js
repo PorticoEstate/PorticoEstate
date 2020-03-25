@@ -380,11 +380,15 @@ $(window).on('load', function ()
 		if ($(this).prop('checked'))
 		{
 			$("#quick_order_template").show(50);
+			$("#delivery_type").show(60);
+			$("#payment_type").show(70);
 
 		}
 		else
 		{
 			$("#quick_order_template").hide(50);
+			$("#delivery_type").hide(50);
+			$("#payment_type").hide(50);
 		}
 	});
 

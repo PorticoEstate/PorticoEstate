@@ -1222,6 +1222,8 @@
 				'handyman_checklist_id' => array('type' => 'int','precision' => 8, 'nullable' => true),
 				'handyman_order_number' => array('type' =>	'int', 'precision' => 8, 'nullable' => true),
 				'order_template_id' => array('type' =>	'int', 'precision' => 4, 'nullable' => true),
+				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1271,12 +1273,6 @@
 			'fk' => array('fm_tts_tickets' => array('ticket_id' => 'id')),
 			'uc' => array()
 		),
-		/*tre varianter av (nøkkel)bestillinger:
-		 *	1)	Bestillinger der nøkler leveres til etaten – og som skal betales av oss
-		 *	2)	Bestillinger der nøkler skal leveres enten her, sendes bofellesskap – eller hentes hos leverandør og betales av annen avdeling i kommunen
-		 *	3)	Bestillinger der nøkler skal leveres enten her, hentes i «post i butikk» – eller hentes hos leverandør og betales av leietaker (privatperson)
-		 *
-		 */
 		'fm_tts_quick_order_template_delivery_type' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
@@ -1317,8 +1313,6 @@
 				'building_part' => array('type' => 'varchar', 'precision' => 4, 'nullable' => True),
 				'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_descr' => array('type' => 'text', 'nullable' => True),
-				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
-				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
 				'remark' => array('type' => 'text', 'nullable' => true),
 				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
@@ -1328,10 +1322,7 @@
 			),
 			'pk' => array('id'),
 			'ix' => array(),
-			'fk' => array(
-				'fm_tts_quick_order_template_delivery_type' => array('delivery_type' => 'id'),
-				'fm_tts_quick_order_template_payment_type' => array('payment_type' => 'id'),
-				),
+			'fk' => array(),
 			'uc' => array()
 		),
 		'fm_tts_external_communication_type' => array(

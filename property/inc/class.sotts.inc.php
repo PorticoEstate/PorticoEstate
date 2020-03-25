@@ -1014,6 +1014,8 @@
 				$ticket['order_template_id']	 = $this->db->f('order_template_id');
 				$ticket['delivery_address']		 = $this->db->f('delivery_address', true);
 				$ticket['payment_info']			 = $this->db->f('payment_info', true);
+				$ticket['delivery_type']		 = $this->db->f('delivery_type');
+				$ticket['payment_type']			 = $this->db->f('payment_type');
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1766,8 +1768,14 @@
 
 				if($ticket['order_template_id'])
 				{
-					$order_template_id = (int)$ticket['order_template_id'];
-					$this->db->query("UPDATE fm_tts_tickets SET order_template_id = {$order_template_id} WHERE id={$id}", __LINE__, __FILE__);
+					$value_set = array(
+						'order_template_id' => (int)$ticket['order_template_id'],
+						'delivery_type' => (int)$ticket['delivery_type'],
+						'payment_type' => (int)$ticket['payment_type']
+					);
+
+					$value_set = $this->db->validate_update($value_set);
+					$this->db->query("UPDATE fm_tts_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 
 					$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
 
