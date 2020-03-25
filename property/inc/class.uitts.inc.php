@@ -3277,14 +3277,14 @@ HTML;
 
 				foreach ($delivery_type_list as $delivery_type)
 				{
-					if($delivery_type['id'] == $order_template['delivery_type'])
+					if($delivery_type['id'] == $ticket['delivery_type'])
 					{
 						$delivery_address = $delivery_type['descr'];
 					}
 				}
 				foreach ($payment_type_list as $payment_type)
 				{
-					if($payment_type['id'] == $order_template['payment_type'])
+					if($payment_type['id'] == $ticket['payment_type'])
 					{
 						$payment_info = str_replace(
 							array(
@@ -3319,7 +3319,7 @@ HTML;
 			}
 
 
-			$delivery_address = $values['delivery_address'] ? $values['delivery_address'] : $delivery_address;
+			$delivery_address = $ticket['delivery_address'] ? $ticket['delivery_address'] : $delivery_address;
 
 			if (!$delivery_address && !empty($location_data['loc1']))
 			{
@@ -3504,7 +3504,10 @@ HTML;
 				'cat_sub_name'					 => 'values[order_cat_id]',
 				'lang_cat_sub_statustext'		 => lang('select sub category'),
 				'validatet_category'			 => $validatet_category,
-				'collect_building_part'			 => !!$this->bo->config->config_data['workorder_require_building_part']
+				'collect_building_part'			 => !!$this->bo->config->config_data['workorder_require_building_part'],
+				'delivery_type_list'			 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $ticket['delivery_type']))),
+				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type'])))
+
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

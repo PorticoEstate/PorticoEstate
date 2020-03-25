@@ -10890,3 +10890,42 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	*
+	* Update property version from 0.9.17.745 to 0.9.17.746
+	*
+	*/
+	$test[] = '0.9.17.745';
+	function property_upgrade0_9_17_745()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'delivery_type',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'payment_type',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$sql =	"ALTER TABLE public.fm_tts_quick_order_template DROP CONSTRAINT fm_tts_quick_order_template_delivery_type_fkey";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$sql =	"ALTER TABLE public.fm_tts_quick_order_template DROP CONSTRAINT fm_tts_quick_order_template_payment_type_fkey";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_quick_order_template', array(), 'delivery_type');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_quick_order_template', array(), 'payment_type');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.746';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

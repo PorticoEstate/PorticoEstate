@@ -238,9 +238,6 @@
 				'link'	 => '#main'
 			);
 
-			$delivery_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $values['delivery_type']));
-			$payment_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $values['payment_type']));
-
 			$_filter_buildingpart	 = array();
 			$filter_buildingpart	 = isset($this->config['filter_buildingpart']) ? $this->config['filter_buildingpart'] : array();
 
@@ -298,8 +295,6 @@
 						'b_account_name' => isset($values['b_account_name']) ? $values['b_account_name'] : ''
 					)
 				),
-				'delivery_type_list'		 => array('options' => $delivery_type_list),
-				'payment_type_list'			 => array('options' => $payment_type_list),
 				'datatable_def'				 => $datatable_def,
 				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.edit", 'id' => $id)),
 				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uiorder_template.index")),
