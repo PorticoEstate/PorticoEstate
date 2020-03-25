@@ -333,6 +333,7 @@
 				'cat_sub_name'					=> 'order_cat_id',
 				'lang_cat_sub_statustext'		=> lang('select sub category'),
 				'validatet_category'			=> $validatet_category,
+				'collect_building_part'			 => !!$this->config['workorder_require_building_part']
 
 //				'branch_list'			 => !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) ? array
 //					(

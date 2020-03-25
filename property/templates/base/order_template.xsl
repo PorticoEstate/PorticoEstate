@@ -187,30 +187,68 @@
 							</div>
 						</xsl:if>
 
-						<div class="pure-control-group">
-							<xsl:variable name="lang_building_part">
-								<xsl:value-of select="php:function('lang', 'building part')"/>
-							</xsl:variable>
-							<label>
-								<xsl:value-of select="$lang_building_part"/>
-							</label>
+						<xsl:choose>
+							<xsl:when test="collect_building_part=1">
+								<div class="pure-control-group">
+									<xsl:variable name="lang_building_part">
+										<xsl:value-of select="php:function('lang', 'building part')"/>
+									</xsl:variable>
+									<label>
+										<xsl:value-of select="$lang_building_part"/>
+									</label>
 
-							<select name="building_part" class="pure-input-3-4" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="$lang_building_part"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_building_part"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="$lang_building_part"/>
-								</option>
-								<xsl:apply-templates select="building_part_list/options"/>
-							</select>
-						</div>
+									<select name="building_part" class="pure-input-3-4" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_building_part"/>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_building_part"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="$lang_building_part"/>
+										</option>
+										<xsl:apply-templates select="building_part_list/options"/>
+									</select>
+								</div>
+								<div class="pure-control-group">
+									<xsl:variable name="lang_order_dim1">
+										<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+									</xsl:variable>
+									<label>
+										<xsl:value-of select="$lang_order_dim1"/>
+									</label>
+									<select name="order_dim1" class="pure-input-3-4" >
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_order_dim1"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'order_dim1')"/>
+										</option>
+										<xsl:apply-templates select="order_dim1_list/options"/>
+									</select>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div class="pure-control-group">
+									<label for="name">
+										<xsl:value-of select="php:function('lang', 'category')"/>
+									</label>
+									<xsl:call-template name="cat_sub_select">
+										<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+									</xsl:call-template>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+
 						<!--						<xsl:choose>
 							<xsl:when test="branch_list!=''">
 								<div class="pure-control-group">
@@ -229,29 +267,6 @@
 								</div>
 							</xsl:when>
 						</xsl:choose>-->
-						<div class="pure-control-group">
-							<xsl:variable name="lang_order_dim1">
-								<xsl:value-of select="php:function('lang', 'order_dim1')"/>
-							</xsl:variable>
-							<label>
-								<xsl:value-of select="$lang_order_dim1"/>
-							</label>
-							<select name="order_dim1" class="pure-input-3-4" >
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'order_dim1')"/>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_order_dim1"/>
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', 'order_dim1')"/>
-								</option>
-								<xsl:apply-templates select="order_dim1_list/options"/>
-							</select>
-						</div>
 						<xsl:if test="enable_unspsc = 1">
 							<div class="pure-control-group">
 								<xsl:variable name="lang_tax_code">
@@ -277,16 +292,6 @@
 								</select>
 							</div>
 						</xsl:if>
-
-						<div class="pure-control-group">
-							<label for="name">
-								<xsl:value-of select="php:function('lang', 'category')"/>
-							</label>
-							<xsl:call-template name="cat_sub_select">
-								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
-							</xsl:call-template>
-						</div>
-
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'order text')"/>
