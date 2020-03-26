@@ -214,11 +214,44 @@
 
 				$values = $custom->prepare($values, 'property', $system_location['location'], false);
 
-
 				$lookup_functions = $values['lookup_functions'];
 
 				$menuaction = $edit_parent ? 'controller.uicase.edit_parent_component' : 'controller.uicase.edit_component_child';
-				
+
+				$attributes_groups	 = $custom->get_attribute_groups('property', ".entity.{$entity_id}.{$cat_id}", $values['attributes']);
+				$attributes_general	 = array();
+				$i					 = -1;
+				$attributes			 = array();
+
+				$_dummy = array(array(
+//					'id' => 0,
+//					'datatype' => 'R',
+//					'nullable' => 1,
+				));
+				foreach ($attributes_groups as $_key => $group)
+				{
+					if (!isset($group['attributes']))
+					{
+						$group['attributes'] = $_dummy;
+					}
+					if ((isset($group['group_sort']) || !$location_data))
+					{
+							$i ++;
+							$attributes[$i]['attributes'][]	 = array
+								(
+								'datatype'	 => 'section',
+								'descr'		 => '<H' . (int)($group['level'] + 1) . "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
+								'level'		 => $group['level'],
+							);
+							$attributes[$i]['attributes']	 = array_merge($attributes[$i]['attributes'], $group['attributes']);
+						unset($_tab_name);
+					}
+					else if (!isset($group['group_sort']) && $location_data)
+					{
+						$attributes_general = array_merge($attributes_general, $group['attributes']);
+					}
+				}
+				unset($attributes_groups);
 				
 				$open_cases = array();
 				if($get_info)
@@ -240,12 +273,14 @@
 					'parent_component_id' => $parent_component_id,
 					'location_id' => $location_id,
 					'component_id'=> $component_id,
-					'attributes_general' => array('attributes' => $values['attributes']),
+//					'attributes_general' => array('attributes' => $values['attributes']),
+					'attributes_group'				 => $attributes,
+					'attributes_general' => array('attributes' => $attributes_general),
 					'get_form'	=> $get_form,
 					'get_info'	=> $get_info,
 					'enable_add_case' => $enable_add_case,
 					'get_edit_form' => $get_edit_form,
-					'template_set' => $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'],
+					'template_set' => 'bootstrap',
 					'supress_history_date' => true,
 					'open_cases' => $open_cases
 					);
