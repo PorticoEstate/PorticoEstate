@@ -1309,7 +1309,18 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-
+			else if (preg_match("/Varsel om behov for korrigering i leverandørregister fane/i", $subject))
+			{
+				$message_cat_id	 = 280; // LRS-Regnskap- underkategori: 24 Spørsmål fra leverandører
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 
 
 			/**
