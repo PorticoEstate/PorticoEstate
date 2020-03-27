@@ -9,12 +9,16 @@
 <!-- new_component-->
 <xsl:template match="new_component" xmlns:php="http://php.net/xsl">
 
-	<div class="row">
-		<form class="pure-form pure-form-aligned" action="{action}" onsubmit="return submitComponentForm(event, this);">
+	<div class="container">
+		<form class="pure-form pure-form-stacked" action="{action}" onsubmit="return submitComponentForm(event, this);">
 			<fieldset>
-				<xsl:apply-templates select="attributes_general/attributes">
+
+				<xsl:call-template name="attributes_values">
 					<xsl:with-param name="supress_history_date" select ='supress_history_date'/>
-				</xsl:apply-templates>
+					<xsl:with-param name="template_set">
+						<xsl:value-of select="template_set" />
+					</xsl:with-param>
+				</xsl:call-template>
 
 				<input type="hidden" name="edit_parent" value="{edit_parent}" />
 				<input type="hidden" name="parent_location_id" value="{parent_location_id}" />
