@@ -223,33 +223,22 @@
 				$i					 = -1;
 				$attributes			 = array();
 
-				$_dummy = array(array(
-//					'id' => 0,
-//					'datatype' => 'R',
-//					'nullable' => 1,
-				));
 				foreach ($attributes_groups as $_key => $group)
 				{
 					if (!isset($group['attributes']))
 					{
-						$group['attributes'] = $_dummy;
+						$group['attributes'] = array(array());
 					}
-					if ((isset($group['group_sort']) || !$location_data))
-					{
-							$i ++;
-							$attributes[$i]['attributes'][]	 = array
-								(
-								'datatype'	 => 'section',
-								'descr'		 => '<H' . (int)($group['level'] + 1) . "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
-								'level'		 => $group['level'],
-							);
-							$attributes[$i]['attributes']	 = array_merge($attributes[$i]['attributes'], $group['attributes']);
-						unset($_tab_name);
-					}
-					else if (!isset($group['group_sort']) && $location_data)
-					{
-						$attributes_general = array_merge($attributes_general, $group['attributes']);
-					}
+
+					$i ++;
+					$attributes[$i]['attributes'][]	 = array
+						(
+						'datatype'	 => 'section',
+						'descr'		 => '<H' . (int)($group['level'] + 1) . "> {$group['descr']} </H" . ($group['level'] + 1) . '>',
+						'level'		 => $group['level'],
+					);
+					$attributes[$i]['attributes']	 = array_merge($attributes[$i]['attributes'], $group['attributes']);
+					
 				}
 				unset($attributes_groups);
 				
@@ -299,11 +288,11 @@
 							phpgw::no_access();
 					}
 					
-					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_form'));
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/attributes_form'));
 				}
 				else
 				{
-					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/property/templates/base/attributes_view'));
+					$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/attributes_view'));
 				}
 
 				$xslttemplates->set_var('phpgw', array('new_component' => $data));

@@ -667,6 +667,7 @@
 			}
 			else
 			{
+
 				$get_buildings_on_property = true;
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
@@ -1673,6 +1674,7 @@
 
 			$component_id = $check_list->get_component_id();
 			$get_locations = false;
+			$get_buildings_on_property = false;
 
 			if ($component_id > 0)
 			{
@@ -1715,10 +1717,16 @@
 			}
 			else
 			{
+				$get_buildings_on_property = true;
 				$location_code = $check_list->get_location_code();
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 				$level = $this->location_finder->get_location_level($location_code);
+			}
+			// Fetches buildings on property
+			if($get_buildings_on_property)
+			{
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			}
 
 			$year = date("Y", $check_list->get_deadline());
@@ -1726,9 +1734,6 @@
 
 			$level = $this->location_finder->get_location_level($location_code);
 			$user_role = true;
-
-			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 
 			$data = array
 				(
