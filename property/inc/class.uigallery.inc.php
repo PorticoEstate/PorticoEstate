@@ -174,18 +174,18 @@
 			}
 
 			$re_create = false;
-			if ($this->is_image($source) && $thumb && $re_create)
+			if ($bofiles->is_image($source) && $thumb && $re_create)
 			{
-				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
+				$bofiles->resize_image($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
 			}
 			else if ($thumb && is_file($thumbfile))
 			{
 				readfile($thumbfile);
 			}
-			else if ($this->is_image($source) && $thumb)
+			else if ($bofiles->is_image($source) && $thumb)
 			{
-				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
+				$bofiles->resize_image($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
 			}
 			else if ($img_id)
@@ -195,71 +195,6 @@
 			else
 			{
 				$bofiles->view_file('', $file);
-			}
-		}
-
-		function create_thumb( $source, $dest, $target_height = 100 )
-		{
-			$size	 = getimagesize($source);
-			$width	 = $size[0];
-			$height	 = $size[1];
-
-			$target_width = round($width * ($target_height / $height));
-
-			if ($width > $height)
-			{
-				$x		 = ceil(($width - $height) / 2);
-				$width	 = $height;
-			}
-			else if ($height > $width)
-			{
-				$y		 = ceil(($height - $width) / 2);
-				$height	 = $width;
-			}
-
-			$new_im = ImageCreatetruecolor($target_width, $target_height);
-
-			@$imgInfo = getimagesize($source);
-
-			if ($imgInfo[2] == IMAGETYPE_JPEG)
-			{
-				$im = imagecreatefromjpeg($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagejpeg($new_im, $dest, 75); // Thumbnail quality (Value from 1 to 100)
-			}
-			else if ($imgInfo[2] == IMAGETYPE_GIF)
-			{
-				$im = imagecreatefromgif($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagegif($new_im, $dest);
-			}
-			else if ($imgInfo[2] == IMAGETYPE_PNG)
-			{
-				$im = imagecreatefrompng($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagepng($new_im, $dest);
-			}
-		}
-
-		function is_image( $fileName )
-		{
-			// Verifies that a file is an image
-			if ($fileName !== '.' && $fileName !== '..')
-			{
-				@$imgInfo = getimagesize($fileName);
-
-				$imgType = array
-					(
-					IMAGETYPE_JPEG,
-					IMAGETYPE_GIF,
-					IMAGETYPE_PNG,
-				);
-
-				if (in_array($imgInfo[2], $imgType))
-				{
-					return true;
-				}
-				return false;
 			}
 		}
 
