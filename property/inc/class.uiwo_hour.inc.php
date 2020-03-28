@@ -1606,10 +1606,20 @@ HTML;
 						$attachments	 = $bofiles->get_attachments($values['file_action']['project']);
 						$attachments	 = array_merge($attachments, $bofiles->get_attachments($values['file_action']['workorder']));
 						$_attachment_log = array();
-						foreach ($attachments as $_attachment)
+						foreach ($attachments as & $_attachment)
 						{
 							$_attachment_log[] = $_attachment['name'];
+							
+							if($bofiles->is_image($_attachment['file']))
+							{
+								$resized = $GLOBALS['phpgw_info']['server']['temp_dir'] . "/resized_{$workorder_id}_" . basename($_attachment['file']);
+								$bofiles->resize_image($_attachment['file'], $resized, 800);
+								$_attachment['file'] = $resized;
+								$_attachment['resized'] = $resized;
+								
+							}
 						}
+						unset($_attachment);
 
 						$attachment_log = lang('attachments') . ': ' . implode(', ', $_attachment_log);
 					}
@@ -1660,6 +1670,15 @@ HTML;
 					try
 					{
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+						
+						foreach ($attachments as $_attachment)
+						{
+							if (!empty($_attachment['resized']))
+							{
+								unlink($_attachment['resized']);
+							}
+						}
+						unset($_attachment);
 						if(!$rcpt)
 						{
 							phpgwapi_cache::message_set("Noe gikk feil, eposten ble ikke sendt. Prøv igjen", 'error');
@@ -1667,6 +1686,14 @@ HTML;
 					}
 					catch (Exception $e)
 					{
+						foreach ($attachments as $_attachment)
+						{
+							if (!empty($_attachment['resized']))
+							{
+								unlink($_attachment['resized']);
+							}
+						}
+						unset($_attachment);
 						if ($e)
 						{
 							phpgwapi_cache::message_set($e->getMessage(), 'error');
@@ -3672,15 +3699,24 @@ HTML;
 				}
 			}
 
+			$bofiles = CreateObject('property.bofiles');
 			$dir		 = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
 			$attachments = array();
 			if (!empty($workorder['file_attachments']) && is_array($workorder['file_attachments']))
 			{
-				$attachments	 = CreateObject('property.bofiles')->get_attachments($workorder['file_attachments']);
+				$attachments	 = $bofiles->get_attachments($workorder['file_attachments']);
 				$_attachment_log = array();
-				foreach ($attachments as $_attachment)
+				foreach ($attachments as & $_attachment)
 				{
-					$_attachment_log[] = $_attachment['name'];
+					$_attachment_log[] = &$_attachment['name'];
+					if($bofiles->is_image($_attachment['file']))
+					{
+						$resized = $GLOBALS['phpgw_info']['server']['temp_dir'] . "/resized_{$workorder_id}_" . basename($_attachment['file']);
+						$bofiles->resize_image($_attachment['file'], $resized, 800);
+						$_attachment['file'] = $resized;
+						$_attachment['resized'] = $resized;
+
+					}
 				}
 				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
 			}
@@ -3743,11 +3779,28 @@ HTML;
 				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
 				phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $workorder_id, $_to), 'message');
 				phpgwapi_cache::message_set(lang('%1 is notified', $bcc), 'message');
+				foreach ($attachments as $_attachment)
+				{
+					if (!empty($_attachment['resized']))
+					{
+						unlink($_attachment['resized']);
+					}
+				}
+				unset($_attachment);
+
 			}
 			catch (Exception $e)
 			{
 				if ($e)
 				{
+					foreach ($attachments as $_attachment)
+					{
+						if (!empty($_attachment['resized']))
+						{
+							unlink($_attachment['resized']);
+						}
+					}
+					unset($_attachment);
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 					phpgwapi_cache::message_set("Bestilling {$workorder_id} er ikke sendt", 'error');
 					throw $e;
