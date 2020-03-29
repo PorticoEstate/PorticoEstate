@@ -271,6 +271,19 @@
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.css");
 
 					break;
+				case 'select2':
+					$load = array(
+						"js/{$_jquery_core}{$_type}",
+						'select2' => array("js/select2{$_type}", "js/i18n/{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}")
+					);
+
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2{$_type}.css");
+					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
+					{
+//						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
+					}
+
+					break;
 
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
