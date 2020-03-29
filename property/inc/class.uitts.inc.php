@@ -1872,21 +1872,19 @@ HTML;
 				return false;
 			}
 
-			$uigallery = CreateObject('property.uigallery');
-
 			$re_create = false;
-			if ($uigallery->is_image($source) && $thumb && $re_create)
+			if ($bofiles->is_image($source) && $thumb && $re_create)
 			{
-				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				$bofiles->resize_image($source, $thumbfile, $thumb_size = 50);
 				readfile($thumbfile);
 			}
 			else if ($thumb && is_file($thumbfile))
 			{
 				readfile($thumbfile);
 			}
-			else if ($uigallery->is_image($source) && $thumb)
+			else if ($bofiles->is_image($source) && $thumb)
 			{
-				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				$bofiles->resize_image($source, $thumbfile, $thumb_size = 50);
 				readfile($thumbfile);
 			}
 			else if ($img_id)

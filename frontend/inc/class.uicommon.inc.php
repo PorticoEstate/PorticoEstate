@@ -635,10 +635,17 @@ HTML;
 
 			header('Content-type: ' . $mime_type);
 
-			if (function_exists('imagejpeg'))
+			$source = "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file['directory']}/{$file['name']}";			
+			$thumbfile	 = "$source.thumb";
+			
+			if(is_file($thumbfile))
 			{
-				$source = "{$GLOBALS['phpgw_info']['server']['files_dir']}{$file['directory']}/{$file['name']}";
-				$this->create_thumb($source, 173);
+				readfile($thumbfile);			
+			}
+			else if (function_exists('imagejpeg'))
+			{
+				CreateObject('property.bofiles')->resize_image($source, $thumbfile, $thumb_size = 173);
+				readfile($thumbfile);
 			}
 			else
 			{
@@ -646,49 +653,5 @@ HTML;
 			}
 
 			$GLOBALS['phpgw']->common->phpgw_exit();
-
-		}
-
-		function create_thumb( $source, $target_height = 100 )
-		{
-			$size = getimagesize($source);
-			$width = $size[0];
-			$height = $size[1];
-
-			$target_width = round($width * ($target_height / $height));
-
-			if ($width > $height)
-			{
-				$x = ceil(($width - $height) / 2);
-				$width = $height;
-			}
-			else if ($height > $width)
-			{
-				$y = ceil(($height - $width) / 2);
-				$height = $width;
-			}
-
-			$new_im = ImageCreatetruecolor($target_width, $target_height);
-
-			@$imgInfo = getimagesize($source);
-
-			if ($imgInfo[2] == IMAGETYPE_JPEG)
-			{
-				$im = imagecreatefromjpeg($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagejpeg($new_im, $dest, 75); // Thumbnail quality (Value from 1 to 100)
-			}
-			else if ($imgInfo[2] == IMAGETYPE_GIF)
-			{
-				$im = imagecreatefromgif($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagegif($new_im, $dest);
-			}
-			else if ($imgInfo[2] == IMAGETYPE_PNG)
-			{
-				$im = imagecreatefrompng($source);
-				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
-				imagepng($new_im, $dest);
-			}
 		}
 	}
