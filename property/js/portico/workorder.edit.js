@@ -213,7 +213,7 @@ this.fetch_vendor_contract = function ()
 						return;
 					}
 
-					if(data.length > 0)
+					if (data.length > 0)
 					{
 						$("#vendor_contract_id").attr("data-validation", "required");
 						htmlString = "<option value=''> kontrakter funnet</option>";
@@ -287,6 +287,13 @@ $(document).ready(function ()
 //		check_and_submit_valid_session();
 //	});
 
+
+	$("#order_cat_id").select2({
+		placeholder: "Select a category",
+		selectOnClose: true,
+		width: 'resolve'
+//		templateSelection: validate_order_category
+	});
 	$.formUtils.addValidator({
 		name: 'budget',
 		validatorFunction: function (value, $el, config, languaje, $form)
@@ -310,7 +317,7 @@ $(document).ready(function ()
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
 			var validatet_category = $('#validatet_category').val();
-			if(validatet_category ==1)
+			if (validatet_category == 1)
 			{
 				return true;
 			}
@@ -323,9 +330,14 @@ $(document).ready(function ()
 		errorMessageKey: ''
 	});
 
-	$("#global_category_id").change(function ()
+	function validate_order_category(data)
 	{
-		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
+		if (!data.id)
+		{
+			return data.text;
+		}
+
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var htmlString = "";
@@ -336,9 +348,9 @@ $(document).ready(function ()
 			url: requestUrl,
 			success: function (data)
 			{
-				if (data != null)
+				if (data !== null)
 				{
-					if (data.active != 1 || data.is_node === false)
+					if (data.active !== 1 || data.is_node === false)
 					{
 						alert('Denne kan ikke velges');
 						$('#validatet_category').val('');
@@ -350,8 +362,15 @@ $(document).ready(function ()
 				}
 			}
 		});
-	});
 
+		return data.text;
+	}
+
+	$("#order_cat_id").change(function ()
+	{
+		var cat_id = $(this).val();
+		validate_order_category({id: cat_id});
+	});
 
 	$("#workorder_edit").on("submit", function (e)
 	{
@@ -459,7 +478,7 @@ $(document).ready(function ()
 		right: '10px',
 		border: '1px solid #B5076D',
 		padding: '0 10px 10px 10px',
-	//	width: width + 'px',
+		//	width: width + 'px',
 		"background - color": '#FFF',
 		display: "block"
 	});
@@ -658,7 +677,7 @@ window.on_location_updated = function (location_code)
 
 	get_location_exception(location_code);
 
-	if(	$("#delivery_address").val() )
+	if ($("#delivery_address").val())
 	{
 		return;
 	}
@@ -702,7 +721,7 @@ window.get_location_exception = function (location_code)
 				var exceptions = data.location_exception;
 				$.each(exceptions, function (k, v)
 				{
-					if(v.alert_vendor == 1)
+					if (v.alert_vendor == 1)
 					{
 						htmlString += "<div class=\"error\">";
 					}
@@ -711,7 +730,7 @@ window.get_location_exception = function (location_code)
 						htmlString += "<div class=\"msg_good\">";
 					}
 					htmlString += v.severity + ": " + v.category_text;
-					if(v.location_descr)
+					if (v.location_descr)
 					{
 						htmlString += "<br/>" + v.location_descr;
 					}
@@ -738,11 +757,11 @@ this.fileuploader = function ()
 
 this.refresh_files = function ()
 {
-	var oArgs = {menuaction:'property.uiworkorder.get_files',id:order_id};
+	var oArgs = {menuaction: 'property.uiworkorder.get_files', id: order_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_1', strURL);
 
-	oArgs = {menuaction:'property.uiworkorder.get_files_attachments',id:order_id};
+	oArgs = {menuaction: 'property.uiworkorder.get_files_attachments', id: order_id};
 	strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_8', strURL);
 };

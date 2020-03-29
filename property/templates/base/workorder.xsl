@@ -875,7 +875,12 @@
 						<label for="name">
 							<xsl:value-of select="lang_cat_sub"/>
 						</label>
-						<xsl:call-template name="cat_sub_select"/>
+						<div class="pure-custom pure-input-1-2">
+						<xsl:call-template name="cat_sub_select">
+							<xsl:with-param name="id">order_cat_id</xsl:with-param>
+							<xsl:with-param name="class">pure-input-1</xsl:with-param>
+						</xsl:call-template>
+						</div>
 					</div>
 					<div class="pure-control-group">
 						<xsl:variable name="lang_continuous">
