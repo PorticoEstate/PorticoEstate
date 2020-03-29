@@ -292,8 +292,8 @@ $(document).ready(function ()
 		placeholder: "Select a category",
 		selectOnClose: true,
 		width: 'resolve'
-//		templateSelection: validate_order_category
 	});
+
 	$.formUtils.addValidator({
 		name: 'budget',
 		validatorFunction: function (value, $el, config, languaje, $form)

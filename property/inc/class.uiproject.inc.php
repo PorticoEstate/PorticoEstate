@@ -2680,6 +2680,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('select2');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
