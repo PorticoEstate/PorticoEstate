@@ -320,12 +320,14 @@
 		<xsl:value-of select="lookup_functions"/>
 		function generate_order()
 		{
-		Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
+			var Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
+			Window1.focus();
 		}
 
 		function generate_request()
 		{
-		Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
+			var Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
+			Window1.focus();
 		}
 
 		function template_lookup()
@@ -349,7 +351,8 @@
 
 		var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
 		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		var Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+		Window1.focus();
 
 		}
 
