@@ -755,13 +755,30 @@
 				$account_list	 .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
 				$account_list	 .= '</form></div>';
 
-				$lan_user = lang('user');
+				$lan_user = lang('Search for a user');
 				$account_list	 .= <<<HTML
 					<script>
+						var oArgs = {menuaction: 'preferences.boadmin_acl.get_users'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+						
 						$("#account_id").select2({
-						placeholder: "{$lan_user}",
-						width: '50%'
-						});
+						  ajax: {
+							url: strURL,
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+							  return {
+								query: params.term, // search term
+								start: 0
+							  };
+							},
+							cache: true
+						  },
+						  width: '50%',
+						  placeholder: '{$lan_user}',
+						  minimumInputLength: 2
+				//		  language: "no"
+						});						
 					</script>
 HTML;
 

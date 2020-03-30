@@ -16,7 +16,7 @@
 	 * @package property
 	 */
 
-	class boadmin_acl
+	class preferences_boadmin_acl
 	{
 		var $start;
 		var $query;
@@ -30,6 +30,10 @@
 		* @var int $total_records the total number of records found during last search
 		*/
 		var $total_records = 0;
+		var $public_functions = array
+		(
+			'get_users'  => True,
+		);
 
 		function __construct($session='')
 		{
@@ -340,6 +344,20 @@
 		}
 
 
+		function get_users()
+		{
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', 0,$this->sort, $this->order, $this->query);
+			
+			$results = array();
+			foreach ($accounts as $account)
+			{
+				$results[]=array(
+					'id'	=> $account->id,
+					'text' => $account->__toString()
+				);
+			}
+			return array('results' => $results);
+		}
 		function get_user_list($type='',$get_grants='')
 		{
 			if($type == 'groups')
