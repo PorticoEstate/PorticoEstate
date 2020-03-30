@@ -737,9 +737,10 @@
 						}
 					}
 				}
+				phpgwapi_jquery::load_widget('select2');
 
-				$account_list	 = "<form method='POST' action=''>";
-				$account_list	 .= '<table><tr><td><select name="account_id" onChange="this.form.submit();">';
+				$account_list	 = "<div><form class='pure-form' method='POST' action=''>";
+				$account_list	 .= '<select name="account_id" id="account_id" onChange="this.form.submit();" style="width:50%;">';
 				$account_list	 .= "<option value=''>" . lang('select user') . '</option>';
 				foreach ($accounts as $account)
 				{
@@ -752,7 +753,15 @@
 				}
 				$account_list	 .= '</select>';
 				$account_list	 .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
-				$account_list	 .= '</td></tr></table></form>';
+				$account_list	 .= '</form></div>';
+
+				$account_list	 .= '<script>'
+						. '$("#account_id").select2({';
+				$account_list	 .= 'placeholder: "' . lang('User') . '",';
+				$account_list	 .= "width: '50%'";
+				$account_list	 .= '});'
+					. '</script>';
+
 
 				$t->set_var('select_user', $account_list);
 

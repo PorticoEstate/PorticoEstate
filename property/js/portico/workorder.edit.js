@@ -288,10 +288,10 @@ $(document).ready(function ()
 //	});
 
 
+
 	$("#order_cat_id").select2({
 		placeholder: "Select a category",
-		selectOnClose: true,
-		width: 'resolve'
+		width: '100%'
 	});
 
 	$.formUtils.addValidator({

@@ -147,10 +147,14 @@ $(document).ready(function ()
 	});
 
 
+	$("#user_id").select2({
+		placeholder: "Select a user",
+		width: '50%'
+	});
+
 	$("#global_category_id").select2({
 		placeholder: "Select a category",
-		selectOnClose: true,
-		width: 'resolve'
+		width: '50%'
 	});
 
 
