@@ -749,19 +749,21 @@
 					{
 						$account_list .= ' selected';
 					}
-					$account_list .= "> {$account['name']}</option>";
+					$account_list .= "> {$account['name']}</option>\n";
 				}
 				$account_list	 .= '</select>';
 				$account_list	 .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
 				$account_list	 .= '</form></div>';
 
-				$account_list	 .= '<script>'
-						. '$("#account_id").select2({';
-				$account_list	 .= 'placeholder: "' . lang('User') . '",';
-				$account_list	 .= "width: '50%'";
-				$account_list	 .= '});'
-					. '</script>';
-
+				$lan_user = lang('user');
+				$account_list	 .= <<<HTML
+					<script>
+						$("#account_id").select2({
+						placeholder: "{$lan_user}",
+						width: '50%'
+						});
+					</script>
+HTML;
 
 				$t->set_var('select_user', $account_list);
 
