@@ -4110,7 +4110,7 @@ HTML;
 					$pdf->ezSetDy(-100);
 				}
 				$pdf->ezText($this->bo->config->config_data['order_footer_header'], 12);
-				$pdf->ezText(htmlentities($this->bo->config->config_data['order_footer']), 10);
+				$pdf->ezText(htmlspecialchars($this->bo->config->config_data['order_footer']), 10);
 			}
 
 			$document = $pdf->ezOutput();
