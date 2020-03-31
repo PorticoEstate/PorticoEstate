@@ -166,7 +166,7 @@
 				if(isset($group_list) && is_array($group_list))
 				{
 					//while (is_array($group_list) && list(,$group) = each($group_list))
-                                        foreach($group_list as $key => $group)
+                    foreach($group_list as $key => $group)
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array
@@ -296,13 +296,14 @@
 				'select_group_name'				=> 'granting_group',
 				'lang_no_group'					=> lang('No granting group'),
 				'group_list'					=> $this->bo->get_group_list('filter',$this->granting_group,$start=-1,$sort='ASC',$order='account_firstname',$query='',$offset=-1),
-				'lang_enable_inheritance'       => lang('enable inheritance'), 
+				'lang_enable_inheritance'       => lang('enable inheritance'),
                 'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
 			);
 
 			$appname			= lang('preferences');
 			$function_msg		= lang('set grants');
 			$owner_name 		= $GLOBALS['phpgw']->accounts->id2name($this->account);		// get owner name for title
+			phpgwapi_jquery::load_widget('select2');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $this->acl_app . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));
@@ -547,12 +548,13 @@
 				'lang_location_statustext'		=> lang('Select submodule'),
 				'select_name_location'			=> 'module',
 				'location_list'					=> $this->bo->select_location('filter',$this->location,False),
-				'lang_enable_inheritance'       => lang('enable inheritance'), 
+				'lang_enable_inheritance'       => lang('enable inheritance'),
                 'lang_enable_inheritance_statustext'        => lang('rights are inherited down the hierarchy')
 			);
 
 			$appname		= lang('permission');
 			$function_msg		= lang('set permission');
+			phpgwapi_jquery::load_widget('select2');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $this->acl_app . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('list_permission' => $data));

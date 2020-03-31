@@ -1906,8 +1906,13 @@ JS;
 			$tabs['notify'] = array('label' => lang('Notify'), 'link' => '#notify');
 			$active_tab = 'add';
 
-			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
+			$cat_select = $this->cats->formatted_xslt_list(array(
+				'select_name' => 'values[cat_id]',
+				'selected' => $this->cat_id,
+				'use_acl' => $this->_category_acl,
+				'required' => true,
+				'class'=>'pure-input-1-2'
+				));
 
 			/**overide*/
 			if((int)$this->parent_cat_id > 0)
@@ -2773,8 +2778,13 @@ JS;
 
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
+			$cat_select = $this->cats->formatted_xslt_list(array(
+				'select_name' => 'values[cat_id]',
+				'selected' => $this->cat_id,
+				'use_acl' => $this->_category_acl,
+				'required' => true,
+				'class'=>'pure-input-1-2'
+				));
 
 			/**overide*/
 			if((int)$this->parent_cat_id > 0)

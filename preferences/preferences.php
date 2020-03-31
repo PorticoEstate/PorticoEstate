@@ -738,8 +738,11 @@
 					}
 				}
 
-				$account_list	 = "<form method='POST' action=''>";
-				$account_list	 .= '<table><tr><td><select name="account_id" onChange="this.form.submit();">';
+				phpgw::import_class('phpgwapi.jquery');
+				phpgwapi_jquery::load_widget('select2');
+
+				$account_list	 = "<div><form class='pure-form' method='POST' action=''>";
+				$account_list	 .= '<select name="account_id" id="account_id" onChange="this.form.submit();" style="width:50%;">';
 				$account_list	 .= "<option value=''>" . lang('select user') . '</option>';
 				foreach ($accounts as $account)
 				{
@@ -748,11 +751,39 @@
 					{
 						$account_list .= ' selected';
 					}
-					$account_list .= "> {$account['name']}</option>";
+					$account_list .= "> {$account['name']}</option>\n";
 				}
 				$account_list	 .= '</select>';
 				$account_list	 .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
-				$account_list	 .= '</td></tr></table></form>';
+				$account_list	 .= '</form></div>';
+
+				$lan_user = lang('Search for a user');
+				$account_list	 .= <<<HTML
+					<script>
+						var oArgs = {menuaction: 'preferences.boadmin_acl.get_users'};
+						var strURL = phpGWLink('index.php', oArgs, true);
+						
+						$("#account_id").select2({
+						  ajax: {
+							url: strURL,
+							dataType: 'json',
+							delay: 250,
+							data: function (params) {
+							  return {
+								query: params.term, // search term
+								page: params.page || 1
+							  };
+							},
+							cache: true
+						  },
+						  width: '50%',
+						  placeholder: '{$lan_user}',
+						  minimumInputLength: 2,
+						  language: "no",
+						  allowClear: true
+						});						
+					</script>
+HTML;
 
 				$t->set_var('select_user', $account_list);
 

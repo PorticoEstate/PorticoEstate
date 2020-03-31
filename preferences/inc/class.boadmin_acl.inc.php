@@ -16,7 +16,7 @@
 	 * @package property
 	 */
 
-	class boadmin_acl
+	class preferences_boadmin_acl
 	{
 		var $start;
 		var $query;
@@ -30,6 +30,10 @@
 		* @var int $total_records the total number of records found during last search
 		*/
 		var $total_records = 0;
+		var $public_functions = array
+		(
+			'get_users'  => True,
+		);
 
 		function __construct($session='')
 		{
@@ -45,7 +49,7 @@
 			}
 
 			$acl_app	= phpgw::get_var('acl_app');
-			$start		= phpgw::get_var('start');
+			$start		= phpgw::get_var('start', 'int');
 			$query		= phpgw::get_var('query');
 			$sort		= phpgw::get_var('sort');
 			$order		= phpgw::get_var('order');
@@ -340,6 +344,39 @@
 		}
 
 
+		function get_users()
+		{
+			$page = phpgw::get_var('page', 'int');
+			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$this->start = ($page - 1) * $length;
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $this->start,$this->sort, $this->order, $this->query);
+			$total = $GLOBALS['phpgw']->accounts->total;
+			
+			$results = array();
+			foreach ($accounts as $account)
+			{
+				$results[]=array(
+					'id'	=> $account->id,
+					'text' => $account->__toString(),
+					'disabled' => $account->enabled ? false : true
+				);
+			}
+
+			$num_records = count($accounts);
+			
+			$morePages = $total > ($num_records + $this->start);
+
+			return array(
+				'results'	=> $results,
+				'start'		=> $this->start,
+				'pagination' => array(
+					'more' => $morePages
+				)
+			);
+			
+
+		}
 		function get_user_list($type='',$get_grants='')
 		{
 			if($type == 'groups')

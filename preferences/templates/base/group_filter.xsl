@@ -5,11 +5,9 @@
 		<xsl:variable name="select_group_name"><xsl:value-of select="select_group_name"/></xsl:variable>
 		<xsl:variable name="lang_submit"><xsl:value-of select="lang_submit"/></xsl:variable>
 		<form method="post" action="{$select_action}">
-			<select name="{$select_group_name}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
-				<xsl:attribute name="onMouseover">
-					<xsl:text>window.status='</xsl:text>
-						<xsl:value-of select="lang_group_statustext"/>
-					<xsl:text>'; return true;</xsl:text>
+			<select name="{$select_group_name}" onChange="this.form.submit();" class="form-control">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_group_statustext"/>
 				</xsl:attribute>
 				<option value=""><xsl:value-of select="lang_no_group"/></option>
 					<xsl:apply-templates select="group_list"/>

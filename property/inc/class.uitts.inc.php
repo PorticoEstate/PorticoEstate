@@ -1744,8 +1744,12 @@ HTML;
 
 
 
-			$cat_select = $this->cats->formatted_xslt_list(array('select_name'	 => 'values[cat_id]',
-				'use_acl'		 => $this->_category_acl, 'required'		 => true, 'class'			 => 'pure-input-1-2'));
+			$cat_select = $this->cats->formatted_xslt_list(array(
+				'select_name'	 => 'values[cat_id]',
+				'use_acl'		 => $this->_category_acl,
+				'required'		 => true,
+				'class'			 => 'pure-input-1-2'
+				));
 
 			$_cat_list = array();
 			if ($this->simple && isset($fmttssimple_categories) && $fmttssimple_categories[1])
@@ -3173,8 +3177,11 @@ HTML;
 
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
-			$cat_select	 = $this->cats->formatted_xslt_list(array('select_name'	 => 'values[cat_id]',
-				'selected'		 => $this->cat_id, 'use_acl'		 => $this->_category_acl, 'required'		 => true,
+			$cat_select	 = $this->cats->formatted_xslt_list(array(
+				'select_name'	 => 'values[cat_id]',
+				'selected'		 => $this->cat_id,
+				'use_acl'		 => $this->_category_acl,
+				'required'		 => true,
 				'class'			 => 'pure-input-1-2'));
 
 			$_ticket_cat_found = false;
@@ -4110,7 +4117,7 @@ HTML;
 					$pdf->ezSetDy(-100);
 				}
 				$pdf->ezText($this->bo->config->config_data['order_footer_header'], 12);
-				$pdf->ezText(htmlentities($this->bo->config->config_data['order_footer']), 10);
+				$pdf->ezText(htmlspecialchars($this->bo->config->config_data['order_footer']), 10);
 			}
 
 			$document = $pdf->ezOutput();

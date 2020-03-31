@@ -683,6 +683,7 @@
 				$use_acl		= isset($data['use_acl']) ? $data['use_acl'] : '';
 				$class			= isset($data['class']) && $data['class'] ? $data['class'] : 'forms';
 				$required		= isset($data['required']) && $data['required'] ? true : false;
+				$data_validation= isset($data['data_validation']) && $data['data_validation'] ? $data['data_validation'] : false;
 				$disabled		= isset($data['disabled']) && $data['disabled'] ? true : false;
 			}
 			else
@@ -761,8 +762,9 @@
 				'select_name'			=> $select_name,
 				'lang_submit'			=> lang('submit'),
 				'class'					=> $class,
-				'required'				=> $required,
-				'disabled'				=> $disabled
+//				'required'				=> $required,
+				'disabled'				=> $disabled,
+				'data_validation'		=> $required ? 'required' : $data_validation
 			);
 			return $cat_data;
 		}

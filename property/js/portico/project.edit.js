@@ -132,19 +132,35 @@ $(document).ready(function ()
 		name: 'category',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			var validatet_category = $('#validatet_category').val();
-			if (validatet_category == 1)
+			var global_category_id = $('#global_category_id').val();
+			if (global_category_id)
 			{
+				$('#select2-global_category_id-container').addClass('valid');
+				$('#select2-global_category_id-container').removeClass('error');
 				return true;
 			}
 			else
 			{
+				$('#select2-global_category_id-container').addClass('error');
+				$('#select2-global_category_id-container').removeClass('valid');
 				return false;
 			}
 		},
 		errorMessage: 'Ugyldig kategori',
 		errorMessageKey: ''
 	});
+
+
+	$("#user_id").select2({
+		placeholder: "Select a user",
+		width: '50%'
+	});
+
+	$("#global_category_id").select2({
+		placeholder: "Select a category",
+		width: '50%'
+	});
+
 
 	$("#global_category_id").change(function ()
 	{
@@ -417,7 +433,7 @@ window.on_location_updated = function (location_code)
 
 	load_google_map();
 
-	if(	$("#delivery_address").val() )
+	if ($("#delivery_address").val())
 	{
 		return;
 	}
@@ -460,7 +476,7 @@ window.get_location_exception = function (location_code)
 				var exceptions = data.location_exception;
 				$.each(exceptions, function (k, v)
 				{
-					if(v.alert_vendor == 1)
+					if (v.alert_vendor == 1)
 					{
 						htmlString += "<div class=\"error\">";
 					}
@@ -469,7 +485,7 @@ window.get_location_exception = function (location_code)
 						htmlString += "<div class=\"msg_good\">";
 					}
 					htmlString += v.severity + ": " + v.category_text;
-					if(v.location_descr)
+					if (v.location_descr)
 					{
 						htmlString += "<br/>" + v.location_descr;
 					}
@@ -496,14 +512,14 @@ this.fileuploader = function ()
 
 this.refresh_files = function ()
 {
-	var oArgs = {menuaction:'property.uiproject.get_files',id:project_id};
+	var oArgs = {menuaction: 'property.uiproject.get_files', id: project_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable5, strURL);
 };
 
 this.get_other_projects = function (location_code)
 {
-	var oArgs = {menuaction:'property.uiproject.get_other_projects',location_code:location_code,id:project_id};
+	var oArgs = {menuaction: 'property.uiproject.get_other_projects', location_code: location_code, id: project_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_7', strURL);
 };
@@ -516,7 +532,7 @@ this.load_google_map = function (location_code)
 	var address = street_name + ' ' + street_number;
 	var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
 	var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
-	if( typeof(street_name) != 'undefined' && address.length > 1 )
+	if (typeof (street_name) != 'undefined' && address.length > 1)
 	{
 		$("#gmap-container").show();
 		$("#googlemapiframe").attr("src", iurl);

@@ -1435,7 +1435,8 @@
 				'ecodimb_data'						 => $ecodimb_data,
 				'lang_category'						 => lang('category'),
 				'lang_no_cat'						 => lang('Select category'),
-				'cat_select'						 => $this->cats->formatted_xslt_list(array('select_name'	 => 'values[order_category]',
+				'cat_select'						 => $this->cats->formatted_xslt_list(array(
+					'select_name'	 => 'values[order_category]',
 					'selected'		 => $values['order_category'])),
 				'lang_name'							 => lang('name'),
 				'lang_name_statustext'				 => lang('name'),
