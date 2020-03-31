@@ -2594,8 +2594,10 @@ JS;
 				'lang_save_statustext'				 => lang('Save the project'),
 				'lang_no_cat'						 => lang('Select category'),
 				'value_cat_id'						 => isset($values['cat_id']) ? $values['cat_id'] : '',
-				'cat_select'						 => $this->cats->formatted_xslt_list(array('select_name'	 => 'values[cat_id]',
-					'selected'		 => $values['cat_id'], 'required'		 => isset($config->config_data['project_optional_category']) && $config->config_data['project_optional_category'] ? false : true,
+				'cat_select'						 => $this->cats->formatted_xslt_list(array(
+					'select_name'	 => 'values[cat_id]',
+					'selected'		 => $values['cat_id'],
+					'data_validation' =>  'category',
 					'class'			 => 'pure-input-1-2')),
 				'lang_workorder_id'					 => lang('Workorder ID'),
 				'lang_sum'							 => lang('Sum'),

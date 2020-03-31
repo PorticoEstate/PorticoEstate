@@ -132,13 +132,17 @@ $(document).ready(function ()
 		name: 'category',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			var validatet_category = $('#validatet_category').val();
-			if (validatet_category == 1)
+			var global_category_id = $('#global_category_id').val();
+			if (global_category_id)
 			{
+				$('#select2-global_category_id-container').addClass('valid');
+				$('#select2-global_category_id-container').removeClass('error');
 				return true;
 			}
 			else
 			{
+				$('#select2-global_category_id-container').addClass('error');
+				$('#select2-global_category_id-container').removeClass('valid');
 				return false;
 			}
 		},

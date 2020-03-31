@@ -319,10 +319,14 @@ $(document).ready(function ()
 			var validatet_category = $('#validatet_category').val();
 			if (validatet_category == 1)
 			{
+				$('#select2-order_cat_id-container').addClass('valid');
+				$('#select2-order_cat_id-container').removeClass('error');
 				return true;
 			}
 			else
 			{
+				$('#select2-order_cat_id-container').addClass('error');
+				$('#select2-order_cat_id-container').removeClass('valid');
 				return false;
 			}
 		},
@@ -353,10 +357,14 @@ $(document).ready(function ()
 					if (data.active !== 1 || data.is_node === false)
 					{
 						alert('Denne kan ikke velges');
+						$('#select2-order_cat_id-container').addClass('error');
+						$('#select2-order_cat_id-container').removeClass('valid');
 						$('#validatet_category').val('');
 					}
 					else
 					{
+						$('#select2-order_cat_id-container').addClass('valid');
+						$('#select2-order_cat_id-container').removeClass('error');
 						$('#validatet_category').val(1);
 					}
 				}

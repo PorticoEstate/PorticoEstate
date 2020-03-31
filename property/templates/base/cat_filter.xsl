@@ -11,7 +11,7 @@
 			<xsl:value-of select="lang_submit"/>
 		</xsl:variable>
 		<form method="post" action="{$select_action}">
-			<select name="{$select_name}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
+			<select name="{$select_name}" onChange="this.form.submit();" class="form-control">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_cat_statustext"/>
 				</xsl:attribute>

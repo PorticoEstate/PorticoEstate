@@ -70,9 +70,19 @@
 				<xsl:text>disabled</xsl:text>
 			</xsl:attribute>
 		</xsl:if>
+		<!--
 		<xsl:if test="required = 1">
 			<xsl:attribute name="data-validation">
 				<xsl:text>required</xsl:text>
+			</xsl:attribute>
+			<xsl:attribute name="data-validation-error-msg">
+				<xsl:value-of select="php:function('lang', 'Please select a category !')"/>
+			</xsl:attribute>
+		</xsl:if>
+		-->
+		<xsl:if test="data_validation">
+			<xsl:attribute name="data-validation">
+				<xsl:value-of select="data_validation"/>
 			</xsl:attribute>
 			<xsl:attribute name="data-validation-error-msg">
 				<xsl:value-of select="php:function('lang', 'Please select a category !')"/>

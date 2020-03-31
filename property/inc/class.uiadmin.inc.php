@@ -301,6 +301,8 @@
 			$function_msg	 = lang('set grants');
 			$owner_name		 = $GLOBALS['phpgw']->accounts->id2name($this->account);  // get owner name for title
 
+			phpgwapi_jquery::load_widget('select2');
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->acl_app) . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list_permission' => $data));
 			$this->save_sessiondata();
@@ -564,6 +566,8 @@
 
 			$appname		 = lang('permission');
 			$function_msg	 = lang('set permission');
+
+			phpgwapi_jquery::load_widget('select2');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->acl_app) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list_permission' => $data));

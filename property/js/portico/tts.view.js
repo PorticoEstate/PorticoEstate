@@ -500,12 +500,16 @@ $(document).ready(function ()
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
 			var validatet_category = $('#validatet_category').val();
-			if(validatet_category ==1)
+			if (validatet_category == 1)
 			{
+				$('#select2-order_cat_id-container').addClass('valid');
+				$('#select2-order_cat_id-container').removeClass('error');
 				return true;
 			}
 			else
 			{
+				$('#select2-order_cat_id-container').addClass('error');
+				$('#select2-order_cat_id-container').removeClass('valid');
 				return false;
 			}
 		},
@@ -530,13 +534,29 @@ $(document).ready(function ()
 					if (data.active != 1 || data.is_node === false)
 					{
 						alert('Denne kan ikke velges');
-						$('#order_cat_id').prop('selectedIndex', 0);
+//						$('#order_cat_id').prop('selectedIndex', 0);
+						$('#order_cat_id').addClass('error');
+						$('#order_cat_id').removeClass('valid');
+						$('#select2-order_cat_id-container').addClass('error');
+						$('#select2-order_cat_id-container').removeClass('valid');
 						$('#validatet_category').val('');
 					}
 					else
 					{
+						$('#order_cat_id').addClass('valid');
+						$('#order_cat_id').removeClass('error');
+						$('#select2-order_cat_id-container').addClass('valid');
+						$('#select2-order_cat_id-container').removeClass('error');
 						$('#validatet_category').val(1);
 					}
+				}
+				else
+				{
+					$('#select2-order_cat_id-container').addClass('error');
+					$('#select2-order_cat_id-container').removeClass('valid');
+					$('#order_cat_id').addClass('error');
+					$('#order_cat_id').removeClass('valid');
+					$('#validatet_category').val('');
 				}
 			}
 		});

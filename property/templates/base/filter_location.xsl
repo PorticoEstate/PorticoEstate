@@ -20,7 +20,7 @@
 				</xsl:variable>
 				<INPUT type="hidden" name="{$name}" value="{$value}"/>
 			</xsl:for-each>
-			<select name="{$select_name_location}" onChange="this.form.submit();" onMouseout="window.status='';return true;">
+			<select name="{$select_name_location}" id="{$select_name_location}" onChange="this.form.submit();">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_location_statustext"/>
 				</xsl:attribute>
@@ -34,6 +34,13 @@
 				<input type="submit" name="submit" value="{$lang_submit}"/>
 			</noscript>
 		</form>
+		<script>
+			$("#<xsl:value-of select="$select_name_location"/>").select2({
+				placeholder: "<xsl:value-of select="lang_location_statustext"/>",
+				width: 'element'
+			});
+			
+		</script>
 </xsl:template>
 
 <!-- New template-->
