@@ -737,6 +737,8 @@
 						}
 					}
 				}
+
+				phpgw::import_class('phpgwapi.jquery');
 				phpgwapi_jquery::load_widget('select2');
 
 				$account_list	 = "<div><form class='pure-form' method='POST' action=''>";
