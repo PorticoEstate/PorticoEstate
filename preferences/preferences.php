@@ -771,15 +771,16 @@
 							data: function (params) {
 							  return {
 								query: params.term, // search term
-								start: 0
+								page: params.page || 1
 							  };
 							},
 							cache: true
 						  },
 						  width: '50%',
 						  placeholder: '{$lan_user}',
-						  minimumInputLength: 2
-				//		  language: "no"
+						  minimumInputLength: 2,
+						  language: "no",
+						  allowClear: true
 						});						
 					</script>
 HTML;

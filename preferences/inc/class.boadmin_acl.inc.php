@@ -49,7 +49,7 @@
 			}
 
 			$acl_app	= phpgw::get_var('acl_app');
-			$start		= phpgw::get_var('start');
+			$start		= phpgw::get_var('start', 'int');
 			$query		= phpgw::get_var('query');
 			$sort		= phpgw::get_var('sort');
 			$order		= phpgw::get_var('order');
@@ -346,17 +346,36 @@
 
 		function get_users()
 		{
-			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', 0,$this->sort, $this->order, $this->query);
+			$page = phpgw::get_var('page', 'int');
+			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$this->start = ($page - 1) * $length;
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $this->start,$this->sort, $this->order, $this->query);
+			$total = $GLOBALS['phpgw']->accounts->total;
 			
 			$results = array();
 			foreach ($accounts as $account)
 			{
 				$results[]=array(
 					'id'	=> $account->id,
-					'text' => $account->__toString()
+					'text' => $account->__toString(),
+					'disabled' => $account->enabled ? false : true
 				);
 			}
-			return array('results' => $results);
+
+			$num_records = count($accounts);
+			
+			$morePages = $total > ($num_records + $this->start);
+
+			return array(
+				'results'	=> $results,
+				'start'		=> $this->start,
+				'pagination' => array(
+					'more' => $morePages
+				)
+			);
+			
+
 		}
 		function get_user_list($type='',$get_grants='')
 		{
