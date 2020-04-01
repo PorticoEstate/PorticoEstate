@@ -11,6 +11,8 @@
  	* @version $Id$
 	*/
 
+	phpgw::import_class('phpgwapi.jquery');
+
 	/**
 	 * Advanced Access Control Lists Management User Interface
 	 * @package preferences

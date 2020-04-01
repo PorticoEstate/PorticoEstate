@@ -27,6 +27,8 @@
 	 * @version $Id$
 	 */
 
+	phpgw::import_class('phpgwapi.jquery');
+
 	/**
 	 * Description
 	 * @package property
