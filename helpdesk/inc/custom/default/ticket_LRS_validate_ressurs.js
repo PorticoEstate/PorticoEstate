@@ -165,7 +165,7 @@ function show_fields()
 //			$("#label_arbeidssted").show();
 	}
 
-	$('form').isValid(validateLanguage, conf_on_changed, true);
+	$('form').isValid(false, conf_on_changed, true);
 }
 
 function validate_submit(action)
@@ -266,7 +266,7 @@ function get_user_info(account_lid)
 			{
 				$("#arbeidssted_id").val(data.org_unit_id);
 				$("#arbeidssted_name").val(data.org_unit);
-				$('form').isValid(validateLanguage, conf_on_changed, true);
+				$('form').isValid(false, conf_on_changed, true);
 			}
 		}
 	});

@@ -12,10 +12,9 @@ this.validate_form = function ()
 		modules: 'location, date, security, file',
 		validateOnBlur: false,
 		scrollToTopOnError: true,
-		errorMessagePosition: 'top',
-		language: validateLanguage
+		errorMessagePosition: 'top'
 	};
-	return $('form').isValid(validateLanguage, conf);
+	return $('form').isValid(false, conf);
 }
 
 
