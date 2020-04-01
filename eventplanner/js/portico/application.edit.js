@@ -57,7 +57,6 @@ validate_submit = function ()
 		validateOnBlur: false,
 		scrollToTopOnError: true,
 		errorMessagePosition: 'top'
-			//	language: validateLanguage
 	};
 
 	var test = $('form').isValid(false, conf);

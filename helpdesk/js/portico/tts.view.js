@@ -15,10 +15,9 @@ this.confirm_session = function (action)
 			modules: 'date, security, file',
 			validateOnBlur: false,
 			scrollToTopOnError: true,
-			errorMessagePosition: 'top',
-			language: validateLanguage
+			errorMessagePosition: 'top'
 		};
-		var test = $('form').isValid(validateLanguage, conf);
+		var test = $('form').isValid(false, conf);
 		if (!test)
 		{
 			return;
@@ -234,7 +233,7 @@ $(document).ready(function ()
 
 	setTimeout(function ()
 	{
-		$('form').isValid(validateLanguage, conf_on_load, true);
+		$('form').isValid(false, conf_on_load, true);
 	}, 500);
 
 });

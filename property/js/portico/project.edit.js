@@ -320,7 +320,6 @@ this.validate_form = function ()
 		validateOnBlur: false,
 		scrollToTopOnError: true,
 		errorMessagePosition: 'top'
-			//	language: validateLanguage
 	};
 
 	return $('form').isValid(false, conf);

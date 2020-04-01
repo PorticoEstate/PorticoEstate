@@ -19,10 +19,9 @@ this.confirm_session = function (action)
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',
-			language: validateLanguage,
-			validateHiddenInputs: true,
+			validateHiddenInputs: true
 		};
-		var test = $('form').isValid(validateLanguage, conf);
+		var test = $('form').isValid(false, conf);
 		if (!test)
 		{
 			return;
@@ -185,7 +184,7 @@ $(document).ready(function ()
 
 	setTimeout(function ()
 	{
-		$('form').isValid(validateLanguage, conf_on_load, true);
+		$('form').isValid(false, conf_on_load, true);
 	}, 500);
 
 	formatFileSize = function (bytes)
@@ -465,12 +464,10 @@ $(window).on('load', function ()
 			var conf = {
 				modules: 'location, date, security, file',
 				validateOnBlur: false,
-				scrollToTopOnError: false,
-				//		errorMessagePosition: 'top',
-				language: validateLanguage
+				scrollToTopOnError: false
 			};
 
-			$('form').isValid(validateLanguage, conf);
+			$('form').isValid(false, conf);
 		}
 		catch (err)
 		{
