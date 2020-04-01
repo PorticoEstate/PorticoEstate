@@ -555,14 +555,6 @@ a#innertoolbar-button {
 }
 
 
-.info, .error, .warning {
-	font-weight: normal;
-	margin:20px;
-	padding:5px;
-	font-size:1.1em;
-	text-align: left;
-}
-
 .message {
 	margin: 5px;
 }
