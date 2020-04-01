@@ -19,7 +19,7 @@ this.confirm_session = function (action)
 			validateOnBlur: false,
 			scrollToTopOnError: true,
 			errorMessagePosition: 'top',
-			validateHiddenInputs: true,
+			validateHiddenInputs: true
 		};
 		var test = $('form').isValid(false, conf);
 		if (!test)
