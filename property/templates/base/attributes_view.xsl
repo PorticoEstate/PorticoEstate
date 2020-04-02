@@ -84,6 +84,15 @@
 			<div class="pure-controls">
 				<xsl:choose>
 					<xsl:when test="not(hide_row)">
+
+						<xsl:choose>
+							<xsl:when test="datatype='R' or datatype='CH'">
+								<div class="row">
+									<xsl:call-template name="attributes_label"/>
+								</div>
+							</xsl:when>
+						</xsl:choose>
+
 						<label id="label_{name}">
 							<xsl:choose>
 								<xsl:when test="name!=''">
@@ -109,7 +118,11 @@
 									</xsl:call-template>
 								</xsl:when>
 							</xsl:choose>
-							<xsl:call-template name="attributes_label"/>
+							<xsl:choose>
+								<xsl:when test="datatype='bolean'">
+									<xsl:call-template name="attributes_label"/>
+								</xsl:when>
+							</xsl:choose>
 
 						</label>
 					</xsl:when>
