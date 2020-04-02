@@ -1843,7 +1843,7 @@
 
 			$lookup_type = $mode == 'edit' ? 'form2' : 'view2';
 
-			if ($entity['location_form'] && $category['location_level'])
+			if ($entity['location_form'] && (int)$category['location_level'] > 0)
 			{
 				$location_data = $bolocation->initiate_ui_location(array
 					(
@@ -1938,7 +1938,7 @@
 			$tabs		 = array();
 			$active_tab	 = phpgw::get_var('active_tab');
 
-			if ($category['location_level'])
+			if ((int)$category['location_level'] > 0)
 			{
 				$tabs['location']	 = array('label'		 => lang('location'), 'link'		 => '#location',
 					'disable'	 => 0);
@@ -1996,15 +1996,20 @@
 //					'datatype' => 'R',
 //					'nullable' => 1,
 				));
+
 				foreach ($attributes_groups as $_key => $group)
 				{
+					if ($group['level'] == 0 && !$group['attributes'])
+					{
+						continue;
+					}
 					if (!isset($group['attributes']))
 					{
 						$group['attributes'] = $_dummy;
 					}
-					if ((isset($group['group_sort']) || !$location_data))
+					if ((!empty($group['group_sort']) || $category['location_level'] > 0))
 					{
-						if ($group['level'] == 0)
+						if ($group['level'] == 0 && $group['attributes'][0])
 						{
 							$_tab_name			 = str_replace(array(' ', '/', '?', '.', '*', '(', ')', '[',
 								']'), '_', $group['name']);
@@ -2027,7 +2032,7 @@
 						}
 						unset($_tab_name);
 					}
-					else if (!isset($group['group_sort']) && $location_data)
+					else if (empty($group['group_sort']))// && $location_data)
 					{
 						$attributes_general = array_merge($attributes_general, $group['attributes']);
 					}
@@ -2040,7 +2045,7 @@
 				  }
 				 */
 			}
-
+//			_debug_array($attributes);
 // ---- START INTEGRATION -------------------------
 
 			$custom_config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
