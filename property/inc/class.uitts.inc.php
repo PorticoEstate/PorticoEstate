@@ -4339,24 +4339,27 @@ HTML;
 			$lang_order	 = lang('order');
 			$lang_from	 = lang('from');
 			$body		 = "<table style='width: 800px;'><tr>";
-			$body		 .= "<td valign='top'>{$lang_order}: <b>{$order_id}</b><br/>&nbsp;</td>";
-			$body		 .= "<td valign='top'>" . lang('date') . ":{$date}</td>";
+			$body		 .= "<td style='vertical-align:top;'>{$lang_order}: <b>{$order_id}</b><br/>&nbsp;</td>";
+			$body		 .= "<td style='vertical-align:top;'>" . lang('date') . ":{$date}</td>";
 			$body		 .= "</tr>";
 			$body		 .= "<tr>";
-			$body		 .= "<td valign='top'>{$lang_from}: {$organisation}<br/>"
+			$body		 .= "<td style='vertical-align:top;'>{$lang_from}: {$organisation}<br/>"
 				. "{$department}<br/>"
 				. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
 				. "</td>";
-			$body		 .= "<td valign='top'>Saksbehandler: {$user_name}<br/>"
+			$body		 .= "<td style='vertical-align:top;'>Saksbehandler: {$user_name}<br/>"
 				. "Ressursnr.: {$ressursnr}<br/>"
 				. "</td>";
+
+			$invoice_address = lang('invoice address') . ":<br/>{$this->bo->config->config_data['invoice_address']}";
+
 			$body		 .= "</tr>";
 			$body		 .= "<tr>";
 			$body		 .= "<td colspan=2>" . lang('delivery address') . ":<br/>{$delivery_address}</td>";
 			$body		 .= "</tr>";
 			$body		 .= "<tr>";
-			$body		 .= "<td valign='top'>" . lang('to') . ":<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
-			$body		 .= "<td valign='top'>" . lang('invoice address') . ":<br/>{$this->bo->config->config_data['invoice_address']}</td>";
+			$body		 .= "<td style='vertical-align:top;'>" . lang('to') . ":<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
+			$body		 .= "<td style='vertical-align:top;'>{$invoice_address}</td>";
 
 			$body .= "</tr></table>";
 

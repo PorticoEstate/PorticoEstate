@@ -172,7 +172,7 @@
 				return False;
 			}
 			return array('id' => $this->db->f('id', false),
-				'name' => $this->db->f('name', false));
+				'name' => $this->db->f('name', true));
 		}
 
 //		function get_accepted($id)
@@ -238,7 +238,7 @@
 			$this->db->query("SELECT name FROM bb_resource where id IN ($list)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->db->f('name', false);
+				$results[] = $this->db->f('name', true);
 			}
 			return $results;
 		}
@@ -250,7 +250,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_buildings()
@@ -261,7 +261,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -317,7 +317,7 @@
 			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
+				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
