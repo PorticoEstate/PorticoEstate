@@ -283,6 +283,13 @@
 					}
 
 					break;
+				case 'glider':
+					$load = array
+					(
+						'glider' => array("glider{$_type}")
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/glider/glider{$_type}.css");
+					break;
 
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
