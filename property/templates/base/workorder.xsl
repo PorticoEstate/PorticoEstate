@@ -81,6 +81,21 @@
 		#submitbox {
 		display: none;
 		}
+
+		.glider-slide img {
+		opacity: 0;
+		transform: opacity .1s ease;
+		}
+		.glider-slide img.loaded {
+		opacity: 1;
+		}
+		.wrapperForGlider {
+		width: 500px;
+		max-width: 80%;
+		margin: 0 auto;
+		}
+
+
 	</style>
 
 	<xsl:variable name="lang_done">
@@ -876,10 +891,10 @@
 							<xsl:value-of select="lang_cat_sub"/>
 						</label>
 						<div class="pure-custom pure-input-1-2">
-						<xsl:call-template name="cat_sub_select">
-							<xsl:with-param name="id">order_cat_id</xsl:with-param>
-							<xsl:with-param name="class">pure-input-1</xsl:with-param>
-						</xsl:call-template>
+							<xsl:call-template name="cat_sub_select">
+								<xsl:with-param name="id">order_cat_id</xsl:with-param>
+								<xsl:with-param name="class">pure-input-1</xsl:with-param>
+							</xsl:call-template>
 						</div>
 					</div>
 					<div class="pure-control-group">
@@ -1323,6 +1338,22 @@
 									</xsl:for-each>
 								</div>
 							</div>
+
+							<div class="pure-control-group wrapperForGlider">
+								<div class="glider-contain">
+									<div class="glider">
+										<xsl:for-each select="image_list">
+											<div>
+												<img data-src="{image_url}" alt="{image_name}"/>
+											</div>
+										</xsl:for-each>
+									</div>
+									<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+									<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+									<div role="tablist" class="dots"></div>
+								</div>
+							</div>
+
 						</fieldset>
 					</div>
 					<div id="history">
@@ -1593,7 +1624,7 @@
 						<xsl:apply-templates select="janitor_list/options_lid"/>
 					</select>
 				</div>
-<!--				<div class="pure-control-group">
+				<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'supervisor')"/>
 					</label>
@@ -1660,7 +1691,7 @@
 						<xsl:apply-templates select="art_list/options"/>
 					</select>
 				</div>
-<!--				<div class="pure-control-group">
+				<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Type invoice II')"/>
 					</label>

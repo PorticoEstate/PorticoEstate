@@ -2291,23 +2291,25 @@ JS;
 //--------------files
 			$link_file_data = array
 				(
-				'menuaction' => 'property.uiproject.view_file',
-				'id'		 => $id
+				'menuaction' => 'property.uiproject.view_file'
 			);
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
 			$_files = $this->bo->get_files($id);
 
-			$lang_view_file		 = lang('click to view file');
-			$lang_delete_file	 = lang('Check to delete file');
-			$z					 = 0;
-			$content_files		 = array();
+			$bofiles = CreateObject('property.bofiles');
+			$image_list		 = array();
+
 			foreach ($_files as $_file)
-			{
-				$content_files[$z]['file_name']		 = "<a href=\"{$link_view_file}&amp;file_id={$_file['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
-				$content_files[$z]['delete_file']	 = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['file_id']}\" title=\"{$lang_delete_file}\">";
-				$z++;
+			{				
+				if($bofiles->is_image("{$bofiles->rootdir}{$_file['directory']}/{$_file['name']}"))
+				{
+					$image_list[] = array(
+						'image_url'		 => "{$link_view_file}&amp;file_id={$_file['file_id']}",
+						'image_name'	 => $_file['name']
+					);			
+				}				
 			}
 
 			$files_def = array
@@ -2323,10 +2325,8 @@ JS;
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_5',
-//				'requestUrl' => "''",
 				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uiproject.get_files',
 						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
-//				'data' => json_encode($content_files),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $files_def,
 				'config'	 => array(
@@ -2649,6 +2649,7 @@ JS;
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file',	'id' => $id)),					
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
+				'image_list'						 => $image_list
 			);
 			if ($auto_create)
 			{
@@ -2683,6 +2684,7 @@ JS;
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('select2');
+			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');

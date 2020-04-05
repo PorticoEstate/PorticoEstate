@@ -2087,12 +2087,6 @@
 			  $msgbox_data = '';
 			  } */
 
-			$link_file_data = array
-				(
-				'menuaction' => 'property.uiworkorder.view_file',
-				'id'		 => $id
-			);
-
 			$categories = $this->cats->formatted_xslt_list(array(
 				'selected' => $project['cat_id']));
 
@@ -2144,15 +2138,6 @@
 				)
 			);
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
-
-			$content_files = array();
-			for ($z = 0; $z < count($values['files']); $z++)
-			{
-				$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $values['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
-			}
-
 			$files_def = array
 				(
 				array(
@@ -2179,7 +2164,6 @@
 				'container'	 => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uiworkorder.get_files',
 						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
-//				'data' => json_encode($content_files),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $files_def,
 				'config'	 => array(
@@ -2877,6 +2861,9 @@
 			);
 			$file_attachments	 = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
+			$bofiles = CreateObject('property.bofiles');
+			$image_list		 = array();
+
 			$content_attachments = array();
 			$link_view_file		 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 			$lang_view_file		 = lang('click to view file');
@@ -2895,6 +2882,14 @@
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
+
+				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
+				{
+					$image_list[] = array(
+						'image_url'		 => "{$link_view_file}&file_id={$_entry['file_id']}",
+						'image_name'	 => $_entry['name']
+					);
+				}
 			}
 			unset($_entry);
 
@@ -2921,6 +2916,14 @@
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
+
+				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
+				{
+					$image_list[] = array(
+						'image_url'		 => "{$link_view_file}&file_id={$_entry['file_id']}",
+						'image_name'	 => $_entry['name']
+					);
+				}
 			}
 
 			$datatable_def[] = array
@@ -3118,7 +3121,8 @@
 				'value_order_received_amount'			 => (int)$values['order_received_amount'],
 				'value_delivery_address'				 => $delivery_address,
 				'multiple_uploader'						 => true,
-				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.handle_multi_upload_file','id' => $id))
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.handle_multi_upload_file','id' => $id)),
+				'image_list'							 => $image_list
 			);
 
 			$appname = lang('Workorder');
@@ -3128,6 +3132,7 @@
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('select2');
+			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 

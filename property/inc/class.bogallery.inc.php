@@ -202,6 +202,10 @@
 					$values['location']			 = '.project.workorder';
 					$values['location_item_id']	 = $directory[3];
 					break;
+				case 'project':
+					$values['location']			 = '.project';
+					$values['location_item_id']	 = $directory[3];
+					break;
 				default:
 					$values['location']			 = '.' . str_replace('_', '.', $directory[2]);
 					$values['location_item_id']	 = $directory[4];
@@ -240,7 +244,7 @@
 			{
 				$directory = explode('/', $entry);
 
-				if (isset($directory[2]) && !isset($directory[3]))
+				if (!empty($directory[2]) && !isset($directory[3]))
 				{
 					$location_info = $this->get_location($directory);
 					if ($GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
@@ -253,6 +257,7 @@
 					}
 				}
 			}
+
 			return $locations;
 		}
 	}
