@@ -24,6 +24,21 @@
 		#submitbox {
 		display: none;
 		}
+
+		.glider-slide img {
+		opacity: 0;
+		transform: opacity .1s ease;
+		}
+		.glider-slide img.loaded {
+		opacity: 1;
+		}
+		.wrapperForGlider {
+		width: 500px;
+		max-width: 80%;
+		margin: 0 auto;
+		}
+
+
 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
@@ -827,7 +842,7 @@
 								</xsl:for-each>
 							</div>
 						</div>
-						
+
 						<div class="pure-control-group">
 							<label for="name">
 								<xsl:value-of select="php:function('lang', 'attachments')"/>
@@ -987,6 +1002,21 @@
 								</xsl:call-template>
 							</div>
 
+							<div class="wrapperForGlider">
+								<div class="glider-contain">
+									<div class="glider">
+										<xsl:for-each select="image_list">
+											<div>
+												<img data-src="{image_url}" alt="{image_name}"/>
+											</div>
+										</xsl:for-each>
+									</div>
+									<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+									<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+									<div role="tablist" class="dots"></div>
+								</div>
+							</div>
+
 						</fieldset>
 					</div>
 					<div id="history">
@@ -1014,17 +1044,17 @@
 
 		<!--/div-->
 	</form>
-	
+
 	<xsl:variable name="done_action">
 		<xsl:value-of select="done_action"/>
 	</xsl:variable>
 	<form name="done_form" id="done_form" method="post" action="{$done_action}"></form>
-			
+
 	<xsl:variable name="edit_action">
 		<xsl:value-of select="edit_action"/>
 	</xsl:variable>
 	<form name="edit_form" id="edit_form" method="post" action="{$edit_action}"></form>
-							
+
 	<!-- AQUI VA EL SCRIPT -->
 	<xsl:choose>
 		<xsl:when test="mode='edit'">
@@ -1035,6 +1065,7 @@
 			</form>
 		</xsl:when>
 	</xsl:choose>
+
 </xsl:template>
 
 
