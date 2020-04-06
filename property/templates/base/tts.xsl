@@ -761,7 +761,7 @@
 							<div class="pure-control-group ">
 								<label for="name">
 								</label>
-								<div class="wrapperForGlider">
+								<div class="wrapperForGlider" style="display:none;">
 									<div class="glider-contain">
 										<div class="glider">
 											<xsl:for-each select="content_files">
