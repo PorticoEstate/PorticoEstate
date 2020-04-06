@@ -36,6 +36,7 @@
 		width: 500px;
 		max-width: 80%;
 		margin: 0 auto;
+		display: inline-block;
 		}
 
 
@@ -971,22 +972,24 @@
 				<xsl:when test="value_project_id &gt; 0">
 					<div id="documents">
 						<fieldset>
-							<label for="name">
-								<xsl:value-of select="php:function('lang', 'files')"/>
-							</label>
-							<div>
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_5'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl' />
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="data" select ='data' />
-											<xsl:with-param name="config" select ='config' />
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom pure-input-1-2">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_5'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
 
 							<div class="pure-control-group">
@@ -1002,18 +1005,22 @@
 								</xsl:call-template>
 							</div>
 
-							<div class="wrapperForGlider">
-								<div class="glider-contain">
-									<div class="glider">
-										<xsl:for-each select="image_list">
-											<div>
-												<img data-src="{image_url}" alt="{image_name}"/>
-											</div>
-										</xsl:for-each>
+							<div class="pure-control-group ">
+								<label for="name">
+								</label>
+								<div class="wrapperForGlider">
+									<div class="glider-contain">
+										<div class="glider">
+											<xsl:for-each select="image_list">
+												<div>
+													<img data-src="{image_url}" alt="{image_name}"/>
+												</div>
+											</xsl:for-each>
+										</div>
+										<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+										<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+										<div role="tablist" class="dots"></div>
 									</div>
-									<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
-									<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
-									<div role="tablist" class="dots"></div>
 								</div>
 							</div>
 
