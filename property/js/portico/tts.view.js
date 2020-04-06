@@ -1,6 +1,7 @@
 var d;
 var vendor_id = 0;
 var amount = 0;
+var glider;
 
 this.local_DrawCallback4 = function (container)
 {
@@ -621,8 +622,65 @@ $(document).ready(function ()
 	}
 
 	on_location_updated(location_code);
+	try
+	{
+
+		glider = new Glider(document.querySelector('.glider'), {
+			slidesToShow: 1,
+			draggable: true,
+			arrows: {
+				prev: '.glider-prev',
+				next: '.glider-next'
+			},
+			easing: function (x, t, b, c, d)
+			{
+				return c * (t /= d) * t + b;
+			},
+			dots: '.dots'
+		});
+
+		document.querySelector('.glider').addEventListener('glider-slide-visible', function (event)
+		{
+			var imgs_to_anticipate = 1;
+			var glider = Glider(this);
+			for (var i = 0; i <= imgs_to_anticipate; ++i)
+			{
+				var index = Math.min(event.detail.slide + i, glider.slides.length - 1),
+					glider = glider;
+				loadImages.call(glider.slides[index], function ()
+				{
+					glider.refresh(true);
+				})
+			}
+		});
+
+		loadImages.call(glider.slides[0]);
+
+	}
+	catch (e)
+	{
+
+	}
 
 });
+
+function loadImages(callback)
+{
+	[].forEach.call(this.querySelectorAll('img'), function (img)
+	{
+		var _img = new Image, _src = img.getAttribute('data-src');
+		_img.onload = function ()
+		{
+			img.src = _src;
+			img.classList.add('loaded');
+			callback && callback(img);
+		}
+		if (img.src !== _src)
+		{
+			_img.src = _src;
+		}
+	});
+}
 
 window.on_location_updated = function (location_code)
 {
