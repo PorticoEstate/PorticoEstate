@@ -273,36 +273,44 @@ JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'uns
 
 $(document).ready(function ()
 {
-//	glider = new Glider(document.querySelector('.glider'), {
-//		slidesToShow: 1,
-//		draggable: true,
-//		arrows: {
-//			prev: '.glider-prev',
-//			next: '.glider-next'
-//		},
-//		easing: function (x, t, b, c, d)
-//		{
-//			return c * (t /= d) * t + b;
-//		},
-//		dots: '.dots'
-//	})
-//
-//	document.querySelector('.glider').addEventListener('glider-slide-visible', function (event)
-//	{
-//		var imgs_to_anticipate = 1;
-//		var glider = Glider(this);
-//		for (var i = 0; i <= imgs_to_anticipate; ++i)
-//		{
-//			var index = Math.min(event.detail.slide + i, glider.slides.length - 1),
-//				glider = glider;
-//			loadImages.call(glider.slides[index], function ()
-//			{
-//				glider.refresh(true);
-//			})
-//		}
-//	});
-//
-//	loadImages.call(glider.slides[0]);
+	try
+	{
+
+		glider = new Glider(document.querySelector('.glider'), {
+			slidesToShow: 1,
+			draggable: true,
+			arrows: {
+				prev: '.glider-prev',
+				next: '.glider-next'
+			},
+			easing: function (x, t, b, c, d)
+			{
+				return c * (t /= d) * t + b;
+			},
+			dots: '.dots'
+		})
+
+		document.querySelector('.glider').addEventListener('glider-slide-visible', function (event)
+		{
+			var imgs_to_anticipate = 1;
+			var glider = Glider(this);
+			for (var i = 0; i <= imgs_to_anticipate; ++i)
+			{
+				var index = Math.min(event.detail.slide + i, glider.slides.length - 1),
+					glider = glider;
+				loadImages.call(glider.slides[index], function ()
+				{
+					glider.refresh(true);
+				})
+			}
+		});
+
+		loadImages.call(glider.slides[0]);
+	}
+	catch (e)
+	{
+
+	}
 
 	check_button_names();
 

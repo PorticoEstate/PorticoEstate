@@ -280,19 +280,19 @@
 				return;
 			}
 
-			$link_file_data = array
-				(
-				'menuaction' => 'property.uiworkorder.view_file',
+			$z = 0;
+			$img_types		 = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
 			);
-
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
 			$values = $this->bo->read_single($id);
 
 			$file_attachments	 = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
 
 			$content_attachments = array();
-			$link_view_file		 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.view_file'));
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
@@ -309,23 +309,26 @@
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
+				if (in_array($_entry['mime_type'], $img_types))
+				{
+					$content_attachments[$z]['file_name']		 = $_entry['name'];
+					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
+					$content_attachments[$z]['img_url']		 = self::link(array(
+							'menuaction' => 'property.uiworkorder.view_image',
+							'img_id'	 => $_entry['file_id']
+					));
+				}
+				$z ++;
 			}
 			unset($_entry);
 
-			$project_link_file_data	 = array
-				(
-				'menuaction' => 'property.uiproject.view_file',
-				'id'		 => $project['project_id']
-			);
-			$link_view_file			 = $GLOBALS['phpgw']->link('/index.php', $project_link_file_data);
-
+			$link_view_file			 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.view_file'));
 			$boproject		 = CreateObject('property.boproject');
 			$files			 = $boproject->get_files($values['project_id']);
 			$lang_project	 = lang('project');
 
 			foreach ($files as $_entry)
 			{
-
 				$_checked = '';
 				if (in_array($_entry['file_id'], $file_attachments))
 				{
@@ -336,9 +339,18 @@
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
+
+				if (in_array($_entry['mime_type'], $img_types))
+				{
+					$content_attachments[$z]['file_name']		 = $_entry['name'];
+					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
+					$content_attachments[$z]['img_url']		 = self::link(array(
+							'menuaction' => 'property.uiworkorder.view_image',
+							'img_id'	 => $_entry['file_id']
+					));
+				}
+				$z ++;
 			}
-
-
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -2865,7 +2877,7 @@
 			$image_list		 = array();
 
 			$content_attachments = array();
-			$link_view_file		 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$link_view_file		 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.view_file'));
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
@@ -2893,12 +2905,7 @@
 			}
 			unset($_entry);
 
-			$project_link_file_data	 = array
-				(
-				'menuaction' => 'property.uiproject.view_file',
-				'id'		 => $project['project_id']
-			);
-			$link_view_file			 = $GLOBALS['phpgw']->link('/index.php', $project_link_file_data);
+			$link_view_file			 = $GLOBALS['phpgw']->link('/index.php', array(	'menuaction' => 'property.uiproject.view_file'));
 
 			$files			 = $boproject->get_files($project['project_id']);
 			$lang_project	 = lang('project');
