@@ -1,5 +1,5 @@
-
 /* global get_files_java_url */
+var glider;
 
 this.fileuploader = function ()
 {
