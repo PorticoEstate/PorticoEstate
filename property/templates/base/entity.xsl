@@ -375,6 +375,7 @@
 	<script type="text/javascript">
 		var location_id = '<xsl:value-of select="value_location_id"/>';
 		var item_id = '<xsl:value-of select="value_id"/>';
+		var get_files_java_url = <xsl:value-of select="get_files_java_url"/>;
 		function set_tab(active_tab)
 		{
 			document.form.active_tab.value = active_tab;
@@ -385,6 +386,25 @@
 			</xsl:when>
 		</xsl:choose>
 	</script>
+
+	<style type="text/css">
+		.glider-slide img {
+		opacity: 0;
+		transform: opacity .1s ease;
+		}
+		.glider-slide img.loaded {
+		opacity: 1;
+		}
+		.wrapperForGlider {
+		width: 500px;
+		max-width: 80%;
+		margin: 0 auto;
+		margin-bottom: 50px;
+		display: inline-block;
+		}
+
+	</style>
+
 
 	<div id="entity_edit_tabview">
 		<dl>
@@ -784,6 +804,28 @@
 										</xsl:if>
 									</xsl:for-each>
 								</div>
+
+							<div class="pure-control-group ">
+								<label for="name">
+								</label>
+								<div class="wrapperForGlider" style="display:none;">
+									<div class="glider-contain">
+										<div class="glider">
+											<xsl:for-each select="content_images">
+												<xsl:if test="img_url">
+													<div>
+														<img data-src="{img_url}" alt="{file_name}"/>
+													</div>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+										<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+										<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+										<div role="tablist" class="dots"></div>
+									</div>
+								</div>
+							</div>
+
 								<xsl:choose>
 									<xsl:when test="value_id!='' and fileupload = 1 and mode = 'edit'">
 										<xsl:call-template name="file_upload"/>

@@ -1159,6 +1159,7 @@
 				'entity_id'	 => $this->entity_id,
 				'type'		 => $this->type
 			);
+			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
 			if (isset($values['files']) && is_array($values['files']))
 			{
@@ -1169,14 +1170,28 @@
 				}
 			}
 
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
 			$content_files = array();
+			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
 				$content_files[] = array
 					(
-					'file_name'		 => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">'
 				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = "{$link_view_file}&file_id={$_entry['file_id']}";
+				}
+				$z ++;
 			}
 
 			$start			 = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
@@ -2242,7 +2257,6 @@
 
 				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
 				{
-					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
 
 					$link_file_data = array
 						(
@@ -2253,6 +2267,30 @@
 						'entity_id'	 => $this->entity_id,
 						'type'		 => $this->type
 					);
+					$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+					$img_types = array(
+						'image/jpeg',
+						'image/png',
+						'image/gif'
+					);
+
+					$content_images = array();
+					foreach ($values['files'] as $_entry)
+					{
+						if ( in_array($_entry['mime_type'], $img_types))
+						{
+							$content_images[] = array(
+								'file_name' => $_entry['name'],
+								'img_id' => $_entry['file_id'],
+								'img_url' => "{$link_view_file}&file_id={$_entry['file_id']}"
+							);
+
+						}
+					}
+
+					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
+
 
 					$file_def = array
 						(
@@ -2622,7 +2660,9 @@ JS;
 				'entity_group_list'				 => array('options' => $entity_group_list),
 				'entity_group_name'				 => $entity_group_name,
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+					'date', 'security', 'file')),
+				'content_images'				 => $content_images,
+				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}'}",
 			);
 
 			//print_r($data['location_data2']);die;
@@ -2632,6 +2672,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 
 			self::add_javascript('property', 'portico', 'entity.edit.js');
+			phpgwapi_jquery::load_widget('glider');
 
 			$attribute_template = 'attributes_form';
 			if ($mode == 'view')
