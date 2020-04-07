@@ -441,6 +441,19 @@
 
 
 	</script>
+	<style>
+
+
+		.wrapperForGlider {
+		width: 500px;
+		max-width: 80%;
+		margin: 0 auto;
+		margin-bottom: 50px;
+		display: inline-block;
+		}
+
+
+	</style>
 	<dl>
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
@@ -791,10 +804,26 @@
 									</xsl:for-each>
 								</div>
 							</div>
-						</xsl:when>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="fileupload = 1">
+							<div class="pure-control-group ">
+								<label for="name">
+								</label>
+								<div class="wrapperForGlider" style="display:none;">
+									<div class="glider-contain">
+										<div class="glider">
+											<xsl:for-each select="content_files">
+												<xsl:if test="img_url">
+													<div>
+														<img data-src="{img_url}" alt="{file_name}"/>
+													</div>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+										<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+										<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+										<div role="tablist" class="dots"></div>
+									</div>
+								</div>
+							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'upload files')"/>

@@ -314,20 +314,37 @@
 		}
 		#submitbox {
 		display: none;
-		} 	</style>
+		}
+
+		.glider-slide img {
+		opacity: 0;
+		transform: opacity .1s ease;
+		}
+		.glider-slide img.loaded {
+		opacity: 1;
+		}
+		.wrapperForGlider {
+		width: 500px;
+		max-width: 80%;
+		margin: 0 auto;
+		margin-bottom: 50px;
+		display: inline-block;
+		}
+
+	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		function generate_order()
 		{
-			var Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
-			Window1.focus();
+		var Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
+		Window1.focus();
 		}
 
 		function generate_request()
 		{
-			var Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
-			Window1.focus();
+		var Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
+		Window1.focus();
 		}
 
 		function template_lookup()
@@ -722,13 +739,13 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'files')"/>
-								</label>
-								<div class="pure-u-md-3-4" >
-									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_2'">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_2'">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'files')"/>
+										</label>
+										<div class="pure-u-md-3-4" >
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl'/>
@@ -737,10 +754,31 @@
 												<xsl:with-param name="tabletools" select ='tabletools' />
 												<xsl:with-param name="config" select ='config'/>
 											</xsl:call-template>
-										</xsl:if>
-									</xsl:for-each>
+										</div>
+									</div>
+								</xsl:if>
+							</xsl:for-each>
+							<div class="pure-control-group ">
+								<label for="name">
+								</label>
+								<div class="wrapperForGlider" style="display:none;">
+									<div class="glider-contain">
+										<div class="glider">
+											<xsl:for-each select="content_files">
+												<xsl:if test="img_url">
+													<div>
+														<img data-src="{img_url}" alt="{file_name}"/>
+													</div>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+										<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+										<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+										<div role="tablist" class="dots"></div>
+									</div>
 								</div>
 							</div>
+
 						</xsl:when>
 					</xsl:choose>
 					<xsl:choose>

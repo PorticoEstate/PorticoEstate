@@ -1951,7 +1951,7 @@ HTML;
 					$content_files[$z]['file_name'] = $_entry['name'];
 					$content_files[$z]['img_id'] = $_entry['file_id'];
 					$content_files[$z]['img_url'] = self::link(array(
-							'menuaction' => 'helpdesk.uitts.view_image',
+							'menuaction' => 'property.uitts.view_image',
 							'img_id'	=>  $_entry['file_id'],
 							'file' => $_entry['directory'] . '/' . $_entry['file_name']
 					));
@@ -3511,13 +3511,14 @@ HTML;
 				'validatet_category'			 => $validatet_category,
 				'collect_building_part'			 => !!$this->bo->config->config_data['workorder_require_building_part'],
 				'delivery_type_list'			 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $ticket['delivery_type']))),
-				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type'])))
-
+				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
+				'content_files'					 => $content_files
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
+			phpgwapi_jquery::load_widget('glider');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();

@@ -130,13 +130,11 @@
 
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
-					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$file	 = urldecode(phpgw::get_var('file'));
 			$thumb	 = phpgw::get_var('thumb', 'bool');
-
 
 			$directory = explode('/', $file);
 
@@ -153,6 +151,7 @@
 			}
 
 			$img_id = phpgw::get_var('img_id', 'int');
+			$file_id = phpgw::get_var('file_id', 'int');
 
 			$bofiles = CreateObject('property.bofiles');
 
@@ -161,8 +160,6 @@
 				$file_info	 = $bofiles->vfs->get_info($img_id);
 				$file		 = "{$file_info['directory']}/{$file_info['name']}";
 			}
-
-
 
 			$source		 = "{$bofiles->rootdir}{$file}";
 			$thumbfile	 = "$source.thumb";
@@ -191,6 +188,10 @@
 			else if ($img_id)
 			{
 				$bofiles->get_file($img_id);
+			}
+			else if ($file_id)
+			{
+				$bofiles->get_file($file_id);
 			}
 			else
 			{

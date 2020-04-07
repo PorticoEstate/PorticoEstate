@@ -157,13 +157,13 @@
 
 				$entry['location']			 = $location['location'];
 				$entry['location_item_id']	 = $location['location_item_id'];
-				$entry['url']				 = $this->interlink->get_relation_link($entry['location'], $entry['location_item_id']);
+				$entry['url']				 = $this->interlink->get_relation_link($location, $entry['location_item_id']);
 
 				$entry['location_name']	 = $this->interlink->get_location_name($entry['location']);
 				$entry['document_url']	 = $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uigallery.view_file',
-					'file'		 => urlencode("{$entry['directory']}/{$entry['name']}")
+					'file_id'	 => $entry['id']
 				));
 				$entry['user']			 = $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
 			}
@@ -176,6 +176,7 @@
 		public function get_location( $directory = array() )
 		{
 			$values = array();
+			$values['appname'] = $directory[1];
 			switch ($directory[2])
 			{
 				case 'agreement':

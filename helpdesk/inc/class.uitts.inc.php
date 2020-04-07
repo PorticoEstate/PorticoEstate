@@ -3015,14 +3015,14 @@ JS;
 				'reverse_assigned' => $ticket['user_id'] != $ticket['reverse_id'] ? true : false,
 				'parent_cat_id' => $this->parent_cat_id,
 				'cat_change_list' => $cat_change_list,
-				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id))
-
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id)),
+				'content_files'	=> $content_files
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
-//			phpgwapi_jquery::init_multi_upload_file();
 			phpgwapi_jquery::load_widget('file-upload-minimum');
+			phpgwapi_jquery::load_widget('glider');
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
