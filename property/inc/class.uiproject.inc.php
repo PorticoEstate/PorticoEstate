@@ -77,6 +77,7 @@
 			'handle_multi_upload_file'		 => true,
 			'build_multi_upload_file'		 => true,
 			'get_files'						 => true,
+			'update_file_data'				 => true,
 			'view_image'					 => true,
 			'get_other_projects'			 => true,
 			'get_attachment'				 => true
@@ -304,6 +305,7 @@
 			foreach ($values as $_entry)
 			{
 				$content_files[] = array(
+					'file_id'		 => $_entry['file_id'],
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
@@ -338,8 +340,39 @@
 			return $content_files;
 		}
 
+		public function update_file_data()
+		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$location_id = phpgw::get_var('location_id', 'int');
+			$location_item_id = phpgw::get_var('location_item_id', 'int');
+			$ids = phpgw::get_var('ids', 'int');
+			$action= phpgw::get_var('action', 'string');
+			$tag= phpgw::get_var('tag', 'string');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if ($action == 'delete_file' && $ids && $location_item_id)
+			{
+				$bofiles->delete_file("/project/{$location_item_id}/", array('file_action' => $ids));
+			}
+
+			return $action;
+
+	//		set_tag
+	//		delete_file
+		}
+
 		public function handle_multi_upload_file()
 		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
 			$id = phpgw::get_var('id', 'int', 'GET');
 
 			phpgw::import_class('property.multiuploader');
@@ -2322,6 +2355,99 @@ JS;
 					'resizeable' => true)
 			);
 
+//---file tagging
+			
+			$requestUrl	 = json_encode(self::link(array(
+				'menuaction' => 'property.uiproject.update_file_data',
+				'location_id' => $location_id,
+				'location_item_id' => $id,
+				'phpgw_return_as'	 => 'json')
+				));
+			$requestUrl = str_replace('&amp;', '&', $requestUrl);
+
+			$buttons = array
+			(
+				array(
+					'action' => 'set_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'set_tag',
+					'label'	 => lang('set tag'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	=> 'actionButton',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'delete_file',
+					'type'	 => 'buttons',
+					'name'	 => 'delete',
+					'label'	 => lang('Delete'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	 => 'actionButton',
+					'value_hidden'	 => ""
+					),
+			);
+
+			$tabletools = array
+			(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			foreach ($buttons as $entry)
+			{
+				$tabletools[] = array
+					(
+					'my_name'		 => $entry['name'],
+					'text'			 => $entry['label'],
+					'type'			 => 'custom',
+					'custom_code'	 => "
+						var api = oTable5.api();
+						var selected = api.rows( { selected: true } ).data();
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['file_id']);
+						}
+						{$entry['funct']}('{$entry['action']}', ids);
+						"
+				);
+			}
+
+			$code		 = <<<JS
+
+	this.onActionsClick_files=function(action, ids)
+	{
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: $requestUrl,
+			data:{ids:ids,action:action},
+			success: function(data) {
+				if( data != null)
+				{
+
+				}
+				JqueryPortico.updateinlineTableHelper('datatable-container_5');
+			},
+			error: function(data) {
+				alert('feil');
+			}
+		});
+	}
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $code);
+
+//-- tile tagging
+
+
+
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_5',
@@ -2329,6 +2455,7 @@ JS;
 						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $files_def,
+				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)

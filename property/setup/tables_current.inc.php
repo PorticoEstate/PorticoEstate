@@ -50,7 +50,7 @@
 				'split' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'remark' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'owner' => array('type' => 'varchar', 'precision' => '5', 'nullable' => True),
-				'Spredning' => array('type' => 'int', 'precision' => '4', 'nullable' => True)
+				'spredning' => array('type' => 'int', 'precision' => '4', 'nullable' => True)
 			),
 			'pk' => array('gab_id', 'location_code'),
 			'fk' => array(),
