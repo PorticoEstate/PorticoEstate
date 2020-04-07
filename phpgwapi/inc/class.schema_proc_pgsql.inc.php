@@ -231,9 +231,15 @@
 			return "UNIQUE($sFields)";
 		}
 
-		function GetIXSQL($sFields)
+		function GetIXSQL($sFields, $field_type = '')
 		{
-			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ USING btree ($sFields)";
+			$index_type = 'btree';
+			if($field_type == 'jsonb')
+			{
+				$index_type = 'gin';
+			}
+
+			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ USING {$index_type} ($sFields)";
 			return '';
 		}
 
