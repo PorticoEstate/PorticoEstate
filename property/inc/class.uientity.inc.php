@@ -1176,14 +1176,16 @@
 				'image/gif'
 			);
 
+			$lang_view = lang('click to view file');
+			$lang_delete = lang('Check to delete file');
 			$content_files = array();
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
 				$content_files[] = array
 					(
-					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
-					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">'
+					'file_link'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file'	 => "<input type='checkbox' name='values[file_action][]' value='{$_entry['file_id']}' title='{$lang_delete}'>"
 				);
 				if ( in_array($_entry['mime_type'], $img_types))
 				{
@@ -2294,7 +2296,7 @@
 
 					$file_def = array
 						(
-						array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
+						array('key'		 => 'file_link', 'label'		 => lang('Filename'), 'sortable'	 => false,
 							'resizeable' => true),
 						array('key'		 => 'delete_file', 'label'		 => lang('Delete file'), 'sortable'	 => false,
 							'resizeable' => true)
@@ -2662,7 +2664,7 @@ JS;
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'content_images'				 => $content_images,
-				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}'}",
+				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
 			);
 
 			//print_r($data['location_data2']);die;
