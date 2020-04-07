@@ -321,6 +321,16 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'phpgw_vfs_filetags' => array(
+			'fd' => array(
+				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'tags' => array('type' => 'jsonb','nullable' => true),
+			),
+			'pk' => array('file_id'),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'ix' => array('tags'),
+			'uc' => array()
+		),
 		'phpgw_vfs_file_relation' => array(
 			'fd' => array(
 				'relation_id'		=> array('type' => 'auto','nullable' => False),
