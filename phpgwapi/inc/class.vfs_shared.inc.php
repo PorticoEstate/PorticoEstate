@@ -760,6 +760,10 @@
 			return True;
 		}
 
+		function set_tags ($ids, $tags) { return False; }
+		function remove_tags ($ids, $tags) { return False; }
+		function get_all_tags()	{ return false; }
+
 		/**
 		 *  * Check if a location (file or directory) exists
 		 * *

@@ -56,6 +56,7 @@
 			   set_attributes now uses this array().   07-Dec-01 skeeter
 			*/
 
+			$this->db = & $GLOBALS['phpgw']->db;
 			$this->db2 = clone $GLOBALS['phpgw']->db;
 			$this->attributes[] = 'deleteable';
 			$this->attributes[] = 'content';
@@ -2461,6 +2462,19 @@
 					)
 				);
 
+				$GLOBALS['phpgw']->db->query("SELECT file_id FROM phpgw_vfs"
+				. " WHERE directory='{$p->fake_leading_dirs_clean}'"
+				. " AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_DELETE)), __LINE__, __FILE__);
+				
+				$GLOBALS['phpgw']->db->next_record();
+				
+				$file_id = (int)$GLOBALS['phpgw']->db->f('file_id');
+				
+				if($file_id)
+				{
+					$GLOBALS['phpgw']->db->query("DELETE FROM phpgw_vfs_filetags WHERE file_id = {$file_id}", __LINE__, __FILE__);
+				}
+
 				$query = $GLOBALS['phpgw']->db->query("DELETE FROM phpgw_vfs"
 				. " WHERE directory='{$p->fake_leading_dirs_clean}'"
 				. " AND name='{$p->fake_name_clean}'" . $this->extra_sql(array('query_type' => VFS_SQL_DELETE)), __LINE__, __FILE__);
@@ -3006,6 +3020,175 @@
 			return $mime_type;
 		}
 
+		function get_all_tags( )
+		{
+			$sql = "SELECT DISTINCT tags FROM phpgw_vfs_filetags";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$data = array();
+			while ($this->db->next_record())
+			{
+				$tags = json_decode($this->db->f('tags', true), true);
+				foreach ($tags as $value)
+				{
+					$data[] = $value;	
+				}
+				unset($value);
+			}
+			$result = array_unique($data);
+			
+			$ret = array();
+			foreach ($result as $value)
+			{
+				$ret[] = array(
+					'id' => $value,
+					'name' => $value
+				);
+				
+			}
+			
+			return $ret;
+		}
+
+
+		function remove_tags($ids, $tags)
+		{
+			if(!is_array($tags))
+			{
+				$tags = array($tags);
+			}
+			
+			$_tags = array_unique($tags);
+			
+			foreach ($_tags as $tag)
+			{
+				$this->remove_tag($ids, $tag);
+			}		
+		}
+
+		function remove_tag($ids, $tag)
+		{
+			if(!is_array($ids))
+			{
+				$ids = array($ids);
+			}
+
+			$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $ids) . ")"
+				. " AND tags @> '[\"{$tag}\"]'::jsonb";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$ids_with_tag = array();
+			while ($this->db->next_record())
+			{
+				$ids_with_tag[] = $this->db->f('file_id');
+			}
+
+
+			if($ids_with_tag)
+			{
+				$json_string = $this->db->db_addslashes($tag);
+
+				$sql = "UPDATE phpgw_vfs_filetags SET tags = tags - '{$json_string}'"
+				. " WHERE file_id IN (" . implode(',', $ids_with_tag) . ")";
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+		}
+
+		/**
+		 * Add or update multiple tags on multiple files
+		 * @param array $ids
+		 * @param array $tag
+		 */
+		function set_tags($ids, $tags)
+		{
+			if(!is_array($tags))
+			{
+				$tags = array($tags);
+			}
+			
+			$_tags = array_unique($tags);
+			
+			foreach ($_tags as $tag)
+			{
+				$this->set_tag($ids, $tag);
+			}
+			
+		}
+
+		/**
+		 * Add or update single tag on multiple files
+		 * @param array $ids
+		 * @param string $tag
+		 */
+		function set_tag($ids, $tag)
+		{
+			if(!$tag)
+			{
+				return;
+			}
+			
+			if(!is_array($ids))
+			{
+				$ids = array($ids);
+			}
+
+			$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $ids) . ")";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$existing_ids = array();
+			while ($this->db->next_record())
+			{
+				$existing_ids[] = $this->db->f('file_id');
+			}
+
+			$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $existing_ids) . ")"
+				. " AND tags @> '[\"{$tag}\"]'::jsonb";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$ids_with_tag = array();
+			while ($this->db->next_record())
+			{
+				$ids_with_tag[] = $this->db->f('file_id');
+			}
+
+			$new_ids= array_diff($ids, $existing_ids);
+
+			$append_ids = array_diff($existing_ids, $ids_with_tag);
+			$json_string = json_encode(array($this->db->db_addslashes($tag)));
+			if($new_ids)
+			{
+				$sql = 'INSERT INTO phpgw_vfs_filetags (file_id, tags) VALUES(?, ?)';
+				$valueset	 = array();
+				foreach ($new_ids as $new_id)
+				{
+					$valueset[] = array
+						(
+						1	 => array
+							(
+							'value'	 => (int)$new_id,
+							'type'	 => PDO::PARAM_INT
+						),
+						2	 => array
+							(
+							'value'	 => $json_string,
+							'type'	 => PDO::PARAM_STR
+						)
+					);
+
+				}
+				$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+			}
+
+			if($append_ids)
+			{
+				$sql = "UPDATE phpgw_vfs_filetags SET tags = tags || '$json_string'::jsonb"
+				. " WHERE file_id IN (" . implode(',', $append_ids) . ")";
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+		}
 		/*
 		 * See vfs_shared
 		 */
@@ -3204,7 +3387,8 @@
 			}
 			else
 			{
-				$sql .= " FROM phpgw_vfs WHERE directory = '{$dir_clean}'";
+				$this->attributes[] = 'tags';
+				$sql = "SELECT tags, phpgw_vfs.* FROM phpgw_vfs LEFT JOIN phpgw_vfs_filetags ON phpgw_vfs.file_id = phpgw_vfs_filetags.file_id WHERE directory = '{$dir_clean}'";
 			}
 
 			$sql .= $this->extra_sql(array('query_type' => VFS_SQL_SELECT));
