@@ -8,7 +8,7 @@ $(document).ready(function ()
 
 		if ($("#update-check-list-status-value").val() == 0)
 		{
-			var proceed = confirm("Vi du oppheve status som utført");
+			var proceed = confirm("Vil du oppheve status som utført");
 			if (proceed !== true)
 			{
 				return false;
