@@ -162,6 +162,27 @@ $(document).ready(function ()
 		width: '50%'
 	});
 
+	$("#tags").select2({
+		placeholder: "Select a tag",
+		width: '50%',
+		tags: true,
+		createTag: function (params)
+		{
+			var term = $.trim(params.term);
+
+			if (term === '')
+			{
+				return null;
+			}
+
+			return {
+				id: term,
+				text: term,
+				newTag: true // add additional parameters
+			}
+		}
+	});
+
 
 	$("#global_category_id").change(function ()
 	{

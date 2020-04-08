@@ -278,6 +278,7 @@
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
+			$tags = phpgw::get_var('tags');
 
 			if (!$this->acl_read)
 			{
@@ -304,8 +305,18 @@
 			$z = 0;
 			foreach ($values as $_entry)
 			{
+				if($tags && $_entry['tags'])
+				{
+					$filter_check = json_decode($_entry['tags'], true);
+					
+					if(!array_intersect($filter_check, $tags))
+					{
+						continue;
+					}				
+				}
 				$content_files[] = array(
 					'file_id'		 => $_entry['file_id'],
+					'tags'			 => $_entry['tags'],
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
@@ -351,7 +362,7 @@
 			$location_item_id = phpgw::get_var('location_item_id', 'int');
 			$ids = phpgw::get_var('ids', 'int');
 			$action= phpgw::get_var('action', 'string');
-			$tag= phpgw::get_var('tag', 'string');
+			$tags= phpgw::get_var('tags', 'string');
 
 			$bofiles = CreateObject('property.bofiles');
 
@@ -359,11 +370,19 @@
 			{
 				$bofiles->delete_file("/project/{$location_item_id}/", array('file_action' => $ids));
 			}
+			else if($action == 'set_tag' && $ids)
+			{
+				$bofiles->set_tags($ids, $tags);
+				
+			}
+			else if($action == 'remove_tag' && $ids)
+			{
+				$bofiles->remove_tags($ids, $tags);
+				
+			}
 
 			return $action;
-
-	//		set_tag
-	//		delete_file
+			
 		}
 
 		public function handle_multi_upload_file()
@@ -2346,13 +2365,27 @@ JS;
 			}
 
 			$files_def = array
-				(
-				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
-					'resizeable' => true),
-				array('key'		 => 'picture', 'label'		 => lang('picture'), 'sortable'	 => false,
-					'resizeable' => true, 'formatter'	 => 'JqueryPortico.showPicture'),
-				array('key'		 => 'delete_file', 'label'		 => lang('Delete file'), 'sortable'	 => false,
-					'resizeable' => true)
+			(
+				array(
+					'key'	=> 'file_name',
+					'label'	=> lang('Filename'),
+					'sortable'	 => false,
+					'resizeable' => true
+				),
+				array(
+					'key'=> 'picture',
+					'label'		 => lang('picture'),
+					'sortable'	 => false,
+					'resizeable' => true,
+					'formatter'	 => 'JqueryPortico.showPicture'
+				),
+				array(
+					'key' => 'tags',
+					'label'	=> lang('tags'),
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.formatJsonArray'
+				)
 			);
 
 //---file tagging
@@ -2368,22 +2401,41 @@ JS;
 			$buttons = array
 			(
 				array(
+					'action' => 'filter_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'filter_tag',
+					'label'	 => lang('filter tag'),
+					'funct'	 => 'onActionsClick_filter_files',
+					'classname'	=> 'actionButton',
+					'value_hidden'	 => ""
+					),
+				array(
 					'action' => 'set_tag',
 					'type'	 => 'buttons',
 					'name'	 => 'set_tag',
 					'label'	 => lang('set tag'),
 					'funct'	 => 'onActionsClick_files',
-					'classname'	=> 'actionButton',
+					'classname'	=> '',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'remove_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'remove_tag',
+					'label'	 => lang('remove tag'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	=> '',
 					'value_hidden'	 => ""
 					),
 				array(
 					'action' => 'delete_file',
 					'type'	 => 'buttons',
 					'name'	 => 'delete',
-					'label'	 => lang('Delete'),
+					'label'	 => lang('Delete file'),
 					'funct'	 => 'onActionsClick_files',
-					'classname'	 => 'actionButton',
-					'value_hidden'	 => ""
+					'classname'	 => '',
+					'value_hidden'	 => "",
+					'confirm_msg'		=> "Vil du slette fil(er)"
 					),
 			);
 
@@ -2396,19 +2448,15 @@ JS;
 			foreach ($buttons as $entry)
 			{
 				$tabletools[] = array
-					(
+				(
 					'my_name'		 => $entry['name'],
 					'text'			 => $entry['label'],
+					'className'		 =>	$entry['classname'],
+					'confirm_msg'	=>	$entry['confirm_msg'],
 					'type'			 => 'custom',
 					'custom_code'	 => "
 						var api = oTable5.api();
 						var selected = api.rows( { selected: true } ).data();
-						var numSelected = 	selected.length;
-
-						if (numSelected ==0){
-							alert('None selected');
-							return false;
-						}
 						var ids = [];
 						for ( var n = 0; n < selected.length; ++n )
 						{
@@ -2417,18 +2465,40 @@ JS;
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);
+				);					
 			}
 
 			$code		 = <<<JS
 
+	this.onActionsClick_filter_files=function(action, ids)
+	{
+		var tags = $('select#tags').val();
+		var api = oTable5.api();
+		var requestUrl = api.ajax.url();
+		requestUrl = requestUrl.split('&tags[]=')[0];
+		$.each(tags, function (k, v)
+		{
+			requestUrl += '&tags[]=' + v;
+		});
+		JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);
+	}
+
 	this.onActionsClick_files=function(action, ids)
 	{
+		var numSelected = 	ids.length;
+
+		if (numSelected ==0)
+		{
+			alert('None selected');
+			return false;
+		}
+		var tags = $('select#tags').val();
+
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: $requestUrl,
-			data:{ids:ids,action:action},
+			data:{ids:ids, tags:tags, action:action},
 			success: function(data) {
 				if( data != null)
 				{
@@ -2776,7 +2846,8 @@ JS;
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file',	'id' => $id)),					
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
-				'image_list'						 => $image_list
+				'image_list'						 => $image_list,
+				'tag_list'							 => array('options' => $bofiles->get_all_tags())
 			);
 			if ($auto_create)
 			{

@@ -972,6 +972,21 @@
 				<xsl:when test="value_project_id &gt; 0">
 					<div id="documents">
 						<fieldset>
+
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'tags')"/>
+								</label>
+
+								<select id='tags' multiple="multiple">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</xsl:attribute>
+										<xsl:apply-templates select="tag_list/options"/>
+								</select>
+							</div>
+
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'files')"/>
