@@ -105,6 +105,10 @@ this.refresh_glider = function (strURL)
 					glider.refresh(true);
 					loadImages.call(glider.slides[0]);
 				}
+				else
+				{
+					$('.wrapperForGlider').hide();
+				}
 			}
 		}
 	});
