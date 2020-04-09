@@ -293,6 +293,28 @@ $(document).ready(function ()
 		width: '100%'
 	});
 
+	$("#tags").select2({
+		placeholder: "Velg en eller flere tagger, eller lag ny",
+		width: '50%',
+		tags: true,
+		language: "no",
+		createTag: function (params)
+		{
+			var term = $.trim(params.term);
+
+			if (term === '')
+			{
+				return null;
+			}
+
+			return {
+				id: term,
+				text: term,
+				newTag: true // add additional parameters
+			}
+		}
+	});
+
 	$.formUtils.addValidator({
 		name: 'budget',
 		validatorFunction: function (value, $el, config, languaje, $form)

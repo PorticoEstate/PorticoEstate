@@ -493,8 +493,30 @@ function populateTableChkApproval(ecodimb)
 		}
 	});
 }
+
 $(document).ready(function ()
 {
+	$("#tags").select2({
+		placeholder: "Velg en eller flere tagger, eller lag ny",
+		width: '75%',
+		tags: true,
+		language: "no",
+		createTag: function (params)
+		{
+			var term = $.trim(params.term);
+
+			if (term === '')
+			{
+				return null;
+			}
+
+			return {
+				id: term,
+				text: term,
+				newTag: true // add additional parameters
+			}
+		}
+	});
 
 	$.formUtils.addValidator({
 		name: 'category',

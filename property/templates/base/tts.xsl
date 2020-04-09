@@ -724,6 +724,19 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'tags')"/>
+								</label>
+
+								<select id='tags' multiple="multiple">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</xsl:attribute>
+										<xsl:apply-templates select="tag_list/options"/>
+								</select>
+							</div>
+
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_2'">
 									<div class="pure-control-group">
