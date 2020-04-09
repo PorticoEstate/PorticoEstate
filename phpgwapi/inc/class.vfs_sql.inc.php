@@ -3123,7 +3123,7 @@
 		 */
 		function set_tag($ids, $tag)
 		{
-			if(!$tag)
+			if(!$tag || !$ids)
 			{
 				return;
 			}
@@ -3143,15 +3143,18 @@
 				$existing_ids[] = $this->db->f('file_id');
 			}
 
-			$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $existing_ids) . ")"
-				. " AND tags @> '[\"{$tag}\"]'::jsonb";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
 			$ids_with_tag = array();
-			while ($this->db->next_record())
+			if($existing_ids)
 			{
-				$ids_with_tag[] = $this->db->f('file_id');
+				$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $existing_ids) . ")"
+					. " AND tags @> '[\"{$tag}\"]'::jsonb";
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while ($this->db->next_record())
+				{
+					$ids_with_tag[] = $this->db->f('file_id');
+				}
 			}
 
 			$new_ids= array_diff($ids, $existing_ids);
