@@ -2415,3 +2415,4 @@ payment info	property	no	Fakturainformasjon
 filter tag	property	no	Filtrer på tag
 set tag	property	no	Legg til tag
 remove tag	property	no	Slett tag
+tags	property	no	Tagger

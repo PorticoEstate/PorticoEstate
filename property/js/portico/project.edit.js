@@ -152,19 +152,30 @@ $(document).ready(function ()
 
 
 	$("#user_id").select2({
-		placeholder: "Select a user",
+		placeholder: lang["select user"],
+		language: "no",
 		width: '50%'
 	});
 
 	$("#global_category_id").select2({
-		placeholder: "Select a category",
+		placeholder: lang["select category"],
+		language: "no",
 		width: '50%'
 	});
 
+	$("#branch_id").select2({
+		placeholder: lang['Select branch'],
+		language: "no",
+		width: '50%'
+	});
+
+
+
 	$("#tags").select2({
-		placeholder: "Select a tag",
+		placeholder: "Velg en eller flere tagger, eller lag ny",
 		width: '50%',
 		tags: true,
+		language: "no",
 		createTag: function (params)
 		{
 			var term = $.trim(params.term);
