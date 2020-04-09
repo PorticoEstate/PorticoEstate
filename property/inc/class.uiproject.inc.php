@@ -2497,7 +2497,7 @@ JS;
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
-			url: $requestUrl,
+			url: {$requestUrl},
 			data:{ids:ids, tags:tags, action:action},
 			success: function(data) {
 				if( data != null)
@@ -2505,6 +2505,13 @@ JS;
 
 				}
 				JqueryPortico.updateinlineTableHelper('datatable-container_5');
+				
+				if(action=='delete_file')
+				{
+					var oArgs = {menuaction: 'property.uiproject.get_files', id: {$id}};
+					var strURL = phpGWLink('index.php', oArgs, true);
+					refresh_glider(strURL);
+				}
 			},
 			error: function(data) {
 				alert('feil');
@@ -2514,7 +2521,7 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-//-- tile tagging
+//-- file tagging
 
 
 

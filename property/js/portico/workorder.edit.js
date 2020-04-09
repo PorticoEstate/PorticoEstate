@@ -1,6 +1,5 @@
 /* global project_id */
 /* global order_id */
-var glider;
 
 //var amount = 0;
 var local_value_budget;
@@ -273,44 +272,6 @@ JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'uns
 
 $(document).ready(function ()
 {
-	try
-	{
-
-		glider = new Glider(document.querySelector('.glider'), {
-			slidesToShow: 1,
-			draggable: true,
-			arrows: {
-				prev: '.glider-prev',
-				next: '.glider-next'
-			},
-			easing: function (x, t, b, c, d)
-			{
-				return c * (t /= d) * t + b;
-			},
-			dots: '.dots'
-		})
-
-		document.querySelector('.glider').addEventListener('glider-slide-visible', function (event)
-		{
-			var imgs_to_anticipate = 1;
-			var glider = Glider(this);
-			for (var i = 0; i <= imgs_to_anticipate; ++i)
-			{
-				var index = Math.min(event.detail.slide + i, glider.slides.length - 1),
-					glider = glider;
-				loadImages.call(glider.slides[index], function ()
-				{
-					glider.refresh(true);
-				})
-			}
-		});
-
-		loadImages.call(glider.slides[0]);
-	}
-	catch (e)
-	{
-
-	}
 
 	check_button_names();
 
@@ -573,26 +534,6 @@ $(document).ready(function ()
 });
 
 
-
-function loadImages(callback)
-{
-	[].forEach.call(this.querySelectorAll('img'), function (img)
-	{
-		var _img = new Image, _src = img.getAttribute('data-src');
-		_img.onload = function ()
-		{
-			img.src = _src;
-			img.classList.add('loaded');
-			callback && callback(img);
-		}
-		if (img.src !== _src)
-		{
-			_img.src = _src;
-		}
-	});
-}
-
-
 var ecodimb_selection = "";
 
 $(window).on('load', function ()
@@ -829,37 +770,7 @@ this.refresh_files = function ()
 
 	oArgs = {menuaction: 'property.uiworkorder.get_files_attachments', id: order_id};
 	strURL = phpGWLink('index.php', oArgs, true);
-
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: strURL,
-		success: function (data)
-		{
-			if (data != null)
-			{
-				var slides = glider.slides.length - 1;
-				for (i = slides; i >= 0; i--)
-				{
-					glider.removeItem(i);
-				}
-
-				var files = data.data;
-				$.each(files, function (k, v)
-				{
-					if (typeof (v.img_url) !== 'undefined' && v.img_url)
-					{
-						var div = document.createElement('div');
-						var img = document.createElement('img');
-						img.setAttribute('data-src', v.img_url.replace(/\&amp;/g, '&'));
-						img.alt = v.file_name;
-						div.appendChild(img);
-						glider.addItem(div);
-					}
-				});
-			}
-		}
-	});
+	refresh_glider(strURL);
 
 	JqueryPortico.updateinlineTableHelper('datatable-container_8', strURL);
 };

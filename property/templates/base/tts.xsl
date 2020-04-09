@@ -316,21 +316,6 @@
 		display: none;
 		}
 
-		.glider-slide img {
-		opacity: 0;
-		transform: opacity .1s ease;
-		}
-		.glider-slide img.loaded {
-		opacity: 1;
-		}
-		.wrapperForGlider {
-		width: 500px;
-		max-width: 80%;
-		margin: 0 auto;
-		margin-bottom: 50px;
-		display: inline-block;
-		}
-
 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
