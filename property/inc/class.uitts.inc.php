@@ -2770,6 +2770,7 @@ HTML;
 
 				$content_files[] = array(
 					'tags'			 => $_entry['tags'],
+					'file_id'		 => $_entry['file_id'],
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
