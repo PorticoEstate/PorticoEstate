@@ -236,7 +236,7 @@ JqueryPortico.formatJsonArray = function (key, oData)
 	var string = "";
 	if (oData['tags'])
 	{
-		var tags = JSON.parse(oData['tags']);
+		var tags =	oData['tags'];
 		$.each(tags, function (k, v)
 		{
 			string += v + '<br/>';
