@@ -417,7 +417,8 @@
 			{
 				if($value && $this->isJson($value))
 				{
-					$insert_value[]	= "'" . $this->db_addslashes($value) . "'";
+//					$insert_value[]	= "'" . $this->db_addslashes($value) . "'";
+					$insert_value[]	= "'{$value}'";//already escaped by json_encode()
 				}
 				else if($value || (is_numeric($value) && $value == 0) )
 				{
@@ -466,7 +467,8 @@
 			{
 				if($value && $this->isJson($value))
 				{
-					$value_entry[]= "{$field}='" . $this->db_addslashes($value) . "'";
+//					$value_entry[]= "{$field}='" . $this->db_addslashes($value) . "'";
+					$value_entry[]= "{$field}='{$value}'";//already escaped by json_encode()
 				}
 				else if($value || (is_numeric($value) && $value == 0) )
 				{
