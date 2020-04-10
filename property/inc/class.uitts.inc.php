@@ -1939,7 +1939,7 @@ HTML;
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
-			$tags = phpgw::get_var('tags');
+			$filter_tags = phpgw::get_var('tags');
 
 			if (!$this->acl_read)
 			{
@@ -1967,15 +1967,15 @@ HTML;
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
-				if($tags && !$_entry['tags'])
+				if($filter_tags && !$_entry['tags'])
 				{
 					continue;
 				}
-				else if($tags && $_entry['tags'])
+				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
 					
-					if(!array_intersect($filter_check, $tags))
+					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
 					}				
@@ -1989,9 +1989,18 @@ HTML;
 					$_checked = 'checked="checked"';
 				}
 
+				if($_entry['tags'])
+				{
+					$tags = json_decode($_entry['tags'],true);
+					foreach ($tags as &$tag)
+					{
+						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
+					}
+				}
+
 				$content_files[] = array(
 					'file_id'		 => $_entry['file_id'],
-					'tags'			 => $_entry['tags'],
+					'tags'			 => $tags,
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 //					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
@@ -2768,8 +2777,17 @@ HTML;
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
 				$created = $datetime->format('Y-m-d H:i:s');
 
+				if($_entry['tags'])
+				{
+					$tags = json_decode($_entry['tags'],true);
+					foreach ($tags as &$tag)
+					{
+						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
+					}
+				}
+				
 				$content_files[] = array(
-					'tags'			 => $_entry['tags'],
+					'tags'			 => $tags,
 					'file_id'		 => $_entry['file_id'],
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
