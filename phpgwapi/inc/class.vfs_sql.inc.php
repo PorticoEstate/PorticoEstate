@@ -3075,10 +3075,10 @@
 				$ids = array($ids);
 			}
 
-			$tag = json_encode($tag);
+			$json_string = json_encode($tag);
 
 			$sql = "SELECT file_id FROM phpgw_vfs_filetags WHERE file_id IN (" . implode(',', $ids) . ")"
-				. " AND tags @> '[{$tag}]'::jsonb";
+				. " AND tags @> '[{$json_string}]'::jsonb";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -3091,9 +3091,7 @@
 
 			if($ids_with_tag)
 			{
-				$json_string = trim($tag, '"');
-
-				$sql = "UPDATE phpgw_vfs_filetags SET tags = tags - '{$json_string}'"
+				$sql = "UPDATE phpgw_vfs_filetags SET tags = tags - '{$tag}'"
 				. " WHERE file_id IN (" . implode(',', $ids_with_tag) . ")";
 				$this->db->query($sql, __LINE__, __FILE__);
 			}

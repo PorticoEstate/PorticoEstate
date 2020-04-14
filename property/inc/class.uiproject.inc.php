@@ -319,6 +319,7 @@
 					}				
 				}
 
+				$tags = array();
 				if($_entry['tags'])
 				{
 					$tags = json_decode($_entry['tags'],true);
@@ -326,6 +327,7 @@
 					{
 						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
 					}
+					unset($tag);
 				}
 
 				$content_files[] = array(
