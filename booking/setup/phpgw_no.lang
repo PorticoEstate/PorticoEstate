@@ -816,3 +816,5 @@ month horizon	booking	no	Tidshorisont (mnd)
 day horizon	booking	no	Tidshorisont (dager)
 Notify on new application	booking	no	Varsle ved ny søknad
 and	booking	no	og
+not completed	booking	no	Ikke fullført
+newpartial1	booking	no	Ikke fullført
