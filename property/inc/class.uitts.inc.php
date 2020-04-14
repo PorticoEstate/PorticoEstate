@@ -4946,13 +4946,26 @@ JS;
 			$id			 = $ticket['id'];
 			$order_id	 = $ticket['order_id'];
 
+			$attachments = array();
+			$attachment_log	 = '';
 			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) && $ticket['file_attachments'])
 			{
+				$bofiles		 = CreateObject('property.bofiles');
+
 				$attachments	 = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
 				$_attachment_log = array();
-				foreach ($attachments as $_attachment)
+				foreach ($attachments as & $_attachment)
 				{
 					$_attachment_log[] = $_attachment['name'];
+					if($bofiles->is_image($_attachment['file']))
+					{
+						$resized = $GLOBALS['phpgw_info']['server']['temp_dir'] . "/resized_{$ticket['order_id']}_" . basename($_attachment['file']);
+						$bofiles->resize_image($_attachment['file'], $resized, 800);
+						$_attachment['file'] = $resized;
+						$_attachment['resized'] = $resized;
+
+					}
+					unset($_attachment);
 				}
 				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
 			}
@@ -5055,6 +5068,15 @@ JS;
 				try
 				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+					foreach ($attachments as $_attachment)
+					{
+						if (!empty($_attachment['resized']))
+						{
+							unlink($_attachment['resized']);
+						}
+					}
+					unset($_attachment);
+
 					phpgwapi_cache::message_set(lang('%1 is notified', $_to), 'message');
 					$historylog->add('M', $id, "{$_to}{$attachment_log}");
 					phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $order_id, $_to), 'message');
