@@ -289,6 +289,10 @@
 									array(
 										'id' => 'ACCEPTED',
 										'name' => lang('ACCEPTED')
+									),
+									array(
+										'id' => 'NEWPARTIAL1',
+										'name' => lang('not completed')
 									)
 								)
 							),
