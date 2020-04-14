@@ -286,7 +286,7 @@
 				case 'glider':
 					$load = array
 					(
-						'glider' => array("glider{$_type}")
+						'glider' => array("glider{$_type}", 'glider_init')
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/glider/glider{$_type}.css");
 					break;

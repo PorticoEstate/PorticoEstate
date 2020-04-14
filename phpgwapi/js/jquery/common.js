@@ -219,7 +219,7 @@ JqueryPortico.formatRadio = function (key, oData)
 
 JqueryPortico.showPicture = function (key, oData)
 {
-	var link = ""
+	var link = "";
 	if (oData['img_id'])
 	{
 		var img_name = oData['file_name'];
@@ -229,6 +229,21 @@ JqueryPortico.showPicture = function (key, oData)
 		link = "<a href='" + img_url + "' title='" + img_name + "' id='" + img_id + "' target='_blank'><img src='" + img_url + "&" + thumbnail_flag + "' alt='" + img_name + "' /></a>";
 	}
 	return link;
+};
+
+JqueryPortico.formatJsonArray = function (key, oData)
+{
+	var string = "";
+	if (oData['tags'])
+	{
+		var tags =	oData['tags'];
+		$.each(tags, function (k, v)
+		{
+			string += v + '<br/>';
+		});
+
+	}
+	return string;
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)
@@ -757,7 +772,7 @@ JqueryPortico.lightboxlogin = function ()
 {
 	var oArgs = {lightbox: 1};
 	var strURL = phpGWLink('login.php', oArgs);
-	var width =  $(window).width() * 0.80;
+	var width = $(window).width() * 0.80;
 	TINY.box.show({
 		iframe: strURL,
 		boxid: 'frameless',
@@ -1228,7 +1243,7 @@ function createObject(object)
 				objs.push('&nbsp;');
 			}
 
-			if(element.getAttribute('type') == 'radio')
+			if (element.getAttribute('type') == 'radio')
 			{
 				element.onclick = function (e)
 				{
@@ -1249,7 +1264,7 @@ function createObject(object)
 						}
 						catch (err)
 						{
-console.log(err);
+							console.log(err);
 						}
 					}
 				};
@@ -1317,7 +1332,7 @@ function populateSelect_activityCalendar(url, container, attr)
 			var option = document.createElement('option');
 			option.text = value.name;
 
-			if(typeof(value.id) !=='undefined')
+			if (typeof (value.id) !== 'undefined')
 			{
 				option.setAttribute('value', value.id);
 			}
@@ -1810,19 +1825,26 @@ function frontendScheduleDateColumn(data, col, date)
 			name = formatScheduleShorten('Privat arr.', 9);
 		}
 		classes = "cellInfo" + " " + type;
-		
-		if(name === "closed" || name === "Stengt"){
-			classes+= " " + "calender-closed";
-		} else if (type === "allocation"){
+
+		if (name === "closed" || name === "Stengt")
+		{
+			classes += " " + "calender-closed";
+		}
+		else if (type === "allocation")
+		{
 			classes += " " + "calender-allocation";
-		} else if (type === "booking"){
+		}
+		else if (type === "booking")
+		{
 			classes += " " + "calender-booking";
-		} else if (type === "event"){
+		}
+		else if (type === "event")
+		{
 			classes += " " + "calender-event";
 		}
 
 		text = name;
-		
+
 		trFunction.push(
 		{
 			event: 'click',
@@ -1832,8 +1854,10 @@ function frontendScheduleDateColumn(data, col, date)
 				schedule.showInfo(data[k]['info_url'], resource);
 
 				// close modal on overlay click
-				setTimeout(function() {
-					document.querySelector(".ui-widget-overlay").addEventListener("click", function() {
+				setTimeout(function ()
+				{
+					document.querySelector(".ui-widget-overlay").addEventListener("click", function ()
+					{
 						document.querySelector(".ui-dialog-titlebar-close").click();
 					});
 				}, 200);
@@ -1955,7 +1979,7 @@ function rentalScheduleApplication(data, col, date)
 		else
 		{
 			text = lang['free'] || "free";
-	//		text = "free";
+			//		text = "free";
 			classes = "free";
 		}
 
@@ -2056,17 +2080,17 @@ function formatBackendScheduleDateColumn(id, name, type, conflicts)
 	conflicts = (conflicts) ? conflicts : {};
 	if (type == "booking")
 	{
-		link = phpGWLink('index.php', {menuaction:'booking.uibooking.edit', id:id});
+		link = phpGWLink('index.php', {menuaction: 'booking.uibooking.edit', id: id});
 //		link = 'index.php?menuaction=booking.uibooking.edit&id=' + id;
 	}
 	else if (type == "allocation")
 	{
-		link = phpGWLink('index.php', {menuaction:'booking.uiallocation.edit', id:id});
+		link = phpGWLink('index.php', {menuaction: 'booking.uiallocation.edit', id: id});
 //		link = 'index.php?menuaction=booking.uiallocation.edit&id=' + id;
 	}
 	else if (type == "event")
 	{
-		link = phpGWLink('index.php', {menuaction:'booking.uievent.edit', id:id});
+		link = phpGWLink('index.php', {menuaction: 'booking.uievent.edit', id: id});
 //		link = 'index.php?menuaction=booking.uievent.edit&id=' + id;
 	}
 	text = formatGenericLink(name, link);

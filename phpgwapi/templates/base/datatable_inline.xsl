@@ -166,7 +166,7 @@
 												{
 													text: "<xsl:value-of select="text"/>",
 													<xsl:choose>
-														<xsl:when test="className">
+														<xsl:when test="className !=''">
 															className: "<xsl:value-of select="className"/>",
 														</xsl:when>
 														<xsl:otherwise>
@@ -175,7 +175,7 @@
 														</xsl:otherwise>
 													</xsl:choose>
 													action: function (e, dt, node, config) {
-																	<xsl:if test="confirm_msg">
+																	<xsl:if test="confirm_msg !=''">
 																		var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
 																		var r = confirm(confirm_msg);
 																		if (r != true) {

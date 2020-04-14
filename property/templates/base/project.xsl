@@ -25,21 +25,6 @@
 		display: none;
 		}
 
-		.glider-slide img {
-		opacity: 0;
-		transform: opacity .1s ease;
-		}
-		.glider-slide img.loaded {
-		opacity: 1;
-		}
-		.wrapperForGlider {
-		width: 500px;
-		max-width: 80%;
-		margin: 0 auto;
-		display: inline-block;
-		}
-
-
 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
@@ -48,7 +33,7 @@
 		var project_id = '<xsl:value-of select="value_project_id"/>';
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'next', 'save')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'next', 'save', 'Select branch', 'select user', 'select category')"/>;
 	</script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -907,7 +892,7 @@
 								<xsl:variable name="lang_branch_statustext">
 									<xsl:value-of select="lang_branch_statustext"/>
 								</xsl:variable>
-								<select name="values[branch][]" multiple="multiple" title="{$lang_branch_statustext}" class="pure-input-1-2">
+								<select id="branch_id" name="values[branch][]" multiple="multiple" title="{$lang_branch_statustext}" class="pure-input-1-2">
 									<xsl:apply-templates select="branch_list"/>
 								</select>
 							</div>
@@ -972,6 +957,21 @@
 				<xsl:when test="value_project_id &gt; 0">
 					<div id="documents">
 						<fieldset>
+
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'tags')"/>
+								</label>
+
+								<select id='tags' multiple="multiple">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</xsl:attribute>
+										<xsl:apply-templates select="tag_list/options"/>
+								</select>
+							</div>
+
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'files')"/>
@@ -1008,7 +1008,7 @@
 							<div class="pure-control-group ">
 								<label for="name">
 								</label>
-								<div class="wrapperForGlider">
+								<div class="wrapperForGlider" style="display:none;">
 									<div class="glider-contain">
 										<div class="glider">
 											<xsl:for-each select="image_list">

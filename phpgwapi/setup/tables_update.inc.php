@@ -3746,7 +3746,7 @@
 			. " WHERE preference_app IN ('property', 'helpdesk')", __LINE__, __FILE__);
 
 		$preference_data = array('email'=> array(), 'cellphone' => array());
-		
+
 		$owners = array();
 
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -3787,9 +3787,9 @@
 				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 
 			$GLOBALS['phpgw_setup']->oProc->next_record();
-			
+
 			$preference_json = $GLOBALS['phpgw_setup']->oProc->f('preference_json');
-			
+
 			if (!$GLOBALS['phpgw_setup']->oProc->f('preference_owner'))
 			{
 				$add_empty_prefs[] = $owner;
@@ -3801,7 +3801,7 @@
 				. " WHERE preference_app = 'common' AND preference_owner = {$owner}", __LINE__, __FILE__);
 			}
 		}
-		
+
 		$add_empty_prefs = array_unique($add_empty_prefs);
 
 		foreach ($add_empty_prefs as $add_empty_pref_owner)
@@ -3833,6 +3833,32 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.564';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	/**
+	 * Enable tags on files
+	 */
+	$test[] = '0.9.17.564';
+	function phpgwapi_upgrade0_9_17_564()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_vfs_filetags', array(
+			'fd' => array(
+				'file_id' => array('type' => 'int','precision' => '4','nullable' => False),
+				'tags' => array('type' => 'jsonb','nullable' => true),
+			),
+			'pk' => array('file_id'),
+			'fk' => array('phpgw_vfs' => array('file_id' => 'file_id')),
+			'ix' => array('tags'),
+			'uc' => array()
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.565';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}

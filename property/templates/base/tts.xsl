@@ -316,21 +316,6 @@
 		display: none;
 		}
 
-		.glider-slide img {
-		opacity: 0;
-		transform: opacity .1s ease;
-		}
-		.glider-slide img.loaded {
-		opacity: 1;
-		}
-		.wrapperForGlider {
-		width: 500px;
-		max-width: 80%;
-		margin: 0 auto;
-		margin-bottom: 50px;
-		display: inline-block;
-		}
-
 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
@@ -739,6 +724,19 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'tags')"/>
+								</label>
+
+								<select id='tags' multiple="multiple">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</xsl:attribute>
+										<xsl:apply-templates select="tag_list/options"/>
+								</select>
+							</div>
+
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_2'">
 									<div class="pure-control-group">

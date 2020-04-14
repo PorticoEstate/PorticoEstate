@@ -404,7 +404,7 @@
 
 			if(isset($aTableDef['ix']) && is_array($aTableDef['ix']) && count($aTableDef['ix']) > 0)
 			{
-				if(!$this->_GetIX($aTableDef['ix'], $sIXSQL))
+				if(!$this->_GetIX($aTableDef['ix'], $sIXSQL, $aTableDef['fd']))
 				{
 					if($bOutputHTML)
 					{
@@ -610,7 +610,7 @@
 			return True;
 		}
 
-		function _GetIX($aFields, &$sIXSQL)
+		function _GetIX($aFields, &$sIXSQL, $fd)
 		{
 			$sIXSQL = '';
 			if(count($aFields) < 1)
@@ -631,7 +631,8 @@
 				}
 				else
 				{
-					$sIXSQL .= $this->m_oTranslator->GetIXSQL($sField);
+					$field_type = $fd[$sField]['type'];
+					$sIXSQL .= $this->m_oTranslator->GetIXSQL($sField, $field_type);
 				}
 
 				if($num_fields > 1 && $i < $num_fields-1 && $this->dbms == 'mysql')

@@ -2400,3 +2400,10 @@ source	property	nn	Opphav
 order is not approved	property	nn	Bestillingen er ikkje godkjent
 order %1 is not approved	property	nn	Bestilling %1 er ikkje godkjent
 The budget for project %1 must be at least %2	property	no	Budsjettet for prosjekt %1 må minst vere på %2
+quick order template	property	nn	Mal for hurtigbestilling
+delivery type	property	nn	Leveringsmetode
+payment type	property	nn	Betalingstype
+payment info	property	nn	Fakturainformasjon
+filter tag	property	nn	Filtrer på tag
+set tag	property	nn	Legg til tag
+remove tag	property	nn	Slett tag

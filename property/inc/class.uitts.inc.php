@@ -63,7 +63,8 @@
 			'show_attachment'			 => true,
 			'handle_multi_upload_file'	 => true,
 			'build_multi_upload_file'	 => true,
-			'query2'					 => true
+			'query2'					 => true,
+			'update_file_data'			 => true
 		);
 
 		/**
@@ -1901,9 +1902,44 @@ HTML;
 			}
 		}
 
+		public function update_file_data()
+		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$location_id = phpgw::get_var('location_id', 'int');
+			$location_item_id = phpgw::get_var('location_item_id', 'int');
+			$ids = phpgw::get_var('ids', 'int');
+			$action= phpgw::get_var('action', 'string');
+			$tags= phpgw::get_var('tags', 'string');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if ($action == 'delete_file' && $ids && $location_item_id)
+			{
+				$bofiles->delete_file("/fmticket/{$location_item_id}/", array('file_action' => $ids));
+			}
+			else if($action == 'set_tag' && $ids)
+			{
+				$bofiles->set_tags($ids, $tags);
+				
+			}
+			else if($action == 'remove_tag' && $ids)
+			{
+				$bofiles->remove_tags($ids, $tags);
+				
+			}
+
+			return $action;
+			
+		}
+
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
+			$filter_tags = phpgw::get_var('tags');
 
 			if (!$this->acl_read)
 			{
@@ -1931,6 +1967,19 @@ HTML;
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
+				if($filter_tags && !$_entry['tags'])
+				{
+					continue;
+				}
+				else if($filter_tags && $_entry['tags'])
+				{
+					$filter_check = json_decode($_entry['tags'], true);
+					
+					if(!array_intersect($filter_check, $filter_tags))
+					{
+						continue;
+					}				
+				}
 				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
 				$created = $datetime->format('Y-m-d H:i:s');
@@ -1940,9 +1989,20 @@ HTML;
 					$_checked = 'checked="checked"';
 				}
 
+				if($_entry['tags'])
+				{
+					$tags = json_decode($_entry['tags'],true);
+					foreach ($tags as &$tag)
+					{
+						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
+					}
+				}
+
 				$content_files[] = array(
+					'file_id'		 => $_entry['file_id'],
+					'tags'			 => $tags,
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
-					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+//					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
 					'created'	=> $created,
 				);
@@ -2717,7 +2777,18 @@ HTML;
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
 				$created = $datetime->format('Y-m-d H:i:s');
 
+				if($_entry['tags'])
+				{
+					$tags = json_decode($_entry['tags'],true);
+					foreach ($tags as &$tag)
+					{
+						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
+					}
+				}
+				
 				$content_files[] = array(
+					'tags'			 => $tags,
+					'file_id'		 => $_entry['file_id'],
 					'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox"' . $_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">',
@@ -2740,14 +2811,31 @@ HTML;
 
 			$attach_file_def = array
 				(
-				array('key' => 'created', 'label' => lang('date'), 'sortable' => true,
-					'resizeable' => true),
-				array('key'		 => 'file_name', 'label'		 => lang('Filename'), 'sortable'	 => false,
-					'resizeable' => true),
-				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
-				array('key'		 => 'delete_file', 'label'		 => lang('Delete file'), 'sortable'	 => false,
-					'resizeable' => true, 'formatter'	 => 'FormatterCenter'),
+				array(
+					'key' => 'created',
+					'label' => lang('date'),
+					'sortable' => true,
+					'resizeable' => true
+					),
+				array(
+					'key'		 => 'file_name',
+					'label'		 => lang('Filename'),
+					'sortable'	 => false,
+					'resizeable' => true
+					),
+				array(
+					'key' => 'picture',
+					'label' => lang('picture'),
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.showPicture'),
+				array(
+					'key' => 'tags',
+					'label'	=> lang('tags'),
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.formatJsonArray'
+				)
 			);
 
 			if (isset($ticket['order_id']) && $ticket['order_id'])
@@ -2755,6 +2843,140 @@ HTML;
 				$attach_file_def[] = array('key'		 => 'attach_file', 'label'		 => lang('attach file'),
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'FormatterCenter');
 			}
+//---file tagging
+			
+			$requestUrl	 = json_encode(self::link(array(
+				'menuaction' => 'property.uitts.update_file_data',
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+				'location_item_id' => $id,
+				'phpgw_return_as'	 => 'json')
+				));
+			$requestUrl = str_replace('&amp;', '&', $requestUrl);
+
+			$buttons = array
+			(
+				array(
+					'action' => 'filter_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'filter_tag',
+					'label'	 => lang('filter tag'),
+					'funct'	 => 'onActionsClick_filter_files',
+					'classname'	=> 'actionButton',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'set_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'set_tag',
+					'label'	 => lang('set tag'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	=> '',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'remove_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'remove_tag',
+					'label'	 => lang('remove tag'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	=> '',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'delete_file',
+					'type'	 => 'buttons',
+					'name'	 => 'delete',
+					'label'	 => lang('Delete file'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	 => '',
+					'value_hidden'	 => "",
+					'confirm_msg'		=> "Vil du slette fil(er)"
+					),
+			);
+
+			$tabletools = array
+			(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			foreach ($buttons as $entry)
+			{
+				$tabletools[] = array
+				(
+					'my_name'		 => $entry['name'],
+					'text'			 => $entry['label'],
+					'className'		 =>	$entry['classname'],
+					'confirm_msg'	=>	$entry['confirm_msg'],
+					'type'			 => 'custom',
+					'custom_code'	 => "
+						var api = oTable2.api();
+						var selected = api.rows( { selected: true } ).data();
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['file_id']);
+						}
+						{$entry['funct']}('{$entry['action']}', ids);
+						"
+				);					
+			}
+
+			$code		 = <<<JS
+
+	this.onActionsClick_filter_files=function(action, ids)
+	{
+		var tags = $('select#tags').val();
+		var oArgs = {menuaction: 'property.uitts.update_data',action:'get_files', id: {$id}};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		$.each(tags, function (k, v)
+		{
+			requestUrl += '&tags[]=' + v;
+		});
+		JqueryPortico.updateinlineTableHelper('datatable-container_2', requestUrl);
+	}
+
+	this.onActionsClick_files=function(action, ids)
+	{
+		var numSelected = 	ids.length;
+
+		if (numSelected ==0)
+		{
+			alert('None selected');
+			return false;
+		}
+		var tags = $('select#tags').val();
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: {$requestUrl},
+			data:{ids:ids, tags:tags, action:action},
+			success: function(data) {
+				if( data != null)
+				{
+
+				}
+				var oArgs = {menuaction: 'property.uitts.update_data',action:'get_files', id: {$id}};
+				var strURL = phpGWLink('index.php', oArgs, true);
+
+				JqueryPortico.updateinlineTableHelper('datatable-container_2',strURL);
+				
+				if(action=='delete_file')
+				{
+					refresh_glider(strURL);
+				}
+			},
+			error: function(data) {
+				alert('feil');
+			}
+		});
+	}
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $code);
+
+//-- file tagging
 
 			$datatable_def[] = array
 				(
@@ -2762,6 +2984,7 @@ HTML;
 				'requestUrl' => "''",
 				'ColumnDefs' => $attach_file_def,
 				'data'		 => json_encode($content_files),
+				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -3512,13 +3735,15 @@ HTML;
 				'collect_building_part'			 => !!$this->bo->config->config_data['workorder_require_building_part'],
 				'delivery_type_list'			 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $ticket['delivery_type']))),
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
-				'content_files'					 => $content_files
+				'content_files'					 => $content_files,
+				'tag_list'							 => array('options' => createObject('property.bofiles')->get_all_tags())
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('glider');
+			phpgwapi_jquery::load_widget('select2');
 			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();

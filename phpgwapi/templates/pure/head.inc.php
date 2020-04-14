@@ -50,7 +50,7 @@ HTML;
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
-//	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/base.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";

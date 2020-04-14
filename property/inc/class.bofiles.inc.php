@@ -194,6 +194,32 @@
 			return $receipt;
 		}
 
+
+		function set_tags($ids, $tags)
+		{
+			if(!is_array($ids))
+			{
+				$ids = array($ids);
+			}
+			return $this->vfs->set_tags($ids, $tags);
+
+		}
+
+		function remove_tags($ids, $tags)
+		{
+			if(!is_array($ids))
+			{
+				$ids = array($ids);
+			}
+			return $this->vfs->remove_tags($ids, $tags);
+		}
+
+
+		function get_all_tags( )
+		{
+			return $this->vfs->get_all_tags();
+		}
+
 		/**
 		 * View File - echo (or download) to browser.
 		 *
@@ -244,14 +270,14 @@
 				}
 			}
 		}
-		
-		
+
+
 
 		/**
 		 * Read a file and display its content chunk by chunk
 		 * @param type $filename
 		 * @param type $retbytes
-		 * @return boolean 
+		 * @return boolean
 		 */
 		function readfile_chunked( $filename, $retbytes = true )
 		{
