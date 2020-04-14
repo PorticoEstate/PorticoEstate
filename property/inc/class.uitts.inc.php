@@ -1989,6 +1989,7 @@ HTML;
 					$_checked = 'checked="checked"';
 				}
 
+				$tags = array();
 				if($_entry['tags'])
 				{
 					$tags = json_decode($_entry['tags'],true);
@@ -1996,6 +1997,7 @@ HTML;
 					{
 						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
 					}
+					unset($tag);
 				}
 
 				$content_files[] = array(
@@ -2777,6 +2779,7 @@ HTML;
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
 				$created = $datetime->format('Y-m-d H:i:s');
 
+				$tags = array();
 				if($_entry['tags'])
 				{
 					$tags = json_decode($_entry['tags'],true);
@@ -2784,6 +2787,7 @@ HTML;
 					{
 						$tag = $GLOBALS['phpgw']->db->stripslashes($tag);
 					}
+					unset($tag);
 				}
 				
 				$content_files[] = array(
