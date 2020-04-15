@@ -165,7 +165,11 @@
 					'menuaction' => 'property.uigallery.view_file',
 					'file_id'	 => $entry['id']
 				));
-				$entry['user']			 = $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
+
+				if($entry['createdby_id'])
+				{
+					$entry['user']			 = $GLOBALS['phpgw']->accounts->get($entry['createdby_id'])->__toString();
+				}
 			}
 			//_debug_array($values);
 			$this->total_records = $this->so->total_records;
