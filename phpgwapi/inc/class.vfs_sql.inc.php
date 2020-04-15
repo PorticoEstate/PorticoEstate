@@ -3023,33 +3023,20 @@
 
 		function get_all_tags( )
 		{
-			$sql = "SELECT DISTINCT tags FROM phpgw_vfs_filetags";
+			$sql = "SELECT DISTINCT jsonb_array_elements(tags) as tag FROM phpgw_vfs_filetags";
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$data = array();
+			$tags = array();
 			while ($this->db->next_record())
 			{
-				$tags = json_decode($this->db->f('tags'), true);
-				foreach ($tags as $value)
-				{
-					$data[] = $value;
-				}
-				unset($value);
-			}
-			$result = array_unique($data);
-
-			$ret = array();
-			foreach ($result as $value)
-			{
-				$value = $this->db->stripslashes($value);
-				
-				$ret[] = array(
-					'id' => $value,
-					'name' => $value
+				$tag = $this->db->stripslashes(json_decode($this->db->f('tag')));
+				$tags[] = array(
+					'id' => $tag,
+					'name' => $tag
 				);
 			}
-
-			return $ret;
+			return $tags;
 		}
 
 
