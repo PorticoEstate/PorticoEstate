@@ -641,10 +641,11 @@
 				catch (Exception $e)
 				{
 					$GLOBALS['phpgw']->log->error(array(
-						'text'	 => "Email to %1 failed <br/>subject: %2, <br/>content: %3",
+						'text'	 => "Email to %1 failed <br/>subject: %2 <br/>content: %3 <br/>error: %4",
 						'p1'	 => $receiver,
 						'p2'	 => $subject,
 						'p3'	 => $body,
+						'p4'	 => $e->getMessage(),
 						'line'	 => __LINE__,
 						'file'	 => __FILE__
 					));
