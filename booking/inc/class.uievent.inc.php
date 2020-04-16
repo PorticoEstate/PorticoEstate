@@ -640,6 +640,16 @@
 				}
 				catch (Exception $e)
 				{
+					$GLOBALS['phpgw']->log->error(array(
+						'text'	 => "Email to %1 failed <br/>subject: %2 <br/>content: %3 <br/>error: %4",
+						'p1'	 => $receiver,
+						'p2'	 => $subject,
+						'p3'	 => $body,
+						'p4'	 => $e->getMessage(),
+						'line'	 => __LINE__,
+						'file'	 => __FILE__
+					));
+
 					// TODO: Inform user if something goes wrong
 				}
 			}
@@ -838,10 +848,11 @@
 							if (phpgw::get_var('sendtocontact', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
-								$body = "<p>" . $config->config_data['event_change_mail'] . "\n" . phpgw::get_var('mail','html', 'POST');
+								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br /Melding:" . phpgw::get_var('mail','html', 'POST');
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
-								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'];
+								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'] . ':<br />';
+								$comment .=  phpgw::get_var('mail','html', 'POST');
 								$this->add_comment($event, $comment);
 							}
 							//sms
