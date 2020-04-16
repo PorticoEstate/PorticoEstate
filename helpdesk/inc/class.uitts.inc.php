@@ -3022,7 +3022,7 @@ JS;
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
-//			phpgwapi_jquery::load_widget('glider');
+			phpgwapi_jquery::load_widget('glider');
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
