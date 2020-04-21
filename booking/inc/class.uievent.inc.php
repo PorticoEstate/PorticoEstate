@@ -788,10 +788,10 @@
 
 				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
+					if ( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST'))
 					{
 
-						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST'))
+						if ((phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
@@ -961,7 +961,7 @@
 								}
 							}
 						}
-						if (!phpgw::get_var('active', 'POST'))
+						if (!phpgw::get_var('active', 'POST') && phpgw::get_var('sendtorbuilding', 'POST'))
 						{
 
 							$subject = $config->config_data['event_canceled_mail_subject'];
