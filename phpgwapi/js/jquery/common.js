@@ -234,9 +234,9 @@ JqueryPortico.showPicture = function (key, oData)
 JqueryPortico.formatJsonArray = function (key, oData)
 {
 	var string = "";
-	if (oData['tags'])
+	if (oData[key])
 	{
-		var tags =	oData['tags'];
+		var tags =	oData[key];
 		$.each(tags, function (k, v)
 		{
 			string += v + '<br/>';
