@@ -4,37 +4,50 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang',  'building part', 'branch', 'doument type')"/>
-
-
-		$(document).ready(function() {
-
- 
-		});
 	</script>
 	<div class="container">
-		<div class="row">
+		<fieldset class="pure-form pure-form-aligned">
 			<h1>Step 1: Order refefrence</h1>
-		</div>
-		<form class="pure-form pure-form-aligned">
 			<div class="pure-control-group">
 				<label >
 					<xsl:value-of select="php:function('lang', 'order id')"/>
 				</label>
 				<input id="order_id" required="required"></input>
+				<div id="message" class='error' style="display:none;"/>
 			</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-		<div class="form-group">
+			<div class="pure-controls">
+				<button type="button" class="pure-button pure-button-primary" onClick="get_order_info();">Get info</button>
+			</div>
 
-			- Matrikkelinfo: Gnr/Bnr
-			- Lokasjonskode/Objekt
-			- Bygningsnr
+			<div class="pure-control-group">
+				<label >
+					<xsl:value-of select="php:function('lang', 'vendor')"/>
+				</label>
+				<div class="pure-custom" id="vendor_name"></div>
+			</div>
+			<div class="pure-control-group">
+				<label >
+					<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
+				</label>
+				<input id="cadastral_unit" required="required"></input>
+			</div>
+			<div class="pure-control-group">
+				<label >
+					<xsl:value-of select="php:function('lang', 'location code')"/>
+				</label>
+				<input id="location_code" required="required"></input>
+			</div>
+			<div class="pure-control-group">
+				<label >
+					<xsl:value-of select="php:function('lang', 'building_number')"/>
+				</label>
+				<input id="order_id" required="required"></input>
+			</div>
+		</fieldset>
 
-		</div>
+		<h1>2) laste opp alle dokumentene til venterommet</h1>
 
-		<div class="row">
-			<h1>2) laste opp alle dokumentene til venterommet</h1>
-
+		<fieldset id="fieldset_file_input" class="pure-form pure-form-aligned" style="display:none;">
 			<div class="pure-control-group">
 				<label>
 					<xsl:value-of select="php:function('lang', 'upload files')"/>
@@ -47,27 +60,6 @@
 					</xsl:with-param>
 				</xsl:call-template>
 			</div>
-
-
-			<ul>
-				<li>
-					– og supplere individuelt (alle eller utvalg) med resten av informasjonen på same måte som vi nettopp har etablert for multi-tagging:
-				</li>
-				<ul>
-					<li>
-						-- Dokumentkategori
-					</li>
-					<li>
-						-- Fag
-					</li>
-					<li>
-						-- Bygningsdel
-					</li>
-				</ul>
-			</ul>
-		</div>
-
-		<fieldset class="pure-form pure-form-aligned">
 
 			<div class="pure-control-group">
 				<label>
@@ -140,89 +132,13 @@
 		</fieldset>
 
 
+		<h1>3) Validere at krav til detaljer er oppfylt</h1>
 
-		<div class="row">
+		<h1>4) Legge på evnt merknader</h1>
 
-			<h1>3) Validere at krav til detaljer er oppfylt</h1>
+		<h1>5) Importere filene til BraArkiv</h1>
 
-			<h1>4) Legge på evnt merknader</h1>
-
-			<h1>5) Importere filene til BraArkiv</h1>
-
-			<h1>6) Rydde på venterommet</h1>
-		</div>
-
-
-		<form method="post" id="form" action="{form_action}">
-
-			<div class="row">
-				<div class="mt-5 container">
-					<div class="form-group">
-						<fieldset>
-							<legend>Velg kontroll</legend>
-
-							<label for="control_area_id">
-								<xsl:value-of select="php:function('lang', 'control area')"/>
-							</label>
-							<select id="control_area_id" name="control_area_id" class="form-control">
-								<xsl:apply-templates select="control_area_list/options"/>
-							</select>
-
-							<label for="control_id">
-								<xsl:value-of select="php:function('lang', 'control')"/>
-							</label>
-							<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'select control type')"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="control_type_list/options"/>
-							</select>
-							<label for="part_of_town_id">
-								<xsl:value-of select="php:function('lang', 'part of town')"/>
-							</label>
-							<select id="part_of_town_id" name="part_of_town_id" class="form-control" onchange="this.form.submit()">
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'select')"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="part_of_town_list/options"/>
-							</select>
-						</fieldset>
-					</div>
-				</div>
-			</div>
-		</form>
-		<div class="row">
-			<div class="mt-5 container">
-				<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{form_action}">
-					<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered " id='user_table'>
-						<thead>
-							<tr>
-								<th>
-									<xsl:value-of select="php:function('lang', 'user')"/>
-
-								</th>
-								<th>
-									<xsl:value-of select="php:function('lang', 'role')"/>
-
-								</th>
-								<th>
-									<xsl:value-of select="php:function('lang', 'last login')"/>
-
-								</th>
-								<th>
-									<xsl:value-of select="php:function('lang', 'status')"/>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<xsl:apply-templates select="user_data"/>
-						</tbody>
-					</table>
-					<xsl:apply-templates select="cat_add"/>
-				</form>
-
-			</div>
-		</div>
+		<h1>6) Rydde på venterommet</h1>
 
 	</div>
 

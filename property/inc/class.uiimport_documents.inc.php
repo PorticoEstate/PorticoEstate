@@ -35,7 +35,7 @@
 	{
 
 		private $receipt		 = array();
-		protected $path_upload_dir;
+		protected $path_upload_dir, $acl_edit, $bocommon;
 		public $public_functions = array(
 			'query'							 => true,
 			'index'							 => true,
@@ -47,7 +47,10 @@
 			'get_profile'					 => true,
 			'download'						 => true,
 			'get_files'						 => true,
-			'handle_import_files'			 => true
+			'handle_import_files'			 => true,
+			'update_file_data'				 => true,
+			'get_order_info'				 => true
+
 		);
 
 		public function __construct()
@@ -57,6 +60,10 @@
 			$this->bocommon			 = CreateObject('property.bocommon');
 			$this->bo				 = CreateObject('property.boadmin_entity', true);
 			$this->acl				 = & $GLOBALS['phpgw']->acl;
+			/**
+			 * Fix me
+			 */
+			$this->acl_edit = true;
 			$this->db				 = & $GLOBALS['phpgw']->db;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
@@ -161,7 +168,7 @@
 
 		private function _prepare_values_to_preview()
 		{
-		
+
 		}
 
 		private function _save_values_import()
@@ -175,6 +182,196 @@
 			return $result;
 		}
 
+
+		public function get_order_info(  )
+		{
+			$order_id = phpgw::get_var('order_id', 'int');
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			switch ($order_type)
+			{
+				case 'workorder':
+					$location_item_id	 = $order_id;
+					$item = CreateObject('property.soworkorder')->read_single($order_id);
+					break;
+				case 'ticket':
+					$sotts = CreateObject('property.sotts');
+					$ticket_id	 = $sotts->get_ticket_from_order($order_id);
+					$item	 = $sotts->read_single($ticket_id);
+					break;
+				default:
+					return array('error' => lang('no such order: %1', $order_id));
+			}
+
+			$vendor_id = $item['vendor_id'];
+
+			$vendor_name = CreateObject('property.boinvoice')->get_vendor_name($vendor_id);
+			$location_code = $item['location_code'];
+			$location_data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code,	'extra' => array('view' => true)));
+
+			$gab_id = '';
+			$cadastral_unit = '';
+			$gabinfos = @execMethod('property.sogab.read', array(
+				'location_code' => $location_code,
+				'allrows' => true)
+				);
+			if ($gabinfos != null && is_array($gabinfos) && count($gabinfos) == 1)
+			{
+				$gabinfo = array_shift($gabinfos);
+				$gab_id = $gabinfo['gab_id'];
+			}
+
+			if (strlen($gab_id) == 20)
+			{
+				$cadastral_unit = substr($gab_id, 4, 5) . '/' . substr($gab_id, 9, 4) . '/' . substr($gab_id, 13, 4) . '/' . substr($gab_id, 17, 3);
+			}
+
+
+			$building_number = '';
+			return array(
+				'vendor_name' => $vendor_name,
+				'cadastral_unit' => $cadastral_unit,
+				'location_code'	=> $location_code,
+				'building_number'	=> $building_number,
+			);
+
+		}
+
+		public function update_file_data()
+		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$action= phpgw::get_var('action', 'string');
+			$files= phpgw::get_var('files', 'string');
+			$doument_type= phpgw::get_var('doument_type', 'string');
+			$branch= phpgw::get_var('branch', 'string');
+			$building_part= phpgw::get_var('building_part', 'string');
+			$order_id = phpgw::get_var('order_id', 'int');
+
+			$file_tags = (array)phpgwapi_cache::session_get('property', 'documents_import_file_tags');
+
+			if ($action == 'delete_file' && $files && $order_id)
+			{
+				$path_upload_dir = $this->path_upload_dir;
+				if (empty($path_upload_dir))
+				{
+					return false;
+				}
+
+				$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+
+				$list_files = $this->_get_files($path_dir);
+
+
+				foreach ($list_files as $file_info)
+				{
+					if(in_array($file_info['file_name'], $files))
+					{
+						unlink($file_info['path_absolute']);
+
+						if(!empty($file_tags[$order_id][$file_info['file_name']]))
+						{
+							$file_tags[$order_id][$file_info['file_name']] = null;
+						}
+					}
+				}
+				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+
+			}
+			else if($action == 'set_tag' && $files)
+			{
+
+				foreach ($files as $file_name)
+				{
+					if($doument_type)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['doument_type']))
+						{
+							$file_tags[$order_id][$file_name]['doument_type'] = array_unique(array_merge($doument_type, $file_tags[$order_id][$file_name]['doument_type']));
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['doument_type'] = $doument_type;
+						}
+					}
+					if($branch)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['branch']))
+						{
+							$file_tags[$order_id][$file_name]['branch'] = array_unique(array_merge($branch, $file_tags[$order_id][$file_name]['branch']));
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['branch'] = $branch;
+						}
+					}
+					if($building_part)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['building_part']))
+						{
+							$file_tags[$order_id][$file_name]['building_part'] = array_unique(array_merge($building_part, $file_tags[$order_id][$file_name]['building_part']));
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['building_part'] = $building_part;
+						}
+					}
+
+				}
+
+				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+
+			}
+			else if($action == 'remove_tag' && $files)
+			{
+
+				foreach ($files as $file_name)
+				{
+					if($doument_type)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['doument_type']))
+						{
+							$file_tags[$order_id][$file_name]['doument_type'] = array_diff($file_tags[$order_id][$file_name]['doument_type'], $doument_type);
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['doument_type'] = array();
+						}
+					}
+					if($branch)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['branch']))
+						{
+							$file_tags[$order_id][$file_name]['branch'] = array_diff($file_tags[$order_id][$file_name]['branch'], $branch);
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['branch'] = array();
+						}
+					}
+					if($building_part)
+					{
+						if(!empty($file_tags[$order_id][$file_name]['building_part']))
+						{
+							$file_tags[$order_id][$file_name]['building_part'] = array_diff($file_tags[$order_id][$file_name]['building_part'], $building_part);
+						}
+						else
+						{
+							$file_tags[$order_id][$file_name]['building_part'] = array();
+						}
+					}
+
+				}
+				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+
+			}
+
+			return $action;
+
+		}
 		/**
 		 * Prepare UI
 		 * @return void
@@ -193,35 +390,36 @@
 
 
 			$files_def = array
-				(
-				array('key'	 => 'file',
+			(
+				array('key'	 => 'file_name',
 					'label'	 => lang('file'),
-					'sortable'	 => true,
+					'sortable'	 => false,
 					'resizeable' => true
 					),
 				array('key' => 'doument_type',
 					'label' => lang('doument type'),
-					'sortable' => true,
-					'resizeable' => true
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'branch',
 					'label' => lang('branch'),
-					'sortable' => true,
-					'resizeable' => true
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'building_part',
 					'label' => lang('building part'),
-					'sortable' => true,
-					'resizeable' => true
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 			);
 
 
 			$datatable_def = array();
 			$requestUrl	 = json_encode(self::link(array(
-				'menuaction' => 'property.uitts.update_file_data',
-				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
-				'location_item_id' => $id,
+				'menuaction' => 'property.uiimport_documents.update_file_data',
 				'phpgw_return_as'	 => 'json')
 				));
 			$requestUrl = str_replace('&amp;', '&', $requestUrl);
@@ -274,63 +472,54 @@
 					'confirm_msg'	=>	$entry['confirm_msg'],
 					'type'			 => 'custom',
 					'custom_code'	 => "
-						var api = oTable2.api();
+						var api = oTable0.api();
 						var selected = api.rows( { selected: true } ).data();
-						var ids = [];
+						var files = [];
 						for ( var n = 0; n < selected.length; ++n )
 						{
 							var aData = selected[n];
-							ids.push(aData['file_id']);
+							files.push(aData['file_name']);
 						}
-						{$entry['funct']}('{$entry['action']}', ids);
+
+						{$entry['funct']}('{$entry['action']}', files);
 						"
 				);
 			}
 
 			$code		 = <<<JS
 
-	this.onActionsClick_filter_files=function(action, ids)
+	this.onActionsClick_files=function(action, files)
 	{
-		var tags = $('select#tags').val();
-		var oArgs = {menuaction: 'property.uitts.update_data',action:'get_files', id: {$id}};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-		$.each(tags, function (k, v)
-		{
-			requestUrl += '&tags[]=' + v;
-		});
-		JqueryPortico.updateinlineTableHelper('datatable-container_2', requestUrl);
-	}
-
-	this.onActionsClick_files=function(action, ids)
-	{
-		var numSelected = 	ids.length;
-
+	   var numSelected = 	files.length;
 		if (numSelected ==0)
 		{
 			alert('None selected');
 			return false;
 		}
-		var tags = $('select#tags').val();
+
+		var order_id = $('#order_id').val();
+		var doument_type = $('#doument_type option:selected').toArray().map(item => item.text);
+		var branch = $('#branch option:selected').toArray().map(item => item.text);
+		var building_part = $('#building_part option:selected').toArray().map(item => item.value);
+//		console.log(doument_type);
+//		console.log(branch);
+//		console.log(building_part);
 
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: {$requestUrl},
-			data:{ids:ids, tags:tags, action:action},
+			data:{files:files, doument_type:doument_type, branch:branch, building_part:building_part, action:action, order_id: order_id},
 			success: function(data) {
 				if( data != null)
 				{
 
 				}
-				var oArgs = {menuaction: 'property.uitts.update_data',action:'get_files', id: {$id}};
+				var oArgs = {menuaction: 'property.uiimport_documents.get_files', order_id: order_id};
 				var strURL = phpGWLink('index.php', oArgs, true);
 
-				JqueryPortico.updateinlineTableHelper('datatable-container_2',strURL);
+				JqueryPortico.updateinlineTableHelper('datatable-container_0',strURL);
 
-				if(action=='delete_file')
-				{
-					refresh_glider(strURL);
-				}
 			},
 			error: function(data) {
 				alert('feil');
@@ -392,7 +581,7 @@ JS;
 			$data = array
 				(
 				'datatable_def'				 => $datatable_def,
-				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+//				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'				 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
 				'multi_upload_action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files','id' => $id)),
 				'building_part_list'		 => array('options' => $this->bocommon->select_category_list(array(
@@ -422,12 +611,21 @@ JS;
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int');
-			$order_id = 1;
 
 			$options = array();
 			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
 
 			$list_files = $this->_get_files($path_dir);
+
+
+			$file_tags = (array)phpgwapi_cache::session_get('property', 'documents_import_file_tags');
+			foreach ($list_files as &$file_info)
+			{
+				$file_name = $file_info['file_name'];
+				$file_info['doument_type'] =  isset($file_tags[$order_id][$file_name]['doument_type']) ? $file_tags[$order_id][$file_name]['doument_type'] : array();
+				$file_info['branch'] = isset($file_tags[$order_id][$file_name]['branch']) ? $file_tags[$order_id][$file_name]['branch'] : array();
+				$file_info['building_part'] = isset($file_tags[$order_id][$file_name]['building_part']) ? $file_tags[$order_id][$file_name]['building_part'] : array();
+			}
 
 			$total_records = count($list_files);
 
@@ -439,7 +637,6 @@ JS;
 				'recordsFiltered'	 => $total_records
 			);
 
-			
 		}
 
 		private function _get_files( $dir, $results = array() )
@@ -463,7 +660,7 @@ JS;
 					}
 
 					$results[] = array(
-						'file' => $value,
+						'file_name' => $value,
 						'path_absolute'	 => $path,
 						'path_relative'	 => '/');
 				}
@@ -483,7 +680,6 @@ JS;
 			phpgw::import_class('property.multiuploader');
 
 			$order_id = phpgw::get_var('order_id', 'int', 'GET');
-			$order_id = 1;
 
 			$options = array();
 			$options['upload_dir']	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
