@@ -39,17 +39,12 @@
 		public $public_functions = array(
 			'query'							 => true,
 			'index'							 => true,
-			'get_locations_for_type'		 => true,
-			'import_component_files'		 => true,
 			'handle_import_files'			 => true,
-			'import_components'				 => true,
-			'get_attributes_from_template'	 => true,
-			'get_profile'					 => true,
 			'download'						 => true,
 			'get_files'						 => true,
-			'handle_import_files'			 => true,
 			'update_file_data'				 => true,
-			'get_order_info'				 => true
+			'get_order_info'				 => true,
+			'validate_info'					 => true
 
 		);
 
@@ -60,11 +55,11 @@
 			$this->bocommon			 = CreateObject('property.bocommon');
 			$this->bo				 = CreateObject('property.boadmin_entity', true);
 			$this->acl				 = & $GLOBALS['phpgw']->acl;
+
 			/**
 			 * Fix me
 			 */
-			$this->acl_edit = true;
-			$this->db				 = & $GLOBALS['phpgw']->db;
+			$this->acl_edit			 = true;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
 			$config = CreateObject('phpgwapi.config', 'property')->read();
@@ -106,82 +101,6 @@
 
 			return $this->receipt;
 		}
-
-		private function _getexcelcolumnname( $index )
-		{
-		}
-
-		public function import_component_files()
-		{
-
-		}
-
-		private function _getArrayItem( $id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
-		{
-		}
-
-
-		private function _get_components_cached_file()
-		{
-			$cached_file = phpgwapi_cache::session_get('property', 'components_import_file');
-
-			if ($_FILES['file']['tmp_name'])
-			{
-				if ($cached_file)
-				{
-					phpgwapi_cache::session_clear('property', 'components_import_file');
-					unlink($cached_file);
-					unset($cached_file);
-				}
-
-				$file		 = $_FILES['file']['tmp_name'];
-				$cached_file = "{$file}_temporary_import_file";
-
-				file_put_contents($cached_file, file_get_contents($file));
-				phpgwapi_cache::session_set('property', 'components_import_file', $cached_file);
-			}
-
-			return $cached_file;
-		}
-
-		private function _build_sheets()
-		{
-		}
-
-		private function _build_start_line()
-		{
-		}
-
-		private function _get_default_options()
-		{
-		}
-
-		private function _build_columns()
-		{
-
-		}
-
-		private function _prepare_profile()
-		{
-
-		}
-
-		private function _prepare_values_to_preview()
-		{
-
-		}
-
-		private function _save_values_import()
-		{
-			return $this->receipt;
-		}
-
-		public function import_components()
-		{
-
-			return $result;
-		}
-
 
 		public function get_order_info(  )
 		{
@@ -226,8 +145,18 @@
 				$cadastral_unit = substr($gab_id, 4, 5) . '/' . substr($gab_id, 9, 4) . '/' . substr($gab_id, 13, 4) . '/' . substr($gab_id, 17, 3);
 			}
 
+			$file_tags = $this->_get_metadata($order_id);
 
-			$building_number = '';
+			if($file_tags)
+			{
+				$file_info = next($file_tags);
+
+				$cadastral_unit = !empty($file_info['cadastral_unit']) ? $file_info['cadastral_unit'] : $cadastral_unit;
+				$location_code = !empty($file_info['location_code']) ? $file_info['location_code'] : $location_code;
+				$building_number = !empty($file_info['building_number']) ? $file_info['building_number'] : $building_number;
+
+			}
+
 			return array(
 				'vendor_name' => $vendor_name,
 				'cadastral_unit' => $cadastral_unit,
@@ -235,6 +164,34 @@
 				'building_number'	=> $building_number,
 			);
 
+		}
+
+		private function _get_metadata_file_name( $order_id )
+		{
+			return "{$this->path_upload_dir}/{$order_id}/metadata/metadata.json";
+		}
+
+		private function _set_metadata( $order_id, $metadata )
+		{
+			if(!$order_id)
+			{
+				return;
+			}
+			$file_name = $this->_get_metadata_file_name( $order_id );
+			$fp	= fopen($file_name, 'w');
+			fputs($fp, json_encode($metadata));
+			fclose($fp);
+		}
+
+		private function _get_metadata( $order_id )
+		{
+			if(!$order_id)
+			{
+				return array();
+			}
+			$file_name = $this->_get_metadata_file_name( $order_id );
+			$string = file_get_contents($file_name);
+			return json_decode($string, true);
 		}
 
 		public function update_file_data()
@@ -245,13 +202,21 @@
 			}
 
 			$action= phpgw::get_var('action', 'string');
-			$files= phpgw::get_var('files', 'string');
+			$files= phpgw::get_var('files', 'raw');
 			$doument_type= phpgw::get_var('doument_type', 'string');
 			$branch= phpgw::get_var('branch', 'string');
 			$building_part= phpgw::get_var('building_part', 'string');
 			$order_id = phpgw::get_var('order_id', 'int');
+			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
+			$location_code= phpgw::get_var('location_code', 'string');
+			$building_number= phpgw::get_var('building_number', 'string');
 
-			$file_tags = (array)phpgwapi_cache::session_get('property', 'documents_import_file_tags');
+			if(!$order_id)
+			{
+				return;
+			}
+
+			$file_tags = $this->_get_metadata($order_id);
 
 			if ($action == 'delete_file' && $files && $order_id)
 			{
@@ -272,13 +237,14 @@
 					{
 						unlink($file_info['path_absolute']);
 
-						if(!empty($file_tags[$order_id][$file_info['file_name']]))
+						if(!empty($file_tags[$file_info['file_name']]))
 						{
-							$file_tags[$order_id][$file_info['file_name']] = null;
+							$file_tags[$file_info['file_name']] = null;
 						}
 					}
 				}
-				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+
+				$this->_set_metadata($order_id, $file_tags);
 
 			}
 			else if($action == 'set_tag' && $files)
@@ -288,86 +254,110 @@
 				{
 					if($doument_type)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['doument_type']))
+						if(!empty($file_tags[$file_name]['doument_type']))
 						{
-							$file_tags[$order_id][$file_name]['doument_type'] = array_unique(array_merge($doument_type, $file_tags[$order_id][$file_name]['doument_type']));
+							$file_tags[$file_name]['doument_type'] = array_unique(array_merge($doument_type, $file_tags[$file_name]['doument_type']));
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['doument_type'] = $doument_type;
+							$file_tags[$file_name]['doument_type'] = $doument_type;
 						}
 					}
 					if($branch)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['branch']))
+						if(!empty($file_tags[$file_name]['branch']))
 						{
-							$file_tags[$order_id][$file_name]['branch'] = array_unique(array_merge($branch, $file_tags[$order_id][$file_name]['branch']));
+							$file_tags[$file_name]['branch'] = array_unique(array_merge($branch, $file_tags[$file_name]['branch']));
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['branch'] = $branch;
+							$file_tags[$file_name]['branch'] = $branch;
 						}
 					}
 					if($building_part)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['building_part']))
+						if(!empty($file_tags[$file_name]['building_part']))
 						{
-							$file_tags[$order_id][$file_name]['building_part'] = array_unique(array_merge($building_part, $file_tags[$order_id][$file_name]['building_part']));
+							$file_tags[$file_name]['building_part'] = array_unique(array_merge($building_part, $file_tags[$file_name]['building_part']));
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['building_part'] = $building_part;
+							$file_tags[$file_name]['building_part'] = $building_part;
 						}
 					}
-
 				}
 
-				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+				$this->_set_metadata($order_id, $file_tags);
 
 			}
 			else if($action == 'remove_tag' && $files)
 			{
-
 				foreach ($files as $file_name)
 				{
 					if($doument_type)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['doument_type']))
+						if(!empty($file_tags[$file_name]['doument_type']))
 						{
-							$file_tags[$order_id][$file_name]['doument_type'] = array_diff($file_tags[$order_id][$file_name]['doument_type'], $doument_type);
+							$file_tags[$file_name]['doument_type'] = array_diff($file_tags[$file_name]['doument_type'], $doument_type);
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['doument_type'] = array();
+							$file_tags[$file_name]['doument_type'] = array();
 						}
 					}
 					if($branch)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['branch']))
+						if(!empty($file_tags[$file_name]['branch']))
 						{
-							$file_tags[$order_id][$file_name]['branch'] = array_diff($file_tags[$order_id][$file_name]['branch'], $branch);
+							$file_tags[$file_name]['branch'] = array_diff($file_tags[$file_name]['branch'], $branch);
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['branch'] = array();
+							$file_tags[$file_name]['branch'] = array();
 						}
 					}
 					if($building_part)
 					{
-						if(!empty($file_tags[$order_id][$file_name]['building_part']))
+						if(!empty($file_tags[$file_name]['building_part']))
 						{
-							$file_tags[$order_id][$file_name]['building_part'] = array_diff($file_tags[$order_id][$file_name]['building_part'], $building_part);
+							$file_tags[$file_name]['building_part'] = array_diff($file_tags[$file_name]['building_part'], $building_part);
 						}
 						else
 						{
-							$file_tags[$order_id][$file_name]['building_part'] = array();
+							$file_tags[$file_name]['building_part'] = array();
 						}
 					}
 
 				}
-				phpgwapi_cache::session_set('property', 'documents_import_file_tags', $file_tags);
+				$this->_set_metadata($order_id, $file_tags);
 
 			}
+
+			else if($action == 'set_tag' && ($cadastral_unit || $location_code || $building_number))
+			{
+				$path_dir	 = "{$this->path_upload_dir}/{$order_id}/";
+				$list_files = $this->_get_files($path_dir);
+				foreach ($list_files as $file_info)
+				{
+					$file_name = $file_info['file_name'];
+
+					if($cadastral_unit)
+					{
+						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
+					}
+					if($location_code)
+					{
+							$file_tags[$file_name]['location_code'] = $location_code;
+					}
+					if($building_number)
+					{
+						$file_tags[$file_name]['building_number'] = $building_number;
+					}
+				}
+
+				$this->_set_metadata($order_id, $file_tags);
+			}
+
 
 			return $action;
 
@@ -378,15 +368,13 @@
 		 */
 		public function index()
 		{
-			$tabs				 = array();
-			$tabs['locations']	 = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['components']	 = array('label' => lang('Components'), 'link'		 => '#components',
-				'disable'	 => 1);
-			$tabs['files']		 = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
-			$tabs['relations']	 = array('label' => lang('Relations'), 'link'		 => '#relations',
-				'disable'	 => 1);
-
-			$active_tab = 'locations';
+//			$tabs				 = array();
+//			$tabs['locations']	 = array('label' => lang('Locations'), 'link' => '#locations');
+//			$tabs['components']	 = array('label' => lang('Components'), 'link'		 => '#components',
+//				'disable'	 => 1);
+//			$tabs['files']		 = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
+//			$tabs['relations']	 = array('label' => lang('Relations'), 'link'		 => '#relations',
+//				'disable'	 => 1);
 
 
 			$files_def = array
@@ -533,8 +521,7 @@ JS;
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiimport_documents.get_files',
-						'phpgw_return_as'	 => 'json'))),
+				'requestUrl' => "''",
 				'ColumnDefs' => $files_def,
 				'tabletools' => $tabletools,
 				'config'	 => array(
@@ -543,40 +530,46 @@ JS;
 				)
 			);
 
-			$_doument_types = array(
-				'Avtaler',
-				'Beskrivelser',
-				'Bilder',
-				'Brosjyrer',
-				'Bruksanvisninger',
-				'Drifts- og systeminformasjon',
-				'Fargekoder',
-				'Garantibefaring',
-				'Generell orientering',
-				'Ikke aktiv',
-				'Innholdsfortegnelse',
-				'Kart',
-				'Låseplaner',
-				'Prosjekt- og entreprenørlister',
-				'Rapport',
-				'Skjema',
-				'Tegning',
-				'Tegning, fasade',
-				'Tegning, plan',
-				'Tegning, snitt',
-				'Teknisk informasjon',
-				'Tilsyn og vedlikehold'
+			$error_list_def = array
+			(
+				array('key'	 => 'file_name',
+					'label'	 => lang('file'),
+					'sortable'	 => false,
+					'resizeable' => true
+					),
+				array('key' => 'doument_type',
+					'label' => lang('doument type'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
+				array('key' => 'branch',
+					'label' => lang('branch'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
+				array('key' => 'building_part',
+					'label' => lang('building part'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_1',
+				'requestUrl' => "''",
+				'ColumnDefs' => $error_list_def,
+				'data'		 => array(),
+				'tabletools' => array(),
+				'config'	 => array(
+					array('disablePagination' => true),
+					array('disableFilter' => true),
+				)
 			);
 
 
-			$doument_types = array();
-			foreach ($_doument_types as $doument_type)
-			{
-				$doument_types[] = array(
-					'id' => $doument_type,
-					'name' => $doument_type,
-				);
-			}
+			$doument_types = $this->_get_document_categories();
+
 
 			$data = array
 				(
@@ -602,6 +595,47 @@ JS;
 		}
 
 
+		function validate_info()
+		{
+			$path_upload_dir = $this->path_upload_dir;
+			if (empty($path_upload_dir))
+			{
+				return false;
+			}
+
+			$order_id = phpgw::get_var('order_id', 'int');
+			$path_dir	 = "{$this->path_upload_dir}/{$order_id}/";
+
+			$list_files = $this->_get_files($path_dir);
+			$file_tags = $this->_get_metadata($order_id);
+			$lang_missing = lang('Missing value');
+			$error_list = array();
+			foreach ($list_files as &$file_info)
+			{
+				$file_name = $file_info['file_name'];
+				$file_info['doument_type'] =  empty($file_tags[$file_name]['doument_type']) ? array($lang_missing) : ''; //array('Ok');
+				$file_info['branch'] = empty($file_tags[$file_name]['branch']) ? array($lang_missing) : ''; //array('Ok');
+				$file_info['building_part'] = empty($file_tags[$file_name]['building_part']) ? array($lang_missing) : ''; //array('Ok');
+
+		//		if($file_info['doument_type'][0] !=='Ok' || $file_info['branch'][0] !=='Ok'  || $file_info['building_part'][0] !=='Ok' )
+				{
+					$error_list[] = $file_info;
+				}
+			}
+
+			$total_records = count($error_list);
+
+			return array
+				(
+				'data'				 => $error_list,
+				'draw'				 => phpgw::get_var('draw', 'int'),
+				'recordsTotal'		 => $total_records,
+				'recordsFiltered'	 => $total_records
+			);
+
+		}
+
+
 		function get_files()
 		{
 			$path_upload_dir = $this->path_upload_dir;
@@ -618,13 +652,14 @@ JS;
 			$list_files = $this->_get_files($path_dir);
 
 
-			$file_tags = (array)phpgwapi_cache::session_get('property', 'documents_import_file_tags');
+//			$file_tags = (array)phpgwapi_cache::session_get('property', 'documents_import_file_tags');
+			$file_tags = $this->_get_metadata($order_id);
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
-				$file_info['doument_type'] =  isset($file_tags[$order_id][$file_name]['doument_type']) ? $file_tags[$order_id][$file_name]['doument_type'] : array();
-				$file_info['branch'] = isset($file_tags[$order_id][$file_name]['branch']) ? $file_tags[$order_id][$file_name]['branch'] : array();
-				$file_info['building_part'] = isset($file_tags[$order_id][$file_name]['building_part']) ? $file_tags[$order_id][$file_name]['building_part'] : array();
+				$file_info['doument_type'] =  isset($file_tags[$file_name]['doument_type']) ? $file_tags[$file_name]['doument_type'] : array();
+				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
+				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
 			}
 
 			$total_records = count($list_files);
@@ -729,18 +764,13 @@ JS;
 
 			$old = umask(0);
 			$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}", 0755);
+			$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}/metadata", 0755);
 			umask($old);
 
 			return $rs;
 		}
 
-		public function get_attributes_from_template()
-		{
-		}
 
-		public function get_locations_for_type()
-		{
-		}
 
 		/**
 		 * Fetch data from $this->bo based on parametres
@@ -751,23 +781,45 @@ JS;
 			return;
 		}
 
-		public function get_categories_for_type()
-		{
-		}
 
-		public function get_profile()
+		private function _get_document_categories()
 		{
-		}
+			$_doument_types = array(
+				'Avtaler',
+				'Beskrivelser',
+				'Bilder',
+				'Brosjyrer',
+				'Bruksanvisninger',
+				'Drifts- og systeminformasjon',
+				'Fargekoder',
+				'Garantibefaring',
+				'Generell orientering',
+				'Ikke aktiv',
+				'Innholdsfortegnelse',
+				'Kart',
+				'Låseplaner',
+				'Prosjekt- og entreprenørlister',
+				'Rapport',
+				'Skjema',
+				'Tegning',
+				'Tegning, fasade',
+				'Tegning, plan',
+				'Tegning, snitt',
+				'Teknisk informasjon',
+				'Tilsyn og vedlikehold'
+			);
 
-		public function get_data_type()
-		{
-		}
 
-		public function get_part_of_town()
-		{
-		}
+			$doument_types = array();
+			foreach ($_doument_types as $doument_type)
+			{
+				$doument_types[] = array(
+					'id' => $doument_type,
+					'name' => $doument_type,
+				);
+			}
 
-		private function _get_document_categories( $selected = 0 )
-		{
+			return $doument_types;
+
 		}
 	}

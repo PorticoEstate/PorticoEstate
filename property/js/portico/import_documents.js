@@ -1,3 +1,5 @@
+/* global lang */
+
 $(document).ready(function ()
 {
 
@@ -44,16 +46,16 @@ this.get_order_info = function ()
 		url: requestUrl,
 		success: function (data)
 		{
-			if (data != null)
+			if (data !== null)
 			{
 				if (data.error)
 				{
 					$("#fieldset_file_input").hide();
 					$("#message").text(data.error).show();
-					$("#vendor_name").text('')
-					$("#cadastral_unit").val('')
-					$("#location_code").val('')
-					$("#building_number").val('')
+					$("#vendor_name").text('');
+					$("#cadastral_unit").val('');
+					$("#location_code").val('');
+					$("#building_number").val('');
 				}
 				else
 				{
@@ -67,10 +69,10 @@ this.get_order_info = function ()
 						);
 				}
 
-				$("#vendor_name").text(data.vendor_name)
-				$("#cadastral_unit").val(data.cadastral_unit)
-				$("#location_code").val(data.location_code)
-				$("#building_number").val(data.building_number)
+				$("#vendor_name").text(data.vendor_name);
+				$("#cadastral_unit").val(data.cadastral_unit);
+				$("#location_code").val(data.location_code);
+				$("#building_number").val(data.building_number);
 			}
 			else
 			{
@@ -79,5 +81,58 @@ this.get_order_info = function ()
 			refresh_files();
 		}
 	});
-
 };
+
+this.validate_info = function ()
+{
+	var order_id = $("#order_id").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
+
+	var cadastral_unit = $("#cadastral_unit").val();
+	var location_code = $("#location_code").val();
+	var building_number = $("#building_number").val();
+
+	var $html = [];
+
+	if (!cadastral_unit)
+	{
+		$html.push(lang['Missing value'] + ': ' + lang['cadastral unit']);
+	}
+	if (!location_code)
+	{
+		$html.push(lang['Missing value'] + ': ' + lang['location code']);
+	}
+	if (!building_number)
+	{
+		$html.push(lang['Missing value'] + ': ' + lang['building number']);
+	}
+
+	if ($html.length > 0)
+	{
+		$("#validate_message").html($html.join('<br/>'));
+		$("#validate_message").addClass('error');
+	}
+	else
+	{
+		$("#validate_message").html('');
+		$("#validate_message").removeClass('error');
+
+	}
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, action: 'set_tag', order_id: order_id},
+		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
+		success: function (data)
+		{
+			if (data != null)
+			{
+			}
+		}
+	});
+};
+

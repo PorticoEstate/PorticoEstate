@@ -3,7 +3,7 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<script type="text/javascript">
-		var lang = <xsl:value-of select="php:function('js_lang',  'building part', 'branch', 'doument type')"/>
+		var lang = <xsl:value-of select="php:function('js_lang',  'building part', 'branch', 'doument type', 'cadastral unit', 'location code', 'building number', 'Missing value')"/>
 	</script>
 	<div class="container">
 		<fieldset class="pure-form pure-form-aligned">
@@ -38,10 +38,10 @@
 				<input id="location_code" required="required"></input>
 			</div>
 			<div class="pure-control-group">
-				<label >
-					<xsl:value-of select="php:function('lang', 'building_number')"/>
+				<label>
+					<xsl:value-of select="php:function('lang', 'building number')"/>
 				</label>
-				<input id="order_id" required="required"></input>
+				<input id="building_number" required="required"></input>
 			</div>
 		</fieldset>
 
@@ -129,10 +129,16 @@
 					</xsl:if>
 				</xsl:for-each>
 			</div>
+		<h1>3) Validere at krav til detaljer er oppfylt</h1>
+
+		<div class="pure-controls">
+			<div id="validate_message"></div>
+
+			<button type="button" class="pure-button pure-button-primary" onClick="validate_info();">Valider</button>
+		</div>
 		</fieldset>
 
 
-		<h1>3) Validere at krav til detaljer er oppfylt</h1>
 
 		<h1>4) Legge på evnt merknader</h1>
 
