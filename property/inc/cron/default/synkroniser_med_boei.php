@@ -96,6 +96,7 @@
 			$this->oppdater_oppsagtdato();
 			$this->slett_feil_telefon();
 			$this->update_tenant_name();
+			$this->update_tenant_termination_date();
 			$this->update_obskode();
 			$this->update_hemmelig_adresse();
 			$this->oppdater_namssakstatus_pr_leietaker();
@@ -1244,6 +1245,29 @@ SQL;
 			}
 
 			$msg						 = $i . ' Leietakere er oppdatert';
+			$this->receipt['message'][]	 = array('msg' => $msg);
+			$this->cron_log($msg);
+		}
+
+		function update_tenant_termination_date()
+		{
+			$sql = "SELECT boei_leietaker.leietaker_id, boei_leietaker.oppsagtdato FROM boei_leietaker"
+				. " JOIN fm_tenant ON boei_leietaker.leietaker_id = fm_tenant.id"
+				. " WHERE fm_tenant.oppsagtdato != boei_leietaker.oppsagtdato";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$i = 0;
+			while ($this->db->next_record())
+			{
+				$sql2 = "UPDATE fm_tenant SET"
+					. " oppsagtdato = '" . $this->db->f('oppsagtdato') . "'"
+					. " WHERE id = " . (int)$this->db->f('leietaker_id');
+//_debug_array($sql2);
+				$this->db2->query($sql2, __LINE__, __FILE__);
+				$i++;
+			}
+
+			$msg						 = $i . ' Leietakere er oppdatert med oppsagtdato';
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
