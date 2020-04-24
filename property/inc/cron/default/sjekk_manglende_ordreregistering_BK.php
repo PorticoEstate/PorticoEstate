@@ -100,7 +100,7 @@
 				fm_tts_tickets.budget,
 				account_firstname, account_lastname
 				FROM fm_tts_tickets
-				JOIN phpgw_accounts ON fm_tts_tickets.user_id = phpgw_accounts.account_id
+				JOIN phpgw_accounts ON fm_tts_tickets.assignedto = phpgw_accounts.account_id
 				WHERE fm_tts_tickets.order_id IS NOT NULL
 				AND (order_sent IS NOT NULL)
 				AND verified_transfered IS NULL
