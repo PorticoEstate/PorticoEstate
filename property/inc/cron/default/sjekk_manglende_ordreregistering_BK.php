@@ -78,6 +78,43 @@
 			while ($this->db->next_record())
 			{
 				$orderserie[] = array(
+					'type'				 => 'workorder',
+					'order_id'			 => $this->db->f('order_id'),
+					'title'				 => $this->db->f('title', true),
+					'status'			 => $this->db->f('status'),
+					'date'				 => $this->db->f('date'),
+					'kostnadsart'		 => $this->db->f('kostnadsart'),
+					'overfort_dato'		 => $this->db->f('overfort_dato'),
+					'budget'			 => $this->db->f('budget'),
+					'account_lastname'	 => $this->db->f('account_lastname'),
+					'account_firstname'	 => $this->db->f('account_firstname'),
+				);
+			}
+
+			$sql = <<<SQL
+				SELECT fm_tts_tickets.id AS ticket_id, order_id, fm_tts_tickets.status ,fm_tts_tickets.subject as title,
+				to_char(to_timestamp(fm_tts_tickets.entry_date ),'DD/MM-YYYY') as date,
+				to_char(to_timestamp(fm_tts_tickets.entry_date ),'YYYYMMDD') as sorteringsdato,
+				fm_tts_tickets.b_account_id as kostnadsart,
+				to_char(to_timestamp(fm_tts_tickets.order_sent ),'DD/MM-YYYY') as overfort_dato,
+				fm_tts_tickets.budget,
+				account_firstname, account_lastname
+				FROM fm_tts_tickets
+				JOIN phpgw_accounts ON fm_tts_tickets.user_id = phpgw_accounts.account_id
+				WHERE fm_tts_tickets.order_id IS NOT NULL
+				AND (order_sent IS NOT NULL)
+				AND verified_transfered IS NULL
+				AND fm_tts_tickets.status !='X'
+				ORDER BY sorteringsdato , fm_tts_tickets.id
+SQL;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$orderserie[] = array(
+					'type'				 => 'ticket',
+					'ticket_id'			 => $this->db->f('ticket_id'),
 					'order_id'			 => $this->db->f('order_id'),
 					'title'				 => $this->db->f('title', true),
 					'status'			 => $this->db->f('status'),
@@ -135,7 +172,21 @@ HTML;
 				}
 				if ($order && ((string)$order[0]->status == 'O' || (string)$order[0]->status == 'N' || (string)$order[0]->status == 'F'))
 				{
-					$this->db->query("UPDATE fm_workorder SET verified_transfered = 1 WHERE id = '{$order_id}'", __LINE__, __FILE__);
+
+					switch ($entry['type'])
+					{
+						case 'workorder':
+							$table = 'fm_workorder';
+							$this->db->query("UPDATE {$table} SET verified_transfered = 1 WHERE id = '{$order_id}'", __LINE__, __FILE__);
+							break;
+						case 'ticket':
+							$table = 'fm_tts_tickets';
+							$this->db->query("UPDATE {$table} SET verified_transfered = 1 WHERE id = '{$entry['ticket_id']}'", __LINE__, __FILE__);
+							break;
+						default:
+							break;
+					}
+
 					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
 				}
 				else
@@ -144,9 +195,21 @@ HTML;
 
 					$i++;
 
-					$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
-							'menuaction' => 'property.uiworkorder.edit',
-							'id'		 => $order_id), false, true) . "\">{$order_id}</a>";
+					switch ($entry['type'])
+					{
+						case 'workorder':
+								$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction' => 'property.uiworkorder.edit',
+									'id'		 => $order_id), false, true) . "\">{$order_id}</a>";
+							break;
+						case 'ticket':
+								$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction' => 'property.uitts.view',
+									'id'		 => $entry['ticket_id']), false, true) . "\">{$order_id}</a>";
+							break;
+						default:
+							break;
+					}
 
 					$html .= <<<HTML
 
