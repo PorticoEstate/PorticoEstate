@@ -3245,10 +3245,15 @@
 		}
 
 		/* temporary wrapper function for not working Record function in adodb layer(ceb)*/
-		function Record()
+		function Record($attributes = array())
 		{
+			if(!$attributes)
+			{
+				$attributes = $this->attributes;
+			}
+
 			$values = array();
-			foreach($this->attributes as $attribute)
+			foreach($attributes as $attribute)
 			{
 				$values[$attribute] = $this->db->f($attribute);
 			}
@@ -3379,7 +3384,9 @@
 			}
 			else
 			{
-				$this->attributes[] = 'tags';
+				$_attributes = $this->attributes;
+				$_attributes[] = 'tags';
+
 				$sql = "SELECT tags, phpgw_vfs.* FROM phpgw_vfs LEFT JOIN phpgw_vfs_filetags ON phpgw_vfs.file_id = phpgw_vfs_filetags.file_id WHERE directory = '{$dir_clean}'";
 			}
 
@@ -3397,7 +3404,7 @@
 			$rarray = array();
 			while( $this->db->next_record() )
 			{
-				$record = $this->Record();
+				$record = $this->Record($_attributes);
 
 				//_debug_array($record);
 				/* Further checking on the directory.  This makes sure /home/user/test won't match /home/user/test22 */
