@@ -413,13 +413,18 @@
 
 					if($component_children)
 					{
+						$sort_key_location = array();
 						$short_description = array();
-						foreach ($component_children as $_value)
+						foreach ($component_children as &$_value)
 						{
+							$sort_key_location[] = $_value['location_id'];
 							$short_description[] = $_value['short_description'];
+							
+							$_value['selected'] = ($receipt['id'] == $_value['id'] && $location_id == $_value['location_id']) ? 1 : 0;
 						}
 
-						array_multisort($short_description, SORT_ASC, $component_children);
+						array_multisort($sort_key_location, SORT_ASC, $short_description, SORT_ASC, $component_children);
+
 
 						array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 					}
@@ -816,14 +821,15 @@
 
 				if($location_children)
 				{
+					$sort_key_location = array();
 					$short_description = array();
 					foreach ($component_children as $_value)
 					{
+						$sort_key_location[] = $_value['location_id'];
 						$short_description[] = $_value['short_description'];
 					}
 
-					array_multisort($short_description, SORT_ASC, $component_children);
-
+					array_multisort($sort_key_location, SORT_ASC, $short_description, SORT_ASC, $component_children);
 					array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 				}
 

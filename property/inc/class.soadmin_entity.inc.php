@@ -288,7 +288,7 @@
 			}
 
 			$table	 = "fm_{$this->type}_category";
-			$sql	 = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY name ASC";
+			$sql	 = "SELECT * FROM {$table} WHERE entity_id = {$entity_id} AND parent_id = {$parent} ORDER BY location_id, name ASC";
 			$this->db2->query($sql, __LINE__, __FILE__);
 
 			$children = array();

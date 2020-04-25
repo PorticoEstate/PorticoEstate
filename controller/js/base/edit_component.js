@@ -163,10 +163,14 @@ $(document).ready(function ()
 					$.each(component_children, function (i, val)
 					{
 						$('#choose-child-on-component').append($('<option>', {
-							value: val.location_id + '_' + val.id,
-							text: val.short_description
+							value: val.location_id ? val.location_id + '_' + val.id : '',
+							text: val.short_description,
+							selected: val.selected === 1 ? true : null
 						}));
 					});
+
+					$("#item_string").val($('#choose-child-on-component').val());
+					$("#inspection_title").html($("#choose-child-on-component option:selected").text());
 				}
 				if (edit_parent == 1)
 				{
@@ -176,9 +180,8 @@ $(document).ready(function ()
 				else
 				{
 					$("#form_new_component_2").html(data.message);
-					$('#equipment_picture_container').html('');
-					$("#new_picture").hide();
-					$("#view_cases").hide();
+					$("#new_picture").show();
+//					$("#view_cases").hide();
 				}
 			}
 		});
