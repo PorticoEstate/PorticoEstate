@@ -3758,6 +3758,7 @@ HTML;
 				{
 
 					$component_child_data[] = array(
+						'location_id' => $component_child['location_id'],
 						'name'	=> $component_child['short_description'],
 						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
 						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
@@ -3772,7 +3773,7 @@ HTML;
 					$reported_cases[] = $location_identificator;
 				}
 			}
-
+			
 			$report_data['component_child_data'] = $component_child_data;
 
 			$report_data['stray_cases'] = array();
