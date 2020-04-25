@@ -686,7 +686,7 @@
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);				
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
@@ -3521,8 +3521,6 @@ HTML;
 
 					}
 
-
-
 					$n = 1;
 
 					$entry = array();
@@ -3680,7 +3678,7 @@ HTML;
 
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-						$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
+					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
 				}
 
 				$entry = array
@@ -3773,8 +3771,24 @@ HTML;
 					$reported_cases[] = $location_identificator;
 				}
 			}
-			
-			$report_data['component_child_data'] = $component_child_data;
+
+//			$report_data['component_child_data'] = $component_child_data;
+
+			$section_id = 0;
+			$section_location_id = false;
+			foreach ($component_child_data as $data_set)
+			{
+				if($section_location_id != $data_set['location_id'])
+				{
+					$section_location_id = $data_set['location_id'];
+					$system_location = $GLOBALS['phpgw']->locations->get_name($section_location_id);
+					$section_id ++;
+				}
+
+				$report_data['component_child_data'][$section_id]['section'] = $section_id;
+				$report_data['component_child_data'][$section_id]['section_descr'] = $system_location['descr'];
+				$report_data['component_child_data'][$section_id]['data'][] = $data_set;
+			}
 
 			$report_data['stray_cases'] = array();
 			foreach ($data_case as $key => $value_set)
