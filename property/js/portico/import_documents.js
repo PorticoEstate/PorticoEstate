@@ -51,15 +51,19 @@ this.get_order_info = function ()
 				if (data.error)
 				{
 					$("#fieldset_file_input").hide();
+					$("#order_info").hide();
 					$("#message").text(data.error).show();
 					$("#vendor_name").text('');
 					$("#cadastral_unit").val('');
 					$("#location_code").val('');
 					$("#building_number").val('');
+					$("#remark").val('');
+
 				}
 				else
 				{
 					$("#message").hide();
+					$("#order_info").show();
 					$("#fieldset_file_input").show("slow");
 
 					$('#fileupload').fileupload(
@@ -73,6 +77,7 @@ this.get_order_info = function ()
 				$("#cadastral_unit").val(data.cadastral_unit);
 				$("#location_code").val(data.location_code);
 				$("#building_number").val(data.building_number);
+				$("#remark").val(data.remark);
 			}
 			else
 			{
@@ -94,6 +99,7 @@ this.validate_info = function ()
 	var cadastral_unit = $("#cadastral_unit").val();
 	var location_code = $("#location_code").val();
 	var building_number = $("#building_number").val();
+	var remark = $("#remark").val();
 
 	var $html = [];
 
@@ -125,7 +131,7 @@ this.validate_info = function ()
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, action: 'set_tag', order_id: order_id},
+		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id},
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
 		success: function (data)
 		{

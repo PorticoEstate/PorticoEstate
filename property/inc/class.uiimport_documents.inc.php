@@ -112,11 +112,13 @@
 				case 'workorder':
 					$location_item_id	 = $order_id;
 					$item = CreateObject('property.soworkorder')->read_single($order_id);
+					$remark	= $item['title'];
 					break;
 				case 'ticket':
 					$sotts = CreateObject('property.sotts');
 					$ticket_id	 = $sotts->get_ticket_from_order($order_id);
 					$item	 = $sotts->read_single($ticket_id);
+					$remark	= $item['subject'];
 					break;
 				default:
 					return array('error' => lang('no such order: %1', $order_id));
@@ -147,23 +149,23 @@
 
 			$file_tags = $this->_get_metadata($order_id);
 
-			if($file_tags)
+			if ($file_tags)
 			{
-				$file_info = next($file_tags);
+				$file_info = current($file_tags);
 
-				$cadastral_unit = !empty($file_info['cadastral_unit']) ? $file_info['cadastral_unit'] : $cadastral_unit;
-				$location_code = !empty($file_info['location_code']) ? $file_info['location_code'] : $location_code;
+				$cadastral_unit	 = !empty($file_info['cadastral_unit']) ? $file_info['cadastral_unit'] : $cadastral_unit;
+				$location_code	 = !empty($file_info['location_code']) ? $file_info['location_code'] : $location_code;
 				$building_number = !empty($file_info['building_number']) ? $file_info['building_number'] : $building_number;
-
+				$remark			 = !empty($file_info['remark']) ? $file_info['remark'] : $remark;
 			}
 
 			return array(
-				'vendor_name' => $vendor_name,
-				'cadastral_unit' => $cadastral_unit,
-				'location_code'	=> $location_code,
-				'building_number'	=> $building_number,
+				'vendor_name'		 => $vendor_name,
+				'cadastral_unit'	 => $cadastral_unit,
+				'location_code'		 => $location_code,
+				'building_number'	 => $building_number,
+				'remark'			 => $remark,
 			);
-
 		}
 
 		private function _get_metadata_file_name( $order_id )
@@ -210,6 +212,8 @@
 			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
 			$location_code= phpgw::get_var('location_code', 'string');
 			$building_number= phpgw::get_var('building_number', 'string');
+			$remark= phpgw::get_var('remark', 'string');
+			
 
 			if(!$order_id)
 			{
@@ -333,7 +337,7 @@
 
 			}
 
-			else if($action == 'set_tag' && ($cadastral_unit || $location_code || $building_number))
+			else if($action == 'set_tag' && ($cadastral_unit || $location_code || $building_number || $remark))
 			{
 				$path_dir	 = "{$this->path_upload_dir}/{$order_id}/";
 				$list_files = $this->_get_files($path_dir);
@@ -352,6 +356,10 @@
 					if($building_number)
 					{
 						$file_tags[$file_name]['building_number'] = $building_number;
+					}
+					if($remark)
+					{
+						$file_tags[$file_name]['remark'] = $remark;
 					}
 				}
 
@@ -613,11 +621,14 @@ JS;
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
-				$file_info['doument_type'] =  empty($file_tags[$file_name]['doument_type']) ? array($lang_missing) : ''; //array('Ok');
-				$file_info['branch'] = empty($file_tags[$file_name]['branch']) ? array($lang_missing) : ''; //array('Ok');
-				$file_info['building_part'] = empty($file_tags[$file_name]['building_part']) ? array($lang_missing) : ''; //array('Ok');
+				$file_info['doument_type'] =  isset($file_tags[$file_name]['doument_type']) ? $file_tags[$file_name]['doument_type'] : array();
+				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
+				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
+				$file_info['doument_type_validate'] =  empty($file_tags[$file_name]['doument_type']) ? false : true;
+				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
+				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
 
-		//		if($file_info['doument_type'][0] !=='Ok' || $file_info['branch'][0] !=='Ok'  || $file_info['building_part'][0] !=='Ok' )
+				if(!$file_info['doument_type_validate'] || !$file_info['branch_validate']  || !$file_info['branch_validate'] )
 				{
 					$error_list[] = $file_info;
 				}

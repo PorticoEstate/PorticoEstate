@@ -19,29 +19,38 @@
 				<button type="button" class="pure-button pure-button-primary" onClick="get_order_info();">Get info</button>
 			</div>
 
-			<div class="pure-control-group">
-				<label >
-					<xsl:value-of select="php:function('lang', 'vendor')"/>
-				</label>
-				<div class="pure-custom" id="vendor_name"></div>
-			</div>
-			<div class="pure-control-group">
-				<label >
-					<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
-				</label>
-				<input id="cadastral_unit" required="required"></input>
-			</div>
-			<div class="pure-control-group">
-				<label >
-					<xsl:value-of select="php:function('lang', 'location code')"/>
-				</label>
-				<input id="location_code" required="required"></input>
-			</div>
-			<div class="pure-control-group">
-				<label>
-					<xsl:value-of select="php:function('lang', 'building number')"/>
-				</label>
-				<input id="building_number" required="required"></input>
+			<div id="order_info" style="display:none;">
+
+				<div class="pure-control-group">
+					<label >
+						<xsl:value-of select="php:function('lang', 'vendor')"/>
+					</label>
+					<div class="pure-custom" id="vendor_name"></div>
+				</div>
+				<div class="pure-control-group">
+					<label >
+						<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
+					</label>
+					<input id="cadastral_unit" required="required"></input>
+				</div>
+				<div class="pure-control-group">
+					<label >
+						<xsl:value-of select="php:function('lang', 'location code')"/>
+					</label>
+					<input id="location_code" required="required"></input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'building number')"/>
+					</label>
+					<input id="building_number" required="required"></input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'remark')"/>
+					</label>
+					<input id="remark"></input>
+				</div>
 			</div>
 		</fieldset>
 
@@ -60,6 +69,7 @@
 					</xsl:with-param>
 				</xsl:call-template>
 			</div>
+
 
 			<div class="pure-control-group">
 				<label>
@@ -129,13 +139,13 @@
 					</xsl:if>
 				</xsl:for-each>
 			</div>
-		<h1>3) Validere at krav til detaljer er oppfylt</h1>
+			<h1>3) Validere at krav til detaljer er oppfylt</h1>
 
-		<div class="pure-controls">
-			<div id="validate_message"></div>
+			<div class="pure-controls">
+				<div id="validate_message"></div>
 
-			<button type="button" class="pure-button pure-button-primary" onClick="validate_info();">Valider</button>
-		</div>
+				<button type="button" class="pure-button pure-button-primary" onClick="validate_info();">Valider</button>
+			</div>
 		</fieldset>
 
 
