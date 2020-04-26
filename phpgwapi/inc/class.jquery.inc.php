@@ -58,12 +58,10 @@
 				phpgwapi_cache::message_set($message, 'error');
 
 				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
-	//			$_jquery_migrate = 'jquery-migrate-1.4.1.min';
 			}
 			else
 			{
-				$_jquery_core = 'jquery-3.4.1';
-	//			$_jquery_migrate = 'jquery-migrate-3.0.0.min';
+				$_jquery_core = 'jquery-3.5.0';
 			}
 
 			$_jquery_ui = 'jquery-ui-1.12.1';
