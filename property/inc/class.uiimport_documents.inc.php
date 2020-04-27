@@ -144,7 +144,7 @@
 
 			if (strlen($gab_id) == 20)
 			{
-				$cadastral_unit = substr($gab_id, 4, 5) . '/' . substr($gab_id, 9, 4) . '/' . substr($gab_id, 13, 4) . '/' . substr($gab_id, 17, 3);
+				$cadastral_unit = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 
 			$file_tags = $this->_get_metadata($order_id);
@@ -205,7 +205,7 @@
 
 			$action= phpgw::get_var('action', 'string');
 			$files= phpgw::get_var('files', 'raw');
-			$doument_type= phpgw::get_var('doument_type', 'string');
+			$document_category= phpgw::get_var('document_category', 'string');
 			$branch= phpgw::get_var('branch', 'string');
 			$building_part= phpgw::get_var('building_part', 'string');
 			$order_id = phpgw::get_var('order_id', 'int');
@@ -256,15 +256,15 @@
 
 				foreach ($files as $file_name)
 				{
-					if($doument_type)
+					if($document_category)
 					{
-						if(!empty($file_tags[$file_name]['doument_type']))
+						if(!empty($file_tags[$file_name]['document_category']))
 						{
-							$file_tags[$file_name]['doument_type'] = array_unique(array_merge($doument_type, $file_tags[$file_name]['doument_type']));
+							$file_tags[$file_name]['document_category'] = array_unique(array_merge($document_category, $file_tags[$file_name]['document_category']));
 						}
 						else
 						{
-							$file_tags[$file_name]['doument_type'] = $doument_type;
+							$file_tags[$file_name]['document_category'] = $document_category;
 						}
 					}
 					if($branch)
@@ -298,15 +298,15 @@
 			{
 				foreach ($files as $file_name)
 				{
-					if($doument_type)
+					if($document_category)
 					{
-						if(!empty($file_tags[$file_name]['doument_type']))
+						if(!empty($file_tags[$file_name]['document_category']))
 						{
-							$file_tags[$file_name]['doument_type'] = array_diff($file_tags[$file_name]['doument_type'], $doument_type);
+							$file_tags[$file_name]['document_category'] = array_diff($file_tags[$file_name]['document_category'], $document_category);
 						}
 						else
 						{
-							$file_tags[$file_name]['doument_type'] = array();
+							$file_tags[$file_name]['document_category'] = array();
 						}
 					}
 					if($branch)
@@ -376,14 +376,11 @@
 		 */
 		public function index()
 		{
-//			$tabs				 = array();
-//			$tabs['locations']	 = array('label' => lang('Locations'), 'link' => '#locations');
-//			$tabs['components']	 = array('label' => lang('Components'), 'link'		 => '#components',
-//				'disable'	 => 1);
-//			$tabs['files']		 = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
-//			$tabs['relations']	 = array('label' => lang('Relations'), 'link'		 => '#relations',
-//				'disable'	 => 1);
-
+			$tabs			 = array();
+			$tabs['step_1']	 = array('label' => lang('Step 1 - Order refefrence'), 'link' => '#step_1');
+			$tabs['step_2']	 = array('label' => lang('Step 2 - Upload documents'), 'link' => '#step_2', 'disable' => 1);
+			$tabs['step_3']	 = array('label' => lang('Step 3 - Export files'), 'link' => '#step_3', 'disable' => 1);
+			$active_tab		 = 'step_1';
 
 			$files_def = array
 			(
@@ -392,8 +389,8 @@
 					'sortable'	 => false,
 					'resizeable' => true
 					),
-				array('key' => 'doument_type',
-					'label' => lang('doument type'),
+				array('key' => 'document_category',
+					'label' => lang('document categories'),
 					'sortable' => false,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
@@ -494,10 +491,10 @@
 		}
 
 		var order_id = $('#order_id').val();
-		var doument_type = $('#doument_type option:selected').toArray().map(item => item.text);
+		var document_category = $('#document_category option:selected').toArray().map(item => item.text);
 		var branch = $('#branch option:selected').toArray().map(item => item.text);
 		var building_part = $('#building_part option:selected').toArray().map(item => item.value);
-//		console.log(doument_type);
+//		console.log(document_category);
 //		console.log(branch);
 //		console.log(building_part);
 
@@ -505,7 +502,7 @@
 			type: 'POST',
 			dataType: 'json',
 			url: {$requestUrl},
-			data:{files:files, doument_type:doument_type, branch:branch, building_part:building_part, action:action, order_id: order_id},
+			data:{files:files, document_category:document_category, branch:branch, building_part:building_part, action:action, order_id: order_id},
 			success: function(data) {
 				if( data != null)
 				{
@@ -545,7 +542,7 @@ JS;
 					'sortable'	 => false,
 					'resizeable' => true
 					),
-				array('key' => 'doument_type',
+				array('key' => 'document_category',
 					'label' => lang('doument type'),
 					'sortable' => false,
 					'resizeable' => true,
@@ -576,13 +573,13 @@ JS;
 			);
 
 
-			$doument_types = $this->_get_document_categories();
+			$document_categories = $this->_get_document_categories();
 
 
 			$data = array
 				(
 				'datatable_def'				 => $datatable_def,
-//				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'				 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
 				'multi_upload_action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files','id' => $id)),
 				'building_part_list'		 => array('options' => $this->bocommon->select_category_list(array(
@@ -591,7 +588,7 @@ JS;
 					'id_in_name' => 'num',
 					'filter'	 => array()))),
 				'branch_list'				 =>array('options' => execMethod('property.boproject.select_branch_list')),
-				'doument_type_list'			 =>array('options' => $doument_types),
+				'document_category_list'	 =>array('options' => $document_categories),
 			);
 
 			phpgwapi_jquery::load_widget('file-upload-minimum');
@@ -621,14 +618,14 @@ JS;
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
-				$file_info['doument_type'] =  isset($file_tags[$file_name]['doument_type']) ? $file_tags[$file_name]['doument_type'] : array();
+				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
-				$file_info['doument_type_validate'] =  empty($file_tags[$file_name]['doument_type']) ? false : true;
+				$file_info['document_category_validate'] =  empty($file_tags[$file_name]['document_category']) ? false : true;
 				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
 				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
 
-				if(!$file_info['doument_type_validate'] || !$file_info['branch_validate']  || !$file_info['branch_validate'] )
+				if(!$file_info['document_category_validate'] || !$file_info['branch_validate']  || !$file_info['branch_validate'] )
 				{
 					$error_list[] = $file_info;
 				}
@@ -668,7 +665,7 @@ JS;
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
-				$file_info['doument_type'] =  isset($file_tags[$file_name]['doument_type']) ? $file_tags[$file_name]['doument_type'] : array();
+				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
 			}
@@ -795,7 +792,7 @@ JS;
 
 		private function _get_document_categories()
 		{
-			$_doument_types = array(
+			$_document_categories = array(
 				'Avtaler',
 				'Beskrivelser',
 				'Bilder',
@@ -820,17 +817,16 @@ JS;
 				'Tilsyn og vedlikehold'
 			);
 
-
-			$doument_types = array();
-			foreach ($_doument_types as $doument_type)
+			$document_categories = array();
+			foreach ($_document_categories as $document_category)
 			{
-				$doument_types[] = array(
-					'id' => $doument_type,
-					'name' => $doument_type,
+				$document_categories[] = array(
+					'id' => $document_category,
+					'name' => $document_category,
 				);
 			}
 
-			return $doument_types;
+			return $document_categories;
 
 		}
 	}
