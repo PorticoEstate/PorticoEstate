@@ -141,9 +141,11 @@
 					)
 				)
 			);
-			if ($_ticket['location_data'])
+			if ($_ticket['location_code'])
 			{
-				$dim3 = isset($_ticket['location_data']['loc2']) && $_ticket['location_data']['loc2'] ? "{$_ticket['location_data']['loc1']}{$_ticket['location_data']['loc2']}" : "{$_ticket['location_data']['loc1']}01";
+				$_location_arr = explode('-',$_ticket['location_code']);
+
+				$dim3 = !empty($_location_arr[1]) ? "{$_location_arr[0]}{$_location_arr[1]}" : "{$_location_arr[0]}01";
 			}
 			else
 			{
