@@ -210,75 +210,40 @@
 				</div>
 
 				<!-- DEL 1 START -->
-				<xsl:if test= "component_child_data !=''">
+				<!--				<xsl:if test= "component_child_data !=''">
 					<div class="row mt-5">
 						<h2>Del 1. Utstyr</h2>
 					</div>
-				</xsl:if>
+				</xsl:if>-->
 
 				<xsl:for-each select="component_child_data">
 					<div class="row mt-5">
-						<div class="col-md-12 text-center bg-light">
-							<h4>
-								<xsl:value-of select="name"/>
-							</h4>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<xsl:if test="image_link !=''">
-								<a href="{image_link}">
-									<xsl:choose>
-										<xsl:when test="inline_images =1">
-											<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<img src="{image_link}" class="img-thumbnail img-fluid"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</a>
-							</xsl:if>
-						</div>
-						<div class="col-md-8">
-							<table class="table">
-								<xsl:for-each select="data">
-									<tr>
-										<td>
-											<xsl:value-of select="text"/>
-										</td>
-										<td>
-											<xsl:value-of select="value"/>
-										</td>
-									</tr>
-								</xsl:for-each>
-							</table>
-						</div>
+						<h2>Del <xsl:value-of select="section"/>. <xsl:value-of select="section_descr"/></h2>
 					</div>
 
-					<xsl:if test="cases !=''">
-						<div class="row">
-							<div class="col-md-12 bg-light text-center">
-								<h5>Saker</h5>
+					<xsl:for-each select="data">
+
+						<div class="row mt-5">
+							<div class="col-md-12 text-center bg-light">
+								<h4>
+									<xsl:value-of select="name"/>
+								</h4>
 							</div>
 						</div>
-					</xsl:if>
-
-					<xsl:for-each select="cases">
 						<div class="row">
-
 							<div class="col-md-4">
-								<xsl:for-each select="files">
-									<a href="{link}" title="{text}">
+								<xsl:if test="image_link !=''">
+									<a href="{image_link}">
 										<xsl:choose>
 											<xsl:when test="inline_images =1">
 												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 											</xsl:when>
 											<xsl:otherwise>
-												<img src="{link}" class="img-thumbnail img-fluid"/>
+												<img src="{image_link}" class="img-thumbnail img-fluid"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</a>
-								</xsl:for-each>
+								</xsl:if>
 							</div>
 							<div class="col-md-8">
 								<table class="table">
@@ -295,9 +260,50 @@
 								</table>
 							</div>
 						</div>
+
+						<xsl:if test="cases !=''">
+							<div class="row">
+								<div class="col-md-12 bg-light text-center">
+									<h5>Saker</h5>
+								</div>
+							</div>
+						</xsl:if>
+
+						<xsl:for-each select="cases">
+							<div class="row">
+
+								<div class="col-md-4">
+									<xsl:for-each select="files">
+										<a href="{link}" title="{text}">
+											<xsl:choose>
+												<xsl:when test="inline_images =1">
+													<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<img src="{link}" class="img-thumbnail img-fluid"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</a>
+									</xsl:for-each>
+								</div>
+								<div class="col-md-8">
+									<table class="table">
+										<xsl:for-each select="data">
+											<tr>
+												<td>
+													<xsl:value-of select="text"/>
+												</td>
+												<td>
+													<xsl:value-of select="value"/>
+												</td>
+											</tr>
+										</xsl:for-each>
+									</table>
+								</div>
+							</div>
+						</xsl:for-each>
 					</xsl:for-each>
 				</xsl:for-each>
-
 				<xsl:if test= "stray_cases !=''">
 					<div class="row mt-5">
 						<div class="col-md-12 text-center bg-light">

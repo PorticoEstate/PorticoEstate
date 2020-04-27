@@ -124,6 +124,10 @@
 				{
 					data.context
 					.addClass("done");
+					window.setTimeout(function ()
+					{
+						data.context.remove();
+					}, 500);
 				}
 
 			}

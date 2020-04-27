@@ -616,13 +616,15 @@
 
 				if ($location_children)
 				{
+					$sort_key_location = array();
 					$short_description = array();
 					foreach ($component_children as $_value)
 					{
+						$sort_key_location[] = $_value['location_id'];
 						$short_description[] = $_value['short_description'];
 					}
 
-					array_multisort($short_description, SORT_ASC, $component_children);
+					array_multisort($sort_key_location, SORT_ASC, $short_description, SORT_ASC, $component_children);
 
 					array_unshift($component_children, array('id' => '', 'short_description' => lang('select')));
 				}
@@ -684,7 +686,7 @@
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);				
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
@@ -3519,8 +3521,6 @@ HTML;
 
 					}
 
-
-
 					$n = 1;
 
 					$entry = array();
@@ -3678,7 +3678,7 @@ HTML;
 
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-						$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
+					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
 				}
 
 				$entry = array
@@ -3756,6 +3756,7 @@ HTML;
 				{
 
 					$component_child_data[] = array(
+						'location_id' => $component_child['location_id'],
 						'name'	=> $component_child['short_description'],
 						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
 						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
@@ -3771,7 +3772,23 @@ HTML;
 				}
 			}
 
-			$report_data['component_child_data'] = $component_child_data;
+//			$report_data['component_child_data'] = $component_child_data;
+
+			$section_id = 0;
+			$section_location_id = false;
+			foreach ($component_child_data as $data_set)
+			{
+				if($section_location_id != $data_set['location_id'])
+				{
+					$section_location_id = $data_set['location_id'];
+					$system_location = $GLOBALS['phpgw']->locations->get_name($section_location_id);
+					$section_id ++;
+				}
+
+				$report_data['component_child_data'][$section_id]['section'] = $section_id;
+				$report_data['component_child_data'][$section_id]['section_descr'] = $system_location['descr'];
+				$report_data['component_child_data'][$section_id]['data'][] = $data_set;
+			}
 
 			$report_data['stray_cases'] = array();
 			foreach ($data_case as $key => $value_set)
@@ -4001,13 +4018,15 @@ HTML;
 
 				if($location_children)
 				{
+					$sort_key_location = array();
 					$short_description = array();
 					foreach ($component_children as $_value)
 					{
+						$sort_key_location[] = $_value['location_id'];
 						$short_description[] = $_value['short_description'];
 					}
 
-					array_multisort($short_description, SORT_ASC, $component_children);
+					array_multisort($sort_key_location, SORT_ASC, $short_description, SORT_ASC, $component_children);
 
 				}
 			}
