@@ -144,8 +144,7 @@
 			if ($_ticket['location_code'])
 			{
 				$_location_arr = explode('-',$_ticket['location_code']);
-
-				$dim3 = !empty($_location_arr[1]) ? "{$_location_arr[0]}{$_location_arr[1]}" : "{$_location_arr[0]}01";
+				$dim3 = $_location_arr[0];
 			}
 			else
 			{
