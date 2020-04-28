@@ -4,8 +4,8 @@ $(document).ready(function ()
 {
 
 
-	$("#doument_type").select2({
-		placeholder: lang['doument type'],
+	$("#document_category").select2({
+		placeholder: lang['document categories'],
 		language: "no",
 		width: '50%'
 	});
@@ -29,6 +29,18 @@ this.refresh_files = function ()
 	var oArgs = {menuaction: 'property.uiimport_documents.get_files', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+
+//	var api = oTable0.api();
+//	var rows = api.rows().data();
+//
+//	if (rows.length === 0)
+	{
+		$('#step_2_next').hide();
+	}
+
+	$("#message_step_2").hide();
+	$('#step_2_view_all').hide();
+	$('#tab-content').responsiveTabs('disable', 2);
 };
 
 
@@ -50,9 +62,8 @@ this.get_order_info = function ()
 			{
 				if (data.error)
 				{
-					$("#fieldset_file_input").hide();
 					$("#order_info").hide();
-					$("#message").text(data.error).show();
+					$("#message_step_1").text(data.error).show();
 					$("#vendor_name").text('');
 					$("#cadastral_unit").val('');
 					$("#location_code").val('');
@@ -62,9 +73,8 @@ this.get_order_info = function ()
 				}
 				else
 				{
-					$("#message").hide();
+					$("#message_step_1").hide();
 					$("#order_info").show();
-					$("#fieldset_file_input").show("slow");
 
 					$('#fileupload').fileupload(
 						'option',
@@ -88,21 +98,19 @@ this.get_order_info = function ()
 	});
 };
 
-this.validate_info = function ()
+this.validate_step_1 = function ()
 {
-	var order_id = $("#order_id").val();
-
-	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id};
-	var requestUrl = phpGWLink('index.php', oArgs, true);
-	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
-
 	var cadastral_unit = $("#cadastral_unit").val();
 	var location_code = $("#location_code").val();
 	var building_number = $("#building_number").val();
-	var remark = $("#remark").val();
+	var order_id = $("#order_id").val();
 
 	var $html = [];
 
+	if (!order_id)
+	{
+		$html.push(lang['Missing value'] + ': ' + lang['order id']);
+	}
 	if (!cadastral_unit)
 	{
 		$html.push(lang['Missing value'] + ': ' + lang['cadastral unit']);
@@ -118,15 +126,31 @@ this.validate_info = function ()
 
 	if ($html.length > 0)
 	{
-		$("#validate_message").html($html.join('<br/>'));
-		$("#validate_message").addClass('error');
+		$("#message_step_1").html($html.join('<br/>')).show();
+		$("#message_step_1").addClass('error');
 	}
 	else
 	{
-		$("#validate_message").html('');
-		$("#validate_message").removeClass('error');
-
+		$("#message_step_1").html('').hide();
+		$("#message_step_1").removeClass('error');
+		$('#tab-content').responsiveTabs('enable', 1);
+		$('#tab-content').responsiveTabs('activate', 1);
 	}
+};
+
+
+this.validate_step_2 = function (next)
+{
+	var order_id = $("#order_id").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
+
+	var cadastral_unit = $("#cadastral_unit").val();
+	var location_code = $("#location_code").val();
+	var building_number = $("#building_number").val();
+	var remark = $("#remark").val();
 
 	$.ajax({
 		type: 'POST',
@@ -140,5 +164,39 @@ this.validate_info = function ()
 			}
 		}
 	});
+
+	var allow_next = false;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				if (data.recordsTotal === 0)
+				{
+					$("#message_step_2").hide();
+					$('#step_2_next').show();
+					allow_next = true;
+					if (next && allow_next)
+					{
+						$('#tab-content').responsiveTabs('enable', 2);
+						$('#tab-content').responsiveTabs('activate', 2);
+					}
+				}
+				else
+				{
+					$('#step_2_next').hide();
+					$('#step_2_next').hide();
+					$("#message_step_2").html(lang['Missing info']).show();
+					$("#message_step_2").addClass('error');
+				}
+			}
+		}
+	});
+
+	$('#step_2_view_all').show();
+
 };
 
