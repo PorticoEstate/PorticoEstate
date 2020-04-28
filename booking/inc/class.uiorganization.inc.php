@@ -124,6 +124,14 @@
 							'label' => lang('Email')
 						),
 						array(
+							'key' => 'zip_code',
+							'label' => lang('zip code')
+						),
+						array(
+							'key' => 'district',
+							'label' => lang('district')
+						),
+						array(
 							'key' => 'activity_name',
 							'label' => lang('activity')
 						),
