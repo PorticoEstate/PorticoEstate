@@ -124,6 +124,10 @@
 							'label' => lang('Email')
 						),
 						array(
+							'key' => 'activity_name',
+							'label' => lang('activity')
+						),
+						array(
 							'key' => 'active',
 							'label' => lang('Active')
 						),
