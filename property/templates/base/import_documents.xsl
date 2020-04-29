@@ -159,6 +159,9 @@
 						<button type="button" id="step_2_next" class="pure-button pure-button-primary" onClick="validate_step_2(true);" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'next')"/>
 						</button>
+						<button type="button" id="step_3_import" class="pure-button pure-button-primary" onClick="step_3_import();">
+							<xsl:value-of select="php:function('lang', 'Import')"/>
+						</button>
 					</div>
 
 				</fieldset>

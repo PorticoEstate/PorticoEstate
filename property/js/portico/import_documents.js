@@ -200,3 +200,26 @@ this.validate_step_2 = function (next)
 
 };
 
+this.step_3_import = function ()
+{
+	var order_id = $("#order_id").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.step_3_import', order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data: {},
+		url:requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				console.log(data);
+			}
+		}
+	});
+
+};
+

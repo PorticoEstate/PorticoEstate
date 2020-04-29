@@ -45,7 +45,8 @@
 			'get_files'						 => true,
 			'update_file_data'				 => true,
 			'get_order_info'				 => true,
-			'validate_info'					 => true
+			'validate_info'					 => true,
+			'step_3_import'					 => true
 
 		);
 
@@ -408,6 +409,16 @@
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
+				array('key' => 'export_ok',
+					'label' => lang('export ok'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
+				array('key' => 'export_failed',
+					'label' => lang('export failed'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
 			);
 
 
@@ -668,6 +679,9 @@ JS;
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
+				$file_info['export_ok'] = isset($file_tags[$file_name]['export_ok']) ? $file_tags[$file_name]['export_ok'] : '';
+				$file_info['export_failed'] = isset($file_tags[$file_name]['export_failed']) ? $file_tags[$file_name]['export_failed'] : '';
+
 			}
 
 			$total_records = count($list_files);
@@ -787,6 +801,56 @@ JS;
 		public function query()
 		{
 			return;
+		}
+
+
+		public function step_3_import( )
+		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			if(!$order_id)
+			{
+				return;
+			}
+
+			$file_tags = $this->_get_metadata($order_id);
+			$path_upload_dir = $this->path_upload_dir;
+			if (empty($path_upload_dir))
+			{
+				return false;
+			}
+
+			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+
+			$list_files = $this->_get_files($path_dir);
+
+			$import_document_files = new import_document_files();
+
+			foreach ($list_files as $file_info)
+			{
+
+				$current_tag = $file_tags[$file_info['file_name']];
+
+				if(isset($file_tags[$file_info['file_name']]) && empty($current_tag['export_ok'])
+
+					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
+				{
+					if($import_document_files->process_file( $file_info, $current_tag))
+					{
+						$file_tags[$file_info['file_name']]['export_ok'] = date('Y-m-d H:i:s');
+					}
+					else
+					{
+						$file_tags[$file_info['file_name']]['export_failed'] = date('Y-m-d H:i:s');
+					}
+
+					$this->_set_metadata($order_id, $file_tags);
+				}
+			}
 		}
 
 	}
