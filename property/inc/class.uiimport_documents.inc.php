@@ -28,6 +28,7 @@
 	 */
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
+	include_class('property', 'import_document_files_braarkiv', 'inc/import/');
 
 	//include_class('property', 'import_component_files', 'inc/import/');
 
@@ -573,8 +574,11 @@ JS;
 			);
 
 
-			$document_categories = $this->_get_document_categories();
+			$import_document_files = new import_document_files();
 
+			$building_part_list = $import_document_files->get_building_part_list();
+			$branch_list = $import_document_files->get_branch_list();
+			$document_categories = $import_document_files->get_document_categories();
 
 			$data = array
 				(
@@ -582,13 +586,9 @@ JS;
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'				 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
 				'multi_upload_action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files','id' => $id)),
-				'building_part_list'		 => array('options' => $this->bocommon->select_category_list(array(
-					'type' => 'building_part',
-					'order'		 => 'id',
-					'id_in_name' => 'num',
-					'filter'	 => array()))),
-				'branch_list'				 =>array('options' => execMethod('property.boproject.select_branch_list')),
-				'document_category_list'	 =>array('options' => $document_categories),
+				'building_part_list'		 => array('options' => $building_part_list),
+				'branch_list'				 => array('options' => $branch_list),
+				'document_category_list'	 => array('options' => $document_categories),
 			);
 
 			phpgwapi_jquery::load_widget('file-upload-minimum');
@@ -789,44 +789,4 @@ JS;
 			return;
 		}
 
-
-		private function _get_document_categories()
-		{
-			$_document_categories = array(
-				'Avtaler',
-				'Beskrivelser',
-				'Bilder',
-				'Brosjyrer',
-				'Bruksanvisninger',
-				'Drifts- og systeminformasjon',
-				'Fargekoder',
-				'Garantibefaring',
-				'Generell orientering',
-				'Ikke aktiv',
-				'Innholdsfortegnelse',
-				'Kart',
-				'Låseplaner',
-				'Prosjekt- og entreprenørlister',
-				'Rapport',
-				'Skjema',
-				'Tegning',
-				'Tegning, fasade',
-				'Tegning, plan',
-				'Tegning, snitt',
-				'Teknisk informasjon',
-				'Tilsyn og vedlikehold'
-			);
-
-			$document_categories = array();
-			foreach ($_document_categories as $document_category)
-			{
-				$document_categories[] = array(
-					'id' => $document_category,
-					'name' => $document_category,
-				);
-			}
-
-			return $document_categories;
-
-		}
 	}
