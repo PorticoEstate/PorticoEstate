@@ -10,9 +10,7 @@
 			$fields,
 			$baseclassname,
 			$classname,
-			$input_file,
-			$file_map,
-			$all_files;
+			$input_file;
 
 		public function __construct()
 		{
@@ -25,8 +23,8 @@
 			$braarkiv_user	 = $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass	 = $c->config_data[$section]['braarkiv_pass'];
 
-			$this->classname	 = "FDV EBF";
-			$this->baseclassname = "Eiendomsarkiver";
+			$this->classname	 = $c->config_data[$section]['classname'];//"FDV EBF";
+			$this->baseclassname = $c->config_data[$section]['baseclassname'];//"Eiendomsarkiver";
 
 			$this->config = $c;
 
@@ -70,7 +68,6 @@
 			{
 				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
 			}
-			$this->file_map = array();
 		}
 
 		private function init_config()
@@ -116,6 +113,25 @@
 				'descr'		 => 'Pickup catalog for files'
 				)
 			);
+
+			$receipt = $this->config->add_attrib(array
+				(
+				'section_id' => $receipt_section['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'classname',
+				'descr'		 => 'Underklasse/arkivdel'
+				)
+			);
+
+			$receipt = $this->config->add_attrib(array
+				(
+				'section_id' => $receipt_section['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'baseclassname',
+				'descr'		 => 'Navn på baseklasse'
+				)
+			);
+
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', array(
 				'menuaction'	 => 'admin.uiconfig2.list_attrib',
@@ -537,15 +553,6 @@
 				}
 
 				$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
-			}
-
-			if ($ok)
-			{
-				$this->file_map[] = array($document_id, $file);
-			}
-			else
-			{
-				$this->file_map[] = array($document_id, "Feilet: {$file}");
 			}
 
 			return $ok;

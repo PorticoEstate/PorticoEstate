@@ -46,7 +46,7 @@
 			'update_file_data'				 => true,
 			'get_order_info'				 => true,
 			'validate_info'					 => true,
-			'step_3_import'					 => true
+			'step_2_import'					 => true
 
 		);
 
@@ -149,6 +149,7 @@
 				$cadastral_unit = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 
+			$building_number = $this->get_building_number($location_code);
 			$file_tags = $this->_get_metadata($order_id);
 
 			if ($file_tags)
@@ -157,7 +158,7 @@
 
 				$cadastral_unit	 = !empty($file_info['cadastral_unit']) ? $file_info['cadastral_unit'] : $cadastral_unit;
 				$location_code	 = !empty($file_info['location_code']) ? $file_info['location_code'] : $location_code;
-				$building_number = !empty($file_info['building_number']) ? $file_info['building_number'] : $building_number;
+				$building_number = !empty($file_info['building_number']) ? array($file_info['building_number']) : $building_number;
 				$remark			 = !empty($file_info['remark']) ? $file_info['remark'] : $remark;
 			}
 
@@ -168,6 +169,49 @@
 				'building_number'	 => $building_number,
 				'remark'			 => $remark,
 			);
+		}
+
+		private function get_building_number( $location_code )
+		{
+			$where_to_find_building_number = 'fm_location4.bygningsnr';
+
+			$location_arr = explode('-', $location_code);
+			$info = explode('.', $where_to_find_building_number);
+			$table = $info[0];
+			$field = $info[1];
+			$targe_level = (int)substr($info[0], -1);
+			$search_level = count($location_arr);
+
+			if($search_level == $targe_level)
+			{
+				$sql = "SELECT {$field} FROM {$table} WHERE location_code = '{$location_code}'";
+			}
+			else if($search_level > $targe_level)
+			{
+				$temp_loc_arr = array();
+				for ($i = 0; $i < count($targe_level); $i++)
+				{
+					$temp_loc_arr[] = $location_arr[$i];
+				}
+
+				$_location_code = implode('-', $temp_loc_arr);
+
+				$sql = "SELECT {$field} FROM {$table} WHERE location_code = '{$_location_code}'";
+			}
+			else if($search_level < $targe_level)
+			{
+				$sql = "SELECT DISTINCT {$field} FROM {$table} WHERE location_code like '{$location_code}%'";
+			}
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			
+			$building_numbers = array();
+
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$building_numbers[] = $GLOBALS['phpgw']->db->f($field);
+			}
+			return $building_numbers;
 		}
 
 		private function _get_metadata_file_name( $order_id )
@@ -258,6 +302,10 @@
 
 				foreach ($files as $file_name)
 				{
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -300,6 +348,10 @@
 			{
 				foreach ($files as $file_name)
 				{
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -347,6 +399,11 @@
 				{
 					$file_name = $file_info['file_name'];
 
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
+
 					if($cadastral_unit)
 					{
 						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
@@ -379,7 +436,7 @@
 		public function index()
 		{
 			$tabs			 = array();
-			$tabs['step_1']	 = array('label' => lang('Step 1 - Order refefrence'), 'link' => '#step_1');
+			$tabs['step_1']	 = array('label' => lang('Step 1 - Order reference'), 'link' => '#step_1');
 			$tabs['step_2']	 = array('label' => lang('Step 2 - Upload documents'), 'link' => '#step_2', 'disable' => 1);
 			$tabs['step_3']	 = array('label' => lang('Step 3 - Export files'), 'link' => '#step_3', 'disable' => 1);
 			$active_tab		 = 'step_1';
@@ -804,7 +861,7 @@ JS;
 		}
 
 
-		public function step_3_import( )
+		public function step_2_import( )
 		{
 			if(!$this->acl_edit)
 			{
