@@ -188,17 +188,20 @@
 
 
 			$_action_list	 = array(
-				'regHelseforetak'	 => 'RegHelseforetak',
-				'helseforetak'		 => 'Helseforetak',
-				'organizations'		 => 'organizations',
-				'ownership'			 => 'Ownership',
-				'hovedfunksjon'		 => 'Hovedfunksjon',
-				'delfunksjon'		 => 'Delfunksjon',
-				'locations'			 => 'Locations',
-				'buildings'			 => 'Buildings',
-				'wings'				 => 'Wings',
-				'floors'			 => 'Floors',
-				'rooms'				 => 'Room',
+				'regHelseforetak'		 => 'RegHelseforetak',
+				'helseforetak'			 => 'Helseforetak',
+				'organizations'			 => 'organizations',
+				'ownership'				 => 'Ownership',
+				'Hovedfunksjon'			 => 'Hovedfunksjon',
+				'Delfunksjon'			 => 'Delfunksjon',
+				'Romnavn'				 => 'Romnavn',
+				'Romspesifikasjon'		 => 'Romspesifikasjon',
+				'Klassifikasjonskode'	 => 'Klassifikasjonskode',
+				'locations'				 => 'Locations',
+				'buildings'				 => 'Buildings',
+				'wings'					 => 'Wings',
+				'floors'				 => 'Floors',
+				'rooms'					 => 'Room',
 			);
 			$action_list	 = array();
 			foreach ($_action_list as $key => $name)
