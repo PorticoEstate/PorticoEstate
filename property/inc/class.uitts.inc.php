@@ -3507,11 +3507,31 @@ JS;
 //				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: til etaten, 2: til ekstern, kommunal avdeling, 3: til privat leietaker, 4: hentes hos leverandør
 //				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),//1: ordrenr, 2: ressursnr, 3: privat leietaker
 
+				$tenant_data = $this->bocommon->read_single_tenant($ticket['tenant_id']);
+				$_delivery_address= "{$tenant_data['first_name']} {$tenant_data['last_name']}\n";
+				$_delivery_address	 .= createObject('property.solocation')->get_location_address($ticket['location_code']) . "\n";
+
+				$address_element = $this->bo->get_address_element($ticket['location_code']);
+
+				foreach ($address_element as $address_entry)
+				{
+					$_delivery_address .= "{$address_entry['text']}: {$address_entry['value']}\n";
+				}
+				unset($address_entry);
+
 				foreach ($delivery_type_list as $delivery_type)
 				{
 					if($delivery_type['id'] == $ticket['delivery_type'])
 					{
-						$delivery_address = $delivery_type['descr'];
+						$delivery_address = str_replace(
+							array(
+								'__address__',
+							),
+							array(
+								$_delivery_address
+							),
+							$delivery_type['descr']
+						);
 					}
 				}
 				foreach ($payment_type_list as $payment_type)
