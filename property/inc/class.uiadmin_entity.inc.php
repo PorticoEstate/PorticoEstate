@@ -2001,7 +2001,7 @@
 
 			$receipt = array(
 				'status' => 'ok',
-				'choice_id' => 100
+				'choice_id' => $id
 			);
 
 			return $receipt;
