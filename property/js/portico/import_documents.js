@@ -86,7 +86,7 @@ this.get_order_info = function ()
 				$("#vendor_name").text(data.vendor_name);
 				$("#cadastral_unit").val(data.cadastral_unit);
 				$("#location_code").val(data.location_code);
-				$("#building_number").val(data.building_number);
+				$("#building_number").val(data.building_number[0]);
 				$("#remark").val(data.remark);
 			}
 			else
@@ -188,7 +188,7 @@ this.validate_step_2 = function (next)
 				else
 				{
 					$('#step_2_next').hide();
-					$('#step_2_next').hide();
+					$('#step_2_import').hide();
 					$("#message_step_2").html(lang['Missing info']).show();
 					$("#message_step_2").addClass('error');
 				}
@@ -197,6 +197,31 @@ this.validate_step_2 = function (next)
 	});
 
 	$('#step_2_view_all').show();
+
+};
+
+this.step_2_import = function ()
+{
+	var order_id = $("#order_id").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.step_2_import', order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data: {},
+		url:requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				console.log(data);
+			}
+			refresh_files();
+
+		}
+	});
 
 };
 

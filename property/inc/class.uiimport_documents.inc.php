@@ -45,7 +45,8 @@
 			'get_files'						 => true,
 			'update_file_data'				 => true,
 			'get_order_info'				 => true,
-			'validate_info'					 => true
+			'validate_info'					 => true,
+			'step_2_import'					 => true
 
 		);
 
@@ -148,6 +149,7 @@
 				$cadastral_unit = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 
+			$building_number = $this->get_building_number($location_code);
 			$file_tags = $this->_get_metadata($order_id);
 
 			if ($file_tags)
@@ -156,7 +158,7 @@
 
 				$cadastral_unit	 = !empty($file_info['cadastral_unit']) ? $file_info['cadastral_unit'] : $cadastral_unit;
 				$location_code	 = !empty($file_info['location_code']) ? $file_info['location_code'] : $location_code;
-				$building_number = !empty($file_info['building_number']) ? $file_info['building_number'] : $building_number;
+				$building_number = !empty($file_info['building_number']) ? array($file_info['building_number']) : $building_number;
 				$remark			 = !empty($file_info['remark']) ? $file_info['remark'] : $remark;
 			}
 
@@ -167,6 +169,49 @@
 				'building_number'	 => $building_number,
 				'remark'			 => $remark,
 			);
+		}
+
+		private function get_building_number( $location_code )
+		{
+			$where_to_find_building_number = 'fm_location4.bygningsnr';
+
+			$location_arr = explode('-', $location_code);
+			$info = explode('.', $where_to_find_building_number);
+			$table = $info[0];
+			$field = $info[1];
+			$targe_level = (int)substr($info[0], -1);
+			$search_level = count($location_arr);
+
+			if($search_level == $targe_level)
+			{
+				$sql = "SELECT {$field} FROM {$table} WHERE location_code = '{$location_code}'";
+			}
+			else if($search_level > $targe_level)
+			{
+				$temp_loc_arr = array();
+				for ($i = 0; $i < count($targe_level); $i++)
+				{
+					$temp_loc_arr[] = $location_arr[$i];
+				}
+
+				$_location_code = implode('-', $temp_loc_arr);
+
+				$sql = "SELECT {$field} FROM {$table} WHERE location_code = '{$_location_code}'";
+			}
+			else if($search_level < $targe_level)
+			{
+				$sql = "SELECT DISTINCT {$field} FROM {$table} WHERE location_code like '{$location_code}%'";
+			}
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			
+			$building_numbers = array();
+
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$building_numbers[] = $GLOBALS['phpgw']->db->f($field);
+			}
+			return $building_numbers;
 		}
 
 		private function _get_metadata_file_name( $order_id )
@@ -257,6 +302,10 @@
 
 				foreach ($files as $file_name)
 				{
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -299,6 +348,10 @@
 			{
 				foreach ($files as $file_name)
 				{
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -346,6 +399,11 @@
 				{
 					$file_name = $file_info['file_name'];
 
+					if(!empty($file_tags[$file_name]['export_ok']))
+					{
+						continue;
+					}
+
 					if($cadastral_unit)
 					{
 						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
@@ -378,7 +436,7 @@
 		public function index()
 		{
 			$tabs			 = array();
-			$tabs['step_1']	 = array('label' => lang('Step 1 - Order refefrence'), 'link' => '#step_1');
+			$tabs['step_1']	 = array('label' => lang('Step 1 - Order reference'), 'link' => '#step_1');
 			$tabs['step_2']	 = array('label' => lang('Step 2 - Upload documents'), 'link' => '#step_2', 'disable' => 1);
 			$tabs['step_3']	 = array('label' => lang('Step 3 - Export files'), 'link' => '#step_3', 'disable' => 1);
 			$active_tab		 = 'step_1';
@@ -407,6 +465,16 @@
 					'sortable' => false,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
+					),
+				array('key' => 'export_ok',
+					'label' => lang('export ok'),
+					'sortable' => false,
+					'resizeable' => true,
+					),
+				array('key' => 'export_failed',
+					'label' => lang('export failed'),
+					'sortable' => false,
+					'resizeable' => true,
 					),
 			);
 
@@ -668,6 +736,9 @@ JS;
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
+				$file_info['export_ok'] = isset($file_tags[$file_name]['export_ok']) ? $file_tags[$file_name]['export_ok'] : '';
+				$file_info['export_failed'] = isset($file_tags[$file_name]['export_failed']) ? $file_tags[$file_name]['export_failed'] : '';
+
 			}
 
 			$total_records = count($list_files);
@@ -787,6 +858,56 @@ JS;
 		public function query()
 		{
 			return;
+		}
+
+
+		public function step_2_import( )
+		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			if(!$order_id)
+			{
+				return;
+			}
+
+			$file_tags = $this->_get_metadata($order_id);
+			$path_upload_dir = $this->path_upload_dir;
+			if (empty($path_upload_dir))
+			{
+				return false;
+			}
+
+			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+
+			$list_files = $this->_get_files($path_dir);
+
+			$import_document_files = new import_document_files();
+
+			foreach ($list_files as $file_info)
+			{
+
+				$current_tag = $file_tags[$file_info['file_name']];
+
+				if(isset($file_tags[$file_info['file_name']]) && empty($current_tag['export_ok'])
+
+					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
+				{
+					if($import_document_files->process_file( $file_info, $current_tag))
+					{
+						$file_tags[$file_info['file_name']]['export_ok'] = date('Y-m-d H:i:s');
+					}
+					else
+					{
+						$file_tags[$file_info['file_name']]['export_failed'] = date('Y-m-d H:i:s');
+					}
+
+					$this->_set_metadata($order_id, $file_tags);
+				}
+			}
 		}
 
 	}

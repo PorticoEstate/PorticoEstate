@@ -511,7 +511,7 @@ JS;
 					var ticket_infoURL = phpGWLink('index.php', {
 						menuaction:'property.uitts.query2',
 						order:'id',
-						sort:'asc',
+						sort:'desc',
 						user_id:{$accound_id},
 						result:10
 						}, true);

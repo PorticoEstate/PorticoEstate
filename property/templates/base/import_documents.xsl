@@ -10,7 +10,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="step_1">
 				<fieldset class="pure-form pure-form-aligned">
-					<h1>Step 1: Order refefrence</h1>
+					<!--<h1>Step 1 - Order reference</h1>-->
 					<div id="message_step_1" class='error' style="display:none;"/>
 					<div class="pure-control-group">
 						<label >
@@ -158,6 +158,9 @@
 						</button>
 						<button type="button" id="step_2_next" class="pure-button pure-button-primary" onClick="validate_step_2(true);" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'next')"/>
+						</button>
+						<button type="button" id="step_2_import" class="pure-button pure-button-primary" onClick="step_2_import();" style="display:none;">
+							<xsl:value-of select="php:function('lang', 'Import')"/>
 						</button>
 					</div>
 
