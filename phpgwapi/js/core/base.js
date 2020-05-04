@@ -299,7 +299,7 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 									var select = document.getElementById(id);
 									var option = document.createElement("option");
 									option.text = new_value;
-									option.id = data.choice_id;
+									option.value = data.choice_id;
 									select.add(option, select[1]);
 									select.selectedIndex = "1";
 								}
