@@ -170,6 +170,16 @@
 			'ix' => array(),
 			'uc' => array('location_code')
 		),
+		'fm_zip_code' => array(
+			'fd' => array(
+				'id' => array('type' => 'varchar', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_location1_category' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
@@ -187,6 +197,7 @@
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'part_of_town_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'zip_code' => array('type' => 'varchar', 'precision' => '4', 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'category' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
@@ -221,6 +232,7 @@
 				'loc1' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
 				'loc1_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'part_of_town_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'zip_code' => array('type' => 'varchar', 'precision' => '4', 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'category' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),

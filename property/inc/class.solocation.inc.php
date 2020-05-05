@@ -2696,4 +2696,25 @@
 			return $this->db->query("UPDATE fm_tenant SET contact_phone = '{$value}'"
 					. " WHERE id = {$tenant_id}", __LINE__, __FILE__);
 		}
+
+		function get_zip_info($location_code)
+		{
+			if (!$location_code)
+			{
+				return array();
+			}
+
+			$location_arr	 = explode('-', $location_code);
+			$zip_info = array();
+
+			$this->db->query("SELECT fm_zip_code.id AS zip_code, fm_zip_code.name AS city"
+				. " FROM fm_zip_code $this->join fm_location1 ON fm_zip_code.id = fm_location1.zip_code"
+				. " WHERE loc1 = '{$location_arr[0]}'", __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				$zip_info['zip_code'] = $this->db->f('zip_code');
+				$zip_info['city'] = $this->db->f('city', true);
+			}
+			return $zip_info;
+		}
 	}

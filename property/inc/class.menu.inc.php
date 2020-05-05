@@ -543,6 +543,12 @@
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type'		 => 'street'))
 					),
+					'zip_code'	 => array
+						(
+						'text'	 => lang('zip code'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'zip_code'))
+					),
 					'location'	 => array
 						(
 						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),

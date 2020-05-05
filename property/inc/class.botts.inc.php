@@ -1260,10 +1260,9 @@
 				}
 
 				$fm_location_cols	 = $custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
-				$i					 = 0;
 				foreach ($fm_location_cols as $location_entry)
 				{
-					if ($location_entry['lookup_form'])
+					if ($location_entry['lookup_form'] && $location_data[$location_entry['column_name']])
 					{
 						$address_element[] = array
 							(
@@ -1271,8 +1270,23 @@
 							'value'	 => $location_data[$location_entry['column_name']]
 						);
 					}
-					$i++;
 				}
+
+				$zip_info = $solocation->get_zip_info($location_code);
+				if($zip_info)
+				{
+						$address_element[] = array
+						(
+							'text'	 => lang('zip code'),
+							'value'	 => $zip_info['zip_code']
+						);
+						$address_element[] = array
+						(
+							'text'	 => lang('city'),
+							'value'	 => $zip_info['city']
+						);
+				}
+
 			}
 			return $address_element;
 		}
