@@ -91,6 +91,7 @@
 			$this->legg_til_leietaker_phpgw();
 			$this->oppdater_leieobjekt();
 			$this->oppdater_boa_objekt();
+			$this->legg_til_zip_code_phpgw();
 			$this->oppdater_boa_bygg();
 			$this->oppdater_boa_del();
 			$this->oppdater_oppsagtdato();
@@ -979,7 +980,7 @@ SQL;
 
 		function legg_til_objekt_phpgw()
 		{
-			$sql = "SELECT boei_objekt.objekt_id, boei_objekt.navn, boei_objekt.bydel_id, boei_objekt.eier_id,boei_objekt.tjenestested"
+			$sql = "SELECT boei_objekt.objekt_id, boei_objekt.navn, boei_objekt.bydel_id, boei_objekt.eier_id,boei_objekt.tjenestested, boei_objekt.postnr_id"
 				. " FROM fm_location1 RIGHT OUTER JOIN "
 				. " boei_objekt ON fm_location1.loc1 = boei_objekt.objekt_id"
 				. " WHERE fm_location1.loc1 IS NULL";
@@ -989,13 +990,14 @@ SQL;
 			while ($this->db->next_record())
 			{
 				$objekt_latin[] = array
-					(
+				(
 					'location_code'		 => $this->db->f('objekt_id'),
 					'loc1'				 => $this->db->f('objekt_id'),
 					'loc1_name'			 => $this->db->f('navn'),
 					'part_of_town_id'	 => $this->db->f('bydel_id'),
 					'owner_id'			 => $this->db->f('eier_id'),
 					'kostra_id'			 => $this->db->f('tjenestested'),
+					'zip_code'			 => $this->db->f('postnr_id'),
 					'category'			 => 1
 				);
 			}
@@ -1174,6 +1176,45 @@ SQL;
 			$this->db->transaction_commit();
 
 			$msg						 = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . @implode(",", $leieobjekt_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
+			$this->cron_log($msg);
+		}
+
+		function legg_til_zip_code_phpgw()
+		{
+			$sql = "SELECT DISTINCT boei_poststed.id, boei_poststed.navn"
+				. " FROM fm_zip_code RIGHT OUTER JOIN"
+				. " boei_poststed ON fm_zip_code.id = boei_poststed.id"
+				. " WHERE fm_zip_code.id IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$zip_codes = array();
+
+			while ($this->db->next_record())
+			{
+				$zip_codes[] = array
+				(
+					'id'			 => $this->db->f('id'),
+					'name'	 => $this->db->f('navn')
+				);
+			}
+
+			$this->db->transaction_begin();
+
+			foreach ($zip_codes as $zip_code)
+			{
+				$sql2 = "INSERT INTO fm_zip_code (id, name)"
+					. "VALUES (" . $this->db->validate_insert($zip_code) . ")";
+
+				$this->db->query($sql2, __LINE__, __FILE__);
+
+				$leietaker_msg[] = "[{$zip_code['id']}  '{$zip_code['name']}']";
+			}
+
+			$this->db->transaction_commit();
+
+			$msg						 = count($leietakere) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1446,6 +1487,19 @@ SQL;
 					. " kostra_id = " . (int)$this->db->f('tjenestested')
 					. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'";
 
+				$this->db2->query($sql2, __LINE__, __FILE__);
+			}
+
+			$sql = " SELECT boei_objekt.objekt_id, boei_objekt.postnr_id"
+				. " FROM boei_objekt JOIN fm_location1 ON boei_objekt.objekt_id = fm_location1.loc1"
+				. " WHERE boei_objekt.postnr_id != fm_location1.zip_code OR fm_location1.zip_code IS NULL";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$sql2 = " UPDATE fm_location1 SET "
+					. " zip_code = '" . $this->db->f('postnr_id') . "'"
+					. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'";
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
 

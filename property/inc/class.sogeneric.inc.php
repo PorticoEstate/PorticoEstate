@@ -992,6 +992,26 @@
 					);
 					break;
 				//-------- ID type varchar
+				case 'zip_code':
+					$info	 = array
+						(
+						'table'			 => 'fm_zip_code',
+						'id'			 => array('name' => 'id', 'type' => 'varchar'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('zip code'),
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::location::zip_code',
+					);
+					break;
 				case 'external_project':
 					$info	 = array
 						(
