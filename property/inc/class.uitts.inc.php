@@ -3497,7 +3497,7 @@ JS;
 
 			$delivery_address = '';
 			$payment_info = '';
-//			if($ticket['order_template_id'])
+			if($ticket['order_template_id'])
 			{
 				$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
 				$delivery_type_list	 = execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'fields' => array('descr')));
@@ -3552,7 +3552,7 @@ JS;
 					}
 				}
 			}
-//			_debug_array($_delivery_address);
+
 			if(!$delivery_address)
 			{
 				$solocation	 = createObject('property.solocation');
