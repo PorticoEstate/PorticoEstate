@@ -77,6 +77,7 @@
 		'fm_vendor',
 		'fm_vendor_category',
 		'fm_locations',
+		'fm_zip_code',
 		'fm_location1_category',
 		'fm_location1',
 		'fm_location1_history',
