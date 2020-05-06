@@ -20,6 +20,10 @@ $(document).ready(function ()
 		width: '50%'
 	});
 
+	if($("#order_id").val())
+	{
+		get_order_info();
+	}
 
 });
 
@@ -30,14 +34,7 @@ this.refresh_files = function ()
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 
-//	var api = oTable0.api();
-//	var rows = api.rows().data();
-//
-//	if (rows.length === 0)
-	{
-		$('#step_2_next').hide();
-	}
-
+	$('#step_2_next').hide();
 	$("#message_step_2").hide();
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);
@@ -69,10 +66,13 @@ this.get_order_info = function ()
 					$("#location_code").val('');
 					$("#building_number").val('');
 					$("#remark").val('');
-
+					$("#get_order_info").show();
+					$("#validate_step_1").hide();
 				}
 				else
 				{
+					$("#get_order_info").hide();
+					$("#validate_step_1").show();
 					$("#message_step_1").hide();
 					$("#order_info").show();
 

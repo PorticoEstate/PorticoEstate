@@ -46,6 +46,7 @@
 			'update_file_data'				 => true,
 			'get_order_info'				 => true,
 			'validate_info'					 => true,
+			'step_1_import'					 => true,
 			'step_2_import'					 => true
 
 		);
@@ -61,6 +62,7 @@
 			/**
 			 * Fix me
 			 */
+			$this->acl_read			 = true;
 			$this->acl_edit			 = true;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
@@ -104,9 +106,12 @@
 			return $this->receipt;
 		}
 
-		public function get_order_info(  )
+		public function get_order_info( $order_id = 0)
 		{
-			$order_id = phpgw::get_var('order_id', 'int');
+			if(!$order_id)
+			{
+				$order_id = phpgw::get_var('order_id', 'int');
+			}
 			$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
 			switch ($order_type)
@@ -120,6 +125,12 @@
 					$sotts = CreateObject('property.sotts');
 					$ticket_id	 = $sotts->get_ticket_from_order($order_id);
 					$item	 = $sotts->read_single($ticket_id);
+
+					if (!$item['subject'])
+					{
+						$item['subject'] =  CreateObject('property.botts')->get_category_name($item['cat_id']);
+					}
+
 					$remark	= $item['subject'];
 					break;
 				default:
@@ -429,12 +440,77 @@
 			return $action;
 
 		}
+
+		public function index()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+				return;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$appname		 = lang('import documents');
+			$function_msg	 = lang('list');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$data							 = array(
+				'datatable_name' => $appname . ': ' . $function_msg,
+				'form'			 => array(
+					'toolbar' => array(
+						'item' => array(
+						)
+					)
+				),
+				'datatable'		 => array(
+					'source'	 => self::link(array('menuaction' => 'property.uiimport_documents.index', 'phpgw_return_as' => 'json')),
+					'allrows'	 => true,
+					'new_item'	 => self::link(array('menuaction' => 'property.uiimport_documents.step_1_import')),
+					'field'		 => array(
+						array(
+							'key'		 => 'id',
+							'label'		 => lang('Order ID'),
+							'formatter'	 => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key'		 => 'remark',
+							'label'		 => lang('title'),
+						),
+						array(
+							'key'		 => 'vendor_name',
+							'label'		 => lang('vendor'),
+						),
+						array(
+							'key'		 => 'cadastral_unit',
+							'label'		 => lang('cadastral unit'),
+						),
+						array(
+							'key'		 => 'location_code',
+							'label'		 => lang('location code'),
+						),
+						array(
+							'key'		 => 'building_number',
+							'label'		 => lang('building number'),
+						)
+					),
+					'actions'	 => array(array())
+				)
+			);
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+
 		/**
 		 * Prepare UI
 		 * @return void
 		 */
-		public function index()
+		public function step_1_import()
 		{
+
+			$order_id = phpgw::get_var('id');
 			$tabs			 = array();
 			$tabs['step_1']	 = array('label' => lang('Step 1 - Order reference'), 'link' => '#step_1');
 			$tabs['step_2']	 = array('label' => lang('Step 2 - Upload documents'), 'link' => '#step_2', 'disable' => 1);
@@ -650,6 +726,7 @@ JS;
 
 			$data = array
 				(
+				'order_id'					 => $order_id,
 				'datatable_def'				 => $datatable_def,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'				 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
@@ -836,14 +913,21 @@ JS;
 
 		private function create_document_dir($order_id)
 		{
-			if (is_dir("{$this->path_upload_dir}/{$order_id}"))
+			if (is_dir("{$this->path_upload_dir}/{$order_id}") && is_dir("{$this->path_upload_dir}/{$order_id}/metadata"))
 			{
 				return true;
 			}
 
 			$old = umask(0);
-			$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}", 0755);
-			$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}/metadata", 0755);
+			$rs = false;
+			if (!is_dir("{$this->path_upload_dir}/{$order_id}"))
+			{
+				$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}", 0755);
+			}
+			if (!is_dir("{$this->path_upload_dir}/{$order_id}/metadata"))
+			{
+				$rs	 = mkdir("{$this->path_upload_dir}/{$order_id}/metadata", 0755);
+			}
 			umask($old);
 
 			return $rs;
@@ -851,13 +935,140 @@ JS;
 
 
 
+		function get_pending_list( $search )
+		{
+			
+			$dirname = $this->path_upload_dir;
+			// prevent path traversal
+			if (preg_match('/\./', $dirname) || !is_dir($dirname))
+			{
+				return array();
+			}
+
+			$values	 = array();
+			$dir	 = new DirectoryIterator($dirname);
+			if (is_object($dir))
+			{
+				foreach ($dir as $file)
+				{
+					$name = (string) $file;
+
+					if ($file->isDot() || !$file->isDir() || !ctype_digit($name))
+					{
+						continue;
+					}
+
+					$values[] = array('id' => $name);
+				}
+			}
+
+
+			$ret = array();
+			foreach ($values as $entry)
+			{
+				$order_info = $this->get_order_info($entry['id']);
+
+				/**
+				 * not a valid order
+				 */
+				if ($order_info['error'])
+				{
+					continue;
+				}
+
+				if ($order_info)
+				{
+					$entry = array_merge($entry, $order_info);
+				}
+
+				if ($search)
+				{
+					$pattern = str_replace('/', '\/', $search);
+					if(!preg_match("/$search/", $entry['id'])
+						&& !preg_match("/$pattern/i", $entry['remark'])
+						&& !preg_match("/$pattern/i", $entry['vendor_name'])
+						&& !preg_match("/$pattern/", $entry['cadastral_unit'])
+						&& !preg_match("/$pattern/i", $entry['location_code'])
+						&& !preg_match("/$pattern/", $entry['building_number'])
+
+						)
+					{
+						continue;
+					}
+				}
+				$ret[] = $entry;
+			}
+			return $ret;
+
+		}
+
 		/**
 		 * Fetch data from $this->bo based on parametres
 		 * @return array
 		 */
 		public function query()
 		{
-			return;
+			$search		 = phpgw::get_var('search');
+			$values = $this->get_pending_list($search['value']);
+
+			$_order		 = phpgw::get_var('order');
+			if($_order)
+			{
+				$columns	 = phpgw::get_var('columns');
+				$order		 = $columns[$_order[0]['column']]['data'];
+				$sort		 = $_order[0]['dir'];
+				foreach ($values as $entry)
+				{
+					$sort_key[] = $entry[$order];
+				}
+
+				if($sort == 'asc')
+				{
+					array_multisort($sort_key, SORT_ASC, $values);
+				}
+				else
+				{
+					array_multisort($sort_key, SORT_DESC, $values);
+				}
+			}
+
+
+//------ Start pagination
+
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows		 = phpgw::get_var('length', 'int') == -1;
+
+			$total_records	 = count($values);
+
+			$maxmatchs = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])  ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			$num_rows = $results ? $results : $maxmatchs;
+			if ($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page		 = ceil(( $start / $num_rows));
+				$values_part = array_chunk($values, $num_rows);
+				$out		 = $values_part[$page];
+			}
+
+//------ End pagination
+
+			$result_data = array('results' => $out);
+
+			$result_data['total_records']	 = $total_records;
+			$result_data['draw']			 = phpgw::get_var('draw', 'int');
+
+			$link_data = array
+				(
+				'menuaction' => 'property.uiimport_documents.step_1_import',
+			);
+
+			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
+			return $this->jquery_results($result_data);
 		}
 
 

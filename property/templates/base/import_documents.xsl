@@ -16,7 +16,7 @@
 						<label >
 							<xsl:value-of select="php:function('lang', 'order id')"/>
 						</label>
-						<input id="order_id" required="required"></input>
+						<input id="order_id" required="required" value="{order_id}"></input>
 					</div>
 					<div id="order_info" style="display:none;">
 
@@ -52,17 +52,17 @@
 						</div>
 					</div>
 					<div class="pure-controls">
-						<button type="button" class="pure-button pure-button-primary" onClick="get_order_info();">
+						<button type="button" id="get_order_info" class="pure-button pure-button-primary" onClick="get_order_info();">
 							<xsl:value-of select="php:function('lang', 'get info')"/>
 						</button>
-						<button type="button" class="pure-button pure-button-primary" onClick="validate_step_1();">
+						<button type="button" id="validate_step_1" class="pure-button pure-button-primary" onClick="validate_step_1();" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'validate')"/>
 						</button>
 					</div>
 
 				</fieldset>
 			</div>
-			<div id="step_2">
+			<div id="step_2" style="display:none;">
 				<h1>2) laste opp alle dokumentene til venterommet</h1>
 
 				<fieldset id="fieldset_file_input" class="pure-form pure-form-aligned">
