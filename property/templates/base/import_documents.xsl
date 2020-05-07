@@ -2,6 +2,21 @@
 
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<style>
+		.delete_file
+		{
+			float: right;
+		}
+		.remove_tag
+		{
+			float: right;
+		}
+		.dt-buttons
+		{
+			width:100%;
+		}
+	</style>
+
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'order id', 'building part', 'branch', 'document categories', 'cadastral unit', 'location code', 'building number', 'Missing value', 'Missing info')"/>
 	</script>

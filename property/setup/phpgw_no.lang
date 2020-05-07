@@ -2420,3 +2420,11 @@ cadastral unit	property	no	Matrikkelenhet
 building number	property	no	Bygningsnummer
 zip code	property	no	Postnr
 city	property	no	Poststed
+import documents	property	no	Importer dokumenter
+import ok	property	no	Import Ok
+import failed	property	no	Import feilet
+step %1 - order reference	property	no	Steg %1 - Bestillingsinformasjon
+step %1 - upload documents	property	no	Steg %1 - Last opp dokumenter
+step %1 - import documents	property	no	Steg %1 - Importer dokumenter
+validate	property	no	Kontroller
+view all	property	no	Vis alle

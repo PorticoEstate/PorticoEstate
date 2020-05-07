@@ -20,7 +20,7 @@ $(document).ready(function ()
 		width: '50%'
 	});
 
-	if($("#order_id").val())
+	if ($("#order_id").val())
 	{
 		get_order_info();
 	}
@@ -38,6 +38,7 @@ this.refresh_files = function ()
 	$("#message_step_2").hide();
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);
+	$('.record').addClass('disabled');
 };
 
 
@@ -197,6 +198,10 @@ this.validate_step_2 = function (next)
 	});
 
 	$('#step_2_view_all').show();
+	$(window).scrollTop(0);
+
+
+
 
 };
 
@@ -211,7 +216,7 @@ this.step_2_import = function ()
 		type: 'POST',
 		dataType: 'json',
 		data: {},
-		url:requestUrl,
+		url: requestUrl,
 		success: function (data)
 		{
 			if (data != null)

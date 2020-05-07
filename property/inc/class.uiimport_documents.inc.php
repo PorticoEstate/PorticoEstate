@@ -313,7 +313,7 @@
 
 				foreach ($files as $file_name)
 				{
-					if(!empty($file_tags[$file_name]['export_ok']))
+					if(!empty($file_tags[$file_name]['import_ok']))
 					{
 						continue;
 					}
@@ -359,7 +359,7 @@
 			{
 				foreach ($files as $file_name)
 				{
-					if(!empty($file_tags[$file_name]['export_ok']))
+					if(!empty($file_tags[$file_name]['import_ok']))
 					{
 						continue;
 					}
@@ -410,7 +410,7 @@
 				{
 					$file_name = $file_info['file_name'];
 
-					if(!empty($file_tags[$file_name]['export_ok']))
+					if(!empty($file_tags[$file_name]['import_ok']))
 					{
 						continue;
 					}
@@ -512,9 +512,9 @@
 
 			$order_id = phpgw::get_var('id');
 			$tabs			 = array();
-			$tabs['step_1']	 = array('label' => lang('Step 1 - Order reference'), 'link' => '#step_1');
-			$tabs['step_2']	 = array('label' => lang('Step 2 - Upload documents'), 'link' => '#step_2', 'disable' => 1);
-			$tabs['step_3']	 = array('label' => lang('Step 3 - Export files'), 'link' => '#step_3', 'disable' => 1);
+			$tabs['step_1']	 = array('label' => lang('step %1 - order reference', 1), 'link' => '#step_1');
+			$tabs['step_2']	 = array('label' => lang('step %1 - upload documents', 2), 'link' => '#step_2', 'disable' => 1);
+			$tabs['step_3']	 = array('label' => lang('step %1 - import documents', 3), 'link' => '#step_3', 'disable' => 1);
 			$active_tab		 = 'step_1';
 
 			$files_def = array
@@ -542,13 +542,13 @@
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
-				array('key' => 'export_ok',
-					'label' => lang('export ok'),
+				array('key' => 'import_ok',
+					'label' => lang('import ok'),
 					'sortable' => false,
 					'resizeable' => true,
 					),
-				array('key' => 'export_failed',
-					'label' => lang('export failed'),
+				array('key' => 'import_failed',
+					'label' => lang('import failed'),
 					'sortable' => false,
 					'resizeable' => true,
 					),
@@ -568,16 +568,8 @@
 					'action' => 'set_tag',
 					'type'	 => 'buttons',
 					'name'	 => 'set_tag',
+					'icon'	=> '<i class="far fa-save"></i>',
 					'label'	 => lang('set tag'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	=> '',
-					'value_hidden'	 => ""
-					),
-				array(
-					'action' => 'remove_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'remove_tag',
-					'label'	 => lang('remove tag'),
 					'funct'	 => 'onActionsClick_files',
 					'classname'	=> '',
 					'value_hidden'	 => ""
@@ -586,18 +578,29 @@
 					'action' => 'delete_file',
 					'type'	 => 'buttons',
 					'name'	 => 'delete',
+					'icon'	=> '<i class="far fa-trash-alt"></i>',
 					'label'	 => lang('Delete file'),
 					'funct'	 => 'onActionsClick_files',
-					'classname'	 => '',
+					'classname'	 => 'record disabled delete_file',
 					'value_hidden'	 => "",
 					'confirm_msg'		=> "Vil du slette fil(er)"
+					),
+				array(
+					'action' => 'remove_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'remove_tag',
+					'icon'	=> '<i class="far fa-trash-alt"></i>',
+					'label'	 => lang('remove tag'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	 => 'record disabled remove_tag',
+					'value_hidden'	 => "",
+					'confirm_msg'		=> "Vil du slette tag fra fil(er)"
 					),
 			);
 
 			$tabletools = array
 			(
-				array('my_name' => 'select_all'),
-				array('my_name' => 'select_none')
+				array('my_name' => 'toggle_select'),
 			);
 
 			foreach ($buttons as $entry)
@@ -605,6 +608,7 @@
 				$tabletools[] = array
 				(
 					'my_name'		 => $entry['name'],
+					'icon'			 => $entry['icon'],
 					'text'			 => $entry['label'],
 					'className'		 =>	$entry['classname'],
 					'confirm_msg'	=>	$entry['confirm_msg'],
@@ -639,6 +643,16 @@
 		var document_category = $('#document_category option:selected').toArray().map(item => item.text);
 		var branch = $('#branch option:selected').toArray().map(item => item.text);
 		var building_part = $('#building_part option:selected').toArray().map(item => item.value);
+
+		if(action !== 'delete_file')
+		{
+			if(!document_category.length && !branch.length && !building_part.length)
+			{
+				alert('ingenting valgt');
+				return false;
+			}
+		}
+
 //		console.log(document_category);
 //		console.log(branch);
 //		console.log(building_part);
@@ -657,6 +671,9 @@
 				var strURL = phpGWLink('index.php', oArgs, true);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_0',strURL);
+				$('.record').addClass('disabled');
+				$("#toggle_select").addClass('fa-toggle-off');
+				$("#toggle_select").removeClass('fa-toggle-on');
 
 			},
 			error: function(data) {
@@ -813,8 +830,8 @@ JS;
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
-				$file_info['export_ok'] = isset($file_tags[$file_name]['export_ok']) ? $file_tags[$file_name]['export_ok'] : '';
-				$file_info['export_failed'] = isset($file_tags[$file_name]['export_failed']) ? $file_tags[$file_name]['export_failed'] : '';
+				$file_info['import_ok'] = isset($file_tags[$file_name]['import_ok']) ? $file_tags[$file_name]['import_ok'] : '';
+				$file_info['import_failed'] = isset($file_tags[$file_name]['import_failed']) ? $file_tags[$file_name]['import_failed'] : '';
 
 			}
 
@@ -1103,17 +1120,17 @@ JS;
 
 				$current_tag = $file_tags[$file_info['file_name']];
 
-				if(isset($file_tags[$file_info['file_name']]) && empty($current_tag['export_ok'])
+				if(isset($file_tags[$file_info['file_name']]) && empty($current_tag['import_ok'])
 
 					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
 				{
 					if($import_document_files->process_file( $file_info, $current_tag))
 					{
-						$file_tags[$file_info['file_name']]['export_ok'] = date('Y-m-d H:i:s');
+						$file_tags[$file_info['file_name']]['import_ok'] = date('Y-m-d H:i:s');
 					}
 					else
 					{
-						$file_tags[$file_info['file_name']]['export_failed'] = date('Y-m-d H:i:s');
+						$file_tags[$file_info['file_name']]['import_failed'] = date('Y-m-d H:i:s');
 					}
 
 					$this->_set_metadata($order_id, $file_tags);
