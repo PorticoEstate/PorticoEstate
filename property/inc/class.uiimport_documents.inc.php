@@ -521,24 +521,24 @@
 			(
 				array('key'	 => 'file_name',
 					'label'	 => lang('file'),
-					'sortable'	 => false,
+					'sortable'	 => true,
 					'resizeable' => true
 					),
 				array('key' => 'document_category',
 					'label' => lang('document categories'),
-					'sortable' => false,
+					'sortable' => true,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'branch',
 					'label' => lang('branch'),
-					'sortable' => false,
+					'sortable' => true,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'building_part',
 					'label' => lang('building part'),
-					'sortable' => false,
+					'sortable' => true,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
@@ -672,8 +672,11 @@
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_0',strURL);
 				$('.record').addClass('disabled');
-				$("#toggle_select").addClass('fa-toggle-off');
-				$("#toggle_select").removeClass('fa-toggle-on');
+				$("#toggle_select0").addClass('fa-toggle-off');
+				$("#toggle_select0").removeClass('fa-toggle-on');
+				$('#step_2_next').hide();
+				$("#message0").hide();
+				$('#step_2_view_all').hide();
 
 			},
 			error: function(data) {
@@ -694,46 +697,10 @@ JS;
 				'config'	 => array(
 					array('disablePagination' => true),
 					array('disableFilter' => true),
+					array('scrollX' => true),
+					array('scrollY' => 300),
 				)
 			);
-
-			$error_list_def = array
-			(
-				array('key'	 => 'file_name',
-					'label'	 => lang('file'),
-					'sortable'	 => false,
-					'resizeable' => true
-					),
-				array('key' => 'document_category',
-					'label' => lang('doument type'),
-					'sortable' => false,
-					'resizeable' => true,
-					),
-				array('key' => 'branch',
-					'label' => lang('branch'),
-					'sortable' => false,
-					'resizeable' => true,
-					),
-				array('key' => 'building_part',
-					'label' => lang('building part'),
-					'sortable' => false,
-					'resizeable' => true,
-					),
-			);
-
-			$datatable_def[] = array
-				(
-				'container'	 => 'datatable-container_1',
-				'requestUrl' => "''",
-				'ColumnDefs' => $error_list_def,
-				'data'		 => array(),
-				'tabletools' => array(),
-				'config'	 => array(
-					array('disablePagination' => true),
-					array('disableFilter' => true),
-				)
-			);
-
 
 			$import_document_files = new import_document_files();
 

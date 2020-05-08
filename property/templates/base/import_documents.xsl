@@ -1,19 +1,18 @@
 <!-- $Id$ -->
-
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<style>
 		.delete_file
 		{
-			float: right;
+		float: right;
 		}
 		.remove_tag
 		{
-			float: right;
+		float: right;
 		}
 		.dt-buttons
 		{
-			width:100%;
+		width:100%;
 		}
 	</style>
 
@@ -141,28 +140,26 @@
 						</select>
 					</div>
 
-					<div id="message_step_2" class='error' style="display:none;"/>
-					<div class="pure-control-group">
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_0'">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'files')"/>
-									</label>
-									<div class="pure-custom pure-u-md-3-4" >
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl'/>
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											<xsl:with-param name="data" select ='data'/>
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="config" select ='config'/>
-										</xsl:call-template>
-									</div>
+					<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_0'">
+							<div class="pure-control-group">
+								<div id="message_step_2" class='error' style="display:none; width:80%;"/>
+								<label>
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom pure-u-md-3-4" >
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
 								</div>
-							</xsl:if>
-						</xsl:for-each>
-					</div>
+							</div>
+						</xsl:if>
+					</xsl:for-each>
 					<div class="pure-controls">
 						<div id="validate_message"></div>
 						<button type="button" class="pure-button pure-button-primary" onClick="validate_step_2(false);">
@@ -189,123 +186,6 @@
 
 </xsl:template>
 
-
-<xsl:template match="user_data" xmlns:php="http://php.net/xsl">
-	<tr>
-		<td>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</td>
-		<td align="center">
-			<select name="values[{control_id}][{part_of_town_id}][{id}][new][]" multiple="multiple" class="user_roles">
-				<!--				<option value="">
-					<xsl:value-of select="php:function('lang', 'select')"/>
-				</option>-->
-				<xsl:apply-templates select="../roles/options">
-					<xsl:with-param name="selected" select="selected_role"/>
-				</xsl:apply-templates>
-			</select>
-			<input type="hidden" name="values[{control_id}][{part_of_town_id}][{id}][original]" value="{original_value}"/>
-		</td>
-		<td>
-			<xsl:value-of select="lastlogin"/>
-		</td>
-		<td>
-			<xsl:value-of select="status"/>
-		</td>
-	</tr>
-</xsl:template>
-
-
-<!-- BEGIN cat_list -->
-
-<xsl:template match="edit">
-
-	<section id="tabs">
-		<div class="container">
-			<div class="row">
-				<div id="tab-content" class="col-xs-12 ">
-
-					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-
-					<div id="category_assignment">
-						<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{form_action}">
-							<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered ">
-								<xsl:apply-templates select="cat_header"/>
-								<xsl:apply-templates select="cat_data"/>
-							</table>
-							<xsl:apply-templates select="cat_add"/>
-						</form>
-
-					</div>
-					<div id="vendors">
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
-</xsl:template>
-
-<!-- BEGIN cat_header -->
-
-<xsl:template match="cat_header">
-	<tr class="th">
-		<th width="45%">
-			<xsl:value-of select="lang_name"/>
-		</th>
-		<th width="45%" align="center">
-			<xsl:value-of select="lang_edit"/>
-		</th>
-	</tr>
-</xsl:template>
-
-<!-- BEGIN cat_data -->
-
-<xsl:template match="cat_data" xmlns:php="http://php.net/xsl">
-	<tr>
-		<td>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</td>
-		<td align="center">
-			<select name="values[{control_id}]" >
-				<option value="">
-					<xsl:value-of select="php:function('lang', 'select')"/>
-				</option>
-				<xsl:apply-templates select="cat_list/options"/>
-			</select>
-		</td>
-	</tr>
-</xsl:template>
-
-<!-- BEGIN cat_add -->
-
-<xsl:template match="cat_add">
-	<table>
-		<tr height="50" valign="bottom">
-			<td colspan="2">
-				<xsl:variable name="lang_add">
-					<xsl:value-of select="php:function('lang', 'save')"/>
-				</xsl:variable>
-				<input type="submit" name="save" value="{$lang_add}" class="pure-button pure-button-primary" >
-					<xsl:attribute name="title">
-						<xsl:value-of select="lang_add_statustext"/>
-					</xsl:attribute>
-				</input>
-			</td>
-			<td colspan="3" align="right">
-				<xsl:variable name="cancel_url">
-					<xsl:value-of select="//cancel_url"/>
-				</xsl:variable>
-				<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{$cancel_url}';">
-					<xsl:attribute name="value">
-						<xsl:value-of select="php:function('lang', 'cancel')"/>
-					</xsl:attribute>
-				</input>
-			</td>
-		</tr>
-	</table>
-</xsl:template>
 
 <!-- END cat_list -->
 

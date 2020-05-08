@@ -35,7 +35,7 @@ this.refresh_files = function ()
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 
 	$('#step_2_next').hide();
-	$("#message_step_2").hide();
+	$("#message0").hide();
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);
 	$('.record').addClass('disabled');
@@ -136,6 +136,9 @@ this.validate_step_1 = function ()
 		$("#message_step_1").removeClass('error');
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
+		$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
+      .fixedColumns().relayout().draw();
+
 	}
 };
 
@@ -177,7 +180,7 @@ this.validate_step_2 = function (next)
 			{
 				if (data.recordsTotal === 0)
 				{
-					$("#message_step_2").hide();
+					$("#message0").hide();
 					$('#step_2_next').show();
 					allow_next = true;
 					if (next && allow_next)
@@ -190,8 +193,8 @@ this.validate_step_2 = function (next)
 				{
 					$('#step_2_next').hide();
 					$('#step_2_import').hide();
-					$("#message_step_2").html(lang['Missing info']).show();
-					$("#message_step_2").addClass('error');
+					$("#message0").html(lang['Missing info']).show();
+					$("#message0").addClass('error');
 				}
 			}
 		}
@@ -199,9 +202,6 @@ this.validate_step_2 = function (next)
 
 	$('#step_2_view_all').show();
 	$(window).scrollTop(0);
-
-
-
 
 };
 
