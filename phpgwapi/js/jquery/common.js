@@ -285,6 +285,14 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var editor_cols = [];
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
+    var scrollY	= options['scrollY'] || false;
+    var scrollX	= options['scrollX'] || false;
+
+	if(scrollY)
+	{
+		disablePagination = false;
+	}
+
 	data = data || {};
 	num = num || 0;
 
@@ -407,7 +415,12 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 //	{
 
 	var oTable = $("#" + container).dataTable({
-		paginate: disablePagination ? false : true,
+		scrollY:        scrollY,
+		scrollX:        scrollX,
+		scroller:    scrollY ? true : false,
+		scrollCollapse: scrollY ? true : false,
+		fixedColumns : scrollX ? true : false,
+ 		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
 		info: disablePagination ? false : true,
 		order: order,
@@ -515,13 +528,30 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		buttons: buttons_def,
 		search: initial_search
 	});
+
 	$("#" + container + ' tbody').on('click', 'tr', function ()
 	{
+		var Ugly_fixedColumns_hack;
+
+		if (!$(this).hasClass('selected'))
+		{
+			Ugly_fixedColumns_hack = 1;
+		}
+		else
+		{
+			Ugly_fixedColumns_hack = -1;
+		}
+
 		$(this).toggleClass('selected');
 		var api = oTable.api();
 //		var selectedRows = api.rows({selected: true}).count();
+//		var selectedRows    = api.rows( { selected: true } ).flatten().length;
 		var selectedRows = api.rows('.selected').data().length;
 
+		if(scrollX)
+		{
+			selectedRows += Ugly_fixedColumns_hack;
+		}
 		api.buttons('.record').enable(selectedRows > 0);
 
 		var row = $(this);

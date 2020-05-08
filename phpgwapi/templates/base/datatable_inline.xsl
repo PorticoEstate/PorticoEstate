@@ -411,6 +411,12 @@
 			<xsl:if test="allrows">
 				options<xsl:number value="$num"/>.allrows = true;
 			</xsl:if>
+			<xsl:if test="scrollX">
+				options<xsl:number value="$num"/>.scrollX = true;
+			</xsl:if>
+			<xsl:if test="scrollY">
+				options<xsl:number value="$num"/>.scrollY = <xsl:value-of select="number(scrollY)" />;
+			</xsl:if>
 			<xsl:if test="singleSelect">
 				options<xsl:number value="$num"/>.singleSelect = true;
 			</xsl:if>
