@@ -66,6 +66,7 @@
 			'validate_info'					 => true,
 			'step_1_import'					 => true,
 			'step_2_import'					 => true,
+			'step_3_clean_up'				 => true,
 			'view_file'						 => true
 		);
 
@@ -239,7 +240,7 @@
 			}
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			
+
 			$building_numbers = array();
 
 			while ($GLOBALS['phpgw']->db->next_record())
@@ -294,7 +295,7 @@
 			$location_code= phpgw::get_var('location_code', 'string');
 			$building_number= phpgw::get_var('building_number', 'string');
 			$remark= phpgw::get_var('remark', 'string');
-			
+
 
 			if(!$order_id)
 			{
@@ -719,7 +720,7 @@
 			$file_tags = $this->_get_metadata($order_id);
 			$lang_missing = lang('Missing value');
 			$error_list = array();
-			$debug = true;
+//			$debug = true;
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
@@ -949,7 +950,7 @@
 
 		function get_pending_list( $search )
 		{
-			
+
 			$dirname = $this->path_upload_dir;
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
@@ -1131,6 +1132,49 @@
 					$this->_set_metadata($order_id, $file_tags);
 				}
 			}
+		}
+
+		public function step_3_clean_up( )
+		{
+			if(!$this->acl_manage)
+			{
+				phpgw::no_access();
+			}
+			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			if(!$order_id)
+			{
+				return;
+			}
+
+			$file_tags = $this->_get_metadata($order_id);
+			$path_upload_dir = $this->path_upload_dir;
+			if (empty($path_upload_dir))
+			{
+				return false;
+			}
+
+			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+
+			$list_files = $this->_get_files($path_dir);
+
+			$import_document_files = new import_document_files();
+
+			$i = 0;
+			foreach ($list_files as $file_info)
+			{
+				$current_tag = $file_tags[$file_info['file_name']];
+
+				if(isset($file_tags[$file_info['file_name']]) && !empty($current_tag['import_ok']))
+				{
+					if(is_file($file_info['path_absolute']))
+					{
+						unlink($file_info['path_absolute']);
+						$i ++;
+					}
+				}
+			}
+			
+			return array('status' => 'ok', 'number_of_files' => $i );
 		}
 
 	}

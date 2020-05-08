@@ -185,6 +185,13 @@
 			</div>
 			<div id="step_3">
 				<h1>3) Alt er klart, du kan nå lukke vinduet</h1>
+				<xsl:if test="role = 'manager'">
+					<div id="message_step_3" class='msg_good' style="display:none;"/>
+					<button type="button" id="step_3_clean_up" class="pure-button pure-button-primary" onClick="step_3_clean_up();">
+						<xsl:value-of select="php:function('lang', 'clean up')"/>
+					</button>
+				</xsl:if>
+
 			</div>
 		</div>
 	</div>

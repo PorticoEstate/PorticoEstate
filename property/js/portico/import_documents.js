@@ -320,3 +320,24 @@ this.move_to_step_3 = function ()
 	$('#tab-content').responsiveTabs('activate', 2);
 
 };
+
+this.step_3_clean_up = function ()
+{
+
+	var order_id = $("#order_id").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.step_3_clean_up', order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data: {},
+		url: requestUrl,
+		success: function (data)
+		{
+			$("#message_step_3").html('Filer slettet: ' + data.number_of_files ).show();
+		}
+	});
+
+};
