@@ -1,4 +1,4 @@
-/* global lang */
+/* global lang, JqueryPortico, role */
 
 $(document).ready(function ()
 {
@@ -27,6 +27,59 @@ $(document).ready(function ()
 
 });
 
+this.onActionsClick_files = function (action, files)
+{
+	var numSelected = files.length;
+	if (numSelected === 0)
+	{
+		alert('None selected');
+		return false;
+	}
+
+	var order_id = $('#order_id').val();
+	var document_category = $('#document_category option:selected').toArray().map(item => item.text);
+	var branch = $('#branch option:selected').toArray().map(item => item.text);
+	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
+
+	if (action !== 'delete_file')
+	{
+		if (!document_category.length && !branch.length && !building_part.length)
+		{
+			alert('ingenting valgt');
+			return false;
+		}
+	}
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
+		data: {files: files, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id},
+		success: function (data)
+		{
+			if (data !== null)
+			{
+
+			}
+			var oArgs = {menuaction: 'property.uiimport_documents.get_files', order_id: order_id};
+			var strURL = phpGWLink('index.php', oArgs, true);
+
+			JqueryPortico.updateinlineTableHelper('datatable-container_0', strURL);
+			$('.record').addClass('disabled');
+			$("#toggle_select0").addClass('fa-toggle-off');
+			$("#toggle_select0").removeClass('fa-toggle-on');
+			$('#step_2_next').hide();
+			$("#message0").hide();
+			$('#step_2_view_all').hide();
+
+		},
+		error: function (data)
+		{
+			alert('feil');
+		}
+	});
+};
+
 this.refresh_files = function ()
 {
 	var order_id = $("#order_id").val();
@@ -39,6 +92,15 @@ this.refresh_files = function ()
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);
 	$('.record').addClass('disabled');
+};
+
+this.local_DrawCallback0 = function (container)
+{
+	var api = $("#" + container).dataTable().api();
+	if (api.rows().data().count() > 0)
+	{
+		$('#step_2_validate').show();
+	}
 };
 
 
@@ -137,17 +199,17 @@ this.validate_step_1 = function ()
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
 		$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
-      .fixedColumns().relayout().draw();
+			.fixedColumns().relayout().draw();
 
 	}
 };
 
 
-this.validate_step_2 = function (next)
+this.validate_step_2 = function (sub_step)
 {
 	var order_id = $("#order_id").val();
 
-	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id};
+	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
 
@@ -169,7 +231,6 @@ this.validate_step_2 = function (next)
 		}
 	});
 
-	var allow_next = false;
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -180,20 +241,43 @@ this.validate_step_2 = function (next)
 			{
 				if (data.recordsTotal === 0)
 				{
-					$("#message0").hide();
-					$('#step_2_next').show();
-					allow_next = true;
-					if (next && allow_next)
+					//$("#message0").hide();
+					$("#message0").removeClass('error');
+					$("#message0").addClass('msg_good');
+					$("#message0").html('Ok').show();
+
+					if (role === 'manager')
+					{
+						$('#step_2_import').show();
+					}
+					else
+					{
+						$('#step_2_next').show();
+					}
+
+					if (sub_step === 1)
 					{
 						$('#tab-content').responsiveTabs('enable', 2);
 						$('#tab-content').responsiveTabs('activate', 2);
 					}
+					else if (sub_step === 2)
+					{
+						$('#step_2_import_validate_next').show();
+					}
 				}
 				else
 				{
-					$('#step_2_next').hide();
-					$('#step_2_import').hide();
-					$("#message0").html(lang['Missing info']).show();
+					if (sub_step === 2)
+					{
+						$("#message0").html('Filer gjenstår').show();
+					}
+					else
+					{
+						$("#message0").html(lang['Missing info']).show();
+						$('#step_2_next').hide();
+						$('#step_2_import').hide();
+					}
+					$("#message0").removeClass('msg_good');
 					$("#message0").addClass('error');
 				}
 			}
@@ -224,9 +308,15 @@ this.step_2_import = function ()
 				console.log(data);
 			}
 			refresh_files();
-
+			$('#step_2_import_validate').show();
 		}
 	});
 
 };
 
+this.move_to_step_3 = function ()
+{
+	$('#tab-content').responsiveTabs('enable', 2);
+	$('#tab-content').responsiveTabs('activate', 2);
+
+};

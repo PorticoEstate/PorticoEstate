@@ -18,6 +18,7 @@
 
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'order id', 'building part', 'branch', 'document categories', 'cadastral unit', 'location code', 'building number', 'Missing value', 'Missing info')"/>
+		var role = '<xsl:value-of select="role"/>';
 	</script>
 	<div class="container">
 		<div id="tab-content">
@@ -92,8 +93,6 @@
 							</xsl:with-param>
 						</xsl:call-template>
 					</div>
-
-
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'document categories')"/>
@@ -162,17 +161,23 @@
 					</xsl:for-each>
 					<div class="pure-controls">
 						<div id="validate_message"></div>
-						<button type="button" class="pure-button pure-button-primary" onClick="validate_step_2(false);">
+						<button type="button" id="step_2_validate" class="pure-button pure-button-primary" onClick="validate_step_2(0);" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'validate')"/>
 						</button>
 						<button type="button" id="step_2_view_all" class="pure-button pure-button-primary" onClick="refresh_files();" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'view all')"/>
 						</button>
-						<button type="button" id="step_2_next" class="pure-button pure-button-primary" onClick="validate_step_2(true);" style="display:none;">
+						<button type="button" id="step_2_next" class="pure-button pure-button-primary" onClick="validate_step_2(1);" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'next')"/>
 						</button>
 						<button type="button" id="step_2_import" class="pure-button pure-button-primary" onClick="step_2_import();" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'Import')"/>
+						</button>
+						<button type="button" id="step_2_import_validate" class="pure-button pure-button-primary" onClick="validate_step_2(2);" style="display:none;">
+							<xsl:value-of select="php:function('lang', 'validate import')"/>
+						</button>
+						<button type="button" id="step_2_import_validate_next" class="pure-button pure-button-primary" onClick="move_to_step_3();" style="display:none;">
+							<xsl:value-of select="php:function('lang', 'next')"/>
 						</button>
 					</div>
 
