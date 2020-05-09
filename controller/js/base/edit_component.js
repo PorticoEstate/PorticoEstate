@@ -331,7 +331,7 @@ $(document).ready(function ()
 
 		requestUrl += '&component=' + component;
 
-		$('<div id="spinner" class="text-cente mt-2  ml-2">')
+		$('<div id="spinner" class="text-center mt-2  ml-2">')
 			.append($('<div class="spinner-border" role="status">')
 				.append($('<span class="sr-only">Loading...</span>')))
 			.insertAfter(thisForm);
@@ -382,7 +382,7 @@ $(document).ready(function ()
 		var thisForm = $(this);
 		var requestUrl = $(thisForm).attr("action");
 
-		$('<div id="spinner" class="text-cente mt-2  ml-2">')
+		$('<div id="spinner" class="text-center mt-2  ml-2">')
 			.append($('<div class="spinner-border" role="status">')
 				.append($('<span class="sr-only">Loading...</span>')))
 			.insertAfter(thisForm);

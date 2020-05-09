@@ -60,7 +60,7 @@ this.confirm_session = function (action)
 //						.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>'))
 //						.insertAfter(form);
 
-					$('<div id="spinner" class="text-cente mt-2  ml-2">')
+					$('<div id="spinner" class="text-center mt-2  ml-2">')
 						.append($('<div class="spinner-border" role="status">')
 							.append($('<span class="sr-only">Loading...</span>')))
 						.insertAfter(form);
