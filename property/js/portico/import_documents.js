@@ -3,21 +3,20 @@
 $(document).ready(function ()
 {
 
-
 	$("#document_category").select2({
 		placeholder: lang['document categories'],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 	$("#branch").select2({
 		placeholder: lang['branch'],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 	$("#building_part").select2({
 		placeholder: lang['building part'],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 
 	if ($("#order_id").val())
@@ -88,6 +87,7 @@ this.refresh_files = function ()
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
 
 	$('#step_2_next').hide();
+	$('#step_2_import_validate_next').hide();
 	$("#message0").hide();
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);

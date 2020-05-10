@@ -110,7 +110,7 @@
 							<xsl:value-of select="php:function('lang', 'document categories')"/>
 						</label>
 
-						<select id='document_category' multiple="multiple">
+						<select id='document_category' class="pure-input-3-4" multiple="multiple">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
@@ -122,7 +122,7 @@
 							<xsl:value-of select="php:function('lang', 'branch')"/>
 						</label>
 
-						<select id='branch' multiple="multiple">
+						<select id='branch' class="pure-input-3-4" multiple="multiple">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
