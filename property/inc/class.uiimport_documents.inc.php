@@ -49,6 +49,7 @@
 			$acl_manage,
 			$bocommon,
 			$role,
+			$debug,
 			$default_roles = array
 			(
 				self::ROLE_DEFAULT,
@@ -67,7 +68,8 @@
 			'step_1_import'					 => true,
 			'step_2_import'					 => true,
 			'step_3_clean_up'				 => true,
-			'view_file'						 => true
+			'view_file'						 => true,
+			'get_progress'					 => true
 		);
 
 		public function __construct()
@@ -84,11 +86,21 @@
 			$this->acl_edit		 = $this->acl->check('.document', PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete	 = $this->acl->check('.document', PHPGW_ACL_DELETE, 'property');
 			$this->acl_manage	 = $this->acl->check('.document', PHPGW_ACL_PRIVATE, 'property');//16
+			
+			$this->acl_manage = true;
+//			$this->acl_manage = false;
 
-		//	if($this->acl_manage)
+			if($this->acl_manage)
 			{
 				$this->role = self::ROLE_MANAGER;
 			}
+			else
+			{
+				$this->role = self::ROLE_DEFAULT;
+				
+			}
+			
+			$this->debug = true;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
 			$config = CreateObject('phpgwapi.config', 'property')->read();
@@ -566,18 +578,23 @@
 					'sortable' => true,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
-					),
-				array('key' => 'import_ok',
+					)
+				);
+			
+			
+			if($this->role == self::ROLE_MANAGER)
+			{
+				$files_def[] = array('key' => 'import_ok',
 					'label' => lang('import ok'),
-					'sortable' => false,
+					'sortable' => true,
 					'resizeable' => true,
-					),
-				array('key' => 'import_failed',
+					);
+				$files_def[] = array('key' => 'import_failed',
 					'label' => lang('import failed'),
-					'sortable' => false,
+					'sortable' => true,
 					'resizeable' => true,
-					),
-			);
+					);
+			}
 
 
 			$datatable_def = array();
@@ -674,7 +691,7 @@
 				'datatable_def'			 => $datatable_def,
 				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'			 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
-				'multi_upload_action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files', 'id' => $id)),
+				'multi_upload_action'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files')),
 				'building_part_list'	 => array('options' => $building_part_list),
 				'branch_list'			 => array('options' => $branch_list),
 				'document_category_list' => array('options' => $document_categories),
@@ -1108,11 +1125,21 @@
 			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
 
 			$list_files = $this->_get_files($path_dir);
+			
+			$total_records = count($list_files);
 
 			$import_document_files = new import_document_files();
+			
+			$i = 1;
 
 			foreach ($list_files as $file_info)
 			{
+				$progress = array(
+					'success' => true,
+					'percent' => ($i/$total_records) * 100,
+					'done'	  => $total_records == $i
+				);
+				$_SESSION['import_progress'] = $progress;
 
 				$current_tag = $file_tags[$file_info['file_name']];
 
@@ -1120,6 +1147,10 @@
 
 					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
 				{
+					if($this->debug)
+					{
+						sleep(1);
+					}
 					if($import_document_files->process_file( $file_info, $current_tag))
 					{
 						$file_tags[$file_info['file_name']]['import_ok'] = date('Y-m-d H:i:s');
@@ -1131,6 +1162,27 @@
 
 					$this->_set_metadata($order_id, $file_tags);
 				}
+				
+				$i++;
+			}
+			
+			unset($_SESSION['import_progress']);
+
+			return array(
+					'status' => 'finished',
+					'total_records' => $total_records,
+				);
+		}
+		
+		public function get_progress( )
+		{
+			if(empty($_SESSION['import_progress']))
+			{
+				return array('success' => false);
+			}
+			else
+			{
+				return $_SESSION['import_progress'];			
 			}
 		}
 
@@ -1167,11 +1219,23 @@
 				if(isset($file_tags[$file_info['file_name']]) && !empty($current_tag['import_ok']))
 				{
 					if(is_file($file_info['path_absolute']))
-					{
-						unlink($file_info['path_absolute']);
+					{						
+						if(!$this->debug)
+						{
+							unlink($file_info['path_absolute']);
+						}
 						$i ++;
+
+						/**
+						 * Preserve metainformation for later?
+						 */
+						//$file_tags[$file_info['file_name']] = array();
+
 					}
 				}
+				
+				$this->_set_metadata($order_id, $file_tags);
+
 			}
 			
 			return array('status' => 'ok', 'number_of_files' => $i );

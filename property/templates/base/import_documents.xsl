@@ -14,6 +14,14 @@
 		{
 		width:100%;
 		}
+
+		.processing-import
+		{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		}
+
 	</style>
 
 	<script type="text/javascript">
@@ -21,6 +29,10 @@
 		var role = '<xsl:value-of select="role"/>';
 	</script>
 	<div class="container">
+
+		<h5>
+			<xsl:value-of select="role"/>
+		</h5>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="step_1">
@@ -139,14 +151,15 @@
 						</select>
 					</div>
 
-					<xsl:for-each select="datatable_def">
-						<xsl:if test="container = 'datatable-container_0'">
-							<div class="pure-control-group">
-								<div id="message_step_2" class='error' style="display:none; width:80%;"/>
-								<label>
-									<xsl:value-of select="php:function('lang', 'files')"/>
-								</label>
-								<div class="pure-custom pure-u-md-3-4" >
+					<div class="pure-control-group">
+						<div id="message_step_2" class='error' style="display:none; width:80%;"/>
+						<img src="{image_loader}" class="processing-import" style="display:none;"></img>
+						<label>
+							<xsl:value-of select="php:function('lang', 'files')"/>
+						</label>
+						<div class="pure-custom pure-u-md-3-4" >
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
 									<xsl:call-template name="table_setup">
 										<xsl:with-param name="container" select ='container'/>
 										<xsl:with-param name="requestUrl" select ='requestUrl'/>
@@ -155,10 +168,10 @@
 										<xsl:with-param name="tabletools" select ='tabletools' />
 										<xsl:with-param name="config" select ='config'/>
 									</xsl:call-template>
-								</div>
-							</div>
-						</xsl:if>
-					</xsl:for-each>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
 					<div class="pure-controls">
 						<div id="validate_message"></div>
 						<button type="button" id="step_2_validate" class="pure-button pure-button-primary" onClick="validate_step_2(0);" style="display:none;">
@@ -184,14 +197,20 @@
 				</fieldset>
 			</div>
 			<div id="step_3">
-				<h1>3) Alt er klart, du kan nå lukke vinduet</h1>
-				<xsl:if test="role = 'manager'">
-					<div id="message_step_3" class='msg_good' style="display:none;"/>
-					<button type="button" id="step_3_clean_up" class="pure-button pure-button-primary" onClick="step_3_clean_up();">
-						<xsl:value-of select="php:function('lang', 'clean up')"/>
-					</button>
-				</xsl:if>
 
+				<xsl:choose>
+					<xsl:when test="role = 'manager'">
+						<h1>3) Alt er klart, du kan slette filene fra venterommet</h1>
+						<div id="message_step_3" class='msg_good' style="display:none;"/>
+						<button type="button" id="step_3_clean_up" class="pure-button pure-button-primary" onClick="step_3_clean_up();">
+							<xsl:value-of select="php:function('lang', 'clean up')"/>
+						</button>
+
+					</xsl:when>
+					<xsl:otherwise>
+						<h1>3) Alt er klart, du kan nå lukke vinduet</h1>
+					</xsl:otherwise>
+				</xsl:choose>
 			</div>
 		</div>
 	</div>

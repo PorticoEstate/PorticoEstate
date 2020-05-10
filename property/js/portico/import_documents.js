@@ -262,7 +262,11 @@ this.validate_step_2 = function (sub_step)
 					}
 					else if (sub_step === 2)
 					{
-						$('#step_2_import_validate_next').show();
+						$('#step_2_validate').hide(500);
+						$('#step_2_view_all').hide(500);
+						$('#step_2_import').hide(500);
+						$('#step_2_import_validate').hide(500);
+						$('#step_2_import_validate_next').show(500);
 					}
 				}
 				else
@@ -291,10 +295,20 @@ this.validate_step_2 = function (sub_step)
 
 this.step_2_import = function ()
 {
+
+//	$('<div id="spinner" class="text-center mt-2  ml-2">')
+//		.append($('<div class="spinner-border" role="status">')
+//			.append($('<span class="sr-only">Loading...</span>')))
+//		.insertAfter($("#message0"));
+
+	$('.processing-import').show();
+	$("#message0").hide();
+
 	var order_id = $("#order_id").val();
 
 	var oArgs = {menuaction: 'property.uiimport_documents.step_2_import', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
+
 
 	$.ajax({
 		type: 'POST',
@@ -309,10 +323,43 @@ this.step_2_import = function ()
 			}
 			refresh_files();
 			$('#step_2_import_validate').show();
+			$('.processing-import').hide();
+//			var element = document.getElementById('spinner');
+//			if (element)
+//			{
+//				element.parentNode.removeChild(element);
+//			}
+
 		}
+	});
+	setTimeout(get_progress, 1000 /*1 second*/);
+
+};
+
+this.get_progress = function ()
+{
+	$.get(phpGWLink('index.php', {menuaction: 'property.uiimport_documents.get_progress'}, true), function (response)
+	{
+		console.log(response);
+		if (!response.success)
+		{
+//			alert('Cannot find progress');
+			return;
+		}
+		if (response.done)
+		{
+//			alert('Done!');
+		}
+		else
+		{
+//			alert('Progress at ' + response.precent + '%');
+			setTimeout(get_progress, 1000 /*1 second*/);
+		}
+
 	});
 
 };
+
 
 this.move_to_step_3 = function ()
 {
@@ -323,6 +370,7 @@ this.move_to_step_3 = function ()
 
 this.step_3_clean_up = function ()
 {
+	$('.processing-import').show();
 
 	var order_id = $("#order_id").val();
 
@@ -336,8 +384,22 @@ this.step_3_clean_up = function ()
 		url: requestUrl,
 		success: function (data)
 		{
-			$("#message_step_3").html('Filer slettet: ' + data.number_of_files ).show();
+			$('.processing-import').hide();
+			$("#message_step_3").html('Filer slettet: ' + data.number_of_files).show();
+
+			window.setTimeout(function ()
+			{
+				$("#message_step_3").html('Du blir videresendt til oversikten');
+			}, 2000);
+
+			window.setTimeout(function ()
+			{
+				window.location.href = phpGWLink('index.php', {menuaction: 'property.uiimport_documents.index'});
+			}, 4000);
+
+
 		}
 	});
+
 
 };
