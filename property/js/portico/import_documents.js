@@ -1,4 +1,4 @@
-/* global lang, JqueryPortico, role */
+/* global lang, JqueryPortico, role, oTable0 */
 
 $(document).ready(function ()
 {
@@ -79,12 +79,16 @@ this.onActionsClick_files = function (action, files)
 	});
 };
 
-this.refresh_files = function ()
+this.refresh_files = function (show_all_columns)
 {
+//	var show_all = show_all_columns || false;
+
 	var order_id = $("#order_id").val();
 	var oArgs = {menuaction: 'property.uiimport_documents.get_files', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
+	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
+		.fixedColumns().relayout().draw();
 
 	$('#step_2_next').hide();
 	$('#step_2_import_validate_next').hide();
@@ -92,6 +96,18 @@ this.refresh_files = function ()
 	$('#step_2_view_all').hide();
 	$('#tab-content').responsiveTabs('disable', 2);
 	$('.record').addClass('disabled');
+
+//	var api = oTable0.api();
+//	if(show_all)
+//	{
+//		api.column( 4 ).visible( true, false );
+//		api.column( 5 ).visible( true, false );
+//	}
+//	else
+//	{
+//		api.column( 4 ).visible( false, false );
+//		api.column( 5 ).visible( false, false );
+//	}
 };
 
 this.local_DrawCallback0 = function (container)
@@ -296,10 +312,9 @@ this.validate_step_2 = function (sub_step)
 this.step_2_import = function ()
 {
 
-//	$('<div id="spinner" class="text-center mt-2  ml-2">')
-//		.append($('<div class="spinner-border" role="status">')
-//			.append($('<span class="sr-only">Loading...</span>')))
-//		.insertAfter($("#message0"));
+	$("#step_2_import").prop("disabled", true);
+	$("#step_2_validate").prop("disabled", true);
+	$("#step_2_view_all").prop("disabled", true);
 
 	$('.processing-import').show();
 	$("#message0").hide();
@@ -321,18 +336,15 @@ this.step_2_import = function ()
 			{
 				console.log(data);
 			}
-			refresh_files();
+			refresh_files(true);
+			$("#step_2_import").prop("disabled", false);
+			$("#step_2_validate").prop("disabled", false);
+			$("#step_2_view_all").prop("disabled", false);
 			$('#step_2_import_validate').show();
 			$('.processing-import').hide();
-//			var element = document.getElementById('spinner');
-//			if (element)
-//			{
-//				element.parentNode.removeChild(element);
-//			}
-
 		}
 	});
-	setTimeout(get_progress, 1000 /*1 second*/);
+//	setTimeout(get_progress, 1000 /*1 second*/);
 
 };
 
@@ -371,7 +383,7 @@ this.move_to_step_3 = function ()
 this.step_3_clean_up = function ()
 {
 	$('.processing-import').show();
-
+	$("#step_3_clean_up").prop("disabled", true);
 	var order_id = $("#order_id").val();
 
 	var oArgs = {menuaction: 'property.uiimport_documents.step_3_clean_up', order_id: order_id};
@@ -384,6 +396,7 @@ this.step_3_clean_up = function ()
 		url: requestUrl,
 		success: function (data)
 		{
+//			$("#step_3_clean_up").hide();
 			$('.processing-import').hide();
 			$("#message_step_3").html('Filer slettet: ' + data.number_of_files).show();
 

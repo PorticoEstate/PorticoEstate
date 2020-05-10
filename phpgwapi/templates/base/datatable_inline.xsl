@@ -134,12 +134,15 @@
 											</xsl:when>
 											<xsl:when test="my_name = 'toggle_select'">
 												{
-													text: '<i id ="toggle_select{$num}" class="fas fa-toggle-off"></i>' + " <xsl:value-of select="php:function('lang', 'toggle select')"/>",
+													text: '<i id ="toggle_select{$num}" class="fas fa-toggle-off"></i>' + ' <span id ="toggle_select_text{$num}"><xsl:value-of select="php:function('lang', 'all')"/></span>',
 													action: function () {
 														var api = oTable<xsl:number value="$num"/>.api();
 
 														var selectedRows = api.rows('.selected').data().length;
 														var allRows = api.rows().data().length;
+
+														var lang_select_all_text ='<xsl:value-of select="php:function('lang', 'all')"/>';
+														var lang_select_none_text ='<xsl:value-of select="php:function('lang', 'none')"/>';
 														if (selectedRows &lt; allRows)
 														{
 															api.rows().select();
@@ -150,6 +153,7 @@
 															api.buttons( '.record' ).enable( api.rows('.selected').data().length > 0 );
 															$("#toggle_select<xsl:number value="$num"/>").removeClass('fa-toggle-off');
 															$("#toggle_select<xsl:number value="$num"/>").addClass('fa-toggle-on');
+															$("#toggle_select_text<xsl:number value="$num"/>").html(lang_select_none_text);
 														}
 														else
 														{
@@ -161,6 +165,7 @@
 															api.buttons('.record').enable(false);
 															$("#toggle_select<xsl:number value="$num"/>").addClass('fa-toggle-off');
 															$("#toggle_select<xsl:number value="$num"/>").removeClass('fa-toggle-on');
+															$("#toggle_select_text<xsl:number value="$num"/>").html(lang_select_all_text);
 														}
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>

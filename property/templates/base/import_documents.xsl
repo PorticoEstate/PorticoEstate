@@ -203,7 +203,7 @@
 						<h1>3) Alt er klart, du kan slette filene fra venterommet</h1>
 						<div id="message_step_3" class='msg_good' style="display:none;"/>
 						<button type="button" id="step_3_clean_up" class="pure-button pure-button-primary" onClick="step_3_clean_up();">
-							<xsl:value-of select="php:function('lang', 'clean up')"/>
+							<xsl:value-of select="php:function('lang', 'delete files')"/>
 						</button>
 
 					</xsl:when>
