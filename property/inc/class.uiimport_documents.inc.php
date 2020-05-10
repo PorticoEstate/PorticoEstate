@@ -758,7 +758,7 @@
 				}
 				$debug = false;
 
-				if(!$file_info['document_category_validate'] || !$file_info['branch_validate']  || !$file_info['branch_validate'] || ($sub_step == 2 && !$file_info['import_ok_validate']))
+				if(!$file_info['document_category_validate'] || !$file_info['branch_validate']  || !$file_info['building_part_validate'] || ($sub_step == 2 && !$file_info['import_ok_validate']))
 				{
 					$error_list[] = $file_info;
 				}
