@@ -236,7 +236,7 @@ JqueryPortico.formatJsonArray = function (key, oData)
 	var string = "";
 	if (oData[key])
 	{
-		var tags =	oData[key];
+		var tags = oData[key];
 		$.each(tags, function (k, v)
 		{
 			string += v + '<br/>';
@@ -285,10 +285,10 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var editor_cols = [];
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
-    var scrollY	= options['scrollY'] || false;
-    var scrollX	= options['scrollX'] || false;
+	var scrollY = options['scrollY'] || false;
+	var scrollX = options['scrollX'] || false;
 
-	if(scrollY)
+	if (scrollY)
 	{
 		disablePagination = false;
 	}
@@ -415,12 +415,12 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 //	{
 
 	var oTable = $("#" + container).dataTable({
-		scrollY:        scrollY,
-		scrollX:        scrollX,
-		scroller:    scrollY ? true : false,
+		scrollY: scrollY,
+		scrollX: scrollX,
+		scroller: scrollY ? true : false,
 		scrollCollapse: scrollY ? true : false,
-		fixedColumns : scrollX ? true : false,
- 		paginate: disablePagination ? false : true,
+		fixedColumns: scrollX ? true : false,
+		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
 		info: disablePagination ? false : true,
 		order: order,
@@ -475,6 +475,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		{
 			if (typeof (oTable) != 'undefined')
 			{
+				var api = oTable.api();
+				api.buttons('.record').enable(false);
 				oTable.makeEditable({
 					sUpdateURL: editor_action,
 					fnOnEditing: function (input)
@@ -548,7 +550,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 //		var selectedRows    = api.rows( { selected: true } ).flatten().length;
 		var selectedRows = api.rows('.selected').data().length;
 
-		if(scrollX)
+		if (scrollX)
 		{
 			selectedRows += Ugly_fixedColumns_hack;
 		}

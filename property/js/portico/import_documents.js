@@ -396,20 +396,29 @@ this.step_3_clean_up = function ()
 		url: requestUrl,
 		success: function (data)
 		{
-//			$("#step_3_clean_up").hide();
 			$('.processing-import').hide();
-			$("#message_step_3").html('Filer slettet: ' + data.number_of_files).show();
-
-			window.setTimeout(function ()
+			if(data.status == 'ok')
 			{
-				$("#message_step_3").html('Du blir videresendt til oversikten');
-			}, 2000);
+				$("#message_step_3").addClass('msg_good');
+				$("#message_step_3").removeClass('error');
+				$("#message_step_3").html('Filer slettet: ' + data.number_of_files).show();
 
-			window.setTimeout(function ()
+				window.setTimeout(function ()
+				{
+					$("#message_step_3").html('Du blir videresendt til oversikten');
+				}, 2000);
+
+				window.setTimeout(function ()
+				{
+					window.location.href = phpGWLink('index.php', {menuaction: 'property.uiimport_documents.index'});
+				}, 4000);
+			}
+			else
 			{
-				window.location.href = phpGWLink('index.php', {menuaction: 'property.uiimport_documents.index'});
-			}, 4000);
-
+				$("#message_step_3").html('Noe gikk feil med slettingen: ' + data.path_dir).show();
+				$("#message_step_3").removeClass('msg_good');
+				$("#message_step_3").addClass('error');
+			}
 
 		}
 	});

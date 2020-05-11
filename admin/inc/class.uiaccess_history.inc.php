@@ -32,6 +32,12 @@
 			$start		= phpgw::get_var('start', 'int', 'GET', 0);
 			$sort		= phpgw::get_var('sort', 'int', 'POST', 0);
 			$order		= phpgw::get_var('order', 'int', 'POST', 0);
+			$query		= phpgw::get_var('query');
+
+			if(!$account_id && $query)
+			{
+				$account_id = $GLOBALS['phpgw']->accounts->name2id($query);
+			}
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View access log');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::access_log';
@@ -49,14 +55,15 @@
 
 			$var = array
 			(
-				'nextmatchs_left'  => $nextmatches->left('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
-				'nextmatchs_right' => $nextmatches->right('/index.php',$start,$total_records,'&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
-				'showing'          => $nextmatches->show_hits($total_records,$start),
-				'lang_loginid'     => lang('LoginID'),
-				'lang_ip'     => lang('IP'),
-				'lang_login'  => lang('Login'),
-				'lang_logout' => lang('Logout'),
-				'lang_total'  => lang('Total')
+				'nextmatchs_left'	 => $nextmatches->left('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
+				'nextmatchs_right'	 => $nextmatches->right('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
+				'showing'			 => $nextmatches->show_hits($total_records, $start),
+				'nm_search'			 => $nextmatches->search(array('query' => $query)),
+				'lang_loginid'		 => lang('LoginID'),
+				'lang_ip'			 => lang('IP'),
+				'lang_login'		 => lang('Login'),
+				'lang_logout'		 => lang('Logout'),
+				'lang_total'		 => lang('Total'),
 			);
 
 			if ($account_id)
@@ -73,6 +80,11 @@
 			{
 				$var['lang_last_x_logins'] = lang('Last %1 logins',$total_records);
 			}
+
+			$var['actionurl']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'admin.uiaccess_history.list_history'));
+			$var['lang_search_title'] = lang('enter the search string. to show all entries, empty this field and press the submit button again');
+			$var['submit_title'] = lang('submit the search string');
+			$var['lang_search'] = lang('search');
 
 			$t->set_var($var);
 

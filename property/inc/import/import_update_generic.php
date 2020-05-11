@@ -297,6 +297,13 @@
 
 		private function _add_sql( $data )
 		{
+			static $data_line = 3;
+			if(count(array_keys($data, null)) == count($data))
+			{
+				$this->errors[]	 = "Ingen data på linje {$data_line} i regnearket";
+				return false;
+			}
+			$data_line++;;
 //			_debug_array($this->metadata);
 			$error	 = false;
 			$table	 = $this->table;

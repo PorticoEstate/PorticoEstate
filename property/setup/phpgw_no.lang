@@ -2431,3 +2431,4 @@ validate import	property	no	Kontroller import
 view all	property	no	Vis alle
 missing info	property	no	Mangler data
 get info	property	no	Hent data
+delete files	property	no	Slett filer
