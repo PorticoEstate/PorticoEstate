@@ -88,7 +88,7 @@
 			$this->acl_manage	 = $this->acl->check('.document', PHPGW_ACL_PRIVATE, 'property');//16
 			
 			$this->acl_manage = true;
-//			$this->acl_manage = false;
+			$this->acl_manage = false;
 
 			if($this->acl_manage)
 			{
@@ -1209,36 +1209,51 @@
 
 			$list_files = $this->_get_files($path_dir);
 
-			$import_document_files = new import_document_files();
 
-			$i = 0;
-			foreach ($list_files as $file_info)
+			if(is_dir($path_dir) && $list_files)
 			{
-				$current_tag = $file_tags[$file_info['file_name']];
-
-				if(isset($file_tags[$file_info['file_name']]) && !empty($current_tag['import_ok']))
+				try
 				{
-					if(is_file($file_info['path_absolute']))
-					{						
-						if(!$this->debug)
-						{
-							unlink($file_info['path_absolute']);
-						}
-						$i ++;
-
-						/**
-						 * Preserve metainformation for later?
-						 */
-						//$file_tags[$file_info['file_name']] = array();
-
-					}
+					$this->delete_files(rtrim($path_dir, '/'));
 				}
-				
-				$this->_set_metadata($order_id, $file_tags);
-
+				catch (Exception $ex)
+				{
+					return array(
+						'status' => 'error',
+						'number_of_files' => count($list_files),
+						'path_dir' => $path_dir
+					);
+				}
 			}
+
 			
-			return array('status' => 'ok', 'number_of_files' => $i );
+			return array(
+				'status' => 'ok',
+				'number_of_files' => count($list_files),
+				'path_dir' => $path_dir
+			);
 		}
 
+		/*
+		 * php delete function that deals with directories recursively
+		 */
+
+		private function delete_files( $target )
+		{
+			if (is_dir($target))
+			{
+				$files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+
+				foreach ($files as $file)
+				{
+					$this->delete_files($file);
+				}
+
+				rmdir($target);
+			}
+			elseif (is_file($target))
+			{
+				unlink($target);
+			}
+		}
 	}
