@@ -692,7 +692,7 @@
 						<label>
 							<xsl:value-of select="$lang_dimb"/>
 						</label>
-						<xsl:if test="mode='edit' and project_ecodimb =''">
+						<xsl:if test="mode='edit'"><!-- and project_ecodimb =''">-->
 							<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
 						</xsl:if>
 						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}" class="pure-input-1-2">
@@ -719,6 +719,14 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</input>
+						<xsl:if test="mode='edit'">
+							<input type="radio" id="ecodimb_edit" onClick="$('#ecodimb_name').prop('disabled', false);">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'edit')"/>
+								</xsl:attribute>
+							</input>
+						</xsl:if>
+
 						<div id="ecodimb_container"/>
 					</div>
 					<div class="pure-control-group">
@@ -1284,7 +1292,7 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'select')"/>
 									</xsl:attribute>
-										<xsl:apply-templates select="tag_list/options"/>
+									<xsl:apply-templates select="tag_list/options"/>
 								</select>
 							</div>
 							<div class="pure-control-group">

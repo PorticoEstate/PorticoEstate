@@ -271,8 +271,6 @@ HTML;
 	</body>
 </html>
 HTML;
-	$bra5ServiceLogout	 = new Bra5ServiceLogout();
-	$bra5ServiceLogout->Logout(new Bra5StructLogout($secKey));
 
 	if (!$_result)
 	{
@@ -331,10 +329,16 @@ HTML;
 	{
 //		$attributes = $document->getAttributes()->Attribute;
 	}
+	$Bra5ServiceGet = new Bra5ServiceGet();
 
 	$case_array = array();
 	foreach ($_result as $document)
 	{
+
+//		$Bra5ServiceGet->getRelativeFileURL(new Bra5StructGetRelativeFileURL( $secKey, $document->ID));
+//		$RelativeFileURL = $Bra5ServiceGet->getResult()->getRelativeFileURLResult->getRelativeFileURLResult;
+//		_debug_array($RelativeFileURL);
+
 		$_html	 = '<tr>';
 		$_html	 .= '<td>';
 		$_html	 .= "<a href ='{$base_url}&fileid={$document->ID}' title = '{$document->Name}' target = '_blank'>{$document->ID}</a>";
@@ -368,7 +372,16 @@ HTML;
 						{
 							$_html .= ', ';
 						}
-						$_html .= $value;
+						
+						if(is_object($value) && $value->enc_stype == 'Matrikkel')
+						{
+							$_html .= $value->enc_value->getGnr();
+							$_html .= ' / ' .$value->enc_value->getBnr();
+						}
+						else
+						{
+							$_html .= $value;
+						}
 					}
 				}
 			}
@@ -383,6 +396,8 @@ HTML;
 
 		$case_array[$_key][] = $_html;
 	}
+	$bra5ServiceLogout	 = new Bra5ServiceLogout();
+	$bra5ServiceLogout->Logout(new Bra5StructLogout($secKey));
 
 	krsort($case_array);
 //_debug_array($case_array);

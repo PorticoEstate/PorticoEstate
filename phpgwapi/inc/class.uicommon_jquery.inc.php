@@ -104,6 +104,13 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
 			}
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.jqueryui.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.jqueryui.min.css');
+
+			self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/dataTables.scroller.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/dataTables.fixedColumns.js');
+
+
 			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js');
 			//Buttons
 			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/dataTables.buttons.min.js');

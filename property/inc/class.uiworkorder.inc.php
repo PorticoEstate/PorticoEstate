@@ -1105,6 +1105,12 @@
 
 				if(!empty($_b_account['ecodimb']))
 				{
+
+					if(!empty($values['ecodimb']) && $values['ecodimb'] != $_b_account['ecodimb'])
+					{
+						$this->receipt['message'][] = array('msg' => "Ansvar er overstyrt av binding til art: {$values['ecodimb']} -> {$_b_account['ecodimb']}" );
+					}
+
 					$values['ecodimb'] = $_b_account['ecodimb'];
 				}
 
@@ -1281,7 +1287,12 @@
 					$receipt		 = $this->bo->save($values, $action);
 					$values['id']	 = $receipt['id'];
 					$id				 = $receipt['id'];
+					$_receipt_message = (array)$this->receipt['message'];
 					$this->receipt	 = $receipt;
+					if($_receipt_message)
+					{
+						$this->receipt['message'] = array_merge($this->receipt['message'], $_receipt_message);
+					}
 				}
 				catch (Exception $e)
 				{

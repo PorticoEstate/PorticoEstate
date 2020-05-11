@@ -24,13 +24,13 @@
 	<xsl:param name="data" />
 	<xsl:param name="separator" select="'_'" />
 	<xsl:param name="class"/>
-	
+
 	<xsl:variable name="num">
 		<xsl:number value="substring-after($container, $separator)"/>
 	</xsl:variable>
-	
+
 	<div id='message{$num}' class='message'/>
-	
+
 	<table id="{$container}" width="100%">
 		<xsl:choose>
 			<xsl:when test="$class != ''">
@@ -85,15 +85,15 @@
 			</tr>
 		</tfoot>
 	</table>
-	
+
 	<script>
-		
+
 	var oTable<xsl:number value="$num"/> = null;
-		
+
 	<xsl:choose>
 			<xsl:when test="$tabletools">
 					JqueryPortico.buttons<xsl:number value="$num"/> = 	{
-							buttons: 
+							buttons:
 								[
 									<xsl:for-each select="$tabletools">
 										<xsl:choose>
@@ -130,7 +130,45 @@
 														});
 														api.buttons( '.record' ).enable( false );
 													}
-												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+											</xsl:when>
+											<xsl:when test="my_name = 'toggle_select'">
+												{
+													text: '<i id ="toggle_select{$num}" class="fas fa-toggle-off"></i>' + ' <span id ="toggle_select_text{$num}"><xsl:value-of select="php:function('lang', 'all')"/></span>',
+													action: function () {
+														var api = oTable<xsl:number value="$num"/>.api();
+
+														var selectedRows = api.rows('.selected').data().length;
+														var allRows = api.rows().data().length;
+
+														var lang_select_all_text ='<xsl:value-of select="php:function('lang', 'all')"/>';
+														var lang_select_none_text ='<xsl:value-of select="php:function('lang', 'none')"/>';
+														if (selectedRows &lt; allRows)
+														{
+															api.rows().select();
+															$(".mychecks").each(function ()
+															{
+																$(this).prop("checked", true);
+															});
+															api.buttons( '.record' ).enable( api.rows('.selected').data().length > 0 );
+															$("#toggle_select<xsl:number value="$num"/>").removeClass('fa-toggle-off');
+															$("#toggle_select<xsl:number value="$num"/>").addClass('fa-toggle-on');
+															$("#toggle_select_text<xsl:number value="$num"/>").html(lang_select_none_text);
+														}
+														else
+														{
+															api.rows().deselect();
+															$(".mychecks").each(function ()
+															{
+																$(this).prop("checked", false);
+															});
+															api.buttons('.record').enable(false);
+															$("#toggle_select<xsl:number value="$num"/>").addClass('fa-toggle-off');
+															$("#toggle_select<xsl:number value="$num"/>").removeClass('fa-toggle-on');
+															$("#toggle_select_text<xsl:number value="$num"/>").html(lang_select_all_text);
+														}
+													}
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 											</xsl:when>
 											<xsl:when test="my_name = 'download'">
 												{
@@ -160,11 +198,18 @@
 														}
 														]]>
 													}
-												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>												
+												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 											</xsl:when>
 											<xsl:when test="type = 'custom'">
 												{
-													text: "<xsl:value-of select="text"/>",
+													<xsl:choose>
+														<xsl:when test="icon">
+															text: '<xsl:value-of disable-output-escaping="yes" select="icon"/>' + " <xsl:value-of select="text"/>",
+														</xsl:when>
+														<xsl:otherwise>
+															text: "<xsl:value-of select="text"/>",
+														</xsl:otherwise>
+													</xsl:choose>
 													<xsl:choose>
 														<xsl:when test="className !=''">
 															className: "<xsl:value-of select="className"/>",
@@ -182,7 +227,7 @@
 																			return false;
 																		}
 																	</xsl:if>
-																	<xsl:value-of select="custom_code"/>	
+																	<xsl:value-of select="custom_code"/>
 															}
 
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
@@ -250,7 +295,7 @@
 
 																		// look for the word "DELETE" in URL
 																		if(JqueryPortico.substr_count(action,'delete')>0)
-																		{               
+																		{
 																				action += "&amp;confirm=yes&amp;phpgw_return_as=json";
 																				JqueryPortico.execute_ajax(action, function(result){
 
@@ -261,7 +306,7 @@
 																						.insertAfter(message);
 
 																					oTable<xsl:number value="$num"/>.fnDraw();
-																				});																			
+																				});
 																		}
 																		else if (target == 'ajax')
 																		{
@@ -269,7 +314,7 @@
 																				JqueryPortico.execute_ajax(action, function(result){
 																					document.getElementById("message<xsl:number value="$num"/>").innerHTML += '<br/>' + result;
 																					oTable<xsl:number value="$num"/>.fnDraw();
-																				});																				
+																				});
 																		}
 																		else
 																		{
@@ -288,7 +333,7 @@
 						};
 			</xsl:when>
 	</xsl:choose>
-			
+
 		var PreColumns = [
 			<xsl:for-each select="$ColumnDefs">
 				{
@@ -370,6 +415,12 @@
 		<xsl:for-each select="$config">
 			<xsl:if test="allrows">
 				options<xsl:number value="$num"/>.allrows = true;
+			</xsl:if>
+			<xsl:if test="scrollX">
+				options<xsl:number value="$num"/>.scrollX = true;
+			</xsl:if>
+			<xsl:if test="scrollY">
+				options<xsl:number value="$num"/>.scrollY = <xsl:value-of select="number(scrollY)" />;
 			</xsl:if>
 			<xsl:if test="singleSelect">
 				options<xsl:number value="$num"/>.singleSelect = true;

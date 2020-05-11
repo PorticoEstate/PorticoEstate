@@ -35,7 +35,7 @@
 
 			if (!$location_url || !$braarkiv_pass || !$braarkiv_pass)
 			{
-				throw new Exception('braArkiv is not configured');
+//				throw new Exception('braArkiv is not configured');
 			}
 
 			$wdsl	 = "{$location_url}?WSDL";

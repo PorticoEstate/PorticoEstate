@@ -248,8 +248,12 @@
 
 		function read_single_tenant( $id )
 		{
-			$this->db->query("SELECT * FROM fm_tenant WHERE id =$id", __LINE__, __FILE__);
-			$this->db->next_record();
+			$this->db->query("SELECT * FROM fm_tenant WHERE id = " . (int)$id, __LINE__, __FILE__);
+			
+			if(!$this->db->next_record())
+			{
+				return array();
+			}
 
 			$tenant_data = array
 				(
