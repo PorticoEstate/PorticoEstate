@@ -55,8 +55,8 @@
 
 			$var = array
 			(
-				'nextmatchs_left'	 => $nextmatches->left('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
-				'nextmatchs_right'	 => $nextmatches->right('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id),
+				'nextmatchs_left'	 => $nextmatches->left('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id . '&query=' . $query),
+				'nextmatchs_right'	 => $nextmatches->right('/index.php', $start, $total_records, '&menuaction=admin.uiaccess_history.list_history&account_id=' . $account_id . '&query=' . $query),
 				'showing'			 => $nextmatches->show_hits($total_records, $start),
 				'nm_search'			 => $nextmatches->search(array('query' => $query)),
 				'lang_loginid'		 => lang('LoginID'),
@@ -82,9 +82,9 @@
 			}
 
 			$var['actionurl']	= $GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'admin.uiaccess_history.list_history'));
-			$var['lang_search_title'] = lang('enter the search string. to show all entries, empty this field and press the submit button again');
-			$var['submit_title'] = lang('submit the search string');
-			$var['lang_search'] = lang('search');
+//			$var['lang_search_title'] = lang('enter the search string. to show all entries, empty this field and press the submit button again');
+//			$var['submit_title'] = lang('submit the search string');
+//			$var['lang_search'] = lang('search');
 
 			$t->set_var($var);
 
