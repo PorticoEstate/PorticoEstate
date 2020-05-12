@@ -480,6 +480,7 @@
 						array('menuaction' => 'admin.uiaccounts.edit_user'));
 			}
 
+			$status		= phpgw::get_var('status', 'int');
 			$query		= phpgw::get_var('query', 'string');
 			$start		= phpgw::get_var('start', 'int', 'GET', 0);
 			$order		= phpgw::get_var('order', 'string', 'GET', 'account_lid');
@@ -522,7 +523,7 @@
 
 				$valid_users = array_unique($valid_users);
 
-				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$sort, $order, $query);
+				$allusers = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$sort, $order, $query, -1, array('active' => $status));
 				foreach($allusers as  $user)
 				{
 					if(!in_array($user->id, $valid_users))
@@ -546,13 +547,15 @@
 			}
 			else
 			{
-				$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total);
+				$account_info = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $total, array('active' => $status));
 				$total = $GLOBALS['phpgw']->accounts->total;
 			}
 
 			$link_data = array
 			(
-				'menuaction' => 'admin.uiaccounts.list_users'
+				'menuaction' => 'admin.uiaccounts.list_users',
+				'allrows'	=> $allrows,
+				'status'	=> $status
 			);
 
 			$lang = array
@@ -596,6 +599,15 @@
 												'order'	=> $order,
 												'extra'	=> $link_data
 											)),
+				'sort_last_login'			=> $this->_nextmatches->show_sort_order(array
+											(
+												'sort'	=> $sort,
+												'var'	=> 'account_lastlogin',
+												'order'	=> $order,
+												'extra'	=> $link_data
+											)),
+				'lang_last_login'			=> lang('last login'),
+				'lang_last_login_from'		=> lang('last login from'),
 				'lang_status'			=> $lang['status'],
 				'lang_view'				=> $lang['view'],
 				'lang_edit'				=> $lang['edit'],
@@ -678,7 +690,8 @@
 					'lid'						=> $account->lid,
 					'firstname'					=> $account->firstname,
 					'lastname'					=> $account->lastname,
-
+					'last_login'				=> $GLOBALS['phpgw']->common->show_date($account->last_login),
+					'last_login_from'			=> $account->last_login_from,
 					'status'					=> $account->enabled,
 /*					'status_img'				=> $account->enabled
 													? $status_data['img_enabled']
@@ -724,6 +737,14 @@
 				'query'				=> $query
 			);
 
+			$status_list = array(
+				array(
+					'id' => '1',
+					'name'	=> lang('active'),
+					'selected' => $status == 1 ? 1 : 0
+				)
+			);
+
 			$data = array
 			(
 				'nm_data'		=> $this->_nextmatches->xslt_nm($nm),
@@ -731,7 +752,9 @@
 				'user_header'	=> $user_header,
 				'user_data'		=> $user_data,
 				'user_add'		=> $user_add,
-				'search_access'	=> $this->_bo->check_rights('search', 'account_access')
+				'search_access'	=> $this->_bo->check_rights('search', 'account_access'),
+				'status_list'	 => array('options' => $status_list),
+				'status_action'	 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 			);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('account_list' => $data));
 		}
