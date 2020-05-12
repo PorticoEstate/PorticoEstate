@@ -203,7 +203,7 @@
 						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
 					}
 
-					if (preg_match('/^X205/i', (string)$file_name))
+					if (preg_match('/^X205/i', (string)$file_name) || preg_match('/^Portico/i', (string)$file_name))
 					{
 						$file_remote = $file_name;
 						$file_local	 = "{$directory_local}/{$file_name}";
@@ -258,6 +258,18 @@
 
 		protected function import( $file )
 		{
+			$_file		 = basename($file);
+
+			$update_attachments = false;
+
+			$receive_order_performed = false;
+			if (preg_match('/^Portico/i', (string)$_file))
+			{
+				$update_attachments = true;
+				$receive_order_performed = true;
+			}
+
+
 			$buffer		 = array();
 			$bilagsnr	 = false;
 
@@ -431,10 +443,9 @@
 				}
 
 				$update_voucher			 = false;
-				$receive_order_performed = false;
 				$sql					 = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if ($this->db->next_record())
+				if (!$update_attachments && $this->db->next_record())
 				{
 					$this->skip_update_voucher_id	 = true;
 					$update_voucher					 = true;
@@ -446,7 +457,7 @@
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
-				if ($this->db->next_record())
+				if (!$update_attachments && $this->db->next_record())
 				{
 					$this->skip_update_voucher_id	 = true;
 					$update_voucher					 = true;
