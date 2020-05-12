@@ -5,13 +5,7 @@
 			{lang_last_x_logins}
 		</td>
 		<td style="text-align: right;" colspan="2">
-			<!--
-			<input type="text" name="query" value="{query}" title="{lang_search_title}"/>
-			<input type="submit" name="submit" value="{lang_search}" title="{submit_title}"/>
-			-->
-			<form method="POST" action="{actionurl}">
-				{nm_search}
-			</form>
+			{select_user}
 		</td>
 	</tr>
 	<tr>
