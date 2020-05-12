@@ -1915,8 +1915,10 @@ HTML;
 			return $this->so->get_assigned_groups2($selected);
 		}
 
-		public function receive_order( $id, $received_amount, $external_voucher_id = 0 )
+		public function receive_order($order_id, $received_amount, $external_voucher_id = 0 )
 		{
+			$id	 = $this->so->get_ticket_from_order($order_id);
+
 			$transfer_action = 'receive_order'; // used as trigger within the custom function
 			$acl_location	 = $this->acl_location;
 
