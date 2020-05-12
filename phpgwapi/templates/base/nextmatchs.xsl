@@ -165,7 +165,7 @@
 				<xsl:when test="allow_all_rows = 1">
 					<xsl:choose>
 						<xsl:when test="allrows = 1">
-						<xsl:variable name="all"><xsl:value-of select="$nextmatchs_url"/>&amp;start=0</xsl:variable>
+						<xsl:variable name="all"><xsl:value-of select="$nextmatchs_url"/>&amp;start=0&amp;allrows=0</xsl:variable>
 							<td width="25" align="right">
 								<a href="{$all}"><img src="{$all_img}" border="0" alt="{$title_all}" title="{$title_all}"/></a>
 							</td>
