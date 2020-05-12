@@ -703,39 +703,48 @@
 		{
 			case 'user':
 				$accounts	 = array();
-				$selected	 = 0;
 				$account_id	 = phpgw::get_var('account_id', 'int', 'REQUEST', 0);
-				if ($appname == 'preferences') // All users
+//				if ($appname == 'preferences') // All users
+//				{
+//					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, '', 'account_lastname');
+//					foreach ($_accounts as $_account)
+//					{
+//						if($_account->enabled)
+//						{
+//							$accounts[] = array
+//								(
+//								'id'	 => $_account->id,
+//								'name'	 => $_account->__toString()
+//							);
+//						}
+//					}
+//					unset($_accounts);
+//				}
+//				else // only users which has access to the app
+//				{
+//					$_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(1, 'run', $appname);
+//					foreach ($_accounts as $_account)
+//					{
+//						$__account	 = $GLOBALS['phpgw']->accounts->get($_account['account_id']);
+//						if($__account->enabled)
+//						{
+//							$accounts[]	 = array
+//								(
+//								'id'	 => $__account->id,
+//								'name'	 => $__account->__toString()
+//							);
+//						}
+//					}
+//				}
+
+				$__account	 = $GLOBALS['phpgw']->accounts->get($account_id);
+				if($__account->enabled)
 				{
-					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, '', 'account_lastname');
-					foreach ($_accounts as $_account)
-					{
-						if($_account->enabled)
-						{
-							$accounts[] = array
-								(
-								'id'	 => $_account->id,
-								'name'	 => $_account->__toString()
-							);
-						}
-					}
-					unset($_accounts);
-				}
-				else // only users which has access to the app
-				{
-					$_accounts = $GLOBALS['phpgw']->acl->get_user_list_right(1, 'run', $appname);
-					foreach ($_accounts as $_account)
-					{
-						$__account	 = $GLOBALS['phpgw']->accounts->get($_account['account_id']);
-						if($__account->enabled)
-						{
-							$accounts[]	 = array
-								(
-								'id'	 => $__account->id,
-								'name'	 => $__account->__toString()
-							);
-						}
-					}
+					$accounts[]	 = array
+					(
+						'id'	 => $__account->id,
+						'name'	 => $__account->__toString()
+					);
 				}
 
 				phpgw::import_class('phpgwapi.jquery');

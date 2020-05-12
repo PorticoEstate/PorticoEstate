@@ -738,13 +738,14 @@
 			$lang_missing = lang('Missing value');
 			$error_list = array();
 //			$debug = true;
+			$missing_value = array('<span style="color:red;">*</span>');
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
-				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
-				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
-				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
+				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
+				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
+				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
 				$file_info['document_category_validate'] =  empty($file_tags[$file_name]['document_category']) ? false : true;
 				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
 				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
