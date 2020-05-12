@@ -53,6 +53,8 @@
 					case '.ticket':
 						$this->acl_location			 = $acl_location;
 						$this->values				 = ExecMethod('property.sotts.read_single', $id);
+			_debug_array($this->values);
+
 						$this->ordered_amount		 = $this->_get_ordered_ticket_amount($id);
 						break;
 					default:
