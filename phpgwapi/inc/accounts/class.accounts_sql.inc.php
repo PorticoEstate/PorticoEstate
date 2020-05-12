@@ -538,18 +538,18 @@
 			{
 				$record = array
 				(
-					'id'			=> $this->db->f('account_id'),
-					'lid'			=> $this->db->f('account_lid'),
-					'passwd_hash'	=> $this->db->f('account_pwd', true),
-					'firstname'		=> $this->db->f('account_firstname', true),
-					'lastname'		=> $this->db->f('account_lastname', true),
-					'lastlogin'		=> $this->db->f('account_lastlogin'),
-					'lastloginfrom'	=> $this->db->f('account_lastloginfrom'),
-					'lastpasswd_change'		=> $this->db->f('account_lastpwd_change'),
-					'enabled'		=> $this->db->f('account_status') == 'A',
-					'expires'		=> $this->db->f('account_expires'),
-					'person_id'		=> $this->db->f('person_id'),
-					'quota'			=> $this->db->f('account_quota')
+					'id'				 => $this->db->f('account_id'),
+					'lid'				 => $this->db->f('account_lid'),
+					'passwd_hash'		 => $this->db->f('account_pwd', true),
+					'firstname'			 => $this->db->f('account_firstname', true),
+					'lastname'			 => $this->db->f('account_lastname', true),
+					'last_login'		 => $this->db->f('account_lastlogin'),
+					'last_login_from'	 => $this->db->f('account_lastloginfrom'),
+					'last_passwd_change' => $this->db->f('account_lastpwd_change'),
+					'enabled'			 => $this->db->f('account_status') == 'A',
+					'expires'			 => $this->db->f('account_expires'),
+					'person_id'			 => $this->db->f('person_id'),
+					'quota'				 => $this->db->f('account_quota')
 				);
 
 				$id = $record['id'];

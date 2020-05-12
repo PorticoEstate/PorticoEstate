@@ -223,7 +223,8 @@
 				<xsl:choose>
 					<xsl:when test="allrows = 1">
 						<xsl:variable name="all">
-							<xsl:value-of select="$nextmatchs_url"/>&amp;start=0
+							<xsl:value-of select="$nextmatchs_url"/>
+							<xsl:text>&amp;start=0&amp;allrows=0</xsl:text>
 						</xsl:variable>
 						<li class="page-item">
 							<a class="page-link" href="{$all}">
@@ -233,7 +234,8 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="all">
-							<xsl:value-of select="$nextmatchs_url"/>&amp;allrows=1
+							<xsl:value-of select="$nextmatchs_url"/>
+							<xsl:text>&amp;allrows=1</xsl:text>
 						</xsl:variable>
 						<li class="page-item">
 							<a class="page-link" href="{$all}">

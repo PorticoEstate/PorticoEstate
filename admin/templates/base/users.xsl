@@ -16,10 +16,38 @@
 
 <!-- BEGIN user_list -->
 
-<xsl:template match="account_list">
+<xsl:template match="account_list" xmlns:php="http://php.net/xsl">
+	<style>
+		.button-container form,
+		.button-container form div {
+		display: inline;
+		}
+
+		.button-container button {
+		display: inline;
+		vertical-align: middle;
+		}
+	</style>
 	<div id="admin_accounts_list">
 		<xsl:if test="search_access = 1">
-			<div class="search">
+			<div class="button-container" >
+				<form method="post" action="{status_action}">
+					<select name="status" onChange="this.form.submit();">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'status')"/>
+						</xsl:attribute>
+						<option value="">
+							<xsl:value-of select="php:function('lang', 'all')"/>
+						</option>
+						<xsl:apply-templates select="status_list/options"/>
+					</select>
+					<noscript>
+						<xsl:text> </xsl:text>
+						<button type="submit" name="submit">
+							<xsl:value-of select="php:function('lang', 'submit')"/>
+						</button>
+					</noscript>
+				</form>
 				<xsl:call-template name="search_field"/>
 			</div>
 		</xsl:if>
@@ -40,6 +68,15 @@
 	</div>
 </xsl:template>
 
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
+</xsl:template>
+
 <!-- BEGIN user_header -->
 
 <xsl:template match="user_header">
@@ -58,6 +95,14 @@
 			<a href="{sort_lastname}">
 				<xsl:value-of select="lang_lastname"/>
 			</a>
+		</th>
+		<th>
+			<a href="{sort_last_login}">
+				<xsl:value-of select="lang_last_login"/>
+			</a>
+		</th>
+		<th>
+			<xsl:value-of select="lang_last_login_from" />
 		</th>
 		<th>
 			<a href="{sort_status}">
@@ -101,6 +146,12 @@
 		</td>
 		<td align = 'center'>
 			<xsl:value-of select="lastname" />
+		</td>
+		<td align = 'center'>
+			<xsl:value-of select="last_login" />
+		</td>
+		<td align = 'center'>
+			<xsl:value-of select="last_login_from" />
 		</td>
 		<!--	<td class="icon"><img src="{status_img}" alt="{status_text}" /></td> -->
 		<td align = 'center'>
