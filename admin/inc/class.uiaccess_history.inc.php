@@ -206,9 +206,6 @@ HTML;
 			$var['rows'] = createObject('admin.uimenuclass')->createHTMLCode('view_account');
 
 			$t->set_var($var);
-//			$GLOBALS['phpgw']->common->phpgw_header(true);
-
 			$t->pfp('out','list');
-
 		}
 	}
