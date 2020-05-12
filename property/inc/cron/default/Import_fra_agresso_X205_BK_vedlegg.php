@@ -227,118 +227,6 @@
 			}
 		}
 
-		protected function get_files_old()
-		{
-			$method = $this->config->config_data['common']['method'];
-			if ($method == 'local')
-			{
-				return;
-			}
-
-			$server				 = $this->config->config_data['common']['host'];
-			$user				 = $this->config->config_data['common']['user'];
-			$password			 = $this->config->config_data['common']['password'];
-			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir'], '/');
-			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
-			$port				 = 22;
-
-			if (!function_exists("ssh2_connect"))
-			{
-				die("function ssh2_connect doesn't exist");
-			}
-			if (!($connection = ssh2_connect($server, $port)))
-			{
-				echo "fail: unable to establish connection\n";
-			}
-			else
-			{
-				// try to authenticate with username root, password secretpassword
-				if (!ssh2_auth_password($connection, $user, $password))
-				{
-					echo "fail: unable to authenticate\n";
-				}
-				else
-				{
-					// allright, we're in!
-					echo "okay: logged in...<br/>";
-
-					// Enter "sftp" mode
-					$sftp = @ssh2_sftp($connection);
-
-					// Scan directory
-					$files	 = array();
-					echo "Scanning {$directory_remote}<br/>";
-					$dir	 = "ssh2.sftp://$sftp$directory_remote";
-					$handle	 = opendir($dir);
-					while (false !== ($file	 = readdir($handle)))
-					{
-						if (is_dir($file))
-						{
-							echo "Directory: $file<br/>";
-							continue;
-						}
-
-						/* 						if ($this->debug)
-						  {
-						  $size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-						  echo "File $file Size: $size<br/>";
-
-						  $stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
-						  $contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-						  @fclose($stream);
-						  echo "CONTENTS: $contents<br/><br/>";
-						  }
-						 */
-						$files[] = $file;
-					}
-
-					if ($this->debug)
-					{
-						_debug_array($files);
-					}
-					else
-					{
-						foreach ($files as $file_name)
-						{
-							if (preg_match('/^Portico/i', (string)$file_name))
-							{
-								//		_debug_array($file_name);
-								$file_remote = "{$directory_remote}/{$file_name}";
-								$file_local	 = "{$directory_local}/{$file_name}";
-
-								$stream		 = fopen("ssh2.sftp://$sftp$file_remote", 'r');
-								$contents	 = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
-								fclose($stream);
-
-								$fp = fopen($file_local, "wb");
-								fwrite($fp, $contents);
-
-								if (fclose($fp))
-								{
-									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-									if (ssh2_sftp_unlink($sftp, "{$directory_remote}/arkiv/{$file_name}"))
-									{
-										echo "Deleted duplicate File remote: {$directory_remote}/arkiv/{$file_name}<br/>";
-									}
-									if (ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/arkiv/{$file_name}"))
-									{
-										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
-									}
-									else
-									{
-										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
-										if (unlink($file_local))
-										{
-											echo "Lokal file was deleted: {$file_local}<br/>";
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 
 		protected function check_storage_dir( $files_path )
 		{
@@ -435,12 +323,10 @@
 					unlink($tmpfname);
 				}
 
-				$update_voucher	 = false;
 				$sql			 = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$update_voucher				 = true;
 					$bilagsnr					 = $this->db->f('bilagsnr');
 					$this->receipt['message'][]	 = array('msg' => "Oppdatert med nye filer, key: {$_data['KEY']}, bestilling: {$_data['PURCHASEORDERNO']}");
 				}
@@ -449,6 +335,7 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
+					$bilagsnr					 = $this->db->f('bilagsnr');
 					$this->receipt['message'][] = array('msg' => "Oppdatert med nye filer, key: {$_data['KEY']}, bestilling: {$_data['PURCHASEORDERNO']}");
 				}
 			}
