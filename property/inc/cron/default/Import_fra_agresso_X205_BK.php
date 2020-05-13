@@ -465,17 +465,17 @@
 						$receipt = $this->rollback($bilagsnr);
 						if (isset($receipt['message']))
 						{
-							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$bilagsnr}");
+							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : ordre = {$_order_id}, bilag = {$_data['KEY']}");
 						}
 						else
 						{
-							$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$bilagsnr}, Skanningreferanse: {$_data['KEY']}, FakturaNr: {$fakturanr}");
+							$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : ordre = {$_order_id}, bilag: {$_data['KEY']}, FakturaNr: {$fakturanr}");
 						}
 					}
 
 					if($update_attachments)
 					{
-						$this->receipt['message'][] = array('msg' => "Bilag oppdatert med vedlegg : {$bilagsnr}");
+						$this->receipt['message'][] = array('msg' => "Bilag oppdatert med vedlegg : ordre = {$_order_id}, bilag = {$_data['KEY']}");
 					}
 					else
 					{
