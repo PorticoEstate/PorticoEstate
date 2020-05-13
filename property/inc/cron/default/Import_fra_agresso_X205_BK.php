@@ -738,7 +738,7 @@
 
 			if ($num > 0)
 			{
-				$this->receipt['message'][] = array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, KEY: {$buffer[0]['external_voucher_id']}");
+				$this->receipt['message'][] = array('msg' => "Importert {$num} poster til ordre {$buffer[0]['pmwrkord_code']}, bilag: {$buffer[0]['external_voucher_id']}");
 				return $buffer[0]['bilagsnr'];
 			}
 			return false;
