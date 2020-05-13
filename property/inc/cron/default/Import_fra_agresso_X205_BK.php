@@ -89,7 +89,7 @@
 						continue;
 					}
 
-					if (preg_match('/^X205/i', (string)$file))
+					if (preg_match('/(^X205|^Portico)/i', (string)$file))
 					{
 						$file_list[] = (string)"{$dirname}/{$file}";
 					}
@@ -203,7 +203,7 @@
 						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
 					}
 
-					if (preg_match('/^X205/i', (string)$file_name) || preg_match('/^Portico/i', (string)$file_name))
+					if (preg_match('/(^X205|^Portico)/i', (string)$file_name))
 					{
 						$file_remote = $file_name;
 						$file_local	 = "{$directory_local}/{$file_name}";
@@ -440,20 +440,39 @@
 					}
 				}
 
-				$receive_order_performed		 = $order_info['order_received'];
-
 				$update_voucher			 = false;
-				$sql					 = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
+
+				$sql = "SELECT bilagsnr, overftid FROM (
+				SELECT  bilagsnr, NULL as overftid FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'
+				UNION
+				SELECT  bilagsnr, overftid FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}' ) AS t";
+
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ( $this->db->next_record())
 				{
 					$this->skip_update_voucher_id	 = true;
+					$receive_order_performed		 = true;
+					$bilagsnr					 = $this->db->f('bilagsnr');
+					$buffer[$i]['bilagsnr']		 = $bilagsnr;
+					$overftid					 = $this->db->f('$overftid');
 					if(!$update_attachments)
 					{
 						$update_voucher					 = true;
 					}
-					$bilagsnr						 = $this->db->f('bilagsnr');
-					$buffer[$i]['bilagsnr']			 = $bilagsnr;
+
+					if(!$update_attachments && $overftid)
+					{
+						$receipt = $this->rollback($bilagsnr);
+						if (isset($receipt['message']))
+						{
+							$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$bilagsnr}");
+						}
+						else
+						{
+							$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$bilagsnr}, Skanningreferanse: {$_data['KEY']}, FakturaNr: {$fakturanr}");
+						}
+					}
+
 					if($update_attachments)
 					{
 						$this->receipt['message'][] = array('msg' => "Bilag oppdatert med vedlegg : {$bilagsnr}");
@@ -461,36 +480,6 @@
 					else
 					{
 						$this->receipt['message'][]		 = array('msg' => "Oppdatert med nye data i arbeidsregister: ordre = {$_order_id}, bilag = {$_data['KEY']}");
-					}
-				}
-
-				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";
-				$this->db->query($sql, __LINE__, __FILE__);
-				if ( $this->db->next_record())
-				{
-					$this->skip_update_voucher_id	 = true;
-					$bilagsnr						 = $this->db->f('bilagsnr');
-
-					if(!$update_attachments)
-					{
-						$update_voucher				 = true;
-						$receipt = $this->rollback($bilagsnr);
-					}
-
-					$buffer[$i]['bilagsnr'] = $bilagsnr;
-
-
-					if($update_attachments)
-					{
-						$this->receipt['message'][] = array('msg' => "Bilag oppdatert med vedlegg : {$bilagsnr}");					
-					}
-					else if (isset($receipt['message']))
-					{
-						$this->receipt['message'][] = array('msg' => "Bilag rullet tilbake fra historikk : {$bilagsnr}");
-					}
-					else
-					{
-						$this->receipt['error'][] = array('msg' => "Bilag ikke rullet tilbake fra historikk : {$bilagsnr}, Skanningreferanse: {$_data['KEY']}, FakturaNr: {$fakturanr}");
 					}
 				}
 
@@ -659,8 +648,7 @@
 						. " fm_tts_tickets.tax_code,"
 						. " fm_tts_tickets.cat_id as category,"
 						. " fm_tts_tickets.ordered_by as user_id,"
-						. " fm_tts_tickets.subject as title,"
-						. " fm_tts_tickets.order_received"
+						. " fm_tts_tickets.subject as title"
 						. " FROM fm_tts_tickets"
 						. " WHERE fm_tts_tickets.order_id = {$order_id}";
 
@@ -675,8 +663,7 @@
 						. " fm_workorder.user_id,"
 						. " fm_workorder.service_id,"
 						. " fm_workorder.tax_code,"
-						. " fm_workorder.title,"
-						. " fm_workorder.order_received"
+						. " fm_workorder.title"
 						. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 						. " WHERE fm_workorder.id = {$order_id}";
 					break;
