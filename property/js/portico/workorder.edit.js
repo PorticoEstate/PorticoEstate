@@ -623,7 +623,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table class='pure-table pure-table-striped'>";
+				htmlString = "<table class='pure-table pure-table-striped' style='width:100%'>";
 				htmlString += "<thead><th>" + $.number(total_amount, 0, ',', '.') + "</th><th></th><th></th></thead>";
 				htmlString += "<thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;

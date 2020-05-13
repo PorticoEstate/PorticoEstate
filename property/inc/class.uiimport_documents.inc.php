@@ -674,8 +674,9 @@
 				'config'	 => array(
 					array('disablePagination' => true),
 					array('disableFilter' => true),
-					array('scrollX' => true),
+					array('scrollX' => false),
 					array('scrollY' => 300),
+					array('fixedColumns' => true)
 				)
 			);
 

@@ -2635,7 +2635,7 @@ JS;
 				'ColumnDefs' => $invoice_def,
 				'config'	 => array(
 					array('disableFilter' => true),
-//					array('disablePagination' => true)
+					array('disablePagination' => true)
 				)
 			);
 
