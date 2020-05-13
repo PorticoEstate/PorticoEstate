@@ -244,11 +244,11 @@
 				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
-					
+
 					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
-					}				
+					}
 				}
 
 				$tags = array();
@@ -321,16 +321,16 @@
 			else if($action == 'set_tag' && $ids)
 			{
 				$bofiles->set_tags($ids, $tags);
-				
+
 			}
 			else if($action == 'remove_tag' && $ids)
 			{
 				$bofiles->remove_tags($ids, $tags);
-				
+
 			}
 
 			return $action;
-			
+
 		}
 
 
@@ -1378,13 +1378,14 @@
 								//Not approved
 								if (!$approved)
 								{
+									phpgwapi_cache::message_set("NB: Sjekk at rammene for prosjektet er innenfor totalen av bestillingene: " . number_format($_budget_amount, 0, ".", " "), 'message');
+
 									$substitute = $sosubstitute->get_substitute($_account_id);
 
 									if ($substitute)
 									{
 										$_account_id = $substitute;
 									}
-
 
 									$pending_action->set_pending_action($action_params_approved);
 									if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
@@ -2248,7 +2249,7 @@
 			);
 
 //---file tagging
-			
+
 			$requestUrl	 = json_encode(self::link(array(
 				'menuaction' => 'property.uiworkorder.update_file_data',
 				'location_id' => $location_id,
@@ -2324,7 +2325,7 @@
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);					
+				);
 			}
 
 			$code		 = <<<JS
@@ -2364,7 +2365,7 @@
 
 				}
 				JqueryPortico.updateinlineTableHelper('datatable-container_1');
-				
+
 				if(action=='delete_file')
 				{
 					var oArgs = {menuaction: 'property.uiworkorder.get_files_attachments', id: {$id}};
