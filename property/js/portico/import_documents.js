@@ -79,6 +79,14 @@ this.onActionsClick_files = function (action, files)
 	});
 };
 
+
+function set_tab(active_tab)
+{
+	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
+		.fixedColumns().relayout().draw();
+}
+
+
 this.refresh_files = function (show_all_columns)
 {
 //	var show_all = show_all_columns || false;
