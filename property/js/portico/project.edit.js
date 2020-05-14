@@ -154,19 +154,19 @@ $(document).ready(function ()
 	$("#user_id").select2({
 		placeholder: lang["select user"],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 
 	$("#global_category_id").select2({
 		placeholder: lang["select category"],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 
 	$("#branch_id").select2({
 		placeholder: lang['Select branch'],
 		language: "no",
-		width: '50%'
+		width: '75%'
 	});
 
 

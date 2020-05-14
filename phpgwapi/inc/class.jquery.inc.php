@@ -467,6 +467,11 @@ HTML;
 							try
 							{
 								set_tab(active_tab);
+								$($.fn.dataTable.tables(true)).DataTable()
+									.scroller.measure()
+									.columns.adjust()
+									.fixedColumns().relayout();
+
 							}
 							catch (err)
 							{

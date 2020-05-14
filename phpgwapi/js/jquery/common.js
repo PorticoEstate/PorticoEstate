@@ -286,7 +286,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
 	var scrollY = options['scrollY'] || false;
-	var scrollX = options['scrollX'] || false;
+	var scrollX = true;//options['scrollX'] || false;
+	var fixedColumns = options['fixedColumns'] || false;
 
 	if (scrollY)
 	{
@@ -419,7 +420,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		scrollX: scrollX,
 		scroller: scrollY ? true : false,
 		scrollCollapse: scrollY ? true : false,
-		fixedColumns: scrollX ? true : false,
+		fixedColumns: fixedColumns ? true : false,
 		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
 		info: disablePagination ? false : true,
@@ -476,6 +477,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			if (typeof (oTable) != 'undefined')
 			{
 				var api = oTable.api();
+				api.columns.adjust();
 				api.buttons('.record').enable(false);
 				oTable.makeEditable({
 					sUpdateURL: editor_action,
@@ -512,6 +514,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 						return;
 					}
 				});
+
 			}
 			if (typeof (addFooterDatatable) == 'function')
 			{
@@ -530,6 +533,11 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		buttons: buttons_def,
 		search: initial_search
 	});
+
+//	oTable.fixedHeader.adjust();
+
+//	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
+//		.fixedColumns().relayout().draw();
 
 	$("#" + container + ' tbody').on('click', 'tr', function ()
 	{
