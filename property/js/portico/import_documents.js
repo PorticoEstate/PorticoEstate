@@ -152,12 +152,12 @@ this.get_order_info = function ()
 					$("#location_code").val('');
 					$("#building_number").val('');
 					$("#remark").val('');
-					$("#get_order_info").show();
+				//	$("#get_order_info").show();
 					$("#validate_step_1").hide();
 				}
 				else
 				{
-					$("#get_order_info").hide();
+				//	$("#get_order_info").hide();
 					$("#validate_step_1").show();
 					$("#message_step_1").hide();
 					$("#order_info").show();
