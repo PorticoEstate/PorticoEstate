@@ -80,15 +80,12 @@
 			$this->bo				 = CreateObject('property.boadmin_entity', true);
 			$this->acl				 = & $GLOBALS['phpgw']->acl;
 
-			$this->acl_location	 = '.document';
-			$this->acl_read		 = $this->acl->check('.document', PHPGW_ACL_READ, 'property');
-			$this->acl_add		 = $this->acl->check('.document', PHPGW_ACL_ADD, 'property');
-			$this->acl_edit		 = $this->acl->check('.document', PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete	 = $this->acl->check('.document', PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage	 = $this->acl->check('.document', PHPGW_ACL_PRIVATE, 'property');//16
-			
-			$this->acl_manage = true;
-			$this->acl_manage = false;
+			$this->acl_location	 = '.document.import';
+			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
+			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
+			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
+			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage	 = $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'property');//16
 
 			if($this->acl_manage)
 			{
@@ -97,9 +94,9 @@
 			else
 			{
 				$this->role = self::ROLE_DEFAULT;
-				
+
 			}
-			
+
 			$this->debug = true;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
@@ -149,9 +146,25 @@
 			{
 				$order_id = phpgw::get_var('order_id', 'int');
 			}
+
+			$secret = phpgw::get_var('secret');
+
 			$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
-			switch ($order_type)
+			$custom_frontend = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? true : false;
+
+			if($custom_frontend && !$this->acl_manage)
+			{
+				if($secret != $order_type['secret'])
+				{
+					return array(
+						'error'			 => 'Ikke gylding nøkkel for dette bestillingsnrummeret',
+						'error_type'	 => 'secret'
+					);
+				}
+			}
+
+			switch ($order_type['type'])
 			{
 				case 'workorder':
 					$location_item_id	 = $order_id;
@@ -171,7 +184,10 @@
 					$remark	= $item['subject'];
 					break;
 				default:
-					return array('error' => lang('no such order: %1', $order_id));
+					return array(
+						'error' => lang('no such order: %1', $order_id),
+						'error_type'	 => null
+						);
 			}
 
 			$vendor_id = $item['vendor_id'];
@@ -211,6 +227,7 @@
 			}
 
 			return array(
+				'acl_error'			 => null,
 				'vendor_name'		 => $vendor_name,
 				'cadastral_unit'	 => $cadastral_unit,
 				'location_code'		 => $location_code,
@@ -314,6 +331,22 @@
 				return;
 			}
 
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			$custom_frontend = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? true : false;
+
+			if($custom_frontend && !$this->acl_manage)
+			{
+				$secret = phpgw::get_var('secret');
+				if($secret != $order_type['secret'])
+				{
+					return array(
+						'error'			 => 'Ikke gylding nøkkel for dette bestillingsnrummeret',
+						'error_type'	 => 'secret'
+					);
+				}
+			}
+			
 			$file_tags = $this->_get_metadata($order_id);
 
 			if ($action == 'delete_file' && $files && $order_id)
@@ -480,7 +513,7 @@
 
 		public function index()
 		{
-			if (!$this->acl_read)
+			if (!$this->acl_manage)
 			{
 				phpgw::no_access();
 				return;
@@ -548,6 +581,7 @@
 		{
 
 			$order_id = phpgw::get_var('id');
+			$secret = phpgw::get_var('secret');
 			$tabs			 = array();
 			$tabs['step_1']	 = array('label' => lang('step %1 - order reference', 1), 'link' => '#step_1');
 			$tabs['step_2']	 = array('label' => lang('step %1 - upload documents', 2), 'link' => '#step_2', 'disable' => 1);
@@ -580,8 +614,8 @@
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					)
 				);
-			
-			
+
+
 			if($this->role == self::ROLE_MANAGER)
 			{
 				$files_def[] = array('key' => 'import_ok',
@@ -689,6 +723,7 @@
 			$data = array
 				(
 				'order_id'				 => $order_id,
+				'secret'				 => $secret,
 				'datatable_def'			 => $datatable_def,
 				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'image_loader'			 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
@@ -927,7 +962,7 @@
 			$upload_handler			 = new property_multiuploader($options, true);
 		}
 
-		public function check_upload_dir($order_id)
+		private function check_upload_dir($order_id)
 		{
 			$rs = $this->create_document_dir($order_id);
 			if (!$rs)
@@ -1001,7 +1036,7 @@
 				$order_info = $this->get_order_info($entry['id']);
 
 				/**
-				 * not a valid order
+				 * not a valid order, or no access
 				 */
 				if ($order_info['error'])
 				{
@@ -1040,6 +1075,16 @@
 		 */
 		public function query()
 		{
+			if(!$this->acl_manage)
+			{
+				$result_data = array(
+					'results' => array(),
+					'total_records'	 => 0,
+					'draw'			 => phpgw::get_var('draw', 'int'));
+				return $this->jquery_results($result_data);
+			}
+
+
 			$search		 = phpgw::get_var('search');
 			$values = $this->get_pending_list($search['value']);
 
@@ -1106,7 +1151,7 @@
 
 		public function step_2_import( )
 		{
-			if(!$this->acl_edit)
+			if(!$this->acl_manage)
 			{
 				phpgw::no_access();
 			}
@@ -1127,11 +1172,11 @@
 			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
 
 			$list_files = $this->_get_files($path_dir);
-			
+
 			$total_records = count($list_files);
 
 			$import_document_files = new import_document_files();
-			
+
 			$i = 1;
 
 			foreach ($list_files as $file_info)
@@ -1164,10 +1209,10 @@
 
 					$this->_set_metadata($order_id, $file_tags);
 				}
-				
+
 				$i++;
 			}
-			
+
 			unset($_SESSION['import_progress']);
 
 			return array(
@@ -1175,7 +1220,7 @@
 					'total_records' => $total_records,
 				);
 		}
-		
+
 		public function get_progress( )
 		{
 			if(empty($_SESSION['import_progress']))
@@ -1184,7 +1229,7 @@
 			}
 			else
 			{
-				return $_SESSION['import_progress'];			
+				return $_SESSION['import_progress'];
 			}
 		}
 
@@ -1228,7 +1273,7 @@
 				}
 			}
 
-			
+
 			return array(
 				'status' => 'ok',
 				'number_of_files' => count($list_files),

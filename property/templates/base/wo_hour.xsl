@@ -855,6 +855,19 @@
 			</xsl:when>
 		</xsl:choose>
 
+
+		<xsl:choose>
+			<xsl:when test="documentation_url !=''">
+				<tr>
+					<td>
+						<a href="{documentation_url}">
+							<xsl:value-of select="php:function('lang', 'import documents')"/>
+						</a>
+					</td>
+				</tr>
+			</xsl:when>
+		</xsl:choose>
+
 		<xsl:choose>
 			<xsl:when test="order_footer_header!=''">
 				<tr>

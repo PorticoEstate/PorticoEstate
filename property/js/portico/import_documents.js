@@ -36,6 +36,7 @@ this.onActionsClick_files = function (action, files)
 	}
 
 	var order_id = $('#order_id').val();
+	var secret = $("#secret").val();
 	var document_category = $('#document_category option:selected').toArray().map(item => item.text);
 	var branch = $('#branch option:selected').toArray().map(item => item.text);
 	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
@@ -53,7 +54,7 @@ this.onActionsClick_files = function (action, files)
 		type: 'POST',
 		dataType: 'json',
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
-		data: {files: files, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id},
+		data: {files: files, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
 		success: function (data)
 		{
 			if (data !== null)
@@ -130,9 +131,10 @@ this.local_DrawCallback0 = function (container)
 this.get_order_info = function ()
 {
 	var order_id = $("#order_id").val();
+	var secret = $("#secret").val();
 //	alert(order_id);
 
-	var oArgs = {menuaction: 'property.uiimport_documents.get_order_info', order_id: order_id};
+	var oArgs = {menuaction: 'property.uiimport_documents.get_order_info', order_id: order_id, secret: secret};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	$.ajax({
@@ -145,6 +147,10 @@ this.get_order_info = function ()
 			{
 				if (data.error)
 				{
+					if (data.error_type == 'secret')
+					{
+						$("#input_secret").show();
+					}
 					$("#order_info").hide();
 					$("#message_step_1").text(data.error).show();
 					$("#vendor_name").text('');
@@ -152,12 +158,14 @@ this.get_order_info = function ()
 					$("#location_code").val('');
 					$("#building_number").val('');
 					$("#remark").val('');
-				//	$("#get_order_info").show();
+					//	$("#get_order_info").show();
 					$("#validate_step_1").hide();
 				}
 				else
 				{
-				//	$("#get_order_info").hide();
+					$("#input_secret").hide();
+
+					//	$("#get_order_info").hide();
 					$("#validate_step_1").show();
 					$("#message_step_1").hide();
 					$("#order_info").show();
@@ -231,6 +239,7 @@ this.validate_step_1 = function ()
 this.validate_step_2 = function (sub_step)
 {
 	var order_id = $("#order_id").val();
+	var secret = $("#secret").val();
 
 	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -244,7 +253,7 @@ this.validate_step_2 = function (sub_step)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id},
+		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id, secret: secret},
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
 		success: function (data)
 		{
@@ -404,7 +413,7 @@ this.step_3_clean_up = function ()
 		success: function (data)
 		{
 			$('.processing-import').hide();
-			if(data.status == 'ok')
+			if (data.status == 'ok')
 			{
 				$("#message_step_3").addClass('msg_good');
 				$("#message_step_3").removeClass('error');

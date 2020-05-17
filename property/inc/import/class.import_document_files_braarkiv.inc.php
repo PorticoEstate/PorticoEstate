@@ -30,7 +30,7 @@
 
 			if (!isset($c->config_data) || !$c->config_data)
 			{
-				$this->init_config();
+//				$this->init_config();
 			}
 
 			if (!$location_url || !$braarkiv_pass || !$braarkiv_pass)

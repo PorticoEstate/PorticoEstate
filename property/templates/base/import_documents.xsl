@@ -45,6 +45,12 @@
 						</label>
 						<input id="order_id" required="required" value="{order_id}"></input>
 					</div>
+					<div id="input_secret" class="pure-control-group" style="display:none;">
+						<label >
+							<xsl:value-of select="php:function('lang', 'secret')"/>
+						</label>
+						<input id="secret" required="required" value="{secret}"></input>
+					</div>
 					<div id="order_info" style="display:none;">
 
 						<div class="pure-control-group">
