@@ -15,7 +15,17 @@
 		'custom_frontend' => 'mobilefrontend',
 		'session_name' => 'mobilefrontendsession'
 	);
+	
+	
+	
+	/**
+	 * ID-porten for å komme inn på siden
+	 * Brukere som har en rolle i systemet blir logget på som normalt
+	 * andre (eksterne leverandører) logges på med anonym systembruker med svært få rettigheter
+	 * 
+	 */
 
 	$phpgwlogin = new phpgwapi_login;
-	$phpgwlogin->login('mobilefrontend');
+	$anonymous = true;
+	$phpgwlogin->login('mobilefrontend', $anonymous);
 

@@ -44,6 +44,18 @@
 			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_Anonymous_user}:</td>
+			<td><input name="newsettings[anonymous_user]" value="{value_anonymous_user}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_Anonymous_password}:</td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
+		</tr>
+		<tr class="row_on">
+			<td>{lang_external_host_address}:{lang_example}: https://www.bergen.kommune.no</td>
+			<td><input name="newsettings[external_site_address]" value="{value_external_site_address}"/></td>
+		</tr>
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">

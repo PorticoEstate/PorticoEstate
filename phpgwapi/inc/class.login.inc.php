@@ -93,7 +93,7 @@
 
 		}
 
-		public function login($frontend = '')
+		public function login($frontend = '', $anonymous = false)
 		{
 
 			if(isset($_REQUEST['hide_lightbox']) && $_REQUEST['hide_lightbox'])
@@ -265,45 +265,14 @@ HTML;
 						$cd_array['domain'] = $logindomain;
 					}
 
-					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+
 					exit;
 				}
+				
+				$this->login_forward();
 
-				$forward = phpgw::get_var('phpgw_forward');
-				if ($forward)
-				{
-					$extra_vars['phpgw_forward'] = $forward;
-					foreach ($_GET as $name => $value)
-					{
-						if (preg_match('/phpgw_/', $name))
-						{
-							$name				 = urlencode($name);
-							$extra_vars[$name]	 = urlencode($value);
-						}
-					}
-				}
-				if (!isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'])
-				{
-			//			$uilogin->check_langs();
-				}
-				$extra_vars['cd'] = 'yes';
-
-				$GLOBALS['phpgw']->hooks->process('login');
-				if ($lightbox)
-				{
-					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
-				}
-				else
-				{
-					if ($after)
-					{
-						$this->redirect_after();
-					}
-					else
-					{
-						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
-					}
-				}
 			//----------------- End login ntlm
 			}
 
@@ -381,42 +350,12 @@ HTML;
 						$cd_array['domain'] = $logindomain;
 					}
 
-					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
 					exit;
 				}
 
-				$forward = phpgw::get_var('phpgw_forward');
-				if ($forward)
-				{
-					$extra_vars['phpgw_forward'] = $forward;
-					foreach ($_GET as $name => $value)
-					{
-						if (preg_match('/phpgw_/', $name))
-						{
-							$name				 = urlencode($name);
-							$extra_vars[$name]	 = urlencode($value);
-						}
-					}
-				}
-
-				$extra_vars['cd'] = 'yes';
-
-				if ($lightbox)
-				{
-					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
-				}
-				else
-				{
-					$GLOBALS['phpgw']->hooks->process('login');
-					if ($after)
-					{
-						$this->redirect_after();
-					}
-					else
-					{
-						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
-					}
-				}
+				$this->login_forward();
 			}
 			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' &&  (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 			{
@@ -459,42 +398,12 @@ HTML;
 						$cd_array['domain'] = $logindomain;
 					}
 
-					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
 				}
 
-				$forward = phpgw::get_var('phpgw_forward');
-				if ($forward)
-				{
-					$extra_vars['phpgw_forward'] = $forward;
-					foreach ($_GET as $name => $value)
-					{
-						if (preg_match('/phpgw_/', $name))
-						{
-							$name				 = urlencode($name);
-							$extra_vars[$name]	 = urlencode($value);
-						}
-					}
-				}
-
-				$extra_vars['cd'] = 'yes';
-
-				if ($lightbox)
-				{
-					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
-				}
-				else
-				{
-					$GLOBALS['phpgw']->hooks->process('login');
-					if ($after)
-					{
-						$this->redirect_after();
-					}
-					else
-					{
-						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
-					}
-				}
+				$this->login_forward();
 			}
 
 			if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
@@ -540,7 +449,8 @@ HTML;
 					}
 					$cd_array['skip_remote'] = true;
 					$cd_array['lightbox']	 = $lightbox;
-					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
 					exit;
 				}
 
@@ -559,43 +469,8 @@ HTML;
 					phpgwapi_cache::message_set($receipt, 'message');
 				}
 
-				$forward = phpgw::get_var('phpgw_forward');
-				if ($forward)
-				{
-					$extra_vars['phpgw_forward'] = $forward;
-					foreach ($_GET as $name => $value)
-					{
-						if (preg_match('/phpgw_/', $name))
-						{
-							//$extra_vars[$name] = $value;
-							$name				 = urlencode($name);
-							$extra_vars[$name]	 = urlencode($value);
-						}
-					}
-				}
-				if (!isset($GLOBALS['phpgw_info']['server']['disable_autoload_langfiles']) || !$GLOBALS['phpgw_info']['server']['disable_autoload_langfiles'])
-				{
-		//			$uilogin->check_langs();
-				}
-				$extra_vars['cd'] = 'yes';
+				$this->login_forward();
 
-
-				if ($lightbox)
-				{
-					$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
-				}
-				else
-				{
-					$GLOBALS['phpgw']->hooks->process('login');
-					if ($after)
-					{
-						$this->redirect_after();
-					}
-					else
-					{
-						$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
-					}
-				}
 			}
 
 			//Build vars :
@@ -654,5 +529,85 @@ HTML;
 				//failsafe
 				$GLOBALS['phpgw']->redirect_link("/home.php");
 			}
+		}
+		
+		function login_failed( $partial_url, $cd_array, $anonymous = false , $frontend = '')
+		{
+			if($anonymous && $frontend)
+			{
+				$GLOBALS['phpgw_info']['server']['auth_type'] = 'sql';
+				$c = createobject('phpgwapi.config', $frontend);
+				$c->read();
+				$config = $c->config_data;
+
+				$login = $c->config_data['anonymous_user'];
+				$passwd = $c->config_data['anonymous_passwd'];
+				$_POST['submitit'] = "";
+				$domain = phpgw::get_var('domain', 'string', 'GET');
+				if (strstr($login, '#') === false && $domain)
+				{
+					$login .= "#{$domain}";
+				}
+
+				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
+				if (!$GLOBALS['sessionid'])
+				{
+					$lang_denied = lang('Anonymous access not correctly configured');
+					if ($GLOBALS['phpgw']->session->reason)
+					{
+						$lang_denied = $GLOBALS['phpgw']->session->reason;
+					}
+					echo <<<HTML
+						<div class="error">$lang_denied</div>
+		HTML;
+					$GLOBALS['phpgw']->common->phpgw_exit(True);
+				}
+				ExecMethod('phpgwapi.menu.clear');
+				
+				$this->login_forward();				
+			}
+			else
+			{
+				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+				exit;
+			}
+			
+		}
+		
+		function login_forward()
+		{
+			$forward = phpgw::get_var('phpgw_forward');
+			if ($forward)
+			{
+				$extra_vars['phpgw_forward'] = $forward;
+				foreach ($_GET as $name => $value)
+				{
+					if (preg_match('/phpgw_/', $name))
+					{
+						$name				 = urlencode($name);
+						$extra_vars[$name]	 = urlencode($value);
+					}
+				}
+			}
+
+			$extra_vars['cd'] = 'yes';
+
+			if ($lightbox)
+			{
+				$GLOBALS['phpgw']->redirect_link("/login.php", array('hide_lightbox' => true));
+			}
+			else
+			{
+				$GLOBALS['phpgw']->hooks->process('login');
+				if ($after)
+				{
+					$this->redirect_after();
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link("/home.php", $extra_vars);
+				}
+			}
+			
 		}
 	}

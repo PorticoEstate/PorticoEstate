@@ -2030,6 +2030,10 @@
 						{
 							$_tab_name			 = str_replace(array(' ', '/', '?', '.', '*', '(', ')', '[',
 								']'), '_', $group['name']);
+							if(isset($tabs[$_tab_name]))
+							{
+								$_tab_name .= "_";
+							}
 							$active_tab			 = $active_tab ? $active_tab : $_tab_name;
 							$tabs[$_tab_name]	 = array('label'		 => $group['name'], 'link'		 => "#{$_tab_name}",
 								'disable'	 => 0);
