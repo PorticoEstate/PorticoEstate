@@ -477,7 +477,14 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			if (typeof (oTable) != 'undefined')
 			{
 				var api = oTable.api();
-				api.columns.adjust();
+//				api.columns.adjust().fixedColumns().relayout();
+				window.setTimeout(function ()
+				{
+					api.scroller.measure()
+						.columns.adjust()
+						.fixedColumns().relayout();
+				}, 50);
+
 				api.buttons('.record').enable(false);
 				oTable.makeEditable({
 					sUpdateURL: editor_action,
