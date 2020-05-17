@@ -226,7 +226,7 @@ HTML;
 HTML;
 		}
 
-		if(true)//$acl->check('run', PHPGW_ACL_READ, 'property'))
+		if($acl->check('.document.import', PHPGW_ACL_ADD, 'property'))
 		{
 			$property_documents_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.step_1_import'));
 			$property_documents_text = $GLOBALS['phpgw']->translation->translate('import documents', array(), false, 'property');
