@@ -559,7 +559,7 @@ HTML;
 					}
 					echo <<<HTML
 						<div class="error">$lang_denied</div>
-		HTML;
+HTML;
 					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 				ExecMethod('phpgwapi.menu.clear');
