@@ -635,9 +635,13 @@
 			{
 				$resources	 = $this->so->get_screen_resources($building_id, $res);
 				if (count($resources) > 0)
+				{
 					$resources	 = "AND bb_resource.id IN (" . implode(",", $resources) . ")";
+				}
 				else
+				{
 					$resources	 = '';
+				}
 			}
 			$allocations = $this->so->get_screen_allocation($building_id, $from, $to, $resources);
 			$bookings	 = $this->so->get_screen_booking($building_id, $from, $to, $resources);
