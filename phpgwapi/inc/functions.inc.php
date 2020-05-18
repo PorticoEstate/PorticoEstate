@@ -902,6 +902,20 @@ HTML;
 		$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
 		if ( is_array($redirect) && count($redirect) )
 		{
+				/**
+				 * Hack to deal with problem with update cookie for sso combined with certain reverse-proxy implementation
+				 */
+				switch ($GLOBALS['phpgw_info']['server']['auth_type'])
+				{
+					case 'customsso':
+					case 'ntlm':
+						sleep(1);
+						$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
+						break;
+					default:
+						break;
+				}
+
 			foreach($redirect as $key => $value)
 			{
 				$redirect_data[$key] = phpgw::clean_value($value);
