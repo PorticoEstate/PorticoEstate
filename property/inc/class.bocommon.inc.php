@@ -2645,7 +2645,7 @@
 			
 			$config_frontend = createobject('phpgwapi.config', 'mobilefrontend')->read();
 			
-			$documentation_url = !empty($config_frontend['external_site_address'])  ? $config_frontend['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$documentation_url = !empty($config_frontend['external_site_address'])  ? rtrim($config_frontend['external_site_address'], '/') : rtrim($GLOBALS['phpgw_info']['server']['webserver_url'], '/');
 			
 			$documentation_url .= '/mobilefrontend/';
 			
