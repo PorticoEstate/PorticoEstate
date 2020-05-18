@@ -863,7 +863,22 @@ HTML;
 				unset($_GET['sessionid']);
 				unset($_GET[session_name()]);
 				unset($_GET['kp3']);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($_GET),$cookietime= time()+60);
+				
+				/**
+				 * Hack to deal with problem with update cookie for sso combined with certain reverse-proxy implementation
+				 */
+				switch ($GLOBALS['phpgw_info']['server']['auth_type'])
+				{
+					case 'customsso':
+					case 'ntlm':
+						$cookietime = time() + 2;
+						break;
+					default:
+						$cookietime = time() + 60;
+						break;
+				}
+
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($_GET),$cookietime);
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
