@@ -871,7 +871,7 @@ HTML;
 				{
 					case 'customsso':
 					case 'ntlm':
-						$cookietime = time() + 2;
+						$cookietime = time() + 1;
 						break;
 					default:
 						$cookietime = time() + 60;
