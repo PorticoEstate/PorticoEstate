@@ -480,8 +480,10 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 //				api.columns.adjust().fixedColumns().relayout();
 				window.setTimeout(function ()
 				{
-					api.scroller.measure()
-						.columns.adjust()
+//					api.scroller.measure()
+//						.columns.adjust()
+//						.fixedColumns().relayout();
+					api.columns.adjust()
 						.fixedColumns().relayout();
 				}, 50);
 
@@ -548,16 +550,16 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 
 	$("#" + container + ' tbody').on('click', 'tr', function ()
 	{
-		var Ugly_fixedColumns_hack;
-
-		if (!$(this).hasClass('selected'))
-		{
-			Ugly_fixedColumns_hack = 1;
-		}
-		else
-		{
-			Ugly_fixedColumns_hack = -1;
-		}
+//		var Ugly_fixedColumns_hack;
+//
+//		if (!$(this).hasClass('selected'))
+//		{
+//			Ugly_fixedColumns_hack = 1;
+//		}
+//		else
+//		{
+//			Ugly_fixedColumns_hack = -1;
+//		}
 
 		$(this).toggleClass('selected');
 		var api = oTable.api();
@@ -565,10 +567,10 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 //		var selectedRows    = api.rows( { selected: true } ).flatten().length;
 		var selectedRows = api.rows('.selected').data().length;
 
-		if (scrollX)
-		{
-			selectedRows += Ugly_fixedColumns_hack;
-		}
+//		if (scrollX)
+//		{
+//			selectedRows += Ugly_fixedColumns_hack;
+//		}
 		api.buttons('.record').enable(selectedRows > 0);
 
 		var row = $(this);
