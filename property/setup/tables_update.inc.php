@@ -10943,7 +10943,7 @@
 
 		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
 
-	
+
 		$field = array
 		(
 			'column_name' => 'zip_code',
@@ -10991,6 +10991,41 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.747';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	 * Notes
+	 * Secret hash for order-documentation in table fm_orders
+	 * new location_id for .document.import
+	 */	$test[] = '0.9.17.747';
+	function property_upgrade0_9_17_747()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_orders", 'secret', array('type' => 'text', 'nullable' => true));
+		$GLOBALS['phpgw']->locations->add('.document.import', 'Document import', 'property', $allow_grant = false, $custom_tbl = false, $c_function = false);
+
+		$db->query("SELECT id FROM fm_orders");
+		$orders = array();
+		while ($db->next_record())
+		{
+			$orders[] = $db->f('id');
+		}
+
+		foreach ($orders as $order_id)
+		{
+			$secret = bin2hex(random_bytes(16));
+			$db->query("UPDATE fm_orders SET secret = '{$secret}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.748';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

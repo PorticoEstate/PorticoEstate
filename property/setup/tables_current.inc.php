@@ -2544,7 +2544,8 @@
 		'fm_orders' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
-				'type' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False)
+				'type' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
+				'secret' => array('type' => 'text', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

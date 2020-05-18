@@ -4360,6 +4360,8 @@ JS;
 
 //end SMS::QRCODE
 
+			$documentation_url = $this->get_documentation_url($ticket['order_id']);
+
 			if (isset($this->bo->config->config_data['order_footer_header']) && $this->bo->config->config_data['order_footer_header'])
 			{
 				if (!$content)
@@ -4380,6 +4382,11 @@ JS;
 			{
 				return $document;
 			}
+		}
+
+		private function get_documentation_url( $id )
+		{
+			return  $this->bocommon->get_documentation_url($id);	
 		}
 
 		private function _html_order( $id = 0, $preview = false, $show_cost = false )
@@ -4404,6 +4411,8 @@ JS;
 
 			$ticket	 = $this->bo->read_single($id);
 			$subject = lang('workorder') . ": {$ticket['order_id']}";
+
+			$documentation_url = $this->get_documentation_url($ticket['order_id']);
 
 			$organisation	 = '';
 			$contact_name	 = '';
@@ -4820,6 +4829,8 @@ JS;
 			$body	 .= '</br>';
 			$body	 .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>';
+			$body	 .= '</br>';
+//			$body	 .= '<a href ="' . $documentation_url . '">' . lang('import documents') . ' #' . $ticket['order_id'] . '</a>';
 			$html	 .= "<body><div style='width: 800px;'>{$body}";
 
 			if(!empty($this->bo->config->config_data['order_footer_header']))

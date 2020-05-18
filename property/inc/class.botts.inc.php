@@ -2232,7 +2232,7 @@ HTML;
 			}
 			else if ($order_id)
 			{
-				switch ($order_type)
+				switch ($order_type['type'])
 				{
 					case 'workorder':
 						$location			 = '.project.workorder';
@@ -2445,7 +2445,7 @@ HTML;
 			{
 				$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
-				switch ($order_type)
+				switch ($order_type['type'])
 				{
 					case 'workorder':
 						$location			 = '.project.workorder';

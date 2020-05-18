@@ -165,7 +165,7 @@
 
 				$ok			 = false;
 				$order_type	 = $socommon->get_order_type($voucher['order_id']);
-				switch ($order_type)
+				switch ($order_type['type'])
 				{
 					case 's_agreement':
 						break;

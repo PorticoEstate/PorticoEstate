@@ -1281,8 +1281,12 @@
 				}
 			}
 
+			$documentation_url = $this->bocommon->get_documentation_url($workorder_id);
+	
+
 			$email_data = array
 				(
+				'documentation_url'			 => $documentation_url,
 				'contract_name'				 => $contract_name,
 				'formatted_gab_id'			 => $formatted_gab_id,
 				'org_name'					 => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',

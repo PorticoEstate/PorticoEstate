@@ -578,7 +578,7 @@
 
 						$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
-						switch ($order_type)
+						switch ($order_type['type'])
 						{
 							case 'workorder':
 								$received	 = createObject('property.boworkorder')->receive_order((int)$order_id, $received_amount, $_data['KEY']);

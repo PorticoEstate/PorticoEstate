@@ -1364,7 +1364,8 @@
 				. "contract_id, tax_code, unspsc_code, service_id,building_part, order_dim1, mail_recipients, delivery_address $cols) "
 				. "VALUES ( {$values} {$vals})", __LINE__, __FILE__);
 
-			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
+			$secret = $GLOBALS['phpgw']->common->randomstring();
+			$this->db->query("INSERT INTO fm_orders (id,type, secret) VALUES ({$id},'workorder', '{$secret}')");
 
 			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int)$workorder['budget_periodization'] : 0;
 			if ($combined_cost)
