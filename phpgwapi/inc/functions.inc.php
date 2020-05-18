@@ -899,7 +899,7 @@ HTML;
 				$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 			}
 
-			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
+			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', '', time()-60); // expired
 			$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_data);
 			unset($redirect);
 			unset($redirect_data);
