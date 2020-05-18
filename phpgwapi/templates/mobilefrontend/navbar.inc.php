@@ -238,7 +238,7 @@ HTML;
 HTML;
 
 			$landing .= <<<HTML
-				<!-- CARD #5 -->
+				<!-- CARD #6 -->
 					 <div class="col">
 						<div class="mb-5 card" style="width: 18rem;">
 						  <div class="text-center card-body">
@@ -270,7 +270,7 @@ HTML;
 				</li>
 HTML;
 			$landing .= <<<HTML
-				<!-- CARD #5 -->
+				<!-- CARD #7 -->
 					 <div class="col">
 						<div class="card" style="width: 18rem;">
 						  <div class="text-center card-body">

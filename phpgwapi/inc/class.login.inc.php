@@ -531,7 +531,7 @@ HTML;
 			}
 		}
 		
-		function login_failed( $partial_url, $cd_array, $anonymous = false , $frontend = '')
+		function login_failed( $partial_url, $cd_array = array(), $anonymous = false , $frontend = '')
 		{
 			if($anonymous && $frontend)
 			{
@@ -552,15 +552,23 @@ HTML;
 				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 				if (!$GLOBALS['sessionid'])
 				{
-					$lang_denied = lang('Anonymous access not correctly configured');
-					if ($GLOBALS['phpgw']->session->reason)
+					if ($GLOBALS['phpgw']->session->cd_reason)
 					{
-						$lang_denied = $GLOBALS['phpgw']->session->reason;
+						$cd_array['cd']	= $GLOBALS['phpgw']->session->cd_reason;
 					}
-					echo <<<HTML
-						<div class="error">$lang_denied</div>
-HTML;
-					$GLOBALS['phpgw']->common->phpgw_exit(True);
+					$cd_array['skip_remote'] = true;
+					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					exit;
+
+//					$lang_denied = lang('Anonymous access not correctly configured');
+//					if ($GLOBALS['phpgw']->session->reason)
+//					{
+//						$lang_denied = $GLOBALS['phpgw']->session->reason;
+//					}
+//					echo <<<HTML
+//						<div class="error">$lang_denied</div>
+//HTML;
+//					$GLOBALS['phpgw']->common->phpgw_exit(True);
 				}
 				ExecMethod('phpgwapi.menu.clear');
 				
