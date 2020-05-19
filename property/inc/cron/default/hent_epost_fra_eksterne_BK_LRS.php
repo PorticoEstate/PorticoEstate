@@ -1321,6 +1321,18 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/Varsling - brukere der overordnet ikke er aktiv /i", $subject))
+			{
+				$message_cat_id	 = 357; // LRS-Regnskap- underkategori: 16 Hjelp til annet
+				$group_id		 = 4253; //LRS- Drift _Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 
 
 			/**
