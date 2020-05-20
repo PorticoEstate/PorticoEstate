@@ -2295,7 +2295,7 @@ HTML;
 							'appname'			 => 'property',
 							'location'			 => $location,
 							'id'				 => $location_item_id,
-							'responsible'		 => $supervisor_id,
+							'responsible'		 => $responsible,
 							'responsible_type'	 => 'user',
 							'action'			 => 'approval',
 							'deadline'			 => '',
