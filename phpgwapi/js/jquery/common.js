@@ -420,7 +420,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		scrollX: scrollX,
 		scroller: scrollY ? true : false,
 		scrollCollapse: scrollY ? true : false,
-		fixedColumns: fixedColumns ? true : false,
+		fixedColumns: fixedColumns,
 		paginate: disablePagination ? false : true,
 		filter: disableFilter ? false : true,
 		info: disablePagination ? false : true,
@@ -430,7 +430,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		responsive: responsive_def,
 		deferRender: true,
 		select: select,
-		data: data,
+ 		data: data,
 		ajax: ajax_def,
 		fnServerParams: function (aoData)
 		{
@@ -477,12 +477,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			if (typeof (oTable) != 'undefined')
 			{
 				var api = oTable.api();
-//				api.columns.adjust().fixedColumns().relayout();
 				window.setTimeout(function ()
 				{
-//					api.scroller.measure()
-//						.columns.adjust()
-//						.fixedColumns().relayout();
 					api.columns.adjust()
 						.fixedColumns().relayout();
 				}, 50);
@@ -543,34 +539,14 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		search: initial_search
 	});
 
-//	oTable.fixedHeader.adjust();
-
-//	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
-//		.fixedColumns().relayout().draw();
 
 	$("#" + container + ' tbody').on('click', 'tr', function ()
 	{
-//		var Ugly_fixedColumns_hack;
-//
-//		if (!$(this).hasClass('selected'))
-//		{
-//			Ugly_fixedColumns_hack = 1;
-//		}
-//		else
-//		{
-//			Ugly_fixedColumns_hack = -1;
-//		}
 
 		$(this).toggleClass('selected');
 		var api = oTable.api();
-//		var selectedRows = api.rows({selected: true}).count();
-//		var selectedRows    = api.rows( { selected: true } ).flatten().length;
 		var selectedRows = api.rows('.selected').data().length;
 
-//		if (scrollX)
-//		{
-//			selectedRows += Ugly_fixedColumns_hack;
-//		}
 		api.buttons('.record').enable(selectedRows > 0);
 
 		var row = $(this);

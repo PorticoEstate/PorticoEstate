@@ -590,8 +590,8 @@
 
 			$files_def = array
 			(
-				array('key'	 => 'file_link',
-					'label'	 => lang('file'),
+				array('key'		 => 'file_link',
+					'label'		 => lang('file'),
 					'sortable'	 => true,
 					'resizeable' => true
 					),
@@ -612,6 +612,11 @@
 					'sortable' => true,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
+					),
+					array('key'		 => 'select',
+						'label'		 => '',
+						'sortable'	 => false,
+						'className'	 => 'center',
 					)
 				);
 
@@ -710,7 +715,9 @@
 					array('disableFilter' => true),
 					array('scrollX' => false),
 					array('scrollY' => 300),
-					array('fixedColumns' => true)
+	//				array('fixedColumns' => true),
+					array('fixedColumns' => json_encode(array('leftColumns' => 1))),
+					array('order' => json_encode(array('0', 'asc')))
 				)
 			);
 
@@ -778,6 +785,7 @@
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
+				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
 				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
@@ -877,6 +885,7 @@
 			foreach ($list_files as &$file_info)
 			{
 				$file_name = $file_info['file_name'];
+				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
