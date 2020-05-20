@@ -266,7 +266,7 @@ HTML;
 					}
 
 //					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
-					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
 
 					exit;
 				}
@@ -351,7 +351,7 @@ HTML;
 					}
 
 //					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
-					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
 					exit;
 				}
 
@@ -398,7 +398,7 @@ HTML;
 						$cd_array['domain'] = $logindomain;
 					}
 
-					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
 //					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
 				}
@@ -450,7 +450,7 @@ HTML;
 					$cd_array['skip_remote'] = true;
 					$cd_array['lightbox']	 = $lightbox;
 //					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
-					$this->login_failed( "/{$partial_url}", $cd_array, $anonymous, $frontend );
+					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
 					exit;
 				}
 
