@@ -1382,9 +1382,10 @@
 
 									$substitute = $sosubstitute->get_substitute($_account_id);
 
+									$notify_on_request = array($_account_id);
 									if ($substitute)
 									{
-										$_account_id = $substitute;
+										$notify_on_request[] = $substitute;
 									}
 
 									$pending_action->set_pending_action($action_params_approved);
@@ -1394,25 +1395,32 @@
 										createObject('property.soproject')->set_status($values['project_id'], $_project_status);
 									}
 
-									$prefs = $this->bocommon->create_preferences('common', $_account_id);
-									if (!empty($prefs['email']))
+									$toarray = array();
+									foreach ($notify_on_request as $__account_id)
 									{
-										$_address = $prefs['email'];
-									}
-									else
-									{
-										$email_domain	 = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
-										$_address		 = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+										$prefs = $this->bocommon->create_preferences('common', $__account_id);
+										if (!empty($prefs['email']))
+										{
+											$_address = $prefs['email'];
+										}
+										else
+										{
+											$email_domain	 = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+											$_address		 = $GLOBALS['phpgw']->accounts->id2lid($__account_id) . "@{$email_domain}";
+										}
+
+										$toarray[] = $_address;
 									}
 
 									try
 									{
 										CreateObject('property.historylog', 'project')->add('AP', $values['project_id'], $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
 
-										$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+										$to = implode(';', $toarray);
+										$rcpt = $GLOBALS['phpgw']->send->msg('email', $to, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 										if ($rcpt)
 										{
-											phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+											phpgwapi_cache::message_set(lang('%1 is notified', $to), 'message');
 										}
 									}
 									catch (Exception $exc)
@@ -1488,21 +1496,30 @@
 								/**
 								 * Alert the substitute
 								 */
+								$notify_on_request = array($_account_id);
 								if ($substitute)
 								{
-									$_account_id = $substitute;
+									$notify_on_request[] = $substitute;
 								}
 
-								$prefs = $this->bocommon->create_preferences('common', $_account_id);
-								if (!empty($prefs['email']))
+								$toarray = array();
+								foreach ($notify_on_request as $__account_id)
 								{
-									$_address = $prefs['email'];
+									$prefs = $this->bocommon->create_preferences('common', $__account_id);
+									if (!empty($prefs['email']))
+									{
+										$_address = $prefs['email'];
+									}
+									else
+									{
+										$email_domain	 = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+										$_address		 = $GLOBALS['phpgw']->accounts->id2lid($__account_id) . "@{$email_domain}";
+									}
+									$toarray[] = $_address;
+
 								}
-								else
-								{
-									$email_domain	 = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
-									$_address		 = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
-								}
+
+								$to = implode(';', $toarray);
 
 								if ($approval_level == 'order')
 								{
@@ -1514,10 +1531,10 @@
 										{
 											$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
 											execMethod('property.sopending_action.set_pending_action', $action_params);
-											$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+											$rcpt = $GLOBALS['phpgw']->send->msg('email', $to, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 											if ($rcpt)
 											{
-												phpgwapi_cache::message_set(lang('%1 is notified', $_address), 'message');
+												phpgwapi_cache::message_set(lang('%1 is notified', $to), 'message');
 											}
 										}
 										catch (Exception $exc)

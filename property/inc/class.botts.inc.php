@@ -1996,13 +1996,10 @@ HTML;
 				if ($supervisor_id)
 				{
 					$substitute = $sosubstitute->get_substitute($supervisor_id);
-					if ($substitute)
-					{
-						$supervisor_id = $substitute;
-					}
 
 					$supervisors[$supervisor_id] = array(
 						'id'		 => $supervisor_id,
+						'substitute' => $substitute ? $substitute : null,
 						'required'	 => false,
 						'default'	 => true
 					);
@@ -2028,12 +2025,9 @@ HTML;
 						}
 
 						$substitute = $sosubstitute->get_substitute($supervisor_id);
-						if ($substitute)
-						{
-							$supervisor_id = $substitute;
-						}
 						$supervisors[$supervisor_id] = array(
 							'id'		 => $supervisor_id,
+							'substitute' => $substitute ? $substitute : null,
 							'required'	 => false,
 							'default'	 => !$default_found ? !!$entry['default_user'] : false
 						);
@@ -2103,11 +2097,11 @@ HTML;
 				{
 					$supervisor_id	 = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
 					$substitute		 = $sosubstitute->get_substitute($supervisor_id);
-					if ($substitute)
-					{
-						$supervisor_id = $substitute;
-					}
-					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
+					$supervisors[$supervisor_id] = array(
+						'id' => $supervisor_id,
+						'substitute' => $substitute ? $substitute : null,
+						'required' => true
+						);
 				}
 			}
 			else if ($approval_amount_limit > 0 && $amount > $approval_amount_limit)
@@ -2122,12 +2116,9 @@ HTML;
 				if ($supervisor_id)
 				{
 					$substitute = $sosubstitute->get_substitute($supervisor_id);
-					if ($substitute)
-					{
-						$supervisor_id = $substitute;
-					}
 					$supervisors[$supervisor_id] = array(
 						'id'		 => $supervisor_id,
+						'substitute' => $substitute ? $substitute : null,
 						'required'	 => true,
 						'default'	 => true
 					);
@@ -2137,8 +2128,10 @@ HTML;
 					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
 					{
 						$supervisor_id				 = $prefs['approval_from'];
+						$substitute = $sosubstitute->get_substitute($supervisor_id);
 						$supervisors[$supervisor_id] = array(
 							'id' => $supervisor_id,
+							'substitute' => $substitute ? $substitute : null,
 							'required' => false
 						);
 					}
@@ -2156,12 +2149,10 @@ HTML;
 					if ($supervisor_id)
 					{
 						$substitute = $sosubstitute->get_substitute($supervisor_id);
-						if ($substitute)
-						{
-							$supervisor_id = $substitute;
-						}
+
 						$supervisors[$supervisor_id] = array(
 							'id'		 => $supervisor_id,
+							'substitute' => $substitute,
 							'required'	 => true,
 							'default'	 => true
 						);
@@ -2173,12 +2164,9 @@ HTML;
 				if ($supervisor_id)
 				{
 					$substitute = $sosubstitute->get_substitute($supervisor_id);
-					if ($substitute)
-					{
-						$supervisor_id = $substitute;
-					}
 					$supervisors[$supervisor_id] = array(
 						'id'		 => $supervisor_id,
+						'substitute' => $substitute,
 						'required'	 => $level_1_required,
 						'default'	 => $level_1_required
 					);
@@ -2188,12 +2176,9 @@ HTML;
 			{
 				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 				$substitute = $sosubstitute->get_substitute($supervisor_id);
-				if($substitute)
-				{
-					$supervisor_id = $substitute;
-				}
 				$supervisors[$supervisor_id] = array(
 					'id' => $supervisor_id,
+					'substitute' => $substitute ? $substitute : null,
 					'required' => false,
 					'default' => true
 				);
@@ -2300,6 +2285,12 @@ HTML;
 					{
 						$pending_action = CreateObject('property.sopending_action');
 
+						$responsible = array($supervisor_id);
+						if(!empty($info['substitute']))
+						{
+							$responsible[] = (int) $info['substitute'];
+						}
+
 						$action_params = array(
 							'appname'			 => 'property',
 							'location'			 => $location,
@@ -2375,7 +2366,8 @@ HTML;
 						'requested_time' => $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
 						'approved'		 => $approved,
 						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
-						'is_user'		 => $supervisor_id == $this->account ? true : false
+						'is_user'		 => $supervisor_id == $this->account ? true : false,
+						'is_substitute'	 => $info['substitute'] == $this->account ? true : false
 					);
 
 					unset($prefs);

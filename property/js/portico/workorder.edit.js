@@ -680,7 +680,7 @@ function populateTableChkApproval(ecodimb)
 					}
 					else
 					{
-						if (obj[i].is_user === true)
+						if (obj[i].is_user === true || obj[i].is_substitute === true)
 						{
 							htmlString += "<input type=\"checkbox\" name=\"values[do_approve][" + obj[i].id + "]\" value=\"" + obj[i].id + "\"></input>";
 						}
