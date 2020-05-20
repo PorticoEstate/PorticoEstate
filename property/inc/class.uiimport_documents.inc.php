@@ -238,7 +238,17 @@
 
 		private function get_building_number( $location_code )
 		{
-			$where_to_find_building_number = 'fm_location4.bygningsnr';
+
+			$metadata = $GLOBALS['phpgw']->db->metadata('fm_location4');
+
+			if(isset($metadata['bygningsnr']))
+			{
+				$where_to_find_building_number = 'fm_location4.bygningsnr';
+			}
+			else
+			{
+				$where_to_find_building_number = 'fm_location2.bygningsnummer';
+			}
 
 			$location_arr = explode('-', $location_code);
 			$info = explode('.', $where_to_find_building_number);
