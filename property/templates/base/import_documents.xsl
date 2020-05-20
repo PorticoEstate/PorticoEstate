@@ -22,6 +22,10 @@
 		margin-right: auto;
 		}
 
+		.select-info
+		{
+			padding-left: 4px;
+		}
 	</style>
 
 	<script type="text/javascript">
