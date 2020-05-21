@@ -24,13 +24,14 @@
 
 		.select-info
 		{
-			padding-left: 4px;
+		padding-left: 4px;
 		}
 	</style>
 
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'order id', 'building part', 'branch', 'document categories', 'cadastral unit', 'location code', 'building number', 'Missing value', 'Missing info')"/>
 		var role = '<xsl:value-of select="role"/>';
+
 	</script>
 	<div class="container">
 
@@ -101,9 +102,22 @@
 			</div>
 			<div id="step_2" style="display:none;">
 				<h1>2) laste opp alle dokumentene til venterommet</h1>
+				<h3 id="select_upload_alternative_1">
+					<input type="radio" name = "upload_alternative"></input> Alternativ 1: laste opp alle dokumentene som en pakket fil (ZIP eller RAR)</h3>
+				<h3 id="select_upload_alternative_2">
+					<input  type="radio" name = "upload_alternative"></input> Alternativ 2: laste opp alle dokumentene fra samme katalog</h3>
 
-				<fieldset id="fieldset_file_input" class="pure-form pure-form-aligned">
-					<div class="pure-control-group">
+				<fieldset  class="pure-form pure-form-aligned">
+					<div id="upload_alternative_1" class="pure-form pure-form-aligned" style="display:none">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'upload zipped files')"/>
+							</label>
+							<input type="file" id="fileupload_zip" class="pure-input-3-4"></input>
+							<div class="content_upload_download" id="content_upload_zip"></div>
+						</div>
+					</div>
+					<div id="upload_alternative_2" class="pure-control-group" style="display:none">
 						<label>
 							<xsl:value-of select="php:function('lang', 'upload files')"/>
 						</label>

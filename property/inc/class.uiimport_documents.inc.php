@@ -50,6 +50,7 @@
 			$bocommon,
 			$role,
 			$debug,
+			$order_path_dir,
 			$default_roles = array
 			(
 				self::ROLE_DEFAULT,
@@ -69,7 +70,8 @@
 			'step_2_import'					 => true,
 			'step_3_clean_up'				 => true,
 			'view_file'						 => true,
-			'get_progress'					 => true
+			'get_progress'					 => true,
+			'unzip_files'					 => true
 		);
 
 		public function __construct()
@@ -112,6 +114,10 @@
 				$fakebase			 = '/temp_files_components';
 				$this->path_upload_dir	 = $GLOBALS['phpgw_info']['server']['files_dir'] . $fakebase;
 			}
+
+			$order_id = phpgw::get_var('order_id', 'int');
+
+			$this->order_path_dir	 = rtrim($this->path_upload_dir, '/') . "/{$order_id}/";
 
 		}
 
@@ -356,31 +362,28 @@
 					);
 				}
 			}
-			
+
 			$file_tags = $this->_get_metadata($order_id);
 
 			if ($action == 'delete_file' && $files && $order_id)
 			{
-				$path_upload_dir = $this->path_upload_dir;
-				if (empty($path_upload_dir))
+				if (empty($this->path_upload_dir))
 				{
 					return false;
 				}
 
-				$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
-
-				$list_files = $this->_get_files($path_dir);
+				$list_files = $this->_get_dir_contents($this->order_path_dir);
 
 
 				foreach ($list_files as $file_info)
 				{
-					if(in_array($file_info['file_name'], $files))
+					if(in_array($file_info['path_relative_filename'], $files))
 					{
 						unlink($file_info['path_absolute']);
 
-						if(!empty($file_tags[$file_info['file_name']]))
+						if(!empty($file_tags[$file_info['path_relative_filename']]))
 						{
-							$file_tags[$file_info['file_name']] = null;
+							$file_tags[$file_info['path_relative_filename']] = null;
 						}
 					}
 				}
@@ -484,8 +487,7 @@
 
 			else if($action == 'set_tag' && ($cadastral_unit || $location_code || $building_number || $remark))
 			{
-				$path_dir	 = "{$this->path_upload_dir}/{$order_id}/";
-				$list_files = $this->_get_files($path_dir);
+				$list_files = $this->_get_dir_contents($this->order_path_dir);
 				foreach ($list_files as $file_info)
 				{
 					$file_name = $file_info['file_name'];
@@ -706,7 +708,7 @@
 						for ( var n = 0; n < selected.length; ++n )
 						{
 							var aData = selected[n];
-							files.push(aData['file_name']);
+							files.push(aData['path_relative_filename']);
 						}
 
 						{$entry['funct']}('{$entry['action']}', files);
@@ -762,13 +764,17 @@
 
 		function validate_info()
 		{
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir))
 			{
 				return false;
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int');
+
+			if(!$order_id)
+			{
+				return;
+			}
 
 			/**
 			 * '2' - means validate actual import
@@ -784,9 +790,7 @@
 			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 			$lang_view = lang('click to view file');
 
-			$path_dir	 = "{$this->path_upload_dir}/{$order_id}/";
-
-			$list_files = $this->_get_files($path_dir);
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
 			$file_tags = $this->_get_metadata($order_id);
 			$lang_missing = lang('Missing value');
 			$error_list = array();
@@ -794,9 +798,10 @@
 			$missing_value = array('<span style="color:red;">*</span>');
 			foreach ($list_files as &$file_info)
 			{
-				$file_name = $file_info['file_name'];
+				$file_name = $file_info['path_relative_filename'];
+				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
-				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
 				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
 				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
@@ -834,25 +839,28 @@
 
 		function view_file()
 		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
 			$order_id = phpgw::get_var('order_id', 'int');
-			$file_name		 = phpgw::get_var('file_name');
-			if (!$this->acl_read || !$order_id)
+			$file_name		 = phpgw::get_var('file_name', 'raw');
+			// prevent path traversal
+			if (preg_match('/\.\./', $file_name))
 			{
 				return;
 			}
 
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir) || empty($order_id))
 			{
 				return false;
 			}
 
-			$file_source	 = rtrim($path_upload_dir, '/') . "/{$order_id}/$file_name";
+			$file_source	 = $this->order_path_dir . $file_name;
 
 			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
-
 			if(is_file($file_source))
 			{
 				$mime = createObject('phpgwapi.mime_magic')->filename2mime($file_name);
@@ -870,8 +878,7 @@
 				return;
 			}
 
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir))
 			{
 				return false;
 			}
@@ -879,9 +886,8 @@
 			$order_id = phpgw::get_var('order_id', 'int');
 
 			$options = array();
-			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
 
-			$list_files = $this->_get_files($path_dir);
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
 
 			$link_file_data = array
 			(
@@ -894,9 +900,10 @@
 			$file_tags = $this->_get_metadata($order_id);
 			foreach ($list_files as &$file_info)
 			{
-				$file_name = $file_info['file_name'];
+				$file_name = $file_info['path_relative_filename'];
+				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
-				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
@@ -946,10 +953,45 @@
 			return $results;
 		}
 
+
+		private function _get_dir_contents( $dir, &$results = array() )
+		{
+			$content		 = scandir($dir);
+			$patrones		 = array('(\\/)', '(\\\\)', '(")');
+			$sustituciones	 = array('_', '_', '_');
+
+			foreach ($content as $key => $value)
+			{
+				$path = realpath($dir . '/' . $value);
+				if (is_file($path))
+				{
+					$path_relative	 = substr($dir, strlen($this->order_path_dir));
+
+					if($path_relative == 'metadata' && $value == 'metadata.json')
+					{
+						continue;
+					}
+
+					$results[] = array(
+						'file_name'				 => $value,
+						'path_string'			 => preg_replace($patrones, $sustituciones, $path),
+						'path_absolute'			 => $path,
+						'path_relative'			 => $path_relative,
+						'path_relative_filename' => "{$path_relative}/{$value}"
+					);
+				}
+				else if ($value != "." && $value != "..")
+				{
+					$this->_get_dir_contents($path, $results);
+				}
+			}
+
+			return $results;
+		}
+
 		public function handle_import_files()
 		{
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir))
 			{
 				return false;
 			}
@@ -957,9 +999,10 @@
 			phpgw::import_class('property.multiuploader');
 
 			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			$zipped  = phpgw::get_var('zipped', 'bool');
 
 			$options = array();
-			$options['upload_dir']	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+			$options['upload_dir']	 = $this->order_path_dir;
 			$options['script_url']	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.handle_import_files'));
 
 			if(!$order_id)
@@ -978,7 +1021,37 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			$upload_handler			 = new property_multiuploader($options, true);
+			if ($zipped)
+			{
+				$options['accept_file_types'] = '/\.(zip|rar)$/i';
+
+				$error_messages = array(
+				   1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+				   2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+				   3 => 'The uploaded file was only partially uploaded',
+				   4 => 'No file was uploaded',
+				   6 => 'Missing a temporary folder',
+				   7 => 'Failed to write file to disk',
+				   8 => 'A PHP extension stopped the file upload',
+				   'post_max_size' => 'The uploaded file exceeds the post_max_size directive in php.ini',
+				   'max_file_size' => 'File is too big',
+				   'min_file_size' => 'File is too small',
+				   'accept_file_types' => lang('The file extension should be zip or rar'),
+				   'max_number_of_files' => 'Maximum number of files exceeded',
+				   'max_width' => 'Image exceeds maximum width',
+				   'min_width' => 'Image requires a minimum width',
+				   'max_height' => 'Image exceeds maximum height',
+				   'min_height' => 'Image requires a minimum height',
+				   'abort' => 'File upload aborted',
+				   'image_resize' => 'Failed to resize image'
+			   );
+			}
+			else
+			{
+				$error_messages = null;
+			}
+
+			$upload_handler			 = new property_multiuploader($options, true, $error_messages);
 		}
 
 		private function check_upload_dir($order_id)
@@ -1182,15 +1255,12 @@
 			}
 
 			$file_tags = $this->_get_metadata($order_id);
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir))
 			{
 				return false;
 			}
 
-			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
-
-			$list_files = $this->_get_files($path_dir);
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
 
 			$total_records = count($list_files);
 
@@ -1207,9 +1277,9 @@
 				);
 				$_SESSION['import_progress'] = $progress;
 
-				$current_tag = $file_tags[$file_info['file_name']];
+				$current_tag = $file_tags[$file_info['path_relative_filename']];
 
-				if(isset($file_tags[$file_info['file_name']]) && empty($current_tag['import_ok'])
+				if(isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok'])
 
 					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
 				{
@@ -1219,11 +1289,11 @@
 					}
 					if($import_document_files->process_file( $file_info, $current_tag))
 					{
-						$file_tags[$file_info['file_name']]['import_ok'] = date('Y-m-d H:i:s');
+						$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
 					}
 					else
 					{
-						$file_tags[$file_info['file_name']]['import_failed'] = date('Y-m-d H:i:s');
+						$file_tags[$file_info['path_relative_filename']]['import_failed'] = date('Y-m-d H:i:s');
 					}
 
 					$this->_set_metadata($order_id, $file_tags);
@@ -1265,38 +1335,33 @@
 			}
 
 			$file_tags = $this->_get_metadata($order_id);
-			$path_upload_dir = $this->path_upload_dir;
-			if (empty($path_upload_dir))
+			if (empty($this->path_upload_dir))
 			{
 				return false;
 			}
 
-			$path_dir	 = rtrim($path_upload_dir, '/') . "/{$order_id}/";
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
 
-			$list_files = $this->_get_files($path_dir);
-
-
-			if(is_dir($path_dir) && $list_files)
+			if(is_dir($this->order_path_dir) && $list_files)
 			{
 				try
 				{
-					$this->delete_files(rtrim($path_dir, '/'));
+					$this->delete_files(rtrim($this->order_path_dir, '/'));
 				}
 				catch (Exception $ex)
 				{
 					return array(
 						'status' => 'error',
 						'number_of_files' => count($list_files),
-						'path_dir' => $path_dir
+						'path_dir' => $this->order_path_dir
 					);
 				}
 			}
 
-
 			return array(
 				'status' => 'ok',
 				'number_of_files' => count($list_files),
-				'path_dir' => $path_dir
+				'path_dir' => $this->order_path_dir
 			);
 		}
 
@@ -1321,5 +1386,147 @@
 			{
 				unlink($target);
 			}
+		}
+
+		function unzip_files ()
+		{
+			if(!$order_id)
+			{
+				$order_id = phpgw::get_var('order_id', 'int');
+			}
+
+			$secret = phpgw::get_var('secret');
+
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			$custom_frontend = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? true : false;
+
+			if($custom_frontend && !$this->acl_manage)
+			{
+				if($secret != $order_type['secret'])
+				{
+					return array(
+						'status'		=> 'error',
+						'error'			 => 'Ikke gylding nøkkel for dette bestillingsnrummeret',
+						'error_type'	 => 'secret'
+					);
+				}
+			}
+
+			$list_files = array();
+
+			if (empty($this->path_upload_dir))
+			{
+				return false;
+			}
+
+			$compressed_file_name = phpgw::get_var('compressed_file_name', 'raw');
+
+			$path_file = $this->order_path_dir . $compressed_file_name;
+
+
+			if (!is_file($path_file))
+			{
+					return array(
+						'status'		 => 'error',
+						'error'			 => lang('File %1 not exist', basename($path_file)),
+						'error_type'	 => ''
+					);
+			}
+
+			if (!$this->_uncompresed_file($path_file))
+			{
+				return array(
+					'status' => 'error',
+					'error'	 => lang('File %1 did not uncompress', basename($path_file)),
+					);
+			}
+
+			return array(
+				'status' => 'ok'
+				);
+		}
+
+		private function _uncompresed_file( $path_file )
+		{
+			$info		 = pathinfo($path_file);
+			$path_dir	 = $info['dirname'];
+			$result		 = true;
+
+			if (!in_array($info['extension'], array('zip', 'rar')))
+			{
+				$this->receipt['error'][] = array('msg' => lang('The file extension should be zip or rar'));
+				return false;
+			}
+
+			if ($info['extension'] == 'zip')
+			{
+				$result = $this->_un_zip($path_file, $path_dir);
+			}
+			else if ($info['extension'] == 'rar')
+			{
+				$result = $this->_un_rar($path_file, $path_dir);
+			}
+
+			return $result;
+		}
+
+		private function _un_zip( $file, $dir )
+		{
+			@set_time_limit(5 * 60);
+
+			$zip = new ZipArchive;
+			if ($zip->open($file) === TRUE)
+			{
+				for ($i = 0; $i < $zip->numFiles; $i++)
+				{
+//					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
+					$file_name	 = str_replace('..', '.', $zip->getNameIndex($i));
+					$copy_to	 = $dir . '/' . $file_name;
+					if (!is_dir(dirname($copy_to)))
+					{
+						mkdir(dirname($copy_to), 0777, true);
+					}
+					copy("zip://" . $file . "#" . $zip->getNameIndex($i), "{$copy_to}");
+				}
+				$zip->close();
+
+				unlink($file);
+
+				return true;
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
+				return false;
+			}
+		}
+
+		private function _un_rar( $file, $dir )
+		{
+			@set_time_limit(5 * 60);
+
+			$archive = RarArchive::open($file);
+			if ($archive === FALSE)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
+				return false;
+			}
+
+			$entries = $archive->getEntries();
+			foreach ($entries as $entry)
+			{
+				$file_name	 = str_replace('..', '.', $entry->getName());
+				$copy_to	 = $dir . '/' . $file_name;
+				if (!is_dir(dirname($copy_to)))
+				{
+					mkdir(dirname($copy_to), 0777, true);
+				}
+				copy("rar://" . $file . "#" . $entry->getName(), "{$copy_to}");
+			}
+			$archive->close();
+			unlink($file);
+
+			return true;
 		}
 	}
