@@ -490,7 +490,7 @@
 				$list_files = $this->_get_dir_contents($this->order_path_dir);
 				foreach ($list_files as $file_info)
 				{
-					$file_name = $file_info['file_name'];
+					$file_name = $file_info['path_relative_filename'];
 
 					if(!empty($file_tags[$file_name]['import_ok']))
 					{
@@ -603,7 +603,7 @@
 			$files_def = array
 			(
 				array('key'		 => 'file_link',
-					'label'		 => lang('file'),
+					'label'		 => lang('filename'),
 					'sortable'	 => true,
 					'resizeable' => true
 					),
@@ -625,11 +625,11 @@
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
-					array('key'		 => 'select',
-						'label'		 => '',
-						'sortable'	 => false,
-						'className'	 => 'center',
-					)
+//				array('key'		 => 'select',
+//					'label'		 => '',
+//					'sortable'	 => false,
+//					'className'	 => 'center',
+//				)
 				);
 
 
@@ -726,9 +726,10 @@
 					array('disablePagination' => true),
 					array('disableFilter' => true),
 					array('scrollX' => false),
-					array('scrollY' => 300),
-	//				array('fixedColumns' => true),
-					array('fixedColumns' => json_encode(array('leftColumns' => 1))),
+					array('singleSelect' => true),
+//					array('scrollY' => 800),
+//					array('fixedColumns' => true),
+//					array('fixedColumns' => json_encode(array('leftColumns' => 1))),
 					array('order' => json_encode(array('0', 'asc')))
 				)
 			);
@@ -808,6 +809,7 @@
 				$file_info['document_category_validate'] =  empty($file_tags[$file_name]['document_category']) ? false : true;
 				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
 				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
+				unset($file_info['path_absolute']);
 				if($debug)
 				{
 					$file_info['import_ok_validate'] = false;
@@ -909,6 +911,7 @@
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
 				$file_info['import_ok'] = isset($file_tags[$file_name]['import_ok']) ? $file_tags[$file_name]['import_ok'] : '';
 				$file_info['import_failed'] = isset($file_tags[$file_name]['import_failed']) ? $file_tags[$file_name]['import_failed'] : '';
+				unset($file_info['path_absolute']);
 			}
 
 			$total_records = count($list_files);
@@ -1270,12 +1273,12 @@
 
 			foreach ($list_files as $file_info)
 			{
-				$progress = array(
-					'success' => true,
-					'percent' => ($i/$total_records) * 100,
-					'done'	  => $total_records == $i
-				);
-				$_SESSION['import_progress'] = $progress;
+//				$progress = array(
+//					'success' => true,
+//					'percent' => ($i/$total_records) * 100,
+//					'done'	  => $total_records == $i
+//				);
+//				$_SESSION['import_progress'] = $progress;
 
 				$current_tag = $file_tags[$file_info['path_relative_filename']];
 
@@ -1302,7 +1305,7 @@
 				$i++;
 			}
 
-			unset($_SESSION['import_progress']);
+//			unset($_SESSION['import_progress']);
 
 			return array(
 					'status' => 'finished',
@@ -1390,10 +1393,8 @@
 
 		function unzip_files ()
 		{
-			if(!$order_id)
-			{
-				$order_id = phpgw::get_var('order_id', 'int');
-			}
+
+			$order_id = phpgw::get_var('order_id', 'int');
 
 			$secret = phpgw::get_var('secret');
 
@@ -1481,7 +1482,7 @@
 				for ($i = 0; $i < $zip->numFiles; $i++)
 				{
 //					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
-					$file_name	 = str_replace('..', '.', $zip->getNameIndex($i));
+					$file_name	 = str_replace(array('..', '¢', '¥'), array('.', 'ø', 'Ø'), $zip->getNameIndex($i));
 					$copy_to	 = $dir . '/' . $file_name;
 					if (!is_dir(dirname($copy_to)))
 					{

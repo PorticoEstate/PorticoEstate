@@ -4,8 +4,6 @@
 $(document).ready(function ()
 {
 	'use strict';
-	var order_id = $('#order_id').val();
-	var secret = $("#secret").val();
 	//Initialize the jQuery File Upload widget:
 	$('#fileupload_zip').fileupload({
 		limitConcurrentUploads: 1,
@@ -61,11 +59,11 @@ $(document).ready(function ()
 				try
 				{
 					$.when(
-						$.get(phpGWLink('index.php', {menuaction: 'property.uiimport_documents.unzip_files', order_id: order_id, secret: secret, compressed_file_name: data.result.files[0].name}, true), function (data)
+						$.get(phpGWLink('index.php', {menuaction: 'property.uiimport_documents.unzip_files', order_id: $('#order_id').val(), secret: $("#secret").val(), compressed_file_name: data.result.files[0].name}, true), function (data)
 						{
-							if(data)
+							if (data)
 							{
-								if(data.status=='ok')
+								if (data.status == 'ok')
 								{
 									refresh_files();
 								}
@@ -180,7 +178,7 @@ this.onActionsClick_files = function (action, files)
 };
 function set_tab(active_tab)
 {
-	$($.fn.dataTable.tables(true)).DataTable().draw();
+	//	$($.fn.dataTable.tables(true)).DataTable().draw();
 }
 
 
@@ -192,8 +190,8 @@ this.refresh_files = function (show_all_columns)
 	var oArgs = {menuaction: 'property.uiimport_documents.get_files', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable0, requestUrl);
-	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
-		.fixedColumns().relayout().draw();
+//	$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
+//		.fixedColumns().relayout().draw();
 	$('#step_2_next').hide();
 	$('#step_2_import_validate_next').hide();
 	$("#message0").hide();
@@ -222,6 +220,7 @@ this.local_DrawCallback0 = function (container)
 };
 this.get_order_info = function ()
 {
+	$("#validate_step_1").prop("disabled", false);
 	var order_id = $("#order_id").val();
 	var secret = $("#secret").val();
 //	alert(order_id);
@@ -281,12 +280,17 @@ this.get_order_info = function ()
 			{
 			}
 
-			refresh_files();
+//			refresh_files();
 		}
 	});
 };
 this.validate_step_1 = function ()
 {
+//	window.setTimeout(function ()
+//	{
+		$("#validate_step_1").prop("disabled", true);
+//	}, 5);
+
 	var cadastral_unit = $("#cadastral_unit").val();
 	var location_code = $("#location_code").val();
 	var building_number = $("#building_number").val();
@@ -313,6 +317,7 @@ this.validate_step_1 = function ()
 	{
 		$("#message_step_1").html($html.join('<br/>')).show();
 		$("#message_step_1").addClass('error');
+//		$("#validate_step_1").prop("disabled", false);
 	}
 	else
 	{
@@ -320,8 +325,7 @@ this.validate_step_1 = function ()
 		$("#message_step_1").removeClass('error');
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
-		$($.fn.dataTable.tables(true)).DataTable().scroller.measure().columns.adjust()
-			.fixedColumns().relayout().draw();
+		refresh_files();
 	}
 };
 this.validate_step_2 = function (sub_step)

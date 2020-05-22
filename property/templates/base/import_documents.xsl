@@ -102,16 +102,16 @@
 			</div>
 			<div id="step_2" style="display:none;">
 				<h1>2) laste opp alle dokumentene til venterommet</h1>
-				<h3 id="select_upload_alternative_1">
-					<input type="radio" name = "upload_alternative"></input> Alternativ 1: laste opp alle dokumentene som en pakket fil (ZIP eller RAR)</h3>
-				<h3 id="select_upload_alternative_2">
-					<input  type="radio" name = "upload_alternative"></input> Alternativ 2: laste opp alle dokumentene fra samme katalog</h3>
+				<p id="select_upload_alternative_1">
+					<input type="radio" name = "upload_alternative"></input> Alternativ 1: laste opp alle dokumentene som en pakket fil (ZIP eller RAR)</p>
+				<p id="select_upload_alternative_2">
+					<input  type="radio" name = "upload_alternative"></input> Alternativ 2: laste opp alle dokumentene fra samme katalog</p>
 
 				<fieldset  class="pure-form pure-form-aligned">
 					<div id="upload_alternative_1" class="pure-form pure-form-aligned" style="display:none">
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'upload zipped files')"/>
+								<xsl:value-of select="php:function('lang', 'compressed')"/> (zip, rar)
 							</label>
 							<input type="file" id="fileupload_zip" class="pure-input-3-4"></input>
 							<div class="content_upload_download" id="content_upload_zip"></div>
@@ -178,10 +178,7 @@
 					<div class="pure-control-group">
 						<div id="message_step_2" class='error' style="display:none; width:80%;"/>
 						<img src="{image_loader}" class="processing-import" style="display:none;"></img>
-						<label>
-							<xsl:value-of select="php:function('lang', 'files')"/>
-						</label>
-						<div class="pure-custom pure-u-md-3-4" >
+						<div class="pure-input-1" >
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_0'">
 									<xsl:call-template name="table_setup">
