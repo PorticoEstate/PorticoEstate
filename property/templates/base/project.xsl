@@ -1206,7 +1206,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'dimb')"/>
 						</label>
-						<select name="ecodimb">
+						<select name="ecodimb" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
@@ -1220,7 +1220,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_coordinator"/>
 						</label>
-						<select name="coordinator">
+						<select name="coordinator" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select user')"/>
 							</xsl:attribute>
@@ -1234,7 +1234,7 @@
 						<label for="new_coordinator">
 							<xsl:value-of select="lang_new_coordinator"/>
 						</label>
-						<select name="new_coordinator">
+						<select name="new_coordinator" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select user')"/>
 							</xsl:attribute>
@@ -1252,7 +1252,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'type')"/>
 						</label>
-						<select name="type" onChange="this.form.submit();">
+						<select name="type" onChange="this.form.submit();" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select type')"/>
 							</xsl:attribute>
@@ -1263,7 +1263,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'status filter')"/>
 						</label>
-						<select name="status_filter">
+						<select name="status_filter" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select status')"/>
 							</xsl:attribute>
@@ -1277,7 +1277,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'status new')"/>
 						</label>
-						<select name="status_new">
+						<select name="status_new" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select status')"/>
 							</xsl:attribute>
@@ -1291,7 +1291,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'transfer budget')"/>
 						</label>
-						<select name="transfer_budget">
+						<select name="transfer_budget" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'transfer budget')"/>
 							</xsl:attribute>
