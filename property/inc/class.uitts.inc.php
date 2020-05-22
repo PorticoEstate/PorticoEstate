@@ -4830,7 +4830,7 @@ JS;
 			$body	 .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>';
 			$body	 .= '</br>';
-//			$body	 .= '<a href ="' . $documentation_url . '">' . lang('import documents') . ' #' . $ticket['order_id'] . '</a>';
+			$body	 .= '<a href ="' . $documentation_url . '">' . lang('import documents') . ' #' . $ticket['order_id'] . '</a>';
 			$html	 .= "<body><div style='width: 800px;'>{$body}";
 
 			if(!empty($this->bo->config->config_data['order_footer_header']))
