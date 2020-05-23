@@ -340,7 +340,7 @@
 			$location_code= phpgw::get_var('location_code', 'string');
 			$building_number= phpgw::get_var('building_number', 'string');
 			$remark= phpgw::get_var('remark', 'string');
-
+			$remark_detail= phpgw::get_var('remark_detail', 'string');
 
 			if(!$order_id)
 			{
@@ -400,6 +400,10 @@
 					{
 						continue;
 					}
+					if($remark_detail)
+					{
+						$file_tags[$file_name]['remark_detail'] = $remark_detail;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -445,6 +449,10 @@
 					if(!empty($file_tags[$file_name]['import_ok']))
 					{
 						continue;
+					}
+					if($remark_detail)
+					{
+						$file_tags[$file_name]['remark_detail'] = '';
 					}
 					if($document_category)
 					{
@@ -604,6 +612,11 @@
 			(
 				array('key'		 => 'file_link',
 					'label'		 => lang('filename'),
+					'sortable'	 => true,
+					'resizeable' => true
+					),
+				array('key'		 => 'remark_detail',
+					'label'		 => lang('remark'),
 					'sortable'	 => true,
 					'resizeable' => true
 					),
@@ -803,6 +816,7 @@
 				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
 				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
 				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
@@ -905,7 +919,8 @@
 				$file_name = $file_info['path_relative_filename'];
 				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
-				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";				
+				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();

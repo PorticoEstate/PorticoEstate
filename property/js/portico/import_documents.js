@@ -137,12 +137,13 @@ this.onActionsClick_files = function (action, files)
 
 	var order_id = $('#order_id').val();
 	var secret = $("#secret").val();
+	var remark_detail = $('#remark_detail').val();
 	var document_category = $('#document_category option:selected').toArray().map(item => item.text);
 	var branch = $('#branch option:selected').toArray().map(item => item.text);
 	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
 	if (action !== 'delete_file')
 	{
-		if (!document_category.length && !branch.length && !building_part.length)
+		if (!remark_detail && !document_category.length && !branch.length && !building_part.length)
 		{
 			alert('ingenting valgt');
 			return false;
@@ -153,7 +154,7 @@ this.onActionsClick_files = function (action, files)
 		type: 'POST',
 		dataType: 'json',
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
-		data: {files: files, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
+		data: {files: files, remark_detail:remark_detail, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
 		success: function (data)
 		{
 			if (data !== null)
@@ -468,6 +469,7 @@ this.move_to_step_3 = function ()
 {
 	$('#tab-content').responsiveTabs('enable', 2);
 	$('#tab-content').responsiveTabs('activate', 2);
+	$(window).scrollTop(0);
 };
 this.step_3_clean_up = function ()
 {
