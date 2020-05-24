@@ -131,6 +131,13 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'remark')"/>
+						</label>
+
+						<input id="remark_detail" class="pure-input-3-4"></input>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'document categories')"/>
 						</label>
 

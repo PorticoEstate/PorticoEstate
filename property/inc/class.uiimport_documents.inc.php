@@ -64,6 +64,7 @@
 			'download'						 => true,
 			'get_files'						 => true,
 			'update_file_data'				 => true,
+			'update_common'					 => true,
 			'get_order_info'				 => true,
 			'validate_info'					 => true,
 			'step_1_import'					 => true,
@@ -123,6 +124,68 @@
 
 		public function download()
 		{
+			if(!$order_id)
+			{
+				$order_id = phpgw::get_var('order_id', 'int');
+			}
+
+			$secret = phpgw::get_var('secret');
+
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			$custom_frontend = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? true : false;
+
+			if($custom_frontend && !$this->acl_manage)
+			{
+				if($secret != $order_type['secret'])
+				{
+					return array(
+						'error'			 => 'Ikke gylding nøkkel for dette bestillingsnrummeret',
+						'error_type'	 => 'secret'
+					);
+				}
+			}
+
+
+			$file_tags = $this->_get_metadata($order_id);
+
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
+
+			$values = array();
+			foreach ($list_files as $file_info)
+			{
+
+				$entry = $file_tags[$file_info['path_relative_filename']];
+				$entry['file_name'] = $file_info['path_relative_filename'];
+				$entry['document_category'] = !empty($entry['document_category']) ? implode("\n", $entry['document_category']) : '';
+				$entry['branch'] = !empty($entry['branch']) ? implode("\n", $entry['branch']) : '';
+				$entry['building_part'] = !empty($entry['building_part']) ? implode("\n", $entry['building_part']) : '';
+
+				$values[] = $entry;
+
+			}
+
+			$name = array();
+			$name[]	 = 'cadastral_unit';
+			$name[]	 = 'building_number';
+			$name[]	 = 'location_code';
+			$name[]	 = 'branch';
+			$name[]	 = 'building_part';
+			$name[]	 = 'document_category';
+			$name[]	 = 'remark';
+			$name[]	 = 'remark_detail';
+			$name[]	 = 'file_name';
+			$name[]	 = 'import_ok';
+			$name[]	 = 'import_failed';
+
+			$descr = array();
+			foreach ($name as $_entry)
+			{
+				$descr[] = lang(str_replace('_', ' ', $_entry));
+			}
+
+			$this->bocommon->download($values, $name, $descr);
+
 		}
 
 		private function _msg_data( $receipt )
@@ -309,7 +372,7 @@
 			$file_name = $this->_get_metadata_file_name( $order_id );
 			$fp	= fopen($file_name, 'w');
 			fputs($fp, json_encode($metadata));
-			fclose($fp);
+			return fclose($fp);
 		}
 
 		private function _get_metadata( $order_id )
@@ -336,11 +399,7 @@
 			$branch= phpgw::get_var('branch', 'string');
 			$building_part= phpgw::get_var('building_part', 'string');
 			$order_id = phpgw::get_var('order_id', 'int');
-			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
-			$location_code= phpgw::get_var('location_code', 'string');
-			$building_number= phpgw::get_var('building_number', 'string');
-			$remark= phpgw::get_var('remark', 'string');
-
+			$remark_detail= phpgw::get_var('remark_detail', 'string');
 
 			if(!$order_id)
 			{
@@ -400,6 +459,10 @@
 					{
 						continue;
 					}
+					if($remark_detail)
+					{
+						$file_tags[$file_name]['remark_detail'] = $remark_detail;
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -446,6 +509,10 @@
 					{
 						continue;
 					}
+					if($remark_detail)
+					{
+						$file_tags[$file_name]['remark_detail'] = '';
+					}
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -485,42 +552,73 @@
 
 			}
 
-			else if($action == 'set_tag' && ($cadastral_unit || $location_code || $building_number || $remark))
+			return $action;
+		}
+
+		public function update_common()
+		{
+			if(!$this->acl_edit)
 			{
-				$list_files = $this->_get_dir_contents($this->order_path_dir);
-				foreach ($list_files as $file_info)
-				{
-					$file_name = $file_info['path_relative_filename'];
-
-					if(!empty($file_tags[$file_name]['import_ok']))
-					{
-						continue;
-					}
-
-					if($cadastral_unit)
-					{
-						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
-					}
-					if($location_code)
-					{
-							$file_tags[$file_name]['location_code'] = $location_code;
-					}
-					if($building_number)
-					{
-						$file_tags[$file_name]['building_number'] = $building_number;
-					}
-					if($remark)
-					{
-						$file_tags[$file_name]['remark'] = $remark;
-					}
-				}
-
-				$this->_set_metadata($order_id, $file_tags);
+				phpgw::no_access();
 			}
 
+			$order_id = phpgw::get_var('order_id', 'int');
+			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
+			$location_code= phpgw::get_var('location_code', 'string');
+			$building_number= phpgw::get_var('building_number', 'string');
+			$remark= phpgw::get_var('remark', 'string');
 
-			return $action;
+			if(!$order_id)
+			{
+				return;
+			}
 
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			$custom_frontend = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? true : false;
+
+			if($custom_frontend && !$this->acl_manage)
+			{
+				$secret = phpgw::get_var('secret');
+				if($secret != $order_type['secret'])
+				{
+					return array(
+						'error'			 => 'Ikke gylding nøkkel for dette bestillingsnrummeret',
+						'error_type'	 => 'secret'
+					);
+				}
+			}
+
+			$file_tags = $this->_get_metadata($order_id);
+			$list_files = $this->_get_dir_contents($this->order_path_dir);
+			foreach ($list_files as $file_info)
+			{
+				$file_name = $file_info['path_relative_filename'];
+
+				if(!empty($file_tags[$file_name]['import_ok']))
+				{
+					continue;
+				}
+
+				if($cadastral_unit)
+				{
+					$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
+				}
+				if($location_code)
+				{
+					$file_tags[$file_name]['location_code'] = $location_code;
+				}
+				if($building_number)
+				{
+					$file_tags[$file_name]['building_number'] = $building_number;
+				}
+				if($remark)
+				{
+					$file_tags[$file_name]['remark'] = $remark;
+				}
+			}
+
+			return $this->_set_metadata($order_id, $file_tags);
 		}
 
 		public function index()
@@ -607,6 +705,11 @@
 					'sortable'	 => true,
 					'resizeable' => true
 					),
+				array('key'		 => 'remark_detail',
+					'label'		 => lang('remark'),
+					'sortable'	 => true,
+					'resizeable' => true
+					),
 				array('key' => 'document_category',
 					'label' => lang('document categories'),
 					'sortable' => true,
@@ -660,6 +763,16 @@
 					'label'	 => lang('set tag'),
 					'funct'	 => 'onActionsClick_files',
 					'classname'	=> '',
+					'value_hidden'	 => ""
+					),
+				array(
+					'action' => 'download',
+					'type'	 => 'buttons',
+					'name'	 => 'download_custom',
+					'icon'	=> '<i class="fas fa-download"></i>',
+					'label'	 => lang('download'),
+					'funct'	 => 'download',
+					'classname'	=> 'enabled',
 					'value_hidden'	 => ""
 					),
 				array(
@@ -803,6 +916,7 @@
 				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
 				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
 				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
@@ -906,6 +1020,7 @@
 				$encoded_file_name = urlencode($file_name);
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
 				$file_info['building_part'] = isset($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : array();
