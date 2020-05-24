@@ -31,7 +31,6 @@ $(document).ready(function ()
 				try
 				{
 					refresh_files();
-
 				}
 				catch (e)
 				{
@@ -55,7 +54,7 @@ $(document).ready(function ()
 				window.setTimeout(function ()
 				{
 					data.context.remove();
-				}, 500);
+				}, 1000);
 				try
 				{
 					$.when(
@@ -154,7 +153,7 @@ this.onActionsClick_files = function (action, files)
 		type: 'POST',
 		dataType: 'json',
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
-		data: {files: files, remark_detail:remark_detail, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
+		data: {files: files, remark_detail: remark_detail, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
 		success: function (data)
 		{
 			if (data !== null)
@@ -218,6 +217,8 @@ this.local_DrawCallback0 = function (container)
 	{
 		$('#step_2_validate').show();
 	}
+	update_common();
+
 };
 this.get_order_info = function ()
 {
@@ -285,11 +286,35 @@ this.get_order_info = function ()
 		}
 	});
 };
+
+this.update_common = function ()
+{
+	var order_id = $("#order_id").val();
+	var secret = $("#secret").val();
+	var cadastral_unit = $("#cadastral_unit").val();
+	var location_code = $("#location_code").val();
+	var building_number = $("#building_number").val();
+	var remark = $("#remark").val();
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id, secret: secret},
+		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_common'}, true),
+		success: function (data)
+		{
+			if (data != null)
+			{
+			}
+		}
+	});
+
+};
+
 this.validate_step_1 = function ()
 {
 //	window.setTimeout(function ()
 //	{
-		$("#validate_step_1").prop("disabled", true);
+	$("#validate_step_1").prop("disabled", true);
 //	}, 5);
 
 	var cadastral_unit = $("#cadastral_unit").val();
@@ -336,22 +361,7 @@ this.validate_step_2 = function (sub_step)
 	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
-	var cadastral_unit = $("#cadastral_unit").val();
-	var location_code = $("#location_code").val();
-	var building_number = $("#building_number").val();
-	var remark = $("#remark").val();
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id, secret: secret},
-		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
-		success: function (data)
-		{
-			if (data != null)
-			{
-			}
-		}
-	});
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -410,6 +420,7 @@ this.validate_step_2 = function (sub_step)
 	$('#step_2_view_all').show();
 	$(window).scrollTop(0);
 };
+
 this.step_2_import = function ()
 {
 
@@ -465,6 +476,22 @@ this.get_progress = function ()
 
 	});
 };
+
+
+this.download = function ()
+{
+	var order_id = $("#order_id").val();
+	var secret = $("#secret").val();
+
+	var oArgs = {menuaction: 'property.uiimport_documents.download', order_id: order_id, secret: secret};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var iframe = document.createElement('iframe');
+	iframe.style.height = "0px";
+	iframe.style.width = "0px";
+	iframe.src = requestUrl;
+	document.body.appendChild(iframe);
+};
+
 this.move_to_step_3 = function ()
 {
 	$('#tab-content').responsiveTabs('enable', 2);
