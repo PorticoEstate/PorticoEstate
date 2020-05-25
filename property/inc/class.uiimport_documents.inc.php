@@ -761,6 +761,16 @@
 			$buttons = array
 			(
 				array(
+					'action' => 'filter_tag',
+					'type'	 => 'buttons',
+					'name'	 => 'filter_tag',
+					'icon'	 => '<i class="fas fa-filter"></i>',
+					'label'	 => lang('filter tag'),
+					'funct'	 => 'onActionsClick_filter_files',
+					'classname'	=> 'enabled',
+					'value_hidden'	 => ""
+					),
+				array(
 					'action' => 'set_tag',
 					'type'	 => 'buttons',
 					'name'	 => 'set_tag',
@@ -1013,7 +1023,9 @@
 
 			$order_id = phpgw::get_var('order_id', 'int');
 
-			$options = array();
+			$filter_document_category	 = phpgw::get_var('filter_document_category');
+			$filter_branch				 = phpgw::get_var('filter_branch');
+			$filter_building_part		 = phpgw::get_var('filter_building_part');
 
 			$list_files = $this->_get_dir_contents($this->order_path_dir);
 			$_duplicates = array();
@@ -1032,9 +1044,24 @@
 			$lang_view = lang('click to view file');
 
 			$file_tags = $this->_get_metadata($order_id);
-			foreach ($list_files as &$file_info)
+			$values = array();
+			foreach ($list_files as $file_info)
 			{
 				$file_name = $file_info['path_relative_filename'];
+
+				if($filter_document_category && !array_intersect($filter_document_category, $file_tags[$file_name]['document_category']))
+				{
+					continue;
+				}
+				if($filter_branch && !array_intersect($filter_branch, $file_tags[$file_name]['branch']))
+				{
+					continue;
+				}
+				if($filter_building_part && !array_intersect($filter_building_part, $file_tags[$file_name]['building_part']))
+				{
+					continue;
+				}
+
 				$encoded_file_name = urlencode($file_name);
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
@@ -1046,13 +1073,14 @@
 				$file_info['import_ok'] = isset($file_tags[$file_name]['import_ok']) ? $file_tags[$file_name]['import_ok'] : '';
 				$file_info['import_failed'] = isset($file_tags[$file_name]['import_failed']) ? $file_tags[$file_name]['import_failed'] : '';
 				unset($file_info['path_absolute']);
+				$values[] = $file_info;
 			}
 
 			$total_records = count($list_files);
 
 			return array
 				(
-				'data'				 => $list_files,
+				'data'				 => $values,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
 				'recordsFiltered'	 => $total_records

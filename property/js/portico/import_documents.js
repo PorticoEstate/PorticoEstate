@@ -125,6 +125,33 @@ $(document).ready(function ()
 
 
 });
+
+this.onActionsClick_filter_files = function (action, ids)
+{
+	var order_id = $('#order_id').val();
+	var secret = $("#secret").val();
+	var document_category = $('#document_category option:selected').toArray().map(item => item.text);
+	var branch = $('#branch option:selected').toArray().map(item => item.text);
+	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
+
+	var oArgs = {menuaction: 'property.uiimport_documents.get_files', action: 'get_files', order_id: order_id, secret: secret};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	$.each(document_category, function (k, v)
+	{
+		requestUrl += '&filter_document_category[]=' + v;
+	});
+	$.each(branch, function (k, v)
+	{
+		requestUrl += '&filter_branch[]=' + v;
+	});
+	$.each(building_part, function (k, v)
+	{
+		requestUrl += '&filter_building_part[]=' + v;
+	});
+	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
+}
+
+
 this.onActionsClick_files = function (action, files)
 {
 	var numSelected = files.length;
