@@ -356,8 +356,7 @@
 			{
 				for ($i = 0; $i < $zip->numFiles; $i++)
 				{
-					//					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
-					$file_name	 = str_replace('..', '.', $zip->getNameIndex($i));
+					$file_name	 = str_replace(array('..', '¢', '¥'), array('.', 'ø', 'Ø'), $zip->getNameIndex($i));
 					$copy_to	 = $dir . '/' . $file_name;
 					if (!is_dir(dirname($copy_to)))
 					{
