@@ -738,6 +738,11 @@
 
 			if($this->role == self::ROLE_MANAGER)
 			{
+				$files_def[] = array('key' => 'duplicate',
+					'label' => lang('duplicate'),
+					'sortable' => true,
+					'resizeable' => true,
+					);
 				$files_def[] = array('key' => 'import_ok',
 					'label' => lang('import ok'),
 					'sortable' => true,
@@ -905,6 +910,12 @@
 			$lang_view = lang('click to view file');
 
 			$list_files = $this->_get_dir_contents($this->order_path_dir);
+			$_duplicates = array();
+			foreach ($list_files as $file_info)
+			{
+				$_duplicates[$file_info['file_name']] += 1;
+			}
+			unset($file_info);
 			$file_tags = $this->_get_metadata($order_id);
 			$lang_missing = lang('Missing value');
 			$error_list = array();
@@ -914,6 +925,7 @@
 			{
 				$file_name = $file_info['path_relative_filename'];
 				$encoded_file_name = urlencode($file_name);
+				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
@@ -1004,6 +1016,12 @@
 			$options = array();
 
 			$list_files = $this->_get_dir_contents($this->order_path_dir);
+			$_duplicates = array();
+			foreach ($list_files as $file_info)
+			{
+				$_duplicates[$file_info['file_name']] += 1;
+			}
+			unset($file_info);
 
 			$link_file_data = array
 			(
@@ -1018,6 +1036,7 @@
 			{
 				$file_name = $file_info['path_relative_filename'];
 				$encoded_file_name = urlencode($file_name);
+				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
@@ -1086,6 +1105,10 @@
 					$path_relative	 = substr($dir, strlen($this->order_path_dir));
 
 					if($path_relative == 'metadata' && $value == 'metadata.json')
+					{
+						continue;
+					}
+					if($path_relative == 'thumbnail')
 					{
 						continue;
 					}
