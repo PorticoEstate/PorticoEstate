@@ -370,7 +370,7 @@ this.validate_step_1 = function ()
 	{
 		$("#message_step_1").html($html.join('<br/>')).show();
 		$("#message_step_1").addClass('error');
-//		$("#validate_step_1").prop("disabled", false);
+		$("#validate_step_1").prop("disabled", false);
 	}
 	else
 	{
