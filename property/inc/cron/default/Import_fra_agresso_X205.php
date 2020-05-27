@@ -317,6 +317,7 @@
 			echo "okay: logged in...<br/>\n";
 
 			// Scan directory
+			$empty_files = array();
 			$files = array();
 			echo "Scanning {$directory_remote}<br/>\n";
 
@@ -357,6 +358,11 @@
 
 						$contents = $filesystem->read($file_name);
 
+						if(strlen($contents) == 0)
+						{
+							$empty_files[] = $file_name;
+						}
+
 						$fp = fopen($file_local, "wb");
 						fwrite($fp, $contents);
 
@@ -387,6 +393,36 @@
 					}
 				}
 			}
+
+			if($empty_files)
+			{
+				$subject = "Import fra Agresso: tomme filer detektert";
+
+				$body = '<p>Følgende filer er tomme:</p>';
+				$body .= implode('<br/>', $empty_files);
+
+				$from = "Ikke svar<IkkeSvar@nlsh.no>";
+
+				$toarray = array('hms506');
+
+				foreach ($toarray as $lid)
+				{
+					$prefs = $this->bocommon->create_preferences('common', $GLOBALS['phpgw']->accounts->name2id($lid));
+					if (isset($prefs['email']) && $prefs['email'])
+					{
+						try
+						{
+							$rc = $this->send->msg('email', $prefs['email'], $subject, $body, '', '', '', $from, '', 'html');
+						}
+						catch (Exception $e)
+						{
+							$this->receipt['error'][] = array('msg' => $e->getMessage());
+						}
+					}
+				}
+
+			}
+
 		}
 
 		protected function import( $file )
