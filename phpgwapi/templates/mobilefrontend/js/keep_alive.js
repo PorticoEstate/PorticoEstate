@@ -57,7 +57,10 @@ $(document).ready(function ()
 function keepAlive()
 {
 	var oArgs = {keep_alive: true};
-	var keep_alive_url = phpGWLink('home.php', oArgs, true);
+//	var keep_alive_url = phpGWLink('home.php', oArgs, true);
+
+	//test...
+	var keep_alive_url = 'https://allmenningen.bergen.kommune.no/';
 
 	$.ajax({
 		cache: false,
