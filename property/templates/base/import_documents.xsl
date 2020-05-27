@@ -200,8 +200,13 @@
 							</xsl:for-each>
 						</div>
 					</div>
+					<div id="validate_message"></div>
+					<div class="content_upload_download" id="import_status_wrapper" style="display:none;">
+						<p class="file" id="import_status_content">
+							<span id="status_value"></span>
+						</p>
+					</div>
 					<div class="pure-controls">
-						<div id="validate_message"></div>
 						<button type="button" id="step_2_validate" class="pure-button pure-button-primary" onClick="validate_step_2(0);" style="display:none;">
 							<xsl:value-of select="php:function('lang', 'validate')"/>
 						</button>

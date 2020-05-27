@@ -450,7 +450,7 @@ this.validate_step_2 = function (sub_step)
 
 this.step_2_import = function ()
 {
-
+	$('#import_status_wrapper').show();
 	$("#step_2_import").prop("disabled", true);
 	$("#step_2_validate").prop("disabled", true);
 	$("#step_2_view_all").prop("disabled", true);
@@ -466,44 +466,33 @@ this.step_2_import = function ()
 		url: requestUrl,
 		success: function (data)
 		{
+			console.log(data);
 			if (data != null)
 			{
-				console.log(data);
+				if(data.done)
+				{
+					refresh_files(true);
+					$("#step_2_import").prop("disabled", false);
+					$("#step_2_validate").prop("disabled", false);
+					$("#step_2_view_all").prop("disabled", false);
+					$('#step_2_import_validate').show();
+					$('.processing-import').hide();
+					$("#status_value").html('100 %');
+					$("#import_status_content").css("background-position-x", 0 + "%");
+				}
+				else
+				{
+					$("#import_status_content").css("background-position-x", 100 - data.percent + "%");
+					$("#status_value").html(parseInt(data.percent) + ' %');
+					//Next iteration
+					step_2_import();
+				}
+
 			}
-			refresh_files(true);
-			$("#step_2_import").prop("disabled", false);
-			$("#step_2_validate").prop("disabled", false);
-			$("#step_2_view_all").prop("disabled", false);
-			$('#step_2_import_validate').show();
-			$('.processing-import').hide();
 		}
 	});
-//	setTimeout(get_progress, 1000 /*1 second*/);
 
 };
-this.get_progress = function ()
-{
-	$.get(phpGWLink('index.php', {menuaction: 'property.uiimport_documents.get_progress'}, true), function (response)
-	{
-		console.log(response);
-		if (!response.success)
-		{
-//			alert('Cannot find progress');
-			return;
-		}
-		if (response.done)
-		{
-//			alert('Done!');
-		}
-		else
-		{
-//			alert('Progress at ' + response.precent + '%');
-			setTimeout(get_progress, 1000 /*1 second*/);
-		}
-
-	});
-};
-
 
 this.download = function ()
 {
