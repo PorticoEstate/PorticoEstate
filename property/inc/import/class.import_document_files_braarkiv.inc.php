@@ -425,6 +425,11 @@
 			$fileFag			 = (array)$file_tags['branch'];
 			$remark				 = $file_tags['remark'];
 
+			if(!empty($file_tags['remark_detail']))
+			{
+				$remark .= "; {$file_tags['remark_detail']}";
+			}
+
 			if (is_file($file))
 			{
 				try

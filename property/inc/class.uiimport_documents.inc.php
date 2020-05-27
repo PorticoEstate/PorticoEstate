@@ -71,7 +71,6 @@
 			'step_2_import'					 => true,
 			'step_3_clean_up'				 => true,
 			'view_file'						 => true,
-			'get_progress'					 => true,
 			'unzip_files'					 => true
 		);
 
@@ -1435,61 +1434,59 @@
 
 			$import_document_files = new import_document_files();
 
-			$i = 1;
+			$i = 0;
 
 			foreach ($list_files as $file_info)
 			{
-//				$progress = array(
-//					'success' => true,
-//					'percent' => ($i/$total_records) * 100,
-//					'done'	  => $total_records == $i
-//				);
-//				$_SESSION['import_progress'] = $progress;
+				$i++;
 
 				$current_tag = $file_tags[$file_info['path_relative_filename']];
 
-				if(isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok'])
-
-					&& ( $current_tag['document_category'] && $current_tag['branch']  && $current_tag['branch'] ) )
+				if (isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok']) && empty($current_tag['import_failed']))
 				{
-					if($this->debug)
+					if (empty($current_tag['import_ok']) && ( $current_tag['document_category'] && $current_tag['branch'] && $current_tag['branch'] ))
 					{
-						sleep(1);
-					}
-					if($import_document_files->process_file( $file_info, $current_tag))
-					{
-						$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
-					}
-					else
-					{
-						$file_tags[$file_info['path_relative_filename']]['import_failed'] = date('Y-m-d H:i:s');
+						if ($this->debug)
+						{
+							sleep(1);
+						}
+						if ($import_document_files->process_file($file_info, $current_tag))
+						{
+							$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
+						}
+						else
+						{
+							$file_tags[$file_info['path_relative_filename']]['import_failed'] = date('Y-m-d H:i:s');
+						}
+
+						$this->_set_metadata($order_id, $file_tags);
 					}
 
-					$this->_set_metadata($order_id, $file_tags);
+					$progress = array(
+						'success'	 => true,
+						'percent'	 => ($i / $total_records) * 100,
+						'done'		 => $total_records == $i
+					);
+
+					return $progress;
 				}
-
-				$i++;
 			}
 
-//			unset($_SESSION['import_progress']);
+			if ($i == $total_records)
+			{
+				return array(
+					'success'	 => true,
+					'percent'	 => 100,
+					'done'		 => true
+				);
+			}
 
 			return array(
-					'status' => 'finished',
-					'total_records' => $total_records,
-				);
+				'status'		 => 'strange',
+				'total_records'	 => $total_records,
+			);
 		}
 
-		public function get_progress( )
-		{
-			if(empty($_SESSION['import_progress']))
-			{
-				return array('success' => false);
-			}
-			else
-			{
-				return $_SESSION['import_progress'];
-			}
-		}
 
 		public function step_3_clean_up( )
 		{
@@ -1655,6 +1652,7 @@
 						mkdir(dirname($copy_to), 0777, true);
 					}
 					copy("zip://" . $file . "#" . $zip->getNameIndex($i), "{$copy_to}");
+					touch($copy_to, $zip->statIndex($i)['mtime']);
 				}
 				$zip->close();
 
@@ -1690,6 +1688,7 @@
 					mkdir(dirname($copy_to), 0777, true);
 				}
 				copy("rar://" . $file . "#" . $entry->getName(), "{$copy_to}");
+				touch($copy_to, strtotime($entry->getFileTime()));
 			}
 			$archive->close();
 			unlink($file);
