@@ -1494,7 +1494,7 @@
 				$this->fields_updated[] = 'status';
 				$this->historylog->add('R', $id, $new_status, $old_status);
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
-	//			$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
 			}
 
 			$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id=" . (int)$id, __LINE__, __FILE__);
