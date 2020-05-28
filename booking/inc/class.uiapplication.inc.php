@@ -1229,14 +1229,13 @@
 									$booking_boevent->so->update_id_string();
 									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 									$GLOBALS['phpgw']->db->transaction_commit();
+									$this->bo->send_notification($application);
 								}
 								else
 								{
 									$this->flash_form_errors($errors);
 									$GLOBALS['phpgw']->db->transaction_abort();
 								}
-
-								$this->bo->send_notification($application);
 							}
 							/**
 							 * End Direct booking
