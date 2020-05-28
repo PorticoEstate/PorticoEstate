@@ -11010,18 +11010,19 @@
 		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_orders", 'secret', array('type' => 'text', 'nullable' => true));
 		$GLOBALS['phpgw']->locations->add('.document.import', 'Document import', 'property', $allow_grant = false, $custom_tbl = false, $c_function = false);
 
-		$db->query("SELECT id FROM fm_orders");
-		$orders = array();
-		while ($db->next_record())
-		{
-			$orders[] = $db->f('id');
-		}
+//		$db->query("SELECT id FROM fm_orders");
+//		$orders = array();
+//		while ($db->next_record())
+//		{
+//			$orders[] = $db->f('id');
+//		}
 
-		foreach ($orders as $order_id)
-		{
-			$secret = bin2hex(random_bytes(16));
-			$db->query("UPDATE fm_orders SET secret = '{$secret}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
-		}
+//		foreach ($orders as $order_id)
+//		{
+//			$secret = bin2hex(random_bytes(16));
+//			$db->query("UPDATE fm_orders SET secret = '{$secret}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+//		}
+		$db->query("UPDATE fm_orders SET secret = id", __LINE__, __FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
