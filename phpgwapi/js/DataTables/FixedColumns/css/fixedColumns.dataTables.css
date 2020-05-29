@@ -16,3 +16,7 @@ div.DTFC_LeftWrapper table.dataTable.no-footer,
 div.DTFC_RightWrapper table.dataTable.no-footer {
   border-bottom: none;
 }
+
+table.dataTable.display tbody tr.DTFC_NoData {
+  background-color: transparent;
+}

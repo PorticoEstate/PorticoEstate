@@ -210,6 +210,13 @@ div.dt-buttons.buttons-right {
   float: right;
 }
 
+div.dataTables_layout_cell div.dt-buttons {
+  float: none;
+}
+div.dataTables_layout_cell div.dt-buttons.buttons-right {
+  float: none;
+}
+
 div.dt-button-collection {
   position: absolute;
   top: 0;
