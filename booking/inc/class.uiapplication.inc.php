@@ -689,6 +689,31 @@
 					$application['name'] = $application['description'] ;
 				}
 
+				/**
+				 * In rare case of refresh or double-click
+				 */
+				if ($GLOBALS['phpgw']->session->is_repost())
+				{
+					if ($is_partial1)
+					{
+						phpgwapi_cache::message_set(
+							lang("Complete application text booking") .
+							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("Complete applications") .
+							'</button>'
+						);
+						// Redirect to same URL so as to present a new, empty form
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+					}
+					else
+					{
+						$repost_add_application = 	phpgwapi_cache::session_get('booking', 'repost_add_application', $receipt['id']);
+						$application = $this->bo->read_single($repost_add_application);
+						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $repost_add_application,
+								'secret' => $application['secret']));
+					}
+				}
+
 				$errors = $this->validate($application);
 				if (!$session_id_ok)
 				{
@@ -796,6 +821,8 @@
 //						$this->flash(lang("Your application has now been registered and a confirmation email has been sent to you.")."<br />".
 //								 lang("A Case officer will review your application as soon as possible.")."<br />".
 //								 lang("Please check your Spam Filter if you are missing mail."));
+
+						phpgwapi_cache::session_set('booking', 'repost_add_application', $receipt['id']);
 						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
 							'secret' => $application['secret']));
 					}
