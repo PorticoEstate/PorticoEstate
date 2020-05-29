@@ -369,3 +369,13 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 	margin-bottom: 50px;
 	display: inline-block;
 }
+
+.dataTables_filter label
+{
+	display: inline !important;
+}
+
+input[type="search"] {
+	display: inline !important;
+	float:right;
+}

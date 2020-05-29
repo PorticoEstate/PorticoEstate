@@ -851,7 +851,7 @@
 				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disablePagination' => true),
-					array('disableFilter' => true),
+//					array('disableFilter' => true),
 					array('scrollX' => false),
 					array('singleSelect' => true),
 //					array('scrollY' => 800),
