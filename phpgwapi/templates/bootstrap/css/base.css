@@ -375,7 +375,6 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 	display: inline !important;
 }
 
-/*input[type="search"] {
-	display: inline !important;
+label > input[type="search"] {
 	float:right;
-}*/
+}
