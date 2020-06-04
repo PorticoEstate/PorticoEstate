@@ -2503,7 +2503,7 @@ JS;
 					'paid'),
 				'formatter'	 => array('', '', '', 'formatLinkIndexInvoice', '', ''),
 				'descr'		 => array(lang('District'), lang('Period'), lang('Budget account'),
-					lang('Consume'), lang('refund'), lang('paid')),
+					lang('Consume'), lang('refund') . ' (' . lang('tax') . ')', lang('paid')),
 				'className'	 => array('center', 'center', 'center', 'right', 'right', 'center')
 			);
 
