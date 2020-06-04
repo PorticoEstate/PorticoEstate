@@ -285,7 +285,6 @@ H5 EM {
 	display: inline !important;
 }
 
-/*input[type="search"] {
-	display: inline !important;
+label > input[type="search"] {
 	float:right;
-}*/
+}
