@@ -37,6 +37,11 @@
 
 		public function __construct($html = False, $translation = False)
 		{
+			ini_set('session.use_cookies', true);
+			/*
+			 * FIXME - do not take effect
+			 */
+			ini_set('session.cookie_samesite', 'Strict');
 			$this->detection = createObject('phpgwapi.setup_detection');
 			$this->process   = createObject('phpgwapi.setup_process');
 			$_translation    = &$this->process->translation;
