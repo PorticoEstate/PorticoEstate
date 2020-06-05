@@ -396,6 +396,7 @@
 
 			if($empty_files)
 			{
+				$this->receipt['error'][] = array('msg' => 'Følgende filer er tomme: ' . implode(',', $empty_files) );
 				$subject = "Import fra Agresso: tomme filer detektert";
 
 				$body = '<p>Følgende filer er tomme:</p>';
@@ -420,7 +421,6 @@
 						}
 					}
 				}
-
 			}
 
 		}
