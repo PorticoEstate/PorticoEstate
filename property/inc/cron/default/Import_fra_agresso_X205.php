@@ -404,7 +404,7 @@
 
 				$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
-				$toarray = array('hms506');
+				$toarray = array('hms506', 'sigurd');
 
 				foreach ($toarray as $lid)
 				{
