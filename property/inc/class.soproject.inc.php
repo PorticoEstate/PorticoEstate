@@ -1867,6 +1867,8 @@
 					}
 					unset($action_params);
 
+					$historylog->add('RM', $project['id'], "Godkjent beløp:" . (int)$total_budget + (int)$project['reserve']);
+
 					$this->approve_related_workorders($project['id']);
 				}
 
