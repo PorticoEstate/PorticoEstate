@@ -1837,6 +1837,7 @@
 					$this->db->next_record();
 					$total_budget = (int)$this->db->f('sum_budget');
 
+					$limit = (int)$total_budget + (int)$project['reserve'];
 					$action_params = array
 						(
 						'appname'			 => 'property',
@@ -1846,7 +1847,7 @@
 						'action'			 => 'approval',
 						'remark'			 => '',
 						'deadline'			 => '',
-						'data'				 => array('limit' => (int)$total_budget + (int)$project['reserve'] )
+						'data'				 => array('limit' => $limit )
 					);
 
 					$pending_action = createObject('property.sopending_action');
@@ -1866,6 +1867,8 @@
 						$pending_action->close_pending_action($action_params);
 					}
 					unset($action_params);
+
+					$historylog->add('RM', $project['id'], "Godkjent beløp: {$limit}");
 
 					$this->approve_related_workorders($project['id']);
 				}
@@ -2360,7 +2363,7 @@
 					$_vendor_list[] = $_vendor_id;
 				}
 			}
-			$this->vendor_list = $_vendor_list;
+			$this->vendor_list = array_unique($_vendor_list);
 
 			$soworkorder = CreateObject('property.soworkorder');
 

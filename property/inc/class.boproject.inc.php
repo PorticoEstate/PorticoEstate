@@ -640,7 +640,7 @@
 					}
 					if ($vendor_names)
 					{
-						$entry['vendor_names'] = implode(', ', $vendor_names);
+						$entry['vendor_names'] = implode(',<br/> ', $vendor_names);
 					}
 				}
 				if (!isset($data['skip_origin']) || !$data['skip_origin'])

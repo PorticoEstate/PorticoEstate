@@ -2209,6 +2209,16 @@ HTML;
 		protected function get_supervisor_approval( $supervisors, $order_id = 0, $project_id = 0, $amount = 0 )
 		{
 			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			$approval_level = !empty($this->config->config_data['approval_level']) ? $this->config->config_data['approval_level'] : 'order';
+
+			if($approval_level == 'project' && !$project_id && $order_id && $order_type['type'] == 'workorder')
+			{
+
+				$order_info = CreateObject('property.soworkorder')->read_single($order_id);
+				$project_id = $order_info['project_id'];
+				$amount = CreateObject('property.boworkorder')->get_accumulated_budget_amount($project_id);
+			}
 			
 			if($project_id)
 			{
