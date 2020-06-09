@@ -2360,7 +2360,7 @@
 					$_vendor_list[] = $_vendor_id;
 				}
 			}
-			$this->vendor_list = $_vendor_list;
+			$this->vendor_list = array_unique($_vendor_list);
 
 			$soworkorder = CreateObject('property.soworkorder');
 
