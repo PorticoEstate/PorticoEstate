@@ -639,7 +639,7 @@ the \*) later.
 Without a specific translation in the lang table, the above code will
 print:
 
-	The counter is 42*<br />
+	The counter is 42<br />
 
 If the current user speaks Italian, the string returned will
 be:
