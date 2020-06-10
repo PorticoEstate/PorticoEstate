@@ -223,14 +223,14 @@ appname/inc/hook\_preferences.inc.php instead of
 appname/inc/hook\_admin.inc.php. The same functions and variables are
 defined.]{style="font-family:'Times New Roman'"}
 
-##infrastructure
+## infrastructure
 --------------------------------------------------------------------------
 
 ### overview 
 
 PorticoEstate attempts to provide developers with a sound directory
-structure to work from.]{style="font-family:'Times New Roman'"}\
-[The directory layout may seem complex at first, but after some use, you
+structure to work from.
+The directory layout may seem complex at first, but after some use, you
 will see that it is designed to accommodate a large number of
 applications and functions.
 
@@ -335,7 +335,7 @@ file.
 
 #### $GLOBALS\['phpgw'\]->link
 
-	$GLOBALS\['phpgw'\]->link(\$url,\$args)
+	$GLOBALS['phpgw']->link($url,$args)
 	
 Add support for session management. ALL links must use this, that
 includes href's form actions and header
@@ -358,14 +358,14 @@ Example:
 
 #### $GLOBALS\['phpgw'\]-&gt;common-&gt;phpgw\_header
 
-	$GLOBALS\['phpgw'\]->phpgw\_header()
+	$GLOBALS['phpgw']->phpgw_header()
 Print out the start of the HTML page, including the navigation bar and
 includes appname/inc/header.php, if using deprecated linear scripts
 style.
 
 #### $GLOBALS\['phpgw'\]-&gt;common-&gt;phpgw\_footer
 
-	$GLOBALS\['phpgw'\]->;phpgw\_footer()
+	$GLOBALS['phpgw']->phpgw_footer()
 Prints the system footer, and includes
 appname/inc/footer.php
 
@@ -407,7 +407,7 @@ Example:
       $body = "Give me a call\n Been wondering what your up to.";
       $errors = $GLOBALS['phpgw']->msg->send('email', $to, $subject, $body);
       
-##configuration-variables
+## configuration-variables
 -------------------------------------------------------------------------------
 
 ### Introduction
@@ -765,8 +765,8 @@ class.[http://phplib.sanisoft.com](http://phplib.sanisoft.com)
 
 ### How to use XSLT templates
 
-[Whoops, there is no documentation available on this - hassle the
-docteam to produce something.]{style="font-family:'Times New Roman'"}
+Whoops, there is no documentation available on this - hassle the
+docteam to produce something.
 
 ## About this document
 ---------------------------------------------------------------------------
@@ -793,8 +793,7 @@ A copy of the license is available at
 
 ### Acknowledgments and Thanks
 
-Thanks to Joesph Engo for starting PorticoEstate (at the time called
-webdistro). Thanks to all the developers and users who contribute to
-making PorticoEstate such a success.
+Thanks to Joesph Engo for starting phpGroupware - (at the time called
+webdistro) which has evolved into PorticoEstate. Thanks to all the developers and users who has contributed.
 
 
