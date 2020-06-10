@@ -234,8 +234,9 @@ The directory layout may seem complex at first, but after some use, you
 will see that it is designed to accommodate a large number of
 applications and functions.
 
-### directory-tree 
+### directory-tree
 
+```
 --phpgroupware
   |
   +--admin
@@ -302,8 +303,7 @@ applications and functions.
   |
   +--setup
 
-
-
+```
 
 ### Translations
 
