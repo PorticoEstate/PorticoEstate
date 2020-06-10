@@ -12,15 +12,13 @@ with what is required to integrate applications into it.
 
 PorticoEstate is a web based groupware application framework (API), for
 writing applications. Integrated applications such as email, calendar,
-todo list, address book, and file manager are
-included.
+helpdesk, address book, rental management and facilities management is included.
 
 ### Overview of application writing
 
-[We have attempted to make writing application for PorticoEstate as
+We have attempted to make writing application for PorticoEstate as
 painless as possible. We hope any pain and suffering is cause by making
-your application work, but not dealing with PorticoEstate
-itself.]{style="font-family:'Times New Roman'"}
+your application work, but not dealing with PorticoEstate itself.
 
 ### What does the PorticoEstate API provide?
 
@@ -39,27 +37,17 @@ PorticoEstate.
 ### Requirements
 
 These guidelines must be followed for any application that wants
-considered for inclusion into the PorticoEstate
-distribution:
+considered for inclusion into the PorticoEstate distribution:
 
 -   It must run on PHP 7.2 or later
 -   SQL statements must be compatible with both MySQL, PostgreSQL, MSSQL Server and SAP-DB
--   It must use our default header.inc.php
-    include.
--   It must use our $GLOBALS['phpgw']->link($url) for all links
-    (this is for session support).
+-   It must use our default header.inc.php include.
+-   It must use our $GLOBALS['phpgw']->link($url) for all links (this is for session support).
 -   It must use "POST" for form submit methods.
--   It must respect phpGW group rights and phpGW user
-    permissions.
--   It must use our directory structure, template support and lang
-    (multi-language) support.
--   Where possible it should run on both Unix and NT
-    platforms.
--   For applications that do not meet these requirements, they can be
-    available to users via the PorticoEstate "3rd Party Apps" listing on
-    our website. If you need help converting your application to
-    templates and our lang support, we will try to connect you with
-    someone to help.
+-   It must respect phpGW group rights and phpGW user permissions.
+-   It must use our directory structure, template support and lang (multi-language) support.
+-   Where possible it should run on both Unix and NT platforms.
+
 
 ### Writing/porting your application
 
