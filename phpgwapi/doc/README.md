@@ -71,10 +71,10 @@ This is done by putting this at the top of each PHP
 page.
 
 ```
-      <?php
-      $phpgw_info["flags"]["currentapp"] = "appname";
-      include("../header.inc.php");
-      ?>
+<?php
+	$phpgw_info["flags"]["currentapp"] = "appname";
+	include("../header.inc.php");
+
 ```
 
 Of course change application name to fit.
@@ -181,7 +181,7 @@ setup system for install and updating the final version of your
 application.
 
 ```
-      insert into applications (app_name, app_title, app_enabled) values ('appname', 'The App name', 1);
+	insert into applications (app_name, app_title, app_enabled) values ('appname', 'The App name', 1);
 ```
 
 ### Hooking into Administration page
@@ -195,14 +195,14 @@ configure that application.
 Simple Example:
 
 ```
-	<?php
-		// Old linear script style
-		$file['Site Configuration'] = $GLOBALS['phpgw']->link('myapp/myAdminPage.php');
-		// OR - OOP Style
-		$file['Site Configuration'] = $GLOBALS['phpgw']->link('/index.php',
-		                                    array(menuaction => 'myapp.uiobj.admin_method');
-		display_section('myapp',$file);
-	?>
+<?php
+	// Old linear script style
+	$file['Site Configuration'] = $GLOBALS['phpgw']->link('myapp/myAdminPage.php');
+	// OR - OOP Style
+	$file['Site Configuration'] = $GLOBALS['phpgw']->link('/index.php',
+	                                    array(menuaction => 'myapp.uiobj.admin_method');
+	display_section('myapp',$file);
+?>
 ```
 
 Look at headlines/inc/hook\_admin.inc.php and
