@@ -70,11 +70,12 @@ with a few variables.
 This is done by putting this at the top of each PHP
 page.
 
+```
       <?php
       $phpgw_info["flags"]["currentapp"] = "appname";
       include("../header.inc.php");
       ?>
-
+```
 
 Of course change application name to fit.
 This include will provide the following things:
@@ -146,26 +147,29 @@ files.
 
 ### Adding files, directories and icons.
 
-You will need to create the following directories for your code\
-(replace ’appname’ with your application name)\
-`‘--appname`
+You will need to create the following directories for your code
+(replace ’appname’ with your application name)
 
-`  --inc`
+```
 
-`     --functions.inc.php`
-
-`     --header.inc.php`
-
-`     --hook_preferences.inc.php`
-
-`     --hook_admin.inc.php`
-
-`     ‘--footer.inc.php`
-
-`  ‘--templates`
-
-`     ‘--default`
-
+--appname
+  |
+  +--inc
+  |  |
+  |  +--functions.inc.php
+  |  |
+  |  +--header.inc.php
+  |  |
+  |  +--hook_preferences.inc.php
+  |  |
+  |  +--hook_admin.inc.php
+  |  |
+  |  +--footer.inc.php
+  |
+  +--templates
+     |
+     +--base
+```
 
 ### Making PorticoEstate aware of your application
 
@@ -176,8 +180,9 @@ be used during initial development. You should use the PorticoEstate
 setup system for install and updating the final version of your
 application.
 
+```
       insert into applications (app_name, app_title, app_enabled) values ('appname', 'The App name', 1);
-
+```
 
 ### Hooking into Administration page
 
@@ -189,6 +194,7 @@ configure that application.
 
 Simple Example:
 
+```
 	<?php
 		// Old linear script style
 		$file['Site Configuration'] = $GLOBALS['phpgw']->link('myapp/myAdminPage.php');
@@ -196,8 +202,8 @@ Simple Example:
 		$file['Site Configuration'] = $GLOBALS['phpgw']->link('/index.php',
 		                                    array(menuaction => 'myapp.uiobj.admin_method');
 		display_section('myapp',$file);
-	?>;
-
+	?>
+```
 
 Look at headlines/inc/hook\_admin.inc.php and
 admin/inc/hook\_admin.inc.php for more
@@ -217,11 +223,11 @@ application name in the path.
 
 ### Hooking into Preferences page
 
-[The mechanism to hook into the preferences page is identical to the one
+The mechanism to hook into the preferences page is identical to the one
 used to hook into the administration page, however it looks for
 appname/inc/hook\_preferences.inc.php instead of
 appname/inc/hook\_admin.inc.php. The same functions and variables are
-defined.]{style="font-family:'Times New Roman'"}
+defined.
 
 ## infrastructure
 --------------------------------------------------------------------------
@@ -237,7 +243,7 @@ applications and functions.
 ### directory-tree
 
 ```
---phpgroupware
+--portico
   |
   +--admin
   |
@@ -327,7 +333,7 @@ of this class are in the inc/core directory and are named to match the
 sub-class.
 
 Example: 
-\$phpgw-&gt;send-&gt;msg() is in the
+$phpgw-&gt;send-&gt;msg() is in the
 inc/phpgwapi/class.send.inc.php
 file.
 
@@ -335,7 +341,9 @@ file.
 
 #### $GLOBALS\['phpgw'\]->link
 
-	$GLOBALS['phpgw']->link($url,$args)
+```
+	$GLOBALS['phpgw']->link($url,$args);
+```
 	
 Add support for session management. ALL links must use this, that
 includes href's form actions and header
@@ -347,25 +355,28 @@ it without any parameters.
 This function is right at the core of the class because it is used so
 often, we wanted to save developers a few keystrokes.
 Example:
+```
 
 	<form name=copy method=post action="<?php echo $GLOBALS['phpgw']->link();?>">
 	/* If session management is done via passing url parameters */
 	/* The the result would be */
 	/* <form name=copy method=post action="somepage.php?sessionid=87687693276?kp3=kjh98u80"> */
-
+```
 
 ### Application Functions
 
 #### $GLOBALS\['phpgw'\]-&gt;common-&gt;phpgw\_header
-
-	$GLOBALS['phpgw']->phpgw_header()
+```
+	$GLOBALS['phpgw']->phpgw_header();
+```
 Print out the start of the HTML page, including the navigation bar and
 includes appname/inc/header.php, if using deprecated linear scripts
 style.
 
 #### $GLOBALS\['phpgw'\]-&gt;common-&gt;phpgw\_footer
-
-	$GLOBALS['phpgw']->phpgw_footer()
+```
+	$GLOBALS['phpgw']->phpgw_footer();
+```
 Prints the system footer, and includes
 appname/inc/footer.php
 
@@ -383,9 +394,10 @@ it back into an array when you receive the value
 back.
 
 Example:
-
+```
 	$GLOBALS['phpgw']->common->appsession("/path/to/something");
 	echo "Dir: " . $GLOBALS'phpgw'->common->appsession();
+```
 
 ### File functions
 
@@ -401,11 +413,12 @@ for more info.
 Send a message via email or NNTP and returns any error
 codes.
 Example:
-
+```
       $to = 'someuser@domain.com';
       $subject = 'Hello buddy';
       $body = "Give me a call\n Been wondering what your up to.";
       $errors = $GLOBALS['phpgw']->msg->send('email', $to, $subject, $body);
+```
       
 ## configuration-variables
 -------------------------------------------------------------------------------
@@ -424,7 +437,7 @@ Due to the multi-dimensional array approach. getting these values is
 easy.
 
 Here are some examples:
-
+```
 	<?php
 		// To do a hello username
 		echo "Hello " . $GLOBALS['phpgw_info']['user']['fullname'];
@@ -436,6 +449,7 @@ Here are some examples:
 		echo 'IMAP Server is named: ' . $GLOBALS['phpgw_info']['server']['imap_server']; 
 		//If imap is running on localhost, prints: 'IMAP Server is named: localhost'
 	?>
+```
 
 ### User information
 
@@ -605,9 +619,10 @@ internationalization support.
 While developing your application, just wrap all your text output with
 calls to lang(), as in the following
 code:
-
+```
 	$x = 42;
 	echo lang('The counter is %1', $x).'<br />';
+```
 
 This will attempt to translate \`\`The counter is %1'', and return a
 translated version based on the current application and language in use.
@@ -632,8 +647,9 @@ be:
 	il contatore è 42<br />
 
 #### The lang function
-
+```
 	lang($key, $m1="", $m2="", $m3="", $m4="", $m5="", $m6="", $m7="", $m8="", $m9="", $m10="")
+```
 
 \[$key\]
 
@@ -704,7 +720,9 @@ convention for the lang files is phpgw\_&lt;langcode&gt;.lang
 The files are stored in the **app/setup** directory. The format of the files is as
 follows:
 
+```
 	english phrase in lower case    appname 	**      Translated phrase in desired case.
+```
 
 **Notes:**
 
@@ -713,7 +731,7 @@ follows:
     filename
 -   tabs are used to deliniate "columns"
 
-[ranslating the content to reflect the message\_id string in the lang
+Translating the content to reflect the message\_id string in the lang
 language. If the string is specific to your application, put your
 application name in for app\_name otherwise use the name common. The
 message\_id should be in lower case for a small increase in
@@ -732,13 +750,13 @@ the check\_code() function, which passes the strings through lang()
 before returning.
 
 For example, calling
-
+```
 	echo check_code(13);
-
+```
 Would print
-
+```
 	Your message has been sent
-
+```
 translated into the current language.
 
 ## Using Templates
