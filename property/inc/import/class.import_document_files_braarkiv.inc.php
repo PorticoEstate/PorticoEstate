@@ -493,10 +493,10 @@
 			$file_date	 = date('Y-m-d', filemtime($file));
 			$document	 = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark);
 
-			_debug_array($document);
+//			_debug_array($document);
 			//Her blir det alvor....
 
-			return true;
+//			return true;
 
 			$bra5ServiceCreate	 = new Bra5ServiceCreate();
 			$bra5CreateDocument	 = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
