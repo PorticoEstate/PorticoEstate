@@ -99,8 +99,6 @@
 
 			}
 
-			$this->debug = true;
-
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = "property::documentation::import_documents";
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 
@@ -1446,10 +1444,6 @@
 				{
 					if (empty($current_tag['import_ok']) && ( $current_tag['document_category'] && $current_tag['branch'] && $current_tag['branch'] ))
 					{
-						if ($this->debug)
-						{
-							sleep(1);
-						}
 						if ($import_document_files->process_file($file_info, $current_tag))
 						{
 							$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
