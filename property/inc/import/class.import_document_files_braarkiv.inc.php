@@ -430,6 +430,7 @@
 				$remark .= "; {$file_tags['remark_detail']}";
 			}
 
+			$ok = false;
 			if (is_file($file))
 			{
 				try
@@ -438,7 +439,7 @@
 				}
 				catch (Exception $e)
 				{
-					echo $e->getTraceAsString();
+//					echo $e->getTraceAsString();
 					$this->receipt['error'][] = array('msg' => $e->getMessage());
 				}
 
@@ -503,8 +504,10 @@
 
 			if (!$bra5ServiceCreate->createDocument($bra5CreateDocument))
 			{
-				_debug_array($bra5ServiceCreate->getLastError());
-				throw new Exception($bra5ServiceCreate->getLastError());
+				$LastError = $bra5ServiceCreate->getLastError();
+
+				_debug_array($LastError);
+				throw new Exception($LastError['Bra5ServiceCreate::createDocument']->getMessage());
 			}
 
 
