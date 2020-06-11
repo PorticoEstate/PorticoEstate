@@ -101,7 +101,7 @@
 
 			$this->debug = true;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'admin::property::import_documents';
+			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = "property::documentation::import_documents";
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 
 			if (!empty($config['temp_files_components']))

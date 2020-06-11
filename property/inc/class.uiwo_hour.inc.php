@@ -2372,7 +2372,7 @@ HTML;
 					$pdf->ezSetDy(-80);
 				}
 				$pdf->ezText($this->config->config_data['order_footer_header'], 12);
-				$pdf->ezText($this->config->config_data['order_footer'], 10);
+				$pdf->ezText(htmlentities($this->config->config_data['order_footer']), 10);
 			}
 
 			if ($preview)
