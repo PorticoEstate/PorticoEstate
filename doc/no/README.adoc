@@ -204,7 +204,7 @@ image:extracted-media/media/image8.png[image,width=543,height=249]
 
 Bekreft at databasen er opprettet med rett navn og eier ved å skrive
 
- \l;
+ \l
 
 
 [IMPORTANT]
