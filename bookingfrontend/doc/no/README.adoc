@@ -46,6 +46,7 @@ Mappestrukturen er delt inn på ulike nivå, basert på hvilken template som du 
 
 [cols=",",options="header",]
 |=========================================================================================================================================================================================================
+|*Mappe* |Forklaring.
 |*PHPGWAPI* |Overordnet mappe for templates og kjernekonfigurasjon på systemet.
 |*PHPGWAPI/ TEMPLATES/AALESUND* |Her finner du blant annet overordnet CSS fil (custom.css) for Ålesund templaten.
 |*BOOKINGFRONTEND* |Overordnet mappe for Frontend.
