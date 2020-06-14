@@ -58,7 +58,7 @@ All work as you would except them to. The major exception is:
   $GLOBALS['phpgw']->vfs->touch(array(
      'string' => 'file'
   ));
-  
+
 vs.
 
  $GLOBALS['phpgw']->vfs->mkdir(array(
@@ -441,7 +441,7 @@ programmers need to recognize that /home is not absolute, and use $GLOBALS
 == Alternative : WebDAV file share
 [NOTE]
 ====
-Note: if you don't know what WebDAV is you probably don't need it.  The default
+If you don't know what WebDAV is you probably don't need it.  The default
 vfs_sql is generally faster and easier to setup.
 
 ====
