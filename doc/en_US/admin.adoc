@@ -1,0 +1,450 @@
+= PorticoEstate Administration Manual
+:experimental:
+:toc:
+:toc-placement: preamble
+
+
+This Manual is for administrators of PorticoEstate.
+
+
+== Chapter 1. Introduction
+
+=== What is PorticoEstate
+
+PorticoEstate is a fork of phpGroupWare and is a multi-user web-based suite written in PHP. It contains many
+applications, including a Calendar, email package, contact database and project
+manager. It also includes an extensive API for writing new applications.
+
+
+
+=== Acknowledgements
+
+I would like to thank the many authors of phpGroupWare and it's applications
+for creating such a useful and extensible product. I would also like to thank
+the authors of previous version of the documentation, including Dan Kuykendall,
+Joseph Engo and Darryl VanDorp and the authors of the LDP Author guide for
+teaching me how to use DocBook.
+
+
+== Chapter 2. Installation
+
+Installation and Configuration of PorticoEstate has never been easier. Just
+point and click, yeah it's very easy.
+
+
+=== Requirements
+
+You will need PHP compiled and installed on your system. You will also need
+MySQL or PostgreSQL setup. If you are planning on using the email system, you
+will need to have an IMAP server installed and IMAP support compiled into PHP.
+You can have it installed as an Apache module or command line version, the
+Apache module is preferred. We will assume that you are running on a Linux or
+other Unix system for these steps. Windows is supported, but there is no
+documentation for it currently.
+
+In order to check if you have php installed create the file with your favorite
+text editor named test.php in your webserver root directory:
+----
+<? phpinfo(); ?>
+----
+
+Then point your browser to http://yourserverroot/test.php. You should get a
+very detailed page describing various options in php.
+
+If you need to to compile php and apache the following links are good starting
+points:
+
+
+[width="100%"]
+|====================
+|http://www.apachetoolbox.com  |  A set of scripts to compile and install various modules with apache.
+| http://www.linuxhelp.net/guides/ |  The Linux Apache MySQL PHP (LAMP) Guide v2 (latest as of this writing)
+| http://www.devshed.com/Server_Side/PHP/SoothinglySeamless |  The Soothing Seemless Setup of Apache, SSL, MySQL, and PHP
+|====================
+
+
+
+Tested Systems:
+
+On Linux
+
+  * PHP 7.2 +
+  * Apache 1.3.x
+  * MySQL 3.22.25 or PostgreSQL 7.0.x
+  * Courier-IMAP 0.33+ and/or qmail 1.03 for POP3 access
+
+We have reports of it working on Windows NT and OS/2, and using Oracle as the
+database.
+
+
+Obtaining and Installing PorticoEstate
+
+Installing from TarBall
+
+Installing from a TarBall is very easy. The files should be installed in the
+webserver directory. Example steps (please adjust to your server's config):
+
+    # cp porticoestate-version.tar.gz /var/www/html
+    # cd /var/www/html
+    # tar zxf porticoestate-version.tar.gz
+
+You may have to get required permissions to do this. Contact your system
+administrator if you dont have the permission to write to your webserver
+directory.
+
+
+=== Installing from github
+
+Installing from a github is fairly easy. The files should be checked out in the
+webserver directory. You may have to get required permissions to install from
+github. Contact your system administrator if you dont have the permission to write
+to your webserver directory.
+
+To see a list of applications currently available via CVS, go to https://github.com/PorticoEstate/PorticoEstate[https://github.com/PorticoEstate/PorticoEstate]
+
+
+=== Development Branch in git
+
+Follow these steps (please adjust to your server's config):
+
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ git clone https://github.com/PorticoEstate/PorticoEstate.git .
+
+or if you prefer using svn:
+
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ svn co https://github.com/PorticoEstate/PorticoEstate.git/trunk .
+
+
+=== Stable Branch in github
+
+Follow these steps (please adjust to your server's config and the up-to-date
+stable Version - 2 at the moment):
+
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ git clone --single-branch --branch Version-2_0-branch \
+    https://github.com/PorticoEstate/PorticoEstate.git .
+
+or if you prefer using svn:
+
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ svn co https://github.com/PorticoEstate/PorticoEstate.git/branches/Version-2_0-branch .
+
+
+=== Setting File Permissions
+
+There are a few directories which will need special file permissions set for
+PorticoEstate to work properly.
+
+Temp Directory (Required) - This can be /tmp for simplicity, but it is required
+for several apps to function properly. Simply make sure that the webserver can
+add/delete files in it.
+
+Files Directory (Required) - This can not be the files dir under the porticoestate
+dir. You will need to give the webserver account owndership of this directory.
+
+    (outside document-root)
+    # mkdir files
+    # chown nobody:nobody files 
+    (note: this assumes your webserver runs as user nobody, adjust for your installation)
+    # chmod 700 files
+
+Root Directory (Not recommended) - If you give the webserver account write
+access to the porticoestate directory, then the setup program can create the
+header.inc.php for you. Otherwise you will need to use the setup program to
+create it, and then you can manually save it to file.
+
+If you want to do it:
+
+    # chown :nobody /var/www/html/porticoestate
+    # chmod 770 /var/www/html/porticoestate
+
+You may have to get required permissions to do this. Contact your system
+administrator if you dont have the permission to write to your webserver
+directory.
+
+
+=== Setup the database
+
+You need to create empty databases for the setup app to create the tables in.
+
+
+==== MySQL
+
+Ensure that you have a working MySQL installation and that MySQL is running.
+
+    Mandrake or Redhat: 
+    /etc/rc.d/init.d/mysqld start
+    other: 
+    /usr/local/mysql/bin/safe_mysqld &
+
+Create the porticoestate Database and give permissions to the portico user
+
+    # mysqladmin -u someuser -p create portico 
+    (enter password when prompted)
+    # mysql -u someuser -p
+    mysql> grant all on portico.* to portico@localhost identified by
+    "somepassword";
+
+    Make sure you change the password from "somepassword" to your MySQL
+    password in the GRANT statement
+
+For more detailed user documentation on MySQL see their website: [http://
+www.mysql.com]
+
+
+
+==== PostgreSQL
+
+Ensure that you have a working PostgreSQL installation and that PostgreSQL is
+running.
+
+Ubuntu : 
+
+ sudo service postgresql start
+
+Others:
+
+https://www.postgresql.org/docs/12/server-start.html
+    
+Create the porticoestate database and user
+
+    # sudo -u postgres createuser --superuser $USER
+    # sudo -u postgres psql
+    # postgres=# \password $USER
+
+For more detailed user documentation on Postgresql see their website: 
+http://www.postgresql.org
+
+
+=== Setup/Configure PorticoEstate
+
+==== configure header file
+
+Point your browser to http://yourserverroot/porticoestate/setup/ which will
+create (or upgrade) the header.inc.php and database tables. Setup will attempt
+to determine what version of the phpGroupWare databases and header.inc.php you
+have installed, and upgrade to the most recent version.
+
+Most values for the header setup can be left as the default, be sure to enter a
+password for header admin, and change the password for your DB, and for
+configuration.
+[TIP]
+====
+Enable libsodium will encrypt all values in the header.inc.php
+====
+
+[NOTE]
+====
+The Domain select box is only usefull if you have multiple databases
+====
+
+
+Once you have finished your configuration, you can have PorticoEstate write it
+directly if you changed permissions on the directory, or you can download or
+view it with your browser, and save it in the directory yourself.
+
+
+==== Site Configuration
+
+After header configuration, you will be prompted to enter your Setup/Config
+Login, or your Header login if you want to go back and change something.
+
+
+.Caution
+[IMPORTANT]
+====
+You are advised to backup your existing database before running the setup script to avoid problems!
+====
+
+You have to press the button, not hit enter on the setup/index.php script
+
+Your first step is to install all application databases, simply click on the 
+Install to have PorticoEstate add all the necessary tables.
+
+Next, click on Edit Current Configuration. You will be prompted with a list of
+configuration options.
+
+Table 2-1. Edit Current Configuration
+
+[[Current_Configuration]]
+.Edit Current Configuration
+[width="100%",options="header"]
+|====================
+| Prompt | Notes
+|full path for temporary files |usually /tmp                                  
+|full path for user and group  |directory must exist and have user and group  
+
+|files                         |directories outside document root.                    
+|location of PorticoEstate URL |full domain name or just relative link, no trailing slash                                
+|hostname of machine           |Fully qualified hostname                      
+|default ftp server            |*addme* what is this for?                     
+|use correct mimetype for FTP  |*addme* what might this affect?               
+|HTTP proxy server             |                                              
+|HTTP proxy port               |                                              
+|Which type of Authentication  |[a]                                           
+|Where to store user accounts  |[b]                                           
+|Minimum account ID            |                                              
+|Maximum account ID            |                                              
+|manage homedirectory and loginshell attributes     |*addme* what is this?                   
+|LDAP home directory prefix    |                                              
+|LDAP default shell            |                                              
+|Auto create account records?  |*addme* what is this?                         
+|if no ACL records...          |                                              
+|LDAP host                     |                                              
+|LDAP accounts context         |                                              
+|LDAP root dn                  |                                              
+|LDAP root password            |                                              
+|LDAP encryption type          |                                              
+|app_session encryption        |*addme* what is this?                         
+|title for your site           |                                              
+|Show powered by logo on       |                                              
+|Country Selection             |                                              
+|use pure HTML                 |                                              
+|Use cookies                   |                                              
+|check for new version?        |*addme* what does this check, stable version or CVS?  
+|cache the phpgw_info array    |*addme* what effect does this have on speed,  
+|====================
+[width="100%",options="header"]
+|====================
+|Notes:                                                                       
+|SQL  use SQL table (default)                                                 
+|SQL/SSL  use encrypted SQL access                                            
+|LDAP  use LDAP server                                                        
+|mail  use mail server (IMAP/POP3)                                            
+|HTTP  use HTTP authentication (.htaccess)                                    
+|PAM   use PAM authentication (not currently working) 
+|SQL  store in SQL table                                                      
+|LDAP store in LDAP server                                                    
+|Contacts  *addme* what is this?                                              
+|====================
+
+Next, select click here to add admin account and optionally, three demo
+accounts. Fill in the fields on the next screen and uncheck the box at the
+bottom if you don't want the demo accounts created. Click on Submit when
+finished.
+
+Click Install Languages to add at least one language to the system. On the next
+screen, select all the languages you want by single clicking them, then click
+on Install.
+
+There shouldn't be anything to do under Manage Applications at this time, this
+is where you will return after an upgrade to update and table differences.
+
+after you're done, click on logout to complete the install and end the session.
+
+
+==== Testing the install
+
+If your config is setup properly you can now login. Point your browser to the
+installed location and login with the new admin username and password you
+created.
+
+
+
+==== Installing additional applications
+
+Once you have the core PorticoEstate install up and running, you may want to
+install additional applications.
+
+You should consult any README or INSTALL files that come with the new
+application.
+
+Log into /setup and click on manage applications - and then select the desired application for install.
+
+
+You need to give either users or relevant groups access to the application in order
+to be able to access it.
+
+
+
+=== Troubleshooting
+
+
+== Chapter 3. Upgrading
+
+Upgrading from github
+
+Follow these steps to upgrade a svn install (please adjust to your server's
+config):
+----
+$ cd /var/www/html/portico
+$ svn up
+----
+
+After updating from github, be sure to return to the configuration page [/setup]
+and update any necessary tables.
+
+
+== Chapter 4. General
+
+Here will go an overview of categories and other overall topics.
+
+
+
+=== Categories
+
+
+
+=== Themes
+
+
+
+=== Access Control Lists
+
+
+
+=== Translations
+
+
+
+== Chapter 5. Calendar
+
+
+
+== Chapter 6. Email
+
+
+
+== Chapter 7. Addressbook
+
+
+
+== Chapter 8. Notes
+
+
+
+== Chapter 9. Todo
+
+
+
+== Chapter 10. Project
+
+
+== Chapter 11. File Manager
+
+
+== Chapter 12. Security
+
+
+== Chapter 13. Performance Tuning
+
+=== Linux
+
+
+=== Apache
+
+
+=== PHP
+
+
+=== Database
+
