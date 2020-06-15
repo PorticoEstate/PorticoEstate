@@ -578,6 +578,11 @@ it should work with this set to Off. If you find this caused problems, please lo
 This directive will prevent phpGroupWare from accessing any files outside of the directories specified. AFAIK all symlinks are resolved.
 For more information please refer to the PHP website.
 
+* THE SUPER GLOBAL ARRAY REQUEST
+
+ variables_order = "GPCS"
+ request_order = "GPCS"
+
 == Suggested Apache Config File
 
 [source,]
