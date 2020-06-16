@@ -574,14 +574,14 @@ This can cause header output problems if left on. They are better stored in your
 
 See above.
 
-* Databases +
-Replace [rdbms] with the data module you are using
+//* Databases +
+//Replace [rdbms] with the data module you are using
+//
+//----
+// [dbms].allow_persistent = Of
+//----
 
-----
- [dbms].allow_persistent = Of
-----
-
-Only turn this option on if you want to use persistent databse connections. Generally persistent connections are only of benefit if you are using a highly tuned apache install with a small user base.
+// Only turn this option on if you want to use persistent databse connections. Generally persistent connections are only of benefit if you are using a highly tuned apache install with a small user base.
 
 * File Uploads
 
