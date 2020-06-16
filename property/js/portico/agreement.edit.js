@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_alarm'});
+var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_alarm'}, true);
 
 onActionsClick_notify = function (type, ids, url)
 {
@@ -11,7 +11,7 @@ onActionsClick_notify = function (type, ids, url)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {ids: ids, type: type},
 		success: function (data)
 		{
@@ -36,7 +36,7 @@ onAddClick_Alarm = function (type)
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
-			url: "" + sUrl_agreement + "&phpgw_return_as=json",
+			url: sUrl_agreement,
 			data: {day: day, hour: hour, minute: minute, user_list: user, type: type, id: id},
 			success: function (data)
 			{
@@ -99,7 +99,7 @@ onUpdateClickAlarm = function (type)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {id: id, ids: ids, mcost: mcost, wcost: wcost, tcost: tcost, icoun: icoun, type: type, date: oDate, index: oIndex},
 		success: function (data)
 		{
@@ -156,7 +156,7 @@ onUpdateClickItems = function (type)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {id: id, ids: ids, mcost: mcost, wcost: wcost, tcost: tcost, icoun: icoun, type: type, date: oDate, index: oIndex},
 		success: function (data)
 		{
@@ -180,7 +180,7 @@ onActionsClickDeleteLastIndex = function (type)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {ids: oSelid, type: type, id: id},
 		success: function (data)
 		{

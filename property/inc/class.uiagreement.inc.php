@@ -1216,7 +1216,7 @@
 				(
 				array(
 					'my_name'		 => 'enable_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_enable]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_enable']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
@@ -1238,7 +1238,7 @@
 				),
 				array(
 					'my_name'		 => 'disable_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_disable]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_disable']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
@@ -1261,7 +1261,7 @@
 				),
 				array(
 					'my_name'		 => 'delete_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_delete]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_delete']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
