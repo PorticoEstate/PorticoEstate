@@ -15,7 +15,22 @@ This Manual is for administrators of PorticoEstate.
 PorticoEstate is a fork of phpGroupWare and is a multi-user web-based suite written in PHP.
 It is a very flexible pluggable framework capable of hosting applications like a group calendar,
 Addressbook, email, accounting ledger, inventory, and whatever else your can think of. These applications can share a common user store,
-and a flexible Access Control List (ACL) system to control access and information sharing. At it's core there is the phpgwapi,
+and a flexible Access Control List (ACL) system to control access and information sharing.
+
+PorticoEstate has turned it's focus from groupware to Facilities management system - and comprices:
+
+* Locations and assets
+* Helpdesk
+* Condition survey
+* Maintenance planning
+* Project management / E-procurement-system
+* Integration with external systems (accounting, SMS, Email…)
+* Internal control
+* Rental management
+* Public booking (culture/sports - events)
+
+
+At it's core there is the phpgwapi,
 an API written for php, that provides some very useful functions and tools for developers, including the user store,
 which has several back ends, database abstraction, and a flexible templating system.
 Applications are then written using the phpgwapi and phpgw framework to provide web based tools to users.
