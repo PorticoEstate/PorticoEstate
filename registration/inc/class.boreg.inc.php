@@ -313,7 +313,7 @@
 
 			$so->create_account($reg_info['reg_lid'], $reg_info['reg_info']);
 			$so->delete_reg_info($reg_id);
-			ini_set('session.cookie_samesite', 'Strict');
+			ini_set('session.cookie_samesite', 'Lax');
 			setcookie('sessionid');
 			setcookie('kp3');
 			setcookie('domain');
