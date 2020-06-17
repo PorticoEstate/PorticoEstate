@@ -1666,7 +1666,7 @@
 
 			$webserver_url = '/';
 
-			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
+			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, false);
 			return $this->_cookie_domain;
 		}
 

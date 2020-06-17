@@ -85,6 +85,8 @@ On Linux
   * Courier-IMAP 0.33+ and/or qmail 1.03 for POP3 access
 
 
+Install the php-modules as described in the link:../phpgwapi/doc/Vagrantfile[Vagrantfile]
+
 Obtaining and Installing PorticoEstate
 
 Installing from TarBall
