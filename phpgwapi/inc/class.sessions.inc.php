@@ -184,7 +184,7 @@
 
 			//respect the config option for cookies
 			ini_set('session.use_cookies', $this->_use_cookies);
-			ini_set('session.cookie_samesite', 'Strict');
+			ini_set('session.cookie_samesite', 'Lax');
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
