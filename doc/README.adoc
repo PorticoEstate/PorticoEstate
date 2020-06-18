@@ -86,6 +86,10 @@ On Linux
 
 
 Install the php-modules as described in the link:../phpgwapi/doc/Vagrantfile[Vagrantfile]
+[NOTE]
+====
+xdebug is not needed (or desired) for production
+====
 
 Obtaining and Installing PorticoEstate
 
