@@ -49,10 +49,12 @@
 		</div>
 	</form>
 	<div class="pure-control-group">
-		<button class="pure-button pure-button-primary">
-			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/application_link"/>"</xsl:attribute>
-			<xsl:value-of select="php:function('lang', 'return to application')" />
-		</button>
+		<xsl:if test="allocation/application_id !=''">
+			<button class="pure-button pure-button-primary">
+				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/application_link"/>"</xsl:attribute>
+				<xsl:value-of select="php:function('lang', 'return to application')" />
+			</button>
+		</xsl:if>
 		<xsl:if test="allocation/permission/write">
 			<button class="pure-button pure-button-primary">
 				<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="allocation/edit_link"/>"</xsl:attribute>
