@@ -8,7 +8,7 @@ A developer introduction to using the setup application for PorticoEstate
 
 [NOTE]
 ====
-PorticoEstate is a for of phpGroupWare.
+PorticoEstate is a fork of phpGroupWare.
 ====
 
 == Introduction
