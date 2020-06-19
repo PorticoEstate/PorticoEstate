@@ -1,22 +1,22 @@
+= PorticoEstate Setup
+:experimental:
+:sectnums:
+:toc:
+:toc-placement: preamble
 
+A developer introduction to using the setup application for PorticoEstate
 
-phpGroupWare Setup
+[NOTE]
+====
+PorticoEstate is a for of phpGroupWare.
+====
 
-June 18, 2001 
-Updated May 9, 2003
+== Introduction
 
-
-Abstract
-
-A developer introduction to using the next generation setup
-application for phpgroupware.
-
-1 Introduction
-
-1.1 Welcome
+=== Welcome
 
 Thanks for taking the time to look over this document. If
-you are a developer who is new to phpgroupware, this document
+you are a developer who is new to PorticoEstate, this document
 will be invaluable to your success during the life of your
 application. This is in addition to the other fine documentation
 available in the phpgwapi/doc directory in your install.
@@ -25,7 +25,7 @@ Herein, I will attempt to outline the critical steps required
 in order to get along with setup3, setup-TNG, or whatever
 we end up calling it (Hey, how about 'setup'?)
 
-1.2 Overview
+=== Overview
 
 With setup3, we introduce several new capabilities and technologies
 for the developer and end user alike. Michael Dean was kind
@@ -46,22 +46,76 @@ a long missed feature, I would imagine.
 Setup3 gives each application developer control over their
 application install and upgrade processes, while giving
 them access to work within a realm formerly owned by only
-the former core phpgroupware applications. Yes, this is
+the former core PorticoEstate applications. Yes, this is
 extra work for the developer. But it is hoped that setup3
 is also viewed as a tool that can truly enhance the development
 process.
 
+==== Abput the setup application
+
+[NOTE]
+====
+
+All setup classes are located in the phpgwapi module Since setup
+      cannot work without the api anyway.
+====
+
+Class logical organization map:
+
+----
+class.setup.inc.php			Global setup functions app/hook/login
+	|
+	class.detection.inc.php	Detection of header, file and db versions
+	|
+	class.translation.inc.php	Multi-lang functions for display
+	|
+	class.html.inc.php		HTML/template output functions
+	|
+	class.process.inc.php		b processing functions/upgrade/install
+		|
+		class.schema_proc.inc.php	DB array <--> SQL and abstraction class
+			|
+			class.schema_proc_array.inc.php		Array input parser
+			|
+			class.schema_proc_mysql.inc.php		SQL functions for MySQL
+			|
+			class.schema_proc_pgsql.inc.php		SQL functions for Postgresql
+			|
+			class.schema_proc_mssql.inc.php		SQL functions for MS SQL
+			|
+			...					other db support...
+
+----
+
+Files in setup/lang are for setup only.  Please see each app/setup dir
+for app-specific and phpgwap/setup for global langs.
+
+These files MUST be tab-delimited:
+----
+phrase{TAB}application{TAB}langcode{TAB}Output Phrase
+----
+
+e.g.
+
+----
+hello	common	en	Hello
+----
+
+The languages file is a list of the languages we would support.
+This is loaded and a dir listing is done to see what is then
+available.  The results are shown in the login page.
+
 OK. Let's dive right in...
 
-2 Application setup files
+== Application setup files
 
 The files in this section are contained within each application/setup
 directory. Every app will some of these files in order to
 operate with setup3.
 
-2.1 setup.inc.php (Required)
+=== setup.inc.php (Required)
 
-2.1.1 Basic information
+==== Basic information
 
 The values in this section must be used by all applications.
 
@@ -69,21 +123,18 @@ The first section of setup.inc.php defines the very basic
 and yet critical information about the application. Take
 a look at the following section:
 
+----
 $setup_info['addressbook']['name'] = 'addressbook';
-
-$setup_info['addressbook']['title'] = 'Addressbook'; - Deprecated .0.9.16+
-
 $setup_info['addressbook']['version'] = '0.9.13.002';
-
 $setup_info['addressbook']['app_order'] = 4;
-
 $setup_info['addressbook']['enable'] = 1;
+----
 
-'name' is used throughout phpgroupware, typically in $phpgw_info
+'name' is used throughout PorticoEstate, typically in $phpgw_info
 flags such as 'currentapp' or as the 'app_name' almost everywhere
 else.
 
-'title' is now deprecated.  Now simply include an entry like this 
+'title' is now deprecated.  Now simply include an entry like this
 in the lang file for you application:
 addressbook en common Address Book
 
@@ -101,7 +152,7 @@ app, the app whose 'name' is first in the English alphabet
 would appear first. Smaller numbers show closer to the top
 or left end of the navbar, depending upon the layout.
 
-The 'enable' string is used by the phpgroupware API to determine
+The 'enable' string is used by the PorticoEstate API to determine
 whether an application is disabled, enabled, or enabled
 but hidden from the navbar. Most applications will want
 this set to a value of 1 (enabled). The notifywindow app
@@ -114,37 +165,36 @@ flag to 3, the API is still enabled, but will not be assignable
 to a user as a real application. It will thereby be hidden
 from the admin for application and user/group editing.
 
-2.1.2 Table info
+==== Table info
 
-Only applications with database tables will use entries
-  in this section.
+Only applications with database tables will use entries in this section.
 
 The next section of $setup_info values is an array defining
 all of the application's database tables:
 
+----
 $setup_info['addressbook']['tables'] = array(
-
     'phpgw_addressbook',
-
     'phpgw_addressbook_extra'
-
 );
+----
 
 This is a simple array, and must list accurately the current
 table names you are using in your application. This list
 will match a much more complex array of table specifications,
 as you will see below.
 
-2.1.3 Hooks
+==== Hooks
 
 Some applications will use this section.
 
 The hooks array part of $setup_info contains a simple list
 of hooks the application will use:
 
+----
 $setup_info['addressbook']['hooks'][] = 'preferences';
-
 $setup_info['addressbook']['hooks'][] = 'admin';
+----
 
 Here we also note a different method of 'stuffing the array.'
 In any case, this list of hooks will be required soon in
@@ -154,7 +204,7 @@ and file_exists loops done currently to discover hook files.
 Other than 'preferences' and 'admin', 'home', 'manual',
 'after_navbar' and 'navbar_end' are all valid hook entries.
 
-2.1.4 Dependencies
+==== Dependencies
 
 All applications will have at least one entry here.
 
@@ -162,25 +212,19 @@ The final section, or array of data, is a listing of the
 other applications your application requires in order to
 function:
 
+----
 $setup_info['addressbook']['depends'][] = array(
-
-    'appname' => 'phpgwapi', 
-
+    'appname' => 'phpgwapi',
     'versions' => Array(
-
         '0.9.10',
-
         '0.9.11',
-
         '0.9.12',
-
         '0.9.13'
-
-    ) 
-
+    )
 );
+----
 
-This is the standard dependency array for all phpgroupware
+This is the standard dependency array for all PorticoEstate
 applications. It states that this application requires the
 phpgwapi, and lists the versions with which versions this
 app is compatible. This list would need to be appended upon
@@ -201,10 +245,9 @@ In all cases, the API would be installed first in every
 new install or upgrade, since all applications depend on
 the API.
 
-2.2 tables_baseline.inc.php (Recommended)
+=== tables_baseline.inc.php (Recommended)
 
-2.2.1 Any application that has at least one upgrade routine will
-  have this file.
+==== Any application that has at least one upgrade routine will have this file.
 
 The tables_baseline file represents the earliest supported
 version of an application's tables. This file is used only
@@ -217,42 +260,24 @@ file in setup3. See the tables_update section below for
 more detail about schema_proc, but for now, here is a simple
 table definition in this format:
 
+----
 $phpgw_baseline = array(
-
     'skel' => array(
-
         'fd' => array(
-
-            'skel_id' => array('type' => 'auto','nullable'
-=> false),
-
-            'skel_owner' => array('type' => 'varchar','precision'
-=> 25),
-
-            'skel_access' => array('type' => 'varchar','precision'
-=> 10),
-
-            'skel_cat' => array('type' => 'int','precision'
-=> 4),
-
+            'skel_id' => array('type' => 'auto','nullable'=> false),
+            'skel_owner' => array('type' => 'varchar','precision'=> 25),
+            'skel_access' => array('type' => 'varchar','precision'=> 10),
+            'skel_cat' => array('type' => 'int','precision'=> 4),
             'skel_des' => array('type' => 'text'),
-
-            'skel_pri' => array('type' => 'int','precision'
-=> 4)
-
+            'skel_pri' => array('type' => 'int','precision' => 4)
         ),
-
         'pk' => array('skel_id'),
-
         'fk' => array(),
-
         'ix' => array(),
-
         'uc' => array()
-
-    ) 
-
+    )
 );
+----
 
 This multi-dimensional array contains 1 subarray with 5 subs
 of its own. The first array ('skel' above) defines the table
@@ -267,9 +292,9 @@ is below. But, this format was chosen as an available solution
 for defining tables and fields without having to maintain
 seperate files for different databases.
 
-2.3 tables_current.inc.php (Recommended)
+=== tables_current.inc.php (Recommended)
 
-2.3.1 All applications with tables will need this file.
+==== All applications with tables will need this file.
 
 The tables_current file defines the current table definition
 that matches the 'version' string in $setup_info as well
@@ -282,32 +307,27 @@ start by copying the current file over to become the tables_baseline
 file. After having created your upgrade routines, you would
 then recreate the current file to match the new table definitions.
 
-2.4 tables_update.inc.php (Recommended)
+=== tables_update.inc.php (Recommended)
 
-2.4.1 Any application which requires an upgrade to a previous
-  version's tables will need this file.
+==== Any application which requires an upgrade to a previous version's tables will need this file.
 
 This file will be the most complex of all setup-oriented
 files with which you will be working. It will contain all
 upgrade functions capable of upgrading any possible version
-of your phpgroupware app. These upgrade routines roughly
+of your PorticoEstate app. These upgrade routines roughly
 match the old setup program's upgrade functions, but the
 use of objects and the methods have changed dramatically.
 The simplest version upgrade routine would look like:
 
+----
 $test[] = "0.9.3pre10";
-
 function addressbook_upgrade0_9_3pre10()
-
 {
-
     global $setup_info;
-
     $setup_info['addressbook']['currentver'] = '0.9.3';
-
     return $setup_info['addressbook']['currentver'];
-
 }
+----
 
 This upgrade function merely updates the current version
 number. Note that there is not only an upgrade function,
@@ -341,13 +361,12 @@ operations here. If you global $phpgw_setup, you will then
 have access to db and schema_proc objects and functions.
 The objects of interest here are:
 
-* $phpgw_setup->oProc
-
-* $phpgw_setup->db.
+* $phpgw_setup\->oProc
+* $phpgw_setup\->db
 
 For most database work you should use the oProc object. This
 also has a db object that should be used for most standard
-phpgw API db class functions, including $db->query, next_record,
+phpgw API db class functions, including $db\->query, next_record,
 num_rows, and f. The use of these for standard db operations
 is critical to the upgrade process. Schema_proc has a flag
 that can be set to determine what mode of upgrade we are
@@ -371,24 +390,26 @@ definition status. This is used in some schema_proc functions
 when altering columns and tables. This is especially critical
 for pgsql schema_proc functions.
 
-By using the $phpgw_setup->oProc object for basic inserts
+By using the $phpgw_setup\->oProc object for basic inserts
 and queries, we acheive the ability to run all upgrade functions
 in every upgrade cycle without actually altering the database
 until we reach the current version we actually want to upgrade.
 For example:
 
+----
 $sql = "SELECT * FROM phpgw_addressbook_extra WHERE contact_name='notes'";
-
 $phpgw_setup->oProc->query($sql,__LINE__,__FILE__);
 
-while($phpgw_setup->oProc->next_record()) {
+while($phpgw_setup->oProc->next_record())
+{
+----
 
-We could have used $phpgw_setup->db or even a copy for the
+We could have used $phpgw_setup\->db or even a copy for the
 above activity. However, using the above method ensures
 that an array only upgrade does just that. If the flag was
 set in setup telling schema_proc to alter the array only,
 we do not want to touch the tables for inserts or selects
-yet. In this case, $phpgw_setup->oProc->next_record() returns
+yet. In this case, $phpgw_setup\->oProc\->next_record() returns
 False, and the loop is skipped. The $phpgw_baseline array
 does not know about table content, only table and field
 definitions.
@@ -397,44 +418,51 @@ If the upgrade function containing this method is actually
 working on the tables (currentver <= the upgrade function),
 then next_record() is returned as the expected action of
 pulling the next row of data. Inside of this while loop,
-you can safely use $phpgw_setup->db, or preferably a copy,
+you can safely use $phpgw_setup\->db, or preferably a copy,
 to do the insert/delete, etc you want to have happen here.
 
+----
     $cid = $phpgw_setup->oProc->f('contact_id');
-
     $cvalu = $phpgw_setup->oProc->f('contact_value');
-
-    $update = "UPDATE phpgw_addressbook set note='" . $cvalu
-. "' WHERE id=" . $cid;
-
+    $update = "UPDATE phpgw_addressbook set note='" . $cvalu . "' WHERE id=" . $cid;
     $db1->query($update);
-
-    $delete = "DELETE FROM phpgw_addressbook_extra WHERE
-contact_id=" . $cid . " AND contact_name='notes'";
-
+    $delete = "DELETE FROM phpgw_addressbook_extra WHERE contact_id=" . $cid . " AND contact_name='notes'";
     $db1->query($delete);
-
 }
-
-$db1 is a copy of $phpgw_setup->db, to avoid potential conflicts
+----
+$db1 is a copy of $phpgw_setup\->db, to avoid potential conflicts
 with the rest of setup's db activities.
 
 In addition to the basic API db class functions, schema_proc
 introduces the following special functions:
 
+----
 function DropTable($sTableName)
+----
 
+----
 function DropColumn($sTableName, $aTableDef, $sColumnName)
+----
 
+----
 function RenameTable($sOldTableName, $sNewTableName)
+----
 
+----
 function RenameColumn($sTableName, $sOldColumnName, $sNewColumnName)
+----
 
+----
 function AlterColumn($sTableName, $sColumnName, $aColumnDef)
+----
 
+----
 function AddColumn($sTableName, $sColumnName, $aColumnDef)
+----
 
+----
 function CreateTable($sTableName, $aTableDef)
+----
 
 Please use these functions where appropriate in place of
 standard SQL CREATE, DROP, and ALTER TABLE commands. This
@@ -450,40 +478,23 @@ The remaining functions require some explanation:
 
 * CreateTable:
 
+----
 $phpgw_setup->oProc->CreateTable(
-
     'categories', array(
-
         'fd' => array(
-
-            'cat_id' => array('type' => 'auto','nullable'
-=> false),
-
-            'account_id' => array('type' => 'int','precision'
-=> 4,'nullable' => false, 'default' => 0),
-
-            'app_name' => array('type' => 'varchar','precision'
-=> 25,'nullable' => false),
-
-            'cat_name' => array('type' => 'varchar', 'precision'
-=> 150, 'nullable' => false),
-
-            'cat_description' => array('type' => 'text',
-'nullable' => false)
-
+            'cat_id' => array('type' => 'auto','nullable' => false),
+            'account_id' => array('type' => 'int','precision' => 4,'nullable' => false, 'default' => 0),
+            'app_name' => array('type' => 'varchar','precision' => 25,'nullable' => false),
+            'cat_name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => false),
+            'cat_description' => array('type' => 'text', 'nullable' => false)
         ),
-
         'pk' => array('cat_id'),
-
         'ix' => array(),
-
         'fk' => array(),
-
         'uc' => array()
-
     )
-
 );
+----
 
 Does this look familiar? The array passed to CreateTable
 is in the format used also in tables_baseline and tables_current.
@@ -493,8 +504,10 @@ is the table definition array, starting with 'fd'.
 
 * AddColumn:
 
+----
 $phpgw_setup->oProc->AddColumn('phpgw_categories','cat_access',array('type'
 => 'varchar', 'precision' => 25));
+----
 
 Here we pass the table name of an existing table, the new
 column name, and a field definition. This definition is
@@ -503,8 +516,10 @@ document.
 
 * AlterColumn:
 
+----
 $phpgw_setup->oProc->AlterColumn('phpgw_sessions','session_action',array('type'
 => 'varchar', 'precision' => '255'));
+----
 
 The format of this function matches AddColumn. It is also
 a simple case of passing the table name, field name, and
@@ -512,35 +527,23 @@ field definition.
 
 * DropColumn:
 
+----
 $newtbldef = array(
-
     "fd" => array(
-
-        'acl_appname' => array('type' => 'varchar', 'precision'
-=> 50),
-
-        'acl_location' => array('type' => 'varchar', 'precision'
-=> 255),
-
-        'acl_account' => array('type' => 'int', 'precision'
-=> 4),
-
-        'acl_rights' => array('type' => 'int', 'precision'
-=> 4)
-
+        'acl_appname' => array('type' => 'varchar', 'precision' => 50),
+        'acl_location' => array('type' => 'varchar', 'precision' => 255),
+        'acl_account' => array('type' => 'int', 'precision'=> 4),
+        'acl_rights' => array('type' => 'int', 'precision' => 4)
     ),
-
     'pk' => array(),
-
     'ix' => array(),
-
     'fk' => array(),
-
     'uc' => array()
-
 );
 
 $phpgw_setup->oProc->DropColumn('phpgw_acl',$newtbldef,'acl_account_type');
+----
+
 
 This is the most complicated function in schema_proc, from
 the user's perspective. Its complexity is necessitated by
@@ -567,14 +570,14 @@ from what you might expect relative to the master.
 PLEASE, DO NOT WRITE TO OR ALTER ANOTHER APPLICATION'S TABLES
 OR THE API TABLES IN YOUR APPLICATION UPGRADE FUNCTIONS!
 
-2.5 default_records.inc.php (Optional)
+=== default_records.inc.php (Optional)
 
-2.5.1 Any application with tables that wants to load some default
-  data will need this file.
+==== Any application with tables that wants to load some default data will need this file.
 
 The default_records file consists of a list of SQL INSERTs
 using the $oProc object directly:
 
+----
 $oProc->query("INSERT INTO phpgw_inv_statuslist (status_name)
 VALUES ('available')");
 
@@ -583,6 +586,7 @@ VALUES ('no longer available')");
 
 $oProc->query("INSERT INTO phpgw_inv_statuslist (status_name)
 VALUES ('back order')");
+----
 
 In this case, the developer wanted to insert some status
 information, which was then used in a select box on an html
@@ -591,10 +595,9 @@ will have this data included. This file should consist of
 queries applicable to the tables defined in setup.inc.php
 and tables_current.inc.php.
 
-2.6 test_data.inc.php (Optional)
+=== test_data.inc.php (Optional)
 
-2.6.1 Any developer wanting to test the full list of upgrade
-  routines can use this file.
+==== Any developer wanting to test the full list of upgrade routines can use this file.
 
 test_data.inc.php is similar to default_records above. It
 is called only by schematoy.php and is never installed with
@@ -602,26 +605,30 @@ a new install or upgrade. This is a developer-only file.
 The INSERTs here should be applicable to the tables_baseline
 table definitions.
 
-2.7 language files (Required)
+=== language files (Required)
 
-2.7.1 All applications should have at least a file of English
-  translations, used for their application lang() calls.
+==== All applications should have at least a file of English translations, used for their application lang() calls.
 
 * Format of a lang file:
 
+----
 {phrase}{TAB}{appname}{TAB}{LANG_CODE}{TAB}{translation}
+----
 
-    e.g:
+e.g:
 
+----
 first name    common    en    First Name
-
 first name    common    de    Vorname
+----
 
 * Filenames:
 
+----
 phpgw_{LANG_CODE}.lang
+----
 
-  e.g.
+e.g.
 
 English: phpgw_en.lang
 
@@ -630,12 +637,11 @@ German: phpgw_de.lang
 Please see the contents of the API 'languages' table for
 the correct setting of the LANG_CODE.
 
-3 Developer Tools
+== Developer Tools
 
-3.1 sqltoarray.php
+=== sqltoarray.php
 
-3.1.1 Displays the current schema_proc array defining an application's
-  tables.
+==== Displays the current schema_proc array defining an application's tables.
 
 This web application reads the current table status live
 from the database. It then parses this information into
@@ -647,9 +653,9 @@ this form you may then download a tables_current file, suitable
 for commission to cvs. Please do check the format to make
 sure the definitions are correct.
 
-3.2 schematoy.php
+=== schematoy.php
 
-3.2.1 Runs the full cycle of upgrades, including optional test_data.
+==== Runs the full cycle of upgrades, including optional test_data.
 
 This app is not beautiful, may bomb on you, and will definitely
 drop your application's tables. The display is similar to
@@ -658,13 +664,9 @@ of apps with tables. Select one app, and enter a target
 version. Upon submission of the form:
 
 * All application tables are dropped.
-
 * tables_baseline.inc.php is loaded.
-
 * test_data.inc.php is loaded
-
 * tables_update.inc.php is loaded.
-
 * a full application upgrade test begins.
 
 This will give a LOT of debugging output. Depending on your
@@ -676,9 +678,9 @@ as expected after all the table modifications, etc. If not,
 it should be clear where the error has occurred. Look for
 the usual INVALID SQL warnings, among others.
 
-3.3 tools subdirectory
+=== tools subdirectory
 
-3.3.1 some utilities for sql file conversion, etc.
+==== some utilities for sql file conversion, etc.
 
 In the tools directory under setup3, there should be at least
 a couple of hopefully handy perl or shell scripts. These
@@ -688,11 +690,11 @@ expected to be perfect, but might offer some assistance
 or ideas for additional utilities. Use these at your own
 risk or benefit.
 
-4 The install/upgrade process
+== The install/upgrade process
 
-4.1 Overview
+=== Overview
 
-4.1.1 Setup internal upgrade functions
+==== Setup internal upgrade functions
 
 Setup uses a common set of functions for new installs and
 upgrades. These are implemented as multi-pass loops. For
@@ -703,9 +705,9 @@ mass install or upgrade is determined by application dependencies.
 The other determining factor is the order in which the application
 directories and setup.inc.php files are read from the filesystem.
 
-4.2 New installs
+=== New installs
 
-4.2.1 Detection
+==== Detection
 
 Each run of index.php or applications.php in setup3 first
 runs a set of detection routines. These read the data from
@@ -717,17 +719,11 @@ all applications. Based on the information gathered, a status
 flag is set to one of the following values:
 
 * U - Upgrade required/available
-
 * R - upgrade in pRogress
-
 * C - upgrade Completed successfully
-
 * D - Dependency failure
-
 * F - upgrade Failed
-
 * V - Version mismatch at end of upgrade
-
 * M - Missing files at start of upgrade (Not used, proposed
   only)
 
@@ -743,13 +739,13 @@ For a new install, all applications will be out of sync,
 since there is not even an 'phpgw_applications' table in
 the database to tell setup what the status is for any application.
 
-4.2.2 Selection
+==== Selection
 
 There is no selection for application installs in 'new install'
 mode. All physically present applications will be installed,
 or at least attempted.
 
-4.2.3 Installation
+==== Installation
 
 Once the setup user clicks the magic button to install all
 applications, the following occurs:
@@ -778,9 +774,9 @@ applications, the following occurs:
   some reason, it will then be skipped on the next pass.
   This keeps the loop from running away.
 
-4.3 Upgrades
+=== Upgrades
 
-4.3.1 Detection
+==== Detection
 
 Only an API version mismatch will trigger an automated request
 for the user to upgrade their install. Once the api is current,
@@ -792,7 +788,7 @@ which may be out of sync, as well. As the phpgwapi continues
 to stabilize, it is felt that this method of upgrading will
 become less and less common.
 
-4.3.2 Selection
+==== Selection
 
 Within applications.php, a color-coded matrix of application
 status and actions is displayed. Depending on the status
@@ -813,7 +809,7 @@ three routines in order:
 
 * upgrade
 
-4.3.3 Upgrade
+==== Upgrade
 
 The idea here is that multiple actions can be selected and
 run in order in one click. In any case, once they select
@@ -841,14 +837,14 @@ an application for upgrade, the following occurs:
   updated into the 'phpgw_applications' and 'phpgw_hooks'
   tables.
 
-4.4 Uninstallation/Removal
+=== Uninstallation/Removal
 
-4.4.1 Selection
+==== Selection
 
 Selective removal of an application is done via applications.php,
 in a manner similar to the method above for upgrades.
 
-4.4.2 Uninstallation
+===== Uninstallation
 
 Once an application is selected for removal:
 
@@ -864,18 +860,20 @@ Once an application is selected for removal:
 
 * The application itself is deregistered (removed from 'phpgw_applications').
 
-5 Caveats
+== Caveats
 
-5.1 Must see info
+=== Must see info
 
-5.1.1 Auto fields
+==== Auto fields
 
 For auto type fields, schema_proc creates a sequence automatically
 based on the table name for databases that require sequences.
 In the case of postgresql, the limit for this name based
 on our tests is 31 characters. The schema_proc format is:
 
+----
 $sSequenceSQL = sprintf("CREATE SEQUENCE seq_%s", $sTableName);
+----
 
 This limits the maximum length for a tablename to 27 characters.
 Based on the tablename standard in phpgw of 'phpgw_tablename',
@@ -891,7 +889,7 @@ SQL for a field that will also be an index or unique field,
 which for our uses should typically be true for an auto
 field. MySQL 3.23.X and PostgreSQL do not have this issue.
 
-5.1.2 Default 0
+==== Default 0
 
 For int fields, a default of 0 is not assumed. Only some
 databases will set this default for you, MySQL being one.
