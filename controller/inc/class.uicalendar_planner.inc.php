@@ -307,11 +307,109 @@
 			$part_of_town['planned_status'] = $planned_status;
 		}
 
+
+		/**
+		 * Note: prelimilary test
+		 * @param type $part_of_towns
+		 * @param type $from_date_ts
+		 * @param type $control_id
+		 */
+		
+		private function get_scheduled_controls( $part_of_towns, $from_date_ts, $control_id  )
+		{
+
+			$month = date('m', $from_date_ts);
+			$year = date('Y', $from_date_ts);
+			$daysInMonth	 = $this->_daysInMonth($month, $year);
+
+
+			$items = array();
+
+			foreach ($part_of_towns as $part_of_town_id)
+			{
+				$_items = $this->get_items($year, $month, $control_id, 0, $part_of_town_id);
+
+				$items = array_merge($items, $_items);
+			}
+
+			$controls = array();
+			for ($day = 1; $day <= $daysInMonth; $day++)
+			{
+				$date_string = "{$year}-{$month}-{$day}";
+
+				if(!empty($items[$date_string]))
+				{
+					$i=1;
+					foreach ($items[$date_string] as $item)
+					{
+	//				_debug_array($item);
+						$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+
+						if($item['schedule']['info']['check_list_id'])
+						{
+							$control_link_data = array
+								(
+								'menuaction' => 'controller.uicase.add_case',
+								'check_list_id' => $item['schedule']['info']['check_list_id'],
+							);
+							$url_target = '_self';
+							$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
+						}
+						else
+						{
+							$link_to_checklist = '';
+						}
+
+						switch ($item['schedule']['status'])
+						{
+							case 'CONTROL_REGISTERED':
+							case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
+							case 'CONTROL_NOT_DONE':
+							case 'CONTROL_PLANNED':
+								$class = 'badge-primary';
+								$draggable =  'draggable="true"';
+								break;
+
+							case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
+								$class = 'badge-secondary';
+								$draggable =  '';
+								break;
+
+							default:
+								$class = 'badge-secondary';
+								$draggable =  '';
+								break;
+						}
+
+						$item_content = array(
+							'id'				 => "{$item['component']['location_id']}_{$item['component']['id']}",
+							'control_id'		 => $item['schedule']['info']['control_id'],
+							'serie_id'			 => $item['schedule']['info']['serie_id'],
+							'check_list_id'		 => $item['schedule']['info']['check_list_id'],
+							'deadline_date_ts'	 => $item['schedule']['info']['deadline_date_ts'],
+							'completed_date_ts'  =>	$component['schedule']['info']['completed_date_ts'],
+							'assigned_to'		 => $item['schedule']['info']['assigned_to'],
+							'link'				 => $link_to_checklist,
+							'name'				 => $desc
+						);
+
+						$i++;
+
+						$controls[] = $item_content;
+					}
+				}
+
+			}
+
+			_debug_array($controls);
+
+		}
+
 		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null)
 		{
 
 			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows);
-			
+
 			return $historic_check_lists;
 		}
 
@@ -687,7 +785,7 @@
 			foreach ($components as $component)
 			{
 				$timestamp = $component['schedule']['info']['planned_date_ts'] ? $component['schedule']['info']['planned_date_ts'] : $component['schedule']['info']['deadline_date_ts'];
-				
+
 				$date = $GLOBALS['phpgw']->common->show_date($timestamp, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
 				$control_info[] = array(
@@ -799,7 +897,7 @@ HTML;
 				if($email[$item])
 				{
 					$week = date("W", $timestamp[$item]);
-					
+
 					$html = str_replace(array('__location__', '__week__', '__sender__'), array($location_name, $week, $GLOBALS['phpgw_info']['user']['fullname']), $html);
 
 					$toarray = array($email[$item]);
@@ -1007,7 +1105,7 @@ HTML;
 			{
 				phpgw::no_access();
 			}
-			
+
 			self::set_active_menu('controller::inspection_history');
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
 
@@ -1119,7 +1217,7 @@ HTML;
 			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows);
 			$total = $this->so->total_records;
 
-			
+
 			$condition_degree = 0;
 
 			$soentity = createObject('property.soentity');
@@ -1291,7 +1389,7 @@ HTML;
 							(
 							'menuaction' => 'controller.uicase.add_case',
 							'check_list_id' => $item['schedule']['info']['check_list_id'],
-						);					
+						);
 						$url_target = '_self';
 						$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
 					}
@@ -1490,7 +1588,7 @@ HTML;
 			}
 
 
-	
+
 			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
 				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
 
@@ -1507,6 +1605,7 @@ HTML;
 			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
 
 
+			$selected_part_of_towns = array();
 			$part_of_town_list	 = array();
 			$part_of_town_list2	 = array();
 			$_items = array();
@@ -1519,13 +1618,16 @@ HTML;
 
 					if ($part_of_town['selected'])
 					{
+						$selected_part_of_towns[] = $part_of_town['id'];
 						$checklist_items = $this->so_control->get_checklist_at_time_and_place($part_of_town['id'] , $control_id, $from_date_ts, $to_date_ts);
 						$_items = $_items + $checklist_items;
 					}
 				}
 			}
-			unset($part_of_town);
-
+			unset($part_of_town);		
+			
+			//Test: complete list per month
+//			$scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $from_date_ts, $control_id );
 
 			$items = array();
 			foreach ($_items as $location_id => $entry)
@@ -1563,7 +1665,7 @@ HTML;
 						$todo_list[] = array(
 							'id' => $check_list['schedule']['info']['check_list_id'],
 							'name' => "{$check_list['component']['xml_short_desc']}"
-						);			
+						);
 					}
 				}
 			}
