@@ -350,7 +350,12 @@
 
 		public function show()
 		{
-			$delegate = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$delegate = $this->bo->read_single($id);
 			$delegate['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$delegate['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 					'id' => $delegate['organization_id']));

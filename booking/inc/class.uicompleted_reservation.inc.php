@@ -550,7 +550,12 @@
 
 		public function show()
 		{
-			$reservation = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$reservation = $this->bo->read_single($id);
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
 			$show_edit_button = false;
