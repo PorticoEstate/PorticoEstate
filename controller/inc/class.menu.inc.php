@@ -87,6 +87,13 @@
 				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
 				'image'	 => array('property', 'location_1')
 			);
+
+			$menus['navigation']['ad_hoc']	 = array(
+				'text'	 => 'Ad Hoc',
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.ad_hoc')),
+				'image'	 => array('property', 'location_1')
+			);
+
 			$menus['navigation']['inspection_history']	 = array(
 				'text'	 => lang('inspection history'),
 				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
@@ -211,6 +218,12 @@
 			$menus['navigation']['start_inspection']	 = array(
 				'text'	 => lang('start inspection'),
 				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection')),
+				'image'	 => array('property', 'location_1')
+			);
+
+			$menus['navigation']['ad_hoc']	 = array(
+				'text'	 => 'Ad Hoc',
+				'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.ad_hoc')),
 				'image'	 => array('property', 'location_1')
 			);
 
