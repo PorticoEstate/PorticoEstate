@@ -980,6 +980,10 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$booking = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);

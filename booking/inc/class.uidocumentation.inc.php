@@ -146,6 +146,10 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
 			self::render_template('documentation', array('document' => $document));

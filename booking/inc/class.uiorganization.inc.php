@@ -332,7 +332,13 @@
 
 		public function show()
 		{
-			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
+			$organization = $this->bo->read_single($id);
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Organization'), 'link' => '#organization');

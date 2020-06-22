@@ -286,6 +286,10 @@
 		{
 			#$this->check_active('booking.uipermission_building.show');
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$permission = $this->bo->read_single($id);
 			$this->add_default_display_data($permission);
 			self::render_template('permission', array('permission' => $permission));
