@@ -312,17 +312,17 @@
 		/**
 		 * Note: prelimilary test
 		 * @param type $part_of_towns
-		 * @param type $from_date_ts
+		 * @param type $month
+		 * @param type $year
 		 * @param type $control_id
 		 */
 
-		private function get_scheduled_controls( $part_of_towns, $from_date_ts, $control_id  )
+		private function get_scheduled_controls( $part_of_towns, $month, $year, $control_id  )
 		{
 
-			$month = date('m', $from_date_ts);
-			$year = date('Y', $from_date_ts);
+			$month = $month ? $month : date('m');
+			$year = $year ? $year : date('Y');
 			$daysInMonth	 = $this->_daysInMonth($month, $year);
-
 
 			$items = array();
 
@@ -330,13 +330,15 @@
 			{
 				$_items = $this->get_items($year, $month, $control_id, 0, $part_of_town_id);
 
-				$items = array_merge($items, $_items);
+				$items = array_merge_recursive($items, $_items);
 			}
-
+//			_debug_array($items);
+			$sort_names = array();
 			$controls = array();
+
 			for ($day = 1; $day <= $daysInMonth; $day++)
 			{
-				$date_string = "{$year}-{$month}-{$day}";
+				$date_string = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
 
 				if(!empty($items[$date_string]))
 				{
@@ -360,7 +362,7 @@
 							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list',
 									'deadline_ts'	 => $item['schedule']['info']['deadline_date_ts'],
 									'control_id'	 => $item['schedule']['info']['control_id'],
-									'serie_id'		 => '',
+									'serie_id'		 => $item['schedule']['info']['serie_id'],
 									'location_id'	 => $item['component']['location_id'],
 									'component_id'	 => $item['component']['id'],
 									'location_code'	 => $item['component']['location_code'],
@@ -375,14 +377,24 @@
 							case 'CONTROL_REGISTERED':
 								$status = 'Registrert';
 								break;
+
 							case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
-							case 'CONTROL_NOT_DONE':
 							case 'CONTROL_PLANNED':
-								$status = 'Planned';
+								$status = 'Planlagt';
 								break;
 
+							case 'CONTROL_NOT_DONE':
+								$status = 'Ikke utført';
+
+							case "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS":
+							case "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS":
+							case "CONTROL_DONE_WITH_ERRORS":
 							case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
 								$status = 'Utført';
+								break;
+
+							case "CONTROL_CANCELED":
+								$status = 'Kansellert';
 								break;
 						}
 
@@ -392,6 +404,7 @@
 							'serie_id'			 => $item['schedule']['info']['serie_id'],
 							'check_list_id'		 => $item['schedule']['info']['check_list_id'],
 							'deadline_date_ts'	 => $item['schedule']['info']['deadline_date_ts'],
+							'deadline_date'		 => $GLOBALS['phpgw']->common->show_date($item['schedule']['info']['deadline_date_ts'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 							'completed_date_ts'  =>	$component['schedule']['info']['completed_date_ts'],
 							'assigned_to'		 => $item['schedule']['info']['assigned_to'],
 							'link'				 => $link,
@@ -401,11 +414,15 @@
 
 						$i++;
 
+						$sort_names[] = $desc;
 						$controls[] = $item_content;
 					}
 				}
 
 			}
+
+			array_multisort($sort_names, SORT_ASC, $controls);
+
 			return $controls;
 		}
 
@@ -681,9 +698,9 @@
 						$calendar_array = $year_calendar->build_calendar($check_lists_array);
 						foreach ($calendar_array as $_month => $_month_info)
 						{
-							if($month !== $_month)
+							if($month && (int)$month !== $_month)
 							{
-//								continue;
+								continue;
 							}
 
 							if($_month_info)
@@ -1503,10 +1520,14 @@ HTML;
 		{
 
 			if (null == ($year))
+			{
 				$year = date("Y", time());
+			}
 
 			if (null == ($month))
+			{
 				$month = date("m", time());
+			}
 
 			return date('t', strtotime($year . '-' . $month . '-01'));
 		}
@@ -1727,6 +1748,19 @@ HTML;
 			self::set_active_menu('controller::ad_hoc');
 			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+
+			if (13 == $month)
+			{
+				$month	 = 1;
+				$year	 += 1;
+			}
+
+			if ((string)$_REQUEST['month'] === '0')
+			{
+				$month	 = 12;
+				$year	 -= 1;
+			}
+
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
 
 			$control_id		 = phpgw::get_var('control_id', 'int');
@@ -1766,24 +1800,6 @@ HTML;
 			}
 
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
-			$current_day_timestamp	 = phpgw::get_var('current_day_str', 'date', 'REQUEST', time());
-			$current_day = new DateTime(date('Y-m-d', $current_day_timestamp));
-
-			$current_day_str = date('Y-m-d', $current_day_timestamp);
-//_debug_array($current_day_str);
-
-
-			if (phpgw::get_var('prev_day', 'bool'))
-			{
-				$current_day->modify('-1 day');
-				$current_day_str = $current_day->format('Y-m-d');
-			}
-
-			if (phpgw::get_var('next_day', 'bool'))
-			{
-				$current_day->modify('+1 day');
-				$current_day_str = $current_day->format('Y-m-d');
-			}
 
 			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
 
@@ -1796,8 +1812,6 @@ HTML;
 					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
 				);
 			}
-
-
 
 			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
 				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
@@ -1833,7 +1847,7 @@ HTML;
 			}
 			unset($part_of_town);
 
-			$scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $from_date_ts, $control_id );
+			$scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $month, $year, $control_id );
 
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
@@ -1855,11 +1869,20 @@ HTML;
 
 			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('current_day_str', 'date', $current_day->getTimestamp()	);
 			$data = array
 			(
-				'current_day_str' => $current_day->format('Y-m-d'),
-				'current_day' => $current_day->getTimestamp(),
+				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
+				'current_year'	 => $year,
+				'next_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc',
+					'year' => $year,
+					'month' => ($month + 1),
+					)),
+				'prev_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc',
+					'year' => $year,
+					'month' => ($month - 1),
+					)),
+				'next_month'	 => lang(date('F', mktime(0, 0, 0, $month + 1, 1))),
+				'prev_month'	 => lang(date('F', mktime(0, 0, 0, $month - 1, 1))),
 				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
 				'control_area_list'	 => array('options' => $control_area_list),
 				'entity_group_list'	 => array('options' => $entity_groups),

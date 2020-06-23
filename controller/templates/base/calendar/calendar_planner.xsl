@@ -795,44 +795,39 @@
 		</div>
 
 		<div class="row mt-2">
-			<div class="container">
-				<h4>Velg blant dagens oppførte kontroller</h4>
+			<div class="col">
+				<p style="font-size: 14px">Velg blant månedens oppførte kontroller:
+				</p>
 			</div>
+		</div>
+
+		<div class="text-center clearfix">
+			<span class="float-left">
+				<a href="{prev_month_url}">
+					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
+						<xsl:value-of select="prev_month"/>
+					</button>
+				</a>
+			</span>
+
+			<span class="float-right">
+				<a href="{next_month_url}">
+					<button type="button" name="next_year" value="1" class="btn btn-secondary">
+						<xsl:value-of select="next_month"/> &gt;
+					</button>
+				</a>
+			</span>
+			<span class="float-none">
+				<h4>
+					<xsl:value-of select="current_month"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="current_year"/>
+				</h4>
+			</span>
 		</div>
 		<div class="row mt-2">
 
 			<div class="container">
-				<div class="text-center clearfix">
-					<span class="float-left">
-						<a href="#">
-							<button type="submit" name="prev_day" value="1" class="btn btn-secondary">&lt;
-								<xsl:value-of select="prev_day"/>
-							</button>
-						</a>
-					</span>
-
-					<span class="float-right">
-						<a href="#">
-							<button type="submit" name="next_day" value="1" class="btn btn-secondary">
-								<xsl:value-of select="next_day"/> &gt;
-							</button>
-						</a>
-					</span>
-					<span class="float-none">
-						<h4>
-							<div>
-								<input type="text" id="current_day_str" name="current_day_str" readonly= "true" style="border:none;text-align: center; width:6em">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
-									</xsl:attribute>
-								</input>
-								<i class="fa fa-calendar ml-1"></i>
-							</div>
-
-						</h4>
-					</span>
-				</div>
-
 				<div class="mt-3 row datagrid table-responsive">
 					<table class="table table-bordered table-hover-cells">
 						<thead>
@@ -841,7 +836,10 @@
 									Objekt
 								</th>
 								<th>
-									status
+									Status
+								</th>
+								<th>
+									<xsl:value-of select="php:function('lang', 'deadline')"/>
 								</th>
 								<th>
 									Link
@@ -851,7 +849,6 @@
 						<tbody>
 							<xsl:apply-templates select="scheduled_controls/ad_hoc_rows">
 							</xsl:apply-templates>
-
 						</tbody>
 					</table>
 				</div>
@@ -1035,6 +1032,9 @@
 		</td>
 		<td>
 			<xsl:value-of select="status"/>
+		</td>
+		<td>
+			<xsl:value-of select="deadline_date"/>
 		</td>
 		<td>
 			<a href="{link}" target="_blank">
