@@ -13,6 +13,9 @@
 		<xsl:when test="start_inspection">
 			<xsl:apply-templates select="start_inspection"/>
 		</xsl:when>
+		<xsl:when test="ad_hoc">
+			<xsl:apply-templates select="ad_hoc"/>
+		</xsl:when>
 		<xsl:when test="inspection_history">
 			<xsl:apply-templates select="inspection_history"/>
 		</xsl:when>
@@ -737,43 +740,250 @@
 				</div>
 			</div>
 		</xsl:if>
+	</form>
+</xsl:template>
 
-		<!--
-		<div class="row mt-5">
-			<div class="container">
-				<h4>Velg blant alle enheter</h4>
+<xsl:template match="ad_hoc" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
+
+	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+
+	<form method="post" id="form" action="{form_action}">
+
+		<div id="democollapseBtn" class="row collapse">
+			<div class="mt-2 container">
+				<div class="form-group">
+					<fieldset>
+						<legend>Velg kontroll</legend>
+
+						<label for="control_area_id">
+							<xsl:value-of select="php:function('lang', 'control types')"/>
+						</label>
+						<select id="control_area_id" name="control_area_id" class="form-control">
+							<xsl:apply-templates select="control_area_list/options"/>
+						</select>
+
+						<label for="control_id">
+							<xsl:value-of select="php:function('lang', 'control')"/>
+						</label>
+						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select control type')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="control_type_list/options"/>
+						</select>
+
+
+						<label for="part_of_town_id">
+							<xsl:value-of select="php:function('lang', 'part of town')"/>
+						</label>
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+							<xsl:attribute name="multiple">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select part of town')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="part_of_town_list/options"/>
+						</select>
+
+					</fieldset>
+				</div>
 			</div>
 		</div>
 
 		<div class="row mt-2">
+			<div class="col">
+				<p style="font-size: 14px">Velg blant månedens oppførte kontroller:
+				</p>
+			</div>
+		</div>
+
+		<div class="text-center clearfix">
+			<span class="float-left">
+				<a href="{prev_month_url}">
+					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
+						<xsl:value-of select="prev_month"/>
+					</button>
+				</a>
+			</span>
+
+			<span class="float-right">
+				<a href="{next_month_url}">
+					<button type="button" name="next_year" value="1" class="btn btn-secondary">
+						<xsl:value-of select="next_month"/> &gt;
+					</button>
+				</a>
+			</span>
+			<span class="float-none">
+				<h4>
+					<xsl:value-of select="current_month"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="current_year"/>
+				</h4>
+			</span>
+		</div>
+		<div class="row mt-2">
 
 			<div class="container">
+				<div class="mt-3 row datagrid table-responsive">
+					<table class="table table-bordered table-hover-cells">
+						<thead>
+							<tr>
+								<th>
+									Objekt
+								</th>
+								<th>
+									Status
+								</th>
+								<th>
+									<xsl:value-of select="php:function('lang', 'deadline')"/>
+								</th>
+								<th>
+									Link
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<xsl:apply-templates select="scheduled_controls/ad_hoc_rows">
+							</xsl:apply-templates>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</form>
+</xsl:template>
 
-				 Søkefelt som viser valg etterhvert som man skriver inn
-				<select name="unitSelected" class="custom-select">
-					<option value="1">Christi Krybbe skoler
-					</option>
-					<option value="2">Haukeland skole
-					</option>
-					<option value="3">Hellen skole
-					</option>
-					<option value="4">Krohnegen skole
-					</option>
-					<option value="5">Møhlenpris oppveksttun skole
-					</option>
-					<option value="5">Nordnes
-					</option>
+<xsl:template match="ad_hoc_" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
 
-				</select>
-				<div class="float-right mt-2">
-					<a href="inspect-playground.html">
-						<button type="button" class="btn btn-success">Neste</button>
-					</a>
+	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+
+	<form method="post" id="form" action="{form_action}">
+		<div class="container">
+
+			<div id="democollapseBtn" class="row collapse">
+				<div class="mt-2 container">
+					<div class="form-group">
+						<fieldset>
+							<legend>Velg kontroll</legend>
+
+							<label for="control_area_id">
+								<xsl:value-of select="php:function('lang', 'control types')"/>
+							</label>
+							<select id="control_area_id" name="control_area_id" class="form-control">
+								<xsl:apply-templates select="control_area_list/options"/>
+							</select>
+
+							<label for="control_id">
+								<xsl:value-of select="php:function('lang', 'control')"/>
+							</label>
+							<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select control type')"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="control_type_list/options"/>
+							</select>
+
+
+							<label for="part_of_town_id">
+								<xsl:value-of select="php:function('lang', 'part of town')"/>
+							</label>
+							<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+								<xsl:attribute name="multiple">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select part of town')"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="part_of_town_list/options"/>
+							</select>
+
+						</fieldset>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-2">
+				<div class="container">
+					<h4>Velg blant dagens oppførte kontroller</h4>
+				</div>
+			</div>
+			<div class="row mt-2">
+
+				<div class="text-center clearfix">
+					<span class="float-left">
+						<a href="#">
+							<button type="submit" name="prev_day" value="1" class="btn btn-secondary">&lt;
+								<xsl:value-of select="prev_day"/>
+							</button>
+						</a>
+					</span>
+
+					<span class="float-right">
+						<a href="#">
+							<button type="submit" name="next_day" value="1" class="btn btn-secondary">
+								<xsl:value-of select="next_day"/> &gt;
+							</button>
+						</a>
+					</span>
+					<span class="float-none">
+						<h4>
+							<div>
+								<input type="text" id="current_day_str" name="current_day_str" readonly= "true" style="border:none;text-align: center; width:6em">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
+									</xsl:attribute>
+								</input>
+								<i class="fa fa-calendar ml-1"></i>
+							</div>
+
+						</h4>
+					</span>
+				</div>
+				<div class="mt-2">
+					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
+						<xsl:apply-templates select="todo_list/options"/>
+					</select>
+					<div class="float-right mt-2">
+						<button type="button" class="btn btn-success" onClick="start_inspection();">
+							<xsl:value-of select="php:function('lang', 'next')"/>
+						</button>
+					</div>
 				</div>
 
 			</div>
+
+			<div class="mt-3 row datagrid table-responsive">
+				<table class="table table-bordered table-hover-cells">
+					<thead>
+						<tr>
+							<th>
+								Objekt
+							</th>
+							<th>
+								status
+							</th>
+							<th>
+								Link
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<xsl:apply-templates select="scheduled_controls/ad_hoc_rows">
+						</xsl:apply-templates>
+
+					</tbody>
+				</table>
+			</div>
+
 		</div>
-		-->
+
 	</form>
 </xsl:template>
 
@@ -814,6 +1024,29 @@
 		</xsl:for-each>
 	</tr>
 </xsl:template>
+
+<xsl:template match="ad_hoc_rows">
+	<tr>
+		<td>
+			<xsl:value-of disable-output-escaping="yes" select="name"/>
+		</td>
+		<td>
+			<xsl:value-of select="status"/>
+		</td>
+		<td>
+			<xsl:value-of select="deadline_date"/>
+		</td>
+		<td>
+			<a href="{link}" target="_blank">
+				<kbd>
+					<i class='fas fa-link'></i>
+				</kbd>
+			</a>
+		</td>
+	</tr>
+</xsl:template>
+
+
 
 <xsl:template match="history_rows">
 	<xsl:param name="date_format"/>
