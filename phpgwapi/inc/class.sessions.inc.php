@@ -164,7 +164,7 @@
 			$this->_phpgw_set_cookie_params();
 
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
+				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True'  && !phpgw::get_var('api_mode', 'bool'))
 			{
 				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');

@@ -127,7 +127,7 @@ HTML;
 				$_REQUEST['skip_remote']				 = true;
 			}
 
-			if ( isset($_POST['mode']) && $_POST['mode'] == 'api' )
+			if ( isset($_POST['api_mode']) && $_POST['api_mode'] == true )
 			{
 				$_POST['submitit'] = true;
 				$GLOBALS['phpgw_remote_user_fallback']	 = 'sql';
@@ -454,7 +454,7 @@ HTML;
 					exit;
 				}
 
-				if ( phpgw::get_var('mode', 'string', 'POST') == 'api' )
+				if ( phpgw::get_var('api_mode', 'bool', 'POST') )
 				{
 					header('Content-Type: application/json');
 					echo json_encode(array(
