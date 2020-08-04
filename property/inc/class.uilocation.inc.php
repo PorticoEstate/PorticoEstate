@@ -3175,6 +3175,12 @@ JS;
 
 			$location_exception = $this->bo->get_location_exception($location_code);
 
+			foreach ($location_exception as & $_location_exception)
+			{
+				$_location_exception['category_text'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['category_text']);
+				$_location_exception['location_descr'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['location_descr']);
+			}
+
 			return array(
 				'location_exception' => $location_exception
 			);
