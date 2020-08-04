@@ -708,15 +708,21 @@
 
 		function select_location_type()
 		{
+			static $location_type = array();
+
+			if($location_type)
+			{
+				return $location_type;
+			}
+
 			$this->db->query("SELECT * FROM fm_location_type ORDER BY id ");
 
-			$location_type = array();
 			while ($this->db->next_record())
 			{
 				$location_type[] = array(
 					'id'				 => $this->db->f('id'),
-					'name'				 => stripslashes($this->db->f('name')),
-					'descr'				 => stripslashes($this->db->f('descr')),
+					'name'				 => $this->db->f('name', true),
+					'descr'				 => $this->db->f('descr', true),
 					'list_info'			 => unserialize($this->db->f('list_info')),
 					'list_address'		 => $this->db->f('list_address'),
 					'list_documents'	 => $this->db->f('list_documents'),
