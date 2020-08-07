@@ -4045,7 +4045,7 @@ JS;
 			$data		 = array(
 				array(
 					'col1'	 => "{$organisation}\n{$department}\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
-					'col2'	 => "Saksbehandler: {$from_name}\nRessursnr.: {$ressursnr}"
+					'col2'	 => "Saksbehandler: {$from_name}"//\nRessursnr.: {$ressursnr}"
 				),
 			);
 
@@ -4609,9 +4609,9 @@ JS;
 				. "{$department}<br/>"
 				. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
 				. "</td>";
-			$body		 .= "<td style='vertical-align:top;'>Saksbehandler: {$user_name}<br/>"
-				. "Ressursnr.: {$ressursnr}<br/>"
-				. "</td>";
+			$body		 .= "<td style='vertical-align:top;'>Saksbehandler: {$user_name}<br/>";
+//			$body		 .= "Ressursnr.: {$ressursnr}<br/>";
+			$body		 .= "</td>";
 
 			$invoice_address = lang('invoice address') . ":<br/>{$this->bo->config->config_data['invoice_address']}";
 
