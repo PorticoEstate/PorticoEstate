@@ -1,6 +1,4 @@
 <?php
-
-error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
 include_once '../src/Cezpdf.php';
@@ -17,7 +15,7 @@ $data = [
     ['num' => 5, 'numColor' => [1,1,1], 'name' => 'sauron', 'type' => 'really bad dude', 'typeFill' => [0, 0, 0], 'typeColor' => [1, 1, 1]],
 ];
 
-$cols = array('num' => 'No', 'type' => 'Type', 'name' => '<i>Alias</i>');
+$cols = ['num' => 'No', 'type' => 'Type', 'name' => '<i>Alias</i>'];
 
 $conf = [
     'evenColumns' => 2,

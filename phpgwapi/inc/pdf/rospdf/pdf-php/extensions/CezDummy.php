@@ -4,7 +4,6 @@
  *
  * This template file is an example on how to use extensions for Cezpdf or Cpdf
  */
-error_reporting(E_ALL);
 set_time_limit(1800);
 set_include_path('../src/'.PATH_SEPARATOR.get_include_path());
 include 'Cezpdf.php';
@@ -15,13 +14,13 @@ include 'Cezpdf.php';
 class CezDummy extends Cezpdf
 {
     public $data = array(
-                    array('first' => 'John', 'last' => 'Doe'),
-                    array('first' => 'Ole', 'last' => 'K.'),
+                    ['first' => 'John', 'last' => 'Doe'],
+                    ['first' => 'Ole', 'last' => 'K.'],
                 );
     /**
      * @param Cezpdf $ezpdf current cezpdf object
      */
-    public function __construct($p, $o = 'portrait', $t = 'none', $op = array())
+    public function __construct($p, $o = 'portrait', $t = 'none', $op = [])
     {
         parent::__construct($p, $o, $t, $op);
 
