@@ -1,6 +1,6 @@
 {
   "name": "blueimp-file-upload",
-  "version": "10.6.0",
+  "version": "10.31.0",
   "title": "jQuery File Upload",
   "description": "File Upload widget with multiple file selection, drag&drop support, progress bar, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (Google App Engine, PHP, Python, Ruby on Rails, Java, etc.) that supports standard HTML form file uploads.",
   "keywords": [
@@ -35,23 +35,23 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "jquery": ">=1.6"
+    "jquery": ">=1.7"
   },
   "optionalDependencies": {
     "blueimp-canvas-to-blob": "3",
-    "blueimp-load-image": "2",
+    "blueimp-load-image": "5",
     "blueimp-tmpl": "3"
   },
   "devDependencies": {
-    "eslint": "6",
-    "eslint-config-blueimp": "1",
+    "eslint": "7",
+    "eslint-config-blueimp": "2",
     "eslint-config-prettier": "6",
-    "eslint-plugin-jsdoc": "15",
+    "eslint-plugin-jsdoc": "29",
     "eslint-plugin-prettier": "3",
-    "prettier": "1",
-    "stylelint": "10",
-    "stylelint-config-prettier": "5",
-    "stylelint-config-recommended": "2"
+    "prettier": "2",
+    "stylelint": "13",
+    "stylelint-config-prettier": "8",
+    "stylelint-config-recommended": "3"
   },
   "stylelint": {
     "extends": [
@@ -76,18 +76,19 @@
   },
   "eslintIgnore": [
     "js/*.min.js",
-    "js/vendor",
     "test/vendor"
   ],
   "prettier": {
+    "arrowParens": "avoid",
     "proseWrap": "always",
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "none"
   },
   "scripts": {
     "lint": "stylelint '**/*.css' && eslint .",
     "unit": "docker-compose run --rm mocha",
     "wdio": "docker-compose run --rm wdio",
-    "test": "npm run lint && npm run unit && npm run wdio && npm run wdio -- firefox",
+    "test": "npm run lint && npm run unit && npm run wdio && npm run wdio -- conf/firefox.js",
     "posttest": "docker-compose down -v",
     "preversion": "npm test",
     "postversion": "git push --tags origin master && npm publish"
