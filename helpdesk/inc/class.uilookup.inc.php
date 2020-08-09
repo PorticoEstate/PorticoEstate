@@ -117,7 +117,7 @@ JS;
 
 						try
 						{
-							parent.$.fn.insertAtCaret(decodedString);
+							parent.$.fn.insertAtCaret(encodedStr);
 						}
 JS;
 					break;
@@ -297,7 +297,7 @@ JS;
 
 						try
 						{
-							parent.$.fn.insertAtCaret(decodedString);
+							parent.$.fn.insertAtCaret(encodedStr);
 						}
 JS;
 					break;
