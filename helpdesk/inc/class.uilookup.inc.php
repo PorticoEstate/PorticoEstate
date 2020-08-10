@@ -156,7 +156,7 @@ JS;
 
 				catch(e)
 				{
-					console.log(parent.quill);
+	//				console.log(parent.quill);
 					console.log(e);
 					var temp = parent.document.getElementById("new_note").value;
 					if(temp)
