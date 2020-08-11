@@ -355,7 +355,12 @@
 
 		public function show()
 		{
-			$export = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$export = $this->bo->read_single($id);
 			$this->add_default_display_data($export);
 			$this->add_template_file('helpers');
 			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));

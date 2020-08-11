@@ -117,7 +117,7 @@ JS;
 
 						try
 						{
-							parent.$.fn.insertAtCaret(decodedString);
+							parent.$.fn.insertAtCaret(encodedStr);
 						}
 JS;
 					break;
@@ -156,7 +156,7 @@ JS;
 
 				catch(e)
 				{
-					console.log(parent.quill);
+	//				console.log(parent.quill);
 					console.log(e);
 					var temp = parent.document.getElementById("new_note").value;
 					if(temp)
@@ -297,7 +297,7 @@ JS;
 
 						try
 						{
-							parent.$.fn.insertAtCaret(decodedString);
+							parent.$.fn.insertAtCaret(encodedStr);
 						}
 JS;
 					break;

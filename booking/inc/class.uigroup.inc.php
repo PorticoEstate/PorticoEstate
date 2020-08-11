@@ -391,7 +391,12 @@
 
 		public function show()
 		{
-			$group = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$group = $this->bo->read_single($id);
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 					'id' => $group['organization_id']));

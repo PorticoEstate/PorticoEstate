@@ -330,6 +330,10 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 
 			$system_message = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$system_message['system_messages_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));

@@ -1,34 +1,34 @@
 [
     {
         "name": "spipu/html2pdf",
-        "version": "v5.2.1",
-        "version_normalized": "5.2.1.0",
+        "version": "v5.2.2",
+        "version_normalized": "5.2.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/spipu/html2pdf.git",
-            "reference": "7dca57b61fdb2d6920635ff2332dbc82d4be19f3"
+            "reference": "e6d8ca22347b6691bb8c2652212b1be2c89b3eff"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/spipu/html2pdf/zipball/7dca57b61fdb2d6920635ff2332dbc82d4be19f3",
-            "reference": "7dca57b61fdb2d6920635ff2332dbc82d4be19f3",
+            "url": "https://api.github.com/repos/spipu/html2pdf/zipball/e6d8ca22347b6691bb8c2652212b1be2c89b3eff",
+            "reference": "e6d8ca22347b6691bb8c2652212b1be2c89b3eff",
             "shasum": ""
         },
         "require": {
+            "ext-gd": "*",
             "ext-mbstring": "*",
-            "php": "^5.4 || ^7.0",
+            "php": "^5.6 || ^7.0",
             "tecnickcom/tcpdf": "^6.2"
         },
         "require-dev": {
             "phake/phake": "^2.0",
-            "phpunit/phpunit": "^4.0 || ^5.0",
-            "squizlabs/php_codesniffer": "^3.0"
+            "phpunit/phpunit": "^5.0"
         },
         "suggest": {
             "ext-gd": "Allows to embed images into the PDF",
             "fagundes/zff-html2pdf": "if you need to integrate Html2Pdf with Zend Framework 2 (zf2)"
         },
-        "time": "2018-10-26T13:33:18+00:00",
+        "time": "2020-03-22T16:23:26+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -57,23 +57,23 @@
     },
     {
         "name": "tecnickcom/tcpdf",
-        "version": "6.2.26",
-        "version_normalized": "6.2.26.0",
+        "version": "6.3.5",
+        "version_normalized": "6.3.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/tecnickcom/TCPDF.git",
-            "reference": "367241059ca166e3a76490f4448c284e0a161f15"
+            "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
-            "reference": "367241059ca166e3a76490f4448c284e0a161f15",
+            "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/19a535eaa7fb1c1cac499109deeb1a7a201b4549",
+            "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2018-10-16T17:24:05+00:00",
+        "time": "2020-02-14T14:20:12+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -98,7 +98,7 @@
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "LGPL-3.0"
+            "LGPL-3.0-only"
         ],
         "authors": [
             {

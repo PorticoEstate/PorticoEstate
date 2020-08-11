@@ -27,6 +27,8 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
+		function set_tab()
+		{};
 	</script>
 
 	<div id="generic_edit_tabview">
@@ -169,7 +171,13 @@
 												</xsl:when>
 											</xsl:choose>
 										</input>
-										<div id="location_container"/>
+										<div id="location_container">
+										</div>
+										<script type="text/javascript">
+											var oArgs = {menuaction: 'property.bolocation.get_locations'};
+											var strURL = phpGWLink('index.php', oArgs, true);
+											JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
+										</script>
 									</xsl:when>
 
 
@@ -316,10 +324,4 @@
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 		</form>
 	</div>
-	<script type="text/javascript">
-		var oArgs = {menuaction: 'property.bolocation.get_locations'};
-		var strURL = phpGWLink('index.php', oArgs, true);
-		JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
-	</script>
-
 </xsl:template>

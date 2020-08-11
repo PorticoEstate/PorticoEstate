@@ -26,6 +26,18 @@
 		{
 		padding-left: 4px;
 		}
+		.dataTables_filter label
+		{
+		display: inline !important;
+
+		}
+
+		input[type="search"] {
+		display: inline !important;
+		margin-left: 5px !important;
+
+		}
+
 	</style>
 
 	<script type="text/javascript">

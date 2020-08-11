@@ -473,6 +473,11 @@ class ADODB_mssqlnative extends ADOConnection {
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
 		if (!function_exists('sqlsrv_connect')) return null;
+		
+		if (!empty($this->port))
+		{
+			$argHostname .= ", $this->port";
+		}
 		$connectionInfo = $this->connectionInfo;
 		$connectionInfo["Database"]=$argDatabasename;
 		$connectionInfo["UID"]=$argUsername;

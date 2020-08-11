@@ -123,7 +123,7 @@
 			}
 
 			$dsn = '';
-			$port ='';
+			$port = $this->Port;
 			$_charset = '';
 			$host = $this->Host;
 			switch ($this->Type)

@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
 set_time_limit(1800);
 set_include_path('../src/'.PATH_SEPARATOR.get_include_path());
 
@@ -8,9 +7,9 @@ include 'Cezpdf.php';
 
 class Creport extends Cezpdf
 {
-    public function __construct($p, $o)
+    public function Creport($p, $o)
     {
-        parent::__construct($p, $o, 'none', array());
+        $this->__construct($p, $o, 'none', []);
     }
 }
 $pdf = new Creport('a4', 'portrait');
@@ -37,5 +36,5 @@ $pdf->ezText("Followed by an <c:ilink:test001>internal</c:ilink> link which requ
 if (isset($_GET['d']) && $_GET['d']) {
     echo $pdf->ezOutput(true);
 } else {
-    $pdf->ezStream(array('compress' => 0));
+    $pdf->ezStream(['compress' => 0]);
 }

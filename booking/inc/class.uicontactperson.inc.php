@@ -101,7 +101,12 @@
 
 		public function show()
 		{
-			$person = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$person = $this->bo->read_single($id);
 			$person['contactpersons_link'] = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 			$person['edit_link'] = self::link(array('menuaction' => 'booking.uicontactperson.edit',
 					'id' => $person['id']));

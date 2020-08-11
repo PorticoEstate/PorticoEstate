@@ -785,7 +785,12 @@
 
 		public function show()
 		{
-			$allocation = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$allocation = $this->bo->read_single($id);
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',
 					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],

@@ -11,7 +11,7 @@
 
 /* global define, require */
 
-(function(factory) {
+(function (factory) {
   'use strict';
   if (typeof define === 'function' && define.amd) {
     // Register as an anonymous AMD module:
@@ -23,7 +23,7 @@
     // Browser globals:
     factory(window.jQuery);
   }
-})(function($) {
+})(function ($) {
   'use strict';
 
   var counter = 0,
@@ -46,7 +46,7 @@
       'url',
       'username'
     ],
-    convert = function(p) {
+    convert = function (p) {
       return p;
     };
 
@@ -58,10 +58,10 @@
     }
   });
 
-  $.ajaxTransport('postmessage', function(options) {
+  $.ajaxTransport('postmessage', function (options) {
     if (options.postMessage && window.postMessage) {
       var iframe,
-        loc = $('<a>').prop('href', options.postMessage)[0],
+        loc = $('<a></a>').prop('href', options.postMessage)[0],
         target = loc.protocol + '//' + loc.host,
         xhrUpload = options.xhr().upload;
       // IE always includes the port for the host property of a link
@@ -71,7 +71,7 @@
         target = target.replace(/:(80|443)$/, '');
       }
       return {
-        send: function(_, completeCallback) {
+        send: function (_, completeCallback) {
           counter += 1;
           var message = {
               id: 'postmessage-transport-' + counter
@@ -84,12 +84,12 @@
               message.id +
               '"></iframe>'
           )
-            .bind('load', function() {
-              $.each(names, function(i, name) {
+            .on('load', function () {
+              $.each(names, function (i, name) {
                 message[name] = options[name];
               });
               message.dataType = message.dataType.replace('postmessage ', '');
-              $(window).bind(eventName, function(event) {
+              $(window).on(eventName, function (event) {
                 var e = event.originalEvent;
                 var data = e.data;
                 var ev;
@@ -107,7 +107,7 @@
                       data.headers
                     );
                     iframe.remove();
-                    $(window).unbind(eventName);
+                    $(window).off(eventName);
                   }
                 }
               });
@@ -115,7 +115,7 @@
             })
             .appendTo(document.body);
         },
-        abort: function() {
+        abort: function () {
           if (iframe) {
             iframe.remove();
           }

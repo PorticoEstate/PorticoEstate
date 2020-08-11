@@ -237,7 +237,12 @@
 
 		public function show()
 		{
-			$resource = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$resource = $this->bo->read_single($id);
 			$lang['title'] = lang('New audience');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');

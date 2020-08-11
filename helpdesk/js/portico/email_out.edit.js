@@ -26,7 +26,8 @@ $(window).on('load', function ()
 	$.fn.insertAtCaret = function (myValue)
 	{
 		myValue = myValue.trim();
-		CKEDITOR.instances['content'].insertText(myValue);
+//		CKEDITOR.instances['content'].insertText(myValue);
+		CKEDITOR.instances['content'].insertHtml(myValue);
 	};
 
 });

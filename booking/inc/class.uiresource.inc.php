@@ -704,6 +704,10 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$resource = $this->bo->read_single($id);
 			$array_resource = array(&$resource);
 			$this->bo->add_activity_facility_data($array_resource);

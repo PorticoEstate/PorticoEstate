@@ -19,7 +19,7 @@ class XLSXWriter
 	protected $company;
 	protected $description;
 	protected $keywords = array();
-	
+
 	protected $current_sheet;
 	protected $sheets = array();
 	protected $temp_files = array();
@@ -229,7 +229,7 @@ class XLSXWriter
 		$sheet->columns = $this->initializeColumnTypes($header_types);
 		if (!$suppress_row)
 		{
-			$header_row = array_keys($header_types);      
+			$header_row = array_keys($header_types);
 
 			$sheet->file_writer->write('<row collapsed="false" customFormat="false" customHeight="false" hidden="false" ht="12.1" outlineLevel="0" r="' . (1) . '">');
 			foreach ($header_row as $c => $v) {
@@ -253,7 +253,7 @@ class XLSXWriter
 			$default_column_types = $this->initializeColumnTypes( array_fill($from=0, $until=count($row), 'GENERAL') );//will map to n_auto
 			$sheet->columns = array_merge((array)$sheet->columns, $default_column_types);
 		}
-		
+
 		if (!empty($row_options))
 		{
 			$ht = isset($row_options['height']) ? floatval($row_options['height']) : 12.1;
@@ -283,7 +283,7 @@ class XLSXWriter
 
 	public function countSheetRows($sheet_name = '')
 	{
-		$sheet_name = $sheet_name ?: $this->current_sheet;
+		$sheet_name = $sheet_name ? $sheet_name : $this->current_sheet;
 		return array_key_exists($sheet_name, $this->sheets) ? $this->sheets[$sheet_name]->row_count : 0;
 	}
 
@@ -307,7 +307,7 @@ class XLSXWriter
 		$max_cell = self::xlsCell($sheet->row_count - 1, count($sheet->columns) - 1);
 
 		if ($sheet->auto_filter) {
-			$sheet->file_writer->write(    '<autoFilter ref="A1:' . $max_cell . '"/>');			
+			$sheet->file_writer->write(    '<autoFilter ref="A1:' . $max_cell . '"/>');
 		}
 
 		$sheet->file_writer->write(    '<printOptions headings="false" gridLines="false" gridLinesSet="true" horizontalCentered="false" verticalCentered="false"/>');
@@ -626,8 +626,8 @@ class XLSXWriter
 		$core_xml.='<dc:creator>'.self::xmlspecialchars($this->author).'</dc:creator>';
 		if (!empty($this->keywords)) {
 			$core_xml.='<cp:keywords>'.self::xmlspecialchars(implode (", ", (array)$this->keywords)).'</cp:keywords>';
-		}		
-		$core_xml.='<dc:description>'.self::xmlspecialchars($this->description).'</dc:description>';		
+		}
+		$core_xml.='<dc:description>'.self::xmlspecialchars($this->description).'</dc:description>';
 		$core_xml.='<cp:revision>0</cp:revision>';
 		$core_xml.='</cp:coreProperties>';
 		return $core_xml;
@@ -666,7 +666,7 @@ class XLSXWriter
 			if ($sheet->auto_filter) {
 				$sheetname = self::sanitize_sheetname($sheet->sheetname);
 				$workbook_xml.='<definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">\''.self::xmlspecialchars($sheetname).'\'!$A$1:' . self::xlsCell($sheet->row_count - 1, count($sheet->columns) - 1, true) . '</definedName>';
-				$i++;	
+				$i++;
 			}
 		}
 		$workbook_xml.='</definedNames>';
@@ -742,7 +742,7 @@ class XLSXWriter
 		return str_replace($all_invalids, "", $filename);
 	}
 	//------------------------------------------------------------------
-	public static function sanitize_sheetname($sheetname) 
+	public static function sanitize_sheetname($sheetname)
 	{
 		static $badchars  = '\\/?*:[]';
 		static $goodchars = '        ';

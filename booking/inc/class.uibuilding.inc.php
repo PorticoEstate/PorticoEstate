@@ -291,7 +291,12 @@
 
 		public function show()
 		{
-			$building = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$building = $this->bo->read_single($id);
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit',
 					'id' => $building['id']));
