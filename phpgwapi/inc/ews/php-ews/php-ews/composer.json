@@ -11,12 +11,15 @@
   ],
   "prefer-stable": true,
   "require": {
-    "php": ">=5.3.9",
+    "php": ">=7.1.0",
     "ext-soap": "*",
     "jamesiarmes/php-ntlm": "~1.0"
   },
   "require-dev": {
-    "mustache/mustache": "~2.0"
+    "mustache/mustache": "~2.0",
+    "squizlabs/php_codesniffer": "*",
+    "phpmd/phpmd": "@stable",
+    "phan/phan": "@stable"
   },
   "config": {
     "bin-dir": "bin"
