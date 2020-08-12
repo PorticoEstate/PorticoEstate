@@ -2234,10 +2234,14 @@ JS;
 				}
 
 				$_order_entry['send_order'] = '';
-				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
+				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0] && !$_order_entry['order_sent'])
 				{
 					$_title						 = implode(';', $_order_entry['mail_recipients']);
 					$_order_entry['send_order']	 = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
+				}
+				else if($_order_entry['order_sent'])
+				{
+					$_order_entry['send_order'] = $GLOBALS['phpgw']->common->show_date($_order_entry['order_sent'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				}
 				$_order_data[] = $_order_entry;
 			}
