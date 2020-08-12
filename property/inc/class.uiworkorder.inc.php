@@ -3094,6 +3094,12 @@ JS;
 					'sortable'	 => false,
 					'resizeable' => true
 				),
+				array('key'		 => 'picture',
+					'label'		 => lang('picture'),
+					'sortable'	 => false,
+					'resizeable' => true,
+					'formatter'	 => 'JqueryPortico.showPicture'
+				),
 				array(
 					'key'		 => 'attach_file',
 					'label'		 => lang('attach file'),
@@ -3111,6 +3117,8 @@ JS;
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
+
+			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
 				$_checked = '';
@@ -3127,11 +3135,21 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$content_attachments[$z]['file_name']	 = $_entry['name'];
+					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
+					$content_attachments[$z]['img_url']		 = self::link(array(
+							'menuaction' => 'property.uiworkorder.view_image',
+							'img_id'	 => $_entry['file_id'],
+							'file'		 => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_attachments[$z]['thumbnail_flag'] = 'thumb=1';
+
 					$image_list[] = array(
 						'image_url'		 => "{$link_view_file}&file_id={$_entry['file_id']}",
 						'image_name'	 => $_entry['name']
 					);
 				}
+				$z ++;
 			}
 			unset($_entry);
 
@@ -3156,12 +3174,23 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$content_attachments[$z]['file_name']	 = $_entry['name'];
+					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
+					$content_attachments[$z]['img_url']		 = self::link(array(
+							'menuaction' => 'property.uiworkorder.view_image',
+							'img_id'	 => $_entry['file_id'],
+							'file'		 => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_attachments[$z]['thumbnail_flag'] = 'thumb=1';
+
 					$image_list[] = array(
 						'image_url'		 => "{$link_view_file}&file_id={$_entry['file_id']}",
 						'image_name'	 => $_entry['name']
 					);
 				}
+				$z ++;
 			}
+			unset($_entry);
 
 			$datatable_def[] = array
 				(
