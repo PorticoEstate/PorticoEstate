@@ -243,9 +243,10 @@
 						}
 						break;
 					case 'ticket':
-						$this->db->query("SELECT id, continuous FROM fm_tts_tickets WHERE order_id= '{$voucher['order_id']}'", __LINE__, __FILE__);
+						$this->db->query("SELECT id, continuous, cat_id FROM fm_tts_tickets WHERE order_id= '{$voucher['order_id']}'", __LINE__, __FILE__);
 						$this->db->next_record();
 						$ticket_id = $this->db->f('id');
+						$cat_id = (int)$this->db->f('cat_id');
 
 						if ($this->db->f('continuous'))
 						{
@@ -253,10 +254,27 @@
 						}
 						else
 						{
-							$ticket	 = array(
-								'status' => 'C8' //Avsluttet og fakturert (C)
-							);
-							$ok		 = $sotts->update_status($ticket, $ticket_id);
+							/**
+							 * EBE
+							 */
+							if ($voucher['order_id'] >= 45250000 && $voucher['order_id'] <= 45499999)
+							{
+								$ticket	 = array(
+									'status' => 'C8' //Avsluttet og fakturert (C)
+								);
+								$ok		 = $sotts->update_status($ticket, $ticket_id);
+							}
+							else if( $cat_id ==10106) //Nøkkeølbestilling EBF
+							{
+								$ticket	 = array(
+									'status' => 'X' //Avsluttet
+								);
+								$ok		 = $sotts->update_status($ticket, $ticket_id);
+							}
+							else
+							{
+								$ok = true;
+							}
 						}
 						break;
 					default:
