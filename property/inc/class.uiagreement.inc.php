@@ -875,6 +875,7 @@
 
 		public function get_contentalarm()
 		{
+			$draw			 = phpgw::get_var('draw', 'int');
 			$id				 = phpgw::get_var('id', 'int');
 			$acl_location	 = phpgw::get_var('acl_location');
 			$times			 = phpgw::get_var('times');
