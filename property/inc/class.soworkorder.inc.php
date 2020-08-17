@@ -471,6 +471,10 @@
 //				$this->cols_extra	= $this->bocommon->fm_cache('cols_extra_workorder'.!!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
 			}
 
+			if ($dry_run)
+			{
+				return array();
+			}
 
 			$location_table = 'fm_project';
 			if (isset($GLOBALS['phpgw']->config->config_data['location_at_workorder']) && $GLOBALS['phpgw']->config->config_data['location_at_workorder'])
@@ -816,62 +820,62 @@
 
 			$sql_base = substr($sql_full, strripos($sql_full, 'FROM'));
 
+			$sql_minimized		 = "SELECT DISTINCT fm_workorder.id {$sql_base}";
+
 			if ($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 			{
-				$sql_minimized		 = "SELECT DISTINCT fm_workorder.id {$sql_base}";
-				$sql_count			 = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
-//				_debug_array($sql_count);
-				$this->db->query($sql_count, __LINE__, __FILE__);
-				$this->db->next_record();
-				$this->total_records = $this->db->f('cnt');
+//				$sql_count			 = "SELECT count(id) as cnt FROM ({$sql_minimized}) as t";
+//				$this->db->query($sql_count, __LINE__, __FILE__);
+//				$this->db->next_record();
+//				$this->total_records = $this->db->f('cnt');
+
+				$sql_count	 = "SELECT DISTINCT fm_workorder.id {$order_field} " . substr($sql_full, strripos($sql_full, 'FROM'));
+				$this->db->query($sql_count  . $ordermethod, __LINE__, __FILE__);
+				$this->total_records = $this->db->num_rows();
+
 			}
 			else
 			{
-				$sql_count			 = 'SELECT DISTINCT fm_workorder.id ' . substr($sql_full, strripos($sql_full, 'FROM'));
-				$this->db->query($sql_count, __LINE__, __FILE__);
+				$sql_count	 = "SELECT DISTINCT fm_workorder.id {$order_field} " . substr($sql_full, strripos($sql_full, 'FROM'));
+				$this->db->query($sql_count  . $ordermethod, __LINE__, __FILE__);
 				$this->total_records = $this->db->num_rows();
 			}
 
 			$workorder_list = array();
 
-			if ($dry_run)
-			{
-				return $workorder_list;
-			}
 
-			$sql_end = str_replace('SELECT DISTINCT fm_workorder.id', "SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
-//	_debug_array($sql_end);
+//			$sql_end = str_replace('SELECT DISTINCT fm_workorder.id', "SELECT DISTINCT fm_workorder.id {$order_field}", $sql_minimized) . $ordermethod;
 
-			if (!$allrows)
-			{
-				$this->db->limit_query($sql_end, $start, __LINE__, __FILE__, $results);
-			}
-			else
-			{
-				$_fetch_single = false;
-//FIXME: something wrong here...
-				/*
-				  if($this->total_records > 200)
-				  {
-				  $_fetch_single = true;
-				  }
-				  else
-				  {
-				  $_fetch_single = false;
-				  }
-
-				 */
-				$this->db->query($sql_end, __LINE__, __FILE__, false, $_fetch_single);
-				unset($_fetch_single);
-			}
+//			if (!$allrows)
+//			{
+//				$this->db->limit_query($sql_end, $start, __LINE__, __FILE__, $results);
+//			}
+//			else
+//			{
+//				$_fetch_single = false;
+//
+//				$this->db->query($sql_end, __LINE__, __FILE__, false, $_fetch_single);
+//				unset($_fetch_single);
+//			}
 
 			$count_cols_return = count($cols_return);
 
 			$_order_list = array();
-			while ($this->db->next_record())
+
+			if (!$allrows && $start)
+			{
+				for ($i = 0; $i < $start; $i++)
+				{
+					$this->db->next_record();
+				}
+			}
+
+			$i = 0;
+			while ($this->db->next_record() && ($i < $results || $allrows) )
 			{
 				$workorder_list[]	 = array('workorder_id' => $this->db->f('id'));
 				$_order_list[]		 = $this->db->f('id');
+				$i ++;
 			}
 
 			$this->db->set_fetch_single(false);

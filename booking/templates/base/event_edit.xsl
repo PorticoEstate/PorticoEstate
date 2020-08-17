@@ -458,7 +458,6 @@
 									</div>
 								</xsl:for-each>
 							</div>
-
 						</div>
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
@@ -555,6 +554,18 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
+									<h3>
+										<xsl:value-of select="php:function('lang', 'participants')" />
+									</h3>
+								</legend>
+							</div>
+							<div class="pure-control-group">
+								<div id="participant_container"/>
+							</div>
+						</div>
+						<div class="pure-u-1">
+							<div class="heading">
+								<legend>
 									<label for="field_mail">
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Inform contact persons')" />
@@ -637,5 +648,20 @@
 		var initialAudience = <xsl:value-of select="event/audience_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
+
+		var event_id = <xsl:value-of select="event/id"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'phone', 'email')"/>;
+
+    <![CDATA[
+		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: event_id, filter_reservation_type: 'event', length:-1}, true);
+
+        ]]>
+		var colDefsParticipantURL = [
+			{key: 'phone', label: lang['phone']},
+			{key: 'email', label: lang['email']}
+		];
+
+		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered');
+
 	</script>
 </xsl:template>
