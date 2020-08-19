@@ -61,20 +61,14 @@
 			</p>
 		</div>
 	</xsl:if>
-	<div class="actions">
-		<button onclick="location.href='{event/show_link}'" class="btn btn-light mt-4">
-			<xsl:value-of select="php:function('lang', 'view event')"/>
-		</button>
+
+	<div class="mt-4">
+		<a href="{event/participant_registration_link}">
+			<xsl:value-of select="php:function('lang', 'registration')"/>
+		</a>
 	</div>
 
-	<xsl:if test="event/edit_link">
-		<div class="actions">
-			<button onclick="location.href='{event/edit_link}'" class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'Edit event')"/>
-			</button>
-			<button onclick="location.href='{event/cancel_link}'" class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'Cancel event')"/>
-			</button>
-		</div>
-	</xsl:if>
+	<div class="mt-1">
+		<img src="{event/encoded_qr}"/>
+	</div>
 </xsl:template>
