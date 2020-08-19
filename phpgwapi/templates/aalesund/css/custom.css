@@ -2223,3 +2223,18 @@ footer h3{
 	border-bottom: 1.5px solid rgb(137, 38, 106);
 }
 
+.dp-highlight .ui-state-default {
+    background: #0e90d2  !important;
+    color: #FFF !important;
+}
+.ui-datepicker.ui-datepicker-multi  {
+    width: 100% !important;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+    float:none;
+}
+#datepicker {
+    height: 300px;
+    overflow-x: scroll;
+}
+.ui-widget { font-size: 100% }

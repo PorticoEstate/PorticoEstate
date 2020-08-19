@@ -1,4 +1,4 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<div id="organization-page-content">
 		<div class="info-content pb-5">
 			<div class="container wrapper">
@@ -161,6 +161,22 @@
 							</xsl:if>
 						</xsl:if>
 					</div>
+				</div>
+				<h2 class="row">
+					<xsl:value-of select="php:function('lang', 'events')" />
+				</h2>
+				<div class="row">
+					<div class="col">
+						<label for="from">From</label>
+						<input type="text" id="from" name="from"/>
+					</div>
+					<div class="col">
+						<label for="to">To</label>
+						<input type="text" id="to" name="to"/>
+					</div>
+				</div>
+				<div class="datepicker row">
+					<div class="row"></div>
 				</div>
 			</div>
 		</div>

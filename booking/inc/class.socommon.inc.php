@@ -15,7 +15,7 @@
 			'int' => true,
 			'decimal' => true,
 			'intarray' => true,
-			'json' => true
+			'json' => truelimi
 		);
 		public static $AUTO_CREATED_ON = array('created_on' => array('type' => 'timestamp',
 				'auto' => true, 'add_callback' => '_set_created_on'));
