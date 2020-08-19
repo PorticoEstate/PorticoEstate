@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* global JqueryPortico, oTable0, oTable1 */
+
 var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_alarm'}, true);
 
 onActionsClick_notify = function (type, ids, url)
@@ -19,7 +21,7 @@ onActionsClick_notify = function (type, ids, url)
 			JqueryPortico.updateinlineTableHelper(oTable0, url);
 		}
 	});
-}
+};
 
 onAddClick_Alarm = function (type)
 {
@@ -48,7 +50,7 @@ onAddClick_Alarm = function (type)
 	{
 		return false;
 	}
-}
+};
 
 onUpdateClickAlarm = function (type)
 {
@@ -110,7 +112,7 @@ onUpdateClickAlarm = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onUpdateClickItems = function (type)
 {
@@ -167,7 +169,7 @@ onUpdateClickItems = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onActionsClickDeleteLastIndex = function (type)
 {
@@ -192,4 +194,9 @@ onActionsClickDeleteLastIndex = function (type)
 			$('#new_index').val('');
 		}
 	});
-}
+};
+
+set_tab  = function ()
+{
+
+};

@@ -378,3 +378,8 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 label > input[type="search"] {
 	float:right;
 }
+
+.ui-datepicker
+{
+	z-index: 9999 !important;
+}

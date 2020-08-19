@@ -59,7 +59,7 @@ function GetApplicationsCartItems(bc)
 {
 	bc.applicationCartItems.removeAll();
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials", phpgw_return_as: "json"}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials"}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		if (result.length < 1)
