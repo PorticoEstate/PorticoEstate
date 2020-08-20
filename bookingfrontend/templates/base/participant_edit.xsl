@@ -15,10 +15,16 @@
 
 	<div id="group-edit-page-content" class="margin-top-content">
 		<div class="container wrapper">
-
 			<h1>
-				<xsl:value-of select="description" />
+				<xsl:value-of select="name" />
 			</h1>
+			<span class="d-block">
+				<xsl:value-of select="when"/>
+			</span>
+			<span class="d-block">
+				<xsl:value-of select="php:function('lang', 'number of participants')" />:
+				<xsl:value-of select="number_of_participants" />
+			</span>
 			<form action="{data/form_action}" method="POST" id="form" name="form" class="col-lg-8">
 				<div class="row">
 					<div class="col-12">

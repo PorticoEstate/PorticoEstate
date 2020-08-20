@@ -476,6 +476,10 @@
 			}
 			$event['when'] = $when;
 
+			$number_of_participants = createObject('booking.boparticipant')->get_number_of_participants('event', $event['id']);
+
+			$event['number_of_participants'] = $number_of_participants;
+
 			phpgw::import_class('phpgwapi.phpqrcode');
 
 			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
