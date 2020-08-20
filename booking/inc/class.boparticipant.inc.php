@@ -25,14 +25,12 @@
 					'write' => true,
 					'create' => true,
 				);
-
-				$defaultPermissions['parent_role_permissions']['organization'] = array();
 			}
 
 			if ($this->current_app() == 'bookingfrontend')
 			{
-				$defaultPermissions['parent_role_permissions']['organization'][booking_boorganization::ROLE_ADMIN] = array
-					(
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT] = array
+				(
 					'write' => true,
 					'create' => true,
 				);
@@ -53,7 +51,7 @@
 
 			if ($this->current_app() == 'bookingfrontend')
 			{
-				$defaultPermissions['parent_role_permissions']['organization'][booking_boorganization::ROLE_ADMIN]['create'] = true;
+				$defaultPermissions[booking_sopermission::ROLE_DEFAULT]['create'] = true;
 			}
 
 			return $defaultPermissions;
