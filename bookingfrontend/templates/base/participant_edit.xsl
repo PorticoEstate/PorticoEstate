@@ -34,7 +34,7 @@
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:text>Minimum 8</xsl:text>
+									<xsl:value-of select="php:function('lang', 'Minimum 8 digits')" />
 								</xsl:attribute>
 							</input>
 						</div>

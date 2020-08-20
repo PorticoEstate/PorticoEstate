@@ -486,3 +486,5 @@ invoice	bookingfrontend	no	Faktura
 delegate from	bookingfrontend	no	Delegert fra
 saved data	bookingfrontend	no	Lagrede data
 edit data	bookingfrontend	no	Endre data
+Minimum 8 digits	bookingfrontend	no	Minimum 8 tall
+view event	bookingfrontend	no	Vis arrangement

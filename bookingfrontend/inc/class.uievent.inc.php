@@ -480,7 +480,7 @@
 
 			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
 				'reservation_type' => 'event',
-				'reservation_id' => $event['id']), false, true, true);
+				'reservation_id' => $event['id']), true, true);
 
 			$event['participant_registration_link'] = $participant_registration_link;
 			$code_text					 = $participant_registration_link;

@@ -497,3 +497,5 @@ invoice	bookingfrontend	nn	Faktura
 delegate from	bookingfrontend	nn	Delegert frå
 saved data	bookingfrontend	nn	Lagra data
 edit data	bookingfrontend	nn	Endre data
+Minimum 8 digits	bookingfrontend	nn	Minimum 8 tal
+view event	bookingfrontend	nn	Vis arrangement
