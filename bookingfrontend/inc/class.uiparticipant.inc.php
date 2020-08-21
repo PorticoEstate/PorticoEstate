@@ -26,20 +26,6 @@
 			$participant['phone']			 = null;
 			$participant['reservation_type'] = $reservation_type;
 			$participant['reservation_id']	 = $reservation_id;
-			$errors							 = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
-				$participant['phone']	 = phpgw::get_var('phone', 'int');
-				$participant['email']	 = phpgw::get_var('email', 'email');
-				$errors					 = $this->bo->validate($participant);
-				if (!$errors)
-				{
-					$receipt = $this->bo->add($participant);
-					$this->redirect(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
-						'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
-				}
-			}
-			$this->flash_form_errors($errors);
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
 
@@ -54,6 +40,39 @@
 				$end	 = new DateTime($reservation['to_']);
 				$when	 = pretty_timestamp($reservation['from_']) . ' - ' . $end->format('H:i');
 			}
+
+			$errors							 = array();
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$participant['phone']	 = phpgw::get_var('phone', 'int');
+				$participant['email']	 = phpgw::get_var('email', 'email');
+				$errors					 = $this->bo->validate($participant);
+				if (!$errors)
+				{
+					$receipt = $this->bo->add($participant);
+
+					/**
+					 * send SMS
+					 */
+					$sms_text = "Hei\n "
+						. "Du har tilgang til {$reservation['name']} i tidsrommet {$when}";
+
+					try
+					{
+						$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], $sms_text);
+					}
+					catch (Exception $ex)
+					{
+						//implement me
+						$this->log('sms_error', $ex->getMessage());
+					}
+
+					$this->redirect(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
+						'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
+				}
+			}
+			$this->flash_form_errors($errors);
+
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
 
@@ -74,5 +93,17 @@
 		public function index()
 		{
 			phpgw::no_access();
+		}
+
+		private function log( $what, $value = '' )
+		{
+			$GLOBALS['phpgw']->log->message(array(
+				'text'	 => "what: %1, <br/>value: %2",
+				'p1'	 => $what,
+				'p2'	 => $value ? $value : ' ',
+				'line'	 => __LINE__,
+				'file'	 => __FILE__
+			));
+			$GLOBALS['phpgw']->log->commit();
 		}
 	}

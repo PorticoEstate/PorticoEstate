@@ -13,11 +13,12 @@
 			'delete' => true,
 			'toggle_show_inactive' => true,
 		);
-		protected $module;
+		protected $module, $account;
 
 		public function __construct()
 		{
 			parent::__construct();
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo = CreateObject('booking.boparticipant');
 //			self::set_active_menu('booking::organizations::participants');
 
