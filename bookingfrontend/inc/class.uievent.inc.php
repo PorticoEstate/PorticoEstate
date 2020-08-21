@@ -484,7 +484,8 @@
 //				'reservation_type' => 'event',
 //				'reservation_id' => $event['id']), true, true);
 
-			$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$participant_registration_link = $external_site_address
 				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
