@@ -2183,18 +2183,6 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('values_tender_received');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_inspection_on_completion');
 
-			/* if( isset($receipt) && is_array($receipt))
-			  {
-			  $msgbox_data = $this->bocommon->msgbox_data($receipt);
-			  }
-			  else
-			  {
-			  $msgbox_data = '';
-			  } */
-
-			$categories = $this->cats->formatted_xslt_list(array(
-				'selected' => $project['cat_id']));
-
 			$history_def = array
 				(
 				array(
