@@ -480,13 +480,20 @@
 
 			$event['number_of_participants'] = $number_of_participants;
 
-			phpgw::import_class('phpgwapi.phpqrcode');
+//			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
+//				'reservation_type' => 'event',
+//				'reservation_id' => $event['id']), true, true);
 
-			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
-				'reservation_type' => 'event',
-				'reservation_id' => $event['id']), true, true);
+			$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$participant_registration_link = $external_site_address
+				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+				. "&reservation_type=event"
+				. "reservation_id={$event['id']}";
 
 			$event['participant_registration_link'] = $participant_registration_link;
+
+			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;
 			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
 			QRcode::png($code_text, $filename);
