@@ -59,6 +59,7 @@
 
 					try
 					{
+						$sms_service = CreateObject('sms.sms');
 						$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], $sms_text);
 					}
 					catch (Exception $ex)
