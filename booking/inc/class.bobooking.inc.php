@@ -1127,7 +1127,7 @@
 			{
 				$availlableTimeSlots[$resource['id']] = [];
 
-				if ($resource['simple_booking'])
+				if ($resource['simple_booking'] && $resource['simple_booking_start_date'])
 				{
 					$dow_start		 = $resource['booking_dow_default_start'];
 					$booking_lenght	 = $resource['booking_day_default_lenght'];

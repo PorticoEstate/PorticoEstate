@@ -703,7 +703,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, resource_id => phpgw::get_var('resource_id', 'int')));
 					}
 					else
 					{
@@ -826,6 +826,10 @@
 						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
 							'secret' => $application['secret']));
 					}
+				}
+				else
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'history');
 				}
 			}
 			if (phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))

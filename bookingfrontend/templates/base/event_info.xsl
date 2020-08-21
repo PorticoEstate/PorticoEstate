@@ -51,16 +51,24 @@
 						<br/>
 						<xsl:value-of select="php:function('lang', 'contact_phone')"/>: <xsl:value-of select="event/contact_phone"/>
 					</xsl:if>
-<!--
-					<xsl:if test="event/equipment != ''">
-						<br/>
-						<xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
-					</xsl:if>
--->
+					<!--
+										<xsl:if test="event/equipment != ''">
+											<br/>
+											<xsl:value-of select="event/equipment" disable-output-escaping="yes"/>
+										</xsl:if>
+					-->
 				</span>
 			</p>
 		</div>
 	</xsl:if>
+	<div class="actions">
+		<a href="{event/show_link}" target="_blank">
+			<button class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view event')"/>
+			</button>
+		</a>
+	</div>
+
 	<xsl:if test="event/edit_link">
 		<div class="actions">
 			<button onclick="location.href='{event/edit_link}'" class="btn btn-light mt-4">
