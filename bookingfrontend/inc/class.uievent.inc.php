@@ -490,7 +490,7 @@
 			$participant_registration_link = $external_site_address
 				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
 				. "&reservation_type=event"
-				. "reservation_id={$event['id']}";
+				. "&reservation_id={$event['id']}";
 
 			$event['participant_registration_link'] = $participant_registration_link;
 
