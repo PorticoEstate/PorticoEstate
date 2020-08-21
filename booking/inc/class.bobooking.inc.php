@@ -1051,14 +1051,16 @@
 
 				if($resource['booking_day_horizon'])
 				{
-					$__to = clone $to;
-
-					$__to->modify("+{$resource['booking_day_horizon']} days");
-
-//					if($__to > $_to)
+					if(!$resource['booking_month_horizon'])
 					{
-						$to = clone $__to;
+						$__to = clone $from;
 					}
+					else
+					{
+						$__to = clone $to;
+					}
+					$__to->modify("+{$resource['booking_day_horizon']} days");
+					$to = clone $__to;
 				}
 
 				if($resource['booking_month_horizon'])
