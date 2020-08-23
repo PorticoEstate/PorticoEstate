@@ -15,6 +15,7 @@
 				'phone' => array('type' => 'string', 'query' => true, 'required' => true),
 				'email' => array('type' => 'string', 'required' => False,'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
+				'quantity' => array('type' => 'int', 'query' => false, 'required' => true),
 				)
 			);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];

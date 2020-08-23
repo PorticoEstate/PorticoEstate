@@ -45,8 +45,20 @@
 							</input>
 						</div>
 					</div>
-
 					<div class="col-12">
+						<div class="form-group">
+							<label for="quantity" class="text-uppercase">
+								<xsl:value-of select="php:function('lang', 'quantity')" />
+							</label>
+							<input id="quantity" name="quantity" class="form-control" type="number" min="1" value="{quantity}">
+								<xsl:attribute name="required">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+							</input>
+						</div>
+					</div>
+
+<!--					<div class="col-12">
 						<div class="form-group">
 							<label for="email" class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'email')" />
@@ -54,7 +66,7 @@
 							<input id="email" name="email" type="email" class="form-control" value="{email}">
 							</input>
 						</div>
-					</div>
+					</div>-->
 
 					<div class="col-12 mt-3 mb-2">
 						<input type="submit" class="btn btn-light mr-4" value="{php:function('lang', 'Add')}"/>

@@ -1111,6 +1111,8 @@
 				'to_' => array('type' => 'timestamp', 'nullable' => true),
 				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'quantity',	array('type' => 'int', 'precision' => 4,	'default' => 1,	'nullable' => false
+				)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
