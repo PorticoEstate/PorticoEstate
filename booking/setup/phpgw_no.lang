@@ -820,3 +820,4 @@ not completed	booking	no	Ikke fullført
 newpartial1	booking	no	Ikke fullført
 missing id	booking	no	mangler referanse til ID
 participants	booking	no	Deltakere
+quantity	booking	no	Antall

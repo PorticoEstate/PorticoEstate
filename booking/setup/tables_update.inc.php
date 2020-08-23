@@ -4470,4 +4470,31 @@
 	}
 
 
+	/**
+	 * Update booking version from 0.2.55 to 0.2.56
+	 *
+	 */
+	$test[] = '0.2.55';
+
+	function booking_upgrade0_2_55()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_participant_log', 'quantity',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'default' => 1,
+					'nullable' => false
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.56';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
 

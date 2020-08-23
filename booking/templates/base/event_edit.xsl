@@ -650,7 +650,7 @@
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
 
 		var event_id = <xsl:value-of select="event/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'phone', 'email')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'phone', 'email', 'quantity')"/>;
 
     <![CDATA[
 		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: event_id, filter_reservation_type: 'event', length:-1}, true);
@@ -658,7 +658,7 @@
         ]]>
 		var colDefsParticipantURL = [
 			{key: 'phone', label: lang['phone']},
-			{key: 'email', label: lang['email']}
+			{key: 'quantity', label: lang['quantity']}
 		];
 
 		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered');
