@@ -24,6 +24,7 @@
 			$participant					 = array();
 			$participant['email']			 = null;
 			$participant['phone']			 = null;
+			$participant['quantity']		 = 1;
 			$participant['reservation_type'] = $reservation_type;
 			$participant['reservation_id']	 = $reservation_id;
 
@@ -44,8 +45,10 @@
 			$errors							 = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$participant['phone']	 = phpgw::get_var('phone', 'int');
-				$participant['email']	 = phpgw::get_var('email', 'email');
+				$participant['phone']		 = phpgw::get_var('phone', 'int');
+				$participant['email']		 = phpgw::get_var('email', 'email');
+				$participant['quantity']	 = phpgw::get_var('quantity', 'int');
+
 				$errors					 = $this->bo->validate($participant);
 				if (!$errors)
 				{
@@ -55,7 +58,7 @@
 					 * send SMS
 					 */
 					$sms_text = "Hei\n "
-						. "Du har tilgang til {$reservation['name']} i tidsrommet {$when}";
+						. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
 
 					try
 					{
@@ -68,8 +71,10 @@
 						$this->log('sms_error', $ex->getMessage());
 					}
 
+					phpgwapi_cache::message_set(lang('added'));
+
 					$this->redirect(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
-						'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
+					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -83,6 +88,7 @@
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
+				'quantity'				 => $participant['quantity'],
 				'name'					 => $reservation['name'],
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),

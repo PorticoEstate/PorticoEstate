@@ -821,3 +821,4 @@ not completed	booking	nn	Ikkje fullført
 newpartial1	booking	nn	Ikke fullført
 missing id	booking	no	manglar referanse til ID
 participants	booking	nn	Deltakarar
+quantity	booking	no	Antal
