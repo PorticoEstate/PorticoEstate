@@ -45,11 +45,48 @@
 			$errors							 = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$participant['phone']		 = phpgw::get_var('phone', 'int');
-				$participant['email']		 = phpgw::get_var('email', 'email');
-				$participant['quantity']	 = phpgw::get_var('quantity', 'int');
+				$user_inputs = (array)phpgwapi_cache::system_get('bookingfrontendt', 'add_participant');
+				$ip_address = phpgw::get_ip_address();
+				$user_inputs[$ip_address][time()] = 1;
 
-				$errors					 = $this->bo->validate($participant);
+				/**
+				 * 10 seconds limit
+				 */
+				$check_timestamp = time() - 10;
+
+				$limit = 1;
+
+				$number_of_submits = 0;
+
+				foreach ($user_inputs as $_ip_address =>  &$timestamps)
+				{
+					foreach ($timestamps as $timestamp =>  $entry)
+					{
+						if($timestamp > $check_timestamp)
+						{
+							$number_of_submits ++;
+						}
+						else
+						{
+							unset($timestamps[$timestamp]);
+						}
+					}
+				}
+
+				phpgwapi_cache::system_set('bookingfrontendt', 'add_participant', $user_inputs);
+
+				if($number_of_submits > $limit)
+				{
+					$errors = array('phone' =>'Number of submit is exceeded within timelimit');
+				}
+				else
+				{
+					$participant['phone']	 = phpgw::get_var('phone', 'int');
+					$participant['email']	 = phpgw::get_var('email', 'email');
+					$participant['quantity'] = phpgw::get_var('quantity', 'int');
+					$errors = $this->bo->validate($participant);
+				}
+
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($participant);

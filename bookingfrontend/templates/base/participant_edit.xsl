@@ -35,7 +35,7 @@
 							<label for="phone" class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'phone')" />
 							</label>
-							<input id="phone" name="phone" class="form-control" type="number" value="{phone}" oninput="check(this)">
+							<input id="phone" name="phone" class="form-control" type="number" min="1" value="{phone}" oninput="check(this)">
 								<xsl:attribute name="required">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
