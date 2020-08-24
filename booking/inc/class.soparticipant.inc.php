@@ -46,7 +46,7 @@
 
 		function get_number_of_participants($reservation_type, $reservation_id)
 		{
-			$sql = "SELECT count(*) as cnt"
+			$sql = "SELECT sum(quantity) as cnt"
 				. " FROM bb_participant_log"
 				. " WHERE reservation_type='{$reservation_type}'"
 				. " AND reservation_id=" . (int) $reservation_id;
