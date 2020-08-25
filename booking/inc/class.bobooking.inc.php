@@ -1103,6 +1103,8 @@
 				$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
 					'results' => -1));
 			}
+			
+			$this->get_partials( $events);
 
 //			_debug_array($events);
 			$availlableTimeSlots		 = array();
@@ -1264,6 +1266,28 @@
 			return $availlableTimeSlots;
 		}
 
+		private function get_partials(& $events)
+		{
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			if (!empty($session_id))
+			{
+				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
+				$params = array('filters' => $filters, 'results' =>'all');
+				$applications = CreateObject('booking.soapplication')->read($params);
+				
+				if($applications['results'])
+				{
+					foreach ($applications['results'] as & $application)
+					{
+						$application['from_'] = $application['dates'][0]['from_'];
+						$application['to_'] = $application['dates'][0]['to_'];
+					}
+
+					$events['results'] = array_merge((array)$events['results'],$applications['results']);
+				}
+			}
+		}
+
 		function check_if_resurce_is_taken( $resource_id, $StartTime, $endTime, $events )
 		{
 			$timezone		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
@@ -1277,8 +1301,11 @@
 					$event_start = new DateTime($event['from_'], $DateTimeZone);
 					$event_end	 = new DateTime($event['to_'], $DateTimeZone);
 					if (
-						($StartTime >= $event_start && $StartTime <= $event_end) ||
-						($event_start >= $StartTime && $event_start <= $endTime)
+//						($StartTime >= $event_start && $StartTime <= $event_end) ||
+//						($event_start >= $StartTime && $event_start <= $endTime)
+                       ($event_start <= $StartTime AND $event_end > $StartTime)
+                      || ($event_start > $StartTime AND $event_end < $endTime)
+                      || ($event_start < $endTime AND $event_end >= $endTime)
 					)
 					{
 						$overlap = true;
