@@ -1093,6 +1093,12 @@
 				}
 
 				$resource['from'] = $from;
+				$to->setTime(23, 59, 59);
+				if($resource['booking_time_default_end'] > -1)
+				{
+					$to->setTime($resource['booking_time_default_end'], 0, 0);
+				}
+
 				$resource['to'] = $to;
 			}
 			unset($resource);
@@ -1193,6 +1199,7 @@
 						if ($StartTime->format('H') > $defaultEndHour)
 						{
 							$StartTime->modify("+1 days");
+							$defaultStartHour = $defaultStartHour_fallback;
 						}
 
 //					$test = $checkDate->format('Y-m-d');

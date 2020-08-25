@@ -6,7 +6,7 @@
 
 		function __construct()
 		{
-			parent::__construct('bb_participant_log', array(
+			parent::__construct('bb_participant', array(
 				'id' => array('type' => 'int'),
 				'reservation_type' => array('type' => 'string', 'required' => True, 'nullable' => False),
 				'reservation_id' => array('type' => 'int', 'required' => True, 'nullable' => False),
@@ -32,7 +32,7 @@
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			$sql = "SELECT id"
-				. " FROM bb_participant_log"
+				. " FROM bb_participant"
 				. " WHERE reservation_type='{$entity['reservation_type']}'"
 				. " AND reservation_id=" . (int) $entity['reservation_id']
 				. " AND phone='{$entity['phone']}'";
@@ -47,7 +47,7 @@
 		function get_number_of_participants($reservation_type, $reservation_id)
 		{
 			$sql = "SELECT sum(quantity) as cnt"
-				. " FROM bb_participant_log"
+				. " FROM bb_participant"
 				. " WHERE reservation_type='{$reservation_type}'"
 				. " AND reservation_id=" . (int) $reservation_id;
 			$this->db->query($sql, __LINE__, __FILE__);
