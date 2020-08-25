@@ -1102,7 +1102,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'bb_participant_log' => array(
+		'bb_participant' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'reservation_type' => array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
