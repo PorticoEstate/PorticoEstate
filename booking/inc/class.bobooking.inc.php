@@ -1046,7 +1046,6 @@
 					}
 				}
 
-
 				$to = clone $_to;
 
 				if($resource['booking_day_horizon'])
@@ -1087,13 +1086,14 @@
 					}
 				}
 
+				$to->setTime(23, 59, 59);
+
 				if ($resource['simple_booking'])
 				{
 					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
 				}
 
 				$resource['from'] = $from;
-				$to->setTime(23, 59, 59);
 				if($resource['booking_time_default_end'] > -1)
 				{
 					$to->setTime($resource['booking_time_default_end'], 0, 0);
@@ -1112,7 +1112,6 @@
 			
 			$this->get_partials( $events);
 
-//			_debug_array($events);
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;
 			$defaultStartHour_fallback	 = 8;
@@ -1132,6 +1131,8 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$datetimeformat = "{$dateformat} H:i";
+
+			$soseason = CreateObject('booking.soseason');
 
 			foreach ($resources['results'] as $resource)
 			{
@@ -1177,9 +1178,7 @@
 						$defaultEndHour--;
 					}
 
-//					$checkDate = new DateTime();
 					$checkDate = clone $resource['from'];
-//					$checkDate->setTimezone($DateTimeZone);
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
 //					$limitDate = clone ($to);
@@ -1201,8 +1200,6 @@
 							$StartTime->modify("+1 days");
 							$defaultStartHour = $defaultStartHour_fallback;
 						}
-
-//					$test = $checkDate->format('Y-m-d');
 
 						if ($dow_start > -1)
 						{
@@ -1234,9 +1231,12 @@
 
 						$checkDate = clone ($endTime);
 
+						$within_season = $soseason->timespan_within_season($resource['direct_booking_season_id'], $StartTime, $endTime);
+
 						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 
-						if (($booking_lenght > 1 && $overlap) || !$overlap)
+						if($within_season)
+					//	if ($within_season && (($booking_lenght > 1 && $overlap) || !$overlap))
 						{
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
@@ -1263,8 +1263,6 @@
 								$defaultStartHour = $defaultStartHour_fallback;
 							}
 						}
-//					$test = $StartTime->format('Y-m-d H:s');
-//					$test = $endTime->format('Y-m-d H:s');
 					}
 					while ($checkDate < $limitDate);
 				}
