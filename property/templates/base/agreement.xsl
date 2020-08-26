@@ -466,7 +466,7 @@
 									<div style="width:25px;height:15px;position:relative;float:left;"></div>
 									<input id="new_index" class="mybottonsUpdates" type="inputText" name="values[new_index]" size="12"/>
 									<input id="hd_values[update]" class="" type="hidden" name="values[update]" value="Update"/>
-									<input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickAlarm('update');"/>
+									<input type="button" name="" value="Update" id="values[update]" onClick="onUpdateClickIndex('update');"/>
 								</div>
 							</div>		<!-- <xsl:apply-templates select="table_update"/>  -->
 						</form>
