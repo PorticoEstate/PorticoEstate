@@ -20,6 +20,7 @@
 		{
 			$reservation_type	 = phpgw::get_var('reservation_type');
 			$reservation_id		 = phpgw::get_var('reservation_id', 'int');
+			$register_type		 = phpgw::get_var('register_type');
 
 			$participant					 = array();
 			$participant['email']			 = null;
@@ -43,7 +44,7 @@
 			}
 
 			$errors							 = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $register_type)
 			{
 				$user_inputs = (array)phpgwapi_cache::system_get('bookingfrontendt', 'add_participant');
 				$ip_address = phpgw::get_ip_address();
@@ -52,7 +53,7 @@
 				/**
 				 * 10 seconds limit
 				 */
-				$check_timestamp = time() - 10;
+				$check_timestamp = time() - 2;
 
 				$limit = 1;
 
@@ -81,15 +82,31 @@
 				}
 				else
 				{
-					$participant['phone']	 = phpgw::get_var('phone', 'int');
-					$participant['email']	 = phpgw::get_var('email', 'email');
-					$participant['quantity'] = phpgw::get_var('quantity', 'int');
-					$errors = $this->bo->validate($participant);
+
+					$phone = phpgw::get_var('phone', 'int');
+					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
+					$participant['register_type']	 = $register_type;
+					$participant['phone']			 = $phone;
+					$participant['email']			 = phpgw::get_var('email', 'email');
+					$participant['quantity']		 = phpgw::get_var('quantity', 'int');
+					$participant['reservation_type'] = $reservation_type;
+					$participant['reservation_id']	 = $reservation_id;
+
+					$errors							 = $this->bo->validate($participant);
 				}
 
 				if (!$errors)
 				{
-					$receipt = $this->bo->add($participant);
+					if(!empty($participant['id']))
+					{
+						$participant['from_'] = $participant['from_'] ? $participant['from_'] : null;
+						$participant['to_'] = $participant['to_'] ? $participant['to_'] : null;
+						$receipt = $this->bo->update($participant);
+					}
+					else
+					{
+						$receipt = $this->bo->add($participant);
+					}
 
 					/**
 					 * send SMS
@@ -108,9 +125,9 @@
 						$this->log('sms_error', $ex->getMessage());
 					}
 
-					phpgwapi_cache::message_set(lang('added'));
+					phpgwapi_cache::message_set(lang('added') . ": {$participant['phone']}");
 
-					$this->redirect(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
+					$this->redirect(array('menuaction'	=> 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
 				}
 			}
@@ -130,7 +147,7 @@
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
-
+			self::add_javascript('bookingfrontend', 'base', 'participant_edit.js');
 			self::render_template_xsl('participant_edit', $data);
 		}
 
