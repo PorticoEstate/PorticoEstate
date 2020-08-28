@@ -252,7 +252,7 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
     CONTENT STYLE
 ----------------------------------------------------- */
 
-#content {
+#page_content {
     width: 100%;
     padding: 20px;
     min-height: 100vh;

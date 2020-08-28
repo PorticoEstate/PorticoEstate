@@ -95,16 +95,15 @@ $(document).ready(function ()
 						});
 						show_case_picture(case_id, thisForm);
 //						submitBnt.prop('disabled', false);
-						var element = document.getElementById('spinner');
-						if (element)
-						{
-							element.parentNode.removeChild(element);
-						}
-
 					}
 					else
 					{
 						alert(data.message);
+					}
+					var element = document.getElementById('spinner');
+					if (element)
+					{
+						element.parentNode.removeChild(element);
 					}
 				}
 			}

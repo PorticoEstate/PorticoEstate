@@ -559,7 +559,10 @@
 						'relatives' => Array(RELATIVE_NONE)
 					)))
 				{
-					$this->receipt['error'][] = array('msg' => lang('This file already exists !'));
+					return array(
+						'status' => 'error',
+						'message' => lang('This file already exists !')
+						);
 				}
 				else
 				{
