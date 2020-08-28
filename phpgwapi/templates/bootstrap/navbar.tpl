@@ -11,7 +11,7 @@
 		</nav>
 
 		<!-- Page Content  -->
-        <div id="content">
+        <div id="page_content">
 			<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
 
 				<div class="container-fluid">
