@@ -525,7 +525,7 @@
 					'step' => $step,
 					'interval' => $_POST['field_interval'],
 					'outseason' => $_POST['outseason'],
-					'repeat_until' => $_POST['repeat_until'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'outseason' => $_POST['outseason'],
 					'weekday' => $weekday,
 				));
@@ -536,7 +536,7 @@
 					'step' => $step,
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => $_POST['repeat_until'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'weekday' => $weekday,
 					'from_date' => $from_date,
 					'to_date' => $to_date,

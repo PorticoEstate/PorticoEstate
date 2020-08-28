@@ -314,7 +314,7 @@ body {
 #line {
 	width: 960px; height: 30px; clear: left; margin-left: 20px; border-top-color: rgb(2, 118, 58); border-top-width: 5px; border-top-style: solid;
 }
-#content {
+#page_content {
 	text-align: left;
 }
 #cloud {

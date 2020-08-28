@@ -358,18 +358,18 @@ $(document).ready(function ()
 						$("#submit_update_component_parent").hide();
 						$("#component_parent_picture_file").val('');
 						show_component_parent_picture(component);
-						var element = document.getElementById('spinner');
-						if (element)
-						{
-							element.parentNode.removeChild(element);
-						}
-
 					}
 					else
 					{
 						alert(data.message);
 					}
 				}
+				var element = document.getElementById('spinner');
+				if (element)
+				{
+					element.parentNode.removeChild(element);
+				}
+
 			}
 		});
 	});
@@ -409,17 +409,16 @@ $(document).ready(function ()
 						$("#submit_update_component").hide();
 						$("#component_picture_file").val('');
 						show_component_picture();
-						var element = document.getElementById('spinner');
-						if (element)
-						{
-							element.parentNode.removeChild(element);
-						}
-
 					}
 					else
 					{
 						alert(data.message);
 					}
+				}
+				var element = document.getElementById('spinner');
+				if (element)
+				{
+					element.parentNode.removeChild(element);
 				}
 			}
 		});
@@ -436,7 +435,7 @@ $(document).ready(function ()
 			get_info: 1
 		};
 
-		if(typeof(enable_add_case) !=='undefined' && enable_add_case === true)
+		if (typeof (enable_add_case) !== 'undefined' && enable_add_case === true)
 		{
 			oArgs.enable_add_case = true;
 		}

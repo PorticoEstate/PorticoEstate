@@ -4497,4 +4497,47 @@
 	}
 
 
+	/**
+	 * Update booking version from 0.2.56 to 0.2.57
+	 *
+	 */
+	$test[] = '0.2.56';
 
+	function booking_upgrade0_2_56()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameTable('bb_participant_log', 'bb_participant');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.57';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.57 to 0.2.58
+	 *
+	 */
+	$test[] = '0.2.57';
+
+	function booking_upgrade0_2_57()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_participant', 'name',
+				array(
+					'type' => 'varchar',
+					'precision' => 150,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.58';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

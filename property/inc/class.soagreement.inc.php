@@ -855,7 +855,7 @@
 		{
 //            echo '<pre>'; print_r($values);echo '</pre>'; exit('update saul');
 			//_debug_array($values);
-			$values['new_index'] = $this->floatval($values['new_index']);
+//			$values['new_index'] = $this->floatval($values['new_index']);
 			$this->db->transaction_begin();
 
 			if (is_array($values['select']))
@@ -867,10 +867,23 @@
 					{
 						$this->db->query("UPDATE fm_activity_price_index set current_index = NULL WHERE agreement_id=" . intval($values['agreement_id']) . ' AND activity_id=' . intval($activity_id));
 
-						$this->db->query("INSERT INTO fm_activity_price_index (agreement_id,activity_id,index_count,current_index,this_index,m_cost,w_cost,total_cost,index_date,entry_date,user_id)"
-							. "VALUES (" . $values['agreement_id'] . "," . $activity_id . "," . ($values['id'][$activity_id] + 1) . ",1,'" . $values['new_index'] . "','" . ($values['m_cost'][$activity_id] * $values['new_index']) . "','" . ($values['w_cost'][$activity_id] * $values['new_index']) . "','" . ($values['total_cost'][$activity_id] * $values['new_index']) . "'," . (int)$values['date'] . "," . time()
-							. "," . $this->account . ")");
+						$value_set = array
+						(
+							'agreement_id'	 => $values['agreement_id'],
+							'activity_id'	 => $activity_id,
+							'index_count'	 => $values['id'][$activity_id] + 1,
+							'current_index'	 => 1,
+							'this_index'	 => str_replace(',', '.', (float)$values['new_index']),
+							'm_cost'		 => str_replace(',', '.', (float)($values['m_cost'][$activity_id] * $values['new_index'])),
+							'w_cost'		 => str_replace(',', '.', (float)($values['w_cost'][$activity_id] * $values['new_index'])),
+							'total_cost'	 => str_replace(',', '.', (float)($values['total_cost'][$activity_id] * $values['new_index'])),
+							'index_date'	 => (int)$values['date'],
+							'entry_date'	 => time(),
+							'user_id'		 => $this->account
+						);
 
+					$this->db->query("INSERT INTO fm_activity_price_index (" . implode(',', array_keys($value_set)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
 						$receipt['message'][] = array('msg' => lang('Activity %1 has been updated for index', $activity_id));
 					}
 				}

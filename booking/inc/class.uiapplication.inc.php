@@ -809,7 +809,14 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						if($simple)
+						{
+							$this->redirect(array('menuaction' => $this->module . '.uibuilding.show', 'id' => $building_id));
+						}
+						else
+						{
+							$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						}
 					}
 					else
 					{
