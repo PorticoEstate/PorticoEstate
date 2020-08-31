@@ -130,7 +130,11 @@
 				case 'booking':
 				case 'allocation':
 					$sql = "DELETE FROM bb_participant WHERE reservation_type = '{$reservation_type}' AND reservation_id IN"
-					. " (SELECT id FROM bb_{$reservation_type} WHERE to_ >  (now() - '{$interval} days'::interval))";
+					. " (SELECT id FROM bb_{$reservation_type}"
+					. " WHERE to_ IS NOT NULL"
+					. " AND to_ <  (now() - '{$interval} days'::interval))";
+
+					$this->db->query($sql, __LINE__, __FILE__);
 
 					break;
 
