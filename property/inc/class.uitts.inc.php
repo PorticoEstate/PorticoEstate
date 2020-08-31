@@ -3542,10 +3542,12 @@ JS;
 							array(
 								'__ressursnr__',
 								'__order_id__',
+								'__address__',
 							),
 							array(
 								$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
-								$ticket['order_id']
+								$ticket['order_id'],
+								$_delivery_address
 							),
 							$payment_type['descr']
 						);
