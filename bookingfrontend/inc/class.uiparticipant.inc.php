@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uiparticipant');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class bookingfrontend_uiparticipant extends booking_uiparticipant
 	{
@@ -108,11 +109,49 @@
 						$receipt = $this->bo->add($participant);
 					}
 
+//					$participant_id = $receipt['id'];
+//					$config = CreateObject('phpgwapi.config', 'booking')->read();
+//					$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+//
+//					// Hack..
+//					if(!preg_match('/^http/', $external_site_address))
+//					{
+//						$external_site_address = "http:/{$external_site_address}";
+//					}
+//
+//					$participant_registration_link = $external_site_address
+//						. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+//						. "&phone={$phone}"
+//						. "&quantity={$participant['quantity']}"
+//						. "&reservation_type={$participant['reservation_type']}"
+//						. "&reservation_id={$participant['reservation_id']}";
+
+					switch ($register_type)
+					{
+						case 'register_pre':
+							$sms_text = "Hei.\n"
+								. "Du er forhåndspåmeldt med {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
+								. "Du må registrere fremmøte når du møter ved arrangementet\n";
+							break;
+						case 'register_in':
+							$sms_text = "Hei.\n"
+								. "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
+								. "Du kan frigjøre plassen ved å melde deg ut når du forlater arrangementet ";
+							break;
+						case 'register_out':
+							$sms_text = "Hei.\n"
+								. "Du har registrert at du forlater {$reservation['name']} som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							break;
+
+						default:
+							$sms_text = "Hei.\n "
+								. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
+							break;
+					}
+
 					/**
 					 * send SMS
 					 */
-					$sms_text = "Hei\n "
-						. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
 
 					try
 					{
@@ -138,6 +177,8 @@
 
 			$data = array
 				(
+				'enable_register_pre'	 => strtotime($reservation['from_']) > phpgwapi_datetime::user_localtime() ? true : false,
+				'enable_register_in'	 => strtotime($reservation['from_']) < phpgwapi_datetime::user_localtime() ? true : false,
 				'number_of_participants' => $number_of_participants,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],

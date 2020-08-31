@@ -824,3 +824,4 @@ quantity	booking	no	Antall
 Pre-register	booking	no	Påmelding
 Register in	booking	no	Inn-registrering
 Register out	booking	no	Ut-registrering
+booking_async_task_delete_participants	booking	no	Slette gamle deltagerregistreringer

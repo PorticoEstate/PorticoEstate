@@ -822,3 +822,4 @@ newpartial1	booking	nn	Ikke fullført
 missing id	booking	nn	manglar referanse til ID
 participants	booking	nn	Deltakarar
 quantity	booking	nn	Antal
+booking_async_task_delete_participants	booking	nn	Slette gamle deltagerregistreringer
