@@ -1,4 +1,5 @@
 var selectedAutocompleteValue = false;
+let from_time, to_time;
 $(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }");
 $(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
@@ -6,7 +7,10 @@ $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
 $(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
 
 $('.date_availability_filter').change(() => {
-    console.log("Date filter changed, udating results");
+    from_time = $('#from_time').val();
+    to_time = $('#to_time').val();
+    DoFilterSearch();
+    console.log("DATE CHANGED");
     });
 
 var urlParams = [];
@@ -409,11 +413,11 @@ function doSearch(searchterm_value)
 
 function DoFilterSearch()
 {
-    console.log("YY");
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
 	results.removeAll();
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1}, true);
+        console.log(from_time);
+	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1, ...(from_time && to_time) ? {from_time: from_time, to_time: to_time} : {}}, true);
         console.log(requestURL);
 	searchViewModel.facilities.removeAll();
 	searchViewModel.activities.removeAll();

@@ -501,9 +501,13 @@
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+                        if (isset($_GET['from_time']) && isset($_GET['to_time']))
+                        {
+                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."FILTER TIMES: ".$_GET['from_time'] . " - ".$_GET['to_time'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+                        $booked_ids = $this->get_all_booked_ids($_GET['from_time'], $_GET['to_time']);
                         $buildings_filtered = array();
-                        foreach($buildings as $building){ // keep only available buildings in output
-                            if (! in_array($building['id'], $buildings)){
+                        foreach($buildings as $building){ // keep only available buildings in output 
+                            if (! in_array($building['id'], $booked_ids)){
                                 $buildings_filtered[] = $building;
                                 file_put_contents("/var/www/html/portico/LOG.log", "\n"."INCLUDED BUILDING: ".$building['id'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
                             }else{
@@ -511,11 +515,12 @@
                             }
                         }
 			$returnres['buildings']   = $buildings_filtered;
+                        }else{
+			$returnres['buildings']   = $buildings;
+                        }
 			$returnres['activities']  = $all_activities_list;
 			$returnres['facilities']  = $all_facilities_list;
 			$returnres['partoftowns'] = $all_partoftown_list;
-                        $booked_ids = $this->get_all_booked_ids("2020/01/01", "2020/09/09");
-                        
                         file_put_contents("/var/www/html/portico/LOG.log", "\n"."BOOKED IDS: ".implode(',', $booked_ids) , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
                         file_put_contents("/var/www/html/portico/LOG.log", "\n"."BOOKED IDS: ". $returnres['buildings'][0]['id'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
 
