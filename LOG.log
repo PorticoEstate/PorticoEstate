@@ -1,0 +1,146 @@
+
+
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: Array
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: {"id":19,"name":"Fana Stadion","part_of_town_id":"6","street":"Grimseidvegen 60","zip_code":"5239","city":"R\u00e5dal","part_of_town_name":"YTREBYGDA  BYDEL","resources":[{"id":732,"name":"Gymsal","simple_booking":null,"activities_list":[{"id":33,"name":"Kampsport"},{"id":94,"name":"Trim"},{"id":51,"name":"Turn"}],"facilities_list":[]}]}
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 19
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+EXCLUDED BUILDING: 19
+EXCLUDED BUILDING: 138
+EXCLUDED BUILDING: 8
+EXCLUDED BUILDING: 141
+EXCLUDED BUILDING: 35
+EXCLUDED BUILDING: 137
+EXCLUDED BUILDING: 140
+EXCLUDED BUILDING: 139
+EXCLUDED BUILDING: 147
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 19
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+EXCLUDED BUILDING: 19
+EXCLUDED BUILDING: 138
+EXCLUDED BUILDING: 8
+EXCLUDED BUILDING: 141
+EXCLUDED BUILDING: 35
+EXCLUDED BUILDING: 137
+EXCLUDED BUILDING: 140
+EXCLUDED BUILDING: 139
+EXCLUDED BUILDING: 147
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+INCLUDED BUILDING: 19
+INCLUDED BUILDING: 138
+INCLUDED BUILDING: 8
+INCLUDED BUILDING: 141
+INCLUDED BUILDING: 35
+INCLUDED BUILDING: 137
+INCLUDED BUILDING: 140
+INCLUDED BUILDING: 139
+INCLUDED BUILDING: 147
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 19
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+INCLUDED BUILDING: 19
+INCLUDED BUILDING: 138
+INCLUDED BUILDING: 8
+INCLUDED BUILDING: 141
+INCLUDED BUILDING: 35
+INCLUDED BUILDING: 137
+INCLUDED BUILDING: 140
+INCLUDED BUILDING: 139
+INCLUDED BUILDING: 147
+BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+BOOKED IDS: 19

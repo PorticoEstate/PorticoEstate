@@ -26,7 +26,7 @@
 			'get_address_search' => true,
 			'edit_organization_values' => true,
 			'get_organization_activities' => true,
-			'test_sql_injection' => true
+			'test_sql_injection' => true,
 		);
 
 		public function __construct()

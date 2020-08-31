@@ -5,6 +5,10 @@ $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
 $(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
 $(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
 
+$('.date_availability_filter').change(() => {
+    console.log("Date filter changed, udating results");
+    });
+
 var urlParams = [];
 CreateUrlParams(window.location.search);
 var results = ko.observableArray();
@@ -175,6 +179,7 @@ $(document).ready(function ()
 		}
 		else
 		{
+                        console.log( $("#mainSearchInput").val() + " - logged form search.js");
 			doSearch();
 			searchViewModel.notFilterSearch(true);
 		}
@@ -348,6 +353,7 @@ function doSearch(searchterm_value)
 		data: {searchterm: searchTerm},
 		success: function (response)
 		{
+                    console.log(response)
 			results.removeAll();
 			for (var i = 0; i < response.results.results.length; i++)
 			{
@@ -384,7 +390,7 @@ function doSearch(searchterm_value)
 					type: response.results.results[i].type,
 					tagItems: []
 				});
-			}
+			} 
 			setTimeout(function ()
 			{
 				$('html, body').animate({
@@ -403,17 +409,19 @@ function doSearch(searchterm_value)
 
 function DoFilterSearch()
 {
+    console.log("YY");
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
 	results.removeAll();
 	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1}, true);
-
+        console.log(requestURL);
 	searchViewModel.facilities.removeAll();
 	searchViewModel.activities.removeAll();
 	searchViewModel.towns.removeAll();
 
 	$.getJSON(requestURL, function (result)
 	{
+            console.log(result) 
 		for (var i = 0; i < result.facilities.length; i++)
 		{
 			var selectedFacilities = false;
@@ -523,3 +531,21 @@ function GetTypeName(type)
 		return "org";
 	}
 }
+
+
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#startDate').datepicker({
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: today,
+            maxDate: function () {
+                return $('#endDate').val();
+            }
+        });
+        $('#endDate').datepicker({
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                return $('#startDate').val();
+            }
+        });
