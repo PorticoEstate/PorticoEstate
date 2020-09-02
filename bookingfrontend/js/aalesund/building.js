@@ -31,12 +31,14 @@ $(document).ready(function ()
 		date = new Date(urlParams['date']);
 	}
 
-	if(active_building == 1)
-	{
-		getFreetime(urlParams);
-	}
-//	PopulateBuildingData(urlParams);
-//	PopulateBookableResources(urlParams);
+//	Moved to the resource-level
+//	if(active_building == 1)
+//	{
+//		getFreetime(urlParams);
+//	}
+//	
+	PopulateBuildingData(urlParams);
+	PopulateBookableResources(urlParams);
 
 	$(".calendar-tool").removeClass("invisible");
 
@@ -604,11 +606,11 @@ function PopulateBookableResources(urlParams)
 				activitiesList.push(result.results[i].activities_list[k].name);
 			}
 
-			if(result.results[i].simple_booking == 1)
-			{
-				resourceItemLink = false;
-			}
-			else
+//			if(result.results[i].simple_booking == 1)
+//			{
+//				resourceItemLink = false;
+//			}
+//			else
 			{
 				oArgs = {
 					menuaction: 'bookingfrontend.uiresource.show',

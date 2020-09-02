@@ -1,3 +1,4 @@
+var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var events = ko.observableArray();
 var date = new Date();
@@ -6,10 +7,32 @@ var urlParams = [];
 CreateUrlParams(window.location.search);
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
+var availlableTimeSlots = ko.observableArray();
+$(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
+
+
+function ResourceModel()
+{
+	var self = this;
+	self.availlableTimeSlots = availlableTimeSlots;
+}
+
+ResourceModel = new ResourceModel();
+ko.applyBindings(ResourceModel, document.getElementById("resource-page-content"));
 
 $(document).ready(function ()
 {
 	$(".overlay").show();
+
+	if (typeof urlParams['date'] !== "undefined")
+	{
+		date = new Date(urlParams['date']);
+	}
+	if(simple_booking == 1)
+	{
+		getFreetime(urlParams);
+	}
+
 
 	PopulateResourceData();
 	if (deactivate_calendar == 0)
@@ -71,6 +94,34 @@ function PopulateResourceData()
 	});
 }
 
+function getFreetime(urlParams)
+{
+	var checkDate = new Date();
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + booking_month_horizon, 0);
+
+	var getJsonURL = phpGWLink('bookingfrontend/', {
+		menuaction: "bookingfrontend.uibooking.get_freetime",
+		building_id: urlParams['building_id'],
+		resource_id: urlParams['id'],
+		start_date: formatSingleDateWithoutHours(new Date()),
+		end_date: formatSingleDateWithoutHours(EndDate),
+	}, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		for (var key in result)
+		{
+			for (var i = 0; i < result[key].length; i++)
+			{
+				if (typeof result[key][i].applicationLink != 'undefined')
+				{
+					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
+				}
+				availlableTimeSlots.push(result[key][i]);
+			}
+		}
+	});
+}
 
 function ForwardToNewApplication(start, end, resource)
 {
