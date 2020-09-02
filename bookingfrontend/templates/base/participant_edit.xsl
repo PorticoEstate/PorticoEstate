@@ -70,21 +70,26 @@
 
 					<input id="register_type" name="register_type" type="hidden"/>
 
-					<div class="col-12 mt-3 mb-2">
-						<button type="submit" value="register_pre" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_pre');">
-							<xsl:value-of select="php:function('lang', 'Pre-register')" />
-						</button>
-					</div>
-					<div class="col-12 mt-3 mb-2">
-						<button type="submit" value="register_in" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_in');">
-							<xsl:value-of select="php:function('lang', 'Register in')" />
-						</button>
-					</div>
-					<div class="col-12 mt-3 mb-2">
-						<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
-							<xsl:value-of select="php:function('lang', 'Register out')" />
-						</button>
-					</div>
+					<xsl:if test="enable_register_pre = 1">
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_pre" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_pre');">
+								<xsl:value-of select="php:function('lang', 'Pre-register')" />
+							</button>
+						</div>
+					</xsl:if>
+
+					<xsl:if test="enable_register_in = 1">
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_in" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_in');">
+								<xsl:value-of select="php:function('lang', 'Register in')" />
+							</button>
+						</div>
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
+								<xsl:value-of select="php:function('lang', 'Register out')" />
+							</button>
+						</div>
+					</xsl:if>
 				</div>
 			</form>
 		</div>

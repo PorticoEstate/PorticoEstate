@@ -5,6 +5,11 @@
 	class booking_async_task_update_reservation_state extends booking_async_task
 	{
 
+		public function get_default_times()
+		{
+			return array( 'hour' => '*/1');
+		}
+
 		public function run( $options = array() )
 		{
 			$db = & $GLOBALS['phpgw']->db;
