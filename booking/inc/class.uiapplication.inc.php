@@ -811,7 +811,7 @@
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							$this->redirect(array('menuaction' => $this->module . '.uibuilding.show', 'id' => $building_id));
+							$this->redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
 						}
 						else
 						{
