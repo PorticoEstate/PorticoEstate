@@ -55,6 +55,14 @@
 		</div>
 	</xsl:if>
 
+	<div class="actions">
+		<a href="{allocation/show_link}" target="_blank">
+			<button class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view allocation')"/>
+			</button>
+		</a>
+	</div>
+
 	<xsl:if test="allocation/add_link">
 		<div class="actions">
 			<button onclick="location.href='{allocation/add_link}'" class="btn btn-light mt-4">

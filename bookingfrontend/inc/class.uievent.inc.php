@@ -480,10 +480,6 @@
 
 			$event['number_of_participants'] = $number_of_participants;
 
-//			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
-//				'reservation_type' => 'event',
-//				'reservation_id' => $event['id']), true, true);
-
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
