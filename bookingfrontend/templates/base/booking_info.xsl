@@ -29,6 +29,13 @@
 	<!--<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
 	</div>-->
+	<div class="actions">
+		<a href="{booking/show_link}" target="_blank">
+			<button class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view booking')"/>
+			</button>
+		</a>
+	</div>
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
 			<button class="btn btn-light mt-4" onclick="location.href='{booking/edit_link}'">

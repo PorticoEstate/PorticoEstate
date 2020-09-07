@@ -488,3 +488,5 @@ saved data	bookingfrontend	no	Lagrede data
 edit data	bookingfrontend	no	Endre data
 Minimum 8 digits	bookingfrontend	no	Minimum 8 tall
 view event	bookingfrontend	no	Vis arrangement
+view allocation	bookingfrontend	no	Vis tildeling
+view booking	bookingfrontend	no	Vis interntildeling
