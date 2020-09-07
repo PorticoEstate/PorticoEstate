@@ -1,3 +1,4 @@
+var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var events = ko.observableArray();
 var date = new Date();
@@ -6,13 +7,35 @@ var urlParams = [];
 CreateUrlParams(window.location.search);
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
+var availlableTimeSlots = ko.observableArray();
+$(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
+
+
+function ResourceModel()
+{
+	var self = this;
+	self.availlableTimeSlots = availlableTimeSlots;
+}
+
+ResourceModel = new ResourceModel();
+ko.applyBindings(ResourceModel, document.getElementById("resource-page-content"));
 
 $(document).ready(function ()
 {
 	$(".overlay").show();
 
+	if (typeof urlParams['date'] !== "undefined")
+	{
+		date = new Date(urlParams['date']);
+	}
+	if(simple_booking == 1)
+	{
+		getFreetime(urlParams);
+	}
+
+
 	PopulateResourceData();
-	if (deactivate_calendar == 0 || deactivate_calendar == '')
+	if (deactivate_calendar == 0)
 	{
 		PopulateCalendarEvents();
 	}
@@ -21,7 +44,7 @@ $(document).ready(function ()
 		$(".main-picture").attr("src", this.src);
 	});
 
-	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], resource_id: urlParams['id']}, false);
+	var bookBtnURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: building_id, resource_id: urlParams['id'], simple: simple_booking}, false);
 	$(".bookBtnForward").attr("href", bookBtnURL);
 
 	$(".goToCal").click(function ()
@@ -71,15 +94,44 @@ function PopulateResourceData()
 	});
 }
 
+function getFreetime(urlParams)
+{
+	var checkDate = new Date();
+	var EndDate = new Date(checkDate.getFullYear(), checkDate.getMonth() + booking_month_horizon, 0);
+
+	var getJsonURL = phpGWLink('bookingfrontend/', {
+		menuaction: "bookingfrontend.uibooking.get_freetime",
+		building_id: urlParams['building_id'],
+		resource_id: urlParams['id'],
+		start_date: formatSingleDateWithoutHours(new Date()),
+		end_date: formatSingleDateWithoutHours(EndDate),
+	}, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		for (var key in result)
+		{
+			for (var i = 0; i < result[key].length; i++)
+			{
+				if (typeof result[key][i].applicationLink != 'undefined')
+				{
+					result[key][i].applicationLink = phpGWLink('bookingfrontend/', result[key][i].applicationLink);
+				}
+				availlableTimeSlots.push(result[key][i]);
+			}
+		}
+	});
+}
 
 function ForwardToNewApplication(start, end, resource)
 {
 	window.location.href = phpGWLink('bookingfrontend/', {
 		menuaction: "bookingfrontend.uiapplication.add",
-		building_id: urlParams['building_id'],
+		building_id: building_id,
 		resource_id: (typeof resource === 'undefined') ? "" : resource,
 		start: (typeof start === 'undefined') ? "" : roundMinutes(start),
-		end: (typeof end === 'undefined') ? "" : roundMinutes(end)
+		end: (typeof end === 'undefined') ? "" : roundMinutes(end),
+		simple: simple_booking
 	}, false);
 }
 
@@ -123,7 +175,7 @@ function PopulateCalendarEvents()
 	$('.weekNumber').remove();
 	var eventsArray = [];
 	var paramDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-	var colors = {"allocation": "#2875c2", "booking": "#123456", "event": "#898989"}
+	var colors = {"allocation": "#82368c", "booking": "#27348b", "event": "#6c9ad1", boundery: '#0cf296'}
 //  getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+urlParams['id']+"&date="+paramDate+"&phpgw_return_as=json";
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibooking.resource_schedule", resource_id: urlParams['id'], date: paramDate}, true);
 
@@ -450,6 +502,11 @@ function tooltipDetails()
 	var tooltipText = "";
 	var url = $(this).find('.event-id')[0];
 	url = url.getAttribute("data-url");
+
+	if(!url)
+	{
+		return false;
+	}
 
 	$.ajax({
 		url: url,
@@ -988,6 +1045,7 @@ function GenerateCalendarForEvents(date)
 
 			$(".scheduler-base-nav-date").remove();
 			$(".scheduler-base-controls").append("<div class='d-inline ml-2 weekNumber'>Uke " + date.getWeek() + "</div>");
+			$(".scheduler-base-controls").append("<div class='d-inline ml-2 building_name'><h3>" + $("#resource_name").text() + "</h3></div>");
 			$(".scheduler-event-title").text("");
 
 			$(".scheduler-event-disabled").hover(function ()

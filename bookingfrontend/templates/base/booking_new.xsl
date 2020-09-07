@@ -21,8 +21,9 @@
 					</div>
 					<input type="hidden" class="form-control" name="season_id" value="{booking/season_id}"/>
 					<input type="hidden" class="form-control" name="allocation_id" value="{booking/allocation_id}"/>
+
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
 						<select name="activity_id" class="form-control" id="field_activity">
@@ -49,7 +50,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Building (2018)')"/>
 						</label>
 						<input id="field_building_id" class="form-control" name="building_id" type="hidden" value="{booking/building_id}">
@@ -63,7 +64,7 @@
 						<xsl:value-of select="booking/building_name" />
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />
 						</label>
 						<button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
@@ -93,13 +94,13 @@
 						</span>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Organization')"/>
 						</label>
 						<xsl:value-of select="booking/organization_name" />
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Group')"/>
 						</label>
 						<div id="group_container">
@@ -125,7 +126,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'From')"/>
 						</label>
 						<input class="form-control datetime" id="field_from" type="text" name="from_">
@@ -141,7 +142,7 @@
 						</input>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'To')"/>
 						</label>
 						<input class="form-control" id="field_to" type="text" name="to_">
@@ -157,7 +158,7 @@
 						</input>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Recurring booking')" />
 						</label>
 						<div>
@@ -183,9 +184,10 @@
 						</input>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Interval')" />
 						</label>
+
 						<xsl:value-of select="../field_interval" />
 						<select id="field_interval" class="form-control" name="field_interval">
 							<option value="1">
@@ -215,7 +217,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Target audience')" />
 						</label>
 						<div class="dropdown d-inline-block">
@@ -229,7 +231,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
 						</label>
 						<div class="p-2 border">
@@ -246,6 +248,7 @@
 									<xsl:value-of select="php:function('lang', 'Female')" />
 								</div>
 							</div>
+
 							<div class="row mb-2" data-bind="foreach: agegroup">
 								<span data-bind="text: id, visible: false"/>
 								<div class="col-3">
@@ -282,11 +285,14 @@
 		var initialSelectionAgegroup = <xsl:value-of select="booking/agegroups_json" />;
 		var building_id = <xsl:value-of select="booking/building_id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
+
 		$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
 		$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
+
 		BookingNewModel = GenerateUIModelForResourceAudienceAndAgegroup();
 		bnm = new BookingNewModel();
 		ko.applyBindings(bnm, document.getElementById("booking-new-page-content"));
+
 		AddBookableResourceData(building_id, initialSelection, bnm.bookableresource);
 		AddAudiencesAndAgegroupData(building_id, bnm.agegroup, initialSelectionAgegroup, bnm.audiences, initialAudience);
 		bnm.audienceSelectedValue(<xsl:value-of select="booking/audience" />);

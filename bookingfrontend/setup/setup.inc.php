@@ -1,6 +1,6 @@
 <?php
 	$setup_info['bookingfrontend']['name'] = 'bookingfrontend';
-	$setup_info['bookingfrontend']['version'] = '0.1.1';
+	$setup_info['bookingfrontend']['version'] = '1.0';
 	$setup_info['bookingfrontend']['app_order'] = 9;
 	$setup_info['bookingfrontend']['enable'] = 1;
 	$setup_info['bookingfrontend']['app_group'] = 'office';
