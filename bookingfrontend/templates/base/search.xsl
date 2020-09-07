@@ -1,14 +1,23 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="search-page-content">
+		<div class="frontpageimage" id="main-page">
+			<div class="header-text"    style="color:#26348B;"  >
+				<a href="{site_url}"    >
+					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+				</a>
+			</div>
+		</div>
+		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
-			<div class="container searchContainer">
-				<h2 class="text-center font-weight-bold">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
-				</h2>
-				<div class="text-center mt-4 mb-5">
+			<!-- Title -->
+			<div class="container">
+				<div class="flex-container" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-				<div class="input-group input-group-lg">
+			</div>
+			<!-- Search Container -->
+			<div class="container searchContainer"     >
+				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
 							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
@@ -21,10 +30,10 @@
 					</div>
 				</div>
 				<div id="search-autocomplete"></div>
-				<!-- FILTER BOXES> -->
-				<h5 class="mt-5 font-weight-bold">
-					<xsl:value-of select="filterboxtitle"/>
-				</h5>
+				<!-- Filter Boxes -->
+				<h2 class="mt-5 font-weight-bold">
+					<xsl:value-of select="php:function('lang', 'Choose categories')"/>
+				</h2>
 				<div class="row mx-auto" data-bind="if: filterboxes().length > 0">
 					<div data-bind="foreach: filterboxes">
 						<div class="dropdown d-inline-block mr-2">
@@ -82,9 +91,10 @@
 				</div>
 			</div>
 		</div>
+		<!-- Arrangement Container -->
 		<div class="container pageResults">
-			<!-- UPCOMMING ARRAGEMENTS -->
-			<div id="welcomeResult">
+			<!-- Upcomming Arrangements -->
+			<div id="welcomeResult" class=" container">
 				<h1 class="text-center upcomingevents-header"></h1>
 				<div class="row" data-bind="foreach: upcommingevents">
 					<div class="col-lg-6 card-positioncorrect">
@@ -99,19 +109,20 @@
 								</svg>
 							</div>
 							<div class="col-md-9 col-sm-8 col-8 desc">
-								<h5 class="font-weight-bold title" data-bind="text: name"></h5>
-								<span class="text-uppercase" data-bind="text: datetime_time"></span>
-								<span class="text-uppercase" data-bind="text: 'STED: ' +building_name"></span>
-								<span class="text-uppercase mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-								<a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									<span class="text-uppercase font-weight-normal" data-bind="visible: homepage != ''">Les mer</span>
-								</a>
+								<h2 class="font-weight-bold title" data-bind="text: name"></h2>
+								<div class="card-text">
+									<span  data-bind="text: datetime_time"></span>
+									<span  data-bind="text: 'STED: ' +building_name"></span>
+									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
+									<span class="font-weight-normal" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
+									Les mer</a></span>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- SEARCH RESULT -->
+			<!-- Search Results -->
 			<div id="searchResult" data-bind="if: notFilterSearch">
 				<h1 class="text-center result-title">
 					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
@@ -129,12 +140,12 @@
 								</div>
 								<div class="col-9 desc">
 									<div class="desc">
-										<h4 class="font-weight-bold" data-bind="html: name"></h4>
+										<h2 class="font-weight-bold" data-bind="html: name"></h2>
 										<span data-bind="html: street"></span>
 										<span class="d-block" data-bind="html: postcode"></span>
 									</div>
 									<div data-bind="foreach: tagItems">
-										<span class="badge badge-pill badge-default text-uppercase" data-bind="text: $rawData, click: selectThisTag" ></span>
+										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
 									</div>
 								</div>
 							</div>
@@ -142,7 +153,8 @@
 					</div>
 				</div>
 			</div>
-			<!-- FILTER SEARCH RESULT -->
+
+			<!-- Filter Search Result -->
 			<div id="filterSearchResult" data-bind="if: selectedFilterbox">
 				<h1 class="text-center result-title">
 					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>
@@ -174,7 +186,7 @@
 										</div>
 										<div class="col-6">
 											<a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">
-												<xsl:value-of select="php:function('lang', 'more info	booking')"/>
+												<xsl:value-of select="php:function('lang', 'Book resource')"/>
 											</a>
 										</div>
 									</div>

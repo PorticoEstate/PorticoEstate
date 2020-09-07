@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div class="info-content" id="building-page-content">
+	<div class="info-content" id="resource-page-content">
 		<div class="container wrapper">
 			<div class="location">
 				<span>
@@ -26,13 +26,13 @@
 							<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 						</div>
 						<div class="col-xl-8 col-lg-7 col-md-8 col-sm-7">
-							<h3>
+							<h1 id="resource_name" class="resource_title">
 								<xsl:value-of select="resource/name"/>
-							</h3>
-							<h3>
+							</h1>
+							<!-- <h2>
 								<xsl:value-of select="building/name"/>
-							</h3>
-							<i class="fas fa-map-marker d-inline">&#160;</i>
+							</h2> -->
+							<!-- <i class="fas fa-map-marker d-inline">&#160;</i>
 							<div class="building-place-adr">
 								<span>
 									<xsl:value-of select="building/street"/>
@@ -42,7 +42,7 @@
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="building/city"/>
 								</span>
-							</div>
+							</div> -->
 						</div>
 						<div class="col-12 mt-4" id="item-description">
 							<xsl:value-of disable-output-escaping="yes" select="resource/description"/>
@@ -64,12 +64,12 @@
 						<xsl:if test="count(resource/activities_list) &gt; 0">
 							<div class="building-card">
 								<div class="building-card-header">
-									<h5 class="mb-0">
+									<h2 class="mb-0">
 										<button class="btn btn-link" data-toggle="collapse" data-target="#collapseActivities" aria-expanded="false">
 											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
 										</button>
 										<button data-toggle="collapse" data-target="#collapseActivities" class="btn fas fa-plus float-right"></button>
-									</h5>
+									</h2>
 								</div>
 								<div id="collapseActivities" class="collapse">
 									<div class="card-body">
@@ -156,6 +156,43 @@
 							</div>
 						</xsl:if>
 					</div>
+
+					<xsl:if test="resource/active=1 and resource/simple_booking = 1">
+						<div class="col-lg-12">
+							<h2 class="">
+								<xsl:value-of select="php:function('lang', 'simple booking')" />
+							</h2>
+							<div class="custom-card">
+								<!--<pre data-bind="text: ko.toJSON(availlableTimeSlots, null, 2)"></pre>-->
+								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
+									<ul class="list-group list-group-flush">
+										<div data-bind="if: overlap">
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
+												<span data-bind="html: when"></span>
+												<span class="ml-2" style="font-weight: bold; color: #ff3333;">
+													<xsl:value-of select="php:function('lang', 'leased')"/>
+												</span>
+											</li>
+										</div>
+
+										<div data-bind="if: overlap == false">
+
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
+												<a class="bookable-timeslots-link-href" data-bind="" href="">
+													<span data-bind="html: when"></span>
+												</a>
+												<span class="ml-2" style="font-weight: bold; color: #1a8f65;">
+													<xsl:value-of select="php:function('lang', 'available')"/>
+												</span>
+											</li>
+										</div>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</xsl:if>
 				</div>
 			</div>
 		</div>
@@ -169,40 +206,41 @@
 			</div>
 		</xsl:if>
 		<div class="row margin-top-and-bottom">
-			<xsl:if test="building/deactivate_calendar=0">
-				<div class="col-6 button-group dropdown calendar-tool">
+			<div class="col-6 button-group dropdown calendar-tool">
+				<xsl:if test="building/deactivate_calendar=0">
 					<button class="btn btn-default datepicker-btn mr-2 mb-2 mb-lg-0">
 						<i class="far fa-calendar-alt"></i>&#160;
 						<xsl:value-of select="php:function('lang', 'choose a date')"/>
 					</button>
-					<xsl:if test="building/deactivate_application=0">
-						<a href="" class="btn btn-default bookBtnForward">
-							<i class="fas fa-plus"></i>&#160;
-							<xsl:value-of select="php:function('lang', 'Application')" />
-						</a>
-					</xsl:if>
+				</xsl:if>
+
+				<xsl:if test="building/deactivate_application=0">
+					<a href="" class="btn btn-default bookBtnForward">
+						<i class="fas fa-plus"></i>&#160;
+						<xsl:value-of select="php:function('lang', 'Application')" />
+					</a>
+				</xsl:if>
+			</div>
+			<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2">
+				<div class="d-block">
+					<div class="square allocation"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'allocation')"/>
+					</span>
 				</div>
-				<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 event-color-desc mt-2">
-					<div class="d-block">
-						<div class="square allocation"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'allocation')"/>
-						</span>
-					</div>
-					<div class="d-block">
-						<div class="square booking"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
-						</span>
-					</div>
-					<div class="d-block">
-						<div class="square event"></div>
-						<span>
-							<xsl:value-of select="php:function('lang', 'event')"/>
-						</span>
-					</div>
+				<div class="d-block">
+					<div class="square booking"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
+					</span>
 				</div>
-			</xsl:if>
+				<div class="d-block">
+					<div class="square event"></div>
+					<span>
+						<xsl:value-of select="php:function('lang', 'event')"/>
+					</span>
+				</div>
+			</div>
 			<!--<div class="input-group date" id="datepicker" data-provide="datepicker">
 				<input type="text" class="form-control" />
 				<div class="input-group-addon">
@@ -229,5 +267,7 @@
 		var resourcename = "<xsl:value-of select="resource/name" />";
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+		var building_id = "<xsl:value-of select="building/id" />";
+		var simple_booking = "<xsl:value-of select="resource/simple_booking" />";
 	</script>
 </xsl:template>
