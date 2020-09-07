@@ -62,7 +62,7 @@
 		link.media = "screen,print";
 		document.getElementsByTagName( "head" )[0].appendChild( link );
 		var link = document.createElement( "link" );
-		link.href =  strBaseURL.split('?')[0] + "phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
+		link.href =  strBaseURL.split('?')[0] + "phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
 		link.type = "text/css";
 		link.rel = "stylesheet";
 		link.media = "screen,print";
