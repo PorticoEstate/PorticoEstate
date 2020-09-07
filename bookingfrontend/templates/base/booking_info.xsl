@@ -30,10 +30,8 @@
 		<xsl:value-of select="booking/activity_name"/>
 	</div>-->
 	<div class="actions">
-		<a href="{booking/show_link}" target="_blank">
-			<button class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'view booking')"/>
-			</button>
+		<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">
+			<xsl:value-of select="php:function('lang', 'view booking')"/>
 		</a>
 	</div>
 	<xsl:if test="booking/edit_link">

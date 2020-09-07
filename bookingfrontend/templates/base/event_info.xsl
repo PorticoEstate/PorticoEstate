@@ -62,10 +62,8 @@
 		</div>
 	</xsl:if>
 	<div class="actions">
-		<a href="{event/show_link}" target="_blank">
-			<button class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'view event')"/>
-			</button>
+		<a href="{event/show_link}" target="_blank" class="btn btn-light mt-4">
+			<xsl:value-of select="php:function('lang', 'view event')"/>
 		</a>
 	</div>
 
