@@ -1329,6 +1329,8 @@
 
 			$booking['participant_registration_link'] = $participant_registration_link;
 
+			$booking['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+
 			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;
 			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';

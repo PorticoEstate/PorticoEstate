@@ -55,7 +55,7 @@
 						</input>
 					</xsl:for-each>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Bookings that can be created')" />
 						</label>
 						<xsl:for-each select="valid_dates">
@@ -65,7 +65,7 @@
 						</xsl:for-each>
 					</div>
 					<div class="form-group">
-						<label class="text-uppercase">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Allocations colliding with existing bookings or allocations (%1)', count(result/invalid[from_]))" />
 						</label>
 						<xsl:for-each select="invalid_dates">
@@ -74,6 +74,7 @@
 							</li>
 						</xsl:for-each>
 					</div>
+
 					<div class="col mt-5">
 						<input type="submit" name="create" class="btn btn-light mr-4">
 							<xsl:attribute name="value">
@@ -92,6 +93,7 @@
 		</div>
 	</div>
 	<div class="push"></div>
+
 	<script>
 		var initialSelection = <xsl:value-of select="booking/resources_json"/>;
 	</script>

@@ -489,13 +489,14 @@
 				. "&reservation_id={$event['id']}";
 
 			$event['participant_registration_link'] = $participant_registration_link;
+			$event['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
 
 			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;
 			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
 			QRcode::png($code_text, $filename);
 			$event['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
-
+//			_debug_array($event);
 			self::render_template_xsl('event', array('event' => $event, 'orginfo' => $orginfo));
 		}
 
