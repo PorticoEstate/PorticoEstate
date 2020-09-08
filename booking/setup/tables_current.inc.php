@@ -806,6 +806,7 @@
 					'default' => '1'),
 				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'include_in_list' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				'participant_limit' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

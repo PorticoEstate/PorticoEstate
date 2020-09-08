@@ -22,8 +22,15 @@
 				<xsl:value-of select="when"/>
 			</span>
 			<span class="d-block">
+				<xsl:value-of select="php:function('lang', 'participant limit')" />:
+				<xsl:value-of select="participant_limit" />
+			</span>
+			<span class="d-block">
 				<xsl:value-of select="php:function('lang', 'number of participants')" />:
 				<xsl:value-of select="number_of_participants" />
+			</span>
+			<span class="d-block">
+				<xsl:value-of select="participanttext" disable-output-escaping="yes"/>
 			</span>
 			<form action="{data/form_action}" method="POST" id="form" name="form" class="col-lg-8">
 				<div class="row">

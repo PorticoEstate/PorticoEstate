@@ -474,6 +474,7 @@
 				. "&reservation_id={$allocation['id']}";
 
 			$allocation['participant_registration_link'] = $participant_registration_link;
+			$allocation['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
 
 			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;
