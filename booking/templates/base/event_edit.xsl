@@ -353,6 +353,17 @@
 											</xsl:for-each>
 										</tbody>
 									</table>
+									<label for="field_participant_limit">
+										<h4>
+											<xsl:value-of select="php:function('lang', 'participant limit')" />
+										</h4>
+									</label>
+									<input id="field_participant_limit" name="participant_limit" type="number" min="0">
+										<xsl:attribute name="value">
+											<xsl:value-of select="event/participant_limit"/>
+										</xsl:attribute>
+									</input>
+
 									<label for="sms_total">
 										<h4>
 											<xsl:value-of select="php:function('lang', 'SMS total')" />
@@ -585,7 +596,7 @@
 									<xsl:value-of select="php:function('lang', 'Send to contact')" />
 								</label>
 							</div>
-                            <div class="pure-control-group">
+							<div class="pure-control-group">
 								<label>
 									<input type="checkbox" value="1" name="sendsmstocontact" />
 									<xsl:value-of select="php:function('lang', 'Send as sms')" />
@@ -657,8 +668,8 @@
 
         ]]>
 		var colDefsParticipantURL = [
-			{key: 'phone', label: lang['phone']},
-			{key: 'quantity', label: lang['quantity']}
+		{key: 'phone', label: lang['phone']},
+		{key: 'quantity', label: lang['quantity']}
 		];
 
 		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered');

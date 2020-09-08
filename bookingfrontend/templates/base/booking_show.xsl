@@ -32,6 +32,10 @@
 			<xsl:value-of select="booking/number_of_participants" />
 		</span>
 
+		<span class="mt-2">
+			<xsl:value-of select="booking/participanttext" disable-output-escaping="yes"/>
+		</span>
+
 		<div class="mt-4">
 			<a href="{booking/participant_registration_link}">
 				<xsl:value-of select="php:function('lang', 'registration')"/>

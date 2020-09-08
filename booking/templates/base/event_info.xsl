@@ -19,7 +19,7 @@
 				<xsl:value-of select="event/resources[position()=1]/building_name"/>
 				(<xsl:value-of select="event/resource_info"/>)
 			</a>
-			</div>
+		</div>
 		<div class="pure-control-group">
 			<label>
 				<h4>
@@ -41,6 +41,17 @@
 				<xsl:value-of select="php:function('lang', 'Private event')"/>
 			</xsl:if>
 		</div>
+
+		<xsl:if test="event/participant_limit">
+			<div class="pure-control-group">
+				<label for="field_participant_limit">
+					<h4>
+						<xsl:value-of select="php:function('lang', 'participant limit')" />
+					</h4>
+				</label>
+				<xsl:value-of select="event/participant_limit"/>
+			</div>
+		</xsl:if>
 	</div>
 	<xsl:if test="event/edit_link">
 		<div class="actions">

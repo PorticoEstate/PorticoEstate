@@ -40,7 +40,7 @@
 				'building_id', 'building_name',
 				'contact_name', 'contact_email', 'contact_phone',
 				'from_', 'to_', 'active', 'audience', 'reminder',
-				'is_public', 'sms_total', 'customer_internal', 'include_in_list');
+				'is_public', 'sms_total', 'participant_limit','customer_internal', 'include_in_list');
 
 			$this->display_name = lang('events');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";

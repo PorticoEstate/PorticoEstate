@@ -60,6 +60,10 @@
 			<xsl:value-of select="allocation/number_of_participants" />
 		</span>
 
+		<span class="mt-2">
+			<xsl:value-of select="allocation/participanttext" disable-output-escaping="yes"/>
+		</span>
+
 		<div class="mt-4">
 			<a href="{allocation/participant_registration_link}">
 				<xsl:value-of select="php:function('lang', 'registration')"/>

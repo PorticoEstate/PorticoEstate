@@ -38,6 +38,7 @@
 					'default' => '1'),
 				'secret' => array('type' => 'string', 'required' => true),
 				'sms_total' => array('type' => 'int', 'required' => false),
+				'participant_limit' => array('type' => 'int', 'required' => false),
 				'customer_organization_name' => array('type' => 'string', 'required' => False,
 					'query' => true),
 				'customer_organization_id' => array('type' => 'int', 'required' => False),

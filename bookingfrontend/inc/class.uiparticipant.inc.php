@@ -19,6 +19,7 @@
 
 		public function add()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			$reservation_type	 = phpgw::get_var('reservation_type');
 			$reservation_id		 = phpgw::get_var('reservation_id', 'int');
 			$register_type		 = phpgw::get_var('register_type');
@@ -110,7 +111,6 @@
 					}
 
 //					$participant_id = $receipt['id'];
-//					$config = CreateObject('phpgwapi.config', 'booking')->read();
 //					$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 //
 //					// Hack..
@@ -175,16 +175,20 @@
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
 
+			$time_slack = 2 * 3600; // two hours
+
 			$data = array
-				(
-				'enable_register_pre'	 => strtotime($reservation['from_']) > phpgwapi_datetime::user_localtime() ? true : false,
-				'enable_register_in'	 => strtotime($reservation['from_']) < phpgwapi_datetime::user_localtime() ? true : false,
+			(
+				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
+				'enable_register_pre'	 => strtotime($reservation['from_']) > (phpgwapi_datetime::user_localtime() - $time_slack)  ? true : false,
+				'enable_register_in'	 => strtotime($reservation['from_']) < ( phpgwapi_datetime::user_localtime() - $time_slack)  ? true : false,
 				'number_of_participants' => $number_of_participants,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
 				'name'					 => $reservation['name'],
+				'participant_limit'		 => !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0,
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
