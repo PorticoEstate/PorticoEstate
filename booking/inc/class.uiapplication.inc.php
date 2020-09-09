@@ -51,10 +51,28 @@
 			$this->document_resource = CreateObject('booking.bodocument_resource');
 
 			self::set_active_menu('booking::applications::applications');
-			$this->fields = array('formstage', 'name', 'organizer', 'homepage', 'description', 'equipment', 'resources',
-				'activity_id', 'building_id', 'building_name', 'contact_name',
-				'contact_email', 'contact_phone', 'audience',
-				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city', 'agreement_requirements' => 'html');
+			$this->fields = array(
+				'formstage' => 'string',
+				'name' => 'string',
+				'organizer' => 'string',
+				'homepage' => 'string',
+				'description' => 'string',
+				'equipment' => 'string',
+				'resources' => 'string',
+				'activity_id' => 'string',
+				'building_id' => 'string',
+				'building_name' => 'string',
+				'contact_name' => 'string',
+				'contact_email' => 'string',
+				'contact_phone' => 'string',
+				'audience' => 'string',
+				'active' => 'string',
+				'accepted_documents' => 'string',
+				'responsible_street' => 'string',
+				'responsible_zip_code' => 'string',
+				'responsible_city' => 'string',
+				'agreement_requirements' => 'html'
+			);
 
 			$this->display_name = lang('application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
