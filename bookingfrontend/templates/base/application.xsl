@@ -312,6 +312,12 @@
 						</p>
 					</dl>
 				</div>
+				<div class="col-12 mt-4">
+					<h5 class="font-weight-bold mb-4">
+						<xsl:value-of select="php:function('lang', 'additional requirements')" />
+					</h5>
+					<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
+				</div>
 
 			</div>
 		</div>
