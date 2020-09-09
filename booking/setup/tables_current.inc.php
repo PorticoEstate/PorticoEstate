@@ -365,6 +365,7 @@
 				'responsible_zip_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => True),
 				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'session_id' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
+				'agreement_requirements' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

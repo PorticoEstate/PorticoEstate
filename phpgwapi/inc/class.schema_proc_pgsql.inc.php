@@ -319,7 +319,7 @@
 				$colnum  = $sdb->f(0);
 				$colname = $sdb->f(1);
 
-				if ($sdb->f(5) == 'f')
+				if ($sdb->f(5) == 'false')
 				{
 					$null = "'nullable' => False";
 				}
@@ -352,13 +352,11 @@
 				$type = $this->rTranslateType($sdb->f(2), $prec, $scale);
 
 				$sql_get_default = "
-					SELECT d.adsrc AS rowdefault
-						FROM pg_attrdef d, pg_class c
-						WHERE
-							c.relname = '$sTableName' AND
-							c.oid = d.adrelid AND
-							d.adnum = $colnum
-					";
+				SELECT column_default
+					FROM information_schema.columns
+					WHERE table_name='{$sTableName}'
+					AND column_name = '{$colname}'";
+
 				$sdc->query($sql_get_default, __LINE__, __FILE__);
 				$sdc->next_record();
 				if ($sdc->f(0) != '')

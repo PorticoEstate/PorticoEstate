@@ -84,6 +84,11 @@
 				}
 
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån er " . lang($application['status']) . '</p>';
+				if ($application['agreement_requirements'] != '')
+				{
+					$lang_additional_requirements = lang('additional requirements');
+					$body .= "{$lang_additional_requirements}:<br />" . $application['agreement_requirements'] . "<br />";
+				}
 				if ($application['comment'] != '')
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . nl2br($application['comment']) . "</p>";

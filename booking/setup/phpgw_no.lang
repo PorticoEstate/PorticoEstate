@@ -827,3 +827,4 @@ Register out	booking	no	Ut-registrering
 booking_async_task_delete_participants	booking	no	Slette gamle deltagerregistreringer
 register participant text	booking	no	Registrering av deltaker
 participant limit	booking	no	Max antall deltakere
+additional requirements	booking	no	Tillegsbetingelser

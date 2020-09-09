@@ -27,7 +27,7 @@
 			<div id="application" class="booking-container">
 				<fieldset>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<h1>
 								<xsl:value-of select="application/id"/>
 							</h1>
@@ -121,7 +121,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
@@ -165,7 +165,7 @@
 					</div>
 
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>1.1 <xsl:value-of select="php:function('lang', 'attachments')" /></h3>
@@ -200,7 +200,7 @@
 					</div>
 
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
@@ -263,7 +263,7 @@
 							</xsl:if>
 						</div>
 
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
@@ -286,7 +286,7 @@
 								<div id="resources_container" class="pure-form-contentTable"></div>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
@@ -374,7 +374,7 @@
 								</xsl:if>
 							</xsl:for-each>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
@@ -440,7 +440,7 @@
 								</div>
 							</xsl:if>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>6. <xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
@@ -471,7 +471,7 @@
 								</span>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></h3>
@@ -522,7 +522,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3>
@@ -542,10 +542,21 @@
 								</p>
 							</div>
 						</div>
+						<div class="pure-u-1">
+							<div class="heading">
+								<legend>
+									<h4>
+										<xsl:value-of select="php:function('lang', 'additional requirements')" />
+									</h4>
+								</legend>
+							</div>
+								<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
+						</div>
+
 					</div>
 					<xsl:if test="not(frontend)">
 						<div class="pure-g">
-							<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+							<div class="pure-u-1">
 								<div class="heading">
 									<legend>
 										<h3>
@@ -561,7 +572,7 @@
 					</xsl:if>
 					<xsl:if test="application/edit_link">
 						<div class="pure-g">
-							<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+							<div class="pure-u-1">
 								<div class="heading">
 									<legend>
 										<h3>
@@ -574,7 +585,7 @@
 										<label for="comment">
 											<xsl:value-of select="php:function('lang', 'Add a comment')" />
 										</label>
-										<textarea name="comment" id="comment" style="width: 60%; height: 7em"></textarea>
+										<textarea name="comment" id="comment"></textarea>
 										<br/>
 									</div>
 									<div class="pure-control-group">
