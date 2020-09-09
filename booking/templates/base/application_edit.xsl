@@ -12,13 +12,13 @@
 				<fieldset>
 					<h1>
 						<xsl:value-of select="php:function('lang', 'Application')"/> (<xsl:value-of select="application/id"/>)</h1>
-					<div class="pure-g pure-form pure-form-aligned">
+					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'Active')"/>
 								</label>
-								<select id="field_active" name="active">
+								<select id="field_active" name="active" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<option value="1">
 										<xsl:if test="application/active=1">
 											<xsl:attribute name="selected">checked</xsl:attribute>
@@ -36,7 +36,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
@@ -51,7 +51,7 @@
 										<xsl:value-of select="config/application_activities"/>
 									</p>
 								</xsl:if>
-								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -78,7 +78,7 @@
 								<label for="field_name">
 									<xsl:value-of select="php:function('lang', 'Event name')" />
 								</label>
-								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/name"/>
 									</xsl:attribute>
@@ -88,7 +88,7 @@
 								<label for="field_organizer">
 									<xsl:value-of select="php:function('lang', 'Organizer')" />
 								</label>
-								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/organizer"/>
 									</xsl:attribute>
@@ -98,7 +98,7 @@
 								<label for="field_homepage">
 									<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 								</label>
-								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/homepage"/>
 									</xsl:attribute>
@@ -113,7 +113,7 @@
 										<xsl:value-of select="config/application_description"/>
 									</p>
 								</xsl:if>
-								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
+								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-md-1" name="description">
 									<xsl:value-of select="application/description"/>
 								</textarea>
 							</div>
@@ -126,14 +126,14 @@
 										<xsl:value-of select="config/application_equipment"/>
 									</p>
 								</xsl:if>
-								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="equipment">
+								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-md-1" name="equipment">
 									<xsl:value-of select="application/equipment"/>
 								</textarea>
 							</div>
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
@@ -182,7 +182,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
@@ -215,7 +215,7 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
 														</xsl:attribute>
-<!--														<xsl:attribute name="readonly">
+														<!--														<xsl:attribute name="readonly">
 															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>-->
 
@@ -229,7 +229,7 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
-<!--														<xsl:attribute name="readonly">
+														<!--														<xsl:attribute name="readonly">
 															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>-->
 
@@ -248,7 +248,7 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
 														</xsl:attribute>
-<!--														<xsl:attribute name="readonly">
+														<!--														<xsl:attribute name="readonly">
 															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>-->
 
@@ -262,7 +262,7 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
-<!--														<xsl:attribute name="readonly">
+														<!--														<xsl:attribute name="readonly">
 															<xsl:text>readonly</xsl:text>
 														</xsl:attribute>-->
 
@@ -279,7 +279,7 @@
 								</a>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
@@ -378,7 +378,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -434,7 +434,7 @@
 								</input>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -485,7 +485,7 @@
 								</input>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
+						<div class="pure-u-1">
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
@@ -514,7 +514,18 @@
 									</xsl:if>
 
 								</div>
-								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1"></div>
+								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
+									<div class="heading">
+										<legend>
+											<h4>
+												<xsl:value-of select="php:function('lang', 'additional requirements')" />
+											</h4>
+										</legend>
+									</div>
+									<textarea id="field_agreement_requirements" name="agreement_requirements">
+										<xsl:value-of select="application/agreement_requirements"/>
+									</textarea>
+								</div>
 							</div>
 						</div>
 					</div>

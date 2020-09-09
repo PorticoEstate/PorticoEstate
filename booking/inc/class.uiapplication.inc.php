@@ -54,7 +54,7 @@
 			$this->fields = array('formstage', 'name', 'organizer', 'homepage', 'description', 'equipment', 'resources',
 				'activity_id', 'building_id', 'building_name', 'contact_name',
 				'contact_email', 'contact_phone', 'audience',
-				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
+				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city', 'agreement_requirements' => 'html');
 
 			$this->display_name = lang('application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
@@ -1514,6 +1514,7 @@
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
+				self::rich_text_editor('field_agreement_requirements');
 				$tabs = array();
 				$tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
 				$active_tab = 'generic';
