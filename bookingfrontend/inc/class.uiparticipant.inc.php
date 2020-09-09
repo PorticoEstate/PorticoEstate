@@ -20,6 +20,7 @@
 		public function add()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
 			$reservation_type	 = phpgw::get_var('reservation_type');
 			$reservation_id		 = phpgw::get_var('reservation_id', 'int');
 			$register_type		 = phpgw::get_var('register_type');
@@ -32,6 +33,8 @@
 			$participant['reservation_id']	 = $reservation_id;
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
+
+			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
 
 			$interval	 = (new DateTime($reservation['from_']))->diff(new DateTime($reservation['to_']));
 			$when		 = "";
@@ -53,7 +56,7 @@
 				$user_inputs[$ip_address][time()] = 1;
 
 				/**
-				 * 10 seconds limit
+				 * 2 seconds limit
 				 */
 				$check_timestamp = time() - 2;
 
@@ -95,6 +98,17 @@
 					$participant['reservation_id']	 = $reservation_id;
 
 					$errors							 = $this->bo->validate($participant);
+				}
+
+				$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+
+				if( !empty($reservation['participant_limit']) && $participant['quantity']
+					&& ($register_type == 'register_pre' || $register_type == 'register_in'))
+				{
+					if(($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit'])
+					{
+						$errors = array('quantity' =>"Antall er begrenset til {$reservation['participant_limit']}");
+					}
 				}
 
 				if (!$errors)
@@ -175,13 +189,29 @@
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
 
-			$time_slack = 2 * 3600; // two hours
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$reservation['from_'] = '2020-09-09 12:59:00';
+
+			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
+			$now =  new DateTime('now', $DateTimeZone);
+
+			$now->modify("-2 hour");
 
 			$data = array
 			(
 				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
-				'enable_register_pre'	 => strtotime($reservation['from_']) > (phpgwapi_datetime::user_localtime() - $time_slack)  ? true : false,
-				'enable_register_in'	 => strtotime($reservation['from_']) < ( phpgwapi_datetime::user_localtime() - $time_slack)  ? true : false,
+				'enable_register_pre'	 => $from > $now  ? true : false,
+				'enable_register_in'	 => $from < $now  ? true : false,
 				'number_of_participants' => $number_of_participants,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
