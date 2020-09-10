@@ -10,8 +10,8 @@
 				'id' => array('type' => 'int'),
 				'reservation_type' => array('type' => 'string', 'required' => True, 'nullable' => False),
 				'reservation_id' => array('type' => 'int', 'required' => True, 'nullable' => False),
-				'from_' => array('type' => 'timestamp', 'required' => False),
-				'to_' => array('type' => 'timestamp', 'required' => False),
+				'from_' => array('type' => 'timestamp', 'required' => False,'read_callback' => 'modify_by_timezone'),
+				'to_' => array('type' => 'timestamp', 'required' => False, 'read_callback' => 'modify_by_timezone'),
 				'phone' => array('type' => 'string', 'query' => true, 'required' => true),
 				'email' => array('type' => 'string', 'required' => False,'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
@@ -73,7 +73,7 @@
 
 		function get_previous_registration($reservation_type, $reservation_id, $phone, $register_type)
 		{
-			$sql = "SELECT id, email, from_, to_"
+			$sql = "SELECT id, email, from_, to_, quantity"
 				. " FROM bb_participant"
 				. " WHERE reservation_type='{$reservation_type}'"
 				. " AND reservation_id=" . (int) $reservation_id
@@ -82,9 +82,10 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$id = $this->db->f('id');
-			$to_ = $this->db->f('to_');
-			$from_ = $this->db->f('from_');
+			$id			 = $this->db->f('id');
+			$to_		 = $this->db->f('to_');
+			$from_		 = $this->db->f('from_');
+			$quantity	 = $this->db->f('quantity');
 
 			/**
 			 * Re-entry to the event
@@ -93,6 +94,7 @@
 			{
 				$id = null;
 				$to_ = null;
+				$quantity = null;
 
 				if($register_type == 'register_pre')
 				{
@@ -101,10 +103,11 @@
 			}
 
 			return array(
-				'id' => $id,
-				'email' => $this->db->f('email'),
-				'from_' => $from_,
-				'to_' => $to_
+				'id'		 => $id,
+				'email'		 => $this->db->f('email'),
+				'quantity'	 => $quantity,
+				'from_'		 => $from_,
+				'to_'		 => $to_
 			);
 		}
 
