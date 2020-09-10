@@ -106,7 +106,17 @@
 				phpgw::import_class('booking.sodocument');
 
 				$where_filter = array();
-				$where_filter[] = "(%%table%%.type='building' AND %%table%%.owner_id = {$application['building_id']})";
+
+				if(empty($application['building_id']))
+				{
+					$building_info = $this->so->get_building_info($application['id']);
+					$application['building_id'] = $building_info['id'];
+				}
+				
+				if($application['building_id'])
+				{
+					$where_filter[] = "(%%table%%.type='building' AND %%table%%.owner_id = {$application['building_id']})";
+				}
 
 				foreach ($application['resources'] as $resource_id)
 				{
@@ -169,7 +179,7 @@
 
 							try
 							{
-								$send->msg('email', $bemail, $bsubject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
+								$send->msg('email', $bemail, $bsubject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 							}
 							catch (Exception $e)
 							{
@@ -221,7 +231,7 @@
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
 				if($bcc && $created)
 				{
 
