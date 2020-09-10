@@ -821,3 +821,10 @@ newpartial1	booking	no	Ikke fullført
 missing id	booking	no	mangler referanse til ID
 participants	booking	no	Deltakere
 quantity	booking	no	Antall
+Pre-register	booking	no	Påmelding
+Register in	booking	no	Inn-registrering
+Register out	booking	no	Ut-registrering
+booking_async_task_delete_participants	booking	no	Slette gamle deltagerregistreringer
+register participant text	booking	no	Registrering av deltaker
+participant limit	booking	no	Max antall deltakere
+additional requirements	booking	no	Tilleggvilkår

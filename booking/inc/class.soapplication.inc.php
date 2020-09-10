@@ -97,6 +97,7 @@
 				'responsible_zip_code' => array('type' => 'string', 'required' => true),
 				'responsible_city' => array('type' => 'string', 'required' => true),
 				'session_id' => array('type' => 'string', 'required' => false),
+				'agreement_requirements' => array('type' => 'string', 'required' => false),
 				)
 			);
 		}

@@ -12,16 +12,19 @@
 						</a>
 					</span>
 				</div>
+
 				<div class="row">
 					<div class="col-lg-6">
+
 						<div class="row">
+
 							<div class="col-xl-4 col-lg-5 col-md-4 col-sm-4 mb-4 col-item-img">
 								<img class="img-fluid image-circle" id="item-main-picture" src=""/>
 							</div>
 							<div class="col-xl-6 col-lg-7 col-md-8 col-sm-8 col-xs-12 mb-4">
-								<h3 id="main-item-header">
+								<h1 id="main-item-header">
 									<xsl:value-of select="organization/name"/>
-								</h3>
+								</h1>
 								<xsl:if test="organization/street and normalize-space(organization/street)">
 									<i class="fas fa-map-marker d-inline"> </i>
 									<div class="building-place-adr">
@@ -40,11 +43,13 @@
 									</button>
 								</xsl:if>
 							</div>
+
 							<div class="col-12 ml-1">
 								<xsl:if test="organization/description and normalize-space(organization/description)">
 									<xsl:value-of disable-output-escaping="yes" select="organization/description"/>
 								</xsl:if>
 							</div>
+
 							<div class="building-accordion mt-4">
 								<xsl:if test="organization/logged_on">
 									<div class="building-card">
@@ -54,8 +59,11 @@
 													<xsl:value-of select="php:function('lang', 'delegates')" />
 												</button>
 												<button data-toggle="collapse" data-target="#collapseDelegates" class="btn fas fa-plus float-right"></button>
+
 											</h5>
+
 										</div>
+
 										<div id="collapseDelegates" class="collapse">
 											<div class="card-body">
 												<div id="delegates_container"/>
@@ -68,21 +76,26 @@
 										</div>
 									</div>
 								</xsl:if>
+
 								<div class="building-card">
 									<div class="building-card-header">
-										<h5 class="mb-0">
+										<h2 class="mb-0">
 											<button class="btn btn-link" data-toggle="collapse" data-target="#collapseBuildingsUsedBy" aria-expanded="false">
 												<xsl:value-of select="php:function('lang', 'Used buildings (2018)')" />
 											</button>
 											<button data-toggle="collapse" data-target="#collapseBuildingsUsedBy" class="btn fas fa-plus float-right"></button>
-										</h5>
+
+										</h2>
+
 									</div>
+
 									<div id="collapseBuildingsUsedBy" class="collapse">
 										<div class="card-body">
 											<div id="buildings_used_by_container"/>
 										</div>
 									</div>
 								</div>
+
 								<div class="building-card card-img-thumbs">
 									<div class="building-card-header">
 										<h5 class="mb-0">
@@ -97,15 +110,16 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="building-card">
 									<xsl:if test="organization/contact_info and normalize-space(organization/contact_info)">
 										<div class="building-card-header">
-											<h5 class="mb-0">
+											<h2 class="mb-0">
 												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseContacts" aria-expanded="false">
 													<xsl:value-of select="php:function('lang', 'Contact information')" />
 												</button>
 												<button data-toggle="collapse" data-target="#collapseContacts" class="btn fas fa-plus float-right"></button>
-											</h5>
+											</h2>
 										</div>
 										<div id="collapseContacts" class="collapse">
 											<div class="card-body" >
@@ -116,13 +130,13 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
+
 					<div class="col-lg-6 building-bookable">
-						<h5 class="font-weight-bold mb-4">
+						<h2 class="font-weight-bold mb-4">
 							<xsl:value-of select="php:function('lang', 'Groups (2018)')" />
-						</h5>
-						<div class="custom-card p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
+						</h2>
+						<div class="custom-card-org p-0 m-0 mb-2" data-bind="visible: groups().length > 0">
 							<div data-bind="foreach: groups">
 								<div class="custom-subcard mb-0">
 									<xsl:if test="organization/permission/write">
@@ -151,6 +165,7 @@
 			</div>
 		</div>
 		<div class="push"></div>
+
 		<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-body lightbox-body">
@@ -160,18 +175,20 @@
 			</div>
 		</div>
 	</div>
+
 	<script>
 		JqueryPortico.booking = {};
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
+
 		var organization_id = <xsl:value-of select="organization/id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 
-		<![CDATA[
+            <![CDATA[
             var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id, length:-1}, true);
             var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1', length:-1},true);
             var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id, length:-1}, true);
             var document_organizationURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidocument_organization.index_images', sort:'name', filter_owner_id:organization_id, length:-1}, true);
-		]]>
+            ]]>
 
 		var rBuilding = [{n: 'ResultSet'},{n: 'Result'}];
 
@@ -181,8 +198,10 @@
 		];
 
 		var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
+
 		createTable('delegates_container', delegateURL, colDefsDelegate, '', 'table table-hover');
 		createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding, 'table table-hover');
+
 		$(window).on('load', function(){
 			// Load image
 			//JqueryPortico.booking.inlineImages('images_container', document_organizationURL);

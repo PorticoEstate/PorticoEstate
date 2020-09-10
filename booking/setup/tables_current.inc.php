@@ -365,6 +365,7 @@
 				'responsible_zip_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => True),
 				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'session_id' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
+				'agreement_requirements' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -806,6 +807,7 @@
 					'default' => '1'),
 				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'include_in_list' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+				'participant_limit' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -1109,8 +1111,9 @@
 				'reservation_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => true),
 				'to_' => array('type' => 'timestamp', 'nullable' => true),
-				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
-				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true),
+				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true),
+				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => true),
 				'quantity',	array('type' => 'int', 'precision' => 4,	'default' => 1,	'nullable' => false
 				)
 			),

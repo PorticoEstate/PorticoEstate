@@ -822,3 +822,9 @@ newpartial1	booking	nn	Ikke fullført
 missing id	booking	nn	manglar referanse til ID
 participants	booking	nn	Deltakarar
 quantity	booking	nn	Antal
+Pre-register	booking	nn	Påmelding
+Register in	booking	nn	Inn-registrering
+Register out	booking	nn	Ut-registrering
+booking_async_task_delete_participants	booking	nn	Slette gamle deltagerregistreringer
+register participant text	booking	nn	Registrering av deltakar
+additional requirements	booking	nn	Tilleggvilkår

@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uiparticipant');
+	phpgw::import_class('phpgwapi.datetime');
 
 	class bookingfrontend_uiparticipant extends booking_uiparticipant
 	{
@@ -18,8 +19,11 @@
 
 		public function add()
 		{
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
 			$reservation_type	 = phpgw::get_var('reservation_type');
 			$reservation_id		 = phpgw::get_var('reservation_id', 'int');
+			$register_type		 = phpgw::get_var('register_type');
 
 			$participant					 = array();
 			$participant['email']			 = null;
@@ -29,6 +33,8 @@
 			$participant['reservation_id']	 = $reservation_id;
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
+
+			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
 
 			$interval	 = (new DateTime($reservation['from_']))->diff(new DateTime($reservation['to_']));
 			$when		 = "";
@@ -43,16 +49,16 @@
 			}
 
 			$errors							 = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $register_type)
 			{
 				$user_inputs = (array)phpgwapi_cache::system_get('bookingfrontendt', 'add_participant');
 				$ip_address = phpgw::get_ip_address();
 				$user_inputs[$ip_address][time()] = 1;
 
 				/**
-				 * 10 seconds limit
+				 * 2 seconds limit
 				 */
-				$check_timestamp = time() - 10;
+				$check_timestamp = time() - 2;
 
 				$limit = 1;
 
@@ -81,21 +87,85 @@
 				}
 				else
 				{
-					$participant['phone']	 = phpgw::get_var('phone', 'int');
-					$participant['email']	 = phpgw::get_var('email', 'email');
-					$participant['quantity'] = phpgw::get_var('quantity', 'int');
-					$errors = $this->bo->validate($participant);
+
+					$phone = phpgw::get_var('phone', 'int');
+					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
+					$participant['register_type']	 = $register_type;
+					$participant['phone']			 = $phone;
+					$participant['email']			 = phpgw::get_var('email', 'email');
+					$participant['quantity']		 = phpgw::get_var('quantity', 'int');
+					$participant['reservation_type'] = $reservation_type;
+					$participant['reservation_id']	 = $reservation_id;
+
+					$errors							 = $this->bo->validate($participant);
+				}
+
+				$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+
+				if( !empty($reservation['participant_limit']) && $participant['quantity']
+					&& ($register_type == 'register_pre' || $register_type == 'register_in'))
+				{
+					if(($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit'])
+					{
+						$errors = array('quantity' =>"Antall er begrenset til {$reservation['participant_limit']}");
+					}
 				}
 
 				if (!$errors)
 				{
-					$receipt = $this->bo->add($participant);
+					if(!empty($participant['id']))
+					{
+						$participant['from_'] = $participant['from_'] ? $participant['from_'] : null;
+						$participant['to_'] = $participant['to_'] ? $participant['to_'] : null;
+						$receipt = $this->bo->update($participant);
+					}
+					else
+					{
+						$receipt = $this->bo->add($participant);
+					}
+
+//					$participant_id = $receipt['id'];
+//					$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+//
+//					// Hack..
+//					if(!preg_match('/^http/', $external_site_address))
+//					{
+//						$external_site_address = "http:/{$external_site_address}";
+//					}
+//
+//					$participant_registration_link = $external_site_address
+//						. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+//						. "&phone={$phone}"
+//						. "&quantity={$participant['quantity']}"
+//						. "&reservation_type={$participant['reservation_type']}"
+//						. "&reservation_id={$participant['reservation_id']}";
+
+					switch ($register_type)
+					{
+						case 'register_pre':
+							$sms_text = "Hei.\n"
+								. "Du er forhåndspåmeldt med {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
+								. "Du må registrere fremmøte når du møter ved arrangementet\n";
+							break;
+						case 'register_in':
+							$sms_text = "Hei.\n"
+								. "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
+								. "Du kan frigjøre plassen ved å melde deg ut når du forlater arrangementet ";
+							break;
+						case 'register_out':
+							$sms_text = "Hei.\n"
+								. "Du har registrert at du forlater {$reservation['name']} som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							break;
+
+						default:
+							$sms_text = "Hei.\n "
+								. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
+							break;
+					}
 
 					/**
 					 * send SMS
 					 */
-					$sms_text = "Hei\n "
-						. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
 
 					try
 					{
@@ -108,9 +178,9 @@
 						$this->log('sms_error', $ex->getMessage());
 					}
 
-					phpgwapi_cache::message_set(lang('added'));
+					phpgwapi_cache::message_set(lang('added') . ": {$participant['phone']}");
 
-					$this->redirect(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
+					$this->redirect(array('menuaction'	=> 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
 				}
 			}
@@ -119,18 +189,40 @@
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
 
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$reservation['from_'] = '2020-09-09 12:59:00';
+
+			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
+			$now =  new DateTime('now', $DateTimeZone);
+
+			$now->modify("-2 hour");
+
 			$data = array
-				(
+			(
+				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
+				'enable_register_pre'	 => $from > $now  ? true : false,
+				'enable_register_in'	 => $from < $now  ? true : false,
 				'number_of_participants' => $number_of_participants,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
 				'name'					 => $reservation['name'],
+				'participant_limit'		 => !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0,
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
-
+			self::add_javascript('bookingfrontend', 'base', 'participant_edit.js');
 			self::render_template_xsl('participant_edit', $data);
 		}
 

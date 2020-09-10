@@ -353,6 +353,17 @@
 											</xsl:for-each>
 										</tbody>
 									</table>
+									<label for="field_participant_limit">
+										<h4>
+											<xsl:value-of select="php:function('lang', 'participant limit')" />
+										</h4>
+									</label>
+									<input id="field_participant_limit" name="participant_limit" type="number" min="0">
+										<xsl:attribute name="value">
+											<xsl:value-of select="event/participant_limit"/>
+										</xsl:attribute>
+									</input>
+
 									<label for="sms_total">
 										<h4>
 											<xsl:value-of select="php:function('lang', 'SMS total')" />
@@ -585,7 +596,7 @@
 									<xsl:value-of select="php:function('lang', 'Send to contact')" />
 								</label>
 							</div>
-                            <div class="pure-control-group">
+							<div class="pure-control-group">
 								<label>
 									<input type="checkbox" value="1" name="sendsmstocontact" />
 									<xsl:value-of select="php:function('lang', 'Send as sms')" />
@@ -650,18 +661,24 @@
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
 
 		var event_id = <xsl:value-of select="event/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'phone', 'email', 'quantity')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'phone', 'email', 'quantity', 'from', 'to')"/>;
 
     <![CDATA[
 		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: event_id, filter_reservation_type: 'event', length:-1}, true);
 
         ]]>
 		var colDefsParticipantURL = [
-			{key: 'phone', label: lang['phone']},
-			{key: 'quantity', label: lang['quantity']}
+		{key: 'phone', label: lang['phone']},
+		{key: 'quantity', label: lang['quantity']},
+		{key: 'from_', label: lang['from']},
+		{key: 'to_', label: lang['to']}
 		];
 
-		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered');
+		var paginatorTableparticipant = new Array();
+		paginatorTableparticipant.limit = 10;
+		createPaginatorTable('participant_container', paginatorTableparticipant);
+
+		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered', paginatorTableparticipant);
 
 	</script>
 </xsl:template>

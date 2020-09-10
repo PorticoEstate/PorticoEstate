@@ -515,24 +515,24 @@ JS;
 
 		$( document ).ready( function() {
 
-//			CKEDITOR.replace('$target', {
-//			   language: '$userlang'
-//			 });
+			CKEDITOR.replace('$target', {
+			   language: '$userlang'
+			 });
 
-		$( 'textarea#{$target}' ).ckeditor(
-				{
-					language: '{$userlang}',
-					resize_dir: 'both',
-					extraAllowedContent: [
-						'div(*){*}[*]',
-						'h1(*){*}[*]',
-						'h2(*){*}[*]',
-						'h3(*){*}[*]',
-						'h4(*){*}[*]',
-						'h5(*){*}[*]'
-						].join("; ")
-				}
-			);
+//		$( 'textarea#{$target}' ).ckeditor(
+//				{
+//					language: '{$userlang}',
+//					resize_dir: 'both',
+//					extraAllowedContent: [
+//						'div(*){*}[*]',
+//						'h1(*){*}[*]',
+//						'h2(*){*}[*]',
+//						'h3(*){*}[*]',
+//						'h4(*){*}[*]',
+//						'h5(*){*}[*]'
+//						].join("; ")
+//				}
+//			);
 		} );
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);

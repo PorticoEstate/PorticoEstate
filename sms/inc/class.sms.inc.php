@@ -190,7 +190,8 @@
 			{
 				$message = substr($message, 0, $max_length - 1);
 			}
-			$sms_msg = str_replace(array("\r","\n", "\""), array("", "", " "), html_entity_decode($message));
+//			$sms_msg = str_replace(array("\r","\n", "\""), array("", "", " "), html_entity_decode($message));
+			$sms_msg = str_replace(array("\r", "\""), array("", " "), html_entity_decode($message));
 			$mobile_sender = str_replace(array("\'","\""), array("", ""), $mobile_sender);
 			$sms_sender = str_replace(array("\'","\""), array("", ""), $sms_sender);
 			if (is_array($sms_to))

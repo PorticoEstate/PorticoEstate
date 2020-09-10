@@ -22,8 +22,15 @@
 				<xsl:value-of select="when"/>
 			</span>
 			<span class="d-block">
+				<xsl:value-of select="php:function('lang', 'participant limit')" />:
+				<xsl:value-of select="participant_limit" />
+			</span>
+			<span class="d-block">
 				<xsl:value-of select="php:function('lang', 'number of participants')" />:
 				<xsl:value-of select="number_of_participants" />
+			</span>
+			<span class="d-block">
+				<xsl:value-of select="participanttext" disable-output-escaping="yes"/>
 			</span>
 			<form action="{data/form_action}" method="POST" id="form" name="form" class="col-lg-8">
 				<div class="row">
@@ -58,7 +65,7 @@
 						</div>
 					</div>
 
-<!--					<div class="col-12">
+					<!--					<div class="col-12">
 						<div class="form-group">
 							<label for="email" class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'email')" />
@@ -68,27 +75,35 @@
 						</div>
 					</div>-->
 
-					<div class="col-12 mt-3 mb-2">
-						<input type="submit" class="btn btn-light mr-4" value="{php:function('lang', 'Add')}"/>
-					</div>
+					<input id="register_type" name="register_type" type="hidden"/>
+
+					<xsl:if test="enable_register_pre = 1">
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_pre" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_pre');">
+								<xsl:value-of select="php:function('lang', 'Pre-register')" />
+							</button>
+						</div>
+					</xsl:if>
+
+					<xsl:if test="enable_register_in = 1">
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_in" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_in');">
+								<xsl:value-of select="php:function('lang', 'Register in')" />
+							</button>
+						</div>
+						<div class="col-12 mt-3 mb-2">
+							<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
+								<xsl:value-of select="php:function('lang', 'Register out')" />
+							</button>
+						</div>
+					</xsl:if>
 				</div>
 			</form>
 		</div>
 	</div>
 	<script>
-		function check(input)
-		{
-		value = input.value;
 
-		var phoneno = /^\d{8}$/;
-		if(value.match(phoneno))
-		{
-		input.setCustomValidity('');
-		}
-		else
-		{
-		input.setCustomValidity('Must be at least 8 digits');
-		}
-		}
+
+
 	</script>
 </xsl:template>
