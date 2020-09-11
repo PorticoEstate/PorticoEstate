@@ -1227,9 +1227,8 @@
 
 		public function info()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['user_can_delete_bookings'] != 'yes')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_bookings'] != 'yes')
 			{
 				$user_can_delete_bookings = 0;
 			}
@@ -1274,6 +1273,7 @@
 			$booking['when'] = $when;
 			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
+			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
 
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
@@ -1281,9 +1281,8 @@
 
 		public function show()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['user_can_delete_bookings'] != 'yes')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_bookings'] != 'yes')
 			{
 				$user_can_delete_bookings = 0;
 			}
@@ -1319,7 +1318,6 @@
 
 			$booking['number_of_participants'] = $number_of_participants;
 
-			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$participant_registration_link = $external_site_address
@@ -1328,6 +1326,8 @@
 				. "&reservation_id={$booking['id']}";
 
 			$booking['participant_registration_link'] = $participant_registration_link;
+
+			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
 
 			$booking['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
 

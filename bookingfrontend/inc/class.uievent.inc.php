@@ -426,6 +426,7 @@
 
 			$event['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.show',
 						'id' => $event['id']));
+			$event['participant_limit'] = $event['participant_limit'] ? $event['participant_limit'] : (int)$config->config_data['participant_limit'];
 
 			self::render_template_xsl('event_info', array('event' => $event, 'orginfo' => $orginfo,
 				'user_can_delete_bookings' => $user_can_delete_bookings));
@@ -490,6 +491,7 @@
 
 			$event['participant_registration_link'] = $participant_registration_link;
 			$event['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+			$event['participant_limit'] = $event['participant_limit'] ? $event['participant_limit'] : (int)$config['participant_limit'];
 
 			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;
