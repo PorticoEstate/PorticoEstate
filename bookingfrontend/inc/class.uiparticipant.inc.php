@@ -200,8 +200,6 @@
 				throw $ex;
 			}
 
-			$reservation['from_'] = '2020-09-09 12:59:00';
-
 			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
 			$now =  new DateTime('now', $DateTimeZone);
 
