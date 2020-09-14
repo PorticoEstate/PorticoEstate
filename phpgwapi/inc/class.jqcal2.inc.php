@@ -98,6 +98,15 @@
 				$min_date .= ",maxDate:'" . date('Y/m/d', $config['max_date']) . "'";
 			}
 
+			if(!empty($config['disabled_dates']))
+			{
+				$disabled_dates  = "disabledDates: ['" . implode("','", $config['disabled_dates']) . "']";// Y/m/d
+			}
+			else
+			{
+				"disabledDates: []";
+			}
+
 			$value = 'false';
 			if(!$start_value)
 			{
@@ -139,7 +148,8 @@
 					formatDate:'Y/m/d', //Format date for minDate and maxDate
 					formatTime: 'H:i',
 					startDate: {$start_value},
-					minDate:{$min_date}
+					minDate:{$min_date},
+					$disabled_dates
 				});
 			});
 JS;

@@ -96,8 +96,8 @@ HTML;
 					 <div class="col">
 						<div class="mb-5 card" style="width: 18rem;">
 						  <div class="text-center card-body">
-							<h5 class="mx-auto card-title">Denne er kun for test/utvikling</h5>
-							<a href="{$controller_test_url}" class="btn btn-outline-secondary">Gå til test</a>
+							<h5 class="mx-auto card-title">Kontroll av utstyr og lekeplasser</h5>
+							<a href="{$controller_test_url}" class="btn btn-warning">Gå til kontroll</a>
 						  </div>
 						</div>
 					 </div>
