@@ -55,7 +55,7 @@
 
 			if(empty($data['ssn']))
 			{
-//				return;
+				return;
 			}
 
 			$apikey = !empty($this->config->config_data['apikey_fiks_folkeregister']) ? $this->config->config_data['apikey_fiks_folkeregister'] : 'EHWEdJMU4db2bFYbbUXp58hx6Tzs2MPdGgs4ckC9CQEgTK7vL3FqXUBafErxFA5gJgf35YgAD8AqdjEu';
@@ -69,8 +69,7 @@
 
 			$post_data = array
 			(
-//				'id'	=> $data['ssn'],
-				'id'	=> '06076301709',
+				'id'	=> $data['ssn'],
 				'apikey' => $apikey,
 			);
 
