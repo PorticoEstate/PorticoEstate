@@ -160,6 +160,10 @@
 			<td><input name="newsettings[test_organization]" value="{value_test_organization}"></td>
 		</tr>
 		<tr class="row_on">
+			<td>{lang_test_person}:</td>
+			<td><input name="newsettings[test_ssn]" value="{value_test_ssn}"></td>
+		</tr>
+		<tr class="row_on">
 			<td>{lang_google_tracker_id}:</td>
 			<td><input name="newsettings[tracker_id]" value="{value_tracker_id}"></td>
 		</tr>

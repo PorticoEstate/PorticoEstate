@@ -93,9 +93,12 @@
 
 			$ret = json_decode($result, true);
 
-			$this->log('webservice httpCode', print_r($httpCode, true));
-			$this->log('webservice returdata as json', $result);
-			$this->log('webservice returdata as array', print_r($ret, true));
+			if($this->debug)
+			{
+				$this->log('webservice httpCode', print_r($httpCode, true));
+				$this->log('webservice returdata as json', $result);
+				$this->log('webservice returdata as array', print_r($ret, true));
+			}
 
 //Array
 //(
@@ -116,6 +119,12 @@
 			$data['street']		 = $ret['postadresse'][0];
 			$data['zip_code']	 = $poststed[0];
 			$data['city']		 = $poststed[1];
+
+			if($this->debug)
+			{
+				_debug_array($data);
+			}
+
 		}
 
 		private function log( $what, $value = '' )
