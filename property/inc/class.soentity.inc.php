@@ -1148,7 +1148,8 @@
 				);
 
 				//Start: get short descripion - if any
-				$_short_description = array();
+				$_short_description = '';
+				$_short_description_multiple = array();
 
 				foreach ($cache_attributes[$location_id] as $key => $attribute)
 				{
@@ -1170,11 +1171,19 @@
 
 					if ($description_value)
 					{
-						$_short_description[] = "{$attribute['input_text']}: {$description_value}";
+						$_short_description_multiple[] = "{$attribute['input_text']}: {$description_value}";
+						$_short_description = $description_value;
 					}
 				}
 
-				$dataset[$j]['short_description']['value'] = implode(', ', $_short_description);
+				if(count($_short_description_multiple) > 1)
+				{
+					$dataset[$j]['short_description']['value'] = implode(', ', $_short_description_multiple);
+				}
+				else
+				{
+					$dataset[$j]['short_description']['value'] = $_short_description;
+				}
 
 				//END: get short descripion
 

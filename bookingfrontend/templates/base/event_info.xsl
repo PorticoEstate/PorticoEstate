@@ -62,7 +62,7 @@
 		</div>
 	</xsl:if>
 
-	<xsl:if test="event/participant_limit">
+	<xsl:if test="event/participant_limit > 0">
 		<div>
 			<span class="font-weight-bold text-uppercase">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:

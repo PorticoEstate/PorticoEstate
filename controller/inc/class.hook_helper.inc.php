@@ -79,7 +79,7 @@
 			}
 			else
 			{
-				$this->home();
+				$this->home(true);
 			}
 		}
 
@@ -153,7 +153,7 @@ HTML;
 		 *
 		 * @return void
 		 */
-		public function home()
+		public function home($front_end = false)
 		{
 			$app_id = $GLOBALS['phpgw']->applications->name2id('controller');
 			if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
@@ -427,7 +427,16 @@ HTML;
 
 			$my_planned_controls_HTML .= "</table></div>"; // home_portal
 
-			echo "\n" . '<!-- BEGIN checklist info -->' . "\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div>\n" . '<!-- END checklist info -->' . "\n";
+			if($front_end)
+			{
+				$pre_div = "<div class=\"container\"><div class=\"col\">";
+			}
+			else
+			{
+				$pre_div = '';
+			}
+
+			echo "{$pre_div}\n" . '<!-- BEGIN checklist info -->' . "\n <h2 class='heading'>Mine planlagte kontroller</h2><div class='home-box'>" . $my_planned_controls_HTML . "</div>\n" . '<!-- END checklist info -->' . "\n";
 			{
 				/* =======================================  UNDONE ASSIGNED CONTROLS FOR CURRENT USER  ================================= */
 
@@ -859,7 +868,16 @@ HTML;
 				$my_assigned_controls_HTML .= "</ul>";
 				$my_assigned_controls_HTML .= "</div>"; // home_portal
 
-				echo "\n" . '<!-- BEGIN checklist info -->' . "\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n" . '<!-- END checklist info -->' . "\n";
+				if($front_end)
+				{
+					$post_div = "</div>\n</div>\n";
+				}
+				else
+				{
+					$post_div = '';
+				}
+
+				echo "\n" . '<!-- BEGIN checklist info -->' . "\n <h2 class='heading'>Mine tildelte kontroller</h2><div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n" . '<!-- END checklist info -->' . "\n{$post_div}";
 			}
 		}
 		/* ================================  FUNCTIONS  ======================================== */

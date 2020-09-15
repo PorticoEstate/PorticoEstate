@@ -391,6 +391,8 @@
 					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+						/*hack to preserve dateformat for next step*/
+						$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
 					}
 					else
 					{

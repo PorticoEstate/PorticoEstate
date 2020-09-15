@@ -74,6 +74,12 @@
 				<input name="newsettings[e_lock_password]" value="{value_e_lock_password}"/>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_participant_limit}:</td>
+			<td>
+				<input name="newsettings[participant_limit]" value="{value_participant_limit}"/>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
