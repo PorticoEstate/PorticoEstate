@@ -78,7 +78,7 @@
 
 			$url = "{$webservicehost}?AKTIVKOMMUNE=postadresse";
 
-			$this->log('webservicehost', print_r($url, true));
+			$this->log('url', print_r($url, true));
 			$this->log('POST data', print_r($post_data, true));
 
 			$ch = curl_init();
@@ -130,9 +130,8 @@
 
 		private function log( $what, $value = '' )
 		{
-			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['login']))
+			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['bookingfrontend']))
 			{
-//				$bt = debug_backtrace();
 				$GLOBALS['phpgw']->log->debug(array(
 					'text' => "what: %1, <br/>value: %2",
 					'p1' => $what,
@@ -140,8 +139,6 @@
 					'line' => __LINE__,
 					'file' => __FILE__
 				));
-	//			unset($bt);
 			}
 		}
-
 	}
