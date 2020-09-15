@@ -75,14 +75,15 @@
 			);
 
 			$post_string = http_build_query($post_data);
-			$this->log('webservicehost', print_r($webservicehost, true));
-			$this->log('POST data', print_r($post_data, true));
 
 			$url = "{$webservicehost}?AKTIVKOMMUNE=postadresse";
 
+			$this->log('webservicehost', print_r($url, true));
+			$this->log('POST data', print_r($post_data, true));
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $webservicehost);
+			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/x-www-form-urlencoded'));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
@@ -131,7 +132,7 @@
 		{
 			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['login']))
 			{
-				$bt = debug_backtrace();
+//				$bt = debug_backtrace();
 				$GLOBALS['phpgw']->log->debug(array(
 					'text' => "what: %1, <br/>value: %2",
 					'p1' => $what,
@@ -139,7 +140,7 @@
 					'line' => __LINE__,
 					'file' => __FILE__
 				));
-				unset($bt);
+	//			unset($bt);
 			}
 		}
 
