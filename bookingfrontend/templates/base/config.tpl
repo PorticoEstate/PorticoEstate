@@ -89,6 +89,15 @@
 			<td><input name="newsettings[webservicehost]" value="{value_webservicehost}"></td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_login_apikey} Fiks folkeregister:</td>
+			<td><input name="newsettings[apikey_fiks_folkeregister]" value="{value_apikey_fiks_folkeregister}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_login_webservicehost} Fiks folkeregister:</td>
+			<td><input name="newsettings[webservicehost_fiks_folkeregister]" value="{value_webservicehost_fiks_folkeregister}"></td>
+		</tr>
+
+		<tr class="row_off">
 			<td>{lang_login_header_key}:</td>
 			<td><input name="newsettings[header_key]" value="{value_header_key}"></td>
 		</tr>
