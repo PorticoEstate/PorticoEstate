@@ -201,9 +201,9 @@
 			}
 
 			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
-			$now =  new DateTime('now', $DateTimeZone);
+			$from->modify("-2 hour");
 
-			$now->modify("-2 hour");
+			$now =  new DateTime('now', $DateTimeZone);
 
 			$data = array
 			(
