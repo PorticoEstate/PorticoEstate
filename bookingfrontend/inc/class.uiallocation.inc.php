@@ -355,11 +355,10 @@
 
 		public function info()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['user_can_delete_allocations'] != 'never')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_allocations'] != 'never')
 			{
-				if ($config->config_data['user_can_delete_allocations'] != 'yes')
+				if ($config['user_can_delete_allocations'] != 'yes')
 				{
 					$user_can_delete_allocations = 0;
 				}
@@ -414,6 +413,8 @@
 			$allocation['when'] = $when;
 			$allocation['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
 						'id' => $allocation['id']));
+			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];
+
 			self::render_template_xsl('allocation_info', array('allocation'	 => $allocation,
 				'user_can_delete_allocations'	 => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
@@ -475,6 +476,7 @@
 
 			$allocation['participant_registration_link'] = $participant_registration_link;
 			$allocation['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];
 
 			phpgw::import_class('phpgwapi.phpqrcode');
 			$code_text					 = $participant_registration_link;

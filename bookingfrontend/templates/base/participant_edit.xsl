@@ -21,10 +21,12 @@
 			<span class="d-block">
 				<xsl:value-of select="when"/>
 			</span>
-			<span class="d-block">
-				<xsl:value-of select="php:function('lang', 'participant limit')" />:
-				<xsl:value-of select="participant_limit" />
-			</span>
+			<xsl:if test="participant_limit > 0">
+				<span class="d-block">
+					<xsl:value-of select="php:function('lang', 'participant limit')" />:
+					<xsl:value-of select="participant_limit" />
+				</span>
+			</xsl:if>
 			<span class="d-block">
 				<xsl:value-of select="php:function('lang', 'number of participants')" />:
 				<xsl:value-of select="number_of_participants" />

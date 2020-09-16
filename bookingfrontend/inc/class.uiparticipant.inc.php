@@ -93,7 +93,7 @@
 					$participant['register_type']	 = $register_type;
 					$participant['phone']			 = $phone;
 					$participant['email']			 = phpgw::get_var('email', 'email');
-					$participant['quantity']		 = phpgw::get_var('quantity', 'int');
+					$participant['quantity']		 = $participant['quantity'] ? $participant['quantity'] : phpgw::get_var('quantity', 'int');
 					$participant['reservation_type'] = $reservation_type;
 					$participant['reservation_id']	 = $reservation_id;
 
@@ -140,26 +140,26 @@
 //						. "&reservation_type={$participant['reservation_type']}"
 //						. "&reservation_id={$participant['reservation_id']}";
 
+
+					$lang_reservation_type = strtolower(lang($reservation_type));
+
 					switch ($register_type)
 					{
 						case 'register_pre':
-							$sms_text = "Hei.\n"
-								. "Du er forhåndspåmeldt med {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
+							$sms_text = "Du er forhåndspåmeldt med {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n"
 								. "Du må registrere fremmøte når du møter ved arrangementet\n";
 							break;
 						case 'register_in':
-							$sms_text = "Hei.\n"
-								. "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}.\n"
-								. "Du kan frigjøre plassen ved å melde deg ut når du forlater arrangementet ";
+							$sms_text = "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n"
+								. "Du kan frigjøre plassen(e) ved å melde deg ut når du forlater arrangementet ";
 							break;
 						case 'register_out':
-							$sms_text = "Hei.\n"
-								. "Du har registrert at du forlater {$reservation['name']} som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							$sms_text = "Du har registrert at du forlater {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
 							break;
 
 						default:
 							$sms_text = "Hei.\n "
-								. "Du har registrert {$participant['quantity']} deltaker(e) for {$reservation['name']} som avholdes i tidsrommet {$when}";
+								. "Du har registrert {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}";
 							break;
 					}
 
@@ -170,7 +170,7 @@
 					try
 					{
 						$sms_service = CreateObject('sms.sms');
-						$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], $sms_text);
+						$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text}");
 					}
 					catch (Exception $ex)
 					{
@@ -178,7 +178,7 @@
 						$this->log('sms_error', $ex->getMessage());
 					}
 
-					phpgwapi_cache::message_set(lang('added') . ": {$participant['phone']}");
+					phpgwapi_cache::message_set($sms_text);
 
 					$this->redirect(array('menuaction'	=> 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
@@ -199,8 +199,6 @@
 			{
 				throw $ex;
 			}
-
-			$reservation['from_'] = '2020-09-09 12:59:00';
 
 			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
 			$now =  new DateTime('now', $DateTimeZone);
