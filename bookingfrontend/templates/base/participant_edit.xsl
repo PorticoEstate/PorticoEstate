@@ -21,12 +21,12 @@
 			<span class="d-block">
 				<xsl:value-of select="when"/>
 			</span>
-			<xsl:if test="participant_limit > 0">
+<!--			<xsl:if test="participant_limit > 0">
 				<span class="d-block">
 					<xsl:value-of select="php:function('lang', 'participant limit')" />:
 					<xsl:value-of select="participant_limit" />
 				</span>
-			</xsl:if>
+			</xsl:if>-->
 			<span class="d-block">
 				<xsl:value-of select="php:function('lang', 'number of participants')" />:
 				<xsl:value-of select="number_of_participants" />
@@ -39,33 +39,37 @@
 					<div class="col-12">
 						<xsl:call-template name="msgbox"/>
 					</div>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="phone" class="text-uppercase">
-								<xsl:value-of select="php:function('lang', 'phone')" />
-							</label>
-							<input id="phone" name="phone" class="form-control" type="number" min="1" value="{phone}" oninput="check(this)">
-								<xsl:attribute name="required">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'Minimum 8 digits')" />
-								</xsl:attribute>
-							</input>
+
+					<xsl:if test="enable_register_form = 1">
+
+						<div class="col-12">
+							<div class="form-group">
+								<label for="phone" class="text-uppercase">
+									<xsl:value-of select="php:function('lang', 'phone')" />
+								</label>
+								<input id="phone" name="phone" class="form-control" type="number" min="1" value="{phone}" oninput="check(this)">
+									<xsl:attribute name="required">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="placeholder">
+										<xsl:value-of select="php:function('lang', 'Minimum 8 digits')" />
+									</xsl:attribute>
+								</input>
+							</div>
 						</div>
-					</div>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="quantity" class="text-uppercase">
-								<xsl:value-of select="php:function('lang', 'quantity')" />
-							</label>
-							<input id="quantity" name="quantity" class="form-control" type="number" min="1" value="{quantity}">
-								<xsl:attribute name="required">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-							</input>
+						<div class="col-12">
+							<div class="form-group">
+								<label for="quantity" class="text-uppercase">
+									<xsl:value-of select="php:function('lang', 'quantity')" />
+								</label>
+								<input id="quantity" name="quantity" class="form-control" type="number" min="1" value="{quantity}">
+									<xsl:attribute name="required">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</input>
+							</div>
 						</div>
-					</div>
+					</xsl:if>
 
 					<!--					<div class="col-12">
 						<div class="form-group">
@@ -90,9 +94,11 @@
 					<xsl:if test="enable_register_in = 1">
 						<div class="col-12 mt-3 mb-2">
 							<button type="submit" value="register_in" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_in');">
-								<xsl:value-of select="php:function('lang', 'Register in')" />
+								<xsl:value-of select="lang_register_in" />
 							</button>
 						</div>
+					</xsl:if>
+					<xsl:if test="enable_register_out = 1">
 						<div class="col-12 mt-3 mb-2">
 							<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
 								<xsl:value-of select="php:function('lang', 'Register out')" />
