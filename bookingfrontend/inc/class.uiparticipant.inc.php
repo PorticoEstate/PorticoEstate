@@ -52,16 +52,30 @@
 				$when	 = pretty_timestamp($reservation['from_']) . ' - ' . $end->format('H:i');
 			}
 
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
 			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
 			$from->modify("-2 hour");
 			$to = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['to_'])),$DateTimeZone);
 			$to->modify("+2 hour");
 
 			$now =  new DateTime('now', $DateTimeZone);
+
 			$enable_register_pre = false;//$from > $now ? true : false;
 			$enable_register_in	 = $from < $now && $to > $now ? true : false;
 			$enable_register_out = false; //$from < $now && $to > $now ? true : false;
-			
+//			_debug_array($from);			
+//			_debug_array($now);			
+//			_debug_array($to);			
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
@@ -214,18 +228,6 @@
 
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
-
-			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
-
-			try
-			{
-				$DateTimeZone	 = new DateTimeZone($timezone);
-			}
-			catch (Exception $ex)
-			{
-				throw $ex;
-			}
-
 
 			$data = array
 			(
