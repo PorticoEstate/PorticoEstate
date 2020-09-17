@@ -34,7 +34,11 @@
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
 
-			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
+//			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
+			/**
+			 * Disable limit for now
+			 */
+			$reservation['participant_limit'] = 0;
 
 			$interval	 = (new DateTime($reservation['from_']))->diff(new DateTime($reservation['to_']));
 			$when		 = "";
@@ -48,8 +52,27 @@
 				$when	 = pretty_timestamp($reservation['from_']) . ' - ' . $end->format('H:i');
 			}
 
+			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
+			$from->modify("-2 hour");
+			$to = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['to_'])),$DateTimeZone);
+			$to->modify("+2 hour");
+
+			$now =  new DateTime('now', $DateTimeZone);
+			$enable_register_pre = false;//$from > $now ? true : false;
+			$enable_register_in	 = $from < $now && $to > $now ? true : false;
+			$enable_register_out = false; //$from < $now && $to > $now ? true : false;
+			
+			if($enable_register_pre || $enable_register_in || $enable_register_out)
+			{
+				$enable_register_form = true;
+			}
+			else
+			{
+				$enable_register_form = false;
+			}
+
 			$errors							 = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $register_type)
+			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $register_type && $enable_register_form)
 			{
 				$user_inputs = (array)phpgwapi_cache::system_get('bookingfrontendt', 'add_participant');
 				$ip_address = phpgw::get_ip_address();
@@ -150,8 +173,8 @@
 								. "Du må registrere fremmøte når du møter ved arrangementet\n";
 							break;
 						case 'register_in':
-							$sms_text = "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n"
-								. "Du kan frigjøre plassen(e) ved å melde deg ut når du forlater arrangementet ";
+							$sms_text = "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n";
+			//				$sms_text .= "Du kan frigjøre plassen(e) ved å melde deg ut når du forlater arrangementet ";
 							break;
 						case 'register_out':
 							$sms_text = "Du har registrert at du forlater {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
@@ -164,18 +187,21 @@
 					}
 
 					/**
-					 * send SMS
+					 * disable SMS for now
 					 */
 
-					try
+					if(false)
 					{
-						$sms_service = CreateObject('sms.sms');
-						$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text}");
-					}
-					catch (Exception $ex)
-					{
-						//implement me
-						$this->log('sms_error', $ex->getMessage());
+						try
+						{
+							$sms_service = CreateObject('sms.sms');
+							$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text}");
+						}
+						catch (Exception $ex)
+						{
+							//implement me
+							$this->log('sms_error', $ex->getMessage());
+						}
 					}
 
 					phpgwapi_cache::message_set($sms_text);
@@ -200,17 +226,16 @@
 				throw $ex;
 			}
 
-			$from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
-			$now =  new DateTime('now', $DateTimeZone);
-
-			$now->modify("-2 hour");
 
 			$data = array
 			(
 				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
-				'enable_register_pre'	 => $from > $now  ? true : false,
-				'enable_register_in'	 => $from < $now  ? true : false,
+				'enable_register_pre'	 => $enable_register_pre,
+				'enable_register_in'	 => $enable_register_in,
+				'enable_register_out'	 => $enable_register_out,
+				'enable_register_form'	 => $enable_register_form,
 				'number_of_participants' => $number_of_participants,
+				'lang_register_in'		 => lang('Registration'),
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],

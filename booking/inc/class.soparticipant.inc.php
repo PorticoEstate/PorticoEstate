@@ -67,7 +67,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
-				$errors['phone'] = lang('Duplicate');
+				$errors['phone'] = lang('Phone is already registered');
 			}
 		}
 

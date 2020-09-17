@@ -58,12 +58,12 @@
 			</div>
 		</xsl:if>
 
-		<xsl:if test="event/participant_limit > 0">
+<!--		<xsl:if test="event/participant_limit > 0">
 			<p class="mt-2">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 				<xsl:value-of select="event/participant_limit"/>
 			</p>
-		</xsl:if>
+		</xsl:if>-->
 		<p class="mt-2">
 			<xsl:value-of select="php:function('lang', 'number of participants')" />:
 			<xsl:value-of select="event/number_of_participants" />

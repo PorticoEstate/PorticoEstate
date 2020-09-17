@@ -23,7 +23,7 @@
 			$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list'));
 		}
 
-		$controller_test_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.index'));
+		$controller_test_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar_planner.start_inspection'));
 
 		$extra_vars = array();
 		foreach($_GET as $name => $value)
