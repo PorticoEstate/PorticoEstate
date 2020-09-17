@@ -501,3 +501,5 @@ Minimum 8 digits	bookingfrontend	nn	Minimum 8 tal
 view event	bookingfrontend	nn	Vis arrangement
 view allocation	bookingfrontend	nn	Vis tildeling
 view booking	bookingfrontend	nn	Vis interntildeling
+Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
+registration	bookingfrontend	nn	Registrering
