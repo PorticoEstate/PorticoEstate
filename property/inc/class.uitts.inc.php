@@ -2074,7 +2074,7 @@ HTML;
 					$receipt = $this->bo->add_relation($add_relation, $id, $relation_type);
 				}
 			}
-			else if ($add_relation)
+			else if ($relation_type == 'request')
 			{
 				$add_relation	 = phpgw::get_var('add_request');
 				$receipt		 = $this->bo->add_relation($add_relation, $id, 'request');
