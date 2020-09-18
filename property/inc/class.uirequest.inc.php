@@ -937,8 +937,7 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$this->bo->read(array('make_relation'	 => $make_relation, 'allrows'		 => $this->allrows,
-				'dry_run'		 => true));
+			$this->bo->read(array('dry_run' => true));
 			$uicols				 = $this->bo->uicols;
 			//_debug_array($uicols);die();
 			$count_uicols_name	 = count($uicols['name']);
@@ -1107,6 +1106,7 @@
 											var path_update = new Array();
 											path_update['menuaction'] = '{$update_menuaction}';
 											path_update['id'] = '{$relation_id}';
+											path_update['relation_type'] = 'request';
 
 											var sUrl = phpGWLink('index.php', path_update);
 
