@@ -45,6 +45,12 @@
 					</label>
 					<div id="resources_container" style="display:inline-block;"></div>
 				</div>
+				<div class="pure-control-group">
+					<label style="vertical-align:top;">
+						<xsl:value-of select="php:function('lang', 'participants')" />
+					</label>
+						<div id="participant_container" style="display:inline-block;"></div>
+				</div>
 			</div>
 		</div>
 	</form>
@@ -76,13 +82,30 @@
 	</div>
 	<script type="text/javascript">
 		var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+		var allocation_id = '<xsl:value-of select="allocation/id"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to')"/>;
     <![CDATA[
 //        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;
+		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: allocation_id, filter_reservation_type: 'allocation', length:-1}, true);
 
     ]]>
 		var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink()}, {key: 'type', label: lang['Resource Type']}];
 		createTable('resources_container',resourcesURL,colDefs, 'data', 'pure-table pure-table-bordered');
+
+		var colDefsParticipantURL = [
+		{key: 'phone', label: lang['phone']},
+		{key: 'quantity', label: lang['quantity']},
+		{key: 'from_', label: lang['from']},
+		{key: 'to_', label: lang['to']}
+		];
+
+		var paginatorTableparticipant = new Array();
+		paginatorTableparticipant.limit = 10;
+		createPaginatorTable('participant_container', paginatorTableparticipant);
+
+		createTable('participant_container', participantURL, colDefsParticipantURL, '', 'pure-table pure-table-bordered', paginatorTableparticipant);
+
+
 	</script>
 </xsl:template>
