@@ -1,289 +1,28 @@
 
 
+menuaction: bookingfrontend.uiactivities.get_all_available_buildings
+menuaction: bookingfrontend.uiactivities.get_all_available_buildings
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
 VALID DATA
 menuaction: bookingfrontend.uisearch.get_filterboxdata
 VALID DATA
 menuaction: bookingfrontend.uisearch.events
 VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
 menuaction: bookingfrontend.uisearch.autocomplete
 VALID DATA
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
 BOOKED IDS: 
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: Array
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: {"id":19,"name":"Fana Stadion","part_of_town_id":"6","street":"Grimseidvegen 60","zip_code":"5239","city":"R\u00e5dal","part_of_town_name":"YTREBYGDA  BYDEL","resources":[{"id":732,"name":"Gymsal","simple_booking":null,"activities_list":[{"id":33,"name":"Kampsport"},{"id":94,"name":"Trim"},{"id":51,"name":"Turn"}],"facilities_list":[]}]}
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 10
-INCLUDED BUILDING: 4
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
 BOOKED IDS: 10
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-INCLUDED BUILDING: 134
-INCLUDED BUILDING: 10
-INCLUDED BUILDING: 23
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 94
-INCLUDED BUILDING: 11
-INCLUDED BUILDING: 132
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 36
-INCLUDED BUILDING: 3
-INCLUDED BUILDING: 147
-INCLUDED BUILDING: 153
+FILTER TIMES: 2018-06-12T19:30 - 2018-06-13T19:30
+EXCLUDED BUILDING: 10
 INCLUDED BUILDING: 4
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 134
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 134
-INCLUDED BUILDING: 10
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 134
+BOOKED IDS: 132,69,112,98,3,5,10,111,123,7,1,18
+BOOKED IDS: 4
+menuaction: bookingfrontend.uiactivities.get_all_available_buildings
 VALID DATA
 menuaction: bookingfrontend.uiapplication.get_partials
 VALID DATA
@@ -293,154 +32,118 @@ menuaction: bookingfrontend.uisearch.events
 VALID DATA
 menuaction: bookingfrontend.uisearch.autocomplete
 VALID DATA
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 19
-INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
-INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
-INCLUDED BUILDING: 137
-INCLUDED BUILDING: 140
-INCLUDED BUILDING: 139
-INCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 19
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-INCLUDED BUILDING: 35
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 35
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
 BOOKED IDS: 
-BOOKED IDS: 19
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 
-BOOKED IDS: 8
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-FILTER TIMES: 2018-06-12T19:32 - 2019-06-12T19:30
-EXCLUDED BUILDING: 35
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-FILTER TIMES: 2018-06-12T19:32 - 2019-06-12T19:30
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-FILTER TIMES: 2018-06-12T19:32 - 2018-06-12T19:30
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-FILTER TIMES: 2018-06-12T19:32 - 2018-06-12T19:30
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-FILTER TIMES: 2018-06-12T19:32 - 2019-06-12T19:30
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.events
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
-VALID DATA
-menuaction: bookingfrontend.uiapplication.get_partials
-VALID DATA
-menuaction: bookingfrontend.uisearch.autocomplete
-VALID DATA
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 
-BOOKED IDS: 19
+BOOKED IDS: 10
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
 FILTER TIMES: 2018-06-12T19:30 - 2019-06-12T19:30
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
-BOOKED IDS: 
+EXCLUDED BUILDING: 10
+INCLUDED BUILDING: 4
+BOOKED IDS: 116,146,70,132,69,112,22,135,98,11,113,43,147,9,19,3,5,74,29,138,10,35,134,144,39,36,102,14,13,133,111,16,123,142,7,136,139,140,12,137,141,33,1,18,64,23,143,8
+BOOKED IDS: 4
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-FILTER TIMES: 2018-06-12T19:30 - 2018-06-12T19:30
-EXCLUDED BUILDING: 19
-EXCLUDED BUILDING: 138
-EXCLUDED BUILDING: 8
-EXCLUDED BUILDING: 141
-EXCLUDED BUILDING: 35
-EXCLUDED BUILDING: 137
-EXCLUDED BUILDING: 140
-EXCLUDED BUILDING: 139
-EXCLUDED BUILDING: 147
-BOOKED IDS: 116,146,70,132,69,112,135,98,11,113,147,9,26,19,3,5,74,138,10,35,134,144,39,36,102,14,13,133,111,123,99,152,46,7,136,139,140,12,137,141,94,33,1,18,148,143,23,8
+FILTER TIMES: 2018-06-12T19:30 - 2020-06-12T19:30
+EXCLUDED BUILDING: 10
+INCLUDED BUILDING: 4
+BOOKED IDS: 116,146,70,132,69,112,22,135,98,11,113,43,147,9,26,19,3,5,74,29,138,10,35,134,144,39,36,102,14,13,133,111,16,123,99,142,152,46,7,136,139,140,12,137,141,94,33,1,18,64,110,145,148,143,23,8
+BOOKED IDS: 4
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+FILTER TIMES: 2020-06-12T19:30 - 2020-06-12T19:30
+INCLUDED BUILDING: 10
+INCLUDED BUILDING: 4
 BOOKED IDS: 
+BOOKED IDS: 10
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+FILTER TIMES: 2020-06-12T19:30 - 2020-06-30T19:30
+EXCLUDED BUILDING: 10
+INCLUDED BUILDING: 4
+BOOKED IDS: 1,3,5,7,9,10,11,12,14,18,19,33,69,70,74,98,111,112,113,123,132,133,134,135,137,141
+BOOKED IDS: 4
+menuaction: bookingfrontend.uibuilding.show
+VALID DATA
+menuaction: bookingfrontend.uibuilding.show
+VALID DATA
+menuaction: bookingfrontend.uibuilding.show
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uibooking.get_freetime
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.index_images
+VALID DATA
+menuaction: bookingfrontend.uiresource.index_json
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.download
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.download
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.download
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.download
+VALID DATA
+menuaction: bookingfrontend.uidocument_building.download
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
+menuaction: bookingfrontend.uibooking.resource_schedule
+VALID DATA
 VALID DATA
 menuaction: bookingfrontend.uiapplication.get_partials
 VALID DATA
@@ -450,10 +153,26 @@ menuaction: bookingfrontend.uisearch.get_filterboxdata
 VALID DATA
 menuaction: bookingfrontend.uisearch.autocomplete
 VALID DATA
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-BOOKED IDS: 
-BOOKED IDS: 140
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
 BOOKED IDS: 
@@ -500,14 +219,12 @@ INCLUDED BUILDING: 139
 INCLUDED BUILDING: 147
 BOOKED IDS: 116,70,132,69,112,98,11,113,9,19,3,5,74,29,10,35,102,111,123,7,12,1,18,8
 BOOKED IDS: 138
-menuaction: bookingfrontend.uisearch.resquery
-VALID DATA
-BOOKED IDS: 
-BOOKED IDS: 19
-VALID DATA
-menuaction: bookingfrontend.uisearch.get_filterboxdata
+menuaction: bookingfrontend.uiuser.show
+NEW USER--1
 VALID DATA
 menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
 VALID DATA
 menuaction: bookingfrontend.uisearch.events
 VALID DATA
@@ -519,7 +236,46 @@ BOOKED IDS:
 BOOKED IDS: 19
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-FILTER TIMES: 2019-06-12T19:30 - 2018-06-12T19:30
+FILTER TIMES: 2018-06-12T19:30 - 2018-08-12T19:30
+EXCLUDED BUILDING: 19
+INCLUDED BUILDING: 138
+EXCLUDED BUILDING: 8
+INCLUDED BUILDING: 141
+EXCLUDED BUILDING: 35
+INCLUDED BUILDING: 137
+INCLUDED BUILDING: 140
+INCLUDED BUILDING: 139
+INCLUDED BUILDING: 147
+BOOKED IDS: 116,70,132,69,112,98,11,113,9,19,3,5,74,29,10,35,102,14,111,123,7,12,1,18,8
+BOOKED IDS: 138
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+FILTER TIMES: 2018-06-12T19:30 - 2018-07-12T19:30
+EXCLUDED BUILDING: 19
+INCLUDED BUILDING: 138
+EXCLUDED BUILDING: 8
+INCLUDED BUILDING: 141
+EXCLUDED BUILDING: 35
+INCLUDED BUILDING: 137
+INCLUDED BUILDING: 140
+INCLUDED BUILDING: 139
+INCLUDED BUILDING: 147
+BOOKED IDS: 116,70,132,69,112,98,11,113,9,19,3,5,74,29,10,35,102,111,123,7,12,1,18,8
+BOOKED IDS: 138
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+FILTER TIMES: 2018-06-12T19:30 - 2018-06-12T19:30
 INCLUDED BUILDING: 19
 INCLUDED BUILDING: 138
 INCLUDED BUILDING: 8
@@ -533,22 +289,36 @@ BOOKED IDS:
 BOOKED IDS: 19
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-FILTER TIMES: 2019-06-12T19:30 - 2019-06-12T19:30
-INCLUDED BUILDING: 19
+FILTER TIMES: 2018-06-12T19:30 - 2018-09-12T19:30
+EXCLUDED BUILDING: 19
 INCLUDED BUILDING: 138
-INCLUDED BUILDING: 8
+EXCLUDED BUILDING: 8
 INCLUDED BUILDING: 141
-INCLUDED BUILDING: 35
+EXCLUDED BUILDING: 35
 INCLUDED BUILDING: 137
 INCLUDED BUILDING: 140
 INCLUDED BUILDING: 139
 INCLUDED BUILDING: 147
-BOOKED IDS: 
-BOOKED IDS: 19
+BOOKED IDS: 116,70,132,69,112,98,11,113,9,19,3,5,74,29,10,35,102,14,13,111,16,123,7,12,1,18,8
+BOOKED IDS: 138
 menuaction: bookingfrontend.uisearch.resquery
 VALID DATA
-FILTER TIMES: 2019-06-12T19:30 - 2019-07-12T19:30
-INCLUDED BUILDING: 19
+FILTER TIMES: 2018-06-12T19:30 - 2018-11-12T19:30
+EXCLUDED BUILDING: 19
+INCLUDED BUILDING: 138
+EXCLUDED BUILDING: 8
+INCLUDED BUILDING: 141
+EXCLUDED BUILDING: 35
+INCLUDED BUILDING: 137
+INCLUDED BUILDING: 140
+INCLUDED BUILDING: 139
+INCLUDED BUILDING: 147
+BOOKED IDS: 116,70,132,69,112,22,98,11,113,9,19,3,5,74,29,10,35,36,102,14,13,111,16,123,7,12,33,1,18,64,8
+BOOKED IDS: 138
+menuaction: bookingfrontend.uisearch.resquery
+VALID DATA
+FILTER TIMES: 2018-06-12T19:30 - 2020-11-12T19:30
+EXCLUDED BUILDING: 19
 EXCLUDED BUILDING: 138
 EXCLUDED BUILDING: 8
 EXCLUDED BUILDING: 141
@@ -557,5 +327,23 @@ EXCLUDED BUILDING: 137
 EXCLUDED BUILDING: 140
 EXCLUDED BUILDING: 139
 EXCLUDED BUILDING: 147
-BOOKED IDS: 116,70,132,69,112,98,11,113,43,147,9,3,5,74,29,138,10,35,134,39,36,102,14,133,111,123,7,139,140,12,137,141,33,1,18,64,8
-BOOKED IDS: 19
+BOOKED IDS: 116,146,70,132,69,112,22,135,98,11,113,43,147,9,26,19,3,5,74,29,138,10,35,134,144,39,36,102,14,13,133,111,16,123,99,142,152,46,7,136,139,140,12,137,141,94,33,1,18,64,110,145,148,143,23,8
+BOOKED IDS: 
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+VALID DATA
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
+VALID DATA
+menuaction: bookingfrontend.uisearch.get_filterboxdata
+menuaction: bookingfrontend.uisearch.events
+VALID DATA
+VALID DATA
+menuaction: bookingfrontend.uiapplication.get_partials
+VALID DATA
+menuaction: bookingfrontend.uisearch.autocomplete
+VALID DATA
