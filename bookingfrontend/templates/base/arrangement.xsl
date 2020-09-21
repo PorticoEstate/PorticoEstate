@@ -5,7 +5,5 @@
     <div class="content">
         <p>This is a paragraph</p>
         <xsl:value-of select="arrangement/test"/>
-
-
     </div>
 </xsl:template>

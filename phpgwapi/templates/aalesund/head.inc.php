@@ -287,7 +287,7 @@ JS;
 		'str_base_url'			 => $GLOBALS['phpgw']->link('/', array(), true),
 		'dateformat_backend'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
-		'arrangement_url'        => $GLOBALS['phpgw']->link('?menuaction' .'=bookingfrontend.uiarrangement.show',array()),
+		'arrangement_url'        => $GLOBALS['phpgw']->link('/bookingfrontend/',array('menuaction'=>'bookingfrontend.uiarrangement.show')),
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
