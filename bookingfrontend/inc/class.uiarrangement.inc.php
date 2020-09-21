@@ -1,26 +1,50 @@
 <?php
 
-phpgw::import_class("booking.uicommon");
+    phpgw::import_class("booking.uicommon");
 
-class bookingfrontend_uiarrangement extends booking_uicommon
-{
-
-
-    public $public_functions = array
-    (
-        'show' => true
-    );
-
-    public function show()
+    class bookingfrontend_uiarrangement extends booking_uicommon
     {
-        $config = CreateObject('phpgwapi.config', 'booking');
-        $config->read();
-        self::render_template_xsl('arrangement', array('arrangement' => '', 'config_data' => $config));
 
-    }
+        public function __construct()
+        {
+            parent::__construct();
+            $this->module= "bookingfrontend";
+        }
 
-    public function query()
-    {
-        // TODO: Implement query() method.
-    }
+
+        public $public_functions = array
+        (
+            'index' => true,
+            'show'  => true
+        );
+
+        public function show()
+        {
+            $config = CreateObject('phpgwapi.config', 'booking');
+            $config->read();
+
+            $arrangement['test']="test";
+            $config = CreateObject('phpgwapi.config', 'booking');
+            $config->read();
+            _debug_array($arrangement);
+            phpgwapi_jquery::load_widget("core");
+
+            self::render_template_xsl('arrangement', array('arrangement' => $arrangement, 'config_data' => $config->config_data));
+
+        }
+
+        public function query()
+        {
+            // TODO: Implement query() method.
+        }
+        public function index()
+        {
+            if (phpgw::get_var('phpgw_return_as') == 'json')
+            {
+                return $this->query();
+            }
+
+            phpgw::no_access();
+        }
+
 }
