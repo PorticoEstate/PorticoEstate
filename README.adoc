@@ -1,0 +1,6 @@
+include::doc/README.adoc[]
+
+include::setup/doc/README.adoc[]
+
+include::phpgwapi/doc/README.adoc[]
+

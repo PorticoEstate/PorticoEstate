@@ -13,24 +13,43 @@
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
 			<!-- Title -->
-			<div class="container">
+			<div id="titleContainer">
 				<div class="flex-container" id="frontpagetitle">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+                                    Finn fasiliteter/etableringer
+				<!--	<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/> -->
 				</div>
 			</div>
 			<!-- Search Container -->
-			<div class="container searchContainer"     >
+                        <div id="searchContainer">
+                            <div id="searchContainerContent">
+                                                            <div  id="searchWrapper">
+                             <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
+						<xsl:attribute name="placeholder">
+                                                    <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+						</xsl:attribute>
+					</input>
+                            </div>
+                             <div>
+                                 <div  id="locationWrapper">
+                                   <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>  
+                                 </div>
+                                 <div  id="dateWrapper">
+                                   <input type="text" id="dateFilter" class="form-control searchInput" placeholder="Dato" aria-label="Large"></input>
+                                 </div>
+                            </div>
+                            <button id="searchBtn">Finn tilgjengelige</button> 
+                            </div>
+                        </div>
+                        
+                        
+			<div class="container searchContainer"    style="display:none" >
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
                                                     <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
 						</xsl:attribute>
 					</input>
-					<div class="input-group-prepend">
-						<button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
-							<i class="fas fa-search"></i>
-						</button>
-					</div>
+					
 				</div>
 				<div id="search-autocomplete"></div>
 				<!-- Filter Boxes -->
@@ -96,6 +115,9 @@ Til: <input type="datetime-local" class="date_availability_filter" id="to_time"
 						</div>
 					</div>
 				</div>
+                                <button class="btn" id="searchButton" type="button">
+							Finn tilgjengelig
+						</button>
 				<div class="row mx-auto mt-5" data-bind="if: selectedTags().length > 0">
 					<div data-bind="foreach: selectedTags">
 						<div class="d-inline-block mb-2">

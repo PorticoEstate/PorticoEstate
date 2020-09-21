@@ -1,6 +1,6 @@
 # ROS PHP Pdf creation class
 
-[![Latest Stable Version](https://poser.pugx.org/rospdf/pdf-php/v/stable)](https://packagist.org/packages/rospdf/pdf-php) [![Total Downloads](https://poser.pugx.org/rospdf/pdf-php/downloads)](https://packagist.org/packages/rospdf/pdf-php) [![Latest Unstable Version](https://poser.pugx.org/rospdf/pdf-php/v/unstable)](https://packagist.org/packages/rospdf/pdf-php) [![License](https://poser.pugx.org/rospdf/pdf-php/license)](https://packagist.org/packages/rospdf/pdf-php) [![Build Status](https://travis-ci.org/rospdf/pdf-php.svg?branch=master)](https://travis-ci.org/rospdf/pdf-php) 
+[![Latest Stable Version](https://poser.pugx.org/rospdf/pdf-php/v/stable)](https://packagist.org/packages/rospdf/pdf-php) [![Total Downloads](https://poser.pugx.org/rospdf/pdf-php/downloads)](https://packagist.org/packages/rospdf/pdf-php) [![Daily Downloads](https://poser.pugx.org/rospdf/pdf-php/d/daily)](https://packagist.org/packages/rospdf/pdf-php) [![License](https://poser.pugx.org/rospdf/pdf-php/license)](https://packagist.org/packages/rospdf/pdf-php) [![Build Status](https://travis-ci.org/rospdf/pdf-php.svg?branch=master)](https://travis-ci.org/rospdf/pdf-php) [![Donations Badge](https://yourdonation.rocks/images/badge.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CCU8QYD549JCU&source=url)
 
 ![ros.jpg](https://raw.githubusercontent.com/rospdf/pdf-php/master/ros.jpg "R&OS PHP Pdf creation class")
 
@@ -12,7 +12,7 @@ It comes with a base class called "Cpdf.php" plus a helper class "Cezpdf.php" to
 <div align="center">
     <a href="https://github.com/rospdf/pdf-php/blob/master/readme.pdf">DOCUMENTATION</a> :
     <a href="http://pdf-php.sf.net/">WEBSITE</a> :
-    <a href="DEVELOPER.md">DEVELOPER NOTES</a>
+    <a href="CONTRIBUTE.md">CONTRIBUTE</a>
 </div>
 
 ## Features
@@ -63,7 +63,7 @@ For more details on how to use `composer` please refer to the documentation - ht
 include 'src/Cezpdf.php'; // Or use 'vendor/autoload.php' when installed through composer
 
 // Initialize a ROS PDF class object using DIN-A4, with background color gray
-$pdf = new Cezpdf('a4','portrait','color',array(0.8,0.8,0.8));
+$pdf = new Cezpdf('a4','portrait','color',[0.8,0.8,0.8]);
 // Set pdf Bleedbox
 $pdf->ezSetMargins(20,20,20,20);
 // Use one of the pdf core fonts
@@ -76,9 +76,9 @@ $size=12;
 $pdf->openHere('Fit');
 
 // Output some colored text by using text directives and justify it to the right of the document
-$pdf->ezText("PDF with some <c:color:1,0,0>blue</c:color> <c:color:0,1,0>red</c:color> and <c:color:0,0,1>green</c:color> colours", $size, array('justification'=>'right'));
+$pdf->ezText("PDF with some <c:color:1,0,0>blue</c:color> <c:color:0,1,0>red</c:color> and <c:color:0,0,1>green</c:color> colours", $size, ['justification'=>'right']);
 // Output the pdf as stream, but uncompress
-$pdf->ezStream(array('compress'=>0));
+$pdf->ezStream(['compress'=>0]);
 ?>
 ```
 

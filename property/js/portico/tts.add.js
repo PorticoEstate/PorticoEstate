@@ -295,6 +295,11 @@ $.formUtils.addValidator({
 	errorMessageKey: ''
 });
 
+set_tab = function ()
+{
+	//Dummy
+};
+
 window.on_location_updated = function (location_code)
 {
 	location_code = location_code || $("#loc1").val();

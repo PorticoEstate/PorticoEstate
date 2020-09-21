@@ -11,6 +11,7 @@
 			'report_numbers' => true,
 			'cancel' => true,
 			'edit' => true,
+			'show'	=> true
 		);
 
 		public function __construct()
@@ -423,9 +424,83 @@
 						'id' => $event['id']));
 			}
 
+			$event['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.show',
+						'id' => $event['id']));
+
 			self::render_template_xsl('event_info', array('event' => $event, 'orginfo' => $orginfo,
 				'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		public function show( )
+		{
+			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			unset($event['comments']);
+			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $event['resources']),
+				'sort' => 'name'));
+			if ($event['customer_organization_number'] != '')
+			{
+				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+				if ($orginfo != array())
+				{
+					$event['customer_organization_id'] = $orginfo['id'];
+					$event['customer_organization_name'] = $orginfo['name'];
+					$orginfo['link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+							'id' => $orginfo['id']));
+				}
+			}
+			else
+			{
+				$orginfo = array();
+			}
+			//echo $event['name'];
+			$event['resources'] = $resources['results'];
+			$res_names = array();
+			foreach ($event['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$event['resource_info'] = join(', ', $res_names);
+			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $event['building_id']));
+			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
+			$when = "";
+			if($interval->days > 0)
+			{
+				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
+			}
+			else
+			{
+				$end = new DateTime($event['to_']);
+				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}
+			$event['when'] = $when;
+
+			$number_of_participants = createObject('booking.boparticipant')->get_number_of_participants('event', $event['id']);
+
+			$event['number_of_participants'] = $number_of_participants;
+
+//			$participant_registration_link =  $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiparticipant.add',
+//				'reservation_type' => 'event',
+//				'reservation_id' => $event['id']), true, true);
+
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$participant_registration_link = $external_site_address
+				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+				. "&reservation_type=event"
+				. "&reservation_id={$event['id']}";
+
+			$event['participant_registration_link'] = $participant_registration_link;
+
+			phpgw::import_class('phpgwapi.phpqrcode');
+			$code_text					 = $participant_registration_link;
+			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
+			QRcode::png($code_text, $filename);
+			$event['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
+
+			self::render_template_xsl('event', array('event' => $event, 'orginfo' => $orginfo));
 		}
 
 		public function report_numbers()

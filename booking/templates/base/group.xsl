@@ -10,7 +10,13 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Organization')" />
 						</label>
-						<xsl:value-of select="group/organization_name"/>
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:booking.uiorganization.show')" />
+								<xsl:text>&amp;id=</xsl:text><xsl:value-of select="group/organization_id"/>
+							</xsl:attribute>
+							<xsl:value-of select="group/organization_name"/>
+						</a>
 					</div>
 					<div class="pure-control-group">
 						<label>

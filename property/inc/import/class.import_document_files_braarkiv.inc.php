@@ -430,6 +430,7 @@
 				$remark .= "; {$file_tags['remark_detail']}";
 			}
 
+			$ok = false;
 			if (is_file($file))
 			{
 				try
@@ -438,7 +439,7 @@
 				}
 				catch (Exception $e)
 				{
-					echo $e->getTraceAsString();
+//					echo $e->getTraceAsString();
 					$this->receipt['error'][] = array('msg' => $e->getMessage());
 				}
 
@@ -493,18 +494,20 @@
 			$file_date	 = date('Y-m-d', filemtime($file));
 			$document	 = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark);
 
-			_debug_array($document);
+//			_debug_array($document);
 			//Her blir det alvor....
 
-			return true;
+//			return true;
 
 			$bra5ServiceCreate	 = new Bra5ServiceCreate();
 			$bra5CreateDocument	 = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
 
 			if (!$bra5ServiceCreate->createDocument($bra5CreateDocument))
 			{
-				_debug_array($bra5ServiceCreate->getLastError());
-				throw new Exception($bra5ServiceCreate->getLastError());
+				$LastError = $bra5ServiceCreate->getLastError();
+
+				_debug_array($LastError);
+				throw new Exception($LastError['Bra5ServiceCreate::createDocument']->getMessage());
 			}
 
 

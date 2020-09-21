@@ -164,7 +164,7 @@
 			$this->_phpgw_set_cookie_params();
 
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
+				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True'  && !phpgw::get_var('api_mode', 'bool'))
 			{
 				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
@@ -184,7 +184,7 @@
 
 			//respect the config option for cookies
 			ini_set('session.use_cookies', $this->_use_cookies);
-			ini_set('session.cookie_samesite', 'Strict');
+			ini_set('session.cookie_samesite', 'Lax');
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
@@ -1666,7 +1666,7 @@
 
 			$webserver_url = '/';
 
-			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, true);
+			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, false);
 			return $this->_cookie_domain;
 		}
 

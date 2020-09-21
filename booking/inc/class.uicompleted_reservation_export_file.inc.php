@@ -194,7 +194,12 @@
 
 		public function show()
 		{
-			$export_file = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$export_file = $this->bo->read_single($id);
 			$export_file['type'] = lang($export_file['type']);
 			$this->add_default_display_data($export_file);
 			$tabs = array();

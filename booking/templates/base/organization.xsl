@@ -149,6 +149,33 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'groups')" />
+						</label>
+						<div class="pure-custom">
+							<div id="groups_container"/>
+							<xsl:if test="organization/permission/write">
+								<a href="{organization/new_group_link}">
+									<xsl:value-of select="php:function('lang', 'new group')" />
+								</a>
+							</xsl:if>
+						</div>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'delegates')" />
+						</label>
+						<div class="pure-custom">
+							<div id="delegates_container"/>
+							<xsl:if test="organization/permission/write">
+								<a href="{organization/new_delegate_link}">
+									<xsl:value-of select="php:function('lang', 'new delegate')" />
+								</a>
+							</xsl:if>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 		</div>
@@ -162,19 +189,34 @@
 			<xsl:attribute name="value">
 				<xsl:value-of select="php:function('lang', 'Cancel')" />
 			</xsl:attribute>
-		</input>		
+		</input>
 	</div>
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order', 'email')"/>;
 
     <![CDATA[
-//        var documentsURL     = 'index.php?menuaction=booking.uidocument_organization.index&sort=name&filter_owner_id=' + organization_id + '&phpgw_return_as=json&';
+		var groupURL = phpGWLink('index.php', {menuaction:'booking.uigroup.index', sort:'name', filter_organization_id: organization_id, length:-1}, true);
+		var delegateURL =  phpGWLink('index.php', {menuaction:'booking.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1', length:-1},true);
 		var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_organization.index', sort:'name',filter_owner_id: organization_id,  length:-1}, true);
 
         ]]>
-		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
+		var colDefsGroups = [
+			{key: 'name', label: lang['Name'], formatter: genericLink},
+			{key: 'primary_contact_email', label: lang['email']}
+		];
+		var colDefsDelegate = [
+			{key: 'name', label: lang['Name'], formatter: genericLink},
+			{key: 'email', label: lang['email']}
+		];
+		var colDefsDocuments = [
+			{key: 'name', label: lang['Name'], formatter: genericLink},
+			{key: 'category', label: lang['Category']},
+			{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
+		];
 
+		createTable('groups_container', groupURL, colDefsGroups, '', 'pure-table pure-table-bordered');
+		createTable('delegates_container', delegateURL, colDefsDelegate, '', 'pure-table pure-table-bordered');
 		createTable('documents_container',documentsURL,colDefsDocuments, '', 'pure-table pure-table-bordered');
 	</script>
 

@@ -243,15 +243,104 @@ a {
     background: #89266a;
     color: #fff;
 }
+#searchContainerContent{
+    margin:auto;
+    max-width: 720px;
+    text-align: center;
+}
+#searchContainer{
+    margin:auto;
+    background-color: #DDDDFF;
+    padding: 40px;
+    width:100%;
+    max-width: 1440px;
+    text-align: center;
+}
+
+#searchContainer #searchWrapper{
+    margin-bottom: 20px;
+}
+
+#searchContainer #locationWrapper{
+    display:inline-block;
+    max-width: 350px;
+    width:100%;
+    background: white;
+    border-radius: 12px;
+}
 
 
-#mainSearchInput  {
-    border-left: 2px solid #26348B  !important;
-    border-top: 2px solid #26348B  !important;
-    border-bottom: 2px solid #26348B  !important;
-    border-right: 0 !important;
+ #searchContainer #dateWrapper{
+    margin-left: 15px;
+    display:inline-block;
+    max-width: 350px;
+    width:100%;
+    border-radius:12px;
+    background: white;
+}
+
+#locationFilter, #dateFilter{
+    width:100%;
+}
+#titleContainer{
+  
+  font-family: Martel;
+  font-size: 2em;
+  font-weight: 900;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #3a3a4c;
+  padding-bottom:40px;
+  padding-top:80px;
+}
+
+#searchWrapper{
+    background-color: white;
+      border-radius: 12px;
+
+}
+#mainSearchInput, #locationFilter, #dateFilter  {
+    background: url("https://flaticons.net/custom.php?i=eN7tlTrkWDgSRI9IbIjAhwvjQ4un&format=png&size=18") no-repeat scroll 9px 9px;
+    padding-left:50px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px #28358f;
  }
  
+ #locationFilter{
+        background: url("https://flaticons.net/custom.php?i=6v5IxcYlPe7uEIAIZIG9h9YljJuV&format=png&size=18") no-repeat scroll 9px 9px; 
+ }
+ 
+ 
+ #dateFilter{
+             background: url(" https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px; 
+ } 
+ 
+ 
+ #searchBtn{
+  margin-top:20px;
+  width: 200px;
+  height: 52px;
+  border-radius: 36px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.24);
+  border-style: solid;
+  border-width: 1px;
+  border-image-source: linear-gradient(to bottom, #c2ffdf, #00ff77);
+  border-image-slice: 1;
+  background-image: linear-gradient(to bottom, #99ffc9, #99ffc9), linear-gradient(to bottom, #c2ffdf, #00ff77);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  font-family: Rubik;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  color: #3a3a4c;
+}
  
 /* #searchmotor  {
      border: 1px solid #26348B  !important;
@@ -314,11 +403,6 @@ a {
     background: #000; 
 }
 
-
-#searchinput:fokus {
-     border-color: black !important;
-       border: 2px solid black  !important;
-}
 
 /* NAVBAR SEARCHBAR STYLING */
 .search-container {
@@ -836,17 +920,6 @@ SEARCH PAGE STYLE
     font-size: 15px;
     margin-left: 1.5em;
 }* */
-
-
-.searchInput {
-    border: 2px solid #3d3d3d !important;
-    border-radius: 0 !important;
-}
-
-.searchInput:focus {
-    box-shadow: none;
-    border: 2px solid #3d3d3d !important;
-}
 
 .searchBtn {
 border: 2px solid #26348B !important;

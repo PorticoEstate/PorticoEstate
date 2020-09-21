@@ -49,6 +49,8 @@
 			$this->like		 = $this->db->like;
 			$this->left_join = " LEFT JOIN ";
 
+			//http://adodb.org/dokuwiki/doku.php?id=v5:database:microsoft_sql_server
+
 			$this->db_boei	 = createObject('phpgwapi.db_adodb', null, null, true);
 			$host_info		 = explode(':', $GLOBALS['external_db']['boei']['db_host']);
 

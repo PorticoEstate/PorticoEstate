@@ -2501,7 +2501,7 @@
 			$status = $this->db->f('status');
 
 			$custom_status = (int)trim($status, 'C');
-			$this->db->query("SELECT * FROM phpgw_helpdesk_status WHERE id = {$custom_status}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM fm_tts_status WHERE id = {$custom_status}", __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($status == 'X' || $this->db->f('closed'))
 			{

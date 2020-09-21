@@ -2220,7 +2220,7 @@ HTML;
 				$amount = CreateObject('property.boworkorder')->get_accumulated_budget_amount($project_id);
 			}
 			
-			if($project_id)
+			if($approval_level == 'project' && $project_id)
 			{
 				$location			 = '.project';
 				$location_item_id	 = $project_id;

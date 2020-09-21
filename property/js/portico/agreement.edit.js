@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_alarm'});
+/* global JqueryPortico, oTable0, oTable1 */
+
+var sUrl_agreement = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_data'}, true);
 
 onActionsClick_notify = function (type, ids, url)
 {
@@ -11,7 +13,7 @@ onActionsClick_notify = function (type, ids, url)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {ids: ids, type: type},
 		success: function (data)
 		{
@@ -19,7 +21,7 @@ onActionsClick_notify = function (type, ids, url)
 			JqueryPortico.updateinlineTableHelper(oTable0, url);
 		}
 	});
-}
+};
 
 onAddClick_Alarm = function (type)
 {
@@ -36,7 +38,7 @@ onAddClick_Alarm = function (type)
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
-			url: "" + sUrl_agreement + "&phpgw_return_as=json",
+			url: sUrl_agreement,
 			data: {day: day, hour: hour, minute: minute, user_list: user, type: type, id: id},
 			success: function (data)
 			{
@@ -48,9 +50,9 @@ onAddClick_Alarm = function (type)
 	{
 		return false;
 	}
-}
+};
 
-onUpdateClickAlarm = function (type)
+onUpdateClickIndex = function (type)
 {
 
 	var oDate = $('#values_date').val();
@@ -96,21 +98,24 @@ onUpdateClickAlarm = function (type)
 		tcost[aData['id']] = aData['total_cost'];
 		icoun[aData['id']] = aData['index_count'];
 	}
+
+	var sUrl_index = phpGWLink('index.php', {'menuaction': 'property.uiagreement.edit_data'}, true);
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_index,
 		data: {id: id, ids: ids, mcost: mcost, wcost: wcost, tcost: tcost, icoun: icoun, type: type, date: oDate, index: oIndex},
 		success: function (data)
 		{
-			obj = JSON.parse(data);
-			var newstr = obj.replace("&amp;", "&", "gi");
+			var obj = JSON.parse(data);
+			var newstr = obj.replace(/&amp;/gi, "&");
 			JqueryPortico.updateinlineTableHelper(oTable1, newstr);
 			$('#values_date').val('');
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onUpdateClickItems = function (type)
 {
@@ -156,18 +161,18 @@ onUpdateClickItems = function (type)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {id: id, ids: ids, mcost: mcost, wcost: wcost, tcost: tcost, icoun: icoun, type: type, date: oDate, index: oIndex},
 		success: function (data)
 		{
-			obj = JSON.parse(data);
-			var newstr = obj.replace("&amp;", "&", "gi");
+			var obj = JSON.parse(data);
+			var newstr = obj.replace(/&amp;/gi, "&");
 			JqueryPortico.updateinlineTableHelper(oTable0, newstr);
 			$('#values_date').val('');
 			$('#new_index').val('');
 		}
 	});
-}
+};
 
 onActionsClickDeleteLastIndex = function (type)
 {
@@ -180,16 +185,21 @@ onActionsClickDeleteLastIndex = function (type)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "" + sUrl_agreement + "&phpgw_return_as=json",
+		url: sUrl_agreement,
 		data: {ids: oSelid, type: type, id: id},
 		success: function (data)
 		{
-			obj = JSON.parse(data);
-			var newstr = obj.replace("&amp;", "&", "gi");
+			var obj = JSON.parse(data);
+			var newstr = obj.replace(/&amp;/gi, "&");
 //                console.log(newstr);
 			JqueryPortico.updateinlineTableHelper(oTable0, newstr);
 			$('#values_date').val('');
 			$('#new_index').val('');
 		}
 	});
-}
+};
+
+set_tab  = function ()
+{
+
+};

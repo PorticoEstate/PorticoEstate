@@ -63,6 +63,7 @@
 			'query'					 => true,
 			'update_schedule'		 => true,
 			'start_inspection'		 => true,
+			'ad_hoc'				 => true,
 			'inspection_history'	 => true
 		);
 
@@ -307,11 +308,129 @@
 			$part_of_town['planned_status'] = $planned_status;
 		}
 
+
+		/**
+		 * Note: prelimilary test
+		 * @param type $part_of_towns
+		 * @param type $month
+		 * @param type $year
+		 * @param type $control_id
+		 */
+
+		private function get_scheduled_controls( $part_of_towns, $month, $year, $control_id  )
+		{
+
+			$month = $month ? $month : date('m');
+			$year = $year ? $year : date('Y');
+			$daysInMonth	 = $this->_daysInMonth($month, $year);
+
+			$items = array();
+
+			foreach ($part_of_towns as $part_of_town_id)
+			{
+				$_items = $this->get_items($year, $month, $control_id, 0, $part_of_town_id);
+
+				$items = array_merge_recursive($items, $_items);
+			}
+//			_debug_array($items);
+			$sort_names = array();
+			$controls = array();
+
+			for ($day = 1; $day <= $daysInMonth; $day++)
+			{
+				$date_string = date('Y-m-d', mktime(0, 0, 0, $month, $day, $year));
+
+				if(!empty($items[$date_string]))
+				{
+					$i=1;
+					foreach ($items[$date_string] as $item)
+					{
+						$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+
+						if($item['schedule']['info']['check_list_id'])
+						{
+							$control_link_data = array
+								(
+								'menuaction' => 'controller.uicase.add_case',
+								'check_list_id' => $item['schedule']['info']['check_list_id'],
+							);
+							$url_target = '_self';
+							$link = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+						}
+						else
+						{
+							$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list',
+									'deadline_ts'	 => $item['schedule']['info']['deadline_date_ts'],
+									'control_id'	 => $item['schedule']['info']['control_id'],
+									'serie_id'		 => $item['schedule']['info']['serie_id'],
+									'location_id'	 => $item['component']['location_id'],
+									'component_id'	 => $item['component']['id'],
+									'location_code'	 => $item['component']['location_code'],
+									'assigned_to'	 => $item['schedule']['info']['assigned_to'],
+									'type'			 => 'component'
+								));
+
+						}
+
+						switch ($item['schedule']['status'])
+						{
+							case 'CONTROL_REGISTERED':
+								$status = 'Registrert';
+								break;
+
+							case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
+							case 'CONTROL_PLANNED':
+								$status = 'Planlagt';
+								break;
+
+							case 'CONTROL_NOT_DONE':
+								$status = 'Ikke utført';
+
+							case "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS":
+							case "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS":
+							case "CONTROL_DONE_WITH_ERRORS":
+							case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
+								$status = 'Utført';
+								break;
+
+							case "CONTROL_CANCELED":
+								$status = 'Kansellert';
+								break;
+						}
+
+						$item_content = array(
+							'id'				 => "{$item['component']['location_id']}_{$item['component']['id']}",
+							'control_id'		 => $item['schedule']['info']['control_id'],
+							'serie_id'			 => $item['schedule']['info']['serie_id'],
+							'check_list_id'		 => $item['schedule']['info']['check_list_id'],
+							'deadline_date_ts'	 => $item['schedule']['info']['deadline_date_ts'],
+							'deadline_date'		 => $GLOBALS['phpgw']->common->show_date($item['schedule']['info']['deadline_date_ts'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'completed_date_ts'  =>	$component['schedule']['info']['completed_date_ts'],
+							'assigned_to'		 => $item['schedule']['info']['assigned_to'],
+							'link'				 => $link,
+							'name'				 => $desc,
+							'status'			 => $status
+						);
+
+						$i++;
+
+						$sort_names[] = $desc;
+						$controls[] = $item_content;
+					}
+				}
+
+			}
+
+			array_multisort($sort_names, SORT_ASC, $controls);
+
+			return $controls;
+		}
+
 		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null)
 		{
 
 			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows);
-			
+
 			return $historic_check_lists;
 		}
 
@@ -579,9 +698,9 @@
 						$calendar_array = $year_calendar->build_calendar($check_lists_array);
 						foreach ($calendar_array as $_month => $_month_info)
 						{
-							if($month !== $_month)
+							if($month && (int)$month !== $_month)
 							{
-//								continue;
+								continue;
 							}
 
 							if($_month_info)
@@ -687,7 +806,7 @@
 			foreach ($components as $component)
 			{
 				$timestamp = $component['schedule']['info']['planned_date_ts'] ? $component['schedule']['info']['planned_date_ts'] : $component['schedule']['info']['deadline_date_ts'];
-				
+
 				$date = $GLOBALS['phpgw']->common->show_date($timestamp, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 
 				$control_info[] = array(
@@ -799,7 +918,7 @@ HTML;
 				if($email[$item])
 				{
 					$week = date("W", $timestamp[$item]);
-					
+
 					$html = str_replace(array('__location__', '__week__', '__sender__'), array($location_name, $week, $GLOBALS['phpgw_info']['user']['fullname']), $html);
 
 					$toarray = array($email[$item]);
@@ -1007,7 +1126,7 @@ HTML;
 			{
 				phpgw::no_access();
 			}
-			
+
 			self::set_active_menu('controller::inspection_history');
 			$control_area_id = phpgw::get_var('control_area_id', 'int');
 
@@ -1119,7 +1238,7 @@ HTML;
 			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows);
 			$total = $this->so->total_records;
 
-			
+
 			$condition_degree = 0;
 
 			$soentity = createObject('property.soentity');
@@ -1291,7 +1410,7 @@ HTML;
 							(
 							'menuaction' => 'controller.uicase.add_case',
 							'check_list_id' => $item['schedule']['info']['check_list_id'],
-						);					
+						);
 						$url_target = '_self';
 						$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
 					}
@@ -1401,10 +1520,14 @@ HTML;
 		{
 
 			if (null == ($year))
+			{
 				$year = date("Y", time());
+			}
 
 			if (null == ($month))
+			{
 				$month = date("m", time());
+			}
 
 			return date('t', strtotime($year . '-' . $month . '-01'));
 		}
@@ -1490,7 +1613,7 @@ HTML;
 			}
 
 
-	
+
 			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
 				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
 
@@ -1507,6 +1630,7 @@ HTML;
 			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
 
 
+			$selected_part_of_towns = array();
 			$part_of_town_list	 = array();
 			$part_of_town_list2	 = array();
 			$_items = array();
@@ -1519,13 +1643,13 @@ HTML;
 
 					if ($part_of_town['selected'])
 					{
+						$selected_part_of_towns[] = $part_of_town['id'];
 						$checklist_items = $this->so_control->get_checklist_at_time_and_place($part_of_town['id'] , $control_id, $from_date_ts, $to_date_ts);
 						$_items = $_items + $checklist_items;
 					}
 				}
 			}
 			unset($part_of_town);
-
 
 			$items = array();
 			foreach ($_items as $location_id => $entry)
@@ -1563,7 +1687,7 @@ HTML;
 						$todo_list[] = array(
 							'id' => $check_list['schedule']['info']['check_list_id'],
 							'name' => "{$check_list['component']['xml_short_desc']}"
-						);			
+						);
 					}
 				}
 			}
@@ -1611,6 +1735,171 @@ HTML;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('start inspection');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::start_inspection';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start_inspection' => $data));
+
+		}
+
+		public function ad_hoc()
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			self::set_active_menu('controller::ad_hoc');
+			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
+			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+
+			if (13 == $month)
+			{
+				$month	 = 1;
+				$year	 += 1;
+			}
+
+			if ((string)$_REQUEST['month'] === '0')
+			{
+				$month	 = 12;
+				$year	 -= 1;
+			}
+
+			$control_area_id = phpgw::get_var('control_area_id', 'int');
+
+			$control_id		 = phpgw::get_var('control_id', 'int');
+			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
+
+
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			if($control_area_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_control_area_id", $control_area_id, $user_id);
+			}
+			else
+			{
+				$control_area_id = (int)phpgwapi_cache::user_get('controller', "calendar_control_area_id", $user_id);
+			}
+			if($control_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_control_id", $control_id, $user_id);
+			}
+			else
+			{
+				$control_id = (int)phpgwapi_cache::user_get('controller', "calendar_planner_control_id", $user_id);
+			}
+
+			if($part_of_town_id)
+			{
+				phpgwapi_cache::user_set('controller', "calendar_planner_part_of_town", $part_of_town_id, $user_id);
+			}
+			else if ($_POST)
+			{
+				phpgwapi_cache::user_clear('controller', "calendar_planner_part_of_town", $user_id);
+			}
+			else
+			{
+				$part_of_town_id = (array)phpgwapi_cache::user_get('controller', "calendar_planner_part_of_town", $user_id);
+			}
+
+			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+
+			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
+
+			$control_type_list = array(array('id' => '', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$control_type_list[] = array(
+					'id'		 => $control_type['id'],
+					'name'		 => $control_type['title'],
+					'selected'	 => $control_id == $control_type['id'] ? 1 : 0
+				);
+			}
+
+			$entity_groups = createObject('property.bogeneric')->get_list(array('type'		 => 'entity_group',
+				'selected'	 => $entity_group_id, 'order'		 => 'name', 'sort'		 => 'asc'));
+
+			$part_of_towns = createObject('property.bogeneric')->get_list(array(
+				'type'		 => 'part_of_town',
+				'selected'	 => $part_of_town_id,
+				'order'		 => 'name',
+				'sort'		 => 'asc'
+				)
+			);
+
+
+			$from_date_ts = strtotime("{$current_day_str} 0:00:00");
+			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
+
+
+			$selected_part_of_towns = array();
+			$part_of_town_list	 = array();
+			$_items = array();
+			foreach ($part_of_towns as &$part_of_town)
+			{
+				if ($part_of_town['id'] > 0)
+				{
+					$part_of_town['name']		 = ucfirst(strtolower($part_of_town['name']));
+					$part_of_town_list[]		 = $part_of_town;
+
+					if ($part_of_town['selected'])
+					{
+						$selected_part_of_towns[] = $part_of_town['id'];
+					}
+				}
+			}
+			unset($part_of_town);
+
+			$scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $month, $year, $control_id );
+
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
+			$cats->supress_info	 = true;
+
+			$control_area = $cats->formatted_xslt_list(array('format'	 => 'filter', 'globals'	 => true,
+				'use_acl'	 => $this->_category_acl));
+
+
+			$control_area_list = array();
+			foreach ($control_area['cat_list'] as $cat_list)
+			{
+				$control_area_list[] = array
+					(
+					'id'		 => $cat_list['cat_id'],
+					'name'		 => $cat_list['name'],
+					'selected'	 => $control_area_id == $cat_list['cat_id'] ? 1 : 0
+				);
+			}
+
+			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
+
+			$data = array
+			(
+				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
+				'current_year'	 => $year,
+				'next_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc',
+					'year' => $year,
+					'month' => ($month + 1),
+					)),
+				'prev_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc',
+					'year' => $year,
+					'month' => ($month - 1),
+					)),
+				'next_month'	 => lang(date('F', mktime(0, 0, 0, $month + 1, 1))),
+				'prev_month'	 => lang(date('F', mktime(0, 0, 0, $month - 1, 1))),
+				'img_green_check' => $GLOBALS['phpgw']->common->image('phpgwapi', 'green-check'),
+				'control_area_list'	 => array('options' => $control_area_list),
+				'entity_group_list'	 => array('options' => $entity_groups),
+				'part_of_town_list'	 => array('options' => $part_of_town_list),
+				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc')),
+				'control_type_list'	 => array('options' => $control_type_list),
+				'scheduled_controls'	=> array('ad_hoc_rows' => $scheduled_controls),
+			);
+
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+
+			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::Ad hoc';
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::ad_hoc';
+			self::render_template_xsl(array('calendar/calendar_planner'), array('ad_hoc' => $data));
 
 		}
 

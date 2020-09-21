@@ -395,7 +395,14 @@
 			$user_role = true;
 
 			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			if ($type == "location")
+			{
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			}
+			else
+			{
+				$buildings_on_property = null;
+			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
 

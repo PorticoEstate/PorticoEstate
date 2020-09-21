@@ -624,11 +624,6 @@
 						'text'	 => lang('import components') . ' (TIDA)',
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.index'))
 					),
-					'import_documents'			 => array
-						(
-						'text'	 => lang('import documents'),
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.index'))
-					),
 					'entity'					 => array
 						(
 						'text'		 => lang('Admin entity'),
@@ -1406,12 +1401,12 @@
 			{
 				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
 				$menus['navigation']['documentation']	 = array
-					(
+				(
 					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
 					'text'		 => lang('Documentation'),
 					'image'		 => array('property', 'documentation'),
 					'children'	 => array
-						(
+					(
 						'generic'		 => array(
 							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric_document.index')),
 							'text'	 => lang('generic document')
@@ -1429,6 +1424,16 @@
 						)
 					)
 				);
+
+				if ($acl->check('.document.import', PHPGW_ACL_PRIVATE, 'property'))//acl_manage
+				{
+						$menus['navigation']['documentation']['children']['import_documents']	 = array
+							(
+							'text'	 => lang('import documents'),
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_documents.index'))
+						);
+				}
+
 				if (is_array($entity_list) && count($entity_list))
 				{
 					foreach ($entity_list as $entry)

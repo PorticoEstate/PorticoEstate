@@ -703,7 +703,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, resource_id => phpgw::get_var('resource_id', 'int')));
 					}
 					else
 					{
@@ -809,7 +809,14 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						if($simple)
+						{
+							$this->redirect(array('menuaction' => $this->module . '.uibuilding.show', 'id' => $building_id));
+						}
+						else
+						{
+							$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						}
 					}
 					else
 					{
@@ -826,6 +833,10 @@
 						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
 							'secret' => $application['secret']));
 					}
+				}
+				else
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'history');
 				}
 			}
 			if (phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))
@@ -1593,6 +1604,10 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$application = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);

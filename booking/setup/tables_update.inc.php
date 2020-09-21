@@ -4401,7 +4401,7 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
-		/**
+	/**
 	 * Update booking version from 0.2.53 to 0.2.54
 	 *
 	 */
@@ -4433,3 +4433,88 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.54 to 0.2.55
+	 *
+	 */
+	$test[] = '0.2.54';
+
+	function booking_upgrade0_2_54()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_participant_log', array(
+			'fd' => array(
+				'id'				 => array('type' => 'auto', 'nullable' => false),
+				'reservation_type'	 => array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'reservation_id'	 => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_'				 => array('type' => 'timestamp', 'nullable' => true),
+				'to_'				 => array('type' => 'timestamp', 'nullable' => true),
+				'phone'				 => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'email'				 => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.55';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.55 to 0.2.56
+	 *
+	 */
+	$test[] = '0.2.55';
+
+	function booking_upgrade0_2_55()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_participant_log', 'quantity',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'default' => 1,
+					'nullable' => false
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.56';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.56 to 0.2.57
+	 *
+	 */
+	$test[] = '0.2.56';
+
+	function booking_upgrade0_2_56()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameTable('bb_participant_log', 'bb_participant');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.57';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+

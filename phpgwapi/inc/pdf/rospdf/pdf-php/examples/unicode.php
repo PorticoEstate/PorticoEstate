@@ -1,6 +1,4 @@
 <?php
-
-error_reporting(E_ALL & ~E_NOTICE);
 set_include_path('../src/'.PATH_SEPARATOR.get_include_path());
 
 include 'Cezpdf.php';
@@ -9,13 +7,12 @@ class Creport extends Cezpdf
 {
     public function __construct($p, $o)
     {
-        parent::__construct($p, $o, 'none', array());
+        parent::__construct($p, $o, 'none', []);
         $this->isUnicode = true;
         $this->allowedTags .= '|uline';
-        // always embed the font for the time being
-        //$this->embedFont = false;
     }
 }
+
 $pdf = new Creport('a4', 'portrait');
 
 $pdf->ezSetMargins(20, 20, 20, 20);
@@ -30,11 +27,12 @@ $pdf->setFontFamily($mainFont, $family);
 
 // select a font and use font subsetting
 $pdf->selectFont($mainFont, '', 1, true);
-$pdf->ezText('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidfgfdgdfgdfgdfg ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur. et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur', 10, array('justification' => 'full'));
+
+$pdf->ezText('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidfgfdgdfgdfgdfg ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur. et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur', 10, ['justification' => 'full']);
 $pdf->ezText("\n<b>Greek: (full justified)</b>");
-$pdf->ezText('Νες εα ελεστραμ σορρυμπιθ ινστρυσθιορ, υσυ διαμ ωπωρθεαθ τεμποριβυς ετ. Προμπτα βλανδιτ μωδερατιυς ευμ ευ, σεθερο ρεπυδιαρε αν φελ, φιξ πυρθο ρεγιονε φολυπθυα ατ. Σιθ δυις σωνσυλ ιρασυνδια ατ, νε νιηιλ φενιαμ φεριθυς ιυς, συ μελιορε ερροριβυς δισπυθανδο εσθ. Ηις εσεντ σοπιωσαε ιδ. Εξ εως μεις αυγυε ρεσυσαβο, φιξ φοσεντ μαλορυμ ινσιδεριντ ιν. Δισο ναθυμ σοντεντιωνες ευ μει.', 10, array('justification' => 'full'));
+$pdf->ezText('Νες εα ελεστραμ σορρυμπιθ ινστρυσθιορ, υσυ διαμ ωπωρθεαθ τεμποριβυς ετ. Προμπτα βλανδιτ μωδερατιυς ευμ ευ, σεθερο ρεπυδιαρε αν φελ, φιξ πυρθο ρεγιονε φολυπθυα ατ. Σιθ δυις σωνσυλ ιρασυνδια ατ, νε νιηιλ φενιαμ φεριθυς ιυς, συ μελιορε ερροριβυς δισπυθανδο εσθ. Ηις εσεντ σοπιωσαε ιδ. Εξ εως μεις αυγυε ρεσυσαβο, φιξ φοσεντ μαλορυμ ινσιδεριντ ιν. Δισο ναθυμ σοντεντιωνες ευ μει.', 10, ['justification' => 'full']);
 $pdf->ezText("\nCyrillic:");
-$pdf->ezText('ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор <u>КкЛлМмНнО</u> <u>оПпРр</u> <u>СсТтУу</u>', 10, array('justification' => 'full'));
+$pdf->ezText('ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор ыёюз лобортис ажжынтиор <u>КкЛлМмНнО</u> <u>оПпРр</u> <u>СсТтУу</u>', 10, ['justification' => 'full']);
 $pdf->ezText("\nArabic:");
 $pdf->ezText('لبسبيلتتاف لالبالفقث بببب');
 $pdf->ezText("\nHebrew:");

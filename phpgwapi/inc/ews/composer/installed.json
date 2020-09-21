@@ -18,7 +18,7 @@
             "ext-soap": "*",
             "php": ">=5.3.9"
         },
-        "time": "2017-10-04 01:14:17",
+        "time": "2017-10-04T01:14:17+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -45,35 +45,38 @@
     },
     {
         "name": "php-ews/php-ews",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/jamesiarmes/php-ews.git",
-            "reference": "405f03cb679eff59c84f223962c9cadf14b38450"
+            "reference": "eaad3c8d3c40721e2acf0732c1f398829e772c3c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jamesiarmes/php-ews/zipball/405f03cb679eff59c84f223962c9cadf14b38450",
-            "reference": "405f03cb679eff59c84f223962c9cadf14b38450",
+            "url": "https://api.github.com/repos/jamesiarmes/php-ews/zipball/eaad3c8d3c40721e2acf0732c1f398829e772c3c",
+            "reference": "eaad3c8d3c40721e2acf0732c1f398829e772c3c",
             "shasum": ""
         },
         "require": {
             "ext-soap": "*",
             "jamesiarmes/php-ntlm": "~1.0",
-            "php": ">=5.3.9"
+            "php": ">=7.1.0"
         },
         "require-dev": {
-            "mustache/mustache": "~2.0"
+            "mustache/mustache": "~2.0",
+            "phan/phan": "@stable",
+            "phpmd/phpmd": "@stable",
+            "squizlabs/php_codesniffer": "*"
         },
-        "time": "2017-10-04 01:18:36",
+        "time": "2019-01-29T02:33:58+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "1.0.x-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "jamesiarmes\\PhpEws\\": "src/"

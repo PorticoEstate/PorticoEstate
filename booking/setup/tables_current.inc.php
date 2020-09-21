@@ -1101,5 +1101,22 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
+		'bb_participant' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'reservation_type' => array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'reservation_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => true),
+				'to_' => array('type' => 'timestamp', 'nullable' => true),
+				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'quantity',	array('type' => 'int', 'precision' => 4,	'default' => 1,	'nullable' => false
+				)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);

@@ -2901,14 +2901,23 @@
 			unset($entry);
 
 			$split_amount = 0;
+			$_data = array();
 			foreach ($data as $entry)
 			{
 				$split_amount += (float)$entry[2];
-				if (!$entry[0] || !$entry[0] || !$entry[0])
+				// if there is empty rows at the end
+				if ($entry[0] == null && $entry[1] == null && $entry[2] == null)
+				{
+					continue;
+				}
+				if (!$entry[0] || !$entry[1] || !$entry[2])
 				{
 					throw new Exception('soinvoice::perform_bulk_split() - incomplete dataset in input');
 				}
+				
+				$_data[] = $entry; 
 			}
+			unset($entry);
 
 			if ($split_amount != $amount)
 			{
@@ -2921,7 +2930,7 @@
 
 			$_last_line_id = 0;
 
-			foreach ($data as $entry)
+			foreach ($_data as $entry)
 			{
 				$value_set	 = array
 					(

@@ -1,0 +1,780 @@
+= PorticoEstate Administration Manual
+:experimental:
+:sectnums:
+:toc:
+:toc-placement: preamble
+
+
+This Manual is for administrators of PorticoEstate.
+
+
+== Chapter 1. Introduction
+
+=== What is PorticoEstate
+
+PorticoEstate is a fork of phpGroupWare and is a multi-user web-based suite written in PHP.
+It is a very flexible pluggable framework capable of hosting applications like a group calendar,
+Addressbook, email, accounting ledger, inventory, and whatever else your can think of. These applications can share a common user store,
+and a flexible Access Control List (ACL) system to control access and information sharing.
+
+PorticoEstate has turned it's focus from groupware to Facilities management system - and comprices:
+
+* Locations and assets
+* Helpdesk
+* Condition survey
+* Maintenance planning
+* Project management / E-procurement-system
+* Integration with external systems (accounting, SMS, Email…)
+* Internal control
+* Rental management
+* Public booking (culture/sports - events)
+
+
+At it's core there is the phpgwapi,
+an API written for php, that provides some very useful functions and tools for developers, including the user store,
+which has several back ends, database abstraction, and a flexible templating system.
+Applications are then written using the phpgwapi and phpgw framework to provide web based tools to users.
+
+
+=== What does this HOWTO cover?
+
+In this HOWTO we will go through a typical base installation and configuration of a PorticoEstate.
+Some applications will require some extra configuration or install step, we will only cover the extra steps needed for FileManager.
+We will not cover standard setup of the prerequisites or any configuration other than SQL auth/user data store.
+We will also not cover the use of the applications, this is an Install and Configure HOWTO only.
+We will also initially concentrate on Linux, Apache, and MySql as that is what I use. Other details will be added later as contributed.
+I will be doing this HOWTO install on a default ubuntu 18.04 installation with Apache 2.4.29, PHP 7.4.7, PostgreSQL 12, and UWash IMAP-2001a all running on the same server.
+We will also be using the lettered modes for file permissions instead of octets.
+All recent chmod versions support this. We will also be installing phpgw as a regular user for security reasons that will be discussed in section 3.
+
+== Chapter 2. Installation
+
+Installation and Configuration of PorticoEstate has never been easier. Just
+point and click, yeah it's very easy.
+
+
+=== Requirements
+
+You will need PHP compiled and installed on your system. You will also need
+MySQL or PostgreSQL setup. If you are planning on using the email system, you
+will need to have an IMAP server installed and IMAP support compiled into PHP.
+You can have it installed as an Apache module or command line version, the
+Apache module is preferred. We will assume that you are running on a Linux or
+other Unix system for these steps. Windows is supported, but there is no
+documentation for it currently.
+
+
+In order to check if you have php installed create the file with your favorite
+text editor named test.php in your webserver root directory:
+
+----
+<? phpinfo(); ?>
+----
+
+Then point your browser to http://yourserverroot/test.php. You should get a
+very detailed page describing various options in php.
+
+
+Tested Systems:
+
+On Linux
+
+  * PHP 7.2 +
+  * Apache 2.4.x
+  * MySQL 5 or PostgreSQL 9.6 - 12
+  * Courier-IMAP 0.33+ and/or qmail 1.03 for POP3 access
+
+
+Install the php-modules as described in the link:../phpgwapi/doc/Vagrantfile[Vagrantfile]
+[NOTE]
+====
+xdebug is not needed (or desired) for production
+====
+
+Obtaining and Installing PorticoEstate
+
+Installing from TarBall
+
+Installing from a TarBall is very easy. The files should be installed in the
+webserver directory. Example steps (please adjust to your server's config):
+
+Grab your preferred packaged format (tar.gz, tar.bz2, or zip) and save it to a temporary directory.
+Next extract the archive:
+
+----
+    # tar zxf porticoestate-version.tar.gz
+----
+
+This will give you a "porticoestate" directory with lots of directories under it. The phpgw layout is as follows:
+
+----
+  --porticoestate\
+    |-- App 1\ (this is the root of an application)
+    | |-- inc\ (the applications classes and core files go here)
+    | |-- setup\ (the files needed to "install" the app go here)
+    | |-- templates\ (the app specific template and theme files go here)
+    |-- App 2\
+    | |-- inc\
+    | |-- setup\
+    | |-- templates\
+    .
+    .
+    .
+    and so on
+----
+
+Next move the porticoestate directory into your web root.
+There is no formula for where to put it, typically you would put it directly in /var/www/html/ or /home/httpd/html/ or where ever your apache DocumentRoot is.
+Alternatively you can install PorticoEstate using a virtual host.
+For this HOWTO we will be using my users home directory in /home/chris/htdocs/ and not doing any phpgw config as root.
+The only requirement is that every directory in the file system up to the directory you install in
+MUST have modes a+rx or 755 so that the anonymous web user can view the html and run the php scripts.
+The php files do not have to be executable unless you are using the php CGI, which is not recommended for a php application of this size and complexity.
+
+
+=== Installing from github
+
+Installing from a github is fairly easy. The files should be checked out in the
+webserver directory. You may have to get required permissions to install from
+github. Contact your system administrator if you dont have the permission to write
+to your webserver directory.
+
+To see a list of applications currently available via CVS, go to https://github.com/PorticoEstate/PorticoEstate[https://github.com/PorticoEstate/PorticoEstate]
+
+
+=== Development Branch in git
+
+Follow these steps (please adjust to your server's config):
+
+----
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ git clone https://github.com/PorticoEstate/PorticoEstate.git .
+----
+
+or if you prefer using svn:
+
+----
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ svn co https://github.com/PorticoEstate/PorticoEstate.git/trunk .
+----
+
+=== Stable Branch in github
+
+Follow these steps (please adjust to your server's config and the up-to-date
+stable Version - 2 at the moment):
+
+----
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ git clone --single-branch --branch Version-2_0-branch \
+    https://github.com/PorticoEstate/PorticoEstate.git .
+----
+
+or if you prefer using svn:
+
+----
+    $ cd /var/www/html
+    $ mkdir portico
+    $ cd portico
+    $ svn co https://github.com/PorticoEstate/PorticoEstate.git/branches/Version-2_0-branch .
+----
+
+=== Setting File Permissions
+
+There are a few directories which will need special file permissions set for
+PorticoEstate to work properly.
+
+Temp Directory (Required) - This can be /tmp for simplicity, but it is required
+for several apps to function properly. Simply make sure that the webserver can
+add/delete files in it.
+
+Files Directory (Required) - This can not be the files dir under the porticoestate
+dir. You will need to give the webserver account owndership of this directory.
+
+(outside document-root)
+
+----
+    # mkdir /somewhere/safe/files
+    # chown nobody:nobody files
+----
+
+[NOTE]
+====
+This assumes your webserver runs as user nobody, adjust for your installation
+====
+
+----
+    # chmod 700 files
+----
+
+Root Directory (Not recommended) - If you give the webserver account write
+access to the porticoestate directory, then the setup program can create the
+header.inc.php for you. Otherwise you will need to use the setup program to
+create it, and then you can manually save it to file.
+
+If you want to do it:
+
+----
+    # chown :nobody /var/www/html/porticoestate
+    # chmod 770 /var/www/html/porticoestate
+----
+
+You may have to get required permissions to do this. Contact your system
+administrator if you dont have the permission to write to your webserver
+directory.
+
+
+=== Setup the database
+
+You need to create empty databases for the setup app to create the tables in.
+
+
+==== MySQL
+
+Ensure that you have a working MySQL installation and that MySQL is running.
+
+Mandrake or Redhat:
+
+----
+    /etc/rc.d/init.d/mysqld start
+----
+
+other:
+    
+----
+    /usr/local/mysql/bin/safe_mysqld &
+----
+
+Create the porticoestate Database and give permissions to the portico user
+
+----
+   # mysqladmin -u someuser -p create portico
+----
+
+(enter password when prompted)
+
+----
+    # mysql -u someuser -p
+    mysql> grant all on portico.* to portico@localhost identified by "somepassword";
+----
+
+Make sure you change the password from "somepassword" to your MySQL
+password in the GRANT statement
+
+For more detailed user documentation on MySQL see their website: http://www.mysql.com
+
+
+==== PostgreSQL
+
+Ensure that you have a working PostgreSQL installation and that PostgreSQL is
+running.
+
+Ubuntu :
+
+----
+ sudo service postgresql start
+----
+
+Others:
+
+https://www.postgresql.org/docs/12/server-start.html
+
+Create the porticoestate database and user
+
+----
+    # sudo -u postgres createuser --superuser $USER
+    # sudo -u postgres psql
+    # postgres=# \password $USER
+----
+
+For more detailed user documentation on Postgresql see their website:
+http://www.postgresql.org
+
+
+=== Setup/Configure PorticoEstate
+
+==== configure header file
+
+Point your browser to http://yourserverroot/porticoestate/setup/ which will
+create (or upgrade) the header.inc.php and database tables. Setup will attempt
+to determine what version of the PorticoEstate databases and header.inc.php you
+have installed, and upgrade to the most recent version.
+
+Most values for the header setup can be left as the default, be sure to enter a
+password for header admin, and change the password for your DB, and for
+configuration.
+
+Setup will try and guess some good defaults for your setup. You should verify each one, especially the database name and user.
+If you don't know what an item affects, the default is fine.
+The "Admin Password" will be used to get back into this header manager,
+and the "Configuration Password" will be used to get into the other config
+options and to install applications.
+
+[TIP]
+====
+Enable libsodium will encrypt all values in the header.inc.php
+====
+
+[NOTE]
+====
+The Domain select box is only usefull if you have multiple databases
+====
+
+
+Once you have finished your configuration, you can have PorticoEstate write it
+directly if you changed permissions on the directory, or you can download or
+view it with your browser, and save it in the directory yourself.
+
+Whichever you choose, I recommend not leaving this world writable,
+and only making it writable when you actually need to change some configuration,
+which is very rare once you have a working system.
+
+
+==== Site Configuration
+
+After header configuration,
+login to Setup/Config Admin with the password you defined in the Header.
+This stage of Setup has 4 basic steps, the status of each step can be a little misleading, but more on that later.
+You should have a message saying "Your database is working, but you don't have any applications installed"
+and an Install button. If not, then something is wrong with your database or the database user permissions.
+Click Install and with any luck you will not get any errors.
+Errors at this stage will also typically be the fault of the database server in some way.
+If you need to fix something and try again it's recommended to drop any and all the tables from the database,
+but not the database itself. Once it's all ok, click the Recheck button. You will be told everything is done, but only defaults are in and not all defaults are good so lets check them.
+
+In Step 2, edit the configuration. Do no yet create the Admin and demo accounts, we'll do that later.
+These are the options you need to check, the rest are optional or the defaults are fine or recommended.
+
+
+• You will need to set a tmp path, "/tmp" is usually good enough, but it can be anywhere that is writable by apache/IIS.
+• You need to set the full path to your files directory.
+• For the URL, it is recommended that you don't include the server name or http:// because some apps and some configurations have a problem with this, so for mine it's "/~chris/porticoestate". Do not ever include the "index.php" or "login.php" in this URL!
+• Setup should fill in your servers host name for you, you can change it to your web sites name if you are using a vhost.
+• If you enabled mcrypt in the header, set your preferences for it.
+• Give your site a name to show in the title
+• If you plan on having AOL, or any Australian users access the site or your clients are behind a transparent proxy pool you will need to set "check ip address of all sessions:" to No. You will know you need this if they consistantly get "session could not be verifed" messages when their login works fine over the LAN.
+
+
+In Step 3, only English/US translations are installed by default. Select any others you want and choose the "Only add new phrases" option and install.
+
+In Step4 we install the applications. The way phpgw works, all sections such as the calendar and addressbook are separate applications.
+You can have as many or as few as you want installed and you can choose which users get access to what applications.
+By default, only the phpgwapi is installed. Some applications have dependencies and cannot be installed until those apps are installed.
+First we will install the apps that most everything depends on, admin, manual, and preferences.
+Check their boxes in the Install column and click Submit. Do not check everything at once, this will fail most of the time.
+You will get a status message for each part of the setup and a link at the bottom to Go Back to the list.
+
+Because this is a basic setup HOWTO we are not going to install all the apps.
+You can come back into setup later and play with the rest on your own.
+Lets install addressbook, calendar, email, messenger, notes, phpsysinfo, filemanager, and todo. For a description of what each app is good for,
+
+By now all the apps with dependency problems are ready for installation, but I'm going into them.
+Click Cancel to go back to the main setup screen.
+
+Now we are ready to create the admin and demo accounts.
+Click where it says. Give your site admin a username, I'm going to use "admin", and a password.
+You can create the demo accounts if you want, they can always be deleted later.
+Submit it and logout of setup.
+
+
+==== Testing the install
+
+If your config is setup properly you can now login. Point your browser to the
+installed location and login with the new admin username and password you
+created.
+
+
+==== Basic Administration
+
+You will have the default "bootstrap" template and a blue color theme.
+you can change this in Preferences (link on the top right).
+On the preferences pages as Admin you can select the Default or Forced preferences.
+Default only applies to new users but lets them change it later, and Forced will change any existing users too and disables the ability to change it.
+In these default and forced prefs if you leave an option as "Select One" or leave it blank,
+the system default will apply and the users will be allowed to change that option.
+Go ahead and find which template you like for a default by selecting one under Your Preferences then set it to be the default or force it.
+
+By default the only app granted access to is the Administration app.
+Using this app you can change some site settings without using the setup app,
+manage users and groups and installed applications, and other things.
+Let's edit User accounts and edit our Admin user.
+If you leave the password fields blank the current password will not be changed.
+To demonstrate how user and group application permissions work, make sure your user is in both Default and Admin groups,
+leave Administration checked, and check only System Information.
+Any app you grant access to will not show up until you do any one other thing.
+This is because the menu list is built before the admin apps runs to save the changes.
+System Information does not have a menu icon. It's only accessible through the admin app.
+Now go into User Groups and edit the Admin group. Select Messenger. Now edit the Default group.
+you will notice the Messenger icon in your menu now.
+Give the default group access to Addressbook, Calendar, Notify Window, Preferences, User Manual, E-Mail, filemanager, and To Do List.
+Now submit your changes and edit the default group again. Click the little blue box in the ACL column next to To Do and a new window will open.
+Here you can use the ACL to grant permissions to users data for other users. Grant Read, Add and Edit for Admins and only Read for Default.
+Users will also have access to this tool through the Preferences for Apps that support it so they can grant even more granular access.
+Submit and close the window. Go back to the Administration app, you now have a section for each of the apps you have rights to use.
+Go into each one and set anything needed for your installation. To use Email be sure to enter your site settings including an SMTP server.
+The Email app does not use php's built in mail() function nor a local sendmail,
+it speaks STMP so that it can support more advanced MIME functions like a real email client.
+Also note here that in order for email to work, your phpgw usernames and passwords MUST be exactly the same as your mail server accounts.
+If they are not, or you don't want them to be, you will have use the Custom email settings and set it for each user, one at a time.
+
+The Manual app will give you some insight on how to work each of the apps, but be aware that some of the information is out of date.
+
+Hopefully this will give you enough of a start to begin using PorticoEstate for your workgroup needs!
+
+
+==== Installing additional applications
+
+Once you have the core PorticoEstate install up and running, you may want to
+install additional applications.
+
+You should consult any README or INSTALL files that come with the new
+application.
+
+Log into /setup and click on manage applications - and then select the desired application for install.
+
+
+You need to give either users or relevant groups access to the application in order
+to be able to access it.
+
+
+== Application Specific Tasks
+=== Filemanager group file sharing
+
+These instructions will show you how to setup a shared group area in Filemanager for a new group called "files".
+
+• In administration click "user groups". Then click Add.
+• For the group name enter "files". In the list box, hold the CTRL key and select all the users that will be allowed to share files in this group.
+• Check the box for Filemanager and click Submit chnages. This will transparently grant access to the Filemanager application to the selected users if they don't already have it.
+• You should be back at the groups lists now, click Edit for the files group.
+• In the ACL (Access Control List) column, click the little box for Filemanager to pop up a new window to set the permissions.
+• Setting permissions is very flexible, you can even have non-members of a group have varied levels of access to a group. We simply want all users in the files group to have full access. Check all 4 boxes in the "files" row. The "Private" column is not needed here because group based filemanagers don't have an awareness of "private" records.
+• Save and then close the new window.
+• Save any changes to the group.
+• Go to the Filemanager application.
+• To the far left of the current folder name (the one in red at the top) there is a folder icon with an up arrow on it. Click this to go up one level to see the groups and users (user sharing is not yet implemented) folders that you have access to. When you go here any group folders you have access to that have not been created yet will be automaticaly created.
+• You can now go into the group folder and share files.
+• Also, after the group folder has been create by the first user to look for it, all users in the group will be able to see that folder in the drown down list in the "Go to: Copy to: Move to:" row from any of their folders.
+
+
+== Security
+=== World writable files and keeping your configuration safe
+
+Obviously having files that any user on your system, including the anonymous "nobody" user that apache runs under, can write to is a security risk.
+First we'll talk about what files PorticoEstate wants to be world writable and why, then we'll talk about how to manage the risks this imposes. Last we'll discuss some myths and other concerns.
+Some other phpgw applications might introduce other files and risks, hopefully what we talk about here will give you enough knowledge to recognize them and reduce any vulnerabilities.
+
+As discussed earlier, having a world writable file in you web root is a rather serious security risk, especially if that file will accept raw user data.
+It becomes trivial for someone to add php code or any type of script or cgi code your server supports and execute it on your system.
+Risk is reduced slightly because it would be executed as the "anonymous" nobody user that apache runs under but still would allow access to your header.inc.php and thus your database,
+as well as access to /etc/* where all sorts of fun and dangerous information could be abused. So in phpgw the only files required to be writable at all are under the files directory,
+and that's only if your planning on using the Filemanager or apps that use the VFS. Hopefully we've removed this risk by moving the files dir outside of the web root so that cannot be accessed directly and thus not executed.
+As for the header.inc.php, it never really needs to be world writable, but it can be convenient to make it so when you have to change something in the header manager.
+After making the changes the files should have the world write permissions removed.
+It does need to be world readable but the risk is reduced since the file is php and if accessed directly will be parsed on the server and send nothing to the client at all.
+
+
+=== Myths and Truths
+"the porticoestate directory needs to be mode 777" Ack! no! this makes your whole tree world writable!
+all it takes is one malicious user to upload a file that edits the login files to record all logins and passwords for later abuse and your done for, start working on that resume.
+
+"the porticoestate directory needs to be owned by the same user apache runs under" Very false! this is in essence the same thing as mode 777!
+
+"have the tree owned by apache's user and mode 700 is safer" well, not exactly. Having the header.inc.php owned by apache's user and mode 400
+is about as safe as you can get since then other system users can't read your config, but now root need to maintain this file, which is just not ideal.
+
+"having php pipe certain files like Excel and Word files causes problems, direct access is needed" At one time, yes,
+but that should all be fixed. You know the risks now so that's your call if you want to grant direct access..
+
+
+=== Why install as a starndard user?
+On my servers I maintain the main websites as regular users, including file ownership.
+This is more secure because even if the site is somehow comprimised, only a user account is affected. Now,
+if the site is maintained as root, well, I don't even wanna think about that. Also, using vhosts,
+this allows me to make users for each web site and let other people maintain the site without ever having to worry about root access.
+"root" priveledges are very rarely needed to install any web based application that runs on apache, why
+take the risk doing it anyway when it's not any harder to install as a user.
+For this HOWTO I used a regular user account's web space, but I could have just as easily put porticoestate into it's own directory
+under that user account and made an apache alias or a simple softlink (ln -s) to have the site show up as http://server/porticoestate/.
+This would even allow me to assign a user to maintain just the phpgw install and nothing else on the server if I so wanted.
+
+=== Virtual Hosts on Apache
+For information about running PorticoEstate in a virtual host, please refer to doc/phpgw-apache.conf.
+This document all includes some apache security options when running PorticoEstate.
+
+=== Troubleshooting
+
+==== Problems
+
+First read, check and understand the
+A collection of problems from users that cover a wide variety of subjects (many having nothing to do with porticoestate)
+
+• name and version of your webserver (on redhat/fedora/mandrake the default webserver is apache, get the version rpm -qa | grep httpd)
+• name and version of your database (on redhat etc rpm -qa | grep mysql or rpm -qa | grep postgresql)
+• version of php (on redhat etc rpm -qa | grep php)
+• version of phpgw (the login-box gives u the version and it might also be on the bottom of other screens), and the source of the version
+
+We're just adding to these as they come up .. so be patient
+
+Before posting double check that you have **READ AND FOLLOWED THE PREVIOUS SECTIONS OF THIS DOCUMENT !!**
+
+==== PHP
+most people can get apache and php installed but many people then run into problems
+
+• php pages display as source code .. look into the php settings you should have in httpd.conf
+• make sure you have installed php-imap (you need php-imap in order to connect to an imap server from php) and php-pgsql
+and php-mysql (you need one of these in order to connect to your database server) if you intend to use any of them (they're usually separate software packages)
+
+==== Email
+System setup for Email gets so many problems that it gets it's own section: email-FAQ . Here's some general info to get you started.
+
+• imap and pop3 is for recieving, smtp is for sending
+• can't send or can't receive. Before you do anything else, please check your server settings in Admin, Email, Site Configuration and also try to use email through another email client program
+• small size limit on email (0.5 MB). For apache 2 and up, there is a setting in php.conf that says LimitRequestBody 524288 which is 512k, change it to a higher size (for 8meg LimitRequestBody 8388608) and restart your apache webserver
+• email app folder list includes .dot files in my home directory. Look into your imap setup and make sure your email server is putting you email in a subdir of your home directory, not your home directory itself
+• sometimes I get Variable passed to each() error on class.mail_dcom_imap_sock.inc.php, and sometimes it works fine - socket support isn't finished, install php-imap
+
+
+==== Tips to increase PorticoEstate response time
+This section is based on user tips for how to increase your server's speed for serving up phpgw pages.
+This will start out kind of general since PorticoEstate can run on so many hardware platforms with so many combinations of web servers and databases but hopefully people will add more specific tips as time goes by.
+To add your tips please leave an issue at github.
+
+* reduce or prevent any memory swaps to the hard drive (a killer for any kind of server)
+* php.ini (usually /etc/php.ini on GNU/Linux systems) has cache settings
+* use a php accelerator (this basically holds php code in a cache so the web server doesn't have to load it each time), the best open source php cache is...
+* mysql
+* postgresql .. look for the file postgresql.conf
+* turn off IP address lookups and turn on use cookies and php session management in phpgoupware setup, config
+* look for network traffic bottlenecks and handle those with hardware.
+This is usually only a problem on LANs with a larger user base but would be applicable with a small user base on a 10MB LANs.
+A relatively small number of concurrent users (20 or so) can eat up a 1.5MB DSL internet connection (additional users could be connected from the
+LAN at the same time without affecting the internet network connection) so you would want to get a faster connection.
+
+
+== Suggested PHP Configuration
+This is a suggested php.ini config for running phpGroupWare 0.9.16 on php. It is roughly in the order of the paramters in you php.ini file.
+These recommendations are based on feedback from users and developers.
+
+
+* Resources
+
+----
+ max_execution_time = 90
+----
+
+This allows for encoding/decoding large file attachments on slower machines and other complex functions.
+
+----
+ memory_limit = 256M
+----
+
+At least this value should help with more complex operations.
+
+* Errors
+
+----
+	error_reporting = E_ALL & ~E_NOTICE
+----
+Having this set to E_ALL, will cause all types of problems if left to display on the screen.
+E_NOTICE are non-fatal errors such as undefined variable etc. Having this set to E_ALL only will dramatically increase the size of your log files if you log errors.
+
+----
+ display_errors = Off
+----
+
+This can cause header output problems if left on. They are better stored in your log file and that way you have a record of any problems.
+
+----
+ log_errors = On
+----
+
+See above.
+
+//* Databases +
+//Replace [rdbms] with the data module you are using
+//
+//----
+// [dbms].allow_persistent = Of
+//----
+
+// Only turn this option on if you want to use persistent databse connections. Generally persistent connections are only of benefit if you are using a highly tuned apache install with a small user base.
+
+* File Uploads
+
+----
+ file_uploads = On
+----
+
+If you want to use email, filemanager, infolog or any apps that upload files this must be set to on.
+
+----
+ upload_max_filesize = 8M
+----
+
+At least this. This will allow for larger email attachments and phpwebhosting files. Use filesize * 4 = memory_limit to allow for base64 encodes.
+
+* PHP Sessions
+
+----
+ session.save_path = /tmp
+----
+
+Your httpd must be able to read and write to this directory, if you intend to use php sessions.
+
+----
+ session.gc_maxlifetime = 7200
+----
+
+Set this to what you want to be your session time out limit. It is in second so set it to 3600 if you want it to one hour. The default is 1440 or 24mins, which is generally too short.
+
+* Globals
+
+----
+ register_globals = Off
+----
+
+it should work with this set to Off. If you find this caused problems, please log them on github.
+
+* Directories
+
+----
+ open_basedir = "/path/to/porticoestate:/path/to/phpgw-vfs:/path/to/temp"
+----
+
+This directive will prevent PorticoEstate from accessing any files outside of the directories specified. AFAIK all symlinks are resolved.
+For more information please refer to the PHP website.
+
+* THE SUPER GLOBAL ARRAY REQUEST
+
+----
+ variables_order = "GPCS"
+ request_order = "GPCS"
+----
+
+== Suggested Apache Config File
+
+[source,]
+----
+
+
+# phpGroupWare suggested apache config file
+# Written by Dave Hall
+# Copyright © 2004 – 2006 Free Software Foundation Inc
+# License GNU GPL
+# See the php configuration doc and php.net for more information
+# regarding these configuration options
+
+# Copy this file to /etc/apache2/conf.d (or where your apache config files are)
+# Add the following to your virtual host section of Apache
+# for the vhost phpgw is running on
+#
+# Like so:
+
+# <$ip>:[<$port>]>
+# #Normal VirtualHost info here
+# Include /etc/apache/phpgw-apache-config.conf
+# Options -Indexes
+#
+#
+
+# Prevent direct execution of classes
+<Files ~ "\.inc*">
+        Order allow,deny
+        Deny from all
+</Files>
+----
+
+
+== Chapter 3. Upgrading
+
+Upgrading from github
+
+Follow these steps to upgrade a svn install (please adjust to your server's
+config):
+
+----
+$ cd /var/www/html/portico
+$ svn up
+----
+
+After updating from github, be sure to return to the configuration page [/setup]
+and update any necessary tables.
+
+
+== Chapter 4. General
+
+Here will go an overview of categories and other overall topics.
+
+
+
+=== Categories
+
+
+
+=== Themes
+
+
+
+=== Access Control Lists
+
+
+
+=== Translations
+
+
+
+== Chapter 5. Calendar
+
+
+
+== Chapter 6. Email
+
+
+
+== Chapter 7. Addressbook
+
+
+
+== Chapter 8. Notes
+
+
+
+== Chapter 9. Todo
+
+
+
+== Chapter 10. Project
+
+
+== Chapter 11. File Manager
+
+
+== Chapter 12. Security
+
+
+== Chapter 13. Performance Tuning
+
+=== Linux
+
+
+=== Apache
+
+
+=== PHP
+
+
+=== Database
+
+== Copyright, Disclaimer and credits
+
+=== Copyright & Disclaimer
+Written by Chris Weiss, with contributions from Dave Hall, Brain Johnson and others.
+This document is Copyright © 2000-2004 Free Software Foundation Inc. Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License , Version 1.1 or any later version published by the Free Software Foundation. A copy of the license is available at http://www.gnu.org/copyleft/fdl.html.
+While this document does provide some recommendations on security, it is not meant to totally prevent an attack, only to help you manage the risk involved. Preventing an attack is solely up to the site administrator.
+There is no guarantee that following this will get you a working phpGroupWare, every system is a little different and I cannot cover all cases.
+

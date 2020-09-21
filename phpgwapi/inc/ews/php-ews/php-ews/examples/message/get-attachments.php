@@ -1,6 +1,6 @@
 <?php
 /**
- * This example shows how to get and save teh attachments for a message.
+ * This example shows how to get and save the attachments for a message.
  * Ideally, this would be split into multiple classes (remember, single
  * responsibility principle), but for the purposes of this example we'll just
  * include it all in one file. This example can be modified to get attachments
@@ -118,7 +118,7 @@ foreach ($response_messages as $response_message) {
         $attachments = $attachment_response_message->Attachments
             ->FileAttachment;
         foreach ($attachments as $attachment) {
-            $path = "$file_destination/" . $attachment->Name;
+            $path = $file_destination . '/' . str_replace(['/','\\',chr(0)], '', $attachment->Name);
             file_put_contents($path, $attachment->Content);
             fwrite(STDOUT, "Created attachment $path\n");
         }

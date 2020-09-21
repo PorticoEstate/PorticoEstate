@@ -781,6 +781,9 @@
 				);
 			}
 
+
+			$locations			 = $this->soadmin_location->select_location_type();
+
 			foreach ($attribute_info as $_attribute_info)
 			{
 
@@ -797,6 +800,12 @@
 				else
 				{
 					$input_type	 = 'text';
+					$exchange	 = false;
+				}
+
+				//hack...
+				if($type_id < count($locations))
+				{
 					$exchange	 = false;
 				}
 

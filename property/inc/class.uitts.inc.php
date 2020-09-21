@@ -4045,7 +4045,7 @@ JS;
 			$data		 = array(
 				array(
 					'col1'	 => "{$organisation}\n{$department}\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
-					'col2'	 => "Saksbehandler: {$from_name}\nRessursnr.: {$ressursnr}"
+					'col2'	 => "Saksbehandler: {$from_name}"//\nRessursnr.: {$ressursnr}"
 				),
 			);
 
@@ -4278,6 +4278,9 @@ JS;
 
 			foreach ($location_exceptions as $location_exception)
 			{
+				$location_exception['category_text'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<c:alink:\\0/>\\0</c:alink>",$location_exception['category_text']);
+				$location_exception['location_descr'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<c:alink:\\0/>\\0</c:alink>",$location_exception['location_descr']);
+
 				$pdf->ezText($location_exception['category_text'], 14);
 
 				if ($location_exception['location_descr'])
@@ -4606,9 +4609,9 @@ JS;
 				. "{$department}<br/>"
 				. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
 				. "</td>";
-			$body		 .= "<td style='vertical-align:top;'>Saksbehandler: {$user_name}<br/>"
-				. "Ressursnr.: {$ressursnr}<br/>"
-				. "</td>";
+			$body		 .= "<td style='vertical-align:top;'>Saksbehandler: {$user_name}<br/>";
+//			$body		 .= "Ressursnr.: {$ressursnr}<br/>";
+			$body		 .= "</td>";
 
 			$invoice_address = lang('invoice address') . ":<br/>{$this->bo->config->config_data['invoice_address']}";
 
@@ -4660,6 +4663,11 @@ JS;
 			}
 
 			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor		 = true);
+			foreach ($location_exceptions as & $_location_exception)
+			{
+				$_location_exception['category_text'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['category_text']);
+				$_location_exception['location_descr'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['location_descr']);
+			}
 
 			$important_imformation = '';
 			if ($location_exceptions)

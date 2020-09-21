@@ -277,10 +277,16 @@
 	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
 	{
 
-		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
+		if (!(error_reporting() & $error_level)) // 0 == @function() so we ignore it, as the dev requested
 		{
 			return true;
 		}
+
+		/*old - pre php 8*/
+//		if ( error_reporting() == 0 ) // 0 == @function() so we ignore it, as the dev requested
+//		{
+//			return true;
+//		}
 /*
 _debug_array($error_level);
 _debug_array($error_msg);
@@ -867,6 +873,9 @@ HTML;
 				$cookietime = time() + 60;
 
 				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($_GET),$cookietime);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_1', 'testverdi_1',$cookietime);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_2', 'testverdi_2',$cookietime);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_3', 'testverdi_3',$cookietime);
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
