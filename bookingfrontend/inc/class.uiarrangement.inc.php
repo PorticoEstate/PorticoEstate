@@ -23,7 +23,7 @@
         {
             echo "hellos";
 
-            $arrangement['test']="test";
+            $arrangement['dickens']="test";
             $config = CreateObject('phpgwapi.config', 'booking');
             $config->read();
             _debug_array($arrangement);
