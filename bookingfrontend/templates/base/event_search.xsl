@@ -1,14 +1,13 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <div class="content">
-        <p>This is a paragraph <xsl:value-of select="arrangement/dickens"/> </p>
+        <p>This is a paragraph <xsl:value-of select="event_search"/> </p>
 
 
-        <h2 class="header">Arrangement</h2>
         <div class="container searchContainer">
             <div class="input-group input-group-lg mainpageserchcontainer">
-                <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
+                <input type="text" class="eventsearchbox" aria-label="Large">
                     <xsl:attribute name="placeholder">
-                        <xsl:value-of select="php:function('lang', 'Search arrangement')"/>
+                        <xsl:value-of select="php:function('lang', 'Search for events')"/>
                     </xsl:attribute>
                 </input>
                 <div class="input-group-prepend">
@@ -18,6 +17,7 @@
                 </div>
             </div>
             <div id="search-autocomplete"></div>
+            <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
 
         </div>
         <div id="welcomeResult" class=" container">
