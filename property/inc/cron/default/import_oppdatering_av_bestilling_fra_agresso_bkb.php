@@ -323,7 +323,7 @@
 		{
 			$external_project_id = trim($data[0]);
 			$prosjektstatus		 = trim($data[1]);
-			$order_id			 = trim($data[2]);
+			$order_id			 = (int)trim($data[2]);
 
 			$id = false;
 
