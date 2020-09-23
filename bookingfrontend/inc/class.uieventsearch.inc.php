@@ -46,7 +46,7 @@
         public function upcomingEvents()
         {
             $currentDate = date('Y-m-d H:i:s');
-            $this->bosearch->soevent->get_events_from_date($currentDate);
+            return $this->bosearch->soevent->get_events_from_date($currentDate);
         }
 
         public function query()

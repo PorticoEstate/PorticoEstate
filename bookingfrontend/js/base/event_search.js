@@ -1,5 +1,5 @@
 function getUpcomingEvents() {
-    var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents"}, true);
+    let requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents"}, true);
     console.log(requestURL);
     $.getJSON(requestURL, function (result) {
         console.log(result.results.length)
@@ -13,6 +13,5 @@ function getUpcomingEvents() {
 
 
 $(document).ready(function () {
-    console.log("getting ready")
-   getUpcomingEvents();
+    getUpcomingEvents();
 });
