@@ -366,6 +366,7 @@
 				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'session_id' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 				'agreement_requirements' => array('type' => 'text', 'nullable' => True),
+				'external_archive_key' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

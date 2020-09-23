@@ -4588,3 +4588,85 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.60 to 0.2.61
+	 *
+	 */
+	$test[] = '0.2.60';
+	function booking_upgrade0_2_60()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
+
+		$receipt_section_common = $custom_config->add_section(array
+			(
+				'name' => 'common_archive',
+				'descr' => 'common archive config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Export / import method',
+				'choice'		=> array('public360'),
+			//	'value'			=> '',
+			)
+		);
+
+		$receipt_section_public360 = $custom_config->add_section(array
+			(
+				'name' => 'public360',
+				'descr' => 'public360 archive config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_public360['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'authkey',
+				'descr'			=> 'authkey',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_public360['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'webservicehost',
+				'descr'			=> 'webservicehost',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_public360['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'debug',
+				'descr'			=> 'debug',
+				'choice'		=> array(1),
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_application', 'external_archive_key',
+				array(
+					'type' => 'varchar',
+					'precision' => '64',
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.61';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

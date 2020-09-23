@@ -287,3 +287,61 @@
 	$aclobj->add('preferences', '.', 1);
 	$aclobj->add('preferences', 'run', 1);
 	$aclobj->save_repository();
+
+	$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
+
+	$receipt_section_common = $custom_config->add_section(array
+		(
+			'name' => 'common_archive',
+			'descr' => 'common archive config'
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_common['section_id'],
+			'input_type'	=> 'listbox',
+			'name'			=> 'method',
+			'descr'			=> 'Export / import method',
+			'choice'		=> array('public360'),
+		//	'value'			=> '',
+		)
+	);
+
+	$receipt_section_public360 = $custom_config->add_section(array
+		(
+			'name' => 'public360',
+			'descr' => 'public360 archive config'
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_public360['section_id'],
+			'input_type'	=> 'password',
+			'name'			=> 'authkey',
+			'descr'			=> 'authkey',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_public360['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'webservicehost',
+			'descr'			=> 'webservicehost',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_public360['section_id'],
+			'input_type'	=> 'listbox',
+			'name'			=> 'debug',
+			'descr'			=> 'debug',
+			'choice'		=> array(1),
+		)
+	);
+

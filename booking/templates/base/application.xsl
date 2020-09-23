@@ -550,7 +550,7 @@
 									</h4>
 								</legend>
 							</div>
-								<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
+							<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
 						</div>
 
 					</div>
@@ -649,6 +649,22 @@
 										</div>
 									</xsl:if>
 								</xsl:if>
+								<div>
+									<form method="POST" action ="{export_pdf_action}" >
+										<input type="hidden" name="export" value="pdf"/>
+										<input onclick="return confirm('{php:function('lang', 'transfer case to external system?')}')" type="submit" value="{php:function('lang', 'PDF-export to archive')}" class="pure-button pure-button-primary">
+											<xsl:if test="not(application/case_officer)">
+												<xsl:attribute name="disabled">disabled</xsl:attribute>
+											</xsl:if>
+										</input>
+										<label for="preview">
+											<input name="preview" type="checkbox" value="1" id="preview" />
+											<xsl:value-of select="php:function('lang', 'preview')"/>
+
+										</label>
+									</form>
+								</div>
+
 								<!--dd><br/><a href="{application/dashboard_link}"><xsl:value-of select="php:function('lang', 'Back to Dashboard')" /></a></dd-->
 							</div>
 						</div>

@@ -827,4 +827,6 @@ Register in	booking	nn	Inn-registrering
 Register out	booking	nn	Ut-registrering
 booking_async_task_delete_participants	booking	nn	Slette gamle deltagerregistreringer
 register participant text	booking	nn	Registrering av deltakar
+participant limit	booking	nn	Max antal deltakarar
 additional requirements	booking	nn	Tilleggvilkår
+PDF-export to archive	booking	nn	Eksporter saken som pdf til arkiv
