@@ -255,10 +255,12 @@ a {
     background-color: #DDDDFF;
     padding: 40px;
     width:100%;
-    max-width: 1440px;
     text-align: center;
 }
-
+.pageContentWrapper{
+    margin:auto;
+    max-width: 1240px;
+}
 #searchContainer #searchWrapper{
     margin-bottom: 20px;
 }
@@ -284,8 +286,41 @@ a {
 #locationFilter, #dateFilter{
     width:100%;
 }
-#titleContainer{
-  
+
+.activityList .activityRow{
+  border-radius: 12px;
+  border: solid 1px #ebebeb;
+  background-color: #ffffff;
+  margin: 10px;
+  padding:10px;
+}
+.activityRow .activityHeaderText{
+  font-family: Rubik !important;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #0b1214;
+}
+
+.activityRow .activityTitle{
+    width:50%;
+}
+
+.boldText{
+    font-weight:bold;
+}
+
+.activityRow .activityHeaderTitleSegment{
+    padding:10px; 
+    padding-left: 20px;
+    
+}
+
+.activityRow *{
+    display:inline-block;
+}
+.headerText{
   font-family: Martel;
   font-size: 2em;
   font-weight: 900;
@@ -293,15 +328,18 @@ a {
   font-style: normal;
   line-height: 1.5;
   letter-spacing: normal;
-  text-align: center;
   color: #3a3a4c;
-  padding-bottom:40px;
+  padding-left:15px;
+}
+
+.titleContainer{
+  padding-bottom:30px;
   padding-top:80px;
 }
 
 #searchWrapper{
     background-color: white;
-      border-radius: 12px;
+    border-radius: 12px;
 
 }
 #mainSearchInput, #locationFilter, #dateFilter  {
@@ -325,8 +363,8 @@ a {
  #searchBtn{
   margin-top:20px;
   width: 200px;
-  height: 52px;
   border-radius: 36px;
+  padding:7px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.24);
   border-style: solid;
   border-width: 1px;
@@ -334,7 +372,7 @@ a {
   border-image-slice: 1;
   background-image: linear-gradient(to bottom, #99ffc9, #99ffc9), linear-gradient(to bottom, #c2ffdf, #00ff77);
   background-origin: border-box;
-  background-clip: content-box, border-box;
+/*  background-clip: content-box, border-box; */
   font-family: Rubik;
   font-weight: 500;
   font-stretch: normal;

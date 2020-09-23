@@ -13,8 +13,8 @@
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
 			<!-- Title -->
-			<div id="titleContainer">
-				<div class="flex-container" id="frontpagetitle">
+			<div class="titleContainer">
+				<div class="flex-container headerText">
                                     Finn fasiliteter/etableringer
 				<!--	<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/> -->
 				</div>
@@ -40,8 +40,35 @@
                             <button id="searchBtn">Finn tilgjengelige</button> 
                             </div>
                         </div>
-                        
-                        
+                        <div class="pageContentWrapper">
+                        <div class="titleContainer">
+				<div class="headerText">
+                                    Dette skjer i Bergen kommune
+				</div>
+                        </div>
+                        <div class="activityList">
+                            <div class="activityRow">
+                             <span class="activityDate activityText boldText activityHeaderTitleSegment"><b>08. - 20. </b>Februar</span>
+                              <span class="activityTitle activityText boldText activityHeaderTitleSegment">Activity title</span>
+                              <span class="activityTime">Activity time</span>
+                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                            </div>
+                            
+                             <div class="activityRow">
+                             <span class="activityDate">08. - 20. Februar</span>
+                              <span class="activityTitle">Activity title</span>
+                              <span class="activityTime">Activity time</span>
+                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                            </div>
+                            
+                             <div class="activityRow">
+                             <span class="activityDate">08. - 20. Februar</span>
+                              <span class="activityTitle">Activity title</span>
+                              <span class="activityTime">Activity time</span>
+                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                            </div>
+                        </div>
+                        </div>
 			<div class="container searchContainer"    style="display:none" >
 				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
