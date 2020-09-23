@@ -4,16 +4,13 @@
 
 
         <div class="container searchContainer">
-            <div class="input-group input-group-lg mainpageserchcontainer">
+            <div class="input-group input-group-lg">
                 <input type="text" class="eventsearchbox" aria-label="Large">
                     <xsl:attribute name="placeholder">
                         <xsl:value-of select="php:function('lang', 'Search for events')"/>
                     </xsl:attribute>
                 </input>
                 <div class="input-group-prepend">
-                    <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
-                        <i class="fas fa-search"></i>
-                    </button>
                 </div>
             </div>
             <div id="search-autocomplete"></div>
