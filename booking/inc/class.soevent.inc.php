@@ -542,4 +542,26 @@
 			}
 			return $results;
 		}
+
+        function get_events_from_date($fromDate)
+        {
+            $sqlQuery = "";
+            if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
+                $sqlQuery = "select name,from_,to_, customer_organization_number from bb_event where from_ > CURRENT_DATE order by from_ asc";
+            } else {
+                $sqlQuery = "select name,from_,to_, customer_organization_number from bb_event where from_ > ($fromDate) order by from_ asc";
+            }
+            //name, org, from_,to_,
+            $this->db->query($sqlQuery);
+            $results = array();
+            while ($this->db->next_record()) {
+                 $results[] = array(
+                     'from'=>$this->db->f('from_', false),
+                     'to'=>$this->db->f('to_', false),
+                     'name'=>$this->db->f('name', false),
+                     'orgnum'=>$this->db->f('customer_organization_number', false),
+                 );
+            }
+            _debug_array($results);
+        }
 	}
