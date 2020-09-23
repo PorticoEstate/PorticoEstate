@@ -5,6 +5,13 @@
     class bookingfrontend_uieventsearch extends booking_uicommon
     {
 
+        public $public_functions = array
+        (
+            'index' => true,
+            'show'  => true,
+            'upcomingEvents' => true
+        );
+
         //fields
         protected $module;
         protected $bosearch;
@@ -15,14 +22,6 @@
             $this->module= "bookingfrontend";
             $this->bosearch = new bookingfrontend_bosearch();
         }
-
-
-        public $public_functions = array
-        (
-            'index' => true,
-            'show'  => true,
-            'upcomingEvents' => true
-        );
 
         public function show()
         {
@@ -47,8 +46,7 @@
         public function upcomingEvents()
         {
             $currentDate = date('Y-m-d H:i:s');
-            echo $currentDate;
-            $this->bosearch->soevent->get_events_from_date();
+            $this->bosearch->soevent->get_events_from_date($currentDate);
         }
 
         public function query()
