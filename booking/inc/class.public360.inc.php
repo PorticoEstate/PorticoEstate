@@ -46,7 +46,7 @@
 
 			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? $custom_config_data['webservicehost'] : '';
 			$this->authkey			 = !empty($custom_config_data['authkey']) ? $custom_config_data['authkey'] : '';
-			$this->proxy			 = !empty(config['proxy']) ? $config['proxy'] : '';
+			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 		}
 
@@ -55,7 +55,7 @@
 			$data = array
 			(
 				'parameter' => array(
-					'Recno'=> '200017',
+					'Recno'=> '201362',
 				//	'CaseNumber' => '2020000689'
 					)
 			);
@@ -84,7 +84,11 @@
 				$document_result = $this->create_document($case_result, $title, $files);
 			}
 
-			return array('case_result' => $case_result, 'document_result' => $document_result);
+			return array(
+				'external_archive_key'	 => $case_result['CaseNumber'],
+				'case_result'			 => $case_result,
+				'document_result'		 => $document_result
+			);
 		}
 
 		public function create_case( $title, $id, $ssn, $files )

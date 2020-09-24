@@ -1774,18 +1774,21 @@
 
 					$result = $archive->export_data($export_text['title'], $application['id'], $application['customer_ssn'], $files);
 
-					if($result['case_result']['CaseNumber'])
+					//update application with external_archive_key
+					if (!empty($result['external_archive_key']))
 					{
-						//update application with external_archive_key
+						$this->bo->update_external_archive_reference($application['id'], $result['external_archive_key']);
 					}
-//					_debug_array($result);
-
+					else
+					{
+						phpgwapi_cache::message_set( 'overføring feilet', 'error');
+					}
 				}
 				else
 				{
 					phpgwapi_cache::message_set( 'integrasjonsmetode er ikke konfigurert', 'error');
 				}
-				//$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 			}
 			
 		}
@@ -2031,6 +2034,10 @@
 				}
 			}
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+			$custom_config = CreateObject('admin.soconfig', $location_id);
+			$external_archive = !empty($custom_config->config_data['common_archive']['method']) ? $custom_config->config_data['common_archive']['method'] : '';
+
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
 				'audience'			 => $audience,
@@ -2041,7 +2048,8 @@
 				'comments'			 => $comments,
 				'simple'			 => $simple,
 				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
-				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id']))
+				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
+				'external_archive'	 => $external_archive
 				)
 			);
 		}
