@@ -426,6 +426,18 @@
 
 			$event['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.show',
 						'id' => $event['id']));
+			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($event['resources'], true);
+			
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+			}
+			
+			if(!$event['participant_limit'])
+			{
+				$event['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
+			
 			$event['participant_limit'] = $event['participant_limit'] ? $event['participant_limit'] : (int)$config->config_data['participant_limit'];
 
 			self::render_template_xsl('event_info', array('event' => $event, 'orginfo' => $orginfo,
@@ -491,6 +503,19 @@
 
 			$event['participant_registration_link'] = $participant_registration_link;
 			$event['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+
+			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($event['resources'], true);
+			
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+			}
+			
+			if(!$event['participant_limit'])
+			{
+				$event['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
+			
 			$event['participant_limit'] = $event['participant_limit'] ? $event['participant_limit'] : (int)$config['participant_limit'];
 
 			phpgw::import_class('phpgwapi.phpqrcode');

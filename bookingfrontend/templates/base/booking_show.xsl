@@ -27,12 +27,12 @@
 			</a>
 			(<xsl:value-of select="booking/resource_info"/>)
 		</div>
-		<!--		<xsl:if test="booking/participant_limit > 0">
+		<xsl:if test="booking/participant_limit > 0">
 			<p class="mt-2">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 				<xsl:value-of select="booking/participant_limit"/>
 			</p>
-		</xsl:if>-->
+		</xsl:if>
 		<span class="mt-2">
 			<xsl:value-of select="php:function('lang', 'number of participants')" />:
 			<xsl:value-of select="booking/number_of_participants" />
