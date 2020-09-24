@@ -73,14 +73,14 @@
 			<xsl:value-of select="event/participanttext" disable-output-escaping="yes"/>
 		</span>
 
-		<div class="mt-4">
-			<a href="{event/participant_registration_link}">
-				<xsl:value-of select="php:function('lang', 'registration')"/>
-			</a>
-		</div>
+		<xsl:variable name="lang_registration">
+			<xsl:value-of select="php:function('lang', 'registration')"/>
+		</xsl:variable>
 
-		<div class="mt-1">
-			<img src="{event/encoded_qr}"/>
+		<div class="mt-4">
+			<a href="{event/participant_registration_link}" title="{$lang_registration}">
+				<img src="{event/encoded_qr}" alt="{$lang_registration}"/>
+			</a>
 		</div>
 	</div>
 </xsl:template>

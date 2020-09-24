@@ -30,6 +30,8 @@
 			'get_e_locks'	=> true,
 			'add_e_lock'	=> true,
 			'remove_e_lock'	=> true,
+			'get_paricipant_limit' => true,
+			'add_paricipant_limit' => true
 		);
 
 		public function __construct()
@@ -314,6 +316,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
 			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_end_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('participant_limit_from', 'date');
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'),
 				array(
@@ -493,6 +496,7 @@
 			return array(
 				self::get_building_datatable_def($id),
 				self::get_e_lock_datatable_def($id),
+				self::get_paricipant_limit_datatable_def($id),
 			);
 		}
 
@@ -533,6 +537,48 @@
 			$lock_result = $this->bo->so->get_e_locks($resource_id);
 
 			return $this->jquery_results($lock_result);
+		}
+
+		private static function get_paricipant_limit_columns()
+		{
+
+			$columns = array
+			(
+				array('key' => 'from_', 'label' => lang('from'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'quantity', 'label' => lang('quantity'), 'sortable' => false, 'resizeable' => true),
+			);
+			return $columns;
+		}
+		private static function get_paricipant_limit_datatable_def( $id )
+		{
+			return	array
+			(
+				'container' => 'datatable-container_2',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_paricipant_limit',
+						'resource_id' => $id, 'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => self::get_paricipant_limit_columns(),
+				'data' => json_encode(array()),
+				'config' => array
+				(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+		}
+
+		public function get_paricipant_limit()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int');
+
+			$result = $this->bo->so->get_paricipant_limit($resource_id);
+
+			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($result['results'] as &$entry)
+			{
+				$entry['from_'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['from_']), $dateFormat);
+			}
+
+			return $this->jquery_results($result);
 		}
 
 		private static function get_building_columns()
@@ -623,6 +669,38 @@
 			{
 				return false;
 				$msg = lang('Could not update object due to insufficient permissions');
+			}
+
+			return array(
+				'ok' => $receipt,
+				'msg' => $msg
+			);
+		}
+
+		public function add_paricipant_limit()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$limit_from = phpgw::get_var('limit_from', 'date');
+			$limit_quantity = phpgw::get_var('limit_quantity', 'int');
+
+			if (!$limit_from || !$limit_quantity )
+			{
+				return array(
+					'ok' => false,
+					'msg' => lang('select')
+				);
+			}
+
+			try
+			{
+				$resource = $this->bo->read_single($resource_id);
+				$receipt = $this->bo->add_paricipant_limit($resource, $resource_id, $limit_from, $limit_quantity);
+				$msg = $receipt == 1 ? lang('added') : lang('updated');
+			}
+			catch (booking_unauthorized_exception $e)
+			{
+				return false;
+				$msg = lang('Could not add object due to insufficient permissions');
 			}
 
 			return array(

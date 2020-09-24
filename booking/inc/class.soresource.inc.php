@@ -507,4 +507,100 @@
 
 			return $this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
 		}
+
+
+		function get_paricipant_limit( $resource_id )
+		{
+			$values = array();
+
+			$this->db->query("SELECT * FROM bb_participant_limit " .
+				"WHERE resource_id = {$resource_id} ORDER BY from_", __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => $this->db->f('id'),
+					'resource_id' => $this->db->f('resource_id'),
+					'from_' => $this->db->f('from_'),
+					'quantity' => $this->db->f('quantity'),
+					'modified_on' => $this->db->f('modified_on'),
+					'modified_by' => $this->db->f('modified_by'),
+				);
+			}
+
+			return array(
+				'results' => $values,
+				'total_records' => count($values),
+				'start' => 0,
+				'sort' => '',
+				'dir' => ''
+			);
+		}
+
+		function add_paricipant_limit( $resource_id, $_limit_from, $limit_quantity )
+		{
+			$ret = 0;
+			if (!$resource_id || !$_limit_from || !$limit_quantity)
+			{
+				return false;
+			}
+
+			$limit_from = date($this->db->date_format(),$_limit_from);
+
+			$insert_update[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $limit_quantity,
+					'type'	=> PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> date($this->db->datetime_format()),
+					'type'	=> PDO::PARAM_STR
+				),
+				3	=> array
+				(
+					'value'	=> (int)$GLOBALS['phpgw_info']['user']['account_id'],
+					'type'	=> PDO::PARAM_INT
+				),
+				4	=> array
+				(
+					'value'	=> $resource_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				5	=> array
+				(
+					'value'	=> $limit_from,
+					'type'	=> PDO::PARAM_STR
+				),
+			);
+			//check for duplicate
+
+			$sql = "SELECT resource_id FROM bb_participant_limit"
+				. " WHERE resource_id = ? AND from_ = ?";
+			$condition =  array((int)$resource_id, $limit_from);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			if ($this->db->next_record())
+			{
+				$update_sql = "UPDATE bb_participant_limit SET quantity = ?, modified_on = ?, modified_by = ? WHERE resource_id = ? AND from_ = ?";
+				if( $this->db->insert($update_sql, $insert_update, __LINE__, __FILE__))
+				{
+					$ret = 2;
+				}
+			}
+			else
+			{
+				$add_sql = "INSERT INTO bb_participant_limit (quantity, modified_on, modified_by, resource_id, from_)"
+					. " VALUES (?, ?, ?, ?, ?)";
+				if( $this->db->insert($add_sql, $insert_update, __LINE__, __FILE__))
+				{
+					$ret = 1;
+				}
+			}
+
+			return $ret;
+		}
 	}

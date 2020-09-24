@@ -476,6 +476,64 @@
 					</label>
 					<input name="organizations_ids" id="field_organizations_ids" type="text" value="{resource/organizations_ids}"/>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'participant limit')"/>
+					</label>
+					<div class = 'pure-u-md-1-2'>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_2'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl'/>
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+									<xsl:with-param name="data" select ='data'/>
+									<xsl:with-param name="config" select ='config'/>
+									<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+				</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Add participant limit')"/>
+						</label>
+
+						<xsl:variable name="lang_date">
+							<xsl:value-of select="php:function('lang', 'date')"/>
+						</xsl:variable>
+						<xsl:variable name="lang_quantity">
+							<xsl:value-of select="php:function('lang', 'quantity')"/>
+						</xsl:variable>
+
+						<input type="text" id="participant_limit_from" name="participant_limit_from">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_date"/>
+							</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="$lang_date"/>
+							</xsl:attribute>
+						</input>
+						<input type="number" id="participant_limit_quantity" min="0" name="participant_limit_quantity">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_quantity"/>
+							</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="$lang_quantity"/>
+							</xsl:attribute>
+						</input>
+						<xsl:if test="resource/permission/write">
+							<a class='btn btn-info'>
+								<xsl:attribute name="onClick">
+									<xsl:text>add_participant_limit()</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Add')" />/
+								<xsl:value-of select="php:function('lang', 'Edit')" />
+							</a>
+						</xsl:if>
+
+					</div>
 			</div>
 		</div>
 		<div class="form-buttons">
