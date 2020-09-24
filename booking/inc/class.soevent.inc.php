@@ -546,9 +546,17 @@
         function get_events_from_date($fromDate)
         {
             if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-                $sqlQuery = "select name,from_,to_, customer_organization_number from bb_event where from_ > CURRENT_DATE order by from_ asc";
+                $sqlQuery = "select bbe.name, bbe.from_, bbe.to_, bbe.building_name as event_name, bbo.name as org_name
+							 from bb_event bbe, bb_organization bbo
+							 where from_ > '$fromDate'
+							 AND bbe.customer_organization_number = bbo.customer_organization_number
+							 order by from_ asc;";
             } else {
-                $sqlQuery = "select name,from_,to_, customer_organization_number from bb_event where from_ > '$fromDate' order by from_ asc";
+                $sqlQuery = "select bbe.name, bbe.from_, bbe.to_, bbe.building_name as event_name, bbo.name as org_name
+							 from bb_event bbe, bb_organization bbo
+							 where from_ > CURRENT_DATE 
+							 AND bbe.customer_organization_number = bbo.customer_organization_number
+							 order by from_ asc;";
             }
             //name, org, from_,to_,
             $this->db->query($sqlQuery);
@@ -558,6 +566,9 @@
                      'name' => $this->db->f('name', false),
                      'from' => $this->db->f('from_', false),
                      'to' => $this->db->f('to_', false),
+	                 'event_name' => $this->db->f('event_name'),
+	                 'org_name' => $this->db->f('org_name'),
+
                      'orgnum' => $this->db->f('customer_organization_number', false)
                  );
             }
