@@ -545,14 +545,15 @@
 
         function get_events_from_date($fromDate)
         {
+        	echo "hello";
             if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-                $sqlQuery = "select bbe.name, bbe.from_, bbe.to_, bbe.building_name as event_name, bbo.name as org_name
+                $sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
 							 from bb_event bbe, bb_organization bbo
 							 where from_ > '$fromDate'
 							 AND bbe.customer_organization_number = bbo.customer_organization_number
 							 order by from_ asc;";
             } else {
-                $sqlQuery = "select bbe.name, bbe.from_, bbe.to_, bbe.building_name as event_name, bbo.name as org_name
+                $sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
 							 from bb_event bbe, bb_organization bbo
 							 where from_ > CURRENT_DATE 
 							 AND bbe.customer_organization_number = bbo.customer_organization_number
@@ -563,13 +564,10 @@
             $results = array();
             while ($this->db->next_record()) {
                  $results[] = array(
-                     'name' => $this->db->f('name', false),
                      'from' => $this->db->f('from_', false),
                      'to' => $this->db->f('to_', false),
-	                 'event_name' => $this->db->f('event_name'),
-	                 'org_name' => $this->db->f('org_name'),
-
-                     'orgnum' => $this->db->f('customer_organization_number', false)
+	                 'event_name' => $this->db->f('event_name', false),
+	                 'org_name' => $this->db->f('org_name', false),
                  );
             }
             return $results;
