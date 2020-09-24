@@ -12,13 +12,15 @@
             </div>
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
             <div id="event-content">
-                <p>test</p>
                 <ul data-bind="foreach: events">
                     <div class="arrangement-card">
                         <li>
                             <span data-bind="text: from"/> |
-                            <span data-bind="text: name"/> |
-                            <span data-bind="text: orgnum"/>
+                            <span data-bind="text: to"/> |
+                            <span data-bind="text: org_name"/> |
+                            <span data-bind="text: event_name"/> |
+                            <span data-bind="text: location_name"/>
+
                         </li>
                     </div>
                 </ul>
