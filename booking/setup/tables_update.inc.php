@@ -4670,3 +4670,35 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.61 to 0.2.62
+	 *
+	 */
+	$test[] = '0.2.61';
+	function booking_upgrade0_2_61()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_participant_limit',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'from_' => array('type' => 'timestamp', 'nullable' => false),
+				'quantity' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+			'pk' => array('id'),
+			'fk' => array('bb_resource' => array('resource_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.62';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
