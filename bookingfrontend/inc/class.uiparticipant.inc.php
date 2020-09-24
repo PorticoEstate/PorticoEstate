@@ -77,9 +77,9 @@
 
 			$now =  new DateTime('now', $DateTimeZone);
 
-			$enable_register_pre = true;$from > $now ? true : false;
-			$enable_register_in	 = true;$from < $now && $to > $now ? true : false;
-			$enable_register_out = true;$from < $now && $to > $now ? true : false;
+			$enable_register_pre = $from > $now ? true : false;
+			$enable_register_in	 = $from < $now && $to > $now ? true : false;
+			$enable_register_out = $from < $now && $to > $now ? true : false;
 //			_debug_array($from);
 //			_debug_array($now);
 //			_debug_array($to);
