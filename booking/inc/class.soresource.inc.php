@@ -509,12 +509,42 @@
 		}
 
 
-		function get_paricipant_limit( $resource_id )
+		function get_paricipant_limit( $resource, $check_current = false)
 		{
+			
+			$resource_ids = array();
+			if (is_array($resource))
+			{
+				foreach ($resource as $entry)
+				{
+					if(is_array($entry))
+					{
+						$resource_ids[] = $entry['id'];
+					}
+					else
+					{
+						$resource_ids[] = $entry;
+					}
+				}
+			}
+			else
+			{
+				$resource_ids[] = $resource;			
+			}
+			
+			$order_menthod = 'ORDER BY from_ DESC';
+			$filter = 'resource_id IN (' . implode(',', $resource_ids) . ')';
+			
+			if($check_current)
+			{
+				$filter .= " AND from_ < '" . date($this->db->date_format()) . "'";
+			}
+			$group_menthod = 'GROUP BY id, resource_id, from_, quantity, modified_on, modified_by';
+
 			$values = array();
 
-			$this->db->query("SELECT * FROM bb_participant_limit " .
-				"WHERE resource_id = {$resource_id} ORDER BY from_", __LINE__, __FILE__);
+			$this->db->query("SELECT id, resource_id, from_,  max(quantity) AS quantity, modified_on, modified_by  FROM bb_participant_limit " .
+				"WHERE {$filter} {$group_menthod} {$order_menthod}", __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{

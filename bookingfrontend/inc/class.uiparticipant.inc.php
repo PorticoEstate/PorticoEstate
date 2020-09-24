@@ -33,12 +33,19 @@
 			$participant['reservation_id']	 = $reservation_id;
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
+			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($reservation['resources'], true);
 
-//			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
-			/**
-			 * Disable limit for now
-			 */
-			$reservation['participant_limit'] = 0;
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+			}
+
+			if(!$reservation['participant_limit'])
+			{
+				$reservation['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
+
+			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
 
 			$interval	 = (new DateTime($reservation['from_']))->diff(new DateTime($reservation['to_']));
 			$when		 = "";
@@ -70,12 +77,12 @@
 
 			$now =  new DateTime('now', $DateTimeZone);
 
-			$enable_register_pre = false;//$from > $now ? true : false;
-			$enable_register_in	 = $from < $now && $to > $now ? true : false;
-			$enable_register_out = false; //$from < $now && $to > $now ? true : false;
-//			_debug_array($from);			
-//			_debug_array($now);			
-//			_debug_array($to);			
+			$enable_register_pre = true;$from > $now ? true : false;
+			$enable_register_in	 = true;$from < $now && $to > $now ? true : false;
+			$enable_register_out = true;$from < $now && $to > $now ? true : false;
+//			_debug_array($from);
+//			_debug_array($now);
+//			_debug_array($to);
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
@@ -124,12 +131,16 @@
 				}
 				else
 				{
-
 					$phone = phpgw::get_var('phone', 'int');
 					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
 					$participant['register_type']	 = $register_type;
 					$participant['phone']			 = $phone;
 					$participant['email']			 = phpgw::get_var('email', 'email');
+
+					if($register_type == 'register_in' && phpgw::get_var('quantity', 'int') < $participant['quantity'])
+					{
+						$participant['quantity'] = phpgw::get_var('quantity', 'int');
+					}
 					$participant['quantity']		 = $participant['quantity'] ? $participant['quantity'] : phpgw::get_var('quantity', 'int');
 					$participant['reservation_type'] = $reservation_type;
 					$participant['reservation_id']	 = $reservation_id;

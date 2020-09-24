@@ -29,14 +29,14 @@
 	<!--<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
 	</div>-->
-<!--	<xsl:if test="booking/participant_limit > 0">
+	<xsl:if test="booking/participant_limit > 0">
 		<div>
 			<span class="font-weight-bold text-uppercase">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 			</span>
 			<xsl:value-of select="booking/participant_limit"/>
 		</div>
-	</xsl:if>-->
+	</xsl:if>
 
 	<div class="actions">
 		<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">

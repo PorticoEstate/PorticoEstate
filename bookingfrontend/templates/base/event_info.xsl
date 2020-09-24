@@ -62,14 +62,14 @@
 		</div>
 	</xsl:if>
 
-<!--	<xsl:if test="event/participant_limit > 0">
+	<xsl:if test="event/participant_limit > 0">
 		<div>
 			<span class="font-weight-bold text-uppercase">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 			</span>
 			<xsl:value-of select="event/participant_limit"/>
 		</div>
-	</xsl:if>-->
+	</xsl:if>
 
 	<div class="actions">
 		<a href="{event/show_link}" target="_blank" class="btn btn-light mt-4">
