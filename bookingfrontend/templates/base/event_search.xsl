@@ -13,13 +13,16 @@
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
             <div id="event-content">
                 <p>test</p>
-                <tbody data-bind="foreach: events">
-                    <tr>
-                        <td data-bind="value: name"></td>
-                    </tr>
-                </tbody>
+                <ul data-bind="foreach: events">
+                    <div class="arrangement-card">
+                        <li>
+                            <span data-bind="text: from"/> |
+                            <span data-bind="text: name"/> |
+                            <span data-bind="text: orgnum"/>
+                        </li>
+                    </div>
+                </ul>
             </div>
-
         </div>
     </div>
 </xsl:template>
