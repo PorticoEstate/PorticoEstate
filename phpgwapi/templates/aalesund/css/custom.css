@@ -287,6 +287,10 @@ a {
     width:100%;
 }
 
+.activityRow{
+    display: flex;
+}
+
 .activityList .activityRow{
   border-radius: 12px;
   border: solid 1px #ebebeb;
@@ -294,6 +298,7 @@ a {
   margin: 10px;
   padding:10px;
 }
+
 .activityRow .activityHeaderText{
   font-family: Rubik !important;
   font-stretch: normal;
@@ -305,15 +310,28 @@ a {
 
 .activityRow .activityTitle{
     width:50%;
+    border-left: 2px solid #ebebeb;
+    flex: 1;
+}
+
+.activityLocation{
+    border-left: 2px solid #ebebeb;
+    line-height:1.5 !important;
+}
+
+.activityLocation *{
+    display: block !important;
 }
 
 .boldText{
     font-weight:bold;
 }
 
-.activityRow .activityHeaderTitleSegment{
-    padding:10px; 
+.activityRow .activityHeaderSegment{
+    padding:5px; 
     padding-left: 20px;
+    padding-right: 20px;
+    line-height: 3;
     
 }
 

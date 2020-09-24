@@ -48,24 +48,22 @@
                         </div>
                         <div class="activityList">
                             <div class="activityRow">
-                             <span class="activityDate activityText boldText activityHeaderTitleSegment"><b>08. - 20. </b>Februar</span>
-                              <span class="activityTitle activityText boldText activityHeaderTitleSegment">Activity title</span>
-                              <span class="activityTime">Activity time</span>
-                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
+                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
+                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
+                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
                             </div>
-                            
                              <div class="activityRow">
-                             <span class="activityDate">08. - 20. Februar</span>
-                              <span class="activityTitle">Activity title</span>
-                              <span class="activityTime">Activity time</span>
-                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
+                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
+                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
+                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
                             </div>
-                            
                              <div class="activityRow">
-                             <span class="activityDate">08. - 20. Februar</span>
-                              <span class="activityTitle">Activity title</span>
-                              <span class="activityTime">Activity time</span>
-                              <div class="activityLocation"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
+                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
+                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
+                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
                             </div>
                         </div>
                         </div>
