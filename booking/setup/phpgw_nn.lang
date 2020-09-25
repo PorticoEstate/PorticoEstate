@@ -831,3 +831,4 @@ participant limit	booking	nn	Max antal deltakarar
 additional requirements	booking	nn	Tilleggvilkår
 PDF-export to archive	booking	nn	Eksporter saken som pdf til arkiv
 add participant limit	booking	nn	Legg til deltakerkapasitet
+registration has ended	booking	no	Registrering er avslutta

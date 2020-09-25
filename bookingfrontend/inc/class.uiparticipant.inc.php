@@ -14,6 +14,8 @@
 		public function __construct()
 		{
 			parent::__construct();
+			$this->resource_bo = CreateObject('booking.boresource');
+			$this->group_bo = CreateObject('booking.bogroup');
 			$this->module = "bookingfrontend";
 		}
 
@@ -34,6 +36,20 @@
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($reservation['resources'], true);
+
+			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $reservation['resources']),'sort' => 'name'));
+			$res_names = array();
+			foreach ($resources['results'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+
+			$reservation['resource_info'] = join(', ', $res_names);
+	
+			if(!empty($reservation['group_id']))
+			{
+				$reservation['group'] = $this->group_bo->read_single($reservation['group_id']);
+			}
 
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
 			{
@@ -237,8 +253,18 @@
 			}
 			$this->flash_form_errors($errors);
 
-
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+
+			$name = '';
+
+			if((array_key_exists('is_public', $reservation) && $reservation['is_public']))
+			{
+				$name = $reservation['name'];
+			}
+			else if(!array_key_exists('is_public', $reservation) && !empty($reservation['name']))
+			{
+				$name = $reservation['name'];
+			}
 
 			$data = array
 			(
@@ -253,7 +279,8 @@
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
-				'name'					 => $reservation['name'],
+				'name'					 => $name,
+				'reservation'			 => $reservation,
 				'participant_limit'		 => !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0,
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
