@@ -231,7 +231,7 @@
 					 * disable SMS for now
 					 */
 
-					if(false)
+					if($config['participant_limit_sms'])
 					{
 						try
 						{
