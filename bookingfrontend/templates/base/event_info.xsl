@@ -69,13 +69,12 @@
 			</span>
 			<xsl:value-of select="event/participant_limit"/>
 		</div>
+		<div class="actions">
+			<a href="{event/show_link}" target="_blank" class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view event')"/>
+			</a>
+		</div>
 	</xsl:if>
-
-	<div class="actions">
-		<a href="{event/show_link}" target="_blank" class="btn btn-light mt-4">
-			<xsl:value-of select="php:function('lang', 'view event')"/>
-		</a>
-	</div>
 
 	<xsl:if test="event/edit_link">
 		<div class="actions">
