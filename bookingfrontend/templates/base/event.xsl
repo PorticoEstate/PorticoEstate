@@ -63,24 +63,24 @@
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 				<xsl:value-of select="event/participant_limit"/>
 			</p>
+			<p class="mt-2">
+				<xsl:value-of select="php:function('lang', 'number of participants')" />:
+				<xsl:value-of select="event/number_of_participants" />
+			</p>
+
+			<span class="mt-2">
+				<xsl:value-of select="event/participanttext" disable-output-escaping="yes"/>
+			</span>
+
+			<xsl:variable name="lang_registration">
+				<xsl:value-of select="php:function('lang', 'registration')"/>
+			</xsl:variable>
+
+			<div class="mt-4">
+				<a href="{event/participant_registration_link}" title="{$lang_registration}">
+					<img src="{event/encoded_qr}" alt="{$lang_registration}"/>
+				</a>
+			</div>
 		</xsl:if>
-		<p class="mt-2">
-			<xsl:value-of select="php:function('lang', 'number of participants')" />:
-			<xsl:value-of select="event/number_of_participants" />
-		</p>
-
-		<span class="mt-2">
-			<xsl:value-of select="event/participanttext" disable-output-escaping="yes"/>
-		</span>
-
-		<xsl:variable name="lang_registration">
-			<xsl:value-of select="php:function('lang', 'registration')"/>
-		</xsl:variable>
-
-		<div class="mt-4">
-			<a href="{event/participant_registration_link}" title="{$lang_registration}">
-				<img src="{event/encoded_qr}" alt="{$lang_registration}"/>
-			</a>
-		</div>
 	</div>
 </xsl:template>
