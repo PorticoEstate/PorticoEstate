@@ -46,9 +46,9 @@
                                     Dette skjer i Bergen kommune
 				</div>
                         </div>
-                        <div class="activityList">
+                        <div class="activityList" data-bind="foreach: upcommingevents">
                             <div class="activityRow">
-                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
+                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b> <b data-bind="text: datetime_month"></b></span>
                               <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
                               <span class="activityTime activityHeaderSegment">00:30-20:00</span>
                               <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
@@ -100,7 +100,7 @@
 	 		 <div class="container">
                                                    
 Fra: <input type="datetime-local" class="date_availability_filter" id="from_time"
-       name="meeting-time" value="2018-06-12T19:30"
+       name="meeting-time" value="2018-06-12T19:30" 
        min="2018-06-07T00:00" max="2018-06-14T00:00" style="border-width: 2px; biorder-color: black"/>
 
 Til: <input type="datetime-local" class="date_availability_filter" id="to_time"
