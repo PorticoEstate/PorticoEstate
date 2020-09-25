@@ -36,13 +36,13 @@
 			</span>
 			<xsl:value-of select="booking/participant_limit"/>
 		</div>
+		<div class="actions">
+			<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view booking')"/>
+			</a>
+		</div>
 	</xsl:if>
 
-	<div class="actions">
-		<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">
-			<xsl:value-of select="php:function('lang', 'view booking')"/>
-		</a>
-	</div>
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
 			<button class="btn btn-light mt-4" onclick="location.href='{booking/edit_link}'">
