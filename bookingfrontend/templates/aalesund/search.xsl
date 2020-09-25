@@ -48,22 +48,10 @@
                         </div>
                         <div class="activityList" data-bind="foreach: upcommingevents">
                             <div class="activityRow">
-                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b> <b data-bind="text: datetime_month"></b></span>
-                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
-                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
-                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
-                            </div>
-                             <div class="activityRow">
-                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
-                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
-                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
-                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
-                            </div>
-                             <div class="activityRow">
-                             <span class="activityDate activityText boldText activityHeaderSegment"><b>08. - 20. </b>Februar</span>
-                              <span class="activityTitle activityText boldText activityHeaderSegment">Activity title</span>
-                              <span class="activityTime activityHeaderSegment">00:30-20:00</span>
-                              <div class="activityLocation activityHeaderSegment"><div>Sotra Arena</div><div>Bergenhus</div></div>
+                             <span class="activityDate activityText boldText activityHeaderSegment"><b class="event_datetime_day"></b>. <b data-bind="text: datetime_month"></b></span>
+                              <span class="activityTitle activityText boldText activityHeaderSegment" data-bind="text: name"></span>
+                              <span class="activityTime activityHeaderSegment" data-bind="text: datetime_time"></span>
+                              <div class="activityLocation activityHeaderSegment"><div data-bind="text: building_name"></div><div data-bind="text: organizer"></div></div>
                             </div>
                         </div>
                         </div>
