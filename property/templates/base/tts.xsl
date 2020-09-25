@@ -998,6 +998,30 @@
 										</input>
 									</div>
 									<div class="pure-control-group">
+										<label for="name">
+											<xsl:choose>
+												<xsl:when test="link_claim !=''">
+													<a href="{link_claim}">
+														<xsl:value-of select="php:function('lang', 'charge tenant')"/>
+													</a>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="php:function('lang', 'charge tenant')"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</label>
+										<input type="checkbox" name="values[charge_tenant]" value="1">
+											<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'charge tenant')"/>
+											</xsl:attribute>
+											<xsl:if test="charge_tenant = '1'">
+												<xsl:attribute name="checked">
+													<xsl:text>checked</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+										</input>
+									</div>
+									<div class="pure-control-group">
 										<xsl:variable name="lang_continuous">
 											<xsl:value-of select="php:function('lang', 'continuous')"/>
 										</xsl:variable>

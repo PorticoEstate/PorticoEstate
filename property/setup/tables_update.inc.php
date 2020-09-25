@@ -11030,3 +11030,22 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	 * Notes
+	 * tenant claim
+	 */	$test[] = '0.9.17.748';
+	function property_upgrade0_9_17_748()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tenant_claim', 'project_id', array('type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tenant_claim", 'ticket_id',array('type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'charge_tenant',array('type' => 'int', 'precision' => 2, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'claim_issued',array('type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.749';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
