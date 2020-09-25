@@ -27,12 +27,10 @@
         {
             phpgwapi_jquery::load_widget('autocomplete');
 
-            echo "hellos";
 
-            $event_search['dickens']="test";
+            $event_search['dickens'] = "test";
             $config = CreateObject('phpgwapi.config', 'booking');
             $config->read();
-            _debug_array($event_search);
             phpgwapi_jquery::load_widget("core");
 
             self::add_javascript('bookingfrontend', 'base', 'event_search.js', 'text/javascript', true);
