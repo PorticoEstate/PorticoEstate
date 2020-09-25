@@ -1236,6 +1236,8 @@
 				'order_template_id' => array('type' =>	'int', 'precision' => 4, 'nullable' => true),
 				'delivery_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'payment_type' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'charge_tenant' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'claim_issued' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -2724,7 +2726,8 @@
 		'fm_tenant_claim' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => '4', 'nullable' => False),
-				'project_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'project_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'ticket_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'tenant_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'default' => '0',
 					'nullable' => True),

@@ -3629,10 +3629,24 @@ JS;
 			}
 
 			array_unshift($cat_sub, array('id' => '', 'name' => lang('category')));
+			$link_claim = '';
+			if (!empty($ticket['charge_tenant']))
+			{
+				$claim = execMethod('property.sotenant_claim.read', array(
+					'ticket_id' => $id));
+				if ($claim)
+				{
+					$link_claim = $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'property.uitenant_claim.edit',
+						'claim_id'	 => $claim[0]['claim_id']));
+				}
+			}
 
 			$data = array(
 				'datatable_def'					 => $datatable_def,
 				'relation_type_list'			 => array('options' => $relation_type_list),
+				'link_claim'					 => $link_claim,
+				'charge_tenant'					 => !empty($ticket['charge_tenant']) ? 1 : 0,
 				'my_groups'						 => json_encode($my_groups),
 				'custom_attributes'				 => array('attributes' => $ticket['attributes']),
 				'lookup_functions'				 => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',

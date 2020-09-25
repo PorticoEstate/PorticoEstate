@@ -54,6 +54,7 @@
 			$cat_id		 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
 			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 			$project_id	 = isset($data['project_id']) ? $data['project_id'] : '';
+			$ticket_id	 = isset($data['ticket_id']) ? $data['ticket_id'] : '';
 			$district_id = isset($data['district_id']) ? (int)$data['district_id'] : 0;
 			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
 
@@ -75,35 +76,48 @@
 				$ordermethod = ' order by id DESC';
 			}
 
-
+			$filtermethod = '';
+			$filtermethod_ticket = '';
 			$where = 'WHERE';
 			if ($cat_id > 0)
 			{
 				$filtermethod	 .= " $where fm_tenant_claim.category='$cat_id' ";
+				$filtermethod_ticket	 .= " $where fm_tenant_claim.category='$cat_id' ";
 				$where			 = 'AND';
 			}
 
 			if ($project_id > 0)
 			{
 				$filtermethod	 .= " $where project_id='$project_id' ";
+				$filtermethod_ticket	 .= " $where ticket_id=-1 ";
+				$where			 = 'AND';
+			}
+
+			if ($ticket_id > 0)
+			{
+				$filtermethod	 .= " $where project_id=-1 ";
+				$filtermethod_ticket	 .= " $where ticket_id='{$ticket_id}' ";
 				$where			 = 'AND';
 			}
 
 			if ($status && $status != 'all')
 			{
 				$filtermethod	 .= " $where fm_tenant_claim.status='{$status}'";
+				$filtermethod_ticket	 .= " $where fm_tenant_claim.status='{$status}'";
 				$where			 = 'AND';
 			}
 
 			if ($user_id > 0)
 			{
 				$filtermethod	 .= " $where fm_tenant_claim.user_id={$user_id} ";
+				$filtermethod_ticket	 .= " $where fm_tenant_claim.user_id={$user_id} ";
 				$where			 = 'AND';
 			}
 
 			if ($district_id > 0)
 			{
 				$filtermethod	 .= " $where  district_id=" . (int)$district_id;
+				$filtermethod_ticket	 .= " $where  district_id=" . (int)$district_id;
 				$where			 = 'AND';
 			}
 
@@ -119,9 +133,16 @@
 					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
 					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
 					. " OR project_id=" . (int)$query . ')';
+				$querymethod_ticket = " $where (address {$this->like} '%{$query}%'"
+					. " OR first_name {$this->like} '%{$query}%'"
+					. " OR last_name {$this->like} '%{$query}%'"
+					. " OR fm_tts_tickets.location_code {$this->like} '{$query}%'"
+					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
+					. " OR ticket_id=" . (int)$query . ')';
 			}
 
-			$sql = "SELECT fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+			$sql = "SELECT 'project' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
 				. " fm_project.address, fm_project.category, fm_project.location_code FROM fm_tenant_claim "
 				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 				. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
@@ -129,6 +150,15 @@
 				. " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " $filtermethod $querymethod";
+			$sql .= " UNION "
+				. " SELECT 'ticket' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+				. " fm_tts_tickets.address, fm_tts_tickets.cat_id, fm_tts_tickets.location_code FROM fm_tenant_claim "
+				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
+				. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
+				. " $this->join fm_tts_tickets ON fm_tts_tickets.id = fm_tenant_claim.ticket_id"
+				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
+				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
+				. " $filtermethod_ticket $querymethod_ticket";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -207,17 +237,6 @@
 			return $claims;
 		}
 
-		//FIXME: to be removed
-		function check_claim_workorder( $workorder_id )
-		{
-			$claim = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $workorder_id, 'origin');
-
-			if ($claim)
-			{
-				return implode(",", $claim);
-			}
-		}
-
 		function read_single( $id )
 		{
 			$id = (int)$id;
@@ -227,6 +246,7 @@
 			{
 				$claim['id']			 = $id;
 				$claim['project_id']	 = $this->db->f('project_id');
+				$claim['ticket_id']		 = $this->db->f('ticket_id');
 				$claim['tenant_id']		 = $this->db->f('tenant_id');
 				$claim['remark']		 = $this->db->f('remark', true);
 				$claim['entry_date']	 = $this->db->f('entry_date');
@@ -251,6 +271,18 @@
 				}
 			}
 
+			$targets = $this->interlink->get_specific_relation('property', '.ticket', '.tenant_claim', $id, 'origin');
+
+			$claim['tickets']	 = $targets;
+			foreach ($targets as $id)
+			{
+				$this->db->query("SELECT claim_issued FROM fm_tts_tickets WHERE id='{$id}' AND claim_issued = 1", __LINE__, __FILE__);
+				if ($this->db->next_record())
+				{
+					$claim['claim_issued'][] = $id;
+				}
+			}
+
 			return $claim;
 		}
 
@@ -263,6 +295,7 @@
 
 			$values_insert = array(
 				$claim['project_id'],
+				$claim['ticket_id'],
 				$claim['tenant_id'],
 				$claim['amount'],
 				$claim['b_account_id'],
@@ -276,7 +309,7 @@
 			$values_insert = $this->db->validate_insert($values_insert);
 
 
-			$this->db->query("INSERT INTO fm_tenant_claim (project_id,tenant_id,amount,b_account_id,category,remark,user_id,entry_date,status) "
+			$this->db->query("INSERT INTO fm_tenant_claim (project_id,ticket_id,tenant_id,amount,b_account_id,category,remark,user_id,entry_date,status) "
 				. "VALUES ($values_insert)", __LINE__, __FILE__);
 
 			$claim_id			 = $this->db->get_last_insert_id('fm_tenant_claim', 'id');
@@ -298,6 +331,22 @@
 				$this->db->query("UPDATE fm_workorder SET claim_issued = 1 WHERE id=" . $workorder_id, __LINE__, __FILE__);
 			}
 
+			foreach ($claim['ticket'] as $ticket_id)
+			{
+				$interlink_data = array
+					(
+					'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location1_item_id'	 => $ticket_id,
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
+					'location2_item_id'	 => $claim_id,
+					'account_id'		 => $this->account
+				);
+
+				$this->interlink->add($interlink_data, $this->db);
+
+				$this->db->query("UPDATE fm_tts_tickets SET claim_issued = 1 WHERE id=" . $ticket_id, __LINE__, __FILE__);
+			}
+
 			$this->db->transaction_commit();
 
 			$receipt['message'][] = array('msg' => lang('claim %1 has been saved', $claim_id));
@@ -314,8 +363,6 @@
 			$this->db->next_record();
 
 			$old_status = $this->db->f('status');
-
-
 
 			$claim['name']	 = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] = str_replace(",", ".", $claim['amount']);
@@ -342,7 +389,16 @@
 
 			$this->interlink->delete_from_target('property', '.tenant_claim', $claim_id, $this->db);
 
-			$this->db->query("UPDATE fm_workorder set claim_issued = NULL WHERE project_id = {$claim['project_id']}", __LINE__, __FILE__);
+			if(!empty($claim['project_id']))
+			{
+				$project_id = (int)$claim['project_id'];
+				$this->db->query("UPDATE fm_workorder set claim_issued = NULL WHERE project_id = {$project_id}", __LINE__, __FILE__);
+			}
+			if(!empty($claim['ticket_id']))
+			{
+				$ticket_id = (int)$claim['ticket_id'];
+				$this->db->query("UPDATE fm_tts_tickets set claim_issued = NULL WHERE id = {$ticket_id}", __LINE__, __FILE__);
+			}
 
 			foreach ($claim['workorder'] as $workorder_id)
 			{
@@ -360,6 +416,22 @@
 				$this->db->query("UPDATE fm_workorder set claim_issued = 1 WHERE id=" . $workorder_id, __LINE__, __FILE__);
 			}
 
+			foreach ($claim['ticket'] as $ticket_id)
+			{
+				$interlink_data = array
+					(
+					'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+					'location1_item_id'	 => $ticket_id,
+					'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.tenant_claim'),
+					'location2_item_id'	 => $claim_id,
+					'account_id'		 => $this->account
+				);
+
+				$this->interlink->add($interlink_data, $this->db);
+
+				$this->db->query("UPDATE fm_tts_tickets SET claim_issued = 1 WHERE id=" . (int)$ticket_id, __LINE__, __FILE__);
+			}
+
 			$this->db->transaction_commit();
 
 			$receipt['claim_id']	 = $claim['claim_id'];
@@ -370,8 +442,8 @@
 		function delete( $id )
 		{
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_tenant_claim WHERE id=' . intval($id), __LINE__, __FILE__);
-			$this->interlink->delete_from_target('property', '.tenant_claim', $id, $this->db);
+			$this->db->query('DELETE FROM fm_tenant_claim WHERE id=' . (int)$id, __LINE__, __FILE__);
+			$this->interlink->delete_from_target('property', '.tenant_claim', (int)$id, $this->db);
 			$this->db->transaction_commit();
 		}
 
@@ -382,7 +454,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("SELECT status, project_id FROM fm_tenant_claim WHERE id=" . $claim_id, __LINE__, __FILE__);
+			$this->db->query("SELECT status FROM fm_tenant_claim WHERE id=" . $claim_id, __LINE__, __FILE__);
 			$this->db->next_record();
 			$old_status = $this->db->f('status');
 

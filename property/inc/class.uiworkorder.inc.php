@@ -2911,7 +2911,7 @@ JS;
 			);
 
 			$link_claim = '';
-			if (isset($values['charge_tenant']) ? $values['charge_tenant'] : '')
+			if (!empty($values['charge_tenant']))
 			{
 				$claim = execMethod('property.sotenant_claim.read', array(
 					'project_id' => $project['project_id']));
