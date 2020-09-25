@@ -49,7 +49,11 @@
                         <div class="activityList" data-bind="foreach: upcommingevents">
                             <div class="activityRow">
                              <span class="activityDate activityText boldText activityHeaderSegment"><b class="event_datetime_day"></b>. <b data-bind="text: datetime_month"></b></span>
-                              <span class="activityTitle activityText boldText activityHeaderSegment" data-bind="text: name"></span>
+                             <span class="activityTitle activityText boldText activityHeaderSegment"> 
+                                 <a class="upcomming-event-href" href="" target="_blank">
+                                     <span  data-bind="text: name"></span>
+                                 </a>
+                             </span>
                               <span class="activityTime activityHeaderSegment" data-bind="text: datetime_time"></span>
                               <div class="activityLocation activityHeaderSegment"><div data-bind="text: building_name"></div><div data-bind="text: organizer"></div></div>
                             </div>
@@ -145,132 +149,6 @@ Til: <input type="datetime-local" class="date_availability_filter" id="to_time"
 				</div>
 			</div>
 		</div>
-		<!-- Arrangement Container -->
-		<div class="container pageResults">
-			<!-- Upcomming Arrangements -->
-			<div id="welcomeResult" class=" container">
-				<h1 class="text-center upcomingevents-header"></h1>
-				<div class="row" data-bind="foreach: upcommingevents">
-					<div class="col-lg-6 card-positioncorrect">
-						<div class="row custom-card">
-							<div class="col-md-3 col-sm-4 col-4 date-circle">
-								<svg width="90" height="90">
-									<circle cx="45" cy="45" r="41" class="circle"/>
-									<text class="event_datetime_day" data-bind="" x="50%" y="43%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">
-									</text>
-									<text data-bind="text: datetime_month" x="50%" y="68%" text-anchor="middle" fill="white" font-weight="bold" dy=".3em">
-									</text>
-								</svg>
-							</div>
-							<div class="col-md-9 col-sm-8 col-8 desc">
-								<h2 class="font-weight-bold title" data-bind="text: name"></h2>
-								<div class="card-text">
-									<span  data-bind="text: datetime_time"></span>
-									<span  data-bind="text: 'STED: ' +building_name"></span>
-									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-									<span class="font-weight-normal" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									Les mer</a></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Search Results -->
-			<div id="searchResult" data-bind="if: notFilterSearch">
-				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
-				<div class="row" id="result-items" data-bind="foreach: items">
-					<div class="col-lg-6 card-positioncorrect">
-						<a class="custom-card-link-href" data-bind="">
-							<div class="row custom-card">
-								<div class="col-3 date-circle">
-									<!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
-									<svg width="90" height="90">
-										<circle cx="45" cy="45" r="37" class="circle" />
-										<text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
-										</text>
-									</svg>
-								</div>
-								<div class="col-9 desc">
-									<div class="desc">
-										<h2 class="font-weight-bold" data-bind="html: name"></h2>
-										<span data-bind="html: street"></span>
-										<span class="d-block" data-bind="html: postcode"></span>
-									</div>
-									<div data-bind="foreach: tagItems">
-										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<!-- Filter Search Result -->
-			<div id="filterSearchResult" data-bind="if: selectedFilterbox">
-				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>
-				<div data-bind="if: filterSearchItems().length > 0">
-					<div class="row" data-bind="foreach: filterSearchItems">
-						<div class="col-lg-6 card-positioncorrect">
-							<a class="custom-card-link-href" data-bind="">
-								<div class="row custom-card">
-									<div class="col-3 date-circle">
-										<!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
-										<svg width="90" height="90">
-											<circle cx="45" cy="45" r="37" class="circle" />
-											<text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
-											</text>
-										</svg>
-									</div>
-									<div class="col-9 desc">
-										<h4 class="font-weight-bold" data-bind="html: name"></h4>
-										<span data-bind="html: street"></span>
-										<span class="d-block" data-bind="html: postcode"></span>
-									</div>
-								</div>
-							</a>
-							<div class="row custom-all-subcard" style="width: 100%" data-bind="foreach: filterSearchItemsResources">
-								<div class="custom-subcard" data-bind="visible: $index() == 0 || $index() == 1">
-									<div class="row">
-										<div class="col-6">
-											<h5 class="font-weight-bold" data-bind="html: name"></h5>
-										</div>
-										<div class="col-6">
-											<a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">
-												<xsl:value-of select="php:function('lang', 'Book resource')"/>
-											</a>
-										</div>
-									</div>
-									<div data-bind="foreach: activities">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
-										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
-									</div>
-									<div data-bind="foreach: facilities">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Facilities')"/>:
-										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
-									</div>
-								</div>
-							</div>
-							<div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2">
-								<i class="fas fa-angle-down"></i>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'See')"/>
-								<xsl:text> </xsl:text>
-								<span data-bind="text: (filterSearchItemsResources().length - 2) "></span>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'more')"/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 	</div>
 </xsl:template>
