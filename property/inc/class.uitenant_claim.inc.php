@@ -598,6 +598,7 @@
 
 			$values						 = phpgw::get_var('values');
 			//_debug_array($values);die;
+			$values['ticket_id']		 = phpgw::get_var('ticket_id', 'int');
 			$values['project_id']		 = phpgw::get_var('project_id', 'int');
 			$values['b_account_id']		 = phpgw::get_var('b_account_id', 'int', 'POST');
 			$values['b_account_name']	 = phpgw::get_var('b_account_name', 'string', 'POST');
@@ -630,7 +631,7 @@
 					$receipt['error'][] = array('msg' => lang('Please select a budget account !'));
 				}
 
-				if (!$values['workorder'])
+				if (!$values['workorder'] && !$values['ticket'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a workorder !'));
 				}
@@ -701,11 +702,38 @@
 			{
 				$values = $this->bo->read_single($claim_id);
 			}
-
-			$project_values = $this->boproject->read_single($values['project_id'], array(), true);
-
-			$project_values['workorder_budget']	 = $this->boproject->get_orders(array('project_id' => $values['project_id'],
+			
+			if($values['project_id'])
+			{
+				$type = 'workorder';
+				$formatter = 'JqueryPortico.formatLinkTenant';
+				$project_values = $this->boproject->read_single($values['project_id'], array(), true);
+				$project_values['workorder_budget']	 = $this->boproject->get_orders(array('project_id' => $values['project_id'],
 				'year'		 => 0));
+			}
+			else if($values['ticket_id'])
+			{
+				$type = 'ticket';
+				$formatter = 'JqueryPortico.formatLinkTicket';
+				$this->botts	 = CreateObject('property.botts', true);
+				$project_values = $this->botts->read_single($values['ticket_id'], array(), true);
+//	_debug_array($project_values);
+				$project_values['workorder_budget'] = array(
+					array(
+					'workorder_id' => $values['ticket_id'],
+					'budget' => $project_values['budget'],
+					'charge_tenant' => $project_values['charge_tenant'],
+					'selected' => 1
+					));
+				$project_values['name'] = $project_values['subject'];
+				
+				if (!$project_values['name'])
+				{
+					$project_values['name'] = $this->botts->get_category_name($project_values['cat_id']);
+				}
+
+			}
+
 			//_debug_array($project_values);die();
 			$soinvoice							 = CreateObject('property.soinvoice');
 
@@ -728,7 +756,10 @@
 
 				$workorder['voucher_id'] = implode(', ', $_vouchers);
 
-				$workorder['selected']		 = in_array($workorder['workorder_id'], $values['workorders']);
+				if($values['project_id'])
+				{
+					$workorder['selected']		 = in_array($workorder['workorder_id'], $values['workorders']);
+				}
 				$workorder['claim_issued']	 = in_array($workorder['workorder_id'], $values['claim_issued']);
 			}
 
@@ -791,7 +822,8 @@
 				(
 				'menuaction' => 'property.uitenant_claim.edit',
 				'claim_id'	 => $claim_id,
-				'project_id' => $values['project_id']
+				'project_id' => $values['project_id'],
+				'ticket_id' => $values['ticket_id']
 			);
 
 			$location_exceptions = $bolocation->get_location_exception($project_values['location_data']['location_code']);
@@ -811,7 +843,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
-
+//_debug_array($project_values['workorder_budget']);
 			for ($d = 0; $d < count($project_values['workorder_budget']); $d++)
 			{
 				if ($project_values['workorder_budget'][$d]['charge_tenant'] == 1)
@@ -825,14 +857,14 @@
 					$project_values['workorder_budget'][$d]['budget_hidden']		 = $project_values['workorder_budget'][$d]['budget'];
 					$project_values['workorder_budget'][$d]['calculation_hidden']	 = $project_values['workorder_budget'][$d]['calculation'];
 					$project_values['workorder_budget'][$d]['actual_cost_hidden']	 = $project_values['workorder_budget'][$d]['actual_cost'];
-					$project_values['workorder_budget'][$d]['selected']				 = '<input type="checkbox" name="values[workorder][]" checked value="' . $project_values['workorder_budget'][$d]['workorder_id'] . '">';
+					$project_values['workorder_budget'][$d]['selected']				 = "<input type=\"checkbox\" name=\"values[{$type}][]\" checked value=\"" . $project_values['workorder_budget'][$d]['workorder_id'] . '">';
 				}
 				else
 				{
 					$project_values['workorder_budget'][$d]['budget_hidden']		 = 0;
 					$project_values['workorder_budget'][$d]['calculation_hidden']	 = 0;
 					$project_values['workorder_budget'][$d]['actual_cost_hidden']	 = 0;
-					$project_values['workorder_budget'][$d]['selected']				 = '<input type="checkbox" name="values[workorder][]" value="' . $project_values['workorder_budget'][$d]['workorder_id'] . '">';
+					$project_values['workorder_budget'][$d]['selected']				 = "<input type=\"checkbox\" name=\"values[{$type}][]\" value=\"" . $project_values['workorder_budget'][$d]['workorder_id'] . '">';
 				}
 //				$project_values['workorder_budget'][$d]['selected'].= $project_values['workorder_budget'][$d]['claim_issued'] ? 'ok' : '';
 
@@ -848,7 +880,7 @@
 			$myColumnDefs0 = array
 				(
 				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
-					'resizeable'	 => true, 'formatter'		 => 'JqueryPortico.formatLinkTenant', 'value_footer'	 => lang('Sum')),
+					'resizeable'	 => true, 'formatter'		 => $formatter, 'value_footer'	 => lang('Sum')),
 				array('key'			 => 'budget', 'label'			 => lang('Budget'), 'sortable'		 => true,
 					'resizeable'	 => true,
 					'formatter'		 => 'JqueryPortico.FormatterAmount0', 'value_footer'	 => number_format($sumaBudget, 0, $this->decimal_separator, ' ')),
