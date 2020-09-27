@@ -354,6 +354,20 @@ a {
   padding-bottom:30px;
   padding-top:80px;
 }
+#searchResultMenu{
+    float: left;
+    padding-right: 20px;
+}
+ #resultCount{
+    float:right;
+}
+#searchResutsHeader{
+    font-family: Martel;
+    font-weight: 900;
+}
+#searchResultsContainer{
+ margin-top:40px;   
+}
 
 #searchWrapper{
     background-color: white;
