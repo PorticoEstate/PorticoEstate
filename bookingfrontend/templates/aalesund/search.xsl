@@ -123,11 +123,8 @@
                              <div class="activityTitle activityText boldText activityHeaderSegment"> 
                                  Testanlegg
                              </div>
-                                                          <div>Test bygg222</div>
-
+                              <div>Test bygg222</div>
                                 </div>
-                            
-                            
                           </div>
                           </div>
                         </div>
