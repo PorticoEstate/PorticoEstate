@@ -177,8 +177,10 @@
 			while ($this->db->next_record())
 			{
 				$claims[] = array
-					(
+				(
+					'type'			 => $this->db->f('type'),
 					'claim_id'		 => $this->db->f('id'),
+					'ticket_id'		 => $this->db->f('ticket_id'),
 					'project_id'	 => $this->db->f('project_id'),
 					'tenant_id'		 => $this->db->f('tenant_id'),
 					'name'			 => $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
