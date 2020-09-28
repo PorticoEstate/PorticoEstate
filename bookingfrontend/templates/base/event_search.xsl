@@ -13,13 +13,21 @@
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
             <div id="event-content">
                 <ul data-bind="foreach: events">
-                    <div class="arrangement-card">
+                    <div class="event-card">
                         <li>
-                            <span data-bind="text: from"/> |
-                            <span data-bind="text: to"/> |
-                            <span data-bind="text: org_name"/> |
-                            <span data-bind="text: event_name"/> |
-                            <span data-bind="text: location_name"/>
+                            <div class="card-element-left date">
+                                <div class="cal-img-logo"></div>
+                                <span class="formattedDate" data-bind="text: formattedDate"/>
+                                <span class="monthTag" data-bind="text:monthText"/>
+                            </div>
+                            <div class="card-element-mid">
+                                <span class="event_name" data-bind="text: event_name"/>
+                                <span class="event_time" data-bind="text: event_time"/>
+                            </div>
+                            <div class="card-element-right">
+                                <span data-bind="text: org_name"/>
+                                <span data-bind="text: location_name"/>
+                            </div>
 
                         </li>
                     </div>
