@@ -34,7 +34,7 @@
                                    <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>  
                                  </div>
                                  <div  id="dateWrapper">
-                                   <input type="text" id="dateFilter" class="form-control searchInput" placeholder="Dato" aria-label="Large"></input>
+                                   <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"></input>
                                  </div>
                             </div>
                             <button id="searchBtn">Finn tilgjengelige</button> 
@@ -59,11 +59,31 @@
                             </div>
                         </div>
                         
-                        <div id="searchResultsContainer">
+                        <div id="searchResultsWrapper">
                           <div id="searchResutsHeader">  Søkeresultat  <div id="resultCount">6 treff</div></div> 
                           <hr />
-                          <div id="searchResultMenu">sidebar</div>
-                          <div id="searchResultList">resultatliste</div>
+                          <div id="searchResultsContainer">
+                          <div id="searchResultMenu">
+                              <input type="text" id="sideDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large" />
+                              <div id="timeFilterContainer">
+                              <input type="text" id="from_time" class="form-control searchInput timeFilter" placeholder="Fra kl" aria-label="Large" />
+                              <input type="text" id="to_time" class="form-control searchInput timeFilter" placeholder="Til kl" aria-label="Large" />
+                              </div>
+                          </div>
+                          <div id="searchResultList">
+                              
+                              
+                                <div class="activityRow">
+                             <div class="activityTitle activityText boldText activityHeaderSegment"> 
+                                 Testanlegg
+                             </div>
+                                                          <div>Test bygg222</div>
+
+                                </div>
+                            
+                            
+                          </div>
+                          </div>
                         </div>
                         </div>
 	

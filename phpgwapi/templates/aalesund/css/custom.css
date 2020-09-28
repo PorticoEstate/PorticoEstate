@@ -357,6 +357,15 @@ a {
 #searchResultMenu{
     float: left;
     padding-right: 20px;
+    min-width: 368px;
+    border-radius: 12px;
+    border: solid 1px #ebebeb;
+    background-color: #ffffff;
+    padding:24px; 
+}
+
+.timeContainer{
+    
 }
  #resultCount{
     float:right;
@@ -365,19 +374,23 @@ a {
     font-family: Martel;
     font-weight: 900;
 }
-#searchResultsContainer{
+#searchResultsWrapper{
  margin-top:40px;   
 }
-
+#searchResultsContainer{
+    display: flex;
+}
 #searchWrapper{
     background-color: white;
     border-radius: 12px;
-
 }
-#mainSearchInput, #locationFilter, #dateFilter  {
+#searchResultList{
+    flex:1;
+}
+#mainSearchInput, #locationFilter, .dateFilter, .timeFilter  {
     background: url("https://flaticons.net/custom.php?i=eN7tlTrkWDgSRI9IbIjAhwvjQ4un&format=png&size=18") no-repeat scroll 9px 9px;
     padding-left:50px;
-    border-radius: 12px;
+    border-radius: 7px;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     border: solid 1px #28358f;
  }
@@ -387,9 +400,25 @@ a {
  }
  
  
- #dateFilter{
-             background: url(" https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px; 
+ .dateFilter{
+             background: url("https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px; 
  } 
+ 
+ .timeFilter{
+        background: url("https://cdn.zeplin.io/5ef9e522609f7780f3d3c1f6/assets/46A672DA-0051-4F6E-A7BA-4052E275191F.svg") no-repeat scroll 9px 9px; 
+ }
+ 
+ #timeFilterContainer{
+     margin-top:10px;
+ }
+ #timeFilterContainer *{
+     width: 48%;
+     display: inline;
+ }
+ 
+ #timeFilterContainer :last-child{
+     margin-left: 4%;
+ }
  
  
  #searchBtn{
