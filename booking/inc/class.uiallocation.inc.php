@@ -373,7 +373,11 @@
 				{
 					$step++;
 				}
-				if (!$errors && ($_POST['outseason'] != 'on' && !phpgw::get_var('repeat_until', 'bool')))
+				if ($errors  && phpgw::get_var('repeat_until', 'bool'))
+				{
+					$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				}
+				else if (!$errors && ($_POST['outseason'] != 'on' && !phpgw::get_var('repeat_until', 'bool')))
 				{
 					try
 					{
