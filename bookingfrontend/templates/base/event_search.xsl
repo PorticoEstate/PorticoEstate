@@ -2,11 +2,16 @@
     <div id="container_event_search">
         <div class="container searchContainer">
             <div class="input-group input-group-lg">
-                <input type="text" class="eventsearchbox" aria-label="Large">
+                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="coolfunc()">
                     <xsl:attribute name="placeholder">
                         <xsl:value-of select="php:function('lang', 'Search for events')"/>
                     </xsl:attribute>
                 </input>
+                <div class="input-group-prepend">
+                    <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
                 <div class="input-group-prepend">
                 </div>
             </div>
@@ -17,16 +22,17 @@
                         <li>
                             <div class="card-element-left date">
                                 <div class="cal-img-logo"></div>
-                                <span class="formattedDate" data-bind="text: formattedDate"/>
-                                <span class="monthTag" data-bind="text:monthText"/>
+                                <div class="formattedDate" data-bind="text: formattedDate"></div>
+                                <div class="monthTag" data-bind="text:monthText"></div>
                             </div>
                             <div class="card-element-mid">
-                                <span class="event_name" data-bind="text: event_name"/>
-                                <span class="event_time" data-bind="text: event_time"/>
+                                <div class="event_name" data-bind="text: event_name"></div>
+                                <div class="event_time" data-bind="text: event_time"></div>
                             </div>
                             <div class="card-element-right">
-                                <span data-bind="text: org_name"/>
-                                <span data-bind="text: location_name"/>
+                                <div class ="org_name" data-bind="text: org_name"></div>
+                                <div class="pin_img_logo"></div>
+                                <div class="location_name" data-bind="text: location_name"></div>
                             </div>
 
                         </li>
