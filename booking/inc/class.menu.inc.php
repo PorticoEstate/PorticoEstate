@@ -308,7 +308,7 @@
 						'appname' => 'booking')),
 					'image' => array('admin', 'navbar'),
 					'children' => array
-						(
+					(
 						'permissions' => array
 							(
 							'text' => lang('Root Permissions'),
@@ -447,6 +447,12 @@
 						'text' => lang('Configuration'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
 							'appname' => 'booking'))
+					),
+					'customconfig' => array
+					(
+						'text' => lang('custom config'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
+						'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', 'run')))
 					),
 					'permissions' => array
 						(

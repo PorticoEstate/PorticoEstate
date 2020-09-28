@@ -98,6 +98,7 @@
 				'responsible_city' => array('type' => 'string', 'required' => true),
 				'session_id' => array('type' => 'string', 'required' => false),
 				'agreement_requirements' => array('type' => 'string', 'required' => false),
+				'external_archive_key' => array('type' => 'string', 'required' => false),
 				)
 			);
 		}
@@ -419,6 +420,12 @@
 				}
 			}
 			return false;
+		}
+
+		function update_external_archive_reference( $id, $external_archive_key )
+		{
+			$external_archive_key = $this->db->db_addslashes($external_archive_key);
+			return $this->db->query("UPDATE bb_application SET external_archive_key = '{$external_archive_key}' WHERE id =" . (int)$id, __LINE__, __FILE__);
 		}
 	}
 

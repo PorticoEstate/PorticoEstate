@@ -58,6 +58,14 @@ JqueryPortico.formatLinkTenant = function (key, oData)
 	return '<a href="' + strURL + '">' + id + '</a>';
 };
 
+JqueryPortico.formatLinkTicket = function (key, oData)
+{
+
+	var id = oData[key];
+	var strURL = phpGWLink('index.php', {menuaction: "property.uitts.view", id: id});
+	return '<a href="' + strURL + '">' + id + '</a>';
+};
+
 JqueryPortico.formatProject = function (key, oData)
 {
 	var name = oData[key];
