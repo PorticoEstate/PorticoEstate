@@ -8,7 +8,7 @@
                     </xsl:attribute>
                 </input>
                 <div class="input-group-prepend">
-                    <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
+                    <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button" onclick="searchInput()">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
