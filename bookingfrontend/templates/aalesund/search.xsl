@@ -37,7 +37,7 @@
                                    <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"></input>
                                  </div>
                             </div>
-                            <button id="searchBtn">Finn tilgjengelige</button> 
+                            <button id="searchBtn" class="greenBtn">Finn tilgjengelige</button> 
                             </div>
                         </div>
                         <div class="pageContentWrapper">
@@ -69,6 +69,52 @@
                               <input type="text" id="from_time" class="form-control searchInput timeFilter" placeholder="Fra kl" aria-label="Large" />
                               <input type="text" id="to_time" class="form-control searchInput timeFilter" placeholder="Til kl" aria-label="Large" />
                               </div>
+                              <div class="collapseModal">
+                                 <div class="modalHeader">Bydel</div>
+                                 <div class="modalBody">
+                                     <div class="checkWrapper">
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Bydel 1</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Bydel 2</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Bydel 3</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Bydel 4</label></div>
+                                     </div>
+                                 </div>
+                              </div>
+                              
+                               <div class="collapseModal">
+                                 <div class="modalHeader">Fasiliteter</div>
+                                 <div class="modalBody">
+                                     <div class="checkWrapper">
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Garderobe</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Internett</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Kjøkken</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Rullestolrampe</label></div>
+                                         <div><input type="checkbox" value="bydel_value_her" /><label>Kunst og designverksted</label></div>
+                                        <div><input type="checkbox" value="bydel_value_her" /><label>Speaker-anlegg</label></div>
+                                     </div>
+                                 </div>
+                              </div>
+                              
+                             <div class="collapseModal">
+                                 <div class="modalHeader">Tilrettelagt for</div>
+                                 <div class="modalBody">
+                                     
+                                 </div>
+                              </div>
+                            <div class="collapseModal">
+                                 <div class="modalHeader">Utstyr</div>
+                                 <div class="modalBody">
+                                     
+                                 </div>
+                              </div>
+                             <div class="collapseModal">
+                                 <div class="modalHeader">Kapasitet</div>
+                                 <div class="modalBody">
+                                     
+                                 </div>
+                              </div>
+                              <button class="greenBtn filterButton" id="aktiverFilterBtn">Aktiver filter</button>
+                              <button class="grayBtn filterButton" id="nullstillFilterBtn">Nullstill filter</button>
                           </div>
                           <div id="searchResultList">
                               

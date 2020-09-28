@@ -398,8 +398,33 @@ a {
  #locationFilter{
         background: url("https://flaticons.net/custom.php?i=6v5IxcYlPe7uEIAIZIG9h9YljJuV&format=png&size=18") no-repeat scroll 9px 9px; 
  }
+ .collapseModal{
+       margin-top: 15px;
+       border-radius: 6px;
+       background-color: #f5f5ff;
+ }
  
- 
+ .collapseModal .modalHeader{
+     font-family: Rubik;
+     font-size: 18px;
+     font-weight: normal;
+     font-stretch: normal;
+     font-style: normal;
+     line-height: 1.56;
+     letter-spacing: normal;
+     color: #0b1214;
+     padding: 12px;
+     border-bottom: 1px solid #ebebeb;
+ }
+ .collapseModal .modalBody{
+     padding: 15px;
+ }
+ .checkWrapper{
+     display: block;
+ }
+ .checkWrapper input[type="checkbox"]{
+     margin-right:10px;
+ }
  .dateFilter{
              background: url("https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px; 
  } 
@@ -419,17 +444,31 @@ a {
  #timeFilterContainer :last-child{
      margin-left: 4%;
  }
- 
- 
- #searchBtn{
-  margin-top:20px;
-  width: 200px;
+ .filterButton{
+     width: 100%;
+     margin-top:20px;
+ }
+ #aktiverFilterBtn{
+     padding:20px;
+ }
+ .grayBtn{
+  border-radius: 12px;
+    padding:7px;
+  border: solid 1px #c2c2ff;
+  background-color: #ffffff;
+  font-family: Rubik;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+ }
+ .greenBtn{
   border-radius: 36px;
   padding:7px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.24);
   border-style: solid;
   border-width: 1px;
-  border-image-source: linear-gradient(to bottom, #c2ffdf, #00ff77);
   border-image-slice: 1;
   background-image: linear-gradient(to bottom, #99ffc9, #99ffc9), linear-gradient(to bottom, #c2ffdf, #00ff77);
   background-origin: border-box;
@@ -440,7 +479,12 @@ a {
   font-style: normal;
   line-height: 1.33;
   letter-spacing: normal;
-  color: #3a3a4c;
+  color: #3a3a4c; 
+ }
+ 
+ #searchBtn{
+  margin-top:20px;
+  width: 200px;
 }
 
 /* / AK CUSTOM */
