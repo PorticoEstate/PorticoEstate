@@ -304,7 +304,44 @@ a {
   letter-spacing: normal;
   color: #0b1214;
 }
-
+.headerSection{
+    padding-left:76px;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+#search-page-content{
+    background: white !important;
+}
+.noteRectangle{
+  width:90%;
+  max-width: 848px;
+  border-radius: 12px;
+  border: solid 1px #e7ebb2;
+  background-color: #fbffc2;
+  font-family: Rubik;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  color: #0b1214;
+  padding:20px;
+  padding-left:24px;
+}
+.noteTitle{
+  font-family: Martel;
+  font-weight: 900;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-size: 24px;
+  margin-bottom:12px;
+}
+body{
+    background: white !important;
+}
 .facilityRow{
     padding: 20px;
     padding-left:32px;

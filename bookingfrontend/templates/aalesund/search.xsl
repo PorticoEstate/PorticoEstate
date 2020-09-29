@@ -3,13 +3,22 @@
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 	
     <div id="search-page-content">
-		<div class="frontpageimage" id="main-page">
-			<div class="header-text"    style="color:#26348B;"  >
-				<a href="{site_url}"    >
-					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
-				</a>
-			</div>
-		</div>
+        <div class="headerSection">
+             <div class="noteRectangle">
+                <div class="noteTitle">
+                Korona-situasjonen
+                </div>
+                
+                <div class="noteBody">
+                    Idrettsanlegg og kulturbygg i Øygarden kommune er delvis stengt framover, som eit tiltak mot spreiing av koronaviruset.  Og kan kun brukes etter tilrådningar fra Folkehelsedirektoratet og Øygarden kommune.
+<br /><br />
+Søknadar som vert lagt inn i portalen, vert sakshandsama, men vil bli lengre sakshandsamartid. Følg med her for meir informasjon. 
+<br /><br />
+Du kan framleis låne/leiga lokale i portalen fram i tid, med forbehold om at bygga vert opna for bruk etter avstengningsperioden.
+                </div>
+        </div>
+        </div>
+       
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
 			<!-- Title -->
