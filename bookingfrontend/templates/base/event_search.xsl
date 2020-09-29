@@ -20,24 +20,32 @@
                 <ul data-bind="foreach: events">
                     <div class="event-card">
                         <li>
-                            <div class="card-element-left date">
+                            <div class="card-element-left">
                                 <div class="cal-img-logo"></div>
-                                <div class="formattedDate" data-bind="text: formattedDate"></div>
-                                <div class="monthTag" data-bind="text:monthText"></div>
-                            </div>
-                            <div class="card-element-mid">
-                                <div class="event_name" data-bind="text: event_name"></div>
-                                <div class="event_time" data-bind="text: event_time"></div>
-                            </div>
-                            <div class="card-element-right">
-
-                                <div class ="org_name" data-bind="text: org_name"></div>
-                                <div class="location_container" >
-                                    <div class="pin_img_logo"></div>
-                                    <div class="location_name" data-bind="text: location_name"></div>
+                                <div class="formattedDate-container">
+                                    <span class="formattedDate"  data-bind="text: formattedDate"></span>
+                                </div>
+                                <div class="monthTag-container">
+                                    <span class="monthTag" data-bind="text:monthText"></span>
                                 </div>
                             </div>
-
+                            <div class="card-element-mid">
+                                <div class="event_name-container">
+                                    <span class="event_name" data-bind="text: event_name"></span>
+                                </div>
+                                <div class="event_time-container">
+                                    <span class="event_time" data-bind="text: event_time"></span>
+                                </div>
+                            </div>
+                            <div class="card-element-right">
+                                <div class ="org_name-container">
+                                    <span class="org_name" data-bind="text: org_name"></span>
+                                </div>
+                                <div class="location_container" >
+                                    <div class="pin_img_logo"></div>
+                                    <span class="location_name" data-bind="text: location_name"></span>
+                                </div>
+                            </div>
                         </li>
                     </div>
                 </ul>
