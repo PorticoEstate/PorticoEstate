@@ -40,11 +40,15 @@ function getTimeFormat(from, to) {
 }
 
 function setdata(result) {
+    viewmodel.events.removeAll();
+    console.log(result);
     for (var i = 0; i < result.length; i++) {
-        orgNameList.push(result[i].org_name);
-        var formattedDateAndMonthArr = getDateFormat(result[i].from,result[i].to);
+        if (!orgNameList.includes(result[i].org_name)) {
+            orgNameList.push(result[i].org_name);
+        }
 
-        var eventTime = getTimeFormat(result[i].from,result[i].to);
+        var formattedDateAndMonthArr = getDateFormat(result[i].from, result[i].to);
+        var eventTime = getTimeFormat(result[i].from, result[i].to);
 
         viewmodel.events.push({
             event_name: result[i].event_name,
@@ -65,8 +69,13 @@ $(document).ready(function () {
     getUpcomingEvents();
 });
 
-function getUpcomingEvents() {
-    let requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents"}, true);
+function getUpcomingEvents(orgName = "") {
+    let requestURL = "";
+    if (orgName != "") {
+        requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents", orgName : orgName}, true);
+    } else {
+        requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents"}, true);
+    }
     $.ajax({
         url: requestURL,
         dataType : 'json',
@@ -90,31 +99,9 @@ function searchInput() {
         viewmodel.events.removeAll();
         getUpcomingEvents();
     } else {
-        if (viewmodel.events().length != 0) {
-
-            updatedList = [];
-            for (var i = 0; i < viewmodel.events().length; i++) {
-                if (viewmodel.events()[i].org_name == inputVal) {
-                    console.log(viewmodel.events()[i])
-                    updatedList.push(viewmodel.events()[i]);
-                }
-                console.log("size" + updatedList.length);
-            }
-        }
-
-        viewmodel.events.removeAll();
-        console.log(updatedList);
-        for (var i = 0; i < updatedList.length;i++)
-        viewmodel.events.push({
-            event_name: updatedList[i].event_name,
-            formattedDate: updatedList[i].formattedDate,
-            monthText: updatedList[i].monthText,
-            event_time: updatedList[i].event_time,
-            org_name: updatedList[i].org_name,
-            location_name: updatedList[i].location_name
-        });
+        //For nå blir det bare søk etter organisasjoner, filtrene blir utvidet etterhvert
+        getUpcomingEvents(inputVal);
     }
-
 }
 
 function coolfunc() {
