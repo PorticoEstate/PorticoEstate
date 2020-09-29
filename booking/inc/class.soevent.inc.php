@@ -26,7 +26,7 @@
 				'cost' => array('type' => 'decimal', 'required' => true),
 				'contact_name' => array('type' => 'string', 'required' => true, 'query' => true),
 				'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
 					'default' => '0'),
@@ -45,7 +45,7 @@
 				'customer_ssn' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
 					'required' => false),
 				'customer_organization_number' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
 				'include_in_list' => array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 				'activity_name' => array('type' => 'string',
@@ -543,33 +543,39 @@
 			return $results;
 		}
 
-        function get_events_from_date($fromDate)
-        {
-        	echo "hello";
-            if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-                $sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
+	function get_events_from_date($fromDate, $orgName=null)
+	{
+		$orgnamesql = null;
+		if ($orgName) {
+			$orgnamesql = " AND bbo.name='$orgName' ";
+		}
+		if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
+			$sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
 							 from bb_event bbe, bb_organization bbo
-							 where from_ > '$fromDate'
-							 AND bbe.customer_organization_number = bbo.customer_organization_number
-							 order by from_ asc;";
-            } else {
-                $sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
+							 where bbe.from_ > '$fromDate' "
+							 .$orgnamesql.
+							 " AND bbe.customer_organization_number = bbo.customer_organization_number
+							 order by bbe.from_ asc LIMIT 50;";
+		} else {
+			$sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
 							 from bb_event bbe, bb_organization bbo
-							 where from_ > CURRENT_DATE 
-							 AND bbe.customer_organization_number = bbo.customer_organization_number
-							 order by from_ asc;";
-            }
-            //name, org, from_,to_,
-            $this->db->query($sqlQuery);
-            $results = array();
-            while ($this->db->next_record()) {
-                 $results[] = array(
-                     'from' => $this->db->f('from_', false),
-                     'to' => $this->db->f('to_', false),
-	                 'event_name' => $this->db->f('event_name', false),
-	                 'org_name' => $this->db->f('org_name', false),
-                 );
-            }
-            return $results;
-        }
+							 where bbe.from_ > CURRENT_DATE "
+							 .$orgnamesql.
+							 " AND bbe.customer_organization_number = bbo.customer_organization_number
+							 order by bbe.from_ asc LIMIT 50;";
+		}
+		$this->db->query($sqlQuery);
+		$results = array();
+		while ($this->db->next_record()) {
+			$results[] = array(
+				'from' => $this->db->f('from_', false),
+				'to' => $this->db->f('to_', false),
+				'event_name' => $this->db->f('event_name', false),
+				'org_name' => $this->db->f('org_name', false),
+				'location_name' => $this->db->f('location_name', false)
+			);
+		}
+		_debug_array($results);
+		return $results;
 	}
+}
