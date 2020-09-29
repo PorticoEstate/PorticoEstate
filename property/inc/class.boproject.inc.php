@@ -628,6 +628,7 @@
 
 			foreach ($project as & $entry)
 			{
+				$entry['coordinator'] = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw']->accounts->name2id($entry['coordinator']));
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
 				$entry['end_date']	 = $GLOBALS['phpgw']->common->show_date($entry['end_date'], $dateformat);
