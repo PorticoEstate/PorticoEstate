@@ -30,9 +30,12 @@
                                 <div class="event_time" data-bind="text: event_time"></div>
                             </div>
                             <div class="card-element-right">
+
                                 <div class ="org_name" data-bind="text: org_name"></div>
-                                <div class="pin_img_logo"></div>
-                                <div class="location_name" data-bind="text: location_name"></div>
+                                <div class="location_container" >
+                                    <div class="pin_img_logo"></div>
+                                    <div class="location_name" data-bind="text: location_name"></div>
+                                </div>
                             </div>
 
                         </li>
