@@ -291,15 +291,12 @@ a {
     display: flex;
 }
 
-.activityList .activityRow{
+ .activityRow, .facilityRow{
   border-radius: 12px;
   border: solid 1px #ebebeb;
   background-color: #ffffff;
   margin: 10px;
   padding:10px;
-}
-
-.activityRow .activityHeaderText{
   font-family: Rubik !important;
   font-stretch: normal;
   font-style: normal;
@@ -308,6 +305,15 @@ a {
   color: #0b1214;
 }
 
+.facilityRow{
+    padding: 20px;
+    padding-left:32px;
+}
+
+.facilityRow:hover{
+      border: solid 1px #83338f;
+      cursor:pointer;
+}
 .activityRow .activityTitle{
     width:50%;
     border-left: 2px solid #ebebeb;

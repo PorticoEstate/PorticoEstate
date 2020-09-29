@@ -119,11 +119,17 @@
                           <div id="searchResultList">
                               
                               
-                                <div class="activityRow">
+                                <div class="facilityRow">
                              <div class="activityTitle activityText boldText activityHeaderSegment"> 
                                  Testanlegg
                              </div>
-                              <div>Test bygg222</div>
+                              <br /><div>Addresse her</div>
+                                </div>
+                                  <div class="facilityRow">
+                             <div class="activityTitle activityText boldText activityHeaderSegment"> 
+                                 Testanlegg 2
+                             </div>
+                              <br /><div>Addresse 2 her</div>
                                 </div>
                           </div>
                           </div>
