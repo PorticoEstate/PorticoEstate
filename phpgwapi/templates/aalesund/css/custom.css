@@ -245,6 +245,9 @@ a {
 }
 
 /* AK CUSTOM */
+.bodySection{
+    background: #f5f5ff !important;
+}
 #searchContainerContent{
     margin:auto;
     max-width: 720px;
@@ -312,7 +315,7 @@ a {
 #search-page-content{
     background: white !important;
 }
-.noteRectangle{
+.noteRectangle, .descriptionRectangle{
   width:90%;
   max-width: 848px;
   border-radius: 12px;
@@ -328,6 +331,12 @@ a {
   color: #0b1214;
   padding:20px;
   padding-left:24px;
+}
+
+.descriptionRectangle{
+    margin-top:10px;
+    background: white;
+    border: none;
 }
 .noteTitle{
   font-family: Martel;
