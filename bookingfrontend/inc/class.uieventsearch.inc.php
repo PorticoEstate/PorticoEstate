@@ -46,8 +46,7 @@
 	        $orgName = phpgw::get_var('orgName', 'string', 'REQUEST', null);
 
 	        $currentDate = date('Y-m-d H:i:s');
-            $ret =  $this->bosearch->soevent->get_events_from_date($currentDate, $orgName);
-            return $ret;
+            return $this->bosearch->soevent->get_events_from_date($currentDate, $orgName);
         }
 
         public function query()
