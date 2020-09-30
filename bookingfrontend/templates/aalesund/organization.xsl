@@ -1,4 +1,4 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="data" xmlns:php="http://php.net/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<div id="organization-page-content">
 		<div class="info-content pb-5">
 			<div class="container wrapper">
