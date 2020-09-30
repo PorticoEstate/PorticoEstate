@@ -366,6 +366,7 @@
 				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'session_id' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 				'agreement_requirements' => array('type' => 'text', 'nullable' => True),
+				'external_archive_key' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -1114,11 +1115,24 @@
 				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true),
 				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => true),
-				'quantity',	array('type' => 'int', 'precision' => 4,	'default' => 1,	'nullable' => false
-				)
+				'quantity' => array('type' => 'int', 'precision' => 4,	'default' => 1,	'nullable' => false)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_participant_limit' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'from_' => array('type' => 'timestamp', 'nullable' => false),
+				'quantity' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+			'pk' => array('id'),
+			'fk' => array('bb_resource' => array('resource_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),

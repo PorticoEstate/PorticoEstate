@@ -1016,6 +1016,7 @@
 				$ticket['payment_info']			 = $this->db->f('payment_info', true);
 				$ticket['delivery_type']		 = $this->db->f('delivery_type');
 				$ticket['payment_type']			 = $this->db->f('payment_type');
+				$ticket['charge_tenant']		 = $this->db->f('charge_tenant');
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1420,6 +1421,8 @@
 			$old_order_dim1			 = (int)$this->db->f('order_dim1');
 			$order_sent				 = $this->db->f('order_sent');
 			$old_order_id			 = $this->db->f('order_id');
+
+			$ticket['tenant_id']= $this->db->f('tenant_id');
 
 			if ($oldcat_id == 0)
 			{
@@ -1918,6 +1921,7 @@
 				$value_set['order_deadline2']		 = $ticket['order_deadline2'];// delete value if empty
 				$value_set['delivery_address']		 = $this->db->db_addslashes($ticket['delivery_address']);
 				$value_set['payment_info']			 = $this->db->db_addslashes($ticket['payment_info']);
+				$value_set['charge_tenant']			 = $ticket['charge_tenant'];
 
 				if (!empty($ticket['invoice_remark']) && !$order_sent)
 				{

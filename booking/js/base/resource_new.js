@@ -204,3 +204,31 @@ removeELock = function ()
 	});
 };
 
+
+add_participant_limit = function ()
+{
+	var oArgs = {menuaction: 'booking.uiresource.add_paricipant_limit'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var limit_from = $("#participant_limit_from").val();
+	var limit_quantity = $("#participant_limit_quantity").val();
+
+	$.ajax({
+		type: 'POST',
+		data: {limit_from: limit_from,limit_quantity: limit_quantity,  resource_id: resource_id},
+		dataType: 'JSON',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data.ok == 1 || data.ok == 2)
+			{
+				oTable2.fnDraw();
+				$("#participant_limit_from").val('');
+				$("#participant_limit_quantity").val('');
+			}
+			if (data.msg !== '')
+			{
+				alert(data.msg);
+			}
+		}
+	});
+};

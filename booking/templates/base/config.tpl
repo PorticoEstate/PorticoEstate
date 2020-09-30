@@ -80,6 +80,15 @@
 				<input name="newsettings[participant_limit]" value="{value_participant_limit}"/>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_participant_limit_sms}:</td>
+			<td>
+				<select name="newsettings[participant_limit_sms]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_participant_limit_sms_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

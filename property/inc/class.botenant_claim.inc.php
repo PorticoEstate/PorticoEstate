@@ -198,13 +198,6 @@
 			return $claim;
 		}
 
-		function check_claim_workorder( $workorder_id )
-		{
-			$claim				 = $this->so->check_claim_workorder($workorder_id);
-			$this->total_records = $this->so->total_records;
-			return $claim;
-		}
-
 		function read_single( $claim_id )
 		{
 			return $this->so->read_single($claim_id);

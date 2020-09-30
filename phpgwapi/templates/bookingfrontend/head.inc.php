@@ -150,15 +150,23 @@ JS;
 //	$municipality_email = 'servicetorget@alesund.kommune.no';
 //	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
 
-	if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+
+	if (!empty($config_frontend['support_address']))
 	{
-		$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
-		$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
+		$support_email = $config_frontend['support_address'];
 	}
 	else
 	{
-		$GLOBALS['phpgw']->template->set_var('support_email', 'support@aktivkommune.no');
+		if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+		{
+			$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
+		}
+		else
+		{
+			$support_email = 'support@aktivkommune.no';
+		}
 	}
+	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 
 //loads jquery
 	phpgwapi_jquery::load_widget('core');
