@@ -75,8 +75,9 @@
 
 			<div class="mt-4">
 				<a href="{allocation/participant_registration_link}" title="{$lang_registration}">
-				For registering: enten klikk på lenken, eller skanne Qr-kode
-			</a>
+					For registering: enten klikk på lenken, eller skanne Qr-kode
+				</a>
+			</div>
 			<div class="mt-4">
 				<a href="{allocation/participant_registration_link}" title="{$lang_registration}">
 					<img src="{allocation/encoded_qr}" alt="{$lang_registration}"/>
