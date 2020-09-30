@@ -2,10 +2,10 @@
     <div id="container_event_search">
         <div class="container searchContainer">
             <div class="input-group input-group-lg">
-                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="coolfunc()">
-                    <xsl:attribute name="placeholder">
-                        <xsl:value-of select="php:function('lang', 'Search for events')"/>
-                    </xsl:attribute>
+                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="coolfunc()" placeholder="søk etter organisasjoner">
+<!--                    <xsl:attribute name="placeholder">-->
+<!--                        <xsl:value-of select="php:function('lang', 'Search for organization')"/>-->
+<!--                    </xsl:attribute>-->
                 </input>
                 <div class="input-group-prepend">
                     <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button" onclick="searchInput()">
