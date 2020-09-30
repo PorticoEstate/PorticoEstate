@@ -244,6 +244,254 @@ a {
     color: #fff;
 }
 
+.Kommende-arrangement {
+    position: center;
+    margin: 0 auto;
+    /*width: 800px;*/
+    /*height: 72px;*/
+    font-family: Martel;
+    font-size: 40px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.8;
+    letter-spacing: normal;
+    text-align: center;
+    color: #3a3a4c;
+}
+
+.Rectangle {
+    width: 2REM;
+    height: 40px;
+    border-radius: 400px;
+    border-style: solid;
+    border-width: 1px;
+    border-image-source: linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
+    border-image-slice: 1;
+    background-image: linear-gradient(to bottom, #ffffff, #ffffff), linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+.eventsearchbox {
+    margin: 0 auto;
+    position: center;
+    text-align: center;
+    width: 495px;
+    height: 56px;
+    border-radius: 6px;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px #28358f;
+    background-color: #ffffff;
+}
+
+.arrangement-link-box {
+    width: 150px;
+    height: 30px;
+    border-radius: 20px;
+    border: solid 3px rgba(58, 58, 76, 0.48);
+    text-align: center;
+}
+
+.Arrangement_link {
+    width: 124px;
+    height: 24px;
+    font-family: Rubik;
+    margin-top: auto;
+    margin-bottom: auto;
+    /*position: center;*/
+    text-align: center;
+    margin: auto;
+    font-size: 20px;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #3a3a4c;
+}
+
+.event-card {
+    width: 100%;
+}
+
+.event-card > * {
+    height: 100px;
+    border-radius: 12px;
+    border: solid 1px #ebebeb;
+    background-color: #ffffff;
+    margin: 30px 0;
+    list-style-type: none;
+}
+.card-element-left{
+    position: relative;
+    width: 20%;
+    height: 100%;
+    float: left;
+}
+
+.formattedDate {
+    width: 36px;
+    height: 28px;
+    font-family: Rubik;
+    font-size: 24px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0b1214;
+}
+
+.card-element-mid {
+    float: left;
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: 60%;
+    flex-direction: inherit;
+}
+.event_time-container {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    font-family: "Georgia", serif;
+    font-size: 20px;
+    text-align: right;
+    color: #0b1214;
+    text-align: right;
+}
+.event_name-container {
+    position: absolute;
+    float: left;
+    width: 50%;
+    height: 100%;
+    font-size: 24px;
+    font-weight: 500;
+    color: #0b1214;
+    display: block;
+    margin: 0 auto;
+}
+.card-element-right {
+    position: relative;
+    float:right;
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+    width: 20%;
+}
+
+.location_container {
+    height: 100%;
+    display: flex;
+    margin-top: 5px;
+    position: center;
+
+}
+
+
+.location_name {
+    word-wrap: break-word;
+    width: 100px;
+    height: fit-content;
+    font-family: Rubik;
+    font-size: 18px;
+    line-height: 1.56;
+    color: #0b1214;
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.org_container {
+    height: 100%;
+    display: flex;
+    margin-top: 5px;
+    position: center;
+}
+
+.org_name {
+    width: 157px;
+    height: fit-content;
+    font-family: Rubik;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.56;
+    letter-spacing: normal;
+    color: #0b1214;
+}
+
+
+.cal-img-logo {
+    margin-left: 10px;
+    margin-top: 10px;
+    content: url(../img/calendar.png);
+    left: 10rem;
+}
+
+.pin_img_logo {
+    content: url(../img/pin.png);
+    width: 9px;
+    height: 12px;
+    object-fit: contain;
+}
+
+.vertical-bar {
+    border-left: 1px solid #ccc;
+    margin: 0 30px;
+    height: inherit;
+    position: relative;
+}
+
+/*autocomplete css*/
+* { box-sizing: border-box; }
+body {
+    font: 16px Arial;
+}
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+}
+input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+}
+input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+}
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
 
 #mainSearchInput  {
     border-left: 2px solid #26348B  !important;
@@ -2223,3 +2471,18 @@ footer h3{
 	border-bottom: 1.5px solid rgb(137, 38, 106);
 }
 
+.dp-highlight .ui-state-default {
+    background: #0e90d2  !important;
+    color: #FFF !important;
+}
+.ui-datepicker.ui-datepicker-multi  {
+    width: 100% !important;
+}
+.ui-datepicker-multi .ui-datepicker-group {
+    float:none;
+}
+#datepicker {
+    height: 300px;
+    overflow-x: scroll;
+}
+.ui-widget { font-size: 100% }
