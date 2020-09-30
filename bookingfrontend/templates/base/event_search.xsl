@@ -24,9 +24,10 @@
                                 <div class="cal-img-logo"></div>
                                 <div class="formattedDate-container">
                                     <span class="formattedDate"  data-bind="text: formattedDate"></span>
+                                    <span class="monthTag" data-bind="text:monthText"></span>
+
                                 </div>
                                 <div class="monthTag-container">
-                                    <span class="monthTag" data-bind="text:monthText"></span>
                                 </div>
                             </div>
                             <div class="card-element-mid">
