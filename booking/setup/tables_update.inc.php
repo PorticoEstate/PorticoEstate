@@ -4470,4 +4470,121 @@
 	}
 
 
+	/**
+	 * Update booking version from 0.2.55 to 0.2.56
+	 *
+	 */
+	$test[] = '0.2.55';
 
+	function booking_upgrade0_2_55()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_participant_log', 'quantity',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'default' => 1,
+					'nullable' => false
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.56';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.56 to 0.2.57
+	 *
+	 */
+	$test[] = '0.2.56';
+
+	function booking_upgrade0_2_56()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameTable('bb_participant_log', 'bb_participant');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.57';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.57 to 0.2.58
+	 *
+	 */
+	$test[] = '0.2.57';
+
+	function booking_upgrade0_2_57()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_participant', 'name',
+				array(
+					'type' => 'varchar',
+					'precision' => 150,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.58';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.58 to 0.2.59
+	 *
+	 */
+	$test[] = '0.2.58';
+
+	function booking_upgrade0_2_58()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_event', 'participant_limit',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.59';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.59 to 0.2.60
+	 *
+	 */
+	$test[] = '0.2.59';
+	function booking_upgrade0_2_59()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_application', 'agreement_requirements',
+				array(
+					'type' => 'text',
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.60';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

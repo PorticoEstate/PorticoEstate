@@ -251,6 +251,12 @@
 		 */
 		public function validate_ssn_login( $redirect = array())
 		{
+			if(!empty($this->config->config_data['test_ssn']))
+			{
+				$_SERVER['HTTP_UID'] = 	$this->config->config_data['test_ssn'];
+				phpgwapi_cache::message_set('Warning: ssn is set by test-data', 'error');
+			}
+
 			$ssn = (string)$_SERVER['HTTP_UID'];
 
 			if( isset($this->config->config_data['bypass_external_login']) && $this->config->config_data['bypass_external_login'] )

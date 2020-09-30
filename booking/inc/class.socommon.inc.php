@@ -249,7 +249,7 @@
 			{
 				return $this->db_null;
 			}
-			else if ($type == 'int' || $type == 'decimal')
+			else if ($type == 'int' || $type == 'decimal' || $type == 'timestamp')
 			{
 				if (is_string($value) && strlen(trim($value)) === 0)
 				{
@@ -262,6 +262,10 @@
 				else if ($type == 'decimal')
 				{
 					return floatval($value);
+				}
+				else if ($type == 'timestamp')
+				{
+					return "'" . $value . "'";
 				}
 				//Don't know what could have gone wrong above for us to get here but returning NULL here as a safety
 				return $this->db_null;
@@ -424,7 +428,7 @@
 					}
 					else
 					{
-						$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
+						$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type'], $modifier);
 					}
 				}
 			}

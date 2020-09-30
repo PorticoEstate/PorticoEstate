@@ -391,6 +391,8 @@
 					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+						/*hack to preserve dateformat for next step*/
+						$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
 					}
 					else
 					{
@@ -525,7 +527,7 @@
 					'step' => $step,
 					'interval' => $_POST['field_interval'],
 					'outseason' => $_POST['outseason'],
-					'repeat_until' => $_POST['repeat_until'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'outseason' => $_POST['outseason'],
 					'weekday' => $weekday,
 				));
@@ -536,7 +538,7 @@
 					'step' => $step,
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
-					'repeat_until' => $_POST['repeat_until'],
+					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'weekday' => $weekday,
 					'from_date' => $from_date,
 					'to_date' => $to_date,

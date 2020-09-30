@@ -584,11 +584,13 @@
 
 
 				$short_description = $_item['location_name'];
+				$short_description = '';
 
 				if(empty($get_locations))
 				{
-					$short_description .= '<br/>' . $_item['short_description'];
+//					$short_description .= '<br/>' . $_item['short_description'];
 //					$short_description .= ' [' . $_item['location_name'] . ']';
+					$short_description .= $_item['short_description'];
 				}
 				else
 				{
@@ -1626,9 +1628,17 @@ HTML;
 			);
 
 
-			$from_date_ts = strtotime("{$current_day_str} 0:00:00");
-			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
+//			$from_date_ts = strtotime("{$current_day_str} 0:00:00");
+//			$to_date_ts = strtotime("{$current_day_str} 23:59:59");
 
+			$from_date = new DateTime("{$current_day_str} 0:00:00");
+			$from_date->modify('first day of this month');
+
+			$to_date = new DateTime("{$current_day_str} 23:59:59");
+			$to_date->modify('last day of this month');
+
+			$from_date_ts = $from_date->getTimestamp();
+			$to_date_ts = $to_date->getTimestamp();
 
 			$selected_part_of_towns = array();
 			$part_of_town_list	 = array();
@@ -1670,7 +1680,22 @@ HTML;
 				$item_schedule = $this->get_items(0, 0, $control_id,  $entity_group_id, $part_of_town_id , $items, $from_date_ts, $to_date_ts);
 			}
 
-//			_debug_array($item_schedule);
+			$begin = clone $from_date;
+			$end = clone $to_date;
+
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+
+			$disabled_dates = array();
+			foreach ($period as $dt)
+			{
+				$test = $dt->format("Y-m-d");
+				if(empty($item_schedule[$test]))
+				{
+					$disabled_dates[] = $dt->format("Y/m/d");
+				}
+			}
+
 			$todo_list = array();
 			$completed_list = array();
 
@@ -1712,7 +1737,7 @@ HTML;
 
 			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('current_day_str', 'date', $current_day->getTimestamp()	);
+			$GLOBALS['phpgw']->jqcal2->add_listener('current_day_str', 'date', $current_day->getTimestamp(), array('disabled_dates' => $disabled_dates)	);
 			$data = array
 			(
 				'current_day_str' => $current_day->format('Y-m-d'),

@@ -1046,19 +1046,20 @@
 					}
 				}
 
-
 				$to = clone $_to;
 
 				if($resource['booking_day_horizon'])
 				{
-					$__to = clone $to;
-
-					$__to->modify("+{$resource['booking_day_horizon']} days");
-
-//					if($__to > $_to)
+					if(!$resource['booking_month_horizon'])
 					{
-						$to = clone $__to;
+						$__to = clone $from;
 					}
+					else
+					{
+						$__to = clone $to;
+					}
+					$__to->modify("+{$resource['booking_day_horizon']} days");
+					$to = clone $__to;
 				}
 
 				if($resource['booking_month_horizon'])
@@ -1085,12 +1086,19 @@
 					}
 				}
 
+				$to->setTime(23, 59, 59);
+
 				if ($resource['simple_booking'])
 				{
 					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
 				}
 
 				$resource['from'] = $from;
+				if($resource['booking_time_default_end'] > -1)
+				{
+					$to->setTime($resource['booking_time_default_end'], 0, 0);
+				}
+
 				$resource['to'] = $to;
 			}
 			unset($resource);
@@ -1101,8 +1109,9 @@
 				$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
 					'results' => -1));
 			}
+			
+			$this->get_partials( $events);
 
-//			_debug_array($events);
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;
 			$defaultStartHour_fallback	 = 8;
@@ -1123,11 +1132,13 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$datetimeformat = "{$dateformat} H:i";
 
+			$soseason = CreateObject('booking.soseason');
+
 			foreach ($resources['results'] as $resource)
 			{
 				$availlableTimeSlots[$resource['id']] = [];
 
-				if ($resource['simple_booking'])
+				if ($resource['simple_booking'] && $resource['simple_booking_start_date'])
 				{
 					$dow_start		 = $resource['booking_dow_default_start'];
 					$booking_lenght	 = $resource['booking_day_default_lenght'];
@@ -1167,9 +1178,7 @@
 						$defaultEndHour--;
 					}
 
-//					$checkDate = new DateTime();
 					$checkDate = clone $resource['from'];
-//					$checkDate->setTimezone($DateTimeZone);
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
 //					$limitDate = clone ($to);
@@ -1189,9 +1198,8 @@
 						if ($StartTime->format('H') > $defaultEndHour)
 						{
 							$StartTime->modify("+1 days");
+							$defaultStartHour = $defaultStartHour_fallback;
 						}
-
-//					$test = $checkDate->format('Y-m-d');
 
 						if ($dow_start > -1)
 						{
@@ -1223,9 +1231,12 @@
 
 						$checkDate = clone ($endTime);
 
+						$within_season = $soseason->timespan_within_season($resource['direct_booking_season_id'], $StartTime, $endTime);
+
 						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 
-						if (($booking_lenght > 1 && $overlap) || !$overlap)
+						if($within_season)
+					//	if ($within_season && (($booking_lenght > 1 && $overlap) || !$overlap))
 						{
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
@@ -1252,14 +1263,34 @@
 								$defaultStartHour = $defaultStartHour_fallback;
 							}
 						}
-//					$test = $StartTime->format('Y-m-d H:s');
-//					$test = $endTime->format('Y-m-d H:s');
 					}
 					while ($checkDate < $limitDate);
 				}
 			}
 
 			return $availlableTimeSlots;
+		}
+
+		private function get_partials(& $events)
+		{
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			if (!empty($session_id))
+			{
+				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
+				$params = array('filters' => $filters, 'results' =>'all');
+				$applications = CreateObject('booking.soapplication')->read($params);
+				
+				if($applications['results'])
+				{
+					foreach ($applications['results'] as & $application)
+					{
+						$application['from_'] = $application['dates'][0]['from_'];
+						$application['to_'] = $application['dates'][0]['to_'];
+					}
+
+					$events['results'] = array_merge((array)$events['results'],$applications['results']);
+				}
+			}
 		}
 
 		function check_if_resurce_is_taken( $resource_id, $StartTime, $endTime, $events )
@@ -1275,8 +1306,11 @@
 					$event_start = new DateTime($event['from_'], $DateTimeZone);
 					$event_end	 = new DateTime($event['to_'], $DateTimeZone);
 					if (
-						($StartTime >= $event_start && $StartTime <= $event_end) ||
-						($event_start >= $StartTime && $event_start <= $endTime)
+//						($StartTime >= $event_start && $StartTime <= $event_end) ||
+//						($event_start >= $StartTime && $event_start <= $endTime)
+                       ($event_start <= $StartTime AND $event_end > $StartTime)
+                      || ($event_start > $StartTime AND $event_end < $endTime)
+                      || ($event_start < $endTime AND $event_end >= $endTime)
 					)
 					{
 						$overlap = true;

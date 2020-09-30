@@ -1628,12 +1628,13 @@ HTML;
 
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
+						phpgwapi_cache::session_clear('phpgwapi', 'history');
 						return array(
 							'status' => 'error',
 							'parent_cat_id' => $this->parent_cat_id,
 							'id' => null,
-							'message' =>  implode(', ', $receipt['error'])
-							);
+							'message' =>  $receipt['error']
+						);
 					}
 
 					if (isset($values['location']) && $values['location'])
@@ -3542,10 +3543,12 @@ JS;
 							array(
 								'__ressursnr__',
 								'__order_id__',
+								'__address__',
 							),
 							array(
 								$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
-								$ticket['order_id']
+								$ticket['order_id'],
+								$_delivery_address
 							),
 							$payment_type['descr']
 						);

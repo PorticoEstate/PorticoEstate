@@ -51,10 +51,28 @@
 			$this->document_resource = CreateObject('booking.bodocument_resource');
 
 			self::set_active_menu('booking::applications::applications');
-			$this->fields = array('formstage', 'name', 'organizer', 'homepage', 'description', 'equipment', 'resources',
-				'activity_id', 'building_id', 'building_name', 'contact_name',
-				'contact_email', 'contact_phone', 'audience',
-				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
+			$this->fields = array(
+				'formstage' => 'string',
+				'name' => 'string',
+				'organizer' => 'string',
+				'homepage' => 'string',
+				'description' => 'string',
+				'equipment' => 'string',
+				'resources' => 'string',
+				'activity_id' => 'string',
+				'building_id' => 'string',
+				'building_name' => 'string',
+				'contact_name' => 'string',
+				'contact_email' => 'string',
+				'contact_phone' => 'string',
+				'audience' => 'string',
+				'active' => 'string',
+				'accepted_documents' => 'string',
+				'responsible_street' => 'string',
+				'responsible_zip_code' => 'string',
+				'responsible_city' => 'string',
+				'agreement_requirements' => 'html'
+			);
 
 			$this->display_name = lang('application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
@@ -703,7 +721,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, resource_id => phpgw::get_var('resource_id', 'int')));
 					}
 					else
 					{
@@ -809,7 +827,14 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						if($simple)
+						{
+							$this->redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+						}
+						else
+						{
+							$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+						}
 					}
 					else
 					{
@@ -826,6 +851,10 @@
 						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
 							'secret' => $application['secret']));
 					}
+				}
+				else
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'history');
 				}
 			}
 			if (phpgw::get_var('resource') == 'null' || !phpgw::get_var('resource'))
@@ -1503,6 +1532,7 @@
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
+				self::rich_text_editor('field_agreement_requirements');
 				$tabs = array();
 				$tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
 				$active_tab = 'generic';

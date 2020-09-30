@@ -41,7 +41,7 @@
 		public function get_freetime()
 		{
 			$building_id = phpgw::get_var('building_id', 'int');
-			$resource_id = phpgw::get_var('resource_id', 'int');			
+			$resource_id = phpgw::get_var('resource_id', 'int');
 
 			$start_date = phpgw::get_var('start_date', 'date');
 			$end_date = phpgw::get_var('end_date', 'date');
@@ -1227,9 +1227,8 @@
 
 		public function info()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['user_can_delete_bookings'] != 'yes')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_bookings'] != 'yes')
 			{
 				$user_can_delete_bookings = 0;
 			}
@@ -1272,7 +1271,72 @@
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
 			}
 			$booking['when'] = $when;
+			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
+						'id' => $booking['id']));
+			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
+
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		public function show()
+		{
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_bookings'] != 'yes')
+			{
+				$user_can_delete_bookings = 0;
+			}
+			else
+			{
+				$user_can_delete_bookings = 1;
+			}
+			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
+			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $booking['resources']),
+				'sort' => 'name'));
+			$booking['resources'] = $resources['results'];
+			$res_names = array();
+			foreach ($booking['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$booking['resource_info'] = join(', ', $res_names);
+
+			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when = "";
+			if($interval->days > 0)
+			{
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			} else
+			{
+				$end = new DateTime($booking['to_']);
+				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}
+			$booking['when'] = $when;
+
+			$number_of_participants = createObject('booking.boparticipant')->get_number_of_participants('booking', $booking['id']);
+
+			$booking['number_of_participants'] = $number_of_participants;
+
+			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$participant_registration_link = $external_site_address
+				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+				. "&reservation_type=booking"
+				. "&reservation_id={$booking['id']}";
+
+			$booking['participant_registration_link'] = $participant_registration_link;
+
+			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
+
+			$booking['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+
+			phpgw::import_class('phpgwapi.phpqrcode');
+			$code_text					 = $participant_registration_link;
+			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
+			QRcode::png($code_text, $filename);
+			$booking['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
+
+			self::render_template_xsl('booking_show', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 		}
 	}

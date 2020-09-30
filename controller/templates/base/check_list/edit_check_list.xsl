@@ -1,5 +1,11 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="edit_check_list" xmlns:php="http://php.net/xsl">
+	<style>
+		input[type="file"]
+		{
+		margin: 0 !important;
+		}
+	</style>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />

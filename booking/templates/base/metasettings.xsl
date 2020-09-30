@@ -58,6 +58,16 @@
 							</textarea>
 						</div>
 					</div>
+					<div class="pure-control-group">
+						<label for="field_participanttext">
+							<xsl:value-of select="php:function('lang', 'register participant text')"/>
+						</label>
+						<div class="pure-custom">
+							<textarea id="field_participanttext" class="full-width" name="participanttext">
+								<xsl:value-of disable-output-escaping="yes" select="config_data/participanttext"/>
+							</textarea>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-buttons">

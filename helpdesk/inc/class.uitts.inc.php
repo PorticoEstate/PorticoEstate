@@ -1815,11 +1815,12 @@ JS;
 
 				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
+					phpgwapi_cache::session_clear('phpgwapi', 'history');
 					return array(
 						'status' => 'error',
 						'parent_cat_id' => $this->parent_cat_id,
 						'id' => null,
-						'message' =>  implode(', ', $receipt['error'])
+						'message' =>  $receipt['error']
 					);
 				}
 

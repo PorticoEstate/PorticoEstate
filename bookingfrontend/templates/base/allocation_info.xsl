@@ -55,6 +55,21 @@
 		</div>
 	</xsl:if>
 
+<!--	<xsl:if test="allocation/participant_limit > 0">
+		<div>
+			<span class="font-weight-bold text-uppercase">
+				<xsl:value-of select="php:function('lang', 'participant limit')" />:
+			</span>
+			<xsl:value-of select="allocation/participant_limit"/>
+		</div>
+	</xsl:if>-->
+
+	<div class="actions">
+		<a href="{allocation/show_link}" target="_blank" class="btn btn-light mt-4">
+			<xsl:value-of select="php:function('lang', 'view allocation')"/>
+		</a>
+	</div>
+
 	<xsl:if test="allocation/add_link">
 		<div class="actions">
 			<button onclick="location.href='{allocation/add_link}'" class="btn btn-light mt-4">

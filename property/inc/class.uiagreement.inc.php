@@ -59,7 +59,7 @@
 			'get_content'		 => true,
 			'deleteitem'		 => true,
 			'get_contentalarm'	 => true,
-			'edit_alarm'		 => true,
+			'edit_data'			 => true,
 			'get_contentitem'	 => true,
 		);
 
@@ -875,6 +875,7 @@
 
 		public function get_contentalarm()
 		{
+			$draw			 = phpgw::get_var('draw', 'int');
 			$id				 = phpgw::get_var('id', 'int');
 			$acl_location	 = phpgw::get_var('acl_location');
 			$times			 = phpgw::get_var('times');
@@ -927,26 +928,26 @@
 			}
 		}
 
-		function edit_alarm()
+		function edit_data()
 		{
 			$boalarm	 = CreateObject('property.boalarm');
-			$ids_alarm	 = !empty($_POST['ids']) ? $_POST['ids'] : '';
-			$type_alarm	 = !empty($_POST['type']) ? $_POST['type'] : '';
+			$ids_alarm	 = phpgw::get_var('ids', 'int', 'POST');
+			$type_data	 = phpgw::get_var('type', 'string', 'POST');
 
 			//Add Alarm
-			$idAgreement = !empty($_POST['id']) ? $_POST['id'] : '';
-			$day		 = !empty($_POST['day']) ? $_POST['day'] : '';
-			$hour		 = !empty($_POST['hour']) ? $_POST['hour'] : '';
-			$minute		 = !empty($_POST['minute']) ? $_POST['minute'] : '';
-			$user_list	 = !empty($_POST['user_list']) ? $_POST['user_list'] : '';
+			$idAgreement = phpgw::get_var('id', 'int', 'POST');
+			$day		 = phpgw::get_var('day', 'int', 'POST');
+			$hour		 = phpgw::get_var('hour', 'int', 'POST');
+			$minute		 = phpgw::get_var('minute', 'int', 'POST');
+			$user_list	 = phpgw::get_var('user_list', 'string', 'POST');
 
 			//Update Index and Date
-			$date	 = !empty($_POST['date']) ? $_POST['date'] : '';
-			$index	 = !empty($_POST['index']) ? $_POST['index'] : '';
-			$mcosto	 = !empty($_POST['mcost']) ? $_POST['mcost'] : '';
-			$wcosto	 = !empty($_POST['wcost']) ? $_POST['wcost'] : '';
-			$tcosto	 = !empty($_POST['tcost']) ? $_POST['tcost'] : '';
-			$icount	 = !empty($_POST['icoun']) ? $_POST['icoun'] : '';
+			$date	 = phpgw::get_var('date', 'string', 'POST');
+			$index	 = phpgw::get_var('index', 'float', 'POST');
+			$mcosto	 = phpgw::get_var('mcost', 'float', 'POST');
+			$wcosto	 = phpgw::get_var('wcost', 'float', 'POST');
+			$tcosto	 = phpgw::get_var('tcost', 'float', 'POST');
+			$icount	 = phpgw::get_var('icoun', 'int', 'POST');
 
 
 			$requestUrl_Alarm = json_encode(self::link(array(
@@ -964,10 +965,10 @@
 
 			$receipt = array();
 
-			if (!empty($type_alarm))
+			if (!empty($type_data))
 			{
 
-				if ($type_alarm == 'update' || $type_alarm == 'update_item')
+				if ($type_data == 'update' || $type_data == 'update_item')
 				{
 					$values = array(
 						'select'		 => $ids_alarm,
@@ -982,7 +983,7 @@
 
 					$receipt = $this->bo->update($values);
 
-					if ($type_alarm == 'update')
+					if ($type_data == 'update')
 					{
 						$requestUrl = json_encode(self::link(array('menuaction'		 => 'property.uiagreement.get_content',
 								'agreement_id'		 => $idAgreement, 'phpgw_return_as'	 => 'json')));
@@ -994,9 +995,9 @@
 					}
 					return $requestUrl;
 				}
-				else if (($type_alarm == 'delete_alarm' || $type_alarm == 'delete_item' ) && count($ids_alarm))
+				else if (($type_data == 'delete_alarm' || $type_data == 'delete_item' ) && count($ids_alarm))
 				{
-					if ($type_alarm == 'delete_alarm')
+					if ($type_data == 'delete_alarm')
 					{
 						$boalarm->delete_alarm('agreement', $ids_alarm);
 					}
@@ -1009,12 +1010,12 @@
 						return $requestUrl;
 					}
 				}
-				else if (($type_alarm == 'disable_alarm' || $type_alarm == 'enable_alarm' ) && count($ids_alarm))
+				else if (($type_data == 'disable_alarm' || $type_data == 'enable_alarm' ) && count($ids_alarm))
 				{
-					$type_alarm = ($type_alarm == 'enable_alarm') ? $type_alarm : '';
-					$boalarm->enable_alarm('agreement', $ids_alarm, $type_alarm);
+					$type_data = ($type_data == 'enable_alarm') ? $type_data : '';
+					$boalarm->enable_alarm('agreement', $ids_alarm, $type_data);
 				}
-				else if ($type_alarm == 'add_alarm')
+				else if ($type_data == 'add_alarm')
 				{
 					$time = intval($day) * 24 * 3600 + intval($hour) * 3600 + intval($minute) * 60;
 
@@ -1594,6 +1595,8 @@
 		{
 			$agreement_id	 = phpgw::get_var('agreement_id', 'int');
 			$id				 = phpgw::get_var('activity_id', 'int');
+
+			$draw	 = phpgw::get_var('draw', 'int');
 
 			if (empty($agreement_id) || empty($id))
 			{

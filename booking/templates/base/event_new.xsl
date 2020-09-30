@@ -351,6 +351,13 @@
 											</xsl:for-each>
 										</tbody>
 									</table>
+									<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
+										<label for="field_participant_limit">
+											<xsl:value-of select="php:function('lang', 'participant limit')" />
+										</label>
+										<input id="field_participant_limit" name="participant_limit" type="number" min="0">
+										</input>
+									</div>
 								</div>
 							</div>
 						</div>

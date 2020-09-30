@@ -144,7 +144,13 @@ ajax_submit_form = function (action)
 						element.parentNode.removeChild(element);
 					}
 
-					alert(data.message);
+					var error_message = '';
+					$.each(data.message, function (index, error)
+					{
+						error_message += error.msg + "\n";
+					});
+
+					alert(error_message);
 				}
 			}
 		}

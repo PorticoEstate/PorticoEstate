@@ -84,6 +84,11 @@
 				}
 
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån er " . lang($application['status']) . '</p>';
+				if ($application['agreement_requirements'] != '')
+				{
+					$lang_additional_requirements = lang('additional requirements');
+					$body .= "{$lang_additional_requirements}:<br />" . $application['agreement_requirements'] . "<br />";
+				}
 				if ($application['comment'] != '')
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . nl2br($application['comment']) . "</p>";
@@ -98,6 +103,53 @@
 					$body .= "<pre>Avvist: " . $rdates . "</pre>";
 				}
 
+				phpgw::import_class('booking.sodocument');
+
+				$where_filter = array();
+
+				if(empty($application['building_id']))
+				{
+					$building_info = $this->so->get_building_info($application['id']);
+					$application['building_id'] = $building_info['id'];
+				}
+				
+				if($application['building_id'])
+				{
+					$where_filter[] = "(%%table%%.type='building' AND %%table%%.owner_id = {$application['building_id']})";
+				}
+
+				foreach ($application['resources'] as $resource_id)
+				{
+					$where_filter[] = "(%%table%%.type='resource' AND %%table%%.owner_id = {$resource_id})";
+				}
+
+				$regulations_params = array(
+					'start' => 0,
+					'sort'=> 'name',
+					'filters' => array(
+						'active' => 1,
+						'category' => array(booking_sodocument::CATEGORY_REGULATION,
+										booking_sodocument::CATEGORY_HMS_DOCUMENT,
+										booking_sodocument::CATEGORY_PRICE_LIST),
+						'where' => array('(' . join(' OR ', $where_filter) . ')')
+					)
+				);
+
+
+				$sodocument_view = createObject('booking.sodocument_view');
+				$files = $sodocument_view->read($regulations_params);
+				$mime_magic	 = createObject('phpgwapi.mime_magic');
+				$attachments = array();
+				foreach ($files['results'] as $file)
+				{
+					$document = $sodocument_view->read_single($file['id']);
+					$attachments[] = array
+					(
+						'file'	 => $document['filename'],
+						'name'	 => basename($document['filename']),
+						'type'	 => $mime_magic->filename2mime(basename($document['filename']))
+					);
+				}
 
 				if (isset($config->config_data['application_notify_on_accepted']) && $config->config_data['application_notify_on_accepted'] == 1)
 				{
@@ -115,7 +167,7 @@
 
 						if($application['equipment'] && $application['equipment'] != 'dummy')
 						{
-							$body .= "<p><b>{$config->config_data['application_equipment']}:</b><br />" . $application['equipment'] . "</p>";						
+							$body .= "<p><b>{$config->config_data['application_equipment']}:</b><br />" . $application['equipment'] . "</p>";
 						}
 
 						foreach ($buildingemail as $bemail)
@@ -174,12 +226,12 @@
 					$cellphones[] =  $prefs['common']['cellphone'];
 				}
 			}
-			
+
 			$bcc = implode(';', $mail_addresses);
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
+				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
 				if($bcc && $created)
 				{
 
@@ -225,7 +277,7 @@
 
 
 		/**
-		 * 
+		 *
 		 * @param int $building_id
 		 * @param int $user_id - the case officer, if any
 		 * @return array
@@ -261,7 +313,7 @@
 
 			return $mail_addresses;
 		}
-		
+
 
 		/**
 		 * @ Send message about comment on application to case officer.
@@ -317,7 +369,7 @@
 			$link =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.show','id' => $application['id']), false, true, true);
 
 			/**
-			 * Text-version	
+			 * Text-version
 			*/
 			$link = str_replace('&amp;', '&', $link);
 
@@ -369,7 +421,7 @@ HTML;
 				try
 				{
 					$send->msg('email', $adr, $subject, $plain_text, '', '', '', $from, 'AktivKommune', 'text');
-					
+
 					if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
 					{
 						phpgwapi_cache::message_set("Epost er sendt til {$adr}");
@@ -462,7 +514,7 @@ HTML;
 			{
 				$params['filters']['status'] = phpgw::get_var('status');
 			}
-	
+
 			$params['filters']['where'] = $where_clauses;
 
 			return $this->so->read($params);

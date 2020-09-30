@@ -8,6 +8,7 @@
 			(
 			'info'	 => true,
 			'cancel' => true,
+			'show'	 => true
 		);
 
 		public function __construct()
@@ -354,11 +355,10 @@
 
 		public function info()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['user_can_delete_allocations'] != 'never')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if ($config['user_can_delete_allocations'] != 'never')
 			{
-				if ($config->config_data['user_can_delete_allocations'] != 'yes')
+				if ($config['user_can_delete_allocations'] != 'yes')
 				{
 					$user_can_delete_allocations = 0;
 				}
@@ -411,8 +411,79 @@
 				$when	 = pretty_timestamp($allocation['from_']) . ' - ' . $end->format('H:i');
 			}
 			$allocation['when'] = $when;
+			$allocation['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
+						'id' => $allocation['id']));
+			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];
+
 			self::render_template_xsl('allocation_info', array('allocation'	 => $allocation,
 				'user_can_delete_allocations'	 => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		public function show()
+		{
+			$allocation				 = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$resources				 = $this->resource_bo->so->read(array('filters'	 => array('id' => $allocation['resources']),
+				'sort'		 => 'name'));
+			$allocation['resources'] = $resources['results'];
+			$res_names				 = array();
+			foreach ($allocation['resources'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+			$allocation['resource']		 = phpgw::get_var('resource');
+			$allocation['resource_info'] = join(', ', $res_names);
+			$allocation['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id'		 => $allocation['building_id']));
+			$allocation['org_link']		 = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id'		 => $allocation['organization_id']));
+			$bouser						 = CreateObject('bookingfrontend.bouser');
+			if ($bouser->is_organization_admin($allocation['organization_id']))
+			{
+				$allocation['add_link']		 = self::link(array('menuaction'	 => 'bookingfrontend.uibooking.add',
+						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
+						'to_'			 => $allocation['to_'],
+						'resource'		 => $allocation['resource']));
+				$allocation['cancel_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.cancel',
+						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
+						'to_'			 => $allocation['to_'],
+						'resource'		 => $allocation['resource']));
+			}
+			$interval	 = (new DateTime($allocation['from_']))->diff(new DateTime($allocation['to_']));
+			$when		 = "";
+			if ($interval->days > 0)
+			{
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			}
+			else
+			{
+				$end	 = new DateTime($allocation['to_']);
+				$when	 = pretty_timestamp($allocation['from_']) . ' - ' . $end->format('H:i');
+			}
+			$allocation['when'] = $when;
+
+			$number_of_participants = createObject('booking.boparticipant')->get_number_of_participants('allocation', $allocation['id']);
+
+			$allocation['number_of_participants'] = $number_of_participants;
+
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$participant_registration_link = $external_site_address
+				. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
+				. "&reservation_type=allocation"
+				. "&reservation_id={$allocation['id']}";
+
+			$allocation['participant_registration_link'] = $participant_registration_link;
+			$allocation['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
+			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];
+
+			phpgw::import_class('phpgwapi.phpqrcode');
+			$code_text					 = $participant_registration_link;
+			$filename					 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
+			QRcode::png($code_text, $filename);
+			$allocation['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
+
+			self::render_template_xsl('allocation_show', array('allocation'	 => $allocation));
 		}
 	}

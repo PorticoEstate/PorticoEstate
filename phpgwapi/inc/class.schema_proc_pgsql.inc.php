@@ -319,7 +319,7 @@
 				$colnum  = $sdb->f(0);
 				$colname = $sdb->f(1);
 
-				if ($sdb->f(5) == 'f')
+				if ($sdb->f(5) == 'false')
 				{
 					$null = "'nullable' => False";
 				}
@@ -352,13 +352,11 @@
 				$type = $this->rTranslateType($sdb->f(2), $prec, $scale);
 
 				$sql_get_default = "
-					SELECT d.adsrc AS rowdefault
-						FROM pg_attrdef d, pg_class c
-						WHERE
-							c.relname = '$sTableName' AND
-							c.oid = d.adrelid AND
-							d.adnum = $colnum
-					";
+				SELECT column_default
+					FROM information_schema.columns
+					WHERE table_name='{$sTableName}'
+					AND column_name = '{$colname}'";
+
 				$sdc->query($sql_get_default, __LINE__, __FILE__);
 				$sdc->next_record();
 				if ($sdc->f(0) != '')
@@ -543,11 +541,21 @@
 		{
 			global $DEBUG;
 			if($DEBUG) { echo '<br>GetSequenceFieldForTable: You rang?'; }
-			$oProc->m_odb->query("SELECT a.attname FROM pg_attribute a, pg_class c, pg_attrdef d WHERE c.relname='$table' AND c.oid=d.adrelid AND d.adsrc LIKE '%seq_$table%' AND a.attrelid=c.oid AND d.adnum=a.attnum", __LINE__, __FILE__);
+
+//			$oProc->m_odb->query("SELECT a.attname FROM pg_attribute a, pg_class c, pg_attrdef d WHERE c.relname='$table' AND c.oid=d.adrelid AND d.adsrc LIKE '%seq_$table%' AND a.attrelid=c.oid AND d.adnum=a.attnum", __LINE__, __FILE__);
+
+			$sql = "SELECT table_name, column_name, column_default"
+				. " FROM information_schema.columns"
+				. " WHERE table_name='{$table}'"
+				. " AND column_default LIKE '%seq_{$table}%'";
+
+			$oProc->m_odb->query($sql, __LINE__, __FILE__);
+
 			$oProc->m_odb->next_record();
-			if ($oProc->m_odb->f('attname'))
+			$column_name = $oProc->m_odb->f('column_name');
+			if ($column_name)
 			{
-				$sField = $oProc->m_odb->f('attname');
+				$sField = $column_name;
 			}
 			return True;
 		}

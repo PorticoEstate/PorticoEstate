@@ -32,7 +32,8 @@
 			return array(
 				'booking.async_task_update_reservation_state',
 				'booking.async_task_send_reminder',
-				'booking.async_task_send_access_request'
+				'booking.async_task_send_access_request',
+				'booking.async_task_delete_participants'
 			);
 		}
 
