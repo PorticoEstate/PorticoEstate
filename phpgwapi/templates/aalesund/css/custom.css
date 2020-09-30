@@ -384,7 +384,6 @@ a {
 
 .location_name {
     word-wrap: break-word;
-    width: 100px;
     height: fit-content;
     font-family: Rubik;
     font-size: 18px;
