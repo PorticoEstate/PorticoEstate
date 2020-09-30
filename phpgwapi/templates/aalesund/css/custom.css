@@ -319,23 +319,19 @@ a {
     margin: 30px 0;
     list-style-type: none;
 }
-.card-element-left{
+.card-element-left {
     position: relative;
     width: 20%;
-    height: 100%;
     float: left;
+    left: 2%;
 }
 
-.formattedDate {
+.formattedDate-container {
     width: 36px;
     height: 28px;
     font-family: Rubik;
     font-size: 24px;
     font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
     color: #0b1214;
 }
 
@@ -349,8 +345,8 @@ a {
 }
 .event_time-container {
     position: absolute;
-    width: 50%;
-    height: 100%;
+    right: 5%;
+    bottom: 40%;
     font-family: "Georgia", serif;
     font-size: 20px;
     text-align: right;
@@ -360,8 +356,8 @@ a {
 .event_name-container {
     position: absolute;
     float: left;
-    width: 50%;
-    height: 100%;
+    left: 5%;
+    top: 40%;
     font-size: 24px;
     font-weight: 500;
     color: #0b1214;
