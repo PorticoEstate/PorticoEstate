@@ -1772,7 +1772,7 @@
 					//test value:
 					$application['customer_ssn'] = 13089402128;
 
-					$result = $archive->export_data($export_text['title'], $application['id'], $application['customer_ssn'], $files);
+					$result = $archive->export_data($export_text['title'], $application, $files);
 
 					//update application with external_archive_key
 					if (!empty($result['external_archive_key']))
