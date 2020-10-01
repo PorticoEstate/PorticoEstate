@@ -45,7 +45,7 @@
 						</xsl:attribute>
 					</input>
                             </div>
-                             <div>
+                             <div id="dateLocationFilterWrapper">
                                  <div  id="locationWrapper">
                                    <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>  
                                  </div>
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         
-                        <div id="searchResultsWrapper">
+                        <div id="searchResultsWrapper" style="display:none">
                           <div id="searchResutsHeader">  Søkeresultat  <div id="resultCount">2 treff</div></div> 
                           <hr />
                           <div id="searchResultsContainer">
@@ -132,9 +132,7 @@
                               <button class="greenBtn filterButton" id="aktiverFilterBtn">Aktiver filter</button>
                               <button class="grayBtn filterButton" id="nullstillFilterBtn">Nullstill filter</button>
                           </div>
-                          <div id="searchResultList">
-                              
-                              
+                          <div id="searchResultList">    
                                 <div class="facilityRow">
                              <div class="activityTitle activityText boldText activityHeaderSegment"> 
                                  Testanlegg
