@@ -78,12 +78,12 @@
 
 	<xsl:if test="event/edit_link">
 		<div class="actions">
-			<button onclick="location.href='{event/edit_link}'" class="btn btn-light mt-4">
+			<a  href="{event/edit_link}" target="_blank" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Edit event')"/>
-			</button>
-			<button onclick="location.href='{event/cancel_link}'" class="btn btn-light mt-4">
+			</a>
+			<a href="{event/cancel_link}" target="_blank" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Cancel event')"/>
-			</button>
+			</a>
 		</div>
 	</xsl:if>
 </xsl:template>
