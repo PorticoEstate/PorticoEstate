@@ -173,8 +173,8 @@ JS;
 
 	$javascripts	 = array();
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
+//  Alloy-ui disagrees with Bootstrap version 4.5.2 and hides buttons in some cases (event.info)
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
