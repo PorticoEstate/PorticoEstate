@@ -328,18 +328,8 @@ function GetAutocompleteData()
 	});
 }
 
-/**
- * Transition to search-results page
- */
-function searcTransition(){
-    $("#dateLocationFilterWrapper, #searchBtn, .activityList, .titleContainer").hide();
-    $("#searchResultsWrapper").show();
-    
-}
-
 function doSearch(searchterm_value)
 {
-    searcTransition();
 	$(".overlay").show();
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
