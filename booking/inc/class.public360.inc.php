@@ -204,7 +204,8 @@
 		{
 
 			$data = array(
-				'EnterpriseNumber' => $organization_number
+				'EnterpriseNumber' => $organization_number,
+				'Active' => true
 				);
 
 			$input = array('parameter' => $data);
