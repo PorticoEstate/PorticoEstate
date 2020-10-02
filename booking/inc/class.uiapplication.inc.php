@@ -1769,8 +1769,20 @@
 					$files = array();
 					$files[] = array('file_name' => $file_name, 'file_data' => $file_data );
 
-					//test value:
-					$application['customer_ssn'] = 13089402128;
+					unset($file_data);
+
+					$attachments = $this->bo->get_related_files($application);
+
+					foreach ($attachments as $attachment)
+					{
+						$file_content = file_get_contents($attachment['name']);
+						$files[] = array(
+							'file_name' => $attachment['name'],
+							'file_data' => $file_content ? $file_content : 'Dummytext'
+							);
+					}
+
+					unset($file_content);
 
 					$result = $archive->export_data($export_text['title'], $application, $files);
 

@@ -68,7 +68,7 @@
 		}
 
 
-		public function export_data( $title, $application, $files )
+		public function export_data( $_title, $application, $files )
 		{
 			if(!$this->archive_user_id)
 			{
@@ -76,19 +76,23 @@
 				return;
 			}
 
-			$person_data = $this->get_person( $application['customer_ssn'] );
-
-			if($person_data[0] && empty($person_data[0]['PostAddress']['StreetAddress']))
+			$title = str_replace(array('(', ')'), array('[', ']'), $_title);
+			if($application['customer_ssn'])
 			{
-				$person_data = $this->add_update_person( $application, $person_data[0] );
+				$person_data = $this->get_person( $application['customer_ssn'] );
+
+				if(!$person_data || empty($person_data['PostAddress']['StreetAddress']))
+				{
+					$person_data = $this->add_update_person( $application, $person_data );
+				}
 			}
 
 			if(!empty($application['customer_organization_number']))
 			{
 				$enterprise_data = $this->get_enterprise( $application['customer_organization_number']);
-				if($enterprise_data[0] && empty($enterprise_data[0]['Name']))
+				if(!$enterprise_data || empty($enterprise_data['Name']))
 				{
-					$enterprise_data = $this->add_update_enterprise( $application, $enterprise_data[0]);
+					$enterprise_data = $this->add_update_enterprise( $application, $enterprise_data);
 				}
 			}
 
@@ -119,11 +123,37 @@
 			$input = array('parameter' => $data);
 			$method = 'ContactService/GetPrivatePersons';
 			$person_data = $this->transfer_data($method, $input);
-			return $person_data;
+			return current($person_data['PrivatePersons']);
 		}
 
 		public function add_update_person ( $application, $person_data )
 		{
+			phpgw::import_class('bookingfrontend.bouser');
+
+			$data = array(
+				'ssn'	=> $application['customer_ssn'],
+//				'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
+//				'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
+				);
+
+			$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+			$get_name_from_external = isset($configfrontend['get_name_from_external']) && $configfrontend['get_name_from_external'] ? $configfrontend['get_name_from_external'] : '';
+
+			$file = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default/{$get_name_from_external}";
+
+			if (is_file($file))
+			{
+				require_once $file;
+				$external_user = new bookingfrontend_external_user_name();
+				try
+				{
+					$external_user->get_name_from_external_service( $data );
+				}
+				catch (Exception $exc)
+				{
+				}
+			}
+
 			if(!empty($person_data['PostAddress']))
 			{
 				$PostAddress = $person_data['PostAddress'];
@@ -131,23 +161,24 @@
 			else
 			{
 				$PostAddress		 = array(
-					'StreetAddress'	 => $application['responsible_street'],
-					'ZipCode'		 => $application['responsible_zip_code'],
-					'ZipPlace'		 => $application['responsible_city'],
+					'StreetAddress'	 => $data['street'],
+					'ZipCode'		 => $data['zip_code'],
+					'ZipPlace'		 => $data['city'],
 					'Country'		 => 'NOR',
 				);
 			}
 
 			$name_array = explode(' ', trim(str_replace('  ', ' ', $application['contact_name'])));
 			$last_name = end($name_array);
-			$first_name = implode(' ', array_pop($name_array));
+			array_pop($name_array);
+			$first_name = implode(' ', $name_array);
 
 			$data = array(
 				'ExternalID'		 => $application['customer_ssn'],
 				'PersonalIdNumber'	 => $application['customer_ssn'],
-				'FirstName'			 => $person_data['FirstName'] ? $person_data['FirstName'] : $first_name,
+				'FirstName'			 => $person_data['FirstName'] ? $person_data['FirstName'] : $data['first_name'],
 				'MiddleName'		 => $person_data['MiddleName'] ? $person_data['MiddleName'] : '',
-				'LastName'			 => $person_data['LastName'] ? $person_data['LastName'] : $last_name,
+				'LastName'			 => $person_data['LastName'] ? $person_data['LastName'] : $data['last_name'],
 				'Email'				 => $person_data['Email'] ? $person_data['Email'] : $application['contact_email'],
 				'PhoneNumber'		 => $person_data['PhoneNumber'] ? $person_data['PhoneNumber'] : $application['contact_phone'],
 				'PostAddress'		 => $PostAddress
@@ -179,14 +210,12 @@
 			$input = array('parameter' => $data);
 			$method = 'ContactService/GetEnterprises';
 			$enterprise_data = $this->transfer_data($method, $input);
-			return $enterprise_data;
+			return current($enterprise_data['Enterprises']);
 		}
 
 		public function add_update_enterprise ( $application, $enterprise_data )
 		{
-			$bo_soorganization = createObject('booking.boorganization');
-			$org_id = $bo_soorganization->so->get_orgid( $application['customer_organization_number'] );
-			$organization = $bo_soorganization->read_single($org_id);
+			$organization = $this->get_organization($application['customer_organization_number']);
 
 			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
 			{
@@ -195,9 +224,9 @@
 			else
 			{
 				$PostAddress		 = array(
-					'StreetAddress'	 => $organization['street'],
-					'ZipCode'		 => $organization['zip_code'],
-					'ZipPlace'		 => $organization['city'],
+					'StreetAddress'	 => implode(', ', $organization['postadresse']['adresse']),
+					'ZipCode'		 => $organization['postadresse']['postnummer'],
+					'ZipPlace'		 => $organization['postadresse']['poststed'],
 					'Country'		 => 'NOR',
 				);
 			}
@@ -209,18 +238,18 @@
 			else
 			{
 				$OfficeAddress = array(
-					'StreetAddress'	 => $organization['street'],
-					'ZipCode'		 => $organization['zip_code'],
-					'ZipPlace'		 => $organization['city'],
+					'StreetAddress'	 => implode(', ', $organization['forretningsadresse']['adresse']),
+					'ZipCode'		 => $organization['forretningsadresse']['postnummer'],
+					'ZipPlace'		 => $organization['forretningsadresse']['poststed'],
 					'Country'		 => 'NOR',
 				);
 			}
 
 			$data = array(
 				'EnterpriseNumber'	 => $application['customer_organization_number'],
-				'Name'				 => $enterprise_data['Name'] ? $enterprise_data['Name'] : $organization['name'],
-				'Email'				 => $enterprise_data['Email'] ? $enterprise_data['Email'] : $organization['email'],
-				'PhoneNumber'		 => $enterprise_data['PhoneNumber'] ? $enterprise_data['PhoneNumber'] : $organization['phone'],
+				'Name'				 => $enterprise_data['Name'] ? $enterprise_data['Name'] : $organization['navn'],
+				'Email'				 => $enterprise_data['Email'] ? $enterprise_data['Email'] : '',
+				'PhoneNumber'		 => $enterprise_data['PhoneNumber'] ? $enterprise_data['PhoneNumber'] : '',
 				'PostAddress'		 => $PostAddress,
 				'OfficeAddress'		 => $OfficeAddress
 			);
@@ -256,16 +285,27 @@
 						'ArchiveType' => 'FELLESKLASSE PRINSIPP',
 					)
 				),
-				'Contacts' => array(
-					array(
-						'Role' => 'Sakspart', //Sakspart
-						'ExternalId' => $application['customer_ssn'],
-				//		'ReferenceNumber' => $ssn,
-					)
-				),
+				'Contacts' => array(),
 				'SubArchive' => '60001',
 				'SubArchiveCode' => 'SAK',
 			);
+
+			if($application['customer_ssn'])
+			{
+				$data['Contacts'][] = 	array(
+						'Role' => 'Sakspart', //Sakspart
+						'ReferenceNumber' => $application['customer_ssn'],
+//						'ExternalId' => $application['customer_ssn'],
+					);
+			}
+			if($application['customer_organization_number'])
+			{
+				$data['Contacts'][] = 	array(
+						'Role' => 'Sakspart', //Sakspart
+						'ReferenceNumber' => $application['customer_organization_number'],
+					);
+			}
+
 			$method = 'CaseService/CreateCase';
 
 			$input = array('parameter' => $data);
@@ -281,23 +321,34 @@
 				'Category' => 110, //Dokument inn
 				'Status'	=> 'J', //Journalført
 				'Files'		=> array(),
-				'Contacts' => array(
-					array(
-						'Role' => 'Sakspart', //Sakspart
-						'ExternalId' => $application['customer_ssn'],
-				//		'ReferenceNumber' => $ssn,
-					)
-				),
+				'Contacts' => array(),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
-				'DocumentDate'			=> date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
+				'DocumentDate'			=> date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime()),
 			);
+
+			if($application['customer_ssn'])
+			{
+				$data['Contacts'][] = array(
+						'Role' => 1,//'Contact',
+						'ExternalId' => $application['customer_ssn'],
+				//		'ReferenceNumber' => $application['customer_ssn'],
+					);
+			}
+			if($application['customer_organization_number'])
+			{
+				$data['Contacts'][] = 	array(
+						'Role' => 1,//'Contact',
+						'ReferenceNumber' => $application['customer_organization_number'],
+					);
+			}
 
 			foreach ($files as $file)
 			{
 				$path_parts = pathinfo($file['file_name']);
 				$data['Files'][] = array(
 					'Title' => $file['file_name'],
-					'Format' => $path_parts['extension'],
+					'Format' => strtolower($path_parts['extension']),
+//					'Data' => $file['file_data'],
 					'Base64Data' => base64_encode($file['file_data'])
 				);
 			}
@@ -356,6 +407,33 @@
 			$this->log('webservice httpCode', print_r($httpCode, true));
 			$this->log('webservice returdata as json', $result);
 			$this->log('webservice returdata as array', print_r($ret, true));
+
+			return $ret;
+		}
+
+		private function get_organization( $organization_number )
+		{
+			$url = "https://data.brreg.no/enhetsregisteret/api/enheter/{$organization_number}";
+
+			$ch		 = curl_init();
+			if ($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'accept: application/json',
+				'Content-Type: application/json',
+				'Content-Length: ' . strlen($data_json)
+				));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$result	 = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			$ret = json_decode($result, true);
 
 			return $ret;
 		}
