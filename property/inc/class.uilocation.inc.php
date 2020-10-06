@@ -1000,8 +1000,8 @@ JS;
 					for ($k = 0; $k < count($input_name); $k++)
 					{
 						$function_exchange_values .= <<<JS
-								
-						if (parent.document.getElementsByName("{$input_name[$k]}").length > 0) 
+
+						if (parent.document.getElementsByName("{$input_name[$k]}").length > 0)
 						{
 							parent.document.getElementsByName("{$input_name[$k]}")[0].value = "";
 					}
@@ -1328,8 +1328,8 @@ JS;
 			if (!empty($query))
 			{
 				$code = <<<JS
-					function initCompleteDatatable(oSettings, json, oTable) 
-					{ 
+					function initCompleteDatatable(oSettings, json, oTable)
+					{
 						var api = oTable.api();
 						api.search( '$query' );
 					}
@@ -2403,7 +2403,16 @@ JS;
 							'section'	 => $_config_section_name,
 							'height'	 => isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500
 						);
-						$_config_section_data['url']		 = htmlspecialchars_decode($_config_section_data['url']);
+
+						if($this->is_external_login())
+						{
+							$_config_section_data['url']		 = htmlspecialchars_decode($_config_section_data['url_from_extern']);
+						}
+						else
+						{
+							$_config_section_data['url']		 = htmlspecialchars_decode($_config_section_data['url']);
+						}
+
 						$_config_section_data['parametres']	 = htmlspecialchars_decode($_config_section_data['parametres']);
 
 						/*
@@ -2769,6 +2778,24 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array(
 				'edit' => $data));
+		}
+
+		private function is_external_login()
+		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		public function save()
