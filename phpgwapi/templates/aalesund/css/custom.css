@@ -284,29 +284,6 @@ a {
     background-color: #ffffff;
 }
 
-.arrangement-link-box {
-    width: 150px;
-    height: 30px;
-    border-radius: 20px;
-    border: solid 3px rgba(58, 58, 76, 0.48);
-    text-align: center;
-}
-
-.Arrangement_link {
-    width: 124px;
-    height: 24px;
-    font-family: Rubik;
-    margin-top: auto;
-    margin-bottom: auto;
-    /*position: center;*/
-    text-align: center;
-    margin: auto;
-    font-size: 20px;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #3a3a4c;
-}
-
 .event-card {
     width: 100%;
 }
