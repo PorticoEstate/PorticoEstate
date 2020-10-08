@@ -115,6 +115,8 @@
 	
 			$poststed = explode(' ', $ret['postadresse'][1]);
 
+			$data['first_name']	 = $ret['fornavn'];
+			$data['last_name']	 = $ret['etternavn'];
 			$data['name']		 = "{$ret['fornavn']} {$ret['etternavn']}";
 			$data['street']		 = $ret['postadresse'][0];
 			$data['zip_code']	 = $poststed[0];

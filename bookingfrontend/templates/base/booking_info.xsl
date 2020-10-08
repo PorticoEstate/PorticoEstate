@@ -45,12 +45,12 @@
 
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
-			<button class="btn btn-light mt-4" onclick="location.href='{booking/edit_link}'">
+			<a class="btn btn-light mt-4" href="{booking/edit_link}" target="_blank">
 				<xsl:value-of select="php:function('lang', 'Edit booking')"/>
-			</button>
-			<button class="btn btn-light mt-4" onclick="location.href='{booking/cancel_link}'">
+			</a>
+			<a class="btn btn-light mt-4" href="{booking/cancel_link}" target="_blank">
 				<xsl:value-of select="php:function('lang', 'Cancel booking')"/>
-			</button>
+			</a>
 		</div>
 	</xsl:if>
 </xsl:template>

@@ -293,6 +293,9 @@
 			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_id	 = isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
 			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
+			$update		 = !empty($data['update']) ? true : false;
+			$dry_run	 = !empty($data['dry_run']) ? true : false;
+
 
 			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -301,13 +304,39 @@
 			$uicols			 = $this->read_cols($custom_id);
 			$this->uicols	 = $uicols;
 
+			if($dry_run)
+			{
+				return array();
+			}
+
+			$sysadmin	 = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+
+			if (!$sysadmin && preg_match('/(INSERT INTO|DELETE FROM|CREATE|DROP|ALTER|UPDATE)/i', trim($sql)))
+			{
+				$message = lang('you are not approved for this task') . ": {$sql}";
+
+					$GLOBALS['phpgw']->log->error(array(
+					'text'	=> $message,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+
+				return array(
+					array($uicols[0]['name'] => $message)
+				);
+			}
+
 			//FIXME:
 			$ordermethod = '';
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			if (!$allrows)
+			if($update)
+			{
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+			else if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
@@ -316,19 +345,19 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$n	 = count($uicols);
-			$j	 = 0;
+			$values = array();
+
 			while ($this->db->next_record())
 			{
-				for ($i = 0; $i < $n; $i++)
+				$row = array();
+				foreach ($uicols as $uicol)
 				{
-					$custom[$j][$uicols[$i]['name']] = $this->db->f($uicols[$i]['name'], true);
+					$row[$uicol['name']] = $this->db->f($uicol['name'], true);
 				}
-				$j++;
+				$values[] = $row;
 			}
 
-			//_debug_array($custom);
-			return $custom;
+			return $values;
 		}
 
 		function delete( $custom_id )

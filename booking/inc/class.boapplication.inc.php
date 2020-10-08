@@ -196,53 +196,7 @@
 					$body .= "<pre>Avvist: " . $rdates . "</pre>";
 				}
 
-				phpgw::import_class('booking.sodocument');
-
-				$where_filter = array();
-
-				if(empty($application['building_id']))
-				{
-					$building_info = $this->so->get_building_info($application['id']);
-					$application['building_id'] = $building_info['id'];
-				}
-				
-				if($application['building_id'])
-				{
-					$where_filter[] = "(%%table%%.type='building' AND %%table%%.owner_id = {$application['building_id']})";
-				}
-
-				foreach ($application['resources'] as $resource_id)
-				{
-					$where_filter[] = "(%%table%%.type='resource' AND %%table%%.owner_id = {$resource_id})";
-				}
-
-				$regulations_params = array(
-					'start' => 0,
-					'sort'=> 'name',
-					'filters' => array(
-						'active' => 1,
-						'category' => array(booking_sodocument::CATEGORY_REGULATION,
-										booking_sodocument::CATEGORY_HMS_DOCUMENT,
-										booking_sodocument::CATEGORY_PRICE_LIST),
-						'where' => array('(' . join(' OR ', $where_filter) . ')')
-					)
-				);
-
-
-				$sodocument_view = createObject('booking.sodocument_view');
-				$files = $sodocument_view->read($regulations_params);
-				$mime_magic	 = createObject('phpgwapi.mime_magic');
-				$attachments = array();
-				foreach ($files['results'] as $file)
-				{
-					$document = $sodocument_view->read_single($file['id']);
-					$attachments[] = array
-					(
-						'file'	 => $document['filename'],
-						'name'	 => basename($document['filename']),
-						'type'	 => $mime_magic->filename2mime(basename($document['filename']))
-					);
-				}
+				$attachments = $this->get_related_files($application);
 
 				if (isset($config->config_data['application_notify_on_accepted']) && $config->config_data['application_notify_on_accepted'] == 1)
 				{
@@ -368,6 +322,59 @@
 		}
 
 
+		function get_related_files( $application )
+		{
+			phpgw::import_class('booking.sodocument');
+
+			$where_filter = array();
+
+			if(empty($application['building_id']))
+			{
+				$building_info = $this->so->get_building_info($application['id']);
+				$application['building_id'] = $building_info['id'];
+			}
+
+			if($application['building_id'])
+			{
+				$where_filter[] = "(%%table%%.type='building' AND %%table%%.owner_id = {$application['building_id']})";
+			}
+
+			foreach ($application['resources'] as $resource_id)
+			{
+				$where_filter[] = "(%%table%%.type='resource' AND %%table%%.owner_id = {$resource_id})";
+			}
+
+			$regulations_params = array(
+				'start' => 0,
+				'sort'=> 'name',
+				'filters' => array(
+					'active' => 1,
+					'category' => array(booking_sodocument::CATEGORY_REGULATION,
+									booking_sodocument::CATEGORY_HMS_DOCUMENT,
+									booking_sodocument::CATEGORY_PRICE_LIST),
+					'where' => array('(' . join(' OR ', $where_filter) . ')')
+				)
+			);
+
+
+			$sodocument_view = createObject('booking.sodocument_view');
+			$files = $sodocument_view->read($regulations_params);
+			$mime_magic	 = createObject('phpgwapi.mime_magic');
+			$attachments = array();
+			foreach ($files['results'] as $file)
+			{
+				$document = $sodocument_view->read_single($file['id']);
+				$attachments[] = array
+				(
+					'file'	 => $document['filename'],
+					'name'	 => basename($document['filename']),
+					'type'	 => $mime_magic->filename2mime(basename($document['filename']))
+				);
+			}
+
+			return $attachments;
+
+		}
 		/**
 		 *
 		 * @param int $building_id
