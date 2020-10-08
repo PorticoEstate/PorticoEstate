@@ -552,6 +552,7 @@
 						'menuaction'		 => "{$this->currentapp}.uicustom.view",
 						'custom_id'			 => $custom_id,
 						'filter'			 => $this->filter,
+						'update'			 => phpgw::get_var('update', 'bool'),
 						'phpgw_return_as'	 => 'json'
 					)),
 					'download'		 => self::link(array(
@@ -569,7 +570,7 @@
 			);
 
 
-			$list	 = $this->bo->read_custom(array('custom_id' => $custom_id));
+			$this->bo->read_custom(array('custom_id' => $custom_id,'dry_run' => true));
 			$uicols	 = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols);
@@ -614,7 +615,8 @@
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
 				'filter'	 => $this->filter,
-				'custom_id'	 => $custom_id
+				'custom_id'	 => $custom_id,
+				'update'	 => phpgw::get_var('update', 'bool')
 			);
 
 			$values = $this->bo->read_custom($params);

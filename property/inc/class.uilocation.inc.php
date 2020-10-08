@@ -2404,7 +2404,7 @@ JS;
 							'height'	 => isset($_config_section_data['height']) && $_config_section_data['height'] ? $_config_section_data['height'] : 500
 						);
 
-						if($this->is_external_login())
+						if($this->is_external_login() && !empty($_config_section_data['url_from_extern']))
 						{
 							$_config_section_data['url']		 = htmlspecialchars_decode($_config_section_data['url_from_extern']);
 						}
