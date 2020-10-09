@@ -464,12 +464,15 @@
 			$project_id	 = isset($data['project_id']) && $data['project_id'] ? $data['project_id'] : phpgw::get_var('project_id');
 			$export		 = phpgw::get_var('export', 'bool');
 
+			$this->sort = $order[0]['dir'];
+			$this->order = $columns[$order[0]['column']]['data'];
+
 			$params = array(
 				'start'			 => $this->start,
 				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query'			 => $search['value'],
-				'sort'			 => $order[0]['dir'],
-				'order'			 => $columns[$order[0]['column']]['data'],
+				'sort'			 => $this->sort,
+				'order'			 => $this->order,
 				'user_id'		 => $this->user_id,
 				'status'		 => $this->status,
 				'cat_id'		 => $this->cat_id,
@@ -541,8 +544,7 @@
 		public function query2()
 		{
 			$length				 = phpgw::get_var('length', 'int', 'REQUEST', 10);
-			$_REQUEST['start']	 = phpgw::get_var('startIndex');
-			$_REQUEST['length']	 = $length;
+			$this->start	 = phpgw::get_var('startIndex');
 
 			$values = $this->query();
 
