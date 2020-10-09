@@ -2410,6 +2410,43 @@
 			return $this->socommon->set_pending_action($action_params);
 		}
 
+		public function get_top_level_categories( $data )
+		{
+			$selected = array();
+			if(!empty($data['selected']))
+			{
+				if(is_array($data['selected']))
+				{
+					$selected = $data['selected'];
+				}
+				else if(preg_match('/^\,|&\,/', $data['selected']))
+				{
+					$selected = explode(',',trim($data['selected'],','));
+				}
+				else
+				{
+					$selected[] = $data['selected'];
+				}
+			}
+
+			$cats				 = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
+			$cats->supress_info	 = true;
+			$_cats				 = $cats->return_sorted_array(0, false, '', '', '', false, false);
+			$values = array();
+			foreach ($_cats as $_cat)
+			{
+				if ($_cat['level'] == 0 && $_cat['active'] != 2)
+				{
+					$_cat['selected']	= in_array($_cat['id'], $selected) ? 1 : 0;
+
+					$values[] = $_cat;
+				}
+			}
+
+			return $values;
+
+		}
+
 		public function get_categories( $data )
 		{
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
@@ -2417,6 +2454,9 @@
 			$values				 = $cats->formatted_xslt_list(array('selected'	 => $data['selected'],
 				'globals'	 => true, 'link_data'	 => array()));
 			$ret				 = array();
+
+			$level = !empty($data['level']) ? $data['level'] : 0;
+
 			foreach ($values['cat_list'] as $category)
 			{
 				$ret[] = array

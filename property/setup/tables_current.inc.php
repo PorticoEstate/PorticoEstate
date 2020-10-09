@@ -557,8 +557,8 @@
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => '0'),
-				'external_project' => array('type' => 'int', 'precision' => '2', 'nullable' => True,
-					'default' => '0')
+				'external_project' => array('type' => 'int', 'precision' => '2', 'nullable' => True,'default' => '0'),
+				'project_category' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
