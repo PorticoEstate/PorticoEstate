@@ -285,35 +285,54 @@ a {
 }
 
 .event-card {
-    width: 100%;
-}
-
-.event-card > * {
-    height: 100px;
+    width: 1240px;
+    height:92px;
     border-radius: 12px;
     border: solid 1px #ebebeb;
     background-color: #ffffff;
-    margin: 30px 0;
+    margin: 16px 0;
     list-style-type: none;
 }
+
 .card-element-left {
     position: relative;
     width: 20%;
+    height: 92px;
     float: left;
-    left: 2%;
-}
-
-.formattedDate-container {
-    width: 36px;
-    height: 28px;
-    font-family: Rubik;
     font-size: 24px;
     font-weight: 500;
     color: #0b1214;
 }
 
-.card-element-mid {
+.formattedDate-container {
+    width: 86px;
+    height: 28px;
+}
+
+.formattedDate {
+    position: absolute;
     float: left;
+    left: 60px;
+    top: 22px;
+    bottom: 42px;
+    font-size: 24px;
+    font-weight: 500;
+    width: 86px;
+    height: 28px;
+
+}
+
+.monthTag {
+    position: absolute;
+    bottom: 20px;
+    top: 50px;
+    left: 44px;
+    font-size: 18px;
+    color: #0b1214;
+
+}
+
+.card-element-mid {
     position: relative;
     display: flex;
     height: 100%;
@@ -322,8 +341,11 @@ a {
 }
 .event_time-container {
     position: absolute;
-    right: 5%;
-    bottom: 40%;
+    right: 32px;
+    bottom: 334px;
+    top: 32px;
+    width: 120px;
+    height: 24px;
     font-family: "Georgia", serif;
     font-size: 20px;
     text-align: right;
@@ -333,8 +355,9 @@ a {
 .event_name-container {
     position: absolute;
     float: left;
-    left: 5%;
-    top: 40%;
+    left: 32px;
+    top: 32px;
+    bottom: 32px;
     font-size: 24px;
     font-weight: 500;
     color: #0b1214;
@@ -394,9 +417,13 @@ a {
 
 
 .cal-img-logo {
-    margin-top: 10px;
     content: url(../img/calendar.png);
-    left: 10rem;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    left: 20px;
+    top:26px;
+    bottom: 34px;
 }
 
 .pin_img_logo {
