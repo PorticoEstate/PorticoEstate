@@ -334,8 +334,8 @@ a {
 
 .card-element-mid {
     position: relative;
-    display: flex;
-    height: 100%;
+    display: inline-flex;
+    height: 92px;
     width: 60%;
     flex-direction: inherit;
 }
@@ -368,50 +368,44 @@ a {
     position: relative;
     float:right;
     flex-direction: column;
-    display: flex;
-    height: 100%;
+    display: inline-flex;
+    height: 92px;
     width: 20%;
 }
 
 .location_container {
-    height: 100%;
+    position: absolute;
+    top: 16px;
     display: flex;
-    margin-top: 5px;
-    position: center;
-
+    left: 37px;
+    height: 28px;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 
 .location_name {
     word-wrap: break-word;
-    height: fit-content;
-    font-family: Rubik;
     font-size: 18px;
     line-height: 1.56;
     color: #0b1214;
     white-space: pre;
     overflow: hidden;
-    text-overflow: ellipsis;
-
 }
 
-.org_container {
-    height: 100%;
+.org_name-container {
+    position: absolute;
+    height: 28px;
+    left: 37px;
     display: flex;
-    margin-top: 5px;
-    position: center;
+    bottom: 16px;
 }
 
 .org_name {
-    width: 157px;
-    height: fit-content;
-    font-family: Rubik;
     font-size: 15px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
     line-height: 1.56;
-    letter-spacing: normal;
     color: #0b1214;
 }
 
@@ -430,6 +424,7 @@ a {
     content: url(../img/pin.png);
     width: 9px;
     height: 12px;
+    left: 16px;
     object-fit: contain;
 }
 
