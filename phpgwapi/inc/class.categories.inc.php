@@ -315,7 +315,7 @@
 			$order		= $order?$this->db->db_addslashes($order):'cat_name';
 
 			$parent_ids = array();
-			if(is_array($parent_id))
+			if(is_array($parent_id) && $parent_id)
 			{
 
 				foreach ($parent_id as $_parent_id)
