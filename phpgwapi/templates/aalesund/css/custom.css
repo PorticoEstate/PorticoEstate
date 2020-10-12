@@ -277,13 +277,12 @@ a {
 }
 
 .event-card {
-    position: center;
-    width: 80%;
+    width: 90%;
     height:92px;
     border-radius: 12px;
     border: solid 1px #ebebeb;
     background-color: #ffffff;
-    margin: 16px 0;
+    margin: 16px auto;
     list-style-type: none;
 }
 
