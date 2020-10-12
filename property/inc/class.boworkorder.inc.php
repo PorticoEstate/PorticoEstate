@@ -129,18 +129,18 @@
 					{
 						$parent_categories = explode(',', trim($account_group_data['project_category'], ','));
 					}
-				}
-				$_cat_sub	 = $this->cats->return_sorted_array(0, false, '', '', '', false, $parent_categories);
+					$_cat_sub	 = $this->cats->return_sorted_array(0, false, '', '', '', false, $parent_categories);
 
-				$cat_ids = array();
-				foreach ($_cat_sub as $entry)
-				{
-					$cat_ids[] = $entry['id'];
-				}
+					$cat_ids = array();
+					foreach ($_cat_sub as $entry)
+					{
+						$cat_ids[] = $entry['id'];
+					}
 
-				if(!in_array($cat_id, $cat_ids))
-				{
-					$category[0]['active'] = 0;
+					if(!in_array($cat_id, $cat_ids))
+					{
+						$category[0]['active'] = 0;
+					}
 				}
 			}
 
