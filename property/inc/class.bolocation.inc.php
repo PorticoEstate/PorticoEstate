@@ -791,7 +791,7 @@ JS;
 			$this->total_records = $this->so->total_records;
 			$this->uicols		 = $this->so->uicols;
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : array();
 
 			$column_list		 = $this->get_column_list();
 			$get_vendor_names	 = false;

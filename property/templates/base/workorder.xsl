@@ -763,12 +763,13 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
+								<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}">
+								</input>
 								<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}" class="pure-input-3-4">
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
 											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
+												<xsl:text>budget_account</xsl:text>
 											</xsl:attribute>
 											<xsl:attribute name="data-validation-error-msg">
 												<xsl:value-of select="$lang_budget_account"/>
