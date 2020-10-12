@@ -244,6 +244,10 @@ a {
     color: #fff;
 }
 
+#event-content {
+ width: 100%;
+}
+
 .Kommende-arrangement {
     position: center;
     margin: 0 auto;
@@ -260,18 +264,6 @@ a {
     color: #3a3a4c;
 }
 
-.Rectangle {
-    width: 2REM;
-    height: 40px;
-    border-radius: 400px;
-    border-style: solid;
-    border-width: 1px;
-    border-image-source: linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
-    border-image-slice: 1;
-    background-image: linear-gradient(to bottom, #ffffff, #ffffff), linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-}
 .eventsearchbox {
     margin: 0 auto;
     position: center;
@@ -285,7 +277,8 @@ a {
 }
 
 .event-card {
-    width: 1240px;
+    position: center;
+    width: 80%;
     height:92px;
     border-radius: 12px;
     border: solid 1px #ebebeb;
