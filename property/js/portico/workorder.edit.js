@@ -334,20 +334,40 @@ $(document).ready(function ()
 	});
 
 	$.formUtils.addValidator({
-		name: 'category',
+		name: 'budget_account',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			var validatet_category = $('#validatet_category').val();
-			if (validatet_category == 1)
+			var b_account_name = $('#b_account_name').val();
+			if(b_account_name)
 			{
-				$('#select2-order_cat_id-container').addClass('valid');
-				$('#select2-order_cat_id-container').removeClass('error');
+				var cat_id = $("#order_cat_id").val();
+				validate_order_category({id: cat_id});
 				return true;
 			}
 			else
 			{
-				$('#select2-order_cat_id-container').addClass('error');
-				$('#select2-order_cat_id-container').removeClass('valid');
+				return false;
+			}
+
+		},
+		errorMessage: 'Ugyldig art',
+		errorMessageKey: ''
+	});
+
+	$.formUtils.addValidator({
+		name: 'category',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var cat_id = $(this).val();
+			validate_order_category({id: cat_id});
+
+			if($('#select2-order_cat_id-container').hasClass('valid'))
+			{
+				return true;
+
+			}
+			else
+			{
 				return false;
 			}
 		},
@@ -362,7 +382,9 @@ $(document).ready(function ()
 			return data.text;
 		}
 
-		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id};
+		var b_account_id = $('#b_account_id').val();
+
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id, b_account_id: b_account_id};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var htmlString = "";
@@ -377,7 +399,7 @@ $(document).ready(function ()
 				{
 					if (data.active !== 1 || data.is_node === false)
 					{
-						alert('Denne kan ikke velges');
+						alert('Ugyldig kategori - eller feil kombinasjon av art og kategori');
 						$('#select2-order_cat_id-container').addClass('error');
 						$('#select2-order_cat_id-container').removeClass('valid');
 						$('#validatet_category').val('');
