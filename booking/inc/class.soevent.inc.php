@@ -551,19 +551,17 @@
 			$orgnamesql = " AND bbo.name='$orgName' ";
 		}
 		if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-			$sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
-							 from bb_event bbe, bb_organization bbo
+			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
+							 from bb_event bbe
 							 where bbe.from_ > '$fromDate' "
 							 .$orgnamesql.
-							 " AND bbe.customer_organization_number = bbo.customer_organization_number
-							 order by bbe.from_ asc LIMIT 50;";
+							 "order by bbe.from_ asc LIMIT 50;";
 		} else {
-			$sqlQuery = "select bbe.name as event_name, bbe.from_, bbe.to_, bbe.building_name as location_name, bbo.name as org_name
-							 from bb_event bbe, bb_organization bbo
+			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
+						 from bb_event bbe
 							 where bbe.from_ > CURRENT_DATE "
 							 .$orgnamesql.
-							 " AND bbe.customer_organization_number = bbo.customer_organization_number
-							 order by bbe.from_ asc LIMIT 50;";
+							 "order by bbe.from_ asc LIMIT 50;";
 		}
 		$this->db->query($sqlQuery);
 		$results = array();
@@ -573,7 +571,9 @@
 				'to' => $this->db->f('to_', false),
 				'event_name' => $this->db->f('event_name', false),
 				'org_name' => $this->db->f('org_name', false),
-				'location_name' => $this->db->f('location_name', false)
+				'location_name' => $this->db->f('location_name', false),
+				'event_id' => $this->db->f('event_id', false),
+				'building_id' => $this->db->f('building_id')
 			);
 		}
 		_debug_array($results);
