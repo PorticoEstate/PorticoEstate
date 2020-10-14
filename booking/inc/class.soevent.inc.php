@@ -548,20 +548,20 @@
 	{
 		$orgnamesql = null;
 		if ($orgName) {
-			$orgnamesql = " AND bbo.name='$orgName' ";
+			$orgnamesql = " AND bbe.organizer='$orgName' ";
 		}
 		if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
 			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
 							 from bb_event bbe
 							 where bbe.from_ > '$fromDate' "
 							 .$orgnamesql.
-							 "order by bbe.from_ asc LIMIT 50;";
+							 " order by bbe.from_ asc LIMIT 50;";
 		} else {
 			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
 						 from bb_event bbe
 							 where bbe.from_ > CURRENT_DATE "
 							 .$orgnamesql.
-							 "order by bbe.from_ asc LIMIT 50;";
+							 " order by bbe.from_ asc LIMIT 50;";
 		}
 		$this->db->query($sqlQuery);
 		$results = array();
