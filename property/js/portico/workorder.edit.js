@@ -258,9 +258,6 @@ var oArgs = {menuaction: 'property.uiworkorder.get_ecodimb'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container');
 
-var oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
-var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
 var oArgs = {menuaction: 'property.uiworkorder.get_unspsc_code'};
 var strURL = phpGWLink('index.php', oArgs, true);
@@ -359,8 +356,9 @@ $(document).ready(function ()
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
 			var cat_id = $("#order_cat_id").val();
+			var validatet_category = $('#validatet_category').val();
 
-			if(cat_id)
+			if(cat_id && validatet_category)
 			{
 				$('#select2-order_cat_id-container').addClass('valid');
 				$('#select2-order_cat_id-container').removeClass('error');
@@ -426,6 +424,16 @@ $(document).ready(function ()
 		var cat_id = $(this).val();
 		validate_order_category({id: cat_id});
 	});
+
+	validate_change_budget_account = function()
+	{
+		var cat_id = $("#order_cat_id").val();
+		validate_order_category({id: cat_id});
+	}
+
+	var oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container', null, null, null, validate_change_budget_account);
 
 	$("#workorder_edit").on("submit", function (e)
 	{

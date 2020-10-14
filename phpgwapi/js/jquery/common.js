@@ -687,7 +687,7 @@ JqueryPortico.substr_count = function (haystack, needle, offset, length)
 };
 
 
-JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, label_attr, show_id, requestGenerator)
+JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, label_attr, show_id, requestGenerator, callback)
 {
 	show_id = show_id ? true : false;
 	requestGenerator = requestGenerator || false;
@@ -761,6 +761,15 @@ JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, 
 				setTimeout(function ()
 				{
 					$("#" + field).val(ui.item.label);
+					try
+					{
+						callback(ui.item);
+					}
+					catch (err)
+					{
+
+					}
+
 				}, 1);
 			}
 		});
