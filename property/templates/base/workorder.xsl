@@ -133,7 +133,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>
-			<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
+			<xsl:when test="value_workorder_id!= 0 and mode='edit' and lean = 0">
 				<td>
 					<table>
 						<tr>
@@ -203,7 +203,7 @@
 									</xsl:when>
 								</xsl:choose>
 								<xsl:choose>
-									<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
+									<xsl:when test="value_workorder_id!= 0 and mode='edit' and lean = 0">
 										<td valign="top">
 											<xsl:variable name="lang_calculate">
 												<xsl:value-of select="lang_calculate"/>
@@ -295,7 +295,7 @@
 					</div>
 
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!='' and mode='edit'">
+						<xsl:when test="value_workorder_id!= 0 and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'move to another project')"/>
@@ -384,7 +384,7 @@
 						<xsl:value-of select="value_other_branch"/>
 					</div>
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="lang_workorder_id"/>
@@ -474,7 +474,7 @@
 						</xsl:when>
 					</xsl:choose>
 					<!--xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'approved')"/>
@@ -1110,7 +1110,7 @@
 						</input>
 					</div>
 					<!--xsl:choose>
-						<xsl:when test="value_workorder_id!='' and mode='edit'">
+						<xsl:when test="value_workorder_id!= 0 and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'order received')"/>
@@ -1147,7 +1147,7 @@
 						</xsl:when>
 					</xsl:choose-->
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:choose>
@@ -1283,7 +1283,7 @@
 				</fieldset>
 			</div>
 			<xsl:choose>
-				<xsl:when test="value_workorder_id!=''">
+				<xsl:when test="value_workorder_id!= 0">
 					<div id="documents">
 						<fieldset>
 							<div class="pure-control-group">
