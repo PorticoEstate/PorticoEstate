@@ -1752,7 +1752,12 @@
 			$_lean = phpgw::get_var('lean', 'bool');
 
 			// in case of bigint
-			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id');
+			$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id');
+
+			if(!$id)
+			{
+				$id = 0;
+			}
 
 			if ($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{

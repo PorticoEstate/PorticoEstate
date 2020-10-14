@@ -340,8 +340,8 @@ $(document).ready(function ()
 			var b_account_name = $('#b_account_name').val();
 			if(b_account_name)
 			{
-				var cat_id = $("#order_cat_id").val();
-				validate_order_category({id: cat_id});
+//				var cat_id = $("#order_cat_id").val();
+//				validate_order_category({id: cat_id});
 				return true;
 			}
 			else
@@ -358,16 +358,18 @@ $(document).ready(function ()
 		name: 'category',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			var cat_id = $(this).val();
-			validate_order_category({id: cat_id});
+			var cat_id = $("#order_cat_id").val();
 
-			if($('#select2-order_cat_id-container').hasClass('valid'))
+			if(cat_id)
 			{
+				$('#select2-order_cat_id-container').addClass('valid');
+				$('#select2-order_cat_id-container').removeClass('error');
 				return true;
-
 			}
 			else
 			{
+				$('#select2-order_cat_id-container').addClass('error');
+				$('#select2-order_cat_id-container').removeClass('valid');
 				return false;
 			}
 		},
@@ -386,8 +388,6 @@ $(document).ready(function ()
 
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id, b_account_id: b_account_id};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		var htmlString = "";
 
 		$.ajax({
 			type: 'POST',
@@ -411,6 +411,10 @@ $(document).ready(function ()
 						$('#validatet_category').val(1);
 					}
 				}
+			},
+			complete:function ()
+			{
+
 			}
 		});
 
