@@ -340,8 +340,8 @@ $(document).ready(function ()
 			var b_account_name = $('#b_account_name').val();
 			if(b_account_name)
 			{
-				var cat_id = $("#order_cat_id").val();
-				validate_order_category({id: cat_id});
+//				var cat_id = $("#order_cat_id").val();
+//				validate_order_category({id: cat_id});
 				return true;
 			}
 			else
