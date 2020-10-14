@@ -370,7 +370,6 @@
 						'name'			 => 'lookup_loc' . ($i + 1) . '()',
 						'filter_level'	 => $i,
 						'link'			 => $location_link . ',type_id:' . ($i + 1) . ',lookup_name:' . $i,
-//							'action' 					=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
 						'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 					);
 				}
