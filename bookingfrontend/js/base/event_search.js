@@ -13,7 +13,7 @@ function AppViewModel() {
 
     };
 }
-//"2020-09-28 09:00:00"
+
 function getDateFormat(from, to) {
     var ret = [];
     var fromDate = new Date(from);
@@ -59,13 +59,11 @@ function setdata(result) {
             location_name: result[i].location_name
         });
     }
-    console.log("test"+viewmodel.events().length);
-
 }
 
 $(document).ready(function () {
     viewmodel = new AppViewModel();
-    ko.applyBindings(viewmodel, document.getElementById('container_event_search'));
+    ko.applyBindings(viewmodel, document.getElementById('event-content'));
     getUpcomingEvents();
 });
 
@@ -86,10 +84,6 @@ function getUpcomingEvents(orgName = "") {
             console.log(error);
         }
     });
-}
-
-function sortEvents() {
-
 }
 
 function searchInput() {

@@ -244,6 +244,10 @@ a {
     color: #fff;
 }
 
+#event-content {
+ width: 100%;
+}
+
 .Kommende-arrangement {
     position: center;
     margin: 0 auto;
@@ -260,18 +264,6 @@ a {
     color: #3a3a4c;
 }
 
-.Rectangle {
-    width: 2REM;
-    height: 40px;
-    border-radius: 400px;
-    border-style: solid;
-    border-width: 1px;
-    border-image-source: linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
-    border-image-slice: 1;
-    background-image: linear-gradient(to bottom, #ffffff, #ffffff), linear-gradient(to bottom, rgba(194, 194, 255, 0.72) -33%, #c2c2ff 67%);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-}
 .eventsearchbox {
     margin: 0 auto;
     position: center;
@@ -284,69 +276,68 @@ a {
     background-color: #ffffff;
 }
 
-.arrangement-link-box {
-    width: 150px;
-    height: 30px;
-    border-radius: 20px;
-    border: solid 3px rgba(58, 58, 76, 0.48);
-    text-align: center;
-}
-
-.Arrangement_link {
-    width: 124px;
-    height: 24px;
-    font-family: Rubik;
-    margin-top: auto;
-    margin-bottom: auto;
-    /*position: center;*/
-    text-align: center;
-    margin: auto;
-    font-size: 20px;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #3a3a4c;
-}
-
 .event-card {
-    width: 100%;
-}
-
-.event-card > * {
-    height: 100px;
+    width: 90%;
+    height:92px;
     border-radius: 12px;
     border: solid 1px #ebebeb;
     background-color: #ffffff;
-    margin: 30px 0;
+    margin: 16px auto;
     list-style-type: none;
 }
+
 .card-element-left {
     position: relative;
     width: 20%;
+    height: 92px;
     float: left;
-    left: 2%;
-}
-
-.formattedDate-container {
-    width: 36px;
-    height: 28px;
-    font-family: Rubik;
     font-size: 24px;
     font-weight: 500;
     color: #0b1214;
 }
 
-.card-element-mid {
+.formattedDate-container {
+    width: 86px;
+    height: 28px;
+}
+
+.formattedDate {
+    position: absolute;
     float: left;
+    left: 60px;
+    top: 22px;
+    bottom: 42px;
+    font-size: 24px;
+    font-weight: 500;
+    width: 86px;
+    height: 28px;
+
+}
+
+.monthTag {
+    position: absolute;
+    bottom: 20px;
+    top: 50px;
+    left: 44px;
+    font-size: 18px;
+    color: #0b1214;
+
+}
+
+.card-element-mid {
     position: relative;
-    display: flex;
-    height: 100%;
+    display: inline-flex;
+    height: 92px;
     width: 60%;
     flex-direction: inherit;
 }
 .event_time-container {
     position: absolute;
-    right: 5%;
-    bottom: 40%;
+    right: 32px;
+    bottom: 334px;
+    top: 32px;
+    width: 120px;
+    height: 24px;
     font-family: "Georgia", serif;
     font-size: 20px;
     text-align: right;
@@ -356,8 +347,9 @@ a {
 .event_name-container {
     position: absolute;
     float: left;
-    left: 5%;
-    top: 40%;
+    left: 32px;
+    top: 32px;
+    bottom: 32px;
     font-size: 24px;
     font-weight: 500;
     color: #0b1214;
@@ -368,64 +360,63 @@ a {
     position: relative;
     float:right;
     flex-direction: column;
-    display: flex;
-    height: 100%;
+    display: inline-flex;
+    height: 92px;
     width: 20%;
 }
 
 .location_container {
-    height: 100%;
+    position: absolute;
+    top: 16px;
     display: flex;
-    margin-top: 5px;
-    position: center;
-
+    left: 37px;
+    height: 28px;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 
 .location_name {
     word-wrap: break-word;
-    height: fit-content;
-    font-family: Rubik;
     font-size: 18px;
     line-height: 1.56;
     color: #0b1214;
     white-space: pre;
     overflow: hidden;
-    text-overflow: ellipsis;
-
 }
 
-.org_container {
-    height: 100%;
+.org_name-container {
+    position: absolute;
+    height: 28px;
+    left: 37px;
     display: flex;
-    margin-top: 5px;
-    position: center;
+    bottom: 16px;
 }
 
 .org_name {
-    width: 157px;
-    height: fit-content;
-    font-family: Rubik;
     font-size: 15px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
     line-height: 1.56;
-    letter-spacing: normal;
     color: #0b1214;
 }
 
 
 .cal-img-logo {
-    margin-top: 10px;
     content: url(../img/calendar.png);
-    left: 10rem;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    left: 20px;
+    top:26px;
+    bottom: 34px;
 }
 
 .pin_img_logo {
     content: url(../img/pin.png);
     width: 9px;
     height: 12px;
+    left: 16px;
     object-fit: contain;
 }
 

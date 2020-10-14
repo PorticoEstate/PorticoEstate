@@ -1,8 +1,11 @@
 <?php
 	phpgw::import_class('booking.bocommon');
+	phpgw::import_class('booking.soevent');
 
 	class bookingfrontend_bosearch extends booking_bocommon
 	{
+
+	    public $soevent;
 
 		function __construct()
 		{
@@ -10,7 +13,7 @@
 			$this->sobuilding = CreateObject('booking.sobuilding');
 			$this->soorganization = CreateObject('booking.soorganization');
 			$this->soresource = CreateObject('booking.soresource');
-			$this->soevent = CreateObject('booking.soevent');
+			$this->soevent = new booking_soevent();
 			$this->borescategory = CreateObject('booking.borescategory');
 			$this->boresource = CreateObject('booking.boresource');
 			$this->boactivity = CreateObject('booking.boactivity');

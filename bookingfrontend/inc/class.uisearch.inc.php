@@ -1,8 +1,10 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('bookingfrontend.bosearch');
 
 	class bookingfrontend_uisearch extends booking_uicommon
 	{
+	    var $bo;
 
 		public $public_functions = array
 			(
@@ -18,7 +20,7 @@
 		{
 
 			parent::__construct();
-			$this->bo = CreateObject('bookingfrontend.bosearch');
+			$this->bo = new bookingfrontend_bosearch();
 			$old_top = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
