@@ -1302,6 +1302,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'transfer_to_external' => array('type' => 'int', 'precision' => 2, 'nullable' => True ),
 				'descr' => array('type' => 'text', 'nullable' => false),
 			),
 			'pk' => array('id'),
