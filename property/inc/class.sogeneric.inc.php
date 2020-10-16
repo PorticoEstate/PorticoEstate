@@ -990,10 +990,23 @@
 						'fields'		 => array
 							(
 							array
-								(
+							(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
 								'type'	 => 'varchar'
+							),
+							array
+							(
+								'name'		 => 'transfer_to_external',
+								'descr'		 => lang('transfer to external'),
+								'type'		 => 'checkbox',
+								'default'	 => 'checked',
+								'filter'	 => false,
+								'sortable'	 => true,
+								'values_def' => array
+								(
+									'valueset' => array(array('id' => 1, 'name' => lang('transfer to external'))),
+								)
 							),
 							array
 								(

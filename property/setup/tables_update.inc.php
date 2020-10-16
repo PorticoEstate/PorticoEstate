@@ -11069,3 +11069,22 @@
 		}
 	}
 
+	/**
+	 * Notes
+	 * Transfer orders to external accounting system - or not
+	 */
+	$test[] = '0.9.17.750';
+	function property_upgrade0_9_17_750()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_quick_order_template_payment_type", 'transfer_to_external',array('type' => 'int', 'precision' => 2, 'nullable' => True ));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.751';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
