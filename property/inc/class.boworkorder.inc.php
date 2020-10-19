@@ -102,8 +102,48 @@
 
 		public function get_category()
 		{
+			$b_account_id = phpgw::get_var('b_account_id', 'int');
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$category	 = $this->cats->return_single($cat_id);
+
+			if ($b_account_id)
+			{
+				$_b_account			 = execMethod('property.bogeneric.read_single', array(
+					'id'			 => $b_account_id,
+					'location_info'	 => array
+						(
+						'type' => 'budget_account')
+					)
+				);
+				$_b_account_group	 = $_b_account['category'];
+
+				$parent_categories = array();
+
+				if (!empty($_b_account_group))
+				{
+					$sogeneric			 = CreateObject('property.sogeneric');
+					$sogeneric->get_location_info('b_account_category', false);
+					$account_group_data	 = $sogeneric->read_single(array('id' => (int)$_b_account_group), array());
+
+					if (isset($account_group_data['project_category']) && $account_group_data['project_category'])
+					{
+						$parent_categories = explode(',', trim($account_group_data['project_category'], ','));
+					}
+					$_cat_sub	 = $this->cats->return_sorted_array(0, false, '', '', '', false, $parent_categories);
+
+					$cat_ids = array();
+					foreach ($_cat_sub as $entry)
+					{
+						$cat_ids[] = $entry['id'];
+					}
+
+					if(!in_array($cat_id, $cat_ids))
+					{
+						$category[0]['active'] = 0;
+					}
+				}
+			}
+
 			return $category[0];
 		}
 

@@ -763,23 +763,32 @@
 				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $_user_columns) . '))';
 			}
 
-			$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
-			$i = count($uicols['name']);
-
 			$attribute_info = array();
 
-			while ($this->db->next_record())
+			if($lookup_tenant)
 			{
-				$attribute_info[] = array(
-					'column_name'	 => $this->db->f('column_name'),
-					'lookup_form'	 => $this->db->f('lookup_form'),
-					'list'			 => $this->db->f('list'),
-					'input_text'	 => $this->db->f('input_text', true),
-					'statustext'	 => $this->db->f('statustext', true),
-					'datatype'		 => $this->db->f('datatype'),
-					'id'			 => $this->db->f('id')
-				);
+				$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE lookup_form=1 AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 			}
+			else
+			{
+				$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
+			}
+
+				$i = count($uicols['name']);
+
+				while ($this->db->next_record())
+				{
+					$attribute_info[] = array(
+						'column_name'	 => $this->db->f('column_name'),
+						'lookup_form'	 => $this->db->f('lookup_form'),
+						'list'			 => $this->db->f('list'),
+						'input_text'	 => $this->db->f('input_text', true),
+						'statustext'	 => $this->db->f('statustext', true),
+						'datatype'		 => $this->db->f('datatype'),
+						'id'			 => $this->db->f('id')
+					);
+				}
+			
 
 
 			$locations			 = $this->soadmin_location->select_location_type();

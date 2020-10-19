@@ -306,14 +306,30 @@
 			return $cats;
 		}
 
-		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = '', $use_acl = false)
+		function return_sorted_array($start,$limit = True,$query = '',$sort = '',$order = '',$globals = False, $parent_id = 0, $use_acl = false)
 		{
 			//casting and slashes for security
 			$start		= intval($start);
 			$query		= $this->db->db_addslashes($query);
 			$sort		= $sort?$this->db->db_addslashes($sort):'ASC';
 			$order		= $order?$this->db->db_addslashes($order):'cat_name';
-			$parent_id	= intval($parent_id);
+
+			$parent_ids = array();
+			if(is_array($parent_id) && $parent_id)
+			{
+
+				foreach ($parent_id as $_parent_id)
+				{
+					$parent_ids[] = (int)$_parent_id;
+				}
+			}
+			else
+			{
+				$parent_ids[] = (int)$parent_id;
+
+			}
+//			$parent_id	= intval($parent_id);
+
 
 			$global_cats = '';
 			if ($globals)
@@ -346,7 +362,8 @@
 				}
 			}
 
-			$parent_select = ' AND cat_parent=' . $parent_id;
+//			$parent_select = ' AND cat_parent=' . $parent_id;
+			$parent_select = ' AND cat_parent IN (' . implode(',', $parent_ids) . ')';
 
 			$querymethod = '';
 			if ($query)
