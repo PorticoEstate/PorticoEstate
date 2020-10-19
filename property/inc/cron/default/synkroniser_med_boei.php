@@ -1009,7 +1009,7 @@ SQL;
 			foreach ($objekt_latin as $objekt)
 			{
 
-				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id,category) "
+				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id, zip_code, category) "
 					. "VALUES (" . $this->db->validate_insert($objekt) . ")";
 
 				$this->db->query($sql2, __LINE__, __FILE__);
