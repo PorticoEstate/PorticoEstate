@@ -194,6 +194,7 @@
 								$this->db->next_record();
 								$old_value					 = $this->db->f('skiftet');
 								$id							 = $this->db->f('id');
+								$update_interlink = false;
 								if ($id)
 								{
 									$attrib_id = 2;
@@ -206,6 +207,7 @@
 											. " AND location_code='{$values['location_code']}'";
 
 										$this->db->query($sql, __LINE__, __FILE__);
+										$update_interlink = true;
 									}
 								}
 								else
@@ -219,8 +221,25 @@
 										$address = $this->db->db_addslashes($values['location_name']);
 									}
 
-									$this->br_slokk_app($new_value, $values['location_code'], $address);
+									$id = $this->br_slokk_app($new_value, $values['location_code'], $address);
+									$update_interlink = true;
+
 								}
+
+								if($update_interlink)
+								{
+									$interlink_data = array
+									(
+										'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location),
+										'location1_item_id'	 => $values['id'],
+										'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10'),
+										'location2_item_id'	 => $id,
+										'account_id'		 => $this->account
+									);
+
+									CreateObject('property.interlink')->add($interlink_data, $this->db);
+								}
+
 							}
 							break;
 
@@ -242,6 +261,7 @@
 								$old_skiftet				 = $this->db->f('skiftet');
 								$old_batteriskift			 = $this->db->f('batteriskift');
 								$id							 = $this->db->f('id');
+								$update_interlink = false;
 								if ($id)
 								{
 									if($entry['value'] == 3) //Skiftet røykvarsler"
@@ -256,6 +276,7 @@
 												. " AND location_code='{$values['location_code']}'";
 
 											$this->db->query($sql, __LINE__, __FILE__);
+											$update_interlink = true;
 										}
 									}
 									else // Skiftet batteri
@@ -270,6 +291,7 @@
 												. " AND location_code='{$values['location_code']}'";
 
 											$this->db->query($sql, __LINE__, __FILE__);
+											$update_interlink = true;
 										}
 									}
 								}
@@ -284,8 +306,26 @@
 										$address = $this->db->db_addslashes($values['location_name']);
 									}
 
-									$this->add_roykvarsler($new_value, $values['location_code'], $address);
+									$id = $this->add_roykvarsler($new_value, $values['location_code'], $address);
+									$update_interlink = true;
+
 								}
+
+								if($update_interlink)
+								{
+									$interlink_data = array
+									(
+										'location1_id'		 => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location),
+										'location1_item_id'	 => $values['id'],
+										'location2_id'		 => $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.23'),
+										'location2_item_id'	 => $id,
+										'account_id'		 => $this->account
+									);
+
+									CreateObject('property.interlink')->add($interlink_data, $this->db);
+								}
+
+
 							}
 							break;
  
@@ -354,6 +394,7 @@
 
 			$historylog	 = CreateObject('property.historylog', 'entity_1_10');
 			$historylog->add('SO', $id, $date, false, $attrib_id	 = 2, time());
+			return $id;
 		}
 		private function add_roykvarsler( $date, $location_code, $address )
 		{
@@ -384,6 +425,7 @@
 
 			$historylog	 = CreateObject('property.historylog', 'entity_1_23');
 			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
+			return $id;
 		}
 	}
 	$data_sync = new entity_data_sync();
