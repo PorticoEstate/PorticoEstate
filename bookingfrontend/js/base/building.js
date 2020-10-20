@@ -592,11 +592,18 @@ function PopulateBookableResources(urlParams)
 		var resourceItemLink;
 		var facilitiesList = [];
 		var activitiesList = [];
+		var now = Math.floor(Date.now() / 1000);
 
 		for (var i = 0; i < result.results.length; i++)
 		{
 			facilitiesList = [];
 			activitiesList = [];
+			if(result.results[i].simple_booking == 1 && result.results[i].simple_booking_start_date < now)
+			{
+				result.results[i].name += '*';
+				activitiesList.push('Forenklet booking');
+			}
+
 			for (var k = 0; k < result.results[i].facilities_list.length; k++)
 			{
 				facilitiesList.push(result.results[i].facilities_list[k].name);
@@ -606,20 +613,14 @@ function PopulateBookableResources(urlParams)
 				activitiesList.push(result.results[i].activities_list[k].name);
 			}
 
-//			if(result.results[i].simple_booking == 1)
-//			{
-//				resourceItemLink = false;
-//			}
-//			else
-			{
-				oArgs = {
-					menuaction: 'bookingfrontend.uiresource.show',
-					id: result.results[i].id,
-					building_id: urlParams['id']
-				};
+			oArgs = {
+				menuaction: 'bookingfrontend.uiresource.show',
+				id: result.results[i].id,
+				building_id: urlParams['id']
+			};
 
-				resourceItemLink = phpGWLink('bookingfrontend/', oArgs);
-			}
+			resourceItemLink = phpGWLink('bookingfrontend/', oArgs);
+		
 
 			if(Number(result.results[i].booking_month_horizon) > (booking_month_horizon +1))
 			{

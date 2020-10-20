@@ -106,7 +106,7 @@ function applicationModel()
 
 				if (!match)
 				{
-					if (direct_booking == 0 || (direct_booking == 1 && self.date().length < 1))
+		//			if (direct_booking == 0 || (direct_booking == 1 && self.date().length < 1))
 					{
 						self.date.push({id: [start, end
 							].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end)});  /*repeat: self.repeat(),*/
@@ -209,12 +209,15 @@ $(document).ready(function ()
 
 					var now = Math.floor(Date.now() / 1000);
 
-					if (result.results[i].direct_booking && result.results[i].direct_booking < now)
+					if (result.results[i].simple_booking && result.results[i].simple_booking_start_date < now)
 					{
+						//skip this one
 						resource_name += ' *';
 					}
-
-					bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
+					else
+					{
+						bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
+					}
 				}
 			}
 		});
