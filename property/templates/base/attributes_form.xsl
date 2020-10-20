@@ -268,7 +268,7 @@
 				<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
 					<img src="{add_img}" width="23"/>
 					<xsl:text> </xsl:text>
-					<xsl:value-of select="php:function('lang', 'add')"/>
+					<xsl:value-of select="lang_new_value"/>
 					<xsl:text> (</xsl:text>
 					<xsl:value-of select="input_text"/>
 					<xsl:text>)</xsl:text>
@@ -852,22 +852,44 @@
 		</xsl:otherwise>
 	</xsl:choose>
 	<xsl:choose>
-		<xsl:when test="history=1 and $supress_history_date !=1">
-			<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
-			</input>
-			<xsl:variable name="link_history">
-				<xsl:value-of select="link_history"/>
-			</xsl:variable>
-			<xsl:variable name="lang_history_help">
-				<xsl:value-of select="//lang_history_help"/>
-			</xsl:variable>
-			<xsl:variable name="lang_history">
-				<xsl:value-of select="php:function('lang', 'history')" />
-			</xsl:variable>
-			<a href="javascript:JqueryPortico.showlightbox_history('{$link_history}')" title="{$lang_history}">
-				<xsl:value-of select="$lang_history"/>
-			</a>
+		<xsl:when test="datatype='DT' or datatype='D'">
+			<xsl:choose>
+				<xsl:when test="history=1 and $supress_history_date !=1">
+					<xsl:variable name="link_history">
+						<xsl:value-of select="link_history"/>
+					</xsl:variable>
+					<xsl:variable name="lang_history_help">
+						<xsl:value-of select="//lang_history_help"/>
+					</xsl:variable>
+					<xsl:variable name="lang_history">
+						<xsl:value-of select="php:function('lang', 'history')" />
+					</xsl:variable>
+					<a href="javascript:JqueryPortico.showlightbox_history('{$link_history}')" title="{$lang_history}">
+						<xsl:value-of select="$lang_history"/>
+					</a>
+				</xsl:when>
+			</xsl:choose>
 		</xsl:when>
+		<xsl:otherwise>
+			<xsl:choose>
+				<xsl:when test="history=1 and $supress_history_date !=1">
+					<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
+					</input>
+					<xsl:variable name="link_history">
+						<xsl:value-of select="link_history"/>
+					</xsl:variable>
+					<xsl:variable name="lang_history_help">
+						<xsl:value-of select="//lang_history_help"/>
+					</xsl:variable>
+					<xsl:variable name="lang_history">
+						<xsl:value-of select="php:function('lang', 'history')" />
+					</xsl:variable>
+					<a href="javascript:JqueryPortico.showlightbox_history('{$link_history}')" title="{$lang_history}">
+						<xsl:value-of select="$lang_history"/>
+					</a>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
 
