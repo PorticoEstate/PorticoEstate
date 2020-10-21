@@ -4308,7 +4308,7 @@ JS;
 					);
 			}
 
-			$body = '<br/>' . nl2br(str_replace(array
+			$body = str_replace(array
 					(
 					'__vendor_name__',
 					'__organisation__',
@@ -4348,7 +4348,7 @@ JS;
 					$order_id,
 					'<b>',
 					'</b>'
-						), $order_email_template));
+						), $order_email_template);
 
 				$pdf->selectFont('Helvetica');
 
