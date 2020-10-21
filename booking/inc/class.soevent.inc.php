@@ -152,6 +152,12 @@
 					'comment' => $this->db->f('comment', false),
 					'type' => $this->db->f('type', false));
 			}
+
+			foreach ($results as &$value)
+			{
+				$this->modify_by_timezone($value['time']);
+			}
+
 			return $results;
 		}
 
