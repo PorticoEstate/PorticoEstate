@@ -1984,6 +1984,7 @@
 				$type_id		 = isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
 				$district_id	 = isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
 				$part_of_town_id = isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id'] : 0;
+				$dry_run		= !empty($data['dry_run']);
 			}
 
 			if (!$type_id)
@@ -1995,9 +1996,9 @@
 			$cols_return	 = array();
 			$paranthesis	 = '';
 
-			$cols = "count(*) as number, $entity_table.category, $entity_table" . "_category.descr as type";
+			$cols = "count(*) as count, $entity_table.category, {$entity_table}_category.descr as type";
 
-			$groupmethod = " GROUP by $entity_table.category , $entity_table" . "_category.descr";
+			$groupmethod = " GROUP by $entity_table.category , {$entity_table}_category.descr";
 
 			$uicols['name'][]		 = 'type';
 			$uicols['descr'][]		 = lang('type');
@@ -2040,11 +2041,16 @@
 				$where = 'AND';
 			}
 
-			$uicols['name'][]		 = 'number';
-			$uicols['descr'][]		 = lang('number');
+			$uicols['name'][]		 = 'count';
+			$uicols['descr'][]		 = lang('count');
 			$uicols['input_type'][]	 = 'text';
 
 			$this->uicols = $uicols;
+
+			if($dry_run)
+			{
+				return array();
+			}
 
 			$joinmethod	 = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 			$paranthesis .= '(';
@@ -2081,7 +2087,7 @@
 			{
 				$summary[] = array
 					(
-					'number'		 => $this->db->f('number'),
+					'count'		 => $this->db->f('count'),
 					'type'			 => '[' . $this->db->f('category') . '] ' . $this->db->f('type'),
 					'part_of_town'	 => $this->db->f('part_of_town'),
 					'district_id'	 => $this->db->f('district_id')
