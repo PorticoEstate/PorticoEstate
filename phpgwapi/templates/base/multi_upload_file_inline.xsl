@@ -149,6 +149,14 @@
 		e.preventDefault();
 	});
 
+	$('#fileupload').bind('fileuploadsubmit', function (e, data) {
+        var inputs = data.context.find(':input');
+	//	console.log(data);
+        data.formData = inputs.serializeArray();
+ 		// disable enveloping form
+		data.form = null;
+   });
+
 
 	</script>
 </xsl:template>
