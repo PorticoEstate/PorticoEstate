@@ -208,7 +208,7 @@
 			$result_data = array('results' => $values);
 
 			$result_data['total_records']	 = count($values);
-			$result_data['draw']			 = 0;
+			$result_data['draw']			 = phpgw::get_var('draw', 'int');
 
 			return $this->jquery_results($result_data);
 		}
@@ -3110,8 +3110,7 @@ JS;
 
 			if (!$this->acl_read)
 			{
-				$this->bocommon->no_access();
-				return;
+				phpgw::no_access();
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -3119,12 +3118,7 @@ JS;
 				return $this->query_summary();
 			}
 
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-
-			$this->bo->read_summary();
-
-			$uicols = $this->bo->uicols;
 
 			$appname		 = lang('Summary');
 			$function_msg	 = lang('List') . ' ' . lang($this->role);
@@ -3140,6 +3134,9 @@ JS;
 					'source'			 => self::link(array(
 						'menuaction'		 => 'property.uilocation.summary',
 						'summary'			 => true,
+						'filter'			 => $this->filter,
+						'district_id'		 => $this->district_id,
+						'part_of_town_id'	 => $this->part_of_town_id,
 						'phpgw_return_as'	 => 'json'
 					)),
 					'download'			 => self::link(array('menuaction'	 => 'property.uilocation.download',
@@ -3164,7 +3161,9 @@ JS;
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$this->bo->read_summary();
+			$this->bo->read_summary(array('dry_run' => true));
+
+			$uicols = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols['name']);
 

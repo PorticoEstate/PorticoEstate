@@ -1984,20 +1984,23 @@
 				$type_id		 = isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
 				$district_id	 = isset($data['district_id']) && $data['district_id'] ? (int)$data['district_id'] : 0;
 				$part_of_town_id = isset($data['part_of_town_id']) && $data['part_of_town_id'] ? (int)$data['part_of_town_id'] : 0;
+				$dry_run		= !empty($data['dry_run']);
 			}
+
+			$location_types = $this->soadmin_location->select_location_type();
 
 			if (!$type_id)
 			{
-				$type_id = 4;
+				$type_id = count($location_types);
 			}
 
 			$entity_table	 = "fm_location{$type_id}";
 			$cols_return	 = array();
 			$paranthesis	 = '';
 
-			$cols = "count(*) as number, $entity_table.category, $entity_table" . "_category.descr as type";
+			$cols = "count(*) as count, $entity_table.category, {$entity_table}_category.descr as type";
 
-			$groupmethod = " GROUP by $entity_table.category , $entity_table" . "_category.descr";
+			$groupmethod = " GROUP by $entity_table.category , {$entity_table}_category.descr";
 
 			$uicols['name'][]		 = 'type';
 			$uicols['descr'][]		 = lang('type');
@@ -2012,7 +2015,7 @@
 				$uicols['input_type'][]	 = 'text';
 				$cols					 .= ", fm_part_of_town.district_id as district_id";
 				$groupmethod			 .= " ,fm_part_of_town.district_id";
-				$filtermethod			 = " $where fm_part_of_town.district_id = {$district_id}";
+				$filtermethod			 .= " $where fm_part_of_town.district_id = {$district_id}";
 				$where					 = 'AND';
 			}
 
@@ -2040,11 +2043,19 @@
 				$where = 'AND';
 			}
 
-			$uicols['name'][]		 = 'number';
-			$uicols['descr'][]		 = lang('number');
-			$uicols['input_type'][]	 = 'text';
+			foreach ($location_types as $location_type)
+			{
+				$uicols['name'][]		 = "count_{$location_type['id']}";
+				$uicols['descr'][]		 = lang('count') . " {$location_type['name']}";
+				$uicols['input_type'][]	 = 'text';
+			}
 
 			$this->uicols = $uicols;
+
+			if($dry_run)
+			{
+				return array();
+			}
 
 			$joinmethod	 = "{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id))";
 			$paranthesis .= '(';
@@ -2072,23 +2083,48 @@
 			$joinmethod	 .= " {$this->join} {$entity_table}_category ON ($entity_table.category = {$entity_table}_category.id))";
 			$paranthesis .= '(';
 
-			$sql = "SELECT $cols FROM $paranthesis fm_location1 $joinmethod";
+			$sql_base = "$paranthesis fm_location1 $joinmethod";
 
+			$cols = "count(*) as count, fm_location{$type_id}.category, fm_location{$type_id}_category.descr as type";
+
+			$sql = "SELECT $cols FROM $paranthesis fm_location1 $joinmethod";
+			_debug_array($sql . $filtermethod . $groupmethod);
 			$this->db->query($sql . $filtermethod . $groupmethod . " ORDER BY $entity_table.category", __LINE__, __FILE__);
 
-			$summary = array();
+			$values = array();
 			while ($this->db->next_record())
 			{
-				$summary[] = array
-					(
-					'number'		 => $this->db->f('number'),
-					'type'			 => '[' . $this->db->f('category') . '] ' . $this->db->f('type'),
+				$cat_id = $this->db->f('category');
+				$values[] = array
+				(
+					'cat_id'		 => $cat_id,
+					"count_{$type_id}"			 => $this->db->f('count'),
+					'type'			 => '[' . $cat_id . '] ' . $this->db->f('type'),
 					'part_of_town'	 => $this->db->f('part_of_town'),
 					'district_id'	 => $this->db->f('district_id')
 				);
+				unset($cat_id);
 			}
 
-			return $summary;
+			foreach ($values as  &$value)
+			{
+				$cat_id = $value['cat_id'];
+				for ($i = ( $type_id - 1 ); $i > 0; $i--)
+				{
+					$filtermethod2 = " {$where} fm_location{$type_id}.category = '{$cat_id}'";
+					$sql = "SELECT count(*) as count FROM "
+						. "(SELECT DISTINCT fm_location{$i}.location_code"
+						. " FROM {$sql_base} {$filtermethod} {$filtermethod2}) as t";
+					$this->db->query($sql, __LINE__, __FILE__);
+					while ($this->db->next_record())
+					{
+						$value["count_{$i}"] = $this->db->f('count');
+					}
+				}
+			}
+
+//			_debug_array($values);
+			return $values;
 		}
 
 		function check_history( $location_code = '' )
