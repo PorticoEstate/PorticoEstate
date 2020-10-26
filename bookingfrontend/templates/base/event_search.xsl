@@ -27,8 +27,6 @@
                             <span class="monthTag" data-bind="text:monthText"></span>
 
                         </div>
-                        <!--                                <div class="monthTag-container">-->
-                        <!--                                </div>-->
                     </div>
                     <div class="card-element-mid">
                         <div class="event_name-container">
@@ -41,10 +39,14 @@
                     <div class="card-element-right">
                         <div class="location_container" >
                             <div class="pin_img_logo"></div>
-                            <span class="location_name" data-bind="text: location_name"></span>
+                            <a href="#" data-bind="click:$parent.goToBuilding">
+                                <span class="location_name" data-bind="text: location_name"></span>
+                            </a>
                         </div>
                         <div class ="org_name-container">
-                            <span class="org_name" data-bind="text: org_name"></span>
+                            <a href="#" data-bind="click:$parent.goToOrganization">
+                                <span class="org_name" data-bind="text: org_name"></span>
+                            </a>
                         </div>
                     </div>
                 </li>
