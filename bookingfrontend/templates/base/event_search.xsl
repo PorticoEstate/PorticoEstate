@@ -44,6 +44,7 @@
                             </a>
                         </div>
                         <div class ="org_name-container">
+                            <div class="fas fa-users"></div>
                             <a href="#" data-bind="click:$parent.goToOrganization">
                                 <span class="org_name" data-bind="text: org_name"></span>
                             </a>
