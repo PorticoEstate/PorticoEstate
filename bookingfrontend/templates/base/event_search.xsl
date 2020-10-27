@@ -10,6 +10,10 @@
                     </button>
                 </div>
             </div>
+            <!-- Filter Boxes -->
+            <h2 class="mt-5 font-weight-bold">
+                <xsl:value-of select="php:function('lang', 'Choose categories')"/>
+            </h2>
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
         </div>
     </div>
