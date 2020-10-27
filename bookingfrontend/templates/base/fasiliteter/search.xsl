@@ -1,5 +1,8 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="search-page-content">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	
+    <div id="search-page-content">HH
 		<div class="frontpageimage" id="main-page">
 			<div class="header-text"    style="color:#26348B;"  >
 				<a href="{site_url}"    >
@@ -9,39 +12,18 @@
 		</div>
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
-
-                    <!-- Search Container -->
-                        <div id="searchContainer">
-                            <div id="searchContainerContent">
-                                                            <div  id="searchWrapper">
-                             <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
-						<xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
-						</xsl:attribute>
-					</input>
-                            </div>
-                             <div>
-                                 <div  id="locationWrapper">
-                                   <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>
-                                 </div>
-                                 <div  id="dateWrapper">
-                                   <input type="text" id="dateFilter" class="form-control searchInput" placeholder="Dato" aria-label="Large"></input>
-                                 </div>
-                            </div>
-                            <button id="searchBtn">Finn tilgjengelig</button>
-                            </div>
-                        </div>
-			<div class="container searchContainer" style="display:none"> <!-- GJEMT INTIL VIDERE -->
-				<h2 class="text-center font-weight-bold">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
-				</h2>
-				<div class="text-center mt-4 mb-5">
+			<!-- Title -->
+			<div class="container">
+				<div class="flex-container" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-				<div class="input-group input-group-lg">
+			</div>
+			<!-- Search Container -->
+			<div class="container searchContainer"     >
+				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+                                                    <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
 						</xsl:attribute>
 					</input>
 					<div class="input-group-prepend">
@@ -51,10 +33,11 @@
 					</div>
 				</div>
 				<div id="search-autocomplete"></div>
-				<!-- FILTER BOXES> -->
-				<h5 class="mt-5 font-weight-bold">
-					<xsl:value-of select="filterboxtitle"/>
-				</h5>
+				<!-- Filter Boxes -->
+				<h2 class="mt-5 font-weight-bold">
+				   <xsl:value-of select="php:function('lang', 'Choose categories')"/>
+				</h2>
+                                
 				<div class="row mx-auto" data-bind="if: filterboxes().length > 0">
 					<div data-bind="foreach: filterboxes">
 						<div class="dropdown d-inline-block mr-2">
@@ -65,6 +48,21 @@
 							</div>
 						</div>
 					</div>
+				</div>
+                                <h2 class="mt-5 font-weight-bold">
+				   <xsl:value-of select="php:function('lang', 'Choose date-range')"/>
+				</h2>
+				<div class="row mx-auto">
+	 		 <div class="container">
+                                                   
+Fra: <input type="datetime-local" class="date_availability_filter" id="from_time"
+       name="meeting-time" value="2018-06-12T19:30"
+       min="2018-06-07T00:00" max="2018-06-14T00:00" style="border-width: 2px; biorder-color: black"/>
+
+Til: <input type="datetime-local" class="date_availability_filter" id="to_time"
+       name="meeting-time" value="2018-06-12T19:30"
+       min="2018-06-07T00:00" max="2018-06-14T00:00" style="border-width: 2px; biorder-color: black"/>
+                                                </div>
 				</div>
 				<div class="row mx-auto mt-3" data-bind="if: selectedFilterbox">
 					<div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
@@ -112,6 +110,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Arrangement Container -->
 		<div class="container pageResults">
 			<!-- Upcomming Arrangements -->
 			<div id="welcomeResult" class=" container">

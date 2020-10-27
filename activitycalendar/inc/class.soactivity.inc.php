@@ -452,7 +452,6 @@
 
 		protected function populate( int $activity_id, &$activity )
 		{
-
 			if ($activity == null)
 			{
 				$activity = new activitycalendar_activity((int)$activity_id);

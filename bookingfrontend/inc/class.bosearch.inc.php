@@ -19,6 +19,7 @@
 			$this->boactivity = CreateObject('booking.boactivity');
 			$this->bofacility = CreateObject('booking.bofacility');
 		}
+                
 
 		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() , $length)
 		{
@@ -253,8 +254,55 @@
 			$final_array['total_records_sum'] = array_sum((array)$final_array['total_records']);
 			return $final_array;
 		}
-
-
+                
+                /**
+                 * Fetches ids from all booked buildings within a given time-range
+                 * @param type $from_date
+                 * @param type $to_date
+                 */
+                function get_all_booked_ids($from_date, $to_date)
+                {
+                        $results = array();
+			$db = & $GLOBALS['phpgw']->db;
+                        $db->query(
+                                "SELECT DISTINCT bb_building.id FROM (SELECT 'booking'::text AS type,
+                                    bb_booking.application_id,
+                                    bb_booking.id,
+                                    bb_booking.from_,
+                                    bb_booking.to_,
+                                    bb_booking.cost,
+                                    bb_booking.active
+                                   FROM bb_booking
+                                  WHERE bb_booking.application_id IS NOT NULL
+                                UNION
+                                SELECT 'allocation'::text AS type,
+                                    bb_allocation.application_id,
+                                    bb_allocation.id,
+                                    bb_allocation.from_,
+                                    bb_allocation.to_,
+                                    bb_allocation.cost,
+                                    bb_allocation.active
+                                   FROM bb_allocation
+                                  WHERE bb_allocation.application_id IS NOT NULL
+                                UNION
+                                SELECT 'event'::text AS type,
+                                    bb_event.application_id,
+                                    bb_event.id,
+                                    bb_event.from_,
+                                    bb_event.to_,
+                                    bb_event.cost,
+                                    bb_event.active
+                                   FROM bb_event
+                                  WHERE bb_event.application_id IS NOT NULL) as BOOKINGS  JOIN bb_application ON application_id = bb_application.id JOIN bb_building ON bb_application.building_name = bb_building.name WHERE  from_ >= TO_DATE('".$from_date."', 'yyyy/mm/dd') AND to_ <= TO_DATE('".$to_date."', 'yyyy/mm/dd')"  , __LINE__, __FILE__);
+			$i = 0;
+			while ($db->next_record())
+			{
+				$results[] = $db->f('id', true);
+				$i++;
+			}
+			return $results;
+                }
+                
 		function resquery($params = array())
 		{
 			$returnres = array(
@@ -456,11 +504,29 @@
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-
+                        if (isset($_GET['from_time']) && isset($_GET['to_time']))
+                        {
+                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."FILTER TIMES: ".$_GET['from_time'] . " - ".$_GET['to_time'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+                        $booked_ids = $this->get_all_booked_ids($_GET['from_time'], $_GET['to_time']);
+                        $buildings_filtered = array();
+                        foreach($buildings as $building){ // keep only available buildings in output 
+                            if (! in_array($building['id'], $booked_ids)){
+                                $buildings_filtered[] = $building;
+                                file_put_contents("/var/www/html/portico/LOG.log", "\n"."INCLUDED BUILDING: ".$building['id'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+                            }else{
+                                file_put_contents("/var/www/html/portico/LOG.log", "\n"."EXCLUDED BUILDING: ".$building['id'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+                            }
+                        }
+			$returnres['buildings']   = $buildings_filtered;
+                        }else{
 			$returnres['buildings']   = $buildings;
+                        }
 			$returnres['activities']  = $all_activities_list;
 			$returnres['facilities']  = $all_facilities_list;
 			$returnres['partoftowns'] = $all_partoftown_list;
+                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."BOOKED IDS: ".implode(',', $booked_ids) , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."BOOKED IDS: ". $returnres['buildings'][0]['id'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
+
 			return $returnres;
 		}
 

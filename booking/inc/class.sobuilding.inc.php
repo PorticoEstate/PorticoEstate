@@ -55,6 +55,7 @@
 				)
 			);
 		}
+                
 
 		function get_endofseason( $id )
 		{

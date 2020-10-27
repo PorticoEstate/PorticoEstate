@@ -14,6 +14,7 @@
 			'index'             => true,
 			'query'             => true,
 			'resquery'          => true,
+                        'get_all_available_buildings' => true
 		);
 
 		function __construct()
@@ -285,5 +286,13 @@
 			echo json_encode($this->bo->getAutoCompleteData());
 			exit();
 		}
+                
+                 
+                public function get_all_available_buildings(){
+			echo json_encode($this->bo->get_all_a);
+			exit();
+                }
+                
+                
 
 	}
