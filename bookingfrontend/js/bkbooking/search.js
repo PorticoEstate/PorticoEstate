@@ -7,10 +7,23 @@ var part_of_towns = [];
 var top_level_string = "";
 var top_levels = [];
 var selected_building_id = null;
+let from_time, to_time;
 
 var selected_criteria = [];
+
+$('.date_availability_filter').change(() => {
+	from_time = $('#from_time').val();
+	to_time = $('#to_time').val();
+	DoFilterSearch();
+	console.log("DATE CHANGED");
+});
+
 $(document).ready(function ()
 {
+	$("#searchBtn").click(function(){
+		doSearch();
+	});
+
 
 	$("#loading").dialog({
 		hide: 'slide',
@@ -285,3 +298,21 @@ $(window).on('load', function()
 		}
 	});
 });
+
+var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+$('#startDate').datepicker({
+	uiLibrary: 'bootstrap4',
+	iconsLibrary: 'fontawesome',
+	minDate: today,
+	maxDate: function () {
+		return $('#endDate').val();
+	}
+});
+$('#endDate').datepicker({
+	uiLibrary: 'bootstrap4',
+	iconsLibrary: 'fontawesome',
+	minDate: function () {
+		return $('#startDate').val();
+	}
+});
+
