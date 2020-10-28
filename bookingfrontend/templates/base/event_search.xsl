@@ -10,10 +10,16 @@
                     </button>
                 </div>
             </div>
-            <!-- Filter Boxes -->
-            <h2 class="mt-5 font-weight-bold">
-                <xsl:value-of select="php:function('lang', 'Choose categories')"/>
-            </h2>
+            <div class="row datepicker">
+                <div class="col">
+                    <label for="from">From</label>
+                    <input type="date" id="from" name="from"/>
+                </div>
+                <div class="col">
+                    <label for="to">To</label>
+                    <input type="date" id="to" name="to"/>
+                </div>
+            </div>
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
         </div>
     </div>
