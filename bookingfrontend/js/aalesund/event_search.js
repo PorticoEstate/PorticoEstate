@@ -10,8 +10,15 @@ function AppViewModel() {
     self.removeRecord = function () {
         self.events.remove(this);
         self.events.valueHasMutated();
-
     };
+
+    self.goToBuilding = function (event) {
+        window.location = event.building_url();
+    };
+
+    self.goToOrganization = function (event) {
+        window.location = event.org_url();
+    }
 }
 
 function getDateFormat(from, to) {
@@ -41,30 +48,33 @@ function getTimeFormat(from, to) {
 
 function setdata(result) {
     viewmodel.events.removeAll();
-    console.log(result);
     for (var i = 0; i < result.length; i++) {
         if (!orgNameList.includes(result[i].org_name)) {
-            orgNameList.push(result[i].org_name);
+            orgNameList.push(
+                {"org_name":result[i].org_name, org_id:result[i].org_id});
         }
 
         var formattedDateAndMonthArr = getDateFormat(result[i].from, result[i].to);
         var eventTime = getTimeFormat(result[i].from, result[i].to);
 
         viewmodel.events.push({
-            event_name: result[i].event_name,
-            formattedDate: formattedDateAndMonthArr[0],
-            monthText: formattedDateAndMonthArr[1],
-            event_time: eventTime,
-            org_name: result[i].org_name,
-            location_name: result[i].location_name
+            'event_name': ko.observable(result[i].event_name),
+            formattedDate: ko.observable(formattedDateAndMonthArr[0]),
+            monthText: ko.observable(formattedDateAndMonthArr[1]),
+            event_time: ko.observable(eventTime),
+            org_name: ko.observable(result[i].org_name),
+            location_name: ko.observable(result[i].location_name),
+            'building_url': ko.observable(result[i].building_url),
+            org_url: ko.observable(result[i].org_url),
+            event_id: ko.observable(result[i].event_id)
         });
     }
 }
 
 $(document).ready(function () {
     viewmodel = new AppViewModel();
-    ko.applyBindings(viewmodel, document.getElementById('event-content'));
     getUpcomingEvents();
+    ko.applyBindings(viewmodel, document.getElementById('event-content'));
 });
 
 function getUpcomingEvents(orgName = "") {
@@ -81,14 +91,12 @@ function getUpcomingEvents(orgName = "") {
             setdata(result);
         },
         error: function (error) {
-            console.log(error);
         }
     });
 }
 
 function searchInput() {
     var inputVal = document.getElementById("eventsearchBoxID").value;
-    console.log(inputVal);
     if (inputVal === 'undefined' || !inputVal) {
         viewmodel.events.removeAll();
         getUpcomingEvents();

@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <div id="container_event_search">
         <div class="container searchContainer">
-            <div class="input-group input-group-lg">
+            <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
                 <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="coolfunc()" placeholder="søk etter organisasjoner">
                 </input>
                 <div class="input-group-prepend">
@@ -9,9 +9,11 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-                <div class="input-group-prepend">
-                </div>
             </div>
+            <!-- Filter Boxes -->
+            <h2 class="mt-5 font-weight-bold">
+                <xsl:value-of select="php:function('lang', 'Choose categories')"/>
+            </h2>
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
         </div>
     </div>
@@ -27,8 +29,6 @@
                             <span class="monthTag" data-bind="text:monthText"></span>
 
                         </div>
-                        <!--                                <div class="monthTag-container">-->
-                        <!--                                </div>-->
                     </div>
                     <div class="card-element-mid">
                         <div class="event_name-container">
@@ -41,10 +41,15 @@
                     <div class="card-element-right">
                         <div class="location_container" >
                             <div class="pin_img_logo"></div>
-                            <span class="location_name" data-bind="text: location_name"></span>
+                            <a href="#" data-bind="click:$parent.goToBuilding">
+                                <span class="location_name" data-bind="text: location_name"></span>
+                            </a>
                         </div>
                         <div class ="org_name-container">
-                            <span class="org_name" data-bind="text: org_name"></span>
+                            <div class="fas fa-users"></div>
+                            <a href="#" data-bind="click:$parent.goToOrganization">
+                                <span class="org_name" data-bind="text: org_name"></span>
+                            </a>
                         </div>
                     </div>
                 </li>

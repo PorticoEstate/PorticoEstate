@@ -51,17 +51,11 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 		$currentDate = date('Y-m-d H:i:s');
 		$events = $this->bosearch->soevent->get_events_from_date($currentDate, $orgName);
-		foreach ($events as $event) {
+		foreach ($events as &$event) {
 			$event = $this->addBuildingUrl($event);
+			$event = $this->addOrganizationUrl($event);
 		}
 		return $events;
-	}
-
-	function addBuildingUrl($event)
-	{
-		//TODO fullfør denne
-//		$decoded_event = json_decode($event);
-//		$this->bo_booking->read_single($decoded_event[])
 	}
 
 	public function query()
@@ -78,4 +72,15 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		phpgw::no_access();
 	}
 
+	private function addOrganizationUrl($event)
+	{
+		$event["org_url"] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $event['org_id']));
+		return $event;
+	}
+
+	private function addBuildingUrl($event)
+	{
+		$event["building_url"] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $event['building_id']));
+		return $event;
+	}
 }

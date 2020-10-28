@@ -551,13 +551,29 @@
 			$orgnamesql = " AND bbe.organizer='$orgName' ";
 		}
 		if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
+			$sqlQuery = "select bbe.name as event_name,
+						 bbe.id as event_id,
+						 bbe.from_,
+						 bbe.to_,
+						 bbe.building_name as location_name,
+						 bbe.building_id as building_id,
+						 bbe.organizer as org_name,
+						 bbe.customer_organization_number as org_num,
+						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) as org_id
 							 from bb_event bbe
 							 where bbe.from_ > '$fromDate' "
 							 .$orgnamesql.
 							 " order by bbe.from_ asc LIMIT 50;";
 		} else {
-			$sqlQuery = "select bbe.name as event_name, bbe.id as event_id, bbe.from_, bbe.to_, bbe.building_name as location_name,bbe.building_id as building_id, bbe.organizer as org_name, bbe.customer_organization_number as org_id
+			$sqlQuery = "select bbe.name as event_name,
+ 						 bbe.id as event_id,
+ 						 bbe.from_,
+ 						 bbe.to_,
+ 						 bbe.building_name as location_name,
+ 						 bbe.building_id as building_id,
+ 						 bbe.organizer as org_name, 
+ 						 bbe.customer_organization_number as org_num,
+ 						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) as org_id
 						 from bb_event bbe
 							 where bbe.from_ > CURRENT_DATE "
 							 .$orgnamesql.
@@ -573,7 +589,9 @@
 				'org_name' => $this->db->f('org_name', false),
 				'location_name' => $this->db->f('location_name', false),
 				'event_id' => $this->db->f('event_id', false),
-				'building_id' => $this->db->f('building_id')
+				'building_id' => $this->db->f('building_id'),
+				'org_num' => $this->db->f('org_num', false),
+				'org_id' => $this->db->f('org_id', false)
 			);
 		}
 		_debug_array($results);
