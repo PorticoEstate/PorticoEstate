@@ -45,8 +45,6 @@
 			);
 			$this->display_name = lang('users');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
-                                            file_put_contents("/var/www/html/portico/LOG.log", "\n"."NEW USER--1" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
-
 		}
 
 		public function building_users()
@@ -247,8 +245,6 @@
 
 		public function add()
 		{
-                    file_put_contents("/var/www/html/portico/LOG.log", "\n"."NEW USER--1" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
-
 			$errors = array();
 			$user = array();
 
@@ -273,7 +269,7 @@
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('User New'), 'link' => '#user_edit');
-                        $tabs['test'] = array('label' => "Test", 'link' =>"#user_edit");
+            $tabs['test'] = array('label' => "Test", 'link' =>"#user_edit");
 			$active_tab = 'generic';
 
 			$user['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -286,7 +282,6 @@
 
 		public function edit()
 		{
-                    file_put_contents("/var/www/html/portico/LOG.log", "\n"."NEW USER--2" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
 
 			$id = phpgw::get_var('id', 'int');
 
@@ -348,18 +343,14 @@
 
 		public function show()
 		{
-<<<<<<< HEAD
-                                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."NEW USER--1" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
 
 			$user = $this->bo->read_single(phpgw::get_var('id', 'int'));
-=======
 			$id = phpgw::get_var('id', 'int');
 			if (!$id)
 			{
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$user = $this->bo->read_single($id);
->>>>>>> 96554c3507df4f80b5e8cb6130ef2b2ad4990717
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('user'), 'link' => '#user');

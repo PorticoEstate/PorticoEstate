@@ -1623,7 +1623,7 @@
 			(
 				'data'	=> array('label' => lang('user data'), 'link' => '#user'),
 				'groups'	=> array('label' => lang('groups'), 'link' => '#groups'),
-				'apps'	=> array('label' => lang('applications'), 'link' => '#apps'),
+				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
 
 			if(!$account_id)

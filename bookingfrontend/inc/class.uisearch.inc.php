@@ -4,7 +4,7 @@
 
 	class bookingfrontend_uisearch extends booking_uicommon
 	{
-	    var $bo;
+	    public $bo;
 
 		public $public_functions = array
 			(
@@ -14,12 +14,11 @@
 			'index'             => true,
 			'query'             => true,
 			'resquery'          => true,
-                        'get_all_available_buildings' => true
+			'get_all_available_buildings' => true
 		);
 
 		function __construct()
 		{
-
 			parent::__construct();
 			$this->bo = new bookingfrontend_bosearch();
 			$old_top = array_pop($this->tmpl_search_path);
@@ -286,13 +285,9 @@
 			echo json_encode($this->bo->getAutoCompleteData());
 			exit();
 		}
-                
-                 
-                public function get_all_available_buildings(){
-			echo json_encode($this->bo->get_all_a);
-			exit();
-                }
-                
-                
 
+        public function get_all_available_buildings()
+        {
+			return $this->bo->get_all_booked_ids();
+        }
 	}
