@@ -53,8 +53,7 @@ function setdata(result) {
         result[i].org_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: result[i].org_id}, false);
 
         if (!orgNameList.includes(result[i].org_name)) {
-            orgNameList.push(
-                {"org_name":result[i].org_name, org_id:result[i].org_id});
+            orgNameList.push(result[i].org_name);
         }
 
         var formattedDateAndMonthArr = getDateFormat(result[i].from, result[i].to);
