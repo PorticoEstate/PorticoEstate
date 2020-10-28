@@ -2,14 +2,11 @@
 	$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.template_portico');
-    phpgw::import_class('phpgwapi.uicommon');
 
 	if (!isset($GLOBALS['phpgw_info']['server']['site_title']))
 	{
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
-
-	$common = new phpgwapi_uicommon();
 
 	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
