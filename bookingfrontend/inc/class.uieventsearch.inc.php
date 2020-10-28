@@ -45,16 +45,9 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	 */
 	public function upcomingEvents()
 	{
-//	        $allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-//		        'id' => $allocation['resources'][0]['building_id']));
 		$orgName = phpgw::get_var('orgName', 'string', 'REQUEST', null);
-
 		$currentDate = date('Y-m-d H:i:s');
 		$events = $this->bosearch->soevent->get_events_from_date($currentDate, $orgName);
-		foreach ($events as &$event) {
-			$event = $this->addBuildingUrl($event);
-			$event = $this->addOrganizationUrl($event);
-		}
 		return $events;
 	}
 

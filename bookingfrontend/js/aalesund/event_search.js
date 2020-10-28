@@ -49,6 +49,9 @@ function getTimeFormat(from, to) {
 function setdata(result) {
     viewmodel.events.removeAll();
     for (var i = 0; i < result.length; i++) {
+        result[i].building_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result[i].building_id}, false);
+        result[i].org_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: result[i].org_id}, false);
+
         if (!orgNameList.includes(result[i].org_name)) {
             orgNameList.push(
                 {"org_name":result[i].org_name, org_id:result[i].org_id});
@@ -69,6 +72,8 @@ function setdata(result) {
             event_id: ko.observable(result[i].event_id)
         });
     }
+    console.log(result);
+
 }
 
 $(document).ready(function () {
