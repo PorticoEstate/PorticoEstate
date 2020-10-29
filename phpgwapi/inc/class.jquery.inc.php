@@ -685,7 +685,7 @@ JS;
 				placeholder: '',
 			    theme: 'snow'
 			 });
-			quill.$target = editors.$target
+			quill.$target = editors.$target;
 
 		});
 JS;

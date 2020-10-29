@@ -42,20 +42,17 @@
 		public function __construct()
 		{
 			parent::__construct();
-
-			if (!empty($this->config->config_data['debug']))
-			{
-				$this->debug = true;
-			}
 		}
 
 		protected function get_user_org_id()
 		{
-			$headers = getallheaders();
-			$fodselsnr = $headers['uid'];
-
+//			$headers = getallheaders();
+//			$fodselsnr = $headers['uid'];
+			$data = $this->validate_ssn_login();
+			$fodselsnr = (string)$data['ssn'];
 			$bregorgs = $this->get_breg_orgs($fodselsnr);
 			$myorgnr = array();
+
 			if ($bregorgs == array())
 			{
 				$external_user = (object)'ciao';
@@ -182,6 +179,10 @@
 			{
 				foreach ($test_organizations as $test_organization)
 				{
+					if(in_array($test_organization, $orgs_validate))
+					{
+						continue;
+					}
 					$results[] = array
 					(
 						'orgnr' => $test_organization
