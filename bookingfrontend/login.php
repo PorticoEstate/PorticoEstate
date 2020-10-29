@@ -85,7 +85,7 @@
 		$GLOBALS['phpgw']->redirect_link('/bookingfrontend/index.php', $redirect_data);
 	}
 
-	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
+	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'raw')));
 	if (!$after)
 	{
 		$after = array('menuaction' => 'bookingfrontend.uisearch.index');
