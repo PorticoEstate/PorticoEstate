@@ -832,3 +832,5 @@ PDF-export to archive	booking	no	Eksporter saken som pdf til arkiv
 add participant limit	booking	no	Legg til deltakerkapasitet
 registration has ended	booking	no	Registrering er avsluttet
 participant limit sms	booking	no	Send kvittering for registrering på SMS
+global participant limit is set to %1	booking	no	Generell grense for deltakere er satt til %1
+overridden participant limit is set to %1	booking	no	Overstyrt grense for deltakere er satt til %1

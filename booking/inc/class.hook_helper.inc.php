@@ -68,4 +68,20 @@
 			$GLOBALS['phpgw']->locations->update_description(".application.{$data['id']}", $data['name'], 'booking');
 			$GLOBALS['phpgw']->locations->update_description(".resource.{$data['id']}", $data['name'], 'booking');
 		}
+
+		/**
+		 * Alert user if participation registration is set globally
+		 */
+		function after_navbar( )
+		{
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if(!empty($config['participant_limit']) && (int)$config['participant_limit'])
+			{
+				$message = lang('global participant limit is set to %1', $config['participant_limit']);
+				echo '<div class="msg_good">';
+				echo $message;
+				echo '</div>';
+			}
+		}
 	}
