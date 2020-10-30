@@ -10,8 +10,8 @@
 			'show' => true,
 			'edit' => true,
 		);
-		protected $module,$external_login_info;
-		private $ssn, $orgs;
+		protected $module;
+		private $ssn, $orgs, $external_login_info;
 
 		public function __construct()
 		{
@@ -51,8 +51,8 @@
 				}
 			}
 
-			$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
-			$this->ssn = $external_login_info['ssn'];
+			$this->external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
+			$this->ssn = $this->external_login_info['ssn'];
 			
 			if(!$this->ssn)
 			{
@@ -214,7 +214,15 @@
 		public function add()
 		{
 			$errors = array();
-			$user = array('customer_ssn' => $this->ssn);
+			$user = array(
+				'customer_ssn' => $this->ssn,
+				'phone' => $this->external_login_info['phone'],
+				'email' => $this->external_login_info['email'],
+				'name' => "{$this->external_login_info['first_name']} {$this->external_login_info['last_name']}",
+				'street' => $this->external_login_info['street'],
+				'zip_code' => $this->external_login_info['zip_code'],
+				'city' => $this->external_login_info['city'],
+				);
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
