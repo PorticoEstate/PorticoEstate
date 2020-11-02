@@ -712,12 +712,6 @@
 		var resources = <xsl:value-of select="application/resources"/>;
 	
 	    <![CDATA[
-//        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
-//        var associatedURL = 'index.php?menuaction=booking.uiapplication.associated&sort=from_&dir=asc&phpgw_return_as=json&filter_application_id='+app_id;
-//        var documentsURL = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;
-//            documentsURL += 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=resource::'+ resources;
-//		  var attachmentsResourceURL = 'index.php?menuaction=booking.uidocument_application.index&sort=name&no_images=1&filter_owner_id=' + app_id + '&phpgw_return_as=json&';
-
 			var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;
 			var associatedURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.associated', sort:'from_',dir:'asc',filter_application_id:app_id, length:-1}, true);
 			var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name', length:-1}, true) +'&owner[]=building::' + building_id;

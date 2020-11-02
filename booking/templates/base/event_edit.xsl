@@ -358,7 +358,7 @@
 											<xsl:value-of select="php:function('lang', 'participant limit')" />
 										</h4>
 									</label>
-									<input id="field_participant_limit" name="participant_limit" type="number" min="0">
+									<input id="field_participant_limit" name="participant_limit" type="number" min="-1">
 										<xsl:attribute name="value">
 											<xsl:value-of select="event/participant_limit"/>
 										</xsl:attribute>
