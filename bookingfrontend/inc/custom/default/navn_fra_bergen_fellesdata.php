@@ -114,20 +114,29 @@
 			}
 			$db = $this->get_db();
 
-			$sql = "SELECT * FROM V_INNBYGGER_FORTROLIG WHERE FODSELSNR = '{$data['ssn']}'"
-			. " AND POSTENS_ADRESSE1 NOT IN ('SPERRET ADRESSE', 'UTEN FAST BOPEL')";
+			$sql = "SELECT * FROM V_INNBYGGER_FORTROLIG WHERE FODSELSNR = '{$data['ssn']}'";
 
 			$db->query($sql, __LINE__, __FILE__);
-
 			$db->next_record();
+
+			$adresse = $db->f('BESTE_ADRESSE1', true);
+
+			if(in_array($adresse, array('SPERRET ADRESSE', 'UTEN FAST BOPEL')))
+			{
+				$data['street']		 = '';
+				$data['zip_code']	 = '';
+				$data['city']		 = '';
+			}
+			else
+			{
+				$data['street']		 = $db->f('POSTENS_ADRESSE1', true);
+				$data['zip_code']	 = $db->f('POSTENS_POSTNR', true);
+				$data['city']		 = $db->f('POSTENS_POSTSTED', true);
+			}
 
 			$data['first_name']	 = $db->f('FORNAVN');
 			$data['last_name']	 = $db->f('ETTERNAVN');
 			$data['name']		 = $db->f('FORKORTET_NAVN');
-			$data['street']		 = $db->f('POSTENS_ADRESSE1');
-			$data['zip_code']	 = $db->f('POSTENS_POSTNR');
-			$data['city']		 = $db->f('POSTENS_POSTSTED');
-
 
 			if ($this->debug)
 			{
