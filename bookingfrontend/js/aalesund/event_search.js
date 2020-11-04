@@ -60,19 +60,17 @@ function setdata(result) {
         var eventTime = getTimeFormat(result[i].from, result[i].to);
 
         viewmodel.events.push({
-            'event_name': ko.observable(result[i].event_name),
+            event_name: ko.observable(result[i].event_name),
             formattedDate: ko.observable(formattedDateAndMonthArr[0]),
             monthText: ko.observable(formattedDateAndMonthArr[1]),
             event_time: ko.observable(eventTime),
             org_name: ko.observable(result[i].org_name),
             location_name: ko.observable(result[i].location_name),
-            'building_url': ko.observable(result[i].building_url),
+            building_url: ko.observable(result[i].building_url),
             org_url: ko.observable(result[i].org_url),
             event_id: ko.observable(result[i].event_id)
         });
     }
-    console.log(result);
-
 }
 
 $(document).ready(function () {
