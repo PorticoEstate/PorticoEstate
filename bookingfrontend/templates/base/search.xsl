@@ -9,29 +9,7 @@
 		</div>
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
-
-                    <!-- Search Container -->
-                        <div id="searchContainer">
-                            <div id="searchContainerContent">
-                                                            <div  id="searchWrapper">
-                             <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
-						<xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
-						</xsl:attribute>
-					</input>
-                            </div>
-                             <div>
-                                 <div  id="locationWrapper">
-                                   <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>
-                                 </div>
-                                 <div  id="dateWrapper">
-                                   <input type="text" id="dateFilter" class="form-control searchInput" placeholder="Dato" aria-label="Large"></input>
-                                 </div>
-                            </div>
-                            <button id="searchBtn">Finn tilgjengelig</button>
-                            </div>
-                        </div>
-			<div class="container searchContainer" style="display:none"> <!-- GJEMT INTIL VIDERE -->
+			<div class="container searchContainer">
 				<h2 class="text-center font-weight-bold">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
 				</h2>
