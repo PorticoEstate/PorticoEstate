@@ -33,8 +33,6 @@
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.pt-BR.js";
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu

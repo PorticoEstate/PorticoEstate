@@ -35,7 +35,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$config->read();
 		phpgwapi_jquery::load_widget("core");
 
-		self::add_javascript('bookingfrontend', 'base', 'event_search.js', 'text/javascript', true);
+		self::add_javascript('bookingfrontend', 'aalesund', 'event_search.js', 'text/javascript', true);
 		self::render_template_xsl('event_search', array('event_search' => $event_search));
 
 	}
@@ -51,10 +51,6 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		return $events;
 	}
 
-	public function query()
-	{
-		// TODO: Implement query() method.
-	}
 	public function index()
 	{
 		if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -65,15 +61,8 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		phpgw::no_access();
 	}
 
-	private function addOrganizationUrl($event)
+	public function query()
 	{
-		$event["org_url"] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiorganization.show', 'id' => $event['org_id']));
-		return $event;
-	}
-
-	private function addBuildingUrl($event)
-	{
-		$event["building_url"] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $event['building_id']));
-		return $event;
+		// TODO: Implement query() method.
 	}
 }

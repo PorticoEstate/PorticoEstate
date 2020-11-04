@@ -580,21 +580,21 @@
 							 " order by bbe.from_ asc LIMIT 50;";
 		}
 		$this->db->query($sqlQuery);
+
 		$results = array();
 		while ($this->db->next_record()) {
 			$results[] = array(
 				'from' => $this->db->f('from_', false),
 				'to' => $this->db->f('to_', false),
 				'event_name' => $this->db->f('event_name', false),
-				'org_name' => $this->db->f('org_name', false),
-				'location_name' => $this->db->f('location_name', false),
+				'org_name' => $this->db->f('org_name', true),
+				'location_name' => $this->db->f('location_name', true),
 				'event_id' => $this->db->f('event_id', false),
-				'building_id' => $this->db->f('building_id'),
+				'building_id' => $this->db->f('building_id', false),
 				'org_num' => $this->db->f('org_num', false),
 				'org_id' => $this->db->f('org_id', false)
 			);
 		}
-		_debug_array($results);
 		return $results;
 	}
 }

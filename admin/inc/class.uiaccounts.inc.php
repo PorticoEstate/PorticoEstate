@@ -1618,7 +1618,7 @@
 					'i_am_admin'			=> in_array($perm['app_name'], $valid_apps)
 				);
 			}
-                                
+
 			$tabs = array
 			(
 				'data'	=> array('label' => lang('user data'), 'link' => '#user'),

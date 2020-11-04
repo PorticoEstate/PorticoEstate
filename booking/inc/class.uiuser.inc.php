@@ -269,7 +269,6 @@
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('User New'), 'link' => '#user_edit');
-            $tabs['test'] = array('label' => "Test", 'link' =>"#user_edit");
 			$active_tab = 'generic';
 
 			$user['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -282,7 +281,6 @@
 
 		public function edit()
 		{
-
 			$id = phpgw::get_var('id', 'int');
 
 			$user = $this->bo->read_single($id);
@@ -343,8 +341,6 @@
 
 		public function show()
 		{
-
-			$user = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$id = phpgw::get_var('id', 'int');
 			if (!$id)
 			{
