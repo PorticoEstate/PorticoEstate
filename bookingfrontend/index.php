@@ -218,7 +218,6 @@ HTML;
 /////////////////////////////////////////////////////////////////////////////
 	if (isset($_GET['menuaction']))
 	{
-            file_put_contents("/var/www/html/portico/LOG.log", "\n"."menuaction: ".$_GET['menuaction'] , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
 		list($app, $class, $method) = explode('.', $_GET['menuaction']);
 	}
 	else
@@ -230,8 +229,6 @@ HTML;
 
 	if($app != 'bookingfrontend')
 	{
-                        file_put_contents("/var/www/html/portico/LOG.log", "\n"."!bookingfrontend" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
-
 		$invalid_data = true;
 		$GLOBALS['phpgw']->common->phpgw_header(true);
 		$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
@@ -250,8 +247,6 @@ HTML;
 
 	if (!$invalid_data && is_object($GLOBALS[$class]) && isset($GLOBALS[$class]->public_functions) && is_array($GLOBALS[$class]->public_functions) && isset($GLOBALS[$class]->public_functions[$method]) && $GLOBALS[$class]->public_functions[$method])
 	{
-                                    file_put_contents("/var/www/html/portico/LOG.log", "\n"."VALID DATA" , FILE_APPEND); // ONLY FOR TESTING <--- TO BE REMOVED
-
 		if (phpgw::get_var('X-Requested-With', 'string', 'SERVER') == 'XMLHttpRequest'
 			// deprecated
 			|| phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json')
