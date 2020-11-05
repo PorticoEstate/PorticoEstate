@@ -1,5 +1,8 @@
 function check(input)
 {
+	return;
+
+	//handled by init_intl_tel_input
 	value = input.value;
 
 	var phoneno = /^\d{8}$/;

@@ -99,6 +99,7 @@
 //			_debug_array($from);
 //			_debug_array($now);
 //			_debug_array($to);
+
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
@@ -147,7 +148,7 @@
 				}
 				else
 				{
-					$phone = phpgw::get_var('phone', 'int');
+					$phone = phpgw::get_var('phone', 'string');
 					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
 					$participant['register_type']	 = $register_type;
 					$participant['phone']			 = $phone;
@@ -285,6 +286,8 @@
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
+
+			phpgwapi_jquery::init_intl_tel_input('phone');
 			self::add_javascript('bookingfrontend', 'base', 'participant_edit.js');
 			self::render_template_xsl('participant_edit', $data);
 		}
