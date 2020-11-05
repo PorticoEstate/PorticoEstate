@@ -2,6 +2,32 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
 var viewmodel;
 var orgNameList = [];
 var tempList= [];
+var fromDate = "";
+var toDate = "";
+var organization = "";
+
+//########## Listeners #############
+document.getElementById('from').addEventListener("change", function () {
+    var input = this.value;
+    fromDate = formatDateForBackend(input);
+    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
+    getUpcomingEvents(organization,fromDate,toDate)
+});
+
+document.getElementById('to').addEventListener("change", function () {
+    var input = this.value;
+    toDate = formatDateForBackend(input);
+    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
+    getUpcomingEvents(organization,fromDate,toDate)
+});
+
+document.getElementById('eventsearchBoxID').addEventListener("change", function () {
+    var input = this.value;
+    organization = this.value;
+    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
+    getUpcomingEvents(organization,fromDate,toDate)
+});
+//##########END Listeners ##########
 
 function AppViewModel() {
     var self = this;
@@ -21,10 +47,18 @@ function AppViewModel() {
     }
 }
 
+function formatDateForBackend(date) {
+    if (date === "") {
+        return "";
+    }
+    var fDate = new Date(date);
+    return fDate.getFullYear()+"-"+(fDate.getMonth()+1)+"-"+fDate.getDate()+" "+(fDate.getHours())+":"+fDate.getMinutes()+":"+fDate.getSeconds()+"";
+}
+
 function getDateFormat(from, to) {
-    var ret = [];
-    var fromDate = new Date(from);
-    var toDate = new Date(to);
+    let ret = [];
+    let fromDate = new Date(from);
+    let toDate = new Date(to);
 
     if (fromDate.getDate() === toDate.getDate()) {
         ret.push(fromDate.getDate()+". ")
@@ -38,9 +72,9 @@ function getDateFormat(from, to) {
 }
 
 function getTimeFormat(from, to) {
-    var fromDate = new Date(from);
-    var toDate = new Date(to);
-    var ret;
+    let fromDate = new Date(from);
+    let toDate = new Date(to);
+    let ret;
 
     ret = (fromDate.getHours() + ":" + fromDate.getMinutes()+"-"+toDate.getHours() + ":" + toDate.getMinutes());
     return ret;
@@ -79,13 +113,20 @@ $(document).ready(function () {
     ko.applyBindings(viewmodel, document.getElementById('event-content'));
 });
 
-function getUpcomingEvents(orgName = "") {
-    let requestURL = "";
-    if (orgName != "") {
-        requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents", orgName : orgName}, true);
-    } else {
-        requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uieventsearch.upcomingEvents"}, true);
+function getUpcomingEvents(orgName = "", from = "", to="") {
+    if (from === "") {
+        from = formatDateForBackend(new Date());
     }
+    let requestURL;
+
+    reqObject = {
+        menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
+        orgName: orgName,
+        fromDate: from,
+        toDate: to
+    }
+
+    requestURL = phpGWLink('bookingfrontend/', reqObject, true);
     $.ajax({
         url: requestURL,
         dataType : 'json',
@@ -98,14 +139,7 @@ function getUpcomingEvents(orgName = "") {
 }
 
 function searchInput() {
-    var inputVal = document.getElementById("eventsearchBoxID").value;
-    if (inputVal === 'undefined' || !inputVal) {
-        viewmodel.events.removeAll();
-        getUpcomingEvents();
-    } else {
-        //For nå blir det bare søk etter organisasjoner, filtrene blir utvidet etterhvert
-        getUpcomingEvents(inputVal);
-    }
+    getUpcomingEvents();
 }
 
 function coolfunc() {

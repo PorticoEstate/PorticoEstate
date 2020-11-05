@@ -46,8 +46,20 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	public function upcomingEvents()
 	{
 		$orgName = phpgw::get_var('orgName', 'string', 'REQUEST', null);
-		$currentDate = date('Y-m-d H:i:s');
-		$events = $this->bosearch->soevent->get_events_from_date($currentDate, $orgName);
+		$fromDate = phpgw::get_var('fromDate', 'string', 'REQUEST', null);
+		$toDate = phpgw::get_var('toDate', 'string', 'REQUEST', null);
+
+//		if ($fromDate === '' || $fromDate === null)
+//		{
+//			$fromDate = date('Y-m-d H:i:s',time());
+//		}
+//		if ($toDate !== "" && $toDate !== null)
+//		{
+//			$temp = date($toDate);
+//			$toDate = date( "Y-m-d H:i:s",$temp);
+//		}
+
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgName);
 		return $events;
 	}
 

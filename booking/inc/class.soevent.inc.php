@@ -104,10 +104,10 @@
 		function update( $entry )
 		{
 			$receipt = parent::update($entry);
-			
+
 			$cost = $this->_marshal($entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
-			
+
 			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
 			. " WHERE reservation_type = 'event'"
 			. " AND reservation_id = {$id}"
@@ -283,7 +283,6 @@
 			);
 
 			return $this->db->insert($sql, $valueset, __LINE__, __FILE__);
-		
 		}
 
 		protected function doValidate( $entity, booking_errorstack $errors )
@@ -544,14 +543,17 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate, $orgName=null)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null)
 	{
 		$orgnamesql = null;
+		$toDateSql = null;
 		if ($orgName) {
 			$orgnamesql = " AND bbe.organizer='$orgName' ";
 		}
-		if ($fromDate === NULL || $fromDate===EMPTY_STRING) {
-			$sqlQuery = "select bbe.name as event_name,
+		if ($toDate !== "") {
+			$toDateSql = " AND bbe.to_ <= '$toDate' ";
+		}
+		$sqlQuery = "select bbe.name as event_name,
 						 bbe.id as event_id,
 						 bbe.from_,
 						 bbe.to_,
@@ -559,26 +561,13 @@
 						 bbe.building_id as building_id,
 						 bbe.organizer as org_name,
 						 bbe.customer_organization_number as org_num,
-						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) as org_id
-							 from bb_event bbe
-							 where bbe.from_ > '$fromDate' "
-							 .$orgnamesql.
-							 " order by bbe.from_ asc LIMIT 50;";
-		} else {
-			$sqlQuery = "select bbe.name as event_name,
- 						 bbe.id as event_id,
- 						 bbe.from_,
- 						 bbe.to_,
- 						 bbe.building_name as location_name,
- 						 bbe.building_id as building_id,
- 						 bbe.organizer as org_name, 
- 						 bbe.customer_organization_number as org_num,
- 						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) as org_id
-						 from bb_event bbe
-							 where bbe.from_ > CURRENT_DATE "
-							 .$orgnamesql.
-							 " order by bbe.from_ asc LIMIT 50;";
-		}
+						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) AS org_id
+							 FROM bb_event bbe
+							 WHERE bbe.from_ >= '$fromDate'"
+						.$toDateSql
+						.$orgnamesql.
+						" order by bbe.from_ asc LIMIT 50;";
+
 		$this->db->query($sqlQuery);
 
 		$results = array();
