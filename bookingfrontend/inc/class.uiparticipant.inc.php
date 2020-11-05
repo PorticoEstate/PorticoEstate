@@ -100,10 +100,6 @@
 //			_debug_array($now);
 //			_debug_array($to);
 
-			$enable_register_pre = true;
-			$enable_register_in	 = $from < $now && $to > $now ? true : false;
-			$enable_register_out = $from < $now && $to > $now ? true : false;
-
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
