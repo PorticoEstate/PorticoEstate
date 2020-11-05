@@ -289,6 +289,18 @@
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/glider/glider{$_type}.css");
 					break;
+				case 'intl-tel-input':
+					$load = array
+						(
+						'intl-tel-input' => array(
+							"js/utils",
+							"js/intlTelInput"
+						)
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/intl-tel-input/css/intlTelInput.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/intl-tel-input/css/isValidNumber.css");
+
+					break;
 
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
@@ -697,5 +709,82 @@ JS;
 		public static function init_multi_upload_file()
 		{
 			self::load_widget('file-upload');
+		}
+
+
+
+		public static function init_intl_tel_input( $target )
+		{
+			$cache_refresh_token = time();
+			if (!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+			{
+				$cache_refresh_token = $GLOBALS['phpgw_info']['server']['cache_refresh_token'];
+			}
+			self::load_widget('intl-tel-input');
+
+			$js = <<<JS
+			$(document).ready(function ()
+			{
+				var input{$target} = document.querySelector("#{$target}");
+
+				$('<span id="{$target}error-msg" class="hide"></span>').insertAfter($("#{$target}"));
+				$('<span id="{$target}valid-msg" class="hide"> ✓</span>').insertAfter($("#{$target}"));
+
+				{$target}errorMsg = document.querySelector("#{$target}error-msg"),
+					{$target}validMsg = document.querySelector("#{$target}valid-msg");
+
+				// here, the index maps to the error code returned from getValidationError - see readme
+				var errorMap = [
+					"Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"
+				];
+
+				// initialise plugin
+
+				var iti = window.intlTelInput(input{$target}, {
+					initialCountry: 'no'
+					, placeholderNumberType: 'MOBILE',
+					utilsScript: "../phpgwapi/js/intl-tel-input/js/utils.js?{$cache_refresh_token}" // just for formatting/placeholders etc
+				});
+
+				var {$target}reset = function ()
+				{
+					input{$target}.classList.remove("error");
+					{$target}errorMsg.innerHTML = "";
+					{$target}errorMsg.classList.add("hide");
+					{$target}validMsg.classList.add("hide");
+				};
+
+				// on blur: validate
+				input{$target}.addEventListener('blur', function ()
+				{
+					{$target}reset();
+					if (input{$target}.value.trim())
+					{
+						if (iti.isValidNumber())
+						{
+							{$target}validMsg.classList.remove("hide");
+							input{$target}.setCustomValidity('');
+							$("#{$target}").val(iti.getNumber());
+						}
+						else
+						{
+							input{$target}.classList.add("error");
+							var errorCode = iti.getValidationError();
+							input{$target}.setCustomValidity(errorMap[errorCode]);
+							{$target}errorMsg.innerHTML = errorMap[errorCode];
+							{$target}errorMsg.classList.remove("hide");
+						}
+					}
+				});
+
+				// on keyup / change flag: reset
+				input{$target}.addEventListener('change', {$target}reset);
+				input{$target}.addEventListener('keyup', {$target}reset);
+			});
+
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+
+
 		}
 	}
