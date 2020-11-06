@@ -1361,6 +1361,14 @@
 			QRcode::png($code_text, $filename);
 			$booking['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 
+			$get_participants_link =  $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction'				 => 'booking.uiparticipant.index',
+				'filter_reservation_id'		 => $booking['id'],
+				'filter_reservation_type'	 => 'booking',
+			));
+
+			$booking['get_participants_link'] = $get_participants_link;
+
 			self::render_template_xsl('booking_show', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 		}
 	}
