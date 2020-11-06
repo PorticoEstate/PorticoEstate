@@ -33,8 +33,10 @@
 				<xsl:value-of select="booking/participant_limit"/>
 			</p>
 			<span class="mt-2">
-				<xsl:value-of select="php:function('lang', 'number of participants')" />:
-				<xsl:value-of select="booking/number_of_participants" />
+				<a href="{booking/get_participants_link}" target="_blank">
+					<xsl:value-of select="php:function('lang', 'number of participants')" />:
+					<xsl:value-of select="booking/number_of_participants" />
+				</a>
 			</span>
 
 			<span class="mt-2">

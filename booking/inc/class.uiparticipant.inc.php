@@ -23,7 +23,7 @@
 //			self::set_active_menu('booking::organizations::participants');
 
 			$this->module = "booking";
-			$this->display_name = lang('participant');
+			$this->display_name = lang('participants');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
@@ -118,6 +118,45 @@
 			{
 				return $this->query();
 			}
+			$data = array(
+				'datatable_name' => $this->display_name,
+				'form'			 => array(
+					'toolbar' => array(
+						'item' => array(
+						)
+					),
+				),
+				'datatable'		 => array(
+					'source' => self::link(array(
+						'menuaction'				 => 'booking.uiparticipant.index',
+						'sort'						 => 'phone',
+						'filter_reservation_id'		 => phpgw::get_var('filter_reservation_id', 'int', 'GET', -1),
+						'filter_reservation_type'	 => phpgw::get_var('filter_reservation_type', 'string', 'GET', 'event'),
+						'phpgw_return_as'			 => 'json'
+					)),
+					'field'	 => array(
+						array(
+							'key'	 => 'phone',
+							'label'	 => lang('phone'),
+						),
+						array(
+							'key'	 => 'quantity',
+							'label'	 => lang('quantity'),
+						),
+						array(
+							'key'	 => 'from_',
+							'label'	 => lang('from'),
+						),
+						array(
+							'key'	 => 'to_',
+							'label'	 => lang('to'),
+						),
+					)
+				)
+			);
+
+			$data['datatable']['actions'][] = array();
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function query()

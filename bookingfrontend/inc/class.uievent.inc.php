@@ -523,6 +523,14 @@
 			QRcode::png($code_text, $filename);
 			$event['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 //			_debug_array($event);
+
+			$get_participants_link =  $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction'				 => 'booking.uiparticipant.index',
+				'filter_reservation_id'		 => $event['id'],
+				'filter_reservation_type'	 => 'event',
+			));
+
+			$event['get_participants_link'] = $get_participants_link;
 			self::render_template_xsl('event', array('event' => $event, 'orginfo' => $orginfo));
 		}
 

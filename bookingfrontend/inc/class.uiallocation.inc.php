@@ -509,6 +509,14 @@
 			QRcode::png($code_text, $filename);
 			$allocation['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 
+			$get_participants_link =  $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction'				 => 'booking.uiparticipant.index',
+				'filter_reservation_id'		 => $allocation['id'],
+				'filter_reservation_type'	 => 'allocation',
+			));
+
+			$allocation['get_participants_link'] = $get_participants_link;
+
 			self::render_template_xsl('allocation_show', array('allocation'	 => $allocation));
 		}
 	}
