@@ -22,3 +22,18 @@ function validate_submit(type)
 //	document.form.submit();
 }
 
+
+$(document).ready(function ()
+{
+
+	// need to perform the validation first
+	$("#phone").keydown(function (e)
+	{
+		if (e.keyCode === 13)
+		{
+			e.preventDefault();
+		}
+	});
+});
+
+
