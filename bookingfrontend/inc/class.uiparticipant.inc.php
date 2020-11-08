@@ -8,6 +8,7 @@
 		public $public_functions = array
 			(
 			'add' => true,
+			'index' => true
 		);
 		protected $module;
 
@@ -318,9 +319,33 @@
 			self::render_template_xsl('participant_edit', $data);
 		}
 
+
 		public function index()
 		{
-			phpgw::no_access();
+			if(!CreateObject('bookingfrontend.bouser')->is_logged_in())
+			{
+				return array();
+			}
+
+			
+			$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
+			$participants = $this->bo->read();
+
+			$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
+
+			foreach ($participants['results'] as $participant)
+			{
+				if($participant['to_'])
+				{
+					continue;
+				}
+				$data['results'][] = $participant;
+				$data['total_records'] += 1;
+			}
+
+			$results = $this->jquery_results($data);
+
+			return $results;
 		}
 
 		private function log( $what, $value = '' )
