@@ -530,6 +530,8 @@
 				'filter_reservation_type'	 => 'event',
 			));
 
+			$event['get_participants_link'] = $get_participants_link;
+
 			$datatable_def	 = array();		
 			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
 			{
@@ -561,7 +563,6 @@
 				);
 			}
 
-			$event['get_participants_link'] = $get_participants_link;
 			self::render_template_xsl(
 				array(
 					'event',
