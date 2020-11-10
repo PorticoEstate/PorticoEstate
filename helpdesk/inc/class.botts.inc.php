@@ -99,6 +99,10 @@
 
 			$this->reported_by = phpgw::get_var('reported_by', 'int');
 			$this->cat_id = phpgw::get_var('cat_id', 'int');
+			if(!$this->cat_id && !empty($_POST['values']['cat_id']))
+			{
+				$this->cat_id = (int)$_POST['values']['cat_id'];
+			}
 			$this->parent_cat_id = phpgw::get_var('parent_cat_id', 'int');
 			$this->allrows = phpgw::get_var('allrows', 'bool');
 			$this->start_date = phpgw::get_var('filter_start_date', 'string');
