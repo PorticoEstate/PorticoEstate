@@ -3227,6 +3227,8 @@ JS;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
+			
+			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
 
 			$data = array(
 				'datatable_def'							 => $datatable_def,
