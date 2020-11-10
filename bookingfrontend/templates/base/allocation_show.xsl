@@ -61,10 +61,10 @@
 				<xsl:value-of select="allocation/participant_limit"/>
 			</p>
 			<span class="mt-2">
-				<a href="{allocation/get_participants_link}" target="_blank">
+				<!--<a href="{allocation/get_participants_link}" target="_blank">-->
 					<xsl:value-of select="php:function('lang', 'number of participants')" />:
 					<xsl:value-of select="allocation/number_of_participants" />
-				</a>
+				<!--</a>-->
 			</span>
 
 			<span class="mt-2">
