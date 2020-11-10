@@ -345,7 +345,7 @@
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
 				'Category' => 110, //Dokument inn
-				'Status'	=> 'J', //Journalført
+				'Status'	=> 'F', //Ferdig
 				'Files'		=> array(),
 				'Contacts' => array(),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
@@ -378,6 +378,7 @@
 				$path_parts = pathinfo($file['file_name']);
 				$data['Files'][] = array(
 					'Title' => $file['file_name'],
+					'Status'	=> 'F', //Ferdig
 					'Format' => strtolower($path_parts['extension']),
 //					'Data' => $file['file_data'],
 					'Base64Data' => base64_encode($file['file_data'])
