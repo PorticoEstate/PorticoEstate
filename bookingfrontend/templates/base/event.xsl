@@ -64,10 +64,10 @@
 				<xsl:value-of select="event/participant_limit"/>
 			</p>
 			<p class="mt-2">
-				<a href="{event/get_participants_link}" target="_blank">
+				<!--<a href="{event/get_participants_link}" target="_blank">-->
 					<xsl:value-of select="php:function('lang', 'number of participants')" />:
 					<xsl:value-of select="event/number_of_participants" />
-				</a>
+				<!--</a>-->
 			</p>
 
 			<span class="mt-2">
