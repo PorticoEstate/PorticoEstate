@@ -594,7 +594,7 @@
 									</div>
 								</form>
 								<br/>
-								<div class="pure-control-group">
+								<div id="return_after_action" class="pure-control-group">
 									<xsl:if test="application/case_officer/is_current_user">
 										<form method="POST" style="display:inline">
 											<input type="hidden" name="unassign_user"/>

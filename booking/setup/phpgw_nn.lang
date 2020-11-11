@@ -833,3 +833,5 @@ PDF-export to archive	booking	nn	Eksporter saken som pdf til arkiv
 add participant limit	booking	nn	Legg til deltakerkapasitet
 registration has ended	booking	nn	Registrering er avslutta
 participant limit sms	booking	nn	Send kvittering for registrering på SMS
+external archive key	booking	nn	Eksternt saksnummer
+transfer case to external system?	booking	nn	Overføre sak til dokumentarkiv?

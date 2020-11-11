@@ -345,7 +345,7 @@
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
 				'Category' => 110, //Dokument inn
-				'Status'	=> 'F', //Ferdig
+				'Status'	=> 'J',
 				'Files'		=> array(),
 				'Contacts' => array(),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
