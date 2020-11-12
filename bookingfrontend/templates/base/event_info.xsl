@@ -71,7 +71,7 @@
 		</div>
 		<div class="actions">
 			<a href="{event/show_link}" target="_blank" class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'view event')"/>
+				<xsl:value-of select="php:function('lang', 'register participants')"/>
 			</a>
 		</div>
 	</xsl:if>

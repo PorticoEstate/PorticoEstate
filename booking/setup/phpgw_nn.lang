@@ -837,3 +837,4 @@ external archive key	booking	nn	Eksternt saksnummer
 transfer case to external system?	booking	nn	Overføre sak til dokumentarkiv?
 global participant limit is set to %1	booking	nn	Generell grense for deltakarar er sett til %1
 overridden participant limit is set to %1	booking	nn	Overstyrt grense for deltakarar er sett til %1
+register participants	booking	nn	Deltakarregistrering
