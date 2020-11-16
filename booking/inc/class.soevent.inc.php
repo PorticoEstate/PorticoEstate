@@ -38,7 +38,7 @@
 					'default' => '1'),
 				'secret' => array('type' => 'string', 'required' => true),
 				'sms_total' => array('type' => 'int', 'required' => false),
-				'participant_limit' => array('type' => 'int', 'required' => false),
+//				'participant_limit' => array('type' => 'int', 'required' => false),
 				'customer_organization_name' => array('type' => 'string', 'required' => False,
 					'query' => true),
 				'customer_organization_id' => array('type' => 'int', 'required' => False),
@@ -566,7 +566,8 @@
 							 WHERE bbe.from_ >= '$fromDate'"
 						.$toDateSql
 						.$orgnamesql.
-						" order by bbe.from_ asc LIMIT 50;";
+						" AND bbe.is_public = 1
+						order by bbe.from_ asc LIMIT 50;";
 
 		$this->db->query($sqlQuery);
 
@@ -581,7 +582,37 @@
 				'event_id' => $this->db->f('event_id', false),
 				'building_id' => $this->db->f('building_id', false),
 				'org_num' => $this->db->f('org_num', false),
-				'org_id' => $this->db->f('org_id', false)
+				'org_id' => $this->db->f('org_id', false),
+				'facility' => array()
+			);
+
+		}
+		foreach ($results as $key => $value)
+		{
+			$results[$key]['facility'] = $this->getFacilities($value['event_id']);
+		}
+		return $results;
+	}
+
+	private function getFacilities($event_id)
+	{
+		$sqlQuery ="select e.id as event_id, e.name as event_name,rc.id as rescat_id, rc.name as rescat_name, r.id as resource_id, r.name as resource_name
+					from bb_rescategory rc, bb_event_resource er, bb_resource r , bb_event e
+					where e.id = er.event_id 
+						and er.resource_id = r.id 
+						and rc.id = r.rescategory_id
+						and e.id = '$event_id'";
+
+		$this->db->query($sqlQuery);
+		$results = array();
+		while ($this->db->next_record()) {
+			$results[] = array(
+				'event_id' => $this->db->f('event_id',false),
+				'event_name' => $this->db->f('event_name',false),
+				'resource_category_id' => $this->db->f('rescat_id',false),
+				'resource_category_name' => $this->db->f('rescat_name',false),
+				'resource_id' => $this->db->f('resource_id',false),
+				'resource_name' => $this->db->f('resource_name',false)
 			);
 		}
 		return $results;
