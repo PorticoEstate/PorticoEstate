@@ -146,7 +146,6 @@ HTML;
 				'Lillestrøm Synneve <Synneve.Lillestrom@bergen.kommune.no>');
 			$to		 = implode(';', $toarray);
 
-echo $html;
 			try
 			{
 				$rc	 = CreateObject('phpgwapi.send')->msg('email', $to, $subject, $html, '', $cc	 = '', $bcc = '', 'hc483@bergen.kommune.no', 'Ikke svar', 'html');
@@ -251,7 +250,7 @@ echo $html;
 					'leie_id'			 => $this->db->f('Leie_ID'),
 					'flyttenr'			 => $this->db->f('Flyttenr'),
 					'hemmeligadresse'	 => $this->db->f('hemmeligAdresse'),
-					'navn'				 => $this->db->f('Etternavn', true) . ' ' . $this->db->f('Etternavn', true),
+					'navn'				 => $this->db->f('Etternavn', true) . ', ' . $this->db->f('Fornavn', true),
 					'f_dato'			 => implode('.', $Fodt_dato),
 				);
 			}
