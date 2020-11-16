@@ -543,10 +543,15 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null)
 	{
 		$orgnamesql = null;
 		$toDateSql = null;
+		$buildingIDSQL = null;
+
+		if ($buildingID) {
+			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
+		}
 		if ($orgName) {
 			$orgnamesql = " AND bbe.organizer='$orgName' ";
 		}
@@ -565,7 +570,8 @@
 							 FROM bb_event bbe
 							 WHERE bbe.from_ >= '$fromDate'"
 						.$toDateSql
-						.$orgnamesql.
+						.$orgnamesql
+						.$buildingIDSQL.
 						" AND bbe.is_public = 1
 						order by bbe.from_ asc LIMIT 50;";
 
