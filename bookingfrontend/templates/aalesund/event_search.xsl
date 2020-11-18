@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
     <div id="container_event_search">
         <div class="container searchContainer">
             <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
@@ -18,6 +19,17 @@
                 <div class="col">
                     <label for="to">To</label>
                     <input type="date" id="to" name="to"/>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button onclick="buildingNameDropDown()" class="dropbtn" id="dropbutton">Bygnings filter</button>
+                <div id="buildingNameDropDown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
+                    <div class="dropdown_list_container" data-bind="foreach: facilities">
+                        <a id="building_name_dropdown_item" data-bind="click:$parent.buildingFilter">
+                            <span data-bind="text: building_name"/>
+                        </a>
+                    </div>
                 </div>
             </div>
             <h2 class="Kommende-arrangement">Kommende Arrangement</h2>

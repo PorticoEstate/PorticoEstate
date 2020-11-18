@@ -31,7 +31,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('treeview');
 
-			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'aalesund', 'search.js', 'text/javascript', true);
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();

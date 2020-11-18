@@ -1,33 +1,46 @@
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var viewmodel;
+var dropDownModel;
 var orgNameList = [];
+let facilityList = [];
 var tempList= [];
 var fromDate = "";
 var toDate = "";
 var organization = "";
+var buildingID = "";
 
 //########## Listeners #############
 document.getElementById('from').addEventListener("change", function () {
     var input = this.value;
     fromDate = formatDateForBackend(input);
-    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
     getUpcomingEvents(organization,fromDate,toDate)
 });
 
 document.getElementById('to').addEventListener("change", function () {
     var input = this.value;
     toDate = formatDateForBackend(input);
-    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
     getUpcomingEvents(organization,fromDate,toDate)
 });
 
 document.getElementById('eventsearchBoxID').addEventListener("change", function () {
     var input = this.value;
     organization = this.value;
-    console.log("fromDate =" + fromDate + " toDate = " + toDate + " organization = " + organization);
     getUpcomingEvents(organization,fromDate,toDate)
 });
 //##########END Listeners ##########
+
+function DropDownModel() {
+    var self = this;
+    self.facilities = ko.observableArray();
+
+    self.buildingFilter = function () {
+        buildingNameDropDown();
+        document.getElementById('dropbutton').innerText = this.building_name;
+
+        getUpcomingEvents(organization,fromDate,toDate,this.building_id)
+
+    };
+}
 
 function AppViewModel() {
     var self = this;
@@ -80,6 +93,12 @@ function getTimeFormat(from, to) {
     return ret;
 }
 
+function buildingExists(buildingName) {
+    return facilityList.some(function (el) {
+        return el.building_name.valueOf() == buildingName.valueOf();
+    });
+}
+
 function setdata(result) {
     viewmodel.events.removeAll();
     for (var i = 0; i < result.length; i++) {
@@ -88,6 +107,13 @@ function setdata(result) {
 
         if (!orgNameList.includes(result[i].org_name)) {
             orgNameList.push(result[i].org_name);
+        }
+
+        if (!buildingExists(result[i].location_name)) {
+            facilityList.push({
+                building_id : result[i].building_id,
+                building_name : result[i].location_name}
+            );
         }
 
         var formattedDateAndMonthArr = getDateFormat(result[i].from, result[i].to);
@@ -105,15 +131,18 @@ function setdata(result) {
             event_id: ko.observable(result[i].event_id)
         });
     }
+    dropDownModel.facilities.push.apply(dropDownModel.facilities,facilityList);
 }
 
 $(document).ready(function () {
     viewmodel = new AppViewModel();
+    dropDownModel = new DropDownModel();
     getUpcomingEvents();
     ko.applyBindings(viewmodel, document.getElementById('event-content'));
+    ko.applyBindings(dropDownModel, document.getElementById('Dropdown'))
 });
 
-function getUpcomingEvents(orgName = "", from = "", to="") {
+function getUpcomingEvents(orgName = "", from = "", to="",buildingID="") {
     if (from === "") {
         from = formatDateForBackend(new Date());
     }
@@ -123,7 +152,8 @@ function getUpcomingEvents(orgName = "", from = "", to="") {
         menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
         orgName: orgName,
         fromDate: from,
-        toDate: to
+        toDate: to,
+        buildingID : buildingID
     }
 
     requestURL = phpGWLink('bookingfrontend/', reqObject, true);
@@ -241,4 +271,24 @@ function autocomplete(inp, arr) {
     document.addEventListener("click", function (e) {
         closeAllLists(e.target);
     });
+}
+
+function buildingNameDropDown() {
+    document.getElementById("buildingNameDropDown").classList.toggle("show");
+}
+
+function filterFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("buildingNameDropDown");
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+        txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+        } else {
+            a[i].style.display = "none";
+        }
+    }
 }
