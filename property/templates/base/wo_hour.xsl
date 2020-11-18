@@ -649,6 +649,13 @@
 							<xsl:call-template name="contact_form"/>
 						</xsl:when>
 					</xsl:choose>
+					<tr>
+						<td class="th_text" style="text-align:left;" colspan = "2">
+							<b>
+								<xsl:value-of select="php:function('lang', 'delivery address')"/>
+							</b>
+						</td>
+					</tr>
 					<xsl:call-template name="location_view_local"/>
 					<xsl:choose>
 						<xsl:when test="formatted_gab_id !=''">
@@ -2607,45 +2614,18 @@
 
 <!-- $Id$ -->
 <xsl:template name="location_view_local">
-	<xsl:apply-templates select="location_data_local"/>
+	<xsl:apply-templates select="address_element"/>
 </xsl:template>
 
-<!-- New template-->
-<xsl:template match="location_data_local">
-	<xsl:for-each select="location">
-		<xsl:choose>
-			<xsl:when test="value !=''">
-				<tr>
-					<td>
-						<xsl:value-of select="name"/>
-					</td>
-					<td>
-						<xsl:choose>
-							<xsl:when test="input_type !='hidden'">
-								<xsl:choose>
-									<xsl:when test="query_link !=''">
-										<xsl:variable name="query_link" select="query_link"/>
-										<a href="{$query_link}" class="th_text">
-											<xsl:value-of select="value"/>
-										</a>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="value"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
-						</xsl:choose>
-						<xsl:for-each select="extra">
-							<xsl:choose>
-								<xsl:when test="input_type !='hidden'">
-									<xsl:text> </xsl:text>
-									<xsl:value-of select="value"/>
-								</xsl:when>
-							</xsl:choose>
-						</xsl:for-each>
-					</td>
-				</tr>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:for-each>
+
+<xsl:template match="address_element">
+	<tr>
+		<td>
+			<xsl:value-of select="text"/>
+		</td>
+		<td>
+			<xsl:value-of disable-output-escaping="yes" select="value"/>
+		</td>
+	</tr>
 </xsl:template>
+
