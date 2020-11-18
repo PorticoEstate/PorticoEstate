@@ -48,8 +48,9 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$orgName = phpgw::get_var('orgName', 'string', 'REQUEST', null);
 		$fromDate = phpgw::get_var('fromDate', 'string', 'REQUEST', null);
 		$toDate = phpgw::get_var('toDate', 'string', 'REQUEST', null);
+		$buildingId = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgName);
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgName, $buildingId);
 		return $events;
 	}
 
