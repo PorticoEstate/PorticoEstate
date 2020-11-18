@@ -1250,28 +1250,38 @@
 				$location_types	 = execMethod('property.soadmin_location.select_location_type');
 				$type_id		 = count(explode('-', $location_code));
 
-				for ($i = 1; $i < $type_id + 1; $i++)
+				if($location_data['street_name'])
 				{
 					$address_element[] = array
-						(
-						'text'	 => $location_types[($i - 1)]['name'],
-						'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
+					(
+						'text'	 => lang('street'),
+						'value'	 => "{$location_data['street_name']} {$location_data['street_number']}"
 					);
 				}
-
-				$fm_location_cols	 = $custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
-				foreach ($fm_location_cols as $location_entry)
+				else
 				{
-					if ($location_entry['lookup_form'] && $location_data[$location_entry['column_name']])
+					for ($i = 1; $i < $type_id + 1; $i++)
 					{
 						$address_element[] = array
 							(
-							'text'	 => $location_entry['input_text'],
-							'value'	 => $location_data[$location_entry['column_name']]
+							'text'	 => $location_types[($i - 1)]['name'],
+							'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
 						);
 					}
-				}
 
+					$fm_location_cols	 = $custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
+					foreach ($fm_location_cols as $location_entry)
+					{
+						if ($location_entry['lookup_form'] && $location_data[$location_entry['column_name']])
+						{
+							$address_element[] = array
+								(
+								'text'	 => $location_entry['input_text'],
+								'value'	 => $location_data[$location_entry['column_name']]
+							);
+						}
+					}
+				}
 				$zip_info = $solocation->get_zip_info($location_code);
 				if($zip_info)
 				{
