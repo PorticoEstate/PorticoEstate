@@ -212,7 +212,15 @@
 //						. "&reservation_id={$participant['reservation_id']}";
 
 
-					$lang_reservation_type = strtolower(lang($reservation_type));
+					switch ($reservation_type)
+					{
+						case 'event':
+							$lang_reservation_type = strtolower(lang('event'));
+							break;
+						default:
+							$lang_reservation_type = 'arrangement/aktivitet';
+							break;
+					}
 
 					switch ($register_type)
 					{
@@ -231,7 +239,7 @@
 							}
 							else
 							{
-								$sms_text = "Du har registrert at du forlater {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+								$sms_text = "Du har registrert at du forlater et {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
 							}
 							break;
 
