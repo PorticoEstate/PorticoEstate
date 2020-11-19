@@ -258,7 +258,7 @@
 						try
 						{
 							$sms_service = CreateObject('sms.sms');
-							$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text}");
+							$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text} \nDenne meldingen kan ikke besvares");
 						}
 						catch (Exception $ex)
 						{
