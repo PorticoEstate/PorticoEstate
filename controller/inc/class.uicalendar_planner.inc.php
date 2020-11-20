@@ -405,6 +405,7 @@
 							'check_list_id'		 => $item['schedule']['info']['check_list_id'],
 							'deadline_date_ts'	 => $item['schedule']['info']['deadline_date_ts'],
 							'deadline_date'		 => $GLOBALS['phpgw']->common->show_date($item['schedule']['info']['deadline_date_ts'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'planned_date'		 => $GLOBALS['phpgw']->common->show_date($item['schedule']['info']['planned_date_ts'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 							'completed_date_ts'  =>	$component['schedule']['info']['completed_date_ts'],
 							'assigned_to'		 => $item['schedule']['info']['assigned_to'],
 							'link'				 => $link,
