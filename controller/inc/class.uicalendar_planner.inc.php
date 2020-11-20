@@ -1656,7 +1656,14 @@ HTML;
 					{
 						$selected_part_of_towns[] = $part_of_town['id'];
 						$checklist_items = $this->so_control->get_checklist_at_time_and_place($part_of_town['id'] , $control_id, $from_date_ts, $to_date_ts);
-						$_items = $_items + $checklist_items;
+
+						foreach ($checklist_items as $location_id => $entry)
+						{
+							$_items[$location_id] = array_merge((array)$_items[$location_id], $entry);
+						}
+
+						unset($location_id);
+						unset($entry);
 					}
 				}
 			}
