@@ -1035,7 +1035,7 @@
 		</td>
 		<td>
 			<xsl:choose>
-				<xsl:when test="planned_date">
+				<xsl:when test="planned_date !=''">
 					<xsl:value-of select="planned_date"/>
 				</xsl:when>
 				<xsl:otherwise>
