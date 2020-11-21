@@ -591,7 +591,7 @@
 				{
 //					$short_description .= '<br/>' . $_item['short_description'];
 //					$short_description .= ' [' . $_item['location_name'] . ']';
-					$short_description .= $_item['short_description'];
+					$short_description .= $_item['short_description'] ? $_item['short_description'] : $_item['address'];
 				}
 				else
 				{
