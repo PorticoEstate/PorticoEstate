@@ -1,4 +1,4 @@
-/*! SearchPanes 1.1.1
+/*! SearchPanes 1.2.1
  * 2019-2020 SpryMedia Ltd - datatables.net/license
  */
 (function () {
@@ -134,7 +134,7 @@
                 if (settings.nTable !== tableNode) {
                     return true;
                 }
-                var filter = '';
+                var filter = null;
                 if (_this.colExists) {
                     // Get the current filtered data
                     filter = searchData[_this.s.index];
@@ -331,6 +331,7 @@
             // When an item is selected on the pane, add these to the array which holds selected items.
             // Custom search will perform.
             this.s.dtPane.on('select.dtsp', function () {
+                clearTimeout(t0);
                 if (_this.s.dt.page.info().serverSide && !_this.s.updating) {
                     if (!_this.s.serverSelecting) {
                         _this.s.serverSelect = _this.s.dtPane.rows({ selected: true }).data().toArray();
@@ -340,7 +341,6 @@
                     }
                 }
                 else {
-                    clearTimeout(t0);
                     $(_this.dom.clear).removeClass(_this.classes.dull);
                     _this.s.selectPresent = true;
                     if (!_this.s.updating) {
@@ -529,7 +529,7 @@
          * @param sort the value to be sorted in the pane table
          * @param type the value of which the type is to be derived from
          */
-        SearchPane.prototype._addRow = function (display, filter, shown, total, sort, type) {
+        SearchPane.prototype._addRow = function (display, filter, shown, total, sort, type, className) {
             var index;
             for (var _i = 0, _a = this.s.indexes; _i < _a.length; _i++) {
                 var entry = _a[_i];
@@ -542,11 +542,20 @@
                 this.s.indexes.push({ filter: filter, index: index });
             }
             return this.s.dtPane.row.add({
-                display: display !== '' ? display : this.c.emptyMessage,
+                className: className,
+                display: display !== '' ?
+                    display :
+                    this.s.colOpts.emptyMessage !== false ?
+                        this.s.colOpts.emptyMessage :
+                        this.c.emptyMessage,
                 filter: filter,
                 index: index,
                 shown: shown,
-                sort: sort !== '' ? sort : this.c.emptyMessage,
+                sort: sort !== '' ?
+                    sort :
+                    this.s.colOpts.emptyMessage !== false ?
+                        this.s.colOpts.emptyMessage :
+                        this.c.emptyMessage,
                 total: total,
                 type: type
             });
@@ -620,7 +629,7 @@
                 else if (colOpts.show === true || idx !== -1) {
                     this.s.displayed = true;
                 }
-                if (!this.s.dt.page.info().serverSide) {
+                if (!this.s.dt.page.info().serverSide && dataIn === null) {
                     // Only run populatePane if the data has not been collected yet
                     if (rowData.arrayFilter.length === 0) {
                         this._populatePane(last);
@@ -704,6 +713,8 @@
                         this.s.displayed = false;
                         return;
                     }
+                    this.s.rowData.arrayOriginal = this.s.rowData.arrayFilter;
+                    this.s.rowData.binsOriginal = this.s.rowData.bins;
                     this.s.displayed = true;
                 }
             }
@@ -725,7 +736,7 @@
             }
             // Add the container to the document in its original location
             if (prevEl !== null && $(this.dom.panesContainer).has(prevEl).length > 0) {
-                $(this.dom.panesContainer).insertAfter(prevEl);
+                $(this.dom.container).insertAfter(prevEl);
             }
             else {
                 $(this.dom.panesContainer).prepend(this.dom.container);
@@ -759,24 +770,15 @@
                             }
                             // We are displaying the count in the same columne as the name of the search option.
                             // This is so that there is not need to call columns.adjust(), which in turn speeds up the code
-                            var displayMessage = '';
                             var pill = '<span class="' + _this.classes.pill + '">' + message + '</span>';
                             if (_this.c.hideCount || colOpts.hideCount) {
                                 pill = '';
                             }
-                            if (!_this.c.dataLength) {
-                                displayMessage = '<span class="' + _this.classes.name + '">' + data + '</span>' + pill;
-                            }
-                            else if (data !== null && data.length > _this.c.dataLength) {
-                                displayMessage = '<span title="' + data + '" class="' + _this.classes.name + '">'
-                                    + data.substr(0, _this.c.dataLength) + '...'
-                                    + '</span>'
-                                    + pill;
-                            }
-                            else {
-                                displayMessage = '<span class="' + _this.classes.name + '">' + data + '</span>' + pill;
-                            }
-                            return displayMessage;
+                            return '<div class="' + _this.classes.nameCont + '"><span title="' +
+                                (typeof data === 'string' && data.match(/<[^>]*>/) !== null ? data.replace(/<[^>]*>/g, '') : data) +
+                                '" class="' + _this.classes.name + '">' +
+                                data + '</span>' +
+                                pill + '</div>';
                         },
                         targets: 0,
                         // Accessing the private datatables property to set type based on the original table.
@@ -787,20 +789,34 @@
                     },
                     {
                         className: 'dtsp-countColumn ' + this.classes.badgePill,
-                        data: 'total',
+                        data: 'shown',
+                        orderData: [1, 2],
                         targets: 1,
+                        visible: false
+                    },
+                    {
+                        data: 'total',
+                        targets: 2,
                         visible: false
                     }
                 ],
                 deferRender: true,
                 dom: 't',
                 info: false,
+                language: this.s.dt.settings()[0].oLanguage,
                 paging: haveScroller ? true : false,
+                scrollX: false,
                 scrollY: '200px',
                 scroller: haveScroller ? true : false,
                 select: true,
                 stateSave: table.settings()[0].oFeatures.bStateSave ? true : false
-            }, this.c.dtOpts, colOpts !== undefined ? colOpts.dtOpts : {}, (this.customPaneSettings !== null && this.customPaneSettings.dtOpts !== undefined)
+            }, this.c.dtOpts, colOpts !== undefined ? colOpts.dtOpts : {}, (this.s.colOpts.options !== undefined || !this.colExists)
+                ? {
+                    createdRow: function (row, data, dataIndex) {
+                        $(row).addClass(data.className);
+                    }
+                }
+                : undefined, (this.customPaneSettings !== null && this.customPaneSettings.dtOpts !== undefined)
                 ? this.customPaneSettings.dtOpts
                 : {}));
             $(this.dom.dtP).addClass(this.classes.table);
@@ -845,9 +861,6 @@
                             rowData.bins[rowData.arrayFilter[i].filter], this.c.viewTotal || init
                             ? String(rowData.binsTotal[rowData.arrayFilter[i].filter])
                             : rowData.bins[rowData.arrayFilter[i].filter], rowData.arrayFilter[i].sort, rowData.arrayFilter[i].type);
-                        if (colOpts.preSelect !== undefined && colOpts.preSelect.indexOf(rowData.arrayFilter[i].filter) !== -1) {
-                            row.select();
-                        }
                         for (var _d = 0, _e = this.s.serverSelect; _d < _e.length; _d++) {
                             var option = _e[_d];
                             if (option.filter === rowData.arrayFilter[i].filter) {
@@ -860,22 +873,20 @@
                     else if (!this.s.dt.page.info().serverSide &&
                         rowData.arrayFilter[i] &&
                         (rowData.bins[rowData.arrayFilter[i].filter] !== undefined || !this.c.cascadePanes)) {
-                        var row = this._addRow(rowData.arrayFilter[i].display, rowData.arrayFilter[i].filter, rowData.bins[rowData.arrayFilter[i].filter], rowData.binsTotal[rowData.arrayFilter[i].filter], rowData.arrayFilter[i].sort, rowData.arrayFilter[i].type);
-                        if (colOpts.preSelect !== undefined && colOpts.preSelect.indexOf(rowData.arrayFilter[i].filter) !== -1) {
-                            row.select();
-                        }
+                        this._addRow(rowData.arrayFilter[i].display, rowData.arrayFilter[i].filter, rowData.bins[rowData.arrayFilter[i].filter], rowData.binsTotal[rowData.arrayFilter[i].filter], rowData.arrayFilter[i].sort, rowData.arrayFilter[i].type);
                     }
                     else if (!this.s.dt.page.info().serverSide) {
-                        this._addRow(this.c.emptyMessage, count_1, count_1, this.c.emptyMessage, this.c.emptyMessage, this.c.emptyMessage);
+                        // Just pass an empty string as the message will be calculated based on that in _addRow()
+                        this._addRow('', count_1, count_1, '', '', '');
                     }
                 }
             }
+            DataTable.select.init(this.s.dtPane);
             // If there are custom options set or it is a custom pane then get them
             if (colOpts.options !== undefined ||
                 (this.customPaneSettings !== null && this.customPaneSettings.options !== undefined)) {
                 this._getComparisonRows();
             }
-            DataTable.select.init(this.s.dtPane);
             // Display the pane
             this.s.dtPane.draw();
             this._adjustTopRow();
@@ -902,7 +913,10 @@
                     }
                 }
             }
-            this.s.dt.draw();
+            //  If SSP and the table is ready, apply the search for the pane
+            if (this.s.dt.page.info().serverSide) {
+                this.s.dtPane.search($(this.dom.searchBox).val()).draw();
+            }
             // Reload the selection, searchbox entry and ordering from the previous state
             if (loadedFilter && loadedFilter.searchPanes && loadedFilter.searchPanes.panes) {
                 if (!this.c.cascadePanes) {
@@ -925,14 +939,17 @@
          * Update the array which holds the display and filter values for the table
          */
         SearchPane.prototype._detailsPane = function () {
-            var _this = this;
             var table = this.s.dt;
             this.s.rowData.arrayTotals = [];
             this.s.rowData.binsTotal = {};
             var settings = this.s.dt.settings()[0];
-            table.rows().every(function (rowIdx) {
-                _this._populatePaneArray(rowIdx, _this.s.rowData.arrayTotals, settings, _this.s.rowData.binsTotal);
-            });
+            var indexArray = table.rows().indexes();
+            if (!this.s.dt.page.info().serverSide) {
+                for (var _i = 0, indexArray_1 = indexArray; _i < indexArray_1.length; _i++) {
+                    var rowIdx = indexArray_1[_i];
+                    this._populatePaneArray(rowIdx, this.s.rowData.arrayTotals, settings, this.s.rowData.binsTotal);
+                }
+            }
         };
         /**
          * Appends all of the HTML elements to their relevant parent Elements
@@ -1031,6 +1048,7 @@
                 // Initialise the object which is to be placed in the row
                 var insert = comp.label !== '' ? comp.label : this.c.emptyMessage;
                 var comparisonObj = {
+                    className: comp.className,
                     display: insert,
                     filter: typeof comp.value === 'function' ? comp.value : [],
                     shown: 0,
@@ -1059,7 +1077,7 @@
                 }
                 // If cascadePanes is not active or if it is and the comparisonObj should be shown then add it to the pane
                 if (!this.c.cascadePanes || (this.c.cascadePanes && comparisonObj.shown !== 0)) {
-                    rows.push(this._addRow(comparisonObj.display, comparisonObj.filter, comparisonObj.shown, comparisonObj.total, comparisonObj.sort, comparisonObj.type));
+                    rows.push(this._addRow(comparisonObj.display, comparisonObj.filter, comparisonObj.shown, comparisonObj.total, comparisonObj.sort, comparisonObj.type, comparisonObj.className));
                 }
             }
             return rows;
@@ -1072,6 +1090,7 @@
             var table = this.s.dt;
             // We need to reset the thresholds as if they have a value in colOpts then that value will be used
             var defaultMutator = {
+                emptyMessage: false,
                 orthogonal: {
                     threshold: null
                 },
@@ -1129,6 +1148,9 @@
             }
             else {
                 var filter = settings.oApi._fnGetCellData(settings, rowIdx, this.s.index, colOpts.orthogonal.search);
+                if (typeof filter === 'string') {
+                    filter = filter.replace(/<[^>]*>/g, '');
+                }
                 this.s.rowData.filterMap.set(rowIdx, filter);
                 if (!bins[filter]) {
                     bins[filter] = 1;
@@ -1209,7 +1231,10 @@
                     }
                 }
                 // otherwise if the two filter values are equal then return true
-                else if (filter === colSelect.filter) {
+                // Loose type checking incase number type in column comparing to a string
+                else if ((filter === colSelect.filter) ||
+                    (!(typeof filter === 'string' && filter.length === 0) && filter == colSelect.filter) ||
+                    (colSelect.filter === null && typeof filter === 'string' && filter === '')) {
                     return true;
                 }
             }
@@ -1248,7 +1273,9 @@
             var updating = this.s.updating;
             this.s.updating = true;
             var filters = this.s.dtPane.rows({ selected: true }).data().pluck('filter').toArray();
-            var nullIndex = filters.indexOf(this.c.emptyMessage);
+            var nullIndex = filters.indexOf(this.s.colOpts.emptyMessage !== false ?
+                this.s.colOpts.emptyMessage :
+                this.c.emptyMessage);
             var container = $(this.s.dtPane.table().container());
             // If null index is found then search for empty cells as a filter.
             if (nullIndex > -1) {
@@ -1379,7 +1406,7 @@
                     var selectedEl = selected_1[_c];
                     var row = this._addRow(selectedEl.display, selectedEl.filter, 0, this.c.viewTotal
                         ? selectedEl.total
-                        : 0, selectedEl.filter, selectedEl.filter);
+                        : 0, selectedEl.display, selectedEl.display);
                     this.s.updating = true;
                     row.select();
                     this.s.updating = false;
@@ -1404,6 +1431,7 @@
             layout: 'dtsp-',
             name: 'dtsp-name',
             nameButton: 'dtsp-nameButton',
+            nameCont: 'dtsp-nameCont',
             narrow: 'dtsp-narrow',
             paneButton: 'dtsp-paneButton',
             paneInputButton: 'dtsp-paneInputButton',
@@ -1429,7 +1457,6 @@
             container: function (dt) {
                 return dt.table().container();
             },
-            dataLength: 30,
             dtOpts: {},
             emptyMessage: '<i>No Data</i>',
             hideCount: false,
@@ -1438,6 +1465,7 @@
             orderable: true,
             orthogonal: {
                 display: 'display',
+                filter: 'filter',
                 hideCount: false,
                 search: 'filter',
                 show: undefined,
@@ -1493,6 +1521,7 @@
                 panes: [],
                 selectionList: [],
                 serverData: {},
+                stateRead: false,
                 updating: false
             };
             if (table.settings()[0]._searchPanes !== undefined) {
@@ -1504,9 +1533,7 @@
                 if (json.searchPanes && json.searchPanes.options) {
                     _this.s.serverData = json.searchPanes.options;
                     _this.s.serverData.tableLength = json.recordsTotal;
-                    if (_this.c.viewTotal || _this.c.cascadePanes) {
-                        _this._serverTotals();
-                    }
+                    _this._serverTotals();
                 }
             });
             table.settings()[0]._searchPanes = this;
@@ -1520,6 +1547,7 @@
                     _this._paneDeclare(table, paneSettings, opts);
                 });
             }
+            return this;
         }
         /**
          * Clear the selections of all of the panes
@@ -1560,11 +1588,12 @@
             // As a rebuild from scratch is required, empty the searchpanes container.
             var returnArray = [];
             // Rebuild each pane individually, if a specific pane has been selected then only rebuild that one
-            $$1(this.dom.panes).empty();
+            if (targetIdx === false) {
+                $$1(this.dom.panes).empty();
+            }
             for (var _i = 0, _a = this.s.panes; _i < _a.length; _i++) {
                 var pane = _a[_i];
                 if (targetIdx !== false && pane.s.index !== targetIdx) {
-                    $$1(this.dom.panes).append(pane.dom.container);
                     continue;
                 }
                 pane.clearData();
@@ -1576,6 +1605,10 @@
                     this.s.serverData :
                     undefined, null, maintainSelection));
                 $$1(this.dom.panes).append(pane.dom.container);
+            }
+            // Only need to trigger a search if it is not server side processing
+            if (!this.s.dt.page.info().serverSide) {
+                this.s.dt.draw();
             }
             if (this.c.cascadePanes || this.c.viewTotal) {
                 this.redrawPanes(true);
@@ -1992,13 +2025,13 @@
             }
             // If this internal property is true then the DataTable has been initialised already
             if (this.s.dt.settings()[0]._bInitComplete) {
-                this._paneStartup(table);
+                this._startup(table);
             }
             else {
                 // Otherwise add the paneStartup function to the list of functions that are to be run when the table is initialised
                 // This will garauntee that the panes are initialised before the init event and init Complete callback is fired
                 this.s.dt.settings()[0].aoInitComplete.push({ fn: function () {
-                        _this._paneStartup(table);
+                        _this._startup(table);
                     } });
             }
         };
@@ -2013,22 +2046,6 @@
                 if (name === pane.s.name) {
                     return pane;
                 }
-            }
-        };
-        /**
-         * Runs the start up functions for the panes to enable listeners and populate panes
-         * @param table the DataTable api for the parent Table
-         */
-        SearchPanes.prototype._paneStartup = function (table) {
-            var _this = this;
-            // Magic number of 500 is a guess at what will be fast
-            if (this.s.dt.page.info().recordsTotal <= 500) {
-                this._startup(table);
-            }
-            else {
-                setTimeout(function () {
-                    _this._startup(table);
-                }, 100);
             }
         };
         /**
@@ -2126,6 +2143,10 @@
                     $$1.fn.dataTable.select.init(pane.s.dtPane);
                 }
             }
+            // Only need to trigger a search if it is not server side processing
+            if (!this.s.dt.page.info().serverSide) {
+                this.s.dt.draw();
+            }
         };
         /**
          * Initialises the tables previous/preset selections and initialises callbacks for events
@@ -2138,8 +2159,8 @@
             this._attachExtras();
             $$1(this.dom.container).append(this.dom.panes);
             $$1(this.dom.panes).empty();
+            var loadedFilter = this.s.dt.state.loaded();
             if (this.c.viewTotal && !this.c.cascadePanes) {
-                var loadedFilter = this.s.dt.state.loaded();
                 if (loadedFilter !== null &&
                     loadedFilter !== undefined &&
                     loadedFilter.searchPanes !== undefined &&
@@ -2162,9 +2183,19 @@
             }
             for (var _d = 0, _e = this.s.panes; _d < _e.length; _d++) {
                 var pane = _e[_d];
-                pane.rebuildPane(undefined, this.s.dt.page.info().serverSide ? this.s.serverData : undefined);
+                pane.rebuildPane(undefined, Object.keys(this.s.serverData).length > 0 ? this.s.serverData : undefined);
                 $$1(this.dom.panes).append(pane.dom.container);
             }
+            // Only need to trigger a search if it is not server side processing
+            if (!this.s.dt.page.info().serverSide) {
+                this.s.dt.draw();
+            }
+            // Reset the paging if that has been saved in the state
+            if (!this.s.stateRead && loadedFilter !== null && loadedFilter !== undefined) {
+                this.s.dt.page((loadedFilter.start / this.s.dt.page.len()));
+                this.s.dt.draw('page');
+            }
+            this.s.stateRead = true;
             if (this.c.viewTotal && !this.c.cascadePanes) {
                 for (var _f = 0, _g = this.s.panes; _f < _g.length; _f++) {
                     var pane = _g[_f];
@@ -2174,7 +2205,7 @@
             this._updateFilterCount();
             this._checkMessage();
             // When a draw is called on the DataTable, update all of the panes incase the data in the DataTable has changed
-            table.on('draw.dtsps', function () {
+            table.on('preDraw.dtsps', function () {
                 _this._updateFilterCount();
                 if ((_this.c.cascadePanes || _this.c.viewTotal) && !_this.s.dt.page.info().serverSide) {
                     _this.redrawPanes();
@@ -2196,7 +2227,7 @@
             this.s.dt.on('xhr', function () {
                 var processing = false;
                 if (!_this.s.dt.page.info().serverSide) {
-                    _this.s.dt.one('draw', function () {
+                    _this.s.dt.one('preDraw', function () {
                         if (processing) {
                             return;
                         }
@@ -2211,6 +2242,9 @@
                                 false, undefined, undefined, true);
                             $$1(_this.dom.panes).append(pane.dom.container);
                         }
+                        if (!_this.s.dt.page.info().serverSide) {
+                            _this.s.dt.draw();
+                        }
                         if (_this.c.cascadePanes || _this.c.viewTotal) {
                             _this.redrawPanes(_this.c.cascadePanes);
                         }
@@ -2221,10 +2255,28 @@
                     });
                 }
             });
+            // PreSelect any selections which have been defined using the preSelect option
+            for (var _h = 0, _j = this.s.panes; _h < _j.length; _h++) {
+                var pane = _j[_h];
+                if (pane !== undefined &&
+                    pane.s.dtPane !== undefined &&
+                    (pane.s.colOpts.preSelect !== undefined || pane.customPaneSettings.preSelect !== undefined)) {
+                    var tableLength = pane.s.dtPane.rows().data().toArray().length;
+                    for (var i = 0; i < tableLength; i++) {
+                        if (pane.s.colOpts.preSelect.indexOf(pane.s.dtPane.cell(i, 0).data()) !== -1 ||
+                            (pane.customPaneSettings !== null &&
+                                pane.customPaneSettings.preSelect !== undefined &&
+                                pane.customPaneSettings.preSelect.indexOf(pane.s.dtPane.cell(i, 0).data()) !== -1)) {
+                            pane.s.dtPane.row(i).select();
+                        }
+                    }
+                    pane.updateTable();
+                }
+            }
             if (this.s.selectionList !== undefined && this.s.selectionList.length > 0) {
                 var last = this.s.selectionList[this.s.selectionList.length - 1].index;
-                for (var _h = 0, _j = this.s.panes; _h < _j.length; _h++) {
-                    var pane = _j[_h];
+                for (var _k = 0, _l = this.s.panes; _k < _l.length; _k++) {
+                    var pane = _l[_k];
                     pane.s.lastSelect = (pane.s.index === last);
                 }
             }
@@ -2232,23 +2284,6 @@
             if (this.s.selectionList.length > 0 && this.c.cascadePanes) {
                 this._cascadeRegen(this.s.selectionList);
             }
-            // PreSelect any selections which have been defined using the preSelect option
-            table
-                .columns(this.c.columns.length > 0 ? this.c.columns : undefined)
-                .eq(0)
-                .each(function (idx) {
-                if (_this.s.panes[idx] !== undefined &&
-                    _this.s.panes[idx].s.dtPane !== undefined &&
-                    _this.s.panes[idx].s.colOpts.preSelect !== undefined) {
-                    var tableLength = _this.s.panes[idx].s.dtPane.rows().data().toArray().length;
-                    for (var i = 0; i < tableLength; i++) {
-                        if (_this.s.panes[idx].s.colOpts.preSelect.indexOf(_this.s.panes[idx].s.dtPane.cell(i, 0).data()) !== -1) {
-                            _this.s.panes[idx].s.dtPane.row(i).select();
-                            _this.s.panes[idx].updateTable();
-                        }
-                    }
-                }
-            });
             // Update the title bar to show how many filters have been selected
             this._updateFilterCount();
             // If the table is destroyed and restarted then clear the selections so that they do not persist.
@@ -2282,7 +2317,7 @@
                         if (pane.s.dtPane !== undefined) {
                             var rowData = pane.s.dtPane.rows({ selected: true }).data().toArray();
                             for (var i = 0; i < rowData.length; i++) {
-                                data.searchPanes[src][i] = rowData[i].display;
+                                data.searchPanes[src][i] = rowData[i].filter;
                             }
                         }
                     }
@@ -2347,7 +2382,7 @@
             var message = this.s.dt.i18n('searchPanes.title', 'Filters Active - %d', filterCount);
             $$1(this.dom.title).text(message);
             if (this.c.filterChanged !== undefined && typeof this.c.filterChanged === 'function') {
-                this.c.filterChanged(filterCount);
+                this.c.filterChanged.call(this.s.dt, filterCount);
             }
         };
         /**
@@ -2363,7 +2398,7 @@
             }
             this.s.dt.state.save();
         };
-        SearchPanes.version = '1.1.1';
+        SearchPanes.version = '1.2.1';
         SearchPanes.classes = {
             clear: 'dtsp-clear',
             clearAll: 'dtsp-clearAll',
@@ -2392,7 +2427,7 @@
         return SearchPanes;
     }());
 
-    /*! SearchPanes 1.1.1
+    /*! SearchPanes 1.2.1
      * 2019-2020 SpryMedia Ltd - datatables.net/license
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
@@ -2429,42 +2464,29 @@
         $.fn.DataTable.SearchPanes = SearchPanes;
         $.fn.dataTable.SearchPane = SearchPane;
         $.fn.DataTable.SearchPane = SearchPane;
-        DataTable.Api.register('searchPanes.rebuild()', function () {
-            return this.iterator('table', function () {
-                if (this.searchPanes) {
-                    this.searchPanes.rebuild();
-                }
-            });
-        });
-        DataTable.Api.register('column().paneOptions()', function (options) {
-            return this.iterator('column', function (idx) {
-                var col = this.aoColumns[idx];
-                if (!col.searchPanes) {
-                    col.searchPanes = {};
-                }
-                col.searchPanes.values = options;
-                if (this.searchPanes) {
-                    this.searchPanes.rebuild();
-                }
-            });
-        });
         var apiRegister = $.fn.dataTable.Api.register;
         apiRegister('searchPanes()', function () {
             return this;
         });
         apiRegister('searchPanes.clearSelections()', function () {
-            var ctx = this.context[0];
-            ctx._searchPanes.clearSelections();
-            return this;
+            return this.iterator('table', function (ctx) {
+                if (ctx._searchPanes) {
+                    ctx._searchPanes.clearSelections();
+                }
+            });
         });
         apiRegister('searchPanes.rebuildPane()', function (targetIdx, maintainSelections) {
-            var ctx = this.context[0];
-            ctx._searchPanes.rebuild(targetIdx, maintainSelections);
-            return this;
+            return this.iterator('table', function (ctx) {
+                if (ctx._searchPanes) {
+                    ctx._searchPanes.rebuild(targetIdx, maintainSelections);
+                }
+            });
         });
         apiRegister('searchPanes.container()', function () {
             var ctx = this.context[0];
-            return ctx._searchPanes.getNode();
+            return ctx._searchPanes
+                ? ctx._searchPanes.getNode()
+                : null;
         });
         $.fn.dataTable.ext.buttons.searchPanesClear = {
             text: 'Clear Panes',
@@ -2478,6 +2500,7 @@
                 this.popover(config._panes.getNode(), {
                     align: 'dt-container'
                 });
+                config._panes.rebuild(undefined, true);
             },
             config: {},
             init: function (dt, node, config) {

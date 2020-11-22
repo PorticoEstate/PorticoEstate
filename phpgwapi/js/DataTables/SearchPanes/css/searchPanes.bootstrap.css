@@ -198,11 +198,32 @@ div.dtsp-searchPane div.dataTables_scrollBody {
 div.dtsp-searchPane div.dataTables_scrollBody:hover {
   border: 2px solid #cfcfcf !important;
 }
+div.dtsp-searchPane div.dataTables_scrollBody table {
+  table-layout: fixed;
+}
 div.dtsp-searchPane div.dataTables_scrollBody table tbody tr {
   height: 20px;
 }
-div.dtsp-searchPane div.dataTables_scrollBody table tbody tr span.badge {
-  float: right;
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr td.dtsp-nameColumn {
+  width: 100% !important;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont span.dtsp-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont span.badge {
   min-width: 30px;
   display: inline-block;
   line-height: 1;

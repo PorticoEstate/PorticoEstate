@@ -150,6 +150,19 @@ div.dtsp-searchPanes button.dtsp-clearAll {
   max-width: 50px;
 }
 
+div.dtsp-columns-1,
+div.dtsp-columns-2,
+div.dtsp-columns-3,
+div.dtsp-columns-4,
+div.dtsp-columns-5,
+div.dtsp-columns-6,
+div.dtsp-columns-7,
+div.dtsp-columns-8,
+div.dtsp-columns-9 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 div.dtsp-searchPane {
   flex-direction: row;
   flex-wrap: nowrap;
@@ -194,6 +207,17 @@ div.dtsp-searchPane div.dtsp-topRow div.dtsp-subRows {
 div.dtsp-searchPane div.dtsp-topRow div.row {
   width: 100%;
 }
+div.dtsp-searchPane div.dtsp-topRow button {
+  min-width: 35px;
+  max-width: 35px;
+  border: 1px solid #ced4da;
+}
+div.dtsp-searchPane div.dtsp-topRow div.dtsp-subRow2 {
+  margin-left: 5px;
+}
+div.dtsp-searchPane div.dtsp-topRow button.clearButton {
+  padding-left: 10px;
+}
 div.dtsp-searchPane thead {
   display: none;
 }
@@ -220,11 +244,33 @@ div.dtsp-searchPane div.dataTables_scrollBody {
 div.dtsp-searchPane div.dataTables_scrollBody:hover {
   border: 2px solid #cfcfcf !important;
 }
-div.dtsp-searchPane div.dataTables_scrollBody table tbody tr span.badge {
-  float: right;
+div.dtsp-searchPane div.dataTables_scrollBody table {
+  table-layout: fixed;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr td.dtsp-nameColumn {
+  width: 100% !important;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont span.dtsp-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+div.dtsp-searchPane div.dataTables_scrollBody table tbody tr div.dtsp-nameCont span.badge {
   min-width: 30px;
   display: inline-block;
   line-height: 1;
+  margin-top: 3.5px;
 }
 div.dtsp-searchPane div.dataTables_scrollBody table tbody tr td.dtsp-countColumn {
   text-align: right;
@@ -233,6 +279,7 @@ div.dtsp-searchPane .dtsp-searchIcon {
   display: block;
   position: relative;
   padding: 18px 13px;
+  border: 1px solid #ced4da;
 }
 div.dtsp-searchPane div.dataTables_wrapper div.dataTables_filter {
   display: none;
