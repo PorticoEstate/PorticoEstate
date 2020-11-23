@@ -14,7 +14,7 @@
             if (!$ || !$.fn.dataTable) {
                 $ = require('datatables.net-zf')(root, $).$;
             }
-            if (!$.fn.dataTable.searchPanes) {
+            if (!$.fn.dataTable.SearchPanes) {
                 require('datatables.net-searchpanes')(root, $);
             }
             return factory($, root, root.document);
