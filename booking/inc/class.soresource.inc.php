@@ -517,17 +517,17 @@
 			{
 				foreach ($resource as $entry)
 				{
-					if(is_array($entry))
+					if(is_array($entry) && !empty($entry['id']))
 					{
 						$resource_ids[] = $entry['id'];
 					}
-					else
+					else if ($entry)
 					{
 						$resource_ids[] = $entry;
 					}
 				}
 			}
-			else
+			else if($resource)
 			{
 				$resource_ids[] = $resource;			
 			}
