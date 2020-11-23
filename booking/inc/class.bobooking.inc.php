@@ -1023,7 +1023,7 @@
 				$resource_filters = array(
 					'active'			 => 1,
 					'rescategory_active' => 1,
-					'building_id'		 => $building_id
+					'building_id'		 => $building_id ? $building_id : -1
 				);
 			}
 
