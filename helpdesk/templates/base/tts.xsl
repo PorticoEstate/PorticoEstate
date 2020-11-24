@@ -18,27 +18,34 @@
 
 <!-- navigate -->
 <xsl:template xmlns:php="http://php.net/xsl" match="navigate">
-	<table class="pure-table">
-		<tbody>
+
+	<style>
+		.card .btn {
+		z-index: 1;
+		}
+	</style>
+	<div class="container">
+		<div class="row mt-4">
 			<xsl:for-each select="sub_menu">
-				<tr >
-					<xsl:attribute name="class">
-						<xsl:choose>
-							<xsl:when test="position() mod 2 != 0">
-								<xsl:text>pure-table-odd</xsl:text>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:attribute>
-					<td>
-						<a href="{url}" class="list-group-item list-group-item-action">
-							<i class="mr-3 far fa-folder"></i>
-							<xsl:value-of select="text"/>
-						</a>
-					</td>
-				</tr>
+				<div class="col-4 mb-3">
+					<a href="{url}" class="stretched-link text-secondary">
+						<div class="card h-100 mb-2">
+							<div class="card-block text-center">
+								<h1 class="p-3">
+									<i class="{icon}"></i>
+								</h1>
+							</div>
+							<div class="card-footer text-center">
+								<xsl:value-of select="text"/>
+							</div>
+						</div>
+					</a>
+				</div>
 			</xsl:for-each>
-		</tbody>
-	</table>
+
+		</div>
+
+	</div>
 </xsl:template>
 <!-- add -->
 <xsl:template xmlns:php="http://php.net/xsl" match="add">
@@ -328,7 +335,7 @@
 														<xsl:attribute name="capture">camera</xsl:attribute>
 													</input>
 												</span>
-<!--												<button type="button" id="start_file_upload" class="start pure-button">
+												<!--												<button type="button" id="start_file_upload" class="start pure-button">
 													<xsl:value-of select="php:function('lang', 'Start upload')"/>
 												</button>-->
 
