@@ -1440,6 +1440,14 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 			$application = $this->bo->read_single($id);
+
+			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+			}
+
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 
@@ -1800,7 +1808,7 @@
 				{
 					phpgwapi_cache::message_set( 'integrasjonsmetode er ikke konfigurert', 'error');
 				}
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 			}
 			
 		}
@@ -1812,6 +1820,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$application = $this->bo->read_single($id);
+			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+			}
 
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
@@ -1829,6 +1843,8 @@
 				$update = false;
 				$notify = false;
 
+				$return_after_action = false;
+
 				if ($application['frontend_modified'] == '')
 				{
 					unset($application['frontend_modified']);
@@ -1841,6 +1857,7 @@
 					{
 						$application['status'] = 'PENDING';
 					}
+					$return_after_action = true;
 				}
 				elseif (isset($_POST['unassign_user']))
 				{
@@ -1849,11 +1866,13 @@
 						$this->set_display_in_dashboard($application, true, array('force' => true));
 						$update = true;
 					}
+					$return_after_action = true;
 				}
 				elseif (isset($_POST['display_in_dashboard']))
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
+					$return_after_action = true;
 				}
 				elseif ($_POST['status'])
 				{
@@ -1880,6 +1899,7 @@
 
 					$update = true;
 					$notify = true;
+					$return_after_action = true;
 				}
 				else if ($_FILES)
 				{
@@ -1935,12 +1955,13 @@
 					$this->add_comment($application, $application['comment']);
 					$update = true;
 					$notify = true;
+					$return_after_action = true;
 				}
 
 				$update AND $receipt = $this->bo->update($application);
 				$notify AND $this->bo->send_notification($application);
 
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
+				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => $return_after_action));
 			}
 
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
@@ -2050,6 +2071,17 @@
 			$custom_config = CreateObject('admin.soconfig', $location_id);
 			$external_archive = !empty($custom_config->config_data['common_archive']['method']) ? $custom_config->config_data['common_archive']['method'] : '';
 
+			if(phpgw::get_var('return_after_action', 'bool'))
+			{
+				$js =<<<JS
+				$(document).ready(function ()
+				{
+					var return_after_action = document.getElementById("return_after_action");
+					return_after_action.scrollIntoView();
+				});
+JS;
+				$GLOBALS['phpgw']->js->add_code('', $js);
+			}
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
 				'audience'			 => $audience,

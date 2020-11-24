@@ -4026,7 +4026,25 @@ JS;
 			{
 				$department = $this->bo->config->config_data['department'];
 			}
+			$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
+			if ($on_behalf_of_assigned && isset($ticket['assignedto_name']))
+			{
+				$user_name										 = $ticket['assignedto_name'];
+				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+				$GLOBALS['phpgw_info']['user']['preferences']	 = $GLOBALS['phpgw']->preferences->data;
+				if (!$preview)
+				{
+					$_behalf_alert = lang('this order is sent by %1 on behalf of %2', $GLOBALS['phpgw_info']['user']['fullname'], $user_name);
+					$historylog->add('C', $id, $_behalf_alert);
+					unset($_behalf_alert);
+				}
+			}
+			else
+			{
+				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+			}
 
+			$order_id						 = $ticket['order_id'];
 			$data = array(
 				array(
 					'col1'	 => lang('order id') . " <b>{$ticket['order_id']}</b>",
@@ -4043,26 +4061,11 @@ JS;
 				)
 			));
 
-			$GLOBALS['phpgw']->preferences->set_account_id($common_data['workorder']['user_id'], true);
-
-
-			$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
-			if ($on_behalf_of_assigned && isset($ticket['assignedto_name']))
-			{
-				$from_name										 = $ticket['assignedto_name'];
-				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-				$GLOBALS['phpgw_info']['user']['preferences']	 = $GLOBALS['phpgw']->preferences->data;
-			}
-			else
-			{
-				$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
-			}
-
 			$ressursnr	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 			$data		 = array(
 				array(
 					'col1'	 => "{$organisation}\n{$department}\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
-					'col2'	 => "Saksbehandler: {$from_name}"//\nRessursnr.: {$ressursnr}"
+					'col2'	 => "Saksbehandler: {$user_name}"//\nRessursnr.: {$ressursnr}"
 				),
 			);
 
@@ -4118,15 +4121,6 @@ JS;
 
 			$invoice_address = lang('invoice address') . ":\n{$this->bo->config->config_data['invoice_address']}";
 
-
-//			$from = lang('date') . ": {$date}\n";
-//			$from .= lang('dimb') . ": {$ticket['ecodimb']}\n";
-//			$from .= lang('from') . ":\n   {$from_name}";
-//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['email']}";
-//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
-//
-
-
 			if (isset($ticket['vendor_id']) && $ticket['vendor_id'])
 			{
 				$ticket['vendor_name'] = $this->_get_vendor_name($ticket['vendor_id']);
@@ -4156,10 +4150,6 @@ JS;
 				)
 			));
 
-			$pdf->ezSetDy(-10);
-			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('descr') . ':', 20);
-			$pdf->selectFont('Helvetica');
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id' => $ticket['contact_id'],
@@ -4179,9 +4169,6 @@ JS;
 			{
 				$contact_phone = $contact_data['value_contact_tel'];
 			}
-
-			$pdf->ezText($ticket['order_descr'], 14);
-			$pdf->ezSetDy(-20);
 
 			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
@@ -4274,38 +4261,32 @@ JS;
 				$contact_block = '';
 			}
 
-//			$pdf->selectFont('Helvetica-Bold');
-//			$pdf->ezText('Kontakt på bygget:', 14);
-//			$pdf->selectFont('Helvetica');
-//			$pdf->ezText($contact_name, 14);
-//			$pdf->ezText($contact_email, 14);
-//			$pdf->ezText($contact_phone, 14);
-//			$pdf->ezSetDy(-20);
-			$pdf->ezText($contact_block, 14);
-
 			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor		 = true);
+			foreach ($location_exceptions as & $_location_exception)
+			{
+				$_location_exception['category_text'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['category_text']);
+				$_location_exception['location_descr'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<a href=\"\\0\">\\0</a>",$_location_exception['location_descr']);
+			}
 
+			$important_imformation = '';
 			if ($location_exceptions)
 			{
-				$pdf->ezSetDy(-20);
-				$pdf->selectFont('Helvetica-Bold');
-				$pdf->ezText(lang('important information'), 14);
-				$pdf->selectFont('Helvetica');
-			}
-
-			foreach ($location_exceptions as $location_exception)
-			{
-				$location_exception['category_text'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<c:alink:\\0/>\\0</c:alink>",$location_exception['category_text']);
-				$location_exception['location_descr'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=\-&_/]+!', "<c:alink:\\0/>\\0</c:alink>",$location_exception['location_descr']);
-
-				$pdf->ezText($location_exception['category_text'], 14);
-
-				if ($location_exception['location_descr'])
+				$important_imformation		 .= "<b>" . lang('important information') . '</b>';
+				$important_imformation_arr	 = array();
+				foreach ($location_exceptions as $location_exception)
 				{
-					$pdf->ezText($location_exception['location_descr'], 14);
+					$important_imformation_arr[] = $location_exception['category_text'];
+
+					if ($location_exception['location_descr'])
+					{
+						$important_imformation_arr[] = $location_exception['location_descr'];
+					}
 				}
+				$important_imformation .= "\n" . implode("\n", $important_imformation_arr) . "\n";
 			}
+
 			$pdf->ezSetDy(-20);
+
 			$pdf->selectFont('Helvetica-Bold');
 
 			if($ticket['payment_info'])
@@ -4327,8 +4308,53 @@ JS;
 					);
 			}
 
+			$body = str_replace(array
+					(
+					'__vendor_name__',
+					'__organisation__',
+					'__user_name__',
+					'__user_phone__',
+					'__user_email__',
+					'__ressursnr__',
+					'__payment_info__',
+					'__location__',
+					'__order_description__',
+					'__deadline_block__',
+					'__important_imformation__',
+					'__contact_block__',
+					'__contact_name__',
+					'__contact_email__',
+					'__contact_phone__',
+					'__order_id__',
+					'[b]',
+					'[/b]'
+						), array
+					(
+					$this->_get_vendor_name($ticket['vendor_id']),
+					$organisation,
+					$user_name,
+					$user_phone,
+					$user_email,
+					$ressursnr,
+					$payment_info,
+					$delivery_address,
+					$ticket['order_descr'],
+					$deadline_block,
+					$important_imformation,
+					$contact_block,
+					$contact_name,
+					$contact_email,
+					$contact_phone,
+					$order_id,
+					'<b>',
+					'</b>'
+						), $order_email_template);
+
+				$pdf->selectFont('Helvetica');
+
+			$pdf->ezText($body, 12);
 //			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
-			$pdf->ezText($payment_info, 14);
+//			$pdf->ezText($payment_info, 14);
 			$pdf->selectFont('Helvetica');
 			if ($content)
 			{

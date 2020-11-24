@@ -173,26 +173,18 @@ HTML;
 				return $this->db;
 			}
 
-			$boei_db = array(
-				'db_host'	 => $GLOBALS['external_db']['boei']['db_host'],
-				'db_name'	 => $GLOBALS['external_db']['boei']['db_name'],
-				'db_user'	 => $GLOBALS['external_db']['boei']['db_user'],
-				'db_pass'	 => $GLOBALS['external_db']['boei']['db_pass'],
-				'db_type'	 => $GLOBALS['external_db']['boei']['db_type']
-			);
-
-			$host_info = explode(':', $boei_db['db_host']);
+			$db	 = createObject('phpgwapi.db_adodb', null, null, true);
+			$host_info		 = explode(':', $GLOBALS['external_db']['boei']['db_host']);
 
 			$host	 = $host_info[0];
-			$port	 = isset($host_info[1]) && $host_info[1] ? $host_info[1] : $boei_db['db_port'];
+			$port	 = isset($host_info[1]) && $host_info[1] ? $host_info[1] : $GLOBALS['external_db']['boei']['db_port'];
 
-			$db					 = createObject('phpgwapi.db_adodb', null, null, true);
 			$db->Host			 = $host;
+			$db->Type			 = $GLOBALS['external_db']['boei']['db_type'];
+			$db->Database		 = $GLOBALS['external_db']['boei']['db_name'];
 			$db->Port			 = $port;
-			$db->Type			 = $boei_db['db_type'];
-			$db->Database		 = $boei_db['db_name'];
-			$db->User			 = $boei_db['db_user'];
-			$db->Password		 = $boei_db['db_pass'];
+			$db->User			 = $GLOBALS['external_db']['boei']['db_user'];
+			$db->Password		 = $GLOBALS['external_db']['boei']['db_pass'];
 			$db->Halt_On_Error	 = 'yes';
 
 			try

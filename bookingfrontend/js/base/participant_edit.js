@@ -1,5 +1,8 @@
 function check(input)
 {
+	return;
+
+	//handled by init_intl_tel_input
 	value = input.value;
 
 	var phoneno = /^\d{8}$/;
@@ -18,4 +21,19 @@ function validate_submit(type)
 	document.getElementById("register_type").value = type;
 //	document.form.submit();
 }
+
+
+$(document).ready(function ()
+{
+
+	// need to perform the validation first
+	$("#phone").keydown(function (e)
+	{
+		if (e.keyCode === 13)
+		{
+			e.preventDefault();
+		}
+	});
+});
+
 

@@ -1148,22 +1148,28 @@
 
 			$bolocation = CreateObject('property.bolocation');
 
-			$location_data = $bolocation->initiate_ui_location(array(
-				'values'		 => $workorder['location_data'] ? $workorder['location_data'] : $project['location_data'],
-				'type_id'		 => $workorder['location_data'] ? count(explode('-', $workorder['location_data']['location_code'])) : count(explode('-', $project['location_data']['location_code'])),
-				'no_link'		 => false, // disable lookup links for location type less than type_id
-				'tenant'		 => $workorder['location_data']['tenant_id'] ? $workorder['location_data']['tenant_id'] : $project['location_data']['tenant_id'],
-				'lookup_type'	 => 'view'
-			));
+			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
 
-			if ($project['contact_phone'])
+			$address_element = array();
+
+			if ($common_data['workorder']['delivery_address'])
 			{
-				for ($i = 0; $i < count($location_data['location']); $i++)
+				$address_element[] = array('value' => nl2br($common_data['workorder']['delivery_address']));
+			}
+			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			{
+				$address_element[] = array('value' => nl2br($this->config->config_data['delivery_address']));
+			}
+			else
+			{
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				if (!empty($project['location_data']['last_name']))
 				{
-					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
-					{
-						unset($location_data['location'][$i]['value']);
-					}
+					$address_element[] = array('text' => lang('tenant'), 'value' => "{$project['location_data']['first_name']} {$project['location_data']['last_name']}");
+				}
+				if (!empty($project['contact_phone']))
+				{
+					$address_element[] = array('text' => lang('Contact phone'), 'value' => $project['contact_phone']);
 				}
 			}
 
@@ -1248,8 +1254,6 @@
 				'type'		 => 'view'));
 
 
-			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
-
 			$formatted_gab_id = $this->get_gab_id($location_code);
 
 			$location_exceptions = createObject('property.solocation')->get_location_exception($location_code, $alert_vendor		 = true);
@@ -1283,14 +1287,13 @@
 
 			$documentation_url = $this->bocommon->get_documentation_url($workorder_id);
 
-
 			$email_data = array
 				(
 				'documentation_url'			 => $documentation_url,
 				'contract_name'				 => $contract_name,
 				'formatted_gab_id'			 => $formatted_gab_id,
 				'org_name'					 => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
-				'location_data_local'		 => $location_data,
+				'address_element'			 => $address_element,
 				'lang_workorder'			 => lang('Workorder ID'),
 				'workorder_id'				 => $workorder_id,
 				'lang_reminder'				 => $lang_reminder,

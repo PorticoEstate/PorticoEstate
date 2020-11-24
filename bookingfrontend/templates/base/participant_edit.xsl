@@ -70,13 +70,13 @@
 									<label for="phone" class="text-uppercase">
 										<xsl:value-of select="php:function('lang', 'phone')" />
 									</label>
-									<input id="phone" name="phone" class="form-control" type="number" min="1" value="{phone}" oninput="check(this)">
+									<input id="phone" name="phone" class="form-control" type="tel" autocomplete="off" value="{phone}" oninput="check(this)">
 										<xsl:attribute name="required">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="placeholder">
+<!--										<xsl:attribute name="placeholder">
 											<xsl:value-of select="php:function('lang', 'Minimum 8 digits')" />
-										</xsl:attribute>
+										</xsl:attribute>-->
 									</input>
 								</div>
 							</div>
@@ -123,7 +123,7 @@
 							<xsl:if test="enable_register_out = 1">
 								<div class="col-12 mt-3 mb-2">
 									<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
-										<xsl:value-of select="php:function('lang', 'Register out')" />
+										<xsl:value-of select="lang_register_out" />
 									</button>
 								</div>
 							</xsl:if>

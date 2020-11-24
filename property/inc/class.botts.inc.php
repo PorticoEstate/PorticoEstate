@@ -1250,13 +1250,24 @@
 				$location_types	 = execMethod('property.soadmin_location.select_location_type');
 				$type_id		 = count(explode('-', $location_code));
 
-				for ($i = 1; $i < $type_id + 1; $i++)
+				if($location_data['street_name'])
 				{
 					$address_element[] = array
-						(
-						'text'	 => $location_types[($i - 1)]['name'],
-						'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
+					(
+						'text'	 => lang('street'),
+						'value'	 => "{$location_data['street_name']} {$location_data['street_number']}"
 					);
+				}
+				else
+				{
+					for ($i = 1; $i < $type_id + 1; $i++)
+					{
+						$address_element[] = array
+							(
+							'text'	 => $location_types[($i - 1)]['name'],
+							'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
+						);
+					}
 				}
 
 				$fm_location_cols	 = $custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
@@ -1271,7 +1282,7 @@
 						);
 					}
 				}
-
+				
 				$zip_info = $solocation->get_zip_info($location_code);
 				if($zip_info)
 				{
@@ -1301,7 +1312,7 @@
 			$address_element = $this->get_address_element($ticket['location_code']);
 
 			$history_values	 = $this->historylog->return_array(array(), array('O'), 'history_timestamp', 'DESC', $id);
-			$entry_date		 = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime']);
+			$entry_date		 = $GLOBALS['phpgw']->common->show_date($ticket['timestamp']);
 
 			$status_text = $this->get_status_text();
 

@@ -5,6 +5,7 @@
 
 		const ORGNR_SESSION_KEY = 'orgnr';
 		const ORGARRAY_SESSION_KEY = 'orgarray';
+		const USERARRAY_SESSION_KEY = 'userarray';
 
 		public $orgnr = null;
 		public $orgname = null;
@@ -28,6 +29,10 @@
 			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
+			if (!empty($this->config->config_data['debug']))
+			{
+				$this->debug = true;
+			}
 		}
 
 		protected function get_orgname_from_db( $orgnr )
@@ -98,11 +103,8 @@
 
 			if ($this->debug)
 			{
-				echo 'is_logged_in():<br>';
-				_debug_array($this->is_logged_in());
-				echo 'Session:<br>';
-				_debug_array($_SESSION);
-				die();
+//				echo 'is_logged_in():<br>';
+//				_debug_array($this->is_logged_in());
 			}
 
 			return $this->is_logged_in();
@@ -251,21 +253,36 @@
 		 */
 		public function validate_ssn_login( $redirect = array())
 		{
-			if(!empty($this->config->config_data['test_ssn']))
+			static $user_data = array();
+			if(!$user_data)
 			{
-				$_SERVER['HTTP_UID'] = 	$this->config->config_data['test_ssn'];
-				phpgwapi_cache::message_set('Warning: ssn is set by test-data', 'error');
+				$user_data = phpgwapi_cache::session_get($this->get_module(), self::USERARRAY_SESSION_KEY);
+			}
+			if(!empty($user_data['ssn']))
+			{
+				return $user_data;
 			}
 
-			$ssn = (string)$_SERVER['HTTP_UID'];
+			if(!empty($this->config->config_data['test_ssn']))
+			{
+				$ssn = 	$this->config->config_data['test_ssn'];
+				phpgwapi_cache::message_set('Warning: ssn is set by test-data', 'error');
+			}
+			else
+			{
+				$ssn = (string)$_SERVER['HTTP_UID'];
+			}
 
 			if( isset($this->config->config_data['bypass_external_login']) && $this->config->config_data['bypass_external_login'] )
 			{
-				return array(
+				$ret =  array(
 					'ssn'	=> $ssn,
 					'phone' => (string)$_SERVER['HTTP_MOBILTELEFONNUMMER'],
 					'email'	=> (string)$_SERVER['HTTP_EPOSTADRESSE']
 					);
+				phpgwapi_cache::session_set($this->get_module(), self::USERARRAY_SESSION_KEY, $ret);
+
+				return $ret;
 			}
 
 			$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
@@ -335,6 +352,8 @@
 				{
 				}
 			}
+
+			phpgwapi_cache::session_set($this->get_module(), self::USERARRAY_SESSION_KEY, $ret);
 
 			return $ret;
 		}

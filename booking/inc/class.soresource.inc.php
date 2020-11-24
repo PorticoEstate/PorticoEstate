@@ -512,22 +512,22 @@
 		function get_paricipant_limit( $resource, $check_current = false)
 		{
 			
-			$resource_ids = array();
+			$resource_ids = array(-1); // in case of empty: don't  break the query
 			if (is_array($resource))
 			{
 				foreach ($resource as $entry)
 				{
-					if(is_array($entry))
+					if(is_array($entry) && !empty($entry['id']))
 					{
 						$resource_ids[] = $entry['id'];
 					}
-					else
+					else if ($entry)
 					{
 						$resource_ids[] = $entry;
 					}
 				}
 			}
-			else
+			else if($resource)
 			{
 				$resource_ids[] = $resource;			
 			}

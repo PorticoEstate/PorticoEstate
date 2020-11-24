@@ -1034,7 +1034,14 @@
 			<xsl:value-of select="status"/>
 		</td>
 		<td>
-			<xsl:value-of select="deadline_date"/>
+			<xsl:choose>
+				<xsl:when test="planned_date !=''">
+					<xsl:value-of select="planned_date"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="deadline_date"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</td>
 		<td>
 			<a href="{link}" target="_blank">

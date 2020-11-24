@@ -167,7 +167,7 @@ $(document).ready(function ()
 					{
 						time_default_start = result.results[i].booking_time_default_start;
 					}
-					$('#item-description').html(result.results[i].description);
+					$('#item-description').html('<b>' + result.results[i].name + '</b>' + result.results[i].description);
 					$('#resource_list').hide();
 
 					set_conditional_translation(result.results[i].type);

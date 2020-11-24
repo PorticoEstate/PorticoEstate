@@ -90,7 +90,7 @@
 			if(!empty($application['customer_organization_number']))
 			{
 				$enterprise_data = $this->get_enterprise( $application['customer_organization_number']);
-				if(!$enterprise_data || empty($enterprise_data['Name']))
+				if(!$enterprise_data || empty($enterprise_data['OfficeAddress']['StreetAddress']))
 				{
 					$enterprise_data = $this->add_update_enterprise( $application, $enterprise_data);
 				}
@@ -167,6 +167,14 @@
 					'Country'		 => 'NOR',
 				);
 			}
+			if(!empty($person_data['PrivateAddress']))
+			{
+				$PrivateAddress = $person_data['PrivateAddress'];
+			}
+			else
+			{
+				$PrivateAddress = $PostAddress;
+			}
 
 			$name_array = explode(' ', trim(str_replace('  ', ' ', $application['contact_name'])));
 			$last_name = end($name_array);
@@ -181,7 +189,8 @@
 				'LastName'			 => $person_data['LastName'] ? $person_data['LastName'] : $data['last_name'],
 				'Email'				 => $person_data['Email'] ? $person_data['Email'] : $application['contact_email'],
 				'PhoneNumber'		 => $person_data['PhoneNumber'] ? $person_data['PhoneNumber'] : $application['contact_phone'],
-				'PostAddress'		 => $PostAddress
+				'PostAddress'		 => $PostAddress,
+				'PrivateAddress'	 => $PrivateAddress
 			);
 
 			if(!empty($person_data['PrivateAddress']))
@@ -218,6 +227,17 @@
 		{
 			$organization = $this->get_organization($application['customer_organization_number']);
 
+			if(empty($organization['forretningsadresse']) && $organization['beliggenhetsadresse'])
+			{
+				$organization['forretningsadresse']	= $organization['beliggenhetsadresse'];
+			}
+
+			if(empty($organization['forretningsadresse']) && $organization['postadresse'])
+			{
+				$organization['forretningsadresse']	= $organization['postadresse'];
+			}
+
+			$PostAddress = array();
 			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
 			{
 				$PostAddress = $enterprise_data['PostAddress'];
@@ -251,10 +271,15 @@
 				'Name'				 => $enterprise_data['Name'] ? $enterprise_data['Name'] : $organization['navn'],
 				'Email'				 => $enterprise_data['Email'] ? $enterprise_data['Email'] : '',
 				'PhoneNumber'		 => $enterprise_data['PhoneNumber'] ? $enterprise_data['PhoneNumber'] : '',
-				'PostAddress'		 => $PostAddress,
-				'OfficeAddress'		 => $OfficeAddress
+				'OfficeAddress'		 => $OfficeAddress,
+				'web'				 => $enterprise_data['web'] ? $enterprise_data['web'] : $organization['hjemmeside']
 			);
-	
+
+			if($PostAddress)
+			{
+				$data['PostAddress'] = $PostAddress;
+			}
+
 			$input = array('parameter' => $data);
 			$method = 'ContactService/SynchronizeEnterprise';
 			$result = $this->transfer_data($method, $input);
@@ -320,34 +345,40 @@
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
 				'Category' => 110, //Dokument inn
-				'Status'	=> 'J', //Journalført
+				'Status'	=> 'J',
 				'Files'		=> array(),
 				'Contacts' => array(),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
 				'DocumentDate'			=> date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime()),
 			);
 
+			$ssn_role = 5;//'Avsender'
+			if($application['customer_organization_number'])
+			{
+				$ssn_role = 1;//'Contact'
+
+				$data['Contacts'][] = 	array(
+						'Role' => 5,//'Avsender',
+						'ReferenceNumber' => $application['customer_organization_number'],
+					);
+			}
+
 			if($application['customer_ssn'])
 			{
 				$data['Contacts'][] = array(
-						'Role' => 1,//'Contact',
+						'Role' => $ssn_role,
 						'ExternalId' => $application['customer_ssn'],
 				//		'ReferenceNumber' => $application['customer_ssn'],
 					);
 			}
-			if($application['customer_organization_number'])
-			{
-				$data['Contacts'][] = 	array(
-						'Role' => 1,//'Contact',
-						'ReferenceNumber' => $application['customer_organization_number'],
-					);
-			}
+
 
 			foreach ($files as $file)
 			{
 				$path_parts = pathinfo($file['file_name']);
 				$data['Files'][] = array(
 					'Title' => $file['file_name'],
+					'Status'	=> 'F', //Ferdig
 					'Format' => strtolower($path_parts['extension']),
 //					'Data' => $file['file_data'],
 					'Base64Data' => base64_encode($file['file_data'])
@@ -436,8 +467,44 @@
 
 			$ret = json_decode($result, true);
 
+			if($ret)
+			{
+				return $ret;
+			}
+			else
+			{
+				return $this->get_sub_organization($organization_number);
+			}
+		}
+
+
+		private function get_sub_organization( $organization_number )
+		{
+			$url = "https://data.brreg.no/enhetsregisteret/api/underenheter/{$organization_number}";
+
+			$ch		 = curl_init();
+			if ($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'accept: application/json',
+				'Content-Type: application/json',
+				'Content-Length: ' . strlen($data_json)
+				));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$result	 = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			$ret = json_decode($result, true);
+
 			return $ret;
 		}
+
 
 		private function log( $what, $value = '' )
 		{

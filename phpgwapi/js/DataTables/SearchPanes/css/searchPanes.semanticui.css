@@ -203,6 +203,7 @@ div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_
 }
 div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table {
   border-collapse: collapse;
+  table-layout: fixed;
 }
 div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr td {
   border-top: 0px solid transparent;
@@ -210,8 +211,27 @@ div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_
 div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr td.dtsp-countColumn {
   text-align: right;
 }
-div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr span.dtsp-pill {
-  float: right;
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr td.dtsp-nameColumn {
+  width: 100% !important;
+}
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr div.dtsp-nameCont {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr div.dtsp-nameCont span.dtsp-name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane div.dataTables_wrapper table tr div.dtsp-nameCont span.dtsp-pill {
+  display: inline-block;
   background-color: #cfcfcf;
   text-align: center;
   border: 1px solid #cfcfcf;

@@ -64,8 +64,10 @@
 				<xsl:value-of select="event/participant_limit"/>
 			</p>
 			<p class="mt-2">
-				<xsl:value-of select="php:function('lang', 'number of participants')" />:
-				<xsl:value-of select="event/number_of_participants" />
+				<!--<a href="{event/get_participants_link}" target="_blank">-->
+					<xsl:value-of select="php:function('lang', 'number of participants')" />:
+					<xsl:value-of select="event/number_of_participants" />
+				<!--</a>-->
 			</p>
 
 			<span class="mt-2">
@@ -86,6 +88,22 @@
 					<img src="{event/encoded_qr}" alt="{$lang_registration}"/>
 				</a>
 			</div>
+
+
+			<xsl:for-each select="datatable_def">
+				<xsl:if test="container = 'datatable-container_0'">
+					<div style="width:15em;">
+						<xsl:call-template name="table_setup">
+							<xsl:with-param name="container" select ='container'/>
+							<xsl:with-param name="requestUrl" select ='requestUrl'/>
+							<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+							<xsl:with-param name="data" select ='data'/>
+							<xsl:with-param name="config" select ='config'/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
+			</xsl:for-each>
+
 		</xsl:if>
 	</div>
 </xsl:template>

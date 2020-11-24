@@ -509,6 +509,51 @@
 			QRcode::png($code_text, $filename);
 			$allocation['encoded_qr']	 = 'data:image/png;base64,' . base64_encode(file_get_contents($filename));
 
-			self::render_template_xsl('allocation_show', array('allocation'	 => $allocation));
+			$get_participants_link =  $GLOBALS['phpgw']->link('/index.php', array(
+				'menuaction'				 => 'booking.uiparticipant.index',
+				'filter_reservation_id'		 => $allocation['id'],
+				'filter_reservation_type'	 => 'allocation',
+			));
+
+			$allocation['get_participants_link'] = $get_participants_link;
+
+			$datatable_def	 = array();		
+			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
+			{
+				$datatable_def[] = array
+					(
+					'container'	 => 'datatable-container_0',
+					'requestUrl' => json_encode(self::link(array(
+							'menuaction'				 => 'bookingfrontend.uiparticipant.index',
+							'filter_reservation_id'		 => $allocation['id'],
+							'filter_reservation_type'	 => 'allocation',
+							'phpgw_return_as'			 => 'json'))),
+					'ColumnDefs' => array(
+						array(
+							'key'		 => 'phone',
+							'label'		 => lang('participants'),
+							'sortable'	 => true,
+						),
+						array(
+							'key'		 => 'quantity',
+							'label'		 => lang('quantity'),
+							'sortable'	 => true,
+						)
+					),
+					'data'		 => json_encode(array()),
+					'config'	 => array(
+						array('disableFilter' => true),
+						array('disablePagination' => true)
+					)
+				);
+			}
+
+
+			self::render_template_xsl(array(
+				'allocation_show',
+				'datatable_inline'
+				), array(
+				'allocation'	 => $allocation,
+				'datatable_def'	 => $datatable_def));
 		}
 	}

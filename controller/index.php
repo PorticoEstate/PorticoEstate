@@ -42,12 +42,6 @@
 
 	include_once('../header.inc.php');
 
-	$start_page = 'uicontrol';
-
-	if ( isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'])
-		&& $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'] )
-	{
-		$start_page = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'];
-	}
+	$start_page = 'uicalendar_planner';
 
 	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => "controller.{$start_page}.index"));

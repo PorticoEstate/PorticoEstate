@@ -45,7 +45,7 @@
 			if(empty($options['upload_dir']))
 			{
 //				$options['upload_dir'] = '/tmp';
-				$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
+				$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/';
 			}
 
 			if(empty($options['accept_file_types']))
@@ -77,7 +77,7 @@
 			 */
 			if($content_range_header)
 			{
-				$this->options['upload_dir'] = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}";
+				$this->options['upload_dir'] = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$GLOBALS['phpgw_info']['user']['account_id']}/";
 //				$this->options['user_dirs'] = '/' . $GLOBALS['phpgw_info']['user']['account_id'];
 
 				$is_last_chunk = false;
@@ -100,7 +100,7 @@
 				{
 					$response = $this->post(false);
 					$file_name = $response['files'][0]->name;
-					$uploaded_file = $this->get_upload_path() . $file_name;
+					$uploaded_file = $this->get_upload_path($file_name);
 
 					$this->upload_file( $this->options['base_dir'], $uploaded_file, $response['files'][0] );
 

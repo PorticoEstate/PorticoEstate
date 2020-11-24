@@ -660,6 +660,23 @@
 			$id = phpgw::get_var('id', 'int');
 			$event = $this->bo->read_single($id);
 
+			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
+			$resource_paricipant_limit = 0;
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+			}
+
+			if($event['participant_limit'])
+			{
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $event['participant_limit']),'message');
+			}
+			else if($resource_paricipant_limit)
+			{
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+			}
+
 			$activity_path = $this->activity_bo->get_path($event['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 

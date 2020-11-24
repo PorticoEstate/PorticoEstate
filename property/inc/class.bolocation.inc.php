@@ -1051,8 +1051,13 @@ JS;
 
 		function read_summary( $data = array() )
 		{
-			$summary		 = $this->so->read_summary(array('filter'			 => $this->filter, 'type_id'			 => isset($data['type_id']) ? $data['type_id'] : '',
-				'district_id'		 => $this->district_id, 'part_of_town_id'	 => $this->part_of_town_id));
+			$summary		 = $this->so->read_summary(array(
+				'filter'			 => $this->filter,
+				'type_id'			 => isset($data['type_id']) ? $data['type_id'] : '',
+				'district_id'		 => $this->district_id,
+				'part_of_town_id'	 => $this->part_of_town_id,
+				'dry_run'			 => !empty($data['dry_run'])
+				));
 			$this->uicols	 = $this->so->uicols;
 			return $summary;
 		}

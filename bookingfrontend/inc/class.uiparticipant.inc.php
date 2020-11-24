@@ -8,6 +8,7 @@
 		public $public_functions = array
 			(
 			'add' => true,
+			'index' => true
 		);
 		protected $module;
 
@@ -45,7 +46,7 @@
 			}
 
 			$reservation['resource_info'] = join(', ', $res_names);
-	
+
 			if(!empty($reservation['group_id']))
 			{
 				$reservation['group'] = $this->group_bo->read_single($reservation['group_id']);
@@ -95,10 +96,16 @@
 
 			$enable_register_pre = $from > $now ? true : false;
 			$enable_register_in	 = $from < $now && $to > $now ? true : false;
-			$enable_register_out = $from < $now && $to > $now ? true : false;
+
+			if($enable_register_pre || $enable_register_in )
+			{
+				$enable_register_out = true;
+			}
+
 //			_debug_array($from);
 //			_debug_array($now);
 //			_debug_array($to);
+
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
@@ -147,7 +154,7 @@
 				}
 				else
 				{
-					$phone = phpgw::get_var('phone', 'int');
+					$phone = phpgw::get_var('phone', 'string');
 					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
 					$participant['register_type']	 = $register_type;
 					$participant['phone']			 = $phone;
@@ -205,7 +212,15 @@
 //						. "&reservation_id={$participant['reservation_id']}";
 
 
-					$lang_reservation_type = strtolower(lang($reservation_type));
+					switch ($reservation_type)
+					{
+						case 'event':
+							$lang_reservation_type = strtolower(lang('event'));
+							break;
+						default:
+							$lang_reservation_type = 'arrangement/aktivitet';
+							break;
+					}
 
 					switch ($register_type)
 					{
@@ -218,7 +233,14 @@
 			//				$sms_text .= "Du kan frigjøre plassen(e) ved å melde deg ut når du forlater arrangementet ";
 							break;
 						case 'register_out':
-							$sms_text = "Du har registrert at du forlater {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							if($enable_register_pre)
+							{
+								$sms_text = "Du har registrert at du avbestiller fra {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							}
+							else
+							{
+								$sms_text = "Du har registrert at du forlater et {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when} med {$participant['quantity']} deltaker(e)";
+							}
 							break;
 
 						default:
@@ -236,7 +258,7 @@
 						try
 						{
 							$sms_service = CreateObject('sms.sms');
-							$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text}");
+							$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_text} \nDenne meldingen kan ikke besvares");
 						}
 						catch (Exception $ex)
 						{
@@ -251,6 +273,15 @@
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
 				}
 			}
+			if($enable_register_pre)
+			{
+				$lang_register_out = 'Avbestill';
+			}
+			else
+			{
+				$lang_register_out = lang('Register out');
+			}
+
 			$this->flash_form_errors($errors);
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
@@ -275,6 +306,7 @@
 				'enable_register_form'	 => $enable_register_form,
 				'number_of_participants' => $number_of_participants,
 				'lang_register_in'		 => lang('Registration'),
+				'lang_register_out'		 => $lang_register_out,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
@@ -285,13 +317,43 @@
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
+
+			if($enable_register_form)
+			{
+				phpgwapi_jquery::init_intl_tel_input('phone');
+			}
+
 			self::add_javascript('bookingfrontend', 'base', 'participant_edit.js');
 			self::render_template_xsl('participant_edit', $data);
 		}
 
+
 		public function index()
 		{
-			phpgw::no_access();
+			if(!CreateObject('bookingfrontend.bouser')->is_logged_in())
+			{
+				return array();
+			}
+
+			
+			$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
+			$participants = $this->bo->read();
+
+			$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
+
+			foreach ($participants['results'] as $participant)
+			{
+				if($participant['to_'])
+				{
+					continue;
+				}
+				$data['results'][] = $participant;
+				$data['total_records'] += 1;
+			}
+
+			$results = $this->jquery_results($data);
+
+			return $results;
 		}
 
 		private function log( $what, $value = '' )

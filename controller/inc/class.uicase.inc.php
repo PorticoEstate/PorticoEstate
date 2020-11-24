@@ -552,41 +552,45 @@
 
 				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 				$to_file = "{$bofiles->fakebase}/{$category_dir}/{$loc1}/{$id}/{$file_name}";
+				
+				$pathinfo = pathinfo($to_file);
+				
+				$actual_name	 = "{$pathinfo['dirname']}/{$pathinfo['filename']}";
+				$original_name	 = $actual_name;
+				$extension		 = $pathinfo['extension'];
 
-				if ($bofiles->vfs->file_exists(array
-						(
-						'string' => $to_file,
-						'relatives' => Array(RELATIVE_NONE)
-					)))
+				$i = 1;
+				while ( file_exists("{$bofiles->rootdir}/{$actual_name}.{$extension}"))
 				{
-					return array(
-						'status' => 'error',
-						'message' => lang('This file already exists !')
-						);
+					$actual_name = (string) $original_name . $i;
+					$to_file	 = "{$actual_name}.{$extension}";
+					$i++;
+				}
+
+				$from_file = $_FILES['file']['tmp_name'];
+				$bofiles->create_document_dir("{$category_dir}/{$loc1}/{$id}");
+				$bofiles->vfs->override_acl = 1;
+
+				if ($bofiles->vfs->cp(array(
+						'from' => $from_file,
+						'to' => $to_file,
+						'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+				{
+					$status = 'saved';
+					$message = lang('saved');
 				}
 				else
 				{
-					$from_file = $_FILES['file']['tmp_name'];
-					$bofiles->create_document_dir("{$category_dir}/{$loc1}/{$id}");
-					$bofiles->vfs->override_acl = 1;
-
-					if ($bofiles->vfs->cp(array(
-							'from' => $from_file,
-							'to' => $to_file,
-							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
-					{
-						$bofiles->vfs->override_acl = 0;
-						return array(
-							'status' => 'saved',
-							'message' => lang('saved')
-							);
-					}
-				}
+					$status = 'error';
+					$message = lang('Failed to upload file !');
+				
+				}			
+				$bofiles->vfs->override_acl = 0;
 
 				return array(
-					'status' => 'error',
-					'message' => lang('Failed to upload file !')
-					);
+					'status' => $status,
+					'message' => $message
+				);
 
 			}
 		}
