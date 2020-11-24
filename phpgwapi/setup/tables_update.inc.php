@@ -3862,3 +3862,27 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+	/**
+	 * Enable icons and colors on categories
+	 */
+	$test[] = '0.9.17.565';
+	function phpgwapi_upgrade0_9_17_565()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','cat_color', array(
+			'type' => 'varchar',
+			'precision' => 50,
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','cat_icon', array(
+			'type' => 'varchar',
+			'precision' => 50,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.566';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

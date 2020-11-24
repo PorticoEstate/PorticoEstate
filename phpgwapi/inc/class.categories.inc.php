@@ -398,6 +398,8 @@
 					'name'			=> $this->db->f('cat_name',true),
 					'description'	=> $this->db->f('cat_description',true),
 					'data'			=> $this->db->f('cat_data'),
+					'color'			=> $this->db->f('cat_color', true),
+					'icon'			=> $this->db->f('cat_icon', true),
 					'active'		=> (int)$this->db->f('active')
 				);
 			}
@@ -444,6 +446,8 @@
 						'name'			=> $this->db->f('cat_name',true),
 						'description'	=> $this->db->f('cat_description',true),
 						'data'			=> $this->db->f('cat_data'),
+						'color'			=> $this->db->f('cat_color', true),
+						'icon'			=> $this->db->f('cat_icon', true),
 						'active'		=> (int)$this->db->f('active')
 					);
 				}
@@ -545,6 +549,8 @@
 					'name'			=> $this->db->f('cat_name', true),
 					'description'	=> $this->db->f('cat_description', true),
 					'data'			=> $this->db->f('cat_data'),
+					'color'			=> $this->db->f('cat_color', true),
+					'icon'			=> $this->db->f('cat_icon', true),
 					'active'		=> (int)$this->db->f('active'),
 					'is_node'		=> true
 				);
@@ -810,6 +816,8 @@
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['data'] = isset($values['data']) ? $this->db->db_addslashes($values['data']) : '';
+			$values['color'] = isset($values['color']) ? $this->db->db_addslashes($values['color']) : '';
+			$values['icon'] = isset($values['icon']) ? $this->db->db_addslashes($values['icon']) : '';
 			
 			$id_col = '';
 			$id_val = '';
@@ -819,9 +827,12 @@
 				$id_val = $values['id'] . ',';
 			}
 
-			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access, cat_appname, location_id, cat_name, cat_description, cat_data, cat_main ,cat_level, active, last_mod)"
+			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access,"
+				. " cat_appname, location_id, cat_name, cat_description, cat_data, cat_color, cat_icon"
+				. " cat_main ,cat_level, active, last_mod)"
 				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id},"
-					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', {$values['main']}, {$values['level']}, {$values['active']}," . time() . ')',__LINE__,__FILE__);
+					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', '{$values['color']}', '{$values['icon']}',"
+					. " {$values['main']}, {$values['level']}, {$values['active']}," . time() . ')',__LINE__,__FILE__);
 
 			if ($values['id'] > 0)
 			{
@@ -936,37 +947,36 @@
 			$values['id']		= intval($values['cat_id']);
 			$values['parent']	= intval($values['parent']);
 
-			//Sigurd feb 09: Seems like an error to me - will break relations to existing records
-/*			if (isset($values['old_parent']) && intval($values['old_parent']) != $values['parent'])
+			if ($values['parent'] > 0)
 			{
-				$this->delete($values['id'],False,True);
-				return $this->add($values);
+				$values['main']  = intval($this->id2name($values['parent'],'main'));
+				$values['level'] = intval($this->id2name($values['parent'],'level')+1);
 			}
 			else
-
-*/
 			{
-				if ($values['parent'] > 0)
-				{
-					$values['main']  = intval($this->id2name($values['parent'],'main'));
-					$values['level'] = intval($this->id2name($values['parent'],'level')+1);
-				}
-				else
-				{
-					$values['main']  = $values['id'];
-					$values['level'] = 0;
-				}
+				$values['main']  = $values['id'];
+				$values['level'] = 0;
 			}
 
 			$values['descr'] = $this->db->db_addslashes($values['descr']);
 			$values['name'] = $this->db->db_addslashes($values['name']);
 			$values['data'] = isset($values['data']) ? $this->db->db_addslashes($values['data']) : '';
+			$values['color'] = isset($values['color']) ? $this->db->db_addslashes($values['color']) : '';
+			$values['icon'] = isset($values['icon']) ? $this->db->db_addslashes($values['icon']) : '';
 
-			$sql = "UPDATE phpgw_categories SET cat_name='" . $values['name'] . "', cat_description='" . $values['descr']
-					. "', cat_data='" . $values['data'] . "', cat_parent=" . $values['parent'] . ", cat_access='"
-					. $values['access'] . "', cat_main=" . $values['main'] . ', cat_level=' . $values['level'] . ',last_mod=' . time()
-					. ', active = ' . (int) $values['active']
-					. " WHERE cat_appname='" . $this->app_name . "' AND cat_id=" . $values['id'];
+			$sql = "UPDATE phpgw_categories SET"
+				. " cat_name='" . $values['name'] . "',"
+				. " cat_description='" . $values['descr']. "',"
+				. " cat_data='" . $values['data'] . "',"
+				. " cat_color='" . $values['color'] . "',"
+				. " cat_icon='" . $values['icon'] . "',"
+				. " cat_parent=" . $values['parent'] . ","
+				. " cat_access='" . $values['access'] . "',"
+				. " cat_main=" . $values['main'] . ','
+				. ' cat_level=' . $values['level'] . ','
+				. ' last_mod=' . time()	. ','
+				. ' active = ' . (int) $values['active']
+				. " WHERE cat_appname='" . $this->app_name . "' AND cat_id=" . $values['id'];
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			

@@ -233,6 +233,15 @@
 			</tr>
 			<tr>
 				<td colspan="2">
+					<label for="value_icon">
+						<xsl:value-of select="php:function('lang', 'icon')"/>
+					</label>:</td>
+				<td>
+					<input name="values[icon]" id="value_icon" value="{value_icon}" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
 					<label for="value_active">
 						<xsl:value-of select="php:function('lang', 'active')"/>
 					</label>:</td>
