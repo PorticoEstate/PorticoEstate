@@ -420,6 +420,8 @@
 				'value_name'			=> $GLOBALS['phpgw']->strip_html($cats[0]['name']),
 				'value_descr'			=> $GLOBALS['phpgw']->strip_html($cats[0]['description']),
 				'message'				=> $message,
+				'value_color'			=> $cats[0]['color'],
+				'value_icon'			=> $cats[0]['icon'],
 				'lang_content_statustext'	=> lang('enter a description for the category'),
 				'lang_cancel_statustext'	=> lang('leave the category untouched and return back to the list'),
 				'lang_save_statustext'		=> lang('save the category and return back to the list'),

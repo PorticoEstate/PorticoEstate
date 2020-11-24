@@ -1184,12 +1184,12 @@ HTML;
 					(
 						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => $_category['id'])),
 						'text'	=> $_category['name'],
+						'icon'	=> $_category['icon'],
 					);
 				}
 
 				$GLOBALS['phpgw']->xslttpl->add_file(array('tts'));
 				$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('navigate' => array('sub_menu' => $sub_menu)));
-	//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('columns' => $data));
 				return;
 			}
 

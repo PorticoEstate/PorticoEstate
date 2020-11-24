@@ -240,6 +240,8 @@
 				'last_mod' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => False),
 				'location_id' => array('type' => 'int','precision' => 4,'default' => '0','nullable' => True),
 				'active' => array('type' => 'int','precision' => '2','default' => '1','nullable' => True),
+				'cat_color' => array('type' => 'varchar','precision' => 50,'nullable' => True),
+				'cat_icon' => array('type' => 'varchar','precision' => 50,'nullable' => True),
 			),
 			'pk' => array('cat_id'),
 			'fk' => array(),
