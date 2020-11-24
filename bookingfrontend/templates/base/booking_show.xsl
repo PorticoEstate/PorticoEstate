@@ -27,30 +27,34 @@
 			</a>
 			(<xsl:value-of select="booking/resource_info"/>)
 		</div>
-<!--		<xsl:if test="booking/participant_limit > 0">
+		<xsl:if test="booking/participant_limit > 0">
 			<p class="mt-2">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 				<xsl:value-of select="booking/participant_limit"/>
 			</p>
-		</xsl:if>-->
-		<span class="mt-2">
-			<xsl:value-of select="php:function('lang', 'number of participants')" />:
-			<xsl:value-of select="booking/number_of_participants" />
-		</span>
+			<span class="mt-2">
+				<xsl:value-of select="php:function('lang', 'number of participants')" />:
+				<xsl:value-of select="booking/number_of_participants" />
+			</span>
 
-		<span class="mt-2">
-			<xsl:value-of select="booking/participanttext" disable-output-escaping="yes"/>
-		</span>
-
-		<div class="mt-4">
-			<a href="{booking/participant_registration_link}">
+			<span class="mt-2">
+				<xsl:value-of select="booking/participanttext" disable-output-escaping="yes"/>
+			</span>
+			<xsl:variable name="lang_registration">
 				<xsl:value-of select="php:function('lang', 'registration')"/>
+			</xsl:variable>
+
+			<div class="mt-4">
+				<a href="{booking/participant_registration_link}" title="{$lang_registration}">
+				For registering: enten klikk på lenken, eller skanne Qr-kode
 			</a>
-		</div>
+			</div>
 
-		<div class="mt-1">
-			<img src="{booking/encoded_qr}"/>
-		</div>
-
+			<div class="mt-4">
+				<a href="{booking/participant_registration_link}" title="{$lang_registration}">
+					<img src="{booking/encoded_qr}" alt="{$lang_registration}"/>
+				</a>
+			</div>
+		</xsl:if>
 	</div>
 </xsl:template>

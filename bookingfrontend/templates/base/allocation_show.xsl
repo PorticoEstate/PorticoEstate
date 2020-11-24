@@ -55,31 +55,35 @@
 				</p>
 			</div>
 		</xsl:if>
-<!--		<xsl:if test="allocation/participant_limit > 0">
+		<xsl:if test="allocation/participant_limit > 0">
 			<p class="mt-2">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 				<xsl:value-of select="allocation/participant_limit"/>
 			</p>
-		</xsl:if>-->
-		<span class="mt-2">
-			<xsl:value-of select="php:function('lang', 'number of participants')" />:
-			<xsl:value-of select="allocation/number_of_participants" />
-		</span>
+			<span class="mt-2">
+				<xsl:value-of select="php:function('lang', 'number of participants')" />:
+				<xsl:value-of select="allocation/number_of_participants" />
+			</span>
 
-		<span class="mt-2">
-			<xsl:value-of select="allocation/participanttext" disable-output-escaping="yes"/>
-		</span>
+			<span class="mt-2">
+				<xsl:value-of select="allocation/participanttext" disable-output-escaping="yes"/>
+			</span>
 
-		<div class="mt-4">
-			<a href="{allocation/participant_registration_link}">
+			<xsl:variable name="lang_registration">
 				<xsl:value-of select="php:function('lang', 'registration')"/>
-			</a>
-		</div>
+			</xsl:variable>
 
-		<div class="mt-1">
-			<img src="{allocation/encoded_qr}"/>
-		</div>
-
+			<div class="mt-4">
+				<a href="{allocation/participant_registration_link}" title="{$lang_registration}">
+					For registering: enten klikk på lenken, eller skanne Qr-kode
+				</a>
+			</div>
+			<div class="mt-4">
+				<a href="{allocation/participant_registration_link}" title="{$lang_registration}">
+					<img src="{allocation/encoded_qr}" alt="{$lang_registration}"/>
+				</a>
+			</div>
+		</xsl:if>
 	</div>
 
 </xsl:template>

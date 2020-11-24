@@ -258,9 +258,6 @@ var oArgs = {menuaction: 'property.uiworkorder.get_ecodimb'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container');
 
-var oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
-var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
 var oArgs = {menuaction: 'property.uiworkorder.get_unspsc_code'};
 var strURL = phpGWLink('index.php', oArgs, true);
@@ -334,11 +331,34 @@ $(document).ready(function ()
 	});
 
 	$.formUtils.addValidator({
+		name: 'budget_account',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var b_account_name = $('#b_account_name').val();
+			if(b_account_name)
+			{
+//				var cat_id = $("#order_cat_id").val();
+//				validate_order_category({id: cat_id});
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		},
+		errorMessage: 'Ugyldig art',
+		errorMessageKey: ''
+	});
+
+	$.formUtils.addValidator({
 		name: 'category',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
+			var cat_id = $("#order_cat_id").val();
 			var validatet_category = $('#validatet_category').val();
-			if (validatet_category == 1)
+
+			if(cat_id && validatet_category)
 			{
 				$('#select2-order_cat_id-container').addClass('valid');
 				$('#select2-order_cat_id-container').removeClass('error');
@@ -362,10 +382,10 @@ $(document).ready(function ()
 			return data.text;
 		}
 
-		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
+		var b_account_id = $('#b_account_id').val();
 
-		var htmlString = "";
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id, b_account_id: b_account_id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
 			type: 'POST',
@@ -377,7 +397,7 @@ $(document).ready(function ()
 				{
 					if (data.active !== 1 || data.is_node === false)
 					{
-						alert('Denne kan ikke velges');
+						alert('Ugyldig kategori - eller feil kombinasjon av art og kategori');
 						$('#select2-order_cat_id-container').addClass('error');
 						$('#select2-order_cat_id-container').removeClass('valid');
 						$('#validatet_category').val('');
@@ -389,6 +409,10 @@ $(document).ready(function ()
 						$('#validatet_category').val(1);
 					}
 				}
+			},
+			complete:function ()
+			{
+
 			}
 		});
 
@@ -400,6 +424,16 @@ $(document).ready(function ()
 		var cat_id = $(this).val();
 		validate_order_category({id: cat_id});
 	});
+
+	validate_change_budget_account = function()
+	{
+		var cat_id = $("#order_cat_id").val();
+		validate_order_category({id: cat_id});
+	}
+
+	var oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container', null, null, null, validate_change_budget_account);
 
 	$("#workorder_edit").on("submit", function (e)
 	{

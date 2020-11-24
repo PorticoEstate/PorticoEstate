@@ -370,8 +370,7 @@
 						'name'			 => 'lookup_loc' . ($i + 1) . '()',
 						'filter_level'	 => $i,
 						'link'			 => $location_link . ',type_id:' . ($i + 1) . ',lookup_name:' . $i,
-//							'action' 					=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-						'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+						'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 					);
 				}
 //_debug_array($data['no_link']);
@@ -383,7 +382,7 @@
 					$location['location'][$i]['lookup_link']						 = false;
 					$lookup_functions[$i]['link']									 = $location_link . ',type_id:' . ($data['no_link'] - 1) . ',lookup_name:' . ($data['no_link'] - 2);
 //					$lookup_functions[$i]['action'] 								= 'Window1=window.open(strURL,"Search","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
-					$lookup_functions[$i]['action']									 = 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+					$lookup_functions[$i]['action']									 = 'TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$location['location'][$i]['statustext']							 = lang('click this link to select') . ' ' . $location_types[($data['no_link'] - 2)]['name'];
 				}
 
@@ -488,7 +487,7 @@
 							'filter_level'	 => $m,
 							'link'			 => $location_link . ',lookup_tenant:1,type_id:' . $config[$j]['location_type'] . ',lookup_name:' . $i,
 //								'action' 					=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1600,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-							'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+							'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 						);
 
 						$location['location'][$i]['lookup_link']			 = $_lookup_link;
@@ -595,7 +594,7 @@
 						'name'			 => 'lookup_entity_' . $entity['id'] . '()',
 						'link'			 => "menuaction:'property.uilookup.entity',location_type:{$data['type_id']},entity_id:{$entity['id']},cat_id:'{$p_cat_id}',location_code:'{$filter_location}',block_query:'{$block_query}'",
 //							'action'			=> 'Window1=window.open(strURL,"Search","left=50,top=100,width=1200,height=700,toolbar=no,scrollbars=yes,resizable=yes");'
-						'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:1000,height:600,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
+						'action'		 => 'TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});'
 					);
 
 					$location['location'][$i]['input_type']					 = 'text';
@@ -791,7 +790,7 @@ JS;
 			$this->total_records = $this->so->total_records;
 			$this->uicols		 = $this->so->uicols;
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : array();
 
 			$column_list		 = $this->get_column_list();
 			$get_vendor_names	 = false;

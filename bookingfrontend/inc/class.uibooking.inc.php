@@ -1273,6 +1273,18 @@
 			$booking['when'] = $when;
 			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
+			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
+			
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+			}
+
+			if(!$booking['participant_limit'])
+			{
+				$booking['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
+
 			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
 
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
@@ -1326,6 +1338,18 @@
 				. "&reservation_id={$booking['id']}";
 
 			$booking['participant_registration_link'] = $participant_registration_link;
+
+			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
+			
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+			}
+
+			if(!$booking['participant_limit'])
+			{
+				$booking['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
 
 			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
 

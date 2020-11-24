@@ -1,16 +1,22 @@
 <?php
 	phpgw::import_class('booking.bocommon');
+	phpgw::import_class('booking.soevent');
+	phpgw::import_class('booking.sobuilding');
+
 
 	class bookingfrontend_bosearch extends booking_bocommon
 	{
 
+	    public $soevent;
+	    public $sobuilding;
+
 		function __construct()
 		{
 			parent::__construct();
-			$this->sobuilding = CreateObject('booking.sobuilding');
+			$this->sobuilding = new booking_sobuilding();
 			$this->soorganization = CreateObject('booking.soorganization');
 			$this->soresource = CreateObject('booking.soresource');
-			$this->soevent = CreateObject('booking.soevent');
+			$this->soevent = new booking_soevent();
 			$this->borescategory = CreateObject('booking.borescategory');
 			$this->boresource = CreateObject('booking.boresource');
 			$this->boactivity = CreateObject('booking.boactivity');
@@ -453,11 +459,26 @@
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-
-			$returnres['buildings']   = $buildings;
+			if (isset($_GET['from_time']) && isset($_GET['to_time']))
+			{
+				$booked_ids = $this->get_all_booked_ids($_GET['from_time'], $_GET['to_time']);
+				$buildings_filtered = array();
+				foreach($buildings as $building){ // keep only available buildings in output
+					if (! in_array($building['id'], $booked_ids)){
+						$buildings_filtered[] = $building;
+					}else
+						{
+						//TODO: Hva skal inn her?
+					}
+				}
+				$returnres['buildings']   = $buildings_filtered;
+			}else{
+				$returnres['buildings']   = $buildings;
+			}
 			$returnres['activities']  = $all_activities_list;
 			$returnres['facilities']  = $all_facilities_list;
 			$returnres['partoftowns'] = $all_partoftown_list;
+
 			return $returnres;
 		}
 
@@ -476,8 +497,8 @@
 			$fields_events = array('building_name','from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
 			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.name != '')";
-			
-			
+
+
 			/**
 			 * All ( Alter to enable pagination )
 			 */
@@ -617,6 +638,11 @@
 				$i++;
 			}
 			return $results;
+		}
+
+		public function get_all_booked_ids($from_date, $to_date)
+		{
+			return $this->sobuilding->get_all_booked_ids($from_date, $to_date);
 		}
 
 	}

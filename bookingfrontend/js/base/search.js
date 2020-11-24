@@ -146,7 +146,6 @@ ko.applyBindings(searchViewModel, document.getElementById("search-page-content")
 
 $(document).ready(function ()
 {
-
 	$(".overlay").show();
 	if (urlParams['searchterm'] != "" && typeof urlParams['searchterm'] !== "undefined")
 	{
@@ -283,7 +282,6 @@ function GetFilterBoxData()
 
 function GetAutocompleteData()
 {
-
 	var autocompleteData = [];
 //  var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
 	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete"}, true);
@@ -315,7 +313,6 @@ function GetAutocompleteData()
 		$(".overlay").hide();
 	});
 }
-
 
 function doSearch(searchterm_value)
 {
@@ -384,7 +381,7 @@ function doSearch(searchterm_value)
 					type: response.results.results[i].type,
 					tagItems: []
 				});
-			}
+			} 
 			setTimeout(function ()
 			{
 				$('html, body').animate({
@@ -406,8 +403,9 @@ function DoFilterSearch()
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
 	results.removeAll();
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1}, true);
-
+        console.log(from_time);
+	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1, ...(from_time && to_time) ? {from_time: from_time, to_time: to_time} : {}}, true);
+        console.log(requestURL);
 	searchViewModel.facilities.removeAll();
 	searchViewModel.activities.removeAll();
 	searchViewModel.towns.removeAll();

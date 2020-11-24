@@ -11030,3 +11030,61 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	 * Notes
+	 * tenant claim
+	 */
+	$test[] = '0.9.17.748';
+	function property_upgrade0_9_17_748()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tenant_claim', 'project_id', array('type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tenant_claim", 'ticket_id',array('type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'charge_tenant',array('type' => 'int', 'precision' => 2, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'claim_issued',array('type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.749';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	 * Notes
+	 * tenant claim
+	 */
+	$test[] = '0.9.17.749';
+	function property_upgrade0_9_17_749()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_b_account_category", 'project_category',array('type' => 'text', 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.750';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	 * Notes
+	 * Transfer orders to external accounting system - or not
+	 */
+	$test[] = '0.9.17.750';
+	function property_upgrade0_9_17_750()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_quick_order_template_payment_type", 'transfer_to_external',array('type' => 'int', 'precision' => 2, 'nullable' => True ));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.751';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+

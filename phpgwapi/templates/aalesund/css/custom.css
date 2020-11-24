@@ -244,15 +244,599 @@ a {
     color: #fff;
 }
 
+#event-content {
+ width: 100%;
+}
 
-#mainSearchInput  {
-    border-left: 2px solid #26348B  !important;
-    border-top: 2px solid #26348B  !important;
-    border-bottom: 2px solid #26348B  !important;
-    border-right: 0 !important;
+.Kommende-arrangement {
+    position: center;
+    margin: 0 auto;
+    /*width: 800px;*/
+    /*height: 72px;*/
+    font-family: Martel;
+    font-size: 40px;
+    font-weight: 900;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.8;
+    letter-spacing: normal;
+    text-align: center;
+    color: #3a3a4c;
+}
+
+.eventsearchbox {
+    margin: 0 auto;
+    position: center;
+    text-align: center;
+    width: 495px;
+    height: 56px;
+    border-radius: 6px;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px #28358f;
+    background-color: #ffffff;
+}
+
+.event-card {
+    width: 90%;
+    height:92px;
+    border-radius: 12px;
+    border: solid 1px #ebebeb;
+    background-color: #ffffff;
+    margin: 16px auto;
+    list-style-type: none;
+}
+
+.card-element-left {
+    position: relative;
+    width: 20%;
+    height: 92px;
+    float: left;
+    font-size: 24px;
+    font-weight: 500;
+    color: #0b1214;
+}
+
+.formattedDate-container {
+    width: 86px;
+    height: 28px;
+}
+
+.formattedDate {
+    position: absolute;
+    float: left;
+    left: 60px;
+    top: 22px;
+    bottom: 42px;
+    font-size: 24px;
+    font-weight: 500;
+    width: 86px;
+    height: 28px;
+
+}
+
+.monthTag {
+    position: absolute;
+    bottom: 20px;
+    top: 50px;
+    left: 44px;
+    font-size: 18px;
+    color: #0b1214;
+
+}
+
+.card-element-mid {
+    position: relative;
+    display: inline-flex;
+    height: 92px;
+    width: 60%;
+    flex-direction: inherit;
+}
+.event_time-container {
+    position: absolute;
+    right: 32px;
+    bottom: 334px;
+    top: 32px;
+    width: 120px;
+    height: 24px;
+    font-family: "Georgia", serif;
+    font-size: 20px;
+    text-align: right;
+    color: #0b1214;
+    text-align: right;
+}
+.event_name-container {
+    position: absolute;
+    float: left;
+    left: 32px;
+    top: 32px;
+    bottom: 32px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #0b1214;
+    display: block;
+    margin: 0 auto;
+}
+.card-element-right {
+    position: relative;
+    float:right;
+    flex-direction: column;
+    display: inline-flex;
+    height: 92px;
+    width: 20%;
+}
+
+.location_container {
+    position: absolute;
+    top: 16px;
+    display: flex;
+    left: 37px;
+    height: 28px;
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.location_name {
+    word-wrap: break-word;
+    font-size: 18px;
+    line-height: 1.56;
+    color: #0b1214;
+    white-space: pre;
+    overflow: hidden;
+}
+
+.org_name-container {
+    position: absolute;
+    height: 28px;
+    left: 37px;
+    display: flex;
+    bottom: 16px;
+}
+
+.org_name {
+    font-size: 15px;
+    line-height: 1.56;
+    color: #0b1214;
+}
+
+
+.cal-img-logo {
+    content: url(../img/calendar.png);
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    left: 20px;
+    top:26px;
+    bottom: 34px;
+}
+
+.pin_img_logo {
+    content: url(../img/pin.png);
+    width: 9px;
+    height: 12px;
+    left: 16px;
+    object-fit: contain;
+}
+
+.vertical-bar {
+    border-left: 1px solid #ccc;
+    margin: 0 30px;
+    height: inherit;
+    position: relative;
+}
+
+/*autocomplete css*/
+* { box-sizing: border-box; }
+body {
+    font: 16px Arial;
+}
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+}
+input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+}
+input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+}
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+}
+/* AK CUSTOM */
+.bodySection{
+    background: #f5f5ff !important;
+}
+#searchContainerContent{
+    margin:auto;
+    max-width: 720px;
+    text-align: center;
+}
+#searchContainer{
+    margin:auto;
+    background-color: #DDDDFF;
+    padding: 40px;
+    width:100%;
+    text-align: center;
+}
+.pageContentWrapper{
+    margin:auto;
+    max-width: 1240px;
+}
+#searchContainer #searchWrapper{
+    margin-bottom: 20px;
+}
+
+#searchContainer #locationWrapper{
+    display:inline-block;
+    max-width: 350px;
+    width:100%;
+    background: white;
+    border-radius: 12px;
+}
+
+
+ #searchContainer #dateWrapper{
+    margin-left: 15px;
+    display:inline-block;
+    max-width: 350px;
+    width:100%;
+    border-radius:12px;
+    background: white;
+}
+
+#locationFilter, #dateFilter{
+    width:100%;
+}
+
+.activityRow{
+    display: flex;
+}
+
+ .activityRow, .facilityRow{
+  border-radius: 12px;
+  border: solid 1px #ebebeb;
+  background-color: #ffffff;
+  margin: 10px;
+  padding:10px;
+  font-family: Rubik !important;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #0b1214;
+}
+.headerSection{
+    padding-left:76px;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+#search-page-content{
+    background: white !important;
+}
+.noteRectangle, .descriptionRectangle{
+  width:90%;
+  max-width: 848px;
+  border-radius: 12px;
+  border: solid 1px #e7ebb2;
+  background-color: #fbffc2;
+  font-family: Rubik;
+  font-size: 18px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.56;
+  letter-spacing: normal;
+  color: #0b1214;
+  padding:20px;
+  padding-left:24px;
+}
+
+.descriptionRectangle{
+    margin-top:10px;
+    background: white;
+    border: none;
+}
+.noteTitle{
+  font-family: Martel;
+  font-weight: 900;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-size: 24px;
+  margin-bottom:12px;
+}
+body{
+    background: white !important;
+}
+.facilityRow{
+    padding: 20px;
+    padding-left:32px;
+}
+
+.facilityRow:hover{
+      border: solid 1px #83338f;
+      cursor:pointer;
+}
+.activityRow .activityTitle{
+    width:50%;
+    border-left: 2px solid #ebebeb;
+    flex: 1;
+}
+
+.activityLocation{
+    border-left: 2px solid #ebebeb;
+    line-height:1.5 !important;
+}
+
+.activityLocation *{
+    display: block !important;
+}
+
+.boldText{
+    font-weight:bold;
+}
+
+.activityRow .activityHeaderSegment{
+    padding:5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    line-height: 3;
+
+}
+
+.activityRow *{
+    display:inline-block;
+}
+.headerText{
+  font-family: Martel;
+  font-size: 2em;
+  font-weight: 900;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #3a3a4c;
+  padding-left:15px;
+}
+
+.titleContainer{
+  padding-bottom:30px;
+  padding-top:80px;
+}
+#searchResultMenu{
+    float: left;
+    padding-right: 20px;
+    min-width: 368px;
+    border-radius: 12px;
+    border: solid 1px #ebebeb;
+    background-color: #ffffff;
+    padding:24px;
+}
+
+.timeContainer{
+
+}
+ #resultCount{
+    float:right;
+}
+#searchResutsHeader{
+    font-family: Martel;
+    font-weight: 900;
+}
+#searchResultsWrapper{
+ margin-top:40px;
+}
+#searchResultsContainer{
+    display: flex;
+}
+#searchWrapper{
+    background-color: white;
+    border-radius: 12px;
+}
+#searchResultList{
+    flex:1;
+}
+#mainSearchInput, #locationFilter, .dateFilter, .timeFilter  {
+    background: url("https://flaticons.net/custom.php?i=eN7tlTrkWDgSRI9IbIjAhwvjQ4un&format=png&size=18") no-repeat scroll 9px 9px;
+    padding-left:50px;
+    border-radius: 7px;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px #28358f;
+ }
+
+ #locationFilter{
+        background: url("https://flaticons.net/custom.php?i=6v5IxcYlPe7uEIAIZIG9h9YljJuV&format=png&size=18") no-repeat scroll 9px 9px;
+ }
+ .collapseModal{
+       margin-top: 15px;
+       border-radius: 6px;
+       background-color: #f5f5ff;
+ }
+
+ .collapseModal .modalHeader{
+     font-family: Rubik;
+     font-size: 18px;
+     font-weight: normal;
+     font-stretch: normal;
+     font-style: normal;
+     line-height: 1.56;
+     letter-spacing: normal;
+     color: #0b1214;
+     padding: 12px;
+     border-bottom: 1px solid #ebebeb;
+ }
+ .collapseModal .modalBody{
+     padding: 15px;
+ }
+ .checkWrapper{
+     display: block;
+ }
+ .checkWrapper input[type="checkbox"]{
+     margin-right:10px;
+ }
+ .dateFilter{
+             background: url("https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px;
+ }
+
+ .timeFilter{
+        background: url("https://cdn.zeplin.io/5ef9e522609f7780f3d3c1f6/assets/46A672DA-0051-4F6E-A7BA-4052E275191F.svg") no-repeat scroll 9px 9px;
+ }
+
+ #timeFilterContainer{
+     margin-top:10px;
+ }
+ #timeFilterContainer *{
+     width: 48%;
+     display: inline;
  }
  
- 
+ #timeFilterContainer :last-child{
+     margin-left: 4%;
+ }
+ .filterButton{
+     width: 100%;
+     margin-top:20px;
+ }
+ #aktiverFilterBtn{
+     padding:20px;
+ }
+ .grayBtn{
+  border-radius: 12px;
+    padding:7px;
+  border: solid 1px #c2c2ff;
+  background-color: #ffffff;
+  font-family: Rubik;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+ }
+ .greenBtn{
+  border-radius: 36px;
+  padding:7px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.24);
+  border-style: solid;
+  border-width: 1px;
+  border-image-slice: 1;
+  background-image: linear-gradient(to bottom, #99ffc9, #99ffc9), linear-gradient(to bottom, #c2ffdf, #00ff77);
+  background-origin: border-box;
+/*  background-clip: content-box, border-box; */
+  font-family: Rubik;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  color: #3a3a4c;
+ }
+
+ #searchBtn{
+  margin-top:20px;
+  width: 200px;
+}
+
+/* / AK CUSTOM */
+
+/*
+filterbokser søkesiden
+ */
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+/* The search field */
+#myInput {
+    box-sizing: border-box;
+    background-image: url('searchicon.png');
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {outline: 3px solid #ddd;}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
 /* #searchmotor  {
      border: 1px solid #26348B  !important;
  }*/
@@ -314,11 +898,6 @@ a {
     background: #000; 
 }
 
-
-#searchinput:fokus {
-     border-color: black !important;
-       border: 2px solid black  !important;
-}
 
 /* NAVBAR SEARCHBAR STYLING */
 .search-container {
@@ -836,17 +1415,6 @@ SEARCH PAGE STYLE
     font-size: 15px;
     margin-left: 1.5em;
 }* */
-
-
-.searchInput {
-    border: 2px solid #3d3d3d !important;
-    border-radius: 0 !important;
-}
-
-.searchInput:focus {
-    box-shadow: none;
-    border: 2px solid #3d3d3d !important;
-}
 
 .searchBtn {
 border: 2px solid #26348B !important;

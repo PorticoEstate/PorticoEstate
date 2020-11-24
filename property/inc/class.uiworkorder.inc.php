@@ -1752,7 +1752,12 @@
 			$_lean = phpgw::get_var('lean', 'bool');
 
 			// in case of bigint
-			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id');
+			$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id');
+
+			if(!$id)
+			{
+				$id = 0;
+			}
 
 			if ($mode == 'edit' && (!$this->acl_add && !$this->acl_edit))
 			{
@@ -2911,7 +2916,7 @@ JS;
 			);
 
 			$link_claim = '';
-			if (isset($values['charge_tenant']) ? $values['charge_tenant'] : '')
+			if (!empty($values['charge_tenant']))
 			{
 				$claim = execMethod('property.sotenant_claim.read', array(
 					'project_id' => $project['project_id']));
@@ -2929,7 +2934,31 @@ JS;
 				}
 			}
 
-			$_cat_sub	 = $this->cats->return_sorted_array($start		 = 0, $limit		 = false, $query		 = '', $sort		 = '', $order		 = '', $globals	 = False, false);
+
+//---
+//
+//			$_b_account			 = execMethod('property.bogeneric.read_single', array(
+//					'id'		 =>  $values['b_account_id'] ? $values['b_account_id'] : $project['b_account_id'],
+//					'location_info'	 => array(
+//						'type' => 'budget_account')));
+//			$_b_account_group	 = $_b_account['category'];
+//
+//			$parent_categories = array();
+//
+//			if (!empty($_b_account_group))
+//			{
+//				$sogeneric	 = CreateObject('property.sogeneric');
+//				$sogeneric->get_location_info('b_account_category', false);
+//				$account_group_data = $sogeneric->read_single(array('id' => (int)$_b_account_group), array());
+//
+//				if (isset($account_group_data['project_category']) && $account_group_data['project_category'])
+//				{
+//					$parent_categories = explode(',',trim($account_group_data['project_category'],','));
+//				}
+//			}
+//----
+
+			$_cat_sub	 = $this->cats->return_sorted_array(0, false, '', '', '', false, $parent_categories);
 
 			$selected_cat		 = $values['cat_id'] ? $values['cat_id'] : $project['cat_id'];
 			$validatet_category	 = '';

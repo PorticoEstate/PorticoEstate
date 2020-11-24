@@ -2433,3 +2433,4 @@ missing info	property	no	Mangler data
 get info	property	no	Hent data
 delete files	property	no	Slett filer
 duplicate	property	no	Duplikat
+transfer to external	property	no	Overfør til eksternt system

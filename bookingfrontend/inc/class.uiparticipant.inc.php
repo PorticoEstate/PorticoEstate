@@ -14,6 +14,8 @@
 		public function __construct()
 		{
 			parent::__construct();
+			$this->resource_bo = CreateObject('booking.boresource');
+			$this->group_bo = CreateObject('booking.bogroup');
 			$this->module = "bookingfrontend";
 		}
 
@@ -33,12 +35,33 @@
 			$participant['reservation_id']	 = $reservation_id;
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
+			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($reservation['resources'], true);
 
-//			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
-			/**
-			 * Disable limit for now
-			 */
-			$reservation['participant_limit'] = 0;
+			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $reservation['resources']),'sort' => 'name'));
+			$res_names = array();
+			foreach ($resources['results'] as $res)
+			{
+				$res_names[] = $res['name'];
+			}
+
+			$reservation['resource_info'] = join(', ', $res_names);
+	
+			if(!empty($reservation['group_id']))
+			{
+				$reservation['group'] = $this->group_bo->read_single($reservation['group_id']);
+			}
+
+			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			{
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+			}
+
+			if(!$reservation['participant_limit'])
+			{
+				$reservation['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+			}
+
+			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];
 
 			$interval	 = (new DateTime($reservation['from_']))->diff(new DateTime($reservation['to_']));
 			$when		 = "";
@@ -70,12 +93,12 @@
 
 			$now =  new DateTime('now', $DateTimeZone);
 
-			$enable_register_pre = false;//$from > $now ? true : false;
+			$enable_register_pre = $from > $now ? true : false;
 			$enable_register_in	 = $from < $now && $to > $now ? true : false;
-			$enable_register_out = false; //$from < $now && $to > $now ? true : false;
-//			_debug_array($from);			
-//			_debug_array($now);			
-//			_debug_array($to);			
+			$enable_register_out = $from < $now && $to > $now ? true : false;
+//			_debug_array($from);
+//			_debug_array($now);
+//			_debug_array($to);
 			if($enable_register_pre || $enable_register_in || $enable_register_out)
 			{
 				$enable_register_form = true;
@@ -124,12 +147,16 @@
 				}
 				else
 				{
-
 					$phone = phpgw::get_var('phone', 'int');
 					$participant = $this->bo->get_previous_registration($reservation_type, $reservation_id, $phone, $register_type);
 					$participant['register_type']	 = $register_type;
 					$participant['phone']			 = $phone;
 					$participant['email']			 = phpgw::get_var('email', 'email');
+
+					if($register_type == 'register_in' && phpgw::get_var('quantity', 'int') < $participant['quantity'])
+					{
+						$participant['quantity'] = phpgw::get_var('quantity', 'int');
+					}
 					$participant['quantity']		 = $participant['quantity'] ? $participant['quantity'] : phpgw::get_var('quantity', 'int');
 					$participant['reservation_type'] = $reservation_type;
 					$participant['reservation_id']	 = $reservation_id;
@@ -204,7 +231,7 @@
 					 * disable SMS for now
 					 */
 
-					if(false)
+					if($config['participant_limit_sms'])
 					{
 						try
 						{
@@ -226,8 +253,18 @@
 			}
 			$this->flash_form_errors($errors);
 
-
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+
+			$name = '';
+
+			if((array_key_exists('is_public', $reservation) && $reservation['is_public']))
+			{
+				$name = $reservation['name'];
+			}
+			else if(!array_key_exists('is_public', $reservation) && !empty($reservation['name']))
+			{
+				$name = $reservation['name'];
+			}
 
 			$data = array
 			(
@@ -242,7 +279,8 @@
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
-				'name'					 => $reservation['name'],
+				'name'					 => $name,
+				'reservation'			 => $reservation,
 				'participant_limit'		 => !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0,
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),

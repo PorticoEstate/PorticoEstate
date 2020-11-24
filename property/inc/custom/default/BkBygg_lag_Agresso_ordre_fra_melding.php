@@ -55,6 +55,13 @@
 					return 2;
 				}
 
+				$payment_type = CreateObject('property.sogeneric', 'order_template_payment_type')->read_single(array('id' => (int)$_ticket['payment_type']));
+
+				if($_ticket['payment_type'] && !$payment_type['transfer_to_external'])
+				{
+					return 2;
+				}
+
 				$config			 = CreateObject('phpgwapi.config', 'property');
 				$config->read();
 

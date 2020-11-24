@@ -167,6 +167,10 @@
 			<td>{lang_google_tracker_id}:</td>
 			<td><input name="newsettings[tracker_id]" value="{value_tracker_id}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_support_email_address}:</td>
+			<td><input name="newsettings[support_address]" value="{value_support_address}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_url_to_external_logout}:
 				<br/> {lang_Redirect_is_computed_if_url_ends_with} '='

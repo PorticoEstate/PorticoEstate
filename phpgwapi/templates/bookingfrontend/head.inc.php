@@ -150,23 +150,31 @@ JS;
 //	$municipality_email = 'servicetorget@alesund.kommune.no';
 //	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
 
-	if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+
+	if (!empty($config_frontend['support_address']))
 	{
-		$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
-		$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
+		$support_email = $config_frontend['support_address'];
 	}
 	else
 	{
-		$GLOBALS['phpgw']->template->set_var('support_email', 'support@aktivkommune.no');
+		if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+		{
+			$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
+		}
+		else
+		{
+			$support_email = 'support@aktivkommune.no';
+		}
 	}
+	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 
 //loads jquery
 	phpgwapi_jquery::load_widget('core');
 
 	$javascripts	 = array();
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
+//  Alloy-ui disagrees with Bootstrap version 4.5.2 and hides buttons in some cases (event.info)
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";

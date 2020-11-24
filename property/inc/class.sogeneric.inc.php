@@ -771,6 +771,25 @@
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
 								)
 							),
+							array(
+								'name'		 => 'project_category',
+								'descr'		 => lang('project category'),
+								'type'		 => 'multiple_select',
+								'nullable'	 => true,
+								'filter'	 => true,
+								'sortable'	 => false,
+								'hidden'	 => false,
+								'values_def' => array
+									(
+									'valueset'		 => false,
+									'method'		 => 'property.bocommon.get_top_level_categories',
+									'method_input'	 => array(
+										'app'			 => 'property',
+										'acl_location'	 => '.project',
+										'selected'		 => '##project_category##',
+									)
+								)
+							),
 							array
 								(
 								'name'	 => 'external_project',
@@ -971,10 +990,23 @@
 						'fields'		 => array
 							(
 							array
-								(
+							(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
 								'type'	 => 'varchar'
+							),
+							array
+							(
+								'name'		 => 'transfer_to_external',
+								'descr'		 => lang('transfer to external'),
+								'type'		 => 'checkbox',
+								'default'	 => 'checked',
+								'filter'	 => false,
+								'sortable'	 => true,
+								'values_def' => array
+								(
+									'valueset' => array(array('id' => 1, 'name' => lang('transfer to external'))),
+								)
 							),
 							array
 								(

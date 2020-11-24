@@ -29,28 +29,28 @@
 	<!--<div><span class="font-weight-bold text-uppercase"><xsl:value-of select="php:function('lang', 'Activity')"/>: </span>
 		<xsl:value-of select="booking/activity_name"/>
 	</div>-->
-<!--	<xsl:if test="booking/participant_limit > 0">
+	<xsl:if test="booking/participant_limit > 0">
 		<div>
 			<span class="font-weight-bold text-uppercase">
 				<xsl:value-of select="php:function('lang', 'participant limit')" />:
 			</span>
 			<xsl:value-of select="booking/participant_limit"/>
 		</div>
-	</xsl:if>-->
+		<div class="actions">
+			<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'view booking')"/>
+			</a>
+		</div>
+	</xsl:if>
 
-	<div class="actions">
-		<a href="{booking/show_link}" target="_blank" class="btn btn-light mt-4">
-			<xsl:value-of select="php:function('lang', 'view booking')"/>
-		</a>
-	</div>
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
-			<button class="btn btn-light mt-4" onclick="location.href='{booking/edit_link}'">
+			<a class="btn btn-light mt-4" href="{booking/edit_link}" target="_blank">
 				<xsl:value-of select="php:function('lang', 'Edit booking')"/>
-			</button>
-			<button class="btn btn-light mt-4" onclick="location.href='{booking/cancel_link}'">
+			</a>
+			<a class="btn btn-light mt-4" href="{booking/cancel_link}" target="_blank">
 				<xsl:value-of select="php:function('lang', 'Cancel booking')"/>
-			</button>
+			</a>
 		</div>
 	</xsl:if>
 </xsl:template>

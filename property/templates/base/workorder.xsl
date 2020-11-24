@@ -133,7 +133,7 @@
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>
-			<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
+			<xsl:when test="value_workorder_id!= 0 and mode='edit' and lean = 0">
 				<td>
 					<table>
 						<tr>
@@ -203,7 +203,7 @@
 									</xsl:when>
 								</xsl:choose>
 								<xsl:choose>
-									<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
+									<xsl:when test="value_workorder_id!= 0 and mode='edit' and lean = 0">
 										<td valign="top">
 											<xsl:variable name="lang_calculate">
 												<xsl:value-of select="lang_calculate"/>
@@ -295,7 +295,7 @@
 					</div>
 
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!='' and mode='edit'">
+						<xsl:when test="value_workorder_id!= 0 and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'move to another project')"/>
@@ -384,7 +384,7 @@
 						<xsl:value-of select="value_other_branch"/>
 					</div>
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="lang_workorder_id"/>
@@ -474,7 +474,7 @@
 						</xsl:when>
 					</xsl:choose>
 					<!--xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'approved')"/>
@@ -763,12 +763,13 @@
 								</select>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
+								<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}">
+								</input>
 								<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}" class="pure-input-3-4">
 									<xsl:choose>
 										<xsl:when test="mode='edit'">
 											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
+												<xsl:text>budget_account</xsl:text>
 											</xsl:attribute>
 											<xsl:attribute name="data-validation-error-msg">
 												<xsl:value-of select="$lang_budget_account"/>
@@ -1109,7 +1110,7 @@
 						</input>
 					</div>
 					<!--xsl:choose>
-						<xsl:when test="value_workorder_id!='' and mode='edit'">
+						<xsl:when test="value_workorder_id!= 0 and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'order received')"/>
@@ -1146,7 +1147,7 @@
 						</xsl:when>
 					</xsl:choose-->
 					<xsl:choose>
-						<xsl:when test="value_workorder_id!=''">
+						<xsl:when test="value_workorder_id!= 0">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:choose>
@@ -1282,7 +1283,7 @@
 				</fieldset>
 			</div>
 			<xsl:choose>
-				<xsl:when test="value_workorder_id!=''">
+				<xsl:when test="value_workorder_id!= 0">
 					<div id="documents">
 						<fieldset>
 							<div class="pure-control-group">

@@ -1691,6 +1691,65 @@ HTML;
 				}
 			}
 
+			if (!empty($data['charge_tenant']) && !empty($data['tenant_id']))
+			{
+				$_tenant_id = $data['tenant_id'];
+
+				$boclaim = CreateObject('property.botenant_claim');
+
+				$value_set = array
+				(
+					'ticket_id' => $id
+				);
+
+				$claim	 = $boclaim->read(array('ticket_id' => $id));
+				$target	 = array();
+				if ($claim)
+				{
+					$value_set['claim_id']	 = $claim[0]['claim_id'];
+					$claim_old				 = $boclaim->read_single($claim[0]['claim_id']);
+					if (!empty($claim_old['ticket']))
+					{
+						$target = $claim_old['ticket'];
+					}
+					$value_set['amount']		 = $claim_old['amount'];
+					$value_set['tenant_id']		 = $claim_old['tenant_id'];
+					$value_set['b_account_id']	 = $claim_old['b_account_id'];
+					$value_set['cat_id']		 = $claim_old['cat_id'];
+					$value_set['status']		 = $claim_old['status'];
+					$value_set['remark']		 = $claim_old['remark'];
+				}
+				else
+				{
+					$value_set['amount']		 = 0;
+					$value_set['tenant_id']		 = $_tenant_id;
+					$value_set['b_account_id']	 = $data['b_account_id'];
+					$value_set['cat_id']		 = 99;
+					$value_set['status']		 = 'open';
+					$value_set['remark']		 = '';
+				}
+
+				if (!in_array($id, $target))
+				{
+					$target[] = $id;
+				}
+
+				$value_set['ticket'] = $target;
+
+				if (!$value_set['tenant_id'])
+				{
+					$receipt['error'][] = array('msg' => lang('tenant is not defined, claim not issued'));
+				}
+				else
+				{
+					$receipt_claim		 = $boclaim->save($value_set);
+					unset($receipt_claim['id']);
+					$receipt['error']	 = array_merge($receipt['error'], $receipt_claim['error']);
+					$receipt['message']	 = array_merge($receipt['message'], $receipt_claim['message']);
+				}
+			}
+
+
 			return $receipt;
 		}
 
