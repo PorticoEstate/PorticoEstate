@@ -41,21 +41,6 @@
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
 							<div class="pure-control-group">
-								<xsl:if test="config_data/dim_3">
-									<label for="field_object_number">
-										<xsl:value-of select="config_data/dim_3" />
-									</label>
-									<input name="object_number" type="text" id="field_object_number" value="{account_code_set/object_number}" maxlength='8' class="pure-u-1">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter an object number')" />
-										</xsl:attribute>
-									</input>
-								</xsl:if>
-							</div>
-							<div class="pure-control-group">
 								<xsl:if test="config_data/article">
 									<label for="field_article">
 										<xsl:value-of select="config_data/article" />
@@ -86,6 +71,22 @@
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_value_2">
+									<label for="field_dim_value_2">
+										<xsl:value-of select="config_data/dim_value_2" />
+									</label>
+									<input name="dim_value_2" type="text" id="field_dim_value_2" value="{account_code_set/dim_value_2}" maxlength='12' class="pure-u-1" />
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_value_3">
+									<label for="field_dim_value_3">
+										<xsl:value-of select="config_data/dim_value_3" />
+									</label>
+									<input name="dim_value_3" type="text" id="field_dim_value_3" value="{account_code_set/dim_value_3}" maxlength='12' class="pure-u-1" />
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
 								<xsl:if test="config_data/dim_value_4">
 									<label for="field_dim_value_4">
 										<xsl:value-of select="config_data/dim_value_4" />
@@ -99,6 +100,22 @@
 										<xsl:value-of select="config_data/dim_value_5" />
 									</label>
 									<input name="dim_value_5" type="text" id="field_dim_value_5" value="{account_code_set/dim_value_5}" maxlength='12' class="pure-u-1" />
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_value_6">
+									<label for="field_dim_value_6">
+										<xsl:value-of select="config_data/dim_value_6" />
+									</label>
+									<input name="dim_value_6" type="text" id="field_dim_value_6" value="{account_code_set/dim_value_6}" maxlength='12' class="pure-u-1" />
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_value_7">
+									<label for="field_dim_value_7">
+										<xsl:value-of select="config_data/dim_value_7" />
+									</label>
+									<input name="dim_value_7" type="text" id="field_dim_value_7" value="{account_code_set/dim_value_7}" maxlength='12' class="pure-u-1" />
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
@@ -177,6 +194,21 @@
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_3">
+									<label for="field_object_number">
+										<xsl:value-of select="config_data/dim_3" />
+									</label>
+									<input name="object_number" type="text" id="field_object_number" value="{account_code_set/object_number}" maxlength='8' class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter an object number')" />
+										</xsl:attribute>
+									</input>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
 								<xsl:if test="config_data/dim_4">
 									<label for="field_dim_4">
 										<xsl:value-of select="config_data/dim_4" />
@@ -195,6 +227,36 @@
 										</xsl:attribute>
 										<xsl:attribute name="data-validation-error-msg">
 											<xsl:value-of select="php:function('lang', 'Please enter a project number')" />
+										</xsl:attribute>
+									</input>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_6">
+									<label for="field_dim_6">
+										<xsl:value-of select="config_data/dim_6" />
+									</label>
+									<input name="dim_6" type="text" id="field_dim_6" value="{account_code_set/dim_6}" maxlength='8' class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a value')" />
+										</xsl:attribute>
+									</input>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<xsl:if test="config_data/dim_7">
+									<label for="field_dim_7">
+										<xsl:value-of select="config_data/dim_7" />
+									</label>
+									<input name="dim_7" type="text" id="field_dim_7" value="{account_code_set/dim_7}" maxlength='12' class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a value')" />
 										</xsl:attribute>
 									</input>
 								</xsl:if>
