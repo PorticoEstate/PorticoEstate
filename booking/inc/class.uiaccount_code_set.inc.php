@@ -20,7 +20,8 @@
 		);
 		protected $fields = array('name', 'object_number', 'responsible_code', 'article',
 			'service', 'project_number', 'unit_number', 'unit_prefix', 'invoice_instruction',
-			'active', 'dim_4', 'dim_value_4', 'dim_value_5');
+			'active', 'dim_4', 'dim_6','dim_7', 'dim_value_2', 'dim_value_3','dim_value_4',
+			'dim_value_5', 'dim_value_6', 'dim_value_7');
 		protected $module = 'booking';
 
 		public function __construct()
@@ -86,25 +87,70 @@
 			$data['datatable']['field'][] = array(
 				'key' => 'name', 'label' => lang('Name'), 'formatter' => 'JqueryPortico.formatLink');
 			if (isset($config->config_data['dim_3']))
+			{
 				$data['datatable']['field'][] = array('key' => 'object_number', 'label' => $config->config_data['dim_3']);
+			}
 			if (isset($config->config_data['dim_1']))
+			{
 				$data['datatable']['field'][] = array('key' => 'responsible_code', 'label' => $config->config_data['dim_1']);
+			}
 			if (isset($config->config_data['article']))
+			{
 				$data['datatable']['field'][] = array('key' => 'article', 'label' => lang('Article'));
+			}
 			if (isset($config->config_data['dim_2']))
+			{
 				$data['datatable']['field'][] = array('key' => 'service', 'label' => $config->config_data['dim_2']);
+			}
 			if (isset($config->config_data['dim_4']))
+			{
 				$data['datatable']['field'][] = array('key' => 'dim_4', 'label' => $config->config_data['dim_4']);
+			}
 			if (isset($config->config_data['dim_5']))
+			{
 				$data['datatable']['field'][] = array('key' => 'project_number', 'label' => $config->config_data['dim_5']);
+			}
+			if (isset($config->config_data['dim_6']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_6', 'label' => $config->config_data['dim_6']);
+			}
+			if (isset($config->config_data['dim_7']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_7', 'label' => $config->config_data['dim_7']);
+			}
 			if (isset($config->config_data['dim_value_1']))
+			{
 				$data['datatable']['field'][] = array('key' => 'unit_number', 'label' => $config->config_data['dim_value_1']);
+			}
+			if (isset($config->config_data['dim_value_2']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_value_2', 'label' => $config->config_data['dim_value_2']);
+			}
+			if (isset($config->config_data['dim_value_3']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_value_3', 'label' => $config->config_data['dim_value_3']);
+			}
 			if (isset($config->config_data['dim_value_4']))
+			{
 				$data['datatable']['field'][] = array('key' => 'dim_value_4', 'label' => $config->config_data['dim_value_4']);
+			}
 			if (isset($config->config_data['dim_value_5']))
+			{
 				$data['datatable']['field'][] = array('key' => 'dim_value_5', 'label' => $config->config_data['dim_value_5']);
+			}
+			if (isset($config->config_data['dim_value_6']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_value_6', 'label' => $config->config_data['dim_value_6']);
+			}
+			if (isset($config->config_data['dim_value_7']))
+			{
+				$data['datatable']['field'][] = array('key' => 'dim_value_7', 'label' => $config->config_data['dim_value_7']);
+			}
 			if ($config->config_data['external_format'] != 'KOMMFAKT')
+			{
 				$data['datatable']['field'][] = array('key' => 'unit_prefix', 'label' => lang('Unit prefix'));
+			}
+
 			$data['datatable']['field'][] = array('key' => 'link', 'hidden' => true);
 
 			if ($this->bo->allow_create())
@@ -140,8 +186,7 @@
 		public function show()
 		{
 			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'int'));
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			//$this->add_default_display_data($account_code_set);
 			$account_code_set['edit_link'] = self::link(array('menuaction' => 'booking.uiaccount_code_set.edit',
 					'id' => $account_code_set['id']));
@@ -154,14 +199,13 @@
 			$account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
 			self::render_template_xsl('account_code_set', array('account_code_set' => $account_code_set,
-				'config_data' => $config->config_data));
+				'config_data' => $config));
 		}
 
 		public function edit()
 		{
 			$account_code_set = $this->bo->read_single(phpgw::get_var('id', 'int'));
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -192,9 +236,8 @@
 
 			$account_code_set['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			phpgwapi_jquery::formvalidator_generate(array());
-
 			self::render_template_xsl('account_code_set_form', array('account_code_set' => $account_code_set,
-				'config_data' => $config->config_data));
+				'config_data' => $config));
 		}
 
 		public function add()

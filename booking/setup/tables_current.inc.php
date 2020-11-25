@@ -997,16 +997,22 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'name' => array('type' => 'text', 'nullable' => False),
-				'object_number' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
-				'responsible_code' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),
+				'object_number' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),//dim_3
+				'responsible_code' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),//dim_1
 				'article' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
-				'service' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),
-				'project_number' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
-				'unit_number' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False),
+				'service' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),//dim_2
+				'project_number' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False),//dim_5
+				'unit_number' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False),//dim_value_1
 				'unit_prefix' => array('type' => 'varchar', 'precision' => '1', 'nullable' => False),
 				'dim_4' => array('type' => 'varchar', 'precision' => '8', 'nullable' => True),
+				'dim_6' => array('type' => 'varchar', 'precision' => '8', 'nullable' => True),
+				'dim_7' => array('type' => 'varchar', 'precision' => '8', 'nullable' => True),
+				'dim_value_2' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
+				'dim_value_3' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
 				'dim_value_4' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
 				'dim_value_5' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
+				'dim_value_6' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
+				'dim_value_7' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
 				'invoice_instruction' => array('type' => 'varchar', 'precision' => '120'),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 			),

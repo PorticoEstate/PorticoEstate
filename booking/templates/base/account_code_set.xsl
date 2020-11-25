@@ -11,14 +11,6 @@
 					<xsl:value-of select="account_code_set/name"/>
 				</div>
 				<div class="pure-control-group">
-					<xsl:if test="config_data/dim_3">
-						<label>
-							<xsl:value-of select="config_data/dim_3" />
-						</label>
-						<xsl:value-of select="account_code_set/object_number"/>
-					</xsl:if>
-				</div>
-				<div class="pure-control-group">
 					<xsl:if test="config_data/article">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Article')" />
@@ -35,6 +27,22 @@
 					</xsl:if>
 				</div>
 				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_value_2">
+						<label>
+							<xsl:value-of select="config_data/dim_value_2" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_value_2"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_value_3">
+						<label>
+							<xsl:value-of select="config_data/dim_value_3" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_value_3"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
 					<xsl:if test="config_data/dim_value_4">
 						<label>
 							<xsl:value-of select="config_data/dim_value_4" />
@@ -48,6 +56,22 @@
 							<xsl:value-of select="config_data/dim_value_5" />
 						</label>
 						<xsl:value-of select="account_code_set/dim_value_5"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_value_6">
+						<label>
+							<xsl:value-of select="config_data/dim_value_6" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_value_6"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_value_7">
+						<label>
+							<xsl:value-of select="config_data/dim_value_7" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_value_7"/>
 					</xsl:if>
 				</div>
 				<div class="pure-control-group">
@@ -75,6 +99,15 @@
 					</xsl:if>
 				</div>
 				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_3">
+						<label>
+							<xsl:value-of select="config_data/dim_3" />
+						</label>
+						<xsl:value-of select="account_code_set/object_number"/>
+					</xsl:if>
+				</div>
+
+				<div class="pure-control-group">
 					<xsl:if test="config_data/dim_4">
 						<label>
 							<xsl:value-of select="config_data/dim_4" />
@@ -91,12 +124,28 @@
 					</xsl:if>
 				</div>
 				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_6">
+						<label>
+							<xsl:value-of select="config_data/dim_6" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_6"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
+					<xsl:if test="config_data/dim_7">
+						<label>
+							<xsl:value-of select="config_data/dim_7" />
+						</label>
+						<xsl:value-of select="account_code_set/dim_7"/>
+					</xsl:if>
+				</div>
+<!--				<div class="pure-control-group">
 					<xsl:if test="config_data/external_format != 'KOMMFAKT'">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Reference')" />
 						</label>
 					</xsl:if>
-				</div>
+				</div>-->
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Invoice instruction')" />
