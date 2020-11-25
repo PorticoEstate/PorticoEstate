@@ -45,7 +45,7 @@
 					$season = phpgw::get_var('seasons');
 				}
 				$mailsubject = phpgw::get_var('mailsubject', 'string');
-				$mailbody = phpgw::get_var('mailbody', 'string');
+				$mailbody = phpgw::get_var('mailbody', 'html');
 				$contacts = phpgw::get_var('contacts', 'string');
 
 				if ($step == 1)
