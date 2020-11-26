@@ -100,6 +100,10 @@ HTML;
 
 			foreach ($orders as $entry)
 			{
+				$entry['order_link'] = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uiworkorder.edit',
+					'id'		 => $entry['order_id']), false, true) . "\">{$entry['order_id']}</a>";
+
 				$row = array();
 
 				$html .= <<<HTML
@@ -110,8 +114,17 @@ HTML;
 				{
 					$row[] = $entry[$key];
 
+					if($key == 'order_id')
+					{
+						$_key = 'order_link';
+					}
+					else
+					{
+						$_key = $key;
+					}
+
 					$html .= <<<HTML
-						<td>{$entry[$key]}</td>
+						<td>{$entry[$_key]}</td>
 HTML;
 				}
 
