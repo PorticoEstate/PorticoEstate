@@ -175,7 +175,7 @@ HTML;
 
 			$toarray = array(
 				'hc483@bergen.kommune.no',
-				//		'Wick, June <June.Wick@bergen.kommune.no>',
+				'Wick, June <June.Wick@bergen.kommune.no>',
 				//		'Olsen, Stein-Helge <Stein-Helge.Olsen@bergen.kommune.no>'
 			);
 			$to		 = implode(';', $toarray);
