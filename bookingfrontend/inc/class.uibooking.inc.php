@@ -321,7 +321,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $allocation['organization_id'],
-					'active' => 1, 'results' => -1)));
+					'active' => 1), 'results' => -1));
 			$groups = $groups['results'];
 			$booking['organization_name'] = $allocation['organization_name'];
 			$resources_full = $this->resource_bo->so->read(array('filters' => array(
