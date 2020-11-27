@@ -98,11 +98,19 @@
 					</tr>
 HTML;
 
+			$update_orders = array();
 			foreach ($orders as $entry)
 			{
+				if (empty($entry['agresso_status']) || $entry['agresso_status'] == "O")
+				{
+					continue;
+				}
+
+				$update_orders[] = $entry['order_id'];
+
 				$entry['order_link'] = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
-					'menuaction' => 'property.uiworkorder.edit',
-					'id'		 => $entry['order_id']), false, true) . "\">{$entry['order_id']}</a>";
+						'menuaction' => 'property.uiworkorder.edit',
+						'id'		 => $entry['order_id']), false, true) . "\">{$entry['order_id']}</a>";
 
 				$row = array();
 
@@ -114,7 +122,7 @@ HTML;
 				{
 					$row[] = $entry[$key];
 
-					if($key == 'order_id')
+					if ($key == 'order_id')
 					{
 						$_key = 'order_link';
 					}
@@ -174,22 +182,48 @@ HTML;
 			$subject = 'Åpne Portico bestillinger som er løpende, og skal kunne motta flere fakturaer';
 
 			$toarray = array(
-				'hc483@bergen.kommune.no',
-				'Wick, June <June.Wick@bergen.kommune.no>',
-				//		'Olsen, Stein-Helge <Stein-Helge.Olsen@bergen.kommune.no>'
+				'hc483@bergen.kommune.no'
 			);
 			$to		 = implode(';', $toarray);
 
-			try
+			if (false)
 			{
-				$rc	 = CreateObject('phpgwapi.send')->msg('email', $to, $subject, $html, '', $cc	 = '', $bcc = '', 'hc483@bergen.kommune.no', 'Ikke svar', 'html', '', $attachments);
-			}
-			catch (Exception $e)
-			{
-				$this->receipt['error'][] = array('msg' => $e->getMessage());
+				try
+				{
+					$rc	 = CreateObject('phpgwapi.send')->msg('email', $to, $subject, $html, '', $cc	 = '', $bcc = '', 'hc483@bergen.kommune.no', 'Ikke svar', 'html', '', $attachments);
+				}
+				catch (Exception $e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
 			}
 
 			unlink($fname);
+
+			if ($update_orders)
+			{
+				$toarray = array(
+//					'hc483@bergen.kommune.no',
+					'Postmottak LRS System <LRS.System@bergen.kommune.no>'
+				);
+				$to		 = implode(';', $toarray);
+
+				$update_orders_condition = implode(',', $update_orders);
+
+				$message = "Oppdateringsskript for å åpne Portico-ordrer for del-faktura:\n\n";
+				$message .= "UPDATE apoheader SET status='O' WHERE client='BY' AND order_id IN ({$update_orders_condition}) AND status='F';\n";
+				$message .= "UPDATE apodetail SET status='O' WHERE client='BY' AND order_id IN ({$update_orders_condition}) AND status='F';";
+
+
+				try
+				{
+					$rc	 = CreateObject('phpgwapi.send')->msg('email', $to, $subject, nl2br($message), '', $cc	 = '', $bcc = 'hc483@bergen.kommune.no', 'hc483@bergen.kommune.no', 'Ikke svar', 'html');
+				}
+				catch (Exception $e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
+			}
 
 			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
