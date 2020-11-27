@@ -1,9 +1,9 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
     <div id="container_event_search">
         <div class="container searchContainer">
             <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
-                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="coolfunc()" placeholder="søk etter organisasjoner">
+                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="autofunc()" placeholder="søk etter organisasjoner">
                 </input>
                 <div class="input-group-prepend">
                     <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button" onclick="searchInput()">
@@ -21,14 +21,28 @@
                     <input type="date" id="to" name="to"/>
                 </div>
             </div>
-            <div class="dropdown">
-                <button onclick="buildingNameDropDown()" class="dropbtn" id="dropbutton">Bygnings filter</button>
-                <div id="buildingNameDropDown" class="dropdown-content">
-                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
-                    <div class="dropdown_list_container" data-bind="foreach: facilities">
-                        <a id="building_name_dropdown_item" data-bind="click:$parent.buildingFilter">
-                            <span data-bind="text: building_name"/>
-                        </a>
+            <div class="row filterboxcontainer" id="filterboxcontainer">
+                <button onclick="clearFilters()" class="fa fa-times" aria-hidden="true">Fjern Filter</button>
+                <div class="dropdown col">
+                    <button onclick="buildingNameDropDown()" class="dropbtn" id="dropBuildingNameButton">Bygnings navn</button>
+                    <div id="buildingNameDropDown" class="dropdown-content">
+                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
+                        <div class="dropdown_list_container" data-bind="foreach: facilities">
+                            <a id="building_name_dropdown_item" data-bind="click:$parent.buildingFilter">
+                                <span data-bind="text: building_name"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="buildingTypeDropdown col">
+                    <button onclick="buildingTypeDropDown()" class="dropbtn" id="dropBuildingTypeButton">Bygnings type</button>
+                    <div id="buildingTypeDropDown" class="dropdown-content">
+                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
+                        <div class="dropdown_list_container" data-bind="foreach: facilityTypes">
+                            <a id="building_type_dropdown_item" data-bind="click:$parent.buildingTypeFilter">
+                                <span data-bind="text: facilityTypeName"/>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -549,12 +549,16 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null, $facilityTypeID=null)
 	{
+		$facilityTypeIDSql = null;
 		$orgnamesql = null;
 		$toDateSql = null;
 		$buildingIDSQL = null;
 
+		if ($facilityTypeID) {
+			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID'";
+		}
 		if ($buildingID) {
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
 		}
@@ -573,12 +577,21 @@
 						 bbe.organizer as org_name,
 						 bbe.customer_organization_number as org_num,
 						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) AS org_id
-							 FROM bb_event bbe
-							 WHERE bbe.from_ >= '$fromDate'"
+							 FROM bb_event bbe,
+							      bb_event_resource bber,
+     							  bb_resource bbr,
+     							  bb_rescategory bbrc
+							 
+							 WHERE  
+							      bbe.id = bber.event_id
+							  AND bber.resource_id = bbr.id
+  							  AND bbrc.id = bbr.rescategory_id 
+							  AND bbe.from_ >= '$fromDate' "
 						.$toDateSql
 						.$orgnamesql
-						.$buildingIDSQL.
-						" AND bbe.is_public = 1
+						.$buildingIDSQL
+						.$facilityTypeIDSql
+						." AND bbe.is_public = 1
 						order by bbe.from_ asc LIMIT 50;";
 
 		$this->db->query($sqlQuery);
@@ -601,7 +614,7 @@
 		}
 		foreach ($results as $key => $value)
 		{
-			$results[$key]['facility'] = $this->getFacilities($value['event_id']);
+			$results[$key]['facility'] = array_merge($results[$key]['facility'] ,$this->getFacilities($value['event_id']));
 		}
 		return $results;
 	}
@@ -617,15 +630,16 @@
 
 		$this->db->query($sqlQuery);
 		$results = array();
+		$facilityInfo = new stdClass();
 		while ($this->db->next_record()) {
-			$results[] = array(
-				'event_id' => $this->db->f('event_id',false),
-				'event_name' => $this->db->f('event_name',false),
-				'resource_category_id' => $this->db->f('rescat_id',false),
-				'resource_category_name' => $this->db->f('rescat_name',false),
-				'resource_id' => $this->db->f('resource_id',false),
-				'resource_name' => $this->db->f('resource_name',false)
-			);
+			$facilityInfo->event_name = $this->db->f('event_name',false);
+			$facilityInfo->event_id = $this->db->f('event_id',false);
+			$facilityInfo->resource_category_id = $this->db->f('rescat_id',false);
+			$facilityInfo->resource_category_name = $this->db->f('rescat_name',false);
+			$facilityInfo->resource_id = $this->db->f('resource_id',false);
+			$facilityInfo->resource_name = $this->db->f('resource_name',false);
+			array_push($results, $facilityInfo);
+
 		}
 		return $results;
 	}

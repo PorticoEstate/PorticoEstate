@@ -8,6 +8,8 @@ var fromDate = "";
 var toDate = "";
 var organization = "";
 var buildingID = "";
+var facilityTypeID = "";
+var facilityTypeList = [];
 
 //########## Listeners #############
 document.getElementById('from').addEventListener("change", function () {
@@ -23,7 +25,6 @@ document.getElementById('to').addEventListener("change", function () {
 });
 
 document.getElementById('eventsearchBoxID').addEventListener("change", function () {
-    var input = this.value;
     organization = this.value;
     getUpcomingEvents(organization,fromDate,toDate)
 });
@@ -32,13 +33,20 @@ document.getElementById('eventsearchBoxID').addEventListener("change", function 
 function DropDownModel() {
     var self = this;
     self.facilities = ko.observableArray();
+    self.facilityTypes = ko.observableArray();
 
     self.buildingFilter = function () {
         buildingNameDropDown();
-        document.getElementById('dropbutton').innerText = this.building_name;
+        document.getElementById('dropBuildingNameButton').innerText = this.building_name;
+        buildingID = this.building_id;
+        getUpcomingEvents(organization,fromDate,toDate,buildingID)
+    };
 
-        getUpcomingEvents(organization,fromDate,toDate,this.building_id)
-
+    self.buildingTypeFilter = function () {
+        buildingTypeDropDown();
+        document.getElementById('dropBuildingTypeButton').innerText = this.facilityTypeName;
+        facilityTypeID = this.facilityTypeID;
+        getUpcomingEvents(organization, fromDate, toDate, buildingID, facilityTypeID);
     };
 }
 
@@ -99,8 +107,52 @@ function buildingExists(buildingName) {
     });
 }
 
+function facilityTypeExists(resource_category_id) {
+    return facilityTypeList.some(function (el) {
+        return el.facilityTypeID === resource_category_id;
+    });
+}
+
+$(document).ready(function () {
+    viewmodel = new AppViewModel();
+    dropDownModel = new DropDownModel();
+    getUpcomingEvents();
+    ko.applyBindings(viewmodel, document.getElementById('event-content'));
+    ko.applyBindings(dropDownModel, document.getElementById('filterboxcontainer'))
+});
+
+function getUpcomingEvents(orgName = "", from = "", to= "",buildingID= "", facilityTypeID = "") {
+
+    if (from === "") {
+        from = formatDateForBackend(new Date());
+    }
+    let requestURL;
+
+    reqObject = {
+        menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
+        orgName: orgName,
+        fromDate: from,
+        toDate: to,
+        buildingID : buildingID,
+        facilityTypeID : facilityTypeID
+    }
+
+    requestURL = phpGWLink('bookingfrontend/', reqObject, true);
+    $.ajax({
+        url: requestURL,
+        dataType : 'json',
+        success: function (result) {
+            setdata(result);
+        },
+        error: function (error) {
+        }
+    });
+}
+
 function setdata(result) {
     viewmodel.events.removeAll();
+    dropDownModel.facilities.removeAll();
+    dropDownModel.facilityTypes.removeAll();
     for (var i = 0; i < result.length; i++) {
         result[i].building_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result[i].building_id}, false);
         result[i].org_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: result[i].org_id}, false);
@@ -109,7 +161,16 @@ function setdata(result) {
             orgNameList.push(result[i].org_name);
         }
 
+        for (var j = 0; j < result[i].facility.length; j++) {
+            if (!facilityTypeExists(result[i].facility[j].resource_category_id)) {
+                facilityTypeList.push({
+                    facilityTypeID: result[i].facility[j].resource_category_id,
+                    facilityTypeName: result[i].facility[j].resource_category_name
+                });
+            }
+        }
         if (!buildingExists(result[i].location_name)) {
+
             facilityList.push({
                 building_id : result[i].building_id,
                 building_name : result[i].location_name}
@@ -132,48 +193,55 @@ function setdata(result) {
         });
     }
     dropDownModel.facilities.push.apply(dropDownModel.facilities,facilityList);
-}
-
-$(document).ready(function () {
-    viewmodel = new AppViewModel();
-    dropDownModel = new DropDownModel();
-    getUpcomingEvents();
-    ko.applyBindings(viewmodel, document.getElementById('event-content'));
-    ko.applyBindings(dropDownModel, document.getElementById('Dropdown'))
-});
-
-function getUpcomingEvents(orgName = "", from = "", to="",buildingID="") {
-    if (from === "") {
-        from = formatDateForBackend(new Date());
-    }
-    let requestURL;
-
-    reqObject = {
-        menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
-        orgName: orgName,
-        fromDate: from,
-        toDate: to,
-        buildingID : buildingID
-    }
-
-    requestURL = phpGWLink('bookingfrontend/', reqObject, true);
-    $.ajax({
-        url: requestURL,
-        dataType : 'json',
-        success: function (result) {
-            setdata(result);
-        },
-        error: function (error) {
-        }
-    });
+    dropDownModel.facilityTypes.push.apply(dropDownModel.facilityTypes, facilityTypeList)
 }
 
 function searchInput() {
     getUpcomingEvents();
 }
 
-function coolfunc() {
+function autofunc() {
     autocomplete(document.getElementById('eventsearchBoxID'), orgNameList);
+}
+
+function buildingNameDropDown() {
+    document.getElementById("buildingNameDropDown").classList.toggle("show");
+}
+
+function buildingTypeDropDown() {
+    document.getElementById("buildingTypeDropDown").classList.toggle("show");
+}
+
+function filterFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("buildingNameDropDown");
+    if (document.getElementById("buildingNameDropDown") == "") {
+        div = document.getElementById("buildingTypeDropDown");
+    }
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+        txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+        } else {
+            a[i].style.display = "none";
+        }
+    }
+}
+
+function clearFilters() {
+    document.getElementById("dropBuildingNameButton").innerText = "Bygnings navn";
+    document.getElementById("dropBuildingTypeButton").innerText = "Bygnings type";
+    document.getElementById("eventsearchBoxID").value = "";
+    $('#from').val('')
+        .attr('type', 'text')
+        .attr('type', 'date');
+    $('#to').val('')
+        .attr('type', 'text')
+        .attr('type', 'date');
+    getUpcomingEvents("", "", "", "",);
 }
 
 function autocomplete(inp, arr) {
@@ -271,24 +339,4 @@ function autocomplete(inp, arr) {
     document.addEventListener("click", function (e) {
         closeAllLists(e.target);
     });
-}
-
-function buildingNameDropDown() {
-    document.getElementById("buildingNameDropDown").classList.toggle("show");
-}
-
-function filterFunction() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    div = document.getElementById("buildingNameDropDown");
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-        txtValue = a[i].textContent || a[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            a[i].style.display = "";
-        } else {
-            a[i].style.display = "none";
-        }
-    }
 }
