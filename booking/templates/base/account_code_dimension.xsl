@@ -214,6 +214,28 @@
 					</div>
 				</fieldset>
 
+				<fieldsset>
+
+					<legend>Kundeliste, Base: CS15 format 52</legend>
+					<div class="pure-control-group">
+						<label>Reskontrogruppe (apar_gr_id)</label>
+						<input id="field_apar_gr_id" name="apar_gr_id" type="text" maxlength="2">
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/apar_gr_id"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>Betalingsmetode( pay_method )</label>
+						<input id="field_pay_method" name="pay_method" type="text" maxlength="2">
+							<xsl:attribute name="value">
+								<xsl:value-of select="config_data/pay_method"/>
+							</xsl:attribute>
+						</input>
+					</div>
+
+				</fieldsset>
+
 				<div class="pure-control-group">
 					<div class="heading">
 						<legend>
