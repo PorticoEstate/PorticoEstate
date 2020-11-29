@@ -1095,7 +1095,7 @@
 			}
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
-			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime']);
+			$entry_date = $GLOBALS['phpgw']->common->show_date($ticket['timestamp']);
 
 			$status_text = $this->get_status_text();
 

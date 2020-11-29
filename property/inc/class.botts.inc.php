@@ -1250,24 +1250,22 @@
 				$location_types	 = execMethod('property.soadmin_location.select_location_type');
 				$type_id		 = count(explode('-', $location_code));
 
+				for ($i = 1; $i < $type_id + 1; $i++)
+				{
+					$address_element[] = array
+						(
+						'text'	 => $location_types[($i - 1)]['name'],
+						'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
+					);
+				}
+
 				if($location_data['street_name'])
 				{
 					$address_element[] = array
 					(
-						'text'	 => lang('street'),
+						'text'	 => lang('address'),
 						'value'	 => "{$location_data['street_name']} {$location_data['street_number']}"
 					);
-				}
-				else
-				{
-					for ($i = 1; $i < $type_id + 1; $i++)
-					{
-						$address_element[] = array
-							(
-							'text'	 => $location_types[($i - 1)]['name'],
-							'value'	 => $location_data["loc{$i}"] . '  ' . $location_data["loc{$i}_name"]
-						);
-					}
 				}
 
 				$fm_location_cols	 = $custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
