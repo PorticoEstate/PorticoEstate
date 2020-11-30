@@ -877,6 +877,8 @@
 
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
+				phpgwapi_cache::message_set('user can not delete bookings', 'error');
+
 				$booking = $this->bo->read_single($id);
 				$original_from = $booking['from_'];
 				$errors = array();

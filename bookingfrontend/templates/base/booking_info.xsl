@@ -48,9 +48,11 @@
 			<a class="btn btn-light mt-4" href="{booking/edit_link}" target="_blank">
 				<xsl:value-of select="php:function('lang', 'Edit booking')"/>
 			</a>
-			<a class="btn btn-light mt-4" href="{booking/cancel_link}" target="_blank">
-				<xsl:value-of select="php:function('lang', 'Cancel booking')"/>
-			</a>
+			<xsl:if test="user_can_delete_bookings = 1">
+				<a class="btn btn-light mt-4" href="{booking/cancel_link}" target="_blank">
+					<xsl:value-of select="php:function('lang', 'Cancel booking')"/>
+				</a>
+			</xsl:if>
 		</div>
 	</xsl:if>
 </xsl:template>

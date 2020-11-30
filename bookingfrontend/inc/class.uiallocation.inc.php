@@ -69,6 +69,8 @@
 			if ($config->config_data['user_can_delete_allocations'] != 'yes')
 			{
 
+				phpgwapi_cache::message_set('user can not delete allocations', 'error');
+
 				$allocation		 = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'int')));
 				$original_from	 = $allocation['from_'];
 				$organization	 = $this->organization_bo->read_single($allocation['organization_id']);

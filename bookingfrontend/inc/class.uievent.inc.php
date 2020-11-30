@@ -194,6 +194,8 @@
 			$cdate = $currdate->format('Y-m-d H:m:s');
 			if ($config->config_data['user_can_delete_events'] != 'yes')
 			{
+				phpgwapi_cache::message_set('user can not delete events', 'error');
+
 				$can_delete_events = 0;
 			}
 			else
@@ -365,13 +367,13 @@
 		public function info()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
-			if ($config['user_can_delete_bookings'] != 'yes')
+			if ($config['user_can_delete_events'] != 'yes')
 			{
-				$user_can_delete_bookings = 0;
+				$user_can_delete_events = 0;
 			}
 			else
 			{
-				$user_can_delete_bookings = 1;
+				$user_can_delete_events = 1;
 			}
 			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			unset($event['comments']);
@@ -440,7 +442,7 @@
 			$event['participant_limit'] = $event['participant_limit'] ? $event['participant_limit'] : (int)$config['participant_limit'];
 
 			self::render_template_xsl('event_info', array('event' => $event, 'orginfo' => $orginfo,
-				'user_can_delete_bookings' => $user_can_delete_bookings));
+				'user_can_delete_events' => $user_can_delete_events));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 
