@@ -75,9 +75,11 @@
 			<a href="{allocation/add_link}" target="_blank" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Create new booking')"/>
 			</a>
-			<a href="{allocation/cancel_link}" target="_blank" class="btn btn-light mt-4">
-				<xsl:value-of select="php:function('lang', 'Cancel allocation')"/>
-			</a>
+			<xsl:if test="user_can_delete_allocations = 1">
+				<a href="{allocation/cancel_link}" target="_blank" class="btn btn-light mt-4">
+					<xsl:value-of select="php:function('lang', 'Cancel allocation')"/>
+				</a>
+			</xsl:if>
 		</div>
 	</xsl:if>
 
