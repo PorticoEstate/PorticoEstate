@@ -636,5 +636,14 @@
 				<xsl:value-of select="php:function('lang', 'regulation reference')"/>
 			</a>
 		</div>
+		<div class="form-group">
+			<i class="far fa-2x fa-trash-alt"></i>
+			<a id="delete_reference_option" href="#" onClick="deleteValueFromRegulationReference('{$control_item_id}');">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="php:function('lang', 'delete')"/>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="php:function('lang', 'regulation reference')"/>
+			</a>
+		</div>
 	</xsl:if>
 </xsl:template>

@@ -660,6 +660,34 @@ function undo_completed(completed_id)
 	});
 }
 
+function deleteValueFromRegulationReference(control_item_id)
+{
+	var regulation_value = $("#regulation_reference option:selected").val();
+
+	var oArgs = {
+		menuaction: 'controller.uicontrol_item.delete_regulation_reference',
+		control_item_id: control_item_id
+	};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		url: requestUrl,
+		data: {regulation_value: regulation_value},
+		success: function (data)
+		{
+			if (data)
+			{
+				var status = data.status;
+				if (status === 'ok')
+				{
+					$('#regulation_reference option:selected').remove();
+				}
+			}
+		}
+	});
+}
+
 /**
  * Open a prompt for input
  * @param {type} id

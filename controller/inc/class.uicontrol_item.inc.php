@@ -53,14 +53,15 @@
 		private $delete;
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'edit' => true,
-			'view' => true,
-			'add' => true,
-			'save' => true,
-			'display_control_items' => true,
-			'delete_item_list' => true
+			'index'							 => true,
+			'query'							 => true,
+			'edit'							 => true,
+			'view'							 => true,
+			'add'							 => true,
+			'save'							 => true,
+			'display_control_items'			 => true,
+			'delete_item_list'				 => true,
+			'delete_regulation_reference'	 => true
 		);
 
 		public function __construct()
@@ -212,7 +213,23 @@
 
 			$status = $this->so_control_item_list->delete($control_id, $control_item_id);
 
-			return status;
+			return $status;
+		}
+
+		public function delete_regulation_reference( )
+		{
+			if(!$this->edit)
+			{
+				phpgw::no_access();
+			}
+
+			$control_item_id = phpgw::get_var('control_item_id');
+			$regulation_value = phpgw::get_var('regulation_value');
+
+			$status = $this->so->delete_regulation_reference($control_item_id, $regulation_value);
+
+			return $status;
+
 		}
 
 		public function edit( $control_item = null )
