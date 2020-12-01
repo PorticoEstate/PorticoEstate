@@ -230,7 +230,7 @@
 				. sprintf("%-2s", $this->pay_method) // 29	pay_method
 				. sprintf("%-13s", '') // 30	postal_acc
 				. sprintf("%-1s", '') // 31	priority_no
-				. sprintf("%-10s", '.') // 32	short_name
+				. sprintf("%-10s", '') // 32	short_name
 				. 'N'  // 33	status
 				. sprintf("%-11s", '') // 34	swift
 				. sprintf("%-1s", '') // 35	tax_set
