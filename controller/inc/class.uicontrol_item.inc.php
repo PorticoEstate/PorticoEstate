@@ -223,7 +223,7 @@
 				phpgw::no_access();
 			}
 
-			$control_item_id = phpgw::get_var('control_item_id');
+			$control_item_id = phpgw::get_var('control_item_id', 'int');
 			$regulation_value = phpgw::get_var('regulation_value');
 
 			$status = $this->so->delete_regulation_reference($control_item_id, $regulation_value);
