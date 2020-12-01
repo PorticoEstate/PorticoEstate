@@ -232,6 +232,17 @@
 			}
 		}
 
+		public function delete_regulation_reference($control_item_id, $regulation_value )
+		{
+			$option_value = $this->db->db_addslashes($regulation_value);
+			$ok = $this->db->query("DELETE FROM  controller_control_item_regulation_reference_option"
+				. " WHERE control_item_id = {$control_item_id}"
+				. " AND option_value = '{$option_value}'",__LINE__,__FILE__);
+
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
+		}
 
 		/**
 		 * Get single control item with options
