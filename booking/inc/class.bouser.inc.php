@@ -159,6 +159,12 @@
 			$counter = 1; // set to 1 initially to satisfy agresso requirements
 			foreach ($customers as $entry) // Runs through all parties
 			{
+				if(empty($entry['zip_code']))
+				{
+					phpgwapi_cache::message_set("{$entry['name']} mangler PostNr", 'error');
+					continue;
+				}
+
 				$country_code = 'NO';
 				$place = '';
 				// TODO: Which standard for the country codes does Agresso follow?
