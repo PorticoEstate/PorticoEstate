@@ -1,6 +1,7 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
     <div id="container_event_search">
+        <div class="col my_orgs"><button onclick="toggleMyOrgs()" class="fa fa-circle" id="my_orgs_button">Vis mine arrangement</button></div>
         <div class="container searchContainer">
             <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
                 <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="autofunc()" placeholder="søk etter organisasjoner">
