@@ -10,6 +10,7 @@ var organization = "";
 var buildingID = "";
 var facilityTypeID = "";
 var facilityTypeList = [];
+var loggedInUserOrgs = [];
 
 //########## Listeners #############
 document.getElementById('from').addEventListener("change", function () {
@@ -29,6 +30,40 @@ document.getElementById('eventsearchBoxID').addEventListener("change", function 
     getUpcomingEvents(organization,fromDate,toDate)
 });
 //##########END Listeners ##########
+
+function getOrgsIfLoggedIn() {
+    let requestURL;
+
+    reqObject = {
+        menuaction: "bookingfrontend.uieventsearch.getOrgsIfLoggedIn"
+    }
+
+    requestURL = phpGWLink('bookingfrontend/', reqObject, true);
+    $.ajax({
+        url: requestURL,
+        dataType : 'json',
+        success: function (result) {
+            loggedInUserOrgs = result;
+            let elem = document.getElementById("my_orgs_button");
+            if (result.length > 0) {
+                elem.style.display = 'block';
+            } else {
+                elem.style.display = 'none';
+            }
+        },
+        error: function (error) {
+        }
+    });
+}
+
+$(document).ready(function () {
+    viewmodel = new AppViewModel();
+    dropDownModel = new DropDownModel();
+    getOrgsIfLoggedIn();
+    getUpcomingEvents();
+    ko.applyBindings(viewmodel, document.getElementById('event-content'));
+    ko.applyBindings(dropDownModel, document.getElementById('filterboxcontainer'));
+});
 
 function DropDownModel() {
     var self = this;
@@ -65,6 +100,20 @@ function AppViewModel() {
 
     self.goToOrganization = function (event) {
         window.location = event.org_url();
+    }
+}
+
+
+function toggleMyOrgs() {
+    var el = document.getElementById('my_orgs_button');
+    console.log(el.innerText);
+    if (el.innerText === "Vis Alle") {
+        el.innerText = "Vis mine arrangement";
+        getUpcomingEvents();
+        showAllEvents = false;
+    } else {
+        el.innerText = "Vis Alle";
+        getUpcomingEvents(organization,fromDate,toDate,buildingID,facilityTypeID,loggedInUserOrgs.toString());
     }
 }
 
@@ -113,16 +162,8 @@ function facilityTypeExists(resource_category_id) {
     });
 }
 
-$(document).ready(function () {
-    viewmodel = new AppViewModel();
-    dropDownModel = new DropDownModel();
-    getUpcomingEvents();
-    ko.applyBindings(viewmodel, document.getElementById('event-content'));
-    ko.applyBindings(dropDownModel, document.getElementById('filterboxcontainer'))
-});
-
-function getUpcomingEvents(orgName = "", from = "", to= "",buildingID= "", facilityTypeID = "") {
-
+function getUpcomingEvents(orgName = "", from = "", to= "",buildingID= "", facilityTypeID = "",loggedInOrgs = "") {
+    console.log("getting!!  " , "orgName : " , orgName , " from: " , from , " to : " , to , " buildingID: " , buildingID, " faciltytypeID : " , facilityTypeID);
     if (from === "") {
         from = formatDateForBackend(new Date());
     }
@@ -134,7 +175,8 @@ function getUpcomingEvents(orgName = "", from = "", to= "",buildingID= "", facil
         fromDate: from,
         toDate: to,
         buildingID : buildingID,
-        facilityTypeID : facilityTypeID
+        facilityTypeID : facilityTypeID,
+        loggedInOrgs : loggedInOrgs
     }
 
     requestURL = phpGWLink('bookingfrontend/', reqObject, true);
@@ -181,6 +223,7 @@ function setdata(result) {
         var eventTime = getTimeFormat(result[i].from, result[i].to);
 
         viewmodel.events.push({
+            org_id: ko.observable(result[i].org_id),
             event_name: ko.observable(result[i].event_name),
             formattedDate: ko.observable(formattedDateAndMonthArr[0]),
             monthText: ko.observable(formattedDateAndMonthArr[1]),
@@ -197,7 +240,8 @@ function setdata(result) {
 }
 
 function searchInput() {
-    getUpcomingEvents();
+
+    getUpcomingEvents(document.getElementById('eventsearchBoxID').value);
 }
 
 function autofunc() {
@@ -241,7 +285,7 @@ function clearFilters() {
     $('#to').val('')
         .attr('type', 'text')
         .attr('type', 'date');
-    getUpcomingEvents("", "", "", "",);
+    getUpcomingEvents();
 }
 
 function autocomplete(inp, arr) {

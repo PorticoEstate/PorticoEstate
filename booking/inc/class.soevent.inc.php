@@ -549,15 +549,20 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null, $facilityTypeID=null)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs)
 	{
+		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
 		$orgnamesql = null;
 		$toDateSql = null;
 		$buildingIDSQL = null;
 
+		if ($loggedInOrgs) {
+			$loggedInOrgsSql = " AND bbe.customer_organization_number in ($loggedInOrgs) ";
+		}
+
 		if ($facilityTypeID) {
-			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID'";
+			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID' ";
 		}
 		if ($buildingID) {
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
@@ -591,6 +596,7 @@
 						.$orgnamesql
 						.$buildingIDSQL
 						.$facilityTypeIDSql
+						.$loggedInOrgsSql
 						." AND bbe.is_public = 1
 						order by bbe.from_ asc LIMIT 50;";
 

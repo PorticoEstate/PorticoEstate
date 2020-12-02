@@ -2,6 +2,7 @@
 phpgw::import_class("booking.uicommon");
 phpgw::import_class('bookingfrontend.bosearch');
 phpgw::import_class('booking.bobooking');
+phpgw::import_class('bookingfrontend.bouser');
 
 
 class bookingfrontend_uieventsearch extends booking_uicommon
@@ -12,6 +13,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		'index' => true,
 		'show'  => true,
 		'upcomingEvents' => true,
+		'getOrgsIfLoggedIn' => true
 	);
 
 	protected $module;
@@ -40,6 +42,23 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 	}
 
+	public function getOrgsIfLoggedIn()
+	{
+		$bouser = new bookingfrontend_bouser();
+		$orgs = null;
+		if ($bouser->is_logged_in()) {
+			$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+		}
+
+		$orgs_map = array();
+		foreach ($orgs as $org)
+		{
+			$orgs_map[] = $org['orgnumber'];
+		}
+		return $orgs_map;
+	}
+
+
 	/***
 	 * Metode for å hente events til søkesiden
 	 */
@@ -50,8 +69,11 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$toDate = phpgw::get_var('toDate', 'string', 'REQUEST', null);
 		$buildingId = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
 		$facilityTypeID = phpgw::get_var('facilityTypeID', 'string', 'REQUEST', null);
+		$loggedInOrgs = phpgw::get_var('loggedInOrgs', 'string', 'REQUEST', null);
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgName, $buildingId, $facilityTypeID);
+		$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
+
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgName, $buildingId, $facilityTypeID, $result_string);
 		return $events;
 	}
 
