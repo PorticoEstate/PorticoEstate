@@ -2,7 +2,7 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
 var viewmodel;
 var dropDownModel;
 var orgNameList = [];
-let facilityList = [];
+var facilityList = [];
 var tempList= [];
 var fromDate = "";
 var toDate = "";
@@ -285,6 +285,9 @@ function clearFilters() {
     $('#to').val('')
         .attr('type', 'text')
         .attr('type', 'date');
+    buildingID = "";
+    organization = "";
+    facilityTypeID = "";
     getUpcomingEvents();
 }
 
