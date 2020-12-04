@@ -828,7 +828,7 @@
 			}
 
 			$this->db->query("INSERT INTO phpgw_categories ($id_col cat_parent, cat_owner, cat_access,"
-				. " cat_appname, location_id, cat_name, cat_description, cat_data, cat_color, cat_icon"
+				. " cat_appname, location_id, cat_name, cat_description, cat_data, cat_color, cat_icon,"
 				. " cat_main ,cat_level, active, last_mod)"
 				. " VALUES ($id_val {$values['parent']}, {$this->account_id}, '{$values['access']}', '{$this->app_name}',{$this->location_id},"
 					."'{$values['name']}', '{$values['descr']}', '{$values['data']}', '{$values['color']}', '{$values['icon']}',"
