@@ -12,8 +12,8 @@
 			parent::__construct('bb_account_code_set', array(
 				'id' => array('type' => 'int'),
 				'name' => array('type' => 'string', 'required' => True, 'query' => True),
-				'object_number' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_3::c8 A
-				'responsible_code' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_1::c8 A
+				'object_number' => array('type' => 'string', 'required' => False, 'nullable' => True), //dim_3::c8 A
+				'responsible_code' => array('type' => 'string', 'required' => False, 'nullable' => True), //dim_1::c8 A
 				'article' => array('type' => 'string', 'required' => True, 'nullable' => False), //article::c15 A
 				'service' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_2::c8 A
 				'project_number' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_5::c12 A, default 9
