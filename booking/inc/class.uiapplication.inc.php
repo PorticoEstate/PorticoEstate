@@ -1125,7 +1125,11 @@
 				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
 			));
 
-			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			if(!$orgnr = phpgw::get_var('session_org_id', 'int', 'GET'))
+			{
+				$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);			
+			}
+
 			$errors = array();
 
 			$partial2 = array();
