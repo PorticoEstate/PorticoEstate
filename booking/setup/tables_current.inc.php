@@ -997,8 +997,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'name' => array('type' => 'text', 'nullable' => False),
-				'object_number' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),//dim_3
-				'responsible_code' => array('type' => 'varchar', 'precision' => '6', 'nullable' => False),//dim_1
+				'object_number' => array('type' => 'varchar', 'precision' => '8', 'nullable' => True),//dim_3
+				'responsible_code' => array('type' => 'varchar', 'precision' => '6', 'nullable' => True),//dim_1
 				'article' => array('type' => 'varchar', 'precision' => '15', 'nullable' => False),
 				'service' => array('type' => 'varchar', 'precision' => '8', 'nullable' => False),//dim_2
 				'project_number' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False),//dim_5
