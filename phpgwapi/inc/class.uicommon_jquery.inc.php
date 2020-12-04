@@ -91,21 +91,29 @@
 			 * If we want to use boostrap - styling
 			 */
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' 
-				|| ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'frontend'))
+				|| ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'frontend')
+				||$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap2')
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.bootstrap4.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.bootstrap4.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Select/css/select.bootstrap4.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.bootstrap4.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.bootstrap4.min.css');
 				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.bootstrap4.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.bootstrap4.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.bootstrap4.min.js');
 			}
 			else
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.jqueryui.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.jqueryui.min.css');
+				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.jqueryui.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.jqueryui.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.jqueryui.min.js');
 			}
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.jqueryui.min.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.jqueryui.min.css');
 
 			self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/dataTables.scroller.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/dataTables.fixedColumns.js');
