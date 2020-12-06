@@ -46,14 +46,9 @@
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 
-//	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/all.min.css";
 
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
-//	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
-
-	
 	$stylesheets[] = "/phpgwapi/templates/bootstrap2/css/base.css";
-	
 
     if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
