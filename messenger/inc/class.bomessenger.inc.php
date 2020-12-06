@@ -297,7 +297,7 @@
 				$message['from'] = lang('Global Message');
 				$message['global_message'] = True;
 			}
-			else
+			else if(!empty ($message['from']))
 			{
 				$acct = $GLOBALS['phpgw']->accounts->get($message['from']);
 				$message['from'] = $acct->__toString();

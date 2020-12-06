@@ -288,6 +288,22 @@ HTML;
 
 			}
 
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['messenger']) )
+		{
+			$bomessenger	 = CreateObject('messenger.bomessenger');
+			$total_messages	 = $bomessenger->total_messages(" AND message_status = 'N'");
+			if ($total_messages > 0)
+			{
+				$new_messages		 = $total_messages;
+				$new_messages_alert	 = "<span class='badge badge-danger badge-counter'>{$new_messages}</span>";
+			}
+			else
+			{
+				$new_messages		 = 0;
+				$new_messages_alert	 = '';
+			}
+			$total_messages = $total_messages;
+		}
 		$var['topbar'] = <<<HTML
 
                     <!-- Topbar Navbar -->
@@ -349,20 +365,20 @@ HTML;
                         </li>
 
                         <!-- Nav Item - Messages -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
+								{$new_messages_alert}
                             </a>
                             <!-- Dropdown - Messages -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
                                     Message Center
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+								<div id="messages"></div>
+                                <!--a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
                                         <img class="rounded-circle" src="{$undraw_profile_1}"
                                             alt="">
@@ -409,7 +425,7 @@ HTML;
                                             told me that people say this to all dogs, even if they aren't good...</div>
                                         <div class="small text-gray-500">Chicken the Dog · 2w</div>
                                     </div>
-                                </a>
+                                </a-->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
@@ -451,7 +467,6 @@ HTML;
 
 
 HTML;
-
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');

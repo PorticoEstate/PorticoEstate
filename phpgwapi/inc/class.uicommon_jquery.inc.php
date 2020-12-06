@@ -86,13 +86,15 @@
 
 			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js');
 
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 			/**
 			 * If we want to use boostrap - styling
 			 */
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' 
 				|| ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'frontend')
-				||$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap2')
+				|| $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap2')
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.bootstrap4.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.bootstrap4.min.css');
@@ -105,7 +107,6 @@
 			}
 			else
 			{
-				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.jqueryui.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.jqueryui.min.css');
@@ -133,7 +134,6 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'plugins/input.js');
 
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css');
 
 			//pop up script
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');

@@ -1,41 +1,60 @@
 <!-- BEGIN form -->
-{app_header}
+
 
 <center>{errors}</center>
-<form action="{form_action}" method="POST">
-	<table border="0" width="93%" align="center">
-		<tr bgcolor="{th_bg}">
-			<td colspan="2">
 
-				<table border="0" width="100%">
-					<tr>
-						<td align="left"><b>{header_message}</b>&nbsp;</td>
-						<td align="right">{read_buttons}</td>
-					</tr>
-		</tr>
-    </table>
+<div class="card shadow mb-4">
+	<!-- Card Header - Dropdown -->
+	<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+		<h6 class="m-0 font-weight-bold text-primary">{header_message}</h6>
+		<div class="dropdown no-arrow">
+			<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+			</a>
+			<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" style="">
+				<div class="dropdown-header">Dropdown Header:</div>
+				{read_buttons}
 
-</td>
-</tr>
+			</div>
+		</div>
+	</div>
+	<!-- Card Body -->
+	<div class="card-body">
+		<form action="{form_action}" method="POST">
+			<table border="0" width="93%" align="center">
+				<tr bgcolor="{th_bg}">
+					<td colspan="2">
+						<table border="0" width="100%">
+							<tr>
+								<td align="left"><b>{header_message}</b>&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 
-{from}
-{to}
-{date}
-{status}
+				{from}
+				{to}
+				{date}
+				{status}
 
-<tr bgcolor="{row_off}">
-	<td>{lang_subject}</td>
-	<td>{value_subject}&nbsp;</td>
-</tr>
+				<tr bgcolor="{row_off}">
+					<td>{lang_subject}</td>
+					<td>{value_subject}&nbsp;</td>
+				</tr>
 
-<tr bgcolor="{row_off}">
-	<td colspan="2" align="left">{value_content}&nbsp;</td>
-</tr>
+				<tr bgcolor="{row_off}">
+					<td colspan="2" align="left">{value_content}&nbsp;</td>
+				</tr>
 
-{buttons}
+				{buttons}
 
-</table>
-</form>
+			</table>
+		</form>
+	</div>
+</div>
+
+
+
 <!-- END form -->
 
 <!-- BEGIN form_date -->
@@ -74,11 +93,20 @@
 <!-- END form_reply_to -->
 
 <!-- BEGIN form_read_buttons -->
-{link_reply}&nbsp;|&nbsp;{link_forward}&nbsp;|&nbsp;{link_delete}&nbsp;
+<a class="dropdown-item" href="{link_inbox}">{lang_inbox}</a>
+<a class="dropdown-item" href="{link_compose}">{lang_compose}</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item" href="{link_reply}">{lang_reply}</a>
+<a class="dropdown-item" href="{link_forward}">{lang_forward}</a>
+<a class="dropdown-item" href="{link_delete}">{lang_delete}</a>
+
 <!-- END form_read_buttons -->
 
 <!-- BEGIN form_read_buttons_for_global -->
-{link_delete}&nbsp;
+<a class="dropdown-item" href="{link_inbox}">{lang_inbox}</a>
+<a class="dropdown-item" href="{link_compose}">{lang_compose}</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item" href="{link_delete}">{lang_delete}</a>
 <!-- END form_read_buttons_for_global -->
 
 <!-- BEGIN form_buttons -->

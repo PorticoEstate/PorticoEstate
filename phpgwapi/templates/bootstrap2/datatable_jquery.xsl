@@ -16,14 +16,8 @@
 </func:function>
 
 <xsl:template match="data">
-<!--	<xsl:choose>
-		<xsl:when test="datatable_name">
-			<h3>
-				<xsl:value-of select="datatable_name"/>
-			</h3>
-		</xsl:when>
-	</xsl:choose>-->
-	<xsl:call-template name="datatable" />
+	<xsl:call-template name="datatable" >
+	</xsl:call-template>
 </xsl:template>
 
 
@@ -237,29 +231,29 @@
 										</xsl:when>
 										<xsl:when test="type = 'link'">
 											<!--<div class="form-row ml-1">-->
-												<label>
-													<!--<xsl:if test="count(//item) = 1 ">-->
-														<xsl:attribute name="class">
-														<xsl:text>invisible</xsl:text>
+											<label>
+												<!--<xsl:if test="count(//item) = 1 ">-->
+												<xsl:attribute name="class">
+													<xsl:text>invisible</xsl:text>
+												</xsl:attribute>
+												<!--</xsl:if>-->
+												<xsl:value-of select="value"/>
+											</label>
+											<input type="button" class= "form-control btn btn-primary ml-2">
+												<xsl:choose>
+													<xsl:when test="onclick">
+														<xsl:attribute name="onclick">
+															<xsl:value-of select="onclick"/>
 														</xsl:attribute>
-													<!--</xsl:if>-->
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
+													</xsl:otherwise>
+												</xsl:choose>
+												<xsl:attribute name="value">
 													<xsl:value-of select="value"/>
-												</label>
-												<input type="button" class= "form-control btn btn-primary ml-2">
-													<xsl:choose>
-														<xsl:when test="onclick">
-															<xsl:attribute name="onclick">
-																<xsl:value-of select="onclick"/>
-															</xsl:attribute>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:attribute name="onclick">javascript:window.open('<xsl:value-of select="href"/>', "_self");</xsl:attribute>
-														</xsl:otherwise>
-													</xsl:choose>
-													<xsl:attribute name="value">
-														<xsl:value-of select="value"/>
-													</xsl:attribute>
-												</input>
+												</xsl:attribute>
+											</input>
 											<!--</div>-->
 										</xsl:when>
 										<xsl:when test="type = 'hidden'">
@@ -447,46 +441,58 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
-		<thead>
-			<xsl:for-each select="//datatable/field">
-				<xsl:choose>
-					<xsl:when test="hidden">
-						<xsl:if test="hidden =0">
-							<th>
-								<xsl:value-of select="label"/>
-							</th>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<th>
-							<xsl:value-of select="label"/>
-						</th>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
-		</thead>
-		<tfoot>
-			<tr>
-				<xsl:for-each select="//datatable/field">
-					<xsl:choose>
-						<xsl:when test="hidden">
-							<xsl:if test="hidden =0">
-								<th>
-									<xsl:value-of select="value_footer"/>
-								</th>
-							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<th>
-								<xsl:value-of select="value_footer"/>
-							</th>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
-			</tr>
-		</tfoot>
-	</table>
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">
+				<xsl:value-of select="//datatable_name"/>
+			</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0"><!--class="display cell-border compact responsive no-wrap"-->
+					<thead>
+						<xsl:for-each select="//datatable/field">
+							<xsl:choose>
+								<xsl:when test="hidden">
+									<xsl:if test="hidden =0">
+										<th>
+											<xsl:value-of select="label"/>
+										</th>
+									</xsl:if>
+								</xsl:when>
+								<xsl:otherwise>
+									<th>
+										<xsl:value-of select="label"/>
+									</th>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</thead>
+					<tfoot>
+						<tr>
+							<xsl:for-each select="//datatable/field">
+								<xsl:choose>
+									<xsl:when test="hidden">
+										<xsl:if test="hidden =0">
+											<th>
+												<xsl:value-of select="value_footer"/>
+											</th>
+										</xsl:if>
+									</xsl:when>
+									<xsl:otherwise>
+										<th>
+											<xsl:value-of select="value_footer"/>
+										</th>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+					
 	<form id="custom_values_form" name="custom_values_form"></form>
 	<script>
 		var columns = [
@@ -698,7 +704,7 @@
 								var iframe = document.createElement('iframe');
 								iframe.style.height = "0px";
 								iframe.style.width = "0px";
-								console.log(oParams);
+					//			console.log(oParams);
 
 								if(typeof(oParams.order[0]) != 'undefined')
 								{

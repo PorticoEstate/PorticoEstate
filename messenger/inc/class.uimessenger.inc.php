@@ -273,6 +273,7 @@
 			{
 				$value['status'] = $value['status'] == '&nbsp;' ? '' : $value['status'];
 				$value['message_date'] = $value['date'];
+				$value['subject_text'] = $value['subject'];
 				$value['subject'] = "<a href='" . $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction' => 'messenger.uimessenger.read_message', 'message_id' => $value['id'])) . "'>" . $value['subject'] . "</a>";
 				$new_values[] = $value;
@@ -491,7 +492,8 @@
 
 		function read_message()
 		{
-			$message_id = $_REQUEST['message_id'];
+			$message_id = phpgw::get_var('message_id', 'int');
+			$message_id = $message_id ? $message_id : phpgw::get_var('id', 'int');
 			$message = $this->bo->read_message($message_id);
 
 			$this->_display_headers();
@@ -504,21 +506,27 @@
 			$this->template->set_var('value_subject', $GLOBALS['phpgw']->strip_html($message['subject']));
 			$this->template->set_var('value_date', $message['date']);
 			$this->template->set_var('value_content', nl2br(wordwrap($GLOBALS['phpgw']->strip_html($message['content']), 80)));
+			$this->template->set_var('lang_delete', lang('Delete'));
+			$this->template->set_var('lang_reply', lang('Reply'));
+			$this->template->set_var('lang_forward', lang('Forward'));
+			$this->template->set_var('lang_inbox', lang('Inbox'));
+			$this->template->set_var('lang_compose', lang('Compose'));
+			$this->template->set_var('value_from', $message['from']);
+			$this->template->set_var('value_from', $message['from']);
 
-			$this->template->set_var('link_delete', '<a href="'
-				. $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.delete',
-					'messages[]' => $message['id']))
-				. '">' . lang('Delete') . '</a>');
+			$this->template->set_var('link_delete', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.delete',
+					'messages[]' => $message['id'])));
 
-			$this->template->set_var('link_reply', '<a href="'
-				. $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.reply',
-					'message_id' => $message['id']))
-				. '">' . lang('Reply') . '</a>');
+			$this->template->set_var('link_reply',  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.reply',
+					'message_id' => $message['id'])));
 
-			$this->template->set_var('link_forward', '<a href="'
-				. $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.forward',
-					'message_id' => $message['id']))
-				. '">' . lang('Forward') . '</a>');
+			$this->template->set_var('link_forward',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.forward',
+					'message_id' => $message['id'])));
+
+			$this->template->set_var('link_inbox', $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'messenger.uimessenger.inbox')));
+			$this->template->set_var('link_compose',$GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'messenger.uimessenger.compose')));
 
 			switch ($message['status'])
 			{

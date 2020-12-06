@@ -1,0 +1,23 @@
+table.dataTable thead .sorting {
+	 background-image:url("");
+}
+table.dataTable thead .sorting_asc {
+	 background-image:url("");
+}
+table.dataTable thead .sorting_desc {
+	 background-image:url("");
+}
+table.dataTable thead .sorting_asc_disabled {
+	 background-image:url("");
+}
+table.dataTable thead .sorting_desc_disabled {
+	 background-image:url("");
+}
+
+.dataTables_wrapper .dataTables_length select {
+ padding-right: 14px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.0em 0em;
+}

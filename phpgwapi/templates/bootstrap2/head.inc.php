@@ -30,19 +30,14 @@
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
+	phpgwapi_jquery::load_widget('contextMenu');
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
-		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
-		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
-		{
-			phpgwapi_jquery::load_widget('contextMenu');
-			$javascripts[] = "/phpgwapi/templates/bootstrap/js/sidenav.js";
-		}
-
+		$javascripts[] = "/phpgwapi/templates/bootstrap2/js/sidenav.js";
 	}
 
 	$stylesheets = array();
@@ -56,10 +51,9 @@
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 //	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
 
-	if($app != 'frontend')
-	{
-//		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
-	}
+	
+	$stylesheets[] = "/phpgwapi/templates/bootstrap2/css/base.css";
+	
 
     if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
