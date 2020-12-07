@@ -41,14 +41,12 @@
 	}
 
 	$stylesheets = array();
-	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/all.min.css";
-
-	$stylesheets[] = "/phpgwapi/templates/bootstrap2/css/base.css";
 
     if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -60,6 +58,7 @@
 	 * bootstrap ++
 	 */
 	$stylesheets[] = "/phpgwapi/templates/bootstrap2/css/sb-admin-2.min.css";
+	$stylesheets[] = "/phpgwapi/templates/bootstrap2/css/base.css";
 
 
 	foreach ( $stylesheets as $stylesheet )

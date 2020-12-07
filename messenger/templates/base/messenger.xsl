@@ -18,7 +18,7 @@
 			<h2>
 				<xsl:value-of select="php:function('lang', 'groups')" />
 			</h2>
-			<ul class="group_list">
+			<ul class="list-group">
 				<xsl:apply-templates select="group_list" />
 			</ul>
 		</div>
@@ -27,81 +27,69 @@
 			<xsl:value-of select="php:function('lang', 'Compose message')" />
 		</h2>
 
-
-		<table>
-			<tr class="th">
-				<td class="th_text" valign="top">
+		<div class="form-group">
+			<label for="subject">
+				<xsl:value-of select="php:function('lang', 'subject')" />
+			</label>
+			<input type="text" name="values[subject]" class="form-control" value='{value_subject}' id="subject">
+				<xsl:attribute name="size">
+					<xsl:text>60</xsl:text>
+				</xsl:attribute>
+				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'subject')" />
-				</td>
-				<td>
-					<input type="text" name="values[subject]" value='{value_subject}'>
-						<xsl:attribute name="size">
-							<xsl:text>60</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'subject')" />
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top">
+				</xsl:attribute>
+				<xsl:attribute name="placeholder">
+					<xsl:value-of select="php:function('lang', 'subject')" />
+				</xsl:attribute>
+			</input>
+		</div>
+
+		<div class="form-group">
+			<label for="content">
+				<xsl:value-of select="php:function('lang', 'content')" />
+			</label>
+			<textarea cols="60" rows="10" name="values[content]" id="content" class="form-control">
+				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'content')" />
-				</td>
-				<td>
-					<textarea cols="60" rows="10" name="values[content]" wrap="virtual" onMouseout="window.status='';return true;">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'content')" />
-						</xsl:attribute>
-						<xsl:value-of select="value_content"/>		
-					</textarea>
-				</td>
-			</tr>
+				</xsl:attribute>
+				<xsl:value-of select="value_content"/>
+			</textarea>
+		</div>
 
-			<tr height="50">
-				<td>
-					<xsl:variable name="lang_send">
-						<xsl:value-of select="php:function('lang', 'send')" />
-					</xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}'>
-					</input>
-				</td>
-			</tr>
+		<xsl:variable name="lang_send">
+			<xsl:value-of select="php:function('lang', 'send')" />
+		</xsl:variable>
+		<input type="submit" name="values[save]" value="{$lang_send}" title='{$lang_send}' class="btn btn-primary">
+		</input>
 
-		</table>
 	</form>
 </xsl:template>
 
 <!-- BEGIN group_list -->
 <xsl:template match="group_list">
-	<li>
-		<xsl:attribute name="class">
+
+	<li class="list-group-item">
+		<div class="custom-control custom-checkbox">
 			<xsl:choose>
-				<xsl:when test="position() mod 2 = 0">
-					<xsl:text>row_off</xsl:text>
+				<xsl:when test="i_am_admin = 1">
+					<input type="checkbox" class="custom-control-input" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
+						<xsl:choose>
+							<xsl:when test="selected = '1'">
+								<xsl:attribute name="checked" value="checked" />
+							</xsl:when>
+						</xsl:choose>
+					</input>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>row_on</xsl:text>
+					<input type="checkbox" class="custom-control-input" readonly='true'>
+					</input>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:attribute>
-		<xsl:choose>
-			<xsl:when test="i_am_admin = 1">
-				<input type="checkbox" id="account_groups{account_id}" name="account_groups[]" value="{account_id}">
-					<xsl:choose>
-						<xsl:when test="selected = '1'">
-							<xsl:attribute name="checked" value="checked" />
-						</xsl:when>
-					</xsl:choose>
-				</input>
-			</xsl:when>
-			<xsl:otherwise>
-				<input type="checkbox" readonly='true'>
-				</input>
-			</xsl:otherwise>
-		</xsl:choose>
 
-		<xsl:value-of select="account_lid"/>
+			<label class="custom-control-label"  for="account_groups{account_id}">
+				<xsl:value-of select="account_lid"/>
+			</label>
+		</div>
 	</li>
 </xsl:template>
 

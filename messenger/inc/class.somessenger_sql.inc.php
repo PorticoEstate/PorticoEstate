@@ -17,11 +17,12 @@
 	class somessenger extends somessenger_
 	{
 
-		var $db;
+		var $db, $connected, $like;
 
 		function __construct()
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
+			$this->like = $this->db->like;
 			$this->connected = true;
 			parent::__construct();
 		}
@@ -34,14 +35,22 @@
 
 		function read_inbox( $params )
 		{
+			$filtermethod = '';
+			if ($params['query'] && $params['query'])
+			{
+				$query = $this->db->db_addslashes($params['query']);
+				$filtermethod = " AND (message_subject {$this->like} '%$query%'"
+					. " OR message_content {$this->like} '%$query%')";
+			}
 			$sortmethod = '';
 			if ($params['sort'] && $params['order'])
 			{
-				$sortmethod = " order by {$params['order']} {$params['sort']}";
+				$sortmethod = " ORDER BY {$params['order']} {$params['sort']}";
 			}
 
-			$this->db->limit_query("select * from phpgw_messenger_messages where message_owner='" . $this->owner
-				. "' $sortmethod", $params['start'], __LINE__, __FILE__);
+			$this->db->limit_query("SELECT * FROM phpgw_messenger_messages"
+				. " WHERE message_owner='{$this->owner}'"
+				. "{$filtermethod}{$sortmethod}", $params['start'], __LINE__, __FILE__);
 
 			$messages = array();
 			while ($this->db->next_record())
@@ -60,7 +69,7 @@
 
 		function read_message( $message_id )
 		{
-			$this->db->query("select * from phpgw_messenger_messages where message_id='"
+			$this->db->query("SELECT * FROM phpgw_messenger_messages WHERE message_id='"
 				. $message_id . "' and message_owner='" . $this->owner . "'", __LINE__, __FILE__);
 			$this->db->next_record();
 			$message = array(

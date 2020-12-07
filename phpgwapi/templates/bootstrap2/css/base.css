@@ -1,23 +1,76 @@
 table.dataTable thead .sorting {
-	 background-image:url("");
+	background-image:url("");
 }
 table.dataTable thead .sorting_asc {
-	 background-image:url("");
+	background-image:url("");
 }
 table.dataTable thead .sorting_desc {
-	 background-image:url("");
+	background-image:url("");
 }
 table.dataTable thead .sorting_asc_disabled {
-	 background-image:url("");
+	background-image:url("");
 }
 table.dataTable thead .sorting_desc_disabled {
-	 background-image:url("");
+	background-image:url("");
 }
 
 .dataTables_wrapper .dataTables_length select {
- padding-right: 14px;
+	padding-right: 14px;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     padding: 0.0em 0em;
+}
+
+/*
+	Error Related CSS
+*/
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #c10000;
+	font-size: 1rem;
+	position:relative;
+	line-height: 1;
+	width: auto;
+}
+
+.msg
+{
+	background-color: #FFA500;
+	border: 1px solid #f00;
+	color: #f00;
+	text-align: center;
+}
+
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+	font-weight: bold;
+	text-align: center;
+}
+
+.warn
+{
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
+}
+
+div.error, div.warn
+{
+	font-weight: bold;
+	padding: 4px;
+	text-align: center;
+}
+
+.ui-datepicker-month
+{
+	color: black;
+}
+.ui-datepicker-year
+{
+	color: black;
 }

@@ -90,7 +90,7 @@
 
 			if (!$GLOBALS['phpgw']->acl->check('run', 1, 'admin') || $cancel)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 				return False;
 			}
 
@@ -121,7 +121,7 @@
 					$this->so->send_message($message, True);
 				}
 				$this->so->db->transaction_commit();
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 			}
 		}
 
@@ -212,7 +212,7 @@
 
 			if ($cancel)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 				exit;
 			}
 
@@ -225,7 +225,7 @@
 			else
 			{
 				$this->so->send_message($message);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 			}
 		}
 
@@ -346,7 +346,7 @@
 
 			if (!is_array($messages))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 				return False;
 			}
 			$this->so->transaction_begin();
@@ -356,14 +356,14 @@
 				$this->so->delete_message($message_id);
 			}
 			$this->so->transaction_commit();
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 		}
 
 		function reply( $message_id = '', $n_message = '' )
 		{
 			if (phpgw::get_var('cancel', 'bool') == true)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 			}
 			if (!$message_id)
 			{
@@ -381,7 +381,7 @@
 			{
 				$this->so->send_message($n_message);
 				$this->so->update_message_status('R', $message_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 			}
 		}
 
@@ -404,7 +404,7 @@
 			{
 				$this->so->send_message($message);
 				$this->so->update_message_status('F', $message_id);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'messenger.uimessenger.index'));
 			}
 		}
 
