@@ -549,11 +549,11 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgName=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs)
 	{
 		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
-		$orgnamesql = null;
+		$orgIDsql = null;
 		$toDateSql = null;
 		$buildingIDSQL = null;
 
@@ -567,33 +567,38 @@
 		if ($buildingID) {
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
 		}
-		if ($orgName) {
-			$orgnamesql = " AND bbe.organizer='$orgName' ";
+		if ($orgID) {
+			$orgIDsql = " AND bbe.organizer='$orgID' ";
 		}
 		if ($toDate !== "") {
 			$toDateSql = " AND bbe.to_ <= '$toDate' ";
 		}
-		$sqlQuery = "select bbe.name as event_name,
-						 bbe.id as event_id,
-						 bbe.from_,
-						 bbe.to_,
-						 bbe.building_name as location_name,
-						 bbe.building_id as building_id,
-						 bbe.organizer as org_name,
-						 bbe.customer_organization_number as org_num,
-						 (select bbo.id from bb_organization bbo where bbe.customer_organization_number = bbo.organization_number FETCH FIRST 1 ROW ONLY) AS org_id
-							 FROM bb_event bbe,
-							      bb_event_resource bber,
-     							  bb_resource bbr,
-     							  bb_rescategory bbrc
-							 
-							 WHERE  
-							      bbe.id = bber.event_id
-							  AND bber.resource_id = bbr.id
-  							  AND bbrc.id = bbr.rescategory_id 
-							  AND bbe.from_ >= '$fromDate' "
+		$sqlQuery = "
+				select
+			       	bo.id as org_id,
+			       	bo.name as org_name,
+			       	bbe.from_,
+			       	bbe.to_, 
+				    bbe.building_id as building_id,
+			       	bbe.building_name as location_name,
+				    bbe.name as event_name,
+			       	br.name as resource_name,
+			    	b.name as resource_type
+				from bb_event bbe--, bb_event_resource bber, bb_rescategory bbrc, bb_resource bbr
+				    inner join
+				        bb_organization bo on bbe.customer_organization_number = bo.organization_number
+				    inner join
+				        bb_event_resource ber on bbe.id = ber.event_id
+				    inner join
+				        bb_resource br on ber.resource_id = br.id
+				    inner join
+				        bb_rescategory b on br.rescategory_id = b.id
+				where 
+		        	bbe.from_ > current_date and
+			    	bbe.is_public = 1
+				  	AND bbe.from_ >= '$fromDate' "
 						.$toDateSql
-						.$orgnamesql
+						.$orgIDsql
 						.$buildingIDSQL
 						.$facilityTypeIDSql
 						.$loggedInOrgsSql
@@ -614,13 +619,8 @@
 				'building_id' => $this->db->f('building_id', false),
 				'org_num' => $this->db->f('org_num', false),
 				'org_id' => $this->db->f('org_id', false),
-				'facility' => array()
 			);
 
-		}
-		foreach ($results as $key => $value)
-		{
-			$results[$key]['facility'] = array_merge($results[$key]['facility'] ,$this->getFacilities($value['event_id']));
 		}
 		return $results;
 	}
