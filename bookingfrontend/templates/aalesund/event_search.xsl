@@ -4,13 +4,22 @@
         <div class="col my_orgs"><button onclick="toggleMyOrgs()" class="fa fa-circle" id="my_orgs_button">Vis mine arrangement</button></div>
         <div class="container searchContainer">
             <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
-                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="autofunc()" placeholder="søk etter organisasjoner">
+                <input type="text" class="eventsearchbox" id="field_org_name" aria-label="Large" onclick="autofunc()" placeholder="søk etter organisasjoner">
+                    <xsl:attribute name="value">
+                        <xsl:value-of select="allocation/organization_id"/>
+                    </xsl:attribute>
+                </input>
+                <input id="field_org_id" name="organization_id" type="hidden">
+                    <xsl:attribute name="value">
+                        <xsl:value-of select="allocation/organization_id"/>
+                    </xsl:attribute>
                 </input>
                 <div class="input-group-prepend">
                     <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button" onclick="searchInput()">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <div id="org_container" style="height=1000px width=1000px"></div>
             </div>
             <div class="row datepicker">
                 <div class="col">
