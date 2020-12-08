@@ -268,7 +268,7 @@ HTML;
 
 						$bookmark_option .= <<<HTML
 
-						 <a class="$seleced_bm" href="{$entry['url']}" id="bookmark_{$entry['bookmark_id']}>
+						 <a class="$seleced_bm" href="{$entry['url']}" id="bookmark_{$entry['bookmark_id']}">
 							 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
 							 {$entry['text']}
 						 </a>

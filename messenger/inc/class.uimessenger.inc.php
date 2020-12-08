@@ -62,11 +62,34 @@
 $(document).ready(function ()
 {
 
+//	$("#recipient").select2({
+//		placeholder: "{$lang_to}",
+//		language: "no",
+//		width: '100%'
+//	});
+
+
 	$("#recipient").select2({
-		placeholder: "{$lang_to}",
-		language: "no",
-		width: '100%'
+	  ajax: {
+		url: phpGWLink('index.php', {menuaction: 'preferences.boadmin_acl.get_users'}, true),
+		dataType: 'json',
+		delay: 250,
+		data: function (params) {
+		  return {
+			query: params.term, // search term
+			page: params.page || 1
+		  };
+		},
+		cache: true
+	  },
+	  width: '100%',
+	  placeholder: "{$lang_to}",
+	  minimumInputLength: 2,
+	  language: "no",
+	  allowClear: true
 	});
+
+
 });
 
 JS;
@@ -89,23 +112,23 @@ JS;
 			$this->_set_common_langs();
 			$this->template->set_var('header_message', lang('Compose message'));
 
-			$users = $this->bo->get_available_users();
-
-			array_unshift($users, array
-					(
-					'uid' => '',
-					'full_name' => lang('select')
-				));
-
-			foreach ($users as $uid => $name)
-			{
-				$this->template->set_var(array
-					(
-					'uid' => $uid,
-					'full_name' => $name
-				));
-				$this->template->parse('select_tos', 'select_to', true);
-			}
+//			$users = $this->bo->get_available_users();
+//
+//			array_unshift($users, array
+//					(
+//					'uid' => '',
+//					'full_name' => lang('select')
+//				));
+//
+//			foreach ($users as $uid => $name)
+//			{
+//				$this->template->set_var(array
+//					(
+//					'uid' => $uid,
+//					'full_name' => $name
+//				));
+//				$this->template->parse('select_tos', 'select_to', true);
+//			}
 
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'messenger.bomessenger.send_message')));
@@ -205,6 +228,8 @@ JS;
 				'value_subject' => isset($values['subject']) ? $values['subject'] : '',
 				'value_content' => isset($values['content']) ? $values['content'] : ''
 			);
+
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('messenger'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('compose_groups' => $data));

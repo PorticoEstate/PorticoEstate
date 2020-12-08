@@ -55,6 +55,7 @@
 	/**
 	 * Disable doubleklick on links
 	 */
+/*
 	$("a").click(function (event)
 	{
 		if ($(this).hasClass("disabledouble"))
@@ -69,7 +70,7 @@
 
 		$(this).addClass("disabledouble");
 	});
-
+*/
 </script>
 
 </body>
