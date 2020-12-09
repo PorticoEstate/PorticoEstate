@@ -2677,12 +2677,13 @@ JS;
 				$attach_file_def[] = array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
 					'resizeable' => true, 'formatter' => 'FormatterCenter');
 			}
+
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_2',
 				'requestUrl' => "''",
 				'ColumnDefs' => $attach_file_def,
-				'data' => json_encode($content_files),
+				'data' => htmlspecialchars(json_encode($content_files), ENT_QUOTES, 'UTF-8'),
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
