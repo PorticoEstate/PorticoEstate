@@ -549,7 +549,7 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null)
 	{
 		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
@@ -568,7 +568,7 @@
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
 		}
 		if ($orgID) {
-			$orgIDsql = " AND bbe.organizer='$orgID' ";
+			$orgIDsql = " AND bo.id='$orgID' ";
 		}
 		if ($toDate !== "") {
 			$toDateSql = " AND bbe.to_ <= '$toDate' ";
@@ -583,7 +583,7 @@
 			       	bbe.building_name as location_name,
 				    bbe.name as event_name,
 			       	br.name as resource_name,
-			    	b.name as resource_type
+			    	bbrc.name as resource_type
 				from bb_event bbe--, bb_event_resource bber, bb_rescategory bbrc, bb_resource bbr
 				    inner join
 				        bb_organization bo on bbe.customer_organization_number = bo.organization_number
@@ -592,7 +592,7 @@
 				    inner join
 				        bb_resource br on ber.resource_id = br.id
 				    inner join
-				        bb_rescategory b on br.rescategory_id = b.id
+				        bb_rescategory bbrc on br.rescategory_id = b.id
 				where 
 		        	bbe.from_ > current_date and
 			    	bbe.is_public = 1
