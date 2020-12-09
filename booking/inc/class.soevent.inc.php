@@ -592,7 +592,7 @@
 				    inner join
 				        bb_resource br on ber.resource_id = br.id
 				    inner join
-				        bb_rescategory bbrc on br.rescategory_id = b.id
+				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
 				where 
 		        	bbe.from_ > current_date and
 			    	bbe.is_public = 1
