@@ -273,7 +273,7 @@
 						'sortable'	 => true, 'resizeable' => true),
 					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
 						'resizeable' => true)),
-				'data'		 => json_encode($content_email),
+				'data' => htmlspecialchars(json_encode($content_email), ENT_QUOTES, 'UTF-8'),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -701,7 +701,7 @@ JS;
 				'container'	 => 'datatable-container_0',
 				'requestUrl' => "''",
 				'ColumnDefs' => $note_def,
-				'data'		 => json_encode($additional_notes),
+				'data' => htmlspecialchars(json_encode($additional_notes), ENT_QUOTES, 'UTF-8'),
 				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disableFilter' => true),
@@ -715,7 +715,7 @@ JS;
 				'container'	 => 'datatable-container_3',
 				'requestUrl' => "''",
 				'ColumnDefs' => $message_note_def,
-				'data'		 => json_encode($additional_message_notes),
+				'data' => htmlspecialchars(json_encode($additional_message_notes), ENT_QUOTES, 'UTF-8'),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true),
@@ -755,7 +755,7 @@ JS;
 						'sortable'	 => true, 'resizeable' => true),
 					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
 						'resizeable' => true)),
-				'data'		 => json_encode($content_email),
+				'data' => htmlspecialchars(json_encode($content_email), ENT_QUOTES, 'UTF-8'),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -838,7 +838,7 @@ JS;
 				'container'	 => 'datatable-container_2',
 				'requestUrl' => "''",
 				'ColumnDefs' => $attach_file_def,
-				'data'		 => json_encode($content_files),
+				'data' => htmlspecialchars(json_encode($content_files), ENT_QUOTES, 'UTF-8'),
 				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disableFilter' => true),
@@ -868,7 +868,7 @@ JS;
 						'resizeable' => true),
 					array('key'		 => 'value_new_value', 'label'		 => lang('New value'), 'sortable'	 => true,
 						'resizeable' => true)),
-				'data'		 => json_encode($record_history),
+				'data' => htmlspecialchars(json_encode($record_history), ENT_QUOTES, 'UTF-8'),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
