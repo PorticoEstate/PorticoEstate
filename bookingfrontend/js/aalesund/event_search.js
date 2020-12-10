@@ -13,7 +13,7 @@ document.getElementById('from').addEventListener("change", function () {
     var input = this.value;
     fromDate = formatDateForBackend(input);
     getUpcomingEvents(organization,fromDate,toDate)
-});o
+});
 
 document.getElementById('to').addEventListener("change", function () {
     var input = this.value;
