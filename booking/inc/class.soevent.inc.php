@@ -575,6 +575,7 @@
 		}
 		$sqlQuery = "
 				select
+				    bbe.id as event_id,
 			       	bo.id as org_id,
 			       	bo.name as org_name,
 			       	bbe.from_,
