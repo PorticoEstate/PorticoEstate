@@ -167,6 +167,7 @@
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>
 							<xsl:for-each select="choice">
+								<xsl:sort select="value"/>
 								<xsl:variable name="id">
 									<xsl:value-of select="id"/>
 								</xsl:variable>
