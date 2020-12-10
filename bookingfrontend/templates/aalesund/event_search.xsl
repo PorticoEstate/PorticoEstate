@@ -1,16 +1,17 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <!--    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>-->
-    <div id="container_event_search">
-        <div class="col my_orgs"><button onclick="toggleMyOrgs()" class="fa fa-circle" id="my_orgs_button">Vis mine arrangement</button></div>
-        <div class="container searchContainer">
+    <div id="container_event_search col" style="flex-direction:column">
+        <div class="col my_orgs"><button onclick="toggleMyOrgs()" class="fa fa-circle" id="my_orgs_button" style="display='none';">Vis mine arrangement</button></div>
+        <div class="container searchContainer" style="flex-direction:column">
             <div class="input-group input-group-lg mainpageserchcontainer" style="flex-wrap:inherit">
-                <input type="text" class="eventsearchbox" id="eventsearchBoxID" aria-label="Large" onclick="autofunc()" placeholder="søk etter organisasjoner">
-                </input>
+                <input type="text" class="eventsearchbox" id="field_org_name" aria-label="Large" placeholder="søk etter organisasjoner"/>
+                <input id="field_org_id" name="organization_id" type="hidden"/>
                 <div class="input-group-prepend">
                     <button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button" onclick="searchInput()">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <div id="org_container"></div>
             </div>
             <div class="row datepicker">
                 <div class="col">
@@ -27,30 +28,24 @@
                 <div class="dropdown col">
                     <button onclick="buildingNameDropDown()" class="dropbtn" id="dropBuildingNameButton">Bygnings navn</button>
                     <div id="buildingNameDropDown" class="dropdown-content">
-                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
-                        <div class="dropdown_list_container" data-bind="foreach: facilities">
-                            <a id="building_name_dropdown_item" data-bind="click:$parent.buildingFilter">
-                                <span data-bind="text: building_name"/>
-                            </a>
-                        </div>
+                        <input type="text" placeholder="Search.." id="field_building_name"/>
+                        <input type="hidden" id="field_building_id"/>
+                        <div class="dropdown_list_container" id="building_container"></div>
                     </div>
                 </div>
                 <div class="buildingTypeDropdown col">
                     <button onclick="buildingTypeDropDown()" class="dropbtn" id="dropBuildingTypeButton">Bygnings type</button>
                     <div id="buildingTypeDropDown" class="dropdown-content">
-                        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"/>
-                        <div class="dropdown_list_container" data-bind="foreach: facilityTypes">
-                            <a id="building_type_dropdown_item" data-bind="click:$parent.buildingTypeFilter">
-                                <span data-bind="text: facilityTypeName"/>
-                            </a>
-                        </div>
+                        <input type="text" placeholder="Search.." id="field_type_name"/>
+                        <input type="hidden" id="field_type_id"/>
+                        <div class="dropdown_list_container" id="buildingtype_container"></div>
                     </div>
                 </div>
             </div>
-            <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
         </div>
     </div>
-    <div id="event-content">
+    <div id="event-content" class="col">
+        <h2 class="Kommende-arrangement">Kommende Arrangement</h2>
         <ul data-bind="foreach: events">
             <div class="event-card">
                 <li>
