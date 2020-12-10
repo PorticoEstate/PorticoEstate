@@ -16,7 +16,6 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		'index' => true,
 		'show'  => true,
 		'upcomingEvents' => true,
-		'get_orgs' => true,
 		'getOrgsIfLoggedIn' => true,
 		'get_facilityTypes' => true
 	);
