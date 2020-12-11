@@ -614,4 +614,9 @@
 			return $this->custom->add_choice($location_id, $attribute_id, $new_value);
 		}
 
+		function delete_choice_value($location_id, $attribute_id, $choice_id)
+		{
+			return $this->custom->delete_choice($location_id, $attribute_id, $choice_id );
+		}
+
 	}

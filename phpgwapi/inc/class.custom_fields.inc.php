@@ -1058,6 +1058,22 @@
 			}
 		}
 
+		public function delete_choice( $location_id, $attrib_id, $choice_id )
+		{
+			/**
+			 * Perform check if $choice_id is used anywhere before deleting it
+			 */
+			
+			return false;
+
+			$sql = "DELETE FROM phpgw_cust_choice"
+				. " WHERE location_id = " . (int)$location_id
+					. " AND attrib_id = " . (int)$attrib_id
+					. " AND id = " . (int)$choice_id;
+			$this->_db->query($sql, __LINE__, __FILE__);
+
+		}
+
 		/**
 		 * Get a list of attributes
 		 *
