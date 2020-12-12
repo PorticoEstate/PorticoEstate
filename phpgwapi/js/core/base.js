@@ -269,7 +269,6 @@ function deleteValueFromCustomAttribute(select_id, location_id, attribute_id)
 		choice_id: choice_id
 	};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
-alert(requestUrl);
 
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function ()
@@ -284,7 +283,7 @@ alert(requestUrl);
 			}
 			else
 			{
-				alert('Error');
+				alert(data.message);
 			}
 		}
 	};

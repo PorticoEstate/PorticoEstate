@@ -2028,7 +2028,7 @@
 
 			$receipt = array(
 				'status' => $ok ? 'ok' : 'fail',
-				'message' => ''
+				'message' => $ok ? 'ok' : lang('value is used in records'),
 			);
 
 			return $receipt;
