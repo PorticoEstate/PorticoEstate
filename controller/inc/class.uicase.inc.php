@@ -1113,7 +1113,8 @@
 				'degree_list' => array('options' => createObject('property.borequest')->select_degree_list( $degree_value = 2 )),
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list( $consequence_value = 2 )),
 				'case_location_code' => $case_data['location_code'],
-				'add_img' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2')
+				'add_img' => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
+				'delete_img' => $GLOBALS['phpgw']->common->image('phpgwapi', 'recycle-bin-line')
 
 			);
 //			_debug_array($data);die();

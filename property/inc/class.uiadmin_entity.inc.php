@@ -63,8 +63,10 @@
 			'convert_to_eav'			 => true,
 			'save'						 => true,
 			'save_category'				 => true,
-			'add_choice_value'			 => true
+			'add_choice_value'			 => true,
+			'delete_choice_value'		 => true
 		);
+		private $bo;
 
 		function __construct()
 		{
@@ -2002,6 +2004,31 @@
 			$receipt = array(
 				'status' => 'ok',
 				'choice_id' => $id
+			);
+
+			return $receipt;
+
+		}
+
+		function delete_choice_value()
+		{
+			$add_controller = $this->acl->check('.checklist', PHPGW_ACL_ADD, 'controller');
+			$add_location = $this->acl->check('.location', PHPGW_ACL_ADD, 'property');
+
+			if(!$add_controller && !$add_location)
+			{
+				phpgw::no_access();
+			}
+
+			$location_id	 = phpgw::get_var('location_id', 'int');
+			$attribute_id	 = phpgw::get_var('attribute_id', 'int');
+			$choice_id		 = phpgw::get_var('choice_id', 'int');
+
+			$ok = $this->bo->delete_choice_value($location_id, $attribute_id, $choice_id);
+
+			$receipt = array(
+				'status' => $ok ? 'ok' : 'fail',
+				'message' => $ok ? 'ok' : lang('value is used in records'),
 			);
 
 			return $receipt;

@@ -246,6 +246,53 @@ function openwindow(url, h, w)
 	}
 }
 
+/**
+ * Delete attribute value - if not used
+ * @param {type} id
+ * @param {type} location_id
+ * @param {type} attribute_id
+ * @returns {undefined}
+ */
+function deleteValueFromCustomAttribute(select_id, location_id, attribute_id)
+{
+	var choice_id = $("#" + select_id + " option:selected").val();
+
+	if(!choice_id)
+	{
+		alert('None selected');
+	}
+
+	var oArgs = {
+		menuaction: 'property.uiadmin_entity.delete_choice_value',
+		location_id: location_id,
+		attribute_id: attribute_id,
+		choice_id: choice_id
+	};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function ()
+	{
+		if (this.readyState == 4 && this.status == 200)
+		{
+			var data = JSON.parse(this.responseText);
+
+			if (data.status == 'ok')
+			{
+				$("#" + select_id + " option:selected").remove();
+			}
+			else
+			{
+				alert(data.message);
+			}
+		}
+	};
+	xmlhttp.open("POST", requestUrl, true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	var params = '';
+	xmlhttp.send(params);
+}
+
 var alertify;
 
 /**

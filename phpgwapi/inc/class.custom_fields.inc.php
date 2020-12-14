@@ -40,12 +40,12 @@
 	 */
 	class phpgwapi_custom_fields
 	{
-		
+
 		/**
 		* @var array $receipt messages from the prosessing of functions
 		*/
 		public $receipt = array();
-		
+
 		/**
 		* @var array $datatype_text the translated end user field types
 		*/
@@ -77,7 +77,7 @@
 		protected $_total_records = 0;
 
 		protected $global_lock = false;
-		
+
 		protected $attribute_group_tree = array();
 
 		protected $node_id = 0;
@@ -96,7 +96,7 @@
 			{
 				$this->_appname =& $GLOBALS['phpgw_info']['flags']['currentapp'];
 			}
-			
+
 			$this->_db           	=& $GLOBALS['phpgw']->db;
 			$this->_db2				= clone($this->_db);
 			$this->_join			=& $this->_db->join;
@@ -204,13 +204,13 @@
 				return -1;
 			}
 */
-			
+
 			$sql = 'SELECT MAX(id) AS current_id'
 				. ' FROM phpgw_cust_attribute_group '
 				. " WHERE location_id ='{$values['location_id']}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['id']	= $this->_db->f('current_id') + 1;		
+			$values['id']	= $this->_db->f('current_id') + 1;
 
 			$sql = 'SELECT MAX(group_sort) AS max_sort'
 				. ' FROM phpgw_cust_attribute_group '
@@ -219,7 +219,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
 			$values['group_sort']	= $this->_db->f('max_sort') + 1;
-			
+
 			$cols = implode(', ', array_keys($values));
 			$vals = $this->_db->validate_insert($values);
 
@@ -383,7 +383,7 @@
 					. " WHERE location_id ='{$values['location_id']}'";
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
-				$values['id']	= (int)$this->_db->f('current_id') + 1;		
+				$values['id']	= (int)$this->_db->f('current_id') + 1;
 
 				$sql = 'SELECT MAX(attrib_sort) AS max_sort'
 					. ' FROM phpgw_cust_attribute '
@@ -391,7 +391,7 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
 				$values['attrib_sort']	= (int)$this->_db->f('max_sort') + 1;
-			
+
 				$cols = implode(', ', array_keys($values));
 				$vals = $this->_db->validate_insert($values);
 
@@ -627,7 +627,7 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
 				$max_sort	= $this->_db->f('max_sort');
-			
+
 				if ( $max_sort > $attrib_sort )
 				{
 					$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
@@ -643,7 +643,7 @@
 						. " WHERE location_id = {$loc_id} AND id = {$attrib_id}";
 				$this->_db->query($sql, __LINE__,__FILE__);
 
-			}	
+			}
 			return $this->_db->transaction_commit();
 		}
 
@@ -755,7 +755,7 @@
 			$OldDataType		= $this->_db->f('datatype');
 			$OldPrecision		= $this->_db->f('precision_');
 			$OldGroup			= (int) $this->_db->f('group_id');
-			$OldNullable		= $this->_db->f('nullable');		
+			$OldNullable		= $this->_db->f('nullable');
 
 			$this->_db->transaction_begin();
 
@@ -789,7 +789,7 @@
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
 					$max_sort	= $this->_db->f('max_sort');
-					
+
 					$value_set['attrib_sort'] = $max_sort + 1;
 
 
@@ -804,7 +804,7 @@
 					$this->_db->query($sql, __LINE__, __FILE__);
 					$this->_db->next_record();
 					$max_sort	= $this->_db->f('max_sort');
-			
+
 					if ( $max_sort > $attrib_sort )
 					{
 						$sql = "UPDATE phpgw_cust_attribute SET attrib_sort = attrib_sort - 1"
@@ -821,7 +821,7 @@
 
 			if($attrib_table) // not eav
 			{
-				$table_def = $this->get_table_def($attrib_table);	
+				$table_def = $this->get_table_def($attrib_table);
 				$this->_oProc->m_aTables = $table_def;
 
 				if($OldColumnName !=$attrib['column_name'])
@@ -833,7 +833,7 @@
 						$value_set	= $this->_db->validate_update($value_set);
 						$this->_db->query("UPDATE phpgw_cust_attribute set $value_set WHERE location_id = {$location_id} AND id=" . $attrib_id,__LINE__,__FILE__);
 					}
-	
+
 					if($attrib_table)
 					{
 						$this->_oProc->RenameColumn($attrib_table, $OldColumnName, $attrib['column_name']);
@@ -897,7 +897,7 @@
 				}
 
 				$attrib['column_info']['type']  = $this->_translate_datatype_insert($attrib['column_info']['type']);
-				
+
 				$incompatible_char_types = array
 				(
 					'int'		=> true,
@@ -909,7 +909,7 @@
 				{
 					$incompatible_type = false;
 					$OldDataType = $this->_translate_datatype_insert($OldDataType);
-					
+
 					if ($OldDataType == 'varchar' && isset($incompatible_char_types[$attrib['column_info']['type']]) && $incompatible_char_types[$attrib['column_info']['type']])
 					{
 						$incompatible_type = true;
@@ -935,16 +935,16 @@
 							$i++;
 						}
 						while (isset($metadata[$backup_column_name]));
-						
+
 						$this->_oProc->RenameColumn($attrib_table,$attrib['column_name'], $backup_column_name);
 						$this->_oProc->AlterColumn($attrib_table,$backup_column_name,array('type' => $OldDataType, 'nullable' => true));
 						$this->_oProc->AddColumn($attrib_table, $attrib['column_name'], $attrib['column_info']);
 					}
-					
+
 					$this->_oProc->AlterColumn($attrib_table,$attrib['column_name'],$attrib['column_info']);
 				}
 			}
-			
+
 			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
 			{
 				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
@@ -1058,6 +1058,60 @@
 			}
 		}
 
+		public function delete_choice( $location_id, $attrib_id, $choice_id )
+		{
+			/**
+			 * Perform check if $choice_id is used anywhere before deleting it
+			 */
+
+			$sql = "SELECT column_name FROM phpgw_cust_attribute WHERE location_id = " . (int) $location_id
+				. " AND id= " . (int) $attrib_id;
+			$this->_db->query($sql, __LINE__, __FILE__);
+			$this->_db->next_record();
+			$column_name = $this->_db->f('column_name');
+
+			$category = CreateObject('property.soadmin_entity')->get_single_category($location_id, true);
+			if ($category['is_eav'])
+			{
+				$sql = "SELECT location_id FROM fm_bim_item WHERE location_id = " . (int) $location_id
+					. " AND (NULLIF(json_representation->>'{$column_name}', '')::text IS NOT NULL"
+					. " AND json_representation->>'{$column_name}' = '" . (int)$choice_id . "')";
+				$this->_db->query($sql, __LINE__, __FILE__);
+
+				if($this->_db->next_record())
+				{
+					return false;
+				}
+
+			}
+			else
+			{
+				$sql = 'SELECT c_attrib_table FROM phpgw_locations'
+					. " WHERE  location_id = " . (int) $location_id;
+				$this->_db->query($sql, __LINE__, __FILE__);
+				if ( !$this->_db->next_record() )
+				{
+					return false; //invalid location
+				}
+
+				$tbl = $this->_db->f('c_attrib_table');
+
+				$sql = "SELECT count(*) FROM {$tbl} WHERE {$column_name} = '" . (int)$choice_id . "'";
+				$this->_db->query($sql, __LINE__, __FILE__);
+
+				if($this->_db->next_record())
+				{
+					return false;
+				}
+			}
+
+			$sql = "DELETE FROM phpgw_cust_choice"
+				. " WHERE location_id = " . (int)$location_id
+					. " AND attrib_id = " . (int)$attrib_id
+					. " AND id = " . (int)$choice_id;
+			return $this->_db->query($sql, __LINE__, __FILE__);
+		}
+
 		/**
 		 * Get a list of attributes
 		 *
@@ -1098,13 +1152,13 @@
 		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
 				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array(), $results = 0)
 		{
-                        
+
 			$location_id	= (int) $location_id;
 			$start			= (int) $start;
 			$query			= $this->_db->db_addslashes($query);
 			$order			= $this->_db->db_addslashes($order);
 			$allrows		= !!$allrows;
-			
+
 			$filtermethod	= '';
 			if ($filter && is_array($filter))
 			{
@@ -1119,13 +1173,13 @@
 								$condition[] = "{$column} IS NOT NULL";
 								break;
 							default:
-								$condition[] = "{$column} = '{$value}'";							
+								$condition[] = "{$column} = '{$value}'";
 						}
 
 					}
 					else
 					{
-						$condition[] = "{$column} IS NULL";					
+						$condition[] = "{$column} IS NULL";
 					}
 				}
 
@@ -1135,7 +1189,7 @@
 				}
 
 			}
-			
+
 			$ordermethod = 'ORDER BY group_id ASC, attrib_sort ASC';
 			if ( $order )
 			{
@@ -1186,7 +1240,7 @@
 					'id'					=> $id,
 					//'attrib_id'			=> $this->_db->f('id'), // FIXME
 					'entity_type'			=> $this->_db->f('type_id'),
-					'group_id'				=> (int) $this->_db->f('group_id'),					
+					'group_id'				=> (int) $this->_db->f('group_id'),
 					'attrib_sort'			=> (int) $this->_db->f('attrib_sort'),
 					'list'					=> $this->_db->f('list'),
 					'table_filter'			=> $this->_db->f('table_filter'),
@@ -1352,7 +1406,7 @@
 				$this->attribute_group_tree = array();
 			}
 
-			$filtermethod = 'WHERE location_id =' . (int)$location_id;			
+			$filtermethod = 'WHERE location_id =' . (int)$location_id;
 
 			$db = clone($this->_db);
 			$sql = "SELECT * FROM phpgw_cust_attribute_group $filtermethod AND parent_id = {$parent} ORDER BY group_sort ASC";
@@ -1378,7 +1432,7 @@
 				$this->get_attribute_group_children($location_id, $id, $group_sort_text, $level+1);
 			}
 			return $this->attribute_group_tree;
-		} 
+		}
 
 		/**
 		* Read a single attribute group record
@@ -1521,7 +1575,7 @@
 			{
 				$groups = array_merge($no_group, $groups);
 			}
-		
+
 			foreach ($groups as &$group)
 			{
 				foreach ($attributes as $attribute)
@@ -1536,7 +1590,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 * @param type $appname
 		 * @param type $location
 		 * @param type $parent_id
@@ -1621,7 +1675,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 * @param type $location_id
 		 * @param type $parent_id
 		 * @param type $parent
@@ -1666,7 +1720,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 * @param type $location_id
 		 * @param type $parent
 		 * @param type $group_id
@@ -1747,7 +1801,7 @@
 			eval($fd);
 			$table_def[$table]['fd'] = isset($table_def[$table]['fd']) && $table_def[$table]['fd'] ? $table_def[$table]['fd'] + $fd : $fd;
 			$table_def[$table]['pk'] = isset($table_def[$table]['pk']) && $table_def[$table]['pk'] ? $table_def[$table]['pk'] : $tableinfo[1];
-			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];		
+			$table_def[$table]['fk'] = isset($table_def[$table]['fk']) && $table_def[$table]['fk'] ? $table_def[$table]['fk'] : $tableinfo[2];
 			$table_def[$table]['ix'] = isset($table_def[$table]['ix']) && $table_def[$table]['ix'] ? $table_def[$table]['ix'] : $tableinfo[3];
 			$table_def[$table]['uc'] = isset($table_def[$table]['uc']) && $table_def[$table]['uc'] ? $table_def[$table]['uc'] : $tableinfo[4];
 
@@ -2006,7 +2060,7 @@
 		{
 			$location_id	= (int) $location_id;
 			$attrib_id		= (int) $attrib_id;
-			
+
 			$sql = "SELECT * FROM phpgw_cust_choice "
 				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
