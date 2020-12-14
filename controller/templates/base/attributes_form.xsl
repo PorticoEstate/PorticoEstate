@@ -186,7 +186,7 @@
 							<xsl:text>)</xsl:text>
 						</a>
 						<br/>
-						<a id="add_new_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
+						<a id="delete_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
 							<img src="{delete_img}" width="23"/>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="php:function('lang', 'delete')"/>
