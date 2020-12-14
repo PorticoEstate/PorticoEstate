@@ -116,6 +116,7 @@
 			}
 
 			$errors							 = array();
+			$sms_error_message = '';
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $register_type && $enable_register_form)
 			{
 				$user_inputs = (array)phpgwapi_cache::system_get('bookingfrontendt', 'add_participant');
@@ -178,7 +179,8 @@
 				{
 					if(($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit'])
 					{
-						$errors = array('quantity' =>"Antall er begrenset til {$reservation['participant_limit']}");
+						$sms_error_message = "Det gikk ikke: antall er begrenset til {$reservation['participant_limit']}.";
+						$errors = array('quantity' => $sms_error_message);
 					}
 				}
 
@@ -282,9 +284,33 @@
 				$lang_register_out = lang('Register out');
 			}
 
+
+			if($sms_error_message && $participant['phone'] && $config['participant_limit_sms'])
+			{
+				try
+				{
+					$sms_service = CreateObject('sms.sms');
+					$sms_res = $sms_service->websend2pv($this->account, $participant['phone'], "Hei.\n{$sms_error_message} \nDenne meldingen kan ikke besvares");
+				}
+				catch (Exception $ex)
+				{
+					//implement me
+					$this->log('sms_error', $ex->getMessage());
+				}
+
+			}
+
 			$this->flash_form_errors($errors);
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+
+			$participant_limit		 = !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0;
+
+			if($participant_limit && ($number_of_participants >= $participant_limit))
+			{
+				$enable_register_pre = null;
+				$enable_register_in = null;
+			}
 
 			$name = '';
 
@@ -313,7 +339,7 @@
 				'quantity'				 => $participant['quantity'],
 				'name'					 => $name,
 				'reservation'			 => $reservation,
-				'participant_limit'		 => !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0,
+				'participant_limit'		 => $participant_limit,
 				'form_action'			 => self::link(array('menuaction'		 => 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id)),
 			);
