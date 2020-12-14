@@ -683,7 +683,7 @@
 			$limit_from = phpgw::get_var('limit_from', 'date');
 			$limit_quantity = phpgw::get_var('limit_quantity', 'int');
 
-			if (!$limit_from || !$limit_quantity )
+			if (!$limit_from )
 			{
 				return array(
 					'ok' => false,
