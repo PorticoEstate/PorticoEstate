@@ -1160,9 +1160,9 @@
 			{
 				$address_element[] = array('value' => nl2br($this->config->config_data['delivery_address']));
 			}
-			else
+	//		else
 			{
-				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				$address_element = array_merge($address_element, execMethod('property.botts.get_address_element', $location_code));
 				if (!empty($project['location_data']['last_name']))
 				{
 					$address_element[] = array('text' => lang('tenant'), 'value' => "{$project['location_data']['first_name']} {$project['location_data']['last_name']}");
@@ -2227,7 +2227,7 @@ HTML;
 			{
 				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
-			else
+//			else
 			{
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
 				foreach ($address_element as $entry)
