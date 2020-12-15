@@ -242,11 +242,11 @@ JqueryPortico.showPicture = function (key, oData)
 
 JqueryPortico.show_picture_popup = function (img_url)
 {
-	var html = "<!DOCTYPE html>\n";
-		html += "<html><body>\n";
-		html += "<h4 style='text-align: center;'><a href='" + img_url +  "'>Download</a></h4>";
-		html += "<img src='" + img_url + "' style ='display: block; margin-left: auto; margin-right: auto; width: 90%;'/></body></html>";
-	TINY.box.show({html:html, boxid:"frameless",fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+	var width = Math.round($(window).width()*0.9);
+
+	var html =  "<h4 style='text-align: center;'><a href='" + img_url +  "'>Download</a></h4>";
+		html += "<img src='" + img_url + "' style ='display: block; margin-left: auto; margin-right: auto; width: "+ width + "px;'/>";
+	TINY.box.show({html:html, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 };
 
 JqueryPortico.formatJsonArray = function (key, oData)
