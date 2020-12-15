@@ -486,6 +486,7 @@
 			}
 
 			$delete_sql = "DELETE FROM bb_resource_e_lock WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
+			$delete = array();
 			$delete[] = array
 			(
 				1	=> array
@@ -511,7 +512,7 @@
 
 		function get_paricipant_limit( $resource, $check_current = false)
 		{
-			
+
 			$resource_ids = array(-1); // in case of empty: don't  break the query
 			if (is_array($resource))
 			{
@@ -529,12 +530,12 @@
 			}
 			else if($resource)
 			{
-				$resource_ids[] = $resource;			
+				$resource_ids[] = $resource;
 			}
-			
+
 			$order_menthod = 'ORDER BY from_ DESC';
 			$filter = 'resource_id IN (' . implode(',', $resource_ids) . ')';
-			
+
 			if($check_current)
 			{
 				$filter .= " AND from_ < '" . date($this->db->date_format()) . "'";
@@ -570,12 +571,34 @@
 		function add_paricipant_limit( $resource_id, $_limit_from, $limit_quantity )
 		{
 			$ret = 0;
-			if (!$resource_id || !$_limit_from || !$limit_quantity)
+			if (!$resource_id || !$_limit_from)
 			{
 				return false;
 			}
 
 			$limit_from = date($this->db->date_format(),$_limit_from);
+
+			if(!$limit_quantity)
+			{
+				$delete_sql = "DELETE FROM bb_participant_limit WHERE resource_id = ? AND from_ = ?";
+				$delete = array();
+				$delete[] = array
+				(
+					1	=> array
+					(
+						'value'	=> $resource_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					2	=> array
+					(
+						'value'	=> $limit_from,
+						'type'	=> PDO::PARAM_STR
+					)
+				);
+
+				$this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
+				return 2;
+			}
 
 			$insert_update[] = array
 			(
