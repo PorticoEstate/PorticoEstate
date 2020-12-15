@@ -478,6 +478,8 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'register participants')"/>
+						<br/>
 						<xsl:value-of select="php:function('lang', 'participant limit')"/>
 					</label>
 					<div class = 'pure-u-md-1-2'>
@@ -515,7 +517,7 @@
 								<xsl:value-of select="$lang_date"/>
 							</xsl:attribute>
 						</input>
-						<input type="number" id="participant_limit_quantity" min="0" name="participant_limit_quantity">
+						<input type="number" id="participant_limit_quantity" min="-1" name="participant_limit_quantity">
 							<xsl:attribute name="title">
 								<xsl:value-of select="$lang_quantity"/>
 							</xsl:attribute>
