@@ -1244,10 +1244,105 @@ HTML;
 
 			$condition_degree = 0;
 
+			$this->so_check_item = CreateObject('controller.socheck_item');
+			$this->so_control_item = CreateObject('controller.socontrol_item');
+
 			$soentity = createObject('property.soentity');
 
+
+	//		$control = $this->so_control->get_single($control_id);
+			$this->so_control_group_list = CreateObject('controller.socontrol_group_list');
+			$this->so_control_item_list = CreateObject('controller.socontrol_item_list');
+
+			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
+			$findings_map = array();
+			$_temp_options = array();
+			$header_options = array();
+			foreach ($control_groups as $control_group)
+			{
+				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control_id, $control_group->get_id());
+				foreach ($saved_control_items as $_control_item)
+				{
+					$control_item = $this->so_control_item->get_single_with_options($_control_item['id']);
+
+					$findings_map[$_control_item['id']] = $control_item->get_title();
+					$_temp_options[$_control_item['id']] = $control_item->get_options_array();
+					
+					if($_temp_options[$_control_item['id']])
+					{
+						$options = array();
+						foreach ($_temp_options[$_control_item['id']] as $option_entry)
+						{
+							$options[] = $option_entry->get_option_value();
+						}
+						$header_options[] = array(
+							'control_item_id' => $control_item->get_id(),
+							'header' => $control_item->get_title(),
+							'options'=> $options
+						);
+					}
+				}
+			}
 			foreach ($history_content as &$entry)
 			{
+				$findings_options = array();
+				foreach ($header_options as $header_option_set)
+				{
+					foreach ($header_option_set['options'] as $option_value)
+					{
+						$findings_options[$header_option_set['control_item_id']][$option_value] =  0;
+					}
+					unset($option_value);
+
+				}
+
+				$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($entry['id'], $_type = null, '', null, '');
+
+				foreach ($open_check_items_and_cases as $check_item)
+				{
+					$include_condition_degree += (int)$check_item->get_control_item()->get_include_condition_degree();
+
+
+//					if($check_item->get_control_item()->get_report_summary())
+//					{
+//						if($_temp_options)
+//						{
+//							foreach ($_temp_options[$check_item->get_control_item_id()] as $option_entry)
+//							{
+//								$entry['findings_options'][$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+//							}
+//						}
+//					}
+
+					foreach ($check_item->get_cases_array() as $case)
+					{
+						if(isset($findings_map[$case->get_control_item_id()]) && $check_item->get_control_item()->get_report_summary())
+						{
+
+							foreach ($findings_options[$case->get_control_item_id()] as $key => &$value)
+							{
+								if($key == $case->get_measurement())
+								{
+									$value +=1;
+								}
+							}
+							unset($value);
+						}
+					}
+				}
+
+				$entry['findings_options'] = array();
+				foreach ($findings_options as $findings_options_set)
+				{
+					foreach ($findings_options_set as $option_value)
+					{
+						$entry['findings_options'][] = $option_value;
+					}
+					unset($option_value);
+				}
+				unset($findings_options_set);
+
+//				_debug_array($entry['findings_options']);
 				if($entry['location_id'])
 				{
 					$entry['loc1_name'] = $entry['loc1_name'] . '::' . $soentity->get_short_description(
@@ -1306,10 +1401,11 @@ HTML;
 				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
 				'control_type_list'	 => array('options' => $control_type_list),
 				'history_content'	 => array('history_rows' => $history_content),
+				'header_options'	 => $header_options,
 				'condition_degree'	 => !!$condition_degree
 			);
-//			_debug_array($data['control_type_list']);
-//			_debug_array($data['history_content']);
+//			_debug_array($history_content);
+//	_debug_array($header_options);
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.inspection_history.js');
 
