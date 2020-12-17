@@ -134,10 +134,10 @@
 				return False;
 			}
 			return array('id' => $this->db->f('id', false),
-				'name' => $this->db->f('name', false),
-				'email' => $this->db->f('email', false),
-				'tilsyn_email' => $this->db->f('tilsyn_email', false),
-				'tilsyn_email2' => $this->db->f('tilsyn_email2', false));
+				'name' => $this->db->f('name', true),
+				'email' => $this->db->f('email', true),
+				'tilsyn_email' => $this->db->f('tilsyn_email', true),
+				'tilsyn_email2' => $this->db->f('tilsyn_email2', true));
 		}
 
 		function get_ordered_comments( $id )
@@ -149,7 +149,7 @@
 			{
 				$results[] = array('time' => $this->db->f('time', false),
 					'author' => $this->db->f('author', false),
-					'comment' => $this->db->f('comment', false),
+					'comment' => $this->db->f('comment', true),
 					'type' => $this->db->f('type', false));
 			}
 
