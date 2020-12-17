@@ -1626,6 +1626,8 @@
 
 		function _remove_event_conflicts( $bookings, &$events )
 		{
+			$conflict_map = array();
+			
 			foreach ($events as &$e)
 			{
 				$e['conflicts'] = array();
@@ -1671,7 +1673,11 @@
 
 //                        echo "##$i\n";
 						$keep				 = false;
-						$e['conflicts'][]	 = $b;
+						if(!isset($conflict_map["{$b['type']}_{$b['id']}"]))
+						{
+							$e['conflicts'][]	 = $b;
+							$conflict_map["{$b['type']}_{$b['id']}"] = true;							
+						}
 
 						$bf	 = $b['from_'];
 						$bt	 = $b['to_'];
