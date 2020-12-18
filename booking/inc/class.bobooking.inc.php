@@ -1604,7 +1604,7 @@
 						// We need to use 23:59 instead of 00:00 to sort correctly
 						$new_booking['to_']	 = $new_booking['to_'] == '00:00' ? '23:59' : $new_booking['to_'];
 						$new_bookings[]		 = $new_booking;
-
+						unset($new_booking);
 						if ($date->format('Y-m-d') == $end->format('Y-m-d'))
 						{
 							break;
@@ -1621,6 +1621,29 @@
 					while (true);
 				}
 			}
+			
+			foreach ($new_bookings as &$new_booking)
+			{
+				$booking_from	= new DateTime($new_booking['date'] . ' ' . $new_booking['from_']);
+				$booking_to	= new DateTime($new_booking['date'] . ' ' . $new_booking['to_']);
+				$conflicts = array();
+				foreach ($new_booking['conflicts'] as $conflict)
+				{
+					$conflict_from	 = new DateTime($conflict['from_']);
+					$conflict_to	 = new DateTime($conflict['to_']);
+					
+					if(
+					  ($booking_from <= $conflict_from AND $booking_to > $conflict_from)
+                      || ($booking_from > $conflict_from AND $booking_to < $conflict_to)
+                      || ($booking_from < $conflict_to AND $booking_to >= $conflict_to)
+					)
+					{
+						$conflicts[] = $conflict;
+					}
+				}
+				$new_booking['conflicts'] = $conflicts;
+			}
+
 			return $new_bookings;
 		}
 
