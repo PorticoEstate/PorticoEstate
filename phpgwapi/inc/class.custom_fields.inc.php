@@ -1096,10 +1096,12 @@
 
 				$tbl = $this->_db->f('c_attrib_table');
 
-				$sql = "SELECT count(*) FROM {$tbl} WHERE {$column_name} = '" . (int)$choice_id . "'";
+				$sql = "SELECT count(*) as cnt FROM {$tbl} WHERE {$column_name} = '" . (int)$choice_id . "'";
 				$this->_db->query($sql, __LINE__, __FILE__);
 
-				if($this->_db->next_record())
+				$this->_db->next_record();
+				
+				if((int)$this->_db->f('cnt') > 0)
 				{
 					return false;
 				}
