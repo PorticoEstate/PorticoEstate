@@ -209,7 +209,7 @@
 			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn status -u'));
 			$setup_tpl->set_var('check_for_svn_update',lang('check update'));
 			$_svn_message = '';
-			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'perform_svn_update')
+			if(isset($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi']) && $GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'perform_svn_update')
 			{
 				$sudo_user		=  phpgw::get_var('sudo_user');
 				$sudo_password	=  phpgw::get_var('sudo_password');
@@ -241,7 +241,7 @@
 			$setup_tpl->set_var('execute',lang('execute'));
 			$setup_tpl->set_var('svnwarn',lang('will try to perform a svn up'));
 			$_svn_message = '';
-			if($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'check_for_svn_update')
+			if(isset($GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi']) && $GLOBALS['phpgw_info']['setup']['currentver']['phpgwapi'] == 'check_for_svn_update')
 			{
 				$sudo_user		=  phpgw::get_var('sudo_user');
 				$sudo_password	=  phpgw::get_var('sudo_password');
