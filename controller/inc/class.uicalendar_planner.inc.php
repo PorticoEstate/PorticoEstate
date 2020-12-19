@@ -427,10 +427,10 @@
 			return $controls;
 		}
 
-		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null)
+		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null, $limit_date)
 		{
 
-			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows);
+			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows, null, null, $limit_date);
 
 			return $historic_check_lists;
 		}
@@ -1170,7 +1170,15 @@ HTML;
 			}
 
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+			$limit_date = phpgw::get_var('limit_date', 'date');
 
+			$date = new DateTime();		
+			$date->modify('-3 month');
+			
+			if(!$limit_date)
+			{
+				$limit_date = $date->getTimestamp();
+			}
 
 			$control_types = $this->so_control->get_controls_by_control_area($control_area_id);
 
@@ -1238,7 +1246,7 @@ HTML;
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$deviation	= phpgw::get_var('deviation', 'bool');
 
-			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows);
+			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows, $limit_date);
 			$total = $this->so->total_records;
 
 
@@ -1283,6 +1291,7 @@ HTML;
 					}
 				}
 			}
+			$findings_options_sum = array();
 			foreach ($history_content as &$entry)
 			{
 				$findings_options = array();
@@ -1302,18 +1311,6 @@ HTML;
 				{
 					$include_condition_degree += (int)$check_item->get_control_item()->get_include_condition_degree();
 
-
-//					if($check_item->get_control_item()->get_report_summary())
-//					{
-//						if($_temp_options)
-//						{
-//							foreach ($_temp_options[$check_item->get_control_item_id()] as $option_entry)
-//							{
-//								$entry['findings_options'][$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
-//							}
-//						}
-//					}
-
 					foreach ($check_item->get_cases_array() as $case)
 					{
 						if(isset($findings_map[$case->get_control_item_id()]) && $check_item->get_control_item()->get_report_summary())
@@ -1332,16 +1329,21 @@ HTML;
 				}
 
 				$entry['findings_options'] = array();
-				foreach ($findings_options as $findings_options_set)
+				foreach ($findings_options as $_option_key => $findings_options_set)
 				{
-					foreach ($findings_options_set as $option_value)
+					foreach ($findings_options_set as $__option_key => $option_value)
 					{
 						$entry['findings_options'][] = $option_value;
+						$findings_options_sum["{$_option_key}_{$__option_key}"] += $option_value;
 					}
 					unset($option_value);
 				}
 				unset($findings_options_set);
+				$findings_options_sum['num_open_cases'] += (int)$entry['num_open_cases'];
+				$findings_options_sum['num_corrected_cases'] += (int)$entry['num_corrected_cases'];
 
+				$entry['num_open_cases'] = (int)$entry['num_open_cases'];
+				$entry['num_corrected_cases'] = (int)$entry['num_corrected_cases'];
 //				_debug_array($entry['findings_options']);
 				if($entry['location_id'])
 				{
@@ -1392,19 +1394,27 @@ HTML;
 
 			$data = array
 			(
-				'nm_data'			 => $this->_nextmatches->xslt_nm($nm),
-				'query'				 => $query,
-				'deviation'			 => $deviation,
-				'control_area_list'	 => array('options' => $control_area_list),
-				'entity_group_list'	 => array('options' => $entity_groups),
-				'part_of_town_list'	 => array('options' => $part_of_town_list),
-				'form_action'		 => self::link(array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
-				'control_type_list'	 => array('options' => $control_type_list),
-				'history_content'	 => array('history_rows' => $history_content),
-				'header_options'	 => $header_options,
-				'condition_degree'	 => !!$condition_degree
+				'nm_data'				 => $this->_nextmatches->xslt_nm($nm),
+				'query'					 => $query,
+				'deviation'				 => $deviation,
+				'control_area_list'		 => array('options' => $control_area_list),
+				'entity_group_list'		 => array('options' => $entity_groups),
+				'part_of_town_list'		 => array('options' => $part_of_town_list),
+				'form_action'			 => self::link(array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
+				'control_type_list'		 => array('options' => $control_type_list),
+				'history_content'		 => array('history_rows' => $history_content),
+				'header_options'		 => $header_options,
+				'findings_options_sum'	 => array_values($findings_options_sum),
+				'condition_degree'		 => !!$condition_degree,
+				'limit_date'			 => date($this->dateformat, $limit_date)
 			);
-//			_debug_array($history_content);
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('limit_date', 'date', $limit_date, array(
+				)
+			);
+
+//			_debug_array(($findings_options_sum));
+//			_debug_array(array_values($findings_options_sum));
 //	_debug_array($header_options);
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.inspection_history.js');
