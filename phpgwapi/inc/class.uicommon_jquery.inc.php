@@ -854,7 +854,7 @@
 		 * @param  string $key  	A key
 		 * @return array  		An associative array of files
 		 */
-		public function get_files( $key = null )
+		public function get_files_from_post( $key = null )
 		{
 			if (!$this->filesArray)
 			{

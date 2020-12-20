@@ -420,11 +420,6 @@ HTML;
 				}
 			}
 
-			if (count($planned_controls_on_date) > 1)
-			{
-//				$my_planned_controls_HTML .= "</li></ul>";
-			}
-
 			$my_planned_controls_HTML .= "</table></div>"; // home_portal
 
 			if($front_end)

@@ -2340,7 +2340,7 @@ JS;
 
 			$history_def = array
 				(
-				array('key' => '#', 'label' => '#', 'sortable' => true),
+				array('key' => 'number', 'label' => '#', 'sortable' => true),
 				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => false),
 				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => false),
 				array('key' => 'value_action', 'label' => lang('action'), 'sortable' => false),
@@ -2993,6 +2993,7 @@ JS;
 			$config				 = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 
+			$values = array();
 			foreach ($invoices as $entry)
 			{
 

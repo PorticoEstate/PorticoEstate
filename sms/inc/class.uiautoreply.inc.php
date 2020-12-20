@@ -40,7 +40,7 @@
 			$this->sms = CreateObject('sms.sms');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.autoreply';
-			$this->menu->sub = '.autoreply';
+//			$this->menu->sub = '.autoreply';
 			$this->start = $this->bo->start;
 			$this->query = $this->bo->query;
 			$this->sort = $this->bo->sort;

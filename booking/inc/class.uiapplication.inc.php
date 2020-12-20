@@ -800,7 +800,7 @@
 					$document = array(
 						'category' => 'other',
 						'owner_id' => $application['id'],
-						'files' => $this->get_files()
+						'files' => $this->get_files_from_post()
 					);
 					$document_errors = $document_application->bo->validate($document);
 
@@ -1911,7 +1911,7 @@
 					$document_application = createObject('booking.uidocument_application');
 
 					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id']), 'results' =>'all'));
-					$files = $this->get_files();
+					$files = $this->get_files_from_post();
 					$file_exist = false;
 
 					if ($oldfiles['results'])
@@ -1930,7 +1930,7 @@
 					$document = array(
 						'category' => 'other',
 						'owner_id' => $application['id'],
-						'files' => $this->get_files()
+						'files' => $this->get_files_from_post()
 					);
 					$document_errors = $document_application->bo->validate($document);
 

@@ -94,7 +94,7 @@
 			}
 		}
 
-		public function set_is_area( $is_area )
+		public function set_is_area( bool $is_area )
 		{
 			$this->is_area = (bool)$is_area;
 		}

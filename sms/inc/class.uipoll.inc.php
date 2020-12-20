@@ -40,7 +40,7 @@
 			$this->sms = CreateObject('sms.sms');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.poll';
-			$this->menu->sub = $this->acl_location;
+	//		$this->menu->sub = $this->acl_location;
 			$this->start = $this->bo->start;
 			$this->query = $this->bo->query;
 			$this->sort = $this->bo->sort;

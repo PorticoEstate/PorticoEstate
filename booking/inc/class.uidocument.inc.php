@@ -319,7 +319,7 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document = extract_values($_POST, $this->fields);
-				$document['files'] = $this->get_files();
+				$document['files'] = $this->get_files_from_post();
 				$errors = $this->bo->validate($document);
 				if (!$errors)
 				{
