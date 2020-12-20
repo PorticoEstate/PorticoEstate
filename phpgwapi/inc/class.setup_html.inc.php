@@ -192,7 +192,7 @@
 					foreach($GLOBALS['phpgw_domain'] as $domain => $data)
 					{
 						$domains .= "<option value=\"$domain\" ";
-						if($domain == @$GLOBALS['phpgw_info']['setup']['LastDomain'])
+						if(isset($GLOBALS['phpgw_info']['setup']['LastDomain']) && $domain == $GLOBALS['phpgw_info']['setup']['LastDomain'])
 						{
 							$domains .= ' SELECTED';
 						}
