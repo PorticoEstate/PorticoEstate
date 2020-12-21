@@ -324,11 +324,11 @@ class uiaddressbook_prefs
 		}
 		function cache_is_empty()
 		{
-			if(is_array($this->cached_selected_fields[$this->org_or_person]['comm_types']))
+			if (is_array($this->cached_selected_fields[$this->org_or_person]['comm_types']))
 			{
-				if(count($this->cached_selected_fields[$this->org_or_person]['comm_types']) < 1)
+				if (count($this->cached_selected_fields[$this->org_or_person]['comm_types']) < 1)
 				{
-					if(count ($this->cached_selected_fields[$this->org_or_person]) <= 1)
+					if (count($this->cached_selected_fields[$this->org_or_person]) <= 1)
 					{
 						return true;
 					}
@@ -342,14 +342,17 @@ class uiaddressbook_prefs
 					return false;
 				}
 			}
-			elseif(count ($this->cached_selected_fields[$this->org_or_person]) < 1)
+			else if (empty($this->cached_selected_fields[$this->org_or_person]))
 			{
 				return true;
 			}
-				return false;
-
+			else if (count($this->cached_selected_fields[$this->org_or_person]) < 1)
+			{
+				return true;
+			}
+			return false;
 		}
-					
+
 		function fields_to_show() 
 		{
 			//have uiaddressbook fill up its field => english array, stock_contact_fields 

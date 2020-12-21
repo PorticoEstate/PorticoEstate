@@ -65,7 +65,20 @@ validate_submit = function ()
 		return;
 	}
 	var id = $("#application_id").val();
-	document.getElementById('summary').value = CKEDITOR.instances['summary'].getData();
+
+
+	// In case ckeditor is used
+
+	try
+	{
+		document.getElementById('summary').value = CKEDITOR.instances['summary'].getData();
+
+	}
+	catch (e)
+	{
+
+	}
+
 	if (id > 0)
 	{
 		document.form.submit();
@@ -507,8 +520,9 @@ this.fileuploader = function (section)
 
 this.refresh_files = function (section)
 {
-	var container = 'datatable-container_3';;
-	if(section === 'cv')
+	var container = 'datatable-container_3';
+	;
+	if (section === 'cv')
 	{
 		container = 'datatable-container_2';
 	}

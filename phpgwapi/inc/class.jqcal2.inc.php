@@ -90,12 +90,12 @@
 			}
 			else
 			{
-				$min_date = "'" . date('Y/m/d', $config['min_date']) . "'";
+				$min_date = "'" . date('Y/m/d', (int)$config['min_date']) . "'";
 			}
 
 			if(!empty($config['max_date']))
 			{
-				$min_date .= ",maxDate:'" . date('Y/m/d', $config['max_date']) . "'";
+				$min_date .= ",maxDate:'" . date('Y/m/d', (int)$config['max_date']) . "'";
 			}
 
 			if(!empty($config['disabled_dates']))

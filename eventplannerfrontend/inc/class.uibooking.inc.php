@@ -47,9 +47,4 @@
 			return $this->jquery_results($values);
 		}
 
-		public function edit()
-		{
-			parent::edit();
-		}
-
 	}
