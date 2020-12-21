@@ -121,6 +121,7 @@ Vagrant.configure("2") do |config|
    config.vm.provision "shell", inline: <<-SHELL
 	sudo apt-get install -y software-properties-common
 	sudo add-apt-repository -y ppa:ondrej/php
+	sudo add-apt-repository -y ppa:ondrej/apache2
     sudo apt-get update
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2

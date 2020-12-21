@@ -283,7 +283,7 @@
 					{
 						phpgwapi_cache::message_set('feil ved opplasting', 'error');
 						// Handle failure on storing document
-						$this->redirect($document, $document_properties, '', '');
+						$this->_redirect($document, $document_properties, '', '');
 					}
 				}
 				else
@@ -374,14 +374,14 @@
 		}
 
 		/**
-		 * Utitity function for redirecting to correct edit mode (procedure)
+		 * Utility function for redirecting to correct edit mode (procedure)
 		 *
 		 * @param $document	the target document
 		 * @param $document_properties	the document properies (name/value array)
 		 * @param $error	an error message
 		 * @param $message	a user message
 		 */
-		public function redirect( $document, $document_properties, $error, $message )
+		private function _redirect( $document, $document_properties, $error, $message )
 		{
 			if ($document_properties['document_type'] == controller_sodocument::$PROCEDURE_DOCUMENTS)
 			{
@@ -393,7 +393,7 @@
 		}
 
 		/**
-		 * Utiity method for checking the users permission on this document. If the
+		 * Utility method for checking the users permission on this document. If the
 		 * document is bound to a procedure, then the user must have edit privileges
 		 * on the given procedure. If no procedure, the user must be an executive
 		 * officer or an administrator.

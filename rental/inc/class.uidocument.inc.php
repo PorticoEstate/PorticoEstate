@@ -263,7 +263,7 @@
 			}
 			else
 			{
-				$this->redirect($document, $document_properties, lang('no_access'), '');
+				$this->_redirect($document, $document_properties, lang('no_access'), '');
 			}
 			exit;
 		}
@@ -344,18 +344,18 @@
 		}
 
 		/**
-		 * Utitity function for redirecting to correct edit mode (contract/party)
+		 * Utility function for redirecting to correct edit mode (contract/party)
 		 * 
 		 * @param $document	the target document
 		 * @param $document_properties	the document properies (name/value array)
 		 * @param $error	an error message
 		 * @param $message	a user message
 		 */
-		public function redirect( $document, $document_properties, $error, $message )
+		private function _redirect( $document, $document_properties, $error, $message )
 		{
 			if ($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
 					'id' => $document_properties['id'], 'error' => $error, 'message' => $message));
 			}
 			else if ($document_properties['document_type'] == rental_sodocument::$PARTY_DOCUMENTS)
@@ -366,7 +366,7 @@
 		}
 
 		/**
-		 * Utiity method for checking the users permission on this document. If the
+		 * Utility method for checking the users permission on this document. If the
 		 * document is bound to a contract, then the user must have edit privileges
 		 * on the given contract. If no contract, the user must be an executive 
 		 * officer or an administrator.
