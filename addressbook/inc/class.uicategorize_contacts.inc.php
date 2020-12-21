@@ -85,7 +85,7 @@
 			self::render_template_xsl(array('categorize'), array('edit' => $data));
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
 			if (!$_POST)
 			{
