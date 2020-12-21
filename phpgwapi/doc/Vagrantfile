@@ -167,13 +167,11 @@ EOF
     sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.0/cli/php.ini
 
     sudo cat > /etc/php/8.0/apache2/conf.d/91-app.ini <<EOF
-xdebug.mode = debug
+xdebug.mode = debug,develop
 xdebug.start_with_request=yes
-xdebug.log=/tmp/xdebug.log
 xdebug.idekey=netbeans-xdebug
 xdebug.remote_connect_back=On
 xdebug.remote_enable=On
-xdebug.remote_port=9000
 session.cookie_secure=Off
 session.use_cookies=On
 session.use_only_cookies=On

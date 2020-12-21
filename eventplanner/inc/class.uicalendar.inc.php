@@ -337,10 +337,6 @@
 			self::render_template_xsl(array('calendar', 'datatable_inline'), array($mode => $data));
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 
 		public function save_ajax()
 		{
