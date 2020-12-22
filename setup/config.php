@@ -259,7 +259,7 @@
 				}
 				else
 				{
-					$setup_tpl->set_var($value,@$current_config[$newval]);
+					$setup_tpl->set_var($value,isset($current_config[$newval]) ? $current_config[$newval] : '');
 				}
 				break;
 			case 'selected':

@@ -2011,6 +2011,38 @@
 				$contacts	 = CreateObject('phpgwapi.contacts');
 
 				$message_ret = $this->create_messages($check_list->get_control_id(), $check_list->get_id(), $check_list->get_location_code());
+
+				/**
+				 * Sigurd: in case ticket alert in not sufficient - some extra magic, not implemented so far
+				 */
+				/**
+				  $location		 = array();
+				  $_location_arr	 = explode('-', $data['location_code']);
+				  $i				 = 1;
+				  foreach ($_location_arr as $_loc)
+				  {
+				  $location["loc{$i}"] = $_loc;
+				  $i++;
+				  }
+
+				  $ticket_cat_id = $this->so_control->get_single($check_list->get_control_id())->get_ticket_cat_id();
+
+				  $assignedto = execMethod('property.boresponsible.get_responsible', array('location'	 => $location,
+				  'cat_id'	 => $ticket_cat_id));
+
+				  if ($assignedto)
+				  {
+				  $group_or_user = get_class($GLOBALS['phpgw']->accounts->get($assignedto));
+				  }
+
+				  if ($group_or_user == "phpgwapi_group")
+				  {
+				  $group_id = $assignedto;
+				  $assignedto		 = 0;
+				  }
+				 */
+
+
 				/**
 				 * "1" => supervisor
 				 * "2" => operator

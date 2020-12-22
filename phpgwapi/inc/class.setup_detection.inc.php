@@ -167,9 +167,13 @@
 							else	// check if majors are equal and minors greater or equal
 							{
 								//the @ is used below to work around some sloppy coding, we should not always assume version #s will be X.Y.Z.AAA
-								$major_depsvalue = $GLOBALS['phpgw_setup']->get_major($depsvalue);
-								@list(,,,$minor_depsvalue) = explode('.', $depsvalue);
-								@list(,,,$minor) = explode('.', $setup_info[$depsvalue['appname']]['currentver']);
+								$major_depsvalue = $GLOBALS['phpgw_setup']->get_major($depsvalue);				
+								$depsvalue_arr = explode('.', $depsvalue);
+								$minor_depsvalue = isset($depsvalue_arr[3]) ? $depsvalue_arr[3] : null;
+		//						@list(,,,$minor_depsvalue) = explode('.', $depsvalue);
+								$currentver_arr =  explode('.', $setup_info[$depvalue['appname']]['currentver']);
+								$minor = isset($currentver_arr[3]) ? $currentver_arr[3] : null;
+		//						@list(,,,$minor) = explode('.', $setup_info[$depsvalue['appname']]['currentver']);
 								if ($major == $major_depsvalue && $minor <= $minor_depsvalue)
 								{
 									$setup_info['depends'][$depkey]['status'] = True;

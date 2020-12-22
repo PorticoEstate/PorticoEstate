@@ -152,7 +152,7 @@
 			}
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
-			self::render_template('documentation', array('document' => $document));
+			self::render_template_xsl('documentation', array('document' => $document));
 		}
 
 		public function add()
@@ -163,7 +163,7 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$document = extract_values($_POST, $this->fields);
-				$document['files'] = $this->get_files();
+				$document['files'] = $this->get_files_from_post();
 				$errors = $this->bo->validate($document);
 				if (!$errors)
 				{

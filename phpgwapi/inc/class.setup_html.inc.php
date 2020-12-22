@@ -48,7 +48,7 @@
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{
-					if( ($setting['enable_mcrypt'] == 'True' || !empty($setting['enable_crypto'])) && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_port' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
+					if( ((isset($setting['enable_mcrypt']) && $setting['enable_mcrypt'] == 'True') || !empty($setting['enable_crypto'])) && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_port' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
 					{
 						$y = $GLOBALS['phpgw']->crypto->encrypt($y);
 					}
@@ -63,7 +63,7 @@
 			{
 				foreach($setting as $k => $v)
 				{
-					if (($setting['enable_mcrypt'] == 'True'  || !empty($setting['enable_crypto']))&& $k == 'HEADER_ADMIN_PASSWORD')
+					if (((isset($setting['enable_mcrypt']) && $setting['enable_mcrypt'] == 'True')  || !empty($setting['enable_crypto']))&& $k == 'HEADER_ADMIN_PASSWORD')
 					{
 						$v = $GLOBALS['phpgw']->crypto->encrypt($v);
 					}
@@ -192,7 +192,7 @@
 					foreach($GLOBALS['phpgw_domain'] as $domain => $data)
 					{
 						$domains .= "<option value=\"$domain\" ";
-						if($domain == @$GLOBALS['phpgw_info']['setup']['LastDomain'])
+						if(isset($GLOBALS['phpgw_info']['setup']['LastDomain']) && $domain == $GLOBALS['phpgw_info']['setup']['LastDomain'])
 						{
 							$domains .= ' SELECTED';
 						}

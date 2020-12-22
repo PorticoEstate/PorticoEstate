@@ -317,8 +317,4 @@
 			return $vendor;
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 	}

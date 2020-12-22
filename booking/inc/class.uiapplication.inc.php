@@ -398,7 +398,6 @@
 			$data['datatable']['actions'][] = array();
 
 			self::render_template_xsl('datatable_jquery', $data);
-//			self::render_template('datatable', $data);
 		}
 
 		public function query()
@@ -800,7 +799,7 @@
 					$document = array(
 						'category' => 'other',
 						'owner_id' => $application['id'],
-						'files' => $this->get_files()
+						'files' => $this->get_files_from_post()
 					);
 					$document_errors = $document_application->bo->validate($document);
 
@@ -1125,7 +1124,11 @@
 				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
 			));
 
-			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			if(!$orgnr = phpgw::get_var('session_org_id', 'int', 'GET'))
+			{
+				$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);			
+			}
+
 			$errors = array();
 
 			$partial2 = array();
@@ -1521,10 +1524,6 @@
 			$this->install_customer_identifier_ui($application);
 			$application['customer_identifier_types']['ssn'] = 'SSN';
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
-			//test
-
-			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
-
 
 			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
 			{
@@ -1907,7 +1906,7 @@
 					$document_application = createObject('booking.uidocument_application');
 
 					$oldfiles = $document_application->bo->so->read(array('filters' => array('owner_id' => $application['id']), 'results' =>'all'));
-					$files = $this->get_files();
+					$files = $this->get_files_from_post();
 					$file_exist = false;
 
 					if ($oldfiles['results'])
@@ -1926,7 +1925,7 @@
 					$document = array(
 						'category' => 'other',
 						'owner_id' => $application['id'],
-						'files' => $this->get_files()
+						'files' => $this->get_files_from_post()
 					);
 					$document_errors = $document_application->bo->validate($document);
 

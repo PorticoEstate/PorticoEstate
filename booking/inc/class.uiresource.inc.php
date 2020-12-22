@@ -683,7 +683,7 @@
 			$limit_from = phpgw::get_var('limit_from', 'date');
 			$limit_quantity = phpgw::get_var('limit_quantity', 'int');
 
-			if (!$limit_from || !$limit_quantity )
+			if (!$limit_from )
 			{
 				return array(
 					'ok' => false,
@@ -883,6 +883,6 @@
 
 			phpgwapi_jquery::load_widget("datepicker");
 
-			self::render_template('resource_schedule', array('resource' => $resource));
+			self::render_template_xsl('resource_schedule', array('resource' => $resource));
 		}
 	}

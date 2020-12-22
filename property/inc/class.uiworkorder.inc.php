@@ -90,7 +90,7 @@
 
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
-			$this->bo			 = CreateObject('property.boworkorder', true);
+			$this->bo			 = CreateObject('property.boworkorder');
 			$this->bocommon		 = CreateObject('property.bocommon');
 			$this->cats			 = & $this->bo->cats;
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
@@ -2191,7 +2191,7 @@
 			$history_def = array
 				(
 				array(
-					'key'		 => '#',
+					'key'		 => 'number',
 					'label'		 => '#',
 					'sortable'	 => true,
 					'resizeable' => true),

@@ -147,8 +147,6 @@
 				unset($data['datatable']['field'][2]);
 			}
 
-
-//			self::render_template('datatable', $data);
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -260,6 +258,6 @@
 			$data = array(
 				'resource' => $resource
 			);
-			self::render_template('audience', array('audience' => $data, 'lang' => $lang));
+			self::render_template_xsl('audience', array('audience' => $data, 'lang' => $lang));
 		}
 	}

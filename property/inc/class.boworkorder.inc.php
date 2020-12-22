@@ -96,7 +96,7 @@
 			$this->b_account		 = phpgw::get_var('b_account');
 			$this->district_id		 = phpgw::get_var('district_id', 'int');
 			$this->criteria_id		 = phpgw::get_var('criteria_id', 'int');
-			$this->this->allrows	 = phpgw::get_var('allrows', 'bool');
+			$this->allrows			 = phpgw::get_var('allrows', 'bool');
 			$this->obligation		 = phpgw::get_var('obligation', 'bool');
 		}
 
@@ -827,7 +827,7 @@
 				{
 					$record_history[$i]['value_new_value'] = '';
 				}
-				$record_history[$i]['#'] = $i + 1;
+				$record_history[$i]['number'] = $i + 1;
 				$i++;
 			}
 

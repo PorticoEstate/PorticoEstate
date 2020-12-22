@@ -431,7 +431,7 @@ HTML;
 
 				//Set disabled tabs
 				//if (empty($tab['link']) && empty($tab['function'])) {
-				if ($tab['disable'] == 1)
+				if (!empty($tab['disable']))
 				{
 					$disabled[] = $i;
 				}

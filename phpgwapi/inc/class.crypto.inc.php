@@ -29,11 +29,11 @@
 	}
 */
 
-	if(!empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) || $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt' )
+	if(!empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) || (isset($GLOBALS['phpgw_info']['server']['enable_crypto']) && $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt') )
 	{
 		require_once PHPGW_API_INC . '/class.crypto_mcrypt.inc.php';
 	}
-	else if( $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
+	else if(isset($GLOBALS['phpgw_info']['server']['enable_crypto']) && $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' )
 	{
 		require_once PHPGW_API_INC . '/class.crypto_libsodium.inc.php';
 	}
@@ -110,6 +110,12 @@
 			}
 
 			$data = $encrypteddata;
+
+			if (is_array($data))
+			{
+				// no need for unserialize
+				return $data;
+			}
 			
 
 			$newdata = @unserialize($data);

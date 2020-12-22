@@ -181,7 +181,7 @@
 				}
 				else if (isset($params['join']) && $params['join'])
 				{
-					if ($params['join_type'] == 'manytomany' && ( empty($filters[$field]) && empty($query) ) )
+					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( empty($filters[$field]) && empty($query) ) )
 					{
 						continue;
 					}
@@ -370,7 +370,7 @@
 				{
 					$modifier = !empty($params['read_callback']) ? $params['read_callback']  : '';
 
-					if ($params['manytomany'])
+					if (isset($params['manytomany']) && $params['manytomany'])
 					{
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];
@@ -553,14 +553,14 @@
 			}
 			foreach ($filters as $key => $val)
 			{
-				if ($this->fields[$key])
+				if (isset($this->fields[$key]))
 				{
-					$table = $this->fields[$key]['join'] ? $this->build_join_table_alias($key, $this->fields[$key]) : $this->table_name;
+					$table = (isset($this->fields[$key]['join']) && $this->fields[$key]['join']) ? $this->build_join_table_alias($key, $this->fields[$key]) : $this->table_name;
 					if (isset($this->fields[$key]['multiple_join']) && $this->fields[$key]['multiple_join'])
 					{
 						$table_column = $this->fields[$key]['multiple_join']['column'];
 					}
-					else if($this->fields[$key]['join'])
+					else if(isset ($this->fields[$key]['join']))
 					{
 						$column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
 						$table_column = "{$table}.{$column}";
@@ -657,6 +657,7 @@
 			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
 			 */
 
+			$order = '';
 			if ($sort)
 			{
 				if (is_array($sort))
@@ -700,7 +701,7 @@
 				foreach ($this->fields as $field => $params)
 				{
 					$modifier = !empty($params['read_callback']) ? $params['read_callback']  : '';
-					if ($params['manytomany'])
+					if (isset($params['manytomany']) && $params['manytomany'])
 					{
 						$row[$field] = array();
 						$table = $params['manytomany']['table'];

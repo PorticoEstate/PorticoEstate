@@ -439,7 +439,7 @@
 				$contract->set_security_type($this->unmarshal($this->db->f('security_type'), 'int'));
 				$contract->set_security_amount($this->unmarshal($this->db->f('security_amount'), 'string'));
 				$contract->set_due_date($this->unmarshal($this->db->f('due_date'), 'int'));
-				$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'), int));
+				$contract->set_contract_type_id($this->unmarshal($this->db->f('contract_type_id'), 'int'));
 				$contract->set_rented_area($this->unmarshal($this->db->f('rented_area'), 'float'));
 				$contract->set_adjustable($this->unmarshal($this->db->f('adjustable'), 'bool'));
 				$contract->set_adjustment_interval($this->unmarshal($this->db->f('adjustment_interval'), 'int'));

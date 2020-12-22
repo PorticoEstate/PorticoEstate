@@ -676,20 +676,20 @@
 			$newa = str_replace('pre','.',$a);
 			$newb = str_replace('pre','.',$b);
 			$testa = explode('.',$newa);
-			if(@$testa[1] == '')
+			if(empty($testa[1]))
 			{
 				$testa[1] = 0;
 			}
-			if(@$testa[3] == '')
+			if(empty($testa[3]))
 			{
 				$testa[3] = 0;
 			}
 			$testb = explode('.',$newb);
-			if(@$testb[1] == '')
+			if(empty($testb[1]))
 			{
 				$testb[1] = 0;
 			}
-			if(@$testb[3] == '')
+			if(empty($testb[3]))
 			{
 				$testb[3] = 0;
 			}

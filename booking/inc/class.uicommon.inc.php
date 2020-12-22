@@ -203,7 +203,7 @@
 				self::$old_exception_handler = set_exception_handler(array(__CLASS__, 'handle_booking_unauthorized_exception'));
 				if (!self::$old_exception_handler)
 				{
-					//The exception handler of phpgw has probably not been activated, 
+					//The exception handler of phpgw has probably not been activated,
 					//so taking that as a hint to not enable any of our own either.
 					restore_exception_handler();
 				}
@@ -241,18 +241,6 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public static function link( $data )
-		{
-			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
-			{
-				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
-			}
-			else
-			{
-				return $GLOBALS['phpgw']->link('/index.php', $data);
-			}
-		}
-
 		public function redirect( $link_data )
 		{
 			$this->store_flash_msgs();
@@ -278,11 +266,6 @@
 			$this->flash_msgs = $error_stack->to_flash_error_msgs();
 		}
 
-		public function render_template( $files, $data )
-		{
-			parent::render_template_xsl($files, $data);
-		}
-
 		public function send_file( $file_path, $options = array() )
 		{
 			if (!is_readable($file_path))
@@ -302,8 +285,8 @@
 
 			#Below only seems to work for firefox. RE: http://www.ietf.org/rfc/rfc2047.txt
 			#header("Content-Disposition: attachment; filename*=utf-8'en-us'{$options['filename']}");
-			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined. 
-			//However, in reality (where most of us live), UAs pick one of the two values that it understands. 
+			//The behaviour of sending both the filename both in traditional format and in utf-8 RFC2231 encoded is undefined.
+			//However, in reality (where most of us live), UAs pick one of the two values that it understands.
 			header("Content-Disposition: attachment; filename={$options['latin1_filename']}");
 			#header("Content-Description: {$options['filename']}");
 			header("Content-Type: $file_type");
@@ -921,7 +904,7 @@ JS;
 				{
 					var id = v.id;
 					v.classList.remove('newaddedpicker');
-	
+
 					$( "#"+id ).datetimepicker({
 						format: '{$dateformat}',
 						datepicker:{$datepicker},

@@ -575,7 +575,7 @@
 			$active_tab = 'completed_reservation';
 
 			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::render_template('completed_reservation', array('reservation' => $reservation,
+			self::render_template_xsl('completed_reservation', array('reservation' => $reservation,
 				'show_edit_button' => $show_edit_button));
 		}
 
@@ -667,6 +667,6 @@
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);
 			$this->install_customer_identifier_ui($reservation);
-			self::render_template('completed_reservation_edit', array('reservation' => $reservation));
+			self::render_template_xsl('completed_reservation_edit', array('reservation' => $reservation));
 		}
 	}

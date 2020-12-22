@@ -225,11 +225,6 @@
 			self::render_template_xsl(array('permission'), array('edit' => $data));
 		}
 		
-		public function save()
-		{
-			parent::save();
-		}
-
 		public function object()
 		{
 			$object_type = phpgw::get_var('object_type');

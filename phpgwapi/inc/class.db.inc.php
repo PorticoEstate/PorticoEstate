@@ -280,7 +280,7 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return string offset and limit
 		*/
-		function get_offset($sql = '', $offset, $num_rows = 0)
+		function get_offset($sql = '', $offset = 0, $num_rows = 0)
 		{
 			$offset		=  $offset < 0 ? 0 : (int)$offset;
 			$num_rows	= (int)$num_rows;

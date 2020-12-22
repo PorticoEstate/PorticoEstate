@@ -261,7 +261,7 @@
 		}
 
 
-		public function save()
+		public function save($relaxe_acl = false)
 		{
 			//Nothing to do here
 			return false;

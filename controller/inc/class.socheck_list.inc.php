@@ -1177,7 +1177,7 @@
 		}
 
 
-		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null, $location_code = null, $results = null)
+		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null, $location_code = null, $results = null, $limit_date = null)
 		{
 			$control_id = (int)$control_id;
 			if(!$selected_part_of_town && !$location_code)
@@ -1202,6 +1202,11 @@
 			$sql .= " WHERE cl.control_id = {$control_id}"
 				. " AND completed_date IS NOT NULL";
 			
+			if($limit_date)
+			{
+				$sql .=	" AND completed_date > " . (int) $limit_date;
+			}
+
 			if($selected_part_of_town)
 			{
 				$sql .=  " AND fm_part_of_town.id IN (" . implode(',', $selected_part_of_town) . ")";	

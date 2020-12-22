@@ -501,9 +501,11 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:call-template name="contact_form">
-						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
-					</xsl:call-template>
+					<xsl:if test="simple !='1'">
+						<xsl:call-template name="contact_form">
+							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						</xsl:call-template>
+					</xsl:if>
 					<xsl:for-each select="value_target">
 						<div class="pure-control-group">
 							<label>
@@ -733,7 +735,7 @@
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'select')"/>
 									</xsl:attribute>
-										<xsl:apply-templates select="tag_list/options"/>
+									<xsl:apply-templates select="tag_list/options"/>
 								</select>
 							</div>
 
@@ -1012,7 +1014,7 @@
 										</label>
 										<input type="checkbox" name="values[charge_tenant]" value="1">
 											<xsl:attribute name="title">
-													<xsl:value-of select="php:function('lang', 'charge tenant')"/>
+												<xsl:value-of select="php:function('lang', 'charge tenant')"/>
 											</xsl:attribute>
 											<xsl:if test="charge_tenant = '1'">
 												<xsl:attribute name="checked">

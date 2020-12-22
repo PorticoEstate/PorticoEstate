@@ -181,7 +181,7 @@
 		public function query()
 		{
 
-			$filter_part_of_town_id = phpgw::get_var(filter_part_of_town_id);
+			$filter_part_of_town_id = phpgw::get_var('filter_part_of_town_id');
 			if (preg_match("/,/", $filter_part_of_town_id))
 			{
 				$_REQUEST['filter_part_of_town_id'] = explode(',', $filter_part_of_town_id);

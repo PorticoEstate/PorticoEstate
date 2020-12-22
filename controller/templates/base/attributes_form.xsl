@@ -167,21 +167,13 @@
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>
 							<xsl:for-each select="choice">
-								<xsl:variable name="id">
-									<xsl:value-of select="id"/>
-								</xsl:variable>
-								<xsl:choose>
-									<xsl:when test="checked='checked'">
-										<option value="{$id}" selected="selected">
-											<xsl:value-of disable-output-escaping="yes" select="value"/>
-										</option>
-									</xsl:when>
-									<xsl:otherwise>
-										<option value="{$id}">
-											<xsl:value-of disable-output-escaping="yes" select="value"/>
-										</option>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:sort select="value"/>
+								<option value="{id}">
+									<xsl:if test="checked='checked'">
+										<xsl:attribute name="selected" value="selected"/>
+									</xsl:if>
+									<xsl:value-of disable-output-escaping="yes" select="value"/>
+								</option>
 							</xsl:for-each>
 						</select>
 						<br/>
@@ -189,6 +181,15 @@
 							<img src="{add_img}" width="23"/>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="php:function('lang', 'add')"/>
+							<xsl:text> (</xsl:text>
+							<xsl:value-of select="input_text"/>
+							<xsl:text>)</xsl:text>
+						</a>
+						<br/>
+						<a id="delete_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
+							<img src="{delete_img}" width="23"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'delete')"/>
 							<xsl:text> (</xsl:text>
 							<xsl:value-of select="input_text"/>
 							<xsl:text>)</xsl:text>

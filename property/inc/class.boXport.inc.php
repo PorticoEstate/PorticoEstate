@@ -216,12 +216,19 @@
 
 		function select_rollback_file( $selected = '' )
 		{
-			$file_catalog = $this->config->config_data['export']['path'];
+			$rollback_list = array();
 
-			$dir_handle	 = @opendir($file_catalog);
+			$file_catalog = $this->config->config_data['export']['path'];
+			
+			$dir_handle	 = opendir($file_catalog);			
+
+			if(!$dir_handle)
+			{
+				return array();
+			}
 			$i			 = 0;
 			$myfilearray = '';
-			while ($file		 = readdir($dir_handle))
+			while ($file = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file("{$file_catalog}/{$file}"))
 				{

@@ -568,3 +568,30 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	 * alter column
+	 */
+	$test[] = '0.9.18.015';
+	function helpdesk_upgrade0_9_18_015()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication', 'file_attachments', array(
+			'type' => 'text',
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication_msg', 'file_attachments', array(
+			'type' => 'text',
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.016';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}

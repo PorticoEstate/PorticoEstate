@@ -46,22 +46,25 @@
 			$config = CreateObject('phpgwapi.config', 'frontend');
 			$config->read();
 
+			$tab_sorting =array();
+
 			$_locations = array();
 			foreach ($locations as $location => $name)
 			{
+				$sort = isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99;
 				$_locations[] = array
 					(
 					'location' => $location,
 					'name' => $name,
-					'sort' => isset($config->config_data['tab_sorting'][$name]) ? $config->config_data['tab_sorting'][$name] : 99
+					'sort' => $sort
 				);
-			}
-
-			if (isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
+				$tab_sorting[] = $sort;
+			}			
+			
+			if ($_locations && isset($config->config_data['tab_sorting']) && $config->config_data['tab_sorting'])
 			{
-				array_multisort($config->config_data['tab_sorting'], SORT_ASC, $_locations);
+				array_multisort($tab_sorting, SORT_ASC, $_locations);
 			}
-
 			return $_locations;
 		}
 

@@ -335,10 +335,4 @@
 			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
-		
-		public function save()
-		{
-			parent::save();
-		}
-
 	}

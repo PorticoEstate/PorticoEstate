@@ -330,10 +330,6 @@
 			self::render_template_xsl(array('booking', 'datatable_inline'), array($mode => $data));
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 
 		public function save_ajax()
 		{
