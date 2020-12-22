@@ -77,7 +77,7 @@
 			self::rich_text_editor('field_frontimagetext');
 			self::rich_text_editor('field_participanttext');
 
-			self::render_template('metasettings', array('config_data' => $config->config_data,
+			self::render_template_xsl('metasettings', array('config_data' => $config->config_data,
 				'meta' => $meta));
 		}
 

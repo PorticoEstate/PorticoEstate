@@ -1183,7 +1183,7 @@
 			$event['edit_link'] = self::link(array('menuaction' => 'booking.uievent.edit',
 					'id' => $event['id']));
 
-			self::render_template('event_info', array('event' => $event));
+			self::render_template_xsl('event_info', array('event' => $event));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

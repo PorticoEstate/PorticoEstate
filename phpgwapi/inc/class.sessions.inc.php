@@ -1148,7 +1148,12 @@
 		 */
 		public function update_dla()
 		{
-			session_id($this->_sessionid);
+			if ( $this->_sessionid != session_id())
+			{
+				throw new Exception("sessions::sessionid is tampered");
+			}
+
+//			session_id($this->_sessionid);
 
 			$menuaction = phpgw::get_var('menuaction');
 

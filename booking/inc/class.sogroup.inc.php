@@ -52,7 +52,7 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function validate( $entity )
+		function validate( &$entity )
 		{
 			$errors = parent::validate($entity);
 			# Detect and prevent loop creation

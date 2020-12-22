@@ -367,12 +367,22 @@ HTML;
 		public function add_code($namespace, $code, $end_of_page = false)
 		{
 			$key = $end_of_page ? 'java_script_end' : 'java_script';
-			$GLOBALS['phpgw_info']['flags'][$key] .= "\n"
+
+			$script = "\n"
 				. '<script>' ."\n"
 				. '//<[CDATA[' ."\n"
 				. $code ."\n"
 				. '//]]' ."\n"
 				. "</script>\n";
+
+			if(isset($GLOBALS['phpgw_info']['flags'][$key]))
+			{
+				$GLOBALS['phpgw_info']['flags'][$key] .= $script;
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags'][$key] = $script;
+			}
 		}
 
 		/**

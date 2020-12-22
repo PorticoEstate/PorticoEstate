@@ -198,7 +198,7 @@ HTML;
 
 			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
 
-			$var['menu_state'] = $navbar_state['menu_state'];
+			$var['menu_state'] = isset($navbar_state['menu_state']) ? $navbar_state['menu_state'] : null;
 
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 //			_debug_array($bookmarks);
@@ -440,7 +440,7 @@ HTML;
 							(
 								'text'	=> $item['text'],
 								'url'	=> $item['url'],
-								'image'	=> $item['image']
+								'image'	=> isset($item['image']) ? $item['image'] : null
 							)
 						)	+ $item['children'];
 				}

@@ -373,7 +373,7 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time', $boundary['from_']);
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $boundary['to_']);
 
-			self::render_template('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries,
+			self::render_template_xsl('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries,
 				'season' => $season));
 		}
 
@@ -539,7 +539,7 @@ JS;
 
 			self::add_javascript('booking', 'base', 'season.wtemplate.js');
 
-			self::render_template('season_wtemplate_allocation', array('season' => $season));
+			self::render_template_xsl('season_wtemplate_allocation', array('season' => $season));
 		}
 
 		public function generate()
@@ -618,7 +618,7 @@ JS;
 
 			  $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab); */
 
-			self::render_template('season_generate', array('season' => $season,
+			self::render_template_xsl('season_generate', array('season' => $season,
 				'result' => $result, 'step' => $step,
 				'interval' => $interval,
 				'from_' => $from, 'to_' => $to));

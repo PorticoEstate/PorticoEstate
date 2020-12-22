@@ -292,7 +292,7 @@
 			}
 			$permission = $this->bo->read_single($id);
 			$this->add_default_display_data($permission);
-			self::render_template('permission', array('permission' => $permission));
+			self::render_template_xsl('permission', array('permission' => $permission));
 		}
 
 		public function add()

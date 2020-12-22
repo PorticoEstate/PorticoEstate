@@ -202,7 +202,7 @@
 					{
 						$names[] = $res['name'];
 					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
+					$application['what'] = $application['building_name'] . ' (' . join(', ', $names) . ')';
 				}
 				$account_id = $GLOBALS['phpgw']->accounts->name2id($application['case_officer_name']);
 				if($account_id)

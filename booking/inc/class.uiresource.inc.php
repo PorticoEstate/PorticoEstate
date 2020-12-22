@@ -883,6 +883,6 @@
 
 			phpgwapi_jquery::load_widget("datepicker");
 
-			self::render_template('resource_schedule', array('resource' => $resource));
+			self::render_template_xsl('resource_schedule', array('resource' => $resource));
 		}
 	}

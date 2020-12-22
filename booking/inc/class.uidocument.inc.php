@@ -308,7 +308,7 @@
 			}
 			$document = $this->bo->read_single($id);
 			$this->add_default_display_data($document);
-			self::render_template('document', array('document' => $document));
+			self::render_template_xsl('document', array('document' => $document));
 		}
 
 		public function add()
