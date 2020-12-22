@@ -33,9 +33,12 @@
 
 		private function item_link( &$item, $key )
 		{
-			if (in_array($item['type'], array('allocation', 'booking', 'event')))
-				$item['info_url'] = $this->link(array('menuaction' => 'bookingfrontend.ui' . $item['type'] . '.info',
+			if (isset($item['type']) && in_array($item['type'], array('allocation', 'booking', 'event')))
+			{
+				$item['info_url'] = $this->link(array(
+					'menuaction' => 'bookingfrontend.ui' . $item['type'] . '.info',
 					'id' => $item['id']));
+			}
 		}
 
 		public function get_freetime()

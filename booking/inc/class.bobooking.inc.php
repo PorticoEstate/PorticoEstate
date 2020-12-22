@@ -592,7 +592,14 @@
 
 			$bookings	 = array_merge($allocations, $bookings);
 //            echo "before rem\n";
-			$bookings	 = $this->_remove_event_conflicts($bookings, $events);
+			if ($this->current_app() == 'bookingfrontend')
+			{
+				$bookings	 = $this->_remove_event_conflicts2($bookings, $events);
+			}
+			else
+			{
+				$bookings	 = $this->_remove_event_conflicts($bookings, $events);
+			}
 //            echo "after rem\n";
 
 			$bookings = array_merge($events, $bookings);
@@ -1466,7 +1473,16 @@
 			}
 //			_debug_array($events);
 			$bookings	 = array_merge($allocations, $bookings);
-			$bookings	 = $this->_remove_event_conflicts($bookings, $events);
+
+			if ($this->current_app() == 'bookingfrontend')
+			{
+				$bookings	 = $this->_remove_event_conflicts2($bookings, $events);
+			}
+			else
+			{
+				$bookings	 = $this->_remove_event_conflicts($bookings, $events);
+			}
+
 			$bookings	 = array_merge($events, $bookings);
 
 			$bookings	 = $this->_split_multi_day_bookings($bookings, $from, $to);
