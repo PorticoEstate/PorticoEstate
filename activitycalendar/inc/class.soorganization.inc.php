@@ -115,7 +115,7 @@
 				$use_local_org = true;
 				//$id = $this->marshal($filters[$this->get_id_field_name()],'int');
 				//$filter_clauses[] = "org.id = {$id}";
-				unset($filter_clauses);
+				$filter_clauses = array();
 				if (isset($filters[$this->get_id_field_name()]))
 				{
 					$id = $this->marshal($filters[$this->get_id_field_name()], 'int');

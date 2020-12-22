@@ -611,7 +611,7 @@
 
 		function get_office_from_user( $user_id )
 		{
-			if (user_id)
+			if ($user_id)
 			{
 				$user_id = (int)$user_id;
 				$q1 = "SELECT office FROM bb_office_user WHERE account_id={$user_id}";
