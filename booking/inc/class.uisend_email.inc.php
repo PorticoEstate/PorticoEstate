@@ -125,7 +125,7 @@
 		{
 			$ok_count = phpgw::get_var('ok');
 			$fail_count = phpgw::get_var('failed');
-			self::render_template('email_receipt', array('ok_count' => $ok_count, 'fail_count' => $fail_count));
+			self::render_template_xsl('email_receipt', array('ok_count' => $ok_count, 'fail_count' => $fail_count));
 		}
 
 		private function send_emails( $contacts, $subject, $body )

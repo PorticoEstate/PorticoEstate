@@ -161,14 +161,6 @@
 			$permission_data['cancel_link'] = $this->generate_link('index');
 		}
 
-		// public function show()
-		// {
-		// 	$id = (phpgw::get_var('id', 'int');
-		// 	$permission = $this->bo->read_single($id);
-		// 	$this->add_default_display_data($permission);
-		// 	self::render_template('permission_root', array('permission' => $permission));
-		// }
-
 		public function add()
 		{
 			$errors = array();
@@ -203,32 +195,6 @@
 
 			self::render_template_xsl('permission_root_form', array('permission' => $permission));
 		}
-
-		// public function edit()
-		// {
-		// 	$id = phpgw::get_var('id', 'int');
-		// 	$permission = $this->bo->read_single($id);
-		// 	
-		// 	$errors = array();
-		// 	if($_SERVER['REQUEST_METHOD'] == 'POST')
-		// 	{
-		// 		$permission = array_merge($permission, extract_values($_POST, $this->fields));
-		// 		$errors = $this->bo->validate($permission);
-		// 		if(!$errors)
-		// 		{
-		// 			$receipt = $this->bo->update($permission);
-		// 			$this->redirect($this->generate_link_params('index'));
-		// 		}
-		// 	}
-		// 	
-		// 	self::add_javascript('booking', 'base', 'permission_root.js');
-		// 	
-		// 	$this->add_default_display_data($permission);
-		// 	
-		// 	$this->flash_form_errors($errors);
-		// 	
-		// 	self::render_template('permission_root_form', array('permission' => $permission));
-		// }
 
 		public function delete()
 		{

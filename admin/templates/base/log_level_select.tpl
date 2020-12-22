@@ -12,6 +12,7 @@
 			<option value="D" {D_selected}>{lang_debug}</option>
 			<option value="S" {S_selected}>{lang_strict}</option>
 			<option value="DP" {DP_selected}>{lang_deprecated}</option>
+			<option value="A" {A_selected}>{lang_all}</option>
 		</select>
 		<noscript><input type="submit"></noscript>
    </form>

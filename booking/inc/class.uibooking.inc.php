@@ -950,7 +950,7 @@
 
 			if ($step < 2)
 			{
-				self::render_template('booking_delete', array('booking' => $booking,
+				self::render_template_xsl('booking_delete', array('booking' => $booking,
 					'recurring' => $recurring,
 					'outseason' => $outseason,
 					'interval' => $field_interval,
@@ -960,7 +960,7 @@
 			}
 			elseif ($step == 2)
 			{
-				self::render_template('booking_delete_preview', array('booking' => $booking,
+				self::render_template_xsl('booking_delete_preview', array('booking' => $booking,
 					'step' => $step,
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
@@ -1039,7 +1039,7 @@
 					'id' => $booking['id']));
 
 			$booking['when'] = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
-			self::render_template('booking_info', array('booking' => $booking));
+			self::render_template_xsl('booking_info', array('booking' => $booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 

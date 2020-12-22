@@ -75,7 +75,7 @@
 			$billing = array('internal' => $internal_value, 'external' => $external_value);
 			$billing['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::render_template('settings', array('config_data' => $config->config_data,
+			self::render_template_xsl('settings', array('config_data' => $config->config_data,
 				'billing' => $billing));
 		}
 

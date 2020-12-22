@@ -323,7 +323,7 @@
 
 			self::rich_text_editor('field_description');
 
-			self::render_template('system_message_edit', array('system_message' => $system_message,
+			self::render_template_xsl('system_message_edit', array('system_message' => $system_message,
 				'module' => $this->module));
 		}
 
