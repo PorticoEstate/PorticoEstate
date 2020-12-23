@@ -281,9 +281,11 @@
 
 		private function item_link( &$item, $key )
 		{
-			if (in_array($item['type'], array('allocation', 'booking', 'event')))
+			if (isset($item['type']) && in_array($item['type'], array('allocation', 'booking', 'event')))
+			{
 				$item['info_url'] = $this->link(array('menuaction' => 'booking.ui' . $item['type'] . '.info',
 					'id' => $item['id']));
+			}
 		}
 
 		public function building_schedule()

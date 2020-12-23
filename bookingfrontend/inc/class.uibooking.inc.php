@@ -81,6 +81,8 @@
 				{
 					$booking['resource_link'] = $this->link(array('menuaction' => 'bookingfrontend.uiresource.schedule',
 						'id' => $booking['resource_id']));
+					$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',
+						'id' => $booking['id']));
 					array_walk($booking, array($this, 'item_link'));
 
 					$results[] = $booking;
