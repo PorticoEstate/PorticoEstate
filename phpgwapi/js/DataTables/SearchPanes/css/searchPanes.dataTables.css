@@ -46,6 +46,11 @@ div.dtsp-topRow button.dtsp-searchIcon {
   background-size: 12px;
 }
 
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane table thead th,
+div.dtsp-panesContainer div.dtsp-searchPanes div.dtsp-searchPane table thead td {
+  width: 100% !important;
+}
+
 div.dt-button-collection {
   z-index: 2002;
 }
@@ -133,9 +138,12 @@ div.dt-button-collection {
 div.dtsp-panesContainer {
   width: 100%;
 }
+div.dtsp-panesContainer div.dataTables_wrapper {
+  width: 100%;
+}
 
 div.dtsp-panesContainer {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -391,8 +399,8 @@ div.dtsp-narrow div.dtsp-subRows {
 
 @media screen and (max-width: 767px) {
   div.dtsp-columns-4,
-  div.dtsp-columns-5,
-  div.dtsp-columns-6 {
+div.dtsp-columns-5,
+div.dtsp-columns-6 {
     max-width: 31% !important;
     min-width: 31% !important;
   }
