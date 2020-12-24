@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitef4ec8cc98a2ca3621170a40a899999a
+class ComposerStaticInitfaf36dd9681c3671764b7db0ce5e0ce4
 {
     public static $files = array (
         'd5fa61a7f6cbc1df09dd4df84549a2dc' => __DIR__ . '/..' . '/rospdf/pdf-php/src/Cpdf.php',
