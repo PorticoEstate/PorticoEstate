@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Gaetano Giunta
- * @copyright (C) 2005-2019 G. Giunta
+ * @copyright (C) 2005-2020 G. Giunta
  * @license code licensed under the BSD License: see file license.txt
  *
  * Parses GET/POST variables
@@ -11,7 +11,7 @@
  */
 
 // work around magic quotes
-if (get_magic_quotes_gpc()) {
+if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
     function stripslashes_deep($value)
     {
         $value = is_array($value) ?
