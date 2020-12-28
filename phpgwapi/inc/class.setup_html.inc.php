@@ -127,7 +127,9 @@
 				$GLOBALS['setup_tpl']->set_var('configdomain',' - ' . lang('Domain') . ': ' . $configdomain);
 			}
 
-			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
+			$api_version = isset($GLOBALS['phpgw_info']['server']['versions']['phpgwapi']) ? $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'] : '';
+			
+			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $api_version;
 
 			$GLOBALS['setup_tpl']->set_var('pgw_ver',$version);
 			$GLOBALS['setup_tpl']->set_var('logoutbutton',$btn_logout);

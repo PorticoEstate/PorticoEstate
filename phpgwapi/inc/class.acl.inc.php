@@ -484,7 +484,7 @@
 							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 
 			$now 			= time();
-			$mod_account	= $GLOBALS['phpgw_info']['user']['account_id'] ? $GLOBALS['phpgw_info']['user']['account_id'] : -1;
+			$mod_account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 
 			$valueset=array();
 

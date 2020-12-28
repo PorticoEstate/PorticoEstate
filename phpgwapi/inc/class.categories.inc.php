@@ -806,7 +806,7 @@
 
 			$values['level'] = 0;
 			$values['main'] = 0;
-			$values['active'] = (int) $values['active'];
+			$values['active'] = isset($values['active']) ? (int) $values['active'] : 0;
 			if ($values['parent'] > 0)
 			{
 				$values['level']	= (int) $this->id2name($values['parent'],'level')+1;

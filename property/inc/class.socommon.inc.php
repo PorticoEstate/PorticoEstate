@@ -82,7 +82,7 @@
 				}
 			}
 
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{

@@ -56,7 +56,7 @@
 		{
 			//_debug_array($bt = debug_backtrace());
 			$this->socommon	 = CreateObject('property.socommon');
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 
 			if (!isset($GLOBALS['phpgw']->asyncservice))
 			{
@@ -68,7 +68,8 @@
 			$this->left_join = $this->socommon->left_join;
 			$this->like		 = $this->socommon->like;
 
-			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+			$template_set = isset($GLOBALS['phpgw_info']['server']['template_set']) ? $GLOBALS['phpgw_info']['server']['template_set'] : 'base';
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$template_set}"; 
 		}
 
 		function check_perms( $rights, $required )
@@ -157,7 +158,7 @@
 			return phpgwapi_datetime::date_to_timestamp($date);
 		}
 
-		function select_multi_list( $selected = '', $input_list )
+		function select_multi_list( $selected = '', $input_list = array())
 		{
 			$j = 0;
 			if (isset($input_list) AND is_array($input_list))
@@ -1013,7 +1014,7 @@
 			return $alarm;
 		}
 
-		function select_multi_list_2( $selected = '', $list, $input_type = '' )
+		function select_multi_list_2( $selected = '', $list = array(), $input_type = '' )
 		{
 			if (isset($list) AND is_array($list))
 			{

@@ -40,7 +40,9 @@
 
 		function __construct( $bocommon = '' )
 		{
-			$this->account			 = $GLOBALS['phpgw_info']['user']['account_id'];
+
+			$this->account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
+
 			$this->soadmin_location	 = CreateObject('property.soadmin_location');
 			if (!$bocommon || !is_object($bocommon))
 			{

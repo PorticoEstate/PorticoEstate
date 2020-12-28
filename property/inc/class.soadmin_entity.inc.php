@@ -47,7 +47,7 @@
 
 		function __construct( $entity_id = '', $cat_id = '', $bocommon = '' )
 		{
-			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 
 			if (!$bocommon || !is_object($bocommon))
 			{
