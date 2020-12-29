@@ -1,3 +1,27 @@
+== Running from Docker
+
+To run PorticoEstate using Docker containers:
+
+1. Enter this following command in the Terminal to start the docker container in the background
+
+   
+   docker-compose up -d
+
+
+2. Connect to database and create the admin user
+
+http://localhost:8080/setup/[http://localhost:8080/setup/]
+[TIP]
+====
+Use "db" as database-host in setup, as it is defined in the docker-environment
+====
+
+To stop PorticoEstate and PostgreSQL:
+
+   docker-compose down
+
+
+
 include::doc/README.adoc[]
 
 include::setup/doc/README.adoc[]
