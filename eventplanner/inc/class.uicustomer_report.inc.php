@@ -335,9 +335,5 @@
 		}
 
 
-		public function save()
-		{
-			parent::save();
-		}
 
 	}

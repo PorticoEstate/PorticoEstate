@@ -340,13 +340,21 @@
 
 		function allocation_ids_for_resource( $resource_id, $start, $end )
 		{
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
 			$start = $start->format('Y-m-d H:i');
 			$end = $end->format('Y-m-d H:i');
-			$resource_id = intval($resource_id);
 			$results = array();
 			$sql = "SELECT bb_allocation.id AS id"
-				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id=$resource_id)"
-				. " JOIN bb_resource as res ON ( res.id=$resource_id)"
+				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
 				. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
 				. " WHERE bb_season.building_id=bb_building_resource.building_id"
@@ -366,13 +374,21 @@
 
 		function booking_ids_for_resource( $resource_id, $start, $end )
 		{
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
 			$start = $start->format('Y-m-d H:i');
 			$end = $end->format('Y-m-d H:i');
-			$resource_id = intval($resource_id);
 			$results = array();
 			$sql = "SELECT bb_booking.id AS id"
-				. " FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id=$resource_id)"
-				. " JOIN bb_resource as res ON ( res.id=$resource_id)"
+				. " FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1)"
 				. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
 				. " WHERE bb_season.building_id=bb_building_resource.building_id AND bb_season.active=1"
@@ -391,12 +407,19 @@
 
 		function event_ids_for_resource( $resource_id, $start, $end )
 		{
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
 			$start = $start->format('Y-m-d H:i');
 			$end = $end->format('Y-m-d H:i');
-			$resource_id = intval($resource_id);
 			$results = array();
 			$this->db->query("SELECT id FROM bb_event"
-				. " JOIN bb_event_resource ON (event_id=id AND resource_id=$resource_id)"
+				. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
 				. " WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end')"
 				. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
 				. " AND to_ > '$end'))", __LINE__, __FILE__);

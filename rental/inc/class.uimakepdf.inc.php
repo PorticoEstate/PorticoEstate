@@ -246,17 +246,38 @@
 				else
 				{
 					// Handle failure on storing document
-					$this->redirect($document, $document_properties, '', '');
+					$this->_redirect($document, $document_properties, '', '');
 				}
 			}
 			else
 			{
 				//Handle vfs failure to store document
-				$this->redirect($document, $document_properties, '', '');
+				$this->_redirect($document, $document_properties, '', '');
 			}
 			return false;
 		}
 
+		/**
+		 * Utility function for redirecting to correct edit mode (contract/party)
+		 *
+		 * @param $document	the target document
+		 * @param $document_properties	the document properies (name/value array)
+		 * @param $error	an error message
+		 * @param $message	a user message
+		 */
+		private function _redirect( $document, $document_properties, $error, $message )
+		{
+			if ($document_properties['document_type'] == rental_sodocument::$CONTRACT_DOCUMENTS)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
+					'id' => $document_properties['id'], 'error' => $error, 'message' => $message));
+			}
+			else if ($document_properties['document_type'] == rental_sodocument::$PARTY_DOCUMENTS)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uiparty.edit',
+					'id' => $document_properties['id'], 'error' => $error, 'message' => $message));
+			}
+		}
 		/**
 		 * Utility method for finding out whether a document is bound to a
 		 * contract or a party.

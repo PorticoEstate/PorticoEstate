@@ -499,7 +499,7 @@ JS;
 			$this->total_records = $this->so->total_records;
 			$this->uicols		 = $this->so->uicols;
 
-			$user_columns	 = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"] : array();
+			$user_columns	 = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"]) ? (array)$GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"] : array();
 			$custom_cols	 = $this->get_column_list();
 
 //_debug_array($user_columns);

@@ -280,15 +280,15 @@
 		* @param integer $num_rows number of rows to return (optional), if unset will use $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']
 		* @return string offset and limit
 		*/
-		function get_offset($sql = '', $offset, $num_rows = 0)
+		function get_offset($sql = '', $offset = 0, $num_rows = 0)
 		{
 			$offset		=  $offset < 0 ? 0 : (int)$offset;
 			$num_rows	= (int)$num_rows;
 
 			if ($num_rows <= 0)
 			{
-				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;
+				$maxmatches = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+				$num_rows = $maxmatches;
 			}
 
 			switch ( $this->Type )

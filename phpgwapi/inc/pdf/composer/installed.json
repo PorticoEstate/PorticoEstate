@@ -1,17 +1,17 @@
 [
     {
         "name": "rospdf/pdf-php",
-        "version": "0.12.62",
-        "version_normalized": "0.12.62.0",
+        "version": "0.12.63",
+        "version_normalized": "0.12.63.0",
         "source": {
             "type": "git",
             "url": "https://github.com/rospdf/pdf-php.git",
-            "reference": "3598d0cb9d14fb5c5599a93285eff6ddef8a7310"
+            "reference": "f957e49ddfa6b7891de62c48b1de965a74db6c44"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/rospdf/pdf-php/zipball/3598d0cb9d14fb5c5599a93285eff6ddef8a7310",
-            "reference": "3598d0cb9d14fb5c5599a93285eff6ddef8a7310",
+            "url": "https://api.github.com/repos/rospdf/pdf-php/zipball/f957e49ddfa6b7891de62c48b1de965a74db6c44",
+            "reference": "f957e49ddfa6b7891de62c48b1de965a74db6c44",
             "shasum": ""
         },
         "require": {
@@ -21,7 +21,7 @@
             "phpunit/phpunit": "3.7.38",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2020-04-12T14:12:11+00:00",
+        "time": "2020-09-20T06:15:20+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

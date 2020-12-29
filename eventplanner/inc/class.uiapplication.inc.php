@@ -44,7 +44,7 @@
 			'save' => true,
 			'handle_multi_upload_file' => true,
 			'build_multi_upload_file' => true,
-			'get_files'				=> true,
+			'_get_files'				=> true,
 			'view_file'				=> true
 		);
 
@@ -469,7 +469,7 @@
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_2',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.get_files",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication._get_files",
 					'id' => $id,
 					'section' => 'cv',
 					'phpgw_return_as' => 'json'))),
@@ -484,7 +484,7 @@
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_3',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.get_files",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication._get_files",
 					'id' => $id,
 					'section' => 'documents',
 					'phpgw_return_as' => 'json'))),
@@ -551,7 +551,7 @@
 			self::render_template_xsl(array('application', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
-		function get_files()
+		function _get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
 			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
@@ -686,9 +686,5 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 
 	}

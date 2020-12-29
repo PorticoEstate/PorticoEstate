@@ -207,7 +207,7 @@
 
 			$values = array();
 			$this->_db->next_record();
-			$values['sum_total_price'] = $this->_db->f('sum_total_price');
+			$values['sum_total_price'] = (float)$this->_db->f('sum_total_price');
 
 
 			$sql = "SELECT sum(rental_contract.rented_area::numeric) AS sum_total_area FROM"
@@ -219,7 +219,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$this->_db->next_record();
-			$values['sum_total_area'] = $this->_db->f('sum_total_area');
+			$values['sum_total_area'] = (float)$this->_db->f('sum_total_area');
 
 			return $values;
 		}

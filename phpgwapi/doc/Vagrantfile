@@ -58,7 +58,8 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://app.vagrantup.com/boxes/search/
 #  config.vm.box = "ubuntu/eoan64"
-  config.vm.box = "ubuntu/bionic64"
+#  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/focal64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -120,28 +121,29 @@ Vagrant.configure("2") do |config|
    config.vm.provision "shell", inline: <<-SHELL
 	sudo apt-get install -y software-properties-common
 	sudo add-apt-repository -y ppa:ondrej/php
+	sudo add-apt-repository -y ppa:ondrej/apache2
     sudo apt-get update
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2
     sudo apt-get install -y mysql-client-core-8.0
-    sudo apt-get install -y libapache2-mod-php7.4 php7.4 php7.4-curl php7.4-intl php7.4-mysql php-xdebug php-apcu php7.4-dev php7.4-xmlrpc php7.4-xml php7.4-gd php7.4-xsl php7.4-sybase php7.4-pgsql php7.4-json php7.4-gd php-imagick php7.4-imap php7.4-soap php7.4-zip php7.4-mbstring php-pear libaio1 locales
+    sudo apt-get install -y libapache2-mod-php8.0 php8.0 php8.0-curl php8.0-intl php8.0-mysql php8.0-xdebug php8.0-apcu php8.0-dev php8.0-xml php8.0-gd php8.0-xsl php8.0-sybase php8.0-pgsql php8.0-gd php8.0-imagick php8.0-imap php8.0-soap php8.0-zip php8.0-mbstring php-pear libaio1 locales
     sudo apt-get install -y git
     sudo apt-get install -y less vim-tiny
 	sudo apt-get install -y subversion
     sudo apt-get install -y apg
-	sudo apt-get install -y openjdk-11-jre-headless
+	sudo apt-get install -y openjdk-13-jre-headless
 	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
 	sudo apt-get update
-	sudo apt-get install -y postgresql-12 postgresql-client-12 postgresql-contrib-12
+	sudo apt-get install -y postgresql-13 postgresql-client-13 postgresql-contrib-13
 
     # fix permissions
     echo "-------------------- fixing listen_addresses on postgresql.conf"
-    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/12/main/postgresql.conf
+    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/13/main/postgresql.conf
     echo "-------------------- fixing postgres pg_hba.conf file"
     # replace the ipv4 host line with the above line
 
-    sudo cat >> /etc/postgresql/12/main/pg_hba.conf <<EOF
+    sudo cat >> /etc/postgresql/13/main/pg_hba.conf <<EOF
     # Accept all IPv4 connections - FOR DEVELOPMENT ONLY!!!
     host    all         all         0.0.0.0/0             md5
 EOF
@@ -161,16 +163,16 @@ EOF
 
     sudo apt-get upgrade -y
 
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.4/apache2/php.ini
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.4/cli/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.0/apache2/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.0/cli/php.ini
 
-    sudo cat > /etc/php/7.4/apache2/conf.d/91-app.ini <<EOF
-xdebug.max_nesting_level=200
-xdebug.overload_var_dump=Off
-xdebug.remote_autostart=Off
+    sudo cat > /etc/php/8.0/apache2/conf.d/91-app.ini <<EOF
+xdebug.mode = debug,develop
+xdebug.start_with_request=yes
+xdebug.idekey=netbeans-xdebug
 xdebug.remote_connect_back=On
 xdebug.remote_enable=On
-xdebug.remote_port=9000
+xdebug.discover_client_host = 1
 session.cookie_secure=Off
 session.use_cookies=On
 session.use_only_cookies=On
@@ -195,7 +197,7 @@ sudo sed -i "s/PermitRootLogin.*/PermitRootLogin yes/" /etc/ssh/sshd_config
 
 sudo service ssh restart
 
-sudo cp /etc/php/7.4/apache2/conf.d/91-app.ini /etc/php/7.4/cli/conf.d/91-app.ini
+sudo cp /etc/php/8.0/apache2/conf.d/91-app.ini /etc/php/8.0/cli/conf.d/91-app.ini
 
 # Enable mod_rewrite
  sudo a2enmod rewrite

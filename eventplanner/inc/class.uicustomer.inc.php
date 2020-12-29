@@ -295,8 +295,4 @@
 			return $customer;
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 	}

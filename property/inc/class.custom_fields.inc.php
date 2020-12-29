@@ -51,7 +51,7 @@
 		{
 			parent::__construct($appname);
 			$this->_db2		 = clone($this->_db);
-			$this->contacts	 = CreateObject('phpgwapi.contacts');
+			$this->contacts	 = CreateObject('phpgwapi.contacts', false);
 		}
 
 		/**

@@ -36,7 +36,7 @@
 
 		function __construct()
 		{
-			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->account	 = isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->join		 = & $this->db->join;
 			$this->like		 = & $this->db->like;

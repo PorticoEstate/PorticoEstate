@@ -1,3 +1,43 @@
+== Running from Docker
+
+There is prepared a webserver with php 8.0 and Xdebug, connected to PostgreSQL 13.1
+
+To run PorticoEstate using Docker containers:
+
+1. Enter this following command in the Terminal to start the docker container in the background
+
+   
+   docker-compose up -d
+
+
+2. Create a database
+
+pgAdmin is included in the Docker-setup at http://localhost:5050/[http://localhost:5050/]
+connect to the host, using "db" as host - and create a database
+
+usename: pgadmin4@pgadmin.org
+Password: admin
+
+3. Connect to database and create the admin user
+
+http://localhost:8080/setup/[http://localhost:8080/setup/]
+[TIP]
+====
+Use "db" as database-host in setup, as it is defined in the docker-environment
+====
+
+Data is stored persistant as volumes for both pgAdmin and PostgreSQL
+[NOTE]
+====
+If you want to connect to PostgreSQL from outside the docker-environment, you will have to find the IP-address for the postgres_container, and connect using the port 5433 
+====
+
+To stop PorticoEstate and PostgreSQL:
+
+   docker-compose down
+
+
+
 include::doc/README.adoc[]
 
 include::setup/doc/README.adoc[]

@@ -22,6 +22,7 @@
 		{
 			static $cache = array();
 
+
 			$object_args = func_get_args();
 			$class_identifier = array_shift($object_args);
 

@@ -766,7 +766,7 @@
 
 			if ($step < 2)
 			{
-				self::render_template('allocation_delete', array('allocation' => $allocation,
+				self::render_template_xsl('allocation_delete', array('allocation' => $allocation,
 					'recurring' => $recurring,
 					'outseason' => $outseason,
 					'interval' => $field_interval,
@@ -775,7 +775,7 @@
 			}
 			elseif ($step == 2)
 			{
-				self::render_template('allocation_delete_preview', array('allocation' => $allocation,
+				self::render_template_xsl('allocation_delete_preview', array('allocation' => $allocation,
 					'step' => $step,
 					'recurring' => $_POST['recurring'],
 					'outseason' => $_POST['outseason'],
@@ -817,7 +817,6 @@
 			}
 			$allocation['resource_ids'] = $resource_ids;
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-//            self::render_template_xsl('datatable_jquery',$data);
 			self::render_template_xsl('allocation', array('allocation' => $allocation));
 		}
 
@@ -845,7 +844,7 @@
 					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
 					'resource' => $allocation['resource']));
 			$allocation['when'] = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
-			self::render_template('allocation_info', array('allocation' => $allocation));
+			self::render_template_xsl('allocation_info', array('allocation' => $allocation));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 	}

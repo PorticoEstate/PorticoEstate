@@ -488,7 +488,7 @@
 				. "VALUES ($values_insert)",__LINE__,__FILE__);
 			}
 
-			if($values['delete_choice'] && is_array($values['delete_choice']))
+			if(isset($values['delete_choice']) && is_array($values['delete_choice']))
 			{
 				foreach ($values['delete_choice'] as $choice_id)
 				{

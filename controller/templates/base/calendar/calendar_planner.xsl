@@ -306,6 +306,12 @@
 						</label>
 						<input class="form-control" type="text" name="query" value="{query}" placeholder="Fritekstsøk..."/>
 					</div>
+					<div class="form-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'date')"/>
+						</label>
+						<input class="form-control" type="text" id="limit_date" name="limit_date" value="{limit_date}"/>
+					</div>
 					<div class="form-group form-check">
 						<label class="form-check-label">
 							<input class="form-check-input" type="checkbox" name="deviation" value="1">
@@ -327,7 +333,7 @@
 		</div>
 		<div class="row">
 			<div class="mt-5 container">
-				<h2 class="text-center">Siste utførte rapporter</h2>
+				<h2 class="text-center">Utførte rapporter siden <xsl:value-of select="limit_date"/></h2>
 				<div class="row">
 					<xsl:call-template name="nextmatchs"/>
 				</div>
@@ -421,6 +427,35 @@
 								<xsl:with-param name="header_options" select ='header_options'/>
 							</xsl:apply-templates>
 						</tbody>
+						<tfoot>
+
+							<tr>
+								<td>
+								</td>
+								<td class="text-center">
+									<xsl:value-of select="php:function('lang', 'sum')"/>
+								</td>
+								<td>
+								</td>
+								<xsl:for-each select="findings_options_sum">
+									<td class="text-center">
+										<xsl:value-of select="node()"/>
+									</td>
+								</xsl:for-each>
+								<xsl:choose>
+									<xsl:when test="condition_degree =1">
+										<td class="text-center">
+										</td>
+										<td class="text-center">
+										</td>
+										<td class="text-center">
+										</td>
+									</xsl:when>
+								</xsl:choose>
+								<td class="text-center">
+								</td>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -1124,6 +1159,13 @@
 				<xsl:value-of select="node()"/>
 			</td>
 		</xsl:for-each>
+		<td class="text-center">
+			<xsl:value-of select="num_open_cases"/>
+		</td>
+		<td class="text-center">
+			<xsl:value-of select="num_corrected_cases"/>
+		</td>
+
 		<xsl:choose>
 			<xsl:when test="$condition_degree =1">
 				<td class="text-center">
@@ -1137,13 +1179,6 @@
 				</td>
 			</xsl:when>
 		</xsl:choose>
-
-		<td class="text-center">
-			<xsl:value-of select="num_open_cases"/>
-		</td>
-		<td class="text-center">
-			<xsl:value-of select="num_corrected_cases"/>
-		</td>
 
 		<td class="text-center">
 			<a >

@@ -390,7 +390,7 @@
 			$consequence_comment[3]	 = ' - ' . lang('Serious Consequences');
 			for ($i = 0; $i <= 3; $i++)
 			{
-				$consequence_list[$i][id]			 = $i;
+				$consequence_list[$i]['id']			 = $i;
 				$consequence_list[$i]['name']		 = $i . $consequence_comment[$i];
 				$consequence_list[$i]['selected']	 = $i == $selected ? 1 : 0;
 			}

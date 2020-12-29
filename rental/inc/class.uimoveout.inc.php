@@ -35,15 +35,15 @@
 	{
 
 		public $public_functions = array(
-			'add' => true,
-			'index' => true,
-			'query' => true,
-			'view' => true,
-			'edit' => true,
-			'save' => true,
-			'get' => true,
-			'get_files'	=> true,
-			'view_file'=> true
+			'add'		 => true,
+			'index'		 => true,
+			'query'		 => true,
+			'view'		 => true,
+			'edit'		 => true,
+			'save'		 => true,
+			'get'		 => true,
+			'_get_files' => true,
+			'view_file'	 => true
 		);
 		protected
 			$bo,
@@ -199,7 +199,7 @@
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uimoveout.get_files',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uimoveout._get_files',
 						'id' => $id,
 						'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $file_def,
@@ -275,9 +275,9 @@
 			return $moveout;
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
-			parent::save();
+			parent::save($ajax);
 		}
 
 		/**
@@ -298,7 +298,7 @@
 			parent::view_file();
 		}
 
-		public function get_files()
+		public function _get_files()
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{

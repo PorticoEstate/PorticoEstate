@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Gaetano Giunta
- * @copyright (C) 2005-2019 G. Giunta
+ * @copyright (C) 2005-2020 G. Giunta
  * @license code licensed under the BSD License: see file license.txt
  *
  * @todo add links to documentation from every option caption
@@ -26,7 +26,7 @@ $editorlibs = '../../phpjsrpc/lib/';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <title>XMLRPC Debugger</title>
     <meta name="robots" content="index,nofollow"/>

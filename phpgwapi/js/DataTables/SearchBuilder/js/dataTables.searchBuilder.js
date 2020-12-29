@@ -1,7 +1,10 @@
+/*! SearchBuilder 1.0.1
+ * ©2020 SpryMedia Ltd - datatables.net/license/mit
+ */
 (function () {
 	'use strict';
 
-	/*! DateTime picker for DataTables.net v0.0.8
+	/*! DateTime picker for DataTables.net v1.0.1
 	 *
 	 * ©2020 SpryMedia Ltd, all rights reserved.
 	 * License: MIT datatables.net/license/mit
@@ -9,7 +12,7 @@
 
 	/**
 	 * @summary     DateTime picker for DataTables.net
-	 * @version     0.0.8
+	 * @version     1.0.1
 	 * @file        dataTables.dateTime.js
 	 * @author      SpryMedia Ltd
 	 * @contact     www.datatables.net/contact
@@ -165,7 +168,7 @@
 		 * Destroy the control
 		 */
 		destroy: function () {
-			this._hide();
+			this._hide(true);
 			this.dom.container.off().empty();
 			this.dom.input.off('.datetime');
 		},
@@ -320,6 +323,18 @@
 
 			// Render the options
 			this._optionsTitle();
+
+			window.allan = this;
+
+			// When attached to a hidden input, we always show the input picker, and
+			// do so inline
+			if (this.dom.input.attr('type') === 'hidden') {
+				this.dom.container.addClass('inline');
+				this.c.attachTo = 'input';
+
+				this.val( this.dom.input.val(), false );
+				this._show();
+			}
 
 			// Trigger the display of the widget when clicking or focusing on the
 			// input element
@@ -630,7 +645,11 @@
 		 *
 		 * @private
 		 */
-		_hide: function () {
+		_hide: function (destroy) {
+			if (! destroy && this.dom.input.attr('type') === 'hidden') {
+				return;
+			}
+
 			var namespace = this.s.namespace;
 
 			this.dom.container.detach();
@@ -754,7 +773,7 @@
 					           (maxDate && day > maxDate);
 
 				var disableDays = this.c.disableDays;
-				if ( $.isArray( disableDays ) && $.inArray( day.getUTCDay(), disableDays ) !== -1 ) {
+				if ( Array.isArray( disableDays ) && $.inArray( day.getUTCDay(), disableDays ) !== -1 ) {
 					disabled = true;
 				}
 				else if ( typeof disableDays === 'function' && disableDays( day ) === true ) {
@@ -945,8 +964,17 @@
 			var span = 10;
 			var button = function (value, label, className) {
 				// Shift the value for PM
-				if ( count === 12 && val >= 12 && typeof value === 'number' ) {
-					value += 12;
+				if ( count === 12 && typeof value === 'number' ) {
+					if (val >= 12 ) {
+						value += 12;
+					}
+
+					if (value == 12) {
+						value = 0;
+					}
+					else if (value == 24) {
+						value = 12;
+					}
 				}
 
 				var selected = val === value || (value === 'am' && val < 12) || (value === 'pm' && val >= 12) ?
@@ -1081,6 +1109,11 @@
 			var container = this.dom.container;
 			var inputHeight = this.dom.input.outerHeight();
 
+			if (container.hasClass('inline')) {
+				container.insertAfter( this.dom.input );
+				return;
+			}
+
 			if ( this.s.parts.date && this.s.parts.time && $(window).width() > 550 ) {
 				container.addClass('horizontal');
 			}
@@ -1119,6 +1152,11 @@
 			// Correct to the right
 			if ( calWidth + offset.left > $(window).width() ) {
 				var newLeft = $(window).width() - calWidth;
+
+				// Account for elements which are inside a position absolute element
+				if (this.c.attachTo === 'input') {
+					newLeft -= $(container).offsetParent().offset().left;
+				}
 
 				container.css( 'left', newLeft < 0 ? 0 : newLeft );
 			}
@@ -1273,6 +1311,10 @@
 				this.dom.input
 					.val( out )
 					.trigger('change', {write: date});
+			
+			if ( this.dom.input.attr('type') === 'hidden' ) {
+				this.val(out, false);
+			}
 
 			if ( focus ) {
 				this.dom.input.focus();
@@ -1353,6 +1395,8 @@
 		yearRange: 25
 	};
 
+	DateTime.version = '1.0.1';
+
 	// Global export - if no conflicts
 	if (! window.DateTime) {
 		window.DateTime = DateTime;
@@ -1366,9 +1410,9 @@
 	};
 
 	// Attach to DataTables if present
-	if ($.dataTable) {
-		$.dataTable.DateTime = DateTime;
-		$.DataTable.DateTime = DateTime;
+	if ($.fn.dataTable) {
+		$.fn.dataTable.DateTime = DateTime;
+		$.fn.DataTable.DateTime = DateTime;
 	}
 
 	return DateTime;
@@ -1401,9 +1445,10 @@
 	        this.classes = $.extend(true, {}, Criteria.classes);
 	        // Get options from user and any extra conditions/column types defined by plug-ins
 	        this.c = $.extend(true, {}, Criteria.defaults, $.fn.dataTable.ext.searchBuilder, opts);
+	        var i18n = this.c.i18n;
 	        this.s = {
 	            condition: undefined,
-	            conditions: new Map(),
+	            conditions: {},
 	            data: undefined,
 	            dataIdx: -1,
 	            dataPoints: [],
@@ -1422,9 +1467,10 @@
 	            condition: $('<select disabled/>')
 	                .addClass(this.classes.condition)
 	                .addClass(this.classes.dropDown)
-	                .addClass(this.classes.italic),
+	                .addClass(this.classes.italic)
+	                .attr('autocomplete', 'hacking'),
 	            conditionTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.condition', 'Condition')),
+	                .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
 	            container: $('<div/>')
 	                .addClass(this.classes.container),
 	            data: $('<select/>')
@@ -1432,31 +1478,35 @@
 	                .addClass(this.classes.dropDown)
 	                .addClass(this.classes.italic),
 	            dataTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.data', 'Data')),
+	                .text(this.s.dt.i18n('searchBuilder.data', i18n.data)),
 	            defaultValue: $('<select disabled/>')
 	                .addClass(this.classes.value)
 	                .addClass(this.classes.dropDown),
 	            "delete": $('<button>&times</button>')
 	                .addClass(this.classes["delete"])
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', 'Delete filtering rule')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
+	                .attr('type', 'button'),
 	            left: $('<button>\<</button>')
 	                .addClass(this.classes.left)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', 'Outdent criteria')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle))
+	                .attr('type', 'button'),
 	            right: $('<button>\></button>')
 	                .addClass(this.classes.right)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', 'Indent criteria')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle))
+	                .attr('type', 'button'),
 	            value: [
 	                $('<select disabled/>').addClass(this.classes.value).addClass(this.classes.dropDown).addClass(this.classes.italic)
 	            ],
-	            valueTitle: $('<option value="" disabled selected hidden/>').text(this.s.dt.i18n('searchBuilder.value', 'Value'))
+	            valueTitle: $('<option value="--valueTitle--" selected/>').text(this.s.dt.i18n('searchBuilder.value', i18n.value))
 	        };
 	        // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
 	        if (this.c.greyscale) {
 	            $(this.dom.data).addClass(this.classes.greyscale);
 	            $(this.dom.condition).addClass(this.classes.greyscale);
+	            $(this.dom.defaultValue).addClass(this.classes.greyscale);
 	            for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
 	                var val = _a[_i];
 	                $(val).addClass(this.classes.greyscale);
@@ -1501,6 +1551,9 @@
 	        if ((this.c.depthLimit === false || this.s.depth < this.c.depthLimit) && hasSiblings) {
 	            $(this.dom.buttons).append(this.dom.right);
 	        }
+	        else {
+	            $(this.dom.right).remove();
+	        }
 	        $(this.dom.buttons).append(this.dom["delete"]);
 	        $(this.dom.container).append(this.dom.buttons);
 	        if (redraw) {
@@ -1528,20 +1581,48 @@
 	     * @param rowData The data for the row to be compared
 	     * @returns boolean Whether the criteria has passed
 	     */
-	    Criteria.prototype.search = function (rowData) {
-	        var condition = this.s.conditions.get(this.s.condition);
+	    Criteria.prototype.search = function (rowData, rowIdx) {
+	        var condition = this.s.conditions[this.s.condition];
 	        if (this.s.condition !== undefined && condition !== undefined) {
-	            return condition.search(rowData[this.s.dataIdx], this.s.value, this);
+	            // This check is in place for if a custom decimal character is in place
+	            if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                rowData[this.s.dataIdx] = rowData[this.s.dataIdx].replace(this.s.dt.settings()[0].oLanguage.sDecimal, '.');
+	            }
+	            var filter = rowData[this.s.dataIdx];
+	            // If orthogonal data is in place we need to get it's values for searching
+	            if (this.c.orthogonal.search !== 'search') {
+	                var settings = this.s.dt.settings()[0];
+	                filter = settings.oApi._fnGetCellData(settings, rowIdx, this.s.dataIdx, typeof this.c.orthogonal === 'string' ?
+	                    this.c.orthogonal :
+	                    this.c.orthogonal.search);
+	            }
+	            if (this.s.type === 'array') {
+	                // Make sure we are working with an array
+	                if (!Array.isArray(filter)) {
+	                    filter = [filter];
+	                }
+	                filter.sort();
+	            }
+	            return condition.search(filter, this.s.value, this);
 	        }
 	    };
 	    /**
 	     * Gets the details required to rebuild the criteria
 	     */
 	    Criteria.prototype.getDetails = function () {
+	        var value = this.s.value;
+	        // This check is in place for if a custom decimal character is in place
+	        if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	            for (var i = 0; i < this.s.value.length; i++) {
+	                if (this.s.value[i].indexOf('.') !== -1) {
+	                    value[i] = this.s.value[i].replace('.', this.s.dt.settings()[0].oLanguage.sDecimal);
+	                }
+	            }
+	        }
 	        return {
 	            condition: this.s.condition,
 	            data: this.s.data,
-	            value: this.s.value
+	            value: value
 	        };
 	    };
 	    /**
@@ -1595,7 +1676,6 @@
 	            this._populateCondition();
 	            $(this.dom.conditionTitle).remove();
 	            var condition_1;
-	            var conditions = this.s.conditions;
 	            // Check to see if the previously selected condition exists, if so select it
 	            $(this.dom.condition).children('option').each(function () {
 	                if ((loadedCriteria.condition !== undefined &&
@@ -1623,12 +1703,13 @@
 	    Criteria.prototype.setListeners = function () {
 	        var _this = this;
 	        $(this.dom.data)
-	            .unbind('input')
-	            .on('input', function () {
+	            .unbind('input change')
+	            .on('input change', function () {
 	            $(_this.dom.dataTitle).attr('selected', false);
 	            $(_this.dom.data).removeClass(_this.classes.italic);
 	            _this.s.dataIdx = $(_this.dom.data).children('option:selected').val();
 	            _this.s.data = $(_this.dom.data).children('option:selected').text();
+	            _this.c.orthogonal = _this._getOptions().orthogonal;
 	            // When the data is changed, the values in condition and value may also change so need to renew them
 	            _this._clearCondition();
 	            _this._clearValue();
@@ -1642,13 +1723,13 @@
 	            _this.s.dt.state.save();
 	        });
 	        $(this.dom.condition)
-	            .unbind('input')
-	            .on('input', function () {
+	            .unbind('input change')
+	            .on('input change', function () {
 	            $(_this.dom.conditionTitle).attr('selected', false);
 	            $(_this.dom.condition).removeClass(_this.classes.italic);
 	            var condDisp = $(_this.dom.condition).children('option:selected').val();
 	            // Find the condition that has been selected and store it internally
-	            for (var _i = 0, _a = Array.from(_this.s.conditions.keys()); _i < _a.length; _i++) {
+	            for (var _i = 0, _a = Object.keys(_this.s.conditions); _i < _a.length; _i++) {
 	                var cond = _a[_i];
 	                if (cond === condDisp) {
 	                    _this.s.condition = condDisp;
@@ -1743,8 +1824,8 @@
 	    Criteria.prototype._clearCondition = function () {
 	        $(this.dom.condition).empty();
 	        $(this.dom.conditionTitle).attr('selected', true).attr('disabled', true);
-	        $(this.dom.condition).append(this.dom.conditionTitle);
-	        this.s.conditions = new Map();
+	        $(this.dom.condition).prepend(this.dom.conditionTitle).prop('selectedIndex', 0);
+	        this.s.conditions = {};
 	        this.s.condition = undefined;
 	    };
 	    /**
@@ -1758,10 +1839,7 @@
 	                $(val).remove();
 	            }
 	            // Call the init function to get the value elements for this condition
-	            var value = this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener);
-	            this.dom.value = Array.isArray(value) ?
-	                value :
-	                [value];
+	            this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
 	            $(this.dom.value[0]).insertAfter(this.dom.condition).trigger('dtsb-inserted');
 	            // Insert all of the value elements
 	            for (var i = 1; i < this.dom.value.length; i++) {
@@ -1776,8 +1854,7 @@
 	            }
 	            // Append the default valueTitle to the default select element
 	            $(this.dom.valueTitle)
-	                .attr('selected', true)
-	                .attr('disabled', false);
+	                .attr('selected', true);
 	            $(this.dom.defaultValue)
 	                .append(this.dom.valueTitle)
 	                .insertAfter(this.dom.condition);
@@ -1785,12 +1862,21 @@
 	        this.s.value = [];
 	    };
 	    /**
+	     * Gets the options for the column
+	     * @returns {object} The options for the column
+	     */
+	    Criteria.prototype._getOptions = function () {
+	        var table = this.s.dt;
+	        return $.extend(true, {}, Criteria.defaults, table.settings()[0].aoColumns[this.s.dataIdx].searchBuilder);
+	    };
+	    /**
 	     * Populates the condition dropdown
 	     */
 	    Criteria.prototype._populateCondition = function () {
 	        var conditionOpts = [];
+	        var conditionsLength = Object.keys(this.s.conditions).length;
 	        // If there are no conditions stored then we need to get them from the appropriate type
-	        if (this.s.conditions.size === 0) {
+	        if (conditionsLength === 0) {
 	            var column = $(this.dom.data).children('option:selected').val();
 	            this.s.type = this.s.dt.columns().type().toArray()[column];
 	            // If the column type is unknown, call a draw to try reading it again
@@ -1807,10 +1893,20 @@
 	                .addClass(this.classes.italic);
 	            $(this.dom.conditionTitle)
 	                .attr('selected', true);
+	            var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
+	            // This check is in place for if a custom decimal character is in place
+	            if (decimal !== '' && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
+	                if (this.s.type.indexOf('num-fmt') !== -1) {
+	                    this.s.type = this.s.type.replace(decimal, '');
+	                }
+	                else if (this.s.type.indexOf('num') !== -1) {
+	                    this.s.type = this.s.type.replace(decimal, '');
+	                }
+	            }
 	            // Select which conditions are going to be used based on the column type
 	            var conditionObj = this.c.conditions[this.s.type] !== undefined ?
 	                this.c.conditions[this.s.type] :
-	                this.s.type.indexOf('moment') !== -1 && $.fn.dataTable.moment !== undefined ?
+	                this.s.type.indexOf('moment') !== -1 ?
 	                    this.c.conditions.moment :
 	                    this.c.conditions.string;
 	            // If it is a moment format then extract the date format
@@ -1821,9 +1917,13 @@
 	            for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
 	                var condition = _a[_i];
 	                if (conditionObj[condition] !== null) {
-	                    this.s.conditions.set(condition, conditionObj[condition]);
+	                    this.s.conditions[condition] = conditionObj[condition];
+	                    var condName = conditionObj[condition].conditionName;
+	                    if (typeof condName === 'function') {
+	                        condName = condName(this.s.dt, this.c.i18n);
+	                    }
 	                    conditionOpts.push($('<option>', {
-	                        text: conditionObj[condition].conditionName,
+	                        text: condName,
 	                        value: condition
 	                    })
 	                        .addClass(this.classes.option)
@@ -1832,11 +1932,14 @@
 	            }
 	        }
 	        // Otherwise we can just load them in
-	        else if (this.s.conditions.size > 0) {
+	        else if (conditionsLength > 0) {
 	            $(this.dom.condition).empty().attr('disabled', false).addClass(this.classes.italic);
-	            for (var _b = 0, _c = Array.from(this.s.conditions.keys()); _b < _c.length; _b++) {
+	            for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
 	                var condition = _c[_b];
-	                var condName = this.s.conditions.get(condition).conditionName;
+	                var condName = this.s.conditions[condition].conditionName;
+	                if (typeof condName === 'function') {
+	                    condName = condName(this.s.dt, this.c.i18n);
+	                }
 	                var newOpt = $('<option>', {
 	                    text: condName,
 	                    value: condition
@@ -1856,22 +1959,11 @@
 	                .addClass(this.classes.italic);
 	            return;
 	        }
-	        // Sort the conditions so that they are displayed alphabetically
-	        conditionOpts.sort(function (a, b) {
-	            if ($(a).val() < $(b).val()) {
-	                return -1;
-	            }
-	            else if ($(a).val() < $(b).val()) {
-	                return 1;
-	            }
-	            else {
-	                return 0;
-	            }
-	        });
 	        for (var _d = 0, conditionOpts_1 = conditionOpts; _d < conditionOpts_1.length; _d++) {
 	            var opt = conditionOpts_1[_d];
 	            $(this.dom.condition).append(opt);
 	        }
+	        $(this.dom.condition).prop('selectedIndex', 0);
 	    };
 	    /**
 	     * Populates the data select element
@@ -1963,13 +2055,10 @@
 	            });
 	        }
 	        // Initialise the value elements based on the condition
-	        var value = this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined);
+	        this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined));
 	        if (loadedCriteria !== undefined && loadedCriteria.value !== undefined) {
 	            this.s.value = loadedCriteria.value;
 	        }
-	        this.dom.value = Array.isArray(value) ?
-	            value :
-	            [value];
 	        // Insert value elements and trigger the inserted event
 	        $(this.dom.value[0])
 	            .insertAfter(this.dom.condition)
@@ -1980,7 +2069,7 @@
 	                .trigger('dtsb-inserted');
 	        }
 	        // Check if the criteria can be used in a search
-	        this.s.filled = this.s.conditions.get(this.s.condition).isInputValid(this.dom.value, this);
+	        this.s.filled = this.s.conditions[this.s.condition].isInputValid(this.dom.value, this);
 	        this.setListeners();
 	        // If it can and this is different to before then trigger a draw
 	        if (prevFilled !== this.s.filled) {
@@ -1988,7 +2077,7 @@
 	            this.setListeners();
 	        }
 	    };
-	    Criteria.version = '0.0.1';
+	    Criteria.version = '1.0.0';
 	    Criteria.classes = {
 	        button: 'dtsb-button',
 	        buttonContainer: 'dtsb-buttonContainer',
@@ -2011,8 +2100,9 @@
 	    /**
 	     * Default initialisation function for select conditions
 	     */
-	    Criteria.initSelect = function (that, fn, preDefined) {
+	    Criteria.initSelect = function (that, fn, preDefined, array) {
 	        if (preDefined === void 0) { preDefined = null; }
+	        if (array === void 0) { array = false; }
 	        var column = $(that.dom.data).children('option:selected').val();
 	        var indexArray = that.s.dt.rows().indexes().toArray();
 	        var settings = that.s.dt.settings()[0];
@@ -2022,40 +2112,78 @@
 	            .addClass(Criteria.classes.dropDown)
 	            .addClass(Criteria.classes.italic)
 	            .append(that.dom.valueTitle)
-	            .on('input', function () {
+	            .on('input change', function () {
 	            $(this).removeClass(Criteria.classes.italic);
 	            fn(that, this);
 	        });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        var added = [];
 	        var options = [];
 	        // Add all of the options from the table to the select element.
 	        // Only add one option for each possible value
 	        for (var _i = 0, indexArray_1 = indexArray; _i < indexArray_1.length; _i++) {
 	            var index = indexArray_1[_i];
+	            var filter = settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+	                that.c.orthogonal :
+	                that.c.orthogonal.search);
 	            var value = {
-	                filter: settings.oApi._fnGetCellData(settings, index, column, that.c.orthogonal.search),
+	                filter: typeof filter === 'string' ?
+	                    filter.replace(/[\r\n\u2028]/g, ' ') : // Need to replace certain characters to match the search values
+	                    filter,
 	                index: index,
-	                text: settings.oApi._fnGetCellData(settings, index, column, 'display')
+	                text: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+	                    that.c.orthogonal :
+	                    that.c.orthogonal.display)
 	            };
-	            // Add text and value, stripping out any html if that is the column type
-	            var opt = $('<option>', {
-	                text: that.s.type.includes('html') ? value.text.replace(/(<([^>]+)>)/ig, '') : value.text,
-	                value: that.s.type.includes('html') ? value.filter.replace(/(<([^>]+)>)/ig, '') : value.filter
-	            })
-	                .addClass(that.classes.option)
-	                .addClass(that.classes.notItalic);
-	            var val = $(opt).val();
-	            // Check that this value has not already been added
-	            if (added.indexOf(val) === -1) {
-	                // $(el).append(opt);
-	                added.push(val);
-	                options.push(opt);
-	                // If this value was previously selected as indicated by preDefined, then select it again
-	                if (preDefined !== null && opt.val() === preDefined[0]) {
-	                    opt.attr('selected', true);
-	                    that.dom.valueTitle.remove();
-	                    $(el).removeClass(Criteria.classes.italic);
+	            // If we are dealing with an array type, either make sure we are working with arrays, or sort them
+	            if (that.s.type === 'array') {
+	                value.filter = !Array.isArray(value.filter) ?
+	                    [value.filter] :
+	                    value.filter = value.filter.sort();
+	                value.text = !Array.isArray(value.text) ?
+	                    [value.text] :
+	                    value.text = value.text.sort();
+	            }
+	            // Function to add an option to the select element
+	            var addOption = function (filt, text) {
+	                // Add text and value, stripping out any html if that is the column type
+	                var opt = $('<option>', {
+	                    text: typeof text === 'string' ?
+	                        text.replace(/(<([^>]+)>)/ig, '') :
+	                        text,
+	                    type: Array.isArray(filt) ? 'Array' : 'String',
+	                    value: that.s.type.indexOf('html') !== -1 && filt !== null && typeof filt === 'string' ?
+	                        filt.replace(/(<([^>]+)>)/ig, '') :
+	                        filt
+	                })
+	                    .addClass(that.classes.option)
+	                    .addClass(that.classes.notItalic);
+	                var val = $(opt).val();
+	                // Check that this value has not already been added
+	                if (added.indexOf(val) === -1) {
+	                    added.push(val);
+	                    options.push(opt);
+	                    if (preDefined !== null && Array.isArray(preDefined[0])) {
+	                        preDefined[0] = preDefined[0].sort().join(',');
+	                    }
+	                    // If this value was previously selected as indicated by preDefined, then select it again
+	                    if (preDefined !== null && opt.val() === preDefined[0]) {
+	                        opt.attr('selected', true);
+	                        $(el).removeClass(Criteria.classes.italic);
+	                    }
 	                }
+	            };
+	            // If this is to add the individual values within the array we need to loop over the array
+	            if (array) {
+	                for (var i = 0; i < value.filter.length; i++) {
+	                    addOption(value.filter[i], value.text[i]);
+	                }
+	            }
+	            // Otherwise the value that is in the cell is to be added
+	            else {
+	                addOption(value.filter, value.text);
 	            }
 	        }
 	        options.sort(function (a, b) {
@@ -2089,6 +2217,15 @@
 	        return el;
 	    };
 	    /**
+	     * Default initialisation function for select array conditions
+	     *
+	     * This exists because there needs to be different select functionality for contains/without and equals/not
+	     */
+	    Criteria.initSelectArray = function (that, fn, preDefined) {
+	        if (preDefined === void 0) { preDefined = null; }
+	        return Criteria.initSelect(that, fn, preDefined, true);
+	    };
+	    /**
 	     * Default initialisation function for input conditions
 	     */
 	    Criteria.initInput = function (that, fn, preDefined) {
@@ -2098,6 +2235,9 @@
 	            .addClass(Criteria.classes.value)
 	            .addClass(Criteria.classes.input)
 	            .on('input', function () { fn(that, this); });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
@@ -2116,17 +2256,25 @@
 	                .addClass(Criteria.classes.input)
 	                .on('input', function () { fn(that, this); }),
 	            $('<span>')
-	                .addClass(that.classes.joiner).text('and'),
+	                .addClass(that.classes.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
 	                .on('input', function () { fn(that, this); })
 	        ];
+	        if (that.c.greyscale) {
+	            $(els[0]).addClass(Criteria.classes.greyscale);
+	            $(els[2]).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	        return els;
 	    };
 	    /**
@@ -2143,11 +2291,20 @@
 	            format: that.s.momentFormat ? that.s.momentFormat : undefined
 	        })
 	            .on('input change', function () { fn(that, this); });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
 	        }
 	        return el;
+	    };
+	    Criteria.initNoValue = function (that) {
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	    };
 	    Criteria.init2Date = function (that, fn, preDefined) {
 	        if (preDefined === void 0) { preDefined = null; }
@@ -2163,7 +2320,7 @@
 	                .on('input change', function () { fn(that, this); }),
 	            $('<span>')
 	                .addClass(that.classes.joiner)
-	                .text('and'),
+	                .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
@@ -2173,11 +2330,19 @@
 	            })
 	                .on('input change', function () { fn(that, this); })
 	        ];
+	        if (that.c.greyscale) {
+	            $(els[0]).addClass(Criteria.classes.greyscale);
+	            $(els[2]).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there are and preDefined values then add them
 	        if (preDefined !== null && preDefined.length > 0) {
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	        return els;
 	    };
 	    /**
@@ -2219,7 +2384,11 @@
 	        for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
 	            var element = el_3[_i];
 	            if ($(element).is('select')) {
-	                values.push($(element).children('option:selected').val());
+	                var val = $(element).children('option:selected').val();
+	                // If the type of the option is an array we need to split it up and sort it
+	                values.push($(element).children('option:selected').attr('type') === 'Array' ?
+	                    val.split(',').sort() :
+	                    val);
 	            }
 	        }
 	        return values;
@@ -2244,11 +2413,21 @@
 	    Criteria.updateListener = function (that, el) {
 	        // When the value is changed the criteria is now complete so can be included in searches
 	        // Get the condition from the map based on the key that has been selected for the condition
-	        var condition = that.s.conditions.get(that.s.condition);
+	        var condition = that.s.conditions[that.s.condition];
 	        that.s.filled = condition.isInputValid(that.dom.value, that);
 	        that.s.value = condition.inputValue(that.dom.value, that);
 	        if (!Array.isArray(that.s.value)) {
 	            that.s.value = [that.s.value];
+	        }
+	        for (var i = 0; i < that.s.value.length; i++) {
+	            // If the value is an array we need to sort it
+	            if (Array.isArray(that.s.value[i])) {
+	                that.s.value[i].sort();
+	            }
+	            // Otherwise replace the decimal place character for i18n
+	            else if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                that.s.value[i] = that.s.value[i].replace(that.s.dt.settings()[0].oLanguage.sDecimal, '.');
+	            }
 	        }
 	        // Take note of the cursor position so that we can refocus there later
 	        var idx = null;
@@ -2272,55 +2451,12 @@
 	            }
 	        }
 	    };
+	    // The order of the conditions will make tslint sad :(
 	    Criteria.dateConditions = {
-	        '!=': {
-	            conditionName: 'Not',
-	            init: Criteria.initDate,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                value = value.replace(/(\/|\-|\,)/g, '-');
-	                return value !== comparison[0];
-	            }
-	        },
-	        '!between': {
-	            conditionName: 'Not Between',
-	            init: Criteria.init2Date,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                value = value.replace(/(\/|\-|\,)/g, '-');
-	                if (comparison[0] < comparison[1]) {
-	                    return !(comparison[0] <= value && value <= comparison[1]);
-	                }
-	                else {
-	                    return !(comparison[1] <= value && value <= comparison[0]);
-	                }
-	            }
-	        },
-	        '!null': {
-	            conditionName: 'Not Empty',
-	            isInputValid: function () { return true; },
-	            init: function () { return; },
-	            inputValue: function () {
-	                return;
-	            },
-	            search: function (value, comparison) {
-	                return !(value === null || value === undefined || value.length === 0);
-	            }
-	        },
-	        '<': {
-	            conditionName: 'Before',
-	            init: Criteria.initDate,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                value = value.replace(/(\/|\-|\,)/g, '-');
-	                return value < comparison[0];
-	            }
-	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.equals', i18n.conditions.date.equals);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2329,8 +2465,34 @@
 	                return value === comparison[0];
 	            }
 	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.not', i18n.conditions.date.not);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                value = value.replace(/(\/|\-|\,)/g, '-');
+	                return value !== comparison[0];
+	            }
+	        },
+	        '<': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.before', i18n.conditions.date.before);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                value = value.replace(/(\/|\-|\,)/g, '-');
+	                return value < comparison[0];
+	            }
+	        },
 	        '>': {
-	            conditionName: 'After',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.after', i18n.conditions.date.after);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2340,7 +2502,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.between', i18n.conditions.date.between);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2354,67 +2518,56 @@
 	                }
 	            }
 	        },
-	        'null': {
-	            conditionName: 'Empty',
-	            isInputValid: function () { return true; },
-	            init: function () { return; },
-	            inputValue: function () {
-	                return;
-	            },
-	            search: function (value, comparison) {
-	                return (value === null || value === undefined || value.length === 0);
-	            }
-	        }
-	    };
-	    Criteria.momentDateConditions = {
-	        '!=': {
-	            conditionName: 'Not',
-	            init: Criteria.initDate,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() !== moment(comparison[0], that.s.momentFormat).valueOf();
-	            }
-	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.notBetween', i18n.conditions.date.notBetween);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison, that) {
-	                var val = moment(value, that.s.momentFormat).valueOf();
-	                var comp0 = moment(comparison[0], that.s.momentFormat).valueOf();
-	                var comp1 = moment(comparison[1], that.s.momentFormat).valueOf();
-	                if (comp0 < comp1) {
-	                    return !(+comp0 <= +val && +val <= +comp1);
+	            search: function (value, comparison) {
+	                value = value.replace(/(\/|\-|\,)/g, '-');
+	                if (comparison[0] < comparison[1]) {
+	                    return !(comparison[0] <= value && value <= comparison[1]);
 	                }
 	                else {
-	                    return !(+comp1 <= +val && +val <= +comp0);
+	                    return !(comparison[1] <= value && value <= comparison[0]);
 	                }
 	            }
 	        },
-	        '!null': {
-	            conditionName: 'Not Empty',
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.empty', i18n.conditions.date.empty);
+	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () {
+	                return;
+	            },
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
-	        },
-	        '<': {
-	            conditionName: 'Before',
-	            init: Criteria.initDate,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() < moment(comparison[0], that.s.momentFormat).valueOf();
-	            }
-	        },
+	        }
+	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.momentDateConditions = {
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.equals', i18n.conditions.moment.equals);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2422,8 +2575,32 @@
 	                return moment(value, that.s.momentFormat).valueOf() === moment(comparison[0], that.s.momentFormat).valueOf();
 	            }
 	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.not', i18n.conditions.moment.not);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return moment(value, that.s.momentFormat).valueOf() !== moment(comparison[0], that.s.momentFormat).valueOf();
+	            }
+	        },
+	        '<': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.before', i18n.conditions.moment.before);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return moment(value, that.s.momentFormat).valueOf() < moment(comparison[0], that.s.momentFormat).valueOf();
+	            }
+	        },
 	        '>': {
-	            conditionName: 'After',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.after', i18n.conditions.moment.after);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2432,7 +2609,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.between', i18n.conditions.moment.between);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2448,21 +2627,69 @@
 	                }
 	            }
 	        },
+	        '!between': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.notBetween', i18n.conditions.moment.notBetween);
+	            },
+	            init: Criteria.init2Date,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                var val = moment(value, that.s.momentFormat).valueOf();
+	                var comp0 = moment(comparison[0], that.s.momentFormat).valueOf();
+	                var comp1 = moment(comparison[1], that.s.momentFormat).valueOf();
+	                if (comp0 < comp1) {
+	                    return !(+comp0 <= +val && +val <= +comp1);
+	                }
+	                else {
+	                    return !(+comp1 <= +val && +val <= +comp0);
+	                }
+	            }
+	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.empty', i18n.conditions.moment.empty);
+	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.notEmpty', i18n.conditions.moment.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () {
+	                return;
+	            },
+	            search: function (value) {
+	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        }
 	    };
+	    // The order of the conditions will make tslint sad :(
 	    Criteria.numConditions = {
+	        '=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.equals', i18n.conditions.number.equals);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                return +value === +comparison[0];
+	            }
+	        },
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2470,33 +2697,10 @@
 	                return +value !== +comparison[0];
 	            }
 	        },
-	        '!between': {
-	            conditionName: 'Not Between',
-	            init: Criteria.init2Input,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                if (+comparison[0] < +comparison[1]) {
-	                    return !(+comparison[0] <= +value && +value <= +comparison[1]);
-	                }
-	                else {
-	                    return !(+comparison[1] <= +value && +value <= +comparison[0]);
-	                }
-	            }
-	        },
-	        '!null': {
-	            conditionName: 'Not Empty',
-	            isInputValid: function () { return true; },
-	            init: function () { return; },
-	            inputValue: function () {
-	                return;
-	            },
-	            search: function (value, comparison) {
-	                return !(value === null || value === undefined || value.length === 0);
-	            }
-	        },
 	        '<': {
-	            conditionName: 'Less Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lt', i18n.conditions.number.lt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2505,7 +2709,9 @@
 	            }
 	        },
 	        '<=': {
-	            conditionName: 'Less Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lte', i18n.conditions.number.lte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2513,26 +2719,10 @@
 	                return +value <= +comparison[0];
 	            }
 	        },
-	        '=': {
-	            conditionName: 'Equals',
-	            init: Criteria.initSelect,
-	            inputValue: Criteria.inputValueSelect,
-	            isInputValid: Criteria.isInputValidSelect,
-	            search: function (value, comparison) {
-	                return +value === +comparison[0];
-	            }
-	        },
-	        '>': {
-	            conditionName: 'Greater Than',
-	            init: Criteria.initInput,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                return +value > +comparison[0];
-	            }
-	        },
 	        '>=': {
-	            conditionName: 'Greater Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gte', i18n.conditions.number.gte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2540,8 +2730,21 @@
 	                return +value >= +comparison[0];
 	            }
 	        },
+	        '>': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
+	            },
+	            init: Criteria.initInput,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                return +value > +comparison[0];
+	            }
+	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.between', i18n.conditions.number.between);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2554,121 +2757,169 @@
 	                }
 	            }
 	        },
-	        'null': {
-	            conditionName: 'Empty',
-	            init: function () { return; },
-	            inputValue: function () { return; },
-	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
-	                return (value === null || value === undefined || value.length === 0);
-	            }
-	        }
-	    };
-	    Criteria.numFmtConditions = {
-	        '!=': {
-	            conditionName: 'Not',
-	            init: Criteria.initSelect,
-	            inputValue: Criteria.inputValueSelect,
-	            isInputValid: Criteria.isInputValidSelect,
-	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp = comparison[0].replace(/[^0-9.]/g, '');
-	                return +val !== +comp;
-	            }
-	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                var comp1 = comparison[1].replace(/[^0-9.]/g, '');
-	                if (comp0 < comp1) {
-	                    return !(+comp0 <= +val && +val <= +comp1);
+	                if (+comparison[0] < +comparison[1]) {
+	                    return !(+comparison[0] <= +value && +value <= +comparison[1]);
 	                }
 	                else {
-	                    return !(+comp1 <= +val && +val <= +comp0);
+	                    return !(+comparison[1] <= +value && +value <= +comparison[0]);
 	                }
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
+	            },
+	            init: Criteria.initNoValue,
+	            inputValue: function () { return; },
+	            isInputValid: function () { return true; },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
+	            }
+	        }
+	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.numFmtConditions = {
+	        '=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.equals', i18n.conditions.number.equals);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                return +val === +comp;
+	            }
+	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                return +val !== +comp;
 	            }
 	        },
 	        '<': {
-	            conditionName: 'Less Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lt', i18n.conditions.number.lt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp = comparison[0].replace(/[^0-9.]/g, '');
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
 	                return +val < +comp;
 	            }
 	        },
 	        '<=': {
-	            conditionName: 'Less Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lte', i18n.conditions.number.lte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                return +val <= +comp0;
-	            }
-	        },
-	        '=': {
-	            conditionName: 'Equals',
-	            init: Criteria.initSelect,
-	            inputValue: Criteria.inputValueSelect,
-	            isInputValid: Criteria.isInputValidSelect,
-	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                return +val === +comp0;
-	            }
-	        },
-	        '>': {
-	            conditionName: 'Greater Than',
-	            init: Criteria.initInput,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                return +val > +comp0;
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                return +val <= +comp;
 	            }
 	        },
 	        '>=': {
-	            conditionName: 'Greater Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gte', i18n.conditions.number.gte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                return +val >= +comp0;
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                return +val >= +comp;
+	            }
+	        },
+	        '>': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
+	            },
+	            init: Criteria.initInput,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                return +val > +comp;
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.between', i18n.conditions.number.between);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
-	                var comp1 = comparison[1].replace(/[^0-9.]/g, '');
-	                if (comp0 < comp1) {
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp0 = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                var comp1 = comparison[1].indexOf('-') === 0 ?
+	                    '-' + comparison[1].replace(/[^0-9.]/g, '') :
+	                    comparison[1].replace(/[^0-9.]/g, '');
+	                if (+comp0 < +comp1) {
 	                    return +comp0 <= +val && +val <= +comp1;
 	                }
 	                else {
@@ -2676,39 +2927,62 @@
 	                }
 	            }
 	        },
-	        'null': {
-	            conditionName: 'Empty',
-	            init: function () { return; },
-	            inputValue: function () { return; },
-	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
-	                return (value === null || value === undefined || value.length === 0);
-	            }
-	        }
-	    };
-	    Criteria.stringConditions = {
-	        '!=': {
-	            conditionName: 'Not',
-	            init: Criteria.initSelect,
-	            inputValue: Criteria.inputValueSelect,
+	        '!between': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
+	            },
+	            init: Criteria.init2Input,
+	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                return value !== comparison[0];
+	                var val = value.indexOf('-') === 0 ?
+	                    '-' + value.replace(/[^0-9.]/g, '') :
+	                    value.replace(/[^0-9.]/g, '');
+	                var comp0 = comparison[0].indexOf('-') === 0 ?
+	                    '-' + comparison[0].replace(/[^0-9.]/g, '') :
+	                    comparison[0].replace(/[^0-9.]/g, '');
+	                var comp1 = comparison[1].indexOf('-') === 0 ?
+	                    '-' + comparison[1].replace(/[^0-9.]/g, '') :
+	                    comparison[1].replace(/[^0-9.]/g, '');
+	                if (+comp0 < +comp1) {
+	                    return !(+comp0 <= +val && +val <= +comp1);
+	                }
+	                else {
+	                    return !(+comp1 <= +val && +val <= +comp0);
+	                }
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
+	            },
+	            init: Criteria.initNoValue,
+	            inputValue: function () { return; },
+	            isInputValid: function () { return true; },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
-	        },
+	        }
+	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.stringConditions = {
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.equals', i18n.conditions.string.equals);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2716,46 +2990,164 @@
 	                return value === comparison[0];
 	            }
 	        },
-	        'contains': {
-	            conditionName: 'Contains',
-	            init: Criteria.initInput,
-	            inputValue: Criteria.inputValueInput,
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.not', i18n.conditions.string.not);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                return value.toLowerCase().includes(comparison[0].toLowerCase());
-	            }
-	        },
-	        'ends': {
-	            conditionName: 'Ends With',
-	            init: Criteria.initInput,
-	            inputValue: Criteria.inputValueInput,
-	            isInputValid: Criteria.isInputValidInput,
-	            search: function (value, comparison) {
-	                return value.toLowerCase().indexOf(comparison[0].toLowerCase()) === value.length - comparison[0].length;
-	            }
-	        },
-	        'null': {
-	            conditionName: 'Empty',
-	            init: function () { return; },
-	            inputValue: function () { return; },
-	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
-	                return (value === null || value === undefined || value.length === 0);
+	                return value !== comparison[0];
 	            }
 	        },
 	        'starts': {
-	            conditionName: 'Starts With',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.startsWith', i18n.conditions.string.startsWith);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
 	                return value.toLowerCase().indexOf(comparison[0].toLowerCase()) === 0;
 	            }
+	        },
+	        'contains': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.contains', i18n.conditions.string.contains);
+	            },
+	            init: Criteria.initInput,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                return value.toLowerCase().indexOf(comparison[0].toLowerCase()) !== -1;
+	            }
+	        },
+	        'ends': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.endsWith', i18n.conditions.string.endsWith);
+	            },
+	            init: Criteria.initInput,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison) {
+	                return value.toLowerCase().endsWith(comparison[0].toLowerCase());
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.empty', i18n.conditions.string.empty);
+	            },
+	            init: Criteria.initNoValue,
+	            inputValue: function () { return; },
+	            isInputValid: function () { return true; },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.notEmpty', i18n.conditions.string.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () {
+	                return;
+	            },
+	            search: function (value) {
+	                return !(value === null || value === undefined || value.length === 0);
+	            }
+	        }
+	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.arrayConditions = {
+	        'contains': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.contains', i18n.conditions.array.contains);
+	            },
+	            init: Criteria.initSelectArray,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                return value.indexOf(comparison[0]) !== -1;
+	            }
+	        },
+	        'without': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.without', i18n.conditions.array.without);
+	            },
+	            init: Criteria.initSelectArray,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                return value.indexOf(comparison[0]) === -1;
+	            }
+	        },
+	        '=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.equals', i18n.conditions.array.equals);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                if (value.length === comparison[0].length) {
+	                    for (var i = 0; i < value.length; i++) {
+	                        if (value[i] !== comparison[0][i]) {
+	                            return false;
+	                        }
+	                    }
+	                    return true;
+	                }
+	                return false;
+	            }
+	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.not', i18n.conditions.array.not);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                if (value.length === comparison[0].length) {
+	                    for (var i = 0; i < value.length; i++) {
+	                        if (value[i] !== comparison[0][i]) {
+	                            return true;
+	                        }
+	                    }
+	                    return false;
+	                }
+	                return true;
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.empty', i18n.conditions.array.empty);
+	            },
+	            init: Criteria.initNoValue,
+	            isInputValid: function () { return true; },
+	            inputValue: function () { return; },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.notEmpty', i18n.conditions.array.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () { return; },
+	            search: function (value) {
+	                return (value !== null && value !== undefined && value.length !== 0);
+	            }
 	        }
 	    };
 	    Criteria.defaults = {
 	        columns: true,
 	        conditions: {
+	            'array': Criteria.arrayConditions,
 	            'date': Criteria.dateConditions,
 	            'html': Criteria.stringConditions,
 	            'html-num': Criteria.numConditions,
@@ -2766,11 +3158,35 @@
 	            'string': Criteria.stringConditions
 	        },
 	        depthLimit: false,
+	        filterChanged: undefined,
 	        greyscale: false,
+	        i18n: {
+	            add: 'Add Condition',
+	            button: {
+	                0: 'Search Builder',
+	                _: 'Search Builder (%d)'
+	            },
+	            clearAll: 'Clear All',
+	            condition: 'Condition',
+	            data: 'Data',
+	            deleteTitle: 'Delete filtering rule',
+	            leftTitle: 'Outdent criteria',
+	            logicAnd: 'And',
+	            logicOr: 'Or',
+	            rightTitle: 'Indent criteria',
+	            title: {
+	                0: 'Custom Search Builder',
+	                _: 'Custom Search Builder (%d)'
+	            },
+	            value: 'Value',
+	            valueJoiner: 'and'
+	        },
+	        logic: 'AND',
 	        orthogonal: {
-	            conditionName: 'Condition Name',
+	            display: 'display',
 	            search: 'filter'
-	        }
+	        },
+	        preDefined: false
 	    };
 	    return Criteria;
 	}());
@@ -2814,15 +3230,18 @@
 	        this.dom = {
 	            add: $$1('<button/>')
 	                .addClass(this.classes.add)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            clear: $$1('<button>&times</button>')
 	                .addClass(this.classes.button)
-	                .addClass(this.classes.clearGroup),
+	                .addClass(this.classes.clearGroup)
+	                .attr('type', 'button'),
 	            container: $$1('<div/>')
 	                .addClass(this.classes.group),
 	            logic: $$1('<button/>')
 	                .addClass(this.classes.logic)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            logicContainer: $$1('<div/>')
 	                .addClass(this.classes.logicContainer)
 	        };
@@ -2881,7 +3300,9 @@
 	            return;
 	        }
 	        this.s.logic = loadedDetails.logic;
-	        $$1(this.dom.logic).text(this.s.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	        $$1(this.dom.logic).text(this.s.logic === 'OR'
+	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
+	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        // Add all of the criteria, be it a sub group or a criteria
 	        for (var _i = 0, _a = loadedDetails.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
@@ -2895,7 +3316,7 @@
 	        // For all of the criteria children, update the arrows incase they require changing and set the listeners
 	        for (var _b = 0, _c = this.s.criteria; _b < _c.length; _b++) {
 	            var crit = _c[_b];
-	            if (crit.logic === undefined) {
+	            if (crit.criteria instanceof Criteria) {
 	                crit.criteria.updateArrows(this.s.criteria.length > 1, false);
 	                this._setCriteriaListeners(crit.criteria);
 	            }
@@ -2922,25 +3343,26 @@
 	        });
 	        this.setListeners();
 	        for (var i = 0; i < this.s.criteria.length; i++) {
-	            if (this.s.criteria[i].logic === undefined) {
+	            var crit = this.s.criteria[i].criteria;
+	            if (crit instanceof Criteria) {
 	                // Reset the index to the new value
 	                this.s.criteria[i].index = i;
 	                this.s.criteria[i].criteria.s.index = i;
 	                // Add to the group
 	                $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
 	                // Set listeners for various points
-	                this._setCriteriaListeners(this.s.criteria[i].criteria);
+	                this._setCriteriaListeners(crit);
 	                this.s.criteria[i].criteria.rebuild(this.s.criteria[i].criteria.getDetails());
 	            }
-	            else if (this.s.criteria[i].criteria.s.criteria.length > 0) {
+	            else if (crit instanceof Group && crit.s.criteria.length > 0) {
 	                // Reset the index to the new value
 	                this.s.criteria[i].index = i;
 	                this.s.criteria[i].criteria.s.index = i;
 	                // Add the sub group to the group
 	                $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
 	                // Redraw the contents of the group
-	                this.s.criteria[i].criteria.redrawContents();
-	                this._setGroupListeners(this.s.criteria[i].criteria);
+	                crit.redrawContents();
+	                this._setGroupListeners(crit);
 	            }
 	            else {
 	                // The group is empty so remove it
@@ -2955,12 +3377,12 @@
 	     * @param rowData The row data to be compared
 	     * @returns boolean The result of the search
 	     */
-	    Group.prototype.search = function (rowData) {
+	    Group.prototype.search = function (rowData, rowIdx) {
 	        if (this.s.logic === 'AND') {
-	            return this._andSearch(rowData);
+	            return this._andSearch(rowData, rowIdx);
 	        }
 	        else if (this.s.logic === 'OR') {
-	            return this._orSearch(rowData);
+	            return this._orSearch(rowData, rowIdx);
 	        }
 	        return true;
 	    };
@@ -3074,7 +3496,7 @@
 	        });
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var opt = _a[_i];
-	            if (opt.logic === undefined) {
+	            if (opt.criteria instanceof Criteria) {
 	                opt.criteria.updateArrows(this.s.criteria.length > 1, redraw);
 	            }
 	        }
@@ -3088,8 +3510,8 @@
 	    Group.prototype.checkFilled = function () {
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if ((crit.logic === undefined && crit.criteria.s.filled) ||
-	                (crit.logic !== undefined && crit.criteria.checkFilled())) {
+	            if ((crit.criteria instanceof Criteria && crit.criteria.s.filled) ||
+	                (crit.criteria instanceof Group && crit.criteria.checkFilled())) {
 	                return true;
 	            }
 	        }
@@ -3102,7 +3524,7 @@
 	        var count = 0;
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if (crit.logic !== undefined) {
+	            if (crit.criteria instanceof Group) {
 	                count += crit.criteria.count();
 	            }
 	            else {
@@ -3153,7 +3575,7 @@
 	     * @param rowData The row data to be checked against the search criteria
 	     * @returns boolean The result of the AND search
 	     */
-	    Group.prototype._andSearch = function (rowData) {
+	    Group.prototype._andSearch = function (rowData, rowIdx) {
 	        // If there are no criteria then return true for this group
 	        if (this.s.criteria.length === 0) {
 	            return true;
@@ -3161,11 +3583,11 @@
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
 	            // If the criteria is not complete then skip it
-	            if (crit.logic === undefined && !crit.criteria.s.filled) {
+	            if (crit.criteria instanceof Criteria && !crit.criteria.s.filled) {
 	                continue;
 	            }
 	            // Otherwise if a single one fails return false
-	            else if (!crit.criteria.search(rowData)) {
+	            else if (!crit.criteria.search(rowData, rowIdx)) {
 	                return false;
 	            }
 	        }
@@ -3177,7 +3599,7 @@
 	     * @param rowData The row data to be checked against the search criteria
 	     * @returns boolean The result of the OR search
 	     */
-	    Group.prototype._orSearch = function (rowData) {
+	    Group.prototype._orSearch = function (rowData, rowIdx) {
 	        // If there are no criteria in the group then return true
 	        if (this.s.criteria.length === 0) {
 	            return true;
@@ -3186,17 +3608,17 @@
 	        var filledfound = false;
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if (crit.criteria.s.filled) {
+	            if (crit.criteria instanceof Criteria && crit.criteria.s.filled) {
 	                // A completed criteria has been found so set the flag
 	                filledfound = true;
 	                // If the search passes then return true
-	                if (crit.criteria.search(rowData)) {
+	                if (crit.criteria.search(rowData, rowIdx)) {
 	                    return true;
 	                }
 	            }
-	            else if (crit.logic !== undefined && crit.criteria.checkFilled()) {
+	            else if (crit.criteria instanceof Group && crit.criteria.checkFilled()) {
 	                filledfound = true;
-	                if (crit.criteria.search(rowData)) {
+	                if (crit.criteria.search(rowData, rowIdx)) {
 	                    return true;
 	                }
 	            }
@@ -3244,15 +3666,15 @@
 	            .on('click', function () {
 	            _this._removeCriteria(criteria);
 	            $$1(criteria.dom.container).remove();
-	            _this.setupLogic();
 	            for (var _i = 0, _a = _this.s.criteria; _i < _a.length; _i++) {
 	                var crit = _a[_i];
-	                if (crit.logic === undefined) {
+	                if (crit.criteria instanceof Criteria) {
 	                    crit.criteria.updateArrows(_this.s.criteria.length > 1);
 	                }
 	            }
 	            criteria.destroy();
 	            _this.s.dt.draw();
+	            $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
 	            $$1(_this.s.topGroup).trigger('dtsb-updateTitle');
 	            return false;
 	        });
@@ -3353,8 +3775,10 @@
 	     */
 	    Group.prototype._setup = function () {
 	        this.setListeners();
-	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', 'Add Condition'));
-	        $$1(this.dom.logic).text(this.c.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
+	        $$1(this.dom.logic).text(this.c.logic === 'OR'
+	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
+	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
 	        if (this.c.greyscale) {
 	            $$1(this.dom.logic).addClass(this.classes.greyscale);
@@ -3389,14 +3813,14 @@
 	    Group.prototype._toggleLogic = function () {
 	        if (this.s.logic === 'OR') {
 	            this.s.logic = 'AND';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        }
 	        else if (this.s.logic === 'AND') {
 	            this.s.logic = 'OR';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', 'Or'));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
 	        }
 	    };
-	    Group.version = '0.0.1';
+	    Group.version = '1.0.0';
 	    Group.classes = {
 	        add: 'dtsb-add',
 	        button: 'dtsb-button',
@@ -3408,9 +3832,47 @@
 	        logicContainer: 'dtsb-logicContainer'
 	    };
 	    Group.defaults = {
+	        columns: true,
+	        conditions: {
+	            'date': Criteria.dateConditions,
+	            'html': Criteria.stringConditions,
+	            'html-num': Criteria.numConditions,
+	            'html-num-fmt': Criteria.numFmtConditions,
+	            'moment': Criteria.momentDateConditions,
+	            'num': Criteria.numConditions,
+	            'num-fmt': Criteria.numFmtConditions,
+	            'string': Criteria.stringConditions
+	        },
 	        depthLimit: false,
+	        filterChanged: undefined,
 	        greyscale: false,
-	        logic: 'AND'
+	        i18n: {
+	            add: 'Add Condition',
+	            button: {
+	                0: 'Search Builder',
+	                _: 'Search Builder (%d)'
+	            },
+	            clearAll: 'Clear All',
+	            condition: 'Condition',
+	            data: 'Data',
+	            deleteTitle: 'Delete filtering rule',
+	            leftTitle: 'Outdent criteria',
+	            logicAnd: 'And',
+	            logicOr: 'Or',
+	            rightTitle: 'Indent criteria',
+	            title: {
+	                0: 'Custom Search Builder',
+	                _: 'Custom Search Builder (%d)'
+	            },
+	            value: 'Value',
+	            valueJoiner: 'and'
+	        },
+	        logic: 'AND',
+	        orthogonal: {
+	            display: 'display',
+	            search: 'filter'
+	        },
+	        preDefined: false
 	    };
 	    return Group;
 	}());
@@ -3441,9 +3903,10 @@
 	        // Get options from user
 	        this.c = $$2.extend(true, {}, SearchBuilder.defaults, opts);
 	        this.dom = {
-	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', 'Clear All') + '</button>')
+	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
 	                .addClass(this.classes.clearAll)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            container: $$2('<div/>')
 	                .addClass(this.classes.container),
 	            title: $$2('<div/>')
@@ -3567,7 +4030,7 @@
 	     * @param count the number of filters in the SearchBuilder
 	     */
 	    SearchBuilder.prototype._updateTitle = function (count) {
-	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', { 0: 'Custom Search Builder', _: 'Custom Search Builder (%d)' }, count));
+	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', this.c.i18n.title, count));
 	    };
 	    /**
 	     * Builds all of the dom elements together
@@ -3591,7 +4054,7 @@
 	                if (settings.nTable !== tableNode) {
 	                    return true;
 	                }
-	                return _this.s.topGroup.search(searchData);
+	                return _this.s.topGroup.search(searchData, dataIndex);
 	            };
 	            // Add SearchBuilder search function to the dataTables search array
 	            $$2.fn.dataTable.ext.search.push(this.s.search);
@@ -3625,22 +4088,29 @@
 	        }
 	    };
 	    /**
+	     * Update the count in the title/button
+	     * @param count Number of filters applied
+	     */
+	    SearchBuilder.prototype._filterChanged = function (count) {
+	        var fn = this.c.filterChanged;
+	        if (typeof fn === 'function') {
+	            fn(count, this.s.dt.i18n('searchBuilder.button', this.c.i18n.button, count));
+	        }
+	    };
+	    /**
 	     * Set the listener for the clear button
 	     */
 	    SearchBuilder.prototype._setClearListener = function () {
 	        var _this = this;
 	        $$2(this.dom.clearAll).unbind('click');
 	        $$2(this.dom.clearAll).on('click', function () {
-	            _this.s.topGroup = new Group(_this.s.dt, _this.s.opts, undefined);
+	            _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
 	            _this._build();
 	            _this.s.dt.draw();
 	            _this.s.topGroup.setListeners();
 	            $$2(_this.dom.clearAll).remove();
 	            _this._setEmptyListener();
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(0);
-	            }
+	            _this._filterChanged(0);
 	            return false;
 	        });
 	    };
@@ -3657,28 +4127,19 @@
 	            _this._setEmptyListener();
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(count);
-	            }
+	            _this._filterChanged(count);
 	            _this.s.dt.state.save();
 	        });
 	        $$2(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
 	        $$2(this.s.topGroup.dom.container).on('dtsb-clearContents', function () {
 	            _this._setUp(false);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(0);
-	            }
+	            _this._filterChanged(0);
 	            _this.s.dt.draw();
 	        });
 	        $$2(this.s.topGroup.dom.container).on('dtsb-updateTitle', function () {
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(count);
-	            }
+	            _this._filterChanged(count);
 	        });
 	    };
 	    /**
@@ -3693,7 +4154,7 @@
 	            $$2(_this.dom.clearAll).remove();
 	        });
 	    };
-	    SearchBuilder.version = '0.0.1';
+	    SearchBuilder.version = '1.0.1';
 	    SearchBuilder.classes = {
 	        button: 'dtsb-button',
 	        clearAll: 'dtsb-clearAll',
@@ -3703,13 +4164,103 @@
 	        titleRow: 'dtsb-titleRow'
 	    };
 	    SearchBuilder.defaults = {
+	        columns: true,
+	        conditions: {
+	            'date': Criteria.dateConditions,
+	            'html': Criteria.stringConditions,
+	            'html-num': Criteria.numConditions,
+	            'html-num-fmt': Criteria.numFmtConditions,
+	            'moment': Criteria.momentDateConditions,
+	            'num': Criteria.numConditions,
+	            'num-fmt': Criteria.numFmtConditions,
+	            'string': Criteria.stringConditions
+	        },
+	        depthLimit: false,
 	        filterChanged: undefined,
+	        greyscale: false,
+	        i18n: {
+	            add: 'Add Condition',
+	            button: {
+	                0: 'Search Builder',
+	                _: 'Search Builder (%d)'
+	            },
+	            clearAll: 'Clear All',
+	            condition: 'Condition',
+	            conditions: {
+	                array: {
+	                    contains: 'Contains',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notEmpty: 'Not Empty',
+	                    without: 'Without'
+	                },
+	                date: {
+	                    after: 'After',
+	                    before: 'Before',
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty'
+	                },
+	                moment: {
+	                    after: 'After',
+	                    before: 'Before',
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty'
+	                },
+	                number: {
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    gt: 'Greater Than',
+	                    gte: 'Greater Than Equal To',
+	                    lt: 'Less Than',
+	                    lte: 'Less Than Equal To',
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty'
+	                },
+	                string: {
+	                    contains: 'Contains',
+	                    empty: 'Empty',
+	                    endsWith: 'Ends With',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notEmpty: 'Not Empty',
+	                    startsWith: 'Starts With'
+	                }
+	            },
+	            data: 'Data',
+	            deleteTitle: 'Delete filtering rule',
+	            leftTitle: 'Outdent criteria',
+	            logicAnd: 'And',
+	            logicOr: 'Or',
+	            rightTitle: 'Indent criteria',
+	            title: {
+	                0: 'Custom Search Builder',
+	                _: 'Custom Search Builder (%d)'
+	            },
+	            value: 'Value',
+	            valueJoiner: 'and'
+	        },
+	        logic: 'AND',
+	        orthogonal: {
+	            display: 'display',
+	            search: 'filter'
+	        },
 	        preDefined: false
 	    };
 	    return SearchBuilder;
 	}());
 
-	/*! SearchBuilder 1.0.0
+	/*! SearchBuilder 1.0.1
 	 * ©2020 SpryMedia Ltd - datatables.net/license/mit
 	 */
 	// DataTables extensions common UMD. Note that this allows for AMD, CommonJS
@@ -3764,15 +4315,14 @@
 	        config: {},
 	        init: function (dt, node, config) {
 	            var sb = new $.fn.dataTable.SearchBuilder(dt, $.extend({
-	                filterChanged: function (count) {
-	                    dt.button(node).text(dt.i18n('searchBuilder.button', { 0: 'Search Builder', _: 'Search Builder (%d)' }, count));
+	                filterChanged: function (count, text) {
+	                    dt.button(node).text(text);
 	                }
 	            }, config.config));
-	            var message = dt.i18n('searchBuilder.button', 'Search Builder', 0);
-	            dt.button(node).text(message);
+	            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
 	            config._searchBuilder = sb;
 	        },
-	        text: 'Search Builder'
+	        text: null
 	    };
 	    apiRegister('searchBuilder.getDetails()', function () {
 	        var ctx = this.context[0];
@@ -3790,11 +4340,14 @@
 	    /**
 	     * Init function for SearchBuilder
 	     * @param settings the settings to be applied
+	     * @param options the options for SearchBuilder
 	     * @returns JQUERY<HTMLElement> Returns the node of the SearchBuilder
 	     */
-	    function _init(settings) {
+	    function _init(settings, options) {
 	        var api = new DataTable.Api(settings);
-	        var opts = api.init().searchBuilder || DataTable.defaults.searchBuilder;
+	        var opts = options
+	            ? options
+	            : api.init().searchBuilder || DataTable.defaults.searchBuilder;
 	        var searchBuilder = new SearchBuilder(api, opts);
 	        var node = searchBuilder.getNode();
 	        return node;

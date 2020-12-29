@@ -137,6 +137,7 @@
 					{
 						$tr_class = 'pure-table-odd';
 					}
+					$add_options .= "<option disabled=\"disabled\">{$title}</option>\n";
 		    	}
 		    	else
 		    	{
@@ -242,6 +243,7 @@
 				'lang_debug'	=> lang('debug'),
 				'lang_strict'	=> 'strict',
 				'lang_deprecated'	=> 'deprecated',
+				'lang_all'		=> lang('all'),
 				'F_selected'	=> '',
 				'E_selected'	=> '',
 				'N_selected'	=> '',
@@ -249,7 +251,8 @@
 				'I_selected'	=> '',
 				'D_selected'	=> '',
 				'S_selected'	=> '',
-				'DP_selected'	=> ''
+				'DP_selected'	=> '',
+				'A_selected'	=> ''
 			);
 
 			if ( $current_level )

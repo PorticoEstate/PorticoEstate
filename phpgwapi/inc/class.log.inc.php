@@ -49,7 +49,8 @@
 			'I' => 5,
 			'D' => 6,
 			'S'	=> 7,
-			'DP'=>8
+			'DP'=> 8,
+			'A' => 9
 		);
 
 		// these are used by the admin appliation when showing the log file.
@@ -63,7 +64,8 @@
 			'I' => 'info',
 			'D' => 'debug',
 			'S'	=> 'strict',
-			'DP'=> 'deprecated'
+			'DP'=> 'deprecated',
+			'A' => 'all',
 		);
 
 		/**

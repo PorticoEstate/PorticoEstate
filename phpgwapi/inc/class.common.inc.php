@@ -39,7 +39,7 @@
 
 		public function __construct()
 		{
-			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$webserver_url = isset($GLOBALS['phpgw_info']['server']['webserver_url']) ? $GLOBALS['phpgw_info']['server']['webserver_url'] : '/';
 			$this->webserver_url = $webserver_url;
 		}
 

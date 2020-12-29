@@ -206,7 +206,7 @@
 			$tabs['generic'] = array('label' => lang('Export File'), 'link' => '#export_file');
 			$active_tab = 'generic';
 			$export_file['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::render_template('completed_reservation_export_file', array('export_file' => $export_file));
+			self::render_template_xsl('completed_reservation_export_file', array('export_file' => $export_file));
 		}
 
 		public function download()

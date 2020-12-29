@@ -320,6 +320,9 @@ _debug_array($error_line);
 				case 'DP': // Deprecated
 					$error_reporting = E_ERROR | E_USER_ERROR| E_DEPRECATED | E_USER_DEPRECATED;
 					break;
+				case 'A': // All
+					$error_reporting = E_ALL;
+					break;
 			}
 
 			if( !(!!($error_reporting & $error_level)))
@@ -719,9 +722,13 @@ HTML;
 					break;
 
 				case 'DP': // Deprecated
-					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED | E_PARSE);
+					error_reporting(E_ERROR | E_USER_ERROR | E_DEPRECATED | E_USER_DEPRECATED | E_PARSE | E_ALL);
+					break;
+				case 'A': // All
+					error_reporting(E_ALL);
 					break;
 			}
+
 		}
 
 /*

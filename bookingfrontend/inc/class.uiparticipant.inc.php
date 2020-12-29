@@ -192,6 +192,12 @@
 						$participant['to_'] = $participant['to_'] ? $participant['to_'] : null;
 						$receipt = $this->bo->update($participant);
 					}
+					else if(empty($participant['id']) && $register_type == 'register_out')
+					{
+						$sms_error_message = "Du har forsøkt å avbestille tid - men nummeret ditt er ikke registrert, og kan ikke benyttes for avbestilling."
+						. "\n Begrensning: {$reservation['participant_limit']}."
+						. "\n Totalt antall påmeldt: {$number_of_participants}";						
+					}
 					else
 					{
 						$receipt = $this->bo->add($participant);
@@ -257,6 +263,7 @@
 
 					if($config['participant_limit_sms'])
 					{
+						$sms_text = $sms_error_message ? $sms_error_message : $sms_text;
 						try
 						{
 							$sms_service = CreateObject('sms.sms');

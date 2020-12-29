@@ -23,14 +23,12 @@
 	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	phpgw::import_class('phpgwapi.uicommon');
-
 	/**
 	 * Hook helper
 	 *
 	 * @package property
 	 */
-	class eventplannerfrontend_hook_helper extends phpgwapi_uicommon
+	class eventplannerfrontend_hook_helper
 	{
 
 		private $perform_action = false;
@@ -109,12 +107,13 @@
 			{
 				return;
 			}
-			parent::__construct();
+			
+			$uicommon = CreateObject('phpgwapi.uicommon');
 
 			$data = array(
 				'config' => CreateObject('phpgwapi.config', 'eventplannerfrontend')->read(),
 			);
-			self::render_template_xsl(array('home'), array('view' => $data));
+			$uicommon->render_template_xsl(array('home'), array('view' => $data));
 		}
 
 		public function after_navbar()

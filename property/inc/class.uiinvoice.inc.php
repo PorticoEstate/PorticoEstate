@@ -799,6 +799,7 @@ JS;
 		            var menu = [
 
 JS;
+			$jscode_arr = array();
 			foreach ($periodization_list as $key => $periodization_entry)
 			{
 				$jscode_arr[] = "{ text: '{$periodization_entry['name']}', value: '{$periodization_entry['id']}' }";
@@ -1478,7 +1479,7 @@ JS;
 
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
-			$result_data['sum_amount']		 = number_format($this->bo->sum_amount, 2, ',', ' ');
+			$result_data['sum_amount']		 = number_format((float)$this->bo->sum_amount, 2, ',', ' ');
 			$result_data['draw']			 = $draw;
 
 			return $this->jquery_results($result_data);
