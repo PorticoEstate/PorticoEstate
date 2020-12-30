@@ -163,7 +163,7 @@
 		{
 			include_once PHPGW_API_INC . "/accounts/class.accounts_.inc.php";
 
-			$acct_type = strtolower($GLOBALS['phpgw_info']['server']['account_repository']);
+			$acct_type = isset($GLOBALS['phpgw_info']['server']['account_repository']) ? strtolower($GLOBALS['phpgw_info']['server']['account_repository']) : '';
 			switch ( $acct_type )
 			{
 				case 'sqlldap':

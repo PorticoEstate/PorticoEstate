@@ -68,7 +68,7 @@
 
 			if ($account_id === False)
 			{
-				$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$account_id	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : 0;
 			}
 
 			$job = array
