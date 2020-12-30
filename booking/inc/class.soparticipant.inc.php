@@ -101,6 +101,14 @@
 					$from_ = null;
 				}
 			}
+			
+			/**
+			 * Already out
+			 */
+			if($register_type == 'register_out' && $to_)
+			{
+				$id = null;
+			}
 
 			return array(
 				'id'		 => $id,
