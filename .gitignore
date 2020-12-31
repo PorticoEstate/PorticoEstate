@@ -4,6 +4,7 @@
 /.settings
 /.project
 /.vscode
+/.vscode/launch.json
 /.nbproject
 /nbproject
 /vendor
