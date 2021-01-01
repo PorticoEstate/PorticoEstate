@@ -171,7 +171,6 @@ xdebug.mode = debug,develop
 xdebug.start_with_request=yes
 xdebug.idekey=netbeans-xdebug
 xdebug.remote_connect_back=On
-xdebug.remote_enable=On
 xdebug.discover_client_host = 1
 session.cookie_secure=Off
 session.use_cookies=On
