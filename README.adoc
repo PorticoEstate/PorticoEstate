@@ -32,7 +32,7 @@ Data is stored persistant as volumes for both pgAdmin and PostgreSQL
 If you want to connect to PostgreSQL from outside the docker-environment, you will have to find the IP-address for the postgres_container, and connect using the port 5433 
 ====
 
-In order to get Xdebug to work in Windows - one will need to set the XDEBUG_IP_ADDRESS environemet variable to the IP address og the IDE's client
+In order to get Xdebug to work in Windows - one will need to set the XDEBUG_IP_ADDRESS environemet variable to the IP-address of the IDE's client
 
 [TIP]
 ====
