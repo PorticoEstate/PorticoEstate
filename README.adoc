@@ -1,3 +1,7 @@
+= Quik notes on development setup
+
+If you don't have Apache, php and PostgreSQL installed
+
 == Running from Docker
 
 There is prepared a webserver with php 8.0 and Xdebug, connected to PostgreSQL 13.1
@@ -50,6 +54,29 @@ To stop PorticoEstate and PostgreSQL:
 
    docker-compose down
 
+== - Or running from within WSL2 in Windows 10
+Install ubuntu in Windows using WSL2 - and configure according to the Vagrant-setup found in
+[source]
+----
+phpgwapi/doc/Vagrantfile
+----
+
+https://code.visualstudio.com/blogs/2019/09/03/wsl2[VSCode do have a wsl2-connector that fits perfectly]
+
+Debugging php will work
+
+Netbeans will can only be used as with remote source via ssh/sftp - not recommended.
+
+== - OR running with vagrant
+See the howto outlined in the vagrantfile
+[source]
+----
+phpgwapi/doc/Vagrantfile
+----
+[CAUTION]
+====
+Only recommended for Linux host, as virtualbox will have issues vith wsl2
+====
 
 
 include::doc/README.adoc[]
