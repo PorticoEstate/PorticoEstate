@@ -19,6 +19,8 @@ services:
     image: sigurdne/portico_estate_webserver:latest
     ports:
       - 8080:80
+    environment:
+      XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
       - ./:/var/www/html/
     restart: always

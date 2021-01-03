@@ -288,7 +288,7 @@
 			}
 			else
 			{
-				$lang_register_out = lang('Register out');
+				$lang_register_out = lang('Register out') . ' / Avbestill';
 			}
 
 

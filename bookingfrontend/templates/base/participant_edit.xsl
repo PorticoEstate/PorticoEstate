@@ -74,7 +74,7 @@
 										<xsl:attribute name="required">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
-<!--										<xsl:attribute name="placeholder">
+										<!--										<xsl:attribute name="placeholder">
 											<xsl:value-of select="php:function('lang', 'Minimum 8 digits')" />
 										</xsl:attribute>-->
 									</input>
@@ -105,28 +105,71 @@
 
 							<input id="register_type" name="register_type" type="hidden"/>
 
-							<xsl:if test="enable_register_pre = 1">
-								<div class="col-12 mt-3 mb-2">
-									<button type="submit" value="register_pre" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_pre');">
-										<xsl:value-of select="php:function('lang', 'Pre-register')" />
-									</button>
-								</div>
-							</xsl:if>
+							<div class="col-12 mt-3 mb-2">
+								<button type="submit" value="register_pre">
+									<xsl:choose>
+										<xsl:when test="enable_register_pre = 1">
+											<xsl:attribute name="onclick">
+												<xsl:text>validate_submit('register_pre');</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-primary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="disabled" value="disabled"/>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-secondary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:value-of select="php:function('lang', 'Pre-register')" />
+								</button>
+							</div>
 
-							<xsl:if test="enable_register_in = 1">
-								<div class="col-12 mt-3 mb-2">
-									<button type="submit" value="register_in" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_in');">
-										<xsl:value-of select="lang_register_in" />
-									</button>
-								</div>
-							</xsl:if>
-							<xsl:if test="enable_register_out = 1">
-								<div class="col-12 mt-3 mb-2">
-									<button type="submit" value="register_out" class="btn btn-primary btn-lg col-12 mr-4" onclick="validate_submit('register_out');">
-										<xsl:value-of select="lang_register_out" />
-									</button>
-								</div>
-							</xsl:if>
+							<div class="col-12 mt-3 mb-2">
+								<button type="submit" value="register_in">
+
+									<xsl:choose>
+										<xsl:when test="enable_register_in = 1">
+											<xsl:attribute name="onclick">
+												<xsl:text>validate_submit('register_in');</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-primary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="disabled" value="disabled"/>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-secondary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:value-of select="lang_register_in" />
+								</button>
+							</div>
+							<div class="col-12 mt-3 mb-2">
+								<button type="submit" value="register_out">
+									<xsl:choose>
+										<xsl:when test="enable_register_out = 1">
+											<xsl:attribute name="onclick">
+												<xsl:text>validate_submit('register_out');</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-primary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="disabled" value="disabled"/>
+											<xsl:attribute name="class">
+												<xsl:text>btn btn-secondary btn-lg col-12 mr-4</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:value-of select="lang_register_out" />
+								</button>
+							</div>
 						</div>
 					</form>
 				</xsl:when>

@@ -272,8 +272,8 @@
 				'component_id'					=> array('type' => 'int', 'precision' => 4, 'nullable' => true), // forekomst av type
 				'component_child_location_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => true),// register type
 				'component_child_item_id' 		=> array('type' => 'int', 'precision' => 4, 'nullable' => true), // forekomst av type
-				'condition_degree'				=> array('type' => 'int', 'precision' => 2, 'nullable' => truee, 'default' => 2),
-				'consequence'					=> array('type' => 'int', 'precision' => 2, 'nullable' => truee, 'default' => 2),
+				'condition_degree'				=> array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => 2),
+				'consequence'					=> array('type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => 2),
 			),
 			'pk' => array('id'),
 			'fk' => array('controller_check_item' => array('check_item_id' => 'id')),

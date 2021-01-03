@@ -879,18 +879,10 @@
 		*/
 		protected function _get_nextid($account_type='u')
 		{
-			$min = 0;
-			if ( $GLOBALS['phpgw_info']['server']['account_min_id'] )
-			{
-				$min = $GLOBALS['phpgw_info']['server']['account_min_id'];
-			}
 
+			$min = isset($GLOBALS['phpgw_info']['server']['account_min_id']) ? (int) $GLOBALS['phpgw_info']['server']['account_min_id'] : 0;
 
-			$max = 2147483647;
-			if ( $GLOBALS['phpgw_info']['server']['account_max_id'] )
-			{
-				$max = $GLOBALS['phpgw_info']['server']['account_max_id'];
-			}
+			$max = isset($GLOBALS['phpgw_info']['server']['account_max_id']) ? (int) $GLOBALS['phpgw_info']['server']['account_max_id'] : 2147483647;
 
 			if ($account_type == 'g')
 			{

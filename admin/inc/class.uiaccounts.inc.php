@@ -242,7 +242,7 @@
 			}
 
 			$total_records = count($values);
-			if (!$allrows)
+			if ($total_records && !$allrows)
 			{
 				if ($results)
 				{
