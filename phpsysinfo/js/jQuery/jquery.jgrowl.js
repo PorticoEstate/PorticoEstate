@@ -242,7 +242,7 @@
 							this.style.removeAttribute('filter');
 
 						if ( $(this).data("jGrowl") != null ) // Happens when a notification is closing before it's open.
-						$(this).data("jGrowl").created = new Date();
+							$(this).data("jGrowl").created = new Date();
 						
 						$(this).trigger('jGrowl.afterOpen');
 					});
@@ -258,7 +258,7 @@
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
 					if ( $.isFunction(o.close) ) {
 						if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
-					$(this).remove();
+							$(this).remove();
 					} else {
 						$(this).remove();
 					}

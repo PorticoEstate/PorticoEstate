@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * basic output functions
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.Output.inc.php 569 2012-04-16 06:08:18Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -31,7 +31,7 @@ abstract class Output
      * @var PSI_Error
      */
     protected $error;
-    
+
     /**
      * call the parent constructor and check for needed extensions
      */
@@ -41,7 +41,7 @@ abstract class Output
         $this->_checkConfig();
         CommonFunctions::checkForExtensions();
     }
-    
+
     /**
      * read the config file and check for existence
      *
@@ -49,7 +49,7 @@ abstract class Output
      */
     private function _checkConfig()
     {
-        include_once APP_ROOT.'/read_config.php';
+        include_once PSI_APP_ROOT.'/read_config.php';
 
         if ($this->error->errorsExist()) {
             $this->error->errorsAsXML();

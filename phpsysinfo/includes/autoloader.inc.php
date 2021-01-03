@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * class autoloader
  *
@@ -9,10 +9,10 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: autoloader.inc.php 660 2012-08-27 11:08:40Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
- 
+
 error_reporting(E_ALL | E_STRICT);
 
 /**
@@ -30,8 +30,8 @@ function psi_autoload($class_name)
     $dirs = array('/plugins/'.strtolower($class_name).'/', '/includes/mb/', '/includes/ups/');
 
     foreach ($dirs as $dir) {
-        if (file_exists(APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php')) {
-            include_once APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php';
+        if (file_exists(PSI_APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php')) {
+            include_once PSI_APP_ROOT.$dir.'class.'.strtolower($class_name).'.inc.php';
 
             return;
         }
@@ -39,17 +39,17 @@ function psi_autoload($class_name)
 
     /* case-sensitive folders */
     $dirs = array('/includes/', '/includes/interface/', '/includes/to/', '/includes/to/device/', '/includes/os/', '/includes/plugin/', '/includes/xml/', '/includes/web/', '/includes/error/', '/includes/js/', '/includes/output/');
-    
+
     foreach ($dirs as $dir) {
-        if (file_exists(APP_ROOT.$dir.'class.'.$class_name.'.inc.php')) {
-            include_once APP_ROOT.$dir.'class.'.$class_name.'.inc.php';
+        if (file_exists(PSI_APP_ROOT.$dir.'class.'.$class_name.'.inc.php')) {
+            include_once PSI_APP_ROOT.$dir.'class.'.$class_name.'.inc.php';
 
             return;
         }
     }
-    
+
     $error = PSI_Error::singleton();
-    
+
     $error->addError("psi_autoload(\"".$class_name."\")", "autoloading of class file (class.".$class_name.".inc.php) failed!");
     $error->errorsAsXML();
 }
@@ -69,8 +69,8 @@ spl_autoload_register('psi_autoload');
 function errorHandlerPsi($level, $message, $file, $line)
 {
     $error = PSI_Error::singleton();
-    if (PSI_DEBUG || ($level !== 2) || !(preg_match("/^[^:]*: open_basedir /", $message) || preg_match("/^fopen\(/", $message) || preg_match("/^is_readable\(/", $message) || preg_match("/^file_exists\(/", $message))) { // disable open_basedir, fopen, is_readable and file_exists warnings
-    $error->addPhpError("errorHandlerPsi : ", "Level : ".$level." Message : ".$message." File : ".$file." Line : ".$line);
+    if (PSI_DEBUG || (($level !== 2) && ($level !== 8)) || !(preg_match("/^[^:]*: open_basedir /", $message) || preg_match("/^fopen\(/", $message) || preg_match("/^is_readable\(/", $message) || preg_match("/^file_exists\(/", $message) || preg_match("/^fgets\(/", $message))) { // disable open_basedir, fopen, is_readable, file_exists and fgets warnings and notices
+        $error->addPhpError("errorHandlerPsi : ", "Level : ".$level." Message : ".$message." File : ".$file." Line : ".$line);
     }
 }
 

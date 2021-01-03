@@ -82,7 +82,7 @@ phpSysInfo language file Language: French Created by: Cyril Servant
     <exp>Err/Drop</exp>
   </expression>
   <expression id="026" name="connections">
-    <exp>Connections réseau établies</exp>
+    <exp>Connexions réseau établies</exp>
   </expression>
   <expression id="027" name="memusage">
     <exp>Utilisation mémoire</exp>
@@ -368,5 +368,23 @@ phpSysInfo language file Language: French Created by: Cyril Servant
   </expression>
   <expression id="121" name="other">
     <exp>Other</exp>
+  </expression>
+  <expression id="122" name="manufacturer">
+    <exp>Manufacturer</exp>
+  </expression>
+  <expression id="123" name="product">
+    <exp>Product</exp>
+  </expression>
+  <expression id="124" name="serial">
+    <exp>Serial number</exp>
+  </expression>
+  <expression id="125" name="memfree">
+    <exp>Libre</exp>
+  </expression>
+  <expression id="126" name="nvme">
+    <exp>Périphériques NVMe</exp>
+  </expression>
+  <expression id="127" name="os">
+    <exp>OS Type</exp>
   </expression>
 </tns:translation>

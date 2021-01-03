@@ -1,24 +1,13 @@
 <?php
 /**
- * Thermal Zone sensor class
+ * Thermal Zone sensor class, getting information from Thermal Zone WMI class
  *
  * PHP version 5
  *
  * @category  PHP
  * @package   PSI_Sensor
- * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id: class.ohm.inc.php 661 2012-08-27 11:26:39Z namiltd $
- * @link      http://phpsysinfo.sourceforge.net
- */
- /**
- * getting information from Thermal Zone WMI class
- *
- * @category  PHP
- * @package   PSI_Sensor
- * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
+ * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
+ * @copyright 2014 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
@@ -78,15 +67,19 @@ class ThermalZone extends Sensors
             }
         } else {
             $notwas = true;
-            foreach (glob('/sys/class/thermal/thermal_zone*/') as $thermalzone) {
+            $thermalzones = glob('/sys/class/thermal/thermal_zone*/');
+            if (is_array($thermalzones) && (count($thermalzones) > 0)) foreach ($thermalzones as $thermalzone) {
                 $thermalzonetemp = $thermalzone.'temp';
                 $temp = null;
                 if (CommonFunctions::rfts($thermalzonetemp, $temp, 1, 4096, false) && !is_null($temp) && (($temp = trim($temp)) != "")) {
                     if ($temp >= 1000) {
-                        $temp = $temp / 1000;
+                        $div = 1000;
                     } elseif ($temp >= 200) {
-                        $temp = $temp / 10;
+                        $div = 10;
+                    } else {
+                       $div = 1;
                     }
+                    $temp = $temp / $div;
 
                     if ($temp > -40) {
                         $dev = new SensorDevice();
@@ -101,21 +94,21 @@ class ThermalZone extends Sensors
 
                         $temp_max = null;
                         if (CommonFunctions::rfts($thermalzone.'trip_point_0_temp', $temp_max, 1, 4096, false) && !is_null($temp_max) && (($temp_max = trim($temp_max)) != "") && ($temp_max > -40)) {
-                            if ($temp_max >= 1000) {
-                                $temp_max = $temp_max / 1000;
-                            } elseif ($temp_max >= 200) {
-                                $temp_max = $temp_max / 10;
+                            $temp_max = $temp_max / $div;
+                            if (($temp_max != 0) || ($temp != 0)) { // if non-zero values
+                                $dev->setMax($temp_max);
+                                $this->mbinfo->setMbTemp($dev);
                             }
-                            $dev->setMax($temp_max);
+                        } else {
+                            $this->mbinfo->setMbTemp($dev);
                         }
-
                         $notwas = false;
-                        $this->mbinfo->setMbTemp($dev);
                     }
                 }
             }
             if ($notwas) {
-                foreach (glob('/proc/acpi/thermal_zone/TH*/temperature') as $thermalzone) {
+                $thermalzones = glob('/proc/acpi/thermal_zone/TH*/temperature');
+                if (is_array($thermalzones) && (count($thermalzones) > 0)) foreach ($thermalzones as $thermalzone) {
                     $temp = null;
                     if (CommonFunctions::rfts($thermalzone, $temp, 1, 4096, false) && !is_null($temp) && (($temp = trim($temp)) != "")) {
                         $dev = new SensorDevice();

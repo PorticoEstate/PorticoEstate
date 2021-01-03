@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * HP-UX System Class
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.HPUX.inc.php 596 2012-07-05 19:37:48Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -34,14 +34,14 @@ class HPUX extends OS
     private function _hostname()
     {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('hostname', '', $ret)) {
                 $this->sys->setHostname($ret);
             }
         }
     }
-    
+
     /**
      * HP-UX Version
      *
@@ -53,7 +53,7 @@ class HPUX extends OS
             $this->sys->setKernel($ret);
         }
     }
-    
+
     /**
      * UpTime
      * time the system is running
@@ -71,7 +71,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Processor Load
      * optionally create a loadbar
@@ -86,7 +86,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * CPU information
      * All of the tags here are highly architecture dependant
@@ -132,7 +132,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * PCI devices
      *
@@ -165,7 +165,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * IDE devices
      *
@@ -178,10 +178,10 @@ class HPUX extends OS
             if (preg_match('/^hd/', $file)) {
                 $dev = new HWDevice();
                 $dev->setName(trim($file));
-                if (CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
+                if (defined('PSI_SHOW_DEVICES_INFOS') && PSI_SHOW_DEVICES_INFOS && CommonFunctions::rfts("/proc/ide/".$file."/media", $buf, 1)) {
                     if (trim($buf) == 'disk') {
                         if (CommonFunctions::rfts("/proc/ide/".$file."/capacity", $buf, 1, 4096, false)) {
-                            $dev->setCapacity(trim($buf) * 512 / 1024);
+                            $dev->setCapacity(trim($buf) * 512);
                         }
                     }
                 }
@@ -189,7 +189,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * SCSI devices
      *
@@ -215,7 +215,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * USB devices
      *
@@ -246,7 +246,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Network devices
      * includes also rx/tx bytes
@@ -271,7 +271,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Physical memory information and Swap Space information
      *
@@ -309,7 +309,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * filesystem information
      *
@@ -341,7 +341,7 @@ class HPUX extends OS
             }
         }
     }
-    
+
     /**
      * Distribution
      *
@@ -362,29 +362,29 @@ class HPUX extends OS
      */
     public function build()
     {
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
-        $this->_cpuinfo();
-        $this->_pci();
-        $this->_ide();
-        $this->_scsi();
-        $this->_usb();
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_cpuinfo();
+            $this->_pci();
+            $this->_ide();
+            $this->_scsi();
+            $this->_usb();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
-        $this->_network();
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
-        $this->_memory();
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
-        $this->_filesystems();
-    }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
     }
 }

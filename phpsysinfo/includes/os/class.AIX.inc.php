@@ -36,13 +36,13 @@ class AIX extends OS
     private function _hostname()
     {
         /*   if (PSI_USE_VHOST === true) {
-               $this->sys->setHostname(getenv('SERVER_NAME'));
+               if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
            } else {
                if (CommonFunctions::executeProgram('hostname', '', $ret)) {
                    $this->sys->setHostname($ret);
                }
            } */
-        $this->sys->setHostname(getenv('SERVER_NAME'));
+        if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
 
     }
 
@@ -65,7 +65,7 @@ class AIX extends OS
     private function _uptime()
     {
         if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/up (\d+) days,\s*(\d+):(\d+),/", $buf, $ar_buf) || preg_match("/up (\d+) day,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
+            if (preg_match("/up (\d+) day[s]?,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
                 $min = $ar_buf[3];
                 $hours = $ar_buf[2];
                 $days = $ar_buf[1];
@@ -118,7 +118,7 @@ class AIX extends OS
             }
         }
         for ($i = 0; $i < $ncpu; $i++) {
-        $dev = new CpuDevice();
+            $dev = new CpuDevice();
             if (trim($tcpu) != "") {
                 $cpu = trim($tcpu);
                 if (trim($vcpu) != "") $cpu .= " ".trim($vcpu);
@@ -128,8 +128,8 @@ class AIX extends OS
             if (trim($scpu) != "") {
                 $dev->setCpuSpeed(trim($scpu));
             }
-        $this->sys->setCpus($dev);
-    }
+            $this->sys->setCpus($dev);
+        }
     }
 
     /**
@@ -140,11 +140,11 @@ class AIX extends OS
     {
         foreach ($this->readaixdata() as $line) {
             if (preg_match("/^[\*\+]\s\S+\s+\S+\s+(.*PCI.*)/", $line, $ar_buf)) {
-            $dev = new HWDevice();
+                $dev = new HWDevice();
                 $dev->setName(trim($ar_buf[1]));
-            $this->sys->setPciDevices($dev);
+                $this->sys->setPciDevices($dev);
+            }
         }
-    }
     }
 
     /**
@@ -155,9 +155,9 @@ class AIX extends OS
     {
         foreach ($this->readaixdata() as $line) {
             if (preg_match("/^[\*\+]\s\S+\s+\S+\s+(.*IDE.*)/", $line, $ar_buf)) {
-            $dev = new HWDevice();
+                $dev = new HWDevice();
                 $dev->setName(trim($ar_buf[1]));
-            $this->sys->setIdeDevices($dev);
+                $this->sys->setIdeDevices($dev);
             }
         }
     }
@@ -170,11 +170,11 @@ class AIX extends OS
     {
         foreach ($this->readaixdata() as $line) {
             if (preg_match("/^[\*\+]\s\S+\s+\S+\s+(.*SCSI.*)/", $line, $ar_buf)) {
-            $dev = new HWDevice();
+                $dev = new HWDevice();
                 $dev->setName(trim($ar_buf[1]));
-            $this->sys->setScsiDevices($dev);
+                $this->sys->setScsiDevices($dev);
+            }
         }
-    }
     }
 
     /**
@@ -185,11 +185,11 @@ class AIX extends OS
     {
         foreach ($this->readaixdata() as $line) {
             if (preg_match("/^[\*\+]\s\S+\s+\S+\s+(.*USB.*)/", $line, $ar_buf)) {
-            $dev = new HWDevice();
+                $dev = new HWDevice();
                 $dev->setName(trim($ar_buf[1]));
-            $this->sys->setUsbDevices($dev);
+                $this->sys->setUsbDevices($dev);
+            }
         }
-    }
     }
 
     /**
@@ -254,17 +254,17 @@ class AIX extends OS
 //            $this->sys->setMemCache($mems);
         }
         if (trim($tswap) != "") {
-                        $dev = new DiskDevice();
-                        $dev->setName("SWAP");
-                        $dev->setFsType('swap');
+            $dev = new DiskDevice();
+            $dev->setName("SWAP");
+            $dev->setFsType('swap');
             $dev->setTotal($tswap * 1024 * 1024);
             if (trim($pswap) != "") {
                 $dev->setUsed($dev->getTotal() * $pswap / 100);
             }
-                        $dev->setFree($dev->getTotal() - $dev->getUsed());
-                        $this->sys->setSwapDevices($dev);
-                    }
-                }
+            $dev->setFree($dev->getTotal() - $dev->getUsed());
+            $this->sys->setSwapDevices($dev);
+        }
+    }
 
     /**
      * filesystem information
@@ -334,29 +334,29 @@ class AIX extends OS
     public function build()
     {
         $this->error->addError("WARN", "The AIX version of phpSysInfo is a work in progress, some things currently don't work");
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
-        $this->_cpuinfo();
-        $this->_pci();
-        $this->_ide();
-        $this->_scsi();
-        $this->_usb();
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_cpuinfo();
+            $this->_pci();
+            $this->_ide();
+            $this->_scsi();
+            $this->_usb();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
-        $this->_network();
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
-        $this->_memory();
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
-        $this->_filesystems();
-    }
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
+        }
     }
 }

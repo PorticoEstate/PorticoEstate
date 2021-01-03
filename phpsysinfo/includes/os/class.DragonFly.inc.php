@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * DragonFly System Class
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.DragonFly.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -29,16 +29,16 @@ class DragonFly extends BSDCommon
     /**
      * define the regexp for log parser
      */
-    public function __construct()
+    public function __construct($blockname = false)
     {
-        parent::__construct();
+        parent::__construct($blockname);
         $this->setCPURegExp1("/^cpu(.*)\, (.*) MHz/");
         $this->setCPURegExp2("/^(.*) at scsibus.*: <(.*)> .*/");
         $this->setSCSIRegExp2("/^(da[0-9]+): (.*)MB /");
         $this->setPCIRegExp1("/(.*): <(.*)>(.*) (pci|legacypci)[0-9]+$/");
         $this->setPCIRegExp2("/(.*): <(.*)>.* at [0-9\.]+$/");
     }
-    
+
     /**
      * UpTime
      * time the system is running
@@ -51,7 +51,7 @@ class DragonFly extends BSDCommon
         preg_match("/sec = ([0-9]+)/", $a, $buf);
         $this->sys->setUptime(time() - $buf[1]);
     }
-    
+
     /**
      * get network information
      *
@@ -77,7 +77,7 @@ class DragonFly extends BSDCommon
             }
         }
     }
-    
+
     /**
      * get the ide information
      *
@@ -89,14 +89,14 @@ class DragonFly extends BSDCommon
             if (preg_match('/^(.*): (.*) <(.*)> at (ata[0-9]+\-(.*)) (.*)/', $line, $ar_buf)) {
                 $dev = new HWDevice();
                 $dev->setName($ar_buf[1]);
-                if (!preg_match("/^acd[0-9]+(.*)/", $ar_buf[1])) {
-                    $dev->setCapacity($ar_buf[2] * 1024);
+                if (defined('PSI_SHOW_DEVICES_INFOS') && PSI_SHOW_DEVICES_INFOS && !preg_match("/^acd[0-9]+(.*)/", $ar_buf[1])) {
+                    $dev->setCapacity($ar_buf[2] * 1024 * 1024);
                 }
                 $this->sys->setIdeDevices($dev);
             }
         }
     }
-    
+
     /**
      * get icon name
      *
@@ -106,7 +106,7 @@ class DragonFly extends BSDCommon
     {
         $this->sys->setDistributionIcon('DragonFly.png');
     }
-    
+
     /**
      * Processes
      *
@@ -145,12 +145,12 @@ class DragonFly extends BSDCommon
     public function build()
     {
         parent::build();
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distroicon();
-        $this->_uptime();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distroicon();
+            $this->_uptime();
             $this->_processes();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+        if (!$this->blockname || $this->blockname==='network') {
             $this->_network();
         }
     }

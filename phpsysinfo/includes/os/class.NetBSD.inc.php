@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * NetBSD System Class
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.NetBSD.inc.php 287 2009-06-26 12:11:59Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -29,17 +29,17 @@ class NetBSD extends BSDCommon
     /**
      * define the regexp for log parser
      */
-    public function __construct()
+    public function __construct($blockname = false)
     {
-        parent::__construct();
+        parent::__construct($blockname);
         $this->setCPURegExp1("/^cpu(.*)\, (.*) MHz/");
         $this->setCPURegExp2("/user = (.*), nice = (.*), sys = (.*), intr = (.*), idle = (.*)/");
         $this->setSCSIRegExp1("/^(.*) at scsibus.*: <(.*)> .*/");
-        $this->setSCSIRegExp2("/^(da[0-9]+): (.*)MB /");
+        $this->setSCSIRegExp2("/^(sd[0-9]+): (.*)([MG])B,/");
         $this->setPCIRegExp1("/(.*) at pci[0-9]+ dev [0-9]* function [0-9]*: (.*)$/");
         $this->setPCIRegExp2("/\"(.*)\" (.*).* at [.0-9]+ irq/");
     }
-    
+
     /**
      * UpTime
      * time the system is running
@@ -51,7 +51,7 @@ class NetBSD extends BSDCommon
         $a = $this->grabkey('kern.boottime');
         $this->sys->setUptime(time() - $a);
     }
-    
+
     /**
      * get network information
      *
@@ -103,7 +103,7 @@ class NetBSD extends BSDCommon
             }
         }
     }
-    
+
     /**
      * IDE information
      *
@@ -112,22 +112,41 @@ class NetBSD extends BSDCommon
     protected function ide()
     {
         foreach ($this->readdmesg() as $line) {
-            if (preg_match('/^(.*) at (pciide|wdc|atabus|atapibus)[0-9]+ (.*): <(.*)>/', $line, $ar_buf)) {
+            if (preg_match('/^(.*) at (pciide|wdc|atabus|atapibus)[0-9]+ (.*): <(.*)>/', $line, $ar_buf)
+               || preg_match('/^(.*) at (pciide|wdc|atabus|atapibus)[0-9]+ /', $line, $ar_buf)) {
                 $dev = new HWDevice();
-                $dev->setName($ar_buf[1]);
-                // now loop again and find the capacity
-                foreach ($this->readdmesg() as $line2) {
-                    if (preg_match("/^(".$ar_buf[1]."): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
-                        $dev->setCapacity($ar_buf_n[4] * 2048 * 1.049);
-                    } elseif (preg_match("/^(".$ar_buf[1]."): (.*) MB, (.*), (.*), .*$/", $line2, $ar_buf_n)) {
-                        $dev->setCapacity($ar_buf_n[2] * 2048);
+                if (isset($ar_buf[4])) {
+                    $dev->setName($ar_buf[4]);
+                } else {
+                    $dev->setName($ar_buf[1]);
+                    // now loop again and find the name
+                    foreach ($this->readdmesg() as $line2) {
+                        if (preg_match("/^(".$ar_buf[1]."): <(.*)>$/", $line2, $ar_buf_n)) {
+                            $dev->setName($ar_buf_n[2]);
+                            break;
+                        }
+                    }
+                }
+                if (defined('PSI_SHOW_DEVICES_INFOS') && PSI_SHOW_DEVICES_INFOS) {
+                    // now loop again and find the capacity
+                    foreach ($this->readdmesg() as $line2) {
+                        if (preg_match("/^(".$ar_buf[1]."): (.*), (.*), (.*)MB, .*$/", $line2, $ar_buf_n)) {
+                            $dev->setCapacity($ar_buf_n[4] * 1024 * 1024);
+                            break;
+                        } elseif (preg_match("/^(".$ar_buf[1]."): (.*) MB, (.*), (.*), .*$/", $line2, $ar_buf_n)) {
+                            $dev->setCapacity($ar_buf_n[2] * 1024 * 1024);
+                            break;
+                        } elseif (preg_match("/^(".$ar_buf[1]."): (.*) GB, (.*), (.*), .*$/", $line2, $ar_buf_n)) {
+                            $dev->setCapacity($ar_buf_n[2] * 1024 * 1024 * 1024);
+                            break;
+                        }
                     }
                 }
                 $this->sys->setIdeDevices($dev);
             }
         }
     }
-    
+
     /**
      * get icon name
      *
@@ -137,7 +156,7 @@ class NetBSD extends BSDCommon
     {
         $this->sys->setDistributionIcon('NetBSD.png');
     }
-    
+
     /**
      * Processes
      *
@@ -177,12 +196,12 @@ class NetBSD extends BSDCommon
     public function build()
     {
         parent::build();
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distroicon();
-        $this->_uptime();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distroicon();
+            $this->_uptime();
             $this->_processes();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+        if (!$this->blockname || $this->blockname==='network') {
             $this->_network();
         }
     }
