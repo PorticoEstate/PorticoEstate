@@ -357,8 +357,8 @@
 	}
 	else
 	{
-		$_iv  = $GLOBALS['phpgw_info']['server']['mcrypt_iv'];
-		$_key = $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'];	
+		$_iv  = isset($GLOBALS['phpgw_info']['server']['mcrypt_iv']) ? $GLOBALS['phpgw_info']['server']['mcrypt_iv'] : '';
+		$_key = isset($GLOBALS['phpgw_info']['server']['setup_mcrypt_key']) ? $GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] : '';	
 	}
 
 	if($_key) // not during upgrade from 0.9.16
