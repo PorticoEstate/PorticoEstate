@@ -14,7 +14,7 @@
 
 	/**
 	* Setup
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage application
 	*/
@@ -29,11 +29,12 @@
 		var $lang = '';
 		var $html = '';
 		var $appreg = '';
-		
+
 		/* table name vars */
 		var $tbl_apps;
 		var $tbl_config;
 		var $tbl_hooks;
+		private $hack_file_name;
 
 		public function __construct($html = False, $translation = False)
 		{
@@ -51,10 +52,13 @@
 			/* The setup application needs these */
 			$this->html	= $html ? CreateObject('phpgwapi.setup_html') : null;
 			$this->translation = $translation ? $_translation : null ; //CreateObject('phpgwapi.setup_translation') : null;
-			
+
 			//$this->tbl_apps    = $this->get_apps_table_name();
 			//$this->tbl_config  = $this->get_config_table_name();
 			$this->tbl_hooks   = $this->get_hooks_table_name();
+
+			$temp_dir = sys_get_temp_dir();
+			$this->hack_file_name = "$temp_dir/setup_login_hack_prevention.json";
 		}
 
 		/**
@@ -80,6 +84,27 @@
 			$GLOBALS['phpgw']->db =& $this->db;
 
 			$GLOBALS['ConfigDomain'] = $ConfigDomain;
+		}
+
+		private function _store_login_attempts( $data )
+		{
+			$fp	= fopen($this->hack_file_name, 'w');
+			fputs($fp, json_encode($data));
+			fclose($fp);
+		}
+
+		private function _get_login_attempts( )
+		{
+			if(is_file($this->hack_file_name))
+			{
+				$data = (array)json_decode(file_get_contents($this->hack_file_name), true);
+			}
+			else
+			{
+				$data = array();
+			}
+
+			return $data;
 		}
 
 		/**
@@ -128,6 +153,27 @@
 
 			$expire = time() + 1200; /* Expire login if idle for 20 minutes. */
 
+			/**
+			 * Block more than 4 failed login attempts within one hour
+			 */
+			$hack_prevention = $this->_get_login_attempts();
+
+			$ip = phpgw::get_ip_address();
+
+			if(!$ip)
+			{
+				return false;
+			}
+
+			$now = date('Y-m-d:H');
+
+			if(isset($hack_prevention[$ip]['denied'][$now]) && $hack_prevention[$ip]['denied'][$now] > 3)
+			{
+				$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] = $auth_type == 'Header' ? 'To many failed attempts' : '';
+				$GLOBALS['phpgw_info']['setup']['ConfigLoginMSG'] = $auth_type == 'Config' ? 'To many failed attempts' : '';
+				return False;
+			}
+
 			if(!empty($HeaderLogin) && $auth_type == 'Header')
 			{
 				/* header admin login */
@@ -136,12 +182,36 @@
 					$hash = password_hash($FormPW, PASSWORD_BCRYPT);
 					setcookie('HeaderPW',$hash,$expire);
 					setcookie('ConfigLang',$ConfigLang,$expire);
+					if(isset($hack_prevention[$ip]['accepted'][$now]))
+					{
+						$hack_prevention[$ip]['accepted'][$now] +=1;
+					}
+					else
+					{
+						$hack_prevention[$ip]['accepted'][$now] =1;
+					}
+
+					$this->_store_login_attempts($hack_prevention);
+
 					return True;
 				}
 				else
 				{
 					$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] = lang('Invalid password');
 					$GLOBALS['phpgw_info']['setup']['ConfigLoginMSG'] = '';
+					if(isset($hack_prevention[$ip]['denied'][$now]))
+					{
+						$hack_prevention[$ip]['denied'][$now] +=1;
+					}
+					else
+					{
+						$hack_prevention[$ip]['denied'][$now] =1;
+					}
+
+					$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] .= " ({$hack_prevention[$ip]['denied'][$now]})";
+
+					$this->_store_login_attempts($hack_prevention);
+
 					return False;
 				}
 			}
@@ -154,12 +224,36 @@
 					setcookie('ConfigPW', $hash, $expire);
 					setcookie('ConfigDomain', $FormDomain, $expire);
 					setcookie('ConfigLang', $ConfigLang, $expire);
+					if(isset($hack_prevention[$ip]['accepted'][$now]))
+					{
+						$hack_prevention[$ip]['accepted'][$now] +=1;
+					}
+					else
+					{
+						$hack_prevention[$ip]['accepted'][$now] =1;
+					}
+
+					$this->_store_login_attempts($hack_prevention);
+
 					return True;
 				}
 				else
 				{
 					$GLOBALS['phpgw_info']['setup']['ConfigLoginMSG'] = lang('Invalid password');
 					$GLOBALS['phpgw_info']['setup']['HeaderLoginMSG'] = '';
+					if(isset($hack_prevention[$ip]['denied'][$now]))
+					{
+						$hack_prevention[$ip]['denied'][$now] +=1;
+					}
+					else
+					{
+						$hack_prevention[$ip]['denied'][$now] =1;
+					}
+
+					$GLOBALS['phpgw_info']['setup']['ConfigLoginMSG'] .= " ({$hack_prevention[$ip]['denied'][$now]})";
+
+					$this->_store_login_attempts($hack_prevention);
+
 					return False;
 				}
 			}
@@ -304,7 +398,7 @@
 			{
 				return False;
 			}
-			
+
 			$version = str_replace('pre','.',$versionstring);
 			$varray  = explode('.',$version);
 			$major   = implode('.',array($varray[0],$varray[1],$varray[2]));
@@ -374,10 +468,10 @@
 				if ( isset($setup_info[$appname]['tables_use_prefix'])
 					&& $setup_info[$appname]['tables_use_prefix'] )
 				{
-					echo $setup_info[$appname]['name'] . ' uses tables_use_prefix, storing ' 
+					echo $setup_info[$appname]['name'] . ' uses tables_use_prefix, storing '
 					. $setup_info[$appname]['tables_prefix']
 						. ' as prefix for ' . $setup_info[$appname]['name'] . " tables\n";
-																			
+
 					$sql = "INSERT INTO phpgw_config (config_app,config_name,config_value) "
 						."VALUES ('".$setup_info[$appname]['name']."','"
 						.$appname."_tables_prefix','".$setup_info[$appname]['tables_prefix']."')";
@@ -638,7 +732,7 @@
 			{
 				return False;
 			}
-			
+
 			//echo "DELETING hooks for: " . $setup_info[$appname]['name'];
 			if (!is_object($this->hooks))
 			{
@@ -784,7 +878,7 @@
 			{
 				if($DEBUG)
 				{
-					echo'<br>Checking if '. intval($testa[$i]) . ' is more than ' . intval($testb[$i]) . ' ...'; 
+					echo'<br>Checking if '. intval($testa[$i]) . ' is more than ' . intval($testb[$i]) . ' ...';
 				}
 
 				if ( isset($testa[$i]) &&  isset($testb[$i])
@@ -839,9 +933,9 @@
 
 		function get_hooks_table_name()
 		{
-			
-			if ( isset($GLOBALS['setup_info']['phpgwapi']['currentver']) 
-				&& $this->alessthanb($GLOBALS['setup_info']['phpgwapi']['currentver'], '0.9.8pre5') 
+
+			if ( isset($GLOBALS['setup_info']['phpgwapi']['currentver'])
+				&& $this->alessthanb($GLOBALS['setup_info']['phpgwapi']['currentver'], '0.9.8pre5')
 				&& ($GLOBALS['setup_info']['phpgwapi']['currentver'] != ''))
 			{
 				/* No phpgw_hooks table yet. */
