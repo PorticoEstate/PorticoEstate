@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * FreeBSD System Class
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.FreeBSD.inc.php 696 2012-09-09 11:24:04Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -29,17 +29,18 @@ class FreeBSD extends BSDCommon
     /**
      * define the regexp for log parser
      */
-    public function __construct()
+    public function __construct($blockname = false)
     {
-        parent::__construct();
+        parent::__construct($blockname);
         $this->setCPURegExp1("/CPU: (.*) \((.*)-MHz (.*)\)/");
         $this->setCPURegExp2("/(.*) ([0-9]+) ([0-9]+) ([0-9]+) ([0-9]+)/");
         $this->setSCSIRegExp1("/^(.*): <(.*)> .*SCSI.*device/");
         $this->setSCSIRegExp2("/^(da[0-9]+): (.*)MB /");
+        $this->setSCSIRegExp3("/^(da[0-9]+|cd[0-9]+): Serial Number (.*)/");
         $this->setPCIRegExp1("/(.*): <(.*)>(.*) pci[0-9]+$/");
         $this->setPCIRegExp2("/(.*): <(.*)>.* at [.0-9]+ irq/");
     }
-    
+
     /**
      * UpTime
      * time the system is running
@@ -52,7 +53,7 @@ class FreeBSD extends BSDCommon
         $a = preg_replace('/,/', '', $s[3]);
         $this->sys->setUptime(time() - $a);
     }
-    
+
     /**
      * get network information
      *
@@ -67,8 +68,8 @@ class FreeBSD extends BSDCommon
                 $ar_buf = preg_split("/\s+/", $line);
                 if (!empty($ar_buf[0])) {
                     if (preg_match('/^<Link/i', $ar_buf[2])) {
-                    $dev = new NetDevice();
-                    $dev->setName($ar_buf[0]);
+                        $dev = new NetDevice();
+                        $dev->setName($ar_buf[0]);
                         if ((strlen($ar_buf[3]) < 17) && ($ar_buf[0] != $ar_buf[3])) { /* no MAC or dev name*/
                             if (isset($ar_buf[11]) && (trim($ar_buf[11]) != '')) { /* Idrop column exist*/
                               $dev->setTxBytes($ar_buf[9]);
@@ -76,9 +77,9 @@ class FreeBSD extends BSDCommon
                               $dev->setErrors($ar_buf[4] + $ar_buf[8]);
                               $dev->setDrops($ar_buf[11] + $ar_buf[5]);
                             } else {
-                        $dev->setTxBytes($ar_buf[8]);
-                        $dev->setRxBytes($ar_buf[5]);
-                        $dev->setErrors($ar_buf[4] + $ar_buf[7]);
+                              $dev->setTxBytes($ar_buf[8]);
+                              $dev->setRxBytes($ar_buf[5]);
+                              $dev->setErrors($ar_buf[4] + $ar_buf[7]);
                               $dev->setDrops($ar_buf[10]);
                             }
                         } else {
@@ -87,12 +88,12 @@ class FreeBSD extends BSDCommon
                               $dev->setRxBytes($ar_buf[7]);
                               $dev->setErrors($ar_buf[5] + $ar_buf[9]);
                               $dev->setDrops($ar_buf[12] + $ar_buf[6]);
-                    } else {
-                        $dev->setTxBytes($ar_buf[9]);
-                        $dev->setRxBytes($ar_buf[6]);
-                        $dev->setErrors($ar_buf[5] + $ar_buf[8]);
-                        $dev->setDrops($ar_buf[11]);
-                    }
+                            } else {
+                              $dev->setTxBytes($ar_buf[9]);
+                              $dev->setRxBytes($ar_buf[6]);
+                              $dev->setErrors($ar_buf[5] + $ar_buf[8]);
+                              $dev->setDrops($ar_buf[11]);
+                            }
                         }
                         if (defined('PSI_SHOW_NETWORK_INFOS') && (PSI_SHOW_NETWORK_INFOS) && (CommonFunctions::executeProgram('ifconfig', $ar_buf[0].' 2>/dev/null', $bufr2, PSI_DEBUG))) {
                             $bufe2 = preg_split("/\n/", $bufr2, -1, PREG_SPLIT_NO_EMPTY);
@@ -118,13 +119,13 @@ class FreeBSD extends BSDCommon
                                 }
                             }
                         }
-                    $this->sys->setNetDevices($dev);
+                        $this->sys->setNetDevices($dev);
+                    }
                 }
             }
         }
     }
-    }
-    
+
     /**
      * get icon name and distro extended check
      *
@@ -136,10 +137,10 @@ class FreeBSD extends BSDCommon
             $this->sys->setDistribution('pfSense '. trim($version));
             $this->sys->setDistributionIcon('pfSense.png');
         } else {
-        $this->sys->setDistributionIcon('FreeBSD.png');
+            $this->sys->setDistributionIcon('FreeBSD.png');
+        }
     }
-    }
-    
+
     /**
      * extend the memory information with additional values
      *
@@ -192,15 +193,15 @@ class FreeBSD extends BSDCommon
     public function build()
     {
         parent::build();
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distroicon();
-        $this->_uptime();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distroicon();
+            $this->_uptime();
             $this->_processes();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+        if (!$this->blockname || $this->blockname==='network') {
             $this->_network();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
+        if (!$this->blockname || $this->blockname==='memory') {
             $this->_memoryadditional();
         }
     }

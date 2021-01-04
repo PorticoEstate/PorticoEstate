@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * start page for webaccess
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.WebpageXSLT.inc.php 569 2012-04-16 06:08:18Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -30,9 +30,9 @@ class WebpageXSLT extends WebpageXML implements PSI_Interface_Output
      */
     public function __construct()
     {
-        parent::__construct(false, null);
+        parent::__construct();
     }
-    
+
     /**
      * generate the static page
      *
@@ -49,6 +49,7 @@ class WebpageXSLT extends WebpageXML implements PSI_Interface_Output
         $domxsl->load($xslfile);
         $xsltproc = new XSLTProcessor;
         $xsltproc->importStyleSheet($domxsl);
+        header("Cache-Control: no-cache, must-revalidate\n");
         echo $xsltproc->transformToXML($domxml);
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * MBInfo TO class
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.MBInfo.inc.php 253 2009-06-17 13:07:50Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -33,7 +33,7 @@ class MBInfo
      * @var array
      */
     private $_mbTemp = array();
-    
+
     /**
      * array with SensorDevices for fans
      *
@@ -42,7 +42,7 @@ class MBInfo
      * @var array
      */
     private $_mbFan = array();
-    
+
     /**
      * array with SensorDevices for voltages
      *
@@ -51,7 +51,7 @@ class MBInfo
      * @var array
      */
     private $_mbVolt = array();
-    
+
     /**
      * array with SensorDevices for power
      *
@@ -88,9 +88,13 @@ class MBInfo
      */
     public function getMbFan()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbFan, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbFan;
     }
-    
+
     /**
      * Sets $_mbFan.
      *
@@ -104,7 +108,7 @@ class MBInfo
     {
         array_push($this->_mbFan, $mbFan);
     }
-    
+
     /**
      * Returns $_mbTemp.
      *
@@ -114,9 +118,13 @@ class MBInfo
      */
     public function getMbTemp()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbTemp, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbTemp;
     }
-    
+
     /**
      * Sets $_mbTemp.
      *
@@ -130,7 +138,7 @@ class MBInfo
     {
         array_push($this->_mbTemp, $mbTemp);
     }
-    
+
     /**
      * Returns $_mbVolt.
      *
@@ -140,9 +148,13 @@ class MBInfo
      */
     public function getMbVolt()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbVolt, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbVolt;
     }
-    
+
     /**
      * Sets $_mbVolt.
      *
@@ -166,6 +178,10 @@ class MBInfo
      */
     public function getMbPower()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbPower, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbPower;
     }
 
@@ -192,6 +208,10 @@ class MBInfo
      */
     public function getMbCurrent()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbCurrent, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbCurrent;
     }
 
@@ -218,6 +238,10 @@ class MBInfo
      */
     public function getMbOther()
     {
+        if (defined('PSI_SORT_SENSORS_LIST') && PSI_SORT_SENSORS_LIST) {
+            usort($this->_mbOther, array('CommonFunctions', 'name_natural_compare'));
+        }
+
         return $this->_mbOther;
     }
 

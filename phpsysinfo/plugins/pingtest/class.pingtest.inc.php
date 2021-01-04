@@ -46,11 +46,8 @@ class PingTest extends PSI_Plugin
                 if (PSI_OS == 'WINNT') {
                     $params = "-n 1";
                     if (defined('PSI_PLUGIN_PINGTEST_TIMEOUT')) {
-                        if (PSI_PLUGIN_PINGTEST_TIMEOUT === false) {
-                        } elseif (PSI_PLUGIN_PINGTEST_TIMEOUT === true) {
-                            $params .= " -w 1000";
-                        } else {
-                            $params .= " -w ".(1000*PSI_PLUGIN_PINGTEST_TIMEOUT);
+                        if (($tout = max(intval(PSI_PLUGIN_PINGTEST_TIMEOUT), 0)) > 0) {
+                            $params .= " -w ".(1000*$tout);
                         }
                     } else {
                         $params .= " -w 2000";
@@ -59,25 +56,22 @@ class PingTest extends PSI_Plugin
                 } else {
                     $params = "-c 1";
                     if (defined('PSI_PLUGIN_PINGTEST_TIMEOUT')) {
-                        if (PSI_PLUGIN_PINGTEST_TIMEOUT === false) {
-                        } elseif (PSI_PLUGIN_PINGTEST_TIMEOUT === true) {
-                            $params .= " -W 1";
-                        } else {
-                            $params .= " -W ".PSI_PLUGIN_PINGTEST_TIMEOUT;
+                        if (($tout = max(intval(PSI_PLUGIN_PINGTEST_TIMEOUT), 0)) > 0) {
+                            $params .= " -W ".$tout;
                         }
                     } else {
                         $params .= " -W 2";
                     }
                 }
                 foreach ($addresses as $address) {
-                    CommonFunctions::executeProgram("ping", $params." ".$address, $buffer, PSI_DEBUG);
-                    if ((strlen($buffer) > 0) && preg_match("/ time[=<]([\d\.]+)\s*ms/", $buffer, $tmpout)) {
+                    CommonFunctions::executeProgram("ping".((strpos($address, ':') === false)?'':((PSI_OS !== 'WINNT')?'6':'')), $params." ".$address, $buffer, PSI_DEBUG);
+                    if ((strlen($buffer) > 0) && preg_match("/[=<]([\d\.]+)\s*ms/", $buffer, $tmpout)) {
                         $this->_filecontent[] = array($address, $tmpout[1]);
                     }
                 }
                 break;
             case 'data':
-                CommonFunctions::rfts(APP_ROOT."/data/pingtest.txt", $buffer);
+                CommonFunctions::rfts(PSI_APP_ROOT."/data/pingtest.txt", $buffer);
                 $addresses = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($addresses as $address) {
                     $pt = preg_split("/[\s]?\|[\s]?/", $address, -1, PREG_SPLIT_NO_EMPTY);
@@ -87,7 +81,7 @@ class PingTest extends PSI_Plugin
                 }
                 break;
             default:
-                $this->global_error->addError("switch(PSI_PLUGIN_PINGTEST_ACCESS)", "Bad pingtest configuration in phpsysinfo.ini");
+                $this->global_error->addConfigError("__construct()", "[pingtest] ACCESS");
                 break;
             }
         }

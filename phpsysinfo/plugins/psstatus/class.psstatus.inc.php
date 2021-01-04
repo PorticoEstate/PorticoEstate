@@ -1,19 +1,6 @@
 <?php
 /**
- * PSStatus Plugin
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PSI_Plugin_PSStatus
- * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
- * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id: class.psstatus.inc.php 692 2012-09-08 17:12:08Z namiltd $
- * @link      http://phpsysinfo.sourceforge.net
- */
- /**
- * process Plugin, which displays the status of configured processes
+ * PSStatus Plugin, which displays the status of configured processes
  * a simple view which shows a process name and the status
  * status determined by calling the "pidof" command line utility, another way is to provide
  * a file with the output of the pidof utility, so there is no need to run a executeable by the
@@ -52,26 +39,26 @@ class PSStatus extends PSI_Plugin
     {
         parent::__construct(__CLASS__, $enc);
         if (defined('PSI_PLUGIN_PSSTATUS_PROCESSES') && is_string(PSI_PLUGIN_PSSTATUS_PROCESSES)) {
-        switch (strtolower(PSI_PLUGIN_PSSTATUS_ACCESS)) {
-        case 'command':
-            if (PSI_OS == 'WINNT') {
-                try {
+            switch (strtolower(PSI_PLUGIN_PSSTATUS_ACCESS)) {
+            case 'command':
+                if (PSI_OS == 'WINNT') {
+                    try {
                         $objLocator = new COM('WbemScripting.SWbemLocator');
                         $wmi = $objLocator->ConnectServer('', 'root\CIMv2');
                         $process_wmi = CommonFunctions::getWMI($wmi, 'Win32_Process', array('Caption', 'ProcessId'));
-                    foreach ($process_wmi as $process) {
+                        foreach ($process_wmi as $process) {
                             $this->_filecontent[] = array(strtolower(trim($process['Caption'])), trim($process['ProcessId']));
+                        }
+                    } catch (Exception $e) {
                     }
-                } catch (Exception $e) {
-                }
-            } else {
+                } else {
                     if (preg_match(ARRAY_EXP, PSI_PLUGIN_PSSTATUS_PROCESSES)) {
                         $processes = eval(PSI_PLUGIN_PSSTATUS_PROCESSES);
                     } else {
                         $processes = array(PSI_PLUGIN_PSSTATUS_PROCESSES);
                     }
                     if (defined('PSI_PLUGIN_PSSTATUS_USE_REGEX') && PSI_PLUGIN_PSSTATUS_USE_REGEX === true) {
-                    foreach ($processes as $process) {
+                        foreach ($processes as $process) {
                             CommonFunctions::executeProgram("pgrep", "-n -x \"".$process."\"", $buffer, PSI_DEBUG);
                             if (strlen($buffer) > 0) {
                                 $this->_filecontent[] = array($process, $buffer);
@@ -82,26 +69,26 @@ class PSStatus extends PSI_Plugin
                             CommonFunctions::executeProgram("pidof", "-s -x \"".$process."\"", $buffer, PSI_DEBUG);
                             if (strlen($buffer) > 0) {
                                 $this->_filecontent[] = array($process, $buffer);
+                            }
                         }
                     }
                 }
-            }
-            break;
-        case 'data':
-            CommonFunctions::rfts(APP_ROOT."/data/psstatus.txt", $buffer);
-            $processes = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($processes as $process) {
-                $ps = preg_split("/[\s]?\|[\s]?/", $process, -1, PREG_SPLIT_NO_EMPTY);
-                if (count($ps) == 2) {
-                    $this->_filecontent[] = array(trim($ps[0]), trim($ps[1]));
+                break;
+            case 'data':
+                CommonFunctions::rfts(PSI_APP_ROOT."/data/psstatus.txt", $buffer);
+                $processes = preg_split("/\n/", $buffer, -1, PREG_SPLIT_NO_EMPTY);
+                foreach ($processes as $process) {
+                    $ps = preg_split("/[\s]?\|[\s]?/", $process, -1, PREG_SPLIT_NO_EMPTY);
+                    if (count($ps) == 2) {
+                        $this->_filecontent[] = array(trim($ps[0]), trim($ps[1]));
+                    }
                 }
+                break;
+            default:
+                $this->global_error->addConfigError("__construct()", "[psstatus] ACCESS");
+                break;
             }
-            break;
-        default:
-                $this->global_error->addError("switch(PSI_PLUGIN_PSSTATUS_ACCESS)", "Bad psstatus configuration in phpsysinfo.ini");
-            break;
         }
-    }
     }
 
     /**
@@ -120,10 +107,10 @@ class PSStatus extends PSI_Plugin
                 $processes = array(PSI_PLUGIN_PSSTATUS_PROCESSES);
             }
             if ((PSI_OS == 'WINNT') && (strtolower(PSI_PLUGIN_PSSTATUS_ACCESS) == 'command')) {
-            foreach ($processes as $process) {
+                foreach ($processes as $process) {
                     $this->_result[] = array($process, $this->process_inarray(strtolower($process), $this->_filecontent));
                 }
-                } else {
+            } else {
                 foreach ($processes as $process) {
                     $this->_result[] = array($process, $this->process_inarray($process, $this->_filecontent));
                 }
