@@ -123,7 +123,7 @@
 											</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
-									<xsl:value-of select="php:function('lang', 'Pre-register')" />
+									<xsl:value-of select="php:function('lang', 'Pre-registration')" />
 								</button>
 							</div>
 
@@ -146,7 +146,7 @@
 											</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
-									<xsl:value-of select="lang_register_in" />
+									<xsl:value-of select="php:function('lang', 'Register in')" />
 								</button>
 							</div>
 							<div class="col-12 mt-3 mb-2">

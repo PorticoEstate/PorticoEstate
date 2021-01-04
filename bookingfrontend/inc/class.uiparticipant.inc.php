@@ -173,14 +173,31 @@
 				}
 
 				$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+				$number_of_participants_registered_in = $this->bo->get_number_of_participants($reservation_type, $reservation_id, true);
 
-				if( !empty($reservation['participant_limit']) && $participant['quantity']
-					&& ($register_type == 'register_pre' || $register_type == 'register_in'))
+				if( !empty($reservation['participant_limit']) && $participant['quantity'])
 				{
-					if(($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit'])
+					if($register_type == 'register_pre')
 					{
-						$sms_error_message = "Det gikk ikke: antall er begrenset til {$reservation['participant_limit']}.";
-						$errors = array('quantity' => $sms_error_message);
+						if(($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit'])
+						{
+							$sms_error_message = "Det gikk ikke: antall er begrenset til {$reservation['participant_limit']}.";
+							$errors = array('quantity' => $sms_error_message);
+						}
+						else if($participant['id'])
+						{
+							$sms_error_message = "Det gikk ikke: du er allerede innregistrert med antall {$participant['quantity']}.\n";
+							$sms_error_message .= "Du kan eventuelt forsøke å registrere deg ut - og deretter inn igjen med nytt antall.";
+							$errors = array('quantity' => $sms_error_message);
+						}
+					}
+					else if($register_type == 'register_in')
+					{
+						if(($number_of_participants_registered_in  + $participant['quantity']) > (int) $reservation['participant_limit'])
+						{
+							$sms_error_message = "Det gikk ikke: antall er begrenset til {$reservation['participant_limit']}.";
+							$errors = array('quantity' => $sms_error_message);
+						}
 					}
 				}
 
@@ -310,6 +327,7 @@
 			$this->flash_form_errors($errors);
 
 			$number_of_participants = $this->bo->get_number_of_participants($reservation_type, $reservation_id);
+			$number_of_participants_registered_in = $this->bo->get_number_of_participants($reservation_type, $reservation_id, true);
 
 			$participant_limit		 = !empty($reservation['participant_limit']) ? $reservation['participant_limit'] : 0;
 
@@ -317,6 +335,10 @@
 			{
 				$enable_register_pre = null;
 				$enable_register_in = null;
+				if($number_of_participants_registered_in < $number_of_participants)
+				{
+					$enable_register_in = true;
+				}
 			}
 
 			$name = '';
@@ -338,7 +360,6 @@
 				'enable_register_out'	 => $enable_register_out,
 				'enable_register_form'	 => $enable_register_form,
 				'number_of_participants' => $number_of_participants,
-				'lang_register_in'		 => lang('Registration'),
 				'lang_register_out'		 => $lang_register_out,
 				'when'					 => $when,
 				'phone'					 => $participant['phone'],
