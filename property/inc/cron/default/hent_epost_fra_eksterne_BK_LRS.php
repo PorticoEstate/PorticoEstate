@@ -1333,6 +1333,18 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
+			else if (preg_match("/Fare for duplikate faktura/i", $subject))
+			{
+				$message_cat_id	 = 317; // LRS-System- underkategori: Avvik
+				$group_id		 = 4252; //LRS-System
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 
 
 			/**
