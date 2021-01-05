@@ -386,7 +386,7 @@ Edit document	booking	no	Rediger dokument
 Edit resource	booking	no	Rediger ressurs
 Edit Group	booking	no	Rediger gruppe
 Select Type	booking	no	Velg type
-Customer number	booking	no	Ressursnummer
+Customer number	booking	no	Referansenummer
 Send	booking	no	Send
 your application has now been processed and a confirmation email has been sent to you.	booking	nn	Søknaden er behandlet, og en bekreftelse er sendt til deg på e-post.
 Your application has now been registered and a confirmation email has been sent to you.	booking	no	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
