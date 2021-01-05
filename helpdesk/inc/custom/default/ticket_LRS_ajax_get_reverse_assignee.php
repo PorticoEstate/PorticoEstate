@@ -214,9 +214,12 @@
 
 					$db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
+					$org_units = array(-1);
+
 					if($db->next_record())
 					{
 						$treff_utenfor_resultat_enhet = true;
+						$org_units[] = $db->f('ORG_ENHET_ID');
 					}
 
 					$ticket_id = (int)phpgw::get_var('ticket_id');
@@ -261,8 +264,6 @@
 					$sql = "SELECT id FROM fm_org_unit WHERE parent_id  = {$parent_id}";
 
 					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-
-					$org_units = array(-1);
 
 					while ($GLOBALS['phpgw']->db->next_record())
 					{
