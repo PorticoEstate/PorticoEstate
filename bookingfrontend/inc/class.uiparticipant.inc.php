@@ -193,7 +193,8 @@
 					}
 					else if($register_type == 'register_in')
 					{
-						if(($number_of_participants_registered_in  + $participant['quantity']) > (int) $reservation['participant_limit'])
+						if(($participant['id'] && ($number_of_participants_registered_in  + $participant['quantity']) > (int) $reservation['participant_limit'])
+							|| (!$participant['id'] && ($number_of_participants  + $participant['quantity']) > (int) $reservation['participant_limit']))
 						{
 							$sms_error_message = "Det gikk ikke: antall er begrenset til {$reservation['participant_limit']}.";
 							$errors = array('quantity' => $sms_error_message);
