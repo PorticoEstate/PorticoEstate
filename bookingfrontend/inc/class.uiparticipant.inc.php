@@ -214,7 +214,7 @@
 					{
 						$sms_error_message = "Du har forsøkt å avbestille tid - men nummeret ditt er ikke registrert, og kan ikke benyttes for avbestilling."
 						. "\n Begrensning: {$reservation['participant_limit']}."
-						. "\n Totalt antall påmeldt: {$number_of_participants}";						
+						. "\n Totalt antall påmeldt: {$number_of_participants}";
 					}
 					else
 					{
@@ -338,7 +338,7 @@
 				$enable_register_in = null;
 				if($number_of_participants_registered_in < $number_of_participants)
 				{
-					$enable_register_in = true;
+					$enable_register_in = $enable_register_in ? $enable_register_in : null;
 				}
 			}
 
@@ -390,7 +390,7 @@
 				return array();
 			}
 
-			
+
 			$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
 			$participants = $this->bo->read();
 
