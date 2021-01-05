@@ -1108,7 +1108,7 @@
 					continue;
 				}
 
-				$v = trim($entity[$field]);
+				$v = is_array($entity[$field]) ? $entity[$field] : trim($entity[$field]);
 				$empty = false;
 
 				if (isset($params['manytomany']) && isset($params['manytomany']['column']))

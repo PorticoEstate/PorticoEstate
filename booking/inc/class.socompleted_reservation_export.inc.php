@@ -1385,7 +1385,7 @@
 					else
 					{
 						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$header['ext_ord_ref'] = str_pad(substr($customer_number, 0, 15), 15, ' ');
+						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
 
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
