@@ -1295,7 +1295,18 @@
 					}
 				}
 
-				if ($stored_header == array() || $stored_header['tekst2'] != $this->get_customer_identifier_value_for($reservation))
+				if ($type == 'internal')
+				{
+					//Nøkkelfelt, kundens personnr/orgnr.
+					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation);
+				}
+				else
+				{
+					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
+					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
+				}
+
+				if ($stored_header == array() || $stored_header['tekst2'] != $check_customer_identifier)
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
@@ -1374,8 +1385,8 @@
 						$header['dim_value_7'] = str_pad(substr($account_codes['dim_value_7'], 0, 12), 12, ' ');
 					}
 
-					//Nøkkelfelt, kundens personnr/orgnr.
-					$stored_header['tekst2'] = $this->get_customer_identifier_value_for($reservation);
+					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
+					$stored_header['tekst2'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
