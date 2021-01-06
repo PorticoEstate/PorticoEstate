@@ -264,9 +264,12 @@
 
 										if (!$found_reservation)
 										{
-											$error_msg	 = "Fann ikkje reservasjonen for {$e_lock_name} i adgangskontrollen";
+											$error_msg	 = "Fant ikke reservasjonen for {$e_lock_name} i adgangskontrollen.\n";
+											$error_msg	 .= "Du må kontakte byggansvarlig for manuell innlåsing.\n";
+											$error_msg	 .= "Denne meldingen kan ikke besvares";
 											$sms_res	 = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $error_msg);
 											$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
+											$bo->add_single_comment($reservation['id'], "Fant ikke reservasjonen for {$e_lock_name} i adgangskontrollen.");
 										}
 									}
 									unset($e_lock);
