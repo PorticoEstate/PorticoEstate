@@ -6,7 +6,7 @@
 		</tr>
 		<!-- END header -->
 		<!-- BEGIN body -->
-		<tr class="row_on">
+		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<tr class="pure-table-odd">
@@ -60,7 +60,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_cookie_domain_for_sessions} - {lang_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
 		</tr>
@@ -72,11 +72,11 @@
 			<td>{lang_Anonymous_password}:</td>
 			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_custom_login_url}:</td>
 			<td><input name="newsettings[custom_login_url]" value="{value_custom_login_url}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_custom_login_url_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>
 		</tr>
@@ -88,15 +88,23 @@
 			<td>{lang_login_webservicehost} MinId2:</td>
 			<td><input name="newsettings[webservicehost]" value="{value_webservicehost}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_login_apikey} Fiks folkeregister:</td>
 			<td><input name="newsettings[apikey_fiks_folkeregister]" value="{value_apikey_fiks_folkeregister}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_login_role_id} Fiks folkeregister:</td>
 			<td><input name="newsettings[role_id_fiks_folkeregister]" value="{value_role_id_fiks_folkeregister}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
+			<td>{lang_username} Fiks folkeregister:</td>
+			<td><input name="newsettings[username_fiks_folkeregister]" value="{value_username_fiks_folkeregister}"></td>
+		</tr>
+		<tr>
+			<td>{lang_password} Fiks folkeregister:</td>
+			<td><input type="password" name="newsettings[password_fiks_folkeregister]" value="{value_password_fiks_folkeregister}"></td>
+		</tr>
+		<tr>
 			<td>{lang_login_webservicehost} Fiks folkeregister:</td>
 			<td><input name="newsettings[webservicehost_fiks_folkeregister]" value="{value_webservicehost_fiks_folkeregister}"></td>
 		</tr>
