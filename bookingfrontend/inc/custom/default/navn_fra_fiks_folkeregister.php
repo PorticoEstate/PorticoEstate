@@ -60,6 +60,8 @@
 
 			$apikey = !empty($this->config->config_data['apikey_fiks_folkeregister']) ? $this->config->config_data['apikey_fiks_folkeregister'] : '';
 			$role_id = !empty($this->config->config_data['role_id_fiks_folkeregister']) ? $this->config->config_data['role_id_fiks_folkeregister'] : '';
+			$username = !empty($this->config->config_data['username_fiks_folkeregister']) ? $this->config->config_data['username_fiks_folkeregister'] : '';
+			$password = !empty($this->config->config_data['password_fiks_folkeregister']) ? $this->config->config_data['password_fiks_folkeregister'] : '';
 
 			$webservicehost = !empty($this->config->config_data['webservicehost_fiks_folkeregister']) ? $this->config->config_data['webservicehost_fiks_folkeregister'] : 'http://fiks/get.php';
 
@@ -73,6 +75,8 @@
 				'id'	=> $data['ssn'],
 				'apikey' => $apikey,
 				'role_id' => $role_id,
+				'username' => $username,
+				'password' => $password
 			);
 
 			$post_string = http_build_query($post_data);
