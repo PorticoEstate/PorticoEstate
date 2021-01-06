@@ -418,18 +418,19 @@ anonymous user	bookingfrontend	no	Anonym bruker
 anonymous password	bookingfrontend	no	Anonymt passord
 custom login url	bookingfrontend	no	Egendefinert logg inn url
 custom login url parameter	bookingfrontend	no	Egendefinert logg inn url parametre
-login apikey	bookingfrontend	no	login apikey
-login webservicehost	bookingfrontend	no	login webservicehost
+login apikey	bookingfrontend	no	Login apikey
+login role id	bookingfrontend	no	Login Rolle-ID
+login webservicehost	bookingfrontend	no	Login webservicehost
 login header key	bookingfrontend	no	Innloggingsoverskrift:
 login header regular expression	bookingfrontend	no	Innloggingsoverskrift vanlig uttrykk
-login soap client location	bookingfrontend	no	login soap klient location
-login soap client uri	bookingfrontend	no	login soap klient uri
-login soap client proxy host	bookingfrontend	no	login soap klient proxyserver
-login soap client proxy port	bookingfrontend	no	login soap klient proxyport
-login soap client encoding	bookingfrontend	no	login soap klient tegnsett
-login soap client login	bookingfrontend	no	login soap klient login
-login soap client password	bookingfrontend	no	login soap klient passord
-login soap client wsdl	bookingfrontend	no	login soap klient wsdl
+login soap client location	bookingfrontend	no	Login soap klient location
+login soap client uri	bookingfrontend	no	Login soap klient uri
+login soap client proxy host	bookingfrontend	no	Login soap klient proxyserver
+login soap client proxy port	bookingfrontend	no	Login soap klient proxyport
+login soap client encoding	bookingfrontend	no	Login soap klient tegnsett
+login soap client login	bookingfrontend	no	Login soap klient login
+login soap client password	bookingfrontend	no	Login soap klient passord
+login soap client wsdl	bookingfrontend	no	Login soap klient wsdl
 test organization	bookingfrontend	no	Test organisasjon
 google tracker id	bookingfrontend	no	Goggle sporer id
 url to external logout	bookingfrontend	no	Url for ekstern logg ut

@@ -417,18 +417,19 @@ anonymous user	bookingfrontend	nn	Anonym brukar
 anonymous password	bookingfrontend	nn	Anonymt passord
 custom login url	bookingfrontend	nn	Egendefinert logg inn url
 custom login url parameter	bookingfrontend	nn	Egendefinert logg inn url parameter
-login apikey	bookingfrontend	nn	login apikey
-login webservicehost	bookingfrontend	nn	login webservicehost
+login apikey	bookingfrontend	nn	Login apikey
+login role id	bookingfrontend	nn	Login Rolle-ID
+login webservicehost	bookingfrontend	nn	Login webservicehost
 login header key	bookingfrontend	nn	Innloggingsoverskrift:
 login header regular expression	bookingfrontend	nn	Innloggingsoverskrift vanleg uttrykk
-login soap client location	bookingfrontend	nn	login soap klient location
-login soap client uri	bookingfrontend	nn	login soap klient uri
-login soap client proxy host	bookingfrontend	nn	login soap klient proxyserver
-login soap client proxy port	bookingfrontend	nn	login soap klient proxyport
-login soap client encoding	bookingfrontend	nn	login soap klient tegnsett
-login soap client login	bookingfrontend	nn	login soap klient login
-login soap client password	bookingfrontend	nn	login soap klient passord
-login soap client wsdl	bookingfrontend	nn	login soap klient wsdl
+login soap client location	bookingfrontend	nn	Login soap klient location
+login soap client uri	bookingfrontend	nn	Login soap klient uri
+login soap client proxy host	bookingfrontend	nn	Login soap klient proxyserver
+login soap client proxy port	bookingfrontend	nn	Login soap klient proxyport
+login soap client encoding	bookingfrontend	nn	Login soap klient tegnsett
+login soap client login	bookingfrontend	nn	Login soap klient login
+login soap client password	bookingfrontend	nn	Login soap klient passord
+login soap client wsdl	bookingfrontend	nn	Login soap klient wsdl
 test organization	bookingfrontend	nn	Test organisasjon
 google tracker id	bookingfrontend	nn	Goggle sporar id
 url to external logout	bookingfrontend	nn	Url for ekstern logg ut
