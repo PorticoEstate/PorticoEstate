@@ -636,7 +636,7 @@
 					$to = ($to) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to)) : "";
 				}
 
-				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
@@ -878,6 +878,7 @@
 			$_building = $this->building_bo->so->read_single($building_id);
 
 			array_set_default($application, 'building_name', $_building['name']);
+			array_set_default($application, 'audience', array());
 
 			if (strstr($application['building_name'], "%"))
 			{
@@ -888,11 +889,11 @@
 
 			if (phpgw::get_var('from_', 'string'))
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
+				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
 			else
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), '', '');
+				$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			}
 			array_set_default($application, 'dates', $default_dates);
 
@@ -1485,7 +1486,7 @@
 					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
-				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
 				$errors = $this->validate($application);
 
