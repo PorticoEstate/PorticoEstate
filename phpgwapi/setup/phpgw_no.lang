@@ -339,3 +339,4 @@ privacy policy	common	no	Retningslinjer for personvern
 write here...	common	no	Skriv her...
 Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region	common	no	Last opp flere filer ved enten å dra-og-slipp i markert område, eller ved å velge filene direkte.
 value is used in records	common	no	Verdien er brukt i registrerte poster
+%1: login blocked for user '%2', ip %3	common	no	%1: login blokkert for bruker '%2', IP %3
