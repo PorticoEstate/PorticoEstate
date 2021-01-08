@@ -646,7 +646,7 @@ JS;
 				return $data['value'];
 			}
 
-			$ret = '';
+			$ret = null;
 
 			$choice_table		 = 'phpgw_cust_choice';
 			$attribute_table	 = 'phpgw_cust_attribute';
@@ -654,6 +654,12 @@ JS;
 
 			switch ($data['datatype'])
 			{
+				case 'I':
+					$ret = (int)$data['value'];
+					break;
+				case 'N':
+					$ret = (float)$data['value'];
+					break;
 				case 'R':
 				case 'LB':
 					if ($data['attrib_id'])

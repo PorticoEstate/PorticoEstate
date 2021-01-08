@@ -451,7 +451,7 @@
 			$uicols['statustext'][]	 = lang('cost estimate');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'N';
 			$uicols['formatter'][]	 = 'FormatterRight';
 			$uicols['classname'][]	 = 'rightClasss';
 			$uicols['sortable'][]	 = true;
@@ -465,7 +465,7 @@
 			$uicols['statustext'][]	 = lang('cost estimate');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'N';
 			$uicols['formatter'][]	 = 'FormatterRight';
 			$uicols['classname'][]	 = 'rightClasss';
 			$uicols['sortable'][]	 = true;
@@ -479,7 +479,7 @@
 			$uicols['statustext'][]	 = lang('potential grants');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'N';
 			$uicols['formatter'][]	 = 'FormatterRight';
 			$uicols['classname'][]	 = 'rightClasss';
 			$uicols['sortable'][]	 = true;
@@ -506,7 +506,7 @@
 			$uicols['statustext'][]	 = lang('score');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'I';
 			$uicols['formatter'][]	 = 'FormatterRight';
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
@@ -521,7 +521,7 @@
 			$uicols['statustext'][]	 = lang('recommended year');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'I';
 			$uicols['formatter'][]	 = '';
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
@@ -535,7 +535,7 @@
 			$uicols['statustext'][]	 = lang('planned year');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
-			$uicols['datatype'][]	 = '';
+			$uicols['datatype'][]	 = 'I';
 			$uicols['formatter'][]	 = '';
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
