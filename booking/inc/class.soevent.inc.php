@@ -26,7 +26,7 @@
 				'cost' => array('type' => 'decimal', 'required' => true),
 				'contact_name' => array('type' => 'string', 'required' => true, 'query' => true),
 				'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
 					'default' => '0'),
@@ -46,7 +46,7 @@
 				'customer_ssn' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
 					'required' => false),
 				'customer_organization_number' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
 				'include_in_list' => array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 				'activity_name' => array('type' => 'string',
@@ -104,10 +104,10 @@
 		function update( $entry )
 		{
 			$receipt = parent::update($entry);
-			
+
 			$cost = $this->_marshal($entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
-			
+
 			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
 			. " WHERE reservation_type = 'event'"
 			. " AND reservation_id = {$id}"
@@ -289,7 +289,6 @@
 			);
 
 			return $this->db->insert($sql, $valueset, __LINE__, __FILE__);
-		
 		}
 
 		protected function doValidate( $entity, booking_errorstack $errors )
@@ -549,4 +548,106 @@
 			}
 			return $results;
 		}
+
+	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null)
+	{
+		$loggedInOrgsSql = null;
+		$facilityTypeIDSql = null;
+		$orgIDsql = null;
+		$toDateSql = null;
+		$buildingIDSQL = null;
+
+		if ($loggedInOrgs) {
+			$loggedInOrgsSql = " AND bbe.customer_organization_number in ($loggedInOrgs) ";
+		}
+
+		if ($facilityTypeID) {
+			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID' ";
+		}
+		if ($buildingID) {
+			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
+		}
+		if ($orgID) {
+			$orgIDsql = " AND bo.id='$orgID' ";
+		}
+		if ($toDate !== "") {
+			$toDateSql = " AND bbe.to_ <= '$toDate' ";
+		}
+		$sqlQuery = "
+				select
+				    bbe.id as event_id,
+			       	bo.id as org_id,
+			       	bo.name as org_name,
+			       	bbe.from_,
+			       	bbe.to_, 
+				    bbe.building_id as building_id,
+			       	bbe.building_name as location_name,
+				    bbe.name as event_name,
+			       	br.name as resource_name,
+			    	bbrc.name as resource_type
+				from bb_event bbe--, bb_event_resource bber, bb_rescategory bbrc, bb_resource bbr
+				    inner join
+				        bb_organization bo on bbe.customer_organization_number = bo.organization_number
+				    inner join
+				        bb_event_resource ber on bbe.id = ber.event_id
+				    inner join
+				        bb_resource br on ber.resource_id = br.id
+				    inner join
+				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
+				where 
+		        	bbe.from_ > current_date and
+			    	bbe.is_public = 1
+				  	AND bbe.from_ >= '$fromDate' "
+						.$toDateSql
+						.$orgIDsql
+						.$buildingIDSQL
+						.$facilityTypeIDSql
+						.$loggedInOrgsSql
+						." AND bbe.is_public = 1
+						order by bbe.from_ asc LIMIT 50;";
+
+		$this->db->query($sqlQuery);
+
+		$results = array();
+		while ($this->db->next_record()) {
+			$results[] = array(
+				'from' => $this->db->f('from_', false),
+				'to' => $this->db->f('to_', false),
+				'event_name' => $this->db->f('event_name', false),
+				'org_name' => $this->db->f('org_name', true),
+				'location_name' => $this->db->f('location_name', true),
+				'event_id' => $this->db->f('event_id', false),
+				'building_id' => $this->db->f('building_id', false),
+				'org_num' => $this->db->f('org_num', false),
+				'org_id' => $this->db->f('org_id', false),
+			);
+
+		}
+		return $results;
 	}
+
+	private function getFacilities($event_id)
+	{
+		$sqlQuery ="select e.id as event_id, e.name as event_name,rc.id as rescat_id, rc.name as rescat_name, r.id as resource_id, r.name as resource_name
+					from bb_rescategory rc, bb_event_resource er, bb_resource r , bb_event e
+					where e.id = er.event_id 
+						and er.resource_id = r.id 
+						and rc.id = r.rescategory_id
+						and e.id = '$event_id'";
+
+		$this->db->query($sqlQuery);
+		$results = array();
+		$facilityInfo = new stdClass();
+		while ($this->db->next_record()) {
+			$facilityInfo->event_name = $this->db->f('event_name',false);
+			$facilityInfo->event_id = $this->db->f('event_id',false);
+			$facilityInfo->resource_category_id = $this->db->f('rescat_id',false);
+			$facilityInfo->resource_category_name = $this->db->f('rescat_name',false);
+			$facilityInfo->resource_id = $this->db->f('resource_id',false);
+			$facilityInfo->resource_name = $this->db->f('resource_name',false);
+			array_push($results, $facilityInfo);
+
+		}
+		return $results;
+	}
+}

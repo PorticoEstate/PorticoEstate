@@ -1,8 +1,10 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('bookingfrontend.bosearch');
 
 	class bookingfrontend_uisearch extends booking_uicommon
 	{
+	    public $bo;
 
 		public $public_functions = array
 			(
@@ -12,13 +14,13 @@
 			'index'             => true,
 			'query'             => true,
 			'resquery'          => true,
+			'get_all_available_buildings' => true
 		);
 
 		function __construct()
 		{
-
 			parent::__construct();
-			$this->bo = CreateObject('bookingfrontend.bosearch');
+			$this->bo = new bookingfrontend_bosearch();
 			$old_top = array_pop($this->tmpl_search_path);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, $old_top);
@@ -29,7 +31,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('treeview');
 
-			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'aalesund', 'search.js', 'text/javascript', true);
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -284,4 +286,8 @@
 			exit();
 		}
 
+        public function get_all_available_buildings()
+        {
+			return $this->bo->get_all_booked_ids();
+        }
 	}

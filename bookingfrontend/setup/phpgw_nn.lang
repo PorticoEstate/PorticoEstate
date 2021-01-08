@@ -452,6 +452,7 @@ back	bookingfrontend	nn	tilbake
 Building information	bookingfrontend	nn	Informasjon om anlegget
 Choose another building	bookingfrontend	nn	Velg annet anlegg
 Choose categories	bookingfrontend	nn	Velg kategorier
+Choose date-range	bookingfrontend	nn	Velg dato
 Choose resources	bookingfrontend	nn	Velg lokaler
 Complete applications	bookingfrontend	nn	Fullfør søknad
 Date	bookingfrontend	nn	Dato
@@ -500,7 +501,4 @@ saved data	bookingfrontend	nn	Lagra data
 edit data	bookingfrontend	nn	Endre data
 Minimum 8 digits	bookingfrontend	nn	Minimum 8 tal
 view event	bookingfrontend	nn	Vis arrangement
-view allocation	bookingfrontend	nn	Vis tildeling
-view booking	bookingfrontend	nn	Vis interntildeling
-Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
-registration	bookingfrontend	nn	Registrering
+Search for events bookingfrontend nn Søk etter arrangement

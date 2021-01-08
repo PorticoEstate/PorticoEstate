@@ -146,6 +146,7 @@ ko.applyBindings(searchViewModel, document.getElementById("search-page-content")
 
 $(document).ready(function ()
 {
+
 	$(".overlay").show();
 	if (urlParams['searchterm'] != "" && typeof urlParams['searchterm'] !== "undefined")
 	{
@@ -213,28 +214,23 @@ $(document).ready(function ()
 	GetFilterBoxData();
 });
 
-function GetUpcommingEvents()
-{
+function GetUpcommingEvents() {
+
 	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.events"}, true);
-	$.getJSON(requestURL, function (result)
-	{
+	$.getJSON(requestURL, function (result) {
+		console.log(result.results);
 		$(".upcomingevents-header").html(result.header);
-		for (var i = 0; i < result.results.length; i++)
-		{
+		for (var i = 0; i < result.results.length; i++) {
 			var datetime_day = result.results[i].datetime_day;
 			var month = result.results[i].datetime_month;
 			var fontsize = "40px";
-			if (month.indexOf("-") != -1)
-			{
+			if (month.indexOf("-") != -1) {
 				var months = month.split("-");
 				month = months[0].substr(0, 3) + "-" + months[1].substr(0, 3);
-			}
-			else
-			{
+			} else {
 				month = month.substr(0, 3);
 			}
-			if (datetime_day.indexOf("-") != -1)
-			{
+			if (datetime_day.indexOf("-") != -1) {
 				fontsize = "23px";
 			}
 			searchViewModel.upcommingevents.push({
@@ -248,8 +244,7 @@ function GetUpcommingEvents()
 				homepage: result.results[i].homepage
 			});
 		}
-	}).done(function ()
-	{
+	}).done(function () {
 	});
 }
 

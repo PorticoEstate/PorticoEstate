@@ -1,222 +1,86 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="search-page-content">
-		<div class="frontpageimage" id="main-page">
-			<div class="header-text"    style="color:#26348B;"  >
-				<a href="{site_url}"    >
-					<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
-				</a>
-			</div>
-		</div>
-		<!-- Content Container -->
-		<div class="jumbotron jumbotron-fluid">
-			<!-- Title -->
-			<div class="container">
-				<div class="flex-container" id="frontpagetitle">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
-				</div>
-			</div>
-			<!-- Search Container -->
-			<div class="container searchContainer"     >
-				<div class="input-group input-group-lg mainpageserchcontainer">
-					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
-						</xsl:attribute>
-					</input>
-					<div class="input-group-prepend">
-						<button class="input-group-text searchBtn" id="inputGroup-sizing-lg" type="button">
-							<i class="fas fa-search"></i>
-						</button>
-					</div>
-				</div>
-				<div id="search-autocomplete"></div>
-				<!-- Filter Boxes -->
-				<h2 class="mt-5 font-weight-bold">
-					<xsl:value-of select="php:function('lang', 'Choose categories')"/>
-				</h2>
-				<div class="row mx-auto" data-bind="if: filterboxes().length > 0">
-					<div data-bind="foreach: filterboxes">
-						<div class="dropdown d-inline-block mr-2">
-							<button class="btn btn-secondary dropdown-toggle d-inline" data-bind="text: filterboxCaption" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							</button>
-							<div class="dropdown-menu" data-bind="foreach: filterbox" aria-label="Large">
-								<a class="dropdown-item" data-bind="html: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mx-auto mt-3" data-bind="if: selectedFilterbox">
-					<div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
-						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
-						</button>
-						<div class="dropdown-menu" data-bind="foreach: activities" aria-label="Large">
-							<a class="dropdown-item" data-bind="html: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
-						</div>
-					</div>
-					<div class="dropdown d-inline-block" data-bind="if: facilities().length > 0">
-						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<xsl:value-of select="php:function('lang', 'Facilities')"/>
-						</button>
-						<div class="dropdown-menu" data-bind="foreach: facilities" aria-label="Large">
-							<div class="dropdown-item d-block">
-								<a class="text-dark" data-bind="html: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#"></a>
-								<span data-bind="if: selected">&#160; &#10004;</span>
-							</div>
-						</div>
-					</div>
-					<div class="dropdown d-inline-block" data-bind="if: towns().length > 0">
-						<button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<xsl:value-of select="php:function('lang', 'Part of town (2018)')"/>
-						</button>
-						<div class="dropdown-menu" data-bind="foreach: towns" aria-label="Large">
-							<div class="dropdown-item d-block">
-								<a class="text-dark" data-bind="html: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
-								<span data-bind="if: selected">&#160; &#10004;</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mx-auto mt-5" data-bind="if: selectedTags().length > 0">
-					<div data-bind="foreach: selectedTags">
-						<div class="d-inline-block mb-2">
-							<div class="tags mr-2">
-								<span data-bind="html: value, click: $root.clearTag" ></span>
-								<a href="" data-bind="click: $root.clearTag">
-									<i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Arrangement Container -->
-		<div class="container pageResults">
-			<!-- Upcomming Arrangements -->
-			<div id="welcomeResult" class=" container">
-				<h1 class="text-center upcomingevents-header"></h1>
-				<div class="row" data-bind="foreach: upcommingevents">
-					<div class="col-lg-6 card-positioncorrect">
-						<div class="row custom-card">
-							<div class="col-md-3 col-sm-4 col-4 date-circle">
-								<svg width="90" height="90">
-									<circle cx="45" cy="45" r="41" class="circle"/>
-									<text class="event_datetime_day" data-bind="" x="50%" y="43%" text-anchor="middle" font-size="40px" fill="white" font-weight="bold" dy=".3em">
-									</text>
-									<text data-bind="text: datetime_month" x="50%" y="68%" text-anchor="middle" fill="white" font-weight="bold" dy=".3em">
-									</text>
-								</svg>
-							</div>
-							<div class="col-md-9 col-sm-8 col-8 desc">
-								<h2 class="font-weight-bold title" data-bind="text: name"></h2>
-								<div class="card-text">
-									<span  data-bind="text: datetime_time"></span>
-									<span  data-bind="text: 'STED: ' +building_name"></span>
-									<span class="mb-2" data-bind="text: 'ARRANGØR: ' +organizer"></span>
-									<span class="font-weight-normal" data-bind="visible: homepage != ''"><a class="upcomming-event-href" href="" target="_blank" data-bind="">
-									Les mer</a></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Search Results -->
-			<div id="searchResult" data-bind="if: notFilterSearch">
-				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
-				<div class="row" id="result-items" data-bind="foreach: items">
-					<div class="col-lg-6 card-positioncorrect">
-						<a class="custom-card-link-href" data-bind="">
-							<div class="row custom-card">
-								<div class="col-3 date-circle">
-									<!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
-									<svg width="90" height="90">
-										<circle cx="45" cy="45" r="37" class="circle" />
-										<text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
-										</text>
-									</svg>
-								</div>
-								<div class="col-9 desc">
-									<div class="desc">
-										<h2 class="font-weight-bold" data-bind="html: name"></h2>
-										<span data-bind="html: street"></span>
-										<span class="d-block" data-bind="html: postcode"></span>
-									</div>
-									<div data-bind="foreach: tagItems">
-										<span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
 
-			<!-- Filter Search Result -->
-			<div id="filterSearchResult" data-bind="if: selectedFilterbox">
-				<h1 class="text-center result-title">
-					<xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: filterSearchItems().length"></span>)</h1>
-				<div data-bind="if: filterSearchItems().length > 0">
-					<div class="row" data-bind="foreach: filterSearchItems">
-						<div class="col-lg-6 card-positioncorrect">
-							<a class="custom-card-link-href" data-bind="">
-								<div class="row custom-card">
-									<div class="col-3 date-circle">
-										<!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
-										<svg width="90" height="90">
-											<circle cx="45" cy="45" r="37" class="circle" />
-											<text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
-											</text>
-										</svg>
-									</div>
-									<div class="col-9 desc">
-										<h4 class="font-weight-bold" data-bind="html: name"></h4>
-										<span data-bind="html: street"></span>
-										<span class="d-block" data-bind="html: postcode"></span>
-									</div>
-								</div>
-							</a>
-							<div class="row custom-all-subcard" style="width: 100%" data-bind="foreach: filterSearchItemsResources">
-								<div class="custom-subcard" data-bind="visible: $index() == 0 || $index() == 1">
-									<div class="row">
-										<div class="col-6">
-											<h5 class="font-weight-bold" data-bind="html: name"></h5>
-										</div>
-										<div class="col-6">
-											<a class="btn btn-light float-right filtersearch-bookBtn" data-bind="">
-												<xsl:value-of select="php:function('lang', 'Book resource')"/>
-											</a>
-										</div>
-									</div>
-									<div data-bind="foreach: activities">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
-										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
-									</div>
-									<div data-bind="foreach: facilities">
-										<span class="tagTitle" data-bind="if: $index() == 0">
-											<xsl:value-of select="php:function('lang', 'Facilities')"/>:
-										</span>
-										<span class="mr-2 textTagsItems" data-bind="html: name" ></span>
-									</div>
-								</div>
-							</div>
-							<div class="filterSearchToggle" data-bind="visible: filterSearchItemsResources().length > 2">
-								<i class="fas fa-angle-down"></i>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'See')"/>
-								<xsl:text> </xsl:text>
-								<span data-bind="text: (filterSearchItemsResources().length - 2) "></span>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="php:function('lang', 'more')"/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+   <div id="search-page-content">
+      <div class="headerSection">
+         <div class="noteRectangle">
+            <div class="noteTitle">
+               Korona-situasjonen
+            </div>
+            <div class="noteBody">
+               Idrettsanlegg og kulturbygg i Øygarden kommune er delvis stengt framover, som eit tiltak mot spreiing av koronaviruset.  Og kan kun brukes etter tilrådningar fra Folkehelsedirektoratet og Øygarden kommune.
+               <br /><br />
+               Søknadar som vert lagt inn i portalen, vert sakshandsama, men vil bli lengre sakshandsamartid. Følg med her for meir informasjon. 
+               <br /><br />
+               Du kan framleis låne/leiga lokale i portalen fram i tid, med forbehold om at bygga vert opna for bruk etter avstengningsperioden.
+            </div>
+         </div>
+         <div class="descriptionRectangle">
+            <div class="noteTitle">
+               Tittel om hva tjenesten leverer
+            </div>
+            <div class="noteBody">
+               Her finner du informasjon om kommunale bygg, skular, idrettsanlegg, og utstyr som er til utlån/utleige i Øygarden kommune. Ein del private anlegg, forsamlingshus o.l ligg og i portalen, med kontaktinformasjon til eigarar av bygga. Du kan også søke på lag og organisasjoner i kommunen. 
+            </div>
+         </div>
+      </div>
+      <!-- Content Container -->
+      <div class="jumbotron jumbotron-fluid bodySection">
+         <!-- Title -->
+         <div class="titleContainer">
+            <div class="flex-container headerText">
+               Finn fasiliteter/etableringer
+               <!--	<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/> -->
+            </div>
+         </div>
+         <!-- Search Container -->
+         <div id="searchContainer">
+            <div id="searchContainerContent">
+               <div  id="searchWrapper">
+                  <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
+                  <xsl:attribute name="placeholder">
+                     <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+                  </xsl:attribute>
+                  </input>
+               </div>
+               <div id="dateLocationFilterWrapper">
+                  <div  id="locationWrapper">
+                     <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>  
+                  </div>
+                  <div  id="dateWrapper">
+                     <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"></input>
+                  </div>
+               </div>
+               <button id="searchBtn" class="greenBtn">Finn tilgjengelige</button> 
+            </div>
+         </div>
+         <div class="pageContentWrapper">
+            <div class="titleContainer">
+               <div class="headerText">
+                  Dette skjer i Bergen kommune
+               </div>
+            </div>
+            <div class="activityList" data-bind="foreach: upcommingevents">
+               <div class="activityRow">
+                  <span class="activityDate activityText boldText activityHeaderSegment"><b class="event_datetime_day"></b>. <b data-bind="text: datetime_month"></b></span>
+                  <span class="activityTitle activityText boldText activityHeaderSegment"> 
+                  <a class="upcomming-event-href" href="" target="_blank">
+                  <span  data-bind="text: name"></span>
+                  </a>
+                  </span>
+                  <span class="activityTime activityHeaderSegment" data-bind="text: datetime_time"></span>
+                  <div class="activityLocation activityHeaderSegment">
+                     <div data-bind="text: building_name"></div>
+                     <div data-bind="text: organizer"></div>
+                  </div>
+               </div>
+            </div>
+         
+            
+         </div>
+      </div>
+   </div>
 </xsl:template>
+

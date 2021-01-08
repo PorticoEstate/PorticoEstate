@@ -191,4 +191,69 @@
 			}
 		}
 
+		/**
+		 * Fetches ids from all booked buildings within a given time-range
+		 * @param type $from_date
+		 * @param type $to_date
+		 */
+		function get_all_booked_ids($from_date, $to_date)
+		{
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query(
+				"SELECT DISTINCT bb_building.id FROM (SELECT 'booking'::text AS type,
+                                    bb_booking.application_id,
+                                    bb_booking.id,
+                                    bb_booking.from_,
+                                    bb_booking.to_,
+                                    bb_booking.cost,
+                                    bb_booking.active
+                                   FROM bb_booking
+                                  WHERE bb_booking.application_id IS NOT NULL
+                                UNION
+                                SELECT 'allocation'::text AS type,
+                                    bb_allocation.application_id,
+                                    bb_allocation.id,
+                                    bb_allocation.from_,
+                                    bb_allocation.to_,
+                                    bb_allocation.cost,
+                                    bb_allocation.active
+                                   FROM bb_allocation
+                                  WHERE bb_allocation.application_id IS NOT NULL
+                                UNION
+                                SELECT 'event'::text AS type,
+                                    bb_event.application_id,
+                                    bb_event.id,
+                                    bb_event.from_,
+                                    bb_event.to_,
+                                    bb_event.cost,
+                                    bb_event.active
+                                   FROM bb_event
+                                  WHERE bb_event.application_id IS NOT NULL) as BOOKINGS  JOIN bb_application ON application_id = bb_application.id JOIN bb_building ON bb_application.building_name = bb_building.name WHERE  from_ >= TO_DATE('".$from_date."', 'yyyy/mm/dd') AND to_ <= TO_DATE('".$to_date."', 'yyyy/mm/dd')"  , __LINE__, __FILE__);
+			$i = 0;
+			while ($db->next_record())
+			{
+				$results[] = $db->f('id', true);
+				$i++;
+			}
+			return $results;
+		}
+
+		public function get_facilityTypes()
+		{
+			$result = array();
+			$queryURL = "select id,name from bb_rescategory";
+			$this->db->query($queryURL);
+			while ($this->db->next_record()) {
+				$result[] = array(
+//					'resource_id' => $this->db->f('resource_id',false),
+//					'resource_name' => $this->db->f('resource_name',false),
+					'id' => $this->db->f('id',false),
+					'name' => $this->db->f('name',false),
+
+
+				);
+			}
+			return $result;
+		}
 	}

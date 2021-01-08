@@ -446,6 +446,7 @@ Application basket	bookingfrontend	no	Søknadskurv
 Building information	bookingfrontend	no	Informasjon om anlegget
 Choose another building	bookingfrontend	no	Velg annet anlegg
 Choose categories	bookingfrontend	no	Velg kategorier
+Choose date-range	bookingfrontend	no	Velg dato
 Choose resources	bookingfrontend	no	Velg lokaler
 Complete applications	bookingfrontend	no	Fullfør søknad
 Date	bookingfrontend	no	Dato
