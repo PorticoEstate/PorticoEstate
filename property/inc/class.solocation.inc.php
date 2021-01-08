@@ -419,7 +419,7 @@
 				$uicols['statustext'][]	 = 'dummy';
 				$uicols['exchange'][]	 = false;
 				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
+				$uicols['datatype'][]	 = 'I';
 				$uicols['formatter'][]	 = '';
 
 				$cols_return[]			 = 'location_code';
@@ -429,7 +429,7 @@
 				$uicols['statustext'][]	 = 'dummy';
 				$uicols['exchange'][]	 = false;
 				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
+				$uicols['datatype'][]	 = 'V';
 				$uicols['formatter'][]	 = '';
 
 				$cols_return[]			 = 'external_id';
@@ -439,7 +439,7 @@
 				$uicols['statustext'][]	 = 'dummy';
 				$uicols['exchange'][]	 = false;
 				$uicols['align'][]		 = '';
-				$uicols['datatype'][]	 = '';
+				$uicols['datatype'][]	 = 'V';
 				$uicols['formatter'][]	 = '';
 
 				for ($i = 0; $i < ($type_id); $i++)
@@ -450,7 +450,7 @@
 					$uicols['statustext'][]	 = $location_types[$i]['descr'];
 					$uicols['exchange'][]	 = true;
 					$uicols['align'][]		 = 'center';
-					$uicols['datatype'][]	 = $i == ($type_id - 1 ) ? 'I' : 'link'; // correct the last one
+					$uicols['datatype'][]	 = $i == ($type_id - 1 ) ? 'V' : 'link'; // correct the last one
 					$uicols['formatter'][]	 = '';
 					$cols					 .= ",fm_location{$type_id}.loc{$location_types[$i]['id']}";
 					$cols_return[]			 = "loc{$location_types[$i]['id']}";
@@ -512,7 +512,7 @@
 					$uicols['statustext'][]	 = 'dummy';
 					$uicols['exchange'][]	 = true;
 					$uicols['align'][]		 = '';
-					$uicols['datatype'][]	 = '';
+					$uicols['datatype'][]	 = 'I';
 					$uicols['formatter'][]	 = '';
 
 					$cols					 .= ',fm_tenant.last_name';
@@ -1509,11 +1509,11 @@
 
 			if ($location_code)
 			{
-				$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
+				$sql .= " WHERE fm_location{$type_id}.location_code='{$location_code}' ";
 			}
 			else
 			{
-				$sql .= " WHERE fm_location$type_id.id=" . (int)$id;
+				$sql .= " WHERE fm_location{$type_id}.id=" . (int)$id;
 			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
