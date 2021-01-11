@@ -193,21 +193,21 @@
 	</form>
 	<script type="text/javascript">
 		var building_id = <xsl:value-of select="building/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order', 'Direct booking', 'simple booking')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order', 'Direct booking', 'simple booking', 'active')"/>;
 	
     <![CDATA[
     //    var resourcesURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
     //    var documentsURL     = 'index.php?menuaction=booking.uidocument_building.index&sort=name&filter_owner_id=' + building_id + '&phpgw_return_as=json&';
     //    var permissionsURL   = 'index.php?menuaction=booking.uipermission_building.index&sort=name&filter_object_id=' + building_id + '&phpgw_return_as=json&';
 
-		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name',filter_building_id:building_id, length:-1}, true);
+		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name',filter_building_id:building_id, filter_active:-1, length:-1}, true);
 		var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_building.index', sort:'name',filter_owner_id: building_id,  length:-1}, true);
 		var permissionsURL = phpGWLink('index.php', {menuaction:'booking.uipermission_building.index', sort:'name',filter_object_id: building_id, length:-1}, true);
 
 
 
         ]]>
-		var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']},{key: 'direct_booking_date', label: lang['Direct booking']},{key: 'simple_booking', label: lang['simple booking']}];
+		var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']},{key: 'direct_booking_date', label: lang['Direct booking']},{key: 'simple_booking', label: lang['simple booking']},{key: 'active', label: lang['active']} ];
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
 		var colDefsPermissions = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label: 'Edit'}, {name: 'delete', label:lang['Delete']})}];
 
