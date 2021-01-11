@@ -11091,31 +11091,34 @@
 	/**
 	 * Notes
 	 * Alter column
-	 * Consider more...
+	 * Empty sql-cache to reflect datatypes on location values
 	 */
-//	$test[] = '0.9.17.751';
-//	function property_upgrade0_9_17_751()
-//	{
-//		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-//
-//
-//		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication', 'file_attachments', array(
-//			'type' => 'text',
-//			'nullable' => True
-//			)
-//		);
-//
-//		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication_msg', 'file_attachments', array(
-//			'type' => 'text',
-//			'nullable' => True
-//			)
-//		);
-//
-//		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
-//		{
-//			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.752';
-//			return $GLOBALS['setup_info']['property']['currentver'];
-//		}
-//	}
+	$test[] = '0.9.17.751';
+	function property_upgrade0_9_17_751()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication', 'file_attachments', array(
+			'type' => 'text',
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication_msg', 'file_attachments', array(
+			'type' => 'text',
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.752';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
 
