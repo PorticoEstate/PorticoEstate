@@ -533,11 +533,12 @@
    */
   function _buildList(list, data) {
     var menu = '';
-    var building = '<div class="bygg-li"><div class="category-title"><i class="fas fa-cube"></i> Anlegg</div>';
-    var org = '<div class="org-li"><div class="category-title"><i class="fas fa-users"></i> Organisasjon</div>';
-    var orgItems = 0;
-    var buildingItems = 0;
-    
+    var building = '<div class="bygg-li"><div class="category-title">Anlegg</div>';
+    var premises = '<div class="org-li"><div class="category-title">Lokaler</div>';
+
+	  var premiseItems = 0;
+	  var buildingItems = 0;
+
     for (var item = 0, count = list.length; item < count; item++) {
       var classes = ['autocompleter-item'],
         highlightReg = new RegExp(data.query, 'gi');
@@ -578,7 +579,7 @@
       
       
       if (value) {
-          if(list[item].type == "bygg" && buildingItems <= 5) {
+          if(list[item].type === "bygg" && buildingItems <= 5) {
               building +=
                 '<li data-value="' +
                 value +
@@ -590,47 +591,43 @@
                 label +
                 '</li>';
              buildingItems++;
-  
-          } else if(list[item].type == "organisasjon" && orgItems <= 5) {
-              org +=
-                '<li data-value="' +
-                value +
-                '" data-label="' +
-                clear +
-                '" class="' +
-                classes.join(' ') +
-                '">' +
-                label +
-                '</li>';
-                orgItems++;
                 
-          } else if(orgItems == 5) {
-              
+          } else if(list[item].type === "lokale" && premiseItems <= 5) {
+			  premises +=
+				  '<li data-value="' +
+				  value +
+				  '" data-label="' +
+				  clear +
+				  '" class="' +
+				  classes.join(' ') +
+				  '">' +
+				  label +
+				  '</li>';
+			  premiseItems++;
           }
+
       } else {
-          
-          if(list[item].type == "bygg" && buildingItems <= 5) {
-              building +=
-                '<li data-label="' +
-                clear +
-                '" class="' +
-                classes.join(' ') +
-                '">' +
-                label +
-                '</li>';
-                buildingItems
-                
-          } else if(list[item].type == "organisasjon" && orgItems <= 5) {
-              org +=
-                '<li data-label="' +
-                clear +
-                '" class="' +
-                classes.join(' ') +
-                '">' +
-                label +
-                '</li>';
-                orgItems++; 
-          }
+          if(list[item].type === "bygg" && buildingItems <= 5) {
+			  building +=
+				  '<li data-label="' +
+				  clear +
+				  '" class="' +
+				  classes.join(' ') +
+				  '">' +
+				  label +
+				  '</li>';
+			  buildingItems++;
+		  } else if(list[item].type === "lokale" && premiseItems <= 5) {
+			premises +=
+				'<li data-label="' +
+				clear +
+				'" class="' +
+				classes.join(' ') +
+				'">' +
+				label +
+				'</li>';
+			premiseItems++;
+		}
       }
     }
 
@@ -659,11 +656,11 @@
     }
 
     building += '</div>';
-    org += '</div>';
-    
+    premises += '</div>';
+
     // Update data
     data.response = list;
-    data.$autocompleter.find('.autocompleter-list').html(building + org);
+    data.$autocompleter.find('.autocompleter-list').html(building + premises);
     data.$selected = data.$autocompleter.find('.autocompleter-item-selected')
       .length
       ? data.$autocompleter.find('.autocompleter-item-selected')

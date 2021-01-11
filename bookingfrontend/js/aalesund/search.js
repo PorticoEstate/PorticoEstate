@@ -1,4 +1,6 @@
 var selectedAutocompleteValue = false;
+var selectedDistrict = false;
+
 $(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }");
 $(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
@@ -154,7 +156,7 @@ $(document).ready(function ()
 		doSearch(decodeURI(urlParams['searchterm']));
 	}
 
-	$(".searchBtn").click(function ()
+	$("#searchBtn").click(function ()
 	{
 		if ($('#mainSearchInput').val() === '')
 		{
@@ -162,6 +164,10 @@ $(document).ready(function ()
 		}
 		else
 		{
+			if ($('#locationFilter').val() !== '') {
+				console.log($('#locationFilter').val());
+			}
+
 			doSearch();
 			searchViewModel.notFilterSearch(true);
 		}
@@ -180,13 +186,6 @@ $(document).ready(function ()
 		}
 	});
 
-	$('#mainSearchInput').keyup(function (e)
-	{
-		if (e.keyCode == 13 && selectedAutocompleteValue == false)
-		{
-			$(this).trigger("enterKey");
-		}
-	});
 	// Event show all
 	// Event hide all, except index 0
 	$(document).on('click', '.filterSearchToggle', function ()
@@ -211,8 +210,10 @@ $(document).ready(function ()
 		});
 	});
 	GetUpcommingEvents();
-	GetFilterBoxData();
+	GetAutocompleteData();
+	PopulateDistrict();
 });
+
 
 function GetUpcommingEvents() {
 
@@ -250,7 +251,7 @@ function GetUpcommingEvents() {
 
 function GetFilterBoxData()
 {
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.get_filterboxdata"}, true);
+	/*var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.get_filterboxdata"}, true);
 	$.getJSON(requestURL, function (result)
 	{
 		var boxes = [];
@@ -272,14 +273,14 @@ function GetFilterBoxData()
 	}).done(function ()
 	{
 		GetAutocompleteData();
-	});
+	});*/
 }
 
 function GetAutocompleteData()
 {
 	var autocompleteData = [];
 //  var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete"}, true);
+	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete_premises_and_facilities"}, true);
 
 	$.getJSON(requestURL, function (result)
 	{
@@ -295,18 +296,41 @@ function GetAutocompleteData()
 			source: autocompleteData,
 			minLength: 1,
 			highlightMatches: true,
-			template: '<span>{{ label }}</span>', //<span>{{ type }}</span>
+			template: '<span>{{ label }}</span>',
 			callback: function (value, index, object, event)
 			{
 				selectedAutocompleteValue = true;
 				$('#mainSearchInput').val(autocompleteData[value].label);
-				//  window.location.href = baseURL + "?menuaction=" + autocompleteData[value].menuaction + "&id=" + autocompleteData[value].id;
-				window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
+
+				if (autocompleteData[value].type !== 'lokale') {
+					window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
+				}
 				return;
 			}
 		});
 		$(".overlay").hide();
 	});
+}
+
+function PopulateDistrict() {
+	const districts = [];
+
+	districts.push({label: "Fana"});
+	districts.push({label: "Ytrebygda"});
+	districts.push({label: "Fyllingsdalen"});
+	districts.push({label: "Laksevåg"});
+	districts.push({label: "Årstad"});
+	districts.push({label: "Bergenhus"});
+	districts.push({label: "Arna"});
+	districts.push({label: "Åsane"});
+
+	var districtHtml = '';
+
+	for (var i = 0; i < districts.length; i++) {
+		districtHtml += '<option value="' + districts[i].label + '" />';
+	}
+
+	document.getElementById('districtDatalist').innerHTML = districtHtml;
 }
 
 function doSearch(searchterm_value)

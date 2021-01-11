@@ -640,6 +640,40 @@
 			return $results;
 		}
 
+		public function getPremisesAndFacilityAutoCompleteData() {
+			$sql = "SELECT DISTINCT bb_resource.name AS names,
+					'lokale' AS type,
+					'bookingfrontend.uiresource.show' AS menuaction,
+					bb_resource.id AS id
+					FROM bb_resource
+					WHERE bb_resource.active=1
+					AND bb_resource.type = 'Location'
+					UNION
+					SELECT DISTINCT bb_building.name AS names,
+					'bygg' AS type,
+					'bookingfrontend.uibuilding.show' AS menuaction,
+					bb_building.id AS id
+					FROM bb_building
+					WHERE bb_building.active=1
+					ORDER BY names asc";
+
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+			$i = 0;
+			while ($db->next_record())
+			{
+				$results[$i]["name"] = $db->f('names', true);
+				$results[$i]["type"] = $db->f('type', true);
+				$results[$i]["id"] = $db->f('id', true);
+				$results[$i]["menuaction"] = $db->f('menuaction', true);
+				$i++;
+			}
+
+			return $results;
+
+	}
+
 		public function get_all_booked_ids($from_date, $to_date)
 		{
 			return $this->sobuilding->get_all_booked_ids($from_date, $to_date);

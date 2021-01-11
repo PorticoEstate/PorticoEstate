@@ -14,7 +14,8 @@
 			'index'             => true,
 			'query'             => true,
 			'resquery'          => true,
-			'get_all_available_buildings' => true
+			'get_all_available_buildings' => true,
+			'autocomplete_premises_and_facilities' => true
 		);
 
 		function __construct()
@@ -283,6 +284,15 @@
 				'menuaction' => 'bookingfrontend.uisearch.autocomplete',
 					'phpgw_return_as' => 'json'));
 			echo json_encode($this->bo->getAutoCompleteData());
+			exit();
+		}
+
+		function autocomplete_premises_and_facilities()
+		{
+			self::link(array(
+				'menuaction' => 'bookingfrontend.uisearch.autocomplete_premises_and_facilities',
+				'phpgw_return_as' => 'json'));
+			echo json_encode($this->bo->getPremisesAndFacilityAutoCompleteData());
 			exit();
 		}
 

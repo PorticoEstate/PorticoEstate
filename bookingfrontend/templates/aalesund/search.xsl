@@ -36,29 +36,30 @@
             </div>
          </div>
          <!-- Search Container -->
-         <div id="searchContainer">
-            <div id="searchContainerContent">
-               <div  id="searchWrapper">
-                  <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
-                  <xsl:attribute name="placeholder">
-                     <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
-                  </xsl:attribute>
-                  </input>
-               </div>
-               <div id="dateLocationFilterWrapper">
-                  <div  id="locationWrapper">
-                     <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large"></input>  
-                  </div>
-                  <div  id="dateWrapper">
-                     <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"></input>
-                  </div>
-               </div>
-               <button id="searchBtn" class="greenBtn">Finn tilgjengelige</button> 
-            </div>
-         </div>
-         <div class="pageContentWrapper">
-            <div class="titleContainer">
-               <div class="headerText">
+		  <div id="searchContainer">
+			  <div id="searchContainerContent">
+				  <div id="searchWrapper" class="input-group">
+					  <input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
+						  <xsl:attribute name="placeholder">
+							  <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+						  </xsl:attribute>
+					  </input>
+				  </div>
+				  <div id="dateLocationFilterWrapper">
+					  <div id="locationWrapper">
+						  <input type="text" id="locationFilter" class="form-control searchInput" placeholder="Sted" aria-label="Large" list="districtDatalist"/>
+						  <datalist id="districtDatalist"></datalist>
+					  </div>
+					  <div  id="dateWrapper">
+						  <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"/>
+					  </div>
+				  </div>
+				  <button id="searchBtn" class="greenBtn">Finn tilgjengelige</button>
+			  </div>
+		  </div>
+		  <div class="pageContentWrapper">
+            <div class="eventContainer">
+               <div class="headerText headerEvent">
                   Dette skjer i Bergen kommune
                </div>
             </div>
@@ -77,9 +78,7 @@
                   </div>
                </div>
             </div>
-         
-            
-         </div>
+		  </div>
       </div>
    </div>
 </xsl:template>
