@@ -11102,13 +11102,13 @@
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
 
 
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication', 'file_attachments', array(
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_external_communication', 'file_attachments', array(
 			'type' => 'text',
 			'nullable' => True
 			)
 		);
 
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_helpdesk_external_communication_msg', 'file_attachments', array(
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_tts_external_communication_msg', 'file_attachments', array(
 			'type' => 'text',
 			'nullable' => True
 			)
