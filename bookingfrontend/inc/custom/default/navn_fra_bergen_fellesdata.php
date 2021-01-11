@@ -113,6 +113,11 @@
 				return;
 			}
 			$db = $this->get_db();
+			
+			if(!$db)
+			{
+				return;
+			}
 
 			$sql = "SELECT * FROM V_INNBYGGER_FORTROLIG WHERE FODSELSNR = '{$data['ssn']}'";
 
