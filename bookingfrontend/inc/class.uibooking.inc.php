@@ -16,7 +16,8 @@
 			'report_numbers' => true,
 			'massupdate' => true,
 			'cancel' => true,
-			'get_freetime'=> true
+			'get_freetime'=> true,
+			'ical'	=> true
 		);
 
 		public function __construct()
@@ -1280,6 +1281,9 @@
 			$booking['when'] = $when;
 			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
+
+//			$booking['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.ical','id' => $booking['id']));
+
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
 			
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
@@ -1296,6 +1300,25 @@
 
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		function ical()
+		{
+			$booking	 = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$interval	 = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
+			$when		 = "";
+			if ($interval->days > 0)
+			{
+				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
+			}
+			else
+			{
+				$end	 = new DateTime($booking['to_']);
+				$when	 = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
+			}
+			$booking['when'] = $when;
+
+			$ical = createObject('phpgwapi.ical');
 		}
 
 		public function show()

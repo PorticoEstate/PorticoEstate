@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uiallocation');
+	use Kigkonsult\Icalcreator\Vcalendar;
 
 	class bookingfrontend_uiallocation extends booking_uiallocation
 	{
@@ -8,7 +9,8 @@
 			(
 			'info'	 => true,
 			'cancel' => true,
-			'show'	 => true
+			'show'	 => true,
+			'ical'	 => true
 		);
 
 		public function __construct()
@@ -415,6 +417,9 @@
 			$allocation['when'] = $when;
 			$allocation['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
 						'id' => $allocation['id']));
+
+//			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.ical','id' => $allocation['id']));
+
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
 			
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
@@ -432,6 +437,86 @@
 			self::render_template_xsl('allocation_info', array('allocation'	 => $allocation,
 				'user_can_delete_allocations'	 => $user_can_delete_allocations));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		function ical()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
+
+			$allocation	 = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$interval	 = (new DateTime($allocation['from_']))->diff(new DateTime($allocation['to_']));
+			$when		 = "";
+			if ($interval->days > 0)
+			{
+				$when = pretty_timestamp($allocation['from_']) . ' - ' . pretty_timestamp($allocation['to_']);
+			}
+			else
+			{
+				$end	 = new DateTime($allocation['to_']);
+				$when	 = pretty_timestamp($allocation['from_']) . ' - ' . $end->format('H:i');
+			}
+			$allocation['when'] = $when;
+
+			$ical = createObject('phpgwapi.ical');
+
+			$xprop = $ical->vcalendar->getXprop( Vcalendar::X_WR_TIMEZONE );
+			$timezone = $xprop[1];
+
+			$event1 = $ical->vcalendar->newVevent()
+				->setTransp(Vcalendar::OPAQUE)
+				->setClass(Vcalendar::P_BLIC)
+				->setSequence(1)
+				// describe the event
+				->setSummary('Scheduled meeting ')
+				->setDescription(
+					'Agenda for the the meeting...',
+					 [Vcalendar::ALTREP =>
+						'CID:<FFFF__=0ABBE548DFE235B58f9e8a93d@coffeebean.com>']
+				)
+				->setComment('It\'s going to be fun..')
+				// place the event
+				->setLocation('Kafé Ekorren Stockholm')
+				->setGeo('59.32206', '18.12485')
+				// and set another on a specific date
+				->setRdate(
+					[
+						new DateTime(
+							'20190609T090000',
+							new DateTimezone($timezone)
+						),
+						new DateTime(
+							'20190609T110000',
+							new DateTimezone($timezone)
+						),
+					],
+					 [Vcalendar::VALUE => Vcalendar::PERIOD]
+				)
+				// organizer, chair and some participants
+				->setOrganizer(
+					'secretary@coffeebean.com',
+					 [Vcalendar::CN => 'Secretary CoffeeBean']
+				);
+
+			// add alarm for the event
+			$alarm = $event1->newValarm()
+				->setAction(Vcalendar::DISPLAY)
+				// copy description from event
+				->setDescription($event1->getDescription())
+				// fire off the alarm one day before
+				->setTrigger('-P1D');
+
+			$ical->vcalendarString = // apply appropriate Vtimezone with Standard/DayLight components
+				$ical->vcalendar->vtimezonePopulate()
+				// and create the (string) calendar
+				->createCalendar();
+
+			$filesize = filesize($ical->vcalendarString);
+			$filename = 'cal.ics';
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'text/calendar', $filesize);
+			echo $ical->vcalendarString;
 		}
 
 		public function show()
