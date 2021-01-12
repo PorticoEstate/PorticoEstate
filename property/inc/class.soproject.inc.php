@@ -1342,7 +1342,7 @@
 				$this->update_power_meter($project['power_meter'], $project['location_code'], $address);
 			}
 
-			if (count($project['branch']) != 0)
+			if (!empty($project['branch']) && count($project['branch']) != 0)
 			{
 				//while ($branch = each($project['branch']))
 				foreach ($project['branch'] as $key => $value)
@@ -1798,7 +1798,7 @@
 			// -----------------which branch is represented
 			$this->db->query("DELETE FROM fm_projectbranch WHERE project_id={$project['id']}", __LINE__, __FILE__);
 
-			if (count($project['branch']) != 0)
+			if (!empty($project['branch']) && count($project['branch']) != 0)
 			{
 				//while ($branch = each($project['branch']))
 				foreach ($project['branch'] as $key => $value)

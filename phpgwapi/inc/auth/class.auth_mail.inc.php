@@ -36,7 +36,7 @@
 		* @var string $ssl_args arguments used for SSL connection - disables SSL validation by default
 		* @internal see http://php.net/imap_open for more info
 		*/
-		private $ssl_agrs = '/novalidate-cert';
+		private $ssl_args = '/novalidate-cert';
 		
 		public function __construct()
 		{

@@ -55,9 +55,9 @@
 			);
 
 			/**
-			 * Hide from bookingfrontend
+			 * Hide from bookingfrontend, but keep visible for cron jobs
 			 */
-			if($currentapp == 'booking')
+			if(in_array($currentapp, array('booking','login')))
 			{
 				$fields['customer_ssn'] = array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),	'required' => false);
 				$fields['contacts']['manytomany']['column']['ssn'] = array('sf_validator' => createObject('booking.sfValidatorNorwegianSSN'));

@@ -2138,7 +2138,6 @@
 		 */
 		function collect_locationdata( $values = array(), $insert_record = array() )
 		{
-//_debug_array($insert_record);die();
 			if ($insert_record)
 			{
 				if (isset($insert_record['location']) && is_array($insert_record['location']))
@@ -2240,7 +2239,6 @@
 					)
 				);
 			}
-
 			return $values;
 		}
 

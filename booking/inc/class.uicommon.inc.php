@@ -98,7 +98,9 @@
 	function array_set_default( &$array, $key, $value )
 	{
 		if (!isset($array[$key]))
+		{
 			$array[$key] = $value;
+		}
 	}
 
 	/**

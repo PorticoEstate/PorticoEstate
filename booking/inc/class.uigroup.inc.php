@@ -360,7 +360,7 @@
 
 			$tabs = array();
 			$tab_text = ($id) ? 'Group Edit' : 'Group New';
-			if (id)
+			if ($id)
 			{
 				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#group_edit');
 			}

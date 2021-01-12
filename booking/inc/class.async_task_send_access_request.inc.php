@@ -139,6 +139,11 @@
 									 */
 									foreach ($resource['e_locks'] as $e_lock)
 									{
+										if(!$e_lock['e_lock_system_id'] || !$e_lock['e_lock_resource_id'])
+										{
+											continue;
+										}
+
 										$to = $this->round_to_next_hour($reservation['to_']);
 										$custom_id	 = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
 

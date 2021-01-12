@@ -112,6 +112,7 @@
 		private function get_breg_orgs( $fodselsnr )
 		{
 			$results = array();
+			$orgs_validate = array();
 
 			/**
 			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
