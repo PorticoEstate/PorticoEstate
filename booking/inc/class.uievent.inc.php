@@ -406,7 +406,7 @@
 					}
 				}
 
-				$event['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$event['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
 				array_set_default($_POST, 'resources', array());
 				$event['active'] = '1';
@@ -570,7 +570,7 @@
 			{
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
-			$default_dates = array_map(array(self, '_combine_dates'), '', '');
+			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			array_set_default($event, 'dates', $default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
@@ -747,7 +747,7 @@
 				/**
 				 * Update the bb_event_date - which is used for collision test
 				 */
-				$event['dates'] = array_map(array(self, '_combine_dates'), array($_POST['from_']), array($_POST['to_']));
+				$event['dates'] = array_map(array($this, '_combine_dates'), array($_POST['from_']), array($_POST['to_']));
 
 				if ($_POST['organization_name'])
 				{

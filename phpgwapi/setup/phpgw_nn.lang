@@ -326,3 +326,4 @@ read more	common	nn	Les meir
 privacy policy	common	nn	Retningslinjer for personvern
 write here...	common	nn	Skriv her...
 Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region	common	nn	Last opp fleire filer ved enten å dra-og-slepp i markert område, eller ved å velje filene direkte.
+%1: login blocked for user '%2', ip %3	common	nn	%1: login blokkert for bruker '%2', IP %3

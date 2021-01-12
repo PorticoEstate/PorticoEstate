@@ -114,7 +114,7 @@
 					"))";
 			}
 
-			if (count($where_clauses) > O)
+			if (count($where_clauses) > 0)
 			{
 				$filters['where'][] = join(' AND ', $where_clauses);
 			}

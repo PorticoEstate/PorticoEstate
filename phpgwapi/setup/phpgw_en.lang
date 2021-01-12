@@ -361,7 +361,7 @@ personal	common	en	Personal
 peru	common	en	PERU
 philippines	common	en	PHILIPPINES
 phone number	common	en	phone number
-phpgroupware: login blocked for user '%1', ip %2	common	en	phpGroupWare: login blocked for user '%1', IP %2
+%1: login blocked for user '%2', ip %3	common	en	%1: login blocked for user '%2', IP %3
 phpgw-created account	common	en	phpgw-created account
 phpgw-created group	common	en	phpgw-created group
 pitcairn	common	en	PITCAIRN
