@@ -641,13 +641,12 @@
 		}
 
 		public function getPremisesAndFacilityAutoCompleteData() {
-			$sql = "SELECT DISTINCT bb_resource.name AS names,
+			$sql = "SELECT DISTINCT bb_rescategory.name AS names,
 					'lokale' AS type,
 					'bookingfrontend.uiresource.show' AS menuaction,
-					bb_resource.id AS id
-					FROM bb_resource
-					WHERE bb_resource.active=1
-					AND bb_resource.type = 'Location'
+					bb_rescategory.id AS id
+					FROM bb_rescategory
+					WHERE bb_rescategory.active=1
 					UNION
 					SELECT DISTINCT bb_building.name AS names,
 					'bygg' AS type,

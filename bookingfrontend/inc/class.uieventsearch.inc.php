@@ -60,6 +60,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 
 		self::add_javascript('bookingfrontend', 'aalesund', 'event_search.js', 'text/javascript', true);
+		self::add_javascript('bookingfrontend', 'aalesund', 'util.js', 'text/javascript', true);
 		self::render_template_xsl('event_search', array('event_search' => $event_search));
 
 	}
@@ -91,10 +92,13 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$buildingId = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
 		$facilityTypeID = phpgw::get_var('facilityTypeID', 'string', 'REQUEST', null);
 		$loggedInOrgs = phpgw::get_var('loggedInOrgs', 'string', 'REQUEST', null);
+		$start = phpgw::get_var('start', 'int', 'REQUEST', 0);;
+		$end = phpgw::get_var('end', 'int', 'REQUEST', 50);;
 
 		$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgID, $buildingId, $facilityTypeID, $result_string);
+
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgID, $buildingId, $facilityTypeID, $result_string, $start, $end);
 		return $events;
 	}
 

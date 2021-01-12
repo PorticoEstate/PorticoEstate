@@ -1,8 +1,9 @@
 
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
    <div id="search-page-content">
       <div class="headerSection">
          <div class="noteRectangle">
@@ -51,7 +52,7 @@
 						  <datalist id="districtDatalist"></datalist>
 					  </div>
 					  <div  id="dateWrapper">
-						  <input type="text" id="mainDateFilter" class="form-control searchInput dateFilter" placeholder="Dato" aria-label="Large"/>
+						  <input type="text" id="dateFilter" class="form-control searchInput dateFilter" name="datefilter" placeholder="Dato" aria-label="Large" autocomplete="off" value="" />
 					  </div>
 				  </div>
 				  <button id="searchBtn" class="greenBtn">Finn tilgjengelige</button>
@@ -63,22 +64,46 @@
                   Dette skjer i Bergen kommune
                </div>
             </div>
-            <div class="activityList" data-bind="foreach: upcommingevents">
-               <div class="activityRow">
-                  <span class="activityDate activityText boldText activityHeaderSegment"><b class="event_datetime_day"></b>. <b data-bind="text: datetime_month"></b></span>
-                  <span class="activityTitle activityText boldText activityHeaderSegment"> 
-                  <a class="upcomming-event-href" href="" target="_blank">
-                  <span  data-bind="text: name"></span>
-                  </a>
-                  </span>
-                  <span class="activityTime activityHeaderSegment" data-bind="text: datetime_time"></span>
-                  <div class="activityLocation activityHeaderSegment">
-                     <div data-bind="text: building_name"></div>
-                     <div data-bind="text: organizer"></div>
-                  </div>
-               </div>
+			  <div id="event-content" class="col">
+				  <ul data-bind="foreach: events">
+					  <div class="event-card">
+						  <li>
+							  <div class="card-element-left">
+								  <div class="formattedDate-container">
+									  <div class="cal-img-logo"></div>
+
+									  <span class="formattedDate"  data-bind="text: formattedDate"></span>
+									  <span class="monthTag" data-bind="text:monthText"></span>
+
+								  </div>
+							  </div>
+							  <div class="card-element-mid">
+								  <div class="event_name-container">
+									  <span class="event_name" data-bind="text: event_name"></span>
+								  </div>
+								  <div class="event_time-container">
+									  <span class="event_time" data-bind="text: event_time"></span>
+								  </div>
+							  </div>
+							  <div class="card-element-right">
+								  <div class="location_container" >
+									  <div class="pin_img_logo"></div>
+									  <a href="#" data-bind="click:$parent.goToBuilding">
+										  <span class="location_name" data-bind="text: location_name"></span>
+									  </a>
+								  </div>
+								  <div class ="org_name-container">
+									  <div class="fas fa-users"></div>
+									  <a href="#" data-bind="click:$parent.goToOrganization">
+										  <span class="org_name" data-bind="text: org_name"></span>
+									  </a>
+								  </div>
+							  </div>
+						  </li>
+					  </div>
+				  </ul>
+			  </div>
             </div>
-		  </div>
       </div>
    </div>
 </xsl:template>

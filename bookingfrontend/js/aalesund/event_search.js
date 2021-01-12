@@ -123,42 +123,9 @@ function toggleMyOrgs() {
     }
 }
 
-function formatDateForBackend(date) {
-    if (date === "") {
-        return "";
-    }
-    var fDate = new Date(date);
-    return fDate.getFullYear()+"-"+(fDate.getMonth()+1)+"-"+fDate.getDate()+" "+(fDate.getHours())+":"+fDate.getMinutes()+":"+fDate.getSeconds()+"";
-}
-
-function getDateFormat(from, to) {
-    let ret = [];
-    let fromDate = new Date(from);
-    let toDate = new Date(to);
-
-    if (fromDate.getDate() === toDate.getDate()) {
-        ret.push(fromDate.getDate()+". ")
-        ret.push(months[fromDate.getMonth()]);
-        return ret;
-    } else {
-        ret.push(fromDate.getDate() + ".-" + toDate.getDate() + ".");
-        ret.push(months[fromDate.getMonth()]);
-        return ret;
-    }
-}
-
-function getTimeFormat(from, to) {
-    let fromDate = new Date(from);
-    let toDate = new Date(to);
-    let ret;
-
-    ret = (fromDate.getHours() + ":" + fromDate.getMinutes()+"-"+toDate.getHours() + ":" + toDate.getMinutes());
-    return ret;
-}
-
 function getUpcomingEvents(orgID = "", from = "", to= "",buildingID= "", facilityTypeID = "",loggedInOrgs = "") {
     if (from === "") {
-        from = formatDateForBackend(new Date());
+        from = Util.Format.FormatDateForBackend(new Date());
     }
     let requestURL;
 
@@ -169,7 +136,9 @@ function getUpcomingEvents(orgID = "", from = "", to= "",buildingID= "", facilit
         toDate: to,
         buildingID : buildingID,
         facilityTypeID : facilityTypeID,
-        loggedInOrgs : loggedInOrgs
+        loggedInOrgs : loggedInOrgs,
+		start: 0,
+		end: 50
     }
 
     requestURL = phpGWLink('bookingfrontend/', reqObject, true);
@@ -190,8 +159,8 @@ function setdata(result) {
         result[i].building_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result[i].building_id}, false);
         result[i].org_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: result[i].org_id}, false);
 
-        var formattedDateAndMonthArr = getDateFormat(result[i].from, result[i].to);
-        var eventTime = getTimeFormat(result[i].from, result[i].to);
+        var formattedDateAndMonthArr = Util.Format.GetDateFormat(result[i].from, result[i].to);
+        var eventTime = Util.Format.GetTimeFormat(result[i].from, result[i].to);
 
         viewmodel.events.push({
             org_id: ko.observable(result[i].org_id),

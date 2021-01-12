@@ -549,7 +549,7 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null)
+	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
 	{
 		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
@@ -604,7 +604,7 @@
 						.$facilityTypeIDSql
 						.$loggedInOrgsSql
 						." AND bbe.is_public = 1
-						order by bbe.from_ asc LIMIT 50;";
+						order by bbe.from_ asc LIMIT $end OFFSET $start;";
 
 		$this->db->query($sqlQuery);
 
