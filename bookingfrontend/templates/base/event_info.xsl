@@ -88,4 +88,12 @@
 			</xsl:if>
 		</div>
 	</xsl:if>
+	<xsl:if test="event/ical_link">
+		<div class="actions">
+			<a class="btn btn-light mt-4" href="{event/ical_link}" target="_blank">
+				iCal
+			</a>
+		</div>
+	</xsl:if>
+
 </xsl:template>

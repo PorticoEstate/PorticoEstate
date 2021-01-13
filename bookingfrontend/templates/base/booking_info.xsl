@@ -58,7 +58,7 @@
 	<xsl:if test="booking/ical_link">
 		<div class="actions">
 			<a class="btn btn-light mt-4" href="{booking/ical_link}" target="_blank">
-				<xsl:value-of select="php:function('lang', 'ical')"/>
+				iCal
 			</a>
 		</div>
 	</xsl:if>
