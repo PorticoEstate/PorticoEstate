@@ -26,26 +26,25 @@
 	{
 		public $vcalendar;
 
-		public function __construct()
+		public function __construct($cal_name = "", $cal_desc =  "")
 		{
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 			$unique_id	 = !empty($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : $GLOBALS['phpgw_info']['server']['system_name'];
 
 			$this->vcalendar = Vcalendar::factory([Vcalendar::UNIQUE_ID => $unique_id,])
-
 				// with calendaring info
 				->setMethod(Vcalendar::PUBLISH)
-				->setXprop(
-					Vcalendar::X_WR_CALNAME,
-					"Calendar Sample"
-				)
-				->setXprop(
-					Vcalendar::X_WR_CALDESC,
-					 "This is a demo calendar"
-				)
 				->setXprop(
 				Vcalendar::X_WR_TIMEZONE,
 				$timezone
 			);
+			if($cal_name)
+			{
+				$this->vcalendar->setXprop(Vcalendar::X_WR_CALNAME, $cal_name);
+			}
+			if($cal_desc)
+			{
+				$this->vcalendar->setXprop(Vcalendar::X_WR_CALDESC, $cal_desc);
+			}
 		}
 	}
