@@ -2275,6 +2275,7 @@ request status on ticket hookup	property	nn	Behovsstatus ved meldingsoppkobling
 workorder status that are to be set when invoice is processed	property	nn	Arbeidsordre status som skal settes når fakturaen er behandlet
 workorder reopen status that are to be set when invoice is processed	property	nn	Arbeidsordre gjenåpne-status som skal settes når fakturaen er behandlet
 require building part at workorder	property	nn	Krever bygningsdel på arbeidsordre
+require tax code at workorder	property	nn	Krever MVA-kode på arbeidsordre
 require vendor at workorder	property	nn	Krever leverandør på arbeidsordre
 delay operation workorder end date	property	nn	Utsett sluttdato for driftsarbeidsordre
 last day in year	property	nn	siste dag i året

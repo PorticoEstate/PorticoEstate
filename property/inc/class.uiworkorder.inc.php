@@ -3392,6 +3392,7 @@ JS;
 				'decimal_separator'						 => $this->decimal_separator,
 				'value_service_id'						 => $values['service_id'],
 				'value_service_name'					 => $this->_get_eco_service_name($values['service_id']),
+				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
 				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(array(
 						'type'		 => 'tax', 'selected'	 => $values['tax_code'], 'order'		 => 'id',
 						'id_in_name' => 'num'))),
