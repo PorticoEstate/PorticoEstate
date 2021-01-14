@@ -55,4 +55,11 @@
 			</xsl:if>
 		</div>
 	</xsl:if>
+	<xsl:if test="booking/ical_link">
+		<div class="actions">
+			<a class="btn btn-light mt-4" href="{booking/ical_link}" target="_blank">
+				iCal
+			</a>
+		</div>
+	</xsl:if>
 </xsl:template>

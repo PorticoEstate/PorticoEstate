@@ -16,7 +16,8 @@
 			'report_numbers' => true,
 			'massupdate' => true,
 			'cancel' => true,
-			'get_freetime'=> true
+			'get_freetime'=> true,
+			'ical'	=> true
 		);
 
 		public function __construct()
@@ -1280,6 +1281,9 @@
 			$booking['when'] = $when;
 			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
+
+			$booking['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'booking','id' => $booking['id']));
+
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
 			
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
@@ -1296,6 +1300,69 @@
 
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
+		}
+
+		function ical()
+		{
+			$booking	 = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
+
+			$start = $booking['from_'];
+			$end = $booking['to_'];
+
+			$cal_name	 = !empty($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : $GLOBALS['phpgw_info']['server']['system_name'];
+
+			$ical = createObject('phpgwapi.ical', $cal_name);
+
+			$xprop = $ical->vcalendar->getXprop( Vcalendar::X_WR_TIMEZONE );
+			$timezone = $xprop[1];
+
+			$event1 = $ical->vcalendar->newVevent()
+				->setTransp(Vcalendar::OPAQUE)
+				->setClass(Vcalendar::P_BLIC)
+				->setSequence(1)
+				// describe the event
+				->setSummary('Kalenderoppføring fra Aktiv kommune')
+				->setDescription(
+					$booking['building_name'])
+				->setComment($booking['season_name'])
+				// place the event
+				->setLocation($booking['building_name'])
+//				->setGeo('59.32206', '18.12485')
+				->setDtstart(
+					new DateTime(
+							$start,
+							new DateTimezone($timezone)
+						)
+					)
+				->setDtend(
+						new DateTime(
+							$end,
+							new DateTimezone($timezone)
+					)
+
+				);
+
+			// add alarm for the event
+			$alarm = $event1->newValarm()
+				->setAction(Vcalendar::DISPLAY)
+				// copy description from event
+				->setDescription($event1->getDescription())
+				// fire off the alarm before
+				->setTrigger("-PT1H");
+
+			$ical->vcalendarString = // apply appropriate Vtimezone with Standard/DayLight components
+				$ical->vcalendar->vtimezonePopulate()
+				// and create the (string) calendar
+				->createCalendar();
+
+			$filesize = filesize($ical->vcalendarString);
+			$filename = 'cal.ics';
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'text/calendar', $filesize);
+			echo $ical->vcalendarString;
 		}
 
 		public function show()
