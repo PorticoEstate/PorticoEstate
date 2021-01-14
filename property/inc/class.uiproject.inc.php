@@ -2389,7 +2389,7 @@ JS;
 				array(
 					'key'	=> 'file_name',
 					'label'	=> lang('Filename'),
-					'sortable'	 => false,
+					'sortable'	 => true,
 					'resizeable' => true
 				),
 				array(
@@ -2555,7 +2555,8 @@ JS;
 				'tabletools' => $tabletools,
 				'config'	 => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0, 'asc')))
 				)
 			);
 

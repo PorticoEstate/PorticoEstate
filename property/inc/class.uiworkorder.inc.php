@@ -2245,7 +2245,7 @@
 					'resizeable' => true),
 				array('key'		 => 'picture',
 					'label'		 => lang('picture'),
-					'sortable'	 => false,
+					'sortable'	 => true,
 					'resizeable' => true,
 					'formatter'	 => 'JqueryPortico.showPicture'
 				),
@@ -2400,12 +2400,12 @@ JS;
 						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $files_def,
+
 				'tabletools' => $tabletools,
 				'config'	 => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0, 'asc'))),
 				)
 			);
 
@@ -2674,10 +2674,8 @@ JS;
 				'data'		 => json_encode($attachmen_list),
 				'ColumnDefs' => $attachmen_def,
 				'config'	 => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+					array('disablePagination' => true),
 				)
 			);
 
@@ -3217,7 +3215,8 @@ JS;
 				'data'		 => json_encode($content_attachments),
 				'config'	 => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'asc'))),
 				)
 			);
 
