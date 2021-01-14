@@ -49,11 +49,13 @@
 
 			$cal_name	 = !empty($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : $GLOBALS['phpgw_info']['server']['system_name'];
 
-			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
-			$uid = date("Ymd\TGis", $startTime) . rand() . "@" . $cal_name;
+//			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+			$uid = date("Ymd\TGis") . rand() . "@" . $cal_name;
 			$dtstamp = date("Ymd\TGis");
-			$dtstart = (new DateTime($start, new DateTimezone($timezone)))->format("Ymd\THis");
-			$dtend = (new DateTime($end, new DateTimezone($timezone)))->format("Ymd\THis");
+//			$dtstart = (new DateTime($start, new DateTimezone($timezone)))->format("Ymd\THis");
+//			$dtend = (new DateTime($end, new DateTimezone($timezone)))->format("Ymd\THis");
+			$dtstart = (new DateTime($start))->format("Ymd\THis");
+			$dtend = (new DateTime($end))->format("Ymd\THis");
 
 
 

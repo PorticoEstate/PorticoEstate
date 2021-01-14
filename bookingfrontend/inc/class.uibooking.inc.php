@@ -1282,7 +1282,7 @@
 			$booking['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
 
-			$booking['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'booking','id' => $booking['id']));
+			$booking['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'booking','reservation_id' => $booking['id']));
 
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
 			
