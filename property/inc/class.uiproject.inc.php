@@ -302,6 +302,7 @@
 				'image/gif'
 			);
 
+			$sort_array = array();
 			$z = 0;
 			foreach ($values as $_entry)
 			{
@@ -330,6 +331,8 @@
 					unset($tag);
 				}
 
+				$sort_array[] = $_entry['name'];
+
 				$content_files[] = array(
 					'file_id'		 => $_entry['file_id'],
 					'tags'			 => $tags,
@@ -350,6 +353,8 @@
 				}
 				$z ++;
 			}
+
+			array_multisort($sort_array, SORT_ASC, $content_files);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -2389,7 +2394,7 @@ JS;
 				array(
 					'key'	=> 'file_name',
 					'label'	=> lang('Filename'),
-					'sortable'	 => true,
+					'sortable'	 => false,
 					'resizeable' => true
 				),
 				array(
