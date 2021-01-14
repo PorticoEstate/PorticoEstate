@@ -234,6 +234,7 @@
 				'image/gif'
 			);
 
+			$sort_array = array();
 			$z = 0;
 			foreach ($values as $_entry)
 			{
@@ -262,6 +263,7 @@
 					unset($tag);
 				}
 
+				$sort_array[] = $_entry['name'];
 				$content_files[] = array(
 					'file_id'		 => $_entry['file_id'],
 					'tags'			 => $tags,
@@ -282,6 +284,8 @@
 				}
 				$z ++;
 			}
+
+			array_multisort($sort_array, SORT_ASC, $content_files);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -359,6 +363,9 @@
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
+
+			$sort_array = array();
+
 			foreach ($values['files'] as $_entry)
 			{
 				$_checked = '';
@@ -366,6 +373,7 @@
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
@@ -398,6 +406,8 @@
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
+
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
@@ -415,6 +425,8 @@
 				}
 				$z ++;
 			}
+
+			array_multisort($sort_array, SORT_ASC, $content_attachments);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -3133,6 +3145,8 @@ JS;
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
 
+			$sort_array = array();
+
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
@@ -3141,6 +3155,7 @@ JS;
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
@@ -3175,6 +3190,7 @@ JS;
 
 			foreach ($files as $_entry)
 			{
+				$sort_array[] = $_entry['name'];
 
 				$_checked = '';
 				if (in_array($_entry['file_id'], $file_attachments))
@@ -3206,6 +3222,9 @@ JS;
 				$z ++;
 			}
 			unset($_entry);
+
+			array_multisort($sort_array, SORT_ASC, $content_attachments);
+			array_multisort($sort_array, SORT_ASC, $image_list);
 
 			$datatable_def[] = array
 				(

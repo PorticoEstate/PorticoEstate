@@ -2378,16 +2378,21 @@ JS;
 			$bofiles = CreateObject('property.bofiles');
 			$image_list		 = array();
 
+			$sort_array = array();
 			foreach ($_files as $_file)
 			{				
 				if($bofiles->is_image("{$bofiles->rootdir}{$_file['directory']}/{$_file['name']}"))
 				{
+					$sort_array[] = $_file['name'];
 					$image_list[] = array(
 						'image_url'		 => "{$link_view_file}&amp;file_id={$_file['file_id']}",
 						'image_name'	 => $_file['name']
 					);			
 				}				
 			}
+
+			array_multisort($sort_array, SORT_ASC, $image_list);
+
 
 			$files_def = array
 			(
