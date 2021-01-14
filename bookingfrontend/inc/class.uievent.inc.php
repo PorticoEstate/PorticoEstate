@@ -434,7 +434,7 @@
 				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
 			}
 
-			$event['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'event','id' => $event['id']));
+			$event['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'event','reservation_id' => $event['id']));
 			
 			if(!$event['participant_limit'])
 			{

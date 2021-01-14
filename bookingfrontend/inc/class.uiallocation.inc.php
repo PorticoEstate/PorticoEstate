@@ -417,7 +417,7 @@
 			$allocation['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
 						'id' => $allocation['id']));
 
-			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'allocation','id' => $allocation['id']));
+			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'allocation','reservation_id' => $allocation['id']));
 
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
 			
