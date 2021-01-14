@@ -3146,6 +3146,7 @@ JS;
 			$lang_workorder		 = lang('workorder');
 
 			$sort_array = array();
+			$sort_array2 = array();
 
 			$z = 0;
 			foreach ($values['files'] as $_entry)
@@ -3165,6 +3166,7 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$sort_array2[] = $_entry['name'];
 					$content_attachments[$z]['file_name']	 = $_entry['name'];
 					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
 					$content_attachments[$z]['img_url']		 = self::link(array(
@@ -3205,6 +3207,7 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$sort_array2[] = $_entry['name'];
 					$content_attachments[$z]['file_name']	 = $_entry['name'];
 					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
 					$content_attachments[$z]['img_url']		 = self::link(array(
@@ -3224,7 +3227,7 @@ JS;
 			unset($_entry);
 
 			array_multisort($sort_array, SORT_ASC, $content_attachments);
-			array_multisort($sort_array, SORT_ASC, $image_list);
+			array_multisort($sort_array2, SORT_ASC, $image_list);
 
 			$datatable_def[] = array
 				(
