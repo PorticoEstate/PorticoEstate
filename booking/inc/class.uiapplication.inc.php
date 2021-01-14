@@ -763,7 +763,12 @@
 						}
 					}
 				}
-				if (!$audval_present)
+
+				if($is_partial1 && !$audval_present)
+				{
+					$application['audience'] = -1; // Dummy
+				}
+				else if (!$audval_present)
 				{
 					$errors['audience'] = lang("Select a target audience");
 				}
@@ -1181,7 +1186,7 @@
 					{
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code');
+							'responsible_city','responsible_street','responsible_zip_code', 'audience');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update
