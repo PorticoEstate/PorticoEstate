@@ -876,8 +876,8 @@
 					$voucher_info['generic']['amount']			 += $line['amount'];
 				}
 
-				$voucher_info['generic']['approved_amount']					 = number_format($voucher_info['generic']['approved_amount'], 2, ',', ' ');
-				$voucher_info['generic']['amount']							 = number_format($voucher_info['generic']['amount'], 2, ',', ' ');
+				$voucher_info['generic']['approved_amount']					 = number_format((float)$voucher_info['generic']['approved_amount'], 2, ',', ' ');
+				$voucher_info['generic']['amount']							 = number_format((float)$voucher_info['generic']['amount'], 2, ',', ' ');
 				$voucher_info['generic']['dimb_list']['options']			 = $this->bo->select_dimb_list($voucher[0]['dim_b']);
 				$voucher_info['generic']['tax_code_list']['options']		 = $this->bo->tax_code_list($selected_tax_code);
 				$voucher_info['generic']['periodization_list']['options']	 = execMethod('property.bogeneric.get_list', array(

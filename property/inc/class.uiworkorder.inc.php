@@ -1390,7 +1390,7 @@
 								//Not approved
 								if (!$approved)
 								{
-									phpgwapi_cache::message_set("NB: Sjekk at rammene for prosjektet er innenfor totalen av bestillingene: " . number_format($_budget_amount, 0, ".", " "), 'message');
+									phpgwapi_cache::message_set("NB: Sjekk at rammene for prosjektet er innenfor totalen av bestillingene: " . number_format((float)$_budget_amount, 0, ".", " "), 'message');
 
 									$substitute = $sosubstitute->get_substitute($_account_id);
 
@@ -2169,8 +2169,8 @@
 				$sum_estimated_cost = $values['calculation'];
 			}
 
-			$sum_estimated_cost		 = number_format($sum_estimated_cost, 2, $this->decimal_separator, '.');
-			$values['calculation']	 = number_format($values['calculation'], 2, $this->decimal_separator, '.');
+			$sum_estimated_cost		 = number_format((float)$sum_estimated_cost, 2, $this->decimal_separator, '.');
+			$values['calculation']	 = number_format((float)$values['calculation'], 2, $this->decimal_separator, '.');
 
 			$link_data = array
 				(
@@ -2602,13 +2602,13 @@ JS;
 					'label'			 => lang('amount'),
 					'sortable'		 => true,
 					'className'		 => 'right',
-					'value_footer'	 => number_format($amount, 2, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$amount, 2, $this->decimal_separator, '.')),
 //				array(
 //					'key' => 'approved_amount',
 //					'label' => lang('approved amount'),
 //					'sortable' => true,
 //					'className' => 'right',
-//					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+//					'value_footer' => number_format((float)$approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key'		 => 'period',
 					'label'		 => lang('period'),
@@ -2840,42 +2840,42 @@ JS;
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($budget, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$budget, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'sum_orders',
 					'label'			 => lang('order'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($sum_orders, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$sum_orders, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'sum_oblications',
 					'label'			 => lang('sum orders'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($sum_oblications, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$sum_oblications, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'actual_cost',
 					'label'			 => lang('actual cost'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($actual_cost, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$actual_cost, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'diff',
 					'label'			 => lang('difference'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($diff, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$diff, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'deviation_period',
 					'label'			 => lang('deviation'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($deviation, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$deviation, 0, $this->decimal_separator, '.')),
 				array(
 					'key'		 => 'deviation_acc',
 					'label'		 => lang('deviation') . '::' . lang('accumulated'),

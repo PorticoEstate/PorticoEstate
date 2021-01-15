@@ -820,8 +820,8 @@
 				}
 				else if ($value['status'] != 'B' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	 = number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	 = number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value']	 = number_format((float)$value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	 = number_format((float)$value['old_value'], 0, ',', ' ');
 				}
 				else
 				{
@@ -1008,10 +1008,10 @@
 				$lang_percent		 = lang('percent');
 				$lang_obligation	 = lang('obligation');
 
-				$_budget		 = number_format($budget_info['budget'], 0, ',', ' ');
-				$_actual_cost	 = number_format($budget_info['actual_cost'], 0, ',', ' ');
-				$_budget		 = number_format($budget_info['budget'], 0, ',', ' ');
-				$_obligation	 = number_format($budget_info['obligation'], 0, ',', ' ');
+				$_budget		 = number_format((float)$budget_info['budget'], 0, ',', ' ');
+				$_actual_cost	 = number_format((float)$budget_info['actual_cost'], 0, ',', ' ');
+				$_budget		 = number_format((float)$budget_info['budget'], 0, ',', ' ');
+				$_obligation	 = number_format((float)$budget_info['obligation'], 0, ',', ' ');
 
 				$to		 = implode(';', $toarray);
 				$cc		 = false;
