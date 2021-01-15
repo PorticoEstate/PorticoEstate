@@ -993,6 +993,10 @@
 					var iPos = oTable.fnGetPosition( this );
 					var aData = oTable.fnGetData( iPos ); //complete dataset from json returned from server
 
+					if(typeof(iPos) === 'undefined')
+					{
+						return;
+					}
 JS;
 
 				if (is_array($input_name))
@@ -1001,10 +1005,10 @@ JS;
 					{
 						$function_exchange_values .= <<<JS
 
-						if (parent.document.getElementsByName("{$input_name[$k]}").length > 0)
+						if (parent.document.getElementById("{$input_name[$k]}"))
 						{
-							parent.document.getElementsByName("{$input_name[$k]}")[0].value = "";
-					}
+							parent.document.getElementById("{$input_name[$k]}").value = "";
+						}
 JS;
 					}
 				}
@@ -1015,8 +1019,16 @@ JS;
 					{
 						$function_exchange_values .= <<<JS
 
-						parent.document.getElementsByName("{$uicols['name'][$i]}")[0].value = "";
-						parent.document.getElementsByName("{$uicols['name'][$i]}")[0].value = aData["{$uicols['name'][$i]}"];
+					try
+					{
+						if(typeof(aData["{$uicols['name'][$i]}"]) !== 'undefined')
+						{
+							parent.document.getElementById("{$uicols['name'][$i]}").value = "";
+							parent.document.getElementById("{$uicols['name'][$i]}").value = aData["{$uicols['name'][$i]}"];
+						}
+					}
+					catch(err)
+					{}
 JS;
 					}
 				}
@@ -1123,16 +1135,16 @@ JS;
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if ($uicols['datatype'][$k] == 'link')
+				if (!$lookup && $uicols['datatype'][$k] == 'link')
 				{
 					$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
 				}
 
-				if (in_array($uicols['name'][$k], $searc_levels))
+				if (!$lookup && in_array($uicols['name'][$k], $searc_levels))
 				{
 					$params['formatter'] = 'JqueryPortico.searchLink';
 				}
-				if ($uicols['name'][$k] == 'loc1')
+				if (!$lookup && $uicols['name'][$k] == 'loc1')
 				{
 					$params['formatter'] = 'JqueryPortico.searchLink';
 					$params['sortable']	 = true;
@@ -1142,7 +1154,7 @@ JS;
 				{
 					$params['sortable'] = true;
 				}
-				else if ($uicols['name'][$k] == 'contact_phone')
+				else if (!$lookup && $uicols['name'][$k] == 'contact_phone')
 				{
 					$params['editor'] = true;
 				}
