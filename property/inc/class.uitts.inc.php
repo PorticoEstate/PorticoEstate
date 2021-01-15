@@ -3271,13 +3271,13 @@ JS;
 					'label'			 => lang('amount'),
 					'sortable'		 => false,
 					'className'		 => 'right',
-					'value_footer'	 => number_format($amount, 2, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'approved_amount',
 					'label'			 => lang('approved amount'),
 					'sortable'		 => false,
 					'className'		 => 'right',
-					'value_footer'	 => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$approved_amount, 2, $this->decimal_separator, '.')),
 				/* 				array(
 				  'key' => 'period',
 				  'label' => lang('period'),

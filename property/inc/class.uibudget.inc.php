@@ -643,7 +643,7 @@
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$result_data['sum_budget']		 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_budget']		 = number_format((float)$this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
@@ -962,11 +962,11 @@
 						'district_id'		 => $entry['district_id'],
 						'ecodimb'			 => $entry['ecodimb'],
 						'hits_ex'			 => $entry['hits'],
-						'hits'				 => number_format($entry['hits'], 0, ',', ' '),
+						'hits'				 => number_format((float)$entry['hits'], 0, ',', ' '),
 						'budget_cost_ex'	 => $entry['budget_cost'],
-						'budget_cost'		 => number_format($entry['budget_cost'], 0, ',', ' '),
+						'budget_cost'		 => number_format((float)$entry['budget_cost'], 0, ',', ' '),
 						'obligation_ex'		 => $entry['obligation'],
-						'obligation'		 => number_format($entry['obligation'], 0, ',', ' '),
+						'obligation'		 => number_format((float)$entry['obligation'], 0, ',', ' '),
 						'link_obligation'	 => urldecode($GLOBALS['phpgw']->link('/index.php', array(
 								'menuaction'		 => 'property.uiworkorder.index', 'filter'			 => 'all', // 'paid' => 1,
 								'district_id'		 => $entry['district_id'], 'b_group'			 => $entry['grouping'],
@@ -974,15 +974,15 @@
 								'filter_start_date'	 => $start_date, 'filter_end_date'	 => $end_date, 'ecodimb'			 => $entry['ecodimb'],
 								'status_id'			 => 'all', 'obligation'		 => true))),
 						'actual_cost_ex'	 => $entry['actual_cost'],
-						'actual_cost_period' => number_format($entry['actual_cost_period'], 0, ',', ' '),
-						'actual_cost'		 => number_format($entry['actual_cost'], 0, ',', ' '),
+						'actual_cost_period' => number_format((float)$entry['actual_cost_period'], 0, ',', ' '),
+						'actual_cost'		 => number_format((float)$entry['actual_cost'], 0, ',', ' '),
 						'link_actual_cost'	 => urldecode($GLOBALS['phpgw']->link('/index.php', array(
 								'menuaction'		 => 'property.uiinvoice.consume', 'district_id'		 => $entry['district_id'],
 								'b_account_class'	 => $entry['grouping'], 'b_account'			 => $entry['b_account'],
 								'start_date'		 => $start_date, 'end_date'			 => $end_date, 'ecodimb'			 => $entry['ecodimb'],
 								'submit_search'		 => true))),
 						'diff_ex'			 => $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
-						'diff'				 => number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
+						'diff'				 => number_format((float)$entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
 						'percent'			 => (int)$entry['percent'],
 						'year'				 => $this->year,
 						'month'				 => $this->month
@@ -993,12 +993,12 @@
 			$result_data						 = array('results' => $values);
 			$result_data['total_records']		 = $this->bo->total_records;
 			$result_data['draw']				 = $draw;
-			$result_data['sum_budget']			 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
-			$result_data['sum_obligation']		 = number_format($this->bo->sum_obligation_cost, 0, ',', ' ');
-			$result_data['sum_actual']			 = number_format($this->bo->sum_actual_cost, 0, ',', ' ');
-			$result_data['sum_actual_period']	 = number_format($this->bo->sum_actual_cost_period, 0, ',', ' ');
-			$result_data['sum_diff']			 = number_format(($this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost), 0, ',', ' ');
-			$result_data['sum_hits']			 = number_format($this->bo->sum_hits, 0, ',', ' ');
+			$result_data['sum_budget']			 = number_format((float)$this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_obligation']		 = number_format((float)$this->bo->sum_obligation_cost, 0, ',', ' ');
+			$result_data['sum_actual']			 = number_format((float)$this->bo->sum_actual_cost, 0, ',', ' ');
+			$result_data['sum_actual_period']	 = number_format((float)$this->bo->sum_actual_cost_period, 0, ',', ' ');
+			$result_data['sum_diff']			 = number_format((float)($this->bo->sum_budget_cost - $this->bo->sum_actual_cost - $this->bo->sum_obligation_cost), 0, ',', ' ');
+			$result_data['sum_hits']			 = number_format((float)$this->bo->sum_hits, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}

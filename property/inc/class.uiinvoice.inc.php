@@ -1755,7 +1755,7 @@ JS;
 			foreach ($content as &$entry)
 			{
 				$sum					 += $entry['amount'];
-				$entry['amount']		 = number_format($entry['amount'], 2, ',', '');
+				$entry['amount']		 = number_format((float)$entry['amount'], 2, ',', '');
 				$entry['paid']			 = $paid;
 				$entry['dimb_list']		 = $this->bocommon->select_list($entry['dimb'], $dimb_list);
 				$entry['tax_code_list']	 = $this->bo->tax_code_list($entry['tax_code'], $tax_code_list);
@@ -2066,7 +2066,7 @@ JS;
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$result_data['sum_amount']		 = number_format($sum, 2, ',', ' ');
+			$result_data['sum_amount']		 = number_format((float)$sum, 2, ',', ' ');
 			$result_data['vendor']			 = lang('Vendor') . ": " . $content[0]['vendor'];
 			$result_data['voucher_id']		 = lang('Voucher Id') . ": " . ($content[0]['voucher_out_id'] ? $content[0]['voucher_out_id'] : $content[0]['voucher_id']);
 
@@ -2118,15 +2118,15 @@ JS;
 						'ecodimb'			 => $ecodimb
 						)
 				));
-				$entry['consume']		 = number_format($entry['consume'], 0, ',', ' ');
-				$entry['refund']		 = number_format($entry['refund'], 0, ',', ' ');
+				$entry['consume']		 = number_format((float)$entry['consume'], 0, ',', ' ');
+				$entry['refund']		 = number_format((float)$entry['refund'], 0, ',', ' ');
 			}
 
 			$result_data					 = array('results' => $content);
 			$result_data['total_records']	 = count($content);
 			$result_data['draw']			 = $draw;
-			$result_data['sum']				 = number_format($sum, 0, ',', ' ');
-			$result_data['sum_refund']		 = number_format($sum_refund, 0, ',', ' ');
+			$result_data['sum']				 = number_format((float)$sum, 0, ',', ' ');
+			$result_data['sum_refund']		 = number_format((float)$sum_refund, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
@@ -3060,7 +3060,7 @@ JS;
 						lang('dim_d')			 => $entry['dim_d'],
 						lang('Tax code')		 => $entry['tax'],
 						'Tjeneste'				 => $entry['kostra_id'],
-						lang('amount')			 => number_format($entry['amount'], 2, ',', ' ')
+						lang('amount')			 => number_format((float)$entry['amount'], 2, ',', ' ')
 					);
 					$sum		 = $sum + $entry['amount'];
 				}
@@ -3108,7 +3108,7 @@ JS;
 			  $pdf->ezText(lang('Supervisor') . ' ' .$values[0]['supervisor'] ,14);
 			  $pdf->ezText(lang('Budget Responsible') . ' ' .$values[0]['budget_responsible'] ,14);
 			  $pdf->ezText(lang('Project id') . ' ' .$values[0]['project_id'] ,14);
-			  $pdf->ezText(lang('Sum') . ' ' .number_format($sum, 2, ',', ' ') ,14);
+			  $pdf->ezText(lang('Sum') . ' ' .number_format((float)$sum, 2, ',', ' ') ,14);
 			 */
 
 			$content_heading[]	 = array
@@ -3164,7 +3164,7 @@ JS;
 			$content_heading[] = array
 				(
 				'text'	 => lang('Sum'),
-				'value'	 => number_format($sum, 2, ',', ' ')
+				'value'	 => number_format((float)$sum, 2, ',', ' ')
 			);
 
 			$pdf->ezTable($content_heading, '', '', array('xPos'				 => 70, 'xOrientation'		 => 'right',
@@ -3301,7 +3301,7 @@ JS;
 					{
 						$content[$i]['row'][$k]['align'] = 'right';
 						//		$sum=$sum+$values[$i][$import[$header[$k]]];
-						$content[$i]['row'][$k]['value'] = number_format($values[$i][$import[$header[$k]]], 2, ',', '');
+						$content[$i]['row'][$k]['value'] = number_format((float)$values[$i][$import[$header[$k]]], 2, ',', '');
 					}
 				}
 			}
@@ -3330,7 +3330,7 @@ JS;
 				'lang_budget_responsible'	 => lang('Budget Responsible'),
 				'budsjettansvarligid'		 => $values[0]['budsjettansvarligid'],
 				'lang_sum'					 => lang('Sum'),
-				'sum'						 => number_format($values[0]['amount'], 2, ',', ''),
+				'sum'						 => number_format((float)$values[0]['amount'], 2, ',', ''),
 				'table_header'				 => $table_header,
 				'values'					 => $content,
 				'table_add'					 => $table_add,
