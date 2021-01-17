@@ -2,10 +2,19 @@ div.dt-button-collection {
   overflow: visible !important;
 }
 
+.dtsb-greyscale {
+  border: 1px solid #cecece !important;
+}
+
+div.dtsb-logicContainer .dtsb-greyscale {
+  border: none !important;
+}
+
 div.dtsb-searchBuilder {
   justify-content: space-evenly;
   cursor: default;
   margin-bottom: 1em;
+  text-align: left;
 }
 div.dtsb-searchBuilder button.dtsb-button,
 div.dtsb-searchBuilder select {
@@ -21,6 +30,7 @@ div.dtsb-searchBuilder div.dtsb-titleRow div.dtsb-title {
 }
 div.dtsb-searchBuilder div.dtsb-titleRow button.dtsb-clearAll {
   float: right;
+  margin-bottom: 0.333em;
 }
 div.dtsb-searchBuilder div.dtsb-vertical .dtsb-value, div.dtsb-searchBuilder div.dtsb-vertical .dtsb-data, div.dtsb-searchBuilder div.dtsb-vertical .dtsb-condition {
   display: block;
@@ -32,10 +42,8 @@ div.dtsb-searchBuilder div.dtsb-group {
 }
 div.dtsb-searchBuilder div.dtsb-group button.dtsb-clearGroup {
   margin: 2px;
-}
-div.dtsb-searchBuilder div.dtsb-group button.dtsb-add {
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  text-align: center;
+  padding: 0;
 }
 div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer {
   -webkit-transform: rotate(90deg);
@@ -50,11 +58,14 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer {
 div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria {
   margin-bottom: 0.8em;
 }
-div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown, div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown,
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
   padding: 0.4em;
   margin-right: 0.8em;
+  max-width: 20em;
 }
-div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown option.dtsb-notItalic, div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input option.dtsb-notItalic {
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown option.dtsb-notItalic,
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input option.dtsb-notItalic {
   font-style: normal;
 }
 div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-italic {
@@ -82,6 +93,10 @@ div.dt-datetime {
   box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.5);
   padding: 0 20px 6px 20px;
   width: 275px;
+}
+div.dt-datetime.inline {
+  position: relative;
+  box-shadow: none;
 }
 div.dt-datetime div.dt-datetime-title {
   text-align: center;

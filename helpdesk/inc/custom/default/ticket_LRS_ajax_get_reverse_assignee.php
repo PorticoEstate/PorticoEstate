@@ -214,9 +214,12 @@
 
 					$db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
+					$org_units = array(-1);
+
 					if($db->next_record())
 					{
 						$treff_utenfor_resultat_enhet = true;
+						$org_units[] = $db->f('ORG_ENHET_ID');
 					}
 
 					$ticket_id = (int)phpgw::get_var('ticket_id');
@@ -261,8 +264,6 @@
 					$sql = "SELECT id FROM fm_org_unit WHERE parent_id  = {$parent_id}";
 
 					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-
-					$org_units = array(-1);
 
 					while ($GLOBALS['phpgw']->db->next_record())
 					{
@@ -333,7 +334,31 @@
 				if(!$values)
 				{
 					$_values = array();
-					$sql = "SELECT * FROM phpgw_accounts WHERE account_lid ilike '{$query}' AND account_status = 'A'";
+					$filtermethod =	"account_lid ilike '{$query}'"
+					. " OR account_lastname  = '{$query}'"
+					. " OR account_firstname  = '{$query}'";
+
+					if(!empty($query_arr[1]) && empty($query_arr2[1]))
+					{
+						$filtermethod .= " OR (account_firstname  ilike '" . strtolower($query_arr[0]) ."%'"
+						 . " AND account_lastname ilike '" . strtolower($query_arr[1]) ."%')";
+					}
+					if(!empty($query_arr[2]) && empty($query_arr2[1]))
+					{
+						$filtermethod .= " OR (account_firstname  ilike '" . strtolower($query_arr[0]) . " " . strtolower($query_arr[1]) . "%'"
+						 . " AND account_lastname  ilike '" . strtolower($query_arr[2]) ."%')";
+					}
+					else if(!empty($query_arr[0]) && !isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR account_lastname ilike '" . strtolower($query_arr[0]) ."%'";
+					}
+					else if(isset($query_arr2[1]))
+					{
+						$filtermethod .= " OR (account_lastname  ilike '" . strtolower($query_arr2[0]) ."%'"
+						 . " AND account_firstname ilike '" . strtolower($query_arr2[1]) ."%')";
+					}
+
+					$sql = "SELECT * FROM phpgw_accounts WHERE ({$filtermethod}) AND account_status = 'A'";
 					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 					while ($GLOBALS['phpgw']->db->next_record())
 					{
@@ -366,7 +391,7 @@
 				{
 					$values = array(array(
 						'id' => '0',
-						'name' => 'Det er treff - men utenfor resultatenheten',
+						'name' => 'Det er treff - men både den som eier saken og den som settes på kopi må være ansatt innenfor samme resultatenhet',
 					));
 				}
 

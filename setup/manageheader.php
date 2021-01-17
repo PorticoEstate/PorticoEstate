@@ -236,27 +236,18 @@ HTML;
 			$detected = '';
 
 			$detected .= $GLOBALS['phpgw_info']['setup']['PageMSG'];
-/*
-			if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
-			{
-				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later', PHP_VERSION). "\n"
-					. '</p></b><td></tr></table></body></html>';
-				die($detected);
-			}
-*/
 
-			if (version_compare(PHP_VERSION, '5.3.0') < 0)
+			if (version_compare(PHP_VERSION, '7.2.0') < 0)
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.3.0 or later', PHP_VERSION). "\n"
+					. lang('You appear to be using PHP %1, phpGroupWare requires version 7.2.0 or later', PHP_VERSION). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
 
 			$detected = '';
 			$request_order = '';
-			if (version_compare(PHP_VERSION, '5.3.0') >= 0)
+			if (version_compare(PHP_VERSION, '7.2.0') >= 0)
 			{
 				if (!preg_match("/C/i", ini_get('request_order')) || !preg_match("/S/i", ini_get('request_order')))
 				{
@@ -293,19 +284,21 @@ HTML;
 				}
 			}
 
-			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.3) . "</li>\n";
+			$phpver = '<li>' . lang('You appear to be using PHP %1+', 7.2) . "</li>\n";
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
 
-			if ( !isset($_POST['ConfigLang']) || !$_POST['ConfigLang'] )
-			{
-				$_POST['ConfigLang'] = 'en';
-			}
+//			if ( !isset($_POST['ConfigLang']) || !$_POST['ConfigLang'] )
+//			{
+//				$_POST['ConfigLang'] = 'en';
+//			}
+			
+			$default_lang =  phpgw::get_var('ConfigLang', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_lang']);
 
 			$detected .= '<tr><td colspan="2"><form action="manageheader.php" method="post">Please Select your language ' . lang_select(True) . "</form></td></tr>\n";
 
-			$manual = '<a href="../doc/en_US/html/admin/" target="manual">'.lang('phpGroupWare Administration Manual').'</a>';
+			$manual = '<a href="https://github.com/PorticoEstate/PorticoEstate/blob/master/doc/README.adoc" target="_blank">'.lang('phpGroupWare Administration Manual').'</a>';
 			$detected .= '<tr><td colspan="2"><p><strong>' . lang('Please consult the %1.', $manual) . "</strong></td></tr>\n";
 
 			$detected .= '<tr class="th"><td colspan="2">' . lang('Analysis') . "</td></tr><tr><td colspan=\"2\">\n<ul id=\"analysis\">\n$phpver";
@@ -704,13 +697,17 @@ HTML;
 			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_info']['server']['header_admin_password']) : '');
 //			$setup_tpl->set_var('header_admin_password', isset($GLOBALS['phpgw_info']['server']['header_admin_password']) ? $GLOBALS['phpgw_info']['server']['header_admin_password'] : '');
 			$setup_tpl->set_var('system_name', isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate');
-			$setup_tpl->set_var('default_lang', isset($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : phpgw::get_var('ConfigLang', 'string', 'POST'));
-			$setup_tpl->set_var('login_left_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_left_message']));
-			$setup_tpl->set_var('login_right_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_right_message']));
-			$setup_tpl->set_var('new_user_url', $GLOBALS['phpgw_info']['server']['new_user_url']);
-			$setup_tpl->set_var('lost_password_url', $GLOBALS['phpgw_info']['server']['lost_password_url']);
-
-
+			$setup_tpl->set_var('default_lang', $default_lang);
+			if(isset($GLOBALS['phpgw_info']['login_left_message']))
+			{
+				$setup_tpl->set_var('login_left_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_left_message']));
+			}
+			if(isset($GLOBALS['phpgw_info']['login_right_message']))
+			{
+				$setup_tpl->set_var('login_right_message', str_replace(array('<br>', '</br>', '<br />','<','>','"'), array("\n","\n","",'[',']','&quot;'), $GLOBALS['phpgw_info']['login_right_message']));
+			}
+			$setup_tpl->set_var('new_user_url', isset($GLOBALS['phpgw_info']['server']['new_user_url']) ? $GLOBALS['phpgw_info']['server']['new_user_url'] : '');
+			$setup_tpl->set_var('lost_password_url', isset($GLOBALS['phpgw_info']['server']['lost_password_url']) ? $GLOBALS['phpgw_info']['server']['lost_password_url'] : '');
 
 			if ( isset($GLOBALS['phpgw_info']['server']['db_persistent']) && $GLOBALS['phpgw_info']['server']['db_persistent'] )
 			{
@@ -754,7 +751,7 @@ HTML;
 					$selected = ' selected ';
 				}
 
-				if($GLOBALS['phpgw_info']['server']['mcrypt_enabled'] && $stype == 'mcrypt')
+				if(!empty($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) && $stype == 'mcrypt')
 				{
 					$selected = ' selected ';
 				}

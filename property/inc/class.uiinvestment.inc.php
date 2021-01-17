@@ -204,12 +204,12 @@
 						'descr'				 => $investment['descr'],
 						'entity_name'		 => $investment['entity_name'],
 						'initial_value_ex'	 => ($investment['initial_value'] == "" ? 0 : $investment['initial_value']),
-						'initial_value'		 => number_format($investment['initial_value'], 0, ',', ''),
+						'initial_value'		 => number_format((float)$investment['initial_value'], 0, ',', ''),
 						'value_ex'			 => ($investment['value'] == "" ? 0 : $investment['value']),
-						'value'				 => number_format($investment['value'], 0, ',', ''),
+						'value'				 => number_format((float)$investment['value'], 0, ',', ''),
 						'this_index'		 => $investment['this_index'],
 						'this_write_off_ex'	 => $investment['this_write_off'],
-						'this_write_off'	 => number_format($investment['this_write_off'], 0, ',', ''),
+						'this_write_off'	 => number_format((float)$investment['this_write_off'], 0, ',', ''),
 						'date'				 => date($dateformat, strtotime($investment['date'])),
 						'index_count'		 => $investment['index_count'],
 						'link_history'		 => $link_history,
@@ -229,7 +229,7 @@
 			$result_data					 = array('results' => $content);
 			$result_data['total_records']	 = (!empty($this->bo->total_records)) ? $this->bo->total_records : 0;
 			$result_data['draw']			 = $draw;
-			$result_data['sum_budget']		 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_budget']		 = number_format((float)$this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
@@ -477,7 +477,7 @@
 						{
 							if ($uicols['name'][$i] == 'initial_value' || $uicols['name'][$i] == 'value' || $uicols['name'][$i] == 'this_write_off')
 							{
-								$json_row[$uicols['name'][$i]] = number_format($investment[$uicols['name'][$i]], 0, ',', '');
+								$json_row[$uicols['name'][$i]] = number_format((float)$investment[$uicols['name'][$i]], 0, ',', '');
 							}
 							else
 							{

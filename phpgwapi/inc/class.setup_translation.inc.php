@@ -30,8 +30,15 @@
 		public function __construct()
 		{
 			$ConfigLang = phpgw::get_var('ConfigLang', 'string', 'POST');
-
-			$ConfigLang = $ConfigLang ? $ConfigLang : $GLOBALS['phpgw_info']['server']['default_lang'];
+			
+			if(!$ConfigLang)
+			{
+				$ConfigLang  =  phpgw::get_var('ConfigLang', 'string', 'COOKIE');			
+			}
+			if(!$ConfigLang)
+			{
+				$ConfigLang = $GLOBALS['phpgw_info']['server']['default_lang'];
+			}
 
 			$this->set_userlang($ConfigLang);
 

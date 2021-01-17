@@ -697,40 +697,27 @@
 		 * @throws Exception when password is invalid/insecure
 		 */
 		public function validate_password($passwd)
-		{
-			$dict_loc = ini_get('crack.default_dictionary');
+		{			
+			$_error = array();
+			switch ( $GLOBALS['phpgw_info']['server']['password_level'] )
+			{
+				default:
+				case 'NONALPHA':
+					$_error[] = self::_validate_password_level_nonalpha($passwd);
+					// fall through
+				case '1NUM':
+					$_error[] = self::_validate_password_level_1num($passwd);
+					// fall through
+				case '2LOW':
+					$_error[] = self::_validate_password_level_2low($passwd);
+					// fall through
+				case '2UPPER':
+					$_error[] = self::_validate_password_level_2upper($passwd);
+					// fall through
+				case '8CHAR':
+					$_error[] = self::_validate_password_level_8char($passwd);
+			}
 
-			if ( function_exists('crack_check') && $dict_loc )
-			{
-				$dict = crack_opendict($dict_loc);
-				if ( !crack_check($passwd) )
-				{
-					throw new Exception(crack_getlastmessage());
-				}
-				return true;
-			}
-			else
-			{
-				$_error = array();
-				switch ( $GLOBALS['phpgw_info']['server']['password_level'] )
-				{
-					default:
-					case 'NONALPHA':
-						$_error[] = self::_validate_password_level_nonalpha($passwd);
-						// fall through
-					case '1NUM':
-						$_error[] = self::_validate_password_level_1num($passwd);
-						// fall through
-					case '2LOW':
-						$_error[] = self::_validate_password_level_2low($passwd);
-						// fall through
-					case '2UPPER':
-						$_error[] = self::_validate_password_level_2upper($passwd);
-						// fall through
-					case '8CHAR':
-						$_error[] = self::_validate_password_level_8char($passwd);
-				}
-			}
 			$error = array();
 			foreach($_error as $_msq)
 			{

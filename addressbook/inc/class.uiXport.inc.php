@@ -84,7 +84,8 @@
 		function get_convert_type_import()
 		{
 			$dir_handle = opendir(PHPGW_APP_INC . '/import');
-			$i=0; $myfilearray = '';
+			$i=0; 
+			$myfilearray = array();
 			while ($file = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/import/{$file}") )
@@ -110,7 +111,8 @@
 		function get_convert_type_export()
 		{
 			$dir_handle = opendir(PHPGW_APP_INC. '/export');
-			$i=0; $myfilearray = '';
+			$i=0;
+			$myfilearray = array();
 			while ($file = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_APP_INC . "/export/{$file}") )

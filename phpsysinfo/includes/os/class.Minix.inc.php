@@ -31,15 +31,7 @@ class Minix extends OS
      *
      * @var array
      */
-    private $_dmesg = array();
-
-    /**
-     * call parent constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    private $_dmesg = null;
 
     /**
      * read /var/log/messages, but only if we haven't already
@@ -48,11 +40,13 @@ class Minix extends OS
      */
     protected function readdmesg()
     {
-        if (count($this->_dmesg) === 0) {
+        if ($this->_dmesg === null) {
             if (CommonFunctions::rfts('/var/log/messages', $buf)) {
                     $blocks = preg_replace("/\s(kernel: MINIX \d+\.\d+\.\d+\.)/", '<BLOCK>$1', $buf);
                     $parts = preg_split("/<BLOCK>/", $blocks, -1, PREG_SPLIT_NO_EMPTY);
                     $this->_dmesg = preg_split("/\n/", $parts[count($parts) - 1], -1, PREG_SPLIT_NO_EMPTY);
+            } else {
+                $this->_dmesg = array();
             }
         }
 
@@ -97,7 +91,10 @@ class Minix extends OS
                             } elseif (preg_match("/ svm/", $arrBuff[1])) {
                                 $dev->setVirt("svm");
                             }
-                        break;
+                            break;
+                        case 'vendor_id':
+                            $dev->setVendorId($arrBuff[1]);
+                            break;
                         }
                     }
                 }
@@ -110,12 +107,12 @@ class Minix extends OS
             }
         } else
         foreach ($this->readdmesg() as $line) {
-          if (preg_match('/kernel: (CPU .*) freq (.*) MHz/', $line, $ar_buf)) {
+            if (preg_match('/kernel: (CPU .*) freq (.*) MHz/', $line, $ar_buf)) {
                 $dev = new CpuDevice();
                 $dev->setModel($ar_buf[1]);
                 $dev->setCpuSpeed($ar_buf[2]);
                 $this->sys->setCpus($dev);
-          }
+            }
         }
     }
 
@@ -140,16 +137,16 @@ class Minix extends OS
                $dev = new HWDevice();
                $dev->setName($strName);
                $arrResults[] = $dev;
-           }
-           foreach ($arrResults as $dev) {
-               $this->sys->setPciDevices($dev);
-           }
+            }
+            foreach ($arrResults as $dev) {
+                $this->sys->setPciDevices($dev);
+            }
         }
         if (!(isset($arrResults) && is_array($arrResults)) && ($results = Parser::lspci())) {
-           /* if access error: chmod 4755 /usr/bin/lspci */
-           foreach ($results as $dev) {
-              $this->sys->setPciDevices($dev);
-           }
+            /* if access error: chmod 4755 /usr/bin/lspci */
+            foreach ($results as $dev) {
+                $this->sys->setPciDevices($dev);
+            }
         }
     }
 
@@ -161,12 +158,12 @@ class Minix extends OS
     private function _kernel()
     {
         if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
-        foreach ($this->readdmesg() as $line) {
+            foreach ($this->readdmesg() as $line) {
                 if (preg_match('/kernel: MINIX (\d+\.\d+\.\d+)\. \((.+)\)/', $line, $ar_buf)) {
-                $branch = $ar_buf[2];
+                    $branch = $ar_buf[2];
                     break;
-          }
-        }
+                }
+            }
             if (isset($branch))
                $this->sys->setKernel($ret.' ('.$branch.')');
             else
@@ -198,7 +195,7 @@ class Minix extends OS
     private function _uptime()
     {
         if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/up (\d+) days,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
+            if (preg_match("/up (\d+) day[s]?,\s*(\d+):(\d+),/", $buf, $ar_buf)) {
                 $min = $ar_buf[3];
                 $hours = $ar_buf[2];
                 $days = $ar_buf[1];
@@ -234,7 +231,7 @@ class Minix extends OS
     private function _hostname()
     {
         if (PSI_USE_VHOST === true) {
-            $this->sys->setHostname(getenv('SERVER_NAME'));
+            if (CommonFunctions::readenv('SERVER_NAME', $hnm)) $this->sys->setHostname($hnm);
         } else {
             if (CommonFunctions::executeProgram('uname', '-n', $result, PSI_DEBUG)) {
                 $ip = gethostbyname($result);
@@ -271,10 +268,10 @@ class Minix extends OS
      */
     private function _filesystems()
     {
-      $arrResult = Parser::df("-P 2>/dev/null");
-      foreach ($arrResult as $dev) {
-         $this->sys->setDiskDevices($dev);
-     }
+        $arrResult = Parser::df("-P 2>/dev/null");
+        foreach ($arrResult as $dev) {
+            $this->sys->setDiskDevices($dev);
+        }
     }
 
     /**
@@ -336,27 +333,27 @@ class Minix extends OS
     public function build()
     {
         $this->error->addError("WARN", "The Minix version of phpSysInfo is a work in progress, some things currently don't work");
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distro();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
             $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
-        $this->_loadavg();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
+            $this->_loadavg();
             $this->_processes();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
-        $this->_pci();
-        $this->_cpuinfo();
+        if (!$this->blockname || $this->blockname==='hardware') {
+            $this->_pci();
+            $this->_cpuinfo();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+        if (!$this->blockname || $this->blockname==='network') {
             $this->_network();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
-        $this->_memory();
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
-        $this->_filesystems();
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
         }
     }
 }

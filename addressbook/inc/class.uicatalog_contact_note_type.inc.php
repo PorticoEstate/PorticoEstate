@@ -157,7 +157,7 @@
 			return $values;
 		}	
 	
-		public function save()
+		public function save($ajax = false)
 		{
 			$values = $this->_populate();
 			

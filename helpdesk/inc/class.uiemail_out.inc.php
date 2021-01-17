@@ -376,10 +376,6 @@
 			return $email_out;
 		}
 
-		public function save()
-		{
-			parent::save();
-		}
 
 		public function get_candidates( )
 		{

@@ -61,3 +61,15 @@
 		$GLOBALS['setup_info']['phpsysinfo']['currentver'] = '3.2.8';
 		return $GLOBALS['setup_info']['phpsysinfo']['currentver'];
 	}
+	/**
+	* Update from 3.2.8 to 3.3.2
+	*
+	* @return string New version number
+	*/
+
+	$test[] = '3.2.8';
+	function phpsysinfo_upgrade3_2_8()
+	{
+		$GLOBALS['setup_info']['phpsysinfo']['currentver'] = '3.3.2';
+		return $GLOBALS['setup_info']['phpsysinfo']['currentver'];
+	}

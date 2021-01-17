@@ -105,7 +105,7 @@ table {
     border: 1px solid #354242;
 }
 
-#pciTable, #ideTable, #scsiTable, #usbTable, #tbTable, #i2cTable {
+#pciTable, #ideTable, #scsiTable, #nvmeTable, #usbTable, #tbTable, #i2cTable {
     padding: 0px 30px;
 }
 
@@ -126,7 +126,7 @@ table {
     text-align: right;
 }
 
-#lang_047 {
+.lang_047 {
     color:444
 }
 
@@ -169,16 +169,25 @@ table {
 .treespan {
     display: table-cell;
     *float: left; /* ie6 ie7 */
-    vertical-align: middle;
 }
 
 .treespanbold {
     font-weight: bold;
     display: table-cell;
     *float: left; /* ie6 ie7 */
-    vertical-align: middle;
 }
 
 .tree tr td {
     cursor: auto;
+    height: 100%;
+}
+
+.treediv {
+    display: table;
+    height: 100%;
+}
+
+.tablemain {
+    width: 100%;
+    height: 100%;
 }

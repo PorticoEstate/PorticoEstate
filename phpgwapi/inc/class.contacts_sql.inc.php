@@ -590,15 +590,15 @@
 		function __construct( $session = True )
 		{
 			$this->db = clone($GLOBALS['phpgw']->db);
-			if (!is_object($GLOBALS['phpgw']->session))
-			{
-				$GLOBALS['phpgw']->session = createObject('phpgwapi.sessions');
-			}
 
 			$this->stock_contact_fields = & $this->contact_fields['showable'];
 			$this->account_id = isset($GLOBALS['phpgw_info']['user']['account_id']) ? $GLOBALS['phpgw_info']['user']['account_id'] : 0;
 			if ($session)
 			{
+				if (!is_object($GLOBALS['phpgw']->session))
+				{
+					$GLOBALS['phpgw']->session = createObject('phpgwapi.sessions');
+				}
 				$this->read_sessiondata();
 				$this->save_sessiondata();
 			}

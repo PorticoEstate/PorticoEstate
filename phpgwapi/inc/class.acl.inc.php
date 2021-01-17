@@ -484,7 +484,7 @@
 							. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
 
 			$now 			= time();
-			$mod_account	= $GLOBALS['phpgw_info']['user']['account_id'] ? $GLOBALS['phpgw_info']['user']['account_id'] : -1;
+			$mod_account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
 
 			$valueset=array();
 
@@ -1839,7 +1839,9 @@
 				}
 			}
 
-			switch( $GLOBALS['phpgw_info']['server']['account_repository'] )
+			$acct_type = isset($GLOBALS['phpgw_info']['server']['account_repository']) ? strtolower($GLOBALS['phpgw_info']['server']['account_repository']) : '';
+
+			switch( $acct_type )
 			{
 				case 'ldap':
 					$this->_read_repository_ldap($account_type, $app_id, $location_id);

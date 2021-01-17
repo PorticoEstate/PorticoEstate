@@ -79,9 +79,9 @@ Tested Systems:
 
 On Linux
 
-  * PHP 7.2 +
+  * PHP 7.2 - 8.0
   * Apache 2.4.x
-  * MySQL 5 or PostgreSQL 9.6 - 12
+  * MySQL 5 or PostgreSQL 9.6 - 13
   * Courier-IMAP 0.33+ and/or qmail 1.03 for POP3 access
 
 

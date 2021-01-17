@@ -748,8 +748,9 @@ JS;
 			$log_args = array
 				(
 				'severity' => 'W',
-				'text' => 'W-Permissions, Attempted to access %1',
-				'p1' => "{$GLOBALS['phpgw_info']['flags']['currentapp']}::{$location}"
+				'text' => 'W-Permissions, Attempted to access %1 from %2',
+				'p1' => "{$GLOBALS['phpgw_info']['flags']['currentapp']}::{$location}",
+				'p2'=> phpgw::get_ip_address()
 			);
 
 			$GLOBALS['phpgw']->log->warn($log_args);

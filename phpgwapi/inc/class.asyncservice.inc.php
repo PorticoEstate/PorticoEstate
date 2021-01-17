@@ -42,7 +42,8 @@
 		function __construct()
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
-			$this->cronline = PHPGW_SERVER_ROOT . '/phpgwapi/cron/asyncservices.php '.$GLOBALS['phpgw_info']['user']['domain'];
+			$domain = isset($GLOBALS['phpgw_info']['user']['domain']) ? $GLOBALS['phpgw_info']['user']['domain'] : 'default';
+			$this->cronline = PHPGW_SERVER_ROOT . '/phpgwapi/cron/asyncservices.php '.$domain;
 			$this->only_fallback = substr(php_uname(), 0, 7) == "Windows";	// atm cron-jobs dont work on win
 			$this->Exception_On_Error =	$GLOBALS['phpgw']->db->Exception_On_Error; // continue on dberror
 		}
@@ -67,7 +68,7 @@
 
 			if ($account_id === False)
 			{
-				$account_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$account_id	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : 0;
 			}
 
 			$job = array

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Basic Sensor Functions
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.PSI_Interface_Sensor.inc.php 263 2009-06-22 13:01:52Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -33,7 +33,7 @@ interface PSI_Interface_Sensor
      * @return void
      */
     public function build();
-    
+
     /**
      * get the filled or unfilled (with default values) MBInfo object
      *

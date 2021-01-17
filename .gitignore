@@ -4,7 +4,9 @@
 /.settings
 /.project
 /.vscode
+/.vscode/launch.json
 /.nbproject
 /nbproject
 /vendor
 /phpgwapi/test/_output
+/phpgwapi/inc/phpmailer/nbproject/private/

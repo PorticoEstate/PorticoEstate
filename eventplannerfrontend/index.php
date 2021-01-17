@@ -94,8 +94,9 @@
 			&& $method)
 		{
 			$GLOBALS['phpgw']->log->message(array(
-				'text' => 'W-BadmenuactionVariable, attempted to access private method: %1',
+				'text' => 'W-BadmenuactionVariable, attempted to access private method: %1 from %2',
 				'p1'   => $method,
+				'p2'=> phpgw::get_ip_address(),
 				'line' => __LINE__,
 				'file' => __FILE__
 			));

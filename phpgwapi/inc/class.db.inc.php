@@ -287,8 +287,8 @@
 
 			if ($num_rows <= 0)
 			{
-				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;
+				$maxmatches = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+				$num_rows = $maxmatches;
 			}
 
 			switch ( $this->Type )

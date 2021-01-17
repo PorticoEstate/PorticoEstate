@@ -269,6 +269,13 @@ function PopulatePostedDate()
 			StartTime = new Date(from_);
 			EndTime = new Date(to_);
 		}
+
+		if(initialDates.length > 0)
+		{
+			time_default_start = StartTime.getHours();
+			time_default_end = EndTime.getHours();
+			$('#start_date').datetimepicker('destroy');
+		}
 	}
 	else
 	{

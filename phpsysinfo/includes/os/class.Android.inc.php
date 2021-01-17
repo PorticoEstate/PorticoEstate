@@ -50,28 +50,29 @@ class Android extends Linux
     }
 
     /**
-     * call parent constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Kernel Version
      *
      * @return void
      */
     private function _kernel()
     {
-        if (CommonFunctions::rfts('/proc/version', $strBuf, 1)) {
-            if (preg_match('/version\s+(\S+)/', $strBuf, $ar_buf)) {
-                $result = $ar_buf[1];
+        if (CommonFunctions::executeProgram('uname', '-r', $strBuf, false)) {
+            $result = $strBuf;
+            if (CommonFunctions::executeProgram('uname', '-v', $strBuf, PSI_DEBUG)) {
                 if (preg_match('/SMP/', $strBuf)) {
                     $result .= ' (SMP)';
                 }
-                $this->sys->setKernel($result);
             }
+            if (CommonFunctions::executeProgram('uname', '-m', $strBuf, PSI_DEBUG)) {
+                $result .= ' '.$strBuf;
+            }
+            $this->sys->setKernel($result);
+        } elseif (CommonFunctions::rfts('/proc/version', $strBuf, 1) && preg_match('/version\s+(\S+)/', $strBuf, $ar_buf)) {
+            $result = $ar_buf[1];
+            if (preg_match('/SMP/', $strBuf)) {
+                $result .= ' (SMP)';
+            }
+            $this->sys->setKernel($result);
         }
     }
 
@@ -109,7 +110,7 @@ class Android extends Linux
                     if ((preg_match("/^(\/\S+)(\s+)(([0-9\.]+)([KMGT])(\s+)([0-9\.]+)([KMGT])(\s+)([0-9\.]+)([KMGT])(\s+))/", $df_line, $df_buf)
                          || preg_match("/^(\/[^\s\:]+)\:(\s+)(([0-9\.]+)([KMGT])(\s+total\,\s+)([0-9\.]+)([KMGT])(\s+used\,\s+)([0-9\.]+)([KMGT])(\s+available))/", $df_line, $df_buf))
                          && !preg_match('/^\/mnt\/asec\/com\./', $df_buf[1])) {
-                            $dev = new DiskDevice();
+                        $dev = new DiskDevice();
                         if (PSI_SHOW_MOUNT_POINT) $dev->setMountPoint($df_buf[1]);
 
                         if ($df_buf[5] == 'K') $dev->setTotal($df_buf[4] * 1024);
@@ -157,8 +158,8 @@ class Android extends Linux
                         $notwas = false;
                     }
                 }
-                    }
-                }
+            }
+        }
         if ($notwas) { // try Linux df style
             $arrResult = Parser::df("-P 2>/dev/null", false);
             foreach ($arrResult as $dev) {
@@ -177,12 +178,12 @@ class Android extends Linux
         $buf = "";
         if (($lines = $this->_get_buildprop()) && preg_match('/^ro\.build\.version\.release=([^\n]+)/m', $lines, $ar_buf)) {
                 $buf = trim($ar_buf[1]);
-            }
+        }
         if (is_null($buf) || ($buf == "")) {
-                $this->sys->setDistribution('Android');
-            } else {
+            $this->sys->setDistribution('Android');
+        } else {
             if (preg_match('/^(\d+\.\d+)/', $buf, $ver)
-                && ($list = @parse_ini_file(APP_ROOT."/data/osnames.ini", true))
+                && ($list = @parse_ini_file(PSI_APP_ROOT."/data/osnames.ini", true))
                 && isset($list['Android'][$ver[1]])) {
                     $buf.=' '.$list['Android'][$ver[1]];
             }
@@ -236,26 +237,6 @@ class Android extends Linux
     }
 
     /**
-     * USB devices
-     *
-     * @return void
-     */
-    private function _usb()
-    {
-        if ((file_exists('/dev/bus/usb') || (defined('PSI_UNAMEO') && PSI_UNAMEO === 'Android')) && CommonFunctions::executeProgram('lsusb', '', $bufr, false)) {
-            $bufe = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
-            foreach ($bufe as $buf) {
-                $device = preg_split("/ /", $buf, 6);
-                if (isset($device[5]) && trim($device[5]) != "") {
-                    $dev = new HWDevice();
-                    $dev->setName(trim($device[5]));
-                    $this->sys->setUsbDevices($dev);
-                }
-            }
-        }
-    }
-
-    /**
      * get the information
      *
      * @see PSI_Interface_OS::build()
@@ -264,30 +245,30 @@ class Android extends Linux
      */
     public function build()
     {
-        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
-        $this->_distro();
-        $this->_hostname();
-        $this->_kernel();
-        $this->_uptime();
-        $this->_users();
+        if (!$this->blockname || $this->blockname==='vitals') {
+            $this->_distro();
+            $this->_hostname();
+            $this->_kernel();
+            $this->_uptime();
+            $this->_users();
             $this->_loadavg();
             $this->_processes();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
+        if (!$this->blockname || $this->blockname==='hardware') {
             $this->_machine();
-        $this->_cpuinfo();
+            $this->_cpuinfo();
             $this->_pci();
             $this->_usb();
             $this->_i2c();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
-        $this->_network();
+        if (!$this->blockname || $this->blockname==='network') {
+            $this->_network();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
-        $this->_memory();
+        if (!$this->blockname || $this->blockname==='memory') {
+            $this->_memory();
         }
-        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
-        $this->_filesystems();
+        if (!$this->blockname || $this->blockname==='filesystem') {
+            $this->_filesystems();
         }
     }
 }

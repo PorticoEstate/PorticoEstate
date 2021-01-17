@@ -25,6 +25,10 @@ function validate_submit(type)
 
 $(document).ready(function ()
 {
+	setTimeout(function ()
+	{
+		document.getElementById("phone").focus();
+	}, 40);
 
 	// need to perform the validation first
 	$("#phone").keydown(function (e)

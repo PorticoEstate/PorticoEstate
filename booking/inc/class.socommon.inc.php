@@ -181,7 +181,7 @@
 				}
 				else if (isset($params['join']) && $params['join'])
 				{
-					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( empty($filters[$field]) && empty($query) ) )
+					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !isset($filters[$field]) && empty($query) ) )
 					{
 						continue;
 					}
@@ -1108,7 +1108,7 @@
 					continue;
 				}
 
-				$v = trim($entity[$field]);
+				$v = is_array($entity[$field]) ? $entity[$field] : trim($entity[$field]);
 				$empty = false;
 
 				if (isset($params['manytomany']) && isset($params['manytomany']['column']))

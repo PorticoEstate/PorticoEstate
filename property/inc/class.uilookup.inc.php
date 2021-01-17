@@ -983,7 +983,7 @@ JS;
 			$values	 = $boentity->read(array('lookup' => true, 'dry_run' => true));
 			$uicols	 = $boentity->uicols;
 
-			if (count($uicols['name']) > 0)
+			if (count((array)$uicols['name']) > 0)
 			{
 				for ($m = 0; $m < count($input_name); $m++)
 				{

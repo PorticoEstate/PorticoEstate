@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * start page for webaccess
  * redirect the user to the supported page type by the users webbrowser (js available or not)
@@ -10,10 +10,9 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: index.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
-
 
 
 if (file_exists('../header.inc.php'))
@@ -40,19 +39,12 @@ else
 	exit;
 }
 
- /**
+
+/**
  * define the application root path on the webserver
  * @var string
  */
-define('APP_ROOT', dirname(__FILE__));
-
-/**
- * internal xml or external
- * external is needed when running in static mode
- *
- * @var boolean
- */
-define('PSI_INTERNAL_XML', false);
+define('PSI_APP_ROOT', dirname(__FILE__));
 
 if (version_compare("5.1.3", PHP_VERSION, ">")) {
     die("PHP 5.1.3 or greater is required!!!");
@@ -61,10 +53,10 @@ if (!extension_loaded("pcre")) {
     die("phpSysInfo requires the pcre extension to php in order to work properly.");
 }
 
-require_once APP_ROOT.'/includes/autoloader.inc.php';
+require_once PSI_APP_ROOT.'/includes/autoloader.inc.php';
 
 // Load configuration
-require_once APP_ROOT.'/read_config.php';
+require_once PSI_APP_ROOT.'/read_config.php';
 
 if (!defined('PSI_CONFIG_FILE') || !defined('PSI_DEBUG')) {
     $tpl = new Template("/templates/html/error_config.html");
@@ -84,8 +76,15 @@ case "dynamic":
     $webpage->run();
     break;
 case "xml":
-    $webpage = new WebpageXML(true);
+    $webpage = new WebpageXML("complete");
     $webpage->run();
+    break;
+case "json":
+    $webpage = new WebpageXML("complete");
+    $json = $webpage->getJsonString();
+    header("Cache-Control: no-cache, must-revalidate\n");
+    header("Content-Type: application/json\n\n");
+    echo $json;
     break;
 case "bootstrap":
 /*
@@ -115,9 +114,9 @@ default:
         $webpage->run();
         break;
     default:
-    $tpl = new Template("/templates/html/index_all.html");
-    echo $tpl->fetch();
-    break;
+        $tpl = new Template("/templates/html/index_all.html");
+        echo $tpl->fetch();
+        break;
     }
     break;
 }

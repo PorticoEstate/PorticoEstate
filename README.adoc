@@ -1,3 +1,84 @@
+= Quik notes on development setup
+
+If you don't have Apache, php and PostgreSQL installed
+
+== Running from Docker
+
+There is prepared a webserver with php 8.0 and Xdebug, connected to PostgreSQL 13.1
+
+To run PorticoEstate using Docker containers:
+
+1. Enter this following command in the Terminal to start the docker container in the background
+
+   
+   docker-compose up -d
+
+
+2. Create a database
+
+pgAdmin is included in the Docker-setup at http://localhost:5050/[http://localhost:5050/]
+connect to the host, using "db" as host - and create a database
+
+usename: pgadmin4@pgadmin.org
+Password: admin
+
+3. Connect to database and create the admin user
+
+http://localhost:8080/setup/[http://localhost:8080/setup/]
+[TIP]
+====
+Use "db" as database-host in setup, as it is defined in the docker-environment
+====
+
+Data is stored persistant as volumes for both pgAdmin and PostgreSQL
+[NOTE]
+====
+If you want to connect to PostgreSQL from outside the docker-environment, you will have to find the IP-address for the postgres_container, and connect using the port 5433 
+====
+
+In order to get Xdebug to work in Windows - one will need to set the XDEBUG_IP_ADDRESS environemet variable to the IP-address of the IDE's client
+
+[TIP]
+====
+Linux: export XDEBUG_IP_ADDRESS=<IP-address>
+
+Windows: set XDEBUG_IP_ADDRESS=<IP-address>
+====
+
+Netbeans seems to work in both Linux and Windows
+
+VSCode works in Linux, not sure about Windows
+
+
+To stop PorticoEstate and PostgreSQL:
+
+   docker-compose down
+
+== - Or running from within WSL2 in Windows 10
+Install ubuntu in Windows using WSL2 - and configure according to the Vagrant-setup found in
+[source]
+----
+phpgwapi/doc/Vagrantfile
+----
+
+https://code.visualstudio.com/blogs/2019/09/03/wsl2[VSCode do have a wsl2-connector that fits perfectly]
+
+Debugging php will work
+
+Netbeans will can only be used as with remote source via ssh/sftp - not recommended.
+
+== - OR running with vagrant
+See the howto outlined in the vagrantfile
+[source]
+----
+phpgwapi/doc/Vagrantfile
+----
+[CAUTION]
+====
+Only recommended for Linux host, as virtualbox will have issues vith wsl2
+====
+
+
 include::doc/README.adoc[]
 
 include::setup/doc/README.adoc[]

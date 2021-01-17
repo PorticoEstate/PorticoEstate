@@ -636,7 +636,7 @@
 					$to = ($to) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to)) : "";
 				}
 
-				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
@@ -763,7 +763,12 @@
 						}
 					}
 				}
-				if (!$audval_present)
+
+				if($is_partial1 && !$audval_present)
+				{
+					$application['audience'] = -1; // Dummy
+				}
+				else if (!$audval_present)
 				{
 					$errors['audience'] = lang("Select a target audience");
 				}
@@ -878,6 +883,7 @@
 			$_building = $this->building_bo->so->read_single($building_id);
 
 			array_set_default($application, 'building_name', $_building['name']);
+			array_set_default($application, 'audience', array());
 
 			if (strstr($application['building_name'], "%"))
 			{
@@ -888,11 +894,11 @@
 
 			if (phpgw::get_var('from_', 'string'))
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
+				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
 			else
 			{
-				$default_dates = array_map(array(self, '_combine_dates'), '', '');
+				$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			}
 			array_set_default($application, 'dates', $default_dates);
 
@@ -1180,7 +1186,7 @@
 					{
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code');
+							'responsible_city','responsible_street','responsible_zip_code', 'audience');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update
@@ -1485,7 +1491,7 @@
 					$to = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($to));
 				}
 
-				$application['dates'] = array_map(array(self, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
 
 				$errors = $this->validate($application);
 

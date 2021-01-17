@@ -1,0 +1,44 @@
+version: '3.6'
+
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:13.1
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    restart: unless-stopped
+
+  web:
+    container_name: portico_container
+    image: sigurdne/portico_estate_webserver:latest
+    ports:
+      - 8080:80
+    environment:
+      XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
+    volumes:
+      - ./:/var/www/html/
+    restart: always
+    depends_on:
+      - db
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+       - pgadmin:/root/.pgadmin
+    restart: unless-stopped
+
+volumes:
+    postgres:
+    pgadmin:

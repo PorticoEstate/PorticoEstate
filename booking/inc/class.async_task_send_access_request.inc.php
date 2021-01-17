@@ -139,6 +139,11 @@
 									 */
 									foreach ($resource['e_locks'] as $e_lock)
 									{
+										if(!$e_lock['e_lock_system_id'] || !$e_lock['e_lock_resource_id'])
+										{
+											continue;
+										}
+
 										$to = $this->round_to_next_hour($reservation['to_']);
 										$custom_id	 = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
 
@@ -264,9 +269,12 @@
 
 										if (!$found_reservation)
 										{
-											$error_msg	 = "Fann ikkje reservasjonen for {$e_lock_name} i adgangskontrollen";
+											$error_msg	 = "Fant ikke reservasjonen for {$e_lock_name} i adgangskontrollen.\n";
+											$error_msg	 .= "Du må kontakte byggansvarlig for manuell innlåsing.\n";
+											$error_msg	 .= "Denne meldingen kan ikke besvares";
 											$sms_res	 = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $error_msg);
 											$this->send_mailnotification($reservation['contact_email'], 'Melding om tilgang', nl2br($error_msg));
+											$bo->add_single_comment($reservation['id'], "Fant ikke reservasjonen for {$e_lock_name} i adgangskontrollen.");
 										}
 									}
 									unset($e_lock);

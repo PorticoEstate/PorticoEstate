@@ -58,7 +58,7 @@
 	$setup_info['rental']['depends'][] = array
 		(
 		'appname' => 'property',
-		'versions' => array('0.9.17.566')
+		'versions' => array('0.9.17')
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

@@ -48,7 +48,7 @@ class Nut extends UPS
             }
             foreach ($upses as $ups) {
                 CommonFunctions::executeProgram('upsc', '-l '.trim($ups), $output, PSI_DEBUG);
-        $ups_names = preg_split("/\n/", $output, -1, PREG_SPLIT_NO_EMPTY);
+                $ups_names = preg_split("/\n/", $output, -1, PREG_SPLIT_NO_EMPTY);
                 foreach ($ups_names as $ups_name) {
                     CommonFunctions::executeProgram('upsc', trim($ups_name).'@'.trim($ups), $temp, PSI_DEBUG);
                     if (! empty($temp)) {
@@ -64,8 +64,8 @@ class Nut extends UPS
                 if (! empty($temp)) {
                     $this->_output[trim($ups_name)] = $temp;
                 }
+            }
         }
-    }
     }
 
     /**

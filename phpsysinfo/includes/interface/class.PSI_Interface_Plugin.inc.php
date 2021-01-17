@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Basic Plugin Functions
  *
@@ -9,7 +9,7 @@
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @version   SVN: $Id$
+ * @version   SVN: $Id: class.PSI_Interface_Plugin.inc.php 273 2009-06-24 11:40:09Z bigmichi1 $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
@@ -33,7 +33,7 @@ interface PSI_Interface_Plugin
      * @return void
      */
     public function execute();
-    
+
     /**
      * build the xml
      *

@@ -396,7 +396,7 @@ Edit document	booking	nn	Rediger dokument
 Edit resource	booking	nn	Rediger ressurs
 Edit Group	booking	nn	Rediger gruppe
 Select Type	booking	nn	Velg type
-Customer number	booking	nn	Ressursnummer
+Customer number	booking	nn	Referansenummer
 Send	booking	nn	Send
 your application has now been processed and a confirmation email has been sent to you.	booking	nn	Søknaden er handsama, og ein kvittering er sendt til deg på e-post.
 Your application has now been registered and a confirmation email has been sent to you.	booking	nn	Søknaden er sendt inn, og ein kvittering er sendt til deg på e-post.
@@ -822,7 +822,7 @@ newpartial1	booking	nn	Ikke fullført
 missing id	booking	nn	manglar referanse til ID
 participants	booking	nn	Deltakarar
 quantity	booking	nn	Antal
-Pre-register	booking	nn	Påmelding
+Pre-registration	bookingfrontend	nn	Førehandspåmelding
 Register in	booking	nn	Inn-registrering
 Register out	booking	nn	Ut-registrering
 booking_async_task_delete_participants	booking	nn	Slette gamle deltagerregistreringer

@@ -7,9 +7,10 @@
  * @category  PHP
  * @package   PSI_Sensor
  * @author    Marc Hillesheim <hawkeyexp@gmail.com>
+ * @copyright 2012 phpSysInfo
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
- * @copyright 2012 Marc Hillesheim
- * @link      http://pi.no-ip.biz
+ * @version   Release: 3.0
+ * @link      http://phpsysinfo.sourceforge.net
  */
 class PiTemp extends Sensors
 {
@@ -22,14 +23,14 @@ class PiTemp extends Sensors
             CommonFunctions::rfts('/sys/class/thermal/thermal_zone0/trip_point_0_temp', $temp_max, 1, 4096, PSI_DEBUG);
         }
         if (!is_null($temp) && (($temp = trim($temp)) != "")) {
-        $dev = new SensorDevice();
+            $dev = new SensorDevice();
             $dev->setName("CPU 1");
             $dev->setValue($temp / 1000);
             if (!is_null($temp_max) && (($temp_max = trim($temp_max)) != "") && ($temp_max > 0)) {
                 $dev->setMax($temp_max / 1000);
             }
-        $this->mbinfo->setMbTemp($dev);
-    }
+            $this->mbinfo->setMbTemp($dev);
+        }
     }
 
     private function _voltage()

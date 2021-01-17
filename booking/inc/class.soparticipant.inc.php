@@ -101,6 +101,14 @@
 					$from_ = null;
 				}
 			}
+			
+			/**
+			 * Already out
+			 */
+			if($register_type == 'register_out' && $to_)
+			{
+				$id = null;
+			}
 
 			return array(
 				'id'		 => $id,
@@ -111,13 +119,25 @@
 			);
 		}
 
-		function get_number_of_participants($reservation_type, $reservation_id)
+		function get_number_of_participants($reservation_type, $reservation_id, $registered_in = false)
 		{
+
+			$filtermethod = '';
+			if($registered_in)
+			{
+				$filtermethod .= 'AND from_ IS NOT NULL AND to_ IS NULL';
+
+			}
+			else
+			{
+				$filtermethod .= 'AND to_ IS NULL';
+			}
+
 			$sql = "SELECT sum(quantity) as cnt"
 				. " FROM bb_participant"
 				. " WHERE reservation_type='{$reservation_type}'"
 				. " AND reservation_id=" . (int) $reservation_id
-				. " AND to_ IS NULL";
+				. " {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('cnt');

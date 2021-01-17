@@ -2788,7 +2788,7 @@
 				sort($status);
 
 				$voucher_id	 = $entry['bilagsnr_ut'] ? $entry['bilagsnr_ut'] : $bilagsnr;
-				$name		 = sprintf("{$lang_payment_date}: % 10s | {$lang_voucer}:% 8s | {$lang_vendor}: % 50s | {$lang_currency}: % 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s", $payment_date, $voucher_id, trim(strtoupper($entry['org_name'])), $entry['currency'], $entry['kreditnota'] ? 'X' : '', $entry['type'], number_format($entry['godkjentbelop'], 2, ',', ' '), $status[0]
+				$name		 = sprintf("{$lang_payment_date}: % 10s | {$lang_voucer}:% 8s | {$lang_vendor}: % 50s | {$lang_currency}: % 3s | {$lang_parked}: % 1s | {$lang_type}: % 12s | {$lang_approved_amount}: % 19s | Status: % 1s", $payment_date, $voucher_id, trim(strtoupper($entry['org_name'])), $entry['currency'], $entry['kreditnota'] ? 'X' : '', $entry['type'], number_format((float)$entry['godkjentbelop'], 2, ',', ' '), $status[0]
 				);
 
 				$voucers[] = array

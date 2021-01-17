@@ -110,8 +110,10 @@ HTML;
 		if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
-				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1 from %2',
+				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'p2'=> phpgw::get_ip_address()
+				));
 
 			$lang_denied = lang('Access not permitted');
 			echo <<<HTML
@@ -169,8 +171,10 @@ HTML;
 	if($app != 'activitycalendarfrontend')
 	{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1',
-				'p1' => $app));
+			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1 from %2',
+				'p1' => $app,
+				'p2'=> phpgw::get_ip_address()
+				));
 
 			$lang_denied = lang('Access not permitted');
 			echo <<<HTML

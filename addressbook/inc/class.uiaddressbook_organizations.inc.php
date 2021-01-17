@@ -751,7 +751,7 @@ class addressbook_uiaddressbook_organizations extends phpgwapi_uicommon
 		return $values;
 	}
 	
-	public function save()
+	public function save($ajax = false)
 	{
 		$id = phpgw::get_var('contact_id', 'int');
 		

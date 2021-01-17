@@ -522,22 +522,22 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			for ($i = 0; $i < count($values); $i++)
+			foreach ($values as & $value)
 			{
-				$values[$i]['coordinator']		 = $GLOBALS['phpgw']->accounts->id2name($values[$i]['coordinator']);
-				$values[$i]['start_date']		 = $GLOBALS['phpgw']->common->show_date($values[$i]['start_date'], $dateformat);
-				$values[$i]['entry_date']		 = $GLOBALS['phpgw']->common->show_date($values[$i]['entry_date'], $dateformat);
-				$values[$i]['planned_year']		 = $request[$i]['planned_year'] ? date('Y', $values[$i]['planned_year']) : '';
-				$values[$i]['closed_date']		 = $GLOBALS['phpgw']->common->show_date($values[$i]['closed_date'], $dateformat);
-				$values[$i]['in_progress_date']	 = $GLOBALS['phpgw']->common->show_date($values[$i]['in_progress_date'], $dateformat);
-				$values[$i]['delivered_date']	 = $GLOBALS['phpgw']->common->show_date($values[$i]['delivered_date'], $dateformat);
+				$value['coordinator']		 = $GLOBALS['phpgw']->accounts->id2name($value['coordinator']);
+				$value['start_date']		 = $GLOBALS['phpgw']->common->show_date($value['start_date'], $dateformat);
+				$value['entry_date']		 = $GLOBALS['phpgw']->common->show_date($value['entry_date'], $dateformat);
+				$value['planned_year']		 = $value['planned_year'] ? date('Y', $value['planned_year']) : '';
+				$value['closed_date']		 = $GLOBALS['phpgw']->common->show_date($value['closed_date'], $dateformat);
+				$value['in_progress_date']	 = $GLOBALS['phpgw']->common->show_date($value['in_progress_date'], $dateformat);
+				$value['delivered_date']	 = $GLOBALS['phpgw']->common->show_date($value['delivered_date'], $dateformat);
 
 				if ($cols_extra)
 				{
-					$location_data = $this->solocation->read_single($values[$i]['location_code']);
+					$location_data = $this->solocation->read_single($value['location_code']);
 					for ($j = 0; $j < count($cols_extra); $j++)
 					{
-						$values[$i][$cols_extra[$j]] = $location_data[$cols_extra[$j]];
+						$value[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 				}
 			}
@@ -741,8 +741,8 @@
 				}
 				else if ($value['status'] == 'B' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	 = number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	 = number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value']	 = number_format((float)$value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	 = number_format((float)$value['old_value'], 0, ',', ' ');
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{
