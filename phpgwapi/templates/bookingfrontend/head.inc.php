@@ -18,7 +18,8 @@
 		$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
 	}
 
-	$config_frontend = CreateObject('phpgwapi.config', $app)->read();
+	$config_frontend = CreateObject('phpgwapi.config', 'bookingfrontend')->read();
+	$config_backend = CreateObject('phpgwapi.config', 'booking')->read();
 
 	$tracker_id		 = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
 	$tracker_code1	 = <<<JS
@@ -151,9 +152,9 @@ JS;
 //	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
 
 
-	if (!empty($config_frontend['support_address']))
+	if (!empty($config_backend['support_address']))
 	{
-		$support_email = $config_frontend['support_address'];
+		$support_email = $config_backend['support_address'];
 	}
 	else
 	{
