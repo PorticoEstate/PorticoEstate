@@ -58,6 +58,7 @@
 				$values[] = array(
 					'id'							 => $this->db->f('id'),
 					'created'						 => $this->db->f('created'),
+					'status'						 => $this->db->f('status'),
 					'building_name'					 => $this->db->f('building_name', true),
 					'secret'						 => $this->db->f('secret', true),
 					'customer_organization_number'	 => $this->db->f('customer_organization_number', true),
