@@ -83,6 +83,7 @@
 			(
 				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'date', 'label' => lang('Date'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'lang_status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
@@ -94,6 +95,7 @@
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($application_data as &$entry)
 			{
+				$entry['lang_status'] = lang($entry['status']);
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.show", 'id' => $entry['id'], 'secret' => $entry['secret'])) . '">' . $lang_view . '</a>';
 
