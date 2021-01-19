@@ -2435,3 +2435,4 @@ get info	property	no	Hent data
 delete files	property	no	Slett filer
 duplicate	property	no	Duplikat
 transfer to external	property	no	Overfør til eksternt system
+default tax code	property	no	Standard mva-kode
