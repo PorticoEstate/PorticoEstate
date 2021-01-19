@@ -3414,8 +3414,11 @@ JS;
 				'value_service_id'						 => $values['service_id'],
 				'value_service_name'					 => $this->_get_eco_service_name($values['service_id']),
 				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
-				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(array(
-						'type'		 => 'tax', 'selected'	 => $values['tax_code'], 'order'		 => 'id',
+				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
+					array(
+						'type' => 'tax',
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'order'		 => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list'							 => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id'])),
 				'value_unspsc_code'						 => $unspsc_code,
