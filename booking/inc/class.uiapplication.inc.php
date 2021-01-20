@@ -1428,6 +1428,19 @@
 			$partial2['cancel_link'] = self::link(array());
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
 
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+			if(!$bouser->is_logged_in())
+			{
+				$bouser->log_in();
+			}
+
+			$org_id = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+
+			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $org_id);
+
+//			_debug_array($delegate_data);
+
 			/**
 			 * This one is for bookingfrontend
 			 */

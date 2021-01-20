@@ -11,7 +11,7 @@
 			'edit' => true,
 		);
 		protected $module;
-		private $ssn, $orgs, $external_login_info;
+		private $ssn, $orgnr, $orgs, $external_login_info;
 
 		public function __construct()
 		{
@@ -53,6 +53,8 @@
 
 			$this->external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
 			$this->ssn = $this->external_login_info['ssn'];
+
+			$this->orgnr = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
 			
 			if(!$this->ssn)
 			{
@@ -165,7 +167,7 @@
 			);
 
 
-			$delegate_data = $this->bo->so->get_delegate($this->ssn);
+			$delegate_data = $this->bo->so->get_delegate($this->ssn, $this->orgnr);
 
 			foreach ($delegate_data as &$entry)
 			{

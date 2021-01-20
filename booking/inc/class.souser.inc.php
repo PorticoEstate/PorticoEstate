@@ -97,7 +97,8 @@
 			}
 			return $values;
 		}
-		function get_delegate( $ssn )
+
+		function get_delegate( $ssn, $organization_number = '')
 		{
 			if(!$ssn)
 			{
@@ -108,10 +109,14 @@
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
 
-			$sql = "SELECT bb_organization.* FROM bb_delegate"
+			$sql = "SELECT DISTINCT bb_organization.* FROM bb_delegate"
 				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
 				. " WHERE ssn = '{$ssn}'";
 
+			if($organization_number)
+			{
+				$sql .= " OR organization_number = '$organization_number'";
+			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

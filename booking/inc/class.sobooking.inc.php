@@ -485,34 +485,53 @@
 
 		public function delete_booking( $id )
 		{
+			$id = (int) $id;
+
 			$db = $this->db;
 			$db->transaction_begin();
+
 			$table_name = $this->table_name . '_cost';
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
 			$table_name = $this->table_name . '_resource';
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
 			$table_name = $this->table_name . '_targetaudience';
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
 			$table_name = $this->table_name . '_agegroup';
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
+			$sql = "DELETE FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'booking' AND export_file_id IS NULL";
+			$db->query($sql, __LINE__, __FILE__);
+
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
 			return	$db->transaction_commit();
 		}
 
 		public function delete_allocation( $id )
 		{
+			$id = (int) $id;
+
 			$db = $this->db;
 			$db->transaction_begin();
+
 			$sql = "DELETE FROM bb_allocation_cost WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
 			$sql = "DELETE FROM bb_allocation_resource WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
+
+			$sql = "DELETE FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'allocation' AND export_file_id IS NULL";
+			$db->query($sql, __LINE__, __FILE__);
+
 			$sql = "DELETE FROM bb_allocation WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 			return	$db->transaction_commit();

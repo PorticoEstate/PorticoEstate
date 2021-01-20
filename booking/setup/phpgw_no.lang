@@ -164,7 +164,7 @@ primary admin	booking	no	Kontaktperson 1
 primary contact	booking	no	Kontaktperson 1
 published	booking	no	Publisert
 reject application	booking	no	Avslå søknad
-rejected	booking	no	AVVIST
+rejected	booking	no	Avslått
 resource	booking	no	Ressurs
 resource name	booking	no	Navn på ressurs
 resource schedule	booking	no	Ressurskalender
