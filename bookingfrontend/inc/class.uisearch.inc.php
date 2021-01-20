@@ -15,7 +15,8 @@
 			'query'             => true,
 			'resquery'          => true,
 			'get_all_available_buildings' => true,
-			'autocomplete_premises_and_facilities' => true
+			'autocomplete_resource_and_building' => true,
+			'get_all_towns' => true,
 		);
 
 		function __construct()
@@ -288,13 +289,17 @@
 			exit();
 		}
 
-		function autocomplete_premises_and_facilities()
+		function autocomplete_resource_and_building()
 		{
 			self::link(array(
-				'menuaction' => 'bookingfrontend.uisearch.autocomplete_premises_and_facilities',
+				'menuaction' => 'bookingfrontend.uisearch.autocomplete_resource_and_building',
 				'phpgw_return_as' => 'json'));
-			echo json_encode($this->bo->getPremisesAndFacilityAutoCompleteData());
+			echo json_encode($this->bo->getResourceAndBuildingAutoCompleteData());
 			exit();
+		}
+
+		function get_all_towns() {
+			 return execMethod('property.solocation.get_booking_part_of_towns');
 		}
 
         public function get_all_available_buildings()

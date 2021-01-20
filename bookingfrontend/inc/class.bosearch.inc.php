@@ -320,7 +320,8 @@
 							}
 						}
 					}
-					if (!$invalid_params)
+
+					if (!$invalid_params && is_array($params[$multiintparam]))
 					{
 						sort($params[$multiintparam]);
 					}
@@ -640,7 +641,7 @@
 			return $results;
 		}
 
-		public function getPremisesAndFacilityAutoCompleteData() {
+		public function getResourceAndBuildingAutoCompleteData() {
 			$sql = "SELECT DISTINCT bb_rescategory.name AS names,
 					'lokale' AS type,
 					'bookingfrontend.uiresource.show' AS menuaction,
@@ -649,7 +650,7 @@
 					WHERE bb_rescategory.active=1
 					UNION
 					SELECT DISTINCT bb_building.name AS names,
-					'bygg' AS type,
+					'anlegg' AS type,
 					'bookingfrontend.uibuilding.show' AS menuaction,
 					bb_building.id AS id
 					FROM bb_building

@@ -491,11 +491,22 @@ input[type=submit] {
     background-color: #DDDDFF;
     padding: 40px;
     width:100%;
-    text-align: center;
+    text-align: center !important;
 }
+
+.searchContainerStyle {
+	width: 755px;
+	height: 348px;
+	margin: 0 325px 0 0;
+	opacity: 0.24;
+	border-radius: 80px;
+	background-color: #ffffff;
+}
+
 .pageContentWrapper{
     margin:auto;
     max-width: 1240px;
+	overflow: hidden;
 }
 #searchContainer #searchWrapper{
     margin-bottom: 20px;
@@ -505,7 +516,6 @@ input[type=submit] {
     display:inline-block;
     max-width: 350px;
     width:100%;
-    background: white;
     border-radius: 12px;
 }
 
@@ -516,11 +526,6 @@ input[type=submit] {
     max-width: 350px;
     width:100%;
     border-radius:12px;
-    background: white;
-}
-
-#locationFilter, #dateFilter{
-    width:100%;
 }
 
 .activityRow{
@@ -623,20 +628,41 @@ body{
 .activityRow *{
     display:inline-block;
 }
-.headerText{
-  font-family: Martel;
-  font-size: 2em;
-  font-weight: 900;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #3a3a4c;
-  padding-left:15px;
+
+
+.bodySection .input-group {
+}
+
+.headerText {
+	font-family: Martel;
+	font-size: 48px;
+	font-weight: 900;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	text-align: center;
+	color: #3a3a4c;
 }
 
 .headerText.headerEvent{
-	font-size: 1.5em;
+	font-size: 32px;
+	text-align: left;
+}
+
+.headerText.headerResult{
+	font-size: 32px;
+	border-bottom: 1px solid;
+	overflow: hidden
+}
+
+.headerResultText {
+	float: left;
+}
+
+.headerResultNumb {
+	float: right;
+	text-align: right;
 }
 
 .titleContainer{
@@ -674,23 +700,52 @@ body{
     display: flex;
 }
 #searchWrapper{
-    background-color: white;
     border-radius: 12px;
 }
 #searchResultList{
     flex:1;
 }
-#mainSearchInput, #locationFilter, .dateFilter, .timeFilter  {
-    background: url("https://flaticons.net/custom.php?i=eN7tlTrkWDgSRI9IbIjAhwvjQ4un&format=png&size=18") no-repeat scroll 9px 9px;
-    padding-left:50px;
-    border-radius: 7px;
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-    border: solid 1px #28358f;
- }
 
- #locationFilter{
-        background: url("https://flaticons.net/custom.php?i=6v5IxcYlPe7uEIAIZIG9h9YljJuV&format=png&size=18") no-repeat scroll 9px 9px;
- }
+.mainSearchInput, .locationFilter, .dateFilter {
+	padding: 16px 0px 16px 49px;
+	border-radius: 12px;
+	box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+	border: solid 1px #28358f;
+	background-color: #ffffff !important;
+	font-family: Rubik;
+	font-size: 1rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.25;
+	letter-spacing: normal;
+	color: #3a3a4c;
+}
+
+.mainSearchInput {
+	margin: auto;
+	display: block;
+	background: url(../img/search.svg) no-repeat scroll 16px 16px;
+	background-size: 20px;
+	width: 576px;
+	margin-bottom: 20px;
+}
+
+.locationFilter {
+	float: right;
+	width: 278px;
+	background: url(../img/where.svg) no-repeat scroll 16px 15px;
+	background-size: 15px;
+}
+
+.dateFilter {
+	float: left;
+	width: 278px;
+	background: url(../img/cal-search.svg) no-repeat scroll 16px 14px;
+	background-size: 20px;
+}
+
+
  .collapseModal{
        margin-top: 15px;
        border-radius: 6px;
@@ -717,9 +772,6 @@ body{
  }
  .checkWrapper input[type="checkbox"]{
      margin-right:10px;
- }
- .dateFilter{
-             background: url("https://flaticons.net/custom.php?i=nW4TPzHEjV9JSjIMI4IplCoa3VMfv&format=png&size=18") no-repeat scroll 9px 9px;
  }
 
  .timeFilter{
@@ -756,31 +808,30 @@ body{
   line-height: 1.33;
   letter-spacing: normal;
  }
- .greenBtn{
-	 cursor:pointer;
-  	border-radius: 36px;
-  	padding:7px;
-  	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.24);
-  	border-style: solid;
-  	border-width: 1px;
-  	border-image-slice: 1;
-  	background-image: linear-gradient(to bottom, #99ffc9, #99ffc9), linear-gradient(to bottom, #c2ffdf, #00ff77);
-  	background-origin: border-box;
-/*  background-clip: content-box, border-box; */
-  	font-family: Rubik;
-  	font-weight: 500;
-  	font-stretch: normal;
-  	font-style: normal;
-  	line-height: 1.33;
-  	letter-spacing: normal;
-  	color: #3a3a4c;
-}
+ .greenBtn {
+	 width: 325px;
+	 margin: 20px 0 12px;
+	 padding: 10px 0 10px 0;
+	 border-radius: 24px;
+	 border: none;
+	 background-color: #99ffc9;
+	 font-family: Rubik;
+	 font-size: 18px;
+	 font-weight: normal;
+	 font-stretch: normal;
+	 font-style: normal;
+	 line-height: 1.56;
+	 letter-spacing: normal;
+	 color: #0b1214;
+	 cursor: pointer;
+	 text-align: center;
+ }
 
 .greenBtn:focus { outline-style: none; }
 
- #searchBtn{
-  margin-top:20px;
-  width: 200px;
+
+.greenBtn:hover {
+	background-color: #80FFBB;
 }
 
 /* / AK CUSTOM */
@@ -847,6 +898,425 @@ filterbokser søkesiden
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
+.eventCard {
+	border-radius: 12px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+	margin: 16px 0 0 0;
+	list-style-type: none;
+}
+
+.verticalLine {
+	width: 1px;
+	height: 76px;
+	margin: 8px 0 0 0;
+	background-color: #c2c2ff;
+}
+
+.eventCalIcon {
+	content: url(../img/when-event.svg);
+	position: absolute;
+	left: 20px;
+	top:26px;
+	bottom: 34px;
+	width: 52px;
+	height: 52px;
+	object-fit: contain;
+}
+
+.formattedEventDate {
+	position: absolute;
+	float: left;
+	left: 62px;
+	top: 23px;
+	bottom: 42px;
+	font-size: 20px;
+	font-weight: 600;
+	width: 86px;
+	height: 28px;
+	font-family: Rubik;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #0b1214;
+}
+
+.eventMonthTag {
+	position: absolute;
+	bottom: 20px;
+	top: 48px;
+	left: 44px;
+	font-size: 16px;
+	color: #0b1214;
+	font-family: Rubik;
+}
+
+.eventNameContainer {
+	position: absolute;
+	float: left;
+	left: 32px;
+	top: 32px;
+	bottom: 32px;
+	font-size: 21px;
+	font-weight: 500;
+	color: #0b1214;
+	display: block;
+	margin: 0 auto;
+	width: 455px;
+	height: 28px;
+	font-family: Rubik;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+}
+
+.eventTimeContainer {
+	position: absolute;
+	right: 32px;
+	bottom: 334px;
+	top: 36px;
+	width: 120px;
+	height: 24px;
+	font-size: 16px;
+	text-align: right;
+	color: #0b1214;
+	font-family: Rubik;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+}
+
+.eventClockIcon {
+	position: absolute;
+	content: url(../img/time-clock.svg);
+	left: 24px;
+	top: 2px;
+}
+
+.locationContainer {
+	position: absolute;
+	top: 19px;
+	left: 37px;
+	text-overflow: ellipsis;
+	font-family: Rubik;
+	line-height: 1.56;
+	color: #0b1214;
+}
+
+.locationName {
+	word-wrap: break-word;
+	font-size: 14px;
+	line-height: 1.56;
+	color: #0b1214;
+	white-space: pre;
+	overflow: hidden;
+}
+
+.locationName:before {
+	content: url(../img/pin.svg);
+	padding-right: 7px;
+}
+
+.orgNameContainer {
+	position: absolute;
+	left: 37px;
+	display: flex;
+	bottom: 19px;
+	font-family: Rubik;
+	line-height: 1.56;
+	color: #0b1214;
+}
+
+.orgName {
+	word-wrap: break-word;
+	font-size: 14px;
+	line-height: 1.56;
+	color: #0b1214;
+	white-space: pre;
+	overflow: hidden;
+}
+
+.orgName:before {
+	content: url(../img/event-organizer.svg);
+	padding-right: 7px;
+}
+
+.allEventsBtn {
+	float: right;
+	margin-top: 30px;
+	display: flex;
+	width: 287px;
+	padding: 8px 32px 8px 40px;
+	border-radius: 22px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+	font-family: Rubik;
+	font-size: 17px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.4;
+	letter-spacing: normal;
+	color: #3a3a4c;
+	cursor: pointer;
+}
+
+.allEventsBtn:hover {
+	background-color: #F2F2F2;
+}
+
+.allEventsIcon {
+	content: url(../img/chevy-side.svg);
+	padding-left: 30px;
+}
+
+.timeContainer {
+	display: flex;
+}
+
+.horizontalgap {
+	float: left;
+	overflow: hidden;
+	height: 0px;
+	width: 30px;
+}
+
+.dateFilterResult {
+	background: url(../img/cal-filter.svg) no-repeat scroll 7px 7px;
+	margin: 0 0 12px 0;
+	padding: 14px 0 8px 50px;
+	border-radius: 6px;
+	border: solid 1px #c2c2ff;
+	font-family: Rubik;
+}
+
+.timeInput {
+	background: url(../img/time-filter.svg) no-repeat scroll 7px 7px;
+	margin:  0 0 12px 0;
+	padding: 12px 20px 8px 50px;
+	border-radius: 6px;
+	border: solid 1px #c2c2ff;
+	font-family: Rubik;
+}
+
+.searchResultContainer{
+	display: flex;
+	overflow: auto;
+
+}
+
+.filterContainer {
+	width: 33%;
+	height: max-content;
+	margin: 24px 24px 0 0;
+	padding: 24px;
+	padding-bottom: 70px;
+	border-radius: 12px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+	float: left;
+}
+
+.resultContainer {
+	width: 67%;
+	float: right;
+}
+
+.resultCard {
+	margin: 24px 0 0 0;
+	padding: 16px 0 16px 32px;
+	border-radius: 12px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+}
+
+.resultText {
+	max-width: max-content;
+	font-family: Rubik;
+	font-size: 1.2rem;
+	font-weight: 500;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #0b1214;
+}
+
+.resultTextLocation {
+	font-family: Rubik;
+	font-size: 0.9rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.5;
+	letter-spacing: normal;
+	color: #0b1214;
+	margin-top: 5px;
+}
+
+.resultTextLocation:before {
+	content: url(../img/pin.svg);
+	padding-right: 4px;
+}
+
+.accordionFilter {
+	margin: 0 0 12px;
+	border-radius: 6px;
+	background-color: #f5f5ff;
+}
+
+.accordionHeader {
+	padding: 10px 0 35px;
+}
+
+.accordionHeaderText {
+	margin: 0 0 0 20px;
+	font-family: Rubik;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.56;
+	letter-spacing: normal;
+	color: #0b1214;
+	float: left;
+}
+
+.openArrowIcon {
+	float: right;
+	content: url(../img/chevy-open.svg);
+	padding: 8px 20px 0 0 ;
+}
+
+.closedArrowIcon {
+	float: right;
+	content: url(../img/chevy-closed.svg);
+	padding: 8px 20px 0 0 ;
+}
+
+.accordionHeaderUnderline {
+	clear: both;
+	height: 1px;
+	background-color: #c2c2ff;
+}
+
+.accordionContent {
+	padding: 15px 0 15px;
+	border-radius: 6px;
+	background-color: #f5f5ff;
+}
+
+.checkboxContainer {
+	margin: 0 0 6px 20px;
+	color: #ffffff;
+	display: block;
+	position: relative;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.checkboxText {
+	margin-left: 35px;
+	font-family: Rubik;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.33;
+	letter-spacing: normal;
+	color: #0b1214;
+}
+
+.checkboxContainer input[type='checkbox'] {
+	/*visibility: hidden;*/
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+.checkmark {
+	position: absolute;
+	background-color: #FFFFFF;
+	width: 24px;
+	height: 24px;
+	border-radius: 4px;
+	border: solid 1px #3a3a4c;
+}
+
+.checkboxContainer:hover input[type='checkbox'] ~ .checkmark {
+	background-color: #ccc;
+}
+
+.checkboxContainer input[type='checkbox']:checked ~ .checkmark {
+	background-color: #3a3a4c;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+	text-align: center;
+	content: url(../img/check.svg);
+	display: none;
+	padding-top: 3px;
+}
+
+/* Show the checkmark when checked */
+.checkboxContainer input[type='checkbox']:checked ~ .checkmark:after {
+	display: block;
+}
+
+.applyFilterBtn {
+	margin: 20px 0 12px;
+	padding: 10px 0 10px 0;
+	border-radius: 24px;
+	background-color: #99ffc9;
+	font-family: Rubik;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.56;
+	letter-spacing: normal;
+	color: #0b1214;
+	cursor: pointer;
+	text-align: center;
+}
+
+.applyFilterBtn:hover {
+	background-color: #80FFBB;
+}
+
+.removeFilterBtn {
+	margin: 12px 0 0;
+	padding: 4px 0 4px 0;
+	border-radius: 12px;
+	border: solid 1px #c2c2ff;
+	background-color: #ffffff;
+	font-family: Rubik;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.56;
+	letter-spacing: normal;
+	color: #0b1214;
+	cursor: pointer;
+	text-align: center;
+}
+
+.removeFilterBtn:hover {
+	background-color: #F2F2F2;
+}
+
 
 /* #searchmotor  {
      border: 1px solid #26348B  !important;
@@ -1690,7 +2160,7 @@ textarea:focus{
 
 .bygg-li {
     width: 50%;
-    float: right;
+    float: left;
     background-color: #f9f9f9;
     padding: 0.5em;
     border-right: 5px #fff solid;
@@ -1699,11 +2169,106 @@ textarea:focus{
 
 .org-li {
     width: 50%;
-    float: left;
+    float: right;
     background-color: #f9f9f9;
     padding: 0.5em;
     overflow: hidden;
 }
+
+.lokale-li {
+	width: 50%;
+	float: left;
+	background-color: #ffffff;
+	border-right: 1px #c2c2ff solid;
+	overflow: hidden;
+	border-bottom-left-radius: 6px;
+	border-top-left-radius: 6px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.anlegg-li {
+	width: 50%;
+	float: right;
+	background-color: #ffffff;
+	overflow: hidden;
+	border-bottom-right-radius: 6px;
+	border-top-right-radius: 6px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.bk .autocompleter {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 576px;
+	float: none;
+	text-align: left;
+	top: 77%;
+	padding: 1px;
+	border-radius: 6px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	border: solid 1px #c2c2ff;
+	background-color: #ffffff;
+}
+
+.bk .autocompleter-show {
+	padding: 0
+}
+
+.bk .category-title {
+	font-family: Rubik;
+	font-size: 14px;
+	font-weight: normal !important;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.56;
+	letter-spacing: normal;
+	color: #8c8cb8;
+	padding: 0.5em 0.5em 0.5em 0.8em !important;
+
+}
+
+.bk li {
+	border-top: 1px solid #c2c2ff;
+	font-family: Rubik;
+	font-size: 16px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.4;
+	letter-spacing: normal;
+	color: #0b1214;
+}
+
+.bk li strong {
+	font-weight: 500;
+	color: #83338f;
+}
+
+.bk .anlegg-li li span {
+	display: inline-block;
+	max-width: 230px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: bottom;
+}
+
+.anlegg-li li:after {
+	content: url(../img/chevy-side.svg);
+	float: right;
+}
+
+.bk .autocompleter-item {
+	padding: 0.5em 0.5em 0.5em 0.8em;
+}
+
+.bk .hiddenText {
+	color: transparent;
+}
+
 
 .autocompleter-list .category-title{
     font-weight: bold;
