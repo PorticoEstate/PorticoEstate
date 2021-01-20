@@ -643,6 +643,11 @@
 					$buffer[$i]['mvakode']	 = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
 				}
 
+				if(!empty($order_info['tax_code']))
+				{
+					$buffer[$i]['mvakode']	 = $order_info['tax_code'];
+				}
+
 				$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
 
 				$buffer[$i]['merknad']		 = $merknad;
@@ -760,7 +765,9 @@
 			$order_info	 = array();
 			$toarray	 = array();
 			$order_id	 = (int)$order_id;
-			$sql		 = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,fm_workorder.account_id,fm_project.ecodimb,fm_workorder.category, fm_workorder.user_id,fm_workorder.title"
+			$sql		 = "SELECT fm_workorder.location_code,fm_workorder.vendor_id,"
+				. "fm_workorder.account_id,fm_project.ecodimb,fm_workorder.category,"
+				. "fm_workorder.user_id,fm_workorder.title, fm_workorder.tax_code"
 				. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id WHERE fm_workorder.id = {$order_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($this->db->next_record())
@@ -779,6 +786,7 @@
 			$order_info['dimb']			 = $this->db->f('ecodimb');
 			$order_info['dime']			 = $this->db->f('category');
 			$order_info['title']		 = $this->db->f('title', true);
+			$order_info['tax_code']		 = $this->db->f('tax_code');
 
 			$janitor_user_id		 = $this->db->f('user_id');
 			$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;

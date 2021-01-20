@@ -763,7 +763,12 @@
 						}
 					}
 				}
-				if (!$audval_present)
+
+				if($is_partial1 && !$audval_present)
+				{
+					$application['audience'] = -1; // Dummy
+				}
+				else if (!$audval_present)
 				{
 					$errors['audience'] = lang("Select a target audience");
 				}
@@ -1181,7 +1186,7 @@
 					{
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code');
+							'responsible_city','responsible_street','responsible_zip_code', 'audience');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update
@@ -1422,6 +1427,19 @@
 			$this->flash_form_errors($errors);
 			$partial2['cancel_link'] = self::link(array());
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
+
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+			if(!$bouser->is_logged_in())
+			{
+				$bouser->log_in();
+			}
+
+			$org_id = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+
+			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $org_id);
+
+//			_debug_array($delegate_data);
 
 			/**
 			 * This one is for bookingfrontend

@@ -1176,10 +1176,12 @@
 					}
 
 					$checkDate = clone $resource['from'];
+					$checkDate->setTimezone($DateTimeZone);
 					$checkDate->setTime($defaultStartHour, 0, 0);
 
 //					$limitDate = clone ($to);
 					$limitDate = clone ($resource['to']);
+					$limitDate->setTimezone($DateTimeZone);
 
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
@@ -1244,8 +1246,8 @@
 									'menuaction'	 => 'bookingfrontend.uiapplication.add',
 									'resource_id'	 => $resource['id'],
 									'building_id'	 => $building_id,
-									'start'			 => $StartTime->getTimestamp() . '000',
-									'end'			 => $endTime->getTimestamp() . '000',
+									'from_[]'		 => $StartTime->format('Y-m-d H:i:s'),
+									'to_[]'			 => $endTime->format('Y-m-d H:i:s'),
 									'simple'		 => true
 								]
 							];

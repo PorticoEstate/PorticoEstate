@@ -217,6 +217,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td>{lang_require_tax_code_at_workorder}:</td>
+				<td>
+					<select name="newsettings[workorder_require_tax_code]">
+						<option value="" {selected_workorder_require_tax_code_}>NO</option>
+						<option value="1" {selected_workorder_require_tax_code_1}>YES</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td>{lang_require_vendor_at_workorder}:</td>
 				<td>
 					<select name="newsettings[workorder_require_vendor]">

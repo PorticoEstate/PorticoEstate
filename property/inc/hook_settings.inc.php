@@ -45,6 +45,7 @@
 	$status_list_workorder	 = execMethod('property.soworkorder.select_status_list');
 	$status_list_project	 = execMethod('property.soproject.select_status_list');
 
+	$_status_tts = array();
 	if ($status_list_tts)
 	{
 		foreach ($status_list_tts as $entry)
@@ -52,7 +53,9 @@
 			$_status_tts[$entry['id']] = $entry['name'];
 		}
 	}
+	unset($entry);
 
+	$_status_workorder = array();
 	if ($status_list_workorder)
 	{
 		foreach ($status_list_workorder as $entry)
@@ -60,7 +63,9 @@
 			$_status_workorder[$entry['id']] = $entry['name'];
 		}
 	}
+	unset($entry);
 
+	$_status_project = array();
 	if ($status_list_project)
 	{
 		foreach ($status_list_project as $entry)
@@ -68,8 +73,20 @@
 			$_status_project[$entry['id']] = $entry['name'];
 		}
 	}
+	unset($entry);
 
+	$tax_code_list = execMethod('property.sogeneric.get_list', array('type'=> 'tax', 'order' => 'id','id_in_name' => 'num'));
 
+	$_tax_code_list = array();
+	if ($tax_code_list)
+	{
+		foreach ($tax_code_list as $entry)
+		{
+			$_tax_code_list[$entry['id']] = $entry['name'];
+		}
+	}
+
+	create_select_box('Default tax code', 'default_tax_code', $_tax_code_list, 'Default tax code');
 	create_select_box('Show overdue projects on main screen', 'mainscreen_show_project_overdue', $yes_and_no, 'Link to projects you are assigned to');
 	create_select_box('show open tenant claims on main screen', 'mainscreen_show_open_tenant_claim', $yes_and_no, 'Link to claims you are assigned to');
 

@@ -3274,8 +3274,8 @@ JS;
 			{
 				$value['edit']		 = '<a href="javascript:showlightbox_edit_inventory(' . $value['location_id'] . ',' . $value['id'] . ',' . $value['inventory_id'] . ')">' . lang('edit') . '</a>';
 				$value['calendar']	 = '<a href="javascript:showlightbox_show_calendar(' . $value['location_id'] . ',' . $value['id'] . ',' . $value['inventory_id'] . ')">' . lang('calendar') . '</a>';
-				$value['inventory']	 = number_format($value['inventory'], 0, ',', ' ');
-				$value['allocated']	 = number_format($value['allocated'], 0, ',', ' ');
+				$value['inventory']	 = number_format((float)$value['inventory'], 0, ',', ' ');
+				$value['allocated']	 = number_format((float)$value['allocated'], 0, ',', ' ');
 			}
 
 			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);

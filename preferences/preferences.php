@@ -463,6 +463,10 @@
 		/* Don't use a global variable for this ... */
 		define('HAS_ADMIN_RIGHTS', 1);
 	}
+	else
+	{
+		define('HAS_ADMIN_RIGHTS', 0);
+	}
 
 	/* Makes the ifs a little nicer, plus ... this will change once the ACL manager is in place */
 	/* and is able to create less powerfull admins.  This will handle the ACL checks for that (jengo) */
