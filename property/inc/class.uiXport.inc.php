@@ -382,7 +382,7 @@
 					{
 						$content[$i]['row'][$k]['align'] = 'right';
 						$sum							 = $sum + $record[$key];
-						$content[$i]['row'][$k]['value'] = number_format($record[$key], 2, ',', '');
+						$content[$i]['row'][$k]['value'] = number_format((float)$record[$key], 2, ',', '');
 					}
 					else if ($key == 'stedsnavn')
 					{
@@ -462,7 +462,7 @@
 				'lang_budget_responsible'	 => lang('Budget Responsible'),
 				'budsjettansvarligid'		 => $invoice_common['budget_responsible'],
 				'lang_sum'					 => lang('Sum'),
-				'sum'						 => number_format($sum, 2, ',', ''),
+				'sum'						 => number_format((float)$sum, 2, ',', ''),
 				'table_header'				 => $table_header,
 				'values'					 => $content,
 				'table_add'					 => $table_add

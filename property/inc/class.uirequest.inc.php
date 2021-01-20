@@ -170,10 +170,10 @@
 
 			$result_data['total_records']			 = $this->bo->total_records;
 			$result_data['draw']					 = $draw;
-			$result_data['amount_investment']		 = number_format($this->bo->sum_investment, 0, ',', '.');
-			$result_data['amount_operation']		 = number_format($this->bo->sum_operation, 0, ',', '.');
-			$result_data['amount_potential_grants']	 = number_format($this->bo->sum_potential_grants, 0, ',', '.');
-			$result_data['consume']					 = number_format($this->bo->sum_consume, 0, ',', '.');
+			$result_data['amount_investment']		 = number_format((float)$this->bo->sum_investment, 0, ',', '.');
+			$result_data['amount_operation']		 = number_format((float)$this->bo->sum_operation, 0, ',', '.');
+			$result_data['amount_potential_grants']	 = number_format((float)$this->bo->sum_potential_grants, 0, ',', '.');
+			$result_data['consume']					 = number_format((float)$this->bo->sum_consume, 0, ',', '.');
 
 			return $this->jquery_results($result_data);
 		}
@@ -1735,13 +1735,13 @@ JS;
 				'lang_power_meter_statustext'		 => lang('Enter the power meter'),
 				'value_power_meter'					 => $values['power_meter'],
 				'lang_budget'						 => lang('Budget'),
-				'value_budget'						 => number_format($values['budget'], 0, ',', ' '),
+				'value_budget'						 => number_format((float)$values['budget'], 0, ',', ' '),
 				'lang_budget_statustext'			 => lang('Enter the budget'),
-				'value_diff'						 => number_format($value_diff, 0, ',', ' '),
-				'value_diff2'						 => number_format($value_diff2, 0, ',', ' '),
-				'value_amount_potential_grants'		 => number_format($values['amount_potential_grants'], 0, ',', ''),
-				'value_amount_investment'			 => number_format($values['amount_investment'], 0, ',', ''),
-				'value_amount_operation'			 => number_format($values['amount_operation'], 0, ',', ''),
+				'value_diff'						 => number_format((float)$value_diff, 0, ',', ' '),
+				'value_diff2'						 => number_format((float)$value_diff2, 0, ',', ' '),
+				'value_amount_potential_grants'		 => number_format((float)$values['amount_potential_grants'], 0, ',', ''),
+				'value_amount_investment'			 => number_format((float)$values['amount_investment'], 0, ',', ''),
+				'value_amount_operation'			 => number_format((float)$values['amount_operation'], 0, ',', ''),
 				'loc1'								 => $values['location_data']['loc1'],
 				'location_data2'					 => $location_data,
 				//		'location_type'						=> 'form2',
@@ -1794,9 +1794,9 @@ JS;
 						'id_in_name' => 'num', 'filter'	 => $_filter_buildingpart))),
 				'value_consume'						 => isset($receipt['error']) ? $values['consume_value'] : '',
 				'value_multiplier'					 => $values['multiplier'],
-				'value_total_cost_estimate'			 => $values['multiplier'] ? number_format(($values['budget'] * $values['multiplier']), 0, ',', ' ') : '',
+				'value_total_cost_estimate'			 => $values['multiplier'] ? number_format((float)($values['budget'] * $values['multiplier']), 0, ',', ' ') : '',
 				'value_representative'				 => $values['representative'],
-				'value_total_cost_estimate'			 => $values['representative'] ? number_format(($values['budget'] * $values['representative']), 0, ',', ' ') : '',
+				'value_total_cost_estimate'			 => $values['representative'] ? number_format((float)($values['budget'] * $values['representative']), 0, ',', ' ') : '',
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => !!$id,

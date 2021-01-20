@@ -167,8 +167,8 @@
 						'BuyerProductDescr'	 => $line['descr'], //'Kopipapir',
 						'UnitCode'			 => 'STK',
 						'Quantity'			 => 1,
-						'Price'				 => number_format($line['price'], 2, '.', ''),
-						'LineTotal'			 => number_format($line['price'], 2, '.', ''),
+						'Price'				 => number_format((float)$line['price'], 2, '.', ''),
+						'LineTotal'			 => number_format((float)$line['price'], 2, '.', ''),
 						'DetailInfo'		 => $DetailInfo
 					);
 

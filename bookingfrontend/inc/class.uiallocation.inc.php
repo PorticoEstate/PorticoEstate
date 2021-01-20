@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uiallocation');
+	use Kigkonsult\Icalcreator\Vcalendar;
 
 	class bookingfrontend_uiallocation extends booking_uiallocation
 	{
@@ -415,6 +416,9 @@
 			$allocation['when'] = $when;
 			$allocation['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
 						'id' => $allocation['id']));
+
+			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'allocation','reservation_id' => $allocation['id']));
+
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
 			
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))

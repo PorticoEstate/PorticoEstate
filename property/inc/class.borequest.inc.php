@@ -741,8 +741,8 @@
 				}
 				else if ($value['status'] == 'B' && $value['new_value'])
 				{
-					$record_history[$i]['value_new_value']	 = number_format($value['new_value'], 0, ',', ' ');
-					$record_history[$i]['value_old_value']	 = number_format($value['old_value'], 0, ',', ' ');
+					$record_history[$i]['value_new_value']	 = number_format((float)$value['new_value'], 0, ',', ' ');
+					$record_history[$i]['value_old_value']	 = number_format((float)$value['old_value'], 0, ',', ' ');
 				}
 				else if ($value['status'] != 'O' && $value['new_value'])
 				{

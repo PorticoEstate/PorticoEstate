@@ -234,6 +234,7 @@
 				'image/gif'
 			);
 
+			$sort_array = array();
 			$z = 0;
 			foreach ($values as $_entry)
 			{
@@ -262,6 +263,7 @@
 					unset($tag);
 				}
 
+				$sort_array[] = $_entry['name'];
 				$content_files[] = array(
 					'file_id'		 => $_entry['file_id'],
 					'tags'			 => $tags,
@@ -282,6 +284,8 @@
 				}
 				$z ++;
 			}
+
+			array_multisort($sort_array, SORT_ASC, $content_files);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -359,6 +363,9 @@
 			$lang_view_file		 = lang('click to view file');
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
+
+			$sort_array = array();
+
 			foreach ($values['files'] as $_entry)
 			{
 				$_checked = '';
@@ -366,6 +373,7 @@
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
@@ -398,6 +406,8 @@
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
+
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
 					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
@@ -415,6 +425,8 @@
 				}
 				$z ++;
 			}
+
+			array_multisort($sort_array, SORT_ASC, $content_attachments);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -1378,7 +1390,7 @@
 								//Not approved
 								if (!$approved)
 								{
-									phpgwapi_cache::message_set("NB: Sjekk at rammene for prosjektet er innenfor totalen av bestillingene: " . number_format($_budget_amount, 0, ".", " "), 'message');
+									phpgwapi_cache::message_set("NB: Sjekk at rammene for prosjektet er innenfor totalen av bestillingene: " . number_format((float)$_budget_amount, 0, ".", " "), 'message');
 
 									$substitute = $sosubstitute->get_substitute($_account_id);
 
@@ -2157,8 +2169,8 @@
 				$sum_estimated_cost = $values['calculation'];
 			}
 
-			$sum_estimated_cost		 = number_format($sum_estimated_cost, 2, $this->decimal_separator, '.');
-			$values['calculation']	 = number_format($values['calculation'], 2, $this->decimal_separator, '.');
+			$sum_estimated_cost		 = number_format((float)$sum_estimated_cost, 2, $this->decimal_separator, '.');
+			$values['calculation']	 = number_format((float)$values['calculation'], 2, $this->decimal_separator, '.');
 
 			$link_data = array
 				(
@@ -2245,7 +2257,7 @@
 					'resizeable' => true),
 				array('key'		 => 'picture',
 					'label'		 => lang('picture'),
-					'sortable'	 => false,
+					'sortable'	 => true,
 					'resizeable' => true,
 					'formatter'	 => 'JqueryPortico.showPicture'
 				),
@@ -2400,12 +2412,12 @@ JS;
 						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $files_def,
+
 				'tabletools' => $tabletools,
 				'config'	 => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0, 'asc'))),
 				)
 			);
 
@@ -2590,13 +2602,13 @@ JS;
 					'label'			 => lang('amount'),
 					'sortable'		 => true,
 					'className'		 => 'right',
-					'value_footer'	 => number_format($amount, 2, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$amount, 2, $this->decimal_separator, '.')),
 //				array(
 //					'key' => 'approved_amount',
 //					'label' => lang('approved amount'),
 //					'sortable' => true,
 //					'className' => 'right',
-//					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+//					'value_footer' => number_format((float)$approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key'		 => 'period',
 					'label'		 => lang('period'),
@@ -2674,10 +2686,8 @@ JS;
 				'data'		 => json_encode($attachmen_list),
 				'ColumnDefs' => $attachmen_def,
 				'config'	 => array(
-					array(
-						'disableFilter' => true),
-					array(
-						'disablePagination' => true)
+					array('disableFilter' => true),
+					array('disablePagination' => true),
 				)
 			);
 
@@ -2830,42 +2840,42 @@ JS;
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($budget, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$budget, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'sum_orders',
 					'label'			 => lang('order'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($sum_orders, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$sum_orders, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'sum_oblications',
 					'label'			 => lang('sum orders'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($sum_oblications, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$sum_oblications, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'actual_cost',
 					'label'			 => lang('actual cost'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($actual_cost, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$actual_cost, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'diff',
 					'label'			 => lang('difference'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($diff, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$diff, 0, $this->decimal_separator, '.')),
 				array(
 					'key'			 => 'deviation_period',
 					'label'			 => lang('deviation'),
 					'sortable'		 => false,
 					'className'		 => 'right',
 					'formatter'		 => 'JqueryPortico.FormatterAmount0',
-					'value_footer'	 => number_format($deviation, 0, $this->decimal_separator, '.')),
+					'value_footer'	 => number_format((float)$deviation, 0, $this->decimal_separator, '.')),
 				array(
 					'key'		 => 'deviation_acc',
 					'label'		 => lang('deviation') . '::' . lang('accumulated'),
@@ -3135,6 +3145,9 @@ JS;
 			$lang_select_file	 = lang('Check to attach file');
 			$lang_workorder		 = lang('workorder');
 
+			$sort_array = array();
+			$sort_array2 = array();
+
 			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
@@ -3143,6 +3156,7 @@ JS;
 				{
 					$_checked = 'checked="checked"';
 				}
+				$sort_array[] = $_entry['name'];
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
@@ -3152,6 +3166,7 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$sort_array2[] = $_entry['name'];
 					$content_attachments[$z]['file_name']	 = $_entry['name'];
 					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
 					$content_attachments[$z]['img_url']		 = self::link(array(
@@ -3177,6 +3192,7 @@ JS;
 
 			foreach ($files as $_entry)
 			{
+				$sort_array[] = $_entry['name'];
 
 				$_checked = '';
 				if (in_array($_entry['file_id'], $file_attachments))
@@ -3191,6 +3207,7 @@ JS;
 
 				if($bofiles->is_image("{$bofiles->rootdir}{$_entry['directory']}/{$_entry['name']}"))
 				{
+					$sort_array2[] = $_entry['name'];
 					$content_attachments[$z]['file_name']	 = $_entry['name'];
 					$content_attachments[$z]['img_id']		 = $_entry['file_id'];
 					$content_attachments[$z]['img_url']		 = self::link(array(
@@ -3209,6 +3226,9 @@ JS;
 			}
 			unset($_entry);
 
+			array_multisort($sort_array, SORT_ASC, $content_attachments);
+			array_multisort($sort_array2, SORT_ASC, $image_list);
+
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_8',
@@ -3217,7 +3237,8 @@ JS;
 				'data'		 => json_encode($content_attachments),
 				'config'	 => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'asc'))),
 				)
 			);
 
@@ -3392,8 +3413,12 @@ JS;
 				'decimal_separator'						 => $this->decimal_separator,
 				'value_service_id'						 => $values['service_id'],
 				'value_service_name'					 => $this->_get_eco_service_name($values['service_id']),
-				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(array(
-						'type'		 => 'tax', 'selected'	 => $values['tax_code'], 'order'		 => 'id',
+				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
+				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
+					array(
+						'type' => 'tax',
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'order'		 => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list'							 => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id'])),
 				'value_unspsc_code'						 => $unspsc_code,

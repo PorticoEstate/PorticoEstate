@@ -173,7 +173,7 @@ primary admin	booking	nn	Kontaktperson 1
 primary contact	booking	nn	Kontaktperson 1
 published	booking	nn	Publisert
 reject application	booking	nn	Avslå søknad
-rejected	booking	nn	AVVIST
+rejected	booking	nn	Avslått
 resource	booking	nn	Ressurs
 resource name	booking	nn	Namn på ressurs
 resource schedule	booking	nn	Ressurskalender

@@ -1077,7 +1077,7 @@
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$result_data['sum_budget']		 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_budget']		 = number_format((float)$this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
@@ -1288,7 +1288,7 @@
 			$result_data					 = array('results' => $content);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$result_data['sum_budget']		 = number_format($this->bo->sum_budget_cost, 0, ',', ' ');
+			$result_data['sum_budget']		 = number_format((float)$this->bo->sum_budget_cost, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}

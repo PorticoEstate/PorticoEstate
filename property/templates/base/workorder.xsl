@@ -863,28 +863,31 @@
 									<xsl:apply-templates select="order_dim1_list/options"/>
 								</select>
 							</div>
-							<div class="pure-control-group">
-								<xsl:variable name="lang_tax_code">
-									<xsl:value-of select="php:function('lang', 'tax code')"/>
-								</xsl:variable>
-								<label>
-									<xsl:value-of select="$lang_tax_code"/>
-								</label>
-								<select name="values[tax_code]">
-									<xsl:attribute name="title">
-										<xsl:value-of select="$lang_tax_code"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="$lang_tax_code"/>
-									</xsl:attribute>
-									<xsl:apply-templates select="tax_code_list/options"/>
-								</select>
-							</div>
 						</xsl:when>
 					</xsl:choose>
+					<xsl:if test="collect_tax_code=1">
+
+						<div class="pure-control-group">
+							<xsl:variable name="lang_tax_code">
+								<xsl:value-of select="php:function('lang', 'tax code')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_tax_code"/>
+							</label>
+							<select name="values[tax_code]">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_tax_code"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_tax_code"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="tax_code_list/options"/>
+							</select>
+						</div>
+					</xsl:if>
 
 					<div class="pure-control-group">
 						<label for="name">

@@ -494,18 +494,18 @@
 			$table_sum[] = array
 				(
 				'lang_sum_calculation'		 => lang('Sum calculation'),
-				'value_sum_calculation'		 => number_format($sum_hour, 2, ',', ''),
+				'value_sum_calculation'		 => number_format((float)$sum_hour, 2, ',', ''),
 				'lang_addition_rs'			 => lang('Rig addition'),
-				'value_addition_rs'			 => number_format($workorder['addition_rs'], 2, ',', ''),
+				'value_addition_rs'			 => number_format((float)$workorder['addition_rs'], 2, ',', ''),
 				'lang_addition_percentage'	 => lang('Percentage addition'),
-				'value_addition_percentage'	 => number_format($addition_percentage, 2, ',', ''),
+				'value_addition_percentage'	 => number_format((float)$addition_percentage, 2, ',', ''),
 				'lang_sum_tax'				 => lang('Sum tax'),
-				'value_sum_tax'				 => number_format($sum_tax, 2, ',', ''),
+				'value_sum_tax'				 => number_format((float)$sum_tax, 2, ',', ''),
 				'lang_total_sum'			 => lang('Total sum'),
-				'value_total_sum'			 => number_format($total_sum, 2, ',', ''),
+				'value_total_sum'			 => number_format((float)$total_sum, 2, ',', ''),
 				'lang_sum_deviation'		 => lang('Sum deviation'),
-				'sum_deviation'				 => number_format($sum_deviation, 2, ',', ''),
-				'sum_result'				 => number_format($sum_result, 2, ',', '')
+				'sum_deviation'				 => number_format((float)$sum_deviation, 2, ',', ''),
+				'sum_result'				 => number_format((float)$sum_result, 2, ',', '')
 			);
 
 			$workorder_data = array
