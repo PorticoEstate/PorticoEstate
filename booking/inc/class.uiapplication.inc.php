@@ -609,7 +609,7 @@
 
 		public function add()
 		{
-			$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
 			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST', -1 );
 			$simple = phpgw::get_var('simple', 'bool');
@@ -947,11 +947,11 @@
 			$this->install_customer_identifier_ui($application);
 
 			$application['customer_identifier_types']['ssn'] = 'SSN';
-			if ($orgnr)
+			if ($organization_number)
 			{
 				$application['customer_identifier_type'] = 'organization_number';
-				$application['customer_organization_number'] = $orgnr;
-				$orgid = $this->organization_bo->so->get_orgid($orgnr);
+				$application['customer_organization_number'] = $organization_number;
+				$orgid = $this->organization_bo->so->get_orgid($organization_number);
 				$organization = $this->organization_bo->read_single($orgid);
 				if ($organization['contacts'][0]['name'] != '')
 				{
@@ -1130,9 +1130,9 @@
 				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
 			));
 
-			if(!$orgnr = phpgw::get_var('session_org_id', 'int', 'GET'))
+			if(!$organization_number = phpgw::get_var('session_org_id', 'int', 'GET'))
 			{
-				$orgnr = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);			
+				$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);			
 			}
 
 			$errors = array();
@@ -1142,6 +1142,16 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$partial2 = $this->extract_form_data();
+				
+				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
+				if ($customer_organization_number_arr)
+				{
+					$partial2['customer_organization_id']		 = $customer_organization_number_arr[0];
+					$partial2['customer_organization_number']	 = $customer_organization_number_arr[1];
+					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
+					$partial2['customer_organization_name']		 = $organization['name'];
+				}
+
 				// Application contains only contact details. Use dummy values for event fields
 				$dummyfields_string = array('building_name','name','organizer','secret','status');
 				foreach ($dummyfields_string as $field)
@@ -1185,7 +1195,8 @@
 					else
 					{
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
-							'customer_identifier_type','customer_organization_number','customer_ssn',
+							'customer_identifier_type','customer_organization_number','customer_organization_id',
+							'customer_organization_name','customer_ssn',
 							'responsible_city','responsible_street','responsible_zip_code', 'audience');
 						foreach ($partials['results'] as &$application)
 						{
@@ -1358,11 +1369,11 @@
 			}
 
 			$this->install_customer_identifier_ui($partial2);
-			if ($orgnr && $orgnr != '000000000')
+			if ($organization_number && $organization_number != '000000000')
 			{
 				$partial2['customer_identifier_type'] = 'organization_number';
-				$partial2['customer_organization_number'] = $orgnr;
-				$orgid = $this->organization_bo->so->get_orgid($orgnr);
+				$partial2['customer_organization_number'] = $organization_number;
+				$orgid = $this->organization_bo->so->get_orgid($organization_number);
 				$organization = $this->organization_bo->read_single($orgid);
 				if ($organization['contacts'][0]['name'] != '')
 				{
@@ -1435,9 +1446,9 @@
 				$bouser->log_in();
 			}
 
-			$org_id = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+			$organization_number = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
 //			_debug_array($org_id);
-			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $org_id);
+			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
 
 			$organization = array();
 			$this->install_customer_identifier_ui($organization);
