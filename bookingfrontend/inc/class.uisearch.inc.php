@@ -247,8 +247,8 @@
 		{
 			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
-			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', null);
-			$fields_multiids = array('facility_id', 'part_of_town_id');
+			$activity_id = phpgw::get_var('activity_id', 'array', 'REQUEST', null);
+			$fields_multiids = array('facility_id', 'part_of_town_id', 'activity_id');
 			$multiids = array();
 			foreach ($fields_multiids as $field)
 			{
@@ -263,7 +263,7 @@
 				}
 				$multiids[$field] = array_unique($ids);
 			}
-			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $activity_id,
+			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $multiids['activity_id'],
 				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
 		}
 

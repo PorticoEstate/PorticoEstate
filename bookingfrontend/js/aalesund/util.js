@@ -33,7 +33,10 @@ var Util = function () {
 			let toDate = new Date(to);
 			let ret;
 
-			ret = (fromDate.getHours() + ":" + fromDate.getMinutes()+"-"+toDate.getHours() + ":" + toDate.getMinutes());
+			ret = (fromDate.getHours() < 10 ? '0'+fromDate.getHours() : fromDate.getHours()) + ":"
+				+ (fromDate.getMinutes() < 10 ? '0'+fromDate.getMinutes() : fromDate.getMinutes()) + " - "
+				+ (toDate.getHours() < 10 ? '0'+toDate.getHours() : toDate.getHours()) + ":"
+				+ (toDate.getMinutes() < 10 ? '0'+toDate.getMinutes() : toDate.getMinutes());
 			return ret;
 		}
 

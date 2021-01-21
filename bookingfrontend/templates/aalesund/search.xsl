@@ -52,13 +52,14 @@
 			  </div>
 			  <div>
 				  <div id="locationWrapper">
-					  <input id="locationFilter" class="form-control locationFilter" placeholder="Bydel" aria-label="Large" list="townDatalist"/>
-					  <datalist id="townDatalist" data-bind="foreach: towns">
-						  <option data-bind="text: name"></option>
-					  </datalist>
+					  <select id="locationFilter" class="form-control locationFilter" aria-label="Large" data-bind="options: towns,
+                       optionsText: 'name',
+                       value: selectedTown,
+                       optionsCaption: 'Velg bydel'"/>
 				  </div>
+
 				  <div  id="dateWrapper">
-					  <input id="dateFilter" class="form-control dateFilter" name="datefilter" placeholder="Velg dato" aria-label="Large" autocomplete="off" value="" />
+					  <input id="dateFilter" data-bind="value: dateFilter" class="form-control dateFilter" name="datefilter" placeholder="Velg dato" aria-label="Large" autocomplete="off" value="" />
 				  </div>
 			  </div>
 			  <button id="searchBtn" class="greenBtn">Finn tilgjengelig</button>
@@ -120,7 +121,7 @@
 				  <div class="searchResultContainer">
 					  <div class="filterContainer">
 
-						  <input id="dateFilter2" class="form-control dateFilterResult" name="datefilter" aria-label="Large" autocomplete="off" placeholder="Velg dato"/>
+						  <input data-bind="value: dateFilter" class="form-control dateFilterResult" name="datefilter" aria-label="Large" autocomplete="off" placeholder="Velg dato"/>
 
 						  <div class="timeContainer">
 							  <input type="" id="fromTime" class="form-control timeInput" name="timefilter" aria-label="Large" autocomplete="off" placeholder="Fra kl"/>
@@ -145,9 +146,6 @@
 									  </label>
 								  </div>
 							  </div>
-							  <ul data-bind="foreach: selectedTowns">
-								  <li data-bind="text: name"/>
-							  </ul>
 						  </div>
 
 						  <!-- Facility filter -->
@@ -231,7 +229,7 @@
 						  </div>
 
 						  <!-- Apply filter button -->
-						  <div id="applyFilterBtn" class="applyFilterBtn">Aktiver filter</div>
+						  <div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()">Aktiver filter</div>
 
 						  <!-- Remove filter button -->
 						  <div id="removeFilterBtn" class="removeFilterBtn">Nullstill filter</div>

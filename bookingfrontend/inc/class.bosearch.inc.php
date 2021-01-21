@@ -293,10 +293,17 @@
 					{
 						$params[$intparam] = null;
 					}
-					elseif (!(is_int($params[$intparam]) && $params[$intparam] > 0))
+					else {
+						foreach ($params[$intparam] as $val) {
+							if (!(is_int($val) && $val > 0)) {
+								$invalid_params = True;
+								break;
+							}
+						}
+					}
+					if (!$invalid_params && is_array($params[$intparam]))
 					{
-						$invalid_params = True;
-						break;
+						sort($params[$intparam]);
 					}
 				}
 			}
@@ -356,6 +363,7 @@
 				}
 				// Handle the activities
 				$include_on_activity = False;
+				$activities_matched = array();
 				foreach ($resource['activities_list'] as $activity)
 				{
 					if (!array_key_exists($activity['id'], $all_activities))
@@ -363,11 +371,21 @@
 						$all_activities[$activity['id']] = array('id' => $activity['id'], 'name' => $activity['name']);
 					}
 					// Check filter criteria
-					if (isset($params['activity_id']) && $activity['id'] == $params['activity_id'])
+					if (isset($params['activity_id']) && in_array($activity['id'], $params['activity_id']))
+					{
+						$activities_matched[] = $activity['id'];
+					}
+				}
+				// If applicable, check if all activity criterias are met
+				if (!empty($activities_matched))
+				{
+					sort($activities_matched);
+					if ($activities_matched === $params['activity_id'])
 					{
 						$include_on_activity = True;
 					}
 				}
+
 				// Handle the facilities
 				$include_on_facility = False;
 				$facilities_matched = array();

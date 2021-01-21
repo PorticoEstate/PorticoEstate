@@ -53,6 +53,9 @@ function ViewModel()
 	self.showGear = ko.observable(false);
 	self.showCapacity = ko.observable(false);
 
+
+	self.selectedTown = ko.observable() // Nothing selected by default
+
 	self.selectedTowns = ko.observableArray([]);
 	self.selectedTownIds = ko.observableArray([]);
 	self.selectedFacilities = ko.observableArray([]);
@@ -64,18 +67,24 @@ function ViewModel()
 	self.selectedCapacities = ko.observableArray([]);
 	self.selectedCapacityIds = ko.observableArray([]);
 
+	self.dateFilter = ko.observable('');
+
 	self.townArrowIcon = ko.pureComputed(function() {
 		return this.showTown() ? "openArrowIcon" : "closedArrowIcon";
 	}, self);
+
 	self.facilityArrowIcon = ko.pureComputed(function() {
 		return this.showFacility() ? "openArrowIcon" : "closedArrowIcon";
 	}, self);
+
 	self.activityArrowIcon = ko.pureComputed(function() {
 		return this.showActivity() ? "openArrowIcon" : "closedArrowIcon";
 	}, self);
+
 	self.gearArrowIcon = ko.pureComputed(function() {
 		return this.showGear() ? "openArrowIcon" : "closedArrowIcon";
 	}, self);
+
 	self.capacityArrowIcon = ko.pureComputed(function() {
 		return this.showCapacity() ? "openArrowIcon" : "closedArrowIcon";
 	}, self);
@@ -87,10 +96,12 @@ function ViewModel()
 			var selectedTown = ko.utils.arrayFirst(self.towns(), function(town) {
 				return (town.id === townId);
 			});
-			newSelectedTowns.push(selectedTown);
+			console.log(selectedTown.id)
+			newSelectedTowns.push(selectedTown.id);
 		});
 		self.selectedTowns(newSelectedTowns);
 	});
+
 	self.selectedFacilityIds.subscribe(function(newValue) {
 		let newSelectedFacilityIds = newValue;
 		let newSelectedFacilities = [];
@@ -98,10 +109,11 @@ function ViewModel()
 			var selectedFacility = ko.utils.arrayFirst(self.facilities(), function(facility) {
 				return (facility.id === facilityId);
 			});
-			newSelectedFacilities.push(selectedFacility);
+			newSelectedFacilities.push(selectedFacility.id);
 		});
 		self.selectedFacilities(newSelectedFacilities);
 	});
+
 	self.selectedActivityIds.subscribe(function(newValue) {
 		let newSelectedActivityIds = newValue;
 		let newSelectedActivities = [];
@@ -109,10 +121,11 @@ function ViewModel()
 			let selectedActivity = ko.utils.arrayFirst(self.activities(), function(activity) {
 				return (activity.id === activityId);
 			});
-			newSelectedActivities.push(selectedActivity);
+			newSelectedActivities.push(selectedActivity.id);
 		});
 		self.selectedActivities(newSelectedActivities);
 	});
+
 	self.selectedGearIds.subscribe(function(newValue) {
 		let newSelectedGearIds = newValue;
 		let newSelectedGear = [];
@@ -124,6 +137,7 @@ function ViewModel()
 		});
 		self.selectedGear(newSelectedGear);
 	});
+
 	self.selectedCapacityIds.subscribe(function(newValue) {
 		let newSelectedCapacityIds = newValue;
 		let newSelectedCapacities = [];
@@ -135,7 +149,7 @@ function ViewModel()
 		});
 		self.selectedCapacities(newSelectedCapacities);
 	});
-};
+}
 
 $(document).ready(function () {
 	$('.overlay').show();
@@ -144,6 +158,7 @@ $(document).ready(function () {
 	ko.applyBindings(viewmodel, document.getElementById("search-page-content"));
 
 	searchListener();
+	townListener();
 	getAutocompleteData();
 	PopulateTown();
 	DateTimePicker();
@@ -161,7 +176,7 @@ function searchListener() {
 			let inputValue = $('#mainSearchInput').val();
 
 			if (inputValue !== '') {
-				findSearchMethod(inputValue);
+				findSearchMethod();
 			} else {
 				viewmodel.showSearchText(false);
 				viewmodel.showEvents(true);
@@ -174,26 +189,37 @@ function searchListener() {
 	});
 
 	$("#searchBtn").click(function () {
-		if ($('#mainSearchInput').val() !== '') {
-			findSearchMethod($('#mainSearchInput').val());
+		findSearchMethod($());
+	});
+}
+
+function townListener() {
+	$("#locationFilter").change(function () {
+		if (typeof viewmodel.selectedTown() !== 'undefined') {
+			viewmodel.selectedTownIds.removeAll();
+			viewmodel.selectedTownIds.push(viewmodel.selectedTown().id);
 		}
 	});
 }
 
-function findSearchMethod(inputValue) {
+function findSearchMethod() {
 	let foundResCategory = false;
 	let autocompleteResObj = '';
 
-	for(let i = 0; i < autocompleteData.length && !foundResCategory ; i++) {
-		if (autocompleteData[i].label === inputValue) {
-			foundResCategory = true;
-			autocompleteResObj = autocompleteData[i];
+	let inputValue = $('#mainSearchInput').val();
+
+	if (inputValue !== '') {
+		for(let i = 0; i < autocompleteData.length && !foundResCategory ; i++) {
+			if (autocompleteData[i].label === inputValue) {
+				foundResCategory = true;
+				autocompleteResObj = autocompleteData[i];
+			}
 		}
-	}
-	if (foundResCategory) {
-		DoFilterSearch(autocompleteResObj);
-	} else {
-		doSearch(inputValue);
+		if (foundResCategory) {
+			DoFilterSearch(autocompleteResObj);
+		} else {
+			doSearch(inputValue);
+		}
 	}
 }
 
@@ -319,14 +345,14 @@ function DateTimePicker() {
 		const endDate = picker.endDate.format('DD.MM.YYYY');
 
 		if(startDate === endDate) {
-			$(this).val(startDate);
+			viewmodel.dateFilter(startDate);
 		} else {
-			$(this).val(startDate + ' - ' + endDate);
+			viewmodel.dateFilter(startDate + ' - ' + endDate);
 		}
 	});
 
 	$('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
-		$(this).val('');
+		viewmodel.dateFilter('');
 	});
 
 	$('input[name="timefilter"]').daterangepicker({
@@ -369,7 +395,10 @@ function doSearch(searchterm_value) {
 		url: requestUrl,
 		type: "get",
 		contentType: 'text/plain',
-		data: {searchterm: searchTerm},
+		data: {
+			searchterm: searchTerm,
+			filter_search_type: 'resource'
+		},
 		success: function (response)
 		{
 
@@ -428,47 +457,24 @@ function doSearch(searchterm_value) {
 	});
 }
 
-function DoFilterSearch(resCategory, town = '', from = '', to = '')
+function DoFilterSearch(resCategory)
 {
-	let lokale;
-	let townId = '';
-	let datoFra, datoTil = '';
+	const requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", length: -1}, true);
+	let fromDate = '';
+	let toDate = '';
 
-	lokale = resCategory;
+	if (viewmodel.dateFilter() !== '' && typeof viewmodel.dateFilter() !== 'undefined' && !(/[a-zA-Z]/g).test(viewmodel.dateFilter())) {
+		let date = viewmodel.dateFilter();
 
-	console.log($('#locationFilter').val());
-
-	if ($('#locationFilter').val() !== '') {
-		town = $('#locationFilter').val();
-
-		let foundTown = false;
-
-		for(let i = 0; i < towns.length && !foundTown ; i++) {
-			console.log(`${town} ${towns[i].name}`)
-			if (towns[i].name === town) {
-				foundTown = true;
-				townId = towns[i].id;
-			}
-		}
-		if (!foundTown) {
-			townId = '';
-		}
-		towns.push(townId);
-	}
-
-	if ($('#dateFilter').val() !== '' && !(/[a-zA-Z]/g).test($('#dateFilter').val())) {
-		let date = $('#dateFilter').val();
+		fromDate = date.substr(0,10)
 
 		if (date.includes("-")) {
-			from = date.substr(0,8)
-			to = date.substr(11, 18);
-		}
-		else {
-			from = date.substr(0, 8);
+			toDate = date.substr(13, 18);
 		}
 	}
 
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", length: -1}, true);
+	console.log(fromDate);
+	console.log(toDate);
 
 	$.ajax({
 		url: requestURL,
@@ -476,10 +482,16 @@ function DoFilterSearch(resCategory, town = '', from = '', to = '')
 		contentType: 'text/plain',
 		data: {
 			rescategory_id: resCategory.id,
-			part_of_town_id: townId
+			part_of_town_id: viewmodel.selectedTowns,
+			facility_id: viewmodel.selectedFacilities,
+			activity_id: viewmodel.selectedActivities,
+			fromDate: fromDate,
+			toDate: toDate
 		},
 		success: function (response)
 		{
+			console.log(response);
+
 			$("#mainSearchInput").blur();
 			$("#locationFilter").hide();
 			$("#dateFilter").hide();
@@ -492,8 +504,6 @@ function DoFilterSearch(resCategory, town = '', from = '', to = '')
 			viewmodel.activities.removeAll();
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
-
-			$('#dateFilter2').val($('#dateFilter').val());
 
 			console.log(response);
 

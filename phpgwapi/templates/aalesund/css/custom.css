@@ -899,6 +899,25 @@ filterbokser søkesiden
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
 
+
+#locationWrapper select.form-control:not([size]):not([multiple]) {
+	height: inherit;
+}
+
+#locationWrapper select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	text-indent: 1px;
+	text-overflow: '';
+}
+
+select option:focus {
+	background-color: #47ff9d !important;
+	color: #3a3a4c !important;
+}
+
+
+
 .eventCard {
 	border-radius: 12px;
 	border: solid 1px #ebebeb;
@@ -994,7 +1013,6 @@ filterbokser søkesiden
 .eventClockIcon {
 	position: absolute;
 	content: url(../img/time-clock.svg);
-	left: 24px;
 	top: 2px;
 }
 
