@@ -72,7 +72,9 @@
 				'responsible_street' => 'string',
 				'responsible_zip_code' => 'string',
 				'responsible_city' => 'string',
-				'agreement_requirements' => 'html'
+				'agreement_requirements' => 'html',
+				'customer_organization_id' => 'string',
+				'customer_organization_name' => 'string'
 			);
 
 			$this->display_name = lang('application');
@@ -1003,11 +1005,10 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'), 'application_form');
 			}
-//			else
-//			{
-//				self::add_javascript('bookingfrontend', 'base', 'application.js');
-//			}
-
+			else
+			{
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
+			}
 
 			// Get resources
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
@@ -1100,7 +1101,6 @@
 			{
 				$template = 'application_new';
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
 
@@ -1627,7 +1627,8 @@
 			$copy = array(
 				'activity_id', 'name', 'organizer', 'homepage', 'description', 'equipment', 'contact_name',
 				'contact_email', 'contact_phone', 'activity_id', 'building_id', 'building_name',
-				'customer_identifier_type', 'customer_ssn', 'customer_organization_number'
+				'customer_identifier_type', 'customer_ssn', 'customer_organization_number',
+				'customer_organization_id',	'customer_organization_name'
 			);
 			foreach ($copy as $f)
 			{
