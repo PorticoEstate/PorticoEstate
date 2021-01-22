@@ -2023,7 +2023,7 @@
 					}
 				}
 
-				if($_building_simple_booking == count($resource_ids))
+				if($_building_simple_booking == count($application['resources']))
 				{
 					$simple = true;
 				}

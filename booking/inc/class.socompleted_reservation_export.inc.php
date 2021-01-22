@@ -1258,6 +1258,26 @@
 			foreach ($reservations as &$reservation)
 			{
 
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						$test = $this->allocation_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'booking':
+						$test = $this->booking_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'event':
+						$test = $this->event_bo->read_single($reservation['reservation_id']);
+						break;
+					default:
+						break;
+				}
+
+				if(empty($test['id']))
+				{
+					continue; //Reservation has been deleted
+				}
+
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
