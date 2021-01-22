@@ -406,7 +406,7 @@
 					}
 				}
 
-				$event['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$event['dates'] = array_map(array($this, '_combine_dates'),(array)$_POST['from_'], (array)$_POST['to_']);
 
 				array_set_default($_POST, 'resources', array());
 				$event['active'] = '1';
