@@ -1943,7 +1943,8 @@
 						}
 						else
 						{
-							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(time(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+							$_start_date = max(time(), phpgwapi_datetime::date_to_timestamp($project['start_date']));
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date($_start_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 						}
 					}
 					else
@@ -2185,13 +2186,13 @@
 			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date', 'date', '', array(
-					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['start_date'])),
+					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($values['start_date'])),
 		//			'max_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date', 'date', '', array(
-					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['start_date'])),
+					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($values['start_date'])),
 		//			'max_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
