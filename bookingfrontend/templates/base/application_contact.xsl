@@ -1,4 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<style>
+		.modal-dialog,
+		.modal-content {
+		/* 80% of window height */
+		height: 80%;
+		}
+
+		.modal-body {
+		/* 100% = dialog height, 120px = header + footer */
+		max-height: calc(100vh - 210px);
+		overflow-y: auto;
+		}
+	</style>
 	<div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">
 		<a class="btn btn-light">
 			<xsl:attribute name="href">
@@ -216,277 +229,13 @@
 					</div>
 					<!-- Modal body -->
 					<div class="modal-body">
-						<xsl:variable name="action_url">
-							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uiorganization.edit,phpgw_return_as:json')" />
-						</xsl:variable>
-						<form class="frm_register_case" action="{$action_url}" method="post">
-							<fieldset>
-								<div class="form-group">
-									<label for="field_name">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Name')" />
-										</h4>
-									</label>
-									<input id="inputs" name="name" type="text" class="form-control">
-										<xsl:attribute name="value">
-											<xsl:value-of select="organization/name"/>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter a name')" />
-										</xsl:attribute>
-									</input>
-					
-								</div>
-								<div class="form-group">
-									<label for="field_shortname">
-										<xsl:value-of select="php:function('lang', 'Organization shortname')" />
-									</label>
-									<input id="field_shortname" name="shortname" type="text" class="form-control">
-										<xsl:attribute name="value">
-											<xsl:value-of select="organization/shortname"/>
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="form-group">
-									<label for="field_organization_number">
-										<xsl:value-of select="php:function('lang', 'Organization number')" />
-									</label>
-									<input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}" class="form-control"/>
-								</div>
-								<div class="form-group">
-									<label for="field_homepage">
-										<xsl:value-of select="php:function('lang', 'Homepage')" />
-									</label>
-									<input id="field_homepage" name="homepage" type="text" class="form-control">
-										<xsl:attribute name="value">
-											<xsl:value-of select="organization/homepage"/>
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="form-group">
-									<label for="field_phone">
-										<xsl:value-of select="php:function('lang', 'Phone')" />
-									</label>
-									<input id="field_phone" name="phone" type="text" class="form-control">
-										<xsl:attribute name="value">
-											<xsl:value-of select="organization/phone"/>
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="form-group">
-									<label for="field_email">
-										<xsl:value-of select="php:function('lang', 'Email')" />
-									</label>
-									<input id="field_email" name="email" type="text" class="form-control">
-										<xsl:attribute name="value">
-											<xsl:value-of select="organization/email"/>
-										</xsl:attribute>
-									</input>
-								</div>
-
-								<div class="form-group">
-									<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
-								</div>
-								<div class="form-group">
-									<label for="field_customer_internal">
-										<xsl:value-of select="php:function('lang', 'Internal Customer')"/>
-									</label>
-									<!--<xsl:copy-of select="phpgw:option_checkbox(organization/customer_internal, 'customer_internal')"/>-->
-								</div>
-								<div class="form-group">
-									<label for="field_customer_number">
-										<xsl:value-of select="php:function('lang', 'Customer number')" />
-									</label>
-									<xsl:if test="currentapp = 'booking'">
-										<input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}" class="form-control"/>
-									</xsl:if>
-									<xsl:if test="currentapp != 'booking'">
-										<input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}" class="form-control"/>
-									</xsl:if>
-								</div>
-								<div class="form-group">
-									<label for="field_street">
-										<xsl:value-of select="php:function('lang', 'Street')"/>
-									</label>
-									<input id="field_street" name="street" type="text" value="{organization/street}" class="form-control"/>
-								</div>
-								<div class="form-group">
-									<label for="field_zip_code">
-										<xsl:value-of select="php:function('lang', 'Zip code')"/>
-									</label>
-									<input type="text" name="zip_code" id="field_zip_code" value="{organization/zip_code}" class="form-control"/>
-								</div>
-								<div class="form-group">
-									<label for="field_city">
-										<xsl:value-of select="php:function('lang', 'Postal City')"/>
-									</label>
-									<input type="text" name="city" id="field_city" value="{organization/city}" class="form-control"/>
-								</div>
-								<div class="form-group">
-									<label for='field_district'>
-										<xsl:value-of select="php:function('lang', 'District')"/>
-									</label>
-									<input type="text" name="district" id="field_district" value="{organization/district}" class="form-control"/>
-								</div>
-								<input type="text" name="active" id="field_active" value="1"/>
-
-								<div class="form-group">
-									<label for="field_show_in_portal">
-										<xsl:value-of select="php:function('lang', 'Show in portal')"/>
-									</label>
-									<select id="field_show_in_portal" name="show_in_portal" class="form-control">
-										<option value="0">
-											<xsl:if test="organization/show_in_portal=0">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'No')"/>
-										</option>
-										<option value="1">
-											<xsl:if test="organization/show_in_portal=1">
-												<xsl:attribute name="selected">checked</xsl:attribute>
-											</xsl:if>
-											<xsl:value-of select="php:function('lang', 'Yes')"/>
-										</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="field_activity">
-										<xsl:value-of select="php:function('lang', 'Activity')" />
-									</label>
-									<select name="activity_id" id="field_activity" class="form-control">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-										</xsl:attribute>
-										<option value="">
-											<xsl:value-of select="php:function('lang', '-- select an activity --')" />
-										</option>
-										<xsl:for-each select="activities">
-											<option>
-												<xsl:if test="../organization/activity_id = id">
-													<xsl:attribute name="selected">selected</xsl:attribute>
-												</xsl:if>
-												<xsl:attribute name="value">
-													<xsl:value-of select="id"/>
-												</xsl:attribute>
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:for-each>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="field_description">
-										<xsl:value-of select="php:function('lang', 'Description')" />
-									</label>
-									<div style="max-width:650px;">
-										<textarea rows="4" id="field_description" name="description" type="text" class="form-control">
-											<xsl:value-of select="organization/description"/>
-										</textarea>
-									</div>
-								</div>
-								<div class="heading">
-									<legend>
-										<h3>
-											<xsl:value-of select="php:function('lang', 'Admin 1')" />
-										</h3>
-									</legend>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_name_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Name')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}' class="form-control"/>
-									<input type="hidden" name="contacts[0][ssn]" value=""/>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_email_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Email')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' data-validation="email" class="form-control">
-										<xsl:attribute name="data-validation-optional">
-											<xsl:text>true</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_phone_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Phone')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_phone_1' name="contacts[0][phone]" value='{organization/contacts[1]/phone}' class="form-control"/>
-								</div>
-								<div class="heading">
-									<legend>
-										<h3>
-											<xsl:value-of select="php:function('lang', 'Admin 2')" />
-										</h3>
-									</legend>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_name_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Name')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}' class="form-control"/>
-									<input type="hidden" name="contacts[1][ssn]" value=""/>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_email_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Email')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' data-validation="email" class="form-control">
-										<xsl:attribute name="data-validation-optional">
-											<xsl:text>true</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please enter a valid contact email')" />
-										</xsl:attribute>
-									</input>
-								</div>
-								<div class="form-group">
-									<label for="field_admin_phone_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Phone')" />
-										</h4>
-									</label>
-									<input type='text' id='field_admin_phone_2' name="contacts[1][phone]" value='{organization/contacts[2]/phone}' class="form-control"/>
-								</div>
-							</fieldset>
-							<hr class="mt-5"></hr>
-							<button class="btn btn-light mb-5" type="submit">
-								<xsl:value-of select="php:function('lang', 'send')" />
-							</button>
-
-						</form>
-
+						<div style="width: 100%">
+							<iframe id ="iframeorganization" src="{organization_link}" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0"></iframe>
+						</div>
+						<br />
 					</div>
 
 					<!-- Modal footer -->
-
-					<form method="post" id="set_completed_item">
-						<xsl:attribute name="action">
-							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.set_completed_item')" />
-						</xsl:attribute>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig (delskjema)</button>
-						</div>
-					</form>
 				</div>
 			</div>
 		</div>

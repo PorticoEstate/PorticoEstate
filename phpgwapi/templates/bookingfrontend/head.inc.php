@@ -112,14 +112,14 @@ JS;
 	}
 
 	$headlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/Aktiv-kommune-logo.png";
-	$GLOBALS['phpgw']->template->set_var('headlogoimg', $headlogoimg);
+//	$GLOBALS['phpgw']->template->set_var('headlogoimg', $headlogoimg);
 
 	$loginlogo = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/login-logo.svg";
 	$GLOBALS['phpgw']->template->set_var('loginlogo', $loginlogo);
 
 	$GLOBALS['phpgw']->template->set_var('logo_img', $logoimg);
 	$GLOBALS['phpgw']->template->set_var('footer_logo_img', $footerlogoimg);
-	$GLOBALS['phpgw']->template->set_var('logo_title', $logo_title);
+//	$GLOBALS['phpgw']->template->set_var('logo_title', $logo_title);
 
 	$langmanual = lang('Manual');
 	$GLOBALS['phpgw']->template->set_var('manual', $langmanual);
@@ -283,15 +283,39 @@ JS;
 
 	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
 
+	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
+	$placeholder_search = lang('Search');
+
+	$nav = <<<HTML
+   
+		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
+			<div class="container header-container my_class">
+				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
+				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
+				<!-- Search Box -->
+				<!--div class="search-container">
+					<form id="navSearchForm" class="search-form">
+						<input type="text" class="search-input" placeholder="{$placeholder_search}"    id="searchInput"  />
+						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
+					</form>
+				</div-->
+			</div>
+            <div class="navbar-organization-select">
+            </div>
+		</nav>
+		<div class="overlay">
+            <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
+        </div>	
+HTML;
+
+
 	$tpl_vars = array
 		(
 		'css'					 => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
 		'javascript'			 => $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
 		'img_icon'				 => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
-		'site_title'			 => $site_title,
 		'str_base_url'			 => $GLOBALS['phpgw']->link('/', array(), true),
 		'dateformat_backend'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
-		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
@@ -300,10 +324,9 @@ JS;
 		'metainfo_description'	 => $description,
 		'metainfo_robots'		 => $robots,
 		'lbl_search'			 => lang('Search'),
-//		'placeholder_search' => lang('Search building, resource, organization'),
-		'placeholder_search' => lang('Search'),
 		'logofile'				 => $logofile_frontend,
-		'header_search_class'	 => 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : ''
 	);
 
 
@@ -388,7 +411,8 @@ JS;
 			$tpl_vars['login_url'] = $custom_login_url;
 //			$LOGIN  =   $tpl_vars['login_url'];
 		}
-	}
+	}	
+
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');

@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'show' => true,
+			'add' => true,
 			'edit' => true,
 			'index' => true,
 			'building_users' => true,

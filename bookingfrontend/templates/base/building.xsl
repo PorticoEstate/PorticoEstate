@@ -1,4 +1,18 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<style>
+.modal-dialog,
+.modal-content {
+    /* 80% of window height */
+    height: 80%;
+}
+
+.modal-body {
+    /* 100% = dialog height, 120px = header + footer */
+    max-height: calc(100vh - 210px);
+	overflow-y: auto;
+}
+
+	</style>
 	<div id="building-page-content">
 		<div class="info-content">
 			<div class="container wrapper">

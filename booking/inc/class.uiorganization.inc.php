@@ -254,8 +254,14 @@
 			$organization['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('organization_edit', array('organization' => $organization,
-				"new_form" => "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array(
+				'organization'	 => $organization,
+				"new_form"		 => "1",
+				'module'		 => $this->module,
+				'activities'	 => $activities,
+				'currentapp'	 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'noframework'	 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? false : true,
+			));
 		}
 
 		public function edit()
@@ -325,9 +331,15 @@
 			self::rich_text_editor('field_description');
 
 			$this->add_template_helpers();
-			self::render_template_xsl('organization_edit', array('organization' => $organization,
-				"save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link,
-				'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array(
+				'noframework'			 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? false : true,
+				'organization'			 => $organization,
+				"save_or_create_text"	 => "Save",
+				"module"				 => $this->module,
+				"contact_form_link"		 => $contact_form_link,
+				'activities'			 => $activities,
+				'currentapp'			 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+			));
 		}
 
 		public function show()

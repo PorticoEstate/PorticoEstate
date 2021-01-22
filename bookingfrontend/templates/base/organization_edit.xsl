@@ -14,85 +14,68 @@
 	</func:result>
 </func:function>
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="organization-edit-page-content" class="margin-top-content">
+	<div id="organization-edit-page-content">
+		<xsl:if test="noframework != 1">
+			<xsl:attribute name="class" value="margin-top-content"/>
+		</xsl:if>
+
 		<div class="container wrapper">
-			<div class="location mt-5">
-				<span>
-					<a>
-						<xsl:attribute name="href">
-							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
-						</xsl:attribute>
-						<xsl:value-of select="php:function('lang', 'Home')" />
-					</a>
-				</span>
-				<span>
-					<a href="{organization/organization_link}">
-						<xsl:value-of select="organization/name"/>
-					</a>
-				</span>
-				<xsl:if test="new_form">
+			<xsl:if test="noframework != 1">
+				<div class="location mt-5">
 					<span>
-						<xsl:value-of select="php:function('lang', 'New Organization')" />
+						<a>
+							<xsl:attribute name="href">
+								<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+							</xsl:attribute>
+							<xsl:value-of select="php:function('lang', 'Home')" />
+						</a>
 					</span>
-				</xsl:if>
-				<xsl:if test="not(new_form)">
 					<span>
-						<xsl:value-of select="php:function('lang', 'Edit Organization')" />
+						<a href="{organization/organization_link}">
+							<xsl:value-of select="organization/name"/>
+						</a>
 					</span>
-				</xsl:if>
-			</div>
+					<xsl:if test="new_form">
+						<span>
+							<xsl:value-of select="php:function('lang', 'New Organization')" />
+						</span>
+					</xsl:if>
+					<xsl:if test="not(new_form)">
+						<span>
+							<xsl:value-of select="php:function('lang', 'Edit Organization')" />
+						</span>
+					</xsl:if>
+				</div>
+			</xsl:if>
 			<form action="" method="POST" id="form" name="form" class="col">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
 							<label class="text-uppercase">
-								<xsl:value-of select="php:function('lang', 'Organization')" />
+								<xsl:value-of select="php:function('lang', 'name')" />
 							</label>
-							<xsl:if test="currentapp = 'booking'">
-								<input id="inputs" name="name" class="form-control" type="text">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter an organization')" />
-									</xsl:attribute>
-									<xsl:attribute name="value">
-										<xsl:value-of select="organization/name"/>
-									</xsl:attribute>
-								</input>
-							</xsl:if>
-							<xsl:if test="currentapp != 'booking'">
-								<input id="inputs" name="name" class="form-control" readonly="true" type="text">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter an organization')" />
-									</xsl:attribute>
-									<xsl:attribute name="value">
-										<xsl:value-of select="organization/name"/>
-									</xsl:attribute>
-								</input>
-							</xsl:if>
+							<input id="inputs" name="name" class="form-control" type="text">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter an organization')" />
+								</xsl:attribute>
+								<xsl:attribute name="value">
+									<xsl:value-of select="organization/name"/>
+								</xsl:attribute>
+							</input>
 						</div>
 						<div class="form-group">
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'Organization shortname')" />
 							</label>
-							<xsl:if test="currentapp = 'booking'">
 								<input id="field_shortname" class="form-control" name="shortname" type="text">
 									<xsl:attribute name="value">
 										<xsl:value-of select="organization/shortname"/>
 									</xsl:attribute>
 								</input>
-							</xsl:if>
-							<xsl:if test="currentapp != 'booking'">
-								<input id="field_shortname" class="form-control" name="shortname" readonly="true" type="text">
-									<xsl:attribute name="value">
-										<xsl:value-of select="organization/shortname"/>
-									</xsl:attribute>
-								</input>
-							</xsl:if>
+							
 						</div>
 						<div class="form-group">
 							<label class="text-uppercase">

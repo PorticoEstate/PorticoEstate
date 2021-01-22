@@ -1450,9 +1450,6 @@
 //			_debug_array($org_id);
 			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
 
-			$organization = array();
-			$this->install_customer_identifier_ui($organization);
-
 //			_debug_array($delegate_data);
 
 			/**
@@ -1461,11 +1458,11 @@
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
 			self::render_template_xsl('application_contact', array(
-				'organization'	 => $organization,
-				'application'	 => $partial2,
-				'delegate_data'	 => $delegate_data,
-				'add_img'		 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
-				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
+				'application'			 => $partial2,
+				'delegate_data'			 => $delegate_data,
+				'organization_link'	 => self::link(array('menuaction' => 'bookingfrontend.uiorganization.add', 'nonavbar' => true)),
+				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
+				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
 		}
