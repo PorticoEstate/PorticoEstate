@@ -32,6 +32,52 @@
 			return $this->bo->so->get_orgid($orgnr);
 		}
 
+		public function add()
+		{
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			if($bouser->is_logged_in())
+			{
+				$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+
+				$orgs_map = array();
+				foreach ($orgs as $org)
+				{
+					$orgs_map[] = $org['orgnumber'];
+				}
+
+				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+
+				if($session_org_id && in_array($session_org_id, $orgs_map))
+				{
+					try
+					{
+						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+						if($org_number)
+						{
+							$bouser->change_org($org_number);
+						}
+					}
+					catch (sfValidatorError $e)
+					{
+						$session_org_id = -1;
+					}
+				}
+			}
+
+
+		//	$organization = $this->bo->read_single($id);
+
+//			if (isset($organization['permission']['write']))
+			{
+				parent::add();
+			}
+//			else
+//			{
+//				self::render_template_xsl('access_denied', array());
+//			}
+		}
 		public function edit()
 		{
 
