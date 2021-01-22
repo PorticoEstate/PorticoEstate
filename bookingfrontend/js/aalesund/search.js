@@ -164,8 +164,6 @@ $(document).ready(function () {
 	DateTimePicker();
 	getUpcomingEvents();
 	$("#searchResults").hide();
-
-	$('.overlay').hide();
 });
 
 function searchListener() {
@@ -273,6 +271,7 @@ function setEventData(result) {
 			event_id: ko.observable(result[i].event_id)
 		});
 	}
+	$('.overlay').hide();
 }
 
 function getAutocompleteData() {
@@ -355,21 +354,9 @@ function DateTimePicker() {
 		viewmodel.dateFilter('');
 	});
 
-	$('input[name="timefilter"]').daterangepicker({
-		autoUpdateInput: false,
-		timePicker : true,
-		singleDatePicker:true,
-		timePicker24Hour : true,
-		timePickerIncrement : 15,
-		locale : {
-			format : 'HH:mm',
-		}
-	}, function (start) { //callback
-		start_time = start.format('HH:mm');
-		console.log(start_time);
-	}).on('show.daterangepicker', function (ev, picker) {
-		picker.container.find(".calendar-table").hide(); //Hide calendar
-	});
+	$('#fromTime').timepicker({ 'timeFormat': 'HH:mm' });
+	$('#toTime').timepicker({ 'timeFormat': 'HH:mm' });
+
 }
 
 function doSearch(searchterm_value) {
@@ -459,6 +446,7 @@ function doSearch(searchterm_value) {
 
 function DoFilterSearch(resCategory)
 {
+	$('.overlay').show();
 	const requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", length: -1}, true);
 	let fromDate = '';
 	let toDate = '';
@@ -470,11 +458,20 @@ function DoFilterSearch(resCategory)
 
 		if (date.includes("-")) {
 			toDate = date.substr(13, 18);
+		} else {
+			toDate = fromDate
 		}
+	} else {
+		let d = new Date();
+		const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+		const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
+		const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+		fromDate = `${da}.${mo}.${ye}`;
+		toDate = fromDate;
 	}
 
-	console.log(fromDate);
-	console.log(toDate);
+	let fromTime = typeof $("#fromTime").val() === 'undefined' ? '' : $("#fromTime").val();
+	let toTime = typeof $("#toTime").val() === 'undefined' ? '' : $("#toTime").val()
 
 	$.ajax({
 		url: requestURL,
@@ -485,8 +482,10 @@ function DoFilterSearch(resCategory)
 			part_of_town_id: viewmodel.selectedTowns,
 			facility_id: viewmodel.selectedFacilities,
 			activity_id: viewmodel.selectedActivities,
-			fromDate: fromDate,
-			toDate: toDate
+			from_date: fromDate + ' 00:00:00',
+			to_date: toDate + ' 23:59:59',
+			from_time: fromTime,
+			to_time: toTime
 		},
 		success: function (response)
 		{
@@ -505,28 +504,31 @@ function DoFilterSearch(resCategory)
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
 
-			console.log(response);
-
-			for (let i = 0; i < response.buildings.length; i++) {
-				for (let j = 0; j < response.buildings[i].resources.length; j++) {
-					viewmodel.resources.push({
-						name: response.buildings[i].resources[j].name,
-						id: response.buildings[i].resources[j].id,
-						location: typeof response.buildings[i].city === "undefined" ? response.buildings[i].name : response.buildings[i].name + ' - ' + response.buildings[i].city
-					})
-				}
-			}
-
+			setResources(response.available_resources)
 			setTownData(response.partoftowns);
 			setFacilityData(response.facilities);
 			setActivityData(response.activities);
-
-
+			$('.overlay').hide();
 		},
 		error: function (e) {
 			console.log(e);
+			$('.overlay').hide();
 		}
 	});
+}
+
+function setResources(resources) {
+	if (resources.length !== 0) {
+		for (let i = 0; i < resources.length; i++) {
+			viewmodel.resources.push({
+				name: resources[i].resource_name,
+				id: resources[i].resource_id,
+				location: typeof resources[i].building_city === "undefined" ? resources[i].building_name : resources[i].building_name + ' - ' + resources[i].building_city,
+				availableFrom: resources[i].from,
+				availableTo: resources[i].to
+			});
+		}
+	}
 }
 
 function setTownData(towns) {
@@ -572,110 +574,6 @@ function setActivityData(activities) {
 		viewmodel.showActivity(false);
 	}
 }
-
-	/*$.getJSON(requestURL, function (result)
-	{
-		console.log(result);
-
-		for (var i = 0; i < result.facilities.length; i++)
-		{
-			var selectedFacilities = false;
-			var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedFacilities(), function (current)
-			{
-				return current == result.facilities[i].id;
-			});
-			if (alreadySelected)
-			{
-				selectedFacilities = true;
-			}
-			viewmodel.facilities.push(ko.observable({index: i, facilityOption: result.facilities[i].name,
-				facilityOptionId: result.facilities[i].id,
-				facilitySelected: "facilitySelected",
-				selected: ko.observable(selectedFacilities)}));
-		}
-
-		for (var i = 0; i < result.activities.length; i++)
-		{
-			viewmodel.activities.push({activityOption: result.activities[i].name,
-				activityOptionId: result.activities[i].id,
-				activitySelected: "activitySelected"});
-		}
-
-		for (var i = 0; i < result.partoftowns.length; i++)
-		{
-			var selectedTown = false;
-			var alreadySelected = ko.utils.arrayFirst(viewmodel.selectedTowns(), function (current)
-			{
-				return current == result.partoftowns[i].id;
-			});
-			if (alreadySelected)
-			{
-				selectedTown = true;
-			}
-
-			viewmodel.towns.push({townOption: result.partoftowns[i].name,
-				townOptionId: result.partoftowns[i].id,
-				townSelected: "townSelected",
-				selected: ko.observable(selectedTown)});
-		}
-
-		var items = [];
-		for (var i = 0; i < result.buildings.length; i++)
-		{
-			var resources = [];
-			for (var k = 0; k < result.buildings[i].resources.length; k++)
-			{
-				var bookBtnURL;
-				if (result.buildings[i].resources[k].simple_booking == 1)
-				{
-					bookBtnURL = phpGWLink('bookingfrontend/', {
-						menuaction: "bookingfrontend.uiapplication.add",
-						resource_id: result.buildings[i].resources[k].id,
-						building_id: result.buildings[i].id,
-						simple: 1
-					}, false);
-
-				}
-				else
-				{
-					bookBtnURL = phpGWLink('bookingfrontend/', {
-						menuaction: "bookingfrontend.uiresource.show",
-						id: result.buildings[i].resources[k].id,
-						building_id: result.buildings[i].id
-					}, false);
-				}
-
-				var facilities = [];
-				var activities = [];
-				for (var f = 0; f < result.buildings[i].resources[k].facilities_list.length; f++)
-				{
-					facilities.push({name: result.buildings[i].resources[k].facilities_list[f].name});
-				}
-				for (var f = 0; f < result.buildings[i].resources[k].activities_list.length; f++)
-				{
-					activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
-				}
-				resources.push({name: result.buildings[i].resources[k].name, forwardToApplicationPage: bookBtnURL, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false});
-
-			}
-			items.push({resultType: GetTypeName("building").toUpperCase(),
-				name: result.buildings[i].name,
-				street: result.buildings[i].street,
-				postcode: result.buildings[i].zip_code + " " + result.buildings[i].city,
-				filterSearchItemsResources: ko.observableArray(resources),
-				itemLink: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result.buildings[i].id}, false)});
-		}
-		console.log(viewmodel.facilities);
-		console.log(viewmodel.towns);
-		console.log(viewmodel.activities);
-
-		viewmodel.filterSearchItems(items);
-
-
-	});
-}
-	 */
-
 
 function GetTypeName(type)
 {

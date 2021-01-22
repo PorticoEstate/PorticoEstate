@@ -247,7 +247,6 @@
 		{
 			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
-			$activity_id = phpgw::get_var('activity_id', 'array', 'REQUEST', null);
 			$fields_multiids = array('facility_id', 'part_of_town_id', 'activity_id');
 			$multiids = array();
 			foreach ($fields_multiids as $field)

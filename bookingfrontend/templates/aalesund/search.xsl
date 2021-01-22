@@ -1,11 +1,13 @@
-
-
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'/>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-   <div id="search-page-content">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"/>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"/>
+
+
+	<div id="search-page-content">
       <div class="headerSection">
          <div class="noteRectangle">
             <div class="noteTitle">
@@ -124,9 +126,9 @@
 						  <input data-bind="value: dateFilter" class="form-control dateFilterResult" name="datefilter" aria-label="Large" autocomplete="off" placeholder="Velg dato"/>
 
 						  <div class="timeContainer">
-							  <input type="" id="fromTime" class="form-control timeInput" name="timefilter" aria-label="Large" autocomplete="off" placeholder="Fra kl"/>
+							  <input type="" id="fromTime" class="form-control timeInput" aria-label="Large" autocomplete="off" placeholder="Fra kl"/>
 							  <div class="horizontalgap"></div>
-							  <input type="" id="toTime" class="form-control timeInput" name="timefilter" aria-label="Large" autocomplete="off" placeholder="Til kl"/>
+							  <input type="" id="toTime" class="form-control timeInput" aria-label="Large" autocomplete="off" placeholder="Til kl"/>
 						  </div>
 
 						  <!-- Town filter -->
