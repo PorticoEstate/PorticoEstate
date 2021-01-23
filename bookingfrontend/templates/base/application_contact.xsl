@@ -90,7 +90,7 @@
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
 							<xsl:for-each select="delegate_data">
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" checked="checked"/>
+									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}"/>
 									<label class="form-check-label" for="exampleRadios1">
 										<xsl:value-of select="organization_number"/>
 										[ <xsl:value-of select="name"/> ]

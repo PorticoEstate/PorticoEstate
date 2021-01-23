@@ -1368,28 +1368,28 @@
 				}
 			}
 
-			$this->install_customer_identifier_ui($partial2);
-			if ($organization_number && $organization_number != '000000000')
-			{
-				$partial2['customer_identifier_type'] = 'organization_number';
-				$partial2['customer_organization_number'] = $organization_number;
-				$orgid = $this->organization_bo->so->get_orgid($organization_number);
-				$organization = $this->organization_bo->read_single($orgid);
-				if ($organization['contacts'][0]['name'] != '')
-				{
-					$partial2['contact_name'] = $organization['contacts'][0]['name'];
-					$partial2['contact_email'] = $organization['contacts'][0]['email'];
-					$partial2['contact_email2'] = $organization['contacts'][0]['email'];
-					$partial2['contact_phone'] = $organization['contacts'][0]['phone'];
-				}
-				else
-				{
-					$partial2['contact_name'] = $organization['contacts'][1]['name'];
-					$partial2['contact_email'] = $organization['contacts'][1]['email'];
-					$partial2['contact_email2'] = $organization['contacts'][1]['email'];
-					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
-				}
-			}
+	//		$this->install_customer_identifier_ui($partial2);
+//			if ($organization_number && $organization_number != '000000000')
+//			{
+//				$partial2['customer_identifier_type'] = 'organization_number';
+//				$partial2['customer_organization_number'] = $organization_number;
+//				$orgid = $this->organization_bo->so->get_orgid($organization_number);
+//				$organization = $this->organization_bo->read_single($orgid);
+//				if ($organization['contacts'][0]['name'] != '')
+//				{
+//					$partial2['contact_name'] = $organization['contacts'][0]['name'];
+//					$partial2['contact_email'] = $organization['contacts'][0]['email'];
+//					$partial2['contact_email2'] = $organization['contacts'][0]['email'];
+//					$partial2['contact_phone'] = $organization['contacts'][0]['phone'];
+//				}
+//				else
+//				{
+//					$partial2['contact_name'] = $organization['contacts'][1]['name'];
+//					$partial2['contact_email'] = $organization['contacts'][1]['email'];
+//					$partial2['contact_email2'] = $organization['contacts'][1]['email'];
+//					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
+//				}
+//			}
 
 			if(!empty($external_login_info['ssn']))
 			{

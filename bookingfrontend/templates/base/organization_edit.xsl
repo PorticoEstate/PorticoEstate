@@ -50,25 +50,34 @@
 			<form action="" method="POST" id="form" name="form" class="col">
 				<div class="row">
 					<div class="col-md-6">
+						<xsl:if test="new_form">
+							<div class="form-group">
 
-						<div class="form-group">
-
-							<label class="text-uppercase">
-								<xsl:value-of select="php:function('lang', 'organization type')" />
-							</label>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="organization_type" id="privateRadio" value="customer_ssn"/>
-								<label class="form-check-label text-uppercase" for="privateRadio">
-									<xsl:value-of select="php:function('lang', 'Private group')" />
+								<label class="text-uppercase">
+									<xsl:value-of select="php:function('lang', 'organization type')" />
 								</label>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="organization_type" id="privateRadio" value="customer_ssn">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please select an organization type')" />
+										</xsl:attribute>
+									</input>
+									<label class="form-check-label text-uppercase" for="privateRadio">
+										<xsl:value-of select="php:function('lang', 'personal group')" />
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number">
+									</input>
+									<label class="form-check-label text-uppercase" for="officialRadio">
+										<xsl:value-of select="php:function('lang', 'Official organization')" />
+									</label>
+								</div>
 							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number"/>
-								<label class="form-check-label text-uppercase" for="officialRadio">
-									<xsl:value-of select="php:function('lang', 'Official')" />
-								</label>
-							</div>
-						</div>
+						</xsl:if>
 
 						<div id="customer_ssn" class="form-group" style="display: none;">
 							<label for="field_customer_ssn" class="text-uppercase">
@@ -78,13 +87,23 @@
 						</div>
 
 						<input type="hidden" id="field_customer_identifier_type" name="customer_identifier_type" value=""></input>
-						<div id="organization_number" class="form-group" style="display: none;">
+						<div id="organization_number" class="form-group">
+							<xsl:if test="new_form">
+								<xsl:attribute name="style">
+									<xsl:text>display: none;</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 							<label for="field_organization_number" class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'Organization number')" />
 							</label>
 							<xsl:choose>
 								<xsl:when test="count(new_org_list) > 0">
 									<select name="organization_number" class="form-control" id="field_organization_number">
+										<xsl:choose>
+											<xsl:when test="not(new_form)">
+												<xsl:attribute name="readonly" value="readonly"/>
+											</xsl:when>
+										</xsl:choose>
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -109,17 +128,24 @@
 
 								</xsl:when>
 								<xsl:otherwise>
-									<input id="field_organization_number" class="form-control" name="organization_number" type="text" value="{organization/organization_number}"/>
+									<input id="field_organization_number" class="form-control" name="organization_number" type="text" value="{organization/organization_number}">
+										<xsl:choose>
+											<xsl:when test="not(new_form)">
+												<xsl:attribute name="readonly" value="readonly"/>
+											</xsl:when>
+										</xsl:choose>
+
+									</input>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 						</div>
 
 						<div class="form-group">
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'name')" />
 							</label>
-							<input id="inputs" name="name" class="form-control" type="text">
+							<input id="field_name" name="name" class="form-control" type="text">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -140,7 +166,7 @@
 									<xsl:value-of select="organization/shortname"/>
 								</xsl:attribute>
 							</input>
-							
+
 						</div>
 						<div class="form-group">
 							<label class="text-uppercase">
