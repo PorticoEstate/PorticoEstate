@@ -11,7 +11,20 @@
     max-height: calc(100vh - 210px);
 	overflow-y: auto;
 }
+/*
+.modal {
+  max-height: 100vh;
+  .modal-dialog {
+    .modal-content {
+      .modal-body {
+        max-height: calc(80vh - 140px);
+        overflow-y: auto;
+      }
+    }
+  }
+}
 
+*/
 	</style>
 	<div id="building-page-content">
 		<div class="info-content">

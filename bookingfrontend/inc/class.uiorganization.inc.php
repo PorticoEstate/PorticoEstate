@@ -35,7 +35,15 @@
 		public function add()
 		{
 
+			/**
+			 * check external login - and return here
+			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$external_login_info = $bouser->validate_ssn_login( array
+			(
+				'menuaction' => 'bookingfrontend.uiorganization.add'
+			));
 
 			if($bouser->is_logged_in())
 			{
@@ -44,12 +52,13 @@
 				$orgs_map = array();
 				foreach ($orgs as $org)
 				{
-					$orgs_map[] = $org['orgnumber'];
+					$orgs_map[$org['orgnumber']] = $org;
 				}
+				unset($org);
 
 				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
 
-				if($session_org_id && in_array($session_org_id, $orgs_map))
+				if($session_org_id && in_array($session_org_id, array_keys($orgs_map)))
 				{
 					try
 					{
@@ -64,20 +73,48 @@
 						$session_org_id = -1;
 					}
 				}
-			}
+				else
+				{
+					$org_number = $bouser->orgnr;
+				}
 
+				$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], array_keys($orgs_map));
 
-		//	$organization = $this->bo->read_single($id);
+				$delegate_map = array();
+				foreach ($delegate_data as $delegate_entry)
+				{
+					$delegate_map[] = $delegate_entry['organization_number'];
+				}
 
-//			if (isset($organization['permission']['write']))
-			{
+				$_new_org_list = array_diff(array_keys($orgs_map), $delegate_map);
+
+				$new_org_list = array();
+
+				foreach ($_new_org_list as $key)
+				{
+					$orgs_map[$key]['selected']	 = $key == $org_number ? 1 : 0;
+					
+					$_name = $orgs_map[$key]['orgname'] == $key ? $key : "{$key} [{$orgs_map[$key]['orgname']}]";
+					$new_org_list[]				 = array(
+						'id'		 => $key,
+						'name'		 => $_name,
+						'selected'	 => $key == $org_number ? 1 : 0
+					);
+				}
+
+				$this->new_org_list = $new_org_list;
+				$this->ssn = $external_login_info['ssn'];
+
+				self::add_javascript('bookingfrontend', 'base', 'organization_add.js');
+
 				parent::add();
 			}
-//			else
-//			{
-//				self::render_template_xsl('access_denied', array());
-//			}
+			else
+			{
+				self::render_template_xsl('access_denied', array());
+			}
 		}
+
 		public function edit()
 		{
 

@@ -5,7 +5,7 @@
 	class booking_uiorganization extends booking_uicommon
 	{
 
-		protected $fields;
+		protected $fields, $new_org_list, $ssn;
 		public $public_functions = array
 			(
 			'building_users' => true,
@@ -217,6 +217,12 @@
 		{
 			$errors = array();
 			$organization = array('customer_internal' => 0);
+			
+			
+			if($this->module == 'bookingfrontend')
+			{
+				$organization['customer_ssn'] = $this->ssn;
+			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -253,9 +259,9 @@
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$organization['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
-
 			self::render_template_xsl('organization_edit', array(
 				'organization'	 => $organization,
+				'new_org_list'	 => $this->new_org_list,
 				"new_form"		 => "1",
 				'module'		 => $this->module,
 				'activities'	 => $activities,

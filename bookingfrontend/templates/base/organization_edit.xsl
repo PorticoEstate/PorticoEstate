@@ -50,6 +50,71 @@
 			<form action="" method="POST" id="form" name="form" class="col">
 				<div class="row">
 					<div class="col-md-6">
+
+						<div class="form-group">
+
+							<label class="text-uppercase">
+								<xsl:value-of select="php:function('lang', 'organization type')" />
+							</label>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="organization_type" id="privateRadio" value="customer_ssn"/>
+								<label class="form-check-label text-uppercase" for="privateRadio">
+									<xsl:value-of select="php:function('lang', 'Private group')" />
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number"/>
+								<label class="form-check-label text-uppercase" for="officialRadio">
+									<xsl:value-of select="php:function('lang', 'Official')" />
+								</label>
+							</div>
+						</div>
+
+						<div id="customer_ssn" class="form-group" style="display: none;">
+							<label for="field_customer_ssn" class="text-uppercase">
+								<xsl:value-of select="php:function('lang', 'social security number')" />
+							</label>
+							<input name="customer_ssn" class="form-control" type="text" id="field_customer_ssn" value="{organization/customer_ssn}" readonly="readonly"/>
+						</div>
+
+						<input type="hidden" id="field_customer_identifier_type" name="customer_identifier_type" value=""></input>
+						<div id="organization_number" class="form-group" style="display: none;">
+							<label for="field_organization_number" class="text-uppercase">
+								<xsl:value-of select="php:function('lang', 'Organization number')" />
+							</label>
+							<xsl:choose>
+								<xsl:when test="count(new_org_list) > 0">
+									<select name="organization_number" class="form-control" id="field_organization_number">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please select an organization')" />
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="php:function('lang', 'select')" />
+										</option>
+										<xsl:for-each select="new_org_list">
+											<option>
+												<xsl:if test="(../organization/organization_number = id) or (selected = 1)">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+												<xsl:attribute name="value">
+													<xsl:value-of select="id"/>
+												</xsl:attribute>
+												<xsl:value-of select="name"/>
+											</option>
+										</xsl:for-each>
+									</select>
+
+								</xsl:when>
+								<xsl:otherwise>
+									<input id="field_organization_number" class="form-control" name="organization_number" type="text" value="{organization/organization_number}"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							
+						</div>
+
 						<div class="form-group">
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'name')" />
@@ -70,23 +135,12 @@
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'Organization shortname')" />
 							</label>
-								<input id="field_shortname" class="form-control" name="shortname" type="text">
-									<xsl:attribute name="value">
-										<xsl:value-of select="organization/shortname"/>
-									</xsl:attribute>
-								</input>
+							<input id="field_shortname" class="form-control" name="shortname" type="text">
+								<xsl:attribute name="value">
+									<xsl:value-of select="organization/shortname"/>
+								</xsl:attribute>
+							</input>
 							
-						</div>
-						<div class="form-group">
-							<label class="text-uppercase">
-								<xsl:value-of select="php:function('lang', 'Organization number')" />
-							</label>
-							<xsl:if test="currentapp = 'booking'">
-								<input id="field_organization_number" class="form-control" name="organization_number" type="text" value="{organization/organization_number}"/>
-							</xsl:if>
-							<xsl:if test="currentapp != 'booking'">
-								<input id="field_organization_number" class="form-control" name="organization_number" type="text" readonly="true" value="{organization/organization_number}"/>
-							</xsl:if>
 						</div>
 						<div class="form-group">
 							<label class="text-uppercase">

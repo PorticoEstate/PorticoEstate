@@ -1440,14 +1440,31 @@
 			self::add_javascript('bookingfrontend', 'base', 'application.js');
 
 
-			$bouser = CreateObject('bookingfrontend.bouser');
 			if(!$bouser->is_logged_in())
 			{
 				$bouser->log_in();
 			}
 
-			$organization_number = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
-//			_debug_array($org_id);
+			$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+
+			$orgnumbers = array();
+			foreach ($orgs as $org)
+			{
+				$orgnumbers[] = $org['orgnumber'];
+			}
+			
+			$session_org_id = phpgw::get_var('session_org_id');
+			
+			if($session_org_id && in_array($session_org_id, $orgnumbers))
+			{
+				$organization_number = $session_org_id;
+			}
+			else
+			{
+				$organization_number = $bouser->orgnr;
+				
+			}
+
 			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
 
 //			_debug_array($delegate_data);

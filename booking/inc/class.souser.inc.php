@@ -98,25 +98,37 @@
 			return $values;
 		}
 
-		function get_delegate( $ssn, $organization_number = '')
+		function get_delegate( $ssn, $organization_number = null)
 		{
 			if(!$ssn)
 			{
 				return array();
 			}
 
-			$hash = sha1($ssn);
-			$ssn =  '{SHA1}' . base64_encode($hash);
-
-
-			$sql = "SELECT DISTINCT bb_organization.* FROM bb_delegate"
-				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
-				. " WHERE ssn = '{$ssn}'";
-
+			$filter_organization_number = "1=2";
+			
 			if($organization_number)
 			{
-				$sql .= " OR organization_number = '$organization_number'";
+				if(is_array($organization_number))
+				{
+					$filter_organization_number= "organization_number IN ('" . implode("','", $organization_number) . "')";									
+				}
+				else
+				{
+					$filter_organization_number= "organization_number = '$organization_number'";				
+				}
 			}
+
+			$hash = sha1($ssn);
+			$_ssn =  '{SHA1}' . base64_encode($hash);
+
+			$sql = "SELECT DISTINCT id, name, active, organization_number FROM ("
+				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number FROM bb_delegate"
+				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE ssn = '{$_ssn}'"
+				. " UNION"
+				. " SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number FROM bb_organization"
+				. " WHERE {$filter_organization_number} OR customer_ssn = '{$ssn}') as t";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
