@@ -1130,9 +1130,9 @@
 				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
 			));
 
-			if(!$organization_number = phpgw::get_var('session_org_id', 'int', 'GET'))
+			if(!$organization_number = phpgw::get_var('session_org_id', 'string', 'GET'))
 			{
-				$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);			
+				$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 			}
 
 			$errors = array();
@@ -1142,7 +1142,7 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$partial2 = $this->extract_form_data();
-				
+
 				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
 				if ($customer_organization_number_arr)
 				{
@@ -1287,6 +1287,15 @@
 								$event['reminder'] = 0;
 								$event['customer_internal'] = 0;
 								$event['cost'] = 0;
+
+								if($event['customer_organization_id'])
+								{
+									$customer_organization = $this->organization_bo->read_single($event['customer_organization_id']);
+									if($customer_organization['customer_identifier_type'])
+									{
+										$event['customer_identifier_type'] = $customer_organization['customer_identifier_type'];
+									}
+								}
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];
@@ -1452,9 +1461,9 @@
 			{
 				$orgnumbers[] = $org['orgnumber'];
 			}
-			
+
 			$session_org_id = phpgw::get_var('session_org_id');
-			
+
 			if($session_org_id && in_array($session_org_id, $orgnumbers))
 			{
 				$organization_number = $session_org_id;
@@ -1462,7 +1471,7 @@
 			else
 			{
 				$organization_number = $bouser->orgnr;
-				
+
 			}
 
 			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
@@ -1700,7 +1709,7 @@
 			{
 				phpgw::no_access('booking', lang('not case officer'));
 			}
-			
+
 			$preview = phpgw::get_var('preview', 'bool');
 
 			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
@@ -1860,7 +1869,7 @@
 				}
 				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 			}
-			
+
 		}
 		public function show()
 		{

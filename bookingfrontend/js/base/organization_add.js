@@ -47,6 +47,73 @@ $(document).ready(function ()
 			populate_organization_data(organization_number);
 		}
 	});
+
+	$(".add_organization_form").on("submit", function (e)
+	{
+
+		e.preventDefault();
+
+		var test = $('form').isValid();
+		if (!test)
+		{
+			return;
+		}
+
+		var thisForm = $(this);
+
+		var requestUrl = $(thisForm).attr("action");
+		var submitBnt = $(thisForm).find("input[type='submit']");
+		submitBnt.prop('disabled', true);
+
+		$('<div id="spinner" class="text-center mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Loading...</span>')))
+			.insertBefore(submitBnt);
+
+		var formdata = false;
+		if (window.FormData)
+		{
+			try
+			{
+				formdata = new FormData(thisForm[0]);
+			}
+			catch (e)
+			{
+
+			}
+		}
+
+		$.ajax({
+			cache: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: requestUrl + '&phpgw_return_as=json',
+			data: formdata ? formdata : thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status == "saved")
+					{
+						$("#organization_number option:selected").remove();
+						document.getElementById("form").reset();
+					}
+					else
+					{
+						alert(data.message.join());
+					}
+					var element = document.getElementById('spinner');
+					if (element)
+					{
+						element.parentNode.removeChild(element);
+					}
+					submitBnt.prop('disabled', false);
+				}
+			}
+		});
+	});
+
 });
 
 
@@ -61,7 +128,7 @@ function populate_organization_data(organization_number)
 			var postadresse = result.postadresse;
 
 			$("#field_name").val(result.navn);
-			$("#field_shortname").val(result.navn);
+			$("#field_shortname").val(result.navn.substring(0, 11));
 			$("#field_street").val(postadresse.adresse.join());
 			$("#field_zip_code").val(postadresse.postnummer);
 			$("#field_city").val(postadresse.poststed);

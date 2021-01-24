@@ -35,13 +35,21 @@
 			}
 		}
 
-		protected function get_orgname_from_db( $orgnr )
+		protected function get_orgname_from_db( $orgnr, $customer_ssn = null)
 		{
 			if(!$orgnr)
 			{
 				return null;
 			}
-			$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
+
+			if($customer_ssn)
+			{
+				$this->db->limit_query("SELECT name FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
+			}
+			else
+			{
+				$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='{$orgnr}'", 0, __LINE__, __FILE__, 1);
+			}
 			if (!$this->db->next_record())
 			{
 				return $orgnr;
@@ -170,18 +178,34 @@
 			return !!$this->get_user_orgnr();
 		}
 
-		public function is_organization_admin( $organization_id = null )
+		public function is_organization_admin( $organization_id = null, $organization_number = null, $customer_ssn = null )
 		{
-			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
-			{
-				//return true;
-			}
-			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (!$this->is_logged_in())
 			{
-				//return false;
+				return false;
 			}
+
+			/**
+			 * On user adding organization from bookingfrontend
+			 */
+			if(!$organization_id && $organization_number)
+			{
+				$orgs = (array)phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
+
+				$orgs_map = array();
+				foreach ($orgs as $org)
+				{
+					$orgs_map[] = $org['orgnumber'];
+				}
+				unset($org);
+				return in_array($organization_number, $orgs_map);
+			}
+			else if (!$organization_id && !$organization_number && $customer_ssn)
+			{
+				$external_login_info = $this->validate_ssn_login();
+				return $customer_ssn == $external_login_info['ssn'];
+			}
+
 			$so = CreateObject('booking.soorganization');
 			$organization = $so->read_single($organization_id);
 

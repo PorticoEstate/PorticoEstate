@@ -61,7 +61,15 @@
 							<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
 						<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
+							<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'invoice information')" />
+								</xsl:attribute>
+
+							</input>
 							<label class="form-check-label" for="privateRadio">
 								<xsl:value-of select="php:function('lang', 'Private event')" />
 							</label>
@@ -234,8 +242,12 @@
 						</div>
 						<br />
 					</div>
-
 					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							<xsl:value-of select="php:function('lang', 'Cancel')" />
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

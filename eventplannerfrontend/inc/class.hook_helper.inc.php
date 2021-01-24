@@ -129,7 +129,7 @@
 				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
 			}
 
-			$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+			$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 			function get_ids_from_array($org)
 			{

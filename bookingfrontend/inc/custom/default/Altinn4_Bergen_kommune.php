@@ -51,7 +51,7 @@
 			$data = $this->validate_ssn_login();
 			$fodselsnr = (string)$data['ssn'];
 			$bregorgs = $this->get_breg_orgs($fodselsnr);
-			$myorgnr = array();
+//			$myorgnr = array();
 
 			if ($bregorgs == array())
 			{
@@ -60,26 +60,26 @@
 			}
 			else
 			{
-				foreach ($bregorgs as $org)
-				{
-					$myorgnr[] = $org['orgnr'];
-				}
-				if (count($myorgnr) > 1)
+//				foreach ($bregorgs as $org)
+//				{
+//					$myorgnr[] = $org['orgnr'];
+//				}
+				if (count($bregorgs) > 1)
 				{
 					$external_user = (object)'ciao';
-					$external_user->login = $myorgnr[0];
+					$external_user->login = $bregorgs[0]['orgnr'];
 					$orgs = array();
-					foreach ($myorgnr as $org)
+					foreach ($bregorgs as $org)
 					{
-						$orgs[] = array('orgnumber' => $org, 'orgname' => $this->get_orgname_from_db($org));
+						$orgs[] = array('orgnumber' => $org['orgnr'], 'orgname' => $this->get_orgname_from_db($org['orgnr'], $org['customer_ssn']));
 					}
 					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
 				}
-				elseif (count($myorgnr) > 0)
+				elseif (count($bregorgs) > 0)
 				{
 					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
 					$external_user = (object)'ciao';
-					$external_user->login = $myorgnr[0];
+					$external_user->login = $myorgnr[0]['orgnr'];
 				}
 			}
 
@@ -109,7 +109,7 @@
 		private function get_breg_orgs( $fodselsnr )
 		{
 			$results = array();
-			$orgs_validate = array();
+			$orgs_validate = array(-1);
 
 			/**
 			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
@@ -154,21 +154,34 @@
 			$hash = sha1($fodselsnr);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
-			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
+			$this->db->query("SELECT DISTINCT * FROM (SELECT bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
 				. " FROM bb_delegate"
 				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
-				. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+				. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'"
+				. " UNION"
+				. " SELECT customer_ssn, organization_number, name AS organization_name"
+				. " FROM bb_organization"
+				. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
+				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t", __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{
+				$customer_ssn = $this->db->f('customer_ssn');
 				$organization_number = $this->db->f('organization_number');
+				
+				if($customer_ssn && !$organization_number)
+				{
+					$organization_number = '000000000';
+				}
+				
 				if(in_array($organization_number, $orgs_validate))
 				{
-					continue;
+//					continue;
 				}
 				$results[] = array
 				(
-					'orgnr' => $organization_number
+					'orgnr'			 => $organization_number,
+					'customer_ssn'	 => $customer_ssn
 				);
 
 				$orgs_validate[] = $organization_number;
@@ -186,7 +199,8 @@
 					}
 					$results[] = array
 					(
-						'orgnr' => $test_organization
+						'orgnr'			 => $test_organization,
+						'customer_ssn'	 => null
 					);					
 				}
 			}

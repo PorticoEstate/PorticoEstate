@@ -56,7 +56,7 @@
 				}
 				unset($org);
 
-				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 				if($session_org_id && in_array($session_org_id, array_keys($orgs_map)))
 				{
@@ -106,8 +106,20 @@
 				$this->ssn = $external_login_info['ssn'];
 
 				self::add_javascript('bookingfrontend', 'base', 'organization_add.js');
+				
+				$submitted_organization_number = phpgw::get_var('organization_number', 'string', 'POST');
+				if($submitted_organization_number)
+				{
+					if(!in_array($submitted_organization_number, $_new_org_list))
+					{
+						return array(
+							'status'	 => 'error',
+							'message'	 => array('Not authorized for this organization')
+						);
+					}
+				}
 
-				parent::add();
+				return parent::add();
 			}
 			else
 			{
@@ -130,7 +142,7 @@
 					$orgs_map[] = $org['orgnumber'];
 				}
 
-				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 				if($session_org_id && in_array($session_org_id, $orgs_map))
 				{

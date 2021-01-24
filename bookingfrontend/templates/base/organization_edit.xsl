@@ -47,7 +47,7 @@
 					</xsl:if>
 				</div>
 			</xsl:if>
-			<form action="" method="POST" id="form" name="form" class="col">
+			<form action="{form_action}" method="POST" id="form" name="form" class="col add_organization_form">
 				<div class="row">
 					<div class="col-md-6">
 						<xsl:if test="new_form">
@@ -161,7 +161,7 @@
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'Organization shortname')" />
 							</label>
-							<input id="field_shortname" class="form-control" name="shortname" type="text">
+							<input id="field_shortname" class="form-control" name="shortname" type="text" maxlength="11">
 								<xsl:attribute name="value">
 									<xsl:value-of select="organization/shortname"/>
 								</xsl:attribute>
@@ -267,22 +267,34 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<xsl:if test="currentapp = 'booking'">
-							<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
-						</xsl:if>
-						<xsl:if test="currentapp != 'booking'">
-							<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
-						</xsl:if>
-						<xsl:if test="currentapp = 'booking'">
-							<dt>
-								<label for="field_customer_internal">
-									<xsl:value-of select="php:function('lang', 'Internal Customer')"/>
-								</label>
-							</dt>
-							<dd>
-								<xsl:copy-of select="phpgw:option_checkbox(organization/customer_internal, 'customer_internal')"/>
-							</dd>
-						</xsl:if>
+						<div class="form-group">
+							<label for="field_customer_internal">
+								<xsl:value-of select="php:function('lang', 'Internal Customer')"/>
+							</label>
+							<xsl:copy-of select="phpgw:option_checkbox(organization/customer_internal, 'customer_internal', 'form-control')"/>
+						</div>
+
+						<div class="form-group">
+							<label for="field_show_in_portal">
+								<xsl:value-of select="php:function('lang', 'Show in portal')"/>
+							</label>
+							<select id="field_show_in_portal" name="show_in_portal" class="form-control">
+								<option value="0">
+									<xsl:if test="organization/show_in_portal=0">
+										<xsl:attribute name="selected">checked</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="php:function('lang', 'No')"/>
+								</option>
+								<option value="1">
+									<xsl:if test="organization/show_in_portal=1">
+										<xsl:attribute name="selected">checked</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="php:function('lang', 'Yes')"/>
+								</option>
+							</select>
+						</div>
+
+
 						<div class="form-group">
 							<label class="text-uppercase">
 								<xsl:value-of select="php:function('lang', 'Street')"/>
@@ -380,12 +392,14 @@
 									</xsl:attribute>
 								</xsl:if>
 							</input>
-							<a class="cancel">
-								<xsl:attribute name="href">
-									<xsl:value-of select="organization/cancel_link"/>
-								</xsl:attribute>
-								<xsl:value-of select="php:function('lang', 'Cancel')" />
-							</a>
+							<xsl:if test="organization/cancel_link != '#'">
+								<a class="cancel">
+									<xsl:attribute name="href">
+										<xsl:value-of select="organization/cancel_link"/>
+									</xsl:attribute>
+									<xsl:value-of select="php:function('lang', 'Cancel')" />
+								</a>
+							</xsl:if>
 						</div>
 					</div>
 				</div>
