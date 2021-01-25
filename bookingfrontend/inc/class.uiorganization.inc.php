@@ -119,7 +119,16 @@
 					}
 				}
 
-				return parent::add();
+				$ret =  parent::add();
+
+				/**
+				 * Refresh list
+				 */
+				if(phpgw::get_var('phpgw_return_as') == 'json' && $ret['status'] == 'saved')
+				{
+					$bouser->log_in();
+				}
+				return $ret;
 			}
 			else
 			{

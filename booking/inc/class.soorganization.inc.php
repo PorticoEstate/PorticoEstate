@@ -57,7 +57,8 @@
 			/**
 			 * Hide from bookingfrontend, but keep visible for cron jobs
 			 */
-			if(in_array($currentapp, array('booking','login')))
+			if( in_array($currentapp, array('booking','login') )
+				|| ( $GLOBALS['phpgw_info']['menuaction'] == 'bookingfrontend.uiorganization.add' && phpgw::get_var('customer_ssn', 'bool', 'POST') ) )
 			{
 				$fields['customer_ssn'] = array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),	'required' => false);
 				$fields['contacts']['manytomany']['column']['ssn'] = array('sf_validator' => createObject('booking.sfValidatorNorwegianSSN'));

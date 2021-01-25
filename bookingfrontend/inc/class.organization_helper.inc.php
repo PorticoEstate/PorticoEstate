@@ -39,6 +39,8 @@
 
 		public function __construct()
 		{
+			$config	= CreateObject('phpgwapi.config', 'booking')->read();
+			$this->proxy = !empty($config['proxy']) ? $config['proxy'] : '';
 		}
 
 

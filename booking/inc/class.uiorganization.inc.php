@@ -45,6 +45,8 @@
 				'organization_number' => 'string',
 				'activity_id' => 'int',
 				'customer_number' => 'string',
+				'customer_identifier_type' => 'string',
+				'customer_organization_number' => 'string',
 				'customer_internal' => 'int',
 				'show_in_portal' => 'int',
 			);

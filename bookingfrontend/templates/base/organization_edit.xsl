@@ -87,6 +87,7 @@
 						</div>
 
 						<input type="hidden" id="field_customer_identifier_type" name="customer_identifier_type" value=""></input>
+						<input type="hidden" id="field_customer_organization_number" name="customer_organization_number" value=""></input>
 						<div id="organization_number" class="form-group">
 							<xsl:if test="new_form">
 								<xsl:attribute name="style">

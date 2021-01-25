@@ -47,36 +47,42 @@ $(document).ready(function ()
 	ko.applyBindings(am, document.getElementById("new-application-partialtwo"));
 	am.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
 	bc.visible(false);
-
-//	$("input[name='customer_organization_number']").change(function ()
-//	{
-//		var selected = $(this).val().split('_');
-//		var organization_id = selected[0];
-//		var requestURL = phpGWLink('bookingfrontend/index.php', {menuaction: "bookingfrontend.uiorganization.index", filter_id: organization_id}, true);
-//
-//		$.getJSON(requestURL, function (result)
-//		{
-//
-//		});
-//
-//	});
 });
 
-// BOOTSTRAP VALIDATOR
-// (function() {
-//     'use strict';
-//     window.addEventListener('load', function() {
-//       // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//       var forms = document.getElementsByClassName('needs-validation');
-//       // Loop over them and prevent submission
-//       var validation = Array.prototype.filter.call(forms, function(form) {
-//         form.addEventListener('submit', function(event) {
-//           if (form.checkValidity() === false) {
-//             event.preventDefault();
-//             event.stopPropagation();
-//           }
-//           form.classList.add('was-validated');
-//         }, false);
-//       });
-//     }, false);
-//   })();
+
+
+
+$(function ()
+{
+	$("#btnSubmit").on("click", function (e)
+	{
+		var error =false;
+		var form = $("#application_form")[0];
+		var isValid = form.checkValidity();
+		if (!isValid)
+		{
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
+		{
+			document.getElementById('contact_email2').classList.replace('valid', 'invalid');
+			error =true;
+			alert('Epostadressen er ikke den samme i begge feltene');
+		}
+		else
+		{
+			document.getElementById('contact_email2').classList.replace('invalid', 'valid');
+		}
+		form.classList.add('was-validated');
+
+		if(error)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	});
+});

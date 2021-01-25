@@ -15,12 +15,13 @@ $(document).ready(function ()
 
 
 		var organization_number = $("#organization_number  option:selected").val();
-		if (selected == 'organization_number' && organization_number && !$("#field_name").val())
+		if (selected === 'organization_number' && organization_number && !$("#field_name").val())
 		{
 			populate_organization_data(organization_number);
 		}
-		else if (selected == 'organization_number' && !organization_number)
+		else if ((selected === 'organization_number' && !organization_number) || selected === 'customer_ssn')
 		{
+			$("#field_customer_organization_number").val('');
 			$("#field_name").val('');
 			$("#field_shortname").val('');
 			$("#field_street").val('');
@@ -119,6 +120,8 @@ $(document).ready(function ()
 
 function populate_organization_data(organization_number)
 {
+
+	$("#field_customer_organization_number").val(organization_number);
 	var requestURL = phpGWLink('bookingfrontend/index.php', {menuaction: "bookingfrontend.organization_helper.get_organization", organization_number: organization_number}, true);
 
 	$.getJSON(requestURL, function (result)

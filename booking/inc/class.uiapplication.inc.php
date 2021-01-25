@@ -74,7 +74,8 @@
 				'responsible_city' => 'string',
 				'agreement_requirements' => 'html',
 				'customer_organization_id' => 'string',
-				'customer_organization_name' => 'string'
+				'customer_organization_name' => 'string',
+				'customer_identifier_type' => 'string'
 			);
 
 			$this->display_name = lang('application');
@@ -1150,6 +1151,7 @@
 					$partial2['customer_organization_number']	 = $customer_organization_number_arr[1];
 					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
 					$partial2['customer_organization_name']		 = $organization['name'];
+					$partial2['customer_identifier_type']		 = $organization['customer_identifier_type'];
 				}
 
 				// Application contains only contact details. Use dummy values for event fields
@@ -1288,14 +1290,14 @@
 								$event['customer_internal'] = 0;
 								$event['cost'] = 0;
 
-								if($event['customer_organization_id'])
-								{
-									$customer_organization = $this->organization_bo->read_single($event['customer_organization_id']);
-									if($customer_organization['customer_identifier_type'])
-									{
-										$event['customer_identifier_type'] = $customer_organization['customer_identifier_type'];
-									}
-								}
+//								if($event['customer_organization_id'])
+//								{
+//									$customer_organization = $this->organization_bo->read_single($event['customer_organization_id']);
+//									if($customer_organization['customer_identifier_type'])
+//									{
+//										$event['customer_identifier_type'] = $customer_organization['customer_identifier_type'];
+//									}
+//								}
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];

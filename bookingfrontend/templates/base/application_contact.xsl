@@ -2,8 +2,8 @@
 	<style>
 		.modal-dialog,
 		.modal-content {
-		/* 80% of window height */
-		height: 80%;
+		/* 98% of window height */
+		height: 98%;
 		}
 
 		.modal-body {
@@ -19,7 +19,7 @@
 			</xsl:attribute>
 			<xsl:value-of select="php:function('lang', 'Go back')" />
 		</a>
-		<form action="" method="POST" id='application_form' name="form" class="needs-validation" novalidate="true">
+		<form action="" method="POST" id='application_form' name="form" class="needs-validation" novalidate="">
 			<div class="row mb-5">
 				<div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 					<h1 class="font-weight-bold">
@@ -57,28 +57,26 @@
 							</div>
 						</div>
 						<hr class="mt-5 mb-5"></hr>
-						<label>
-							<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
-						<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'invoice information')" />
-								</xsl:attribute>
-
-							</input>
-							<label class="form-check-label" for="privateRadio">
-								<xsl:value-of select="php:function('lang', 'Private event')" />
-							</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
-							<label class="form-check-label" for="orgRadio">
-								<xsl:value-of select="php:function('lang', 'organization')" />
-							</label>
+						<div class="form-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
+							<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn" required="true">
+								</input>
+								<label class="form-check-label" for="privateRadio">
+									<xsl:value-of select="php:function('lang', 'Private event')" />
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number" required="true"/>
+								<label class="form-check-label" for="orgRadio">
+									<xsl:value-of select="php:function('lang', 'organization')" />
+								</label>
+							</div>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig kundetype
+							</div>
 						</div>
 						<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'choose a')" />
@@ -98,15 +96,15 @@
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
 							<xsl:for-each select="delegate_data">
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}"/>
-									<label class="form-check-label" for="exampleRadios1">
+									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" data-bind="required: typeApplicationRadio() === 'organization_number'"/>
+									<label class="form-check-label" for="customer_organization_number_{id}">
 										<xsl:value-of select="organization_number"/>
 										[ <xsl:value-of select="name"/> ]
 									</label>
 								</div>
 							</xsl:for-each>
 							<div class="invalid-feedback">
-								Vennligst oppgi gyldig organisasjonsnummer.
+								Vennligst velg en organisasjon.
 							</div>
 
 							<label>
@@ -192,7 +190,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact_email')" />*</label>
-							<input type="email" class="form-control" name="contact_email" value="{application/contact_email}" required="true"/>
+							<input type="email" class="form-control" id="contact_email" name="contact_email" value="{application/contact_email}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi gyldig e-post.
 							</div>
@@ -201,7 +199,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'Confirm e-mail address')" />*</label>
-							<input type="email" class="form-control" name="contact_email2" value="{application/contact_email2}" required="true"/>
+							<input type="email" class="form-control" id="contact_email2" name="contact_email2" value="{application/contact_email2}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst bekreft e-posten din.
 							</div>
@@ -216,7 +214,7 @@
 							</div>
 						</div>
 						<hr class="mt-5"></hr>
-						<button class="btn btn-light mb-5" type="submit">
+						<button class="btn btn-light mb-5" type="submit" id="btnSubmit">
 							<xsl:value-of select="php:function('lang', 'send')" />
 						</button>
 					</div>
