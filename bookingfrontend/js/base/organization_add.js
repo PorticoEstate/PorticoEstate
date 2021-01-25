@@ -1,11 +1,41 @@
+/* global count_new_org_list */
+
 $(document).ready(function ()
 {
+	$("#submitBtn").prop('disabled', true);
+
+	$(document).on("keypress", 'form', function (e)
+	{
+		var code = e.keyCode || e.which;
+		if (code == 13)
+		{
+			e.preventDefault();
+			return false;
+		}
+	});
 
 	$("input[name='organization_type']").change(function ()
 	{
 		var unselect = {customer_ssn: 'organization_number', organization_number: 'customer_ssn'};
 		var identifier_type = {customer_ssn: 'ssn', organization_number: 'organization_number'};
 		var selected = $(this).val();
+
+		if (count_new_org_list === 0 && selected === 'organization_number')
+		{
+			$("#submitBtn").prop('disabled', true);
+			$("#officialRadio").prop('checked', false);
+			selected = 'customer_ssn';
+			$("#" + selected).show();
+			$("#" + unselect[selected]).hide();
+			$("#" + selected).attr("data-validation", "required");
+			$("#" + unselect[selected]).removeAttr("data-validation");
+			$("#field_customer_identifier_type").val(identifier_type[selected]);
+			alert('Du har har ikke en rolle som gir muliget for å registrere på vegne av (en ny) organisasjon');
+			return;
+		}
+
+		$("#submitBtn").prop('disabled', false);
+
 
 		$("#" + selected).show();
 		$("#" + unselect[selected]).hide();

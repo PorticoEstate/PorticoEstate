@@ -493,3 +493,6 @@ view allocation	bookingfrontend	no	Vis tildeling
 view booking	bookingfrontend	no	Vis interntildeling
 Phone is already registered	bookingfrontend	no	Telefonnummeret er allerede registrert
 download to your calendar	bookingfrontend	no	Last ned til din kalender
+organization type	bookingfrontend	no	Organisasjonstype
+personal group	bookingfrontend	no	Ikke registrert i Brønnøysund
+Official organization	bookingfrontend	no	Registrert i Brønnøysund

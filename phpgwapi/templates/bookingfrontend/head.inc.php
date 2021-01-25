@@ -333,7 +333,7 @@ HTML;
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 
-	$bouser	 = CreateObject('bookingfrontend.bouser');
+	$bouser	 = CreateObject('bookingfrontend.bouser', true);
 
 	/**
 	 * Might be set wrong in the ui-class
@@ -357,7 +357,7 @@ HTML;
 		{
 			return $org['orgnumber'];
 		}
-		if ($session_org_id && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
+		if ($session_org_id && ($session_org_id != $bouser->orgnr) && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
 		{
 			try
 			{
@@ -382,7 +382,7 @@ HTML;
 		else
 		{
 			$org_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiorganization.show',
-				'id' => $org->get_orgid($bouser->orgnr)));
+				'id' => $org->get_orgid($bouser->orgnr, $bouser->ssn)));
 
 			$lang_organization = lang('Organization');
 			$tpl_vars['org_info_view'] = "<span><img class='login-logo' src='{$loginlogo}' alt='{$lang_organization}'></img><a href='{$org_url}'>{$bouser->orgname}</a></span>";

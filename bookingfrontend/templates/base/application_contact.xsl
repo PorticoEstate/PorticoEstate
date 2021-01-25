@@ -256,5 +256,10 @@
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
+		<!-- Modal JQUERY logic -->
+		$('#new_organization').on('hidden.bs.modal', function (e)
+		{
+		location.reload();
+		})
 	</script>
 </xsl:template>

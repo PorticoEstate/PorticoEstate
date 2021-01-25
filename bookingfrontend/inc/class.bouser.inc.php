@@ -7,6 +7,7 @@
 		const ORGARRAY_SESSION_KEY = 'orgarray';
 		const USERARRAY_SESSION_KEY = 'userarray';
 
+		public $ssn = null;
 		public $orgnr = null;
 		public $orgname = null;
 		protected
@@ -21,12 +22,19 @@
 		 */
 		public $debug = false;
 
-		public function __construct()
+		public function __construct($get_external_login_info = null)
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
-			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
+			
+			if($get_external_login_info && $this->is_logged_in())
+			{
+				$external_login_info = $this->validate_ssn_login();
+				$this->ssn = $external_login_info['ssn'];
+			}
+
+			$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn);
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
 			if (!empty($this->config->config_data['debug']))
@@ -130,7 +138,7 @@
 			{
 
 				$this->orgnr = $orgnumber;
-				$this->orgname = $this->get_orgname_from_db($this->orgnr);
+				$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn);
 
 				if ($this->is_logged_in())
 				{
@@ -178,7 +186,7 @@
 			return !!$this->get_user_orgnr();
 		}
 
-		public function is_organization_admin( $organization_id = null, $organization_number = null, $customer_ssn = null )
+		public function is_organization_admin( $organization_id = null, $organization_number = null )
 		{
 			if (!$this->is_logged_in())
 			{
@@ -200,14 +208,16 @@
 				unset($org);
 				return in_array($organization_number, $orgs_map);
 			}
-			else if (!$organization_id && !$organization_number && $customer_ssn)
+
+			$so = CreateObject('booking.soorganization', true);
+			$organization = $so->read_single($organization_id);
+			$customer_ssn = $organization['customer_ssn'];
+
+			if ($organization_id && $customer_ssn)
 			{
 				$external_login_info = $this->validate_ssn_login();
 				return $customer_ssn == $external_login_info['ssn'];
 			}
-
-			$so = CreateObject('booking.soorganization');
-			$organization = $so->read_single($organization_id);
 
 			if ($organization['organization_number'] == '')
 			{

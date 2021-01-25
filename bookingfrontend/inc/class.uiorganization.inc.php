@@ -27,9 +27,9 @@
 			return parent::index_json();
 		}
 
-		public function get_orgid( $orgnr )
+		public function get_orgid( $orgnr, $customer_ssn = null )
 		{
-			return $this->bo->so->get_orgid($orgnr);
+			return $this->bo->so->get_orgid($orgnr, $customer_ssn );
 		}
 
 		public function add()

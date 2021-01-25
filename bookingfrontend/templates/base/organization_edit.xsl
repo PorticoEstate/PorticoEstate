@@ -52,7 +52,6 @@
 					<div class="col-md-6">
 						<xsl:if test="new_form">
 							<div class="form-group">
-
 								<label class="text-uppercase">
 									<xsl:value-of select="php:function('lang', 'organization type')" />
 								</label>
@@ -71,6 +70,11 @@
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number">
+<!--										<xsl:if test="count(new_org_list) = 0">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>-->
 									</input>
 									<label class="form-check-label text-uppercase" for="officialRadio">
 										<xsl:value-of select="php:function('lang', 'Official organization')" />
@@ -128,16 +132,11 @@
 									</select>
 
 								</xsl:when>
-								<xsl:otherwise>
+								<xsl:when test="not(new_form)">
 									<input id="field_organization_number" class="form-control" name="organization_number" type="text" value="{organization/organization_number}">
-										<xsl:choose>
-											<xsl:when test="not(new_form)">
-												<xsl:attribute name="readonly" value="readonly"/>
-											</xsl:when>
-										</xsl:choose>
-
+										<xsl:attribute name="readonly" value="readonly"/>
 									</input>
-								</xsl:otherwise>
+								</xsl:when>
 							</xsl:choose>
 
 						</div>
@@ -378,10 +377,11 @@
 					</xsl:if>
 					<script>
 						var endpoint = '<xsl:value-of select="module" />';
+						var count_new_org_list = <xsl:value-of select="count(new_org_list)" />;
 					</script>
 					<div class="col">
 						<div class="form-group">
-							<input type="submit" class="btn btn-light mr-4">
+							<input id="submitBtn" type="submit" class="btn btn-light mr-4">
 								<xsl:if test="new_form">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'Create')" />
