@@ -96,7 +96,6 @@ function ViewModel()
 			var selectedTown = ko.utils.arrayFirst(self.towns(), function(town) {
 				return (town.id === townId);
 			});
-			console.log(selectedTown.id)
 			newSelectedTowns.push(selectedTown.id);
 		});
 		self.selectedTowns(newSelectedTowns);
@@ -178,10 +177,11 @@ function searchListener() {
 			} else {
 				viewmodel.showSearchText(false);
 				viewmodel.showEvents(true);
-				viewmodel.items.removeAll();
 				$("#searchBtn").show();
 				$("#locationFilter").show();
 				$("#dateFilter").show();
+				$("#searchResults").hide();
+				resetFilters();
 			}
 		}
 	});
@@ -293,11 +293,15 @@ function getAutocompleteData() {
 			template: '<span>{{ label }}</span>',
 			callback: function (value, index, object, event)
 			{
-				selectedAutocompleteValue = true;
-				$('#mainSearchInput').val(autocompleteData[value].label);
+				if (value !== 'hiddenText') {
+					selectedAutocompleteValue = true;
+					$('#mainSearchInput').val(autocompleteData[value].label);
 
-				if (autocompleteData[value].type !== 'lokale') {
-					window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
+					if (autocompleteData[value].type !== 'lokale') {
+						window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
+					}
+				} else {
+					$('#mainSearchInput').val('');
 				}
 			}
 		});
@@ -447,7 +451,7 @@ function doSearch(searchterm_value) {
 function DoFilterSearch(resCategory)
 {
 	$('.overlay').show();
-	const requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", length: -1}, true);
+	const requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery_available_resources", length: -1}, true);
 	let fromDate = '';
 	let toDate = '';
 
@@ -472,6 +476,7 @@ function DoFilterSearch(resCategory)
 
 	let fromTime = typeof $("#fromTime").val() === 'undefined' ? '' : $("#fromTime").val();
 	let toTime = typeof $("#toTime").val() === 'undefined' ? '' : $("#toTime").val()
+
 
 	$.ajax({
 		url: requestURL,
@@ -515,6 +520,19 @@ function DoFilterSearch(resCategory)
 			$('.overlay').hide();
 		}
 	});
+}
+
+function resetFilters() {
+	viewmodel.dateFilter('');
+	$("#fromTime").val('')
+	$("#toTime").val('')
+
+	viewmodel.selectedTowns.removeAll();
+	viewmodel.selectedTownIds.removeAll();
+	viewmodel.selectedFacilities.removeAll();
+	viewmodel.selectedFacilityIds.removeAll();
+	viewmodel.selectedActivities.removeAll();
+	viewmodel.selectedActivities.removeAll();
 }
 
 function setResources(resources) {

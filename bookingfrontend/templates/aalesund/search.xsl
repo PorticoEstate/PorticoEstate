@@ -16,7 +16,7 @@
             <div class="noteBody">
                Idrettsanlegg og kulturbygg i Øygarden kommune er delvis stengt framover, som eit tiltak mot spreiing av koronaviruset.  Og kan kun brukes etter tilrådningar fra Folkehelsedirektoratet og Øygarden kommune.
                <br /><br />
-               Søknadar som vert lagt inn i portalen, vert sakshandsama, men vil bli lengre sakshandsamartid. Følg med her for meir informasjon. 
+               Søknadar som vert lagt inn i portalen, vert sakshandsama, men vil bli lengre sakshandsamartid. Følg med her for meir informasjon.
                <br /><br />
                Du kan framleis låne/leiga lokale i portalen fram i tid, med forbehold om at bygga vert opna for bruk etter avstengningsperioden.
             </div>
@@ -26,7 +26,7 @@
                Tittel om hva tjenesten leverer
             </div>
             <div class="noteBody">
-               Her finner du informasjon om kommunale bygg, skular, idrettsanlegg, og utstyr som er til utlån/utleige i Øygarden kommune. Ein del private anlegg, forsamlingshus o.l ligg og i portalen, med kontaktinformasjon til eigarar av bygga. Du kan også søke på lag og organisasjoner i kommunen. 
+               Her finner du informasjon om kommunale bygg, skular, idrettsanlegg, og utstyr som er til utlån/utleige i Øygarden kommune. Ein del private anlegg, forsamlingshus o.l ligg og i portalen, med kontaktinformasjon til eigarar av bygga. Du kan også søke på lag og organisasjoner i kommunen.
             </div>
          </div>
       </div>
@@ -59,12 +59,13 @@
                        value: selectedTown,
                        optionsCaption: 'Velg bydel'"/>
 				  </div>
-
 				  <div  id="dateWrapper">
 					  <input id="dateFilter" data-bind="value: dateFilter" class="form-control dateFilter" name="datefilter" placeholder="Velg dato" aria-label="Large" autocomplete="off" value="" />
 				  </div>
 			  </div>
+			  <div class="input-group bk">
 			  <button id="searchBtn" class="greenBtn">Finn tilgjengelig</button>
+			  </div>
 		  </div>
 
 		  <div class="pageContentWrapper">
@@ -167,10 +168,6 @@
 									  </label>
 								  </div>
 							  </div>
-
-							  <ul data-bind="foreach: selectedFacilities">
-								  <li data-bind="text: name"/>
-							  </ul>
 						  </div>
 
 						  <!-- Activity filter -->
@@ -234,7 +231,7 @@
 						  <div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()">Aktiver filter</div>
 
 						  <!-- Remove filter button -->
-						  <div id="removeFilterBtn" class="removeFilterBtn">Nullstill filter</div>
+						  <div id="removeFilterBtn" class="removeFilterBtn" onclick="resetFilters()">Nullstill filter</div>
 					  </div>
 
 

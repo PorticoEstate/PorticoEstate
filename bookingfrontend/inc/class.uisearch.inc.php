@@ -14,6 +14,7 @@
 			'index'             => true,
 			'query'             => true,
 			'resquery'          => true,
+			'resquery_available_resources' => true,
 			'get_all_available_buildings' => true,
 			'autocomplete_resource_and_building' => true,
 			'get_all_towns' => true,
@@ -266,6 +267,34 @@
 				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
 		}
 
+		function resquery_available_resources()
+		{
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
+			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
+			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
+			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
+			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
+			$fields_multiids = array('facility_id', 'part_of_town_id', 'activity_id');
+			$multiids = array();
+			foreach ($fields_multiids as $field)
+			{
+				$_ids = explode(',', phpgw::get_var($field, 'string', 'REQUEST', null));
+				$ids = array();
+				foreach ($_ids as $id)
+				{
+					if (ctype_digit($id))
+					{
+						$ids[] = (int)$id;
+					}
+				}
+				$multiids[$field] = array_unique($ids);
+			}
+			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id, 'activity_id' => $multiids['activity_id'],
+				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
+				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
+		}
+
 
 		function events()
 		{
@@ -293,7 +322,7 @@
 			self::link(array(
 				'menuaction' => 'bookingfrontend.uisearch.autocomplete_resource_and_building',
 				'phpgw_return_as' => 'json'));
-			echo json_encode($this->bo->getResourceAndBuildingAutoCompleteData());
+			echo json_encode($this->bo->get_resource_and_building_autocomplete_data());
 			exit();
 		}
 

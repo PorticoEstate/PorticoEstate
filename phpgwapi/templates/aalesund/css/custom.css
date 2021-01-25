@@ -514,17 +514,14 @@ input[type=submit] {
 
 #searchContainer #locationWrapper{
     display:inline-block;
-    max-width: 350px;
-    width:100%;
+	width: 288px;
     border-radius: 12px;
 }
 
 
  #searchContainer #dateWrapper{
-    margin-left: 15px;
+	 width: 288px;
     display:inline-block;
-    max-width: 350px;
-    width:100%;
     border-radius:12px;
 }
 
@@ -733,14 +730,12 @@ body{
 
 .locationFilter {
 	float: right;
-	width: 278px;
 	background: url(../img/where.svg) no-repeat scroll 16px 15px;
 	background-size: 15px;
 }
 
 .dateFilter {
 	float: left;
-	width: 278px;
 	background: url(../img/cal-search.svg) no-repeat scroll 16px 14px;
 	background-size: 20px;
 }
@@ -809,8 +804,10 @@ body{
   letter-spacing: normal;
  }
  .greenBtn {
+	 margin: auto;
+	 display: block;
 	 width: 325px;
-	 margin: 20px 0 12px;
+	 margin-top: 20px;
 	 padding: 10px 0 10px 0;
 	 border-radius: 24px;
 	 border: none;
@@ -1129,7 +1126,7 @@ select option:focus {
 }
 
 .filterContainer {
-	width: 33%;
+	width: 35%;
 	height: max-content;
 	margin: 24px 24px 0 0;
 	padding: 24px;
@@ -1141,7 +1138,7 @@ select option:focus {
 }
 
 .resultContainer {
-	width: 67%;
+	width: 65%;
 	float: right;
 }
 
