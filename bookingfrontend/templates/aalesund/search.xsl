@@ -190,7 +190,7 @@
 						  </div>
 
 						  <!-- Gear filter -->
-						  <div class="accordionFilter">
+						  <div class="accordionFilter" data-bind="if: gear().length > 0">
 							  <div class="accordionHeader" data-bind="click: toggleGear">
 								  <div class="accordionHeaderText">Utstyr</div>
 								  <div data-bind="css: gearArrowIcon"/>
@@ -209,7 +209,7 @@
 						  </div>
 
 						  <!-- Capacity filter -->
-						  <div class="accordionFilter">
+						  <div class="accordionFilter" data-bind="if: capacities().length > 0">
 							  <div class="accordionHeader" data-bind="click: toggleCapacity">
 								  <div class="accordionHeaderText">Kapasitet</div>
 								  <div data-bind="css: capacityArrowIcon"/>
@@ -243,37 +243,6 @@
 					  </div>
 				  </div>
 
-			  </div>
-		  </div>
-
-		  <div id="searchResult" data-bind="if: showSearchText">
-			  <h1 class="text-center result-title">
-				  <xsl:value-of select="php:function('lang', 'Search results')"/> (<span data-bind="text: items().length"></span>)</h1>
-			  <div class="row" id="result-items" data-bind="foreach: items">
-				  <div class="col-lg-6 card-positioncorrect">
-					  <a class="custom-card-link-href" data-bind="">
-						  <div class="row custom-card">
-							  <div class="col-3 date-circle">
-								  <!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
-								  <svg width="90" height="90">
-									  <circle cx="45" cy="45" r="37" class="circle" />
-									  <text x="50%" y="50%" text-anchor="middle" font-size="14px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
-									  </text>
-								  </svg>
-							  </div>
-							  <div class="col-9 desc">
-								  <div class="desc">
-									  <h2 class="font-weight-bold" data-bind="html: name"></h2>
-									  <span data-bind="html: street"></span>
-									  <span class="d-block" data-bind="html: postcode"></span>
-								  </div>
-								  <div data-bind="foreach: tagItems">
-									  <span class="badge badge-pill badge-default" data-bind="text: $rawData, click: selectThisTag" ></span>
-								  </div>
-							  </div>
-						  </div>
-					  </a>
-				  </div>
 			  </div>
 		  </div>
       </div>

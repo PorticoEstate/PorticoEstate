@@ -13,6 +13,7 @@
 			'get_filterboxdata' => true,
 			'index'             => true,
 			'query'             => true,
+			'query_available_resources' => true,
 			'resquery'          => true,
 			'resquery_available_resources' => true,
 			'get_all_available_buildings' => true,
@@ -265,6 +266,96 @@
 			}
 			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $multiids['activity_id'],
 				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
+		}
+
+		function query_available_resources() {
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
+			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
+			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
+			$_filter_part_of_town = explode(',', phpgw::get_var('part_of_town_id', 'string'));
+			$_filter_activities = explode(',', phpgw::get_var('activity_id', 'string'));
+			$_filter_facilities = explode(',', phpgw::get_var('facility_id', 'string'));
+			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
+			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
+			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
+			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
+
+			$filter_activities = array();
+			foreach ($_filter_activities as $key => $value)
+			{
+				if ($value && ctype_digit($value))
+				{
+					$filter_activities[] = (int)$value;
+				}
+			}
+
+			$filter_facilities = array();
+			foreach ($_filter_facilities as $key => $value)
+			{
+				if ($value && ctype_digit($value))
+				{
+					$filter_facilities[] = (int)$value;
+				}
+			}
+
+			$filter_part_of_town = array();
+			foreach ($_filter_part_of_town as $key => $value)
+			{
+				if ($value && ctype_digit($value))
+				{
+					$filter_part_of_town[] = (int)$value;
+				}
+			}
+			unset($value);
+			$_filter_top_level = explode(',', phpgw::get_var('filter_top_level', 'string'));
+
+			$filter_top_level = array();
+			foreach ($_filter_top_level as $key => $value)
+			{
+				if ($value)
+				{
+					$filter_top_level[] = $value;
+				}
+			}
+			unset($value);
+
+			if (!$filter_top_level)
+			{
+				$activities = ExecMethod('booking.boactivity.get_top_level');
+				foreach ($activities as $activity)
+				{
+					$filter_top_level[] = $activity['id'];
+				}
+			}
+
+			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
+			$activity_criteria = array();
+			foreach ($criteria as $entry)
+			{
+				if (isset($entry['activity_top_level']) && !in_array($entry['activity_top_level'], $filter_top_level))
+				{
+					continue;
+				}
+				if (isset($entry['activity_top_level']) && $entry['activity_top_level'])
+				{
+					$activity_criteria[$entry['activity_top_level']]['activity_top_level'] = $entry['activity_top_level'];
+				}
+				if (isset($entry['cat_id']) && !in_array($entry['cat_id'], $filter_top_level))
+				{
+					continue;
+				}
+				if (!empty($entry['cat_id']))
+				{
+					$activity_criteria[$entry['cat_id']]['activity_top_level'] = $entry['cat_id'];
+					$activity_criteria[$entry['cat_id']]['choice'][] = $entry;
+				}
+			}
+			$data = $this->bo->search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level,
+					$activity_criteria, $filter_activities, $filter_facilities, $length, array('from_date' => $from_date,
+						'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
+
+			return $data;
 		}
 
 		function resquery_available_resources()
