@@ -163,7 +163,6 @@ $(document).ready(function () {
 	setDateTimePicker();
 	getUpcomingEvents();
 
-	console.log(autocompleteData);
 	$("#searchResults").hide();
 });
 
@@ -185,8 +184,6 @@ function filterSearch(resCategory) {
 }
 
 function doSearch(url, params) {
-	console.log(params);
-
 	$(".overlay").show();
 	viewmodel.showEvents(false);
 	viewmodel.showSearchText(true);
@@ -216,8 +213,6 @@ function doSearch(url, params) {
 		data: data,
 		success: function (response)
 		{
-			console.log(response);
-
 			$("#mainSearchInput").blur();
 			$("#locationFilter").hide();
 			$("#dateFilter").hide();
@@ -495,7 +490,6 @@ function setEventData(result) {
 }
 
 function setResources(resources) {
-	console.log(resources);
 	if (resources.length !== 0) {
 		for (let i = 0; i < resources.length; i++) {
 			viewmodel.resources.push({
