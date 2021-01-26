@@ -122,12 +122,12 @@
 			$hash = sha1($ssn);
 			$_ssn =  '{SHA1}' . base64_encode($hash);
 
-			$sql = "SELECT DISTINCT id, name, active, organization_number FROM ("
-				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number FROM bb_delegate"
+			$sql = "SELECT DISTINCT id, name, active, organization_number, customer_ssn FROM ("
+				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
 				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
 				. " WHERE ssn = '{$_ssn}'"
 				. " UNION"
-				. " SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number FROM bb_organization"
+				. " SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_organization"
 				. " WHERE {$filter_organization_number} OR customer_ssn = '{$ssn}') as t";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -139,7 +139,8 @@
 					'id'							 => $this->db->f('id'),
 					'name'							 => $this->db->f('name', true),
 					'active'						 => $this->db->f('active'),
-					'organization_number'			 => $this->db->f('organization_number', true),
+					'customer_ssn'					 => $this->db->f('customer_ssn'),
+					'organization_number'			 => $this->db->f('organization_number'),
 				);
 			}
 			return $values;

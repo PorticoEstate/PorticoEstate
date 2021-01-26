@@ -5,7 +5,7 @@
 	class booking_uiorganization extends booking_uicommon
 	{
 
-		protected $fields, $new_org_list, $ssn;
+		protected $fields, $new_org_list, $ssn, $personal_org;
 		public $public_functions = array
 			(
 			'building_users' => true,
@@ -247,7 +247,8 @@
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
 						return array(
-							'status' => 'saved',
+							'status'	 => 'saved',
+							'message'	 => lang('saved')
 						);
 					}
 
@@ -290,6 +291,7 @@
 			self::render_template_xsl('organization_edit', array(
 				'form_action'	 => self::link(array('menuaction' => "{$this->module}.uiorganization.add")),
 				'organization'	 => $organization,
+				'personal_org'	 => $this->personal_org,
 				'new_org_list'	 => $this->new_org_list,
 				"new_form"		 => "1",
 				'module'		 => $this->module,

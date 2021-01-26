@@ -1,4 +1,4 @@
-/* global count_new_org_list */
+/* global count_new_org_list, personal_org */
 
 $(document).ready(function ()
 {
@@ -20,17 +20,36 @@ $(document).ready(function ()
 		var identifier_type = {customer_ssn: 'ssn', organization_number: 'organization_number'};
 		var selected = $(this).val();
 
+		var error = false;
+		if(personal_org.length > 0 && selected === 'customer_ssn')
+		{
+			error = true;
+			$("#submitBtn").prop('disabled', true);
+			$("#privateRadio").prop('checked', false);
+			selected = 'customer_ssn';
+			$("#" + selected).hide();
+			$("#" + unselect[selected]).hide();
+			$("#" + selected).attr("required", "required");
+			$("#" + unselect[selected]).removeAttr("data-validation");
+			$("#field_customer_identifier_type").val(identifier_type[selected]);
+			alert('Du har har allerede registrert "' + personal_org + '"');
+		}
+
 		if (count_new_org_list === 0 && selected === 'organization_number')
 		{
+			error = true;
 			$("#submitBtn").prop('disabled', true);
 			$("#officialRadio").prop('checked', false);
 			selected = 'customer_ssn';
-			$("#" + selected).show();
+			$("#" + selected).hide();
 			$("#" + unselect[selected]).hide();
-			$("#" + selected).attr("data-validation", "required");
-			$("#" + unselect[selected]).removeAttr("data-validation");
+			$("#" + selected).attr("required", "required");
+			$("#" + unselect[selected]).removeAttr("required");
 			$("#field_customer_identifier_type").val(identifier_type[selected]);
 			alert('Du har har ikke en rolle som gir muliget for å registrere på vegne av (en ny) organisasjon');
+		}
+		if(error)
+		{
 			return;
 		}
 
@@ -129,6 +148,7 @@ $(document).ready(function ()
 					{
 						$("#organization_number option:selected").remove();
 						document.getElementById("form").reset();
+						alert(data.message);
 					}
 					else
 					{

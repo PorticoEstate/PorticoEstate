@@ -1145,7 +1145,7 @@
 				$partial2 = $this->extract_form_data();
 
 				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
-				if ($customer_organization_number_arr)
+				if (!empty($customer_organization_number_arr[0]))
 				{
 					$partial2['customer_organization_id']		 = $customer_organization_number_arr[0];
 					$partial2['customer_organization_number']	 = $customer_organization_number_arr[1];

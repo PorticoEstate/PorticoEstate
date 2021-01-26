@@ -70,11 +70,6 @@
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number">
-<!--										<xsl:if test="count(new_org_list) = 0">
-											<xsl:attribute name="disabled">
-												<xsl:text>disabled</xsl:text>
-											</xsl:attribute>
-										</xsl:if>-->
 									</input>
 									<label class="form-check-label text-uppercase" for="officialRadio">
 										<xsl:value-of select="php:function('lang', 'Official organization')" />
@@ -378,6 +373,7 @@
 					<script>
 						var endpoint = '<xsl:value-of select="module" />';
 						var count_new_org_list = <xsl:value-of select="count(new_org_list)" />;
+						var personal_org = '<xsl:value-of select="personal_org" />';
 					</script>
 					<div class="col">
 						<div class="form-group">

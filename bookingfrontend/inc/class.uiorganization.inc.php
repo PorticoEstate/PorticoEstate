@@ -84,8 +84,11 @@
 				foreach ($delegate_data as $delegate_entry)
 				{
 					$delegate_map[] = $delegate_entry['organization_number'];
+					if( $delegate_entry['customer_ssn'] == $external_login_info['ssn'])
+					{
+						$this->personal_org = $delegate_entry['name'];
+					}
 				}
-
 				$_new_org_list = array_diff(array_keys($orgs_map), $delegate_map);
 
 				$new_org_list = array();

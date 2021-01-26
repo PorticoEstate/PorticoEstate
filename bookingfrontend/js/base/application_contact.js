@@ -1,3 +1,5 @@
+/* global bc, ko */
+
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
@@ -47,6 +49,20 @@ $(document).ready(function ()
 	ko.applyBindings(am, document.getElementById("new-application-partialtwo"));
 	am.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
 	bc.visible(false);
+
+	$("input[name='customer_identifier_type']").change(function ()
+	{
+		var selected = $(this).val();
+
+		if (selected === "organization_number")
+		{
+			$("input[name='customer_organization_number']").prop('required', true);
+		}
+		else if (selected === "ssn")
+		{
+			$("input[name='customer_organization_number']").prop('required', false);
+		}
+	});
 });
 
 
@@ -56,7 +72,7 @@ $(function ()
 {
 	$("#btnSubmit").on("click", function (e)
 	{
-		var error =false;
+		var error = false;
 		var form = $("#application_form")[0];
 		var isValid = form.checkValidity();
 		if (!isValid)
@@ -67,7 +83,7 @@ $(function ()
 		if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
 		{
 			document.getElementById('contact_email2').classList.replace('valid', 'invalid');
-			error =true;
+			error = true;
 			alert('Epostadressen er ikke den samme i begge feltene');
 		}
 		else
@@ -76,7 +92,7 @@ $(function ()
 		}
 		form.classList.add('was-validated');
 
-		if(error)
+		if (error)
 		{
 			return false;
 		}
