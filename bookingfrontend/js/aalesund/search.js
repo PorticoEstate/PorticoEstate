@@ -17,6 +17,8 @@ function ViewModel()
 
 	self.goToBuilding = function (event) { window.location = event.building_url(); };
 	self.goToOrganization = function (event) { window.location = event.org_url(); }
+	self.goToResource = function (event) { window.location = event.resource_url; }
+	self.goToApplication = function (event) { window.location = event.application_url; }
 	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }
 
 	self.toggleTown = function (event) {
@@ -284,6 +286,8 @@ function resetFilters() {
 	viewmodel.selectedFacilityIds.removeAll();
 	viewmodel.selectedActivities.removeAll();
 	viewmodel.selectedActivities.removeAll();
+
+	findSearchMethod();
 }
 
 function findDate() {
@@ -492,15 +496,35 @@ function setEventData(result) {
 function setResources(resources) {
 	if (resources.length !== 0) {
 		for (let i = 0; i < resources.length; i++) {
+			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to);
+
 			viewmodel.resources.push({
 				name: resources[i].resource_name,
 				id: resources[i].resource_id,
-				location: typeof resources[i].building_city === "undefined" ? resources[i].building_name : resources[i].building_name + ' - ' + resources[i].building_city,
-				availableFrom: resources[i].from,
-				availableTo: resources[i].to
-			});
+				location: resources[i].building_name,
+				date: dates['date'],
+				month: dates['month'],
+				time: dates['time'],
+				resource_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: resources[i].resource_id, building_id: resources[i].building_id}, false),
+				building_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: resources[i].building_id}, false),
+				application_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: resources[i].building_id, resource_id: resources[i].resource_id}, false),
+
+		});
 		}
 	}
+}
+
+function splitDateIntoDateAndTime(from, to) {
+	let date = (from.substr(0,10) === to.substr(0,10)) ? from.substr(0,3) : from.substr(0,3) + ' - ' + to.substr(0,3);
+	let month = months[parseInt(from.substr(3,2))-1]
+	let time = from.substr(11, 5) + ' - ' + to.substr(11, 5);
+
+	return {
+		'date': date,
+		'month': month,
+		'time': time
+	}
+
 }
 
 function setTownData(towns) {

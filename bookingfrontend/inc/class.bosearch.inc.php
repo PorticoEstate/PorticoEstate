@@ -765,12 +765,17 @@
 				$available_resource['building_id'] = $building['id'];
 				$available_resource['building_name'] = $building['name'];
 				$available_resource['building_city'] = $building['city'];
+				$available_resource['building_street'] = $building['street'];
+				$available_resource['building_zip_code'] = $building['zip_code'];
+				$available_resource['building_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
 
 				foreach ($building['resources'] as $resource)
 				{
 					$available_resource['resource_id'] = $resource['id'];
 					$available_resource['resource_name'] = $resource['name'];
-					$available_resource['resource_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource['id']));
+					$available_resource['resource_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource['id'], 'building_id' => $building['id']));
+					$available_resource['application_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $building['id'], 'resource_id' => $resource['id']));
+
 
 					$allocation_ids = $this->sobooking->allocation_ids_for_resource($resource['id'], $from_date, $to_date);
 					$booking_ids = $this->sobooking->booking_ids_for_resource($resource['id'], $from_date, $to_date);
@@ -811,6 +816,9 @@
 					{
 						$available_resource['from'] = $from_date;
 						$available_resource['to'] = $to_date;
+
+						$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+						$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 						array_push($available_resources, $available_resource);
 					} else {
 						$booked_times_len = count($booked_times);
@@ -833,10 +841,14 @@
 
 									if($available_resource_time <= $from_time && $available_resource_to >= $to_time)
 									{
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
 								} else
 								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 									array_push($available_resources, $available_resource);
 								}
 							} else if ($from > $last_end_date)
@@ -851,10 +863,14 @@
 
 									if($available_resource_time <= $from_time && $available_resource_to >= $to_time)
 									{
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
 								} else
 								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 									array_push($available_resources, $available_resource);
 								}
 
@@ -873,9 +889,13 @@
 									$available_resource_to = $available_resource['to']->format('H:i');
 
 									if ($available_resource_time <= $from_time && $available_resource_to >= $to_time) {
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
 								} else {
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 									array_push($available_resources, $available_resource);
 								}
 							}

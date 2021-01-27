@@ -1094,6 +1094,72 @@ select option:focus {
 	display: flex;
 }
 
+.resultCalIcon {
+	top: 50%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(-31%);
+	content: url(../img/when-event.svg);
+	position: absolute;
+}
+
+.resultDate {
+	position: absolute;
+	top: 50%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(-80%);
+	left: 50px;
+	font-size: 17px;
+	font-weight: 600;
+	font-family: Rubik;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	color: #0b1214;
+}
+
+.resultMonth {
+	position: absolute;
+	top: 50%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(29%);
+	left: 38px;
+	font-size: 16px;
+	color: #0b1214;
+	font-family: Rubik;
+}
+
+.resultClockContainer {
+	top: 50%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(29%);
+}
+
+.resultClockIcon {
+	content: url(../img/time-clock.svg);
+	position: absolute;
+	top: 20%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(-30%);
+	right: 130px;
+}
+
+.resultClockText {
+	position: absolute;
+	font-family: Rubik;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	right: 35px;
+	color: #0b1214;
+	top: 20%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(-30%);
+}
+
 .horizontalgap {
 	float: left;
 	overflow: hidden;
@@ -1144,7 +1210,7 @@ select option:focus {
 
 .resultCard {
 	margin: 24px 0 0 0;
-	padding: 16px 0 16px 32px;
+	padding: 16px 0 16px 0;
 	border-radius: 12px;
 	border: solid 1px #ebebeb;
 	background-color: #ffffff;
@@ -1153,7 +1219,7 @@ select option:focus {
 .resultText {
 	max-width: max-content;
 	font-family: Rubik;
-	font-size: 1.2rem;
+	font-size: 19px;
 	font-weight: 500;
 	font-stretch: normal;
 	font-style: normal;
@@ -1162,9 +1228,14 @@ select option:focus {
 	color: #0b1214;
 }
 
+.resultText:hover {
+	cursor: pointer;
+	color: #83338f
+}
+
 .resultTextLocation {
 	font-family: Rubik;
-	font-size: 0.9rem;
+	font-size: 13px;
 	font-weight: normal;
 	font-stretch: normal;
 	font-style: normal;
@@ -1177,6 +1248,27 @@ select option:focus {
 .resultTextLocation:before {
 	content: url(../img/pin.svg);
 	padding-right: 4px;
+}
+
+.resultBtnText {
+	position: absolute;
+	font-family: Rubik;
+	font-size: 15px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	right: 37px;
+	color: #0b1214;
+	top: 53%;
+	/* Transform looks at the element itself and not the parent. */
+	transform: translateY(20%);
+}
+
+.resultBtnText:hover {
+	cursor: pointer;
+	color: #83338f;
 }
 
 .accordionFilter {

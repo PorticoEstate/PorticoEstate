@@ -236,9 +236,21 @@
 
 
 					  <div class="resultContainer" data-bind="foreach: resources">
-						  <div class="resultCard">
-							  <div class="resultText">Tilgjengelig lokale innenfor satte filter</div>
-							  <div class="resultTextLocation" data-bind="text: location"></div>
+						  <div class="resultCard row">
+							  <div class="col-2">
+								  <div class="resultCalIcon"/>
+								  <span class="resultDate" data-bind="text: date"/>
+								  <span class="resultMonth" data-bind="text: month"/>
+							  </div>
+							  <div class="col-7">
+								  <div class="resultText" href="#" data-bind="text: name, click:$parent.goToResource"/>
+								  <div class="resultTextLocation" data-bind="text: location"/>
+							  </div>
+							  <div class="col-3">
+								  <div class="resultClockIcon"/>
+								  <div class="resultClockText" data-bind="text: time"/>
+								  <div class ="resultBtnText" href="#" data-bind="click:$parent.goToApplication">Til søknadsside</div>
+							  </div>
 						  </div>
 					  </div>
 				  </div>
