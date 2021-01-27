@@ -1103,6 +1103,8 @@ select option:focus {
 }
 
 .resultDate {
+	display: inline-block;
+
 	position: absolute;
 	top: 50%;
 	/* Transform looks at the element itself and not the parent. */
@@ -1116,9 +1118,12 @@ select option:focus {
 	line-height: normal;
 	letter-spacing: normal;
 	color: #0b1214;
+	word-break: break-word;
 }
 
 .resultMonth {
+	display: inline-block;
+
 	position: absolute;
 	top: 50%;
 	/* Transform looks at the element itself and not the parent. */
@@ -1127,12 +1132,7 @@ select option:focus {
 	font-size: 16px;
 	color: #0b1214;
 	font-family: Rubik;
-}
-
-.resultClockContainer {
-	top: 50%;
-	/* Transform looks at the element itself and not the parent. */
-	transform: translateY(29%);
+	word-break: break-word;
 }
 
 .resultClockIcon {

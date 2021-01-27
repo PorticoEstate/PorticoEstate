@@ -767,15 +767,11 @@
 				$available_resource['building_city'] = $building['city'];
 				$available_resource['building_street'] = $building['street'];
 				$available_resource['building_zip_code'] = $building['zip_code'];
-				$available_resource['building_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
 
 				foreach ($building['resources'] as $resource)
 				{
 					$available_resource['resource_id'] = $resource['id'];
 					$available_resource['resource_name'] = $resource['name'];
-					$available_resource['resource_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource['id'], 'building_id' => $building['id']));
-					$available_resource['application_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uiapplication.add', 'building_id' => $building['id'], 'resource_id' => $resource['id']));
-
 
 					$allocation_ids = $this->sobooking->allocation_ids_for_resource($resource['id'], $from_date, $to_date);
 					$booking_ids = $this->sobooking->booking_ids_for_resource($resource['id'], $from_date, $to_date);
