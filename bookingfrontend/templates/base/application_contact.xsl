@@ -1,4 +1,17 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<style>
+		.modal-dialog,
+		.modal-content {
+		/* 98% of window height */
+		height: 98%;
+		}
+
+		.modal-body {
+		/* 100% = dialog height, 120px = header + footer */
+		max-height: calc(100vh - 210px);
+		overflow-y: auto;
+		}
+	</style>
 	<div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">
 		<a class="btn btn-light">
 			<xsl:attribute name="href">
@@ -6,7 +19,7 @@
 			</xsl:attribute>
 			<xsl:value-of select="php:function('lang', 'Go back')" />
 		</a>
-		<form action="" method="POST" id='application_form' name="form" class="needs-validation" novalidate="true">
+		<form action="" method="POST" id='application_form' name="form" class="needs-validation" novalidate="">
 			<div class="row mb-5">
 				<div class="col-md-8 offset-md-2" data-bind="visible: !applicationSuccess()">
 					<h1 class="font-weight-bold">
@@ -44,33 +57,66 @@
 							</div>
 						</div>
 						<hr class="mt-5 mb-5"></hr>
-						<label>
-							<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
-						<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn"/>
-							<label class="form-check-label" for="privateRadio">
-								<xsl:value-of select="php:function('lang', 'Private event')" />
-							</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number"/>
-							<label class="form-check-label" for="orgRadio">
-								<xsl:value-of select="php:function('lang', 'organization')" />
-							</label>
+						<div class="form-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'invoice information')" />*</label>
+							<input type="text" id="customer_identifier_type_hidden_field" hidden="hidden" value="{application/customer_identifier_type}"/>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="customer_identifier_type" id="privateRadio" data-bind="checked: typeApplicationRadio" value="ssn" required="true">
+								</input>
+								<label class="form-check-label" for="privateRadio">
+									<xsl:value-of select="php:function('lang', 'Private event')" />
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="customer_identifier_type" id="orgRadio" data-bind="checked: typeApplicationRadio" value="organization_number" required="true"/>
+								<label class="form-check-label" for="orgRadio">
+									<xsl:value-of select="php:function('lang', 'organization')" />
+								</label>
+							</div>
+							<div class="invalid-feedback">
+								Vennligst oppgi gyldig kundetype
+							</div>
 						</div>
 						<p data-bind="ifnot: typeApplicationSelected, visible: typeApplicationValidationMessage" class="isSelected validationMessage">
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
 						<!-- Organization Number -->
-						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+						<!--						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 							<label>
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
 							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi gyldig organisasjonsnummer.
 							</div>
+						</div>-->
+
+						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+							<label>
+								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
+							<xsl:for-each select="delegate_data">
+								<div class="form-check form-check-inline" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" required="true"/>
+									<label class="form-check-label" for="customer_organization_number_{id}">
+										<xsl:value-of select="organization_number"/>
+										[ <xsl:value-of select="name"/> ]
+									</label>
+								</div>
+							</xsl:for-each>
+							<div class="invalid-feedback">
+								Vennligst velg en organisasjon.
+							</div>
+
+							<label>
+								<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
+									<img src="{add_img}" width="23"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="php:function('lang', 'new organization')"/>
+								</a>
+							</label>
+
 						</div>
+
 						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
 							<xsl:if test="string-length(application/customer_ssn)=0">
@@ -144,7 +190,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact_email')" />*</label>
-							<input type="email" class="form-control" name="contact_email" value="{application/contact_email}" required="true"/>
+							<input type="email" class="form-control" id="contact_email" name="contact_email" value="{application/contact_email}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi gyldig e-post.
 							</div>
@@ -153,7 +199,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'Confirm e-mail address')" />*</label>
-							<input type="email" class="form-control" name="contact_email2" value="{application/contact_email2}" required="true"/>
+							<input type="email" class="form-control" id="contact_email2" name="contact_email2" value="{application/contact_email2}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst bekreft e-posten din.
 							</div>
@@ -168,7 +214,7 @@
 							</div>
 						</div>
 						<hr class="mt-5"></hr>
-						<button class="btn btn-light mb-5" type="submit">
+						<button class="btn btn-light mb-5" type="submit" id="btnSubmit">
 							<xsl:value-of select="php:function('lang', 'send')" />
 						</button>
 					</div>
@@ -177,10 +223,53 @@
 		</form>
 		<!--<div class="mt-5"><pre data-bind="text: ko.toJSON(am, null, 2)"></pre></div> -->
 		<div class="push"></div>
+		<!-- MODAL INSPECT EQUIPMENT START -->
+		<div class="modal fade" id="new_organization" >
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 id="inspection_title" class="modal-title">
+							<xsl:value-of select="php:function('lang', 'new organization')" />
+						</h4>
+					</div>
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div style="width: 100%">
+							<iframe id ="iframeorganization" src="" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0">
+								Wait for it...
+							</iframe>
+						</div>
+						<br />
+					</div>
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							<xsl:value-of select="php:function('lang', 'Cancel')" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- MODAL INSPECT EQIPMENT END -->
+
 	</div>
 	<script>
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
+		<!-- Modal JQUERY logic -->
+
+		$('#new_organization').on('show.bs.modal', function (e)
+		{
+			var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
+			$("#iframeorganization").attr("src", src_organization);
+		});
+
+		$('#new_organization').on('hidden.bs.modal', function (e)
+		{
+			location.reload();
+		});
+		
 	</script>
 </xsl:template>

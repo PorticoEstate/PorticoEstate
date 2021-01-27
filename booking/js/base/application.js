@@ -7,7 +7,7 @@ $(document).ready(function ()
 	{
 //		if(!$("#end_date").val())
 		{
-			var temp_start_date =   $( "#start_date" ).datetimepicker('getValue');
+			var temp_start_date = $("#start_date").datetimepicker('getValue');
 //			console.log(temp_start_date);
 			$("#end_date").val($("#start_date").val());
 
@@ -20,6 +20,9 @@ $(document).ready(function ()
 
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
+
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uiorganization.index'}, true),
+		'field_org_name', 'field_org_id', 'org_container');
 
 	$("#field_activity").change(function ()
 	{
@@ -88,7 +91,7 @@ $(document).ready(function ()
 
 });
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	building_id = $('#field_building_id').val();
 	regulations_select_all = initialAcceptAllTerms;
@@ -120,6 +123,38 @@ $(window).on('load', function()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
+	});
+	$("#field_org_name").on("autocompleteselect", function (event, ui)
+	{
+		var organization_id = ui.item.value;
+		var requestURL = phpGWLink('index.php', {menuaction: "booking.uiorganization.index", filter_id: organization_id}, true);
+
+		$.getJSON(requestURL, function (result)
+		{
+			if (result.recordsTotal > 0)
+			{
+				var organization = result.data[0];
+				$("#field_customer_ssn").val(organization.customer_ssn);
+				$("#field_customer_organization_number").val(organization.customer_organization_number);
+				$("#field_responsible_street").val(organization.street);
+				$("#field_responsible_zip_code").val(organization.zip_code);
+				$("#field_responsible_city").val(organization.city);
+
+				if (organization.customer_identifier_type == "ssn")
+				{
+					document.getElementById("field_customer_identifier_type").selectedIndex = "1";
+					$("#field_customer_ssn").show();
+					$("#field_customer_organization_number").hide();
+				}
+				else if (organization.customer_identifier_type == "organization_number")
+				{
+					document.getElementById("field_customer_identifier_type").selectedIndex = "2";
+					$("#field_customer_ssn").hide();
+					$("#field_customer_organization_number").show();
+				}
+			}
+
+		});
 	});
 
 	if (!$.formUtils)
@@ -236,7 +271,7 @@ if ($.formUtils)
 		{
 			var v = false;
 			var contact_name = $('#field_contact_name').val();
-			if ( contact_name.split(" ").length > 1)
+			if (contact_name.split(" ").length > 1)
 			{
 				v = true;
 			}

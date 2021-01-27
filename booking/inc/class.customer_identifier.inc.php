@@ -174,7 +174,11 @@
 					cust_field = $('#field_{$this->field_prefix}' + $(this).val());
 					all_cust_fields[$(this).val()] = cust_field;
 
-					if (i == selectedIndex) { return true; }
+					if (i == selectedIndex) 
+					{
+						$(cust_field).css('display', 'block');
+						return true;
+					}
 
 					$(cust_field).css('display', 'none');
 				});
