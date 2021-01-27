@@ -18,11 +18,12 @@
 <func:function name="phpgw:option_checkbox" xmlns:php="http://php.net/xsl">
 	<xsl:param name="field"/>
 	<xsl:param name="field_name"/>
+	<xsl:param name="class"/>
 	<xsl:param name="label_false" select="string('No')"/>
 	<xsl:param name="label_true" select="string('Yes')"/>
 	
 	<func:result>
-		<select id="field_{$field_name}" name="{$field_name}">
+		<select id="field_{$field_name}" name="{$field_name}" class="{$class}">
 			<option value="1">
 				<xsl:if test="$field=1">
 					<xsl:attribute name="selected">checked</xsl:attribute>

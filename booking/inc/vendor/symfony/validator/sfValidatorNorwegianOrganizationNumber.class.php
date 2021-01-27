@@ -54,7 +54,7 @@
 
 			if($input == '000000000')
 			{
-				return false;
+				return true;
 			}
 
 			/**

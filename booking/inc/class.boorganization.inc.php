@@ -27,8 +27,10 @@
 				$bouser = CreateObject('bookingfrontend.bouser');
 
 				$org_id = is_array($for_object) ? $for_object['id'] : (!is_null($for_object) ? $for_object : null);
+				
+				$organization_number = !empty($for_object['organization_number']) ? $for_object['organization_number'] : null;
 
-				if ($bouser->is_organization_admin($org_id))
+				if ($bouser->is_organization_admin($org_id, $organization_number))
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
@@ -60,6 +62,7 @@
 					'write' => array_fill_keys(array('name', 'homepage', 'phone', 'email', 'description',
 						'street', 'zip_code', 'district', 'city', 'active', 'organization_number',
 						'contacts'), true),
+					'create' => true
 				);
 			}
 

@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'show' => true,
+			'add' => true,
 			'edit' => true,
 			'index' => true,
 			'building_users' => true,
@@ -26,9 +27,123 @@
 			return parent::index_json();
 		}
 
-		public function get_orgid( $orgnr )
+		public function get_orgid( $orgnr, $customer_ssn = null )
 		{
-			return $this->bo->so->get_orgid($orgnr);
+			return $this->bo->so->get_orgid($orgnr, $customer_ssn );
+		}
+
+		public function add()
+		{
+
+			/**
+			 * check external login - and return here
+			 */
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$external_login_info = $bouser->validate_ssn_login( array
+			(
+				'menuaction' => 'bookingfrontend.uiorganization.add'
+			));
+
+			if($bouser->is_logged_in())
+			{
+				$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+
+				$orgs_map = array();
+				foreach ($orgs as $org)
+				{
+					$orgs_map[$org['orgnumber']] = $org;
+				}
+				unset($org);
+
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
+
+				if($session_org_id && in_array($session_org_id, array_keys($orgs_map)))
+				{
+					try
+					{
+						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+						if($org_number)
+						{
+							$bouser->change_org($org_number);
+						}
+					}
+					catch (sfValidatorError $e)
+					{
+						$session_org_id = -1;
+					}
+				}
+				else
+				{
+					$org_number = $bouser->orgnr;
+				}
+
+				$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], array_keys($orgs_map));
+
+				$delegate_map = array();
+				foreach ($delegate_data as $delegate_entry)
+				{
+					$delegate_map[] = $delegate_entry['organization_number'];
+					if( $delegate_entry['customer_ssn'] == $external_login_info['ssn'])
+					{
+						$this->personal_org = $delegate_entry['name'];
+					}
+				}
+				$_new_org_list = array_diff(array_keys($orgs_map), $delegate_map);
+
+				$new_org_list = array();
+
+				foreach ($_new_org_list as $key)
+				{
+					$orgs_map[$key]['selected']	 = $key == $org_number ? 1 : 0;
+					
+					$_name = $orgs_map[$key]['orgname'] == $key ? $key : "{$key} [{$orgs_map[$key]['orgname']}]";
+					$new_org_list[]				 = array(
+						'id'		 => $key,
+						'name'		 => $_name,
+						'selected'	 => $key == $org_number ? 1 : 0
+					);
+				}
+
+				$this->new_org_list = $new_org_list;
+				$this->ssn = $external_login_info['ssn'];
+
+				self::add_javascript('bookingfrontend', 'base', 'organization_add.js');
+				
+				$submitted_organization_number = phpgw::get_var('organization_number', 'string', 'POST');
+				if($submitted_organization_number)
+				{
+					if(!in_array($submitted_organization_number, $_new_org_list))
+					{
+						return array(
+							'status'	 => 'error',
+							'message'	 => array('Not authorized for this organization')
+						);
+					}
+				}
+				else if($this->personal_org && 'ssn' == phpgw::get_var('customer_identifier_type', 'string', 'POST'))
+				{
+					return array(
+						'status'	 => 'error',
+						'message'	 => array("Du har allerede registrert \"{$this->personal_org}\"")
+					);
+				}
+
+				$ret =  parent::add();
+
+				/**
+				 * Refresh list
+				 */
+				if(phpgw::get_var('phpgw_return_as') == 'json' && $ret['status'] == 'saved')
+				{
+					$bouser->log_in();
+				}
+				return $ret;
+			}
+			else
+			{
+				self::render_template_xsl('access_denied', array());
+			}
 		}
 
 		public function edit()
@@ -46,7 +161,7 @@
 					$orgs_map[] = $org['orgnumber'];
 				}
 
-				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 				if($session_org_id && in_array($session_org_id, $orgs_map))
 				{

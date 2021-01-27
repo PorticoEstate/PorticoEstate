@@ -26,22 +26,4 @@
 		<!-- END javascript -->
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 	</head>
-    
-		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
-			<div class="container header-container my_class">
-				<a class="navbar-brand brand-site-title" href="{site_url}">{site_title} </a>
-				<a href="{site_url}"><img class="navbar-brand brand-site-img" src="{headlogoimg}" alt="{logo_title}"/></a>
-				<!-- Search Box -->
-				<!--div class="search-container">
-					<form id="navSearchForm" class="search-form">
-						<input type="text" class="search-input" placeholder="{placeholder_search}"    id="searchInput"  />
-						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
-					</form>
-				</div-->
-			</div>
-            <div class="navbar-organization-select">
-            </div>
-		</nav>
-		<div class="overlay">
-            <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
-        </div>
+	{nav}
