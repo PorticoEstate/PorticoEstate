@@ -32,7 +32,7 @@
 					$orgs_map[] = $org['orgnumber'];
 				}
 
-				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 				if($session_org_id && in_array($session_org_id, $orgs_map))
 				{

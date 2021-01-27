@@ -4,7 +4,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : Feb 20, 2018, 11:08:19 AM
     Author     : niruban
 */
@@ -30,17 +30,17 @@ h3{
 	font-size: 16px;
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 body {
     position: relative;
     margin: 0;
 /*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
-    
+
     font-family: Open Sans,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
-  
+
     font-size: 16px;
-    
-  
+
+
 }
 }
 
@@ -50,10 +50,10 @@ body {
     min-height: 100% !important;
     position: relative;
     margin: 0;
-    
+
 /*    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;*/
 /*     font-family: FuturaStd-Light  !important;*/
-     
+
      font-family: Open Sans,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
      font-size: 16px;
 }
@@ -86,7 +86,7 @@ a {
 	color: #26348B;
 }
 
-@media (max-width: 567px) { 
+@media (max-width: 567px) {
 #logowidth  img {
    height: 50px !important;
    width: 80px !important;
@@ -94,7 +94,7 @@ a {
 }
 
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 #logowidth  img {
    height: 40px !important;
    width: 80px !important;
@@ -109,19 +109,19 @@ a {
     background-color:white !important;
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
     #nun   {
     width: 100%  !important;
 }
 }
 
 
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
     .header-text {
 	position: absolute;
                       padding-top: 10%;
                       padding-bottom: 10%;
-                    padding-left: 0  !important;           
+                    padding-left: 0  !important;
                     width: 50%;
                     display: inline-block;
 }
@@ -130,9 +130,9 @@ a {
 
 .header-text {
 	display: inline-block;
-                      transform: translateX(-50%) translateY(-50%);	
+                      transform: translateX(-50%) translateY(-50%);
                       left: 50%;
-                      top: 50%; 
+                      top: 50%;
                       position: absolute;
 }
 
@@ -158,8 +158,8 @@ a {
       left: auto !important;
       right: 0px;
     }
-    
-    
+
+
 .navbar-header{
   width:100%;
   padding:0 50px;
@@ -176,7 +176,7 @@ a {
       -ms-transform: scale(1); /* IE9 */
        -o-transform: scale(1); /* Opera 10.5+ */
           transform: scale(1);
-    background-color: white !important;  
+    background-color: white !important;
 }
 
 .nav-link {
@@ -185,7 +185,7 @@ a {
 }
 
 .nav-link:hover {
-    line-height: 1.4em;    
+    line-height: 1.4em;
     text-decoration: underline;
 }
 
@@ -194,7 +194,7 @@ a {
     transform: translateX(-50%);
     left: 50%;
     position: absolute;
-    color: #26348B;    
+    color: #26348B;
     text-decoration: none !important;
     margin-top: 24px  !important;
 }
@@ -251,12 +251,12 @@ a {
     border-bottom: 2px solid #26348B  !important;
     border-right: 0 !important;
  }
- 
- 
+
+
 /* #searchmotor  {
      border: 1px solid #26348B  !important;
  }*/
- 
+
 .grow-left {
   direction: rtl;
 }
@@ -269,7 +269,7 @@ a {
 .mac-style {
 /*     display: inline-block !important;
      position:  relative  !important;*/
-     
+
     width: 10%;
       height: 35px  !important;
        -webkit-transition: width 1s ease-in-out;
@@ -311,7 +311,7 @@ a {
     z-index: 10;
     border-radius: 10px;
     border: none;
-    background: #000; 
+    background: #000;
 }
 
 
@@ -369,7 +369,7 @@ margin-top: auto;
     padding-top: 2em;
 }
 
-  .parentdiv  {   
+  .parentdiv  {
     position: relative !important;
     margin-right: 27px !important;
     margin-top: -30px !important;
@@ -385,11 +385,11 @@ margin-top: auto;
        right: 4% !important;
        display: inline-block !important;
        width: 250px;
-       height: 50px;    
+       height: 50px;
 }
 
  #globalsearchbuttong  input#searchmotor {
-    
+
      width: 150px;
      height: 45px;
      border: 1px solid #26348B !important;
@@ -400,16 +400,16 @@ margin-top: auto;
 	 outline:none;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
- 
+
   -webkit-transition: width .55s ease;
   -moz-transition: width .55s ease;
   -ms-transition: width .55s ease;
   -o-transition: width .55s ease;
   transition: width .55s ease;
-  
+
  }
- 
- 
+
+
  #globalsearchbuttong  input#searchmotor:hover {
 width: 300px;
 outline:none;
@@ -474,7 +474,7 @@ outline:none;
 }
 
 input[type="checkbox"], input[type="radio"]{
-	
+
 	right: 9000px;
 }
 
@@ -560,7 +560,7 @@ F
 
 .margin-top-and-bottom {
     margin: 1.9em 0em;
- 
+
 }
 
 .margin-bottom {
@@ -584,7 +584,7 @@ F
 
 
 
-@media screen and (max-width:  567px)    { 
+@media screen and (max-width:  567px)    {
     .footer {
     line-height: 25px !important;
     padding: 15px 10px;
@@ -596,7 +596,7 @@ F
 }
 }
 
-@media (min-width:  567px)  and (max-width: 767px)    { 
+@media (min-width:  567px)  and (max-width: 767px)    {
     .footer {
     line-height: 25px !important;
     padding: 25px 20px;
@@ -662,9 +662,9 @@ F
     text-align: left;
     max-width: none;
     border-radius: 0px;
-    
+
     background-color: #fff !important;
-    
+
     border: 1px solid #c9c9c9 !important;
     color: #000 !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
@@ -697,7 +697,7 @@ F
 }
 
 
-@media (max-width: 1048px) { 
+@media (max-width: 1048px) {
     .navbar-search {
         display: none;
     }
@@ -707,11 +707,11 @@ F
 }
 
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
     .navbar-search input {
     border: 1px solid red  !important;
      position: absolute !important;
-	 
+
 }
 .col-md-6 {
         margin-top: 1.5em;
@@ -732,7 +732,7 @@ F
     .footer {
         height: 22em !important;
     }
-    
+
     .push {
       height: 1em;
     }
@@ -741,14 +741,14 @@ F
         background-color: #fff;
         height: 20em;
     }
-    
+
     .col-md-6 {
         margin-top: 1.5em;
     }
 }
 
 /* Small devices (landscape phones, 576px and up)*/
-@media (min-width: 576px) and (max-width: 767px) {  
+@media (min-width: 576px) and (max-width: 767px) {
 
     .footer,
     .push {
@@ -759,7 +759,7 @@ F
         background-color: #fff;
         height: 20em;
     }
-    
+
     .col-md-6 {
         margin-top: 1.5em;
     }
@@ -767,9 +767,9 @@ F
 
 @media (max-width: 340px) {
     .brand-site-title {
-		
+
         font-size: 14px;
-    
+
     }
 }
 
@@ -785,7 +785,7 @@ SEARCH PAGE STYLE
 }
 
 .searchContainer {
-    margin-top: 0%!important;  
+    margin-top: 0%!important;
      position: relative;
 }
 
@@ -886,11 +886,11 @@ input:focus{
       margin-top: 25% !important;
  }*/
 
- 
+
 /* #globalsearchbuttong  {
       margin-top: 20% !important;
  }*/
- 
+
 .dropdown .btn,
 .dropdown .btn:hover,
 .dropdown .btn:active,
@@ -960,7 +960,7 @@ input:focus{
     text-decoration: none !important;
     transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     color: #000000;
-    
+
 }
 #searchResult .row .custom-card:hover {
     color: #ffffff;
@@ -1008,7 +1008,7 @@ input:focus{
 	background-color: #fff;
 	color: #000;
 	width: 100%;
-	
+
 }
 
 #welcomeResult .title {
@@ -1056,7 +1056,7 @@ input:focus{
 }
 
 .custom-card-link:hover {
-    text-decoration: none;    
+    text-decoration: none;
 }
 
 .filter-bar {
@@ -1075,8 +1075,8 @@ input:focus{
 input {
     border: none;
     background-color: transparent;
-    
-    
+
+
 }
 
 input:focus,
@@ -1147,28 +1147,28 @@ textarea:focus{
     .navbar-brand {
         margin-right: 0 !important;
     }
-    .navbar-brand span {        
+    .navbar-brand span {
         font-size: 14px;
     }
-    
+
     .date-circle {
         margin-left: -20px;
     }
-    
+
     .custom-card .desc {
         margin-left: 20px;
     }
-    
+
     .filter-link {
         display: block !important;
     }
-    
+
     .autocompleter-item span {
         display: block !important;
         float: none !important;
         overflow: hidden;
     }
-    
+
     .autocompleter-item span:last-child {
         margin-top: 5px !important;
     }
@@ -1190,8 +1190,8 @@ textarea:focus{
 }
 
 /* Small devices (landscape phones, 576px and up)*/
-@media (min-width: 576px) and (max-width: 767px) {  
-    
+@media (min-width: 576px) and (max-width: 767px) {
+
     .filter-link {
         display: block !important;
     }
@@ -1202,12 +1202,12 @@ textarea:focus{
 }
 
 /* Medium devices (tablets, 768px and up)*/
-@media (min-width: 768px) and (max-width: 991px) { 
+@media (min-width: 768px) and (max-width: 991px) {
 
     .filter-link {
         display: block !important;
     }
-    
+
     .search-container #searchInput:hover,
     .search-container #searchInput:focus {
         width: 200px;
@@ -1215,14 +1215,14 @@ textarea:focus{
 }
 
 /* Large devices (desktops, 992px and up)*/
-@media (min-width: 992px) and (max-width: 1199px) {  
+@media (min-width: 992px) and (max-width: 1199px) {
     .pageResults .custom-card:nth-child(1),
     .searchResult .custom-card:nth-child(1){
         margin-right: 5px;
-        
+
 /*        min-height: 90% !important;*/
     }
-    
+
     .pageResults .custom-card:nth-child(2),
     .searchResult .custom-card:nth-child(2){
         margin-left: 5px;
@@ -1236,7 +1236,7 @@ textarea:focus{
     .searchResult .custom-card:nth-child(1){
         margin-right: 5px;
     }
-    
+
     .pageResults .custom-card:nth-child(2),
     .searchResult .custom-card:nth-child(2){
         margin-left: 5px;
@@ -1251,11 +1251,11 @@ BUILDING PAGE STYLE
 *********************************************/
 
 @keyframes spinner {
-  to {transform: rotate(360deg); 
+  to {transform: rotate(360deg);
 }
 }
 
-#loading-img {    
+#loading-img {
     height: 100%;
     z-index: 99999;
     text-align: center;
@@ -1277,15 +1277,15 @@ BUILDING PAGE STYLE
     opacity: 0.5;
     z-index: 99999;
     width:      100%;
-    height:     100%; 
+    height:     100%;
 }
 
 /*.info-content {
     padding-top: 2em;
-    
+
     border-left:solid 6px red !important;
    border-right:solid 6px red !important;
-   height:     100px; 
+   height:     100px;
 }*/
 
 .location {
@@ -1326,7 +1326,7 @@ BUILDING PAGE STYLE
     object-position: center right;
     border: 2px solid #fff;
 }
-  
+
 .building-place-adr {
     display: inline;
     font-size: 14px;
@@ -1388,22 +1388,22 @@ BUILDING PAGE STYLE
     height: 14px;
 /*    border: 1px solid rgba(0, 0, 0, .2);*/
     display: inline-block;
-    
+
 /*   border: 1px solid red;*/
 }
-  
+
 .allocation {
 /*  background: rgb(110, 163, 216);*/
-      
+
     background: #82368c;
-    
-   
+
+
 }
- 
+
 .booking {
   background: #27348b;
 }
-  
+
 .event {
   background: #b7d3f2;
 }
@@ -1447,12 +1447,12 @@ BUILDING PAGE STYLE
 
 
 .scheduler-event-past {
-    
+
       color: red !important;
 }
 
 /*.yui3-widget-bd {
-  
+
      background-color: red;
 border: 1px red solid !important;
 }*/
@@ -1483,7 +1483,7 @@ border: 1px red solid !important;
 }
 
 .yui3-calendarnav-prevmonth:before {
-    content: "\f104";    
+    content: "\f104";
 }
 
 .yui3-calendarnav-nextmonth:before {
@@ -1523,28 +1523,28 @@ border: 1px red solid !important;
 }
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575px) {
-    
+
     .building-bookable {
         margin-top: 2em !important;
     }
 }
 
 /* Small devices (landscape phones, 576px and up)*/
-@media (min-width: 576px) and (max-width: 767px) {  
+@media (min-width: 576px) and (max-width: 767px) {
 
     .building-bookable {
         margin-top: 2em !important;
     }
-    
+
 }
 
 /* Medium devices (tablets, 768px and up)*/
-@media (min-width: 768px) and (max-width: 991px) { 
+@media (min-width: 768px) and (max-width: 991px) {
 
     .building-bookable {
         margin-top: 2em !important;
     }
-    
+
 }
 
 
@@ -1585,7 +1585,7 @@ ORGANIZATION / DELEGATE PAGE STYLE
 #booking-edit-page-content label, .span-label,
 #booking-delete-page-content label, .span-label,
 #allocation-delete-page-content label, .span-label,
-#booking-cancel-page-content label, .span-label, 
+#booking-cancel-page-content label, .span-label,
 #allocation-cancel-page-content label, .span-label,
 #allocation-delete-preview-page-content label, .span-label,
 #booking-delete-preview-page-content  label, .span-label,
@@ -1633,7 +1633,7 @@ NEW APPLICATION PAGE STYLE
 .new-application-page .form-group .choseResource,
 .new-application-page .form-group #audienceDropdownBtn {
     cursor: pointer;
-} 
+}
 
 .new-application-page .form-group .form-input.notValid {
     border-color: #dc3545;
@@ -1726,10 +1726,7 @@ NEW APPLICATION PAGE STYLE
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.modal-body {
-    height: 500px;
-    width: 700px;
-}
+
 
 .modal-body iframe {
     position: absolute;
@@ -1847,7 +1844,7 @@ NEW APPLICATION PAGE STYLE
 }
 
 /* Error Modal TEST */
-.modal-confirm {		
+.modal-confirm {
     color: #434e65;
     width: 525px;
 }
@@ -1859,7 +1856,7 @@ NEW APPLICATION PAGE STYLE
 }
 .modal-confirm .modal-header {
     background: #e85e6c;
-    border-bottom: none;   
+    border-bottom: none;
     position: relative;
     text-align: center;
     margin: -20px -20px 0;
@@ -1873,7 +1870,7 @@ NEW APPLICATION PAGE STYLE
 }
 .modal-confirm .form-control, .modal-confirm .btn {
     min-height: 40px;
-    border-radius: 3px; 
+    border-radius: 3px;
 }
 .modal-confirm .close {
     position: absolute;
@@ -1887,7 +1884,7 @@ NEW APPLICATION PAGE STYLE
     opacity: 0.8;
 }
 .modal-confirm .icon-box {
-    color: #fff;		
+    color: #fff;
     width: 95px;
     height: 95px;
     display: inline-block;
@@ -2000,8 +1997,8 @@ NEW APPLICATION PAGE STYLE
 }
 
 /* Extra small devices (portrait phones, less than 576px) */
-@media (max-width: 575px) {  
-    
+@media (max-width: 575px) {
+
     .booking-cart {
         right: 0;
         min-width: 95% !important;
@@ -2013,8 +2010,8 @@ NEW APPLICATION PAGE STYLE
     }
 }
 
-@media (max-width: 390px) {  
-    
+@media (max-width: 390px) {
+
     .booking-cart {
         right: 0;
         min-width: 100% !important;
@@ -2026,32 +2023,32 @@ NEW APPLICATION PAGE STYLE
     }
 }
 
-@media (min-width: 1850px) { 
+@media (min-width: 1850px) {
 
     .booking-cart {
         margin-bottom: -10px !important;
         margin-right: -23px !important;
     }
-    
+
 }
 
 .brand-site-img{
 	width: 150px;
 }
 
-@media (max-width: 765px) { 
+@media (max-width: 765px) {
 
     .brand-site-img {
 	width: 90px !important;
     }
-    
+
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 
     .col-md-4{
 	padding-bottom: 30px !important;
-    }  
+    }
 }
 
 .footer-brand-site-img{
@@ -2059,7 +2056,7 @@ NEW APPLICATION PAGE STYLE
        height: 88px !important;
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
    .footer-brand-site-img {
 	width: 60px;
     }
@@ -2084,7 +2081,7 @@ NEW APPLICATION PAGE STYLE
     }
 }
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 .frontpageimage {
   background: url("../img/frontpageimage.jpg") no-repeat center center;
   -webkit-background-size: cover;
@@ -2095,33 +2092,21 @@ NEW APPLICATION PAGE STYLE
   border-radius: 0;
   margin-bottom: 0;
   margin-top: -10% !important;
-  
+
   margin-top: -10% !important;
 }
 
-.modal-body {
-    height: 400px;
-    width: 500px;
-}
 
 
 }
 @media (min-width: 576px) {
     .modal-dialog {
-        max-width: 700px;
+     /*   max-width: 700px;*/
     }
 }
 
 @media (max-width: 576px) {
-/* MODAL BODY */
-.modal-dialog {
-    max-width: 700px;
-}
 
-.modal-body {
-    height: 500px;
-    width: 300px;
-}
 #welcomeResult .custom-card {
     max-height: none;
 }
@@ -2153,13 +2138,6 @@ footer .container {
 	text-decoration: none !important;
 }
 
-.modal-dialog{
-	position: absolute !important;
-	top: 50% !important;
-	left: 50% !important;
-	transform: translate(-50%, -50%) !important;
-	margin: 0;
-}
 
 footer{
 	font-size: 14px;
@@ -2176,7 +2154,7 @@ footer h3{
 	font-size: 16px !important;
 	border: 1px solid #4d4c4c !important;
 	width: 120px;
-	
+
 }
 
 .file-upload-button:hover{
@@ -2216,7 +2194,7 @@ footer h3{
 .yui3-calendar-selection-disabled{
 	background-color: #e6e6e6;
 	cursor: not-allowed !important;
-	font-style: italic; 
+	font-style: italic;
 }
 
 .header_borderline{

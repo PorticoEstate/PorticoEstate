@@ -455,6 +455,21 @@
 									</legend>
 								</div>
 								<p>Ut fra reglementet i pkt. 8 finner du kriterier for fakturering. Når du som privatperson skal låne noe som det ikke skal faktureres for oppgir du kun fødselsdato, men skal du leie noe som koster noe, da må vi ha hele personnummeret. Alle lag og organisasjoner skal oppgi organisasjonsnr.</p>
+								<div class="pure-control-group">
+									<label for="field_org_name">
+										<xsl:value-of select="php:function('lang', 'Organization')" />
+									</label>
+									<input id="field_org_id" name="customer_organization_id" type="hidden">
+										<xsl:attribute name="value">
+											<xsl:value-of select="application/customer_organization_id"/>
+										</xsl:attribute>
+									</input>
+									<input id="field_org_name" name="customer_organization_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+										<xsl:attribute name="value">
+											<xsl:value-of select="application/customer_organization_name"/>
+										</xsl:attribute>
+									</input>
+								</div>
 								<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 								<div class="pure-control-group">
 									<label for="field_street">
