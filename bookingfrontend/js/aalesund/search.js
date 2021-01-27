@@ -444,7 +444,8 @@ function setDateTimePicker() {
 		autoUpdateInput: false,
 		autoApply: true,
 		locale: {
-			cancelLabel: 'Clear'
+			cancelLabel: 'Clear',
+			firstDay: 1
 		}
 	});
 
