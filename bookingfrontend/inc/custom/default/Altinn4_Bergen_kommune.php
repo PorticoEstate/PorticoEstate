@@ -46,12 +46,9 @@
 
 		protected function get_user_org_id()
 		{
-//			$headers = getallheaders();
-//			$fodselsnr = $headers['uid'];
 			$data = $this->validate_ssn_login();
 			$fodselsnr = (string)$data['ssn'];
 			$bregorgs = $this->get_breg_orgs($fodselsnr);
-//			$myorgnr = array();
 
 			if ($bregorgs == array())
 			{
@@ -60,10 +57,6 @@
 			}
 			else
 			{
-//				foreach ($bregorgs as $org)
-//				{
-//					$myorgnr[] = $org['orgnr'];
-//				}
 				if (count($bregorgs) > 1)
 				{
 					$external_user = (object)'ciao';
@@ -79,7 +72,7 @@
 				{
 					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
 					$external_user = (object)'ciao';
-					$external_user->login = $myorgnr[0]['orgnr'];
+					$external_user->login = $bregorgs[0]['orgnr'];
 				}
 			}
 
@@ -174,10 +167,6 @@
 					$organization_number = '000000000';
 				}
 				
-				if(in_array($organization_number, $orgs_validate))
-				{
-//					continue;
-				}
 				$results[] = array
 				(
 					'orgnr'			 => $organization_number,

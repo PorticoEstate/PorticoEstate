@@ -1488,7 +1488,6 @@
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
 				'delegate_data'			 => $delegate_data,
-				'organization_link'	 => self::link(array('menuaction' => 'bookingfrontend.uiorganization.add', 'nonavbar' => true)),
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)

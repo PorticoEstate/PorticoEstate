@@ -236,7 +236,9 @@
 					<!-- Modal body -->
 					<div class="modal-body">
 						<div style="width: 100%">
-							<iframe id ="iframeorganization" src="{organization_link}" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0"></iframe>
+							<iframe id ="iframeorganization" src="" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0">
+								Wait for it...
+							</iframe>
 						</div>
 						<br />
 					</div>
@@ -257,9 +259,17 @@
 		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
 		<!-- Modal JQUERY logic -->
+
+		$('#new_organization').on('show.bs.modal', function (e)
+		{
+			var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
+			$("#iframeorganization").attr("src", src_organization);
+		});
+
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
-		location.reload();
-		})
+			location.reload();
+		});
+		
 	</script>
 </xsl:template>

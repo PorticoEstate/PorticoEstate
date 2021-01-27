@@ -32,7 +32,7 @@ $(document).ready(function ()
 			$("#" + selected).attr("required", "required");
 			$("#" + unselect[selected]).removeAttr("data-validation");
 			$("#field_customer_identifier_type").val(identifier_type[selected]);
-			alert('Du har har allerede registrert "' + personal_org + '"');
+			alert('Du har allerede registrert "' + personal_org + '"');
 		}
 
 		if (count_new_org_list === 0 && selected === 'organization_number')

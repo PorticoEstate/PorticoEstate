@@ -60,6 +60,7 @@ $(document).ready(function ()
 		}
 		else if (selected === "ssn")
 		{
+			$("input[name='customer_organization_number']").prop('checked', false);
 			$("input[name='customer_organization_number']").prop('required', false);
 		}
 	});

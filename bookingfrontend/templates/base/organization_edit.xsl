@@ -14,7 +14,7 @@
 	</func:result>
 </func:function>
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="organization-edit-page-content">
+	<div id="organization-edit-page-content" style="display:none;">
 		<xsl:if test="noframework != 1">
 			<xsl:attribute name="class" value="margin-top-content"/>
 		</xsl:if>
@@ -404,4 +404,8 @@
 		</div>
 		<div class="push"></div>
 	</div>
+	<script>
+		$('#organization-edit-page-content').show();
+	</script>
+
 </xsl:template>

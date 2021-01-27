@@ -121,6 +121,13 @@
 						);
 					}
 				}
+				else if($this->personal_org && 'ssn' == phpgw::get_var('customer_identifier_type', 'string', 'POST'))
+				{
+					return array(
+						'status'	 => 'error',
+						'message'	 => array("Du har allerede registrert \"{$this->personal_org}\"")
+					);
+				}
 
 				$ret =  parent::add();
 
