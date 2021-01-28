@@ -130,6 +130,12 @@
 				</xsl:if>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'capacity')"/>
+					</label>
+					<xsl:value-of select="resource/capacity"/>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
 					</label>
 					<xsl:variable name="date_format">

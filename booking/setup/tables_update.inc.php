@@ -4813,3 +4813,51 @@
 	}
 
 
+	/**
+	 * Update booking version from 0.2.64 to 0.2.65
+	 *
+	 */
+	$test[] = '0.2.65';
+	function booking_upgrade0_2_65()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'parent_id',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'capacity',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'e_lock',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'capacity',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.66';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+

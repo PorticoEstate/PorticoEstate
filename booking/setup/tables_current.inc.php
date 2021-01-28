@@ -137,7 +137,10 @@
 		'bb_rescategory' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'parent_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'capacity' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'e_lock' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
 			),
 			'pk' => array('id'),
@@ -194,6 +197,7 @@
 				'simple_booking_end_date' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
 				'booking_month_horizon' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 				'booking_day_horizon' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
+				'capacity' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 			),
 			'pk' => array('id'),
 			'fk' => array(

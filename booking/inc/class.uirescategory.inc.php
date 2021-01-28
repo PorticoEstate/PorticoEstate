@@ -18,7 +18,7 @@
 			parent::__construct();
 			$this->bo = CreateObject('booking.borescategory');
 			self::set_active_menu('booking::settings::rescategory');
-			$this->fields = array('name', 'active', 'activities');
+			$this->fields = array('name', 'active', 'activities', 'capacity', 'e_lock', 'parent_id');
 			$this->display_name = lang('Resource categories');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
@@ -50,6 +50,14 @@
 							'key' => 'activities_name',
 							'label' => lang('Activities'),
 							'sortable' => false,
+						),
+						array(
+							'key' => 'capacity',
+							'label' => lang('capacity'),
+						),
+						array(
+							'key' => 'e_lock',
+							'label' => lang('Electronic lock'),
 						),
 						array(
 							'key' => 'link',
@@ -103,6 +111,9 @@
 			{
 				array_set_default($_POST, 'activities', array());
 				$rescategory = extract_values($_POST, $this->fields);
+				$rescategory['capacity'] = phpgw::get_var('capacity', 'bool', 'POST');
+				$rescategory['e_lock'] = phpgw::get_var('e_lock', 'bool', 'POST');
+				$rescategory['parent_id'] = phpgw::get_var('parent_id', 'int', 'POST');
 				$errors = $this->bo->validate($rescategory);
 				if (!$errors)
 				{
@@ -120,7 +131,7 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'rescategory.js');
-			$rescategory['activities_json'] = json_encode(array_map('intval', $rescategory['activities']));
+			$rescategory['activities_json'] = json_encode(array_map('intval', (array)$rescategory['activities']));
 			$rescategory['cancel_link'] = self::link(array('menuaction' => 'booking.uirescategory.index'));
 			$rescategory['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$rescategory['validator'] = phpgwapi_jquery::formvalidator_generate(array());
@@ -142,6 +153,10 @@
 			{
 				array_set_default($_POST, 'activities', array());
 				$rescategory = array_merge($rescategory, extract_values($_POST, $this->fields));
+				$rescategory['capacity'] = phpgw::get_var('capacity', 'bool', 'POST');
+				$rescategory['e_lock'] = phpgw::get_var('e_lock', 'bool', 'POST');
+				$rescategory['parent_id'] = phpgw::get_var('parent_id', 'int', 'POST');
+
 				$errors = $this->bo->validate($rescategory);
 				if (!$errors)
 				{
@@ -164,7 +179,10 @@
 			$rescategory['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$rescategory['validator'] = phpgwapi_jquery::formvalidator_generate(array());
 
-			self::render_template_xsl('rescategory_edit', array('rescategory' => $rescategory));
+			self::render_template_xsl('rescategory_edit', array(
+				'rescategory' => $rescategory,
+				'parent_list' => $parent_list
+				));
 		}
 
 	}

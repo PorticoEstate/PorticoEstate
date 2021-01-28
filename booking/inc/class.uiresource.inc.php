@@ -52,6 +52,7 @@
 				'contact_info' => 'html',
 				'activity_id' => 'int',
 				'active' => 'int',
+				'capacity' => 'int',
 				'type' => 'string',
 				'sort' => 'string',
 				'organizations_ids' => 'string',

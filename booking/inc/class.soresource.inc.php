@@ -21,6 +21,7 @@
 				'opening_hours' => array('type' => 'string'),
 				'contact_info' => array('type' => 'string'),
 				'activity_id' => array('type' => 'int', 'required' => false),
+				'capacity' => array('type' => 'int', 'required' => false),
 				'organizations_ids' => array('type' => 'string'),
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
