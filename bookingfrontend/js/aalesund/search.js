@@ -286,7 +286,6 @@ function resetFilters() {
 	viewmodel.selectedFacilityIds.removeAll();
 	viewmodel.selectedActivities.removeAll();
 	viewmodel.selectedActivities.removeAll();
-
 	findSearchMethod();
 }
 
@@ -395,6 +394,7 @@ function setSearchListener() {
 				$("#dateFilter").show();
 				$("#searchResults").hide();
 				resetFilters();
+				setTowns();
 			}
 		}
 	});
@@ -441,6 +441,7 @@ function setTowns() {
 
 function setDateTimePicker() {
 	$('input[name="datefilter"]').daterangepicker({
+		singleDatePicker: true,
 		autoUpdateInput: false,
 		autoApply: true,
 		locale: {
