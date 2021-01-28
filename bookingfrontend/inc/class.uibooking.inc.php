@@ -9,6 +9,7 @@
 			'building_schedule' => true,
 			'building_extraschedule' => true,
 			'resource_schedule' => true,
+			'organization_schedule' => true,
 			'info' => true,
 			'add' => true,
 			'show' => true,
@@ -154,6 +155,49 @@
 
 			return $data;
 		}
+
+		public function organization_schedule() {
+			$date = new DateTime(phpgw::get_var('date'));
+			$organization_id = phpgw::get_var('organization_id');
+
+			$_building_ids = $this->building_bo->find_buildings_used_by($organization_id)['results'];
+
+			$building_ids = array();
+			foreach ($_building_ids as $building_id) {
+				$building_ids[] = $building_id['id'];
+			}
+
+			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $organization_id,
+				'active' => 1), 'results' => -1));
+
+			$group_ids = array();
+			foreach ($groups['results'] as $group) {
+				$group_ids[] = $group['id'];
+			}
+
+			$bookings = $this->bo->organization_schedule($date, $organization_id, $building_ids, $group_ids);
+
+			foreach ($bookings['results'] as &$booking)
+			{
+				$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',
+					'id' => $booking['id']));
+				array_walk($booking, array($this, 'item_link'));
+
+				$results[] = $booking;
+			}
+
+			$data = array
+			(
+				'ResultSet' => array(
+					"totalResultsAvailable" =>  count($results),
+					"Result" => $results
+				)
+			);
+
+			return $data;
+
+		}
+
 
 		public function add()
 		{

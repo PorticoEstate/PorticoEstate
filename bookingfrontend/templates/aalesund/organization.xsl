@@ -130,6 +130,11 @@
 								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-12 mt-4">
+								TEST
+							</div>
+						</div>
 					</div>
 
 					<div class="col-lg-6 building-bookable">
