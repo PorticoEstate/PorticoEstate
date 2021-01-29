@@ -645,6 +645,8 @@
 			$allocation['name']		 = $allocation['organization_name'];
 			$allocation['shortname'] = $allocation['organization_shortname'];
 			$allocation['type']		 = 'allocation';
+			$allocation['building_name'] = $allocation['building_name'];
+			$allocation['building_id'] = $allocation['building_id'];
 			unset($allocation['costs']);
 			unset($allocation['comments']);
 			unset($allocation['secret']);
@@ -706,7 +708,6 @@
 				'to_'				 => $booking['to_'],
 				'completed'			 => $booking['completed'],
 				'reminder'			 => $booking['reminder'],
-				'activity_name'		 => $booking['activity_name'],
 				'resources'			 => $booking['resources'],
 				'dates'				 => $booking['dates']
 			);
@@ -727,28 +728,28 @@
 		foreach ($_events['results'] as $event)
 		{
 			$events[] = array(
-				'type'				 => 'event',
-				'name'				 => $event['name'],
-				'id'				 => $event['id'],
-				'id_string'			 => $event['id_string'],
-				'active'			 => $event['active'],
-				'activity_id'		 => $event['activity_id'],
-				'application_id'	 => $event['application_id'],
-				'name'				 => $event['is_public'] ? $event['name'] : '',
-				'homepage'			 => $event['homepage'],
-				'description'		 => $event['is_public'] ? $event['description'] : '',
-				'equipment'			 => $event['equipment'],
-				'building_id'		 => $event['building_id'],
-				'building_name'		 => $event['building_name'],
-				'from_'				 => $event['from_'],
-				'to_'				 => $event['to_'],
-				'completed'			 => $event['completed'],
-				'access_requested'	 => $event['access_requested'],
-				'reminder'			 => $event['reminder'],
-				'is_public'			 => $event['is_public'],
-				'activity_name'		 => $event['activity_name'],
-				'resources'			 => $event['resources'],
-				'dates'				 => $event['dates']
+				'type'				 			=> 'event',
+				'id'				 			=> $event['id'],
+				'id_string'			 			=> $event['id_string'],
+				'active'			 			=> $event['active'],
+				'activity_id'		 			=> $event['activity_id'],
+				'application_id'	 			=> $event['application_id'],
+				'name'				 			=> $event['is_public'] ? $event['name'] : '',
+				'homepage'			 			=> $event['homepage'],
+				'description'					=> $event['is_public'] ? $event['description'] : '',
+				'equipment'			 			=> $event['equipment'],
+				'building_id'		 			=> $event['building_id'],
+				'building_name'		 			=> $event['building_name'],
+				'from_'				 			=> $event['from_'],
+				'to_'				 			=> $event['to_'],
+				'completed'			 			=> $event['completed'],
+				'access_requested'	 			=> $event['access_requested'],
+				'reminder'			 			=> $event['reminder'],
+				'is_public'			 			=> $event['is_public'],
+				'activity_name'		 			=> $event['activity_name'],
+				'resources'			 			=> $event['resources'],
+				'dates'				 			=> $event['dates'],
+				'customer_organization_name'	=> $event['customer_organization_name']
 			);
 		}
 
@@ -776,7 +777,7 @@
 		// Add $resources as the last parameter, to sort by the common key
 		array_multisort($sort, SORT_ASC, $resources);
 		$bookings	 = $this->_split_multi_day_bookings($bookings, $from, $to);
-		$results	 = build_schedule_table($bookings, $resources);
+		$results	 = build_organization_schedule_table($bookings, $resources);
 //            exit;
 		return array('total_records' => count($results), 'results' => $results);
 	}
