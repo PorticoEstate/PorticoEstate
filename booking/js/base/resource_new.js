@@ -138,16 +138,20 @@ populate_rescategory_select = function (activity_id)
 				var $select = $("#field_rescategory_id");
 				$select.empty();
 				$select.append($("<option></option>").attr("value", "").text(lang['Select category...']));
-				$.each(data, function(key,value) {
+				$.each(data, function (key, value)
+				{
 
-					if(selected == value.id)
+					var option = $("<option></option>").attr("value", value.id).text(value.name);
+
+					if (value.disabled)
 					{
-						$select.append($("<option></option>").attr("value", value.id).attr("selected", true).text(value.name));
+						option.attr("disabled", true);
 					}
-					else
+					if (selected == value.id)
 					{
-						$select.append($("<option></option>").attr("value", value.id).text(value.name));
+						option.attr("selected", true);
 					}
+					$select.append(option);
 				});
 			}
 		}
@@ -166,7 +170,7 @@ addELock = function ()
 	var access_code_format = $("#access_code_format").val();
 	$.ajax({
 		type: 'POST',
-		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format,  resource_id: resource_id},
+		data: {e_lock_system_id: e_lock_system_id, e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)
@@ -195,7 +199,7 @@ removeELock = function ()
 	var e_lock_resource_id = $("#e_lock_resource_id").val();
 	$.ajax({
 		type: 'POST',
-		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, resource_id: resource_id},
+		data: {e_lock_system_id: e_lock_system_id, e_lock_resource_id: e_lock_resource_id, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)
@@ -224,7 +228,7 @@ add_participant_limit = function ()
 
 	$.ajax({
 		type: 'POST',
-		data: {limit_from: limit_from,limit_quantity: limit_quantity,  resource_id: resource_id},
+		data: {limit_from: limit_from, limit_quantity: limit_quantity, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)

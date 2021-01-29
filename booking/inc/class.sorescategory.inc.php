@@ -83,16 +83,37 @@
 					'WHERE br.active=1 and ba.parent_id is NULL and bra.activity_id in (' . implode(',', $activity_ids) . ')' .
 					'ORDER BY br.name';
 			$this->db->query($sql, __LINE__, __FILE__);
+
+			$map = array();
 			while ($this->db->next_record())
 			{
-				$rescategories[] = array(
-					'id'		 => $this->db->f('id'),
+				$id = $this->db->f('id');
+				$rescategory = array(
+					'id'		 => $id,
 					'name'		 => $this->db->f('name'),
 					'capacity'	 => $this->db->f('capacity'),
 					'e_lock'	 => $this->db->f('e_lock'),
 				);
+
+				$map[$id]		 = $rescategory;
 			}
-			return $rescategories;
+
+
+			$tree = $this->read_tree2();
+			foreach ($tree as &$entry)
+			{
+				if(! in_array($entry['id'],array_keys($map )))
+				{
+					$entry['disabled'] = true;
+				}
+				else
+				{
+					$entry['capacity'] = $map[$entry['id']]['capacity'];
+					$entry['e_lock'] = $map[$entry['id']]['e_lock'];
+				}
+
+			}
+			return $tree;
 		}
 
 
@@ -159,7 +180,7 @@
 
 
 
-		function get_children2( $parent, $level, $reset = false )
+		function get_children2( $parent_id, $level, $reset = false )
 		{
 			if ($reset)
 			{
@@ -167,17 +188,16 @@
 			}
 			$db		 = clone($this->db);
 			$table	 = "bb_rescategory";
-			$sql	 = "SELECT id, name FROM {$table} WHERE  parent_id = {$parent} ORDER BY name ASC";
+			$sql	 = "SELECT id, name FROM {$table} WHERE  parent_id = {$parent_id} ORDER BY name ASC";
 			$db->query($sql, __LINE__, __FILE__);
 
 			while ($db->next_record())
 			{
 				$id	 = $db->f('id');
-				$this->entity_tree[]	 = array
-					(
+				$this->entity_tree[]	 = array(
 					'id'			 => $id,
 					'name'			 => str_repeat('..', $level) . $db->f('name'),
-					'parent_id'		 => $db->f('parent_id'),
+					'parent_id'		 => $parent_id,
 				);
 				$this->get_children2($id, $level + 1);
 			}
@@ -193,26 +213,26 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->entity_tree = array();
-			$groups = array();
+			$entries = array();
 
 			while ($this->db->next_record())
 			{
-				$groups[] = array
-					(
+				$entries[] = array(
 					'id'			 => $this->db->f('id'),
 					'name'			 => $this->db->f('name', true),
 					'parent_id'		 => 0,
 				);
 			}
 
-			foreach ($groups as $group)
+			foreach ($entries as $entry)
 			{
 				$this->entity_tree[] = array
-					(
-					'id'			 => $group['id'],
-					'name'			 => $group['name'],
+				(
+					'id'			 => $entry['id'],
+					'name'			 => $entry['name'],
+					'parent_id'		 => 0,
 				);
-				$this->get_children2( $group['id'], 1);
+				$this->get_children2( $entry['id'], 1);
 			}
 			return $this->entity_tree;
 		}

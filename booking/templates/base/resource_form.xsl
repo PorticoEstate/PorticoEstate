@@ -63,6 +63,9 @@
 						</option>
 						<xsl:for-each select="rescategorydata">
 							<option value="{id}">
+								<xsl:if test="disabled=1">
+									<xsl:attribute name="disabled">disabled</xsl:attribute>
+								</xsl:if>
 								<xsl:if test="id=../resource/rescategory_id">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 								</xsl:if>
