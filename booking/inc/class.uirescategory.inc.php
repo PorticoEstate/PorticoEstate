@@ -128,7 +128,7 @@
 					}
 				}
 			}
-
+			$parent_list = $this->bo->get_parents();
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'rescategory.js');
 			$rescategory['activities_json'] = json_encode(array_map('intval', (array)$rescategory['activities']));
@@ -136,7 +136,10 @@
 			$rescategory['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$rescategory['validator'] = phpgwapi_jquery::formvalidator_generate(array());
 
-			self::render_template_xsl('rescategory_new', array('rescategory' => $rescategory));
+			self::render_template_xsl('rescategory_new', array(
+				'rescategory' => $rescategory,
+				'parent_list' => $parent_list
+				));
 		}
 
 
@@ -171,6 +174,7 @@
 					}
 				}
 			}
+			$parent_list = $this->bo->get_parents($id);
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'rescategory.js');

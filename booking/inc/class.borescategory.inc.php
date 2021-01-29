@@ -29,7 +29,7 @@
 						$entity_path[] = $path_element['name'];
 					}
 
-					$rescategory['name'] = implode(' / ', $entity_path);
+					$rescategory['name'] = implode(' ::/:: ', $entity_path);
 				}
 
 				$_activity_names = array();
@@ -99,10 +99,13 @@
 		}
 
 
-		public function get_parents( $id )
+		public function get_parents( $id = 0)
 		{
 			$parent_list = $this->so->read_tree2();
-			$exclude	 = array($id);
+			if($id)
+			{
+				$exclude	 = array($id);
+			}
 			$children	 = $this->so->get_children2( $id, 0, true);
 
 			foreach ($children as $child)

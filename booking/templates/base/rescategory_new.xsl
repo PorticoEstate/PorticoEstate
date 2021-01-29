@@ -28,6 +28,28 @@
 						</input>
 					</div>
 					<div class="pure-control-group">
+						<label for="field_parent_id">
+							<xsl:value-of select="php:function('lang', 'Parent group')" />
+						</label>
+						<select name="parent_id" id="field_parent_id">
+							<option value="0">
+								<xsl:value-of select="php:function('lang', 'No Parent')" />
+							</option>
+							<xsl:for-each select="parent_list">
+								<option>
+									<xsl:if test="../rescategory/parent_id = id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:attribute name="value">
+										<xsl:value-of select="id"/>
+									</xsl:attribute>
+									<xsl:value-of select="name"/>
+								</option>
+							</xsl:for-each>
+						</select>
+					</div>
+
+					<div class="pure-control-group">
 						<label for="field_active">
 							<xsl:value-of select="php:function('lang', 'Active')"/>
 						</label>
@@ -104,13 +126,13 @@
 
 	        ]]>
 		var colDefsRespurces = [
-			{label: '', object: [
-				{type: 'input', attrs: [
-					{name: 'type', value: 'checkbox'},
-					{name: 'name', value: 'activities[]'}
-				]}],
-				value: 'id'},
-			{key: 'name', label: lang['Name']},
+		{label: '', object: [
+		{type: 'input', attrs: [
+		{name: 'type', value: 'checkbox'},
+		{name: 'name', value: 'activities[]'}
+		]}],
+		value: 'id'},
+		{key: 'name', label: lang['Name']},
 		];
 		createTable('activities_container', activitiesURL, colDefsRespurces, '', 'pure-table pure-table-bordered');
 	</script>
