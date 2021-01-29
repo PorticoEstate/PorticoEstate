@@ -182,6 +182,15 @@
 						</select>
 					</div>
 				</xsl:if>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'capacity')"/>
+					</label>
+					<input type="number" min="0" id="field_capacity" name="capacity" value="{resource/capacity}">
+					</input>
+				</div>
+
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
