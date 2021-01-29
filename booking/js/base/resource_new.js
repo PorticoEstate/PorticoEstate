@@ -1,4 +1,4 @@
-/* global resource_id, oTable1, oTable0 */
+/* global resource_id, oTable1, oTable0, lang */
 
 $(document).ready(function ()
 {
@@ -43,11 +43,12 @@ get_custom_fields = function (schema_activity_id, schema)
 		url: requestUrl,
 		success: function (data)
 		{
-			if (data != null)
+			if (data != null && data.length > 0)
 			{
 				var custom_fields = data;
 				$("#schema_name").html(schema);
 				$("#custom_fields").html(custom_fields);
+				$("#custom_data").show();
 			}
 		}
 	});
@@ -133,11 +134,20 @@ populate_rescategory_select = function (activity_id)
 		{
 			if (data != null)
 			{
+				var selected = $("#field_rescategory_id").val();
 				var $select = $("#field_rescategory_id");
 				$select.empty();
 				$select.append($("<option></option>").attr("value", "").text(lang['Select category...']));
 				$.each(data, function(key,value) {
-					$select.append($("<option></option>").attr("value", value.id).text(value.name));
+
+					if(selected == value.id)
+					{
+						$select.append($("<option></option>").attr("value", value.id).attr("selected", true).text(value.name));
+					}
+					else
+					{
+						$select.append($("<option></option>").attr("value", value.id).text(value.name));
+					}
 				});
 			}
 		}

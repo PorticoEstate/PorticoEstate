@@ -63,7 +63,7 @@
 			{
 				$idlist = $activity_ids;
 			}
-			else
+			else if($activity_ids)
 			{
 				$idlist[] = $activity_ids;
 			}

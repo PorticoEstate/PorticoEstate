@@ -280,8 +280,9 @@
 
 				$fields = ExecMethod('booking.custom_fields.get_fields', $location);
 				$values_attribute = phpgw::get_var('values_attribute');
+				$resource['json_representation'] = array();
 				$json_representation = array();
-				foreach ($fields as $attrib_id => &$attrib)
+				foreach ($fields as $attrib_id => $attrib)
 				{
 					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 				}
@@ -453,6 +454,13 @@
 			$custom_values = $resource['json_representation'][$location_id];
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
+
+			if(!$fields)
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				return false;
+			}
+
 			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;

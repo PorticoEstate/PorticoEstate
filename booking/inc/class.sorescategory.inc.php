@@ -85,7 +85,12 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$rescategories[] = array('id' => $this->db->f('id'), 'name' => $this->db->f('name'));
+				$rescategories[] = array(
+					'id'		 => $this->db->f('id'),
+					'name'		 => $this->db->f('name'),
+					'capacity'	 => $this->db->f('capacity'),
+					'e_lock'	 => $this->db->f('e_lock'),
+				);
 			}
 			return $rescategories;
 		}
