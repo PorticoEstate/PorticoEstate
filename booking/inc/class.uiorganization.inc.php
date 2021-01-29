@@ -278,6 +278,7 @@
 
 			$this->install_customer_identifier_ui($organization);
 			self::rich_text_editor('field_description');
+			phpgwapi_jquery::load_widget('select2');
 
 			$this->add_template_helpers();
 
@@ -366,6 +367,7 @@
 
 			$this->install_customer_identifier_ui($organization);
 			self::rich_text_editor('field_description');
+			phpgwapi_jquery::load_widget('select2');
 
 			$this->add_template_helpers();
 			self::render_template_xsl('organization_edit', array(
