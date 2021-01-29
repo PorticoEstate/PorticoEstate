@@ -222,6 +222,20 @@
 
 	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
 
+	// Default rescategory
+
+	$bb_rescategory = array(
+		array("Lokale",1,1,1),
+		array("Utstyr",false, false,1),
+	);
+
+	foreach ($bb_rescategory as $value_set)
+	{
+		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
+		$sql = "INSERT INTO bb_rescategory (name, capacity, e_lock, active) VALUES ({$values})";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+	}
+
 // Default groups and users
 	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
 	$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
