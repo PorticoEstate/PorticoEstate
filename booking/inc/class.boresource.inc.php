@@ -16,11 +16,6 @@
 			$this->facility_bo = CreateObject('booking.bofacility');
 		}
 
-		public function allowed_types()
-		{
-			return booking_soresource::allowed_types();
-		}
-
 		/**
 		 * @see bocommon_authorized
 		 */

@@ -48,10 +48,10 @@
 						</dd>
 					</xsl:if>
 					<dt>
-						<xsl:value-of select="php:function('lang', 'Resource Type')" />
+						<xsl:value-of select="php:function('lang', 'Resource category')"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="php:function('lang', string(resource/type))"/>
+						<xsl:value-of select="resource/rescategory_name"/>
 					</dd>
 					<h3>
 						<xsl:value-of select="php:function('lang', 'Documents')" />

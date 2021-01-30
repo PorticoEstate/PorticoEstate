@@ -53,7 +53,6 @@
 				'activity_id' => 'int',
 				'active' => 'int',
 				'capacity' => 'int',
-				'type' => 'string',
 				'sort' => 'string',
 				'organizations_ids' => 'string',
 				'rescategory_id' => 'int',
@@ -226,7 +225,6 @@
 
 			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
-			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
@@ -244,15 +242,6 @@
 				'new_form' => true));
 		}
 
-		protected function resource_types()
-		{
-			$types = array();
-			foreach ($this->bo->allowed_types() as $type)
-			{
-				$types[$type] = self::humanize($type);
-			}
-			return $types;
-		}
 
 		public function edit()
 		{
@@ -266,7 +255,6 @@
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show',
 					'id' => $resource['id']));
-			$resource['types'] = $this->resource_types();
 
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
