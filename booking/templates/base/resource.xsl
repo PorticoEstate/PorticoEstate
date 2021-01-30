@@ -120,12 +120,14 @@
 						</span>
 					</div>
 				</xsl:if>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'capacity')"/>
-					</label>
-					<xsl:value-of select="resource/capacity"/>
-				</div>
+				<xsl:if test="resource/rescategory_capacity = 1">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'capacity')"/>
+						</label>
+						<xsl:value-of select="resource/capacity"/>
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
@@ -205,7 +207,7 @@
 					<xsl:value-of select="resource/booking_dow_default_start"/>
 				</div>
 
-<!--				<div class="pure-control-group">
+				<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'dow default end')"/>
 					</label>
@@ -226,26 +228,27 @@
 					<xsl:value-of select="resource/booking_time_default_end"/>
 				</div>
 
-
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
-					</label>
-					<div class = 'pure-u-md-1-2'>
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_1'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl'/>
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-									<xsl:with-param name="data" select ='data'/>
-									<xsl:with-param name="config" select ='config'/>
-									<xsl:with-param name="class" select="'table table-striped table-bordered'" />
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
+				<xsl:if test="resource/rescategory_e_lock = 1">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
+						</label>
+						<div class = 'pure-u-md-1-2'>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_1'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="config" select ='config'/>
+										<xsl:with-param name="class" select="'table table-striped table-bordered'" />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
 					</div>
-				</div>
+				</xsl:if>
 
 				<div id="custom_fields"></div>
 				<div class="pure-control-group">

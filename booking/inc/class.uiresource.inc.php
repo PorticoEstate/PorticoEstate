@@ -133,10 +133,6 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'type',
-							'label' => lang('Resource Type')
-						),
-						array(
 							'key' => 'activity_name',
 							'label' => lang('Main activity')
 						),
@@ -215,10 +211,7 @@
 					}
 				}
 			}
-			else
-			{
-				$resource['type'] = 'Location';
-			}
+
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');

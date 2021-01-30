@@ -103,6 +103,20 @@
 						'key' => 'id',
 						'column' => 'active',
 					)),
+				'rescategory_capacity' => array('type' => 'int',
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'capacity',
+					)),
+				'rescategory_e_lock' => array('type' => 'int',
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'e_lock',
+					)),
 				'buildings' => array('type' => 'int', 'required' => true,
 					'manytomany' => array(
 						'table' => 'bb_building_resource',
