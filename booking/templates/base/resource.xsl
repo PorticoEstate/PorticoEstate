@@ -65,14 +65,6 @@
 						<xsl:value-of select="resource/rescategory_name"/>
 					</span>
 				</div>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'Resource Type')" />
-					</label>
-					<span>
-						<xsl:value-of select="php:function('lang', string(resource/type))"/>
-					</span>
-				</div>
 				<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
 				<div class="pure-control-group">
 					<label>

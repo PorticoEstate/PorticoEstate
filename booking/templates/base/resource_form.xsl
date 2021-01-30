@@ -142,30 +142,6 @@
 					</div>
 					<div id="custom_fields"></div>
 				</div>
-
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'Resource Type')" />
-					</label>
-					<select name='type' id='field_type' class="pure-input-3-4">
-						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please select a resource type')" />
-						</xsl:attribute>
-						<option value=''>
-							<xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
-						<xsl:for-each select="resource/types/*">
-							<option value="{local-name()}">
-								<xsl:if test="../../type = local-name()">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', string(node()))"/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
 				<xsl:if test="not(new_form)">
 					<div class="pure-control-group">
 						<label>

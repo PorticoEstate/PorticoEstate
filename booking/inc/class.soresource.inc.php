@@ -5,9 +5,6 @@
 	class booking_soresource extends booking_socommon
 	{
 
-		const TYPE_LOCATION = 'Location';
-		const TYPE_EQUIPMENT = 'Equipment';
-
 		function __construct()
 		{
 			parent::__construct('bb_resource', array(
@@ -16,7 +13,6 @@
 				'sort' => array('type' => 'int', 'required' => false),
 //				'building_id'		 => array('type' => 'int', 'required' => true),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
-				'type' => array('type' => 'string', 'query' => true, 'required' => true),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'opening_hours' => array('type' => 'string'),
 				'contact_info' => array('type' => 'string'),
@@ -156,10 +152,6 @@
 				'description' => $this->db->f('description', true));
 		}
 
-		public static function allowed_types()
-		{
-			return array(self::TYPE_LOCATION, self::TYPE_EQUIPMENT);
-		}
 
 		protected function preValidate( &$entity )
 		{
@@ -180,10 +172,6 @@
 		function doValidate( $entity, booking_errorstack $errors )
 		{
 			parent::doValidate($entity, $errors);
-			if (!isset($errors['type']) && !in_array($entity['type'], self::allowed_types(), true))
-			{
-				$errors['type'] = lang('Invalid Resource Type');
-			}
 		}
 
 		function _get_conditions( $query, $filters )

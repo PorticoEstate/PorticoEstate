@@ -177,7 +177,6 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
-				'type' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'sort' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
