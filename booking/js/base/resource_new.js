@@ -15,6 +15,31 @@ $(document).ready(function ()
 		populate_rescategory_select($(this).val());
 	});
 
+	$("#field_rescategory_id").change(function ()
+	{
+		var $option = $("#field_rescategory_id option:selected");
+		var capacity = $option.attr('data-capacity');
+		var e_lock = $option.attr('data-e_lock');
+
+		if (capacity == 1)
+		{
+			$("#capacity_form").show();
+		}
+		else
+		{
+			$("#capacity_form").hide();
+		}
+
+		if (e_lock == 1)
+		{
+			$("#e_lock_form").show();
+		}
+		else
+		{
+			$("#e_lock_form").hide();
+		}
+	});
+
 
 	$("#booking_day_horizon").change(function ()
 	{
@@ -141,7 +166,7 @@ populate_rescategory_select = function (activity_id)
 				$.each(data, function (key, value)
 				{
 
-					var option = $("<option></option>").attr("value", value.id).text(value.name);
+					var option = $("<option></option>").attr("value", value.id).attr("data-capacity", value.capacity).attr("data-e_lock", value.e_lock).text(value.name);
 
 					if (value.disabled)
 					{

@@ -34,6 +34,9 @@
 					</label>
 					<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
 					<select id="field_activity_id" name="activity_id" class="pure-input-3-4">
+						<option value=''>
+							<xsl:value-of select="php:function('lang', 'Select activity...')" />
+						</option>
 						<xsl:for-each select="activitydata/results">
 							<option value="{id}">
 								<xsl:if test="resource_id=id">
@@ -69,6 +72,12 @@
 								<xsl:if test="id=../resource/rescategory_id">
 									<xsl:attribute name="selected">selected</xsl:attribute>
 								</xsl:if>
+								<xsl:attribute name="data-capacity">
+									<xsl:value-of select="capacity" />
+								</xsl:attribute>
+								<xsl:attribute name="data-e_lock">
+									<xsl:value-of select="e_lock" />
+								</xsl:attribute>
 								<xsl:value-of disable-output-escaping="yes" select="name" />
 							</option>
 						</xsl:for-each>
@@ -164,12 +173,19 @@
 					</div>
 				</xsl:if>
 
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'capacity')"/>
-					</label>
-					<input type="number" min="0" id="field_capacity" name="capacity" value="{resource/capacity}" class="pure-input-3-4">
-					</input>
+				<div id="capacity_form">
+					<xsl:if test="new_form or resource/rescategory_capacity != 1">
+						<xsl:attribute name="style">
+							<xsl:text>display:none;</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'capacity')"/>
+						</label>
+						<input type="number" min="0" id="field_capacity" name="capacity" value="{resource/capacity}" class="pure-input-3-4">
+						</input>
+					</div>
 				</div>
 
 				<div class="pure-control-group">
@@ -341,7 +357,12 @@
 					</input>
 				</div>
 
-				<xsl:if test="not(new_form)">
+				<div id="e_lock_form">
+					<xsl:if test="new_form or resource/rescategory_e_lock != 1">
+						<xsl:attribute name="style">
+							<xsl:text>display:none;</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
@@ -424,7 +445,7 @@
 						</xsl:if>
 
 					</div>
-				</xsl:if>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
