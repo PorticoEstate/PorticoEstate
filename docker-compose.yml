@@ -17,6 +17,7 @@ services:
   web:
     container_name: portico_container
     image: sigurdne/portico_estate_webserver:latest
+#    image: sigurdne/portico_estate_webserver_oracle:latest
     ports:
       - 8080:80
     environment:
