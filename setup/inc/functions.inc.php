@@ -64,7 +64,7 @@
 	else
 	{
 		die('Your system install is incomplete, please try to '
-			. '<a href="http://savannah.nongnu.org/projects/fmsystem/"'
+			. '<a href="https://github.com/PorticoEstate/PorticoEstate"'
 			. ' target="_blank">download Portico Estate</a> and try again');
 	}
 
