@@ -349,30 +349,6 @@ HTML;
 	if ($bouser->is_logged_in())
 	{
 
-		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
-
-		$session_org_id = phpgw::get_var('session_org_id', 'string', 'GET');
-
-		function get_ids_from_array( $org )
-		{
-			return $org['orgnumber'];
-		}
-		if ($session_org_id && ($session_org_id != $bouser->orgnr) && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
-		{
-			try
-			{
-				$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
-				if ($org_number)
-				{
-					$bouser->change_org($org_number);
-				}
-			}
-			catch (sfValidatorError $e)
-			{
-				$session_org_id = -1;
-			}
-		}
-
 		if ($bouser->orgname == '000000000')
 		{
 			$tpl_vars['login_text_org']	 = lang('SSN not registred');
