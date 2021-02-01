@@ -165,12 +165,12 @@
 		function add_langs($appname,$DEBUG=False,$force_en=False)
 		{
 			$langs = $this->get_langs($DEBUG);
-			if($force_en && !@in_array('en',$langs))
+			if($force_en && !in_array('en',$langs))
 			{
 				$langs[] = 'en';
 			}
 
-			if(!empty($GLOBALS['phpgw_info']['server']['default_lang']) && $force_en && !@in_array($GLOBALS['phpgw_info']['server']['default_lang'],$langs))
+			if(!empty($GLOBALS['phpgw_info']['server']['default_lang']) && $force_en && !in_array($GLOBALS['phpgw_info']['server']['default_lang'],$langs))
 			{
 				$langs[] = $GLOBALS['phpgw_info']['server']['default_lang'];
 			}

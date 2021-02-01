@@ -950,7 +950,7 @@
 				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
 			}
 
-			if ( count($attrib['edit_choice'])  && !$doubled )
+			if ( isset($attrib['new_choice']) && is_array($attrib['edit_choice'])  && !$doubled )
 			{
 				foreach ($attrib['edit_choice'] as $choice_id => $value)
 				{
@@ -965,7 +965,7 @@
 				}
 			}
 
-			if ( count($attrib['order_choice'])  && !$doubled )
+			if ( isset($attrib['order_choice']) && is_array($attrib['order_choice'])  && !$doubled )
 			{
 				foreach ($attrib['order_choice'] as $choice_id => $order)
 				{
@@ -979,7 +979,7 @@
 				}
 			}
 
-			if ( count($attrib['delete_choice'])  && !$doubled )
+			if ( isset($attrib['delete_choice']) && is_array($attrib['delete_choice']) && !$doubled )
 			{
 				foreach ($attrib['delete_choice'] as $choice_id)
 				{

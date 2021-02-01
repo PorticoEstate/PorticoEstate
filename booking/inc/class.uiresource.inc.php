@@ -52,7 +52,7 @@
 				'contact_info' => 'html',
 				'activity_id' => 'int',
 				'active' => 'int',
-				'type' => 'string',
+				'capacity' => 'int',
 				'sort' => 'string',
 				'organizations_ids' => 'string',
 				'rescategory_id' => 'int',
@@ -133,10 +133,6 @@
 							'sortable' => false
 						),
 						array(
-							'key' => 'type',
-							'label' => lang('Resource Type')
-						),
-						array(
 							'key' => 'activity_name',
 							'label' => lang('Main activity')
 						),
@@ -215,17 +211,13 @@
 					}
 				}
 			}
-			else
-			{
-				$resource['type'] = 'Location';
-			}
+
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
-			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
@@ -243,15 +235,6 @@
 				'new_form' => true));
 		}
 
-		protected function resource_types()
-		{
-			$types = array();
-			foreach ($this->bo->allowed_types() as $type)
-			{
-				$types[$type] = self::humanize($type);
-			}
-			return $types;
-		}
 
 		public function edit()
 		{
@@ -265,7 +248,6 @@
 			$resource['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show',
 					'id' => $resource['id']));
-			$resource['types'] = $this->resource_types();
 
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -279,8 +261,9 @@
 
 				$fields = ExecMethod('booking.custom_fields.get_fields', $location);
 				$values_attribute = phpgw::get_var('values_attribute');
+				$resource['json_representation'] = array();
 				$json_representation = array();
-				foreach ($fields as $attrib_id => &$attrib)
+				foreach ($fields as $attrib_id => $attrib)
 				{
 					$json_representation[$attrib['name']] = isset($values_attribute[$attrib_id]['value']) ? $values_attribute[$attrib_id]['value'] : null;
 				}
@@ -452,6 +435,13 @@
 			$custom_values = $resource['json_representation'][$location_id];
 			$custom_fields = createObject('booking.custom_fields');
 			$fields = $custom_fields->get_fields($location);
+
+			if(!$fields)
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				return false;
+			}
+
 			foreach ($fields as $attrib_id => &$attrib)
 			{
 				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;

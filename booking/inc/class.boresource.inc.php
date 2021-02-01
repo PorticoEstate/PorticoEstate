@@ -16,11 +16,6 @@
 			$this->facility_bo = CreateObject('booking.bofacility');
 		}
 
-		public function allowed_types()
-		{
-			return booking_soresource::allowed_types();
-		}
-
 		/**
 		 * @see bocommon_authorized
 		 */
@@ -128,7 +123,6 @@
 			foreach ($resources['results'] as &$resource)
 			{
 				$resource['link'] = $this->link(array('menuaction' => $menuaction, 'id' => $resource['id']));
-				$resource['type'] = lang($resource['type']);
 				$resource['direct_booking_date'] = $resource['direct_booking'] ? $GLOBALS['phpgw']->common->show_date($resource['direct_booking'], $dateformat) : null;
 //				$resource['full_name']	 = $resource['building_name'] . ' / ' . $resource['name'];
 				if (isset($resource['buildings']))
