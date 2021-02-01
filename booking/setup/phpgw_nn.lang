@@ -7,7 +7,7 @@ when?	booking	nn	Når?
 who?	booking	nn	Kven?
 how many?	booking	nn	Kor mange?
 accept application	booking	nn	Godta søknaden
-accepted	booking	nn	AKSEPTERT
+accepted	booking	nn	GODKJENT
 account	booking	nn	Bruker
 actions	booking	nn	Handling
 active	booking	nn	Aktiv

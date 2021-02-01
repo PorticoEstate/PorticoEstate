@@ -9,7 +9,7 @@ when?	booking	no	Når?
 who?	booking	no	Hvem?
 how many?	booking	no	Hvor mange?
 accept application	booking	no	Godta søknaden
-accepted	booking	no	AKSEPTERT
+accepted	booking	no	GODKJENT
 account	booking	no	Bruker
 actions	booking	no	Handling
 active	booking	no	Aktiv
