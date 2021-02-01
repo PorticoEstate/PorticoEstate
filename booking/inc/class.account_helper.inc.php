@@ -19,7 +19,7 @@
 		/**
 		 * Returns the current user's login name
 		 */
-		public function current_account_lid()
+		public static function current_account_lid()
 		{
 			return $GLOBALS['phpgw_info']['user']['account_lid'];
 		}
@@ -27,7 +27,7 @@
 		/**
 		 * Returns the current user's full name
 		 */
-		public function current_account_fullname()
+		public static function current_account_fullname()
 		{
 			return $GLOBALS['phpgw_info']['user']['fullname'];
 		}

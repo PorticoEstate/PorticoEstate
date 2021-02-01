@@ -5,7 +5,7 @@
 	class booking_uiorganization extends booking_uicommon
 	{
 
-		protected $fields;
+		protected $fields, $new_org_list, $ssn, $personal_org;
 		public $public_functions = array
 			(
 			'building_users' => true,
@@ -45,6 +45,8 @@
 				'organization_number' => 'string',
 				'activity_id' => 'int',
 				'customer_number' => 'string',
+				'customer_identifier_type' => 'string',
+				'customer_organization_number' => 'string',
 				'customer_internal' => 'int',
 				'show_in_portal' => 'int',
 			);
@@ -216,7 +218,16 @@
 		public function add()
 		{
 			$errors = array();
-			$organization = array('customer_internal' => 0);
+			$organization = array(
+				'customer_internal' => 0,
+				'show_in_portal'	=> 1
+				);
+
+
+			if($this->module == 'bookingfrontend')
+			{
+				$organization['customer_ssn'] = $this->ssn;
+			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -232,17 +243,42 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($organization);
+
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array(
+							'status'	 => 'saved',
+							'message'	 => lang('saved')
+						);
+					}
+
 					$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
+				}
+				else if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return array(
+						'status'	 => 'error',
+						'message'	 => array_values($errors)
+					);
 				}
 			}
 			$this->flash_form_errors($errors);
 
-			$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.index',));
+			if($this->module == 'booking')
+			{
+				$organization['cancel_link'] = self::link(array('menuaction' => 'booking.uiorganization.index',));
+			}
+			else
+			{
+				$organization['cancel_link'] = "#";
+			}
+
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
 			self::rich_text_editor('field_description');
+			phpgwapi_jquery::load_widget('select2');
 
 			$this->add_template_helpers();
 
@@ -253,9 +289,17 @@
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$organization['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
-
-			self::render_template_xsl('organization_edit', array('organization' => $organization,
-				"new_form" => "1", 'module' => $this->module, 'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array(
+				'form_action'	 => self::link(array('menuaction' => "{$this->module}.uiorganization.add")),
+				'organization'	 => $organization,
+				'personal_org'	 => $this->personal_org,
+				'new_org_list'	 => $this->new_org_list,
+				"new_form"		 => "1",
+				'module'		 => $this->module,
+				'activities'	 => $activities,
+				'currentapp'	 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'noframework'	 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? false : true,
+			));
 		}
 
 		public function edit()
@@ -323,11 +367,18 @@
 
 			$this->install_customer_identifier_ui($organization);
 			self::rich_text_editor('field_description');
+			phpgwapi_jquery::load_widget('select2');
 
 			$this->add_template_helpers();
-			self::render_template_xsl('organization_edit', array('organization' => $organization,
-				"save_or_create_text" => "Save", "module" => $this->module, "contact_form_link" => $contact_form_link,
-				'activities' => $activities, 'currentapp' => $GLOBALS['phpgw_info']['flags']['currentapp']));
+			self::render_template_xsl('organization_edit', array(
+				'noframework'			 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? false : true,
+				'organization'			 => $organization,
+				"save_or_create_text"	 => "Save",
+				"module"				 => $this->module,
+				"contact_form_link"		 => $contact_form_link,
+				'activities'			 => $activities,
+				'currentapp'			 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+			));
 		}
 
 		public function show()

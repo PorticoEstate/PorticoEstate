@@ -290,7 +290,7 @@ customer_organization_number is invalid	bookingfrontend	no	Organisasjonsnummer e
 Used buildings	bookingfrontend	no	Bygg/anlegg som brukes
 Add group	bookingfrontend	no	Ny gruppe
 Internal Customer	bookingfrontend	no	Intern kunde
-Customer number	bookingfrontend	no	Ressursnummer
+Customer number	bookingfrontend	no	Referansenummer
 activity_id	bookingfrontend	no	Aktivitet
 contact_email	bookingfrontend	no	E-post
 contact_name	bookingfrontend	no	Navn
@@ -493,3 +493,6 @@ view allocation	bookingfrontend	no	Vis tildeling
 view booking	bookingfrontend	no	Vis interntildeling
 Phone is already registered	bookingfrontend	no	Telefonnummeret er allerede registrert
 download to your calendar	bookingfrontend	no	Last ned til din kalender
+organization type	bookingfrontend	no	Organisasjonstype
+personal group	bookingfrontend	no	Ikke registrert i Brønnøysund
+Official organization	bookingfrontend	no	Registrert i Brønnøysund

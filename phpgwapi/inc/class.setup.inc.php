@@ -39,7 +39,7 @@
 		public function __construct($html = False, $translation = False)
 		{
 			ini_set('session.use_cookies', true);
-			$GLOBALS['phpgw_info']['server']['default_lang'] = 'en';
+			$GLOBALS['phpgw_info']['server']['default_lang'] = !empty($GLOBALS['phpgw_info']['server']['default_lang']) ? $GLOBALS['phpgw_info']['server']['default_lang'] : 'en';
 
 			/*
 			 * FIXME - do not take effect

@@ -87,9 +87,6 @@
 								</div>
 							</xsl:otherwise>
 						</xsl:choose>
-
-
-
 					</div>
 					<div class="pure-control-group">
 						<label for="field_activity">
