@@ -70,19 +70,22 @@
 
 
 		</script>
-		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-		<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+		<script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
 		<script>
 			window.addEventListener("load", function ()
 			{
 				window.cookieconsent.initialise({
-					"palette": {
+					palette: {
 						"popup": {
 							"background": "#000"
 						},
 						"button": {
 							"background": "#f1d600"
 						}
+					},
+					cookie: {
+						name: 'cookieconsent_login'
 					}
 				})
 			});

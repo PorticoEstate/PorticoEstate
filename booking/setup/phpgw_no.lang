@@ -181,6 +181,7 @@ secondary admin	booking	no	Kontaktperson 2
 select a building first	booking	no	Velg bygg/anlegg først
 select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
+select activity...	booking	no	Velg aktivitet...
 settings	booking	no	Innstillinger
 show only active	booking	no	Skjul
 showing items	booking	no	Viser
@@ -837,3 +838,4 @@ overridden participant limit is set to %1	booking	no	Overstyrt grense for deltak
 external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
+capacity	booking	no	Kapasitet

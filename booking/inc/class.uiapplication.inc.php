@@ -899,10 +899,31 @@
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
+			else if (phpgw::get_var('start', 'bool'))
+			{
+				$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+				try
+				{
+					$DateTimeZone	 = new DateTimeZone($timezone);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
+
+				$_start_time =  (new DateTime(date('Y-m-d H:i:s', phpgw::get_var('start', 'int')/1000)));
+				$_end_time = ( new DateTime(date('Y-m-d H:i:s', phpgw::get_var('end', 'int')/1000)));
+				$_start_time->setTimezone($DateTimeZone);
+				$_end_time->setTimezone($DateTimeZone);
+
+				$default_dates = array_map(array($this, '_combine_dates'), (array) $_start_time->format('Y-m-d H:i:s'),(array)$_end_time->format('Y-m-d H:i:s'));
+			}
 			else
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			}
+
 			array_set_default($application, 'dates', $default_dates);
 
 			$this->flash_form_errors($errors);
@@ -1006,10 +1027,6 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'), 'application_form');
 			}
-			else
-			{
-				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
-			}
 
 			// Get resources
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
@@ -1101,10 +1118,13 @@
 			else
 			{
 				$template = 'application_new';
-				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			}
 
-
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
+			{
+				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
+			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,
