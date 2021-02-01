@@ -149,42 +149,14 @@
 		public function edit()
 		{
 
-			$bouser = CreateObject('bookingfrontend.bouser');
-
-			if($bouser->is_logged_in())
-			{
-				$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
-
-				$orgs_map = array();
-				foreach ($orgs as $org)
-				{
-					$orgs_map[] = $org['orgnumber'];
-				}
-
-				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
-
-				if($session_org_id && in_array($session_org_id, $orgs_map))
-				{
-					try
-					{
-						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
-						if($org_number)
-						{
-							$bouser->change_org($org_number);
-						}
-					}
-					catch (sfValidatorError $e)
-					{
-						$session_org_id = -1;
-					}
-				}
-			}
+			$bouser = CreateObject('bookingfrontend.bouser', true);
 
 			$id = phpgw::get_var('id', 'int');
+			$session_org_id = phpgw::get_var('session_org_id', 'bool') ? phpgw::get_var('session_org_id') :  $bouser->orgnr;
 
 			if(!$id && $session_org_id)
 			{
-				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id);
+				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id, $bouser->ssn);
 				$_GET['id'] = $id;
 			}
 
@@ -202,15 +174,16 @@
 
 		public function show()
 		{
+			$bouser = CreateObject('bookingfrontend.bouser', true);
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$id = phpgw::get_var('id', 'int');
 
-			$session_org_id = phpgw::get_var('session_org_id');
+			$session_org_id = phpgw::get_var('session_org_id', 'bool') ? phpgw::get_var('session_org_id') :  $bouser->orgnr;
 
 			if(!$id && $session_org_id)
 			{
-				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id);
+				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id, $bouser->ssn);
 			}
 
 			$organization = $this->bo->read_single($id);
@@ -254,14 +227,18 @@
 			$auth_forward .= '&orgnr=' . $organization['organization_number'];
 			// END EVIL HACK
 
-			$bouser = CreateObject('bookingfrontend.bouser');
 			$organization['login_link'] = 'login.php' . $auth_forward;
 			$organization['logoff_link'] = 'logoff.php' . $auth_forward;
 			$organization['new_group_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit',
 					'organization_id' => $organization['id']));
 			$organization['new_delegate_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
 					'organization_id' => $organization['id']));
-			if ($bouser->is_organization_admin($organization['id']))
+//			if ($bouser->is_organization_admin($organization['id'], $organization['organization_number']))
+//			{
+//				$organization['logged_on'] = true;
+//			}
+
+			if (isset($organization['permission']['write']))
 			{
 				$organization['logged_on'] = true;
 			}
