@@ -1027,10 +1027,6 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'), 'application_form');
 			}
-			else
-			{
-				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
-			}
 
 			// Get resources
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
@@ -1122,10 +1118,13 @@
 			else
 			{
 				$template = 'application_new';
-				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			}
 
-
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
+			{
+				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
+			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,
