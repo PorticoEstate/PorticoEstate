@@ -168,6 +168,11 @@
 				$customer_ssn = $this->db->f('customer_ssn');
 				$organization_number = $this->db->f('organization_number');
 
+				if($organization_number && in_array($organization_number, $orgs_validate))
+				{
+					continue;
+				}
+
 				if($customer_ssn && !$organization_number)
 				{
 					$organization_number = '000000000';
