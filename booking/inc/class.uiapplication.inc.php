@@ -899,10 +899,31 @@
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
+			else if (phpgw::get_var('start', 'bool'))
+			{
+				$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+				try
+				{
+					$DateTimeZone	 = new DateTimeZone($timezone);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
+
+				$_start_time =  (new DateTime(date('Y-m-d H:i:s', phpgw::get_var('start', 'int')/1000)));
+				$_end_time = ( new DateTime(date('Y-m-d H:i:s', phpgw::get_var('end', 'int')/1000)));
+				$_start_time->setTimezone($DateTimeZone);
+				$_end_time->setTimezone($DateTimeZone);
+
+				$default_dates = array_map(array($this, '_combine_dates'), (array) $_start_time->format('Y-m-d H:i:s'),(array)$_end_time->format('Y-m-d H:i:s'));
+			}
 			else
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			}
+
 			array_set_default($application, 'dates', $default_dates);
 
 			$this->flash_form_errors($errors);
