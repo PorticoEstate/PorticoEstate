@@ -443,6 +443,22 @@
 								</legend>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_org_name">
+									<xsl:value-of select="php:function('lang', 'Organization')" />
+								</label>
+								<input id="field_org_id" name="customer_organization_id" type="hidden">
+									<xsl:attribute name="value">
+										<xsl:value-of select="application/customer_organization_id"/>
+									</xsl:attribute>
+								</input>
+								<input id="field_org_name" name="customer_organization_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+									<xsl:attribute name="value">
+										<xsl:value-of select="application/customer_organization_name"/>
+									</xsl:attribute>
+								</input>
+							</div>
+
+							<div class="pure-control-group">
 								<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 							</div>
 							<div class="pure-control-group">

@@ -99,6 +99,9 @@
 				'session_id' => array('type' => 'string', 'required' => false),
 				'agreement_requirements' => array('type' => 'string', 'required' => false),
 				'external_archive_key' => array('type' => 'string', 'required' => false),
+				'customer_organization_name' => array('type' => 'string', 'required' => False,
+					'query' => true),
+				'customer_organization_id' => array('type' => 'int', 'required' => False),
 				)
 			);
 		}

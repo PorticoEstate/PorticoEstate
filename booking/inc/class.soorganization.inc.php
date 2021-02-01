@@ -6,7 +6,7 @@
 	class booking_soorganization extends booking_socommon
 	{
 
-		function __construct()
+		function __construct($get_ssn = null)
 		{
 			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
@@ -57,7 +57,9 @@
 			/**
 			 * Hide from bookingfrontend, but keep visible for cron jobs
 			 */
-			if(in_array($currentapp, array('booking','login')))
+			if( $get_ssn 
+				|| in_array($currentapp, array('booking','login') )
+				|| ( $GLOBALS['phpgw_info']['menuaction'] == 'bookingfrontend.uiorganization.add' && phpgw::get_var('customer_ssn', 'bool', 'POST') ) )
 			{
 				$fields['customer_ssn'] = array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),	'required' => false);
 				$fields['contacts']['manytomany']['column']['ssn'] = array('sf_validator' => createObject('booking.sfValidatorNorwegianSSN'));
@@ -82,14 +84,22 @@
 				'description' => $this->db->f('description', false));
 		}
 
-		function get_orgid( $orgnr )
+		function get_orgid( $orgnr, $customer_ssn = null )
 		{
 			if(!$orgnr)
 			{
 				return False;
 			}
 
-			$this->db->limit_query("SELECT id FROM bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
+			if($orgnr == '000000000' && $customer_ssn)
+			{
+				$this->db->limit_query("SELECT id FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
+			}
+			else
+			{
+				$this->db->limit_query("SELECT id FROM bb_organization WHERE organization_number ='{$orgnr}'", 0, __LINE__, __FILE__, 1);
+			}
+
 			if (!$this->db->next_record())
 			{
 				return False;

@@ -11,7 +11,7 @@
 			'edit' => true,
 		);
 		protected $module;
-		private $ssn, $orgs, $external_login_info;
+		private $ssn, $orgnr, $orgs, $external_login_info;
 
 		public function __construct()
 		{
@@ -32,7 +32,7 @@
 					$orgs_map[] = $org['orgnumber'];
 				}
 
-				$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
 
 				if($session_org_id && in_array($session_org_id, $orgs_map))
 				{
@@ -53,6 +53,8 @@
 
 			$this->external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
 			$this->ssn = $this->external_login_info['ssn'];
+
+			$this->orgnr = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
 			
 			if(!$this->ssn)
 			{
@@ -83,6 +85,7 @@
 			(
 				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
 				array('key' => 'date', 'label' => lang('Date'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'lang_status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
@@ -94,6 +97,7 @@
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($application_data as &$entry)
 			{
+				$entry['lang_status'] = lang($entry['status']);
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.show", 'id' => $entry['id'], 'secret' => $entry['secret'])) . '">' . $lang_view . '</a>';
 
@@ -163,7 +167,7 @@
 			);
 
 
-			$delegate_data = $this->bo->so->get_delegate($this->ssn);
+			$delegate_data = $this->bo->so->get_delegate($this->ssn, $this->orgnr);
 
 			foreach ($delegate_data as &$entry)
 			{

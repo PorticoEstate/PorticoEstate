@@ -398,7 +398,7 @@
 				{
 						return null;
 				}
-				else if ( (is_null($value) || !$value) && !is_null($default) )
+				else if ( $value !== 0 && ((is_null($value) || !$value) && !is_null($default) ))
 				{
 						return $default;
 				}

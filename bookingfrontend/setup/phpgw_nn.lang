@@ -289,7 +289,7 @@ customer_organization_number is invalid	bookingfrontend	nn	Organisasjonsnummer e
 Used buildings	bookingfrontend	nn	Bygg/anlegg du kan bruke
 Add group	bookingfrontend	nn	Ny gruppe
 Internal Customer	bookingfrontend	nn	Intern kunde
-Customer number	bookingfrontend	nn	Ressursnummar
+Customer number	bookingfrontend	nn	Referansenummer
 activity_id	bookingfrontend	nn	Aktivitet
 contact_email	bookingfrontend	nn	E-post
 contact_name	bookingfrontend	nn	Namn

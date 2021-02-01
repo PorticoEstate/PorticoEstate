@@ -114,9 +114,7 @@
 		array("61", null,"Undervisning/opplæring", 'Undervisning/opplæring',"1"),
 		array("62", null,"Kommersiell utleige","Utleie til kommersielle arrangementer i kommunale bygg og idrettsanlegg","1"),
 		array("63","1","Sykling","Sykling","1"),
-		array("64","2","Grendalag", 'Grendalag',"1"),
-		array("65","47","Stengt pga ferie eller arrangement","Idrettsanlegget er stengt for trening. Det kan være pga ferie eller arrangement. Ta kontakt med Kulturavdelinga i kommunen for meir informasjon.","0"),
-		array("66", null,"Stengt pga ferie eller arrangement","Idrettsanlegget er stengt for trening. Det kan være pga ferie eller arrangement. Ta kontakt med Kulturavdelinga i kommunen for meir informasjon.","1")
+		array("64","2","Grendalag", 'Grendalag',"1")
 	);
 
 	foreach ($bb_activity as $value_set)
@@ -221,6 +219,32 @@
 	}
 
 	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
+
+	// Default rescategory
+
+	$bb_rescategory = array(
+		array(1,"Lokale",1,1,1),
+		array(2,"Utstyr",false, false,1),
+	);
+
+	foreach ($bb_rescategory as $value_set)
+	{
+		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
+		$sql = "INSERT INTO bb_rescategory (id, name, capacity, e_lock, active) VALUES ({$values})";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+	}
+
+	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
+
+	$bb_rescategory_activity = array(1,2,3,47,55,61,62);
+
+	foreach ($bb_rescategory_activity as $activity_id)
+	{
+		$sql = "INSERT INTO bb_rescategory_activity (rescategory_id, activity_id) VALUES (1, $activity_id)";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$sql = "INSERT INTO bb_rescategory_activity (rescategory_id, activity_id) VALUES (2, $activity_id)";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+	}
 
 // Default groups and users
 	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');

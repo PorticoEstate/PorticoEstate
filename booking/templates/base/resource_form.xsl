@@ -27,51 +27,63 @@
 						</xsl:attribute>
 					</input>
 				</div>
-				<xsl:if test="not(new_form)">
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Resource category')" />
-						</label>
-						<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
-						<select id="field_rescategory_id" name="rescategory_id" class="pure-input-3-4">
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please select a resource category')" />
-							</xsl:attribute>
-							<option value=''>
-								<xsl:value-of select="php:function('lang', 'Select category...')" />
+				<!--<xsl:if test="not(new_form)">-->
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Main activity')" />
+					</label>
+					<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
+					<select id="field_activity_id" name="activity_id" class="pure-input-3-4">
+						<option value=''>
+							<xsl:value-of select="php:function('lang', 'Select activity...')" />
+						</option>
+						<xsl:for-each select="activitydata/results">
+							<option value="{id}">
+								<xsl:if test="resource_id=id">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="name" />
 							</option>
-							<xsl:for-each select="rescategorydata">
-								<option value="{id}">
-									<xsl:if test="id=../resource/rescategory_id">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of disable-output-escaping="yes" select="name" />
-								</option>
-							</xsl:for-each>
-						</select>
-					</div>
-				</xsl:if>
-				<xsl:if test="not(new_form)">
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Main activity')" />
-						</label>
-						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
-						<select id="field_activity_id" name="activity_id" class="pure-input-3-4">
-							<xsl:for-each select="activitydata/results">
-								<option value="{id}">
-									<xsl:if test="resource_id=id">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="name" />
-								</option>
-							</xsl:for-each>
-						</select>
-					</div>
-				</xsl:if>
+						</xsl:for-each>
+					</select>
+				</div>
+				<!--</xsl:if>-->
+				<!--<xsl:if test="not(new_form)">-->
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Resource category')" />
+					</label>
+					<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
+					<select id="field_rescategory_id" name="rescategory_id" class="pure-input-3-4">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Please select a resource category')" />
+						</xsl:attribute>
+						<option value=''>
+							<xsl:value-of select="php:function('lang', 'Select category...')" />
+						</option>
+						<xsl:for-each select="rescategorydata">
+							<option value="{id}">
+								<xsl:if test="disabled=1">
+									<xsl:attribute name="disabled">disabled</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="id=../resource/rescategory_id">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="data-capacity">
+									<xsl:value-of select="capacity" />
+								</xsl:attribute>
+								<xsl:attribute name="data-e_lock">
+									<xsl:value-of select="e_lock" />
+								</xsl:attribute>
+								<xsl:value-of disable-output-escaping="yes" select="name" />
+							</option>
+						</xsl:for-each>
+					</select>
+				</div>
+				<!--</xsl:if>-->
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Sort order')" />
@@ -131,35 +143,13 @@
 					</xsl:if>
 
 				</div>
-				<div class="pure-control-group">
-					<label>
-						<div id="schema_name"></div>
-					</label>
-				</div>
-				<div id="custom_fields"></div>
-
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'Resource Type')" />
-					</label>
-					<select name='type' id='field_type' class="pure-input-3-4">
-						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please select a resource type')" />
-						</xsl:attribute>
-						<option value=''>
-							<xsl:value-of select="php:function('lang', 'Select Type')" />...</option>
-						<xsl:for-each select="resource/types/*">
-							<option value="{local-name()}">
-								<xsl:if test="../../type = local-name()">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', string(node()))"/>
-							</option>
-						</xsl:for-each>
-					</select>
+				<div id="custom_data" style="display: none;">
+					<div class="pure-control-group">
+						<label>
+							<div id="schema_name"></div>
+						</label>
+					</div>
+					<div id="custom_fields"></div>
 				</div>
 				<xsl:if test="not(new_form)">
 					<div class="pure-control-group">
@@ -182,6 +172,22 @@
 						</select>
 					</div>
 				</xsl:if>
+
+				<div id="capacity_form">
+					<xsl:if test="new_form or resource/rescategory_capacity != 1">
+						<xsl:attribute name="style">
+							<xsl:text>display:none;</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'capacity')"/>
+						</label>
+						<input type="number" min="0" id="field_capacity" name="capacity" value="{resource/capacity}" class="pure-input-3-4">
+						</input>
+					</div>
+				</div>
+
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
@@ -351,7 +357,12 @@
 					</input>
 				</div>
 
-				<xsl:if test="not(new_form)">
+				<div id="e_lock_form">
+					<xsl:if test="new_form or resource/rescategory_e_lock != 1">
+						<xsl:attribute name="style">
+							<xsl:text>display:none;</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Electronic lock')"/>
@@ -434,7 +445,7 @@
 						</xsl:if>
 
 					</div>
-				</xsl:if>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
@@ -497,45 +508,45 @@
 						</xsl:for-each>
 					</div>
 				</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Add participant limit')"/>
-						</label>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Add participant limit')"/>
+					</label>
 
-						<xsl:variable name="lang_date">
-							<xsl:value-of select="php:function('lang', 'date')"/>
-						</xsl:variable>
-						<xsl:variable name="lang_quantity">
-							<xsl:value-of select="php:function('lang', 'quantity')"/>
-						</xsl:variable>
+					<xsl:variable name="lang_date">
+						<xsl:value-of select="php:function('lang', 'date')"/>
+					</xsl:variable>
+					<xsl:variable name="lang_quantity">
+						<xsl:value-of select="php:function('lang', 'quantity')"/>
+					</xsl:variable>
 
-						<input type="text" id="participant_limit_from" name="participant_limit_from">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_date"/>
+					<input type="text" id="participant_limit_from" name="participant_limit_from">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_date"/>
+						</xsl:attribute>
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="$lang_date"/>
+						</xsl:attribute>
+					</input>
+					<input type="number" id="participant_limit_quantity" min="-1" name="participant_limit_quantity">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_quantity"/>
+						</xsl:attribute>
+						<xsl:attribute name="placeholder">
+							<xsl:value-of select="$lang_quantity"/>
+						</xsl:attribute>
+					</input>
+					<xsl:if test="resource/permission/write">
+						<a class='btn btn-info'>
+							<xsl:attribute name="onClick">
+								<xsl:text>add_participant_limit()</xsl:text>
 							</xsl:attribute>
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="$lang_date"/>
-							</xsl:attribute>
-						</input>
-						<input type="number" id="participant_limit_quantity" min="-1" name="participant_limit_quantity">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_quantity"/>
-							</xsl:attribute>
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="$lang_quantity"/>
-							</xsl:attribute>
-						</input>
-						<xsl:if test="resource/permission/write">
-							<a class='btn btn-info'>
-								<xsl:attribute name="onClick">
-									<xsl:text>add_participant_limit()</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="php:function('lang', 'Add')" />/
-								<xsl:value-of select="php:function('lang', 'Edit')" />
-							</a>
-						</xsl:if>
+							<xsl:value-of select="php:function('lang', 'Add')" />/
+							<xsl:value-of select="php:function('lang', 'Edit')" />
+						</a>
+					</xsl:if>
 
-					</div>
+				</div>
 			</div>
 		</div>
 		<div class="form-buttons">

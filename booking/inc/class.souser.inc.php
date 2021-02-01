@@ -58,6 +58,7 @@
 				$values[] = array(
 					'id'							 => $this->db->f('id'),
 					'created'						 => $this->db->f('created'),
+					'status'						 => $this->db->f('status'),
 					'building_name'					 => $this->db->f('building_name', true),
 					'secret'						 => $this->db->f('secret', true),
 					'customer_organization_number'	 => $this->db->f('customer_organization_number', true),
@@ -96,21 +97,38 @@
 			}
 			return $values;
 		}
-		function get_delegate( $ssn )
+
+		function get_delegate( $ssn, $organization_number = null)
 		{
 			if(!$ssn)
 			{
 				return array();
 			}
 
+			$filter_organization_number = "1=2";
+			
+			if($organization_number)
+			{
+				if(is_array($organization_number))
+				{
+					$filter_organization_number= "organization_number IN ('" . implode("','", $organization_number) . "')";									
+				}
+				else
+				{
+					$filter_organization_number= "organization_number = '$organization_number'";				
+				}
+			}
+
 			$hash = sha1($ssn);
-			$ssn =  '{SHA1}' . base64_encode($hash);
+			$_ssn =  '{SHA1}' . base64_encode($hash);
 
-
-			$sql = "SELECT bb_organization.* FROM bb_delegate"
+			$sql = "SELECT DISTINCT id, name, active, organization_number, customer_ssn FROM ("
+				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
 				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
-				. " WHERE ssn = '{$ssn}'";
-
+				. " WHERE ssn = '{$_ssn}'"
+				. " UNION"
+				. " SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_organization"
+				. " WHERE {$filter_organization_number} OR customer_ssn = '{$ssn}') as t";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -121,7 +139,8 @@
 					'id'							 => $this->db->f('id'),
 					'name'							 => $this->db->f('name', true),
 					'active'						 => $this->db->f('active'),
-					'organization_number'			 => $this->db->f('organization_number', true),
+					'customer_ssn'					 => $this->db->f('customer_ssn'),
+					'organization_number'			 => $this->db->f('organization_number'),
 				);
 			}
 			return $values;

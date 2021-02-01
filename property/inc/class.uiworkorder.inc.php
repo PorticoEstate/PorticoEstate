@@ -1943,7 +1943,8 @@
 						}
 						else
 						{
-							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(time(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+							$_start_date = max(time(), phpgwapi_datetime::date_to_timestamp($project['start_date']));
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date($_start_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 						}
 					}
 					else
@@ -2185,13 +2186,13 @@
 			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date', 'date', '', array(
-					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['start_date'])),
+					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($values['start_date'])),
 		//			'max_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date', 'date', '', array(
-					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['start_date'])),
+					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($values['start_date'])),
 		//			'max_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
@@ -3414,8 +3415,11 @@ JS;
 				'value_service_id'						 => $values['service_id'],
 				'value_service_name'					 => $this->_get_eco_service_name($values['service_id']),
 				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
-				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(array(
-						'type'		 => 'tax', 'selected'	 => $values['tax_code'], 'order'		 => 'id',
+				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
+					array(
+						'type' => 'tax',
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'order'		 => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list'							 => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id'])),
 				'value_unspsc_code'						 => $unspsc_code,

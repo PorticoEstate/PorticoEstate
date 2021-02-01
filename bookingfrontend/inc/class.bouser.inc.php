@@ -7,6 +7,7 @@
 		const ORGARRAY_SESSION_KEY = 'orgarray';
 		const USERARRAY_SESSION_KEY = 'userarray';
 
+		public $ssn = null;
 		public $orgnr = null;
 		public $orgname = null;
 		protected
@@ -21,12 +22,38 @@
 		 */
 		public $debug = false;
 
-		public function __construct()
+		public function __construct($get_external_login_info = null)
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
-			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
+			
+			if($get_external_login_info && $this->is_logged_in())
+			{
+				$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
+
+				$session_org_id = phpgw::get_var('session_org_id', 'string', 'GET');
+
+				if ($session_org_id && ($session_org_id != $this->orgnr) && in_array($session_org_id, array_map("self::get_ids_from_array", $orgs)))
+				{
+					try
+					{
+						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+						if ($org_number)
+						{
+							$this->change_org($org_number);
+						}
+					}
+					catch (sfValidatorError $e)
+					{
+						$session_org_id = -1;
+					}
+				}
+				$external_login_info = $this->validate_ssn_login();
+				$this->ssn = $external_login_info['ssn'];
+			}
+
+			$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn);
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
 			if (!empty($this->config->config_data['debug']))
@@ -35,13 +62,26 @@
 			}
 		}
 
-		protected function get_orgname_from_db( $orgnr )
+		function get_ids_from_array( $org )
+		{
+			return $org['orgnumber'];
+		}
+
+		protected function get_orgname_from_db( $orgnr, $customer_ssn = null)
 		{
 			if(!$orgnr)
 			{
 				return null;
 			}
-			$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
+
+			if($orgnr == '000000000' && $customer_ssn)
+			{
+				$this->db->limit_query("SELECT name FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
+			}
+			else
+			{
+				$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='{$orgnr}'", 0, __LINE__, __FILE__, 1);
+			}
 			if (!$this->db->next_record())
 			{
 				return $orgnr;
@@ -122,7 +162,7 @@
 			{
 
 				$this->orgnr = $orgnumber;
-				$this->orgname = $this->get_orgname_from_db($this->orgnr);
+				$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn);
 
 				if ($this->is_logged_in())
 				{
@@ -170,20 +210,38 @@
 			return !!$this->get_user_orgnr();
 		}
 
-		public function is_organization_admin( $organization_id = null )
+		public function is_organization_admin( $organization_id = null, $organization_number = null )
 		{
-			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
-			if (strcmp($_SERVER['SERVER_NAME'], 'dev.redpill.se') == 0 || strcmp($_SERVER['SERVER_NAME'], 'bk.localhost') == 0)
-			{
-				//return true;
-			}
-			// FIXME!!!!!! REMOVE THIS ONCE ALTINN IS OPERATIONAL
 			if (!$this->is_logged_in())
 			{
-				//return false;
+				return false;
 			}
-			$so = CreateObject('booking.soorganization');
+
+			/**
+			 * On user adding organization from bookingfrontend
+			 */
+			if(!$organization_id && $organization_number)
+			{
+				$orgs = (array)phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
+
+				$orgs_map = array();
+				foreach ($orgs as $org)
+				{
+					$orgs_map[] = $org['orgnumber'];
+				}
+				unset($org);
+				return in_array($organization_number, $orgs_map);
+			}
+
+			$so = CreateObject('booking.soorganization', true);
 			$organization = $so->read_single($organization_id);
+			$customer_ssn = $organization['customer_ssn'];
+
+			if ($organization_id && $customer_ssn)
+			{
+				$external_login_info = $this->validate_ssn_login();
+				return $customer_ssn == $external_login_info['ssn'];
+			}
 
 			if ($organization['organization_number'] == '')
 			{
