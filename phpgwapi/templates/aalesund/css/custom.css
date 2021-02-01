@@ -2376,6 +2376,10 @@ textarea:focus{
 	color: transparent;
 }
 
+.dropdown-container {
+	display: inline-block;
+}
+
 
 .autocompleter-list .category-title{
     font-weight: bold;

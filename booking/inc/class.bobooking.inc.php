@@ -775,7 +775,10 @@
 
 		// Sort the resources with sortkey ascending
 		// Add $resources as the last parameter, to sort by the common key
-		array_multisort($sort, SORT_ASC, $resources);
+		if (!empty($resources))
+		{
+			array_multisort($sort, SORT_ASC, $resources);
+		}
 		$bookings	 = $this->_split_multi_day_bookings($bookings, $from, $to);
 		$results	 = build_organization_schedule_table($bookings, $resources);
 //            exit;

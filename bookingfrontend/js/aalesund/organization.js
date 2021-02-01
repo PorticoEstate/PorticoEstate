@@ -4,6 +4,7 @@ CreateUrlParams(window.location.search);
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 var viewmodel;
 var resourceIds = [];
+var groupIds = [];
 var events = [];
 var date = new Date();
 
@@ -11,6 +12,7 @@ function ViewModel() {
 	var self = this;
 
 	self.bookableResource = ko.observableArray([]);
+	self.bookedByGroup = ko.observableArray([]);
 	self.groups = ko.observableArray();
 	self.delegates = ko.observableArray();
 }
@@ -32,13 +34,26 @@ $(document).ready(function ()
 	{
 		for (var i = 0; i < resourceIds.length; i++)
 		{
-			if ($(e.target).text() == resourceIds[i].name)
+			if ($(e.target).text() === resourceIds[i].name)
 			{
 				resourceIds[i].visible = e.target.checked;
 			}
 		}
 		EventsOptionsChanged($(e.target).text(), e.target.checked);   // get the current value of the input field.
 	});
+
+	$(document).on('change', '.choosenGroup', function (e)
+	{
+		for (let i = 0; i < groupIds.length; i++)
+		{
+			if ($(e.target).text() === groupIds[i].name)
+			{
+				groupIds[i].visible = e.target.checked;
+			}
+		}
+		GroupOptionsChanged($(e.target).text(), e.target.checked);   // get the current value of the input field.
+	});
+
 
 	$('.dropdown-menu').on('click', function ()
 	{
@@ -97,57 +112,99 @@ function PopulateCalendarEvents() {
 			organization_id: urlParams['id']
 		},
 		success: function (result) {
-			console.log(result);
+
 			if (result.ResultSet.totalResultsAvailable > 0) {
 				for (let i = 0; i < result.ResultSet.Result.length; i++) {
-
 					if (typeof result.ResultSet.Result[i].resource_id !== "undefined" && !IsExistingResource(result.ResultSet.Result[i].resource_id, resourceIds)) {
-						resourceIds.push({id: result.ResultSet.Result[i].resource_id, name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						resourceIds.push({id: result.ResultSet.Result[i].resource_id, name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name, visible: true})
 					}
 
-					if (typeof result.ResultSet.Result[i].Sun !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Sun.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Sun.from_, result.ResultSet.Result[i].Sun.type, result.ResultSet.Result[i].Sun.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Sun, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Sun !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Sun.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Sun.from_, result.ResultSet.Result[i].Sun.type, result.ResultSet.Result[i].Sun.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Sun, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Sun.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Sun.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Sun.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Mon !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Mon.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Mon.from_, result.ResultSet.Result[i].Mon.type, result.ResultSet.Result[i].Mon.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Mon, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Mon !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Mon.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Mon.from_, result.ResultSet.Result[i].Mon.type, result.ResultSet.Result[i].Mon.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Mon, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Mon.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Mon.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Mon.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Tue !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Tue.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Tue.from_, result.ResultSet.Result[i].Tue.type, result.ResultSet.Result[i].Tue.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Tue, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Tue !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Tue.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Tue.from_, result.ResultSet.Result[i].Tue.type, result.ResultSet.Result[i].Tue.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Tue, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Tue.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Tue.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Tue.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Wed !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Wed.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Wed.from_, result.ResultSet.Result[i].Wed.type, result.ResultSet.Result[i].Wed.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Wed, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Wed !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Wed.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Wed.from_, result.ResultSet.Result[i].Wed.type, result.ResultSet.Result[i].Wed.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Wed, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Wed.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Wed.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Wed.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Thu !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Thu.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Thu.from_, result.ResultSet.Result[i].Thu.type, result.ResultSet.Result[i].Thu.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Thu, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Thu !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Thu.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Thu.from_, result.ResultSet.Result[i].Thu.type, result.ResultSet.Result[i].Thu.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Thu, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Thu.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Thu.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Thu.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Fri !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Fri.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Fri.from_, result.ResultSet.Result[i].Fri.type, result.ResultSet.Result[i].Fri.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Fri, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Fri !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Fri.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Fri.from_, result.ResultSet.Result[i].Fri.type, result.ResultSet.Result[i].Fri.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Fri, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Fri.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Fri.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Fri.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 
-					else if (typeof result.ResultSet.Result[i].Sat !== "undefined" && !IsExistingEvent([result.ResultSet.Result[i].Sat.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Sat.from_, result.ResultSet.Result[i].Sat.type, result.ResultSet.Result[i].Sat.wday].join("."), eventsArray)) {
-						eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Sat, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+					if (typeof result.ResultSet.Result[i].Sat !== "undefined") {
+						if (!IsExistingEvent([result.ResultSet.Result[i].Sat.id, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].Sat.from_, result.ResultSet.Result[i].Sat.type, result.ResultSet.Result[i].Sat.wday].join("."), eventsArray)) {
+							eventsArray.push(addEventsOnWeekday(result.ResultSet.Result[i].Sat, result.ResultSet.Result[i].resource, result.ResultSet.Result[i].resource_id));
+						}
+
+						if (result.ResultSet.Result[i].Sat.type === 'booking' && !IsExistingGroup(result.ResultSet.Result[i].Sat.group_name, groupIds)) {
+							groupIds.push({name: result.ResultSet.Result[i].Sat.group_name,  id: result.ResultSet.Result[i].resource_id, resource_name: result.ResultSet.Result[i].resource, building_name: result.ResultSet.Result[i].building_name})
+						}
 					}
 				}
 			}
-
-			console.log(eventsArray);
 			eventsArray.sort(compare);
 
 			events = eventsArray;
 
 			viewmodel.bookableResource(resourceIds);
+			viewmodel.bookedByGroup(groupIds);
 
 			setTimeout(function ()
 			{
 				if (events.length !== 0) {
 					$(".calendar-tool").removeClass("invisible");
+					$(".calendar-text").removeClass("invisible");
 					GenerateCalendarForEvents(date);
 				}
+
 				$(".overlay").hide();
 			}, 1000);
 
@@ -192,7 +249,8 @@ function addEventsOnWeekday(weekday, resource_name, resource_id) {
 		name: resource_name,
 		resource: resource_id,
 		color: colors[weekday.type],
-		content: "<span data-url='" + event_infourl + "' class='event-id' value='" + resource_name + "'></span>",
+		content: "<span data-url='" + event_infourl + "' class='event-id' value='" + resource_name + "'></span>" +
+			"<span class='group-id' value='" + weekday.group_name + "'></span>",
 		description:weekday.description,
 		startDate: currentStartDate,
 		endDate: currentEndDate,
@@ -327,8 +385,12 @@ YUI({lang: 'nb-NO'}).use(
 						});
 						view.syncEventsIntersectionUI(plottedEvents);
 					});
-					this.syncHeaderViewUI();
-					this.syncCurrentTimeUI();
+
+					if (resources.length !== 0) {
+						this.syncHeaderViewUI();
+						this.syncCurrentTimeUI();
+					}
+
 				},
 
 				syncColumnsUI: function ()
@@ -342,13 +404,19 @@ YUI({lang: 'nb-NO'}).use(
 						columnNode.toggleClass(
 							CSS_SCHEDULER_TODAY, !Y.DataType.DateMath.isDayOverlap(columnDate, todayDate));
 					});
-					this.syncCurrentTimeUI();
+
+					if (this.colDaysNode._nodes.length !== 0) {
+						this.syncCurrentTimeUI();
+					}
 				},
 
 				syncUI: function ()
 				{
-					SchedulerResourceDayView.superclass.syncUI.apply(this, arguments);
-					this.gridContainer.attr('colspan', this.get('resources').length);
+					if (this.get('resources').length !== 0) {
+						SchedulerResourceDayView.superclass.syncUI.apply(this, arguments);
+						this.gridContainer.attr('colspan', this.get('resources').length);
+					}
+
 				},
 
 				_prepareEventCreation: function (event, duration)
@@ -529,6 +597,8 @@ YUI({lang: 'nb-NO'}).use(
 
 				syncUI: function ()
 				{
+					console.log(this);
+					console.log(arguments);
 					SchedulerResourceWeekView.superclass.syncUI.apply(this, arguments);
 					this.gridContainer.attr('colspan', this.get('resources').length * this.get('days'));
 				},
@@ -577,6 +647,13 @@ YUI({lang: 'nb-NO'}).use(
 					var colNumber = 0;
 					for (i = 0; i < this.get('days'); i++)
 					{
+
+						if (this.get('resources').length === 0) {
+							console.log("her");
+							buffer.push(Y.Lang.sub(TPL_SCHEDULER_VIEW_DAY_TABLE_COLDAY, {colNumber: colNumber++, borderStyle: 'solid'}));
+						}
+
+
 						var resourceIndex = 0;
 						for (var r in this.get('resources'))
 						{
@@ -832,6 +909,7 @@ YUI({lang: 'nb-no'}).use(
 	});
 
 function EventsOptionsChanged(resource, checkValue) {
+	console.log(resource, checkValue);
 
 	$(".scheduler-event").each(function (index)
 	{
@@ -845,6 +923,30 @@ function EventsOptionsChanged(resource, checkValue) {
 			else if (!checkValue && checkValue != undefined)
 			{
 				$(this).addClass("scheduler-event-hidden");
+			}
+
+		}
+	});
+}
+
+function GroupOptionsChanged(group, checkValue) {
+
+	$(".scheduler-event").each(function (index)
+	{
+		//console.log(index + ": " + $(this).text());
+		if ($(this).find(".group-id").attr("value") === group)
+		{
+			if (checkValue)
+			{
+				//$(this).removeClass("scheduler-event-hidden");
+				$(this).css("background-color", "rgb(64, 80, 186)");
+
+			}
+			else if (!checkValue && checkValue !== undefined)
+			{
+				//$(this).addClass("scheduler-event-hidden");
+				$(this).css("background-color", "rgb(170, 90, 181)");
+
 			}
 
 		}
@@ -898,6 +1000,17 @@ function IsExistingResource(id, resourceArray) {
 	for (let i = 0; i < resourceArray.length; i++)
 	{
 		if (resourceArray[i].id === id)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function IsExistingGroup(name, groupArray) {
+	for (let i = 0; i < groupArray.length; i++)
+	{
+		if (groupArray[i].name === name)
 		{
 			return true;
 		}
