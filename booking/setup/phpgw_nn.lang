@@ -190,6 +190,7 @@ secondary admin	booking	nn	Kontaktperson 2
 select a building first	booking	nn	Velg fyrst bygg/anlegg
 select category...	booking	nn	Velg ein kategori...
 select role...	booking	nn	Velg rolle...
+select activity...	booking	no	Velg aktivitet...
 sep	booking	nn	september
 settings	booking	nn	Innstillingar
 show only active	booking	nn	Skjul
@@ -838,3 +839,4 @@ transfer case to external system?	booking	nn	Overføre sak til dokumentarkiv?
 global participant limit is set to %1	booking	nn	Generell grense for deltakarar er sett til %1
 overridden participant limit is set to %1	booking	nn	Overstyrt grense for deltakarar er sett til %1
 register participants	booking	nn	Deltakarregistrering
+capacity	booking	nn	Kapasitet

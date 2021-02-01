@@ -14,6 +14,10 @@ $(document).ready(function ()
 		}
 	});
 
+	$("#field_activity").select2({
+		language: "no"
+	});
+
 	$("input[name='organization_type']").change(function ()
 	{
 		var unselect = {customer_ssn: 'organization_number', organization_number: 'customer_ssn'};

@@ -4813,3 +4813,108 @@
 	}
 
 
+	/**
+	 * Update booking version from 0.2.64 to 0.2.65
+	 *
+	 */
+	$test[] = '0.2.65';
+	function booking_upgrade0_2_65()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'parent_id',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'capacity',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_rescategory', 'e_lock',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'capacity',
+				array(
+					'type' => 'int',
+					'precision' => 4,
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.66';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.66 to 0.2.67
+	 *
+	 */
+	$test[] = '0.2.66';
+	function booking_upgrade0_2_66()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		
+		$next_id = $GLOBALS['phpgw_setup']->oProc->f('next_id');
+		$next_id_2 = $next_id +1;
+
+		$bb_rescategory = array(
+			array($next_id,"Lokale",1,1,1),
+			array($next_id_2,"Utstyr",false, false,1),
+		);
+
+		foreach ($bb_rescategory as $value_set)
+		{
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
+			$sql = "INSERT INTO bb_rescategory (id, name, capacity, e_lock, active) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM bb_activity WHERE parent_id IS NULL OR parent_id = 0", __LINE__, __FILE__);
+
+		$bb_activity = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$bb_activity[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		foreach ($bb_activity as $activity_id)
+		{
+			$sql = "INSERT INTO bb_rescategory_activity (rescategory_id, activity_id) VALUES ($next_id, $activity_id)";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+			$sql = "INSERT INTO bb_rescategory_activity (rescategory_id, activity_id) VALUES ($next_id_2, $activity_id)";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		}
+
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE bb_resource SET rescategory_id = {$next_id} WHERE type = 'Location'", __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE bb_resource SET rescategory_id = {$next_id_2} WHERE type = 'Equipment'", __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_resource', array(), 'type');
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.67';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
