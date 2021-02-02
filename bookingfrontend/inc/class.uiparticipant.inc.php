@@ -491,28 +491,28 @@ ICAL;
 
 		public function index()
 		{
-			if(!CreateObject('bookingfrontend.bouser')->is_logged_in())
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$results = array();
+
+			if(CreateObject('bookingfrontend.bouser')->is_logged_in() || !empty($config['show_participant_list']))
 			{
-				return array();
-			}
+				$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
+				$participants = $this->bo->read();
 
+				$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
 
-			$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
-			$participants = $this->bo->read();
-
-			$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
-
-			foreach ($participants['results'] as $participant)
-			{
-				if($participant['to_'])
+				foreach ($participants['results'] as $participant)
 				{
-					continue;
+					if($participant['to_'])
+					{
+						continue;
+					}
+					$data['results'][] = $participant;
+					$data['total_records'] += 1;
 				}
-				$data['results'][] = $participant;
-				$data['total_records'] += 1;
-			}
 
-			$results = $this->jquery_results($data);
+				$results = $this->jquery_results($data);
+			}
 
 			return $results;
 		}
