@@ -38,8 +38,7 @@
          <!-- Title -->
 		  <div class="titleContainer">
 			  <div class="headerText">
-				  Finn fasiliteter/etableringer
-							  <!--	<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/> -->
+				  <xsl:value-of select="php:function('lang', 'Find available resources')"/>
 			  </div>
 		  </div>
 
@@ -48,7 +47,7 @@
 			  <div class="input-group bk">
 				  <input id="mainSearchInput" class="mainSearchInput" aria-label="Large">
 					  <xsl:attribute name="placeholder">
-						  <xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
+						  <xsl:value-of select="php:function('lang', 'Search available resources')"/>
 					  </xsl:attribute>
 				  </input>
 			  </div>
@@ -60,11 +59,15 @@
                        optionsCaption: 'Velg bydel'"/>
 				  </div>
 				  <div  id="dateWrapper">
-					  <input id="dateFilter" data-bind="value: dateFilter" class="form-control dateFilter" name="datefilter" placeholder="Velg dato" aria-label="Large" autocomplete="off" value="" />
+					  <input id="dateFilter" data-bind="value: dateFilter" class="form-control dateFilter" name="datefilter" aria-label="Large" autocomplete="off" value="">
+						  <xsl:attribute name="placeholder">
+							  <xsl:value-of select="php:function('lang', 'Choose date')"/>
+						  </xsl:attribute>
+					  </input>
 				  </div>
 			  </div>
 			  <div class="input-group bk">
-			  <button id="searchBtn" class="greenBtn">Finn tilgjengelig</button>
+			  <button id="searchBtn" class="greenBtn"><xsl:value-of select="php:function('lang', 'Find available')"/></button>
 			  </div>
 		  </div>
 
@@ -73,7 +76,7 @@
 			  <!-- Events -->
 			  <div class="eventContainer" data-bind="if: showEvents">
 				  <div class="headerText headerEvent">
-					  Dette skjer i Bergen kommune
+					  <xsl:value-of select="php:function('lang', 'Happening in Bergen')"/>
 				  </div>
 				  <div id="event-content">
 					  <div data-bind="foreach: events">
@@ -110,7 +113,7 @@
 							  </div>
 						  </div>
 					  </div>
-					  <div id="allEventsBtn" class="allEventsBtn" href="#" data-bind="click: $root.goToEvents">Se alle arrangement <div class="allEventsIcon"/></div>
+					  <div id="allEventsBtn" class="allEventsBtn" href="#" data-bind="click: $root.goToEvents"><xsl:value-of select="php:function('lang', 'View all events')"/><div class="allEventsIcon"/></div>
 
 				  </div>
 			  </div>
@@ -118,34 +121,51 @@
 			  <!-- Search results -->
 			  <div id="searchResults">
 				  <div class="headerText headerResult">
-					  <div class="headerResultText">Søkeresultat</div>
+					  <div class="headerResultText"><xsl:value-of select="php:function('lang', 'Search results')"/></div>
 					  <div class="headerResultNumb" data-bind="text: resources().length + ' treff'"/>
 				  </div>
 				  <div class="searchResultContainer">
 					  <div class="filterContainer">
 
-						  <input data-bind="value: dateFilter" class="form-control dateFilterResult" name="datefilter" aria-label="Large" autocomplete="off" placeholder="Velg dato"/>
+						  <input data-bind="value: dateFilter" class="form-control dateFilterResult" name="datefilter" aria-label="Large" autocomplete="off">
+							  <xsl:attribute name="placeholder">
+								  <xsl:value-of select="php:function('lang', 'Choose date')"/>
+							  </xsl:attribute>
+						  </input>
 
 						  <div class="timeContainer">
-							  <input type="" id="fromTime" class="form-control timeInput" aria-label="Large" autocomplete="off" placeholder="Fra kl"/>
+							  <input type="" id="fromTime" class="form-control timeInput" aria-label="Large" autocomplete="off">
+								  <xsl:attribute name="placeholder">
+									  <xsl:value-of select="php:function('lang', 'From time')"/>
+								  </xsl:attribute>
+							  </input>
 							  <div class="horizontalgap"></div>
-							  <input type="" id="toTime" class="form-control timeInput" aria-label="Large" autocomplete="off" placeholder="Til kl"/>
+							  <input type="" id="toTime" class="form-control timeInput" aria-label="Large" autocomplete="off">
+								  <xsl:attribute name="placeholder">
+									  <xsl:value-of select="php:function('lang', 'To time')"/>
+								  </xsl:attribute>
+							  </input>
 						  </div>
 
 						  <!-- Town filter -->
 						  <div class="accordionFilter">
 							  <div class="accordionHeader" data-bind="click: toggleTown">
-							  	<div class="accordionHeaderText">Bydel</div>
+							  	<div class="accordionHeaderText"><xsl:value-of select="php:function('lang', 'Town part')"/></div>
 							  	<div data-bind="css: townArrowIcon"/>
 							  </div>
 							  <div data-bind="if: showTown">
 								  <div class="accordionHeaderUnderline" />
-								  <div class="accordionContent" data-bind="foreach: towns">
-									  <label class="checkboxContainer">
-										  <input type="checkbox"
-											 data-bind="value: id, checked:$root.selectedTownIds" />
-										  <div class="checkmark"/>
-										  <span class="checkboxText" data-bind="text: name"/>
+								  <div class="accordionContent">
+									  <div data-bind="foreach: towns">
+										  <label  class="checkboxContainer">
+											  <input type="checkbox"
+												 data-bind="value: id, checked:$root.selectedTownIds" />
+											  <div class="checkmark"/>
+											  <span class="checkboxText" data-bind="text: name"/>
+										  </label>
+									  </div>
+									  <label data-bind="if: towns().length == 0">
+										  <span class="checkboxText checkboxInvalid"><xsl:value-of select="php:function('lang', 'No available options')"/></span>
 									  </label>
 								  </div>
 							  </div>
@@ -154,17 +174,22 @@
 						  <!-- Facility filter -->
 						  <div class="accordionFilter">
 							  <div class="accordionHeader" data-bind="click: toggleFacility">
-								  <div class="accordionHeaderText">Fasiliteter</div>
+								  <div class="accordionHeaderText"><xsl:value-of select="php:function('lang', 'Facilities')"/></div>
 								  <div data-bind="css: facilityArrowIcon"/>
 							  </div>
 							  <div data-bind="if: showFacility">
 								  <div class="accordionHeaderUnderline" />
-								  <div class="accordionContent" data-bind="foreach: facilities">
-									  <label class="checkboxContainer">
-										  <input type="checkbox"
-												 data-bind="value: id, checked:$root.selectedFacilityIds" />
-										  <div class="checkmark"/>
-										  <span class="checkboxText" data-bind="text: name"/>
+								  <div class="accordionContent">
+									  <div data-bind="foreach: facilities">
+										  <label class="checkboxContainer">
+											  <input type="checkbox"
+													 data-bind="value: id, checked:$root.selectedFacilityIds" />
+											  <div class="checkmark"/>
+											  <span class="checkboxText" data-bind="text: name"/>
+										  </label>
+									  </div>
+									  <label data-bind="if: facilities().length == 0">
+										  <span class="checkboxText checkboxInvalid"><xsl:value-of select="php:function('lang', 'No available options')"/></span>
 									  </label>
 								  </div>
 							  </div>
@@ -173,17 +198,22 @@
 						  <!-- Activity filter -->
 						  <div class="accordionFilter">
 							  <div class="accordionHeader" data-bind="click: toggleActivity">
-								  <div class="accordionHeaderText">Tilrettelagt for</div>
+								  <div class="accordionHeaderText"><xsl:value-of select="php:function('lang', 'Activities (2018)')"/></div>
 								  <div data-bind="css: activityArrowIcon"/>
 							  </div>
-							  <div data-bind="if: showActivity">
+							  <div data-bind="if: (showActivity)">
 								  <div class="accordionHeaderUnderline" />
-								  <div class="accordionContent" data-bind="foreach: activities">
-									  <label class="checkboxContainer">
-										  <input type="checkbox"
-												 data-bind="value: id, checked:$root.selectedActivityIds" />
-										  <div class="checkmark"/>
-										  <span class="checkboxText" data-bind="text: name"/>
+								  <div class="accordionContent">
+									  <div data-bind="foreach: activities">
+										  <label class="checkboxContainer">
+											  <input type="checkbox"
+													 data-bind="value: id, checked:$root.selectedActivityIds" />
+											  <div class="checkmark"/>
+											  <span class="checkboxText" data-bind="text: name"/>
+										  </label>
+									  </div>
+									  <label data-bind="if: activities().length == 0">
+										  <span class="checkboxText checkboxInvalid"><xsl:value-of select="php:function('lang', 'No available options')"/></span>
 									  </label>
 								  </div>
 							  </div>
@@ -228,10 +258,10 @@
 						  </div>
 
 						  <!-- Apply filter button -->
-						  <div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()">Aktiver filter</div>
+						  <div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()"><xsl:value-of select="php:function('lang', 'Apply filter')"/></div>
 
 						  <!-- Remove filter button -->
-						  <div id="removeFilterBtn" class="removeFilterBtn" onclick="resetFilters()">Nullstill filter</div>
+						  <div id="removeFilterBtn" class="removeFilterBtn" onclick="resetFilters()"><xsl:value-of select="php:function('lang', 'Reset filter')"/></div>
 					  </div>
 
 
@@ -249,7 +279,7 @@
 							  <div class="col-3">
 								  <div class="resultClockIcon"/>
 								  <div class="resultClockText" data-bind="text: time"/>
-								  <div class ="resultBtnText" href="#" data-bind="click:$parent.goToApplication">Til søknadsside</div>
+								  <div class ="resultBtnText" href="#" data-bind="click:$parent.goToApplication"><xsl:value-of select="php:function('lang', 'To application site')"/></div>
 							  </div>
 						  </div>
 					  </div>
