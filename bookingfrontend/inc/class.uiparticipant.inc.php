@@ -457,6 +457,24 @@ ICAL;
 				$name = $reservation['name'];
 			}
 
+			$holidays = phpgwapi_datetime::get_holidays(date('Y'));
+
+			$_from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
+
+			$after_hour = false;
+			if(in_array($_from->format('Y-m-d'), $holidays))
+			{
+				$after_hour = true;
+			}
+			else if(in_array($_from->format('w'), array(0, 6))) // Sunday || Saturday
+			{
+				$after_hour = true;
+			}
+			else if($_from->format('H') > 15)
+			{
+				$after_hour = true;
+			}
+
 			$data = array
 			(
 				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
@@ -470,6 +488,7 @@ ICAL;
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
+				'after_hour'			 => $after_hour,
 				'name'					 => $name,
 				'reservation'			 => $reservation,
 				'participant_limit'		 => $participant_limit,
