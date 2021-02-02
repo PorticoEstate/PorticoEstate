@@ -285,7 +285,7 @@ function resetFilters() {
 	viewmodel.selectedFacilities.removeAll();
 	viewmodel.selectedFacilityIds.removeAll();
 	viewmodel.selectedActivities.removeAll();
-	viewmodel.selectedActivities.removeAll();
+	viewmodel.selectedActivityIds.removeAll();
 	findSearchMethod();
 }
 
@@ -429,6 +429,8 @@ function setTowns() {
 				let lower = res.name.toLowerCase();
 				res.name = res.name.charAt(0) + lower.slice(1);
 			});
+
+			result.sort(compare);
 
 			towns = result;
 			viewmodel.towns(result);
@@ -591,6 +593,16 @@ function setActivityData(activities) {
 	} else {
 		viewmodel.showActivity(false);
 	}
+}
+
+function compare( a, b ) {
+	if ( a.name < b.name ){
+		return -1;
+	}
+	if ( a.name > b.name ){
+		return 1;
+	}
+	return 0;
 }
 
 function GetTypeName(type)
