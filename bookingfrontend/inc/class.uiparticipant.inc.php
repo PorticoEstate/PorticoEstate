@@ -68,7 +68,7 @@
 
 			if(!empty($reservation['participant_limit']))
 			{
-				$resource_paricipant_limit = $allocation['participant_limit'];
+				$resource_paricipant_limit = $reservation['participant_limit'];
 			}
 			else
 			{
@@ -84,8 +84,8 @@
 
 				$participant_registration_link = $external_site_address
 					. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
-					. "&reservation_type=allocation"
-					. "&reservation_id={$allocation['id']}";
+					. "&reservation_type={$reservation_type}"
+					. "&reservation_id={$reservation_id}";
 
 				$description.= "</br><a href='{$participant_registration_link}'><b>Innregistrering her</b></a>";
 			}
@@ -462,17 +462,21 @@ ICAL;
 			$_from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
 
 			$after_hour = false;
-			if(in_array($_from->format('Y-m-d'), $holidays))
+
+			if(in_array($reservation_type,array('allocation')))
 			{
-				$after_hour = true;
-			}
-			else if(in_array($_from->format('w'), array(0, 6))) // Sunday || Saturday
-			{
-				$after_hour = true;
-			}
-			else if($_from->format('H') > 15)
-			{
-				$after_hour = true;
+				if(in_array($_from->format('Y-m-d'), $holidays))
+				{
+					$after_hour = true;
+				}
+				else if(in_array($_from->format('w'), array(0, 6))) // Sunday || Saturday
+				{
+					$after_hour = true;
+				}
+				else if($_from->format('H') > 15)
+				{
+					$after_hour = true;
+				}
 			}
 
 			$data = array
