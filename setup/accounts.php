@@ -79,8 +79,8 @@
 			'common' => array
 			(
 				'maxmatchs'		=> 10,
-				'template_set'	=> 'portico',
-				'theme'			=> 'portico',
+				'template_set'	=> 'bootstrap',
+				'theme'			=> '',
 				'tz_offset'		=> 0,
 				'dateformat'	=> 'Y/m/d',
 				'lang'			=> substr(phpgw::get_var('ConfigLang'), 0, 2),

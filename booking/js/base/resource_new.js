@@ -1,4 +1,4 @@
-/* global resource_id, oTable1, oTable0 */
+/* global resource_id, oTable1, oTable0, lang */
 
 $(document).ready(function ()
 {
@@ -13,6 +13,31 @@ $(document).ready(function ()
 	{
 		get_custom_fields($(this).val());
 		populate_rescategory_select($(this).val());
+	});
+
+	$("#field_rescategory_id").change(function ()
+	{
+		var $option = $("#field_rescategory_id option:selected");
+		var capacity = $option.attr('data-capacity');
+		var e_lock = $option.attr('data-e_lock');
+
+		if (capacity == 1)
+		{
+			$("#capacity_form").show();
+		}
+		else
+		{
+			$("#capacity_form").hide();
+		}
+
+		if (e_lock == 1)
+		{
+			$("#e_lock_form").show();
+		}
+		else
+		{
+			$("#e_lock_form").hide();
+		}
 	});
 
 
@@ -43,11 +68,12 @@ get_custom_fields = function (schema_activity_id, schema)
 		url: requestUrl,
 		success: function (data)
 		{
-			if (data != null)
+			if (data != null && data.length > 0)
 			{
 				var custom_fields = data;
 				$("#schema_name").html(schema);
 				$("#custom_fields").html(custom_fields);
+				$("#custom_data").show();
 			}
 		}
 	});
@@ -133,11 +159,24 @@ populate_rescategory_select = function (activity_id)
 		{
 			if (data != null)
 			{
+				var selected = $("#field_rescategory_id").val();
 				var $select = $("#field_rescategory_id");
 				$select.empty();
 				$select.append($("<option></option>").attr("value", "").text(lang['Select category...']));
-				$.each(data, function(key,value) {
-					$select.append($("<option></option>").attr("value", value.id).text(value.name));
+				$.each(data, function (key, value)
+				{
+
+					var option = $("<option></option>").attr("value", value.id).attr("data-capacity", value.capacity).attr("data-e_lock", value.e_lock).text(value.name);
+
+					if (value.disabled)
+					{
+						option.attr("disabled", true);
+					}
+					if (selected == value.id)
+					{
+						option.attr("selected", true);
+					}
+					$select.append(option);
 				});
 			}
 		}
@@ -156,7 +195,7 @@ addELock = function ()
 	var access_code_format = $("#access_code_format").val();
 	$.ajax({
 		type: 'POST',
-		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format,  resource_id: resource_id},
+		data: {e_lock_system_id: e_lock_system_id, e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)
@@ -185,7 +224,7 @@ removeELock = function ()
 	var e_lock_resource_id = $("#e_lock_resource_id").val();
 	$.ajax({
 		type: 'POST',
-		data: {e_lock_system_id: e_lock_system_id,e_lock_resource_id: e_lock_resource_id, resource_id: resource_id},
+		data: {e_lock_system_id: e_lock_system_id, e_lock_resource_id: e_lock_resource_id, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)
@@ -214,7 +253,7 @@ add_participant_limit = function ()
 
 	$.ajax({
 		type: 'POST',
-		data: {limit_from: limit_from,limit_quantity: limit_quantity,  resource_id: resource_id},
+		data: {limit_from: limit_from, limit_quantity: limit_quantity, resource_id: resource_id},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)

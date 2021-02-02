@@ -45,7 +45,7 @@
 					)),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'organizer' => array('type' => 'string', 'query' => true, 'required' => true),
-				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
+				'homepage' => array('type' => 'string', 'query' => true, 'required' => false,'read_callback' => 'validate_url'),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'contact_name' => array('type' => 'string', 'query' => true, 'required' => true),
