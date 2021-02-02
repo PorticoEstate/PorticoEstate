@@ -91,7 +91,7 @@
 				return False;
 			}
 
-			if($customer_ssn)
+			if($orgnr == '000000000' && $customer_ssn)
 			{
 				$this->db->limit_query("SELECT id FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
 			}

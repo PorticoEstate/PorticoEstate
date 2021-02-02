@@ -30,6 +30,25 @@
 			
 			if($get_external_login_info && $this->is_logged_in())
 			{
+				$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
+
+				$session_org_id = phpgw::get_var('session_org_id', 'string', 'GET');
+
+				if ($session_org_id && ($session_org_id != $this->orgnr) && in_array($session_org_id, array_map("self::get_ids_from_array", $orgs)))
+				{
+					try
+					{
+						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+						if ($org_number)
+						{
+							$this->change_org($org_number);
+						}
+					}
+					catch (sfValidatorError $e)
+					{
+						$session_org_id = -1;
+					}
+				}
 				$external_login_info = $this->validate_ssn_login();
 				$this->ssn = $external_login_info['ssn'];
 			}
@@ -43,6 +62,11 @@
 			}
 		}
 
+		function get_ids_from_array( $org )
+		{
+			return $org['orgnumber'];
+		}
+
 		protected function get_orgname_from_db( $orgnr, $customer_ssn = null)
 		{
 			if(!$orgnr)
@@ -50,7 +74,7 @@
 				return null;
 			}
 
-			if($customer_ssn)
+			if($orgnr == '000000000' && $customer_ssn)
 			{
 				$this->db->limit_query("SELECT name FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
 			}

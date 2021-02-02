@@ -18,7 +18,7 @@ function ViewModel()
 	self.goToBuilding = function (event) { window.location = event.building_url(); };
 	self.goToOrganization = function (event) { window.location = event.org_url(); }
 	self.goToResource = function (event) { window.location = event.resource_url; }
-	self.goToApplication = function (event) { window.location = event.application_url; }
+	self.goToApplication = function (event) {window.location = event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`;}
 	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }
 
 	self.toggleTown = function (event) {
@@ -228,7 +228,7 @@ function doSearch(url, params) {
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
 
-			setResources(response.available_resources);
+			setResources(response.available_resources, fromTime, toTime);
 			setTownData(response.partoftowns);
 			setFacilityData(response.facilities);
 			setActivityData(response.
@@ -285,7 +285,7 @@ function resetFilters() {
 	viewmodel.selectedFacilities.removeAll();
 	viewmodel.selectedFacilityIds.removeAll();
 	viewmodel.selectedActivities.removeAll();
-	viewmodel.selectedActivities.removeAll();
+	viewmodel.selectedActivityIds.removeAll();
 	findSearchMethod();
 }
 
@@ -430,6 +430,8 @@ function setTowns() {
 				res.name = res.name.charAt(0) + lower.slice(1);
 			});
 
+			result.sort(compare);
+
 			towns = result;
 			viewmodel.towns(result);
 		},
@@ -495,10 +497,10 @@ function setEventData(result) {
 	$('.overlay').hide();
 }
 
-function setResources(resources) {
+function setResources(resources, fromTime, toTime) {
 	if (resources.length !== 0) {
 		for (let i = 0; i < resources.length; i++) {
-			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to);
+			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to, fromTime, toTime);
 
 			viewmodel.resources.push({
 				name: resources[i].resource_name,
@@ -507,16 +509,34 @@ function setResources(resources) {
 				date: dates['date'],
 				month: dates['month'],
 				time: dates['time'],
+				fromDateParam: dates['fromDateParam'],
+				toDateParam: dates['toDateParam'],
 				resource_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: resources[i].resource_id, building_id: resources[i].building_id}, false),
 				building_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: resources[i].building_id}, false),
 				application_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: resources[i].building_id, resource_id: resources[i].resource_id}, false),
-
 		});
 		}
 	}
 }
 
-function splitDateIntoDateAndTime(from, to) {
+function splitDateIntoDateAndTime(from, to, fromTimeFilter, toTimeFilter) {
+
+	if (fromTimeFilter === '' || toTimeFilter === '') {
+		fromTimeFilter = from.substr(11, 5);
+		toTimeFilter = to.substr(11, 5);
+	}
+
+	let fromDay = from.substr(0,2);
+	let fromMonth = from.substr(3,2);
+	let fromYear = from.substr(6, 4);
+
+	let toDay = to.substr(0,2);
+	let toMonth = to.substr(3,2);
+	let toYear = to.substr(6, 4);
+
+	let fromDateParam = Date.parse(`${fromMonth}.${fromDay}.${fromYear} ${fromTimeFilter}`);
+	let toDateParam = Date.parse(`${toMonth}.${toDay}.${toYear} ${toTimeFilter}`);
+
 	let date = (from.substr(0,10) === to.substr(0,10)) ? from.substr(0,3) : from.substr(0,3) + '-' + to.substr(0,3);
 	let month = months[parseInt(from.substr(3,2))-1]
 	let time = from.substr(11, 5) + ' - ' + to.substr(11, 5);
@@ -524,7 +544,9 @@ function splitDateIntoDateAndTime(from, to) {
 	return {
 		'date': date,
 		'month': month,
-		'time': time
+		'time': time,
+		'fromDateParam': fromDateParam,
+		'toDateParam': toDateParam
 	}
 
 }
@@ -571,6 +593,16 @@ function setActivityData(activities) {
 	} else {
 		viewmodel.showActivity(false);
 	}
+}
+
+function compare( a, b ) {
+	if ( a.name < b.name ){
+		return -1;
+	}
+	if ( a.name > b.name ){
+		return 1;
+	}
+	return 0;
 }
 
 function GetTypeName(type)

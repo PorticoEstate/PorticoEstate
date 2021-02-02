@@ -1313,7 +1313,7 @@ select option:focus {
 }
 
 .accordionContent {
-	padding: 15px 0 15px;
+	padding: 10px 0 0;
 	border-radius: 6px;
 	background-color: #f5f5ff;
 }
@@ -1340,6 +1340,10 @@ select option:focus {
 	line-height: 1.33;
 	letter-spacing: normal;
 	color: #0b1214;
+}
+
+.checkboxInvalid {
+	margin-left: 20px;
 }
 
 .checkboxContainer input[type='checkbox'] {
