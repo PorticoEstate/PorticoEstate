@@ -166,6 +166,102 @@
 		</div>
 		<div class="push"></div>
 
+
+		<div class="container wrapper calendar-content">
+			<!--<xsl:if test="building/deactivate_application=0 and config_data/help_calendar_book and normalize-space(config_data/help_calendar_book)">
+				--><div class="row margin-top-and-bottom">
+					<div class="col">
+						<xsl:value-of select="config_data/help_calendar_book"/>
+					</div>
+				</div>
+			<!--</xsl:if>-->
+			<div class="row margin-top-and-bottom">
+				<div class="col-6">
+					<div class="button-group dropdown calendar-tool invisible">
+						<!--<xsl:if test="false">-->
+							<div class="dropdown-container">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<!--<xsl:value-of select="php:function('lang', 'choose a date')"/>-->
+									Lokaler
+									<span class="caret"></span>
+								</button>
+
+								<ul class="dropdown-menu px-2" data-bind="foreach: bookableResource">
+									<li>
+										<div class="form-check checkbox checkbox-primary">
+
+											<label class="check-box-label">
+												<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="html: name"/>
+												<span class="label-text" data-bind="html: building_name + ' - ' + name "></span>
+											</label>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div class="dropdown-container">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									<xsl:value-of select="php:function('lang', 'groups')"/>
+									<span class="caret"></span>
+								</button>
+
+								<ul class="dropdown-menu px-2" data-bind="foreach: bookedByGroup">
+									<li>
+										<div class="form-check checkbox checkbox-primary">
+
+											<label class="check-box-label">
+												<input class="form-check-input choosenGroup" type="checkbox"  checked="checked" data-bind="html: name"/>
+												<span class="label-text" data-bind="html: name"></span>
+											</label>
+										</div>
+									</li>
+								</ul>
+							</div>
+
+							<button class="btn btn-default datepicker-btn mr-1 mt-1 mb-1">
+								<i class="far fa-calendar-alt"></i>&#160;
+								<xsl:value-of select="php:function('lang', 'choose a date')"/>
+							</button>
+						<!--</xsl:if>-->
+					</div>
+				</div>
+				<!--<xsl:if test="false">-->
+
+					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2 calendar-text invisible">
+						<div class="">
+							<div class="square allocation"></div>
+							<span>
+								<xsl:value-of select="php:function('lang', 'allocation')"/>
+							</span>
+						</div>
+						<div class="">
+							<div class="square booking"></div>
+							<span>
+								<xsl:value-of select="php:function('lang', 'Booking (2018)')"/>
+							</span>
+						</div>
+						<div class="">
+							<div class="square event"></div>
+							<span>
+								<xsl:value-of select="php:function('lang', 'event')"/>
+							</span>
+						</div>
+					</div>
+				<!--</xsl:if>-->
+				<!--<div class="input-group date" id="datepicker" data-provide="datepicker">
+					<input type="text" class="form-control" />
+					<div class="input-group-addon">
+						<span class="glyphicon glyphicon-th"></span>
+					</div>
+				</div>-->
+				<!--<xsl:if test="true">-->
+					<div id="myScheduler" class="d-none d-lg-block margin-bottom col-12"></div>
+					<div id="mySchedulerSmallDeviceView" class="d-lg-none margin-bottom col-12"></div>
+				<!--</xsl:if>-->
+
+			</div>
+			<div class="push"></div>
+		</div>
+
 		<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-body lightbox-body">

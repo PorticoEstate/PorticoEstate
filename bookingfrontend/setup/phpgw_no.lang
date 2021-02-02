@@ -511,9 +511,4 @@ Facilities	bookingfrontend	no	Fasiliteter
 Apply filter	bookingfrontend	no	Aktiver filter
 Reset filter	bookingfrontend	no	Nullstill filter
 To application site	bookingfrontend	no	Til søknadsside
-
-
-
-
-
-
+locations	bookingfrontend	no	Lokaler

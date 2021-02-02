@@ -615,6 +615,176 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
+	function organization_schedule($date, $organization_id, $building_id, $group_ids)
+	{
+		$from = clone $date;
+		$from->setTime(0, 0, 0);
+		// Make sure $from is a monday
+		if ($from->format('w') != 1)
+		{
+			$from->modify('last monday');
+		}
+		$to				 = clone $from;
+		$to->modify('+7 days');
+
+		$resources		 = $this->resource_so->read(array('filters'	 => array('building_id'	 => $building_id,
+			'active' => 1), 'results'	 => -1));
+		$resource_ids = array(-1);
+		foreach ($resources['results'] as $resource)
+		{
+			$resource_ids[] = $resource['id'];
+		}
+
+		$allocation_ids	 = $this->so->allocation_ids_for_organization($organization_id, $resource_ids, $from, $to);
+
+		$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
+			'results' => -1));
+		$allocations	 = $allocations['results'];
+		foreach ($allocations as &$allocation)
+		{
+			$allocation['name']		 = $allocation['organization_name'];
+			$allocation['shortname'] = $allocation['organization_shortname'];
+			$allocation['type']		 = 'allocation';
+			$allocation['building_name'] = $allocation['building_name'];
+			$allocation['building_id'] = $allocation['building_id'];
+			unset($allocation['costs']);
+			unset($allocation['comments']);
+			unset($allocation['secret']);
+			unset($allocation['customer_ssn']);
+			unset($allocation['organizer']);
+			unset($allocation['contact_name']);
+			unset($allocation['contact_email']);
+			unset($allocation['contact_phone']);
+			unset($allocation['cost']);
+			unset($allocation['sms_total']);
+			unset($allocation['customer_organization_name']);
+			unset($allocation['customer_organization_id']);
+			unset($allocation['customer_identifier_type']);
+			unset($allocation['customer_organization_number']);
+			unset($allocation['customer_internal']);
+			unset($allocation['include_in_list']);
+			unset($allocation['agegroups']);
+			unset($allocation['audience']);
+		}
+
+
+		if (!empty($group_ids))
+		{
+			$booking_ids = $this->so->booking_ids_for_organization($group_ids, $resource_ids, $from, $to);
+
+		} else
+		{
+			$booking_ids = array();
+		}
+
+
+
+		$_bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids), 'results' => -1));
+		$bookings = array();
+
+		/**
+		 * Whitelisting
+		 */
+		foreach ($_bookings['results'] as $booking)
+		{
+			$bookings[] = array(
+				'type'				 => 'booking',
+				'id'				 => $booking['id'],
+				'name'				 => $booking['group_name'],
+				'shortname'			 => $booking['group_shortname'],
+				'active'			 => $booking['active'],
+				'allocation_id'		 => $booking['allocation_id'],
+				'group_id'			 => $booking['group_id'],
+				'season_id'			 => $booking['season_id'],
+				'season_name'		 => $booking['season_name'],
+				'activity_id'		 => $booking['activity_id'],
+				'activity_name'		 => $booking['activity_name'],
+				'application_id'	 => $booking['application_id'],
+				'group_name'		 => $booking['group_name'],
+				'group_shortname'	 => $booking['group_shortname'],
+				'building_id'		 => $booking['building_id'],
+				'building_name'		 => $booking['building_name'],
+				'from_'				 => $booking['from_'],
+				'to_'				 => $booking['to_'],
+				'completed'			 => $booking['completed'],
+				'reminder'			 => $booking['reminder'],
+				'resources'			 => $booking['resources'],
+				'dates'				 => $booking['dates']
+			);
+		}
+
+		$allocations = $this->split_allocations($allocations, $bookings);
+
+		$event_ids	 = $this->so->event_ids_for_organization($organization_id, $resource_ids, $from, $to);
+
+		$_events	 = $this->event_so->read(array('filters' => array('id' => $event_ids),
+			'results' => -1));
+
+		$events = array();
+
+		/**
+		 * Whitelisting
+		 */
+		foreach ($_events['results'] as $event)
+		{
+			$events[] = array(
+				'type'				 			=> 'event',
+				'id'				 			=> $event['id'],
+				'id_string'			 			=> $event['id_string'],
+				'active'			 			=> $event['active'],
+				'activity_id'		 			=> $event['activity_id'],
+				'application_id'	 			=> $event['application_id'],
+				'name'				 			=> $event['is_public'] ? $event['name'] : '',
+				'homepage'			 			=> $event['homepage'],
+				'description'					=> $event['is_public'] ? $event['description'] : '',
+				'equipment'			 			=> $event['equipment'],
+				'building_id'		 			=> $event['building_id'],
+				'building_name'		 			=> $event['building_name'],
+				'from_'				 			=> $event['from_'],
+				'to_'				 			=> $event['to_'],
+				'completed'			 			=> $event['completed'],
+				'access_requested'	 			=> $event['access_requested'],
+				'reminder'			 			=> $event['reminder'],
+				'is_public'			 			=> $event['is_public'],
+				'activity_name'		 			=> $event['activity_name'],
+				'resources'			 			=> $event['resources'],
+				'dates'				 			=> $event['dates'],
+				'customer_organization_name'	=> $event['customer_organization_name']
+			);
+		}
+
+		$bookings	 = array_merge($allocations, $bookings);
+
+		if ($this->current_app() == 'bookingfrontend')
+		{
+			$bookings	 = $this->_remove_event_conflicts($bookings, $events);
+		}
+		else
+		{
+			$bookings	 = $this->_remove_event_conflicts($bookings, $events, $list_conflicts = true);
+		}
+
+		$bookings = array_merge($events, $bookings);
+
+		$resources		 = $resources['results'];
+
+		foreach ($resources as $key => $row)
+		{
+			$sort[$key] = $row['sort'];
+		}
+
+		// Sort the resources with sortkey ascending
+		// Add $resources as the last parameter, to sort by the common key
+		if (!empty($resources))
+		{
+			array_multisort($sort, SORT_ASC, $resources);
+		}
+		$bookings	 = $this->_split_multi_day_bookings($bookings, $from, $to);
+		$results	 = build_organization_schedule_table($bookings, $resources);
+//            exit;
+		return array('total_records' => count($results), 'results' => $results);
+	}
+
 		function building_infoscreen_schedule( $building_id, $date, $res = False )
 		{
 			$from = clone $date;

@@ -519,4 +519,5 @@ Facilities	bookingfrontend	nn	Fasiliteter
 Apply filter	bookingfrontend	nn	Aktiver filter
 Reset filter	bookingfrontend	nn	Nullstill filter
 To application site	bookingfrontend	nn	Til søknadsside
+locations	bookingfrontend	nn	Lokaler
 
