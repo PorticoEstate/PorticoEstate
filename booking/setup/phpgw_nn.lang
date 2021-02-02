@@ -840,3 +840,4 @@ global participant limit is set to %1	booking	nn	Generell grense for deltakarar 
 overridden participant limit is set to %1	booking	nn	Overstyrt grense for deltakarar er sett til %1
 register participants	booking	nn	Deltakarregistrering
 capacity	booking	nn	Kapasitet
+show participant list	booking	nn	Vis deltakarliste i frontend
