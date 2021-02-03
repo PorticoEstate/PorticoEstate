@@ -1278,6 +1278,11 @@
 					continue; //Reservation has been deleted
 				}
 
+				if(empty($test['active']))
+				{
+					continue; //Reservation has been de-activated
+				}
+
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
