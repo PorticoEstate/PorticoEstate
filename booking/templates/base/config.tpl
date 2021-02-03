@@ -89,16 +89,6 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
-			<td>{lang_show_participant_list}:</td>
-			<td>
-				<select name="newsettings[show_participant_list]">
-					<option value="">{lang_No}</option>
-					<option value="True"{selected_show_participant_list_True}>{lang_Yes}</option>
-				</select>
-			</td>
-		</tr>
-
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">
