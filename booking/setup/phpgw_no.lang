@@ -839,4 +839,3 @@ external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
 capacity	booking	no	Kapasitet
-show participant list	booking	no	Vis deltagerliste i frontend

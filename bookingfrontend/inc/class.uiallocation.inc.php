@@ -524,7 +524,7 @@
 			$allocation['get_participants_link'] = $get_participants_link;
 
 			$datatable_def	 = array();		
-			if(!empty($config['show_participant_list']) || CreateObject('bookingfrontend.bouser')->is_logged_in())
+			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
 			{
 				$datatable_def[] = array
 					(

@@ -514,10 +514,9 @@ ICAL;
 
 		public function index()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			$results = array();
 
-			if(CreateObject('bookingfrontend.bouser')->is_logged_in() || !empty($config['show_participant_list']))
+			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
 			{
 				$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
 				$participants = $this->bo->read();
