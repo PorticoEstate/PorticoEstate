@@ -1498,7 +1498,14 @@
 
 			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
 
-//			_debug_array($delegate_data);
+			$filtered_delegate_data = array();
+			foreach ($delegate_data as $delegate_entry)
+			{
+				if($delegate_entry['active'])
+				{
+					$filtered_delegate_data[] = $delegate_entry;
+				}
+			}
 
 			/**
 			 * This one is for bookingfrontend
@@ -1507,7 +1514,7 @@
 
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
-				'delegate_data'			 => $delegate_data,
+				'delegate_data'			 => $filtered_delegate_data,
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
