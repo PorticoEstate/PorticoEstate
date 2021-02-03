@@ -235,6 +235,7 @@
 				$booking['allocation_id'] = $allocation_id;
 				$booking['application_id'] = $allocation['application_id'];
 				array_set_default($booking, 'resources', array(phpgw::get_var('resource')));
+				array_set_default($booking, 'resource_ids', phpgw::get_var('resource_ids'));
 			}
 			else
 			{
@@ -349,6 +350,9 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'base', 'booking.js');
 			array_set_default($booking, 'resources', array());
+			array_set_default($booking, 'resource_ids', array());
+			array_set_default($booking, 'audience', array());
+
 
 			if (!$activity_id)
 			{
@@ -360,6 +364,7 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);

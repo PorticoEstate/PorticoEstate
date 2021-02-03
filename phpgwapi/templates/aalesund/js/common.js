@@ -349,6 +349,23 @@ function AddBookableResourceData(building_id, initialSelection, bookableresource
 	});
 }
 
+function AddBookableResourceDataWithinAllocation(building_id, initialSelection, bookableresource)
+{
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: building_id, sort: "name", phpgw_return_as: "json"}, true);
+	$.getJSON(getJsonURL, function (result)
+	{
+		for (let i = 0; i < result.results.length; i++)
+		{
+			if (result.results[i].building_id === building_id) {
+				if ($.inArray(result.results[i].id, initialSelection) !== -1) {
+					bookableresource.push({id: result.results[i].id, name: result.results[i].name, selected: ko.observable(true)});
+				}
+			}
+		}
+		return bookableresource;
+	});
+}
+
 function AddAudiencesAndAgegroupData(building_id, agegroup, initialAgegroups, audiences, initialAudience)
 {
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: building_id, phpgw_return_as: "json"}, true);
