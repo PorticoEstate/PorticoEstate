@@ -145,6 +145,7 @@
 			$type				 = isset($data['type']) && $data['type'] ? $data['type'] : $this->type;
 			$required			 = isset($data['required']) ? $data['required'] : '';
 			$enable_controller	 = isset($data['enable_controller']) ? $data['enable_controller'] : '';
+			$get_inherited		 = empty($data['get_inherited']) ? false : true;
 			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if ($order)
@@ -190,14 +191,8 @@
 				$ids[] = $this->db2->f('id');
 			}
 
-//			if ($enable_controller)
-//			{
-//				$bypass = false;
-//			}
-//			else
-			{
-				$bypass = true;
-			}
+			$bypass = $get_inherited ? false : true;
+
 			foreach ($ids as $id)
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entity_id}.{$id}");
