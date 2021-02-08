@@ -75,7 +75,7 @@
         <![CDATA[
             var resourceURL = phpGWLink('bookingfrontend/index.php', {menuaction: 'bookingfrontend.uiresource.index_json', sort:'name', length:-1}, true) + '&' + resourcesIds;
         ]]>
-		var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+		var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']}];
 		createTable('resources_container', resourceURL, colDefsResources, 'results', 'pure-table pure-table-bordered');
 	</script>
 </xsl:template>
