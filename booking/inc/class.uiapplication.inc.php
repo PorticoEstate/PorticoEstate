@@ -4,6 +4,8 @@
 
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
+	phpgw::import_class('booking.sobuilding');
+	phpgw::import_class('booking.boapplication');
 
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 
@@ -29,6 +31,8 @@
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
 			$module;
+		protected $application_bo;
+		protected $building_so;
 
 		public function __construct()
 		{
@@ -50,6 +54,8 @@
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->document_building = CreateObject('booking.bodocument_building');
 			$this->document_resource = CreateObject('booking.bodocument_resource');
+			$this->building_so = new booking_sobuilding();
+			$this->application_bo = new booking_boapplication();
 
 			self::set_active_menu('booking::applications::applications');
 			$this->fields = array(
@@ -618,6 +624,27 @@
 			$simple = phpgw::get_var('simple', 'bool');
 
 			$errors = array();
+			$application_id = phpgw::get_var('application_id', 'int');
+			if (isset($application_id))
+			{
+				$existing_application = $this->application_bo->read_single($application_id);
+				$building_id = $this->building_so->get_building_id_from_resource_id($existing_application['resources'][0]);
+
+				if ($_SERVER['REQUEST_METHOD'] != 'POST')
+				{
+					$application['resources'] = $existing_application['resources'];
+					$application['building_name'] = $existing_application['building_name'];
+					$application['building_id'] = $building_id;
+					$application['activity_id'] = $existing_application['activity_id'];
+					$application['name'] = $existing_application['name'];
+					$application['organizer'] = $existing_application['organizer'];
+					$application['homepage'] = $existing_application['homepage'];
+					$application['description'] = $existing_application['description'];
+					$application['equipment'] = $existing_application['equipment'];
+					$application['audience'] = $existing_application['audience'];
+					$application['agegroups'] = $existing_application['agegroups'];
+				}
+			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -1219,7 +1246,7 @@
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_organization_id',
 							'customer_organization_name','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code', 'audience');
+							'responsible_city','responsible_street','responsible_zip_code');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update

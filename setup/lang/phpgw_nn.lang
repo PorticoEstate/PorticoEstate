@@ -417,3 +417,5 @@ Password must contain at least 2 lower case characters	setup	nn	Passord må inne
 Password must contain at least 1 number	setup	nn	Passord må inneholde minst 1 tall
 Password must contain at least 1 non alphanumeric character	setup	nn	Passord må inneholde minst 1 spesialtegn
 Done	setup	nn	Utført
+copy	setup	nn	Kopier
+
