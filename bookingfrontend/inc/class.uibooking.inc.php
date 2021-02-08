@@ -504,6 +504,7 @@
 			$update_count = 0;
 			$today = getdate();
 			$step = phpgw::get_var('step', 'int');
+			array_set_default($booking, 'resource_ids', phpgw::get_var('resource_ids'));
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -623,6 +624,7 @@
 			if ($step < 2)
 			{
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+				$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
 				$booking['organization_name'] = $group['organization_name'];
 				$booking['organization_id'] = $group['organization_id'];
 			}
@@ -853,7 +855,7 @@
 		public function resource_users( $resources, $group_id )
 		{
 			$contacts = array();
-			$orglist = array();
+			$orglist = '';
 			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);
@@ -1299,11 +1301,14 @@
 				'sort' => 'name'));
 			$booking['resources'] = $resources['results'];
 			$res_names = array();
+			$res_ids = array();
 			foreach ($booking['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
+				$res_ids[] = $res['id'];
 			}
 			$booking['resource_info'] = join(', ', $res_names);
+			$booking['resource_ids']	 = $res_ids;
 			$booking['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id']));
 			$booking['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
@@ -1315,9 +1320,11 @@
 			if ($bouser->is_group_admin($booking['group_id']))
 			{
 				$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit',
-						'id' => $booking['id']));
+						'id' => $booking['id'],
+						'resource_ids' => $booking['resource_ids']));
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
-						'id' => $booking['id']));
+						'id' => $booking['id'],
+						'resource_ids' => $booking['resource_ids']));
 			}
 			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
 			$when = "";

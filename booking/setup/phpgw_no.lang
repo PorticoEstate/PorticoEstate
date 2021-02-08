@@ -839,3 +839,4 @@ external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
 capacity	booking	no	Kapasitet
+Complete extended application text booking	booking	no	Ny søknad generert for å øke tid. For å fullføre søknadsprosessen må du trykke på knappen «Fullfør søknad» og logge inn via ID-porten og bekrefte kontaktopplysninger.

@@ -349,7 +349,7 @@ function AddBookableResourceData(building_id, initialSelection, bookableresource
 	});
 }
 
-function AddBookableResourceDataWithinAllocation(building_id, initialSelection, bookableresource)
+function AddBookableResourceDataWithinBooking(building_id, initialSelection, bookableresource)
 {
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: building_id, sort: "name", phpgw_return_as: "json"}, true);
 	$.getJSON(getJsonURL, function (result)

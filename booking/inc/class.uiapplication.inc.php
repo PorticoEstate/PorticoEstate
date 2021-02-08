@@ -828,6 +828,16 @@
 					$this->bo->so->update_id_string();
 					if ($is_partial1)
 					{
+						if (isset($_POST['extend_date']) && $_POST['extend_date'])
+						{
+							phpgwapi_cache::message_set(
+								lang("Complete extended application text booking") .
+								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("Complete applications") .
+								'</button>'
+							);
+						}
+
 						phpgwapi_cache::message_set(
 							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
