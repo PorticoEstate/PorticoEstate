@@ -632,17 +632,27 @@
 
 				if ($_SERVER['REQUEST_METHOD'] != 'POST')
 				{
-					$application['resources'] = $existing_application['resources'];
-					$application['building_name'] = $existing_application['building_name'];
-					$application['building_id'] = $building_id;
-					$application['activity_id'] = $existing_application['activity_id'];
-					$application['name'] = $existing_application['name'];
-					$application['organizer'] = $existing_application['organizer'];
-					$application['homepage'] = $existing_application['homepage'];
-					$application['description'] = $existing_application['description'];
-					$application['equipment'] = $existing_application['equipment'];
-					$application['audience'] = $existing_application['audience'];
-					$application['agegroups'] = $existing_application['agegroups'];
+					$bouser = CreateObject('bookingfrontend.bouser');
+					$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiapplication.add'));
+
+					if ($existing_application['customer_organization_number'] == $organization_number || $existing_application['customer_ssn'] == $external_login_info['ssn'])
+					{
+						$application['resources'] = $existing_application['resources'];
+						$application['building_name'] = $existing_application['building_name'];
+						$application['building_id'] = $building_id;
+						$application['activity_id'] = $existing_application['activity_id'];
+						$application['name'] = $existing_application['name'];
+						$application['organizer'] = $existing_application['organizer'];
+						$application['homepage'] = $existing_application['homepage'];
+						$application['description'] = $existing_application['description'];
+						$application['equipment'] = $existing_application['equipment'];
+						$application['audience'] = $existing_application['audience'];
+						$application['agegroups'] = $existing_application['agegroups'];
+					}
+					else
+					{
+						$errors['copy_permission'] = lang('Could not copy application');
+					}
 				}
 			}
 
