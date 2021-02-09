@@ -505,7 +505,16 @@
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
-					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+
+					if(phpgw::get_var('field_interval', 'int', 'POST') == 5)
+					{
+						$interval = 60 * 60 * 24; // day in seconds
+					}
+					else
+					{
+						$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+					}
+
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
