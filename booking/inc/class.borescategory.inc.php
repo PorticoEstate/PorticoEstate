@@ -102,12 +102,13 @@
 		public function get_parents( $id = 0)
 		{
 			$exclude = array();
+			$children = array();
 			$parent_list = $this->so->read_tree2();
 			if($id)
 			{
 				$exclude	 = array($id);
+				$children	 = $this->so->get_children2( $id, 0, true);
 			}
-			$children	 = $this->so->get_children2( $id, 0, true);
 
 			foreach ($children as $child)
 			{
