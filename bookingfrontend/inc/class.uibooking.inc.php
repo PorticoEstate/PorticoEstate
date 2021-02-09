@@ -1313,6 +1313,12 @@
 						'id' => $booking['id']));
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id']));
+
+				if ($booking['application_id'] != null)
+				{
+					$booking['copy_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiapplication.add',
+						'application_id'	 => $booking['application_id']));
+				}
 			}
 			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
 			$when = "";
