@@ -661,7 +661,9 @@
 			'fd' => array(
 				'id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+				'request' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'approved' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
+				'sent' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'in_progress' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'delivered' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'closed' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
@@ -1891,6 +1893,7 @@
 			'fd' => array(
 				'id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+				'request' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'approved' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'closed' => array('type' => 'int', 'precision' => '2', 'nullable' => True)
 			),
