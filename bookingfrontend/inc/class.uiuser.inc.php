@@ -103,7 +103,7 @@
 				$entry['lang_status'] = lang($entry['status']);
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.show", 'id' => $entry['id'], 'secret' => $entry['secret'])) . '">' . $lang_view . '</a>';
-				$entry['copy_link'] ='<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $entry['id'])) . '">' . $lang_copy . '</a>';
+				$entry['copy_link'] ='<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $entry['id'])) . '" target="_blank">' . $lang_copy . '</a>';
 			}
 			unset($entry);
 
