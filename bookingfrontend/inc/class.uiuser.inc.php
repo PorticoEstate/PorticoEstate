@@ -165,8 +165,7 @@
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'active', 'label' => lang('active'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
-				array('key' => 'copy_link', 'label' => $lang_copy, 'sortable' => false, 'resizeable' => true)
+				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true)
 			);
 
 
@@ -175,7 +174,6 @@
 			foreach ($delegate_data as &$entry)
 			{
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiorganization.show", 'id' => $entry['id'])) . '">' . $lang_view . '</a>';
-				$entry['copy_link'] ='<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $entry['id'])) . '">' . $lang_copy . '</a>';
 			}
 
 			$datatable_def[] = array
