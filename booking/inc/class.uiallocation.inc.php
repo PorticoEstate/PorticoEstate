@@ -293,6 +293,12 @@
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id', 'int'));
 				array_set_default($_POST, 'resources', array());
 
+				if(phpgw::get_var('customer_organization_id', 'bool', 'POST'))
+				{
+					$_POST['organization_id'] = phpgw::get_var('customer_organization_id', 'int');
+					$_POST['organization_name'] = phpgw::get_var('customer_organization_name', 'string');
+				}
+
 				if(empty($_POST['organization_id']))
 				{
 					$application_id = phpgw::get_var('application_id', 'int', 'POST');
