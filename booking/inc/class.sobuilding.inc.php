@@ -256,4 +256,15 @@
 			}
 			return $result;
 		}
+
+		public function get_building_id_from_resource_id($resource_id) {
+			$queryURL = "select building_id from bb_building_resource where resource_id = {$resource_id}";
+			$this->db->query($queryURL);
+
+			if (!$this->db->next_record())
+			{
+				return false;
+			}
+			return $this->db->f('building_id');
+		}
 	}
