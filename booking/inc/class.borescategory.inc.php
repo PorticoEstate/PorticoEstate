@@ -101,6 +101,7 @@
 
 		public function get_parents( $id = 0)
 		{
+			$exclude = array();
 			$parent_list = $this->so->read_tree2();
 			if($id)
 			{

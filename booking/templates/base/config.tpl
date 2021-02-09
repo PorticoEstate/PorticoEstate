@@ -89,7 +89,6 @@
 				</select>
 			</td>
 		</tr>
-
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">
