@@ -236,6 +236,10 @@
 			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$building = $this->bo->read_single($id);
 			$building['id'] = $id;
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
