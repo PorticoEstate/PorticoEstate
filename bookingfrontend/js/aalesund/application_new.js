@@ -152,7 +152,6 @@ $(document).ready(function ()
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
-		console.log(result);
 		activityId = result.application.activity_id;
 		for (var i = 0; i < result.agegroups.length; i++)
 		{

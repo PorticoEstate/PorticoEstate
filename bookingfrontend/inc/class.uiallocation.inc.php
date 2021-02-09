@@ -401,6 +401,13 @@
 						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
 						'to_'			 => $allocation['to_'],
 						'resource'		 => $allocation['resource']));
+
+				if ($allocation['application_id'] != null)
+				{
+					$allocation['copy_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiapplication.add',
+						'application_id'	 => $allocation['application_id']));
+				}
+
 			}
 			$interval	 = (new DateTime($allocation['from_']))->diff(new DateTime($allocation['to_']));
 			$when		 = "";

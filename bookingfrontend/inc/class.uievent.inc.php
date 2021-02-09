@@ -423,6 +423,12 @@
 						'id' => $event['id']));
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel',
 						'id' => $event['id']));
+
+				if ($event['application_id'] != null)
+				{
+					$event['copy_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiapplication.add',
+						'application_id'	 => $event['application_id']));
+				}
 			}
 
 			$event['show_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.show',
