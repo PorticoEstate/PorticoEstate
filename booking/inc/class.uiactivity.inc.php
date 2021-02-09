@@ -157,6 +157,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$activity = $this->bo->read_single($id);
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
 			$activities = $this->bo->fetch_activities();

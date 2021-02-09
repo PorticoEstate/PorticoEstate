@@ -583,8 +583,11 @@
 
 		public function edit()
 		{
-
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$allocation = $this->bo->read_single($id);
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];

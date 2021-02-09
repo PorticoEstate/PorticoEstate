@@ -242,6 +242,10 @@
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $resource['id']));

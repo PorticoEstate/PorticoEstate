@@ -659,6 +659,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$event = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
