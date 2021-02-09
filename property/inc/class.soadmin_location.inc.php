@@ -76,10 +76,10 @@
 				$query	 = $this->db->db_addslashes($query);
 				$query	 = $this->db->db_addslashes($query);
 
-				$querymethod = " where name $this->like '%$query%' or descr $this->like '%$query%'";
+				$querymethod = " WHERE name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%'";
 			}
 
-			$sql = "SELECT * FROM $table $querymethod";
+			$sql = "SELECT * FROM {$table} {$querymethod}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -99,9 +99,10 @@
 				$standard[] = array
 					(
 					'id'				 => $this->db->f('id'),
-					'name'				 => $this->db->f('name'),
-					'descr'				 => $this->db->f('descr'),
-					'enable_controller'	 => $this->db->f('enable_controller')
+					'name'				 => $this->db->f('name', true),
+					'descr'				 => $this->db->f('descr', true),
+					'enable_controller'	 => $this->db->f('enable_controller'),
+					'list_address'		 => $this->db->f('list_address'),
 				);
 			}
 			return $standard;
@@ -127,11 +128,11 @@
 
 			if ($order)
 			{
-				$ordermethod = " order by $order $sort";
+				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
 			else
 			{
-				$ordermethod = ' order by column_name asc';
+				$ordermethod = ' ORDER BY column_name ASC';
 			}
 
 			$querymethod = '';
@@ -140,7 +141,7 @@
 				$query	 = $this->db->db_addslashes($query);
 				$query	 = $this->db->db_addslashes($query);
 
-				$querymethod = " where name $this->like '%$query%' or column_name $this->like '%$query%'";
+				$querymethod = " WHERE name {$this->like} '%{$query}%' OR column_name {$this->like} '%{$query}%'";
 			}
 
 			$sql = "SELECT fm_location_config.* ,fm_location_type.name as name FROM fm_location_config"
@@ -183,7 +184,7 @@
 			$id		 = (int)$id;
 			$table	 = 'fm_location_type';
 
-			$sql = "SELECT * FROM $table  where id={$id}";
+			$sql = "SELECT * FROM {$table} WHERE id={$id}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

@@ -3,6 +3,9 @@
 		{debug}
 	</div>
 	<script>
+
+		{support_request}
+
 		function logout()
 		{
 			if (typeof (Storage) !== "undefined")

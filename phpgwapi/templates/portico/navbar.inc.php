@@ -54,13 +54,19 @@
 
 		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
 		{
-			$var['support_url'] = "javascript:openwindow('"
-			 . $GLOBALS['phpgw']->link('/index.php', array
-			 (
-			 	'menuaction'=> 'manual.uisupport.send',
-			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-			 )) . "','700','600')";
+			$support_js = <<<JS
 
+			support_request = function()
+			{
+				var oArgs = {menuaction:'manual.uisupport.send',app:'{$GLOBALS['phpgw_info']['flags']['currentapp']}'};
+				var strURL = phpGWLink('index.php', oArgs);
+				TINY.box.show({iframe:strURL, boxid:"frameless",width:700,height:400,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+			}
+JS;
+
+
+			$var['support_request'] = $support_js;
+			$var['support_url'] = "javascript:support_request();";
 			$var['support_text'] = lang('support');
 			$var['support_icon'] = 'icon icon-help';
 		

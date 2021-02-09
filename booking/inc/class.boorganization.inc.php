@@ -59,9 +59,11 @@
 			{
 				$defaultPermissions[self::ROLE_ADMIN] = array
 					(
-					'write' => array_fill_keys(array('name', 'homepage', 'phone', 'email', 'description',
-						'street', 'zip_code', 'district', 'city', 'active', 'organization_number',
-						'contacts'), true),
+					'write' => array_fill_keys(array(
+						'name', 'homepage', 'phone', 'email', 'description',
+						'street', 'zip_code', 'district', 'city', 'active',
+						'organization_number','customer_identifier_type',
+						'customer_organization_number','contacts'), true),
 					'create' => true
 				);
 			}

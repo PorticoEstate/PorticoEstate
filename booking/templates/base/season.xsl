@@ -99,7 +99,7 @@
 	    ]]>
 		var colDefsRespurces = [
 		{key: 'name', label: lang['Name'], formatter: genericLink},
-		{key: 'type', label: lang['Resource Type']}
+		{key: 'rescategory_name', label: lang['Resource Type']}
 		];
 		var colDefsPermissions = [
 		{key: 'subject_name', label: lang['Account']},

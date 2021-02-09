@@ -906,7 +906,8 @@ import from csv	property	nn	Fil-import til Faktura
 import invoice	property	nn	Import faktura
 import this invoice	property	nn	Importer denne fakturaen
 import vcard	common	nn	Importer visittkort
-incl tax	property	nn	inkl mva
+incl tax	property	nn	inkl. mva
+ex tax	property	nn		eks. mva
 include in location form	property	nn	Inkluder i lokaliseringsskjema
 include in search	property	nn	Inkluder i søk
 include the workorder to this claim	property	nn	Inkluder bestillingen i dette kravet

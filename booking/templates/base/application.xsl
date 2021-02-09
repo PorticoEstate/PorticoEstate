@@ -731,7 +731,7 @@
 
 		]]>
 
-		var colDefsResources = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+		var colDefsResources = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']}];
 
 		if (currentuser == 1) {
 		var colDefsAssociated = [
