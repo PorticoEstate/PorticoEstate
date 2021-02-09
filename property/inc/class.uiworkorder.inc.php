@@ -2445,6 +2445,8 @@ JS;
 
 			$_disable_link	 = $_lean;
 			$content_invoice = array();
+			$amount_ex_tax	 = 0;
+			$amount_tax		 = 0;
 			$amount			 = 0;
 			$approved_amount = 0;
 			foreach ($invoices as $entry)
@@ -2509,6 +2511,8 @@ JS;
 					'dimb'					 => $entry['dimb'],
 					'dimd'					 => $entry['dimd'],
 					'type'					 => $entry['type'],
+					'amount_ex_tax'			 => ((float)$entry['amount'] * 0.8),
+					'amount_tax'			 => ((float)$entry['amount'] * 0.2),
 					'amount'				 => $entry['amount'],
 					'approved_amount'		 => $entry['approved_amount'],
 					'vendor'				 => $entry['vendor'],
@@ -2520,6 +2524,8 @@ JS;
 					'transfer_time'			 => $entry['transfer_time'] ? $GLOBALS['phpgw']->common->show_date(strtotime($entry['transfer_time']), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
 				);
 
+				$amount_ex_tax	 += ((float)$entry['amount'] * 0.8);
+				$amount_tax		 += ((float)$entry['amount'] * 0.2);
 				$amount			 += $entry['amount'];
 				$approved_amount += $entry['approved_amount'];
 			}
@@ -2599,10 +2605,25 @@ JS;
 					'label'		 => lang('vendor'),
 					'sortable'	 => false),
 				array(
+					'key'			 => 'amount_ex_tax',
+					'label'			 => lang('ex tax'),
+					'sortable'		 => true,
+					'className'		 => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2',
+					'value_footer'	 => number_format((float)$amount_ex_tax, 2, $this->decimal_separator, '.')),
+				array(
+					'key'			 => 'amount_tax',
+					'label'			 => lang('tax'),
+					'sortable'		 => true,
+					'className'		 => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2',
+					'value_footer'	 => number_format((float)$amount_tax, 2, $this->decimal_separator, '.')),
+				array(
 					'key'			 => 'amount',
 					'label'			 => lang('amount'),
 					'sortable'		 => true,
 					'className'		 => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2',
 					'value_footer'	 => number_format((float)$amount, 2, $this->decimal_separator, '.')),
 //				array(
 //					'key' => 'approved_amount',

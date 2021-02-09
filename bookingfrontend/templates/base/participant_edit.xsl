@@ -89,6 +89,11 @@
 										<xsl:attribute name="required">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
+										<xsl:if test="after_hour = 1">
+											<xsl:attribute name="max">
+												<xsl:text>5</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 									</input>
 								</div>
 							</div>

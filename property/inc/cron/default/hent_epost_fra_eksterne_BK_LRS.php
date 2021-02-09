@@ -1345,7 +1345,18 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-
+			else if(preg_match("/Salgsordre med Kostra art 1790 fordelte utgifte/i" , $subject ))
+			{
+				$message_cat_id	 = 281; // LRS-DRIFT_Regnskap - underkategori: 20 Fakturering til kunde
+				$group_id		 = 4253; //LRS-DRIFT_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
 
 			/**
 			 * Ticket created / updated

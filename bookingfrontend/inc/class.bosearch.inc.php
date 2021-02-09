@@ -596,12 +596,20 @@
 					// Resource category names containing special characters (such as parentheses) seems to be doubly
 					// escaped when retrieved, so decode the name once here (ie. from "&amp;#40;" to "&#40;") and then
 					// the templates can handle the second decoding
+
+
+					$filtered_entries = array();
 					foreach ($rescategories as &$rescategory)
 					{
 						$rescategory['name'] = html_entity_decode($rescategory['name']);
+
+						if(empty($rescategory['disabled']))
+						{
+							$filtered_entries[] = $rescategory;
+						}
 					}
 					unset($rescategory);
-					$data[] = array('text' => $boxtext, 'rescategories' => $rescategories);
+					$data[] = array('text' => $boxtext, 'rescategories' => $filtered_entries);
 				}
 			}
 			return $data;

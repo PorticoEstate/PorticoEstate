@@ -70,6 +70,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_get_inherited_values_on_entities}</td>
+			<td>
+				<select name="newsettings[get_inherited_values]">
+					<option value="" {selected_get_inherited_values_}>{lang_no}</option>
+					<option value="1" {selected_get_inherited_values_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_on">
 			<td>{lang_document_category}:</td>
 			<td>

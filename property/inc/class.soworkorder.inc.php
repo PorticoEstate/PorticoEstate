@@ -1374,7 +1374,7 @@
 			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int)$workorder['budget_periodization'] : 0;
 			if ($combined_cost)
 			{
-				$this->_update_order_budget($id, $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+				$this->_update_order_budget($id, $workorder['budget_year'], (int)$periodization_id, (int)$workorder['budget'], (int)$workorder['contract_sum'], (int)$combined_cost);
 			}
 
 			$this->_update_project_budget($workorder['project_id']);
