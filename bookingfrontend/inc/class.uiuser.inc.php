@@ -81,6 +81,7 @@
 
 			$lang_view = lang('view');
 			$lang_copy = lang('copy');
+			$lang_application = lang('application');
 
 			$application_def = array
 			(
@@ -91,7 +92,7 @@
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
-				array('key' => 'copy_link', 'label' => $lang_copy, 'sortable' => false, 'resizeable' => true)
+				array('key' => 'copy_link', 'label' => $lang_application, 'sortable' => false, 'resizeable' => true)
 			);
 
 			$application_data = $this->bo->so->get_applications($this->ssn);
