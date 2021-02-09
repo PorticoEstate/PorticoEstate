@@ -839,3 +839,6 @@ external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
 capacity	booking	no	Kapasitet
+Could not copy application	booking	no	Kunne ikke kopiere søknad
+Copy application	booking	no	Kopier søknad
+

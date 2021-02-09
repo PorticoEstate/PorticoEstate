@@ -168,6 +168,7 @@
 			$application['resource_ids'] = $resource_ids;
 			$application['description'] = html_entity_decode(nl2br($application['description']));
 			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
+			$application['copy_link'] = self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $application['id']));
 
 			if(!empty($application['comments']))
 			{
