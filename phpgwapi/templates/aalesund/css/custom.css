@@ -1011,7 +1011,7 @@ select option:focus {
 	left: 32px;
 	top: 32px;
 	bottom: 32px;
-	font-size: 21px;
+	font-size: 18px;
 	font-weight: 500;
 	color: #0b1214;
 	display: block;
@@ -1032,7 +1032,7 @@ select option:focus {
 	top: 36px;
 	width: 120px;
 	height: 24px;
-	font-size: 16px;
+	font-size: 14px;
 	text-align: right;
 	color: #0b1214;
 	font-family: Rubik;
@@ -1046,7 +1046,6 @@ select option:focus {
 .eventClockIcon {
 	position: absolute;
 	content: url(../img/time-clock.svg);
-	top: 2px;
 }
 
 .locationContainer {

@@ -561,45 +561,43 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $orgID=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
+	function get_events_from_date($fromDate=null, $toDate=null, $org_number=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
 	{
 		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
-		$orgIDsql = null;
+		$org_number_sql = null;
 		$toDateSql = null;
 		$buildingIDSQL = null;
 
-		if ($loggedInOrgs) {
+		if ($loggedInOrgs !== "") {
 			$loggedInOrgsSql = " AND bbe.customer_organization_number in ($loggedInOrgs) ";
 		}
 
-		if ($facilityTypeID) {
+		if ($facilityTypeID !== "") {
 			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID' ";
 		}
-		if ($buildingID) {
+		if ($buildingID !== "") {
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
 		}
-		if ($orgID) {
-			$orgIDsql = " AND bo.id='$orgID' ";
+		if ($org_number !== "") {
+			$org_number_sql = " AND bbe.customer_organization_number='$org_number' ";
 		}
 		if ($toDate !== "") {
 			$toDateSql = " AND bbe.to_ <= '$toDate' ";
 		}
 		$sqlQuery = "
-				select
+				SELECT DISTINCT ON (bbe.id, bbe.from_)
 				    bbe.id as event_id,
-			       	bo.id as org_id,
-			       	bo.name as org_name,
 			       	bbe.from_,
 			       	bbe.to_, 
 				    bbe.building_id as building_id,
 			       	bbe.building_name as location_name,
 				    bbe.name as event_name,
+				    bbe.customer_organization_id,
+				    bbe.customer_organization_number,
 			       	br.name as resource_name,
 			    	bbrc.name as resource_type
-				from bb_event bbe--, bb_event_resource bber, bb_rescategory bbrc, bb_resource bbr
-				    inner join
-				        bb_organization bo on bbe.customer_organization_number = bo.organization_number
+				from bb_event bbe
 				    inner join
 				        bb_event_resource ber on bbe.id = ber.event_id
 				    inner join
@@ -611,27 +609,26 @@
 			    	bbe.is_public = 1
 				  	AND bbe.from_ >= '$fromDate' "
 						.$toDateSql
-						.$orgIDsql
+						.$org_number_sql
 						.$buildingIDSQL
 						.$facilityTypeIDSql
 						.$loggedInOrgsSql
 						." AND bbe.is_public = 1
-						order by bbe.from_ asc LIMIT $end OFFSET $start;";
+						ORDER BY bbe.from_ ASC  LIMIT $end OFFSET $start;";
 
 		$this->db->query($sqlQuery);
 
 		$results = array();
 		while ($this->db->next_record()) {
 			$results[] = array(
-				'from' => $this->db->f('from_', false),
-				'to' => $this->db->f('to_', false),
-				'event_name' => $this->db->f('event_name', false),
-				'org_name' => $this->db->f('org_name', true),
+				'from' => $this->db->f('from_'),
+				'to' => $this->db->f('to_'),
+				'event_name' => $this->db->f('event_name', true),
 				'location_name' => $this->db->f('location_name', true),
-				'event_id' => $this->db->f('event_id', false),
-				'building_id' => $this->db->f('building_id', false),
-				'org_num' => $this->db->f('org_num', false),
-				'org_id' => $this->db->f('org_id', false),
+				'event_id' => $this->db->f('event_id'),
+				'building_id' => $this->db->f('building_id'),
+				'org_num' => $this->db->f('customer_organization_number'),
+				'org_id' => $this->db->f('customer_organization_id')
 			);
 
 		}

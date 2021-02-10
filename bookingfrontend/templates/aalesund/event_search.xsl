@@ -82,11 +82,13 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-7">
+					<div class="col-5">
 						<div class="verticalLine"/>
 						<div class="eventNameContainer">
 							<span class="event_name" data-bind="text: event_name"/>
 						</div>
+					</div>
+					<div class="col-2">
 						<div class="eventTimeContainer">
 							<div class="eventClockIcon"/>
 							<span class="event_time" data-bind="text: event_time"/>

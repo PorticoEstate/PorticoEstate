@@ -5,6 +5,7 @@ phpgw::import_class('booking.bobooking');
 phpgw::import_class('bookingfrontend.bouser');
 phpgw::import_class('booking.boorganization');
 phpgw::import_class('booking.bobuilding');
+phpgw::import_class('booking.soorganization');
 
 
 
@@ -25,6 +26,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	protected $bo_booking;
 	protected $boorg;
 	protected $bobuilding;
+	protected $so_organization;
 
 	public function __construct()
 	{
@@ -35,6 +37,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$this->bo_booking = new booking_bobooking();
 		$this->boorg = new booking_boorganization();
 		$this->bobuilding = new booking_bobuilding();
+		$this->so_organization = new booking_soorganization();
 	}
 
 	public function get_facilityTypes()
@@ -95,10 +98,26 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$start = phpgw::get_var('start', 'int', 'REQUEST', 0);;
 		$end = phpgw::get_var('end', 'int', 'REQUEST', 50);;
 
-		$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
+		$result_string = '';
+		if ($loggedInOrgs != '')
+		{
+			$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
+		}
 
+		$org_numb = '';
+		if (isset($orgID) && $orgID != '')
+		{
+			$org_numb = $this->so_organization->get_organization_number($orgID);
+		}
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $orgID, $buildingId, $facilityTypeID, $result_string, $start, $end);
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $org_numb, $buildingId, $facilityTypeID, $result_string, $start, $end);
+
+		foreach ($events as &$event)
+		{
+			$event['org_name'] = $this->so_organization->get_organization_name($event['org_num']);
+		}
+		unset($event);
+
 		return $events;
 	}
 

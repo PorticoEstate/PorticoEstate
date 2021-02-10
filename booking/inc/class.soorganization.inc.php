@@ -253,4 +253,38 @@
 			}
 		}
 
+		function get_organization_name( $org_number )
+		{
+			$result = 'Ingen';
+			$org_number = (int)$org_number;
+			if ($org_number)
+			{
+				$org_number = intval($org_number);
+				$q1 = "SELECT name FROM bb_organization WHERE organization_number='{$org_number}'";
+				$this->db->query($q1, __LINE__, __FILE__);
+				$this->db->next_record();
+
+				$result = $this->db->f('name', true);
+			}
+
+			return $result;
+		}
+
+		function get_organization_number( $org_id )
+		{
+			$result = '';
+			$org_id = (int)$org_id;
+			if ($org_id)
+			{
+				$org_id = intval($org_id);
+				$q1 = "SELECT organization_number FROM bb_organization WHERE id={$org_id}";
+				$this->db->query($q1, __LINE__, __FILE__);
+				$this->db->next_record();
+
+				$result = $this->db->f('organization_number', true);
+			}
+
+			return $result;
+		}
+
 	}
